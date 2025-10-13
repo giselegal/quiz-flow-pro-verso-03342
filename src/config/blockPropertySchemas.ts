@@ -2248,4 +2248,173 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
     ]
   },
+
+  // ============================================================================
+  // 🆕 NOVOS SCHEMAS - Cobertura 100% do Editor
+  // ============================================================================
+
+  // Content Components
+  'heading': {
+    label: 'Título (H1-H6)',
+    fields: [
+      { key: 'text', label: 'Texto do Título', type: 'text', group: 'content', required: true, defaultValue: 'Título' },
+      {
+        key: 'level', label: 'Nível (H1-H6)', type: 'select', group: 'content', options: [
+          { label: 'H1 - Principal', value: 1 },
+          { label: 'H2 - Seção', value: 2 },
+          { label: 'H3 - Subtítulo', value: 3 },
+          { label: 'H4 - Menor', value: 4 },
+          { label: 'H5 - Micro', value: 5 },
+          { label: 'H6 - Mínimo', value: 6 }
+        ], defaultValue: 2
+      },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: '24px', description: 'Ex: 24px, 2rem, 1.5em' },
+      {
+        key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [
+          { label: 'Normal', value: 'normal' },
+          { label: 'Médio', value: '500' },
+          { label: 'Semi-bold', value: '600' },
+          { label: 'Bold', value: 'bold' },
+          { label: 'Extra Bold', value: '800' }
+        ], defaultValue: 'bold'
+      },
+      { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#432818' },
+      {
+        key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [
+          { label: 'Esquerda', value: 'left' },
+          { label: 'Centro', value: 'center' },
+          { label: 'Direita', value: 'right' },
+          { label: 'Justificado', value: 'justify' }
+        ], defaultValue: 'center'
+      },
+      { key: 'marginTop', label: 'Margem Superior', type: 'text', group: 'layout', defaultValue: '0px' },
+      { key: 'marginBottom', label: 'Margem Inferior', type: 'text', group: 'layout', defaultValue: '16px' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  // Quiz Components
+  'question-hero': {
+    label: 'Hero de Pergunta',
+    fields: [
+      { key: 'title', label: 'Título da Pergunta', type: 'text', group: 'content', required: true, defaultValue: 'Qual é a sua pergunta?' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'textarea', group: 'content', description: 'Texto complementar abaixo do título' },
+      { key: 'backgroundImage', label: 'Imagem de Fundo', type: 'text', group: 'style', description: 'URL da imagem de fundo' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#f8f9fa' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
+      { key: 'overlay', label: 'Overlay Escuro', type: 'boolean', group: 'style', defaultValue: false },
+      { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '300px' },
+      { key: 'padding', label: 'Padding', type: 'text', group: 'layout', defaultValue: '48px 24px' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'strategic-question': {
+    label: 'Pergunta Estratégica',
+    fields: [
+      { key: 'question', label: 'Pergunta', type: 'text', group: 'content', required: true, defaultValue: 'Esta é uma pergunta estratégica...' },
+      { key: 'description', label: 'Descrição/Contexto', type: 'textarea', group: 'content', description: 'Texto explicativo adicional' },
+      { key: 'highlightColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#b3a26a' },
+      { key: 'icon', label: 'Ícone', type: 'text', group: 'content', description: 'Nome do ícone Lucide ou URL' },
+      { key: 'showProgress', label: 'Mostrar Progresso', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'required', label: 'Resposta Obrigatória', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'transition-hero': {
+    label: 'Hero de Transição',
+    fields: [
+      { key: 'title', label: 'Título da Transição', type: 'text', group: 'content', required: true, defaultValue: 'Processando suas respostas...' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content', defaultValue: 'Aguarde enquanto calculamos seu resultado' },
+      { key: 'showLoader', label: 'Mostrar Animação', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'autoAdvance', label: 'Avançar Automaticamente', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'delay', label: 'Tempo de Espera (ms)', type: 'number', group: 'content', min: 0, max: 10000, defaultValue: 2000, description: 'Tempo antes de avançar automaticamente' },
+      { key: 'backgroundImage', label: 'Imagem de Fundo', type: 'text', group: 'style' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '400px' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  // Offer/Sales Components
+  'offer-hero': {
+    label: 'Hero de Oferta',
+    fields: [
+      { key: 'headline', label: 'Headline Principal', type: 'text', group: 'content', required: true, defaultValue: 'Oferta Especial' },
+      { key: 'subheadline', label: 'Subheadline', type: 'textarea', group: 'content', defaultValue: 'Aproveite esta oportunidade única' },
+      { key: 'price', label: 'Preço', type: 'text', group: 'content', defaultValue: 'R$ 297,00' },
+      { key: 'oldPrice', label: 'Preço Antigo', type: 'text', group: 'content', description: 'Preço riscado (opcional)' },
+      { key: 'ctaText', label: 'Texto do CTA', type: 'text', group: 'content', defaultValue: 'Quero garantir minha vaga' },
+      { key: 'ctaUrl', label: 'URL do CTA', type: 'text', group: 'content', defaultValue: '#checkout' },
+      { key: 'badgeText', label: 'Badge/Selo', type: 'text', group: 'content', description: 'Ex: "Desconto de 50%"' },
+      { key: 'backgroundImage', label: 'Imagem de Fundo', type: 'text', group: 'style' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#f8f9fa' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
+      { key: 'ctaBackgroundColor', label: 'Cor do Botão', type: 'color', group: 'style', defaultValue: '#b3a26a' },
+      { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '500px' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
+    ]
+  },
+
+  'bonus': {
+    label: 'Seção de Bônus',
+    fields: [
+      { key: 'title', label: 'Título da Seção', type: 'text', group: 'content', defaultValue: 'Bônus Exclusivos' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'textarea', group: 'content' },
+      { key: 'bonusList', label: 'Lista de Bônus', type: 'json', group: 'content', required: true, description: 'Array com [{title, description, value, image}]' },
+      { key: 'showValues', label: 'Mostrar Valores', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'totalValue', label: 'Valor Total', type: 'text', group: 'content' },
+      { key: 'layout', label: 'Layout', type: 'select', group: 'layout', options: [{ label: 'Lista', value: 'list' }, { label: 'Grade 2 Colunas', value: 'grid-2' }, { label: 'Grade 3 Colunas', value: 'grid-3' }], defaultValue: 'list' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'accentColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#b3a26a' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' }
+    ]
+  },
+
+  'testimonials': {
+    label: 'Grade de Depoimentos',
+    fields: [
+      { key: 'title', label: 'Título da Seção', type: 'text', group: 'content', defaultValue: 'Depoimentos' },
+      { key: 'testimonialsList', label: 'Lista de Depoimentos', type: 'json', group: 'content', required: true, description: 'Array com [{name, photo, text, rating, location}]' },
+      { key: 'columns', label: 'Colunas', type: 'select', group: 'layout', options: [{ label: '1 Coluna', value: 1 }, { label: '2 Colunas', value: 2 }, { label: '3 Colunas', value: 3 }], defaultValue: 3 },
+      { key: 'showRatings', label: 'Mostrar Avaliações', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'showPhotos', label: 'Mostrar Fotos', type: 'boolean', group: 'content', defaultValue: true },
+      { key: 'cardBackgroundColor', label: 'Cor de Fundo dos Cards', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'cardBorderColor', label: 'Cor da Borda', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
+      { key: 'starColor', label: 'Cor das Estrelas', type: 'color', group: 'style', defaultValue: '#fbbf24' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' }
+    ]
+  },
+
+  'guarantee': {
+    label: 'Seção de Garantia',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', required: true, defaultValue: 'Garantia Incondicional de 30 Dias' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content', required: true, defaultValue: 'Se você não ficar satisfeito, devolvemos 100% do seu dinheiro.' },
+      { key: 'guaranteePeriod', label: 'Período de Garantia', type: 'text', group: 'content', defaultValue: '30 dias' },
+      { key: 'icon', label: 'Ícone', type: 'text', group: 'content' },
+      { key: 'badgeText', label: 'Texto do Selo', type: 'text', group: 'content', defaultValue: '100% Garantido' },
+      { key: 'highlightColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#10b981' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ecfdf5' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#065f46' },
+      { key: 'borderColor', label: 'Cor da Borda', type: 'color', group: 'style', defaultValue: '#10b981' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' }
+    ]
+  },
+
+  'benefits': {
+    label: 'Lista de Benefícios',
+    fields: [
+      { key: 'title', label: 'Título da Seção', type: 'text', group: 'content', defaultValue: 'O Que Você Vai Receber' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'textarea', group: 'content' },
+      { key: 'benefitsList', label: 'Lista de Benefícios', type: 'json', group: 'content', required: true, description: 'Array com [{title, description, icon}]' },
+      { key: 'layout', label: 'Layout', type: 'select', group: 'layout', options: [{ label: 'Lista', value: 'list' }, { label: 'Grade 2 Colunas', value: 'grid-2' }, { label: 'Grade 3 Colunas', value: 'grid-3' }], defaultValue: 'grid-2' },
+      { key: 'iconStyle', label: 'Estilo do Ícone', type: 'select', group: 'style', options: [{ label: 'Check Simples', value: 'check' }, { label: 'Check Circulado', value: 'check-circle' }, { label: 'Estrela', value: 'star' }, { label: 'Customizado', value: 'custom' }], defaultValue: 'check-circle' },
+      { key: 'iconColor', label: 'Cor do Ícone', type: 'color', group: 'style', defaultValue: '#10b981' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' }
+    ]
+  },
+
 };

@@ -56,13 +56,28 @@ export const ComponentLibraryPanel: React.FC<ComponentLibraryPanelProps> = ({
                             {categories.map(category => {
                                 const items = components.filter(c => c.category === category);
                                 if (items.length === 0) return null;
+
+                                const categoryLabels: Record<string, string> = {
+                                    layout: 'Layout',
+                                    content: 'Conteúdo',
+                                    visual: 'Visual',
+                                    quiz: 'Quiz',
+                                    forms: 'Formulários',
+                                    action: 'Ações',
+                                    result: 'Resultado',
+                                    offer: 'Oferta',
+                                    navigation: 'Navegação',
+                                    ai: 'IA',
+                                    advanced: 'Avançado',
+                                    // Legacy categories
+                                    interactive: 'Interativo',
+                                    media: 'Mídia'
+                                };
+
                                 return (
                                     <div key={category}>
                                         <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">
-                                            {category === 'content' && 'Conteúdo'}
-                                            {category === 'interactive' && 'Interativo'}
-                                            {category === 'media' && 'Mídia'}
-                                            {category === 'layout' && 'Layout'}
+                                            {categoryLabels[category] || category}
                                         </h3>
                                         <div className="space-y-1">
                                             {items.map(component => {

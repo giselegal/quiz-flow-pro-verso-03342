@@ -2063,6 +2063,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     libraryPanel={(
                         <ComponentLibraryPanel
                             components={COMPONENT_LIBRARY as any}
+                            categories={['layout', 'content', 'visual', 'quiz', 'forms', 'action', 'result', 'offer', 'navigation', 'ai', 'advanced']}
                             selectedStepId={selectedStepId}
                             onAdd={(type) => selectedStepId && addBlockToStep(selectedStepId, type)}
                             onQuizCreated={handleBuilderQuizCreated}
