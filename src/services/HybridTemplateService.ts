@@ -37,6 +37,7 @@ export interface StepTemplate {
 
 export interface MasterTemplate {
     templateVersion: string;
+    templateId?: string;
     metadata: any;
     globalConfig: {
         navigation: {
@@ -159,18 +160,115 @@ class HybridTemplateService {
     }
 
     /**
-     * Carrega arquivo master JSON
+     * Carrega arquivo master JSON consolidado (v3.0)
      */
     private static async loadMasterTemplate(): Promise<void> {
         try {
+            console.log('🔄 Carregando master JSON v3.0...');
+
             const response = await fetch('/templates/quiz21-complete.json');
+
             if (response.ok) {
-                this.masterTemplate = await response.json();
-                console.log('✅ Master template carregado:', this.masterTemplate?.metadata.id);
+                const data = await response.json();
+
+                // Validar estrutura v3.0 completa
+                const isValid = this.validateMasterTemplate(data);
+
+                if (isValid) {
+                    this.masterTemplate = data;
+                    console.log('✅ Master JSON v3.0 carregado com sucesso:', {
+                        version: data.templateVersion,
+                        steps: Object.keys(data.steps || {}).length,
+                        consolidated: data.metadata?.consolidated,
+                        size: `${(JSON.stringify(data).length / 1024).toFixed(2)} KB`
+                    });
+                    return;
+                } else {
+                    console.warn('⚠️ Master JSON inválido, usando fallback TypeScript');
+                }
+            } else {
+                console.warn(`⚠️ Erro ${response.status} ao carregar master JSON`);
             }
         } catch (error) {
-            console.warn('⚠️ Falha ao carregar master template:', error);
+            console.warn('⚠️ Erro ao carregar master JSON:', error);
         }
+
+        // Fallback para TypeScript se JSON falhar ou for inválido
+        console.log('📦 Usando fallback TypeScript...');
+        try {
+            const { getQuiz21StepsTemplate } = await import('@/templates/imports');
+            const tsTemplate = getQuiz21StepsTemplate();
+
+            this.masterTemplate = {
+                templateVersion: "3.0",
+                templateId: "quiz21StepsComplete",
+                metadata: {
+                    source: "typescript-fallback",
+                    loadedAt: new Date().toISOString()
+                },
+                steps: tsTemplate,
+                globalConfig: {
+                    navigation: {
+                        autoAdvanceSteps: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18],
+                        manualAdvanceSteps: [12, 19, 20, 21],
+                        autoAdvanceDelay: 1000
+                    },
+                    validation: {
+                        rules: {}
+                    }
+                }
+            };
+
+            console.log('✅ TypeScript fallback carregado');
+        } catch (fallbackError) {
+            console.error('❌ ERRO CRÍTICO: Falha no fallback TypeScript:', fallbackError);
+            throw new Error('Não foi possível carregar nenhum template');
+        }
+    }
+
+    /**
+     * Valida estrutura do master template v3.0
+     */
+    private static validateMasterTemplate(data: any): boolean {
+        if (!data) {
+            console.warn('❌ Master template vazio');
+            return false;
+        }
+
+        // Validar campos obrigatórios
+        if (data.templateVersion !== "3.0") {
+            console.warn('❌ Versão incorreta:', data.templateVersion);
+            return false;
+        }
+
+        if (!data.steps || typeof data.steps !== 'object') {
+            console.warn('❌ Campo "steps" ausente ou inválido');
+            return false;
+        }
+
+        // Validar que tem os 21 steps
+        const stepCount = Object.keys(data.steps).length;
+        if (stepCount !== 21) {
+            console.warn(`❌ Número incorreto de steps: ${stepCount}/21`);
+            return false;
+        }
+
+        // Validar que steps têm seções
+        let stepsWithSections = 0;
+        for (const stepId in data.steps) {
+            const step = data.steps[stepId];
+            if (step.sections && Array.isArray(step.sections)) {
+                stepsWithSections++;
+            }
+        }
+
+        if (stepsWithSections < 21) {
+            console.warn(`⚠️ Apenas ${stepsWithSections}/21 steps têm seções`);
+            // Não retorna false, pois pode ser intencional para alguns steps
+        }
+
+        console.log(`✅ Validação master template: ${stepsWithSections}/21 steps com seções`);
+        return true;
     }
 
     /**
@@ -414,12 +512,32 @@ class HybridTemplateService {
     }
 
     /**
-     * 🔄 Limpar cache
+     * Retorna o master template completo
+     */
+    static async getMasterTemplate(): Promise<MasterTemplate | null> {
+        if (!this.masterTemplate) {
+            await this.loadMasterTemplate();
+        }
+        return this.masterTemplate;
+    }
+
+    /**
+     * 🔄 Limpar cache do master template e overrides
      */
     static clearCache(): void {
         this.masterTemplate = null;
         this.overrideCache.clear();
-        console.log('🔄 Cache limpo');
+        console.log('�️ Cache do HybridTemplateService limpo');
+    }
+
+    /**
+     * �🔄 Recarrega o master template do servidor
+     */
+    static async reload(): Promise<void> {
+        console.log('🔄 Recarregando master template...');
+        this.clearCache();
+        await this.loadMasterTemplate();
+        console.log('✅ Master template recarregado');
     }
 
     /**
