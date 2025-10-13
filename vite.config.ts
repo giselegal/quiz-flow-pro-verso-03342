@@ -150,8 +150,8 @@ export default defineConfig({
       'react-dom',
       'react/jsx-runtime',
       'react-router-dom',
+      'recharts',
     ],
-    exclude: ['recharts'],
     esbuildOptions: {
       target: 'es2020',
       loader: { '.js': 'jsx' },
@@ -167,7 +167,7 @@ export default defineConfig({
     setupFiles: ['tests/setup/vitest.setup.ts'],
     clearMocks: true,
     restoreMocks: true,
-    
+
     // 🔥 Excluir testes legados com erros TypeScript
     exclude: [
       '**/node_modules/**',
@@ -175,7 +175,7 @@ export default defineConfig({
       '**/cypress/**',
       '**/.{idea,git,cache,output,temp}/**',
       '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*',
-      
+
       // Testes legados incompatíveis com arquitetura atual
       'src/__tests__/PropertiesPanel.comprehensive.test.tsx',
       'src/__tests__/PropertiesPanel.integration.test.tsx',
