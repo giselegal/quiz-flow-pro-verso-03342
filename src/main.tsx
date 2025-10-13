@@ -2,6 +2,8 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import ClientLayout from './components/ClientLayout';
 import './index.css';
+// Silenciador de logs em produção (pode ser desativado via VITE_DEBUG_LOGS=true)
+import './shims/consoleSilencer';
 import './styles/design-system.css';
 // 🚀 SUPABASE: Inicialização do serviço de dados
 // 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
