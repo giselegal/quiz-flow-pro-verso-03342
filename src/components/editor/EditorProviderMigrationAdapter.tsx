@@ -35,10 +35,10 @@ export const MigrationEditorProvider: React.FC<{
   );
 };
 
-export const useUnifiedEditor = (): UnifiedEditorContextType => {
+export const useUnifiedEditor = (options?: { optional?: boolean }): UnifiedEditorContextType | undefined => {
   const context = useEditorUnified();
 
-  if (!context) {
+  if (!context && !options?.optional) {
     throw new Error('useUnifiedEditor deve ser usado dentro de MigrationEditorProvider');
   }
 
