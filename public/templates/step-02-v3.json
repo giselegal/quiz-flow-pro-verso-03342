@@ -1,0 +1,195 @@
+{
+    "templateVersion": "3.0",
+    "metadata": {
+        "id": "step-02-question-v3",
+        "name": "Q1 - Roupa Favorita",
+        "description": "Primeira questão sobre preferências de estilo de roupa",
+        "category": "quiz-question",
+        "tags": [
+            "quiz",
+            "style",
+            "question",
+            "roupa",
+            "preferencias"
+        ],
+        "questionNumber": 1,
+        "totalQuestions": 13,
+        "createdAt": "2025-01-13T00:00:00.000Z",
+        "updatedAt": "2025-01-13T00:00:00.000Z",
+        "author": "Quiz Flow Pro",
+        "version": "3.0.0"
+    },
+    "theme": {
+        "colors": {
+            "primary": "#B89B7A",
+            "primaryHover": "#A68B6A",
+            "primaryLight": "#F3E8D3",
+            "secondary": "#432818",
+            "background": "#FAF9F7",
+            "text": "#1F2937",
+            "border": "#E5E7EB",
+            "selected": "#B89B7A",
+            "hover": "#F3E8D3"
+        },
+        "fonts": {
+            "heading": "Playfair Display, serif",
+            "body": "Inter, sans-serif"
+        },
+        "spacing": {
+            "sm": 8,
+            "md": 16,
+            "lg": 24,
+            "xl": 32
+        },
+        "borderRadius": {
+            "sm": 4,
+            "md": 8,
+            "lg": 12,
+            "xl": 16
+        }
+    },
+    "sections": [
+        {
+            "type": "question-hero",
+            "id": "question-hero-02",
+            "content": {
+                "questionNumber": "Q1 - ROUPA FAVORITA",
+                "questionText": "Qual tipo de roupa você mais se identifica?",
+                "currentQuestion": 1,
+                "totalQuestions": 13,
+                "progressValue": 10,
+                "showProgress": true,
+                "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                "logoAlt": "Logo Gisele Galvão"
+            },
+            "style": {
+                "backgroundColor": "transparent",
+                "padding": 16
+            },
+            "animation": {
+                "type": "fade",
+                "duration": 300,
+                "delay": 0,
+                "easing": "ease-out"
+            }
+        },
+        {
+            "type": "options-grid",
+            "id": "options-grid-02",
+            "content": {
+                "options": [
+                    {
+                        "id": "2a",
+                        "text": "Vestidos fluidos e confortáveis",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+                        "value": "2a",
+                        "category": "Natural",
+                        "points": 1
+                    },
+                    {
+                        "id": "2b",
+                        "text": "Blazers estruturados e calças alfaiataria",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+                        "value": "2b",
+                        "category": "Clássico",
+                        "points": 2
+                    },
+                    {
+                        "id": "2c",
+                        "text": "Peças modernas com toque minimalista",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+                        "value": "2c",
+                        "category": "Contemporâneo",
+                        "points": 2
+                    },
+                    {
+                        "id": "2d",
+                        "text": "Vestidos sofisticados e acessórios marcantes",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+                        "value": "2d",
+                        "category": "Elegante",
+                        "points": 3
+                    }
+                ],
+                "columns": 2,
+                "multipleSelection": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "showImages": true,
+                "imageSize": 256,
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1500,
+                "validationMessage": "Selecione 3 opções para continuar"
+            },
+            "style": {
+                "backgroundColor": "transparent",
+                "padding": 16
+            },
+            "animation": {
+                "type": "slideUp",
+                "duration": 300,
+                "delay": 100,
+                "easing": "ease-out"
+            }
+        }
+    ],
+    "validation": {
+        "required": [
+            "selectedOptions"
+        ],
+        "rules": {
+            "selectedOptions": {
+                "minItems": 3,
+                "maxItems": 3,
+                "errorMessage": "Por favor, selecione exatamente 3 opções"
+            }
+        }
+    },
+    "navigation": {
+        "nextStep": "step-03",
+        "prevStep": "step-01",
+        "allowBack": true,
+        "requiresUserInput": true,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+        "events": [
+            "page_view",
+            "section_view",
+            "option_selected",
+            "validation_error",
+            "completion"
+        ],
+        "trackingId": "step-02-question-v3",
+        "fbPixelId": null,
+        "gaTrackingId": null
+    },
+    "scoring": {
+        "method": "points",
+        "categories": [
+            "Natural",
+            "Clássico",
+            "Contemporâneo",
+            "Elegante"
+        ],
+        "options": {
+            "2a": {
+                "category": "Natural",
+                "points": 1
+            },
+            "2b": {
+                "category": "Clássico",
+                "points": 2
+            },
+            "2c": {
+                "category": "Contemporâneo",
+                "points": 2
+            },
+            "2d": {
+                "category": "Elegante",
+                "points": 3
+            }
+        }
+    }
+}

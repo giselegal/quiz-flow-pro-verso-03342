@@ -1,0 +1,146 @@
+{
+    "templateVersion": "3.0",
+    "metadata": {
+        "id": "step-01-intro-v3",
+        "name": "Introdução - Bem-vindo ao Quiz de Estilo",
+        "description": "Página inicial do quiz com apresentação e coleta do nome do usuário",
+        "category": "intro",
+        "tags": [
+            "quiz",
+            "style",
+            "intro",
+            "welcome",
+            "name-input"
+        ],
+        "createdAt": "2025-01-13T00:00:00.000Z",
+        "updatedAt": "2025-01-13T00:00:00.000Z",
+        "author": "Quiz Flow Pro",
+        "version": "3.0.0"
+    },
+    "theme": {
+        "colors": {
+            "primary": "#B89B7A",
+            "primaryHover": "#A68B6A",
+            "primaryLight": "#F3E8D3",
+            "secondary": "#432818",
+            "background": "#FAF9F7",
+            "text": "#1F2937",
+            "border": "#E5E7EB"
+        },
+        "fonts": {
+            "heading": "Playfair Display, serif",
+            "body": "Inter, sans-serif"
+        },
+        "spacing": {
+            "sm": 8,
+            "md": 16,
+            "lg": 24,
+            "xl": 32
+        },
+        "borderRadius": {
+            "sm": 4,
+            "md": 8,
+            "lg": 12,
+            "xl": 16
+        }
+    },
+    "sections": [
+        {
+            "type": "intro-hero",
+            "id": "intro-hero-01",
+            "content": {
+                "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
+                "logoWidth": 96,
+                "logoHeight": 96,
+                "title": "<span style=\"color: #B89B7A\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style=\"color: #B89B7A\">Você</span>.",
+                "subtitle": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
+                "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
+                "imageAlt": "Descubra seu estilo predominante",
+                "description": "Um quiz personalizado que vai revelar qual estilo te representa e como valorizar sua essência através das roupas.",
+                "showProgress": false,
+                "progressValue": 0
+            },
+            "style": {
+                "backgroundColor": "#FAF9F7",
+                "textColor": "#432818",
+                "padding": 24
+            },
+            "animation": {
+                "type": "fade",
+                "duration": 500,
+                "delay": 0,
+                "easing": "ease-out"
+            }
+        },
+        {
+            "type": "welcome-form",
+            "id": "intro-form-01",
+            "content": {
+                "questionText": "Antes de começarmos, como posso te chamar?",
+                "nameLabel": "Seu primeiro nome",
+                "namePlaceholder": "Digite seu primeiro nome aqui...",
+                "submitText": "Quero Descobrir meu Estilo Agora!",
+                "loadingText": "Preparando seu quiz personalizado...",
+                "successText": "Perfeito! Vamos descobrir seu estilo!",
+                "showNameField": true,
+                "showEmailField": false,
+                "requiredFields": "name",
+                "validationMessage": "Por favor, digite seu nome para continuar"
+            },
+            "style": {
+                "backgroundColor": "transparent",
+                "padding": 16
+            },
+            "animation": {
+                "type": "slideUp",
+                "duration": 400,
+                "delay": 200,
+                "easing": "ease-out"
+            }
+        }
+    ],
+    "validation": {
+        "required": [
+            "userName"
+        ],
+        "rules": {
+            "userName": {
+                "minLength": 2,
+                "maxLength": 50,
+                "pattern": "^[a-zA-ZÀ-ÿ\\s]+$",
+                "errorMessage": "Por favor, digite um nome válido (apenas letras)"
+            }
+        }
+    },
+    "navigation": {
+        "nextStep": "step-02",
+        "prevStep": null,
+        "allowBack": false,
+        "requiresUserInput": true,
+        "autoAdvance": false
+    },
+    "analytics": {
+        "events": [
+            "page_view",
+            "section_view",
+            "field_focus",
+            "form_submit",
+            "validation_error"
+        ],
+        "trackingId": "step-01-intro-v3",
+        "fbPixelId": null,
+        "gaTrackingId": null
+    },
+    "seo": {
+        "title": "Quiz de Estilo Pessoal - Descubra seu Estilo Predominante",
+        "description": "Descubra qual estilo te representa em apenas alguns minutos. Quiz personalizado de consultoria de estilo por Gisele Galvão.",
+        "keywords": [
+            "quiz de estilo",
+            "estilo pessoal",
+            "consultoria de estilo",
+            "guarda-roupa",
+            "moda feminina"
+        ]
+    }
+}
