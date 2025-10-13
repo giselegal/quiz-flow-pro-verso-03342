@@ -11,8 +11,10 @@
 ### 1️⃣ **Abrir Quiz no Browser**
 
 ```bash
-URL: http://localhost:5173/quiz-estilo
+URL: http://localhost:8080/quiz-estilo
 ```
+
+**⚠️ ATENÇÃO:** Servidor rodando na porta **8080** (não 5173)
 
 ### 2️⃣ **Abrir Console do Navegador**
 
