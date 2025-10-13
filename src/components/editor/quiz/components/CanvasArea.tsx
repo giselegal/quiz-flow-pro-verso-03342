@@ -98,7 +98,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                         <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={selectedStep.id} />
                                     </div>
                                 </div>
-                                {selectedStep.blocks.length === 0 ? (
+                                {(!selectedStep.blocks || selectedStep.blocks.length === 0) ? (
                                     <div className="text-center py-8 text-muted-foreground text-xs border border-dashed rounded-md bg-white/40">(vazio)</div>
                                 ) : (
                                     <div ref={containerRef} className="space-y-2 pr-1 bg-white/40 overflow-visible">
