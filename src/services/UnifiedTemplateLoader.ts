@@ -1,21 +1,34 @@
 /**
- * 🎯 UNIFIED TEMPLATE LOADER
+ * 🎯 UNIFIED TEMPLATE LOADER - FASE 6 ATUALIZADO
  * 
- * Serviço unificado para garantir que /editor e /quiz usem EXATAMENTE as mesmas fontes de dados.
- * Substitui a fragmentação entre getStepTemplate() e TemplateManager.loadStepBlocks()
+ * Agora usa UnifiedQuizBridge como base
+ * Mantém compatibilidade com código existente
  */
 
 import { TemplateManager } from '@/utils/TemplateManager';
 import { Block } from '@/types/editor';
+import { unifiedQuizBridge } from './UnifiedQuizBridge';
+import { UnifiedQuizStepAdapter } from '@/adapters/UnifiedQuizStepAdapter';
 
 export class UnifiedTemplateLoader {
     /**
      * 🔄 Carrega template para uso no EDITOR
-     * Converte formato do TemplateManager para formato esperado pelo EditorContext
+     * ATUALIZADO: Usa UnifiedQuizBridge
      */
     static async getStepTemplate(stepNumber: number): Promise<{ blocks: Block[] } | null> {
         try {
             const stepId = `step-${stepNumber}`;
+            
+            // Tentar carregar via UnifiedQuizBridge primeiro
+            const unifiedStep = await unifiedQuizBridge.loadStep(stepId, 'hardcoded');
+            
+            if (unifiedStep) {
+                const blocks = UnifiedQuizStepAdapter.toBlocks(unifiedStep);
+                console.log(`✅ [UnifiedTemplateLoader] Template carregado via Bridge: ${blocks.length} blocos`);
+                return { blocks };
+            }
+            
+            // Fallback para TemplateManager legado
             const blocks = await TemplateManager.loadStepBlocks(stepId);
 
             if (!blocks || blocks.length === 0) {
@@ -23,7 +36,7 @@ export class UnifiedTemplateLoader {
                 return null;
             }
 
-            console.log(`✅ [UnifiedTemplateLoader] Template carregado para etapa ${stepNumber}: ${blocks.length} blocos`);
+            console.log(`✅ [UnifiedTemplateLoader] Template carregado (fallback): ${blocks.length} blocos`);
             return { blocks };
         } catch (error) {
             console.error(`❌ [UnifiedTemplateLoader] Erro ao carregar template da etapa ${stepNumber}:`, error);
