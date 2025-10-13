@@ -63,6 +63,9 @@ export class TemplateEditorService {
                 // 5. Limpar cache para recarregar alterações
                 HybridTemplateService.clearCache();
 
+                // 6. Monitorar uso do storage
+                this.logStorageUsage();
+
                 console.log(`✅ Step ${stepId} salvo com sucesso`);
                 return {
                     success: true,
@@ -338,6 +341,64 @@ export class TemplateEditorService {
         console.log(`✅ Validação completa: ${valid} válidos, ${invalid} inválidos`);
 
         return { valid, invalid, errors };
+    }
+
+    /**
+     * Monitora uso do localStorage
+     */
+    static getStorageUsage(): {
+        used: number;
+        limit: number;
+        percentage: number;
+        shouldMigrate: boolean;
+    } {
+        let used = 0;
+
+        try {
+            if (typeof window !== 'undefined' && window.localStorage) {
+                // Calcular apenas dados relacionados ao quiz21
+                for (let key in localStorage) {
+                    if (key.startsWith('quiz21-') || key.startsWith('quiz-master-')) {
+                        const value = localStorage.getItem(key);
+                        if (value) {
+                            // UTF-16 = 2 bytes por caractere
+                            used += value.length * 2;
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Erro ao calcular uso do storage:', error);
+        }
+
+        const limit = 5 * 1024 * 1024; // 5 MB (conservador)
+        const percentage = (used / limit) * 100;
+        const shouldMigrate = percentage > 60; // Alerta aos 60%
+
+        return { used, limit, percentage, shouldMigrate };
+    }
+
+    /**
+     * Log de uso do storage (chamado após salvamento)
+     */
+    private static logStorageUsage(): void {
+        const usage = this.getStorageUsage();
+        const usedKB = (usage.used / 1024).toFixed(2);
+        const limitKB = (usage.limit / 1024).toFixed(0);
+
+        console.log(`💾 Storage: ${usedKB} KB / ${limitKB} KB (${usage.percentage.toFixed(1)}%)`);
+
+        if (usage.shouldMigrate) {
+            console.warn('⚠️ Storage acima de 60%, considere migrar para IndexedDB');
+            console.info('📖 Veja: docs/ANALISE_INDEXEDDB_VS_LOCALSTORAGE.md');
+        }
+    }
+
+    // Aliases para compatibilidade com testes
+    static clearStorage = TemplateEditorService.clearLocalStorage;
+    static hasStorageData = TemplateEditorService.hasLocalStorageData;
+    static getStorageKey(): string {
+        return 'quiz21-edited'; // Compatibilidade
     }
 }
 
