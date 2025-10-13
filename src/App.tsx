@@ -158,6 +158,27 @@ function App() {
                                 </Route>
 
                                 {/* 🎯 EDITOR CANÔNICO (QuizModularProductionEditor) */}
+                                {/* IMPORTANTE: Rotas específicas ANTES de rotas com parâmetros */}
+                                <Route path="/editor/templates">
+                                    <div data-testid="editor-templates-page">
+                                        <EditorTemplatesPage />
+                                    </div>
+                                </Route>
+
+                                <Route path="/editor/:funnelId">
+                                    {(params) => (
+                                        <EditorErrorBoundary>
+                                            <div data-testid="quiz-modular-production-editor-page-optimized-funnel">
+                                                <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true} context={FunnelContext.EDITOR}>
+                                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
+                                                        <QuizModularProductionEditor />
+                                                    </Suspense>
+                                                </UnifiedCRUDProvider>
+                                            </div>
+                                        </EditorErrorBoundary>
+                                    )}
+                                </Route>
+
                                 <Route path="/editor">
                                     {() => {
                                         console.log('🎯 /editor route matched');
@@ -184,26 +205,6 @@ function App() {
                                     }}
                                 </Route>
 
-                                <Route path="/editor/:funnelId">
-                                    {(params) => (
-                                        <EditorErrorBoundary>
-                                            <div data-testid="quiz-modular-production-editor-page-optimized-funnel">
-                                                <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true} context={FunnelContext.EDITOR}>
-                                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
-                                                        <QuizModularProductionEditor />
-                                                    </Suspense>
-                                                </UnifiedCRUDProvider>
-                                            </div>
-                                        </EditorErrorBoundary>
-                                    )}
-                                </Route>
-
-                                <Route path="/editor/templates">
-                                    <div data-testid="editor-templates-page">
-                                        <EditorTemplatesPage />
-                                    </div>
-                                </Route>
-
                                 {/* 🔍 PÁGINAS DE DIAGNÓSTICO */}
                                 <Route path="/debug/templates">
                                     <div data-testid="template-diagnostic-page">
@@ -211,25 +212,10 @@ function App() {
                                     </div>
                                 </Route>
 
-                                {/* 🎯 QUIZ INTEGRADO */}
-                                <Route path="/quiz">
-                                    <QuizErrorBoundary>
-                                        <QuizIntegratedPage />
-                                    </QuizErrorBoundary>
-                                </Route>
-
+                                {/* 🎯 QUIZ - ROTAS ESPECÍFICAS PRIMEIRO */}
                                 {/* 🤖 QUIZ COM IA */}
                                 <Route path="/quiz-ai-21-steps">
                                     <QuizAIPage />
-                                </Route>
-
-                                {/* 🎨 TEMPLATES */}
-                                <Route path="/templates">
-                                    <TemplatesPage />
-                                </Route>
-
-                                <Route path="/funnel-types">
-                                    <FunnelTypesPage />
                                 </Route>
 
                                 {/* 🧪 QUIZ DE ESTILO PESSOAL */}
@@ -239,12 +225,20 @@ function App() {
                                     </QuizErrorBoundary>
                                 </Route>
 
+                                {/* 🎯 QUIZ COM ID ESPECÍFICO */}
                                 <Route path="/quiz/:funnelId">
                                     {(params) => (
                                         <QuizErrorBoundary>
                                             <QuizEstiloPessoalPage funnelId={params.funnelId} />
                                         </QuizErrorBoundary>
                                     )}
+                                </Route>
+
+                                {/* 🎯 QUIZ INTEGRADO (rota genérica) */}
+                                <Route path="/quiz">
+                                    <QuizErrorBoundary>
+                                        <QuizIntegratedPage />
+                                    </QuizErrorBoundary>
                                 </Route>
 
                                 <Route path="/resultado">
@@ -258,16 +252,16 @@ function App() {
                                     <AuthPage />
                                 </Route>
 
-                {/* 🏢 ADMIN DASHBOARDS - CONSOLIDADO */}
-                <Route path="/admin/dashboard">
-                    <RedirectRoute to="/admin" />
-                </Route>
+                                {/* 🏢 ADMIN DASHBOARDS - CONSOLIDADO */}
+                                <Route path="/admin/dashboard">
+                                    <RedirectRoute to="/admin" />
+                                </Route>
 
-                <Route path="/admin">
-                    <div data-testid="modern-admin-dashboard-page">
-                        <ModernAdminDashboard />
-                    </div>
-                </Route>
+                                <Route path="/admin">
+                                    <div data-testid="modern-admin-dashboard-page">
+                                        <ModernAdminDashboard />
+                                    </div>
+                                </Route>
 
                                 <Route path="/dashboard">
                                     <div data-testid="phase2-dashboard-page">
