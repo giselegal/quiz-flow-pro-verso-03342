@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * SIMPLIFIED BLOCK VALIDATOR
  */
