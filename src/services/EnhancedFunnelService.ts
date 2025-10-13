@@ -1,4 +1,14 @@
 /**
+ * @deprecated
+ * Este serviço está DEPRECATED e será removido na v4.0 (Janeiro 2026)
+ * 
+ * ✅ USE: src/services/FunnelService.ts
+ * 
+ * Motivo: Consolidação de serviços duplicados
+ * Veja: DEPRECATED.md para mais detalhes
+ */
+
+/**
  * 🎯 ENHANCED FUNNEL SERVICE - FASE 1 & 7: FALLBACK INTELIGENTE
  * 
  * Wrapper que adiciona funcionalidades automáticas sobre o FunnelUnifiedService:
