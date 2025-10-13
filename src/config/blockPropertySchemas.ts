@@ -1265,66 +1265,6 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     ],
   },
 
-  bonus: {
-    label: 'Bônus (Seção)',
-    fields: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text',
-        group: 'content',
-        defaultValue: 'Bônus Exclusivos para Você',
-      },
-      {
-        key: 'showImages',
-        label: 'Mostrar Imagens',
-        type: 'boolean',
-        group: 'content',
-        defaultValue: true,
-      },
-
-      { key: 'marginTop', label: 'Margem Superior (px)', type: 'number', group: 'spacing' },
-      { key: 'marginBottom', label: 'Margem Inferior (px)', type: 'number', group: 'spacing' },
-      { key: 'marginLeft', label: 'Margem Esquerda (px)', type: 'number', group: 'spacing' },
-      { key: 'marginRight', label: 'Margem Direita (px)', type: 'number', group: 'spacing' },
-    ],
-  },
-
-  testimonials: {
-    label: 'Depoimentos',
-    fields: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text',
-        group: 'content',
-        defaultValue: 'Transformações Reais',
-      },
-      {
-        key: 'showRatings',
-        label: 'Mostrar Estrelas',
-        type: 'boolean',
-        group: 'content',
-        defaultValue: true,
-      },
-      {
-        key: 'layout',
-        label: 'Layout',
-        type: 'select',
-        group: 'layout',
-        defaultValue: 'grid',
-        options: [
-          { label: 'Grid', value: 'grid' },
-          { label: 'Carrossel', value: 'carousel' },
-        ],
-      },
-
-      { key: 'marginTop', label: 'Margem Superior (px)', type: 'number', group: 'spacing' },
-      { key: 'marginBottom', label: 'Margem Inferior (px)', type: 'number', group: 'spacing' },
-      { key: 'marginLeft', label: 'Margem Esquerda (px)', type: 'number', group: 'spacing' },
-      { key: 'marginRight', label: 'Margem Direita (px)', type: 'number', group: 'spacing' },
-    ],
-  },
 
   'value-anchoring': {
     label: 'Ancoragem de Valor',
@@ -1619,38 +1559,6 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'color',
         group: 'design',
         defaultValue: '#B89B7A',
-      },
-
-      { key: 'marginTop', label: 'Margem Superior (px)', type: 'number', group: 'spacing' },
-      { key: 'marginBottom', label: 'Margem Inferior (px)', type: 'number', group: 'spacing' },
-      { key: 'marginLeft', label: 'Margem Esquerda (px)', type: 'number', group: 'spacing' },
-      { key: 'marginRight', label: 'Margem Direita (px)', type: 'number', group: 'spacing' },
-    ],
-  },
-
-  guarantee: {
-    label: 'Garantia',
-    fields: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text',
-        group: 'content',
-        defaultValue: 'Garantia Incondicional',
-      },
-      {
-        key: 'guaranteePeriod',
-        label: 'Período da Garantia',
-        type: 'text',
-        group: 'content',
-        defaultValue: '7 dias',
-      },
-      {
-        key: 'showIcon',
-        label: 'Mostrar Ícone',
-        type: 'boolean',
-        group: 'style',
-        defaultValue: true,
       },
 
       { key: 'marginTop', label: 'Margem Superior (px)', type: 'number', group: 'spacing' },
