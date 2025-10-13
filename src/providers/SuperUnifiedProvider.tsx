@@ -889,14 +889,15 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
     // 🚀 Auto load data
     useEffect(() => {
-        if (autoLoad) {
+        if (autoLoad && state.funnels.length === 0 && !state.ui.isLoading) {
             loadFunnels();
         }
 
         if (funnelId && funnelId !== state.currentFunnel?.id) {
             loadFunnel(funnelId);
         }
-    }, [autoLoad, funnelId, loadFunnels, loadFunnel, state.currentFunnel?.id]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [autoLoad, funnelId]);
 
     // 🔐 Auth listener
     useEffect(() => {
