@@ -60,8 +60,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     StyleResultCard,
     OfferMap,
 }) => {
+    console.log('🔍 CanvasArea render - selectedStep:', selectedStep?.id, 'activeTab:', activeTab);
+
     // Controle de preview responsivo
     const [previewSize, setPreviewSize] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
+    console.log('✅ Hook 1: useState(previewSize)');
 
     // Usar useMemo para calcular rootBlocks uma vez
     const rootBlocks = useMemo(() => {
@@ -70,10 +73,12 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             .filter(b => !b.parentId)
             .sort((a, b) => a.order - b.order);
     }, [selectedStep]);
+    console.log('✅ Hook 2: useMemo(rootBlocks) -', rootBlocks.length, 'blocks');
 
     // ✅ CORREÇÃO: Chamar hook useVirtualBlocks no nível superior
     const virtualizationThreshold = 60;
     const virtualizationEnabled = rootBlocks.length >= virtualizationThreshold && !activeId;
+    console.log('✅ Hook 3: useVirtualBlocks - enabled:', virtualizationEnabled);
 
     const { visible, topSpacer, bottomSpacer, containerRef } = useVirtualBlocks({
         blocks: rootBlocks,
@@ -81,6 +86,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         overscan: 6,
         enabled: virtualizationEnabled,
     });
+    console.log('✅ Hooks completos - visible:', visible.length, 'total:', rootBlocks.length);
 
     return (
         <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
