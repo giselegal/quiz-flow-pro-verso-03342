@@ -8,11 +8,8 @@
 import { useState, useCallback } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-import {
-    ContextualFunnelService,
-    ContextualFunnelData,
-    createContextualFunnelService
-} from '@/services/contextualFunnelService';
+import { FunnelService as ContextualFunnelService } from '@/application/services/FunnelService'
+import type { ContextualFunnelData } from '@/types/funnel' // MIGRATED;
 
 export interface FunnelData {
     id: string;

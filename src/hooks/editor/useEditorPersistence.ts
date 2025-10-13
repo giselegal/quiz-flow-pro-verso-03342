@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useToast } from '../../components/ui/use-toast';
 import { FunnelContext } from '../../core/contexts/FunnelContext';
-import { ContextualFunnelService, type ContextualFunnelData } from '../../services/contextualFunnelService';
+import { FunnelService as ContextualFunnelService } from '@/application/services/FunnelService'
+import type { ContextualFunnelData } from '@/types/funnel' // MIGRATED;
 
 // Interface para compatibilidade com o editor existente
 export interface FunnelData {

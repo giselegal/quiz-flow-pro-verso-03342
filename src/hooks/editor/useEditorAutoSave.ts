@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
-import { ContextualFunnelService, type ContextualFunnelData } from '@/services/contextualFunnelService';
+import { FunnelService as ContextualFunnelService } from '@/application/services/FunnelService'
+import type { ContextualFunnelData } from '@/types/funnel' // MIGRATED;
 import { FunnelContext, generateContextualStorageKey } from '@/core/contexts/FunnelContext';
 import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
 import { useToast } from '@/hooks/use-toast';
