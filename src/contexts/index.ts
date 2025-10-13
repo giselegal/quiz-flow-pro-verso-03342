@@ -11,7 +11,10 @@ export { AdminAuthProvider, useAdminAuth } from './auth/AdminAuthContext';
 export { AuthProvider, useAuth as useAuthLegacy } from './auth/AuthContext';
 
 // 🚀 SUPER UNIFIED (Auth consolidado)
-export { useAuth, useUnifiedAuth } from '@/providers/SuperUnifiedProvider';
+export { useAuth, useUnifiedAuth, useSuperUnified } from '@/providers/SuperUnifiedProvider';
+
+// 🆕 FASE 3: PureBuilder compatibility
+export { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 
 // ✏️ EDITOR
 export { EditorProvider, useEditor } from './editor/EditorContext';

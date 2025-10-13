@@ -21,6 +21,9 @@ export { useEditor, useEditorOptional as useUnifiedEditorOptional } from '@/hook
 // Legacy providers (manter durante transição)
 export { MigrationEditorProvider, EditorProvider as LegacyEditorProvider } from './EditorProviderMigrationAdapter';
 
+// 🆕 FASE 3: Compatibility hooks
+export { usePureBuilder, usePureBuilderCompat } from '@/hooks/usePureBuilderCompat';
+
 // ============================================================================
 // COMPONENTES ORIGINAIS
 // ============================================================================

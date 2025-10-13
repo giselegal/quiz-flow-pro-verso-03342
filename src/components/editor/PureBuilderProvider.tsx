@@ -1,3 +1,17 @@
+/**
+ * ⚠️ DEPRECATED - USE SuperUnifiedProvider
+ * 
+ * Este provider foi migrado para SuperUnifiedProvider.
+ * Use: import { useSuperUnified } from '@/providers/SuperUnifiedProvider';
+ * Ou: import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
+ * 
+ * Este arquivo será removido em breve.
+ * 
+ * MIGRAÇÃO:
+ * - Fase 3 (atual): Deprecation warning ativo
+ * - Fase 4: Remoção completa do arquivo
+ */
+
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
@@ -5,8 +19,13 @@ import { getTemplateInfo } from '@/utils/funnelNormalizer';
 import { AIEnhancedHybridTemplateService } from '@/services/AIEnhancedHybridTemplateService';
 import { funnelApiClient, NormalizedFunnel } from '@/services/funnelApiClient';
 
+// 🚨 DEPRECATION WARNING
+console.warn('⚠️ PureBuilderProvider is deprecated. Use SuperUnifiedProvider instead.');
+
 /**
  * 🏗️ PURE BUILDER SYSTEM PROVIDER
+ * 
+ * ⚠️ DEPRECATED - Migrado para SuperUnifiedProvider
  * 
  * Sistema completamente baseado no Builder System existente
  * Aproveita toda a arquitetura e capacidades avançadas:

@@ -78,6 +78,14 @@ interface EditorState {
     isEditing: boolean;
     dragEnabled: boolean;
     clipboardData: any | null;
+    
+    // 🆕 FASE 3: PureBuilder compatibility
+    stepBlocks: Record<number, any[]>;
+    totalSteps: number;
+    funnelSettings: any;
+    validationErrors: any[];
+    isDirty: boolean;
+    lastSaved: number | null;
 }
 
 interface UIState {
@@ -162,7 +170,14 @@ type SuperUnifiedAction =
     | { type: 'REMOVE_TOAST'; payload: string }
     | { type: 'UPDATE_CACHE'; payload: { key: string; data: any } }
     | { type: 'UPDATE_PERFORMANCE'; payload: Partial<PerformanceMetrics> }
-    | { type: 'TOGGLE_FEATURE'; payload: { feature: keyof SuperUnifiedState['features']; enabled: boolean } };
+    | { type: 'TOGGLE_FEATURE'; payload: { feature: keyof SuperUnifiedState['features']; enabled: boolean } }
+    // 🆕 FASE 3: Editor block operations
+    | { type: 'ADD_BLOCK'; payload: { stepIndex: number; block: any } }
+    | { type: 'UPDATE_BLOCK'; payload: { stepIndex: number; blockId: string; updates: any } }
+    | { type: 'REMOVE_BLOCK'; payload: { stepIndex: number; blockId: string } }
+    | { type: 'REORDER_BLOCKS'; payload: { stepIndex: number; blocks: any[] } }
+    | { type: 'SET_STEP_BLOCKS'; payload: { stepIndex: number; blocks: any[] } }
+    | { type: 'VALIDATE_STEP'; payload: { stepIndex: number; errors: any[] } };
 
 // 🎯 INITIAL STATE
 const initialState: SuperUnifiedState = {
@@ -190,7 +205,15 @@ const initialState: SuperUnifiedState = {
         isPreviewMode: false,
         isEditing: false,
         dragEnabled: true,
-        clipboardData: null
+        clipboardData: null,
+        
+        // 🆕 FASE 3: PureBuilder compatibility
+        stepBlocks: {},
+        totalSteps: 21,
+        funnelSettings: {},
+        validationErrors: [],
+        isDirty: false,
+        lastSaved: null
     },
 
     ui: {
@@ -369,6 +392,89 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 }
             };
 
+        // 🆕 FASE 3: Editor block operations
+        case 'ADD_BLOCK':
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    stepBlocks: {
+                        ...state.editor.stepBlocks,
+                        [action.payload.stepIndex]: [
+                            ...(state.editor.stepBlocks[action.payload.stepIndex] || []),
+                            action.payload.block
+                        ]
+                    },
+                    isDirty: true
+                }
+            };
+
+        case 'UPDATE_BLOCK':
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    stepBlocks: {
+                        ...state.editor.stepBlocks,
+                        [action.payload.stepIndex]: (state.editor.stepBlocks[action.payload.stepIndex] || []).map(
+                            block => block.id === action.payload.blockId
+                                ? { ...block, ...action.payload.updates }
+                                : block
+                        )
+                    },
+                    isDirty: true
+                }
+            };
+
+        case 'REMOVE_BLOCK':
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    stepBlocks: {
+                        ...state.editor.stepBlocks,
+                        [action.payload.stepIndex]: (state.editor.stepBlocks[action.payload.stepIndex] || []).filter(
+                            block => block.id !== action.payload.blockId
+                        )
+                    },
+                    isDirty: true
+                }
+            };
+
+        case 'REORDER_BLOCKS':
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    stepBlocks: {
+                        ...state.editor.stepBlocks,
+                        [action.payload.stepIndex]: action.payload.blocks
+                    },
+                    isDirty: true
+                }
+            };
+
+        case 'SET_STEP_BLOCKS':
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    stepBlocks: {
+                        ...state.editor.stepBlocks,
+                        [action.payload.stepIndex]: action.payload.blocks
+                    }
+                }
+            };
+
+        case 'VALIDATE_STEP':
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    validationErrors: action.payload.errors
+                }
+            };
+
         default:
             return state;
     }
@@ -403,6 +509,14 @@ interface SuperUnifiedContextType {
     enableDragDrop: (enabled: boolean) => void;
     copyToClipboard: (data: any) => void;
     pasteFromClipboard: () => any;
+    
+    // 🆕 FASE 3: Editor block operations
+    addBlock: (stepIndex: number, block: any) => void;
+    updateBlock: (stepIndex: number, blockId: string, updates: any) => Promise<void>;
+    removeBlock: (stepIndex: number, blockId: string) => Promise<void>;
+    reorderBlocks: (stepIndex: number, blocks: any[]) => void;
+    getStepBlocks: (stepIndex: number) => any[];
+    validateStep: (stepIndex: number) => Promise<any[]>;
 
     // UI operations
     showToast: (toast: Omit<ToastMessage, 'id'>) => void;
@@ -768,6 +882,34 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         return state.editor.clipboardData;
     }, [state.editor.clipboardData]);
 
+    // 🆕 FASE 3: Editor block operations
+    const addBlock = useCallback((stepIndex: number, block: any) => {
+        dispatch({ type: 'ADD_BLOCK', payload: { stepIndex, block } });
+    }, []);
+
+    const updateBlock = useCallback(async (stepIndex: number, blockId: string, updates: any) => {
+        dispatch({ type: 'UPDATE_BLOCK', payload: { stepIndex, blockId, updates } });
+    }, []);
+
+    const removeBlock = useCallback(async (stepIndex: number, blockId: string) => {
+        dispatch({ type: 'REMOVE_BLOCK', payload: { stepIndex, blockId } });
+    }, []);
+
+    const reorderBlocks = useCallback((stepIndex: number, blocks: any[]) => {
+        dispatch({ type: 'REORDER_BLOCKS', payload: { stepIndex, blocks } });
+    }, []);
+
+    const getStepBlocks = useCallback((stepIndex: number) => {
+        return state.editor.stepBlocks[stepIndex] || [];
+    }, [state.editor.stepBlocks]);
+
+    const validateStep = useCallback(async (stepIndex: number) => {
+        // TODO: Implement validation logic
+        const errors: any[] = [];
+        dispatch({ type: 'VALIDATE_STEP', payload: { stepIndex, errors } });
+        return errors;
+    }, []);
+
     // 🎪 UI Operations
     const showToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
         const id = Date.now().toString();
@@ -960,6 +1102,12 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         enableDragDrop,
         copyToClipboard,
         pasteFromClipboard,
+        addBlock,
+        updateBlock,
+        removeBlock,
+        reorderBlocks,
+        getStepBlocks,
+        validateStep,
 
         // UI operations
         showToast,
@@ -987,6 +1135,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         signIn, signOut, signUp,
         setTheme, updateThemeColors,
         setCurrentStep, setSelectedBlock, togglePreviewMode, enableDragDrop, copyToClipboard, pasteFromClipboard,
+        addBlock, updateBlock, removeBlock, reorderBlocks, getStepBlocks, validateStep,
         showToast, hideToast, openModal, closeModal, toggleSidebar, togglePropertiesPanel, setLoading,
         clearCache, getCacheStats,
         getPerformanceMetrics, optimizePerformance,
