@@ -63,9 +63,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     // Controle de preview responsivo
     const [previewSize, setPreviewSize] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
 
-    // ✅ CORREÇÃO: Calcular rootBlocks no nível superior com useMemo
+    // Usar useMemo para calcular rootBlocks uma vez
     const rootBlocks = useMemo(() => {
-        if (!selectedStep) return [];
+        if (!selectedStep || !selectedStep.blocks) return [];
         return selectedStep.blocks
             .filter(b => !b.parentId)
             .sort((a, b) => a.order - b.order);
@@ -73,9 +73,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     // ✅ CORREÇÃO: Chamar hook useVirtualBlocks no nível superior
     const virtualizationThreshold = 60;
-    const virtualizationEnabled = rootBlocks.length > virtualizationThreshold && !activeId;
-
-    const { visible, topSpacer, bottomSpacer, containerRef } = useVirtualBlocks({
+    const virtualizationEnabled = rootBlocks.length >= virtualizationThreshold && !activeId; const { visible, topSpacer, bottomSpacer, containerRef } = useVirtualBlocks({
         blocks: rootBlocks,
         rowHeight: 140,
         overscan: 6,
