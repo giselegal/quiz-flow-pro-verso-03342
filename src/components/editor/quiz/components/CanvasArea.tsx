@@ -73,7 +73,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     // ✅ CORREÇÃO: Chamar hook useVirtualBlocks no nível superior
     const virtualizationThreshold = 60;
-    const virtualizationEnabled = rootBlocks.length >= virtualizationThreshold && !activeId; const { visible, topSpacer, bottomSpacer, containerRef } = useVirtualBlocks({
+    const virtualizationEnabled = rootBlocks.length >= virtualizationThreshold && !activeId;
+
+    const { visible, topSpacer, bottomSpacer, containerRef } = useVirtualBlocks({
         blocks: rootBlocks,
         rowHeight: 140,
         overscan: 6,
