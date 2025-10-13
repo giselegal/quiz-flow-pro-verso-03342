@@ -381,26 +381,65 @@ class QuizEditorBridge {
     async loadForRuntime(funnelId?: string): Promise<Record<string, QuizStep>> {
         console.log('🎯 Carregando para runtime:', funnelId || 'produção');
 
-        // Se não tem funnelId, usar produção
-        if (!funnelId) {
-            // Tentar buscar versão publicada mais recente
-            const published = await this.getLatestPublished();
-            return published?.steps || QUIZ_STEPS;
+        // Se tem funnelId, tentar carregar draft específico
+        if (funnelId) {
+            const draft = await this.loadDraftFromDatabase(funnelId);
+            if (draft) {
+                return this.convertToQuizSteps(draft.steps);
+            }
+
+            // Fallback em memória: se salvo nesta sessão
+            const cached = this.cache.get(funnelId);
+            if (cached) {
+                return this.convertToQuizSteps(cached.steps as any);
+            }
         }
 
-        // Carregar draft específico (preview)
-        const draft = await this.loadDraftFromDatabase(funnelId);
-        if (draft) {
-            return this.convertToQuizSteps(draft.steps);
-        }
-        // Fallback em memória: se salvo nesta sessão
-        const cached = this.cache.get(funnelId);
-        if (cached) {
-            return this.convertToQuizSteps(cached.steps as any);
+        // Tentar buscar versão publicada mais recente
+        const published = await this.getLatestPublished();
+        if (published?.steps) {
+            console.log('✅ Usando versão publicada do Supabase');
+            return published.steps;
         }
 
-        // Fallback para produção
-        return QUIZ_STEPS;
+        // ✅ NOVO: Fallback para templates JSON v3.0
+        console.log('📚 Fallback: carregando templates JSON v3.0...');
+        const v3Templates = await this.loadAllV3Templates();
+        return v3Templates;
+    }
+
+    /**
+     * 📦 Carregar todos os templates JSON v3.0 como fallback
+     */
+    private async loadAllV3Templates(): Promise<Record<string, QuizStep>> {
+        const steps: Record<string, QuizStep> = {};
+
+        console.log('📚 Carregando templates JSON v3.0...');
+
+        for (let i = 1; i <= 21; i++) {
+            const stepId = `step-${i.toString().padStart(2, '0')}`;
+
+            try {
+                // Tentar carregar template JSON v3.0
+                const v3Module = await import(`/templates/${stepId}-v3.json`);
+                const v3Template: JSONv3Template = v3Module.default;
+
+                // Converter sections[] para blocks[]
+                const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(v3Template);
+
+                // Converter blocks[] para QuizStep
+                const stepData = convertBlocksToStep(blocks, stepId);
+
+                steps[stepId] = stepData;
+                console.log(`✅ Template ${stepId} carregado do JSON v3.0`);
+            } catch (error) {
+                // Fallback para QUIZ_STEPS hardcoded
+                console.warn(`⚠️  Fallback para ${stepId}:`, error);
+                steps[stepId] = QUIZ_STEPS[stepId];
+            }
+        }
+
+        return steps;
     }
 
     /**
