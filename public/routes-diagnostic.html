@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Rotas Corrigidas - Diagnóstico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .fix-section {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .fix-section h2 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+
+        .fix-section ul {
+            color: #155724;
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .routes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .routes-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .routes-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .routes-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .routes-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .route-order {
+            background: #007bff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .route-type {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .route-type.specific {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .route-type.param {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .route-type.generic {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .test-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .explanation {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .explanation h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+
+        .explanation p {
+            color: #0d47a1;
+            line-height: 1.6;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Rotas Corrigidas!</h1>
+            <p>Problema de ordem de rotas resolvido</p>
+        </div>
+
+        <div class="content">
+            <div class="fix-section">
+                <h2>🔧 O que foi corrigido:</h2>
+                <ul>
+                    <li>✅ Ordem das rotas <code>/editor</code> corrigida</li>
+                    <li>✅ Ordem das rotas <code>/quiz</code> corrigida</li>
+                    <li>✅ Rotas específicas agora VEM ANTES de rotas com parâmetros</li>
+                    <li>✅ Wouter agora consegue fazer o match correto</li>
+                </ul>
+            </div>
+
+            <div class="explanation">
+                <h3>📚 Por que a ordem importa?</h3>
+                <p>
+                    O roteador <strong>Wouter</strong> verifica as rotas de cima para baixo e usa a <strong>primeira que
+                        der match</strong>.
+                    Quando <code>/editor/:funnelId</code> vinha antes de <code>/editor/templates</code>, a palavra
+                    "templates"
+                    era interpretada como um ID de funil, causando erro. Agora as rotas específicas vêm primeiro!
+                </p>
+            </div>
+
+            <h2 style="margin-top: 30px; margin-bottom: 15px;">📋 Ordem Correta das Rotas do Editor:</h2>
+            <table class="routes-table">
+                <thead>
+                    <tr>
+                        <th>Ordem</th>
+                        <th>Rota</th>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="route-order">1</span></td>
+                        <td><code>/editor/templates</code></td>
+                        <td><span class="route-type specific">Específica</span></td>
+                        <td>Página de templates do editor</td>
+                    </tr>
+                    <tr>
+                        <td><span class="route-order">2</span></td>
+                        <td><code>/editor/:funnelId</code></td>
+                        <td><span class="route-type param">Com Parâmetro</span></td>
+                        <td>Editor com ID específico de funil</td>
+                    </tr>
+                    <tr>
+                        <td><span class="route-order">3</span></td>
+                        <td><code>/editor</code></td>
+                        <td><span class="route-type generic">Genérica</span></td>
+                        <td>Editor sem ID (novo funil)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 style="margin-top: 30px; margin-bottom: 15px;">📋 Ordem Correta das Rotas do Quiz:</h2>
+            <table class="routes-table">
+                <thead>
+                    <tr>
+                        <th>Ordem</th>
+                        <th>Rota</th>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="route-order">1</span></td>
+                        <td><code>/quiz-ai-21-steps</code></td>
+                        <td><span class="route-type specific">Específica</span></td>
+                        <td>Quiz com IA (21 etapas)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="route-order">2</span></td>
+                        <td><code>/quiz-estilo</code></td>
+                        <td><span class="route-type specific">Específica</span></td>
+                        <td>Quiz de estilo pessoal</td>
+                    </tr>
+                    <tr>
+                        <td><span class="route-order">3</span></td>
+                        <td><code>/quiz/:funnelId</code></td>
+                        <td><span class="route-type param">Com Parâmetro</span></td>
+                        <td>Quiz com ID específico</td>
+                    </tr>
+                    <tr>
+                        <td><span class="route-order">4</span></td>
+                        <td><code>/quiz</code></td>
+                        <td><span class="route-type generic">Genérica</span></td>
+                        <td>Quiz integrado padrão</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 style="margin-top: 30px; margin-bottom: 15px;">🧪 Teste as Rotas:</h2>
+            <div class="test-buttons">
+                <a href="/editor" class="btn btn-primary" target="_blank">
+                    📝 Editor Principal
+                </a>
+                <a href="/editor/templates" class="btn btn-success" target="_blank">
+                    📚 Editor Templates
+                </a>
+                <a href="/editor/test-123" class="btn btn-warning" target="_blank">
+                    🔍 Editor com ID
+                </a>
+                <a href="/quiz" class="btn btn-primary" target="_blank">
+                    🎯 Quiz Principal
+                </a>
+                <a href="/quiz-estilo" class="btn btn-success" target="_blank">
+                    👗 Quiz Estilo
+                </a>
+                <a href="/quiz-ai-21-steps" class="btn btn-warning" target="_blank">
+                    🤖 Quiz com IA
+                </a>
+            </div>
+
+            <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                <p style="color: #6c757d; margin-bottom: 10px;">
+                    ⚠️ <strong>Lembre-se:</strong> Se ainda não funcionar, limpe o cache do navegador!
+                </p>
+                <p style="color: #6c757d; font-size: 0.9em;">
+                    Pressione <code>CTRL + SHIFT + R</code> (Windows/Linux) ou <code>CMD + SHIFT + R</code> (Mac)
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
