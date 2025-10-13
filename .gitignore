@@ -73,3 +73,11 @@ tmp/
 test-diagnostics.mjs*.bak
 test-*.html
 test-*.js
+
+# TRAE.ai
+.trae/
+.traerc
+.trae-cache/
+*.trae.log
+.env.trae
+trae-workspace/

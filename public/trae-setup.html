@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 TRAE.ai - Guia de Integração</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            color: #6c757d;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card .icon {
+            font-size: 1.5em;
+        }
+
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #1e3c72;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .step h3 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .step code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: block;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .warning h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .warning p {
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .success h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .checklist li:hover {
+            background: #e9ecef;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .command-box {
+            background: #2d3748;
+            color: #68d391;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .command-box::before {
+            content: "$ ";
+            color: #a0aec0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: white;
+            color: #1e3c72;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 TRAE.ai Integration</h1>
+            <p>Guia Interativo de Integração - Quiz Flow Pro Verso</p>
+        </div>
+
+        <div class="success">
+            <h3>✅ Arquivos de configuração criados!</h3>
+            <ul class="checklist">
+                <li>.trae.yaml - Configuração principal</li>
+                <li>TRAE_INTEGRATION_GUIDE.md - Guia completo</li>
+                <li>TRAE_QUICKSTART.md - Quick start</li>
+                <li>setup-trae.sh - Script de configuração</li>
+                <li>.gitignore atualizado</li>
+            </ul>
+        </div>
+
+        <div class="grid">
+            <!-- Card 1: Quick Start -->
+            <div class="card">
+                <h2><span class="icon">⚡</span> Quick Start</h2>
+
+                <div class="step">
+                    <h3>1. Execute o script de configuração</h3>
+                    <code>./setup-trae.sh</code>
+                    <p style="margin-top: 10px; color: #6c757d;">
+                        Este script configura tudo automaticamente
+                    </p>
+                </div>
+
+                <div class="step">
+                    <h3>2. Instale o TRAE CLI</h3>
+                    <code>npm install -g @trae/cli</code>
+                </div>
+
+                <div class="step">
+                    <h3>3. Faça login</h3>
+                    <code>trae login</code>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="copyCommand('./setup-trae.sh')">
+                        📋 Copiar Comando
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2: Configuração -->
+            <div class="card">
+                <h2><span class="icon">⚙️</span> Configuração</h2>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('env')">
+                        .env.trae
+                    </button>
+                    <button class="tab" onclick="showTab('traerc')">
+                        .traerc
+                    </button>
+                </div>
+
+                <div id="env" class="tab-content active">
+                    <div class="step">
+                        <h3>Configure suas credenciais:</h3>
+                        <code>nano .env.trae</code>
+                        <div style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                            <pre style="margin: 0; font-family: monospace; font-size: 0.9em;">TRAE_API_KEY=sua_api_key_aqui
+TRAE_WORKSPACE_ID=seu_workspace_id
+TRAE_ENVIRONMENT=development</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="traerc" class="tab-content">
+                    <div class="step">
+                        <h3>Configure o workspace:</h3>
+                        <code>nano .traerc</code>
+                        <div style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                            <pre style="margin: 0; font-family: monospace; font-size: 0.9em;">{
+  "workspace_id": "seu-workspace-id",
+  "project_path": "/workspaces/quiz-flow-pro-verso",
+  "editor": "vscode"
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Comandos -->
+            <div class="card">
+                <h2><span class="icon">💻</span> Comandos Úteis</h2>
+
+                <div class="step">
+                    <h3>Verificar status</h3>
+                    <code>trae status</code>
+                </div>
+
+                <div class="step">
+                    <h3>Criar workspace</h3>
+                    <code>trae workspace create --name "Quiz Flow" --repo "giselegal/quiz-flow-pro-verso"</code>
+                </div>
+
+                <div class="step">
+                    <h3>Sincronizar</h3>
+                    <code>trae sync</code>
+                </div>
+
+                <div class="step">
+                    <h3>Ver logs</h3>
+                    <code>trae logs</code>
+                </div>
+            </div>
+
+            <!-- Card 4: Recursos -->
+            <div class="card">
+                <h2><span class="icon">📚</span> Recursos</h2>
+
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 15px; margin: 10px 0; background: #f8f9fa; border-radius: 8px;">
+                        <strong>📖 Guia Completo</strong><br>
+                        <a href="#" onclick="openFile('TRAE_INTEGRATION_GUIDE.md')" style="color: #1e3c72;">
+                            TRAE_INTEGRATION_GUIDE.md
+                        </a>
+                    </li>
+                    <li style="padding: 15px; margin: 10px 0; background: #f8f9fa; border-radius: 8px;">
+                        <strong>⚡ Quick Start</strong><br>
+                        <a href="#" onclick="openFile('TRAE_QUICKSTART.md')" style="color: #1e3c72;">
+                            TRAE_QUICKSTART.md
+                        </a>
+                    </li>
+                    <li style="padding: 15px; margin: 10px 0; background: #f8f9fa; border-radius: 8px;">
+                        <strong>⚙️ Configuração</strong><br>
+                        <a href="#" onclick="openFile('.trae.yaml')" style="color: #1e3c72;">
+                            .trae.yaml
+                        </a>
+                    </li>
+                    <li style="padding: 15px; margin: 10px 0; background: #f8f9fa; border-radius: 8px;">
+                        <strong>🌐 Site Oficial</strong><br>
+                        <a href="https://trae.ai" target="_blank" style="color: #1e3c72;">
+                            https://trae.ai
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="warning">
+            <h3>⚠️ IMPORTANTE - Segurança</h3>
+            <p>
+                <strong>NUNCA commite estes arquivos:</strong><br>
+                • .traerc<br>
+                • .env.trae<br>
+                • .trae/ (diretório)<br>
+                • *.trae.log<br>
+                <br>
+                ✅ Eles já estão no .gitignore
+            </p>
+        </div>
+
+        <div class="card" style="margin-top: 30px;">
+            <h2><span class="icon">🎯</span> Próximos Passos</h2>
+            <ol style="padding-left: 20px; line-height: 2;">
+                <li>Execute o script: <code
+                        style="background: #f8f9fa; padding: 4px 8px; border-radius: 4px;">./setup-trae.sh</code></li>
+                <li>Configure suas credenciais no .env.trae</li>
+                <li>Adicione seu workspace_id no .traerc</li>
+                <li>Faça login: <code
+                        style="background: #f8f9fa; padding: 4px 8px; border-radius: 4px;">trae login</code></li>
+                <li>Crie o workspace e sincronize</li>
+                <li>Explore os recursos de IA do TRAE!</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Esconder todos os tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Mostrar o tab selecionado
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function copyCommand(command) {
+            navigator.clipboard.writeText(command).then(() => {
+                alert('✅ Comando copiado: ' + command);
+            });
+        }
+
+        function openFile(filename) {
+            alert('📄 Abra o arquivo: ' + filename + '\n\nNo terminal:\ncat ' + filename);
+            return false;
+        }
+    </script>
+</body>
+
+</html>

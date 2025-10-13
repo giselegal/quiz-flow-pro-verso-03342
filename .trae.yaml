@@ -1,0 +1,294 @@
+# 🤖 Configuração do TRAE.ai para Quiz Flow Pro Verso
+# Documentação: https://docs.trae.ai
+
+name: quiz-flow-pro-verso
+version: 1.0.0
+description: "Sistema de Quiz Interativo com Editor Visual WYSIWYG"
+
+# ============================================================================
+# AMBIENTE DE DESENVOLVIMENTO
+# ============================================================================
+environment:
+  runtime: node
+  node_version: "18.x"
+  package_manager: npm
+  
+# ============================================================================
+# SCRIPTS PRINCIPAIS
+# ============================================================================
+scripts:
+  # Desenvolvimento
+  dev: npm run dev
+  start: npm run dev
+  
+  # Build e Deploy
+  build: npm run build
+  preview: npm run preview
+  
+  # Testes
+  test: npm test
+  test:watch: npm run test:watch
+  
+  # Qualidade de Código
+  lint: npm run lint
+  type-check: npx tsc --noEmit
+  
+  # Utilitários
+  clean: rm -rf node_modules/.vite dist
+  
+# ============================================================================
+# ESTRUTURA DO PROJETO
+# ============================================================================
+paths:
+  source: src
+  components: src/components
+  pages: src/pages
+  contexts: src/contexts
+  services: src/services
+  utils: src/utils
+  types: src/types
+  build: dist
+  public: public
+  tests: src/__tests__
+  docs: docs
+  
+# ============================================================================
+# CONFIGURAÇÕES DE IA
+# ============================================================================
+ai:
+  enabled: true
+  model: "gpt-4"
+  max_tokens: 8000
+  
+  # Arquivos para contexto da IA
+  context_files:
+    # Configuração principal
+    - "package.json"
+    - "vite.config.ts"
+    - "tsconfig.json"
+    - "tailwind.config.js"
+    - "README.md"
+    
+    # Código fonte
+    - "src/**/*.{ts,tsx,js,jsx}"
+    - "src/components/**/*"
+    - "src/pages/**/*"
+    - "src/contexts/**/*"
+    - "src/services/**/*"
+    
+    # Documentação
+    - "docs/**/*.md"
+    - "CHANGELOG.md"
+    
+  # Arquivos/pastas a ignorar
+  ignore:
+    - "node_modules/**"
+    - "dist/**"
+    - "build/**"
+    - ".git/**"
+    - "coverage/**"
+    - "*.log"
+    - ".env*"
+    - "archived/**"
+    - "system-backup/**"
+    
+  # Contexto específico do projeto
+  project_context: |
+    Este é um sistema completo de Quiz Interativo com:
+    - Editor Visual WYSIWYG (Drag & Drop)
+    - 21 etapas de funil de conversão
+    - Integração com Supabase
+    - Sistema de templates JSON
+    - Analytics e tracking
+    - Múltiplos estilos de quiz
+    
+    Stack Técnico:
+    - React 18 + TypeScript
+    - Vite (Build Tool)
+    - Wouter (Roteamento)
+    - Tailwind CSS + shadcn/ui
+    - DnD Kit (Drag & Drop)
+    - Supabase (Backend)
+    
+    Componentes Principais:
+    - QuizModularProductionEditor (Editor 4 colunas)
+    - UnifiedCRUDProvider (Gestão de estado)
+    - BlockRegistry (Sistema de componentes)
+    
+# ============================================================================
+# PADRÕES DE CÓDIGO
+# ============================================================================
+code_standards:
+  # TypeScript
+  typescript:
+    strict: true
+    no_implicit_any: true
+    prefer_interfaces: true
+    
+  # React
+  react:
+    prefer_functional_components: true
+    use_hooks: true
+    prop_types: false  # Usando TypeScript
+    
+  # Estilo
+  style:
+    quotes: single
+    semicolons: true
+    indent: 4 spaces
+    max_line_length: 120
+    
+  # Nomenclatura
+  naming:
+    components: PascalCase
+    functions: camelCase
+    constants: UPPER_SNAKE_CASE
+    files: PascalCase (components), camelCase (utils)
+    
+# ============================================================================
+# INTEGRAÇÕES
+# ============================================================================
+integrations:
+  # GitHub
+  github:
+    enabled: true
+    owner: giselegal
+    repo: quiz-flow-pro-verso
+    branch: main
+    auto_pr: false
+    pr_template: true
+    
+  # VS Code
+  vscode:
+    enabled: true
+    extensions:
+      - "dbaeumer.vscode-eslint"
+      - "esbenp.prettier-vscode"
+      - "bradlc.vscode-tailwindcss"
+      
+  # Netlify/Vercel (Deploy)
+  deployment:
+    platform: auto  # Detecta automaticamente
+    auto_deploy: false
+    
+# ============================================================================
+# TAREFAS COMUNS
+# ============================================================================
+tasks:
+  # Desenvolvimento
+  - name: "Iniciar desenvolvimento"
+    command: npm run dev
+    description: "Inicia servidor de desenvolvimento Vite"
+    
+  - name: "Build de produção"
+    command: npm run build
+    description: "Cria build otimizado para produção"
+    
+  # Manutenção
+  - name: "Limpar cache"
+    command: npm run clean && npm install
+    description: "Limpa cache e reinstala dependências"
+    
+  - name: "Atualizar dependências"
+    command: npm update
+    description: "Atualiza todas as dependências"
+    
+  # Qualidade
+  - name: "Verificar tipos"
+    command: npx tsc --noEmit
+    description: "Verifica erros de TypeScript"
+    
+  - name: "Formatar código"
+    command: npm run format
+    description: "Formata todo o código"
+    
+# ============================================================================
+# FEATURES DO TRAE
+# ============================================================================
+features:
+  # Code Review automático
+  code_review:
+    enabled: true
+    auto_fix: false
+    check_on: ["push", "pr"]
+    
+  # Auto-complete com IA
+  autocomplete:
+    enabled: true
+    trigger_keys: ["Tab", "Enter"]
+    
+  # Documentação automática
+  auto_docs:
+    enabled: true
+    format: markdown
+    output: docs/api
+    
+  # Refactoring assistido
+  refactoring:
+    enabled: true
+    suggest_improvements: true
+    
+  # Testes automáticos
+  testing:
+    enabled: true
+    framework: vitest
+    coverage_threshold: 70
+    
+# ============================================================================
+# WORKFLOWS
+# ============================================================================
+workflows:
+  # Workflow de desenvolvimento
+  development:
+    steps:
+      - checkout
+      - install_dependencies
+      - start_dev_server
+      
+  # Workflow de build
+  build:
+    steps:
+      - checkout
+      - install_dependencies
+      - type_check
+      - build
+      - test
+      
+  # Workflow de deploy
+  deploy:
+    steps:
+      - checkout
+      - install_dependencies
+      - build
+      - deploy
+      
+# ============================================================================
+# CONFIGURAÇÕES AVANÇADAS
+# ============================================================================
+advanced:
+  # Performance
+  performance:
+    cache_enabled: true
+    parallel_jobs: 4
+    timeout: 300  # segundos
+    
+  # Segurança
+  security:
+    scan_dependencies: true
+    check_vulnerabilities: true
+    
+  # Logs
+  logging:
+    level: info
+    format: json
+    output: .trae/logs
+    
+# ============================================================================
+# METADADOS
+# ============================================================================
+metadata:
+  created: "2025-10-13"
+  updated: "2025-10-13"
+  author: "giselegal"
+  license: "MIT"
+  repository: "https://github.com/giselegal/quiz-flow-pro-verso"
