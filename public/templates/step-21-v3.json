@@ -1,0 +1,179 @@
+{
+    "templateVersion": "3.0",
+    "metadata": {
+        "id": "step-21-offer-v3",
+        "name": "Oferta Final - 5 Passos Vista-se de Você",
+        "description": "Página de oferta final do produto após resultado do quiz",
+        "category": "offer",
+        "tags": [
+            "quiz",
+            "offer",
+            "conversion",
+            "product",
+            "cta"
+        ],
+        "createdAt": "2025-01-13T00:00:00.000Z",
+        "updatedAt": "2025-01-13T00:00:00.000Z",
+        "author": "Quiz Flow Pro",
+        "version": "3.0.0"
+    },
+    "offer": {
+        "productName": "5 Passos – Vista-se de Você",
+        "mentorName": "Gisele Galvão",
+        "pricing": {
+            "originalPrice": 447.00,
+            "salePrice": 97.00,
+            "currency": "R$",
+            "installments": {
+                "count": 8,
+                "value": 14.11
+            }
+        },
+        "links": {
+            "checkout": "https://pay.kiwify.com.br/DkYC1Aj",
+            "sales": "https://giselegaviao.com/5passos"
+        },
+        "guarantee": {
+            "days": 7,
+            "description": "Garantia incondicional de 7 dias. Se não gostar, devolvemos 100% do seu investimento."
+        },
+        "features": [
+            "5 módulos completos sobre estilo pessoal",
+            "Acesso vitalício ao conteúdo",
+            "Suporte direto com Gisele Galvão",
+            "Materiais bônus exclusivos",
+            "Comunidade privada de alunas",
+            "Certificado de conclusão"
+        ]
+    },
+    "theme": {
+        "colors": {
+            "primary": "#B89B7A",
+            "primaryHover": "#A68B6A",
+            "primaryLight": "#F3E8D3",
+            "secondary": "#432818",
+            "background": "#FAF9F7",
+            "text": "#1F2937",
+            "border": "#E5E7EB"
+        },
+        "fonts": {
+            "heading": "Playfair Display, serif",
+            "body": "Inter, sans-serif"
+        },
+        "spacing": {
+            "sm": 8,
+            "md": 16,
+            "lg": 24,
+            "xl": 32
+        },
+        "borderRadius": {
+            "sm": 4,
+            "md": 8,
+            "lg": 12,
+            "xl": 16
+        }
+    },
+    "sections": [
+        {
+            "type": "offer-hero",
+            "id": "offer-hero-21",
+            "content": {
+                "title": "{userName}, Transforme Seu Guarda-Roupa e Sua Confiança Hoje!",
+                "subtitle": "Oferta exclusiva para quem completou o quiz de estilo",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                "imageAlt": "5 Passos - Vista-se de Você",
+                "description": "Descubra como valorizar seu estilo único e se sentir confiante em qualquer ocasião com o método exclusivo 5 Passos.",
+                "urgencyMessage": "Oferta por tempo limitado!"
+            },
+            "style": {
+                "backgroundColor": "#FAF9F7",
+                "textColor": "#432818",
+                "padding": 24
+            },
+            "animation": {
+                "type": "scale",
+                "duration": 500,
+                "delay": 0,
+                "easing": "ease-out"
+            }
+        },
+        {
+            "type": "pricing",
+            "id": "pricing-21",
+            "content": {
+                "pricing": {
+                    "originalPrice": 447.00,
+                    "salePrice": 97.00,
+                    "currency": "R$",
+                    "installments": {
+                        "count": 8,
+                        "value": 14.11
+                    }
+                },
+                "title": "Investimento que Transforma",
+                "subtitle": "Desconto exclusivo para participantes do quiz",
+                "ctaText": "Quero Transformar Meu Estilo Agora!",
+                "ctaUrl": "https://pay.kiwify.com.br/DkYC1Aj",
+                "features": [
+                    "✓ 5 módulos completos sobre estilo pessoal",
+                    "✓ Acesso vitalício ao conteúdo",
+                    "✓ Suporte direto com Gisele Galvão",
+                    "✓ Materiais bônus exclusivos",
+                    "✓ Comunidade privada de alunas",
+                    "✓ Certificado de conclusão",
+                    "✓ Garantia de 7 dias"
+                ]
+            },
+            "style": {
+                "backgroundColor": "#FFFFFF",
+                "padding": 24
+            },
+            "animation": {
+                "type": "slideUp",
+                "duration": 500,
+                "delay": 200,
+                "easing": "ease-out"
+            }
+        }
+    ],
+    "navigation": {
+        "nextStep": null,
+        "prevStep": "step-20",
+        "allowBack": true,
+        "requiresUserInput": false,
+        "autoAdvance": false
+    },
+    "analytics": {
+        "events": [
+            "page_view",
+            "section_view",
+            "cta_click",
+            "offer_viewed"
+        ],
+        "trackingId": "step-21-offer-v3",
+        "fbPixelId": null,
+        "gaTrackingId": null,
+        "conversionEvents": [
+            {
+                "event": "ViewContent",
+                "params": {
+                    "content_name": "5 Passos Vista-se de Você",
+                    "content_category": "Offer",
+                    "value": 97.00,
+                    "currency": "BRL"
+                }
+            }
+        ]
+    },
+    "seo": {
+        "title": "Oferta Exclusiva - 5 Passos Vista-se de Você",
+        "description": "Transforme seu guarda-roupa e sua confiança com o método exclusivo 5 Passos. Oferta especial para participantes do quiz.",
+        "keywords": [
+            "consultoria de estilo",
+            "guarda-roupa",
+            "transformação pessoal",
+            "moda feminina",
+            "estilo pessoal"
+        ]
+    }
+}

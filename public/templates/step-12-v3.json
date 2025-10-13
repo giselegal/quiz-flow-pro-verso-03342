@@ -1,0 +1,84 @@
+{
+    "templateVersion": "3.0",
+    "metadata": {
+        "id": "step-12-transition-v3",
+        "name": "Transição Mid-Quiz",
+        "description": "Página de transição no meio do quiz com mensagem motivacional",
+        "category": "transition",
+        "tags": [
+            "quiz",
+            "transition",
+            "loading",
+            "mid-quiz"
+        ],
+        "createdAt": "2025-01-13T00:00:00.000Z",
+        "updatedAt": "2025-01-13T00:00:00.000Z",
+        "author": "Quiz Flow Pro",
+        "version": "3.0.0"
+    },
+    "theme": {
+        "colors": {
+            "primary": "#B89B7A",
+            "secondary": "#432818",
+            "background": "#FAF9F7",
+            "text": "#1F2937"
+        },
+        "fonts": {
+            "heading": "Playfair Display, serif",
+            "body": "Inter, sans-serif"
+        },
+        "spacing": {
+            "sm": 8,
+            "md": 16,
+            "lg": 24,
+            "xl": 32
+        },
+        "borderRadius": {
+            "sm": 4,
+            "md": 8,
+            "lg": 12,
+            "xl": 16
+        }
+    },
+    "sections": [
+        {
+            "type": "transition-hero",
+            "id": "transition-hero-12",
+            "content": {
+                "title": "Analisando suas respostas...",
+                "subtitle": "Estamos montando seu perfil de estilo personalizado",
+                "message": "Continue para descobrir ainda mais sobre seu estilo único!",
+                "autoAdvanceDelay": 3000
+            },
+            "style": {
+                "backgroundColor": "#FAF9F7",
+                "textColor": "#432818",
+                "padding": 32
+            },
+            "animation": {
+                "type": "scale",
+                "duration": 500,
+                "delay": 0,
+                "easing": "ease-out"
+            }
+        }
+    ],
+    "navigation": {
+        "nextStep": "step-13",
+        "prevStep": "step-11",
+        "allowBack": false,
+        "requiresUserInput": false,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 3000
+    },
+    "analytics": {
+        "events": [
+            "page_view",
+            "section_view",
+            "auto_advance"
+        ],
+        "trackingId": "step-12-transition-v3",
+        "fbPixelId": null,
+        "gaTrackingId": null
+    }
+}
