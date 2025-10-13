@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { EditorComponent } from '@/interfaces/editor';
@@ -27,7 +26,7 @@ import React, { useState } from 'react';
 // Definição dos componentes disponíveis
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: any, type: any): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';

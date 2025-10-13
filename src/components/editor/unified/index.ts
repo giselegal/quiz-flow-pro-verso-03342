@@ -58,8 +58,7 @@ export { CollaborationPanel } from './CollaborationPanel';
 // AnalyticsDashboard foi consolidado em @/components/dashboard/AnalyticsDashboard
 // Use: import { AnalyticsDashboard } from '@/components/dashboard/AnalyticsDashboard';
 
-// 🎯 INTEGRAÇÃO QUIZPAGE
-export { QuizPageEditor } from '../quiz/QuizPageEditor';
+// 🎯 INTEGRAÇÃO QUIZPAGE (deprecated - removed)
 // Hooks e serviços serão importados quando implementados
 
 // 🔧 OUTROS COMPONENTES UNIFICADOS

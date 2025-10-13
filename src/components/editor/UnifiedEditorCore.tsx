@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 /**
  * 🎯 UNIFIED EDITOR CORE - COMPONENTE PRINCIPAL CONSOLIDADO
  * 
@@ -28,8 +28,7 @@ const UnifiedComponentsPanel = React.lazy(() => import('@/components/editor/pane
 const CanvasDropZone = React.lazy(() => import('@/components/editor/canvas/CanvasDropZone.simple'));
 const UltraUnifiedPropertiesPanel = React.lazy(() => import('@/components/editor/properties/UltraUnifiedPropertiesPanel'));
 
-// 🎯 FALLBACK COMPONENTS
-const ModularEditorProFallback = React.lazy(() => import('@/components/editor/EditorPro/components/ModularEditorPro'));
+// 🎯 FALLBACK COMPONENTS (removed deprecated ModularEditorPro)
 // 💡 Produção (quiz renderer) declarado no topo para evitar recriações
 const ScalableQuizRenderer = React.lazy(() => import('@/components/core/ScalableQuizRenderer'));
 
@@ -239,9 +238,9 @@ const ModeRenderer: React.FC<{
       default:
         logger.warn('UnifiedEditorCore: Modo desconhecido, usando fallback', mode);
         return (
-          <LazyBoundary fallback={<EditorLoadingFallback />}>
-            <ModularEditorProFallback />
-          </LazyBoundary>
+          <div className="p-8 text-center">
+            <p className="text-gray-600">Modo de edição não suportado: {mode}</p>
+          </div>
         );
     }
   }, [mode, funnelId, state.currentStep, state.stepBlocks, actions]);

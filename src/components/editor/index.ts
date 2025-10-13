@@ -29,11 +29,6 @@ export { MigrationEditorProvider, EditorProvider as LegacyEditorProvider } from 
 export { default as ComponentList } from './ComponentList';
 export { default as QuizEditorSteps } from './QuizEditorSteps';
 // ✅ EDITORES PRINCIPAIS UNIFICADOS
-/**
- * @deprecated Use o fluxo via ModernUnifiedEditor (wrapper pivot) + QuizFunnelEditor.
- * Este export será removido após remoção do legacy.
- */
-export { default as EditorProUnified } from './EditorProUnified';
 export { default as PureBuilderProvider } from './PureBuilderProvider';
 
 // Componentes com named exports

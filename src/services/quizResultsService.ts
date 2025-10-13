@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { styleConfig, type StyleConfig } from '@/config/styleConfig';
 import { supabase } from '@/integrations/supabase/client';
 import { StorageService } from '@/services/core/StorageService';
@@ -364,7 +363,7 @@ class QuizResultsService {
         ? colorData.cores_favoritas
         : [colorData.cores_favoritas];
 
-      cores.forEach(cor => {
+      cores.forEach((cor: string) => {
         const corLower = cor.toLowerCase();
         if (
           corLower.includes('neutro') ||
@@ -533,7 +532,7 @@ class QuizResultsService {
       ],
     };
 
-    return essentials[style] || essentials['Natural'];
+    return (essentials as Record<string, string[]>)[style] || essentials['Natural'];
   }
 
   private getColorsByStyle(style: string): string[] {
@@ -548,7 +547,7 @@ class QuizResultsService {
       Criativo: ['Cores vibrantes', 'Combinações inusitadas', 'Neon', 'Metálicos', 'Tie-dye'],
     };
 
-    return colors[style] || colors['Natural'];
+    return (colors as Record<string, string[]>)[style] || colors['Natural'];
   }
 
   private getPatternsByStyle(style: string): string[] {
@@ -563,7 +562,7 @@ class QuizResultsService {
       Criativo: ['Estampas autorais', 'Mix de padrões', 'Tie-dye', 'Patchwork'],
     };
 
-    return patterns[style] || patterns['Natural'];
+    return (patterns as Record<string, string[]>)[style] || patterns['Natural'];
   }
 
   private getAccessoriesByStyle(style: string): string[] {
@@ -588,7 +587,7 @@ class QuizResultsService {
       Criativo: ['Peças autorais', 'Vintage', 'Artesanais', 'Combinações únicas'],
     };
 
-    return accessories[style] || accessories['Natural'];
+    return (accessories as Record<string, string[]>)[style] || accessories['Natural'];
   }
 
   private getBrandsByStyle(style: string): string[] {
@@ -603,7 +602,7 @@ class QuizResultsService {
       Criativo: ['Vivienne Westwood', 'Issey Miyake', 'Comme des Garçons', 'Jacquemus'],
     };
 
-    return brands[style] || brands['Natural'];
+    return (brands as Record<string, string[]>)[style] || brands['Natural'];
   }
 
   private getStyleTips(style: string): string[] {
@@ -622,7 +621,7 @@ class QuizResultsService {
       Criativo: ['Expresse personalidade', 'Mix texturas e cores', 'Seja autêntica'],
     };
 
-    return tips[style] || tips['Natural'];
+    return (tips as Record<string, string[]>)[style] || tips['Natural'];
   }
 
   private getCombinations(style: string): string[] {
@@ -718,16 +717,14 @@ class QuizResultsService {
   private async saveResults(results: QuizResults): Promise<void> {
     try {
       const { error } = await supabase.from('quiz_results').upsert({
-        session_id: results.sessionId,
-        predominant_style: results.styleProfile.primaryStyle,
-        predominant_percentage: results.styleProfile.confidence * 100,
-        complementary_styles: results.styleProfile.secondaryStyle
-          ? [results.styleProfile.secondaryStyle]
-          : [],
-        style_scores: results.styleProfile.styleScores,
-        calculation_details: results.metadata,
+        result_type: results.styleProfile.primaryStyle,
+        result_title: results.styleProfile.primaryStyle,
+        result_description: `Estilo predominante: ${results.styleProfile.primaryStyle}`,
+        result_data: results.styleProfile as any,
+        recommendation: results.styleProfile.secondaryStyle || null,
+        next_steps: results.styleProfile.styleScores as any,
         created_at: results.calculatedAt,
-      });
+      } as any);
 
       if (error) throw error;
 

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { blockDefinitions } from '@/config/blockDefinitions';
 
 interface ComponentsPanelProps {
@@ -6,7 +6,7 @@ interface ComponentsPanelProps {
 }
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: any, type: any): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';

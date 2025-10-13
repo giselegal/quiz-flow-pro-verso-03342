@@ -470,7 +470,7 @@ export interface Block extends BaseBlock {
   type: BlockType;
   content: BlockContent;
 
-  // Extended properties for SimpleBuilderProvider compatibility
+  // Validation properties
   validation?: {
     required?: boolean;
     minLength?: number;
@@ -478,7 +478,7 @@ export interface Block extends BaseBlock {
     pattern?: string;
     custom?: (value: any) => boolean | string;
     isValid?: boolean;
-    errors?: string[]; // Add errors property
+    errors?: string[];
     warnings?: string[];
   };
   position?: {

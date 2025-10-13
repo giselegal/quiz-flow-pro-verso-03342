@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { generateSemanticId } from '../utils/semanticIdGenerator';
 // Simplified Page Structure Validator
 // Placeholder service to avoid complex type issues
