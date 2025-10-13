@@ -128,24 +128,43 @@ export interface UnifiedStepRendererProps {
 const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
     return useMemo(() => {
         // 🆕 V3.0: Verificar se step tem template v3.0
+        console.log('🔍 [UnifiedStepRenderer] Debug:', { stepId, mode });
+
         if (mode === 'production') {
             try {
                 const template = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
+                console.log('🔍 [Template Check]:', {
+                    stepId,
+                    hasTemplate: !!template,
+                    isObject: typeof template === 'object',
+                    templateVersion: template?.templateVersion,
+                    templateKeys: template ? Object.keys(template).slice(0, 5) : []
+                });
+
                 if (template && typeof template === 'object' && template.templateVersion === '3.0') {
+                    console.log('✅ [V3.0 DETECTED] Usando V3Renderer para', stepId);
                     return {
                         type: 'v3' as const,
                         component: V3Renderer,
                         isRegistry: false,
                         template: template as TemplateV3
                     };
+                } else {
+                    console.log('⚠️ [V3.0 NOT DETECTED] Fallback para lazy/registry:', {
+                        stepId,
+                        reason: !template ? 'no template' : typeof template !== 'object' ? 'not object' : 'no v3.0 version'
+                    });
                 }
             } catch (error) {
-                console.warn(`Failed to check v3.0 template for ${stepId}:`, error);
+                console.error(`❌ Failed to check v3.0 template for ${stepId}:`, error);
             }
+        } else {
+            console.log('⚠️ [Mode NOT production] Mode is:', mode);
         }
 
         // Para modo production e stepIds conhecidos, usar lazy loading
         if (mode === 'production' && stepId in LazyStepComponents) {
+            console.log('📦 [Lazy Loading] Usando componente lazy para', stepId);
             return {
                 type: 'lazy' as const,
                 component: LazyStepComponents[stepId as LazyStepId],
@@ -156,6 +175,7 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
         // Para outros casos, usar registry (editor/preview)
         try {
             const registryComponent = stepRegistry.get(stepId);
+            console.log('📝 [Registry] Usando componente registry para', stepId, registryComponent ? '✅' : '❌');
             return {
                 type: 'registry' as const,
                 component: registryComponent?.component,
@@ -163,7 +183,7 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
                 stepComponent: registryComponent
             };
         } catch (error) {
-            console.error(`Step "${stepId}" não encontrado:`, error);
+            console.error(`❌ Step "${stepId}" não encontrado:`, error);
             return {
                 type: 'error' as const,
                 component: null,

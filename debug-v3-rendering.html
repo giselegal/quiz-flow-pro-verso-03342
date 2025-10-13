@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Debug V3.0 Rendering</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #4ec9b0;
+        }
+
+        h2 {
+            color: #dcdcaa;
+            margin-top: 30px;
+        }
+
+        .code-block {
+            background: #252526;
+            border-left: 3px solid #007acc;
+            padding: 15px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .step {
+            background: #2d2d30;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .success {
+            color: #4ec9b0;
+        }
+
+        .error {
+            color: #f48771;
+        }
+
+        .warning {
+            color: #dcdcaa;
+        }
+
+        .info {
+            color: #9cdcfe;
+        }
+
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #1177bb;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #252526;
+            border-radius: 8px;
+        }
+
+        pre {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 Debug V3.0 Template Rendering</h1>
+        <p class="info">Use esta página para diagnosticar por que templates v3.0 não estão renderizando em /quiz-estilo
+        </p>
+
+        <div class="step">
+            <h2>📋 Passo 1: Abrir Console do Browser</h2>
+            <p>Pressione <code>F12</code> ou <code>Ctrl+Shift+I</code> (Windows/Linux) / <code>Cmd+Option+I</code> (Mac)
+            </p>
+        </div>
+
+        <div class="step">
+            <h2>🚀 Passo 2: Navegar para /quiz-estilo</h2>
+            <button onclick="window.location.href='/quiz-estilo'">Ir para /quiz-estilo</button>
+            <p class="warning">Observe os logs no console que começam com 🔍, ✅, ⚠️, ou ❌</p>
+        </div>
+
+        <div class="step">
+            <h2>🔬 Passo 3: Verificar Template no Console</h2>
+            <button onclick="checkTemplate()">Verificar QUIZ_STYLE_21_STEPS_TEMPLATE</button>
+            <div id="templateResult" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="step">
+            <h2>📊 Passo 4: Inspecionar Componentes Renderizados</h2>
+            <button onclick="inspectComponents()">Inspecionar DOM</button>
+            <div id="componentsResult" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="step">
+            <h2>🎯 Passo 5: Testar V3Renderer Diretamente</h2>
+            <button onclick="testV3Renderer()">Testar V3Renderer</button>
+            <div id="v3Result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="step">
+            <h2>📝 Logs Esperados</h2>
+            <div class="code-block">
+                <pre>
+<span class="info">🔍 [UnifiedStepRenderer] Debug: { stepId: "step-01", mode: "production" }</span>
+<span class="info">🔍 [Template Check]: {
+    stepId: "step-01",
+    hasTemplate: true,
+    isObject: true,
+    templateVersion: "3.0",
+    templateKeys: ["templateVersion", "metadata", "theme", "sections", "validation"]
+}</span>
+<span class="success">✅ [V3.0 DETECTED] Usando V3Renderer para step-01</span>
+                </pre>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🚨 Problemas Comuns</h2>
+            <div class="code-block">
+                <pre>
+<span class="error">❌ Problema 1: mode !== "production"</span>
+   → Solução: Verificar como UnifiedStepRenderer é chamado em QuizApp.tsx
+   → Deve ter mode="production" explicitamente
+
+<span class="error">❌ Problema 2: stepId incorreto</span>
+   → Solução: Verificar se está usando "step-01" vs "step-1"
+   → QUIZ_STYLE_21_STEPS_TEMPLATE usa "step-01" (com zero)
+
+<span class="error">❌ Problema 3: Template não carregado</span>
+   → Solução: Verificar se quiz21StepsComplete.ts está sendo importado
+   → Verificar se build incluiu templates v3.0
+                </pre>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔧 Ações de Correção</h2>
+            <div class="code-block">
+                <strong>Se mode !== "production":</strong>
+                <pre>
+// Em QuizApp.tsx ou onde UnifiedStepRenderer é usado:
+&lt;UnifiedStepRenderer
+  stepId="step-01"
+  mode="production"  // ← Adicionar isto!
+  {...otherProps}
+/&gt;
+                </pre>
+
+                <strong>Se stepId incorreto:</strong>
+                <pre>
+// Verificar formato do stepId:
+const stepId = `step-${String(currentStep).padStart(2, '0')}`;
+// step-01, step-02, ..., step-21 (com zero!)
+                </pre>
+
+                <strong>Se template não encontrado:</strong>
+                <pre>
+// Verificar import em UnifiedStepRenderer.tsx:
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+
+// Verificar se existe:
+console.log('Template step-01:', QUIZ_STYLE_21_STEPS_TEMPLATE['step-01']);
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkTemplate() {
+            const result = document.getElementById('templateResult');
+            result.style.display = 'block';
+
+            // Simular verificação (não temos acesso ao módulo aqui)
+            result.innerHTML = `
+                <h3>Instruções de Verificação no Console:</h3>
+                <pre>
+// Cole estes comandos no console do browser:
+
+// 1. Verificar se template existe
+console.log('Templates disponíveis:', 
+    Object.keys(window.__QUIZ_TEMPLATES__ || {})
+);
+
+// 2. Verificar step-01 especificamente
+const step01 = window.__QUIZ_TEMPLATES__?.['step-01'];
+console.log('step-01:', step01);
+console.log('templateVersion:', step01?.templateVersion);
+
+// 3. Verificar todas as versões
+Object.entries(window.__QUIZ_TEMPLATES__ || {}).forEach(([key, val]) => {
+    console.log(key, '→', val.templateVersion || 'no version');
+});
+                </pre>
+                <p class="warning">⚠️ Se __QUIZ_TEMPLATES__ for undefined, o módulo não foi carregado corretamente</p>
+            `;
+        }
+
+        function inspectComponents() {
+            const result = document.getElementById('componentsResult');
+            result.style.display = 'block';
+
+            const analysis = {
+                v3Components: document.querySelectorAll('[class*="intro-hero"], [class*="welcome-form"]').length,
+                v2Components: document.querySelectorAll('[class*="block-"], [data-block-type]').length,
+                unifiedRenderer: document.querySelectorAll('[class*="unified-step-renderer"]').length,
+                v3Renderer: document.querySelectorAll('[class*="quiz-v3"]').length
+            };
+
+            result.innerHTML = `
+                <h3>Análise do DOM:</h3>
+                <pre>
+Componentes V3.0: ${analysis.v3Components} ${analysis.v3Components > 0 ? '✅' : '❌'}
+Componentes V2.0: ${analysis.v2Components}
+UnifiedStepRenderer: ${analysis.unifiedRenderer} ${analysis.unifiedRenderer > 0 ? '✅' : '❌'}
+V3Renderer: ${analysis.v3Renderer} ${analysis.v3Renderer > 0 ? '✅' : '❌'}
+                </pre>
+                ${analysis.v3Components === 0 ? `
+                    <p class="error">❌ NENHUM componente v3.0 encontrado!</p>
+                    <p>Isto confirma que V3Renderer não está sendo usado.</p>
+                ` : ''}
+            `;
+        }
+
+        function testV3Renderer() {
+            const result = document.getElementById('v3Result');
+            result.style.display = 'block';
+
+            result.innerHTML = `
+                <h3>Teste Manual V3Renderer:</h3>
+                <p>Cole este código no console do React DevTools:</p>
+                <pre>
+// 1. Importar V3Renderer (se disponível)
+const V3Renderer = require('@/components/core/V3Renderer').default;
+
+// 2. Template de teste
+const testTemplate = {
+    templateVersion: "3.0",
+    sections: [
+        {
+            type: "intro-hero",
+            id: "test-intro",
+            content: {
+                title: "TESTE V3.0",
+                subtitle: "Se você vê isto, V3Renderer funciona!",
+                logoUrl: "https://via.placeholder.com/96",
+                imageUrl: "https://via.placeholder.com/300"
+            }
+        }
+    ]
+};
+
+// 3. Renderizar
+React.createElement(V3Renderer, {
+    template: testTemplate,
+    userData: () => ({ name: 'Teste' }),
+    onAnalytics: (e, d) => console.log('Analytics:', e, d),
+    mode: 'full'
+});
+                </pre>
+            `;
+        }
+
+        // Auto-executar verificação ao carregar
+        window.addEventListener('load', () => {
+            console.log('%c🔍 DEBUG V3.0 ATIVO', 'background: #0e639c; color: white; padding: 5px 10px; font-size: 14px;');
+            console.log('📋 Siga as instruções em debug-v3-rendering.html');
+            console.log('🎯 Próximos passos: Navegar para /quiz-estilo e observar logs');
+        });
+    </script>
+</body>
+
+</html>
