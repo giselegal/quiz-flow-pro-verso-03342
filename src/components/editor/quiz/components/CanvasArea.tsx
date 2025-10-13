@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useState, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -63,6 +63,25 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     // Controle de preview responsivo
     const [previewSize, setPreviewSize] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
 
+    // ✅ CORREÇÃO: Calcular rootBlocks no nível superior com useMemo
+    const rootBlocks = useMemo(() => {
+        if (!selectedStep) return [];
+        return selectedStep.blocks
+            .filter(b => !b.parentId)
+            .sort((a, b) => a.order - b.order);
+    }, [selectedStep]);
+
+    // ✅ CORREÇÃO: Chamar hook useVirtualBlocks no nível superior
+    const virtualizationThreshold = 60;
+    const virtualizationEnabled = rootBlocks.length > virtualizationThreshold && !activeId;
+
+    const { visible, topSpacer, bottomSpacer, containerRef } = useVirtualBlocks({
+        blocks: rootBlocks,
+        rowHeight: 140,
+        overscan: 6,
+        enabled: virtualizationEnabled,
+    });
+
     return (
         <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
             <Tabs value={activeTab} onValueChange={onTabChange} className="flex-1 flex flex-col">
@@ -84,59 +103,42 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 {selectedStep.blocks.length === 0 ? (
                                     <div className="text-center py-8 text-muted-foreground text-xs border border-dashed rounded-md bg-white/40">(vazio)</div>
                                 ) : (
-                                    <>
-                                        {(() => {
-                                            const rootBlocks = selectedStep.blocks
-                                                .filter(b => !b.parentId)
-                                                .sort((a, b) => a.order - b.order);
-                                            const virtualizationThreshold = 60;
-                                            const virtualizationEnabled = rootBlocks.length > virtualizationThreshold && !activeId;
-                                            const { visible, topSpacer, bottomSpacer, containerRef } = useVirtualBlocks({
-                                                blocks: rootBlocks,
-                                                rowHeight: 140,
-                                                overscan: 6,
-                                                enabled: virtualizationEnabled,
-                                            });
-                                            return (
-                                                <div ref={containerRef} className="space-y-2 pr-1 bg-white/40 overflow-visible">
-                                                    <SortableContext items={[...rootBlocks.map(b => b.id), 'canvas-end']} strategy={verticalListSortingStrategy}>
-                                                        <TooltipProvider>
-                                                            <div style={{ position: 'relative' }}>
-                                                                {virtualizationEnabled && topSpacer > 0 && <div style={{ height: topSpacer }} />}
-                                                                {visible.map(block => (
-                                                                    <BlockRow
-                                                                        key={block.id}
-                                                                        block={block}
-                                                                        byBlock={byBlock}
-                                                                        selectedBlockId={selectedBlockId}
-                                                                        isMultiSelected={isMultiSelected}
-                                                                        handleBlockClick={handleBlockClick}
-                                                                        renderBlockPreview={renderBlockPreview}
-                                                                        allBlocks={selectedStep.blocks}
-                                                                        removeBlock={removeBlock}
-                                                                        stepId={selectedStep.id}
-                                                                        setBlockPendingDuplicate={setBlockPendingDuplicate}
-                                                                        setTargetStepId={setTargetStepId}
-                                                                        setDuplicateModalOpen={setDuplicateModalOpen}
-                                                                    />
-                                                                ))}
-                                                                {virtualizationEnabled && bottomSpacer > 0 && <div style={{ height: bottomSpacer }} />}
-                                                                <div id="canvas-end" className="h-8 flex items-center justify-center text-[10px] text-slate-400 border border-dashed mx-2 my-2 rounded">Soltar aqui para final</div>
-                                                                {!virtualizationEnabled && visible.length === 0 && (
-                                                                    <div className="text-[11px] text-muted-foreground italic">(sem blocos raiz)</div>
-                                                                )}
-                                                            </div>
-                                                        </TooltipProvider>
-                                                    </SortableContext>
-                                                    {virtualizationEnabled && (
-                                                        <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/90 to-transparent text-[10px] text-center py-1 text-slate-500 border-t">
-                                                            Virtualização ativa · {rootBlocks.length} blocos · exibindo {visible.length}
-                                                        </div>
+                                    <div ref={containerRef} className="space-y-2 pr-1 bg-white/40 overflow-visible">
+                                        <SortableContext items={[...rootBlocks.map(b => b.id), 'canvas-end']} strategy={verticalListSortingStrategy}>
+                                            <TooltipProvider>
+                                                <div style={{ position: 'relative' }}>
+                                                    {virtualizationEnabled && topSpacer > 0 && <div style={{ height: topSpacer }} />}
+                                                    {visible.map(block => (
+                                                        <BlockRow
+                                                            key={block.id}
+                                                            block={block}
+                                                            byBlock={byBlock}
+                                                            selectedBlockId={selectedBlockId}
+                                                            isMultiSelected={isMultiSelected}
+                                                            handleBlockClick={handleBlockClick}
+                                                            renderBlockPreview={renderBlockPreview}
+                                                            allBlocks={selectedStep.blocks}
+                                                            removeBlock={removeBlock}
+                                                            stepId={selectedStep.id}
+                                                            setBlockPendingDuplicate={setBlockPendingDuplicate}
+                                                            setTargetStepId={setTargetStepId}
+                                                            setDuplicateModalOpen={setDuplicateModalOpen}
+                                                        />
+                                                    ))}
+                                                    {virtualizationEnabled && bottomSpacer > 0 && <div style={{ height: bottomSpacer }} />}
+                                                    <div id="canvas-end" className="h-8 flex items-center justify-center text-[10px] text-slate-400 border border-dashed mx-2 my-2 rounded">Soltar aqui para final</div>
+                                                    {!virtualizationEnabled && visible.length === 0 && (
+                                                        <div className="text-[11px] text-muted-foreground italic">(sem blocos raiz)</div>
                                                     )}
                                                 </div>
-                                            );
-                                        })()}
-                                    </>
+                                            </TooltipProvider>
+                                        </SortableContext>
+                                        {virtualizationEnabled && (
+                                            <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/90 to-transparent text-[10px] text-center py-1 text-slate-500 border-t">
+                                                Virtualização ativa · {rootBlocks.length} blocos · exibindo {visible.length}
+                                            </div>
+                                        )}
+                                    </div>
                                 )}
                             </CardContent>
                         </Card>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BlockComponent } from '../types';
 
 interface UseVirtualBlocksOptions {
@@ -20,7 +20,13 @@ export interface VirtualBlocksResult {
 }
 
 export function useVirtualBlocks(opts: UseVirtualBlocksOptions): VirtualBlocksResult {
-    const { blocks, rowHeight = 86, overscan = 4, enabled = true } = opts;
+    const { blocks = [], rowHeight = 86, overscan = 4, enabled = true } = opts;
+
+    // ✅ PROTEÇÃO: Validação defensiva de entrada
+    const safeBlocks = useMemo(() => {
+        return Array.isArray(blocks) ? blocks : [];
+    }, [blocks]);
+
     const containerRef = useRef<HTMLDivElement>(null);
     const [scrollTop, setScrollTop] = useState(0);
     const [viewportHeight, setViewportHeight] = useState(600);
@@ -43,25 +49,44 @@ export function useVirtualBlocks(opts: UseVirtualBlocksOptions): VirtualBlocksRe
         };
     }, [onScroll]);
 
-    if (!enabled) {
+    // ✅ OTIMIZAÇÃO: Memoizar cálculo de blocos visíveis
+    const visibleBlocks = useMemo(() => {
+        if (!enabled) {
+            return safeBlocks;
+        }
+
+        const total = safeBlocks.length;
+        const startIndex = Math.max(Math.floor(scrollTop / rowHeight) - overscan, 0);
+        const viewportCount = Math.ceil(viewportHeight / rowHeight) + overscan * 2;
+        const endIndex = Math.min(startIndex + viewportCount, total);
+
+        return safeBlocks.slice(startIndex, endIndex);
+    }, [enabled, safeBlocks, scrollTop, rowHeight, overscan, viewportHeight]);
+
+    // ✅ OTIMIZAÇÃO: Memoizar cálculo de spacers
+    const { topSpacer, bottomSpacer } = useMemo(() => {
+        if (!enabled) {
+            return { topSpacer: 0, bottomSpacer: 0 };
+        }
+
+        const total = safeBlocks.length;
+        const startIndex = Math.max(Math.floor(scrollTop / rowHeight) - overscan, 0);
+        const viewportCount = Math.ceil(viewportHeight / rowHeight) + overscan * 2;
+        const endIndex = Math.min(startIndex + viewportCount, total);
+
         return {
-            visible: blocks,
-            topSpacer: 0,
-            bottomSpacer: 0,
-            total: blocks.length,
-            scrollTop,
-            setScrollTop,
-            containerRef
+            topSpacer: startIndex * rowHeight,
+            bottomSpacer: (total - endIndex) * rowHeight
         };
-    }
+    }, [enabled, safeBlocks.length, scrollTop, rowHeight, overscan, viewportHeight]);
 
-    const total = blocks.length;
-    const startIndex = Math.max(Math.floor(scrollTop / rowHeight) - overscan, 0);
-    const viewportCount = Math.ceil(viewportHeight / rowHeight) + overscan * 2;
-    const endIndex = Math.min(startIndex + viewportCount, total);
-    const visible = blocks.slice(startIndex, endIndex);
-    const topSpacer = startIndex * rowHeight;
-    const bottomSpacer = (total - endIndex) * rowHeight;
-
-    return { visible, topSpacer, bottomSpacer, total, scrollTop, setScrollTop, containerRef };
+    return {
+        visible: visibleBlocks,
+        topSpacer,
+        bottomSpacer,
+        total: safeBlocks.length,
+        scrollTop,
+        setScrollTop,
+        containerRef
+    };
 }
