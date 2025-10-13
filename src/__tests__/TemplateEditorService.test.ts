@@ -95,7 +95,7 @@ describe('TemplateEditorService', () => {
             });
 
             it('deve rejeitar step sem metadata', () => {
-                const invalidStep = {
+                const invalidStep: any = {
                     sections: []
                 };
 
@@ -104,7 +104,6 @@ describe('TemplateEditorService', () => {
         });
 
         describe('exportMasterTemplate', () => {
-
             it('deve exportar master template como JSON string', async () => {
                 const json = await TemplateEditorService.exportMasterTemplate();
 

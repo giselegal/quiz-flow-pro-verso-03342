@@ -17,7 +17,7 @@ describe('HybridTemplateService', () => {
     describe('validateMasterTemplate', () => {
 
         it('deve validar master template correto com 21 steps', async () => {
-            const validMaster = {
+            const validMaster: any = {
                 templateVersion: '3.0',
                 globalConfig: {},
                 steps: {}
@@ -39,16 +39,14 @@ describe('HybridTemplateService', () => {
         });
 
         it('deve rejeitar master sem templateVersion', () => {
-            const invalidMaster = {
+            const invalidMaster: any = {
                 globalConfig: {},
                 steps: {}
             };
 
             // Validação falha sem templateVersion
             expect(invalidMaster.templateVersion).toBeUndefined();
-        });
-
-        it('deve rejeitar master com menos de 21 steps', () => {
+        }); it('deve rejeitar master com menos de 21 steps', () => {
             const invalidMaster = {
                 templateVersion: '3.0',
                 globalConfig: {},
