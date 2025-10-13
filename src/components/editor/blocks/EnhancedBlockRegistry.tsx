@@ -162,8 +162,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
 
     // ✅ BLOCOS DE OFERTA
     benefits: lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
-    'benefits-list': lazy(() => import('@/components/editor/blocks/Bene
-        fitsListBlock')),
+    'benefits-list': lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
     testimonials: lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
     'testimonials-grid': lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
     guarantee: lazy(() => import('@/components/editor/blocks/GuaranteeBlock')),
