@@ -26,6 +26,12 @@ import {
 } from '@/components/editor/blocks/Step20ModularBlocks';
 import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
 
+// Lazy imports para Sections V3 (Question, Transition, Offer)
+const QuestionHeroSection = lazy(() => import('@/components/sections/questions').then(m => ({ default: m.QuestionHeroSection })));
+const TransitionHeroSection = lazy(() => import('@/components/sections/transitions').then(m => ({ default: m.TransitionHeroSection })));
+const OfferHeroSection = lazy(() => import('@/components/sections/offer').then(m => ({ default: m.OfferHeroSection })));
+const StrategicQuestionBlock = lazy(() => import('@/components/editor/blocks/StrategicQuestionBlock'));
+
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // ✅ STEP 01 - COMPONENTES BÁSICOS
@@ -49,6 +55,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'quiz-question-inline': TextInlineBlock,
     'quiz-options-inline': OptionsGridBlock,
     'options-grid': OptionsGridBlock,
+    'question-hero': QuestionHeroSection, // ✅ NOVO - Section para question-hero
     'form-container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
     // Aliases de container estável
     'container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
@@ -61,11 +68,13 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // ✅ STEP 12 - TRANSIÇÃO
     hero: lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
     'quiz-transition': lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
+    'transition-hero': TransitionHeroSection, // ✅ NOVO - Section para transition-hero
     'loading-animation': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
     'loader-inline': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
 
     // ✅ STEPS 13-18 - PERGUNTAS AVANÇADAS
     'quiz-advanced-question': TextInlineBlock,
+    'strategic-question': StrategicQuestionBlock, // ✅ NOVO - Strategic question block
     'quiz-style-question': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
     'style-card-inline': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
     'style-cards-grid': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
