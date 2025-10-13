@@ -13,8 +13,9 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { funnelUnifiedService, type UnifiedFunnelData } from '@/services/FunnelUnifiedService';
-import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+
+// MIGRATED: enhancedFunnelService was moved to archived, using funnelUnifiedService instead
 
 export interface FunnelLoadingState {
     // Estados de carregamento
@@ -59,10 +60,10 @@ export interface UseFunnelLoaderOptions {
 }
 
 export function useFunnelLoader(
-    initialFunnelId?: string, 
+    initialFunnelId?: string,
     options: UseFunnelLoaderOptions = {}
 ): FunnelLoadingState {
-    
+
     const {
         context = FunnelContext.EDITOR,
         autoLoad = true,
@@ -126,9 +127,9 @@ export function useFunnelLoader(
         try {
             console.log('📖 useFunnelLoader: Carregando funil', id);
 
-            // Usar serviço unificado (com cache automático)
-            const loadedFunnel = await enhancedFunnelService.getFunnelWithFallback(id, userId);
-            
+            // MIGRATED: Using funnelUnifiedService instead of enhancedFunnelService
+            const loadedFunnel = await funnelUnifiedService.getFunnel(id);
+
             if (loadedFunnel) {
                 setFunnel(loadedFunnel);
                 setFunnelId(id);
@@ -153,7 +154,7 @@ export function useFunnelLoader(
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
             console.error('❌ Erro ao carregar funil:', errorMessage);
-            
+
             setErrorState(
                 errorMessage,
                 'LOAD_ERROR',
@@ -307,7 +308,7 @@ export function useFunnelLoader(
             console.log('🗑️ useFunnelLoader: Deletando funil', funnelId);
 
             const success = await funnelUnifiedService.deleteFunnel(funnelId, userId);
-            
+
             if (success) {
                 setFunnel(null);
                 setFunnelId(null);
