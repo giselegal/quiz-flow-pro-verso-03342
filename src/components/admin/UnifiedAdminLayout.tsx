@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
-import { useTheme } from '@/styles/themes';
+import { useSuperUnified } from '@/providers/SuperUnifiedProvider';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useUserName } from '@/hooks/useUserName';
 
@@ -60,8 +60,20 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 }) => {
     const [activeView, setActiveView] = useState(currentView);
     const [syncStats, setSyncStats] = useState(EditorDashboardSyncService.getSyncStats());
-    const theme = useTheme();
+    const { state } = useSuperUnified();
     const displayName = useUserName();
+    
+    // Map SuperUnifiedProvider theme to expected format
+    const theme = React.useMemo(() => ({
+        colors: {
+            background: state.theme.theme === 'dark' ? '#1a1a1a' : '#ffffff',
+            text: state.theme.theme === 'dark' ? '#F3F4F6' : '#1F2937',
+            detailsMinor: state.theme.secondaryColor,
+            buttons: state.theme.primaryColor,
+            glowEffect: state.theme.primaryColor,
+            accent: state.theme.secondaryColor
+        }
+    }), [state.theme]);
 
     // Computa iniciais para avatar simples
     const initials = React.useMemo(() => {
