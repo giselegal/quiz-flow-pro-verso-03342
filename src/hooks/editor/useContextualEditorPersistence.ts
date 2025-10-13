@@ -50,7 +50,7 @@ export const useContextualEditorPersistence = (
 ): UseContextualEditorPersistenceReturn => {
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [service] = useState(() => createContextualFunnelService(context));
+    const [service] = useState(() => new ContextualFunnelService(context));
 
     const convertToContextualData = (data: FunnelData): ContextualFunnelData => {
         return {
@@ -76,7 +76,7 @@ export const useContextualEditorPersistence = (
             isPublished: data.isPublished || false,
             version: data.version || 1,
             settings: data.config || {},
-            pages: data.pages.map(page => ({
+            pages: (data.pages || []).map((page: any) => ({
                 id: page.id,
                 pageType: page.page_type || 'step',
                 pageOrder: page.page_order || 1,

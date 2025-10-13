@@ -72,3 +72,17 @@ export type FunnelStepType =
   | 'result-guide'
   | 'offer-transition'
   | 'offer-page';
+
+// Contextual Funnel Data for editor persistence
+export interface ContextualFunnelData {
+  id: string;
+  name: string;
+  description?: string;
+  steps?: FunnelStep[];
+  theme?: FunnelTheme;
+  settings?: FunnelSettings;
+  context?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: any;
+}

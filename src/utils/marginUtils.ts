@@ -1,19 +1,12 @@
-// @ts-nocheck
 /**
- * 🔧 Utilitário universal para TypeScript nos blocos
- * Função única para corrigir todos os problemas de tipos
+ * Margin Utilities - Centralized
+ * Função para converter valores de margem em classes Tailwind
  */
 
-// Função universal com tipos corretos para usar em todos os blocos
-export const getMarginClass = (value: string | number | undefined, type: string): string => {
-  // Adicionar validação de tipo
-  if (typeof value === 'object' && value !== null) {
-    console.warn('getMarginClass received object value:', value);
-    return '';
-  }
-  
+export const getMarginClassLocal = (value: string | number, type: 'top' | 'bottom' | 'left' | 'right'): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
-  if (isNaN(numValue) || numValue === 0 || value === undefined) return '';
+
+  if (isNaN(numValue) || numValue === 0) return '';
 
   const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
@@ -54,20 +47,17 @@ export const getMarginClass = (value: string | number | undefined, type: string)
   return `${prefix}-32`; // Máximo suportado
 };
 
-// Interface universal para propriedades de margem
-export interface MarginProps {
-  marginTop?: number;
-  marginBottom?: number;
-  marginLeft?: number;
-  marginRight?: number;
-}
-
-// Valores padrão para margens
-export const defaultMargins: MarginProps = {
-  marginTop: 0,
-  marginBottom: 0,
-  marginLeft: 0,
-  marginRight: 0,
+export const getMarginClass = (margin?: string): string => {
+  if (!margin) return '';
+  
+  const marginMap: Record<string, string> = {
+    'none': 'm-0',
+    'small': 'm-2',
+    'medium': 'm-4',
+    'large': 'm-6',
+    'xl': 'm-8',
+    'auto': 'm-auto',
+  };
+  
+  return marginMap[margin] || '';
 };
-
-export default getMarginClass;

@@ -11,8 +11,7 @@
 
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
 import { funnelUnifiedService, UnifiedFunnelData } from '@/services/FunnelUnifiedService';
-import { FunnelService } from '@/application/services/FunnelService'
-const enhancedFunnelService = new FunnelService() // MIGRATED: usar funnelService;
+import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
 import { normalizeFunnelId } from '@/utils/funnelNormalizer';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
