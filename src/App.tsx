@@ -159,15 +159,29 @@ function App() {
 
                                 {/* 🎯 EDITOR CANÔNICO (QuizModularProductionEditor) */}
                                 <Route path="/editor">
-                                    <EditorErrorBoundary>
-                                        <div data-testid="quiz-modular-production-editor-page-optimized">
-                                            <UnifiedCRUDProvider autoLoad={true} context={FunnelContext.EDITOR}>
-                                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
-                                                    <QuizModularProductionEditor />
-                                                </Suspense>
-                                            </UnifiedCRUDProvider>
-                                        </div>
-                                    </EditorErrorBoundary>
+                                    {() => {
+                                        console.log('🎯 /editor route matched');
+                                        return (
+                                            <EditorErrorBoundary>
+                                                <div data-testid="quiz-modular-production-editor-page-optimized">
+                                                    <UnifiedCRUDProvider autoLoad={true} context={FunnelContext.EDITOR}>
+                                                        <Suspense fallback={
+                                                            <div className="flex items-center justify-center min-h-screen">
+                                                                <div className="text-center">
+                                                                    <EnhancedLoadingFallback message="Carregando editor..." />
+                                                                    <p className="text-xs text-muted-foreground mt-4">
+                                                                        Inicializando QuizModularProductionEditor...
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        }>
+                                                            <QuizModularProductionEditor />
+                                                        </Suspense>
+                                                    </UnifiedCRUDProvider>
+                                                </div>
+                                            </EditorErrorBoundary>
+                                        );
+                                    }}
                                 </Route>
 
                                 <Route path="/editor/:funnelId">

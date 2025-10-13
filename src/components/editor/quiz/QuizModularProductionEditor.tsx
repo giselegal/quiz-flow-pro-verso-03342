@@ -15,6 +15,8 @@
  * - ✅ Publicação para /quiz-estilo
  */
 
+console.log('📦 QuizModularProductionEditor: Module loading...');
+
 import React, { useState, useCallback, useEffect, useMemo, Suspense, useRef } from 'react';
 import '@/styles/globals.css'; // garante estilos de produção (quiz-option*, quiz-options-*)
 import { useLocation } from 'wouter';
@@ -385,6 +387,8 @@ interface QuizModularProductionEditorProps {
 export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorProps> = ({
     funnelId: initialFunnelId
 }) => {
+    console.log('✅ QuizModularProductionEditor: Component rendering', { initialFunnelId });
+    
     // ======================
     // Larguras redimensionáveis dos painéis (persistidas)
     // ======================
