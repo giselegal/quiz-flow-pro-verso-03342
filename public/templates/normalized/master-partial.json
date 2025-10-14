@@ -1,7 +1,7 @@
 {
   "templateId": "quiz21StepsComplete",
   "version": "3.0",
-  "generatedAt": "2025-10-14T17:33:39.518Z",
+  "generatedAt": "2025-10-14T18:03:53.637Z",
   "steps": {
     "step-01": {
       "id": "step-01",
@@ -42,15 +42,159 @@
         {
           "type": "question-block",
           "config": {
-            "questionNumber": "02",
+            "questionNumber": 1,
             "questionText": "Q1 - Roupa Favorita",
             "requiredSelections": 1,
-            "options": []
+            "options": [
+              {
+                "id": "2a",
+                "text": "Vestidos fluidos e confortáveis",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp"
+              },
+              {
+                "id": "2b",
+                "text": "Blazers estruturados e calças alfaiataria",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp"
+              },
+              {
+                "id": "2c",
+                "text": "Peças modernas com toque minimalista",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp"
+              },
+              {
+                "id": "2d",
+                "text": "Vestidos sofisticados e acessórios marcantes",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"
+              }
+            ]
           }
         }
       ],
       "meta": {
         "order": 2,
+        "originalType": "question"
+      }
+    },
+    "step-03": {
+      "id": "step-03",
+      "type": "question",
+      "templateVersion": "3.0",
+      "blocks": [
+        {
+          "type": "question-block",
+          "config": {
+            "questionNumber": 2,
+            "questionText": "Q2 - Nome pessoal",
+            "requiredSelections": 1,
+            "options": [
+              {
+                "id": "3a",
+                "text": "Opção A para Q2",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp"
+              },
+              {
+                "id": "3b",
+                "text": "Opção B para Q2",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp"
+              },
+              {
+                "id": "3c",
+                "text": "Opção C para Q2",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp"
+              },
+              {
+                "id": "3d",
+                "text": "Opção D para Q2",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"
+              }
+            ]
+          }
+        }
+      ],
+      "meta": {
+        "order": 3,
+        "originalType": "question"
+      }
+    },
+    "step-04": {
+      "id": "step-04",
+      "type": "question",
+      "templateVersion": "3.0",
+      "blocks": [
+        {
+          "type": "question-block",
+          "config": {
+            "questionNumber": 3,
+            "questionText": "Q3 - Estilo pessoal",
+            "requiredSelections": 1,
+            "options": [
+              {
+                "id": "4a",
+                "text": "Opção A para Q3",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp"
+              },
+              {
+                "id": "4b",
+                "text": "Opção B para Q3",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp"
+              },
+              {
+                "id": "4c",
+                "text": "Opção C para Q3",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp"
+              },
+              {
+                "id": "4d",
+                "text": "Opção D para Q3",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"
+              }
+            ]
+          }
+        }
+      ],
+      "meta": {
+        "order": 4,
+        "originalType": "question"
+      }
+    },
+    "step-05": {
+      "id": "step-05",
+      "type": "question",
+      "templateVersion": "3.0",
+      "blocks": [
+        {
+          "type": "question-block",
+          "config": {
+            "questionNumber": 4,
+            "questionText": "Q4 - Ocasiões",
+            "requiredSelections": 1,
+            "options": [
+              {
+                "id": "5a",
+                "text": "Opção A para Q4",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp"
+              },
+              {
+                "id": "5b",
+                "text": "Opção B para Q4",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp"
+              },
+              {
+                "id": "5c",
+                "text": "Opção C para Q4",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp"
+              },
+              {
+                "id": "5d",
+                "text": "Opção D para Q4",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"
+              }
+            ]
+          }
+        }
+      ],
+      "meta": {
+        "order": 5,
         "originalType": "question"
       }
     }

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-// Script inicial de transformação de steps legacy para formato normalized (piloto: step-01 e step-02)
+// Script de transformação de steps legacy → formato normalized
+// Fase 1: step-01 e step-02
+// Fase 2: expansão para steps 03, 04 e 05
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -90,8 +92,30 @@ function normalizeIntro(stepId, legacyObj) {
 
 function normalizeQuestion(stepId, legacyObj) {
     const questionText = legacyObj?.questionText || legacyObj?.metadata?.name || 'Pergunta';
-    const optionsRaw = legacyObj?.options || legacyObj?.sections?.flatMap(s => s.options || []) || [];
-    const options = optionsRaw.map(o => ({ id: o.id || o.optionId || o.text?.toLowerCase()?.replace(/\s+/g, '-').slice(0, 32), text: o.text || o.label || 'Opção', image: o.image }));
+    // Unificar coleta de opções: direct options, sections[].options, sections[].content.options
+    const sectionOptions = Array.isArray(legacyObj?.sections)
+        ? legacyObj.sections.flatMap(s => {
+            const direct = s?.options || [];
+            const nested = s?.content?.options || [];
+            return [...direct, ...nested];
+        })
+        : [];
+    const directOptions = legacyObj?.options || [];
+    const mergedRaw = [...directOptions, ...sectionOptions];
+    // Deduplicar
+    const seen = new Set();
+    const optionsRaw = mergedRaw.filter(o => {
+        const key = o?.id || o?.optionId || o?.text || o?.label;
+        if (!key) return false;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+    const options = optionsRaw.map(o => ({
+        id: o.id || o.optionId || o.text?.toLowerCase()?.replace(/\s+/g, '-').slice(0, 32),
+        text: o.text || o.label || 'Opção',
+        image: o.image || o.imageUrl
+    }));
     const required = legacyObj?.validation?.minSelections || legacyObj?.requiredSelections || 1;
     return {
         id: stepId,
@@ -101,7 +125,7 @@ function normalizeQuestion(stepId, legacyObj) {
             {
                 type: 'question-block',
                 config: {
-                    questionNumber: legacyObj?.questionNumber || stepId.replace('step-', ''),
+                    questionNumber: legacyObj?.questionNumber || legacyObj?.metadata?.questionNumber || stepId.replace('step-', ''),
                     questionText,
                     requiredSelections: required,
                     options
@@ -112,7 +136,7 @@ function normalizeQuestion(stepId, legacyObj) {
     };
 }
 
-const stepsToProcess = ['step-01', 'step-02'];
+const stepsToProcess = ['step-01', 'step-02', 'step-03', 'step-04', 'step-05'];
 const normalized = {};
 
 for (const sid of stepsToProcess) {
@@ -137,4 +161,4 @@ const masterPath = path.join(OUTPUT_DIR, 'master-partial.json');
 fs.writeFileSync(masterPath, JSON.stringify({ templateId: 'quiz21StepsComplete', version: '3.0', generatedAt: new Date().toISOString(), steps: normalized }, null, 2));
 console.log('✅ Gerado master parcial', masterPath);
 
-console.log('🎯 Transformação piloto concluída. Expanda para demais steps posteriormente.');
+console.log('🎯 Transformação concluída para', stepsToProcess.length, 'steps (piloto expandido).');
