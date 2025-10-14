@@ -114,8 +114,8 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             const baseMatch = raw.match(/^(?:step-)?(\d{1,2})$/);
             const numericPart = baseMatch ? baseMatch[1] : raw.replace(/^step-/, '');
             const paddedId = `step-${String(numericPart).padStart(2, '0')}`;
-            // Apenas steps piloto
-            if (!/^step-0[12]$/.test(paddedId)) { setNormalizedStep(null); return; }
+            // Steps piloto expandido (01-05)
+            if (!/^step-0[0-5]$/.test(paddedId)) { setNormalizedStep(null); return; }
             try {
                 const data = await loadNormalizedStep(paddedId);
                 if (!cancelled) setNormalizedStep(data);
@@ -534,7 +534,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                     {/* Renderização Híbrida: Blocks dinâmicos para result/offer, Unified para demais */}
                     {/* Indicador de modo no editor */}
                     {editorMode && (
-                        <div className="max-w-6xl mx-auto px-4 pb-2 text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-3">
+                        <div className="max-w-6xl mx-auto px-4 pb-2 text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-3 flex-wrap">
                             <span>Renderer: {rendererMode}{normalizedStep ? ' (normalized)' : legacyEnabled ? ' (legacy)' : ''}</span>
                             {normalizedStep && (
                                 <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded border border-emerald-300 font-semibold">
@@ -542,8 +542,39 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                                 </span>
                             )}
                             {normalizedStep && !legacyEnabled && (
-                                <span className="text-[9px] text-gray-400">(adicione &normalizedDebug=1 à URL para ver contornos)</span>
+                                <span className="text-[9px] text-gray-400">(&normalizedDebug=1 para contornos)</span>
                             )}
+                            {/* Toggle buttons */}
+                            <div className="flex items-center gap-1">
+                                {['legacy', 'unified', 'auto'].map(mode => (
+                                    <button
+                                        key={mode}
+                                        type="button"
+                                        onClick={() => {
+                                            const sp = new URLSearchParams(window.location.search);
+                                            sp.set('renderer', mode);
+                                            const url = `${window.location.pathname}?${sp.toString()}`;
+                                            window.history.replaceState({}, '', url);
+                                            setRendererMode(mode as any);
+                                        }}
+                                        className={`px-2 py-0.5 rounded border text-[10px] tracking-normal ${rendererMode === mode ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-100'}`}
+                                    >{mode}</button>
+                                ))}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const sp = new URLSearchParams(window.location.search);
+                                        const cur = sp.get('normalizedDebug');
+                                        const next = (cur === '1' || cur === 'true') ? null : '1';
+                                        if (next) sp.set('normalizedDebug', next); else sp.delete('normalizedDebug');
+                                        const url = `${window.location.pathname}?${sp.toString()}`;
+                                        window.history.replaceState({}, '', url);
+                                        setNormalizedDebug(!!next);
+                                    }}
+                                    className={`ml-1 px-2 py-0.5 rounded border text-[10px] tracking-normal ${normalizedDebug ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-emerald-600 border-emerald-400 hover:bg-emerald-50'}`}
+                                    title="Toggle normalized debug"
+                                >debug</button>
+                            </div>
                         </div>
                     )}
                     {legacyEnabled ? (

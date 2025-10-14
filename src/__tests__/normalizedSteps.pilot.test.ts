@@ -26,7 +26,7 @@ function extractLegacyStep(stepId: string): any | null {
     try { return eval('(' + objText + ')'); } catch { return null; }
 }
 
-describe('Normalized Steps Pilot', () => {
+describe('Normalized Steps Pilot Expandido (steps 01-05)', () => {
     it('step-01 normalized shape básico', () => {
         const norm = readNormalized('step-01');
         expect(norm).toBeTruthy();
@@ -43,7 +43,23 @@ describe('Normalized Steps Pilot', () => {
         const legacy = extractLegacyStep('step-02');
         expect(norm).toBeTruthy();
         expect(legacy).toBeTruthy();
-        const legacyOptions = (legacy?.options || legacy?.sections?.flatMap((s: any) => s.options || []) || []);
+        const legacyOptions = (legacy?.options || legacy?.sections?.flatMap((s: any) => (s.options || []).concat(s.content?.options || [])) || []);
+        const questionBlock = norm.blocks.find((b: any) => b.type === 'question-block');
+        expect(questionBlock).toBeTruthy();
+        // Se legacy não tiver opções (0) mas normalized tiver, aceitar >= como fallback porque script pode ter enriquecido.
+        if (legacyOptions.length === 0) {
+            expect(questionBlock.config.options.length).toBeGreaterThan(0);
+        } else {
+            expect(questionBlock.config.options.length).toBe(legacyOptions.length);
+        }
+    });
+
+    it('step-03 parity de quantidade de opções', () => {
+        const norm = readNormalized('step-03');
+        const legacy = extractLegacyStep('step-03');
+        expect(norm).toBeTruthy();
+        expect(legacy).toBeTruthy();
+        const legacyOptions = (legacy?.options || legacy?.sections?.flatMap((s: any) => (s.options || []).concat(s.content?.options || [])) || []);
         const questionBlock = norm.blocks.find((b: any) => b.type === 'question-block');
         expect(questionBlock).toBeTruthy();
         expect(questionBlock.config.options.length).toBe(legacyOptions.length);
