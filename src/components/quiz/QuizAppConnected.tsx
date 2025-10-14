@@ -109,11 +109,20 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         let cancelled = false;
         async function load() {
             if (rendererMode === 'legacy') { setNormalizedStep(null); return; }
-            const padded = state.currentStep.startsWith('step-') ? state.currentStep : `step-${state.currentStep}`;
-            // Apenas tenta se for step-01 ou step-02 (piloto) ou modo unified/auto
-            if (!/^step-0[12]$/.test(padded)) { setNormalizedStep(null); return; }
-            const data = await loadNormalizedStep(padded);
-            if (!cancelled) setNormalizedStep(data);
+            // Normalizar ID: aceitar 'step-1', '1', '01', etc.
+            const raw = state.currentStep || '';
+            const baseMatch = raw.match(/^(?:step-)?(\d{1,2})$/);
+            const numericPart = baseMatch ? baseMatch[1] : raw.replace(/^step-/, '');
+            const paddedId = `step-${String(numericPart).padStart(2, '0')}`;
+            // Apenas steps piloto
+            if (!/^step-0[12]$/.test(paddedId)) { setNormalizedStep(null); return; }
+            try {
+                const data = await loadNormalizedStep(paddedId);
+                if (!cancelled) setNormalizedStep(data);
+            } catch (e) {
+                console.warn('[normalized] Falha ao carregar', paddedId, e);
+                if (!cancelled) setNormalizedStep(null);
+            }
         }
         load();
         return () => { cancelled = true; };
