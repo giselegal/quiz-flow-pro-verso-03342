@@ -786,8 +786,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
     }, [setSelectedBlockId, editorCtx]);
 
-    // Bloco selecionado (usa selectedBlockId do hook)
+    // Bloco selecionado (usa selectedBlockId efetivo considerando provider)
     const selectedBlock = useMemo(() => selectedStep?.blocks.find(b => b.id === effectiveSelectedBlockId), [selectedStep, effectiveSelectedBlockId]);
+
+    // Sincronizar seleção local -> provider (quando provider estiver disponível)
+    useEffect(() => {
+        if (!editorCtx?.actions?.setSelectedBlockId) return;
+        // Só propaga quando a origem for local (isto é, quando effective não vier do provider)
+        if (editorCtx?.state?.selectedBlockId == null && selectedBlockId !== undefined) {
+            editorCtx.actions.setSelectedBlockId(selectedBlockId || null);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedBlockId]);
 
     // Persistência de seleção por etapa agora tratada no hook
 
@@ -1124,7 +1134,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             selectedStep={selectedStep}
                             selections={quizSelections[id] || []}
                             onToggle={(optionId: string, multi: boolean, required: number) => toggleQuizOption(id, optionId, multi, required)}
-                            advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockId(''); }}
+                            advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockIdUnified(''); }}
                         />
                     </div>
                 </div>
@@ -2118,7 +2128,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             steps={steps}
                             selectedStepId={selectedStepId}
                             byStep={byStep as any}
-                            onSelect={(id) => { setSelectedStepId(id); setSelectedBlockId(''); }}
+                            onSelect={(id) => { setSelectedStepId(id); setSelectedBlockIdUnified(''); }}
                             onAddStep={handleAddStep}
                             onMoveStep={handleMoveStep}
                             onDeleteStep={handleDeleteStep}
@@ -2145,7 +2155,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             topStyle={topStyle || undefined}
                             BlockRow={BlockRow}
                             byBlock={byBlock}
-                            selectedBlockId={selectedBlockId}
+                            selectedBlockId={effectiveSelectedBlockId}
                             isMultiSelected={isMultiSelected}
                             handleBlockClick={(e, block) => {
                                 // orderedBlocks: ordem top-level + filhos linearizada para range com Shift
