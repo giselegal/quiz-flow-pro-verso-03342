@@ -166,16 +166,12 @@ export {
 export { stepRegistry } from '@/components/step-registry/StepRegistry';
 
 // Export do registro de steps de produção
-export {
-  registerProductionSteps,
-  PRODUCTION_STEPS,
-  IntroStepAdapter,
-  QuestionStepAdapter,
-  StrategicQuestionStepAdapter,
-  TransitionStepAdapter,
-  ResultStepAdapter,
-  OfferStepAdapter
-} from '@/components/step-registry/ProductionStepsRegistry';
+// Evitar importar estaticamente ProductionStepsRegistry para não quebrar o code-splitting dos adapters.
+// Expor apenas um wrapper dinâmico para o registrador público.
+export async function registerProductionSteps() {
+  const mod = await import('@/components/step-registry/ProductionStepsRegistry');
+  return mod.registerProductionSteps();
+}
 
 // 🎯 EXPORT DEFAULT PARA INTEGRAÇÃO RÁPIDA
 export default UnifiedEditorSystem;
