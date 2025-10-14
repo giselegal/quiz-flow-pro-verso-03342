@@ -96,6 +96,8 @@ import { useVirtualBlocks } from './hooks/useVirtualBlocks';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import { BuilderSystemPanel } from '@/components/editor/BuilderSystemPanel';
+// Dados canônicos das etapas (fonte rica)
+import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
 import CanvasArea from './components/CanvasArea';
 import BlockRow from './components/BlockRow';
 import { BlockComponent, EditableQuizStep, BlockSnippet } from './types';
@@ -597,28 +599,190 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             return 'offer'; // idx === 20
                         };
 
-                        const initial: EditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
-                            const stepId = `step-${String(idx + 1).padStart(2, '0')}`;
-                            const blocks = safeGetTemplateBlocks(
-                                stepId,
-                                QUIZ_STYLE_21_STEPS_TEMPLATE,
-                                funnelParam
-                            );
+                        // ==========================
+                        // 🔄 NOVO: Construção enriquecida baseada em QUIZ_STEPS (substitui apenas se dados canônicos disponíveis)
+                        // ==========================
+                        const buildEnrichedBlocksForStep = (stepId: string, quizStep: any): any[] => {
+                            const blocks: any[] = [];
+                            let order = 0;
+                            const push = (partial: Partial<EditorBlockComponent> & { type: string }) => {
+                                blocks.push({
+                                    id: `${stepId}-${partial.type}-${blocks.length + 1}`,
+                                    type: partial.type,
+                                    order: order++,
+                                    parentId: null,
+                                    content: partial.content || {},
+                                    properties: partial.properties || {}
+                                });
+                            };
+                            switch (quizStep.type) {
+                                case 'intro': {
+                                    if (quizStep.title) {
+                                        push({
+                                            type: 'heading',
+                                            content: { text: quizStep.title },
+                                            properties: { level: 2, allowHtml: true, textAlign: 'center' }
+                                        });
+                                    }
+                                    if (quizStep.image) {
+                                        push({
+                                            type: 'image',
+                                            content: { src: quizStep.image, alt: 'Intro' },
+                                            properties: { width: '100%', borderRadius: '12px' }
+                                        });
+                                    }
+                                    if (quizStep.formQuestion) {
+                                        push({
+                                            type: 'form-input',
+                                            content: { label: quizStep.formQuestion, placeholder: quizStep.placeholder || '' },
+                                            properties: { required: true }
+                                        });
+                                    }
+                                    push({
+                                        type: 'button',
+                                        content: { text: quizStep.buttonText || 'Continuar' },
+                                        properties: { action: 'next-step' }
+                                    });
+                                    break;
+                                }
+                                case 'question': {
+                                    if (quizStep.questionText) {
+                                        push({
+                                            type: 'heading',
+                                            content: { text: quizStep.questionText },
+                                            properties: { level: 3, allowHtml: false, textAlign: 'center' }
+                                        });
+                                    }
+                                    push({
+                                        type: 'quiz-options',
+                                        content: { options: quizStep.options || [] },
+                                        properties: {
+                                            question: quizStep.questionText,
+                                            questionNumber: quizStep.questionNumber,
+                                            multiSelect: true,
+                                            requiredSelections: quizStep.requiredSelections || 1,
+                                            maxSelections: quizStep.requiredSelections || 3,
+                                            autoAdvance: true
+                                        }
+                                    });
+                                    break;
+                                }
+                                case 'strategic-question': {
+                                    if (quizStep.questionText) {
+                                        push({
+                                            type: 'heading',
+                                            content: { text: quizStep.questionText },
+                                            properties: { level: 3, textAlign: 'center' }
+                                        });
+                                    }
+                                    push({
+                                        type: 'quiz-options',
+                                        content: { options: quizStep.options || [] },
+                                        properties: {
+                                            question: quizStep.questionText,
+                                            multiSelect: false,
+                                            requiredSelections: 1,
+                                            maxSelections: 1,
+                                            autoAdvance: true
+                                        }
+                                    });
+                                    break;
+                                }
+                                case 'transition':
+                                case 'transition-result': {
+                                    if (quizStep.title) {
+                                        push({
+                                            type: 'heading',
+                                            content: { text: quizStep.title },
+                                            properties: { level: 2, allowHtml: true, textAlign: 'center' }
+                                        });
+                                    }
+                                    if (quizStep.text) {
+                                        push({
+                                            type: 'text',
+                                            content: { text: quizStep.text },
+                                            properties: { textAlign: 'center' }
+                                        });
+                                    }
+                                    if (quizStep.showContinueButton) {
+                                        push({
+                                            type: 'button',
+                                            content: { text: quizStep.continueButtonText || 'Continuar' },
+                                            properties: { action: 'next-step' }
+                                        });
+                                    }
+                                    break;
+                                }
+                                case 'result': {
+                                    push({
+                                        type: 'result-header-inline',
+                                        content: { title: quizStep.title || 'Seu Resultado:' },
+                                        properties: {}
+                                    });
+                                    break;
+                                }
+                                case 'offer': {
+                                    if (quizStep.image) {
+                                        push({
+                                            type: 'image',
+                                            content: { src: quizStep.image, alt: 'Oferta' },
+                                            properties: { width: '100%', borderRadius: '12px' }
+                                        });
+                                    }
+                                    // Um bloco CTA genérico usando a primeira oferta do mapa como preview
+                                    const firstOffer = quizStep.offerMap ? Object.values(quizStep.offerMap)[0] : null;
+                                    push({
+                                        type: 'quiz-offer-cta-inline',
+                                        content: {
+                                            title: firstOffer?.title || 'Oferta Especial',
+                                            description: firstOffer?.description || 'Conteúdo exclusivo liberado',
+                                            buttonText: firstOffer?.buttonText || 'Quero Aproveitar',
+                                            offerKey: firstOffer ? Object.keys(quizStep.offerMap)[0] : undefined
+                                        },
+                                        properties: {}
+                                    });
+                                    break;
+                                }
+                                default: {
+                                    // fallback genérico preservando blocks antigos se existirem
+                                    const legacyBlocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                                    return legacyBlocks;
+                                }
+                            }
+                            return blocks;
+                        };
 
+                        const enriched: EditableQuizStep[] = STEP_ORDER.map((stepId, idx) => {
+                            const quizStep: any = (QUIZ_STEPS as any)[stepId];
+                            const legacyType = buildStepType(idx);
+                            const next = quizStep?.nextStep || (idx < STEP_ORDER.length - 1 ? STEP_ORDER[idx + 1] : undefined);
+                            let blocks: any[] = [];
+                            try {
+                                if (quizStep) {
+                                    blocks = buildEnrichedBlocksForStep(stepId, quizStep);
+                                } else {
+                                    blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                                }
+                            } catch (e) {
+                                console.warn('⚠️ Falha ao construir blocks enriquecidos para', stepId, e);
+                                blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                            }
                             return {
                                 id: stepId,
-                                type: buildStepType(idx),
+                                type: quizStep?.type || legacyType,
                                 order: idx + 1,
-                                blocks: blocks,
-                                nextStep: undefined
+                                blocks,
+                                nextStep: next,
+                                // Metadados completos do quizStep para futura edição detalhada
+                                meta: quizStep
                             } as EditableQuizStep;
                         });
-                        for (let i = 0; i < initial.length - 1; i++) initial[i].nextStep = initial[i + 1].id;
-                        setSteps(initial);
-                        setSelectedStepIdUnified(initial[0]?.id || '');
+
+                        setSteps(enriched);
+                        setSelectedStepIdUnified(enriched[0]?.id || '');
                         setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                         setIsLoading(false);
-                        console.log('✅ Fallback concluído! Total de steps:', initial.length);
+                        console.log('✅ Fallback enriquecido concluído! Total de steps:', enriched.length);
                     }
                 }
             }
