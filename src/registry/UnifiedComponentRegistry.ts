@@ -15,7 +15,6 @@ import React, { lazy, type ComponentType } from 'react';
 
 // Importações críticas estáticas (renderização imediata)
 import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
-import BasicContainerBlock from '@/components/editor/blocks/BasicContainerBlock';
 import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
 import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
 import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
@@ -61,11 +60,12 @@ export const UNIFIED_COMPONENT_REGISTRY: Record<string, ComponentType<any> | (()
     'legal-notice': LegalNoticeInlineBlock,
     'legal-notice-inline': LegalNoticeInlineBlock,
     'options-grid': OptionsGridBlock,
-    'container': BasicContainerBlock,
-    'section': BasicContainerBlock,
-    'box': BasicContainerBlock,
+    // Container e aliases via lazy para evitar ciclo com BasicContainerBlock
+    'container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
+    'section': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
+    'box': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
     // Compatibilidade explícita com templates de formulário
-    'form-container': BasicContainerBlock,
+    'form-container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
     'sales-hero': SalesHeroBlock,
 
     // 🔌 COMPONENTES CONECTADOS À API - Controlados pelo /editor
