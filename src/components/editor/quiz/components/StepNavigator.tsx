@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
+import { FixedSizeList as List } from 'react-window';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 
 export interface StepNavigatorValidationIssue {
@@ -21,8 +21,8 @@ export interface StepNavigatorProps<Step = any> {
 }
 
 /**
- * StepNavigator - Coluna de etapas isolada.
- * Assume responsabilidade apenas visual + callbacks fornecidos.
+ * StepNavigator - Coluna de etapas isolada (VIRTUALIZADA).
+ * Usa react-window para renderizar apenas os steps visíveis.
  */
 export const StepNavigator = <Step extends any = any>({
     steps,
@@ -34,54 +34,85 @@ export const StepNavigator = <Step extends any = any>({
     onDeleteStep,
     extractStepMeta = (s: any) => ({ id: s.id, type: s.type, blockCount: s.blocks?.length || 0 })
 }: StepNavigatorProps<Step>) => {
-    return (
-        <>
-            <div className="px-4 py-3 border-b">
-                <h2 className="font-semibold text-sm">Etapas</h2>
-                <p className="text-xs text-muted-foreground">{steps.length} etapas</p>
-            </div>
-            <ScrollArea className="flex-1">
-                <div className="p-2 space-y-1">
-                    {steps.map((step: any, index) => {
-                        const meta = extractStepMeta(step);
-                        const issues = byStep[meta.id];
-                        return (
-                            <div key={meta.id} className={cn('group rounded-lg border-2 transition-colors', selectedStepId === meta.id ? 'bg-blue-50 border-blue-500' : 'border-transparent hover:bg-gray-50')}>
-                                <div className="w-full text-left px-3 py-2 cursor-pointer" onClick={() => onSelect(meta.id)}>
-                                    <div className="flex items-center gap-2">
-                                        <Badge variant="outline" className="text-xs">{index + 1}</Badge>
-                                        <span className="text-sm font-medium truncate" title={meta.id}>{meta.id}</span>
-                                        {issues?.length ? (
-                                            <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-medium">
-                                                {(() => {
-                                                    const errorCount = issues.filter(e => e.severity === 'error').length;
-                                                    const warnCount = issues.filter(e => e.severity === 'warning').length;
-                                                    if (errorCount > 0) return <span className="text-red-600">{errorCount} err</span>;
-                                                    if (warnCount > 0) return <span className="text-amber-600">{warnCount} av</span>;
-                                                    return null;
-                                                })()}
-                                            </span>
-                                        ) : null}
-                                    </div>
-                                    <div className="flex items-center gap-2 mt-1">
-                                        {meta.type && <Badge className="text-xs">{meta.type}</Badge>}
-                                        {typeof meta.blockCount === 'number' && <span className="text-xs text-muted-foreground">{meta.blockCount} blocos</span>}
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-end gap-1 px-2 pb-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index === 0} onClick={() => onMoveStep(meta.id, 'up')} title="Mover para cima">↑</Button>
-                                    <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index === steps.length - 1} onClick={() => onMoveStep(meta.id, 'down')} title="Mover para baixo">↓</Button>
-                                    <Button variant="ghost" size="icon" className="h-5 w-5 text-red-600 hover:text-red-700" onClick={() => { if (window.confirm(`Remover ${meta.id}?`)) onDeleteStep(meta.id); }} title="Remover etapa">✕</Button>
-                                </div>
-                            </div>
-                        );
-                    })}
-                    <div className="pt-2">
-                        <Button variant="outline" size="sm" className="w-full text-xs" onClick={onAddStep}>+ Adicionar etapa</Button>
+    const listRef = useRef<List>(null);
+    const ITEM_HEIGHT = 90; // Altura aproximada de cada step item
+    const HEADER_HEIGHT = 60; // Altura do header
+    const FOOTER_HEIGHT = 50; // Altura do botão adicionar
+
+    // Auto-scroll para o step selecionado quando mudar
+    useEffect(() => {
+        const selectedIndex = steps.findIndex((s: any) => extractStepMeta(s).id === selectedStepId);
+        if (selectedIndex >= 0 && listRef.current) {
+            listRef.current.scrollToItem(selectedIndex, 'smart');
+        }
+    }, [selectedStepId, steps, extractStepMeta]);
+
+    // Componente de linha virtualizado
+    const StepRow = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+        const step = steps[index];
+        const meta = extractStepMeta(step);
+        const issues = byStep[meta.id];
+        const isSelected = selectedStepId === meta.id;
+
+        return (
+            <div style={{ ...style, padding: '4px 8px' }}>
+                <div className={cn('group rounded-lg border-2 transition-colors', isSelected ? 'bg-blue-50 border-blue-500' : 'border-transparent hover:bg-gray-50')}>
+                    <div className="w-full text-left px-3 py-2 cursor-pointer" onClick={() => onSelect(meta.id)}>
+                        <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-xs">{index + 1}</Badge>
+                            <span className="text-sm font-medium truncate" title={meta.id}>{meta.id}</span>
+                            {issues?.length ? (
+                                <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-medium">
+                                    {(() => {
+                                        const errorCount = issues.filter(e => e.severity === 'error').length;
+                                        const warnCount = issues.filter(e => e.severity === 'warning').length;
+                                        if (errorCount > 0) return <span className="text-red-600">{errorCount} err</span>;
+                                        if (warnCount > 0) return <span className="text-amber-600">{warnCount} av</span>;
+                                        return null;
+                                    })()}
+                                </span>
+                            ) : null}
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                            {meta.type && <Badge className="text-xs">{meta.type}</Badge>}
+                            {typeof meta.blockCount === 'number' && <span className="text-xs text-muted-foreground">{meta.blockCount} blocos</span>}
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-end gap-1 px-2 pb-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index === 0} onClick={(e) => { e.stopPropagation(); onMoveStep(meta.id, 'up'); }} title="Mover para cima">↑</Button>
+                        <Button variant="ghost" size="icon" className="h-5 w-5" disabled={index === steps.length - 1} onClick={(e) => { e.stopPropagation(); onMoveStep(meta.id, 'down'); }} title="Mover para baixo">↓</Button>
+                        <Button variant="ghost" size="icon" className="h-5 w-5 text-red-600 hover:text-red-700" onClick={(e) => { e.stopPropagation(); if (window.confirm(`Remover ${meta.id}?`)) onDeleteStep(meta.id); }} title="Remover etapa">✕</Button>
                     </div>
                 </div>
-            </ScrollArea>
-        </>
+            </div>
+        );
+    };
+
+    // Calcular altura disponível (viewport - header - footer)
+    const containerHeight = typeof window !== 'undefined' ? window.innerHeight - HEADER_HEIGHT - FOOTER_HEIGHT - 120 : 600;
+
+    return (
+        <div className="flex flex-col h-full">
+            <div className="px-4 py-3 border-b shrink-0">
+                <h2 className="font-semibold text-sm">Etapas</h2>
+                <p className="text-xs text-muted-foreground">{steps.length} etapas (virtualizado)</p>
+            </div>
+            <div className="flex-1 overflow-hidden">
+                <List
+                    ref={listRef}
+                    height={containerHeight}
+                    itemCount={steps.length}
+                    itemSize={ITEM_HEIGHT}
+                    width="100%"
+                    overscanCount={3}
+                >
+                    {StepRow}
+                </List>
+            </div>
+            <div className="p-2 border-t shrink-0">
+                <Button variant="outline" size="sm" className="w-full text-xs" onClick={onAddStep}>+ Adicionar etapa</Button>
+            </div>
+        </div>
     );
 };
 

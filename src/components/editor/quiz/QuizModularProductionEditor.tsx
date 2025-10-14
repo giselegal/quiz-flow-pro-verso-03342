@@ -753,37 +753,49 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             return blocks;
                         };
 
-                        const enriched: EditableQuizStep[] = STEP_ORDER.map((stepId, idx) => {
-                            const quizStep: any = (QUIZ_STEPS as any)[stepId];
-                            const legacyType = buildStepType(idx);
-                            const next = quizStep?.nextStep || (idx < STEP_ORDER.length - 1 ? STEP_ORDER[idx + 1] : undefined);
-                            let blocks: any[] = [];
+                        // 🚀 ASYNC: Carregar steps de forma lazy e assíncrona
+                        (async () => {
                             try {
-                                if (quizStep) {
-                                    blocks = buildEnrichedBlocksForStep(stepId, quizStep);
-                                } else {
-                                    blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
-                                }
-                            } catch (e) {
-                                console.warn('⚠️ Falha ao construir blocks enriquecidos para', stepId, e);
-                                blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
-                            }
-                            return {
-                                id: stepId,
-                                type: quizStep?.type || legacyType,
-                                order: idx + 1,
-                                blocks,
-                                nextStep: next,
-                                // Metadados completos do quizStep para futura edição detalhada
-                                meta: quizStep
-                            } as EditableQuizStep;
-                        });
+                                console.time('⚡ Lazy load all steps');
+                                const stepsMap = await loadAllQuizSteps();
+                                console.timeEnd('⚡ Lazy load all steps');
 
-                        setSteps(enriched);
-                        setSelectedStepIdUnified(enriched[0]?.id || '');
-                        setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                        setIsLoading(false);
-                        console.log('✅ Fallback enriquecido concluído! Total de steps:', enriched.length);
+                                const enriched: EditableQuizStep[] = STEP_ORDER.map((stepId, idx) => {
+                                    const quizStep = stepsMap.get(stepId);
+                                    const legacyType = buildStepType(idx);
+                                    const next = quizStep?.nextStep || (idx < STEP_ORDER.length - 1 ? STEP_ORDER[idx + 1] : undefined);
+                                    let blocks: any[] = [];
+                                    try {
+                                        if (quizStep) {
+                                            blocks = buildEnrichedBlocksForStep(stepId, quizStep);
+                                        } else {
+                                            blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                                        }
+                                    } catch (e) {
+                                        console.warn('⚠️ Falha ao construir blocks enriquecidos para', stepId, e);
+                                        blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                                    }
+                                    return {
+                                        id: stepId,
+                                        type: quizStep?.type || legacyType,
+                                        order: idx + 1,
+                                        blocks,
+                                        nextStep: next,
+                                        // Metadados completos do quizStep para futura edição detalhada
+                                        meta: quizStep
+                                    } as EditableQuizStep;
+                                });
+
+                                setSteps(enriched);
+                                setSelectedStepIdUnified(enriched[0]?.id || '');
+                                setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                setIsLoading(false);
+                                console.log('✅ Fallback enriquecido concluído! Total de steps:', enriched.length);
+                            } catch (err) {
+                                console.error('❌ Erro ao carregar steps lazy:', err);
+                                setIsLoading(false);
+                            }
+                        })();
                     }
                 }
             }
@@ -950,6 +962,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const n = stepNumberFromId(id);
             if (!isNaN(n)) editorCtx.actions.setCurrentStep(n);
         }
+        // 🚀 Pré-carregar steps adjacentes para melhorar UX
+        preloadAdjacentSteps(id, 2);
     }, [setSelectedStepId, editorCtx, stepNumberFromId]);
 
     // Hook de seleção / clipboard deve vir antes de dependências que usam selectedBlockId
