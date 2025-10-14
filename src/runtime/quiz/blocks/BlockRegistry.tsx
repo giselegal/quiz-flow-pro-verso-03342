@@ -268,28 +268,30 @@ export const QuestionBlock = defineBlock({
     defaultConfig: { questionText: 'Pergunta', requiredSelections: 1, options: [] },
     render: ({ config, state }) => {
         const [answers, setAnswers] = React.useState<string[]>([]);
+        const required = config.requiredSelections ?? 1;
         const toggle = (optId: string) => {
             setAnswers(prev => {
                 const selected = prev.includes(optId);
                 let next = selected ? prev.filter(i => i !== optId) : [...prev, optId];
-                if (next.length > config.requiredSelections) {
-                    next = next.slice(0, config.requiredSelections);
+                if (next.length > required) {
+                    next = next.slice(0, required);
                 }
                 if (state?.onAnswersChange) state.onAnswersChange(next);
                 // Auto avançar se completou
-                if (next.length === config.requiredSelections && state?.onComplete) {
+                if (next.length === required && state?.onComplete) {
                     setTimeout(() => state.onComplete(), 250);
                 }
                 return next;
             });
         };
+        const options = config.options ?? [];
         return (
             <div className="space-y-4">
                 {config.questionNumber && <h2 className="text-sm font-semibold opacity-70">{config.questionNumber}</h2>}
                 <h3 className="text-xl font-bold text-primary leading-snug">{config.questionText}</h3>
-                <p className="text-xs opacity-70">Selecione {config.requiredSelections} opção(ões) ({answers.length}/{config.requiredSelections})</p>
-                <div className={`grid ${config.options.some(o => o.image) ? 'grid-cols-2 gap-3' : 'grid-cols-1 gap-2'}`}>
-                    {config.options.map(opt => {
+                <p className="text-xs opacity-70">Selecione {required} opção(ões) ({answers.length}/{required})</p>
+                <div className={`grid ${options.some(o => o.image) ? 'grid-cols-2 gap-3' : 'grid-cols-1 gap-2'}`}>
+                    {options.map(opt => {
                         const active = answers.includes(opt.id);
                         return (
                             <button
