@@ -36,9 +36,11 @@ import { serviceManager } from './services/core/UnifiedServiceManager';
 
 // 🚀 FASE 2: Consolidated Provider (único provider necessário)
 import { ConsolidatedProvider } from '@/providers';
-import SuperUnifiedProvider from '@/providers/SuperUnifiedProvider';
-import { UnifiedCRUDProvider } from '@/contexts/data/UnifiedCRUDProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+// Removido SuperUnifiedProvider e UnifiedCRUDProvider em favor do ConsolidatedProvider
+// import SuperUnifiedProvider from '@/providers/SuperUnifiedProvider';
+// import { UnifiedCRUDProvider } from '@/contexts/data/UnifiedCRUDProvider';
+import { EditorProviderUnified } from '@/components/editor/EditorProviderUnified';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -111,16 +113,20 @@ function App() {
     return (
         <HelmetProvider>
             <GlobalErrorBoundary showResetButton={true}>
-                {/* 🚀 SUPER UNIFIED PROVIDER - Substitui 7+ providers */}
-                <SuperUnifiedProvider
-                    autoLoad={true}
-                    debugMode={process.env.NODE_ENV === 'development'}
-                    initialFeatures={{
-                        enableCache: true,
-                        enableAnalytics: true,
-                        enableCollaboration: false,
-                        enableAdvancedEditor: true
+                {/* 🚀 CONSOLIDATED PROVIDER - Substitui SuperUnified + UnifiedCRUD (evita duplicação) */}
+                <ConsolidatedProvider
+                    context={FunnelContext.EDITOR}
+                    superProps={{
+                        autoLoad: true,
+                        debugMode: process.env.NODE_ENV === 'development',
+                        initialFeatures: {
+                            enableCache: true,
+                            enableAnalytics: true,
+                            enableCollaboration: false,
+                            enableAdvancedEditor: true
+                        }
                     }}
+                    crudProps={{ autoLoad: true }}
                 >
 
                     <Router>
@@ -163,17 +169,17 @@ function App() {
                                     <div data-testid="editor-templates-page">
                                         <EditorTemplatesPage />
                                     </div>
-                                </Route>scm-history-item:%5Cworkspaces%5Cquiz-flow-pro-verso?%7B%22repositoryId%22%3A%22scm0%22%2C%22historyItemId%22%3A%22f9aa3140421a0ce216624f02d3344f4ff0bb0f96%22%2C%22historyItemParentId%22%3A%22ea91dcd9f988cc7a8588c83467ef621dbd141c45%22%2C%22historyItemDisplayId%22%3A%22f9aa314%22%7D
+                                </Route>
 
                                 <Route path="/editor/:funnelId">
                                     {(params) => (
                                         <EditorErrorBoundary>
                                             <div data-testid="quiz-modular-production-editor-page-optimized-funnel">
-                                                <UnifiedCRUDProvider funnelId={params.funnelId} autoLoad={true} context={FunnelContext.EDITOR}>
-                                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
+                                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
+                                                    <EditorProviderUnified funnelId={params.funnelId} enableSupabase={true}>
                                                         <QuizModularProductionEditor />
-                                                    </Suspense>
-                                                </UnifiedCRUDProvider>
+                                                    </EditorProviderUnified>
+                                                </Suspense>
                                             </div>
                                         </EditorErrorBoundary>
                                     )}
@@ -185,20 +191,20 @@ function App() {
                                         return (
                                             <EditorErrorBoundary>
                                                 <div data-testid="quiz-modular-production-editor-page-optimized">
-                                                    <UnifiedCRUDProvider autoLoad={true} context={FunnelContext.EDITOR}>
-                                                        <Suspense fallback={
-                                                            <div className="flex items-center justify-center min-h-screen">
-                                                                <div className="text-center">
-                                                                    <EnhancedLoadingFallback message="Carregando editor..." />
-                                                                    <p className="text-xs text-muted-foreground mt-4">
-                                                                        Inicializando QuizModularProductionEditor...
-                                                                    </p>
-                                                                </div>
+                                                    <Suspense fallback={
+                                                        <div className="flex items-center justify-center min-h-screen">
+                                                            <div className="text-center">
+                                                                <EnhancedLoadingFallback message="Carregando editor..." />
+                                                                <p className="text-xs text-muted-foreground mt-4">
+                                                                    Inicializando QuizModularProductionEditor...
+                                                                </p>
                                                             </div>
-                                                        }>
+                                                        </div>
+                                                    }>
+                                                        <EditorProviderUnified enableSupabase={true}>
                                                             <QuizModularProductionEditor />
-                                                        </Suspense>
-                                                    </UnifiedCRUDProvider>
+                                                        </EditorProviderUnified>
+                                                    </Suspense>
                                                 </div>
                                             </EditorErrorBoundary>
                                         );
@@ -365,7 +371,7 @@ function App() {
                     <Toaster />
 
 
-                </SuperUnifiedProvider>
+                </ConsolidatedProvider>
             </GlobalErrorBoundary>
         </HelmetProvider>
     );

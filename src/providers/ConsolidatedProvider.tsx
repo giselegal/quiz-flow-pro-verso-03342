@@ -19,16 +19,20 @@ import { FunnelContext } from '@/core/contexts/FunnelContext';
 interface ConsolidatedProviderProps {
   children: ReactNode;
   context?: FunnelContext;
+  superProps?: Omit<React.ComponentProps<typeof SuperUnifiedProvider>, 'children'>;
+  crudProps?: Omit<React.ComponentProps<typeof UnifiedCRUDProvider>, 'children'>;
 }
 
-export const ConsolidatedProvider: React.FC<ConsolidatedProviderProps> = ({ 
-  children, 
-  context = FunnelContext.EDITOR 
+export const ConsolidatedProvider: React.FC<ConsolidatedProviderProps> = ({
+  children,
+  context = FunnelContext.EDITOR,
+  superProps,
+  crudProps
 }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <SuperUnifiedProvider>
-        <UnifiedCRUDProvider context={context}>
+      <SuperUnifiedProvider {...superProps}>
+        <UnifiedCRUDProvider context={context} {...crudProps}>
           {children}
         </UnifiedCRUDProvider>
       </SuperUnifiedProvider>
