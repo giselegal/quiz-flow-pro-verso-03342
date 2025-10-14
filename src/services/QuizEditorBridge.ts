@@ -273,6 +273,8 @@ class QuizEditorBridge {
      * 📂 Carregar draft do banco
      */
     private async loadDraftFromDatabase(draftId: string): Promise<QuizFunnelData | null> {
+        console.log('🔍 QuizEditorBridge - Carregando draft:', draftId);
+
         const { data, error } = await supabaseAny
             .from(this.DRAFT_TABLE)
             .select('*')
@@ -280,10 +282,41 @@ class QuizEditorBridge {
             .single();
 
         if (error || !data) {
+            console.log('⚠️ QuizEditorBridge - Draft não encontrado no DB, tentando cache');
             // Fallback em memória
             const cached = this.cache.get(draftId);
-            if (cached) return cached;
+            if (cached) {
+                console.log('✅ QuizEditorBridge - Draft encontrado em cache');
+                return cached;
+            }
+            console.log('❌ QuizEditorBridge - Draft não encontrado');
             return null;
+        }
+
+        console.log('✅ QuizEditorBridge - Draft carregado do DB');
+        console.log('🔍 Steps:', data.steps?.length || 0);
+
+        // Log detalhado do primeiro bloco quiz-options encontrado
+        if (Array.isArray(data.steps)) {
+            for (const step of data.steps) {
+                if (Array.isArray(step.blocks)) {
+                    const quizOptionsBlock = step.blocks.find((b: any) =>
+                        b.type === 'quiz-options' || b.type === 'options-grid'
+                    );
+                    if (quizOptionsBlock) {
+                        console.log('🎯 Primeiro bloco quiz-options encontrado:');
+                        console.log('  - Tipo:', quizOptionsBlock.type);
+                        console.log('  - Content:', quizOptionsBlock.content);
+                        console.log('  - Properties:', quizOptionsBlock.properties);
+                        console.log('  - Options em content:', quizOptionsBlock.content?.options?.length || 0);
+                        console.log('  - Options em properties:', quizOptionsBlock.properties?.options?.length || 0);
+                        if (quizOptionsBlock.content?.options?.[0]) {
+                            console.log('  - Primeira opção:', quizOptionsBlock.content.options[0]);
+                        }
+                        break;
+                    }
+                }
+            }
         }
 
         return {

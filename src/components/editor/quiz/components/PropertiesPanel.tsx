@@ -147,8 +147,59 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                     console.log('🔍 PropertiesPanel - properties:', selectedBlock.properties);
                                     console.log('🔍 PropertiesPanel - content:', selectedBlock.content);
                                     console.log('🔍 PropertiesPanel - merged values:', { ...selectedBlock.properties, ...selectedBlock.content });
+
+                                    // Se for quiz-options ou options-grid, mostrar options em detalhe
+                                    if (selectedBlock.type === 'quiz-options' || selectedBlock.type === 'options-grid') {
+                                        const options = selectedBlock.content?.options || selectedBlock.properties?.options || [];
+                                        console.log('🎯 OPTIONS ARRAY:', options);
+                                        if (options.length > 0) {
+                                            console.log('🎯 PRIMEIRA OPÇÃO:', options[0]);
+                                            console.log('🎯 Campos:', {
+                                                hasImageUrl: 'imageUrl' in options[0],
+                                                hasPoints: 'points' in options[0],
+                                                hasCategory: 'category' in options[0],
+                                                imageUrl: options[0].imageUrl,
+                                                points: options[0].points,
+                                                category: options[0].category
+                                            });
+                                        }
+                                    }
                                     return null;
                                 })()}
+
+                                {/* 🧪 BOTÃO DE TESTE - Mostrar JSON completo */}
+                                <button
+                                    onClick={() => {
+                                        console.clear();
+                                        console.log('=== TESTE COMPLETO DO BLOCO ===');
+                                        console.log('Tipo:', selectedBlock.type);
+                                        console.log('ID:', selectedBlock.id);
+                                        console.log('\n📦 PROPERTIES:');
+                                        console.log(JSON.stringify(selectedBlock.properties, null, 2));
+                                        console.log('\n📦 CONTENT:');
+                                        console.log(JSON.stringify(selectedBlock.content, null, 2));
+
+                                        if (selectedBlock.content?.options || selectedBlock.properties?.options) {
+                                            const opts = selectedBlock.content?.options || selectedBlock.properties?.options;
+                                            console.log('\n🎯 OPTIONS DETALHADAS:');
+                                            opts.forEach((opt: any, idx: number) => {
+                                                console.log(`\nOpção ${idx + 1}:`, {
+                                                    id: opt.id,
+                                                    text: opt.text,
+                                                    imageUrl: opt.imageUrl || opt.image || '❌ AUSENTE',
+                                                    points: opt.points ?? opt.score ?? '❌ AUSENTE',
+                                                    category: opt.category || '❌ AUSENTE'
+                                                });
+                                            });
+                                        }
+
+                                        alert('✅ Dados logados no console! Pressione F12 para ver.');
+                                    }}
+                                    className="w-full px-3 py-2 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 font-mono"
+                                >
+                                    🧪 DEBUG: Mostrar JSON do Bloco
+                                </button>
+
                                 <DynamicPropertiesForm
                                     type={selectedBlock.type}
                                     values={{ ...selectedBlock.properties, ...selectedBlock.content }}
