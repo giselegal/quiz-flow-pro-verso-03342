@@ -64,6 +64,8 @@ export const UNIFIED_COMPONENT_REGISTRY: Record<string, ComponentType<any> | (()
     'container': BasicContainerBlock,
     'section': BasicContainerBlock,
     'box': BasicContainerBlock,
+    // Compatibilidade explícita com templates de formulário
+    'form-container': BasicContainerBlock,
     'sales-hero': SalesHeroBlock,
 
     // 🔌 COMPONENTES CONECTADOS À API - Controlados pelo /editor
