@@ -203,6 +203,7 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
                                 text: 'Nova opção',
                                 imageUrl: '',
                                 points: 0,
+                                score: 0,
                                 category: ''
                             }];
                             onChange({ [prop.key]: next });

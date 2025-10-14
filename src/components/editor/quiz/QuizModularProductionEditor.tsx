@@ -190,8 +190,22 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
         }),
         ...(comp.type === 'quiz-options' && {
             options: [
-                { id: 'opt1', text: 'Opção 1' },
-                { id: 'opt2', text: 'Opção 2' }
+                {
+                    id: 'opt1',
+                    text: 'Opção 1',
+                    imageUrl: '',
+                    points: 0,
+                    score: 0,
+                    category: ''
+                },
+                {
+                    id: 'opt2',
+                    text: 'Opção 2',
+                    imageUrl: '',
+                    points: 0,
+                    score: 0,
+                    category: ''
+                }
             ],
             multiSelect: true,
             requiredSelections: 1,
