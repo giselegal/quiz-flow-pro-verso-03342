@@ -2171,11 +2171,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             selectedBlockId={effectiveSelectedBlockId}
                             isMultiSelected={isMultiSelected}
                             handleBlockClick={(e, block) => {
+                                const isShift = e.shiftKey;
+                                const isMeta = e.metaKey || (e as any).ctrlKey;
                                 // orderedBlocks: ordem top-level + filhos linearizada para range com Shift
                                 const ordered = (selectedStep?.blocks || [])
                                     .filter(b => !b.parentId)
                                     .sort((a, b) => a.order - b.order)
                                     .flatMap(root => [root, ...((selectedStep?.blocks || []).filter(c => c.parentId === root.id).sort((a, b) => a.order - b.order))]);
+                                if (!isShift && !isMeta) {
+                                    e.stopPropagation();
+                                    setSelectedBlockIdUnified(block.id);
+                                    return;
+                                }
                                 handleBlockClick(e, block, ordered);
                             }}
                             renderBlockPreview={renderBlockPreview}
