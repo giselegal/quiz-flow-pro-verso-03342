@@ -363,8 +363,8 @@ export class SupabaseConfigurationStorage {
                 console.warn('⚠️ IndexedDB delete failed:', error);
             }
 
-            // 3. Remover do Supabase se online
-            if (this.isOnline) {
+            // 3. Remover do Supabase se online (DESABILITADO)
+            if (this.isOnline && this.useSupabase) {
                 try {
                     // Use type assertion since table doesn't exist in types yet
                     const { error } = await (supabase as any)

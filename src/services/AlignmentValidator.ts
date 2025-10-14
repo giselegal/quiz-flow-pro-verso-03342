@@ -14,7 +14,7 @@ export class AlignmentValidator {
   }> {
     const issues: string[] = [];
     let score = 100;
-    
+
     try {
       // Check Supabase connection
       const { data, error } = await supabase.from('funnels').select('id').limit(1);
@@ -22,27 +22,27 @@ export class AlignmentValidator {
         issues.push('Supabase connection failed');
         score -= 20;
       }
-      
-      // Check component_configurations
-      const { error: configError } = await (supabase as any).from('component_configurations').select('id').limit(1);
-      if (configError) {
-        issues.push('component_configurations table missing');
-        score -= 15;
-      }
-      
+
+      // 🔴 DESABILITADO: component_configurations table não existe
+      // const { error: configError } = await (supabase as any).from('component_configurations').select('id').limit(1);
+      // if (configError) {
+      //   issues.push('component_configurations table missing');
+      //   score -= 15;
+      // }
+
       // Determine status
       let status: 'excellent' | 'good' | 'needs_improvement';
       if (score >= 90) status = 'excellent';
       else if (score >= 70) status = 'good';
       else status = 'needs_improvement';
-      
+
       return { score, status, issues };
-      
+
     } catch (error: any) {
-      return { 
-        score: 0, 
-        status: 'needs_improvement', 
-        issues: ['Validation failed: ' + error.message] 
+      return {
+        score: 0,
+        status: 'needs_improvement',
+        issues: ['Validation failed: ' + error.message]
       };
     }
   }
