@@ -43,7 +43,7 @@ export const StepNavigator = <Step extends any = any>({
     useEffect(() => {
         const selectedIndex = steps.findIndex((s: any) => extractStepMeta(s).id === selectedStepId);
         if (selectedIndex >= 0 && listRef.current) {
-            listRef.current.scrollToItem(selectedIndex, 'smart');
+            listRef.current.scrollToRow({ index: selectedIndex, align: 'smart' });
         }
     }, [selectedStepId, steps, extractStepMeta]);
 
@@ -99,15 +99,14 @@ export const StepNavigator = <Step extends any = any>({
             </div>
             <div className="flex-1 overflow-hidden">
                 <VirtualList
-                    ref={listRef}
+                    listRef={listRef}
                     height={containerHeight}
-                    itemCount={steps.length}
-                    itemSize={ITEM_HEIGHT}
+                    rowCount={steps.length}
+                    rowHeight={ITEM_HEIGHT}
                     width="100%"
                     overscanCount={3}
-                >
-                    {StepRow}
-                </VirtualList>
+                    rowComponent={StepRow}
+                />
             </div>
             <div className="p-2 border-t shrink-0">
                 <Button variant="outline" size="sm" className="w-full text-xs" onClick={onAddStep}>+ Adicionar etapa</Button>
