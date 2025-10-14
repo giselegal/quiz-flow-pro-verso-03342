@@ -84,6 +84,7 @@ import { usePanelWidths } from './hooks/usePanelWidths.tsx';
 import { useEditorHistory } from './hooks/useEditorHistory';
 import { useStepsBlocks } from './hooks/useStepsBlocks';
 import { useBlocks } from './hooks/useBlocks';
+import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEditableQuizStep, ComponentLibraryItem } from './types';
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
@@ -404,7 +405,24 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [funnelId, setFunnelId] = useState<string | undefined>(initialFunnelId);
     const [steps, setSteps] = useState<EditableQuizStep[]>([]);
     const [selectedStepId, setSelectedStepId] = useState<string>('');
-    // selectedBlockId agora fornecido pelo useSelectionClipboard
+    // selectedBlockId agora fornecido pelo useSelectionClipboard (ou pelo EditorProviderUnified se disponível)
+
+    // Editor unified provider (opcional durante migração)
+    const editorCtx = useEditor({ optional: true } as any);
+
+    const stepIdFromNumber = useCallback((n: number) => `step-${String(n).padStart(2, '0')}`, []);
+    const stepNumberFromId = useCallback((id: string) => {
+        const m = id?.match(/step-(\d+)/);
+        return m ? parseInt(m[1], 10) : NaN;
+    }, []);
+
+    // Quando o provider está presente, sincronizar o estado local com o provider (somente leitura → local)
+    const effectiveSelectedStepId = useMemo(() => {
+        if (editorCtx?.state?.currentStep) {
+            return stepIdFromNumber(editorCtx.state.currentStep);
+        }
+        return selectedStepId;
+    }, [editorCtx?.state?.currentStep, selectedStepId, stepIdFromNumber]);
     const [isDirty, setIsDirty] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
@@ -693,7 +711,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setSteps,
         pushHistory,
         setDirty: setIsDirty,
-        onSelectStep: setSelectedStepId
+        onSelectStep: (id: string) => {
+            setSelectedStepId(id);
+            if (editorCtx?.actions?.setCurrentStep) {
+                const n = stepNumberFromId(id);
+                if (!isNaN(n)) editorCtx.actions.setCurrentStep(n);
+            }
+        }
     });
 
     // Hook de blocos (integração parcial - substituição progressiva dos handlers inline)
@@ -709,7 +733,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setSteps: setSteps as any,
         pushHistory,
         setDirty: setIsDirty,
-        getSelectedStepId: () => selectedStepId
+        getSelectedStepId: () => effectiveSelectedStepId
     });
 
     const generateNextStepId = (existing: string[]) => {
@@ -739,8 +763,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Step selecionado
     const selectedStep = useMemo(() =>
-        steps.find(s => s.id === selectedStepId),
-        [steps, selectedStepId]
+        steps.find(s => s.id === (editorCtx ? effectiveSelectedStepId : selectedStepId)),
+        [steps, effectiveSelectedStepId, selectedStepId, editorCtx]
     );
 
     // Hook de seleção / clipboard deve vir antes de dependências que usam selectedBlockId
@@ -828,20 +852,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Reordenar / mover blocos (nested)
     const handleDragEnd = (event: any) => {
         const { active, over } = event;
-        if (!selectedStepId) { setActiveId(null); return; }
+        const curStepId = editorCtx ? effectiveSelectedStepId : selectedStepId;
+        if (!curStepId) { setActiveId(null); return; }
         if (!over) { setActiveId(null); setHoverContainerId(null); return; }
         const droppedAtEnd = over.id === 'canvas-end';
         const targetContainerId = !droppedAtEnd && String(over.id).startsWith('container-slot:') ? String(over.id).slice('container-slot:'.length) : null;
         // Novo bloco da paleta
         if (String(active.id).startsWith('lib:')) {
             const componentType = String(active.id).slice(4);
-            addBlockToStep(selectedStepId, componentType);
+            addBlockToStep(curStepId, componentType);
             setActiveId(null); setHoverContainerId(null); return;
         }
         if (active.id === over.id && !targetContainerId && !droppedAtEnd) { setActiveId(null); setHoverContainerId(null); return; }
         // Reordenação / movimento
         const overId = String(over.id).startsWith('container-slot:') ? null : over.id;
-        reorderOrMove(selectedStepId, active.id, targetContainerId, overId);
+        reorderOrMove(curStepId, active.id, targetContainerId, overId);
         setActiveId(null); setHoverContainerId(null);
     };
 
