@@ -202,7 +202,7 @@ export const HeroBlock = defineBlock({
             {config.logoUrl && (
                 <img src={config.logoUrl} alt={config.logoAlt || 'Logo'} className="mx-auto h-16 w-auto object-contain" />
             )}
-            <h1 className="text-2xl md:text-3xl font-serif leading-snug" dangerouslySetInnerHTML={{ __html: config.titleHtml }} />
+            {config.titleHtml && <h1 className="text-2xl md:text-3xl font-serif leading-snug" dangerouslySetInnerHTML={{ __html: config.titleHtml }} />}
             {config.subtitleHtml && <p className="text-sm opacity-80" dangerouslySetInnerHTML={{ __html: config.subtitleHtml }} />}
             {config.imageUrl && (
                 <div className="mx-auto max-w-xs">
