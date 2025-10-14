@@ -113,6 +113,8 @@ const OfferMap = React.lazy(() => import('@/components/editor/quiz/components/Of
 
 // Import da biblioteca de componentes do registry
 import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/EnhancedBlockRegistry';
+// Import direto da função para evitar uso de require() no ambiente ESM do browser
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 
 /**
  * Mapeia categorias para ícones React
@@ -199,7 +201,8 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
             progressPercent: 0,
             autoProgress: true,
             barHeight: '4px',
-            barColor: '#b3a26aff',
+            // Usar cor em formato #rrggbb (sem canal alpha) para compatibilidade com inputs type="color"
+            barColor: '#b3a26a',
             barBackground: '#E5E7EB'
         }),
     }
@@ -375,7 +378,7 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
             progressPercent: 0,
             autoProgress: true,
             barHeight: '4px',
-            barColor: '#b3a26aff',
+            barColor: '#b3a26a',
             barBackground: '#E5E7EB'
         }
     }
@@ -428,7 +431,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             autoProgress: true,
             manualPercent: 0,
             barHeight: '4px',
-            barColor: '#ccaa6aff',
+            // Usar cor em formato #rrggbb (sem canal alpha) para compatibilidade com inputs type="color"
+            barColor: '#ccaa6a',
             barBackground: '#E5E7EB',
             align: 'left', // 'left' | 'center' | 'right'
             title: ''
@@ -560,6 +564,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         setSteps(initial);
                         setSelectedStepId(initial[0]?.id || '');
                         setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                        setIsLoading(false);
                     } else if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
                         // 🎯 Suporte para ambos os IDs de template
                         // NOTA: QuizTemplateAdapter.loadLegacyTemplate() retorna null - usando fallback legacy diretamente
@@ -594,6 +599,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         setSteps(initial);
                         setSelectedStepId(initial[0]?.id || '');
                         setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                        setIsLoading(false);
                         console.log('✅ Fallback concluído! Total de steps:', initial.length);
                     }
                 }
@@ -601,8 +607,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch (err) {
             console.error('❌ Erro no useEffect:', err);
         }
-        console.log('🏁 Finalizando useEffect, setIsLoading(false)');
-        setIsLoading(false);
+        // Removido: não encerrar loading aqui para evitar estado vazio temporário
+        console.log('🏁 Finalizando useEffect (sem encerrar loading global aqui)');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -1619,8 +1625,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             return node;
         }
         // Fallback: usar EnhancedBlockRenderer para tipos não suportados nativamente
-        // Importamos dinamicamente o componente do registry
-        const { getEnhancedBlockComponent } = require('@/components/editor/blocks/EnhancedBlockRegistry');
+        // Usar função importada (ESM) para evitar require() no bundle do cliente
         const EnhancedComponent = getEnhancedBlockComponent(type);
 
         if (EnhancedComponent) {
