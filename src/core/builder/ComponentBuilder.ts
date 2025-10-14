@@ -350,7 +350,6 @@ export class ComponentBuilder {
         switch (schema.kind) {
             case 'text':
             case 'textarea':
-            case 'url':
             case 'color':
                 return typeof value === 'string';
             case 'number':

@@ -420,9 +420,10 @@ class QuizEditorBridge {
             const stepId = `step-${i.toString().padStart(2, '0')}`;
 
             try {
-                // Tentar carregar template JSON v3.0
-                const v3Module = await import(`/templates/${stepId}-v3.json`);
-                const v3Template: JSONv3Template = v3Module.default;
+                // Tentar carregar template JSON v3.0 via fetch (evita dynamic import vars)
+                const res = await fetch(`/templates/${stepId}-v3.json`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const v3Template: JSONv3Template = await res.json();
 
                 // Converter sections[] para blocks[]
                 const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(v3Template);
