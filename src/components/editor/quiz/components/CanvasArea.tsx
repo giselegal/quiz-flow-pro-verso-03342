@@ -152,7 +152,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                         <div className="flex items-center justify-center h-full text-muted-foreground">Selecione uma etapa para editar</div>
                     )}
                 </TabsContent>
-                <TabsContent value="preview" className="flex-1 m-0 p-0" data-testid="tab-content-preview">
+                <TabsContent
+                    value="preview"
+                    className="flex-1 m-0 p-0"
+                    data-testid="tab-content-preview"
+                    forceMount
+                    style={{ display: activeTab === 'preview' ? 'flex' : 'none', flexDirection: 'column' }}
+                >
                     {/* Barra de controle de tamanho do preview */}
                     <div className="flex items-center gap-2 px-4 py-2 border-b bg-white">
                         <span className="text-xs text-muted-foreground">Modo preview:</span>

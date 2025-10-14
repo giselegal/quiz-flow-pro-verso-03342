@@ -2540,7 +2540,7 @@ interface LivePreviewContainerProps {
     selectedStepId?: string;
 }
 
-const LivePreviewContainer: React.FC<LivePreviewContainerProps> = ({ funnelId, steps, selectedStepId }) => {
+const LivePreviewContainer: React.FC<LivePreviewContainerProps> = React.memo(({ funnelId, steps, selectedStepId }) => {
     // Define o modo inicial priorizando query (?preview=live|production), depois localStorage, por fim 'live'
     const [mode, setMode] = React.useState<'production' | 'live'>(() => {
         try {
