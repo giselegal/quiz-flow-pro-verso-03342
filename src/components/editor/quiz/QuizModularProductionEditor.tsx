@@ -625,8 +625,20 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch (err) {
             console.error('❌ Erro no useEffect:', err);
         }
-        // Removido: não encerrar loading aqui para evitar estado vazio temporário
-        console.log('🏁 Finalizando useEffect (sem encerrar loading global aqui)');
+        // Se não houver parâmetros de template ou funnel e ainda não carregamos steps,
+        // finalize o loading para permitir que o fallback vazio seja exibido em /editor
+        try {
+            const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
+            const templateId = sp.get('template');
+            const funnelParam = sp.get('funnel');
+            const noParams = !templateId && !funnelParam;
+            const noSteps = !steps || steps.length === 0;
+            if (noParams && noSteps) {
+                console.warn('⚠️ Nenhum template/funnel informado. Encerrando loading e exibindo fallback vazio.');
+                setIsLoading(false);
+            }
+        } catch {/* ignore */ }
+        console.log('🏁 Finalizando useEffect (loading avaliado)');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
