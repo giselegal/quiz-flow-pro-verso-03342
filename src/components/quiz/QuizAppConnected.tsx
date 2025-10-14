@@ -90,15 +90,18 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     // Renderer mode detection (legacy | unified | auto)
     const [rendererMode, setRendererMode] = useState<'legacy' | 'unified' | 'auto'>('legacy');
     const [normalizedStep, setNormalizedStep] = useState<any | null>(null);
+    const [normalizedDebug, setNormalizedDebug] = useState(false);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const mode = params.get('renderer');
+        const debug = params.get('normalizedDebug');
         if (mode === 'unified' || mode === 'legacy' || mode === 'auto') {
             setRendererMode(mode);
         } else {
             setRendererMode(editorMode ? 'legacy' : 'auto');
         }
+        setNormalizedDebug(debug === '1' || debug === 'true');
     }, [editorMode]);
 
     // Carregar normalized se solicitado e disponível
@@ -522,8 +525,16 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                     {/* Renderização Híbrida: Blocks dinâmicos para result/offer, Unified para demais */}
                     {/* Indicador de modo no editor */}
                     {editorMode && (
-                        <div className="max-w-6xl mx-auto px-4 pb-2 text-[10px] uppercase tracking-wide text-gray-500">
-                            Renderer: {rendererMode}{normalizedStep ? ' (normalized)' : legacyEnabled ? ' (legacy)' : ''}
+                        <div className="max-w-6xl mx-auto px-4 pb-2 text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-3">
+                            <span>Renderer: {rendererMode}{normalizedStep ? ' (normalized)' : legacyEnabled ? ' (legacy)' : ''}</span>
+                            {normalizedStep && (
+                                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded border border-emerald-300 font-semibold">
+                                    UNIFIED • {normalizedStep.blocks?.length || 0} blocks
+                                </span>
+                            )}
+                            {normalizedStep && !legacyEnabled && (
+                                <span className="text-[9px] text-gray-400">(adicione &normalizedDebug=1 à URL para ver contornos)</span>
+                            )}
                         </div>
                     )}
                     {legacyEnabled ? (
@@ -533,13 +544,22 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                             )}
                         </div>
                     ) : normalizedStep ? (
-                        <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+                        <div className={"max-w-6xl mx-auto px-4 py-8 space-y-8" + (normalizedDebug ? ' normalized-debug-mode' : '')}>
                             {normalizedStep.blocks.map((b: any, idx: number) => {
                                 const def = useBlockRegistry().get(b.type);
                                 if (!def) return <div key={idx} className="text-xs text-red-600">Bloco não registrado: {b.type}</div>;
                                 try {
                                     return (
-                                        <div key={idx} className="normalized-block-wrapper" data-block-type={b.type}>
+                                        <div
+                                            key={idx}
+                                            className={"normalized-block-wrapper" + (normalizedDebug ? ' outline outline-2 outline-emerald-400/70 rounded-sm relative' : '')}
+                                            data-block-type={b.type}
+                                        >
+                                            {normalizedDebug && (
+                                                <div className="absolute -top-2 -left-2 bg-emerald-500 text-white text-[10px] px-1 rounded shadow">
+                                                    {b.type}
+                                                </div>
+                                            )}
                                             {def.render({
                                                 config: { ...def.defaultConfig, ...b.config },
                                                 state: {
