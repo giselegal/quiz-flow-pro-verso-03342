@@ -3,6 +3,7 @@ import { List as VirtualList, type ListImperativeAPI } from 'react-window';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { DirtyBadge } from './DirtyBadge';
 
 export interface StepNavigatorValidationIssue {
     severity: 'error' | 'warning';
@@ -18,6 +19,7 @@ export interface StepNavigatorProps<Step = any> {
     onMoveStep: (id: string, dir: 'up' | 'down') => void;
     onDeleteStep: (id: string) => void;
     extractStepMeta?: (step: Step) => { id: string; type?: string; blockCount?: number };
+    isStepDirty?: (id: string) => boolean; // Nova prop para verificar dirty state
 }
 
 // Type para props adicionais do row (vazio neste caso)
@@ -35,7 +37,8 @@ export const StepNavigator = <Step extends any = any>({
     onAddStep,
     onMoveStep,
     onDeleteStep,
-    extractStepMeta = (s: any) => ({ id: s.id, type: s.type, blockCount: s.blocks?.length || 0 })
+    extractStepMeta = (s: any) => ({ id: s.id, type: s.type, blockCount: s.blocks?.length || 0 }),
+    isStepDirty = () => false // Default: nenhum step dirty
 }: StepNavigatorProps<Step>) => {
     const listRef = useRef<ListImperativeAPI | null>(null);
     const ITEM_HEIGHT = 90; // Altura aproximada de cada step item
@@ -62,6 +65,7 @@ export const StepNavigator = <Step extends any = any>({
                         <div className="flex items-center gap-2">
                             <Badge variant="outline" className="text-xs">{index + 1}</Badge>
                             <span className="text-sm font-medium truncate" title={meta.id}>{meta.id}</span>
+                            <DirtyBadge isDirty={isStepDirty(meta.id)} className="ml-1" />
                             {issues?.length ? (
                                 <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-medium">
                                     {(() => {

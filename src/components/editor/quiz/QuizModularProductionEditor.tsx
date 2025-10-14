@@ -104,6 +104,9 @@ import BlockRow from './components/BlockRow';
 import { BlockComponent, EditableQuizStep, BlockSnippet } from './types';
 import PropertiesPanel from './components/PropertiesPanel';
 import DuplicateBlockDialog from './components/DuplicateBlockDialog';
+import { useUnsavedChanges } from '@/hooks/useUnsavedChanges';
+import { UnsavedChangesIndicator } from './components/UnsavedChangesIndicator';
+import { DirtyBadge } from './components/DirtyBadge';
 // Cálculo real de resultado (produção)
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
@@ -502,6 +505,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Validação em tempo real (fase inicial - regras básicas)
     const { byStep, byBlock } = useValidation(steps);
+
+    // Hook de alterações não salvas
+    const {
+        hasUnsavedChanges,
+        markAsChanged,
+        markAsSaved,
+        clearAll: clearUnsavedChanges,
+        isStepDirty,
+        getDirtyStepCount,
+    } = useUnsavedChanges();
 
     useEffect(() => {
         try {
@@ -2312,49 +2325,61 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     )}
                     dragOverlay={<DragOverlay>{activeId ? (String(activeId).startsWith('lib:') ? (<div className="px-3 py-2 text-xs rounded-md border bg-white shadow-sm flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-blue-500" />{(COMPONENT_LIBRARY.find(c => c.type === String(activeId).slice(4))?.label) || 'Novo componente'}</div>) : (<div className="px-3 py-2 text-xs rounded-md border bg-white shadow-sm opacity-80">Bloco</div>)) : null}</DragOverlay>}
                     header={(
-                        <div className="flex items-center justify-between px-6 py-3 bg-white border-b">
-                            <div className="flex items-center gap-4">
-                                <Button variant="ghost" size="sm" onClick={() => setLocation('/quiz-estilo')}>
-                                    <ArrowLeft className="w-4 h-4 mr-2" />
-                                    Voltar
-                                </Button>
-                                <div className="h-6 w-px bg-border" />
-                                <img
-                                    src={BRAND_LOGO_URL}
-                                    alt="Logo Gisele Galvão"
-                                    style={{ height: 36, width: 90, objectFit: 'contain', borderRadius: 8 }}
-                                />
-                                {saveNotice && (
-                                    <div className="text-[10px] px-2 py-1 rounded bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
-                                        <span className="font-medium">!</span>
-                                        <span className="truncate max-w-[220px]">{saveNotice.message}</span>
-                                        <button onClick={() => setSaveNotice(null)} className="ml-1 text-amber-600 hover:text-amber-800">×</button>
+                        <div className="flex flex-col">
+                            <div className="flex items-center justify-between px-6 py-3 bg-white border-b">
+                                <div className="flex items-center gap-4">
+                                    <Button variant="ghost" size="sm" onClick={() => setLocation('/quiz-estilo')}>
+                                        <ArrowLeft className="w-4 h-4 mr-2" />
+                                        Voltar
+                                    </Button>
+                                    <div className="h-6 w-px bg-border" />
+                                    <img
+                                        src={BRAND_LOGO_URL}
+                                        alt="Logo Gisele Galvão"
+                                        style={{ height: 36, width: 90, objectFit: 'contain', borderRadius: 8 }}
+                                    />
+                                    {saveNotice && (
+                                        <div className="text-[10px] px-2 py-1 rounded bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
+                                            <span className="font-medium">!</span>
+                                            <span className="truncate max-w-[220px]">{saveNotice.message}</span>
+                                            <button onClick={() => setSaveNotice(null)} className="ml-1 text-amber-600 hover:text-amber-800">×</button>
+                                        </div>
+                                    )}
+                                    {isDirty && <Badge variant="outline">Não salvo</Badge>}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Button variant="outline" size="sm" onClick={() => setNavOpen(true)}>Navegação</Button>
+                                    <Button variant="outline" size="sm" onClick={() => {
+                                        const previewUrl = `/preview?slug=quiz-estilo${funnelId ? `&funnel=${funnelId}` : ''}`;
+                                        window.open(previewUrl, '_blank');
+                                    }} title="Abrir preview de produção em nova aba">
+                                        <Eye className="w-4 h-4 mr-2" />
+                                        Preview Produção
+                                    </Button>
+                                    <Button variant="outline" size="sm" onClick={handleExport}>Exportar</Button>
+                                    <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving || !isDirty}>{isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}Salvar</Button>
+                                    <div className="flex items-center gap-1">
+                                        <Button variant="ghost" size="sm" disabled={!canUndo} onClick={handleUndo} className="text-xs px-2">⮪ Undo</Button>
+                                        <Button variant="ghost" size="sm" disabled={!canRedo} onClick={handleRedo} className="text-xs px-2">Redo ⮫</Button>
                                     </div>
-                                )}
-                                {isDirty && <Badge variant="outline">Não salvo</Badge>}
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Button variant="outline" size="sm" onClick={() => setNavOpen(true)}>Navegação</Button>
-                                <Button variant="outline" size="sm" onClick={() => {
-                                    const previewUrl = `/preview?slug=quiz-estilo${funnelId ? `&funnel=${funnelId}` : ''}`;
-                                    window.open(previewUrl, '_blank');
-                                }} title="Abrir preview de produção em nova aba">
-                                    <Eye className="w-4 h-4 mr-2" />
-                                    Preview Produção
-                                </Button>
-                                <Button variant="outline" size="sm" onClick={handleExport}>Exportar</Button>
-                                <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving || !isDirty}>{isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}Salvar</Button>
-                                <div className="flex items-center gap-1">
-                                    <Button variant="ghost" size="sm" disabled={!canUndo} onClick={handleUndo} className="text-xs px-2">⮪ Undo</Button>
-                                    <Button variant="ghost" size="sm" disabled={!canRedo} onClick={handleRedo} className="text-xs px-2">Redo ⮫</Button>
+                                    <div className="h-6 w-px bg-border" />
+                                    <div className="flex items-center gap-1" data-testid="preview-toggle">
+                                        <Button variant={activeTab === 'canvas' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('canvas')}>Canvas</Button>
+                                        <Button variant={activeTab === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('preview')}>Preview</Button>
+                                    </div>
+                                    <Button size="sm" onClick={handlePublish} disabled={isPublishing}>{isPublishing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}Publicar</Button>
                                 </div>
-                                <div className="h-6 w-px bg-border" />
-                                <div className="flex items-center gap-1" data-testid="preview-toggle">
-                                    <Button variant={activeTab === 'canvas' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('canvas')}>Canvas</Button>
-                                    <Button variant={activeTab === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('preview')}>Preview</Button>
-                                </div>
-                                <Button size="sm" onClick={handlePublish} disabled={isPublishing}>{isPublishing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}Publicar</Button>
                             </div>
+                            {/* Indicador de alterações não salvas */}
+                            {hasUnsavedChanges && (
+                                <div className="px-6 py-2 bg-white border-b">
+                                    <UnsavedChangesIndicator
+                                        dirtyCount={getDirtyStepCount()}
+                                        onSave={handleSave}
+                                        isSaving={isSaving}
+                                    />
+                                </div>
+                            )}
                         </div>
                     )}
                     stepsPanel={(
@@ -2367,6 +2392,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             onMoveStep={handleMoveStep}
                             onDeleteStep={handleDeleteStep}
                             extractStepMeta={(s: any) => ({ id: s.id, type: s.type, blockCount: s.blocks?.length || 0 })}
+                            isStepDirty={isStepDirty}
                         />
                     )}
                     libraryPanel={(
