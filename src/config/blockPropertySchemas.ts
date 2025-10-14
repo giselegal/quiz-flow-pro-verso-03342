@@ -177,6 +177,31 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       },
     ],
   },
+  'text': {
+    label: 'Texto',
+    fields: [
+      { key: 'content', label: 'Conteúdo', type: 'textarea' },
+      { key: 'text', label: 'Texto', type: 'textarea' },
+      { key: 'html', label: 'HTML', type: 'textarea' },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text' },
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'text' },
+      { key: 'textAlign', label: 'Alinhamento', type: 'text' },
+      { key: 'color', label: 'Cor', type: 'color' },
+      { key: 'lineHeight', label: 'Altura da Linha', type: 'text' },
+      { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
+      { key: 'marginTop', label: 'Margem Superior', type: 'number' },
+      {
+        key: 'scale',
+        label: 'Escala (%)',
+        type: 'range',
+        min: 10,
+        max: 300,
+        step: 1,
+        group: 'transform',
+        defaultValue: 100,
+      },
+    ],
+  },
   'text-inline': {
     label: 'Texto',
     fields: [
@@ -476,6 +501,20 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
       { key: 'marginTop', label: 'Margem Superior', type: 'number' },
       { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
+    ],
+  },
+  'button': {
+    label: 'Botão',
+    fields: [
+      { key: 'text', label: 'Texto', type: 'text' },
+      { key: 'icon', label: 'Ícone', type: 'text' },
+      { key: 'variant', label: 'Variante', type: 'text' },
+      { key: 'size', label: 'Tamanho', type: 'text' },
+      { key: 'fullWidth', label: 'Largura Total', type: 'boolean' },
+      { key: 'action', label: 'Ação', type: 'text' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color' },
+      { key: 'marginTop', label: 'Margem Superior', type: 'number' },
     ],
   },
   'button-inline': {
@@ -815,6 +854,17 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         group: 'behavior',
         defaultValue: 1,
         description: 'Número máximo de opções que podem ser selecionadas'
+      },
+      {
+        key: 'requiredSelections',
+        label: 'Seleções Obrigatórias',
+        type: 'range',
+        min: 0,
+        max: 10,
+        step: 1,
+        group: 'behavior',
+        defaultValue: 1,
+        description: 'Quantas seleções são necessárias para prosseguir'
       },
       {
         key: 'requiredSelections',

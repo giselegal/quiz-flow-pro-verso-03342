@@ -1048,6 +1048,331 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
   // CONTAINER & LAYOUT BLOCKS
   // ============================================================================
 
+  // ============================================================================
+  // MISSING SCHEMAS FROM BLOCK_DEFINITIONS
+  // ============================================================================
+
+  'text': {
+    label: 'Texto',
+    fields: [
+      { key: 'content', label: 'Conteúdo', type: 'textarea', group: 'content', defaultValue: 'Digite seu texto' },
+      { key: 'text', label: 'Texto', type: 'textarea', group: 'content', defaultValue: 'Texto descritivo...' },
+      { key: 'html', label: 'HTML', type: 'textarea', group: 'content', defaultValue: '<p>Texto com formatação</p>' },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: 'base',
+        options: [
+          { label: 'Pequeno', value: 'sm' },
+          { label: 'Normal', value: 'base' },
+          { label: 'Grande', value: 'lg' },
+          { label: 'Extra Grande', value: 'xl' },
+        ]
+      },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#334155' },
+      { key: 'lineHeight', label: 'Altura da Linha', type: 'text', group: 'style', defaultValue: '1.6' },
+      { key: 'marginBottom', label: 'Margem Inferior', type: 'range', min: 0, max: 100, group: 'layout', defaultValue: 16 },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+      ...UNIVERSAL_STYLING_PROPERTIES,
+      ...UNIVERSAL_TRANSFORM_PROPERTIES,
+    ],
+  },
+
+  'button': {
+    label: 'Botão',
+    fields: [
+      { key: 'text', label: 'Texto do Botão', type: 'text', group: 'content', defaultValue: 'Começar Quiz' },
+      { key: 'icon', label: 'Ícone', type: 'text', group: 'content', defaultValue: 'arrow-right' },
+      { key: 'variant', label: 'Variante', type: 'select', group: 'style', defaultValue: 'primary',
+        options: [
+          { label: 'Primário', value: 'primary' },
+          { label: 'Secundário', value: 'secondary' },
+          { label: 'Outline', value: 'outline' },
+        ]
+      },
+      { key: 'size', label: 'Tamanho', type: 'select', group: 'style', defaultValue: 'lg',
+        options: [
+          { label: 'Pequeno', value: 'sm' },
+          { label: 'Médio', value: 'md' },
+          { label: 'Grande', value: 'lg' },
+          { label: 'XL', value: 'xl' },
+        ]
+      },
+      { key: 'fullWidth', label: 'Largura Total', type: 'boolean', group: 'layout', defaultValue: true },
+      { key: 'action', label: 'Ação', type: 'select', group: 'behavior', defaultValue: 'next',
+        options: [
+          { label: 'Próximo', value: 'next' },
+          { label: 'Anterior', value: 'previous' },
+          { label: 'Enviar', value: 'submit' },
+          { label: 'Personalizado', value: 'custom' },
+        ]
+      },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#3B82F6' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#FFFFFF' },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+      ...UNIVERSAL_TRANSFORM_PROPERTIES,
+    ],
+  },
+
+  'quiz-question': {
+    label: 'Pergunta do Quiz',
+    fields: [
+      { key: 'questionNumber', label: 'Número da Pergunta', type: 'text', group: 'content', defaultValue: 'Pergunta X de 10' },
+      { key: 'questionText', label: 'Texto da Pergunta', type: 'textarea', group: 'content', defaultValue: 'Qual das opções abaixo mais combina com você?' },
+      { key: 'subtitle', label: 'Subtítulo/Instrução', type: 'text', group: 'content', defaultValue: 'Selecione 3 opções' },
+      { key: 'requiredSelections', label: 'Seleções Obrigatórias', type: 'range', min: 1, max: 10, group: 'behavior', defaultValue: 3 },
+      { key: 'multipleChoice', label: 'Múltipla Escolha', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'showCounter', label: 'Mostrar Contador', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: 'xl' },
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'text', group: 'style', defaultValue: 'semibold' },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+      ...UNIVERSAL_STYLING_PROPERTIES,
+    ],
+  },
+
+  'quiz-options': {
+    label: 'Opções de Resposta',
+    fields: [
+      { key: 'options', label: 'Lista de Opções', type: 'options-list', group: 'content',
+        defaultValue: [
+          { id: 'opt-1', text: 'Opção 1', image: '', value: 'romantico', points: 1 },
+          { id: 'opt-2', text: 'Opção 2', image: '', value: 'classico', points: 1 },
+        ]
+      },
+      { key: 'columns', label: 'Número de Colunas', type: 'range', min: 1, max: 4, group: 'layout', defaultValue: 3 },
+      { key: 'gap', label: 'Espaçamento', type: 'text', group: 'layout', defaultValue: '1rem' },
+      { key: 'aspectRatio', label: 'Proporção', type: 'text', group: 'layout', defaultValue: '1/1' },
+      { key: 'hoverEffect', label: 'Efeito Hover', type: 'select', group: 'style', defaultValue: 'scale',
+        options: [
+          { label: 'Escalar', value: 'scale' },
+          { label: 'Elevar', value: 'lift' },
+          { label: 'Brilho', value: 'glow' },
+          { label: 'Nenhum', value: 'none' },
+        ]
+      },
+      { key: 'selectedBorderColor', label: 'Cor da Borda Selecionada', type: 'color', group: 'style', defaultValue: '#3B82F6' },
+      { key: 'selectedBorderWidth', label: 'Largura da Borda', type: 'text', group: 'style', defaultValue: '3px' },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+      ...UNIVERSAL_STYLING_PROPERTIES,
+    ],
+  },
+
+  'transition': {
+    label: 'Transição/Loading',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Analisando suas respostas...' },
+      { key: 'messages', label: 'Mensagens', type: 'options-list', group: 'content',
+        defaultValue: [
+          { text: 'Processando suas preferências' },
+          { text: 'Identificando seu estilo' },
+          { text: 'Preparando resultado personalizado' },
+        ]
+      },
+      { key: 'duration', label: 'Duração (ms)', type: 'range', min: 1000, max: 10000, step: 500, group: 'behavior', defaultValue: 3000 },
+      { key: 'autoProgress', label: 'Progresso Automático', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'showProgress', label: 'Mostrar Progresso', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#FAF9F7' },
+      { key: 'loaderType', label: 'Tipo de Loader', type: 'select', group: 'style', defaultValue: 'dots',
+        options: [
+          { label: 'Pontos', value: 'dots' },
+          { label: 'Spinner', value: 'spinner' },
+          { label: 'Barra', value: 'bar' },
+        ]
+      },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+    ],
+  },
+
+  'transition-result': {
+    label: 'Transição para Resultado',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Preparando seu resultado...' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content', defaultValue: 'Em alguns segundos você descobrirá seu estilo predominante' },
+      { key: 'duration', label: 'Duração (ms)', type: 'range', min: 1000, max: 5000, step: 500, group: 'behavior', defaultValue: 2000 },
+      { key: 'autoProgress', label: 'Progresso Automático', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'showAnimation', label: 'Mostrar Animação', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'animationType', label: 'Tipo de Animação', type: 'select', group: 'style', defaultValue: 'fade-in',
+        options: [
+          { label: 'Fade In', value: 'fade-in' },
+          { label: 'Slide Up', value: 'slide-up' },
+          { label: 'Zoom', value: 'zoom' },
+        ]
+      },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+    ],
+  },
+
+  'result-headline': {
+    label: 'Resultado Principal',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: '{userName}, seu estilo é:' },
+      { key: 'resultVariable', label: 'Variável do Resultado', type: 'text', group: 'content', defaultValue: 'dominantStyle' },
+      { key: 'celebrationEmoji', label: 'Emoji de Celebração', type: 'text', group: 'content', defaultValue: '🎉' },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: '3xl' },
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'text', group: 'style', defaultValue: 'bold' },
+      { key: 'textAlign', label: 'Alinhamento', type: 'text', group: 'style', defaultValue: 'center' },
+      { key: 'showConfetti', label: 'Mostrar Confetes', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'animateIn', label: 'Animar Entrada', type: 'boolean', group: 'behavior', defaultValue: true },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+      ...UNIVERSAL_STYLING_PROPERTIES,
+    ],
+  },
+
+  'result-secondary-list': {
+    label: 'Lista de Características',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Suas características:' },
+      { key: 'items', label: 'Itens', type: 'options-list', group: 'content',
+        defaultValue: [
+          { text: 'Característica 1' },
+          { text: 'Característica 2' },
+          { text: 'Característica 3' },
+        ]
+      },
+      { key: 'layout', label: 'Layout', type: 'select', group: 'layout', defaultValue: 'vertical',
+        options: [
+          { label: 'Vertical', value: 'vertical' },
+          { label: 'Horizontal', value: 'horizontal' },
+          { label: 'Grade', value: 'grid' },
+        ]
+      },
+      { key: 'iconType', label: 'Tipo de Ícone', type: 'text', group: 'style', defaultValue: 'checkmark' },
+      { key: 'iconColor', label: 'Cor do Ícone', type: 'color', group: 'style', defaultValue: '#10B981' },
+      { key: 'spacing', label: 'Espaçamento', type: 'text', group: 'layout', defaultValue: '0.5rem' },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+      ...UNIVERSAL_STYLING_PROPERTIES,
+    ],
+  },
+
+  'result-description': {
+    label: 'Descrição do Resultado',
+    fields: [
+      { key: 'text', label: 'Texto', type: 'textarea', group: 'content', defaultValue: 'Baseado nas suas respostas, você tem características...' },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: 'base' },
+      { key: 'lineHeight', label: 'Altura da Linha', type: 'text', group: 'style', defaultValue: '1.8' },
+      { key: 'textAlign', label: 'Alinhamento', type: 'text', group: 'style', defaultValue: 'left' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#F9FAFB' },
+      { key: 'padding', label: 'Padding', type: 'text', group: 'layout', defaultValue: '1.5rem' },
+      { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+    ],
+  },
+
+  'offer-core': {
+    label: 'Oferta Principal',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Transforme Seu Guarda-Roupa' },
+      { key: 'description', label: 'Descrição', type: 'textarea', group: 'content', defaultValue: 'Consultoria personalizada baseada no seu estilo' },
+      { key: 'image', label: 'Imagem', type: 'text', group: 'content', defaultValue: 'https://via.placeholder.com/600x400' },
+      { key: 'price', label: 'Preço', type: 'text', group: 'content', defaultValue: 'R$ 497' },
+      { key: 'originalPrice', label: 'Preço Original', type: 'text', group: 'content', defaultValue: 'R$ 997' },
+      { key: 'discount', label: 'Desconto', type: 'text', group: 'content', defaultValue: '50% OFF' },
+      { key: 'layout', label: 'Layout', type: 'select', group: 'layout', defaultValue: 'horizontal',
+        options: [
+          { label: 'Horizontal', value: 'horizontal' },
+          { label: 'Vertical', value: 'vertical' },
+        ]
+      },
+      { key: 'showBadge', label: 'Mostrar Badge', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'badgeText', label: 'Texto do Badge', type: 'text', group: 'content', defaultValue: 'OFERTA LIMITADA' },
+      { key: 'badgeColor', label: 'Cor do Badge', type: 'color', group: 'style', defaultValue: '#EF4444' },
+      { key: 'borderColor', label: 'Cor da Borda', type: 'color', group: 'style', defaultValue: '#B89B7A' },
+      { key: 'borderWidth', label: 'Largura da Borda', type: 'text', group: 'style', defaultValue: '2px' },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+      ...UNIVERSAL_STYLING_PROPERTIES,
+    ],
+  },
+
+  'offer-urgency': {
+    label: 'Urgência/Escassez',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Esta oferta expira em:' },
+      { key: 'type', label: 'Tipo', type: 'select', group: 'content', defaultValue: 'countdown',
+        options: [
+          { label: 'Contagem Regressiva', value: 'countdown' },
+          { label: 'Vagas Limitadas', value: 'limited' },
+        ]
+      },
+      { key: 'endTime', label: 'Tempo Final', type: 'text', group: 'content', defaultValue: '+24h' },
+      { key: 'urgencyMessage', label: 'Mensagem de Urgência', type: 'text', group: 'content', defaultValue: 'Restam apenas {count} vagas!' },
+      { key: 'showCountdown', label: 'Mostrar Contagem', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'countdownSize', label: 'Tamanho do Contador', type: 'text', group: 'style', defaultValue: 'lg' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#FEF2F2' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#991B1B' },
+      { key: 'pulsate', label: 'Pulsar', type: 'boolean', group: 'behavior', defaultValue: true },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+    ],
+  },
+
+  'checkout-button': {
+    label: 'Botão de Checkout',
+    fields: [
+      { key: 'text', label: 'Texto Principal', type: 'text', group: 'content', defaultValue: 'QUERO TRANSFORMAR MEU ESTILO' },
+      { key: 'subtext', label: 'Subtexto', type: 'text', group: 'content', defaultValue: 'Pagamento 100% seguro' },
+      { key: 'icon', label: 'Ícone', type: 'text', group: 'content', defaultValue: 'lock' },
+      { key: 'size', label: 'Tamanho', type: 'text', group: 'style', defaultValue: 'xl' },
+      { key: 'fullWidth', label: 'Largura Total', type: 'boolean', group: 'layout', defaultValue: true },
+      { key: 'variant', label: 'Variante', type: 'text', group: 'style', defaultValue: 'cta' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#10B981' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#FFFFFF' },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: 'lg' },
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'text', group: 'style', defaultValue: 'bold' },
+      { key: 'pulseAnimation', label: 'Animação de Pulso', type: 'boolean', group: 'behavior', defaultValue: true },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+    ],
+  },
+
+  'image': {
+    label: 'Imagem',
+    fields: [
+      { key: 'url', label: 'URL da Imagem', type: 'text', group: 'content', required: true, defaultValue: 'https://via.placeholder.com/800x600' },
+      { key: 'alt', label: 'Texto Alternativo', type: 'text', group: 'content', defaultValue: 'Imagem descritiva' },
+      { key: 'width', label: 'Largura', type: 'text', group: 'layout', defaultValue: '100%' },
+      { key: 'aspectRatio', label: 'Proporção', type: 'text', group: 'layout', defaultValue: '16/9' },
+      { key: 'objectFit', label: 'Ajuste', type: 'select', group: 'style', defaultValue: 'cover',
+        options: [
+          { label: 'Cobrir', value: 'cover' },
+          { label: 'Conter', value: 'contain' },
+          { label: 'Preencher', value: 'fill' },
+        ]
+      },
+      { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
+      { key: 'lazyLoad', label: 'Carregamento Preguiçoso', type: 'boolean', group: 'behavior', defaultValue: true },
+      ...UNIVERSAL_LAYOUT_PROPERTIES,
+      ...UNIVERSAL_TRANSFORM_PROPERTIES,
+    ],
+  },
+
+  'divider': {
+    label: 'Divisor',
+    fields: [
+      { key: 'width', label: 'Largura', type: 'text', group: 'layout', defaultValue: '100%' },
+      { key: 'height', label: 'Altura', type: 'text', group: 'layout', defaultValue: '1px' },
+      { key: 'backgroundColor', label: 'Cor', type: 'color', group: 'style', defaultValue: '#E5E7EB' },
+      { key: 'margin', label: 'Margem', type: 'text', group: 'layout', defaultValue: '2rem 0' },
+    ],
+  },
+
+  'spacer': {
+    label: 'Espaçamento',
+    fields: [
+      { key: 'height', label: 'Altura', type: 'text', group: 'layout', defaultValue: '2rem' },
+      { key: 'width', label: 'Largura', type: 'text', group: 'layout', defaultValue: '100%' },
+    ],
+  },
+
+  'progress-bar': {
+    label: 'Barra de Progresso',
+    fields: [
+      { key: 'currentStep', label: 'Etapa Atual', type: 'range', min: 1, max: 21, group: 'content', defaultValue: 1 },
+      { key: 'totalSteps', label: 'Total de Etapas', type: 'range', min: 1, max: 21, group: 'content', defaultValue: 21 },
+      { key: 'showPercentage', label: 'Mostrar Porcentagem', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'height', label: 'Altura', type: 'text', group: 'layout', defaultValue: '8px' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#E5E7EB' },
+      { key: 'fillColor', label: 'Cor de Preenchimento', type: 'color', group: 'style', defaultValue: '#3B82F6' },
+      { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '9999px' },
+      { key: 'position', label: 'Posição', type: 'text', group: 'layout', defaultValue: 'top' },
+      { key: 'showLabels', label: 'Mostrar Labels', type: 'boolean', group: 'behavior', defaultValue: true },
+    ],
+  },
+
   'basic-container': {
     label: 'Container Básico',
     fields: [
