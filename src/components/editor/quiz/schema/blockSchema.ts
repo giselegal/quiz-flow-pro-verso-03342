@@ -514,7 +514,32 @@ export const blockSchemaMap: Record<string, BlockPropertySchemaDefinition> = Obj
     INITIAL_BLOCK_SCHEMAS.map(def => [def.type, def])
 );
 
+// 🔄 INTEGRAÇÃO COM NOVO SISTEMA MODULAR
+// Tenta carregar schema do novo sistema primeiro, fallback para legado
+let newSchemaSystemAvailable = false;
+let getSchemaFromNewSystem: ((type: string) => BlockPropertySchemaDefinition | null) | null = null;
+
+try {
+    // Tenta importar o novo sistema (lazy)
+    import('@/config/schemas/adapter').then(adapter => {
+        newSchemaSystemAvailable = true;
+        getSchemaFromNewSystem = adapter.getHybridSchema;
+    }).catch(() => {
+        // Novo sistema não disponível, usa legado
+        console.log('[BlockSchema] Using legacy schema system');
+    });
+} catch {
+    // Ignora erro se módulo não existir
+}
+
 export function getBlockSchema(type: string): BlockPropertySchemaDefinition | undefined {
+    // Tenta novo sistema se disponível
+    if (newSchemaSystemAvailable && getSchemaFromNewSystem) {
+        const newSchema = getSchemaFromNewSystem(type);
+        if (newSchema) return newSchema;
+    }
+    
+    // Fallback para legado
     return blockSchemaMap[type];
 }
 

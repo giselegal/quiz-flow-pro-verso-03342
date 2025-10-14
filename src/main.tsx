@@ -19,9 +19,15 @@ import './utils/blockLovableInDev';
 import './utils/canvasPerformanceControl';
 // ✨ MODULAR STEPS: Sistema modular de steps - auto-registro dos componentes
 import './components/steps';
+// 🏗️ SCHEMA SYSTEM: Inicializa o sistema modular de schemas com lazy loading
+import { initializeSchemaRegistry } from './config/schemas';
 // 🤖 AI: IA do funil auto-ativada via utils
 // import { activateFunnelAI } from './utils/funnelAIActivator'; // Removido - não utilizado
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
+
+// 🏗️ Inicializar sistema de schemas
+initializeSchemaRegistry();
+console.log('✅ Schema system initialized');
 
 // 🧹 DEVELOPMENT: Ativa limpeza de avisos apenas em desenvolvimento
 if (import.meta.env.DEV) {

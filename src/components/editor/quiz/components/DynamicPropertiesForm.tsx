@@ -114,34 +114,102 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
             return (
                 <div className="space-y-2">
                     {arr.map((item: any, idx: number) => (
-                        <div key={item.id || idx} className="flex items-center gap-2">
-                            <Input
-                                value={item.text || ''}
-                                onChange={e => {
-                                    const next = [...arr];
-                                    next[idx] = { ...next[idx], text: e.target.value };
-                                    onChange({ [prop.key]: next });
-                                }}
-                                className="flex-1"
-                            />
-                            <button
-                                type="button"
-                                className="text-xs px-2 py-1 border rounded hover:bg-red-50 hover:text-red-600"
-                                onClick={() => {
-                                    const next = arr.filter((_: any, i: number) => i !== idx);
-                                    onChange({ [prop.key]: next });
-                                }}
-                            >Rem</button>
+                        <div key={item.id || idx} className="border rounded-md p-3 bg-slate-50 space-y-2">
+                            <div className="flex items-start gap-2">
+                                <div className="flex-1 space-y-2">
+                                    {/* Texto da opção */}
+                                    <Input
+                                        placeholder="Texto da opção"
+                                        value={item.text || ''}
+                                        onChange={e => {
+                                            const next = [...arr];
+                                            next[idx] = { ...next[idx], text: e.target.value };
+                                            onChange({ [prop.key]: next });
+                                        }}
+                                        className="text-sm"
+                                    />
+
+                                    {/* URL da imagem com preview */}
+                                    <div className="flex gap-2 items-center">
+                                        <Input
+                                            placeholder="URL da imagem"
+                                            value={item.imageUrl || ''}
+                                            onChange={e => {
+                                                const next = [...arr];
+                                                next[idx] = { ...next[idx], imageUrl: e.target.value };
+                                                onChange({ [prop.key]: next });
+                                            }}
+                                            className="text-xs flex-1"
+                                        />
+                                        {item.imageUrl && (
+                                            <img
+                                                src={item.imageUrl}
+                                                alt={item.text || `opção ${idx + 1}`}
+                                                className="h-10 w-10 rounded object-cover border-2 border-slate-200"
+                                                onError={(e) => {
+                                                    e.currentTarget.style.display = 'none';
+                                                }}
+                                            />
+                                        )}
+                                    </div>
+
+                                    {/* Pontuação e Categoria */}
+                                    <div className="flex gap-2">
+                                        <Input
+                                            type="number"
+                                            placeholder="Pontos"
+                                            value={item.points ?? item.score ?? ''}
+                                            onChange={e => {
+                                                const next = [...arr];
+                                                next[idx] = { ...next[idx], points: parseInt(e.target.value) || 0 };
+                                                onChange({ [prop.key]: next });
+                                            }}
+                                            className="text-xs w-20"
+                                        />
+                                        <Input
+                                            placeholder="Categoria"
+                                            value={item.category || ''}
+                                            onChange={e => {
+                                                const next = [...arr];
+                                                next[idx] = { ...next[idx], category: e.target.value };
+                                                onChange({ [prop.key]: next });
+                                            }}
+                                            className="text-xs flex-1"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Botão remover */}
+                                <button
+                                    type="button"
+                                    className="text-xs px-2 py-1 border rounded hover:bg-red-50 hover:text-red-600 mt-1"
+                                    onClick={() => {
+                                        const next = arr.filter((_: any, i: number) => i !== idx);
+                                        onChange({ [prop.key]: next });
+                                    }}
+                                    title="Remover opção"
+                                >
+                                    🗑️
+                                </button>
+                            </div>
                         </div>
                     ))}
                     <button
                         type="button"
-                        className="text-xs px-2 py-1 border rounded hover:bg-blue-50"
+                        className="text-xs px-3 py-2 border rounded hover:bg-blue-50 w-full font-medium"
                         onClick={() => {
-                            const next = [...arr, { id: `opt-${Date.now()}`, text: 'Nova opção' }];
+                            const next = [...arr, {
+                                id: `opt-${Date.now()}`,
+                                text: 'Nova opção',
+                                imageUrl: '',
+                                points: 0,
+                                category: ''
+                            }];
                             onChange({ [prop.key]: next });
                         }}
-                    >Adicionar Opção</button>
+                    >
+                        ➕ Adicionar Opção
+                    </button>
                 </div>
             );
         }
