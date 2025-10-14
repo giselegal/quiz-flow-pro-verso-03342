@@ -188,7 +188,7 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
             placeholder: 'Digite aqui...',
             required: true
         }),
-        ...(comp.type === 'quiz-options' && {
+        ...(comp.type === 'options-grid' && {
             multiSelect: true,
             requiredSelections: 1,
             maxSelections: 3,
@@ -211,7 +211,37 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
             barColor: '#b3a26a',
             barBackground: '#E5E7EB'
         }),
-    }
+    },
+    ...(comp.type === 'options-grid' && {
+        defaultContent: {
+            options: [
+                {
+                    id: 'opt1',
+                    text: 'Opção 1',
+                    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/ecommerce/accessories-bag',
+                    points: 10,
+                    score: 10,
+                    category: 'A'
+                },
+                {
+                    id: 'opt2',
+                    text: 'Opção 2',
+                    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/food/fish-vegetables',
+                    points: 20,
+                    score: 20,
+                    category: 'B'
+                },
+                {
+                    id: 'opt3',
+                    text: 'Opção 3',
+                    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/landscapes/beach-boat',
+                    points: 30,
+                    score: 30,
+                    category: 'C'
+                }
+            ]
+        }
+    })
 }));
 
 // ⚠️ LEGACY COMPONENT_LIBRARY (mantido comentado para referência)
@@ -329,51 +359,6 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
             backgroundColor: '#B89B7A',
             textColor: '#FFFFFF',
             action: 'next-step'
-        }
-    },
-    {
-        type: 'quiz-options',
-        label: 'Opções de Quiz',
-        icon: <List className="w-4 h-4" />,
-        category: 'interactive',
-        defaultProps: {
-            multiSelect: true,
-            requiredSelections: 1,
-            maxSelections: 3,
-            autoAdvance: true,
-            showImages: true,
-            layout: 'auto',
-            showNextButton: true,
-            enableButtonOnlyWhenValid: true,
-            nextButtonText: 'Avançar'
-        },
-        defaultContent: {
-            options: [
-                {
-                    id: 'opt1',
-                    text: 'Opção 1',
-                    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/ecommerce/accessories-bag',
-                    points: 10,
-                    score: 10,
-                    category: 'A'
-                },
-                {
-                    id: 'opt2',
-                    text: 'Opção 2',
-                    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/food/fish-vegetables',
-                    points: 20,
-                    score: 20,
-                    category: 'B'
-                },
-                {
-                    id: 'opt3',
-                    text: 'Opção 3',
-                    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/landscapes/beach-boat',
-                    points: 30,
-                    score: 30,
-                    category: 'C'
-                }
-            ]
         }
     },
     {
