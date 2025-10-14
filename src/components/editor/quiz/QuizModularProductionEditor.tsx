@@ -899,6 +899,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Layout responsivo
     const [activeTab, setActiveTab] = useState<'canvas' | 'preview'>('canvas');
+    const activeTabDebounceRef = useRef<number | null>(null);
+    
+    // Handler com debounce para mudança de tab
+    const handleTabChange = useCallback((newTab: 'canvas' | 'preview') => {
+        if (activeTabDebounceRef.current) {
+            window.clearTimeout(activeTabDebounceRef.current);
+        }
+        
+        activeTabDebounceRef.current = window.setTimeout(() => {
+            setActiveTab(newTab);
+        }, 50); // Pequeno debounce de 50ms para evitar cliques múltiplos rápidos
+    }, []);
+    
     const [navOpen, setNavOpen] = useState(false);
     const navAnalysis = useMemo(() => buildNavigationMap(steps.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [steps]);
 
@@ -2239,6 +2252,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
     }, [funnelId, toast]);
 
+    // Memoizar o nó do preview para evitar recriação a cada render
+    const previewNode = useMemo(() => {
+        const stepId = (editorCtx ? effectiveSelectedStepId : selectedStepId) || selectedStep?.id;
+        return <LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={stepId} />;
+    }, [funnelId, steps, editorCtx, effectiveSelectedStepId, selectedStepId, selectedStep?.id]);
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
@@ -2441,7 +2460,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
                             activeId={activeId}
-                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={(editorCtx ? effectiveSelectedStepId : selectedStepId) || selectedStep?.id} />}
+                            previewNode={previewNode}
                             FixedProgressHeader={FixedProgressHeader}
                             StyleResultCard={StyleResultCard}
                             OfferMap={OfferMap}
@@ -2580,7 +2599,10 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = React.memo(({ 
             </div>
         </div>
     );
-};
+});
+
+// Definir displayName para facilitar debug
+LivePreviewContainer.displayName = 'LivePreviewContainer';
 
 interface LiveRuntimePreviewProps {
     steps: EditableQuizStep[];
@@ -2588,10 +2610,12 @@ interface LiveRuntimePreviewProps {
     selectedStepId?: string;
 }
 
-const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId, selectedStepId }) => {
+const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ steps, funnelId, selectedStepId }) => {
     const { setSteps, version } = useQuizRuntimeRegistry();
     const runtimeMap = React.useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
     const mapRef = React.useRef(runtimeMap);
+    const updateCountRef = React.useRef(0);
+    const lastUpdateTimeRef = React.useRef(0);
 
     // Hash estável para evitar loops desnecessários
     const mapHash = React.useMemo(() => {
@@ -2605,9 +2629,26 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId
 
     // Atualizar registry quando mapa realmente muda (baseado em hash estável)
     React.useEffect(() => {
+        // ✅ PROTEÇÃO: Prevenir loops infinitos
+        const now = Date.now();
+        const timeSinceLastUpdate = now - lastUpdateTimeRef.current;
+
+        // Se atualizou mais de 10 vezes em menos de 1 segundo, há um loop
+        if (timeSinceLastUpdate < 1000 && updateCountRef.current > 10) {
+            console.error('🚨 Loop de render detectado no LiveRuntimePreview! Bloqueando atualização.');
+            return;
+        }
+
+        // Reset do contador após 1 segundo
+        if (timeSinceLastUpdate > 1000) {
+            updateCountRef.current = 0;
+        }
+
         if (hashRef.current !== mapHash) {
             hashRef.current = mapHash;
             mapRef.current = runtimeMap;
+            updateCountRef.current += 1;
+            lastUpdateTimeRef.current = now;
             setSteps(runtimeMap);
             console.log('🔁 Live preview registry atualizado', Object.keys(runtimeMap).length, 'steps');
         }
@@ -2624,5 +2665,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = ({ steps, funnelId
             </div>
         </div>
     );
-};
+});
 
+// Definir displayName para facilitar debug
+LiveRuntimePreview.displayName = 'LiveRuntimePreview';
