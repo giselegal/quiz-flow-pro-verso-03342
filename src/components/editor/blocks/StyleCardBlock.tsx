@@ -9,6 +9,10 @@ interface StyleCardBlockProps {
   showDescription?: boolean;
   showImage?: boolean;
   className?: string;
+  marginTop?: number | string;
+  marginBottom?: number | string;
+  marginLeft?: number | string;
+  marginRight?: number | string;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -61,6 +65,10 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
   showDescription = true,
   showImage = true,
   className,
+  marginTop = 0,
+  marginBottom = 0,
+  marginLeft = 0,
+  marginRight = 0,
 }) => {
   const { quizResult } = useQuizLogic();
   const primaryStyle = quizResult?.primaryStyle;
@@ -72,10 +80,10 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
           'p-6 text-center text-[#432818]',
           className,
           // Margens universais com controles deslizantes
-          getMarginClass((marginTop as number | string) ?? 0, 'top'),
-          getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
-          getMarginClass((marginLeft as number | string) ?? 0, 'left'),
-          getMarginClass((marginRight as number | string) ?? 0, 'right')
+          getMarginClass(marginTop, 'top'),
+          getMarginClass(marginBottom, 'bottom'),
+          getMarginClass(marginLeft, 'left'),
+          getMarginClass(marginRight, 'right')
         )}
       >
         <p>Finalize o quiz para ver seu estilo predominante</p>

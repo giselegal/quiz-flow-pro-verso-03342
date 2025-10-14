@@ -90,6 +90,10 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
     progressValue = 80,
     backgroundColor = '#ffffff',
     textColor = '#432818',
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -113,10 +117,10 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         'cursor-pointer hover:border-gray-400 transition-colors',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass((marginTop as number | string) ?? 0, 'top'),
-        getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
-        getMarginClass((marginLeft as number | string) ?? 0, 'left'),
-        getMarginClass((marginRight as number | string) ?? 0, 'right')
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
       style={{ backgroundColor, color: textColor }}

@@ -121,10 +121,10 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
         'border-2 overflow-hidden',
         isDragging ? 'border-[#B89B7A]' : 'border-[#B89B7A]/20',
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, 'top'),
-        getMarginClass(marginBottom, 'bottom'),
-        getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(block.properties?.marginTop ?? 0, 'top'),
+        getMarginClass(block.properties?.marginBottom ?? 0, 'bottom'),
+        getMarginClass(block.properties?.marginLeft ?? 0, 'left'),
+        getMarginClass(block.properties?.marginRight ?? 0, 'right')
       )}
     >
       {/* Block Header */}

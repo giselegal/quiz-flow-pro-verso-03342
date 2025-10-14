@@ -82,10 +82,10 @@ const SectionDividerBlock: React.FC<BlockComponentProps> = ({
         isSelected && 'bg-brand/10 ring-2 ring-brand/30',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass((marginTop as number | string) ?? 0, 'top'),
-        getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
-        getMarginClass((marginLeft as number | string) ?? 0, 'left'),
-        getMarginClass((marginRight as number | string) ?? 0, 'right')
+        getMarginClass(block.properties?.marginTop ?? 0, 'top'),
+        getMarginClass(block.properties?.marginBottom ?? 0, 'bottom'),
+        getMarginClass(block.properties?.marginLeft ?? 0, 'left'),
+        getMarginClass(block.properties?.marginRight ?? 0, 'right')
       )}
       style={{ marginTop: margin / 2, marginBottom: margin / 2 }}
       onClick={onClick}

@@ -11,6 +11,10 @@ interface TestimonialInlineBlockProps {
   className?: string;
   onPropertyChange?: (key: string, value: any) => void;
   disabled?: boolean;
+  marginTop?: number | string;
+  marginBottom?: number | string;
+  marginLeft?: number | string;
+  marginRight?: number | string;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -68,6 +72,10 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
   className,
   onPropertyChange,
   disabled = false,
+  marginTop = 0,
+  marginBottom = 0,
+  marginLeft = 0,
+  marginRight = 0,
 }) => {
   return (
     <div
@@ -78,10 +86,10 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
         disabled && 'opacity-75 cursor-not-allowed',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass((marginTop as number | string) ?? 0, 'top'),
-        getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
-        getMarginClass((marginLeft as number | string) ?? 0, 'left'),
-        getMarginClass((marginRight as number | string) ?? 0, 'right')
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={!disabled ? onClick : undefined}
     >

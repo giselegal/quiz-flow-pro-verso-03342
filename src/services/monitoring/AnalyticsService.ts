@@ -63,10 +63,10 @@ class AnalyticsService {
     document.head.appendChild(script);
 
     // Configurar gtag
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function() {
-      if (window.dataLayer) {
-        window.dataLayer.push(arguments);
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    (window as any).gtag = (window as any).gtag || function() {
+      if ((window as any).dataLayer) {
+        (window as any).dataLayer.push(arguments);
       }
     };
 

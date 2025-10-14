@@ -76,6 +76,10 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
     theme: _theme = 'primary',
     size = 'medium',
     layout = 'horizontal',
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
   } = block?.properties || {};
 
   const [displayValue, setDisplayValue] = useState('0');
@@ -208,10 +212,10 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
         className,
         INLINE_ANIMATIONS[animation as keyof typeof INLINE_ANIMATIONS],
         // Margens universais com controles deslizantes
-        getMarginClass((marginTop as number | string) ?? 0, 'top'),
-        getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
-        getMarginClass((marginLeft as number | string) ?? 0, 'left'),
-        getMarginClass((marginRight as number | string) ?? 0, 'right')
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       minHeight="4rem"
       editLabel="Editar Estatística"

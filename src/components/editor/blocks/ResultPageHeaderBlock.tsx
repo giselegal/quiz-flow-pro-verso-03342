@@ -17,6 +17,10 @@ interface ResultPageHeaderBlockProps {
       progressValue?: number;
       backgroundColor?: string;
       textColor?: string;
+      marginTop?: number | string;
+      marginBottom?: number | string;
+      marginLeft?: number | string;
+      marginRight?: number | string;
     };
   };
   isSelected?: boolean;
@@ -96,10 +100,10 @@ const ResultPageHeaderBlock: React.FC<ResultPageHeaderBlockProps> = ({
         isSelected && 'border-[#B89B7A] shadow-lg',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass((marginTop as number | string) ?? 0, 'top'),
-        getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
-        getMarginClass((marginLeft as number | string) ?? 0, 'left'),
-        getMarginClass((marginRight as number | string) ?? 0, 'right')
+        getMarginClass(block.properties?.marginTop ?? 0, 'top'),
+        getMarginClass(block.properties?.marginBottom ?? 0, 'bottom'),
+        getMarginClass(block.properties?.marginLeft ?? 0, 'left'),
+        getMarginClass(block.properties?.marginRight ?? 0, 'right')
       )}
       onClick={onClick}
       style={{
