@@ -1,6 +1,58 @@
 {
   "templateId": "quiz21StepsComplete",
   "version": "3.0",
-  "generatedAt": "2025-10-14T17:33:08.356Z",
-  "steps": {}
+  "generatedAt": "2025-10-14T17:33:39.518Z",
+  "steps": {
+    "step-01": {
+      "id": "step-01",
+      "type": "intro",
+      "templateVersion": "3.0",
+      "blocks": [
+        {
+          "type": "hero-block",
+          "config": {
+            "titleHtml": "<span style=\"color: #B89B7A\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style=\"color: #B89B7A\">Você</span>.",
+            "subtitleHtml": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
+            "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
+            "imageAlt": "Descubra seu estilo predominante",
+            "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+            "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo"
+          }
+        },
+        {
+          "type": "welcome-form-block",
+          "config": {
+            "questionLabel": "Antes de começarmos, como posso te chamar?",
+            "placeholder": "Digite seu primeiro nome aqui...",
+            "buttonText": "Quero Descobrir meu Estilo Agora!",
+            "required": true
+          }
+        }
+      ],
+      "meta": {
+        "order": 1,
+        "originalType": "intro"
+      }
+    },
+    "step-02": {
+      "id": "step-02",
+      "type": "question",
+      "templateVersion": "3.0",
+      "blocks": [
+        {
+          "type": "question-block",
+          "config": {
+            "questionNumber": "02",
+            "questionText": "Q1 - Roupa Favorita",
+            "requiredSelections": 1,
+            "options": []
+          }
+        }
+      ],
+      "meta": {
+        "order": 2,
+        "originalType": "question"
+      }
+    }
+  }
 }

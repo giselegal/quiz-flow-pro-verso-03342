@@ -1,0 +1,20 @@
+{
+  "id": "step-02",
+  "type": "question",
+  "templateVersion": "3.0",
+  "blocks": [
+    {
+      "type": "question-block",
+      "config": {
+        "questionNumber": "02",
+        "questionText": "Q1 - Roupa Favorita",
+        "requiredSelections": 1,
+        "options": []
+      }
+    }
+  ],
+  "meta": {
+    "order": 2,
+    "originalType": "question"
+  }
+}
