@@ -528,7 +528,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 blocks: Array.isArray(step.blocks) ? step.blocks : []
                             }));
                             setSteps(validSteps as any);
-                            setSelectedStepId(draft.steps[0]?.id || '');
+                            setSelectedStepIdUnified(draft.steps[0]?.id || '');
                             setFunnelId(draft.id || funnelParam);
                             const { runtime, results, ui, settings } = (draft as any);
                             setUnifiedConfig({ runtime, results, ui, settings });
@@ -570,7 +570,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                         console.log(`✅ Template fallback carregado: ${initial.length} steps, ${initial.reduce((sum, s) => sum + s.blocks.length, 0)} blocos totais`);
                         setSteps(initial);
-                        setSelectedStepId(initial[0]?.id || '');
+                        setSelectedStepIdUnified(initial[0]?.id || '');
                         setIsLoading(false);
                     }
                 })();
@@ -580,7 +580,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     if (templateId === 'fashionStyle21PtBR') {
                         const initial = buildFashionStyle21Steps(funnelParam);
                         setSteps(initial);
-                        setSelectedStepId(initial[0]?.id || '');
+                        setSelectedStepIdUnified(initial[0]?.id || '');
                         setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                         setIsLoading(false);
                     } else if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
@@ -615,7 +615,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         });
                         for (let i = 0; i < initial.length - 1; i++) initial[i].nextStep = initial[i + 1].id;
                         setSteps(initial);
-                        setSelectedStepId(initial[0]?.id || '');
+                        setSelectedStepIdUnified(initial[0]?.id || '');
                         setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                         setIsLoading(false);
                         console.log('✅ Fallback concluído! Total de steps:', initial.length);
@@ -674,7 +674,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             };
 
             setSteps([fallbackStep]);
-            setSelectedStepId('step-01');
+            setSelectedStepIdUnified('step-01');
             console.log('✅ Fallback step criado para evitar editor vazio');
         }
     }, [isLoading, steps]);
@@ -712,7 +712,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         pushHistory,
         setDirty: setIsDirty,
         onSelectStep: (id: string) => {
-            setSelectedStepId(id);
+            setSelectedStepIdUnified(id);
             if (editorCtx?.actions?.setCurrentStep) {
                 const n = stepNumberFromId(id);
                 if (!isNaN(n)) editorCtx.actions.setCurrentStep(n);
@@ -767,6 +767,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         [steps, effectiveSelectedStepId, selectedStepId, editorCtx]
     );
 
+    const setSelectedStepIdUnified = useCallback((id: string) => {
+        setSelectedStepId(id);
+        if (editorCtx?.actions?.setCurrentStep) {
+            const n = stepNumberFromId(id);
+            if (!isNaN(n)) editorCtx.actions.setCurrentStep(n);
+        }
+    }, [setSelectedStepId, editorCtx, stepNumberFromId]);
+
     // Hook de seleção / clipboard deve vir antes de dependências que usam selectedBlockId
     const selectionApi = useSelectionClipboard({
         steps,
@@ -792,9 +800,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Sincronizar seleção local -> provider (quando provider estiver disponível)
     useEffect(() => {
         if (!editorCtx?.actions?.setSelectedBlockId) return;
-        // Só propaga quando a origem for local (isto é, quando effective não vier do provider)
-        if (editorCtx?.state?.selectedBlockId == null && selectedBlockId !== undefined) {
-            editorCtx.actions.setSelectedBlockId(selectedBlockId || null);
+        const providerId = editorCtx?.state?.selectedBlockId ?? null;
+        const localId = selectedBlockId || null;
+        if (providerId !== localId) {
+            editorCtx.actions.setSelectedBlockId(localId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedBlockId]);
@@ -1012,7 +1021,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Construir hash de dependências (alterações de dados relevantes invalidam cache)
         const expanded = type === 'container' ? (expandedContainers ? expandedContainers.has(id) : false) : false; // guarda defensiva
         const childIds = type === 'container' ? children.map(c => c.id).join(',') : '';
-        const dynamicContextHash = JSON.stringify({ liveScores, selections: quizSelections[id], currentStep: selectedStepId }); // inclui seleções e etapa atual
+        const dynamicContextHash = JSON.stringify({ liveScores, selections: quizSelections[id], currentStep: editorCtx ? effectiveSelectedStepId : selectedStepId }); // inclui seleções e etapa atual
         const key = [
             id,
             type,
@@ -1134,7 +1143,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             selectedStep={selectedStep}
                             selections={quizSelections[id] || []}
                             onToggle={(optionId: string, multi: boolean, required: number) => toggleQuizOption(id, optionId, multi, required)}
-                            advanceStep={(nextStepId: string) => { setSelectedStepId(nextStepId); setSelectedBlockIdUnified(''); }}
+                            advanceStep={(nextStepId: string) => { setSelectedStepIdUnified(nextStepId); setSelectedBlockIdUnified(''); }}
                         />
                     </div>
                 </div>
@@ -1702,7 +1711,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Limpar cache ao trocar de etapa selecionada (evita crescimento indefinido e garante contexto correto)
     useEffect(() => {
         previewCacheRef.current.clear();
-    }, [selectedStepId]);
+    }, [effectiveSelectedStepId]);
 
     // Virtualização: lógica extraída para hook interno em CanvasArea (remoção da implementação inline anterior)
 
@@ -1715,7 +1724,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             // Flush de histórico debounced removido (não mais necessário)
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedStepId]);
+    }, [editorCtx ? effectiveSelectedStepId : selectedStepId]);
 
     // ========================================
     // Expansão Lazy de Containers
@@ -1936,7 +1945,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
             setSteps(convertedSteps);
             if (convertedSteps.length > 0) {
-                setSelectedStepId(convertedSteps[0].id);
+                setSelectedStepIdUnified(convertedSteps[0].id);
             }
             setIsDirty(true);
 
@@ -2040,7 +2049,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             return (
                                                 <div key={s.id} className="p-2 rounded border bg-slate-50 flex flex-col gap-1">
                                                     <div className="flex items-center justify-between">
-                                                        <button onClick={() => { setSelectedStepId(s.id); setNavOpen(false); }} className="text-left font-medium text-[11px] text-slate-800 hover:underline">{s.id}</button>
+                                                        <button onClick={() => { setSelectedStepIdUnified(s.id); setNavOpen(false); }} className="text-left font-medium text-[11px] text-slate-800 hover:underline">{s.id}</button>
                                                         {s.autoLinked && <span className="text-[9px] px-1 py-0.5 rounded bg-indigo-100 text-indigo-600" title="Preenchido automaticamente">auto</span>}
                                                     </div>
                                                     <div className="flex items-center gap-2">
@@ -2126,9 +2135,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     stepsPanel={(
                         <StepNavigator
                             steps={steps}
-                            selectedStepId={selectedStepId}
+                            selectedStepId={editorCtx ? effectiveSelectedStepId : selectedStepId}
                             byStep={byStep as any}
-                            onSelect={(id) => { setSelectedStepId(id); setSelectedBlockIdUnified(''); }}
+                            onSelect={(id) => { setSelectedStepIdUnified(id); setSelectedBlockIdUnified(''); }}
                             onAddStep={handleAddStep}
                             onMoveStep={handleMoveStep}
                             onDeleteStep={handleDeleteStep}
@@ -2139,7 +2148,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         <ComponentLibraryPanel
                             components={COMPONENT_LIBRARY as any}
                             categories={['layout', 'content', 'visual', 'quiz', 'forms', 'action', 'result', 'offer', 'navigation', 'ai', 'advanced']}
-                            selectedStepId={selectedStepId}
+                            selectedStepId={editorCtx ? effectiveSelectedStepId : selectedStepId}
                             onAdd={(type) => selectedStepId && addBlockToStep(selectedStepId, type)}
                             onQuizCreated={handleBuilderQuizCreated}
                         />
@@ -2171,7 +2180,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
                             activeId={activeId}
-                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={selectedStep?.id} />}
+                            previewNode={<LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={(editorCtx ? effectiveSelectedStepId : selectedStepId) || selectedStep?.id} />}
                             FixedProgressHeader={FixedProgressHeader}
                             StyleResultCard={StyleResultCard}
                             OfferMap={OfferMap}
