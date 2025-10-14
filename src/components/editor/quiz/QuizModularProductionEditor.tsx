@@ -2638,7 +2638,6 @@ interface LiveRuntimePreviewProps {
 
 const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ steps, funnelId, selectedStepId }) => {
     const { setSteps, version } = useQuizRuntimeRegistry();
-    const [isInitialized, setIsInitialized] = React.useState(false);
 
     // Calcular runtimeMap apenas quando steps mudam
     const runtimeMap = React.useMemo(() => {
@@ -2646,16 +2645,23 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
         return editorStepsToRuntimeMap(steps as any);
     }, [steps]);
 
-    // Atualizar registry apenas UMA VEZ na montagem
+    // Ref para evitar loop infinito
+    const lastUpdateRef = React.useRef<string>('');
+
+    // Atualizar registry quando runtimeMap mudar (com proteção contra loop)
     React.useEffect(() => {
-        if (!isInitialized) {
-            console.log('✅ Inicializando Live preview registry com', Object.keys(runtimeMap).length, 'steps');
+        const currentHash = JSON.stringify(Object.keys(runtimeMap).sort());
+
+        // Só atualizar se realmente mudou
+        if (currentHash !== lastUpdateRef.current) {
+            console.log('✅ Atualizando Live preview registry com', Object.keys(runtimeMap).length, 'steps');
+            lastUpdateRef.current = currentHash;
             setSteps(runtimeMap);
-            setIsInitialized(true);
         }
-        // ✅ CRÍTICO: Sem dependências de setSteps ou runtimeMap para evitar loop!
+        // ✅ CRÍTICO: setSteps é estável, runtimeMap muda com steps
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isInitialized]); return (
+    }, [runtimeMap]);
+    return (
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">
                 <QuizAppConnected funnelId={funnelId} editorMode initialStepId={selectedStepId} />
