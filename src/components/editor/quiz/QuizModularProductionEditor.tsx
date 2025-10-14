@@ -900,18 +900,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Layout responsivo
     const [activeTab, setActiveTab] = useState<'canvas' | 'preview'>('canvas');
     const activeTabDebounceRef = useRef<number | null>(null);
-    
+
     // Handler com debounce para mudança de tab
     const handleTabChange = useCallback((newTab: 'canvas' | 'preview') => {
         if (activeTabDebounceRef.current) {
             window.clearTimeout(activeTabDebounceRef.current);
         }
-        
+
         activeTabDebounceRef.current = window.setTimeout(() => {
             setActiveTab(newTab);
         }, 50); // Pequeno debounce de 50ms para evitar cliques múltiplos rápidos
     }, []);
-    
+
     const [navOpen, setNavOpen] = useState(false);
     const navAnalysis = useMemo(() => buildNavigationMap(steps.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [steps]);
 
@@ -2383,8 +2383,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     </div>
                                     <div className="h-6 w-px bg-border" />
                                     <div className="flex items-center gap-1" data-testid="preview-toggle">
-                                        <Button variant={activeTab === 'canvas' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('canvas')}>Canvas</Button>
-                                        <Button variant={activeTab === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('preview')}>Preview</Button>
+                                        <Button variant={activeTab === 'canvas' ? 'default' : 'outline'} size="sm" onClick={() => handleTabChange('canvas')}>Canvas</Button>
+                                        <Button variant={activeTab === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => handleTabChange('preview')}>Preview</Button>
                                     </div>
                                     <Button size="sm" onClick={handlePublish} disabled={isPublishing}>{isPublishing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}Publicar</Button>
                                 </div>
@@ -2429,7 +2429,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     canvasPanel={(
                         <CanvasArea
                             activeTab={activeTab}
-                            onTabChange={(v) => setActiveTab(v as 'canvas' | 'preview')}
+                            onTabChange={(v) => handleTabChange(v as 'canvas' | 'preview')}
                             steps={steps}
                             selectedStep={selectedStep}
                             headerConfig={headerConfig}
@@ -2612,49 +2612,24 @@ interface LiveRuntimePreviewProps {
 
 const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ steps, funnelId, selectedStepId }) => {
     const { setSteps, version } = useQuizRuntimeRegistry();
-    const runtimeMap = React.useMemo(() => editorStepsToRuntimeMap(steps as any), [steps]);
-    const mapRef = React.useRef(runtimeMap);
-    const updateCountRef = React.useRef(0);
-    const lastUpdateTimeRef = React.useRef(0);
+    const [isInitialized, setIsInitialized] = React.useState(false);
 
-    // Hash estável para evitar loops desnecessários
-    const mapHash = React.useMemo(() => {
-        try {
-            return JSON.stringify(Object.keys(runtimeMap).sort().map(k => [k, typeof runtimeMap[k]]));
-        } catch {
-            return String(Date.now());
-        }
-    }, [runtimeMap]);
-    const hashRef = React.useRef(mapHash);
+    // Calcular runtimeMap apenas quando steps mudam
+    const runtimeMap = React.useMemo(() => {
+        console.log('🔄 Recalculando runtimeMap com', steps.length, 'steps');
+        return editorStepsToRuntimeMap(steps as any);
+    }, [steps]);
 
-    // Atualizar registry quando mapa realmente muda (baseado em hash estável)
+    // Atualizar registry apenas UMA VEZ na montagem
     React.useEffect(() => {
-        // ✅ PROTEÇÃO: Prevenir loops infinitos
-        const now = Date.now();
-        const timeSinceLastUpdate = now - lastUpdateTimeRef.current;
-
-        // Se atualizou mais de 10 vezes em menos de 1 segundo, há um loop
-        if (timeSinceLastUpdate < 1000 && updateCountRef.current > 10) {
-            console.error('🚨 Loop de render detectado no LiveRuntimePreview! Bloqueando atualização.');
-            return;
-        }
-
-        // Reset do contador após 1 segundo
-        if (timeSinceLastUpdate > 1000) {
-            updateCountRef.current = 0;
-        }
-
-        if (hashRef.current !== mapHash) {
-            hashRef.current = mapHash;
-            mapRef.current = runtimeMap;
-            updateCountRef.current += 1;
-            lastUpdateTimeRef.current = now;
+        if (!isInitialized) {
+            console.log('✅ Inicializando Live preview registry com', Object.keys(runtimeMap).length, 'steps');
             setSteps(runtimeMap);
-            console.log('🔁 Live preview registry atualizado', Object.keys(runtimeMap).length, 'steps');
+            setIsInitialized(true);
         }
-    }, [mapHash, runtimeMap, setSteps]);
-
-    return (
+        // ✅ CRÍTICO: Sem dependências de setSteps ou runtimeMap para evitar loop!
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isInitialized]); return (
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">
                 <QuizAppConnected funnelId={funnelId} editorMode initialStepId={selectedStepId} />
