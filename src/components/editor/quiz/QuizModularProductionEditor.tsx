@@ -189,30 +189,15 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
             required: true
         }),
         ...(comp.type === 'quiz-options' && {
-            options: [
-                {
-                    id: 'opt1',
-                    text: 'Opção 1',
-                    imageUrl: '',
-                    points: 0,
-                    score: 0,
-                    category: ''
-                },
-                {
-                    id: 'opt2',
-                    text: 'Opção 2',
-                    imageUrl: '',
-                    points: 0,
-                    score: 0,
-                    category: ''
-                }
-            ],
             multiSelect: true,
             requiredSelections: 1,
             maxSelections: 3,
             autoAdvance: true,
             showImages: true,
-            layout: 'auto'
+            layout: 'auto',
+            showNextButton: true,
+            enableButtonOnlyWhenValid: true,
+            nextButtonText: 'Avançar'
         }),
         ...(comp.type === 'progress-header' && {
             showLogo: true,
@@ -352,16 +337,43 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
         icon: <List className="w-4 h-4" />,
         category: 'interactive',
         defaultProps: {
-            options: [
-                { id: 'opt1', text: 'Opção 1' },
-                { id: 'opt2', text: 'Opção 2' }
-            ],
             multiSelect: true,
             requiredSelections: 1,
             maxSelections: 3,
             autoAdvance: true,
             showImages: true,
-            layout: 'auto'
+            layout: 'auto',
+            showNextButton: true,
+            enableButtonOnlyWhenValid: true,
+            nextButtonText: 'Avançar'
+        },
+        defaultContent: {
+            options: [
+                {
+                    id: 'opt1',
+                    text: 'Opção 1',
+                    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/ecommerce/accessories-bag',
+                    points: 10,
+                    score: 10,
+                    category: 'A'
+                },
+                {
+                    id: 'opt2',
+                    text: 'Opção 2',
+                    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/food/fish-vegetables',
+                    points: 20,
+                    score: 20,
+                    category: 'B'
+                },
+                {
+                    id: 'opt3',
+                    text: 'Opção 3',
+                    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/landscapes/beach-boat',
+                    points: 30,
+                    score: 30,
+                    category: 'C'
+                }
+            ]
         }
     },
     {
