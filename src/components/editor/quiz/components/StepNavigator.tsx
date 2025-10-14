@@ -47,15 +47,15 @@ export const StepNavigator = <Step extends any = any>({
         }
     }, [selectedStepId, steps, extractStepMeta]);
 
-    // Componente de linha virtualizado
-    const StepRow = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+    // Componente de linha virtualizado (precisa receber props corretas)
+    const StepRow = ({ index, style, ariaAttributes }: { index: number; style: React.CSSProperties; ariaAttributes?: any }) => {
         const step = steps[index];
         const meta = extractStepMeta(step);
         const issues = byStep[meta.id];
         const isSelected = selectedStepId === meta.id;
 
         return (
-            <div style={{ ...style, padding: '4px 8px' }}>
+            <div style={{ ...style, padding: '4px 8px' }} {...(ariaAttributes || {})}>
                 <div className={cn('group rounded-lg border-2 transition-colors', isSelected ? 'bg-blue-50 border-blue-500' : 'border-transparent hover:bg-gray-50')}>
                     <div className="w-full text-left px-3 py-2 cursor-pointer" onClick={() => onSelect(meta.id)}>
                         <div className="flex items-center gap-2">
