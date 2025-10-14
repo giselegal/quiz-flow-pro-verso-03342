@@ -66,6 +66,7 @@ export class SupabaseConfigurationStorage {
     private cacheTtl = 5 * 60 * 1000; // 5 minutos
     private indexedDBService: IndexedDBStorageService;
     private isOnline = navigator.onLine;
+    private useSupabase = false; // 🔴 DESABILITADO: Tabela component_configurations não existe
 
     constructor() {
         this.indexedDBService = IndexedDBStorageService.getInstance();
@@ -170,6 +171,11 @@ export class SupabaseConfigurationStorage {
     }
 
     private async saveToSupabase(config: StoredConfiguration): Promise<void> {
+        // 🔴 TEMPORARIAMENTE DESABILITADO: Tabela component_configurations não existe
+        if (!this.useSupabase) {
+            return;
+        }
+
         try {
             // Use type assertion since table doesn't exist in types yet
             const { error } = await (supabase as any)
@@ -215,8 +221,8 @@ export class SupabaseConfigurationStorage {
                 return cached.data;
             }
 
-            // 2. Tentar carregar do Supabase se online
-            if (this.isOnline) {
+            // 2. Tentar carregar do Supabase se online (DESABILITADO)
+            if (this.isOnline && this.useSupabase) {
                 try {
                     // Use type assertion since table doesn't exist in types yet
                     const { data, error } = await (supabase as any)
@@ -287,8 +293,8 @@ export class SupabaseConfigurationStorage {
 
     async list(funnelId?: string): Promise<StoredConfiguration[]> {
         try {
-            // Tentar carregar do Supabase se online
-            if (this.isOnline) {
+            // Tentar carregar do Supabase se online (DESABILITADO)
+            if (this.isOnline && this.useSupabase) {
                 try {
                     // Use type assertion since table doesn't exist in types yet
                     let query = (supabase as any).from('component_configurations').select('*');
