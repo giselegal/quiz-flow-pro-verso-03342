@@ -778,7 +778,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Hook de seleção / clipboard deve vir antes de dependências que usam selectedBlockId
     const selectionApi = useSelectionClipboard({
         steps,
-        selectedStepId,
+        selectedStepId: editorCtx ? effectiveSelectedStepId : selectedStepId,
         setSteps,
         pushHistory,
         onDirty: () => setIsDirty(true)
@@ -849,12 +849,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const blockDup = blockPendingDuplicateRef.current;
         const target = targetStepIdRef.current;
         if (!blockDup || !target) return;
-        duplicateBlockHook(blockDup.parentId ? blockDup.parentId : (selectedStepId || ''), blockDup.id, target);
+        const sourceStepId = blockDup.parentId ? blockDup.parentId : (editorCtx ? (effectiveSelectedStepId || '') : (selectedStepId || ''));
+        duplicateBlockHook(sourceStepId, blockDup.id, target);
         setDuplicateModalOpen(false);
         setBlockPendingDuplicate(null);
         setTargetStepId('');
         toastRef.current({ title: 'Bloco duplicado', description: `Copiado para ${target}` });
-    }, [duplicateBlockHook, selectedStepId]);
+    }, [duplicateBlockHook, selectedStepId, editorCtx, effectiveSelectedStepId]);
 
     const copyBlock = useCallback((block: BlockComponent) => copyGeneric([block.id]), [copyGeneric]);
     const copyMultiple = useCallback((blocks: BlockComponent[]) => { copyGeneric(blocks.map(b => b.id)); toastRef.current({ title: 'Copiado', description: `${blocks.length} bloco(s) copiado(s)` }); }, [copyGeneric]);
@@ -2149,7 +2150,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             components={COMPONENT_LIBRARY as any}
                             categories={['layout', 'content', 'visual', 'quiz', 'forms', 'action', 'result', 'offer', 'navigation', 'ai', 'advanced']}
                             selectedStepId={editorCtx ? effectiveSelectedStepId : selectedStepId}
-                            onAdd={(type) => selectedStepId && addBlockToStep(selectedStepId, type)}
+                            onAdd={(type) => {
+                                const stepIdToUse = editorCtx ? effectiveSelectedStepId : selectedStepId;
+                                if (stepIdToUse) addBlockToStep(stepIdToUse, type);
+                            }}
                             onQuizCreated={handleBuilderQuizCreated}
                         />
                     )}
