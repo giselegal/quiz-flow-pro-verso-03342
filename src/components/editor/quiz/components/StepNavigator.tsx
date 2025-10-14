@@ -20,6 +20,9 @@ export interface StepNavigatorProps<Step = any> {
     extractStepMeta?: (step: Step) => { id: string; type?: string; blockCount?: number };
 }
 
+// Type para props adicionais do row (vazio neste caso)
+type RowExtraProps = Record<string, never>;
+
 /**
  * StepNavigator - Coluna de etapas isolada (VIRTUALIZADA).
  * Usa react-window para renderizar apenas os steps visíveis.
@@ -36,8 +39,6 @@ export const StepNavigator = <Step extends any = any>({
 }: StepNavigatorProps<Step>) => {
     const listRef = useRef<ListImperativeAPI | null>(null);
     const ITEM_HEIGHT = 90; // Altura aproximada de cada step item
-    const HEADER_HEIGHT = 60; // Altura do header
-    const FOOTER_HEIGHT = 50; // Altura do botão adicionar
 
     // Auto-scroll para o step selecionado quando mudar
     useEffect(() => {
@@ -88,24 +89,21 @@ export const StepNavigator = <Step extends any = any>({
         );
     };
 
-    // Calcular altura disponível (viewport - header - footer)
-    const containerHeight = typeof window !== 'undefined' ? window.innerHeight - HEADER_HEIGHT - FOOTER_HEIGHT - 120 : 600;
-
     return (
         <div className="flex flex-col h-full">
             <div className="px-4 py-3 border-b shrink-0">
                 <h2 className="font-semibold text-sm">Etapas</h2>
                 <p className="text-xs text-muted-foreground">{steps.length} etapas (virtualizado)</p>
             </div>
-            <div className="flex-1 overflow-hidden">
-                <VirtualList
+            <div className="flex-1 overflow-hidden relative">
+                <VirtualList<RowExtraProps>
                     listRef={listRef}
-                    height={containerHeight}
                     rowCount={steps.length}
                     rowHeight={ITEM_HEIGHT}
-                    width="100%"
+                    rowProps={{} as RowExtraProps}
                     overscanCount={3}
                     rowComponent={StepRow}
+                    style={{ height: '100%', width: '100%' }}
                 />
             </div>
             <div className="p-2 border-t shrink-0">
