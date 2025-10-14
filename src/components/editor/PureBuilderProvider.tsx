@@ -20,10 +20,8 @@ import { AIEnhancedHybridTemplateService } from '@/services/AIEnhancedHybridTemp
 import { funnelApiClient, NormalizedFunnel } from '@/services/funnelApiClient';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
-// 🚨 DEPRECATION WARNING
-if (typeof process !== 'undefined' ? process.env.NODE_ENV !== 'production' : true) {
-    console.warn('⚠️ PureBuilderProvider is deprecated. Use SuperUnifiedProvider instead.');
-}
+// 🚨 DEPRECATION WARNING (somente quando o provider LEGADO é montado)
+// Movido para dentro do componente para evitar warning ao apenas importar o módulo
 
 /**
  * 🏗️ PURE BUILDER SYSTEM PROVIDER
@@ -334,6 +332,19 @@ export const PureBuilderProvider: React.FC<{
 
         const isInitialized = useRef(false);
 
+        // ⚠️ Deprecation warning apenas quando o provider LEGADO monta (evita warn ao importar o módulo)
+        useEffect(() => {
+            if (typeof window === 'undefined') return;
+            // Logar uma única vez por sessão em modo de desenvolvimento
+            const alreadyWarned = (window as any).__PURE_BUILDER_DEPRECATED_WARNED__;
+            if (!alreadyWarned && (import.meta as any).env?.DEV) {
+                (window as any).__PURE_BUILDER_DEPRECATED_WARNED__ = true;
+                // eslint-disable-next-line no-console
+                console.warn(
+                    '⚠️ PureBuilderProvider is deprecated and will be removed soon. Use SuperUnifiedProvider or usePureBuilderCompat.'
+                );
+            }
+        }, []);
         // 🎯 INITIALIZATION - Dinâmico baseado em parâmetros 
         useEffect(() => {
             if (!isInitialized.current) {

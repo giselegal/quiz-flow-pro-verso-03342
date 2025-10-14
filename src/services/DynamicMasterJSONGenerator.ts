@@ -532,10 +532,15 @@ export class DynamicMasterJSONGenerator {
         const jsonString = JSON.stringify(masterJSON, null, 2);
 
         if (outputPath) {
-            // Salvar em arquivo (Node.js environment)
-            const fs = await import('fs');
-            fs.writeFileSync(outputPath, jsonString);
-            console.log(`💾 Master JSON saved to: ${outputPath}`);
+            // Salvar em arquivo somente em ambiente Node.js (evita erro no browser)
+            const isNode = typeof process !== 'undefined' && typeof process.versions !== 'undefined' && !!(process.versions as any).node;
+            if (isNode) {
+                const fs = await import('fs');
+                fs.writeFileSync(outputPath, jsonString);
+                console.log(`💾 Master JSON saved to: ${outputPath}`);
+            } else {
+                console.warn('⚠️ generateAndSaveJSON: Ignorando writeFile em ambiente não-Node');
+            }
         }
 
         return jsonString;

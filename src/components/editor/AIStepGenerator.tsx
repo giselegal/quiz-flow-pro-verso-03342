@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAI } from '@/hooks/useAI';
-import { usePureBuilder } from './PureBuilderProvider';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { Sparkles, Loader2, Wand2, Lightbulb } from 'lucide-react';
 import { useNotification } from '@/components/ui/Notification';
 
