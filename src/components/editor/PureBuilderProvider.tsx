@@ -18,6 +18,7 @@ import type { Block } from '@/types/editor';
 import { getTemplateInfo } from '@/utils/funnelNormalizer';
 import { AIEnhancedHybridTemplateService } from '@/services/AIEnhancedHybridTemplateService';
 import { funnelApiClient, NormalizedFunnel } from '@/services/funnelApiClient';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 // 🚨 DEPRECATION WARNING
 console.warn('⚠️ PureBuilderProvider is deprecated. Use SuperUnifiedProvider instead.');
@@ -208,8 +209,6 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
         }
 
         try {
-            const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('../../templates/quiz21StepsComplete');
-
             console.log('✅ Template carregado com sucesso:', {
                 availableSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE),
                 totalSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length

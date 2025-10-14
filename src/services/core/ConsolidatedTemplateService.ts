@@ -10,6 +10,7 @@
  */
 
 import { BaseUnifiedService, ServiceConfig } from './UnifiedServiceManager';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Block } from '@/types/editor';
 
 // ============================================================================
@@ -168,7 +169,6 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
   private async loadFromTypeScript(templateId: string): Promise<FullTemplate | null> {
     try {
       if (templateId === 'quiz21StepsComplete') {
-        const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
         return this.convertLegacyTemplate(QUIZ_STYLE_21_STEPS_TEMPLATE, templateId);
       }
       return null;
@@ -201,7 +201,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    */
   private generateFallback(templateId: string): FullTemplate {
     const stepNumber = this.extractStepNumber(templateId);
-    
+
     return {
       id: templateId,
       name: `Template ${templateId}`,
@@ -236,102 +236,102 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    */
   private generateDefaultBlocks(stepNumber: number): Block[] {
     const baseContent = { text: '', placeholder: '' };
-    
+
     switch (stepNumber) {
       case 1:
         return [
-          { 
-            id: 'intro-1', 
-            type: 'text', 
+          {
+            id: 'intro-1',
+            type: 'text',
             content: baseContent,
             order: 0,
-            properties: { text: 'Bem-vindo!' } 
+            properties: { text: 'Bem-vindo!' }
           },
-          { 
-            id: 'name-input-1', 
-            type: 'form-input', 
+          {
+            id: 'name-input-1',
+            type: 'form-input',
             content: baseContent,
             order: 1,
-            properties: { placeholder: 'Seu nome' } 
+            properties: { placeholder: 'Seu nome' }
           },
-          { 
-            id: 'start-btn-1', 
-            type: 'button', 
+          {
+            id: 'start-btn-1',
+            type: 'button',
             content: baseContent,
             order: 2,
-            properties: { text: 'Começar' } 
+            properties: { text: 'Começar' }
           }
         ];
       case 20:
         return [
-          { 
-            id: 'result-header-20', 
-            type: 'text', 
+          {
+            id: 'result-header-20',
+            type: 'text',
             content: baseContent,
             order: 0,
-            properties: { text: 'Seu Resultado' } 
+            properties: { text: 'Seu Resultado' }
           },
-          { 
-            id: 'style-reveal-20', 
-            type: 'result-display', 
+          {
+            id: 'style-reveal-20',
+            type: 'result-display',
             content: baseContent,
             order: 1,
-            properties: {} 
+            properties: {}
           },
-          { 
-            id: 'offer-20', 
-            type: 'button', 
+          {
+            id: 'offer-20',
+            type: 'button',
             content: baseContent,
             order: 2,
-            properties: {} 
+            properties: {}
           }
         ];
       case 21:
         return [
-          { 
-            id: 'sales-hero-21', 
-            type: 'text', 
+          {
+            id: 'sales-hero-21',
+            type: 'text',
             content: baseContent,
             order: 0,
-            properties: { text: 'Oferta Especial' } 
+            properties: { text: 'Oferta Especial' }
           },
-          { 
-            id: 'timer-21', 
-            type: 'countdown-inline', 
+          {
+            id: 'timer-21',
+            type: 'countdown-inline',
             content: baseContent,
             order: 1,
-            properties: {} 
+            properties: {}
           },
-          { 
-            id: 'cta-21', 
-            type: 'button', 
+          {
+            id: 'cta-21',
+            type: 'button',
             content: baseContent,
             order: 2,
-            properties: { text: 'Garantir Agora' } 
+            properties: { text: 'Garantir Agora' }
           }
         ];
       default:
         return [
-          { 
-            id: `question-${stepNumber}`, 
-            type: 'text', 
+          {
+            id: `question-${stepNumber}`,
+            type: 'text',
             content: baseContent,
             order: 0,
-            properties: { text: `Pergunta ${stepNumber}` } 
+            properties: { text: `Pergunta ${stepNumber}` }
           },
-          { 
-            id: `options-${stepNumber}`, 
-            type: 'options-grid', 
+          {
+            id: `options-${stepNumber}`,
+            type: 'options-grid',
             content: baseContent,
             order: 1,
-            properties: {} 
+            properties: {}
           },
-          { 
-            id: `next-${stepNumber}`, 
-            type: 'button', 
+          {
+            id: `next-${stepNumber}`,
+            type: 'button',
             content: baseContent,
             order: 2,
-            properties: { text: 'Continuar' } 
+            properties: { text: 'Continuar' }
           }
         ];
     }
@@ -449,7 +449,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
     });
 
     await Promise.allSettled(preloadPromises);
-    
+
     const duration = performance.now() - startTime;
     console.log(`🎯 Preload completed in ${duration.toFixed(2)}ms`);
   }
@@ -458,9 +458,9 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    * 📊 GET CACHE STATS
    */
   getCacheStats() {
-    const hitRate = this.loadedTemplates.size > 0 ? 
+    const hitRate = this.loadedTemplates.size > 0 ?
       ((this.loadedTemplates.size / (this.loadedTemplates.size + this.preloadingPromises.size)) * 100).toFixed(1) : '0';
-    
+
     return {
       loaded: this.loadedTemplates.size,
       preloading: this.preloadingPromises.size,

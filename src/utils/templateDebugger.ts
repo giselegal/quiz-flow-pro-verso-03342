@@ -3,6 +3,7 @@
  * 
  * Utilitário para debug e monitoramento do sistema de templates
  */
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 interface TemplateDebugInfo {
   templateId: string;
@@ -40,7 +41,7 @@ class TemplateDebugger {
     };
 
     this.debugLog.unshift(debugInfo);
-    
+
     // Manter apenas os últimos registros
     if (this.debugLog.length > this.maxLogSize) {
       this.debugLog.splice(this.maxLogSize);
@@ -49,7 +50,7 @@ class TemplateDebugger {
     // Log no console
     const status = error ? '❌' : (debugInfo.hasContent ? '✅' : '⚠️');
     console.log(`${status} [TemplateDebugger] ${templateId} | ${source} | ${debugInfo.blockCount} blocks | ${loadTime.toFixed(2)}ms`);
-    
+
     if (error) {
       console.error(`❌ [TemplateDebugger] Error for ${templateId}:`, error);
     }
@@ -71,8 +72,8 @@ class TemplateDebugger {
     const successfulLoads = this.debugLog.filter(log => !log.error && log.hasContent).length;
     const failedLoads = this.debugLog.filter(log => log.error).length;
     const emptyLoads = this.debugLog.filter(log => !log.error && !log.hasContent).length;
-    
-    const averageLoadTime = totalLoads > 0 
+
+    const averageLoadTime = totalLoads > 0
       ? this.debugLog.reduce((sum, log) => sum + log.loadTime, 0) / totalLoads
       : 0;
 
@@ -109,11 +110,10 @@ class TemplateDebugger {
 
     // Verificar template principal
     try {
-      const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
-      
+
       for (const stepId of expectedTemplates) {
         const blocks = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[stepId];
-        
+
         if (!blocks) {
           missingTemplates.push(stepId);
         } else if (!Array.isArray(blocks) || blocks.length === 0) {
@@ -122,13 +122,13 @@ class TemplateDebugger {
           availableTemplates.push(stepId);
         }
       }
-      
+
       console.log('🎯 [TemplateDebugger] Template principal verificado:', {
         available: availableTemplates.length,
         missing: missingTemplates.length,
         empty: emptyTemplates.length
       });
-      
+
     } catch (error) {
       console.error('❌ [TemplateDebugger] Erro ao verificar template principal:', error);
       recommendations.push('Template principal (quiz21StepsComplete) não acessível');
@@ -138,11 +138,11 @@ class TemplateDebugger {
     if (missingTemplates.length > 0) {
       recommendations.push(`Implementar templates ausentes: ${missingTemplates.join(', ')}`);
     }
-    
+
     if (emptyTemplates.length > 0) {
       recommendations.push(`Adicionar conteúdo aos templates vazios: ${emptyTemplates.join(', ')}`);
     }
-    
+
     if (availableTemplates.length < expectedTemplates.length * 0.8) {
       recommendations.push('Sistema de templates está incompleto - considerar fallbacks robustos');
     }
@@ -160,24 +160,24 @@ class TemplateDebugger {
    */
   static async quickTest(): Promise<void> {
     console.log('🧪 [TemplateDebugger] Iniciando teste rápido...');
-    
+
     const testSteps = ['step-1', 'step-12', 'step-20', 'step-21'];
     const { unifiedTemplateService } = await import('@/services/UnifiedTemplateService');
-    
+
     for (const stepId of testSteps) {
       const startTime = performance.now();
-      
+
       try {
         const blocks = await unifiedTemplateService.loadStepBlocks(stepId);
         const loadTime = performance.now() - startTime;
-        
+
         this.logTemplateLoad(stepId, 'UnifiedTemplateService', blocks, loadTime);
       } catch (error) {
         const loadTime = performance.now() - startTime;
         this.logTemplateLoad(stepId, 'UnifiedTemplateService', [], loadTime, error instanceof Error ? error.message : String(error));
       }
     }
-    
+
     console.log('🧪 [TemplateDebugger] Teste rápido concluído');
     console.table(this.getDebugReport());
   }

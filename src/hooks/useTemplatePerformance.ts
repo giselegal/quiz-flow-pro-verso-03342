@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { getStepTemplate as getStepTemplateStatic } from '@/templates/quiz21StepsComplete';
 
 interface PerformanceMetrics {
   loadTime: number;
@@ -57,10 +58,9 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
     }
 
     try {
-      // Import the centralized template system
-      const { getStepTemplate } = await import('@/templates/quiz21StepsComplete');
-      const template = getStepTemplate(stepId);
-      
+      // Use static import to avoid mixed dynamic+static import warnings
+      const template = getStepTemplateStatic(stepId);
+
       if (enableCache && template) {
         cacheRef.current.set(stepId, template);
       }
@@ -85,7 +85,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
   // 🚀 PRE-CARREGAMENTO INTELIGENTE
   const preloadTemplates = useCallback(async (currentStep: number) => {
     const stepIds = [];
-    
+
     for (let i = 1; i <= preloadNext; i++) {
       const nextStep = currentStep + i;
       if (nextStep <= 21) {
@@ -104,13 +104,13 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
   // 🚀 NAVEGAÇÃO OTIMIZADA COM PRELOAD (Simple version)
   const navigateToStep = useCallback(async (stepNumber: number) => {
     const stepId = `step-${stepNumber}`; // Fixed: Remove padStart since template uses step-1, step-2, etc.
-    
+
     // Load current step
     const template = await loadTemplate(stepId);
-    
+
     // Preload next steps in background
     preloadTemplates(stepNumber);
-    
+
     return template;
   }, [loadTemplate, preloadTemplates]);
 
@@ -177,13 +177,13 @@ export function useQuiz21Performance() {
   // 🚀 NAVEGAÇÃO OTIMIZADA COM PRELOAD
   const navigateToStep = useCallback(async (stepNumber: number) => {
     const stepId = `step-${stepNumber}`; // Fixed: Remove padStart since template uses step-1, step-2, etc.
-    
+
     // Load current step
     const template = await performance.loadTemplate(stepId);
-    
+
     // Preload next steps in background
     performance.preloadTemplates(stepNumber);
-    
+
     setCurrentStep(stepNumber);
     return template;
   }, [performance]);

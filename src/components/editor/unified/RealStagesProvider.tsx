@@ -54,10 +54,10 @@ interface RealStagesContextType {
   activeStageId: string;
   totalStages: number;
   loadedStages: Set<string>;
-  
+
   // Ações unificadas
   stageActions: StageActions;
-  
+
   // Status e métricas
   isLoading: boolean;
   error: string | null;
@@ -66,7 +66,7 @@ interface RealStagesContextType {
     totalCached: number;
     memoryUsage: number;
   };
-  
+
   // Configurações
   config: {
     maxStages: number;
@@ -122,11 +122,11 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
 
     try {
       const stages: QuizStage[] = [];
-      
+
       for (let i = 1; i <= config.maxStages; i++) {
         const stageId = `step-${i}`;
         const stageName = getStageName(i);
-        
+
         stages.push({
           id: stageId,
           name: stageName,
@@ -165,7 +165,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
    */
   const loadStageData = useCallback(async (stageId: string): Promise<Block[]> => {
     console.log(`🔄 Carregando dados para ${stageId}...`);
-    
+
     try {
       const stepNumber = extractStepNumber(stageId);
       let blocks: Block[] = [];
@@ -178,42 +178,42 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       }
 
       // Atualizar status da etapa
-      setRealStages(prev => prev.map(stage => 
-        stage.id === stageId 
+      setRealStages(prev => prev.map(stage =>
+        stage.id === stageId
           ? {
-              ...stage,
-              blocksCount: blocks.length,
-              hasData: blocks.length > 0,
-              metadata: {
-                ...stage.metadata,
-                templateLoaded: true,
-                cacheStatus: blocks.length > 0 ? 'cached' : 'empty',
-                lastAccessed: Date.now(),
-                fallback: blocks.some(b => b.metadata?.isFallback),
-              },
-            }
+            ...stage,
+            blocksCount: blocks.length,
+            hasData: blocks.length > 0,
+            metadata: {
+              ...stage.metadata,
+              templateLoaded: true,
+              cacheStatus: blocks.length > 0 ? 'cached' : 'empty',
+              lastAccessed: Date.now(),
+              fallback: blocks.some(b => b.metadata?.isFallback),
+            },
+          }
           : stage
       ));
 
       setLoadedStages(prev => new Set([...prev, stageId]));
       console.log(`✅ ${stageId} carregado: ${blocks.length} blocos`);
-      
+
       return blocks;
 
     } catch (error) {
       console.error(`❌ Erro ao carregar ${stageId}:`, error);
-      
+
       // Atualizar status como erro
-      setRealStages(prev => prev.map(stage => 
-        stage.id === stageId 
+      setRealStages(prev => prev.map(stage =>
+        stage.id === stageId
           ? {
-              ...stage,
-              metadata: {
-                ...stage.metadata,
-                cacheStatus: 'error',
-                fallback: true,
-              },
-            }
+            ...stage,
+            metadata: {
+              ...stage.metadata,
+              cacheStatus: 'error',
+              fallback: true,
+            },
+          }
           : stage
       ));
 
@@ -228,10 +228,10 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
   const stageActions: StageActions = useMemo(() => ({
     setActiveStage: async (stageId: string) => {
       console.log(`🎯 Mudando para etapa: ${stageId}`);
-      
+
       try {
         setIsLoading(true);
-        
+
         // Carregar dados da etapa se necessário
         if (!loadedStages.has(stageId)) {
           await loadStageData(stageId);
@@ -242,7 +242,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
           ...stage,
           isActive: stage.id === stageId,
         })));
-        
+
         setActiveStageId(stageId);
 
         // Preload etapas adjacentes se habilitado
@@ -251,7 +251,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
         }
 
         console.log(`✅ Etapa ativa: ${stageId}`);
-        
+
       } catch (error) {
         console.error(`❌ Erro ao mudar para ${stageId}:`, error);
         setError(`Falha ao carregar etapa ${stageId}`);
@@ -263,7 +263,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
     addStage: async () => {
       const newStageNumber = realStages.length + 1;
       const newStageId = `step-${newStageNumber}`;
-      
+
       if (newStageNumber > config.maxStages) {
         throw new Error(`Limite máximo de ${config.maxStages} etapas atingido`);
       }
@@ -286,7 +286,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
 
       setRealStages(prev => [...prev, newStage]);
       console.log(`✅ Nova etapa adicionada: ${newStageId}`);
-      
+
       return newStageId;
     },
 
@@ -315,7 +315,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       const newStages = [...realStages];
       const [movedStage] = newStages.splice(startIndex, 1);
       newStages.splice(endIndex, 0, movedStage);
-      
+
       // Atualizar orders
       const reorderedStages = newStages.map((stage, index) => ({
         ...stage,
@@ -333,7 +333,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
         const stepNumber = extractStepNumber(stageId);
         templatesCacheService.invalidateStep(stepNumber, config.funnelId);
       }
-      
+
       setLoadedStages(prev => {
         const newSet = new Set(prev);
         newSet.delete(stageId);
@@ -383,7 +383,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       }
 
       const newStageId = await stageActions.addStage();
-      
+
       // Copiar dados da etapa original
       if (loadedStages.has(stageId)) {
         const sourceBlocks = await stageActions.getStageBlocks(stageId);
@@ -411,19 +411,19 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       }
 
       // Atualizar estado da etapa
-      setRealStages(prev => prev.map(stage => 
-        stage.id === stageId 
+      setRealStages(prev => prev.map(stage =>
+        stage.id === stageId
           ? {
-              ...stage,
-              blocksCount: blocks.length,
-              hasData: blocks.length > 0,
-              metadata: {
-                ...stage.metadata,
-                templateLoaded: true,
-                cacheStatus: 'cached',
-                lastAccessed: Date.now(),
-              },
-            }
+            ...stage,
+            blocksCount: blocks.length,
+            hasData: blocks.length > 0,
+            metadata: {
+              ...stage.metadata,
+              templateLoaded: true,
+              cacheStatus: 'cached',
+              lastAccessed: Date.now(),
+            },
+          }
           : stage
       ));
 
@@ -497,7 +497,7 @@ function getStageName(stepNumber: number): string {
     1: 'Coleta de Nome',
     21: 'Resultado Final',
   };
-  
+
   return names[stepNumber] || `Questão ${stepNumber - 1}`;
 }
 
@@ -506,20 +506,19 @@ function getStageDescription(stepNumber: number): string {
     1: 'Etapa inicial para coleta do nome do usuário',
     21: 'Apresentação do resultado personalizado',
   };
-  
+
   return descriptions[stepNumber] || `Questão ${stepNumber - 1} do quiz de estilo`;
 }
+
+import { QUIZ_STYLE_21_STEPS_TEMPLATE as QUIZ_STYLE_21_STEPS_TEMPLATE_STATIC } from '@/templates/quiz21StepsComplete';
 
 async function loadStepDirect(stepNumber: number): Promise<Block[]> {
   // Implementação direta sem cache (fallback)
   console.log(`🔄 Carregamento direto para step ${stepNumber}`);
-  
+
   try {
-    // Importação dinâmica do template
-    const { QUIZ_STYLE_21_STEPS_TEMPLATE } = await import('@/templates/quiz21StepsComplete');
     const stepKey = `step-${stepNumber}`;
-    const stepBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey] || [];
-    
+    const stepBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE_STATIC as any)[stepKey] || [];
     return Array.isArray(stepBlocks) ? stepBlocks : [];
   } catch (error) {
     console.error(`❌ Carregamento direto falhou para step ${stepNumber}:`, error);
