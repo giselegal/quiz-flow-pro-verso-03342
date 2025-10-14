@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { FixedSizeList as VirtualList } from 'react-window';
+import { List as VirtualList, type ListImperativeAPI } from 'react-window';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -34,7 +34,7 @@ export const StepNavigator = <Step extends any = any>({
     onDeleteStep,
     extractStepMeta = (s: any) => ({ id: s.id, type: s.type, blockCount: s.blocks?.length || 0 })
 }: StepNavigatorProps<Step>) => {
-    const listRef = useRef<List>(null);
+    const listRef = useRef<ListImperativeAPI | null>(null);
     const ITEM_HEIGHT = 90; // Altura aproximada de cada step item
     const HEADER_HEIGHT = 60; // Altura do header
     const FOOTER_HEIGHT = 50; // Altura do botão adicionar
@@ -98,7 +98,7 @@ export const StepNavigator = <Step extends any = any>({
                 <p className="text-xs text-muted-foreground">{steps.length} etapas (virtualizado)</p>
             </div>
             <div className="flex-1 overflow-hidden">
-                <FixedSizeList
+                <VirtualList
                     ref={listRef}
                     height={containerHeight}
                     itemCount={steps.length}
@@ -107,7 +107,7 @@ export const StepNavigator = <Step extends any = any>({
                     overscanCount={3}
                 >
                     {StepRow}
-                </FixedSizeList>
+                </VirtualList>
             </div>
             <div className="p-2 border-t shrink-0">
                 <Button variant="outline" size="sm" className="w-full text-xs" onClick={onAddStep}>+ Adicionar etapa</Button>
