@@ -25,6 +25,7 @@ import sanitizeHtml from '@/utils/sanitizeHtml';
 import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
 import { getEffectiveRequiredSelections } from '@/lib/quiz/requiredSelections';
+import { loadNormalizedStep } from '@/lib/normalizedLoader';
 
 interface QuizAppConnectedProps {
     funnelId?: string;
@@ -85,6 +86,35 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         addStrategicAnswer,
         getOfferKey,
     } = useQuizState(funnelId, externalSteps);
+
+    // Renderer mode detection (legacy | unified | auto)
+    const [rendererMode, setRendererMode] = useState<'legacy' | 'unified' | 'auto'>('legacy');
+    const [normalizedStep, setNormalizedStep] = useState<any | null>(null);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const mode = params.get('renderer');
+        if (mode === 'unified' || mode === 'legacy' || mode === 'auto') {
+            setRendererMode(mode);
+        } else {
+            setRendererMode(editorMode ? 'legacy' : 'auto');
+        }
+    }, [editorMode]);
+
+    // Carregar normalized se solicitado e disponível
+    useEffect(() => {
+        let cancelled = false;
+        async function load() {
+            if (rendererMode === 'legacy') { setNormalizedStep(null); return; }
+            const padded = state.currentStep.startsWith('step-') ? state.currentStep : `step-${state.currentStep}`;
+            // Apenas tenta se for step-01 ou step-02 (piloto) ou modo unified/auto
+            if (!/^step-0[12]$/.test(padded)) { setNormalizedStep(null); return; }
+            const data = await loadNormalizedStep(padded);
+            if (!cancelled) setNormalizedStep(data);
+        }
+        load();
+        return () => { cancelled = true; };
+    }, [state.currentStep, rendererMode]);
 
     // ========================= SINCRONIZAR ETAPA ATIVA NO MODO EDITOR =========================
     // Quando usado dentro do editor, opcionalmente alinhar a etapa atual do runtime com a etapa selecionada no editor
@@ -380,7 +410,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     // ============================================================================
     // LEGACY STEP RENDERING (Editor Mode) - Permite visualizar componentes antigos
     // ============================================================================
-    const legacyEnabled = editorMode; // Podemos futuramente trocar por feature flag
+    const legacyEnabled = rendererMode === 'legacy' || (rendererMode === 'auto' && !normalizedStep);
 
     const legacyRender = () => {
         const type = currentStepData.type;
@@ -490,11 +520,41 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                     )}
 
                     {/* Renderização Híbrida: Blocks dinâmicos para result/offer, Unified para demais */}
+                    {/* Indicador de modo no editor */}
+                    {editorMode && (
+                        <div className="max-w-6xl mx-auto px-4 pb-2 text-[10px] uppercase tracking-wide text-gray-500">
+                            Renderer: {rendererMode}{normalizedStep ? ' (normalized)' : legacyEnabled ? ' (legacy)' : ''}
+                        </div>
+                    )}
                     {legacyEnabled ? (
                         <div className="max-w-6xl mx-auto px-4 py-8">
                             {legacyRender() || (
                                 <div className="text-sm text-gray-500 italic">(Sem renderização legacy para este tipo: {currentStepData.type})</div>
                             )}
+                        </div>
+                    ) : normalizedStep ? (
+                        <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+                            {normalizedStep.blocks.map((b: any, idx: number) => {
+                                const def = useBlockRegistry().get(b.type);
+                                if (!def) return <div key={idx} className="text-xs text-red-600">Bloco não registrado: {b.type}</div>;
+                                try {
+                                    return (
+                                        <div key={idx} className="normalized-block-wrapper" data-block-type={b.type}>
+                                            {def.render({
+                                                config: { ...def.defaultConfig, ...b.config },
+                                                state: {
+                                                    userProfile: state.userProfile,
+                                                    onNameSubmit: (name: string) => { setUserName(name); nextStep(); },
+                                                    onAnswersChange: (answers: string[]) => { addAnswer(state.currentStep, answers); },
+                                                    onComplete: () => nextStep()
+                                                }
+                                            })}
+                                        </div>
+                                    );
+                                } catch (e: any) {
+                                    return <div key={idx} className="text-xs text-red-600">Erro bloco {b.type}: {e.message}</div>;
+                                }
+                            })}
                         </div>
                     ) : shouldUseBlocks(currentStepData.type) ? (
                         // Caminho dinâmico (result/offer com blocks)
