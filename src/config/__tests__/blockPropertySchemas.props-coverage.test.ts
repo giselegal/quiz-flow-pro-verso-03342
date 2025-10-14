@@ -21,13 +21,13 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         location: 'content';
       }> = [];
       
-      const allSchemas = { ...blockPropertySchemas, ...completeBlockSchemas };
+      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
       
-      BLOCK_DEFINITIONS.forEach(blockDef => {
+      BLOCK_DEFINITIONS.forEach((blockDef: BlockDefinition) => {
         const schema = allSchemas[blockDef.type];
         if (!schema) return; // Já validado em outro teste
         
-        const schemaFieldKeys = schema.fields.map(f => f.key);
+        const schemaFieldKeys = schema.fields.map((f: any) => f.key);
         const contentProps = blockDef.defaultProps.content || {};
         
         Object.keys(contentProps).forEach(propKey => {
@@ -63,7 +63,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         location: 'properties';
       }> = [];
       
-      const allSchemas = { ...blockPropertySchemas, ...completeBlockSchemas };
+      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
       
       // Lista de propriedades universais que podem não estar no schema individual
       const universalProps = [
@@ -78,11 +78,11 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         'data-testid'
       ];
       
-      BLOCK_DEFINITIONS.forEach(blockDef => {
+      BLOCK_DEFINITIONS.forEach((blockDef: BlockDefinition) => {
         const schema = allSchemas[blockDef.type];
         if (!schema) return;
         
-        const schemaFieldKeys = schema.fields.map(f => f.key);
+        const schemaFieldKeys = schema.fields.map((f: any) => f.key);
         const properties = blockDef.defaultProps.properties || {};
         
         Object.keys(properties).forEach(propKey => {
@@ -115,7 +115,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
 
   describe('📊 Análise de Cobertura por Componente', () => {
     it('deve gerar relatório detalhado de cobertura', () => {
-      const allSchemas = { ...blockPropertySchemas, ...completeBlockSchemas };
+      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
       const coverageReport: Array<{
         blockType: string;
         category: string;
@@ -125,11 +125,11 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         missingProps: string[];
       }> = [];
       
-      BLOCK_DEFINITIONS.forEach(blockDef => {
+      BLOCK_DEFINITIONS.forEach((blockDef: BlockDefinition) => {
         const schema = allSchemas[blockDef.type];
         if (!schema) return;
         
-        const schemaFieldKeys = schema.fields.map(f => f.key);
+        const schemaFieldKeys = schema.fields.map((f: any) => f.key);
         const allProps = {
           ...(blockDef.defaultProps.content || {}),
           ...(blockDef.defaultProps.properties || {})
@@ -210,11 +210,11 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         'navigation'
       ];
       
-      const allSchemas = { ...blockPropertySchemas, ...completeBlockSchemas };
+      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
       const invalidGroups: Array<{ schema: string; field: string; group: string }> = [];
       
       Object.entries(allSchemas).forEach(([schemaType, schema]) => {
-        schema.fields.forEach(field => {
+        schema.fields.forEach((field: any) => {
           if (field.group && !validGroups.includes(field.group)) {
             invalidGroups.push({
               schema: schemaType,
@@ -239,7 +239,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
     });
 
     it('schemas complexos devem ter pelo menos 2 grupos', () => {
-      const allSchemas = { ...blockPropertySchemas, ...completeBlockSchemas };
+      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
       const complexComponents = [
         'options-grid',
         'lead-form',
@@ -254,7 +254,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         if (!schema) return;
         
         const groups = new Set(
-          schema.fields.map(f => f.group).filter(Boolean)
+          schema.fields.map((f: any) => f.group).filter(Boolean)
         );
         
         if (groups.size < 2) {
@@ -271,12 +271,12 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
 
   describe('📝 Validação de Descrições', () => {
     it('campos importantes devem ter descrição', () => {
-      const allSchemas = { ...blockPropertySchemas, ...completeBlockSchemas };
+      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
       const importantFieldTypes = ['json', 'options-list', 'select'];
       const missingDescriptions: Array<{ schema: string; field: string; type: string }> = [];
       
       Object.entries(allSchemas).forEach(([schemaType, schema]) => {
-        schema.fields.forEach(field => {
+        schema.fields.forEach((field: any) => {
           if (
             importantFieldTypes.includes(field.type) && 
             !field.description
@@ -305,12 +305,12 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
 
   describe('🔄 Validação de DefaultValues', () => {
     it('campos importantes devem ter defaultValue', () => {
-      const allSchemas = { ...blockPropertySchemas, ...completeBlockSchemas };
+      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
       const fieldsNeedingDefaults = ['boolean', 'range', 'select', 'number'];
       const missingDefaults: Array<{ schema: string; field: string; type: string }> = [];
       
       Object.entries(allSchemas).forEach(([schemaType, schema]) => {
-        schema.fields.forEach(field => {
+        schema.fields.forEach((field: any) => {
           if (
             fieldsNeedingDefaults.includes(field.type) && 
             field.defaultValue === undefined
@@ -334,7 +334,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         
         Object.entries(grouped).forEach(([schema, fields]) => {
           console.log(`   ${schema}:`);
-          fields.forEach(field => console.log(`      - ${field}`));
+          fields.forEach((field: any) => console.log(`      - ${field}`));
         });
       }
       
@@ -345,10 +345,10 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
 
   describe('🎯 Validação de Required Fields', () => {
     it('campos marcados como required devem existir nos defaultProps', () => {
-      const allSchemas = { ...blockPropertySchemas, ...completeBlockSchemas };
+      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
       const issues: Array<{ schema: string; field: string }> = [];
       
-      BLOCK_DEFINITIONS.forEach(blockDef => {
+      BLOCK_DEFINITIONS.forEach((blockDef: BlockDefinition) => {
         const schema = allSchemas[blockDef.type];
         if (!schema) return;
         
@@ -357,7 +357,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
           ...(blockDef.defaultProps.properties || {})
         };
         
-        schema.fields.forEach(field => {
+        schema.fields.forEach((field: any) => {
           if (field.required && !(field.key in allProps)) {
             issues.push({
               schema: blockDef.type,

@@ -478,11 +478,11 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
       const totalBlockDefinitions = BLOCK_DEFINITIONS.length;
 
       const schemasWithTransform = Object.entries(allSchemas).filter(
-        ([_, schema]) => schema.fields.some(f => f.key === 'scale')
+        ([_, schema]) => schema.fields.some((f: any) => f.key === 'scale')
       ).length;
 
       const schemasWithStyle = Object.entries(allSchemas).filter(
-        ([_, schema]) => schema.fields.some(f =>
+        ([_, schema]) => schema.fields.some((f: any) =>
           ['backgroundColor', 'color', 'textColor'].includes(f.key)
         )
       ).length;
