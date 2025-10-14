@@ -253,6 +253,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             <div className="text-xs font-mono space-y-1">
                 <div><strong>Etapa:</strong> {currentStepNumber}/21</div>
                 <div><strong>Componente:</strong> {currentStepData.type}</div>
+                <div><strong>Versão:</strong> {(currentStepData as any).templateVersion || (currentStepData as any).metadata?.templateVersion || '—'}</div>
                 <div><strong>API Status:</strong>
                     <span className={`ml-1 ${connectionStatus === 'connected' ? 'text-green-600' : 'text-red-600'}`}>
                         {connectionStatus}
@@ -376,6 +377,79 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
 
     const shouldUseBlocks = (type: string) => ['result', 'offer'].includes(type) && (currentStepData as any).blocks?.length;
 
+    // ============================================================================
+    // LEGACY STEP RENDERING (Editor Mode) - Permite visualizar componentes antigos
+    // ============================================================================
+    const legacyEnabled = editorMode; // Podemos futuramente trocar por feature flag
+
+    const legacyRender = () => {
+        const type = currentStepData.type;
+        switch (type) {
+            case 'intro':
+                return (
+                    <IntroStep
+                        data={currentStepData as any}
+                        onNameSubmit={(name: string) => {
+                            setUserName(name);
+                            nextStep();
+                        }}
+                    />
+                );
+            case 'question': {
+                const answers = (state.answers[state.currentStep] || []) as string[];
+                return (
+                    <QuestionStep
+                        data={currentStepData as any}
+                        currentAnswers={answers}
+                        onAnswersChange={(newAnswers) => {
+                            // Atualiza respostas e avança se completou requiredSelections
+                            addAnswer(state.currentStep, newAnswers);
+                            const required = (currentStepData as any).requiredSelections || 1;
+                            if (newAnswers.length === required) {
+                                // Delay pequeno para feedback visual antes de avançar
+                                setTimeout(() => nextStep(), 250);
+                            }
+                        }}
+                    />
+                );
+            }
+            case 'strategic-question': {
+                const strategicAnswers: Record<string, string> = (state.userProfile as any).strategicAnswers || {};
+                const currentAnswer = strategicAnswers[state.currentStep] || '';
+                return (
+                    <StrategicQuestionStep
+                        data={currentStepData as any}
+                        currentAnswer={currentAnswer}
+                        onAnswerChange={(answer: string) => {
+                            addStrategicAnswer(state.currentStep, answer);
+                            // Avança automático após seleção
+                            setTimeout(() => nextStep(), 400);
+                        }}
+                    />
+                );
+            }
+            case 'transition':
+            case 'transition-result':
+                return (
+                    <TransitionStep
+                        data={currentStepData as any}
+                        onComplete={() => nextStep()}
+                    />
+                );
+            case 'result':
+                return (
+                    <ResultStep
+                        data={currentStepData as any}
+                        userProfile={state.userProfile as any}
+                        // Tentativa de incluir pontuações se existirem (fallback silencioso)
+                        scores={(state as any).scores}
+                    />
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
             <div className="min-h-screen" style={dynamicStyles}>
@@ -416,7 +490,13 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                     )}
 
                     {/* Renderização Híbrida: Blocks dinâmicos para result/offer, Unified para demais */}
-                    {shouldUseBlocks(currentStepData.type) ? (
+                    {legacyEnabled ? (
+                        <div className="max-w-6xl mx-auto px-4 py-8">
+                            {legacyRender() || (
+                                <div className="text-sm text-gray-500 italic">(Sem renderização legacy para este tipo: {currentStepData.type})</div>
+                            )}
+                        </div>
+                    ) : shouldUseBlocks(currentStepData.type) ? (
                         // Caminho dinâmico (result/offer com blocks)
                         currentStepData.type === 'result' ? (
                             <div className="max-w-4xl mx-auto px-4 py-8">
