@@ -2639,24 +2639,46 @@ interface LiveRuntimePreviewProps {
 const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ steps, funnelId, selectedStepId }) => {
     const { setSteps, version } = useQuizRuntimeRegistry();
 
+    // Contador de renders para debug
+    const renderCountRef = React.useRef(0);
+    renderCountRef.current++;
+
     // Calcular runtimeMap apenas quando steps mudam
     const runtimeMap = React.useMemo(() => {
-        console.log('🔄 Recalculando runtimeMap com', steps.length, 'steps');
+        console.log(`🔄 [Render #${renderCountRef.current}] Recalculando runtimeMap com`, steps.length, 'steps');
         return editorStepsToRuntimeMap(steps as any);
     }, [steps]);
 
-    // Ref para evitar loop infinito
+    // Refs para evitar loop infinito
     const lastUpdateRef = React.useRef<string>('');
+    const updateCountRef = React.useRef(0);
 
     // Atualizar registry quando runtimeMap mudar (com proteção contra loop)
     React.useEffect(() => {
         const currentHash = JSON.stringify(Object.keys(runtimeMap).sort());
 
+        console.log(`🔍 [Update Check #${updateCountRef.current}]`, {
+            currentHash: currentHash.substring(0, 50) + '...',
+            lastHash: lastUpdateRef.current.substring(0, 50) + '...',
+            willUpdate: currentHash !== lastUpdateRef.current,
+            stepsCount: Object.keys(runtimeMap).length
+        });
+
         // Só atualizar se realmente mudou
         if (currentHash !== lastUpdateRef.current) {
-            console.log('✅ Atualizando Live preview registry com', Object.keys(runtimeMap).length, 'steps');
+            updateCountRef.current++;
+
+            // Proteção adicional: detectar loop
+            if (updateCountRef.current > 10) {
+                console.error('❌ LOOP DETECTADO! Mais de 10 atualizações. Abortando.');
+                return;
+            }
+
+            console.log(`✅ [Update #${updateCountRef.current}] Atualizando Live preview registry com`, Object.keys(runtimeMap).length, 'steps');
             lastUpdateRef.current = currentHash;
             setSteps(runtimeMap);
+        } else {
+            console.log('⏭️ Skip update - hash igual');
         }
         // ✅ CRÍTICO: setSteps é estável, runtimeMap muda com steps
         // eslint-disable-next-line react-hooks/exhaustive-deps
