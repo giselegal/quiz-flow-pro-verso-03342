@@ -777,8 +777,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     });
     const { multiSelectedIds, clipboard, copy: copyGeneric, paste: pasteGeneric, removeSelected: removeMultiple, isMultiSelected, handleBlockClick, selectedBlockId, setSelectedBlockId } = selectionApi;
 
+    // Unificar seleção de bloco com o provider quando disponível
+    const effectiveSelectedBlockId = editorCtx?.state?.selectedBlockId ?? selectedBlockId;
+    const setSelectedBlockIdUnified = useCallback((id: string) => {
+        setSelectedBlockId(id);
+        if (editorCtx?.actions?.setSelectedBlockId) {
+            editorCtx.actions.setSelectedBlockId(id || null);
+        }
+    }, [setSelectedBlockId, editorCtx]);
+
     // Bloco selecionado (usa selectedBlockId do hook)
-    const selectedBlock = useMemo(() => selectedStep?.blocks.find(b => b.id === selectedBlockId), [selectedStep, selectedBlockId]);
+    const selectedBlock = useMemo(() => selectedStep?.blocks.find(b => b.id === effectiveSelectedBlockId), [selectedStep, effectiveSelectedBlockId]);
 
     // Persistência de seleção por etapa agora tratada no hook
 
@@ -805,8 +814,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Remover bloco
     const removeBlock = useCallback((stepId: string, blockId: string) => {
         removeBlockHook(stepId, blockId);
-        if (selectedBlockId === blockId) setSelectedBlockId('');
-    }, [removeBlockHook, selectedBlockId]);
+        if (effectiveSelectedBlockId === blockId) setSelectedBlockIdUnified('');
+    }, [removeBlockHook, effectiveSelectedBlockId, setSelectedBlockIdUnified]);
 
     // Duplicar bloco
     const duplicateBlock = useCallback((stepId: string, block: BlockComponent) => {
