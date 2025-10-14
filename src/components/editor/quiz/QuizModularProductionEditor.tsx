@@ -96,8 +96,9 @@ import { useVirtualBlocks } from './hooks/useVirtualBlocks';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import { BuilderSystemPanel } from '@/components/editor/BuilderSystemPanel';
-// Dados canônicos das etapas (fonte rica)
-import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+// Dados canônicos das etapas (lazy loading para performance)
+import { loadQuizStep, loadAllQuizSteps, STEP_ORDER, preloadAdjacentSteps } from '@/data/quizStepsLazy';
+import type { QuizStep } from '@/data/quizSteps';
 import CanvasArea from './components/CanvasArea';
 import BlockRow from './components/BlockRow';
 import { BlockComponent, EditableQuizStep, BlockSnippet } from './types';
