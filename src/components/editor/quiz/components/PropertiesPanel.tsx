@@ -141,6 +141,14 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     <ScrollArea className="h-full">
                         {selectedBlock && selectedStep ? (
                             <div className="p-4 space-y-6">
+                                {/* 🔍 DEBUG: Log para verificar estrutura do bloco */}
+                                {(() => {
+                                    console.log('🔍 PropertiesPanel - selectedBlock:', selectedBlock);
+                                    console.log('🔍 PropertiesPanel - properties:', selectedBlock.properties);
+                                    console.log('🔍 PropertiesPanel - content:', selectedBlock.content);
+                                    console.log('🔍 PropertiesPanel - merged values:', { ...selectedBlock.properties, ...selectedBlock.content });
+                                    return null;
+                                })()}
                                 <DynamicPropertiesForm
                                     type={selectedBlock.type}
                                     values={{ ...selectedBlock.properties, ...selectedBlock.content }}

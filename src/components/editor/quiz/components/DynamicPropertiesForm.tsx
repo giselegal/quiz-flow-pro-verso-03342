@@ -21,6 +21,11 @@ function filterActive(props: BasePropertySchema[], values: Record<string, any>) 
 export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ type, values, onChange }) => {
     const schema = getBlockSchema(type);
 
+    // 🔍 DEBUG: Log para verificar values recebidos
+    console.log('🔍 DynamicPropertiesForm - type:', type);
+    console.log('🔍 DynamicPropertiesForm - values:', values);
+    console.log('🔍 DynamicPropertiesForm - values.options:', values.options);
+
     const groups = useMemo(() => {
         if (!schema) return [];
         const ordered = [...(schema.groups || [])].sort((a, b) => (a.order || 0) - (b.order || 0));
