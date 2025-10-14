@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { ImageUploadField } from './ImageUploadField';
 
 export interface DynamicPropertiesFormProps {
     type: string;
@@ -36,6 +37,24 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
     const renderField = (prop: BasePropertySchema) => {
         const value = values[prop.key] ?? prop.default ?? '';
         const common = { id: prop.key, name: prop.key } as const;
+
+        // ✅ Detectar campos de imagem e usar ImageUploadField
+        const isImageField =
+            prop.key === 'src' ||
+            prop.key.toLowerCase().includes('image') ||
+            prop.key.toLowerCase().includes('logo') ||
+            (prop.label?.toLowerCase().includes('imagem') || prop.label?.toLowerCase().includes('url')) &&
+            prop.type === 'string';
+
+        if (isImageField && prop.type === 'string') {
+            return (
+                <ImageUploadField
+                    value={value}
+                    onChange={(url) => onChange({ [prop.key]: url })}
+                    placeholder={prop.placeholder || `URL para ${prop.label}`}
+                />
+            );
+        }
 
         if (prop.type === 'string' || prop.type === 'richtext') {
             if ((value?.length || 0) > 80 || prop.type === 'richtext') {
@@ -129,29 +148,16 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
                                         className="text-sm"
                                     />
 
-                                    {/* URL da imagem com preview */}
-                                    <div className="flex gap-2 items-center">
-                                        <Input
-                                            placeholder="URL da imagem"
-                                            value={item.imageUrl || ''}
-                                            onChange={e => {
-                                                const next = [...arr];
-                                                next[idx] = { ...next[idx], imageUrl: e.target.value };
-                                                onChange({ [prop.key]: next });
-                                            }}
-                                            className="text-xs flex-1"
-                                        />
-                                        {item.imageUrl && (
-                                            <img
-                                                src={item.imageUrl}
-                                                alt={item.text || `opção ${idx + 1}`}
-                                                className="h-10 w-10 rounded object-cover border-2 border-slate-200"
-                                                onError={(e) => {
-                                                    e.currentTarget.style.display = 'none';
-                                                }}
-                                            />
-                                        )}
-                                    </div>
+                                    {/* Upload de imagem com preview */}
+                                    <ImageUploadField
+                                        value={item.imageUrl || ''}
+                                        onChange={(url) => {
+                                            const next = [...arr];
+                                            next[idx] = { ...next[idx], imageUrl: url };
+                                            onChange({ [prop.key]: next });
+                                        }}
+                                        placeholder="URL da imagem"
+                                    />
 
                                     {/* Pontuação e Categoria */}
                                     <div className="flex gap-2">
