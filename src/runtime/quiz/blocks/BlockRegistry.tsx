@@ -183,7 +183,139 @@ export const OfferTestimonialBlock = defineBlock({
     )
 });
 
+// ================= BLOCOS NORMALIZED (Fase de Migração) =================
+export const HeroBlock = defineBlock({
+    id: 'hero-block',
+    label: 'Hero (Intro)',
+    category: 'intro',
+    schema: z.object({
+        titleHtml: z.string().default('<strong>Bem-vinda</strong>'),
+        subtitleHtml: z.string().optional(),
+        imageUrl: z.string().url().optional(),
+        imageAlt: z.string().optional(),
+        logoUrl: z.string().url().optional(),
+        logoAlt: z.string().optional()
+    }),
+    defaultConfig: { titleHtml: '<strong>Bem-vinda</strong>' },
+    render: ({ config }) => (
+        <div className="text-center space-y-4">
+            {config.logoUrl && (
+                <img src={config.logoUrl} alt={config.logoAlt || 'Logo'} className="mx-auto h-16 w-auto object-contain" />
+            )}
+            <h1 className="text-2xl md:text-3xl font-serif leading-snug" dangerouslySetInnerHTML={{ __html: config.titleHtml }} />
+            {config.subtitleHtml && <p className="text-sm opacity-80" dangerouslySetInnerHTML={{ __html: config.subtitleHtml }} />}
+            {config.imageUrl && (
+                <div className="mx-auto max-w-xs">
+                    <img src={config.imageUrl} alt={config.imageAlt || 'Imagem'} className="rounded-lg shadow-sm w-full h-auto object-cover" />
+                </div>
+            )}
+        </div>
+    )
+});
+
+export const WelcomeFormBlock = defineBlock({
+    id: 'welcome-form-block',
+    label: 'Formulário Nome (Intro)',
+    category: 'intro',
+    schema: z.object({
+        questionLabel: z.string().default('Como posso te chamar?'),
+        placeholder: z.string().default('Digite seu nome...'),
+        buttonText: z.string().default('Começar'),
+        required: z.boolean().default(true)
+    }),
+    defaultConfig: { questionLabel: 'Como posso te chamar?', placeholder: 'Digite seu nome...', buttonText: 'Começar', required: true },
+    render: ({ config, state }) => {
+        // O state pode conter onNameSubmit para integração com runtime
+        const [value, setValue] = React.useState('');
+        const handle = (e: React.FormEvent) => {
+            e.preventDefault();
+            if (!value.trim()) return;
+            if (state?.onNameSubmit) state.onNameSubmit(value.trim());
+        };
+        return (
+            <form onSubmit={handle} className="space-y-3 max-w-sm mx-auto">
+                <label className="block text-xs font-semibold tracking-wide uppercase opacity-80">
+                    {config.questionLabel}{config.required && ' *'}
+                </label>
+                <input
+                    value={value}
+                    onChange={e => setValue(e.target.value)}
+                    placeholder={config.placeholder}
+                    className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <button
+                    type="submit"
+                    disabled={!value.trim()}
+                    className="w-full bg-primary text-white py-2 rounded font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {config.buttonText}
+                </button>
+            </form>
+        );
+    }
+});
+
+export const QuestionBlock = defineBlock({
+    id: 'question-block',
+    label: 'Pergunta (Múltipla)',
+    category: 'question',
+    schema: z.object({
+        questionNumber: z.string().optional(),
+        questionText: z.string().default('Pergunta'),
+        requiredSelections: z.number().int().positive().default(1),
+        options: z.array(z.object({ id: z.string(), text: z.string(), image: z.string().optional() })).default([])
+    }),
+    defaultConfig: { questionText: 'Pergunta', requiredSelections: 1, options: [] },
+    render: ({ config, state }) => {
+        const [answers, setAnswers] = React.useState<string[]>([]);
+        const toggle = (optId: string) => {
+            setAnswers(prev => {
+                const selected = prev.includes(optId);
+                let next = selected ? prev.filter(i => i !== optId) : [...prev, optId];
+                if (next.length > config.requiredSelections) {
+                    next = next.slice(0, config.requiredSelections);
+                }
+                if (state?.onAnswersChange) state.onAnswersChange(next);
+                // Auto avançar se completou
+                if (next.length === config.requiredSelections && state?.onComplete) {
+                    setTimeout(() => state.onComplete(), 250);
+                }
+                return next;
+            });
+        };
+        return (
+            <div className="space-y-4">
+                {config.questionNumber && <h2 className="text-sm font-semibold opacity-70">{config.questionNumber}</h2>}
+                <h3 className="text-xl font-bold text-primary leading-snug">{config.questionText}</h3>
+                <p className="text-xs opacity-70">Selecione {config.requiredSelections} opção(ões) ({answers.length}/{config.requiredSelections})</p>
+                <div className={`grid ${config.options.some(o => o.image) ? 'grid-cols-2 gap-3' : 'grid-cols-1 gap-2'}`}>
+                    {config.options.map(opt => {
+                        const active = answers.includes(opt.id);
+                        return (
+                            <button
+                                type="button"
+                                key={opt.id}
+                                onClick={() => toggle(opt.id)}
+                                className={`border rounded p-2 text-left text-xs sm:text-sm transition relative ${active ? 'border-primary shadow' : 'border-gray-200 hover:border-primary/60'}`}
+                            >
+                                {opt.image && <img src={opt.image} alt={opt.text} className="w-full aspect-[4/5] object-cover rounded mb-1" />}
+                                <span className="block leading-snug break-words">{opt.text}</span>
+                                {active && <span className="absolute top-1 right-1 w-5 h-5 text-[10px] rounded-full bg-primary text-white flex items-center justify-center">✓</span>}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
+});
+
 export const DEFAULT_BLOCK_DEFINITIONS: BlockDefinition<any>[] = [
+    // Normalized (novos)
+    HeroBlock,
+    WelcomeFormBlock,
+    QuestionBlock,
+    // Existentes
     ResultHeadlineBlock,
     ResultSecondaryListBlock,
     OfferCoreBlock,
