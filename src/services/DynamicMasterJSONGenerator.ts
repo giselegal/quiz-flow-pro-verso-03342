@@ -532,14 +532,22 @@ export class DynamicMasterJSONGenerator {
         const jsonString = JSON.stringify(masterJSON, null, 2);
 
         if (outputPath) {
-            // Salvar em arquivo somente em ambiente Node.js (evita erro no browser)
-            const isNode = typeof process !== 'undefined' && typeof process.versions !== 'undefined' && !!(process.versions as any).node;
-            if (isNode) {
-                const fs = await import('fs');
-                fs.writeFileSync(outputPath, jsonString);
-                console.log(`💾 Master JSON saved to: ${outputPath}`);
+            // Evitar qualquer referência a 'fs' no bundle do browser.
+            // Caso precise salvar em arquivo, use um util Node-only separado.
+            if (typeof window !== 'undefined') {
+                console.warn('⚠️ generateAndSaveJSON: Ignorando writeFile no browser. Forneça apenas funnelId e consuma a string retornada ou use util Node-only para salvar.');
             } else {
-                console.warn('⚠️ generateAndSaveJSON: Ignorando writeFile em ambiente não-Node');
+                // Ambiente Node (SSR/tests): não usar import estático para evitar bundling no client.
+                try {
+                    // Usar import dinâmico de node:fs somente em tempo de execução no Node.
+                    // @ts-ignore - Em ambientes CJS/ESM de Node isso é resolvido em tempo de execução.
+                    const fsMod = await import('node:fs');
+                    (fsMod as any).writeFileSync(outputPath, jsonString);
+                    // eslint-disable-next-line no-console
+                    console.log(`💾 Master JSON saved to: ${outputPath}`);
+                } catch (e) {
+                    console.warn('⚠️ generateAndSaveJSON: Falha ao salvar arquivo no ambiente atual:', e);
+                }
             }
         }
 
