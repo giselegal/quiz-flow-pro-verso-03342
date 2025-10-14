@@ -808,6 +808,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedBlockId]);
 
+    // Ao trocar de etapa, se o bloco selecionado não pertencer à etapa atual, limpar seleção
+    useEffect(() => {
+        if (!selectedStep) return;
+        if (!effectiveSelectedBlockId) return;
+        const existsInStep = selectedStep.blocks?.some(b => b.id === effectiveSelectedBlockId);
+        if (!existsInStep) {
+            setSelectedBlockIdUnified('');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [effectiveSelectedStepId]);
+
     // Persistência de seleção por etapa agora tratada no hook
 
     // Refs para estados usados apenas para leitura em callbacks estáveis
@@ -905,17 +916,39 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
             const meta = e.metaKey || e.ctrlKey;
+            const target = e.target as HTMLElement | null;
+            const isTyping = !!target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || (target as any).isContentEditable);
+
+            // Undo/Redo
             if (meta && e.key.toLowerCase() === 'z') {
                 e.preventDefault();
                 if (e.shiftKey) handleRedo(); else handleUndo();
-            } else if (meta && e.key.toLowerCase() === 'y') {
+                return;
+            }
+            if (meta && e.key.toLowerCase() === 'y') {
                 e.preventDefault();
                 handleRedo();
+                return;
+            }
+
+            // Remoção rápida: Delete/Backspace (fora de campos de texto)
+            if (!isTyping && (e.key === 'Delete' || e.key === 'Backspace')) {
+                // Se houver multi-seleção, remove múltiplos; senão remove bloco selecionado
+                if (multiSelectedIds.length > 0) {
+                    e.preventDefault();
+                    removeMultiple();
+                    return;
+                }
+                if (selectedStep && effectiveSelectedBlockId) {
+                    e.preventDefault();
+                    removeBlock(selectedStep.id, effectiveSelectedBlockId);
+                    return;
+                }
             }
         };
         window.addEventListener('keydown', onKey);
         return () => window.removeEventListener('keydown', onKey);
-    }, []);
+    }, [handleUndo, handleRedo, multiSelectedIds, selectedStep, effectiveSelectedBlockId, removeMultiple, removeBlock]);
 
     // ========================================
     // Live Preview State & Helpers
