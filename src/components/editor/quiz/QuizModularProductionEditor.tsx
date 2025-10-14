@@ -730,13 +730,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         });
                                     }
                                     // Um bloco CTA genérico usando a primeira oferta do mapa como preview
-                                    const firstOffer = quizStep.offerMap ? Object.values(quizStep.offerMap)[0] : null;
+                                    const firstOffer = quizStep.offerMap ? Object.values(quizStep.offerMap)[0] as any : null;
                                     push({
                                         type: 'quiz-offer-cta-inline',
                                         content: {
-                                            title: firstOffer?.title || 'Oferta Especial',
-                                            description: firstOffer?.description || 'Conteúdo exclusivo liberado',
-                                            buttonText: firstOffer?.buttonText || 'Quero Aproveitar',
+                                            title: (firstOffer?.title as string) || 'Oferta Especial',
+                                            description: (firstOffer?.description as string) || 'Conteúdo exclusivo liberado',
+                                            buttonText: (firstOffer?.buttonText as string) || 'Quero Aproveitar',
                                             offerKey: firstOffer ? Object.keys(quizStep.offerMap)[0] : undefined
                                         },
                                         properties: {}

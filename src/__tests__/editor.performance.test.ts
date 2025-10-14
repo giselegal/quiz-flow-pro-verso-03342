@@ -65,8 +65,8 @@ describe('Editor Performance - Step Loading', () => {
 
                 case 'offer':
                     if (quizStep.image) blocks.push({ type: 'image', content: { src: quizStep.image } });
-                    const firstOffer = quizStep.offerMap ? Object.values(quizStep.offerMap)[0] : null;
-                    blocks.push({ type: 'quiz-offer-cta-inline', content: { title: firstOffer?.title } });
+                    const firstOffer = quizStep.offerMap ? Object.values(quizStep.offerMap)[0] as any : null;
+                    blocks.push({ type: 'quiz-offer-cta-inline', content: { title: firstOffer?.title || 'Oferta' } });
                     break;
             }
 
@@ -174,7 +174,7 @@ describe('Editor Performance - Step Loading', () => {
 
             // Simular construção de blocks (como no useEffect)
             if (quizStep?.type === 'question') {
-                state.blocks = [
+                (state.blocks as any) = [
                     { type: 'heading', content: { text: quizStep.questionText } },
                     { type: 'quiz-options', content: { options: quizStep.options || [] } }
                 ];
