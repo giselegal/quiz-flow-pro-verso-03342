@@ -2,7 +2,7 @@ import type { BlockComponentProps } from '@/types/blocks';
 import React from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase } from '@/lib/quiz/selectionRules';
-import { usePureBuilder } from '../PureBuilderProvider';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/utils/placeholder';

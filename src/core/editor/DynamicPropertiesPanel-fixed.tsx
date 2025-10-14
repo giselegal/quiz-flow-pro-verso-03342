@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHeadlessEditor } from './HeadlessEditorProvider';
-import { usePureBuilder } from '../../components/editor/PureBuilderProvider';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { FunnelStep } from '../../types/quiz-schema';
 import type { Block } from '@/types/editor';
 
@@ -22,8 +22,9 @@ export const DynamicPropertiesPanel: React.FC = () => {
 
     // 🔧 INTEGRAÇÃO: Usar dados reais do PureBuilder
     const currentStepKey = `step-${builderState.currentStep}`;
-    const currentStepBlocks = builderState.stepBlocks[currentStepKey] || [];
-    const selectedBlock = selectedBlockId ? currentStepBlocks.find(block => block.id === selectedBlockId) : null;
+    const stepBlocksMap = (builderState.stepBlocks || {}) as Record<string, Block[]>;
+    const currentStepBlocks: Block[] = stepBlocksMap[currentStepKey] || [];
+    const selectedBlock = selectedBlockId ? currentStepBlocks.find((block: Block) => block.id === selectedBlockId) : null;
 
     // 🔄 SINCRONIZAÇÃO: Atualizar seleção baseada no estado do builder
     useEffect(() => {
@@ -277,8 +278,8 @@ const StepPropertiesPanel: React.FC<{
                                 <div
                                     key={block.id}
                                     className={`p-3 border rounded-md cursor-pointer transition-colors ${selectedBlockId === block.id
-                                            ? 'border-blue-500 bg-blue-50'
-                                            : 'border-gray-200 hover:border-gray-300'
+                                        ? 'border-blue-500 bg-blue-50'
+                                        : 'border-gray-200 hover:border-gray-300'
                                         }`}
                                     onClick={() => onBlockSelect(block.id)}
                                 >

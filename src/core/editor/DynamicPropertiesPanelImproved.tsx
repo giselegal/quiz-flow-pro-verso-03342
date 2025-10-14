@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Trash2, Plus, Settings, FileText, Palette, Globe, Rocket, AlertCircle, CheckCircle2 } from 'lucide-react';
 // Removendo dependência problemática do useHeadlessEditor
 // import { useHeadlessEditor } from './HeadlessEditorProvider';
-import { usePureBuilder } from '../../components/editor/PureBuilderProvider';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import type { Block } from '@/types/editor';
 
 type PanelTab = 'step' | 'global' | 'style' | 'publish';
@@ -25,8 +25,11 @@ export const DynamicPropertiesPanelImproved: React.FC = () => {
 
     // 🔧 INTEGRAÇÃO: Usar dados reais do PureBuilder
     const currentStepKey = `step-${builderState.currentStep}`;
-    const currentStepBlocks = builderState.stepBlocks[currentStepKey] || [];
-    const selectedBlock: Block | null = selectedBlockId ? currentStepBlocks.find(block => block.id === selectedBlockId) || null : null;
+    const stepBlocksMap = (builderState.stepBlocks || {}) as Record<string, Block[]>;
+    const currentStepBlocks: Block[] = stepBlocksMap[currentStepKey] || [];
+    const selectedBlock: Block | null = selectedBlockId
+        ? (currentStepBlocks.find((block: Block) => block.id === selectedBlockId) || null)
+        : null;
 
     // 🔄 SINCRONIZAÇÃO: Atualizar seleção baseada no estado do builder
     useEffect(() => {

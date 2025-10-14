@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { useHeadlessEditor } from './HeadlessEditorProvider';
-import { usePureBuilder } from '../../components/editor/PureBuilderProvider';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { FunnelStep } from '../../types/quiz-schema';
 import type { Block } from '@/types/editor';
 
@@ -262,8 +262,8 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
                   goToStep(stepNumber - 1);
                 }}
                 className={`w-full p-3 text-left border rounded-lg transition-colors ${isCurrentStep
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
                   }`}
               >
                 <div className="flex items-center justify-between">
@@ -290,8 +290,8 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
                   builderActions.setSelectedBlockId(block.id);
                 }}
                 className={`w-full p-3 text-left border rounded-lg transition-colors ${selectedBlockId === block.id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
                   }`}
               >
                 <div className="flex items-center justify-between">

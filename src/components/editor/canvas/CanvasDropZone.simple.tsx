@@ -12,7 +12,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import { useGlobalEventManager } from '@/utils/OptimizedGlobalEventManager';
 import { HookOrderDebugger } from '@/tools/debug/HookOrderDebugger';
-import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import EmptyCanvasInterface from '@/components/editor/EmptyCanvasInterface';
 
 // Componente de controles de navegação para aparecer no final dos blocos do editor

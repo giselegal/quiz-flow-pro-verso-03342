@@ -21,7 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { AlertCircle, RefreshCw, Check, X, Database } from 'lucide-react';
 
 import { useBlockProperties } from '@/hooks/useBlockProperties';
-import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { useFunnels } from '@/providers/FunnelMasterProvider';
 import { type BlockPropertySchema } from '@/api/internal/BlockPropertiesAPI';
 
@@ -71,7 +71,8 @@ const FunnelDataDisplay: React.FC<{
         try {
             const stepState = builder?.state;
             const currentStepKey = `step-${stepState.currentStep}`;
-            const currentStepBlocks = stepState.stepBlocks[currentStepKey] || [];
+            const stepBlocksMap = (stepState.stepBlocks || {}) as Record<string, any[]>;
+            const currentStepBlocks = stepBlocksMap[currentStepKey] || [];
             const currentBlock = currentStepBlocks.find((b: any) => b.id === blockId);
 
             // TODO: Implement template blocks loading
@@ -84,7 +85,7 @@ const FunnelDataDisplay: React.FC<{
                 totalBlocks: currentStepBlocks.length,
                 blockData: currentBlock,
                 templateBlocksCount: 0,
-                hasValidation: !!stepState.stepValidation[stepState.currentStep],
+                hasValidation: !!(stepState as any).stepValidation?.[stepState.currentStep],
                 lastModified: new Date().toLocaleString('pt-BR'),
                 isSupabaseEnabled: false,
                 databaseMode: 'local',

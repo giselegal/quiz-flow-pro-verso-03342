@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Zap, Wand2 } from 'lucide-react';
-import { usePureBuilder } from '@/components/editor/PureBuilderProvider';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { useNotification } from '@/components/ui/Notification';
 
 /**

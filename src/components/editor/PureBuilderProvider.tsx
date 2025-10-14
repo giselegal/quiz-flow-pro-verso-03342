@@ -21,7 +21,9 @@ import { funnelApiClient, NormalizedFunnel } from '@/services/funnelApiClient';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 // 🚨 DEPRECATION WARNING
-console.warn('⚠️ PureBuilderProvider is deprecated. Use SuperUnifiedProvider instead.');
+if (typeof process !== 'undefined' ? process.env.NODE_ENV !== 'production' : true) {
+    console.warn('⚠️ PureBuilderProvider is deprecated. Use SuperUnifiedProvider instead.');
+}
 
 /**
  * 🏗️ PURE BUILDER SYSTEM PROVIDER
