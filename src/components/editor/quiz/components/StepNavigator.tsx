@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { FixedSizeList } from 'react-window';
+import { FixedSizeList as VirtualList } from 'react-window';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -98,7 +98,7 @@ export const StepNavigator = <Step extends any = any>({
                 <p className="text-xs text-muted-foreground">{steps.length} etapas (virtualizado)</p>
             </div>
             <div className="flex-1 overflow-hidden">
-                <List
+                <FixedSizeList
                     ref={listRef}
                     height={containerHeight}
                     itemCount={steps.length}
@@ -107,7 +107,7 @@ export const StepNavigator = <Step extends any = any>({
                     overscanCount={3}
                 >
                     {StepRow}
-                </List>
+                </FixedSizeList>
             </div>
             <div className="p-2 border-t shrink-0">
                 <Button variant="outline" size="sm" className="w-full text-xs" onClick={onAddStep}>+ Adicionar etapa</Button>
