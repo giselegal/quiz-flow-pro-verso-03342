@@ -2649,13 +2649,15 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
 
     // Atualizar registry quando runtimeMap mudar (com proteção contra loop)
     React.useEffect(() => {
-        const currentHash = JSON.stringify(Object.keys(runtimeMap).sort());
+        // 🔧 CORREÇÃO: Comparar conteúdo completo, não apenas keys
+        const currentHash = JSON.stringify(runtimeMap);
 
         console.log(`🔍 [Update Check #${updateCountRef.current}]`, {
-            currentHash: currentHash.substring(0, 50) + '...',
-            lastHash: lastUpdateRef.current.substring(0, 50) + '...',
+            currentHash: currentHash.substring(0, 80) + '...',
+            lastHash: lastUpdateRef.current.substring(0, 80) + '...',
             willUpdate: currentHash !== lastUpdateRef.current,
-            stepsCount: Object.keys(runtimeMap).length
+            stepsCount: Object.keys(runtimeMap).length,
+            sampleStep: Object.keys(runtimeMap)[0]
         });
 
         // Só atualizar se realmente mudou
@@ -2669,10 +2671,11 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
             }
 
             console.log(`✅ [Update #${updateCountRef.current}] Atualizando Live preview registry com`, Object.keys(runtimeMap).length, 'steps');
+            console.log(`📦 Exemplo de step sendo enviado:`, runtimeMap[Object.keys(runtimeMap)[0]]);
             lastUpdateRef.current = currentHash;
             setSteps(runtimeMap);
         } else {
-            console.log('⏭️ Skip update - hash igual');
+            console.log('⏭️ Skip update - conteúdo idêntico');
         }
         // ✅ CRÍTICO: setSteps é estável, runtimeMap muda com steps
         // eslint-disable-next-line react-hooks/exhaustive-deps

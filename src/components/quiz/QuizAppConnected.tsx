@@ -51,6 +51,12 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     const registry = useOptionalQuizRuntimeRegistry();
     if (registry && registry.steps && Object.keys(registry.steps).length) {
         externalSteps = registry.steps;
+        console.log(`🔗 Registry detectado com ${Object.keys(externalSteps).length} steps:`, {
+            stepIds: Object.keys(externalSteps),
+            firstStepSample: externalSteps[Object.keys(externalSteps)[0]]
+        });
+    } else {
+        console.log(`⚠️ Registry vazio ou ausente - usando fallback`);
     }
 
     // ============================================================================
