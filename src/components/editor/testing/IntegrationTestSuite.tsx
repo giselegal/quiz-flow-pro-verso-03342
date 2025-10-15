@@ -299,15 +299,11 @@ const IntegrationTests = {
         // Simular app completo com todos os providers
         const mockApp = React.createElement(
             FeatureFlagProvider,
-            {},
+            { children: null },
             React.createElement(
                 LivePreviewProvider,
-                {},
-                React.createElement(
-                    RenderOptimizationProvider,
-                    {},
-                    React.createElement('div', { id: 'test-app' }, 'Test App')
-                )
+                { children: null },
+                React.createElement('div', { id: 'test-app' }, 'Test App')
             )
         );
 
