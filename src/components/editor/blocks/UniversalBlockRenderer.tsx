@@ -34,6 +34,9 @@ import {
   Step20PersonalizedOfferBlock
 } from './Step20ModularBlocks';
 
+// ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
+import { default as ResultCalculationSection } from '@/components/blocks/ResultCalculationSection';
+
 // ✅ FASE 3A: Importações dos novos componentes inline
 import ImageDisplayInlineBlock from '@/components/blocks/inline/ImageDisplayInlineBlock';
 import DecorativeBarInlineBlock from '@/components/blocks/inline/DecorativeBarInlineBlock';
@@ -123,6 +126,8 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'step20-secondary-styles': Step20SecondaryStylesBlock,
   'step20-personalized-offer': Step20PersonalizedOfferBlock,
   'step20-complete-template': Step20ResultHeaderBlock, // TODO: se quiser renderização compacta usar Step20CompleteTemplateBlock diretamente em outro fluxo
+  // ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
+  'result-calculation': ResultCalculationSection,
   // ✅ FASE 3A: Componentes inline específicos
   'image-display-inline': ImageDisplayInlineBlock,
   'decorative-bar-inline': DecorativeBarInlineBlock,

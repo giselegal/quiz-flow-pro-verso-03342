@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { QuizData } from '../types';
+
+// Interface para dados do quiz
+interface QuizData {
+    answers: Record<string, {
+        selectedOptions: string[];
+        [key: string]: any;
+    }>;
+    currentStep?: number;
+    userId?: string;
+    startedAt?: string;
+    completedAt?: string;
+}
 
 interface ResultCalculationSectionProps {
     props: {
