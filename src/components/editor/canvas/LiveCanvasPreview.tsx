@@ -38,7 +38,7 @@ interface LiveCanvasPreviewProps {
     /** ID do funil */
     funnelId?: string;
     /** Step ID atualmente selecionada no canvas */
-    selectedStepId?: string;
+    selectedStepId?: string | null;
     /** Callback quando preview muda de step */
     onStepChange?: (stepId: string) => void;
     /** Configurações customizadas */
@@ -378,7 +378,7 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
                 <QuizAppConnected
                     funnelId={funnelId}
                     previewMode={true}
-                    initialStepId={debouncedSelectedStepId}
+                    initialStepId={debouncedSelectedStepId || undefined}
                 />
             </div>
         );
