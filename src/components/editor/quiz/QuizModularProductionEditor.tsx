@@ -2684,7 +2684,8 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">
                 <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
-                    <QuizAppConnected funnelId={funnelId} editorMode initialStepId={selectedStepId} />
+                    {/* ✅ CORREÇÃO: Removido editorMode para usar comportamento de produção */}
+                    <QuizAppConnected funnelId={funnelId} initialStepId={selectedStepId} />
                 </BlockRegistryProvider>
             </div>
             <div className="px-2 py-1 border-t bg-slate-50 text-[10px] text-slate-500 flex items-center justify-between">
