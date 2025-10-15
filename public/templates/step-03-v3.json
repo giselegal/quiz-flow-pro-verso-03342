@@ -1,191 +1,191 @@
 {
-  "templateVersion": "3.0",
-  "metadata": {
-    "id": "step-03-question-v3",
-    "name": "Q2 - Nome pessoal",
-    "description": "Questão 2 sobre preferências de estilo",
-    "category": "quiz-question",
-    "tags": [
-      "quiz",
-      "style",
-      "question"
-    ],
-    "questionNumber": 2,
-    "totalQuestions": 13,
-    "createdAt": "2025-10-13T00:32:31.714Z",
-    "updatedAt": "2025-10-13T00:32:31.714Z",
-    "author": "Quiz Flow Pro",
-    "version": "3.0.0"
-  },
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "primaryHover": "#A68B6A",
-      "primaryLight": "#F3E8D3",
-      "secondary": "#432818",
-      "background": "#FAF9F7",
-      "text": "#1F2937",
-      "border": "#E5E7EB",
-      "selected": "#B89B7A",
-      "hover": "#F3E8D3"
-    },
-    "fonts": {
-      "heading": "Playfair Display, serif",
-      "body": "Inter, sans-serif"
-    },
-    "spacing": {
-      "sm": 8,
-      "md": 16,
-      "lg": 24,
-      "xl": 32
-    },
-    "borderRadius": {
-      "sm": 4,
-      "md": 8,
-      "lg": 12,
-      "xl": 16
-    }
-  },
-  "sections": [
-    {
-      "type": "question-hero",
-      "id": "question-hero-03",
-      "content": {
-        "questionNumber": "Q2 - NOME PESSOAL",
-        "questionText": "Como você prefere que as pessoas te chamem no dia a dia?",
-        "currentQuestion": 2,
-        "totalQuestions": 13,
-        "progressValue": 14,
-        "showProgress": true,
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão"
-      },
-      "style": {
-        "backgroundColor": "transparent",
-        "padding": 16
-      },
-      "animation": {
-        "type": "fade",
-        "duration": 300,
-        "delay": 0,
-        "easing": "ease-out"
-      }
-    },
-    {
-      "type": "options-grid",
-      "id": "options-grid-03",
-      "content": {
-        "options": [
-          {
-            "id": "3a",
-            "text": "Opção A para Q2",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "3a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "3b",
-            "text": "Opção B para Q2",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "3b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "3c",
-            "text": "Opção C para Q2",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "3c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "3d",
-            "text": "Opção D para Q2",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "3d",
-            "category": "Elegante",
-            "points": 3
-          }
+    "templateVersion": "3.0",
+    "metadata": {
+        "id": "step-03-question-v3",
+        "name": "Q2 - Nome pessoal",
+        "description": "Questão 2 sobre preferências de estilo",
+        "category": "quiz-question",
+        "tags": [
+            "quiz",
+            "style",
+            "question"
         ],
-        "columns": 2,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "showImages": true,
-        "imageSize": 256,
+        "questionNumber": 2,
+        "totalQuestions": 13,
+        "createdAt": "2025-10-13T00:32:31.714Z",
+        "updatedAt": "2025-10-13T00:32:31.714Z",
+        "author": "Quiz Flow Pro",
+        "version": "3.0.0"
+    },
+    "theme": {
+        "colors": {
+            "primary": "#B89B7A",
+            "primaryHover": "#A68B6A",
+            "primaryLight": "#F3E8D3",
+            "secondary": "#432818",
+            "background": "#FAF9F7",
+            "text": "#1F2937",
+            "border": "#E5E7EB",
+            "selected": "#B89B7A",
+            "hover": "#F3E8D3"
+        },
+        "fonts": {
+            "heading": "Playfair Display, serif",
+            "body": "Inter, sans-serif"
+        },
+        "spacing": {
+            "sm": 8,
+            "md": 16,
+            "lg": 24,
+            "xl": 32
+        },
+        "borderRadius": {
+            "sm": 4,
+            "md": 8,
+            "lg": 12,
+            "xl": 16
+        }
+    },
+    "sections": [
+        {
+            "type": "question-hero",
+            "id": "question-hero-03",
+            "content": {
+                "questionNumber": "Q2 - NOME PESSOAL",
+                "questionText": "Como você prefere que as pessoas te chamem no dia a dia?",
+                "currentQuestion": 2,
+                "totalQuestions": 13,
+                "progressValue": 14,
+                "showProgress": true,
+                "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                "logoAlt": "Logo Gisele Galvão"
+            },
+            "style": {
+                "backgroundColor": "transparent",
+                "padding": 16
+            },
+            "animation": {
+                "type": "fade",
+                "duration": 300,
+                "delay": 0,
+                "easing": "ease-out"
+            }
+        },
+        {
+            "type": "options-grid",
+            "id": "options-grid-03",
+            "content": {
+                "options": [
+                    {
+                        "id": "3a",
+                        "text": "Opção A para Q2",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+                        "value": "3a",
+                        "category": "Natural",
+                        "points": 1
+                    },
+                    {
+                        "id": "3b",
+                        "text": "Opção B para Q2",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+                        "value": "3b",
+                        "category": "Clássico",
+                        "points": 2
+                    },
+                    {
+                        "id": "3c",
+                        "text": "Opção C para Q2",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+                        "value": "3c",
+                        "category": "Contemporâneo",
+                        "points": 2
+                    },
+                    {
+                        "id": "3d",
+                        "text": "Opção D para Q2",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+                        "value": "3d",
+                        "category": "Elegante",
+                        "points": 3
+                    }
+                ],
+                "columns": 2,
+                "multipleSelection": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "showImages": true,
+                "imageSize": 256,
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1500,
+                "validationMessage": "Selecione 3 opções para continuar"
+            },
+            "style": {
+                "backgroundColor": "transparent",
+                "padding": 16
+            },
+            "animation": {
+                "type": "slideUp",
+                "duration": 300,
+                "delay": 100,
+                "easing": "ease-out"
+            }
+        }
+    ],
+    "validation": {
+        "required": [
+            "selectedOptions"
+        ],
+        "rules": {
+            "selectedOptions": {
+                "minItems": 3,
+                "maxItems": 3,
+                "errorMessage": "Por favor, selecione exatamente 3 opções"
+            }
+        }
+    },
+    "navigation": {
+        "nextStep": "step-04",
+        "prevStep": "step-02",
+        "allowBack": true,
+        "requiresUserInput": true,
         "autoAdvance": true,
-        "autoAdvanceDelay": 1500,
-        "validationMessage": "Selecione 3 opções para continuar"
-      },
-      "style": {
-        "backgroundColor": "transparent",
-        "padding": 16
-      },
-      "animation": {
-        "type": "slideUp",
-        "duration": 300,
-        "delay": 100,
-        "easing": "ease-out"
-      }
+        "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+        "events": [
+            "page_view",
+            "section_view",
+            "option_selected",
+            "validation_error",
+            "completion"
+        ],
+        "trackingId": "step-03-question-v3"
+    },
+    "scoring": {
+        "method": "points",
+        "categories": [
+            "Natural",
+            "Clássico",
+            "Contemporâneo",
+            "Elegante"
+        ],
+        "options": {
+            "3a": {
+                "category": "Natural",
+                "points": 1
+            },
+            "3b": {
+                "category": "Clássico",
+                "points": 2
+            },
+            "3c": {
+                "category": "Contemporâneo",
+                "points": 2
+            },
+            "3d": {
+                "category": "Elegante",
+                "points": 3
+            }
+        }
     }
-  ],
-  "validation": {
-    "required": [
-      "selectedOptions"
-    ],
-    "rules": {
-      "selectedOptions": {
-        "minItems": 3,
-        "maxItems": 3,
-        "errorMessage": "Por favor, selecione exatamente 3 opções"
-      }
-    }
-  },
-  "navigation": {
-    "nextStep": "step-04",
-    "prevStep": "step-02",
-    "allowBack": true,
-    "requiresUserInput": true,
-    "autoAdvance": true,
-    "autoAdvanceDelay": 1500
-  },
-  "analytics": {
-    "events": [
-      "page_view",
-      "section_view",
-      "option_selected",
-      "validation_error",
-      "completion"
-    ],
-    "trackingId": "step-03-question-v3"
-  },
-  "scoring": {
-    "method": "points",
-    "categories": [
-      "Natural",
-      "Clássico",
-      "Contemporâneo",
-      "Elegante"
-    ],
-    "options": {
-      "3a": {
-        "category": "Natural",
-        "points": 1
-      },
-      "3b": {
-        "category": "Clássico",
-        "points": 2
-      },
-      "3c": {
-        "category": "Contemporâneo",
-        "points": 2
-      },
-      "3d": {
-        "category": "Elegante",
-        "points": 3
-      }
-    }
-  }
 }

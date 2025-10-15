@@ -21,8 +21,8 @@
         "productName": "5 Passos – Vista-se de Você",
         "mentorName": "Gisele Galvão",
         "pricing": {
-            "originalPrice": 447.00,
-            "salePrice": 97.00,
+            "originalPrice": 447,
+            "salePrice": 97,
             "currency": "R$",
             "installments": {
                 "count": 8,
@@ -102,8 +102,8 @@
             "id": "pricing-21",
             "content": {
                 "pricing": {
-                    "originalPrice": 447.00,
-                    "salePrice": 97.00,
+                    "originalPrice": 447,
+                    "salePrice": 97,
                     "currency": "R$",
                     "installments": {
                         "count": 8,
@@ -159,7 +159,7 @@
                 "params": {
                     "content_name": "5 Passos Vista-se de Você",
                     "content_category": "Offer",
-                    "value": 97.00,
+                    "value": 97,
                     "currency": "BRL"
                 }
             }

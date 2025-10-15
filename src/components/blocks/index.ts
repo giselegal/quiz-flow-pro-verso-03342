@@ -11,6 +11,9 @@ export * from './quiz';
 // Blocos de Resultado (Etapa 20) - IMPLEMENTADOS ✅
 export * from './result';
 
+// Componente de Cálculo de Resultados (Step 20 Híbrido) - ✅
+export { default as ResultCalculationSection } from './ResultCalculationSection';
+
 // Blocos de Oferta (Etapa 21) - IMPLEMENTADOS ✅
 export * from './offer';
 

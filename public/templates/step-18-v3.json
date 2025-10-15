@@ -1,197 +1,197 @@
 {
-  "templateVersion": "3.0",
-  "metadata": {
-    "id": "step-18-strategic-v3",
-    "name": "Q16 - Resultado (Estratégica)",
-    "description": "Questão estratégica 6 sobre objetivos e resultados",
-    "category": "strategic-question",
-    "tags": [
-      "quiz",
-      "style",
-      "strategic",
-      "goals"
-    ],
-    "questionNumber": 16,
-    "totalQuestions": 13,
-    "createdAt": "2025-10-13T00:33:47.498Z",
-    "updatedAt": "2025-10-13T00:33:47.498Z",
-    "author": "Quiz Flow Pro",
-    "version": "3.0.0"
-  },
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "primaryHover": "#A68B6A",
-      "primaryLight": "#F3E8D3",
-      "secondary": "#432818",
-      "background": "#FAF9F7",
-      "text": "#1F2937",
-      "border": "#E5E7EB",
-      "selected": "#B89B7A",
-      "hover": "#F3E8D3"
-    },
-    "fonts": {
-      "heading": "Playfair Display, serif",
-      "body": "Inter, sans-serif"
-    },
-    "spacing": {
-      "sm": 8,
-      "md": 16,
-      "lg": 24,
-      "xl": 32
-    },
-    "borderRadius": {
-      "sm": 4,
-      "md": 8,
-      "lg": 12,
-      "xl": 16
-    }
-  },
-  "sections": [
-    {
-      "type": "question-hero",
-      "id": "question-hero-18",
-      "content": {
-        "questionNumber": "Q16 - RESULTADO",
-        "questionText": "Qual resultado você mais gostaria de alcançar?",
-        "currentQuestion": 16,
-        "totalQuestions": 13,
-        "progressValue": 81,
-        "showProgress": true,
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão"
-      },
-      "style": {
-        "backgroundColor": "transparent",
-        "padding": 16
-      },
-      "animation": {
-        "type": "fade",
-        "duration": 300,
-        "delay": 0,
-        "easing": "ease-out"
-      }
-    },
-    {
-      "type": "options-grid",
-      "id": "options-grid-18",
-      "content": {
-        "options": [
-          {
-            "id": "18a",
-            "text": "Opção A para Q16",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "18a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "18b",
-            "text": "Opção B para Q16",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "18b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "18c",
-            "text": "Opção C para Q16",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "18c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "18d",
-            "text": "Opção D para Q16",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "18d",
-            "category": "Elegante",
-            "points": 3
-          }
+    "templateVersion": "3.0",
+    "metadata": {
+        "id": "step-18-strategic-v3",
+        "name": "Q16 - Resultado (Estratégica)",
+        "description": "Questão estratégica 6 sobre objetivos e resultados",
+        "category": "strategic-question",
+        "tags": [
+            "quiz",
+            "style",
+            "strategic",
+            "goals"
         ],
-        "columns": 2,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
-        "showImages": true,
-        "imageSize": 256,
+        "questionNumber": 16,
+        "totalQuestions": 13,
+        "createdAt": "2025-10-13T00:33:47.498Z",
+        "updatedAt": "2025-10-13T00:33:47.498Z",
+        "author": "Quiz Flow Pro",
+        "version": "3.0.0"
+    },
+    "theme": {
+        "colors": {
+            "primary": "#B89B7A",
+            "primaryHover": "#A68B6A",
+            "primaryLight": "#F3E8D3",
+            "secondary": "#432818",
+            "background": "#FAF9F7",
+            "text": "#1F2937",
+            "border": "#E5E7EB",
+            "selected": "#B89B7A",
+            "hover": "#F3E8D3"
+        },
+        "fonts": {
+            "heading": "Playfair Display, serif",
+            "body": "Inter, sans-serif"
+        },
+        "spacing": {
+            "sm": 8,
+            "md": 16,
+            "lg": 24,
+            "xl": 32
+        },
+        "borderRadius": {
+            "sm": 4,
+            "md": 8,
+            "lg": 12,
+            "xl": 16
+        }
+    },
+    "sections": [
+        {
+            "type": "question-hero",
+            "id": "question-hero-18",
+            "content": {
+                "questionNumber": "Q16 - RESULTADO",
+                "questionText": "Qual resultado você mais gostaria de alcançar?",
+                "currentQuestion": 16,
+                "totalQuestions": 13,
+                "progressValue": 81,
+                "showProgress": true,
+                "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                "logoAlt": "Logo Gisele Galvão"
+            },
+            "style": {
+                "backgroundColor": "transparent",
+                "padding": 16
+            },
+            "animation": {
+                "type": "fade",
+                "duration": 300,
+                "delay": 0,
+                "easing": "ease-out"
+            }
+        },
+        {
+            "type": "options-grid",
+            "id": "options-grid-18",
+            "content": {
+                "options": [
+                    {
+                        "id": "18a",
+                        "text": "Opção A para Q16",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+                        "value": "18a",
+                        "category": "Natural",
+                        "points": 1
+                    },
+                    {
+                        "id": "18b",
+                        "text": "Opção B para Q16",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+                        "value": "18b",
+                        "category": "Clássico",
+                        "points": 2
+                    },
+                    {
+                        "id": "18c",
+                        "text": "Opção C para Q16",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+                        "value": "18c",
+                        "category": "Contemporâneo",
+                        "points": 2
+                    },
+                    {
+                        "id": "18d",
+                        "text": "Opção D para Q16",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+                        "value": "18d",
+                        "category": "Elegante",
+                        "points": 3
+                    }
+                ],
+                "columns": 2,
+                "multipleSelection": true,
+                "minSelections": 3,
+                "maxSelections": 3,
+                "showImages": true,
+                "imageSize": 256,
+                "autoAdvance": true,
+                "autoAdvanceDelay": 1500,
+                "validationMessage": "Selecione 3 opções para continuar"
+            },
+            "style": {
+                "backgroundColor": "transparent",
+                "padding": 16
+            },
+            "animation": {
+                "type": "slideUp",
+                "duration": 300,
+                "delay": 100,
+                "easing": "ease-out"
+            }
+        }
+    ],
+    "validation": {
+        "required": [
+            "selectedOptions"
+        ],
+        "rules": {
+            "selectedOptions": {
+                "minItems": 3,
+                "maxItems": 3,
+                "errorMessage": "Por favor, selecione exatamente 3 opções"
+            }
+        }
+    },
+    "navigation": {
+        "nextStep": "step-19",
+        "prevStep": "step-17",
+        "allowBack": true,
+        "requiresUserInput": true,
         "autoAdvance": true,
-        "autoAdvanceDelay": 1500,
-        "validationMessage": "Selecione 3 opções para continuar"
-      },
-      "style": {
-        "backgroundColor": "transparent",
-        "padding": 16
-      },
-      "animation": {
-        "type": "slideUp",
-        "duration": 300,
-        "delay": 100,
-        "easing": "ease-out"
-      }
+        "autoAdvanceDelay": 1500
+    },
+    "analytics": {
+        "events": [
+            "page_view",
+            "section_view",
+            "option_selected",
+            "validation_error",
+            "completion"
+        ],
+        "trackingId": "step-18-strategic-v3"
+    },
+    "scoring": {
+        "method": "points",
+        "categories": [
+            "Natural",
+            "Clássico",
+            "Contemporâneo",
+            "Elegante"
+        ],
+        "options": {
+            "18a": {
+                "category": "Natural",
+                "points": 1
+            },
+            "18b": {
+                "category": "Clássico",
+                "points": 2
+            },
+            "18c": {
+                "category": "Contemporâneo",
+                "points": 2
+            },
+            "18d": {
+                "category": "Elegante",
+                "points": 3
+            }
+        }
+    },
+    "strategic": {
+        "isStrategic": true,
+        "weight": 1.5,
+        "impactsOffer": true
     }
-  ],
-  "validation": {
-    "required": [
-      "selectedOptions"
-    ],
-    "rules": {
-      "selectedOptions": {
-        "minItems": 3,
-        "maxItems": 3,
-        "errorMessage": "Por favor, selecione exatamente 3 opções"
-      }
-    }
-  },
-  "navigation": {
-    "nextStep": "step-19",
-    "prevStep": "step-17",
-    "allowBack": true,
-    "requiresUserInput": true,
-    "autoAdvance": true,
-    "autoAdvanceDelay": 1500
-  },
-  "analytics": {
-    "events": [
-      "page_view",
-      "section_view",
-      "option_selected",
-      "validation_error",
-      "completion"
-    ],
-    "trackingId": "step-18-strategic-v3"
-  },
-  "scoring": {
-    "method": "points",
-    "categories": [
-      "Natural",
-      "Clássico",
-      "Contemporâneo",
-      "Elegante"
-    ],
-    "options": {
-      "18a": {
-        "category": "Natural",
-        "points": 1
-      },
-      "18b": {
-        "category": "Clássico",
-        "points": 2
-      },
-      "18c": {
-        "category": "Contemporâneo",
-        "points": 2
-      },
-      "18d": {
-        "category": "Elegante",
-        "points": 3
-      }
-    }
-  },
-  "strategic": {
-    "isStrategic": true,
-    "weight": 1.5,
-    "impactsOffer": true
-  }
 }
