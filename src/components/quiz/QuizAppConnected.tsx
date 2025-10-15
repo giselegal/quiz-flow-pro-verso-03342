@@ -154,6 +154,50 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         // deps incluem apenas valores estáveis
     }, [editorMode, initialStepId, state.currentStep, nextStep]);
 
+    // ========================= AUTO-AVANÇO QUANDO COMPLETAR RESPOSTAS =========================
+    // Detecta quando usuário completa as seleções necessárias e avança automaticamente
+    useEffect(() => {
+        if (!currentStepData) return;
+
+        // Apenas para perguntas (normais e estratégicas)
+        const isQuestion = currentStepData.type === 'question';
+        const isStrategic = currentStepData.type === 'strategic-question';
+
+        if (!isQuestion && !isStrategic) return;
+
+        // Obter respostas atuais
+        const currentAnswers = state.answers[state.currentStep] || [];
+        const strategicAnswer = state.userProfile.strategicAnswers[state.currentStep];
+
+        // Verificar se completou as seleções necessárias
+        const requiredCount = currentStepData.requiredSelections || 1;
+        let shouldAutoAdvance = false;
+
+        if (isStrategic) {
+            // Perguntas estratégicas: avançar imediatamente após selecionar
+            shouldAutoAdvance = !!strategicAnswer;
+        } else {
+            // Perguntas normais: avançar quando atingir requiredSelections
+            shouldAutoAdvance = currentAnswers.length === requiredCount;
+        }
+
+        if (shouldAutoAdvance) {
+            // Aguardar 800ms antes de avançar para dar feedback visual
+            const timeout = setTimeout(() => {
+                console.log(`✨ Auto-avanço: ${state.currentStep} → próxima step`);
+                nextStep();
+            }, 800);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [
+        state.currentStep,
+        state.answers,
+        state.userProfile.strategicAnswers,
+        currentStepData,
+        nextStep
+    ]);
+
     // ============================================================================
     // DYNAMIC STEP CONFIGURATION
     // ============================================================================
