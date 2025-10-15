@@ -39,21 +39,21 @@ export function SuperUnifiedProvider({ children }: { children: ReactNode }) {
 
     // 🔥 REAL AUTH - Conectar ao Supabase
     useEffect(() => {
-        // Setup auth listener FIRST
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            (event, session) => {
-                setSession(session);
-                setUser(session?.user ?? null);
-                setLoading(false);
-            }
-        );
-
-        // THEN check for existing session
-        supabase.auth.getSession().then(({ data: { session } }) => {
+    // Setup auth listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        (event: string, session: Session | null) => {
             setSession(session);
             setUser(session?.user ?? null);
             setLoading(false);
-        });
+        }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }: { data: { session: Session | null } }) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+    });
 
         return () => subscription.unsubscribe();
     }, []);

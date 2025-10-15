@@ -33,7 +33,7 @@ export default function AnalyticsPage() {
         .from('quiz_events')
         .select('event_type');
 
-      const eventsByType = events?.reduce((acc, e) => {
+      const eventsByType = events?.reduce((acc: Record<string, number>, e: any) => {
         acc[e.event_type] = (acc[e.event_type] || 0) + 1;
         return acc;
       }, {} as Record<string, number>) || {};
@@ -43,7 +43,7 @@ export default function AnalyticsPage() {
         .from('quiz_sessions')
         .select('status');
 
-      const sessionsByStatus = sessions?.reduce((acc, s) => {
+      const sessionsByStatus = sessions?.reduce((acc: Record<string, number>, s: any) => {
         acc[s.status] = (acc[s.status] || 0) + 1;
         return acc;
       }, {} as Record<string, number>) || {};
