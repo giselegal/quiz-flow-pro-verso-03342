@@ -95,7 +95,7 @@ export const PerformanceDashboard: React.FC<{
     refreshInterval = 2000
 }) => {
         // ===== HOOKS =====
-        const cacheMetrics = useAdvancedCache('preview').metrics;
+        const { metrics: cacheMetrics } = useAdvancedCache('preview');
         const renderOptimization = useRenderOptimization();
         const websocketState = useAdvancedWebSocket().state;
         const featureFlags = useFeatureFlags();
@@ -149,8 +149,8 @@ export const PerformanceDashboard: React.FC<{
                     rateLimitRemaining: 0 // TODO: Get from websocket
                 },
                 preview: {
-                    updateTime: livePreview.metrics?.avgUpdateTime || 0,
-                    cacheEfficiency: livePreview.cacheStats?.efficiency || 0,
+                    updateTime: livePreview.metrics?.averageUpdateTime || 0,
+                    cacheEfficiency: livePreview.metrics?.cacheHitRate || 0,
                     errorRate: livePreview.metrics?.errorRate || 0,
                     updatesPerSecond: livePreview.metrics?.updatesPerSecond || 0
                 }
