@@ -148,7 +148,7 @@ const getCategoryIcon = (category: string): React.ReactNode => {
 /**
  * Converte AVAILABLE_COMPONENTS do registry para o formato ComponentLibraryItem do editor
  */
-const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map((comp: any) => ({
+const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp => ({
     type: comp.type,
     label: comp.label,
     icon: getCategoryIcon(comp.category),
@@ -1953,10 +1953,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
         if (EnhancedComponent) {
             // Componente existe no registry - renderizar com props básicas
-            const ComponentToRender = EnhancedComponent as React.ComponentType<any>;
             node = (
                 <div className="relative">
-                    <ComponentToRender
+                    <EnhancedComponent
                         block={block}
                         properties={properties || {}}
                         content={content || {}}

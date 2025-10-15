@@ -54,15 +54,14 @@ const BasicContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
                         order: index,
                     };
 
-                const ComponentToRender = Component as React.ComponentType<any>;
-                return (
-                    <ComponentToRender
-                        key={childBlock.id}
-                        block={childBlock}
-                        properties={childBlock.properties as any}
-                        {...(childBlock.properties as any)}
-                    />
-                );
+                    return (
+                        <Component
+                            key={childBlock.id}
+                            block={childBlock}
+                            properties={childBlock.properties as any}
+                            {...(childBlock.properties as any)}
+                        />
+                    );
                 })}
         </div>
     );

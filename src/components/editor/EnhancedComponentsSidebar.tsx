@@ -130,10 +130,10 @@ export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps>
                     <DraggableComponentItem
                       key={`${component.type}-${index}`}
                       blockType={component.type}
-                      title={component.label || component.displayName}
+                      title={component.label}
                       description={`Componente ${component.type}`}
                       icon={getCategoryIcon(category)}
-                      category={component.category || 'Outros'}
+                      category={component.category}
                       className="border border-muted hover:border-primary/50 transition-colors"
                     />
                   ))}

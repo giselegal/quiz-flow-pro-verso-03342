@@ -147,9 +147,8 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
           };
 
           // Renderizamos o componente filho passando o bloco completo e props avulsas para compatibilidade
-          const ComponentToRender = Component as React.ComponentType<any>;
           return (
-            <ComponentToRender
+            <Component
               key={childBlock.id}
               block={childBlock}
               properties={childBlock.properties as any}

@@ -6,8 +6,8 @@
 
 // Main Dashboards
 export { default as AnalyticsDashboard } from './AnalyticsDashboard';
-export { RealTimeDashboard } from './RealTimeDashboard';
-export { EnhancedRealTimeDashboard } from './EnhancedRealTimeDashboard';
+export { default as RealTimeDashboard } from './RealTimeDashboard';
+export { default as EnhancedRealTimeDashboard } from './EnhancedRealTimeDashboard';
 export { default as PublicDashboard } from './PublicDashboard';
 
 // Specialized Dashboards

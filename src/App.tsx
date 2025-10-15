@@ -65,7 +65,8 @@ const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
 const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
 
 // 🏢 DASHBOARDS
-const AdminDashboardUnified = lazy(() => import('./pages/admin-unified'));
+const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
+const ModernAdminDashboard = lazy(() => import('./pages/ModernAdminDashboard'));
 const Phase2Dashboard = lazy(() => import('./pages/Phase2Dashboard'));
 
 // 🎨 PÁGINAS DE TEMPLATES
@@ -75,9 +76,17 @@ const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'))
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
-const TestImplementation = lazy(() => import('./pages/TestImplementation'));
 
-// 🛠️ PÁGINAS ADMIN - Agora consolidadas em admin-unified
+// 🛠️ PÁGINAS ADMIN (lazy estáveis)
+const AdminAnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
+const AdminParticipantsPage = lazy(() => import('./pages/admin/ParticipantsPage'));
+// Atenção: Alguns nomes originais não existiam (TemplatesPage, ABTestsPage).
+// Substituídos pelos arquivos reais detectados no filesystem.
+const AdminTemplatesPage = lazy(() => import('./pages/admin/MyTemplatesPage'));
+const AdminSettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
+const AdminIntegrationsPage = lazy(() => import('./pages/admin/IntegrationsPage'));
+const AdminABTestsPage = lazy(() => import('./pages/admin/ABTestPage'));
+const AdminCreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
 
 
 
@@ -267,12 +276,16 @@ function AppCore() {
                                     <AuthPage />
                                 </Route>
 
-                {/* 🏢 ADMIN UNIFIED - Dashboard Consolidado com Supabase */}
-                <Route path="/admin/:rest*">
-                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Admin..." />}>
-                        <AdminDashboardUnified />
-                    </Suspense>
-                </Route>
+                                {/* 🏢 ADMIN DASHBOARDS - CONSOLIDADO */}
+                                <Route path="/admin/dashboard">
+                                    <RedirectRoute to="/admin" />
+                                </Route>
+
+                                <Route path="/admin">
+                                    <div data-testid="modern-admin-dashboard-page">
+                                        <ModernAdminDashboard />
+                                    </div>
+                                </Route>
 
                                 <Route path="/dashboard">
                                     <div data-testid="phase2-dashboard-page">
@@ -293,19 +306,54 @@ function AppCore() {
                                     </div>
                                 </Route>
 
-                <Route path="/system/indexeddb-migration">
-                    <div data-testid="indexeddb-migration-page">
-                        <IndexedDBMigrationTestPage />
-                    </div>
-                </Route>
+                                <Route path="/system/indexeddb-migration">
+                                    <div data-testid="indexeddb-migration-page">
+                                        <IndexedDBMigrationTestPage />
+                                    </div>
+                                </Route>
 
-                <Route path="/test-implementation">
-                    <div data-testid="test-implementation-page">
-                        <TestImplementation />
-                    </div>
-                </Route>
+                                {/* 📊 PÁGINAS ADMINISTRATIVAS EXTRAS */}
+                                <Route path="/admin/analytics">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Analytics..." />}>
+                                        <AdminAnalyticsPage />
+                                    </Suspense>
+                                </Route>
 
-                {/* Rotas antigas do admin removidas - agora consolidadas em AdminDashboardUnified */}
+                                <Route path="/admin/participants">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Participantes..." />}>
+                                        <AdminParticipantsPage />
+                                    </Suspense>
+                                </Route>
+
+                                <Route path="/admin/templates">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Templates..." />}>
+                                        <AdminTemplatesPage />
+                                    </Suspense>
+                                </Route>
+
+                                <Route path="/admin/settings">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Configurações..." />}>
+                                        <AdminSettingsPage />
+                                    </Suspense>
+                                </Route>
+
+                                <Route path="/admin/integrations">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Integrações..." />}>
+                                        <AdminIntegrationsPage />
+                                    </Suspense>
+                                </Route>
+
+                                <Route path="/admin/ab-tests">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Testes A/B..." />}>
+                                        <AdminABTestsPage />
+                                    </Suspense>
+                                </Route>
+
+                                <Route path="/admin/creatives">
+                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Criativos..." />}>
+                                        <AdminCreativesPage />
+                                    </Suspense>
+                                </Route>
 
                                 {/* 🔄 REDIRECTS PARA COMPATIBILIDADE */}
                                 <Route path="/dashboard-admin">

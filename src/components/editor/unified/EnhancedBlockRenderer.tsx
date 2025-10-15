@@ -318,7 +318,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
           </div>
         }
       >
-        {Component && React.createElement(Component as React.ComponentType<any>, componentProps)}
+        <Component {...componentProps} />
       </Suspense>
     </ValidationAwareBlockWrapper>
   );

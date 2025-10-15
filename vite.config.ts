@@ -1,17 +1,12 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { defineConfig, loadEnv } from 'vitest/config';
+import { defineConfig } from 'vitest/config';
 
 // Configuração consolidada e sanitizada (UTF-8, sem duplicações) + suporte a testes
-export default defineConfig(({ mode }) => {
-  // Carregar variáveis de ambiente baseado no mode
-  const env = loadEnv(mode, process.cwd(), 'VITE_');
-  
-  return {
-    base: '/',
-    envPrefix: 'VITE_',
-    plugins: [
+export default defineConfig({
+  base: '/',
+  plugins: [
     react(),
     visualizer({
       open: false,
@@ -29,7 +24,8 @@ export default defineConfig(({ mode }) => {
   },
   server: {
     host: '0.0.0.0',
-    port: 8080,
+    // Porta do servidor Vite em dev. Mantemos 5173 (padrão) para alinhar com HMR e com o redirecionador 8080 -> 5173
+    port: 5173,
     open: false,
     cors: true,
     strictPort: true,
@@ -51,8 +47,8 @@ export default defineConfig(({ mode }) => {
     },
     hmr: {
       overlay: false,
-      clientPort: 8080,
-      port: 8080,
+      clientPort: 5173,
+      port: 5173,
     },
   },
   preview: {
@@ -92,12 +88,7 @@ export default defineConfig(({ mode }) => {
       loader: { '.js': 'jsx' },
     },
   },
-  define: { 
-    global: 'globalThis',
-    'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
-    'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(env.VITE_SUPABASE_PUBLISHABLE_KEY),
-    'import.meta.env.VITE_SUPABASE_PROJECT_ID': JSON.stringify(env.VITE_SUPABASE_PROJECT_ID),
-  },
+  define: { global: 'globalThis' },
   esbuild: { target: 'es2020' },
   test: {
     environment: 'jsdom',
@@ -119,5 +110,4 @@ export default defineConfig(({ mode }) => {
       'src/adapters/__tests__/QuizStepAdapter.test.ts',
     ],
   },
-  };
 });

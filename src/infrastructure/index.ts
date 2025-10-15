@@ -25,8 +25,17 @@ export type {
   CacheOptions
 } from './storage/LocalStorageAdapter';
 
-// API Clients - legacy disabled
-// SupabaseApiClient disabled - legacy code
+// API Clients
+import { supabaseApi } from './api/SupabaseApiClient';
+export { 
+  SupabaseApiClient,
+  supabaseApi
+} from './api/SupabaseApiClient';
+export type {
+  ApiResponse,
+  PaginatedApiResponse,
+  QueryOptions
+} from './api/SupabaseApiClient';
 
 // Utility Functions
 export const createStorageKey = (prefix: string, id: string, suffix?: string): string => {
@@ -43,7 +52,8 @@ export const infrastructureLayer = {
     quiz: new SupabaseQuizRepository(),
     funnel: new SupabaseFunnelRepository()
   },
-  storage: new LocalStorageAdapter()
+  storage: new LocalStorageAdapter(),
+  api: supabaseApi
 };
 
 export const validateEnvironment = (): {

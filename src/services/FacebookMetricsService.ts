@@ -253,7 +253,7 @@ export class FacebookMetricsService {
             }
 
             // Buscar métricas para cada funil
-            const metricsPromises = (funnels || []).map((funnel: any) =>
+            const metricsPromises = (funnels || []).map(funnel =>
                 this.getFunnelMetrics(funnel.id, startDate, endDate)
             );
 
