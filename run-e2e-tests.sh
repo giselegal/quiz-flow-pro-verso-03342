@@ -96,13 +96,27 @@ echo ""
 echo "📊 VERIFICANDO ESTRUTURA DE PASTAS..."
 echo "-----------------------------------"
 
-# Testar estrutura de pastas
-test_file "src/hooks/canvas/" "Pasta hooks/canvas existe"
-test_file "src/hooks/performance/" "Pasta hooks/performance existe"
-test_file "src/hooks/websocket/" "Pasta hooks/websocket existe"
-test_file "src/components/editor/canvas/" "Pasta components/editor/canvas existe"
-test_file "src/components/editor/dashboard/" "Pasta components/editor/dashboard existe"
-test_file "src/components/editor/validation/" "Pasta components/editor/validation existe"
+# Testar estrutura de pastas (função para diretórios)
+test_directory() {
+    local dir="$1"
+    local description="$2"
+    TOTAL=$((TOTAL + 1))
+    
+    if [ -d "$dir" ]; then
+        echo "✅ PASS: $description"
+        PASS=$((PASS + 1))
+    else
+        echo "❌ FAIL: $description"
+        FAIL=$((FAIL + 1))
+    fi
+}
+
+test_directory "src/hooks/canvas/" "Pasta hooks/canvas existe"
+test_directory "src/hooks/performance/" "Pasta hooks/performance existe"
+test_directory "src/hooks/websocket/" "Pasta hooks/websocket existe"
+test_directory "src/components/editor/canvas/" "Pasta components/editor/canvas existe"
+test_directory "src/components/editor/dashboard/" "Pasta components/editor/dashboard existe"
+test_directory "src/components/editor/validation/" "Pasta components/editor/validation existe"
 
 echo ""
 echo "🔧 TESTANDO ARQUIVOS DE TESTE..."
