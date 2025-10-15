@@ -29,7 +29,7 @@ import React, {
     ReactNode,
     useState
 } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 // 🎯 CONSOLIDATED TYPES
 interface UnifiedFunnelData {

@@ -18,7 +18,7 @@
  * - Múltiplos serviços (LocalStorageService, StorageOptimizer, etc) → 1 serviço
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 // Compressão inline sem dependência externa
 // Implementação simplificada de compressão para evitar dependências

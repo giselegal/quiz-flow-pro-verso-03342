@@ -5,7 +5,7 @@
  * Migrado e integrado ao core
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { FunnelState } from '../types';
 
 export interface FunnelPersistenceData {

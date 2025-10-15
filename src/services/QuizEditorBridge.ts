@@ -8,7 +8,7 @@
  */
 
 import { QUIZ_STEPS, STEP_ORDER, type QuizStep } from '@/data/quizSteps';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 // @TEMP: Helper para forçar reconhecimento de tabelas recém adicionadas nos tipos gerados
 type AnySupabase = typeof supabase & { from: (table: string) => any };

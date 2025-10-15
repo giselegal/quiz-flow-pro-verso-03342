@@ -8,7 +8,7 @@
  * ✅ Sync offline/online automático
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { IndexedDBStorageService } from '@/utils/storage/IndexedDBStorageService';
 import type { Database } from '@/integrations/supabase/types';
 

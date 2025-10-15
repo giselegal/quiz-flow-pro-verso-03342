@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 interface UseAIOptions {
     model?: 'gpt-4o' | 'gpt-4o-mini' | 'claude-3.5-sonnet' | 'llama-3.1-405b';

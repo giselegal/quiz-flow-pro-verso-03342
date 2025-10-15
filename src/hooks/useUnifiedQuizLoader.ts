@@ -12,7 +12,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/adapters/UnifiedQuizStepAdapter';
 import { QUIZ_STEPS } from '@/data/quizSteps';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 interface UseUnifiedQuizLoaderOptions {
   funnelId?: string;

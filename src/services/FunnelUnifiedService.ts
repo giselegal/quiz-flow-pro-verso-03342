@@ -10,7 +10,7 @@
  * - Fallbacks e recuperação de erro
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { indexedDBService } from './storage/IndexedDBService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 // MIGRATED: Using new validation service

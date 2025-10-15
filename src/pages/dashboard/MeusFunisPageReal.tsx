@@ -31,7 +31,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { useToast } from '@/hooks/use-toast';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 

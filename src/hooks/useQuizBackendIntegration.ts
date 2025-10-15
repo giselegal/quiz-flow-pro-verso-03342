@@ -9,7 +9,7 @@
  */
 
 import { useEffect, useCallback, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { useUnifiedQuizState } from './useUnifiedQuizState';
 
 interface QuizBackendMetrics {

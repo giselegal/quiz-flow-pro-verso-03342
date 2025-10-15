@@ -5,7 +5,7 @@
  * Migrado e integrado ao core
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { FunnelTemplate, TemplateCategory } from '../types';
 
 // Helper para gerar IDs quando necessário
