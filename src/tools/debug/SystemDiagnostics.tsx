@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useUnifiedEditorState } from '@/hooks/useUnifiedEditorState';
 import { useEditorPerformance } from '@/hooks/useUnifiedEditorState';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 interface SystemStatus {
   editor: 'healthy' | 'warning' | 'error';

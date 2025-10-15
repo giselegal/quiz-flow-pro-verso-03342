@@ -3,7 +3,7 @@
  * Sistema completo de publicação de funis com 21 etapas
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { toast } from '@/components/ui/use-toast';
 
 export interface PublishFunnelData {

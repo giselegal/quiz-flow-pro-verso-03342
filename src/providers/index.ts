@@ -1,10 +1,16 @@
 /**
- * 🏗️ PROVIDERS INDEX - FASE 2
+ * 🏗️ PROVIDERS INDEX - FASE 2 (ATUALIZADO P1)
  * 
  * Exportações centralizadas dos providers consolidados
  */
 
-// FASE 2: Consolidated Provider (único provider necessário)
+// 🎯 FASE P1: Unified App Provider (RECOMENDADO)
+export { 
+  UnifiedAppProvider,
+  default as UnifiedAppProviderDefault
+} from './UnifiedAppProvider';
+
+// ⚠️ DEPRECATED: Consolidated Provider (usar UnifiedAppProvider)
 export { 
   ConsolidatedProvider,
   default as ConsolidatedProviderDefault

@@ -1,5 +1,5 @@
 // Real Supabase User Response Service (com modo offline)
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { sessionService } from '@/services/sessionService';
 import { StorageService } from '@/services/core/StorageService';
 

@@ -1,10 +1,11 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vite';
 import { loadEnv } from 'vite';
 
-// Configuração consolidada e sanitizada (UTF-8, sem duplicações) + suporte a testes
+// 🎯 CONFIGURAÇÃO CONSOLIDADA E OTIMIZADA (P1)
+// Única configuração Vite do projeto (inline e original deprecados)
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
   

@@ -1,5 +1,5 @@
 // Remove unused imports and simplify types
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 export interface SupabaseComponent {
   id: string;
   component_type_key: string;

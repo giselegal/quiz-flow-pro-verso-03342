@@ -35,8 +35,8 @@ import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallba
 import { serviceManager } from './services/core/UnifiedServiceManager';
 // Remover LocalConfigProvider complexo - usando sistema JavaScript simples
 
-// 🚀 FASE 2: Consolidated Provider (único provider necessário)
-import { ConsolidatedProvider } from '@/providers';
+// 🚀 FASE 2: Unified Provider (substitui Consolidated)
+import UnifiedAppProvider from '@/providers/UnifiedAppProvider';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 // Removido SuperUnifiedProvider e UnifiedCRUDProvider em favor do ConsolidatedProvider
 // import SuperUnifiedProvider from '@/providers/SuperUnifiedProvider';
@@ -117,20 +117,17 @@ function AppCore() {
     return (
         <HelmetProvider>
             <GlobalErrorBoundary showResetButton={true}>
-                {/* 🚀 CONSOLIDATED PROVIDER - Substitui SuperUnified + UnifiedCRUD (evita duplicação) */}
-                <ConsolidatedProvider
+                {/* 🚀 UNIFIED APP PROVIDER - Arquitetura simplificada */}
+                <UnifiedAppProvider
                     context={FunnelContext.EDITOR}
-                    superProps={{
-                        autoLoad: true,
-                        debugMode: process.env.NODE_ENV === 'development',
-                        initialFeatures: {
-                            enableCache: true,
-                            enableAnalytics: true,
-                            enableCollaboration: false,
-                            enableAdvancedEditor: true
-                        }
+                    autoLoad={true}
+                    debugMode={process.env.NODE_ENV === 'development'}
+                    initialFeatures={{
+                        enableCache: true,
+                        enableAnalytics: true,
+                        enableCollaboration: false,
+                        enableAdvancedEditor: true
                     }}
-                    crudProps={{ autoLoad: true }}
                 >
 
                     <Router>
@@ -382,7 +379,7 @@ function AppCore() {
                     <Toaster />
 
 
-                </ConsolidatedProvider>
+                </UnifiedAppProvider>
             </GlobalErrorBoundary>
         </HelmetProvider>
     );

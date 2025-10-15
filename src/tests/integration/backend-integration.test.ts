@@ -4,10 +4,10 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 // Mock do Supabase para testes
-vi.mock('@/integrations/supabase/client', () => ({
+vi.mock('@/integrations/supabase/customClient', () => ({
   supabase: {
     from: vi.fn(() => ({
       insert: vi.fn(() => ({ data: null, error: null })),

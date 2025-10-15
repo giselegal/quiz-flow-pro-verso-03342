@@ -3,7 +3,7 @@
  * Verifica todos os aspectos críticos antes do deploy em produção
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 interface ChecklistItem {
   id: string;

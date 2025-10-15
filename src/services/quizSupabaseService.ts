@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import type { Database } from '@/integrations/supabase/types';
 
 type InsertQuizUser = Database['public']['Tables']['quiz_users']['Insert'];
