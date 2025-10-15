@@ -598,31 +598,23 @@ describe('Quiz Editor Integration Tests', () => {
     });
 
     describe('🛡️ Error Handling', () => {
-        it('TC-INT-017: deve lidar com erros de renderização graciosamente', () => {
+        it('TC-INT-017: deve lidar com erros de renderização graciosamente', async () => {
             const consoleError = vi.spyOn(console, 'error').mockImplementation(() => { });
 
             const ProblematicComponent = () => {
                 throw new Error('Rendering error');
             };
 
-            const EditorWithErrorBoundary = () => {
-                const [hasError, setHasError] = React.useState(false);
+            // Usa ErrorBoundary real do projeto
+            const QuizEditorErrorBoundary = (await import('@/tools/debug/QuizEditorErrorBoundary')).default;
 
-                if (hasError) {
-                    return <div data-testid="error-fallback">Something went wrong</div>;
-                }
+            render(
+                <QuizEditorErrorBoundary>
+                    <ProblematicComponent />
+                </QuizEditorErrorBoundary>
+            );
 
-                try {
-                    return <ProblematicComponent />;
-                } catch (error) {
-                    setHasError(true);
-                    return <div data-testid="error-fallback">Something went wrong</div>;
-                }
-            };
-
-            render(<EditorWithErrorBoundary />);
-
-            expect(screen.getByTestId('error-fallback')).toBeInTheDocument();
+            expect(screen.getByText(/Erro no QuizFunnelEditor/)).toBeInTheDocument();
 
             consoleError.mockRestore();
         });
