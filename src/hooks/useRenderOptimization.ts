@@ -364,7 +364,7 @@ export const useVirtualization = (
 // OPTIMIZED COMPONENT WRAPPER
 // ============================================================================
 
-export const withRenderOptimization = <P extends {}>(
+export const withRenderOptimization = <P extends Record<string, any>>(
     Component: React.ComponentType<P>,
     config: Partial<RenderOptimizationConfig> = {}
 ) => {
