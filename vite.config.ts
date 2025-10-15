@@ -1,12 +1,17 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { defineConfig } from 'vitest/config';
+import { defineConfig, loadEnv } from 'vitest/config';
 
 // Configuração consolidada e sanitizada (UTF-8, sem duplicações) + suporte a testes
-export default defineConfig({
-  base: '/',
-  plugins: [
+export default defineConfig(({ mode }) => {
+  // Carregar variáveis de ambiente baseado no mode
+  const env = loadEnv(mode, process.cwd(), 'VITE_');
+  
+  return {
+    base: '/',
+    envPrefix: 'VITE_',
+    plugins: [
     react(),
     visualizer({
       open: false,
@@ -89,8 +94,10 @@ export default defineConfig({
   },
   define: { 
     global: 'globalThis',
+    'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
+    'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(env.VITE_SUPABASE_PUBLISHABLE_KEY),
+    'import.meta.env.VITE_SUPABASE_PROJECT_ID': JSON.stringify(env.VITE_SUPABASE_PROJECT_ID),
   },
-  envPrefix: 'VITE_',
   esbuild: { target: 'es2020' },
   test: {
     environment: 'jsdom',
@@ -112,4 +119,5 @@ export default defineConfig({
       'src/adapters/__tests__/QuizStepAdapter.test.ts',
     ],
   },
+  };
 });
