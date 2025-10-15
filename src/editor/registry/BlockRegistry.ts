@@ -266,6 +266,83 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
     // STEP 20 - RESULT COMPONENTS
     // ========================================================================
     {
+        type: 'result-calculation',
+        label: 'Cálculo de Resultados',
+        icon: '🧮',
+        category: 'result',
+        description: 'Sistema híbrido de cálculo e processamento de resultados do quiz',
+        defaultProps: {
+            content: {},
+            properties: {
+                calculationMethod: 'weighted_sum',
+                scoreMapping: {
+                    romantico: { min: 0, max: 100, label: 'Romântico' },
+                    classico: { min: 0, max: 100, label: 'Clássico' },
+                    moderno: { min: 0, max: 100, label: 'Moderno' },
+                    criativo: { min: 0, max: 100, label: 'Criativo' },
+                    dramatico: { min: 0, max: 100, label: 'Dramático' }
+                },
+                resultLogic: {
+                    winnerSelection: 'highest_score',
+                    tieBreaker: 'secondary_scores',
+                    minThreshold: 20
+                },
+                leadCapture: {
+                    id: 'step20-form',
+                    type: 'lead-form',
+                    properties: {
+                        fields: ['name', 'email', 'phone'],
+                        submitText: 'Receber Guia Gratuito'
+                    }
+                }
+            }
+        },
+        schema: {
+            type: 'object',
+            properties: {
+                calculationMethod: {
+                    type: 'string',
+                    enum: ['weighted_sum', 'percentage', 'ranking'],
+                    title: 'Método de Cálculo'
+                },
+                scoreMapping: {
+                    type: 'object',
+                    title: 'Mapeamento de Pontuações',
+                    additionalProperties: {
+                        type: 'object',
+                        properties: {
+                            min: { type: 'number', title: 'Mínimo' },
+                            max: { type: 'number', title: 'Máximo' },
+                            label: { type: 'string', title: 'Label' }
+                        }
+                    }
+                },
+                resultLogic: {
+                    type: 'object',
+                    title: 'Lógica de Resultado',
+                    properties: {
+                        winnerSelection: {
+                            type: 'string',
+                            enum: ['highest_score', 'threshold_based'],
+                            title: 'Seleção do Vencedor'
+                        },
+                        tieBreaker: {
+                            type: 'string',
+                            enum: ['secondary_scores', 'random', 'first_encountered'],
+                            title: 'Critério de Desempate'
+                        },
+                        minThreshold: {
+                            type: 'number',
+                            title: 'Limite Mínimo (%)',
+                            minimum: 0,
+                            maximum: 100
+                        }
+                    }
+                }
+            }
+        }
+    },
+    {
         type: 'result-headline',
         label: 'Resultado Principal',
         icon: '🏆',
