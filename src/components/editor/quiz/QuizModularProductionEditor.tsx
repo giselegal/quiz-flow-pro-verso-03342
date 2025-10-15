@@ -2632,19 +2632,24 @@ interface LiveRuntimePreviewProps {
 const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ steps, funnelId, selectedStepId }) => {
     const { setSteps, version } = useQuizRuntimeRegistry();
 
+    // ✅ FASE 3 (P2): Reduzir debounce
+    const [syncStatus, setSyncStatus] = React.useState<'synced' | 'syncing' | 'error'>('synced');
+    const [registryReady, setRegistryReady] = React.useState(false);
+
     // 🐛 DEBUG: Log de renderização crítico
     console.log(`🎨 LiveRuntimePreview RENDERIZADO`, {
         stepsCount: steps.length,
         funnelId,
         selectedStepId,
-        hasSteps: steps.length > 0
+        syncStatus,
+        registryReady
     });
 
     // Contador de renders para debug
     const renderCountRef = React.useRef(0);
     renderCountRef.current++;
 
-    // Calcular runtimeMap apenas quando steps mudam
+    // ✅ FASE 1 (P0): Calcular runtimeMap usando transformação unificada
     const runtimeMap = React.useMemo(() => {
         console.log(`🔄 [Render #${renderCountRef.current}] Recalculando runtimeMap com`, steps.length, 'steps');
         return editorStepsToRuntimeMap(steps as any);
@@ -2653,9 +2658,12 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
     // Refs para evitar loop infinito
     const lastUpdateRef = React.useRef<string>('');
     const updateCountRef = React.useRef(0);
+    const loopResetTimerRef = React.useRef<NodeJS.Timeout>();
 
-    // Atualizar registry quando runtimeMap mudar (com proteção contra loop)
+    // ✅ FASE 1 (P0) + FASE 2 (P1): Atualizar registry com timeout agressivo e reset de loop
     React.useEffect(() => {
+        setSyncStatus('syncing');
+
         // 🔧 CORREÇÃO: Comparar conteúdo completo, não apenas keys
         const currentHash = JSON.stringify(runtimeMap);
 
@@ -2663,30 +2671,54 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
             currentHash: currentHash.substring(0, 80) + '...',
             lastHash: lastUpdateRef.current.substring(0, 80) + '...',
             willUpdate: currentHash !== lastUpdateRef.current,
-            stepsCount: Object.keys(runtimeMap).length,
-            sampleStep: Object.keys(runtimeMap)[0]
+            stepsCount: Object.keys(runtimeMap).length
         });
 
         // Só atualizar se realmente mudou
         if (currentHash !== lastUpdateRef.current) {
             updateCountRef.current++;
 
-            // Proteção adicional: detectar loop
+            // ✅ FASE 2 (P1): Ao invés de abortar, resetar contador após delay
             if (updateCountRef.current > 10) {
-                console.error('❌ LOOP DETECTADO! Mais de 10 atualizações. Abortando.');
+                console.warn('⚠️ LOOP DETECTADO! Resetando contador em 2s...');
+                
+                // Resetar contador após 2s de inatividade
+                if (loopResetTimerRef.current) {
+                    clearTimeout(loopResetTimerRef.current);
+                }
+                
+                loopResetTimerRef.current = setTimeout(() => {
+                    console.log('🔄 Reset de loop counter');
+                    updateCountRef.current = 0;
+                }, 2000);
+                
+                setSyncStatus('error');
                 return;
             }
 
-            console.log(`✅ [Update #${updateCountRef.current}] Atualizando Live preview registry com`, Object.keys(runtimeMap).length, 'steps');
-            console.log(`📦 Exemplo de step sendo enviado:`, runtimeMap[Object.keys(runtimeMap)[0]]);
+            console.log(`✅ [Update #${updateCountRef.current}] Atualizando Live preview registry`);
             lastUpdateRef.current = currentHash;
             setSteps(runtimeMap);
+            setRegistryReady(true);
+            setSyncStatus('synced');
         } else {
             console.log('⏭️ Skip update - conteúdo idêntico');
+            setRegistryReady(true);
+            setSyncStatus('synced');
         }
-        // ✅ CRÍTICO: setSteps é estável, runtimeMap muda com steps
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [runtimeMap]);
+    }, [runtimeMap, setSteps]);
+    // ✅ FASE 1 (P0): Bloquear renderização até registry estar pronto
+    if (!registryReady) {
+        return (
+            <div className="h-full flex items-center justify-center bg-white">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                    <p className="text-xs text-muted-foreground">Sincronizando Preview...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">
@@ -2696,7 +2728,18 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
                 </BlockRegistryProvider>
             </div>
             <div className="px-2 py-1 border-t bg-slate-50 text-[10px] text-slate-500 flex items-center justify-between">
-                <span>Live Runtime v{version}</span>
+                <div className="flex items-center gap-2">
+                    <span>Live Runtime v{version}</span>
+                    {syncStatus === 'syncing' && (
+                        <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full animate-pulse" title="Sincronizando..." />
+                    )}
+                    {syncStatus === 'synced' && (
+                        <span className="inline-block w-2 h-2 bg-green-400 rounded-full" title="Sincronizado" />
+                    )}
+                    {syncStatus === 'error' && (
+                        <span className="inline-block w-2 h-2 bg-red-400 rounded-full" title="Erro de sincronização" />
+                    )}
+                </div>
                 <span>{Object.keys(runtimeMap).length} steps</span>
             </div>
         </div>
