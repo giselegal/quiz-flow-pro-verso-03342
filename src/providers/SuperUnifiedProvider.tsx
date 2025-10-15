@@ -50,7 +50,16 @@ export function useSuperUnified() {
 }
 
 export function useUnifiedAuth() {
-    return { user: null, loading: false, signIn: async () => {}, signOut: async () => {} };
+    return { 
+        user: null, 
+        loading: false, 
+        isLoading: false,
+        signIn: async () => {}, 
+        signOut: async () => {},
+        login: async () => {},
+        signup: async () => {},
+        logout: async () => {}
+    };
 }
 
 export function useAuth() {
