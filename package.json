@@ -30,7 +30,7 @@
     "format:check": "prettier --check .",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
-    "type-check": "tsc --noEmit",
+  "type-check": "tsc --noEmit -p tsconfig.typecheck.json",
     "format:editor": "prettier --write \"src/components/editor/**/*.{ts,tsx}\"",
     "format:context": "prettier --write \"src/context/**/*.{ts,tsx}\"",
     "format:hooks": "prettier --write \"src/hooks/**/*.{ts,tsx}\"",
