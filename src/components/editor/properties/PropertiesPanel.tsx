@@ -21,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Trash2, Copy, ArrowUp, ArrowDown, X, Save, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import AdvancedPropertiesPanel from './AdvancedPropertiesPanel';
 
 interface PropertiesPanelProps {
   blockId?: string | null;
@@ -136,19 +137,135 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         </div>
       </div>
       <ScrollArea className="flex-1 p-4">
-        {definition && Object.entries(localValues).map(([key, value]) => {
-          // Renderiza controles dinamicamente conforme tipo do valor
-          const valueType = typeof value;
+        {/* Usar painel avançado para tipos específicos */}
+        {block.type === 'result-calculation' ? (
+          <div className="space-y-4">
+            <div className="text-xs text-gray-600 mb-4">
+              🧮 Painel Avançado - Cálculo de Resultados
+            </div>
+            {/* Por enquanto, usar o rendering padrão mas com labels específicos */}
+            {Object.entries(localValues).map(([key, value]) => {
+              if (key === 'calculationMethod') {
+                return (
+                  <div key={key} className="mb-4">
+                    <Label className="text-sm font-medium">Método de Cálculo</Label>
+                    <Select value={value} onValueChange={(newValue) => handleChange(key, newValue)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="weighted_sum">Soma Ponderada</SelectItem>
+                        <SelectItem value="percentage">Percentual</SelectItem>
+                        <SelectItem value="ranking">Ranking</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                );
+              }
 
-          if (valueType === 'string') {
-            // Se é longo, usar textarea, senão input
-            const isLong = String(value).length > 50;
+              if (key === 'scoreMapping') {
+                return (
+                  <div key={key} className="mb-4">
+                    <Label className="text-sm font-medium">Mapeamento de Estilos</Label>
+                    <Textarea
+                      value={JSON.stringify(value, null, 2)}
+                      onChange={e => {
+                        try {
+                          const parsed = JSON.parse(e.target.value);
+                          handleChange(key, parsed);
+                        } catch {
+                          // Ignorar parse errors enquanto digita
+                        }
+                      }}
+                      className="font-mono text-xs"
+                      rows={8}
+                      placeholder="JSON com configuração dos estilos"
+                    />
+                    <div className="text-xs text-gray-500 mt-1">
+                      Exemplo: {`{"romantico": {"min": 0, "max": 100, "label": "Romântico"}}`}
+                    </div>
+                  </div>
+                );
+              }
 
-            if (isLong) {
+              if (key === 'resultLogic') {
+                return (
+                  <div key={key} className="mb-4">
+                    <Label className="text-sm font-medium">Lógica de Resultado</Label>
+                    <Textarea
+                      value={JSON.stringify(value, null, 2)}
+                      onChange={e => {
+                        try {
+                          const parsed = JSON.parse(e.target.value);
+                          handleChange(key, parsed);
+                        } catch {
+                          // Ignorar parse errors enquanto digita
+                        }
+                      }}
+                      className="font-mono text-xs"
+                      rows={4}
+                    />
+                  </div>
+                );
+              }
+
+              // Para outros campos, usar o rendering padrão
+              const valueType = typeof value;
+              if (valueType === 'string') {
+                return (
+                  <div key={key} className="mb-4">
+                    <Label className="text-sm">{key}</Label>
+                    <Input
+                      value={value || ''}
+                      onChange={e => handleChange(key, e.target.value)}
+                    />
+                  </div>
+                );
+              }
+
+              if (valueType === 'boolean') {
+                return (
+                  <div key={key} className="mb-4 flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id={`checkbox-${key}`}
+                      checked={!!value}
+                      onChange={e => handleChange(key, e.target.checked)}
+                      className="h-4 w-4"
+                    />
+                    <Label htmlFor={`checkbox-${key}`} className="text-sm">{key}</Label>
+                  </div>
+                );
+              }
+
+              return null;
+            })}
+          </div>
+        ) : (
+          definition && Object.entries(localValues).map(([key, value]) => {
+            // Renderiza controles dinamicamente conforme tipo do valor
+            const valueType = typeof value;
+
+            if (valueType === 'string') {
+              // Se é longo, usar textarea, senão input
+              const isLong = String(value).length > 50;
+
+              if (isLong) {
+                return (
+                  <div key={key} className="mb-4">
+                    <Label>{key}</Label>
+                    <Textarea
+                      value={value || ''}
+                      onChange={e => handleChange(key, e.target.value)}
+                    />
+                  </div>
+                );
+              }
+
               return (
                 <div key={key} className="mb-4">
                   <Label>{key}</Label>
-                  <Textarea
+                  <Input
                     value={value || ''}
                     onChange={e => handleChange(key, e.target.value)}
                   />
@@ -156,69 +273,59 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               );
             }
 
-            return (
-              <div key={key} className="mb-4">
-                <Label>{key}</Label>
-                <Input
-                  value={value || ''}
-                  onChange={e => handleChange(key, e.target.value)}
-                />
-              </div>
-            );
-          }
+            if (valueType === 'number') {
+              return (
+                <div key={key} className="mb-4">
+                  <Label>{key}</Label>
+                  <Input
+                    type="number"
+                    value={value || 0}
+                    onChange={e => handleChange(key, Number(e.target.value))}
+                  />
+                </div>
+              );
+            }
 
-          if (valueType === 'number') {
-            return (
-              <div key={key} className="mb-4">
-                <Label>{key}</Label>
-                <Input
-                  type="number"
-                  value={value || 0}
-                  onChange={e => handleChange(key, Number(e.target.value))}
-                />
-              </div>
-            );
-          }
+            if (valueType === 'boolean') {
+              return (
+                <div key={key} className="mb-4 flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id={`checkbox-${key}`}
+                    checked={!!value}
+                    onChange={e => handleChange(key, e.target.checked)}
+                    className="h-4 w-4"
+                  />
+                  <Label htmlFor={`checkbox-${key}`}>{key}</Label>
+                </div>
+              );
+            }
 
-          if (valueType === 'boolean') {
-            return (
-              <div key={key} className="mb-4 flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id={`checkbox-${key}`}
-                  checked={!!value}
-                  onChange={e => handleChange(key, e.target.checked)}
-                  className="h-4 w-4"
-                />
-                <Label htmlFor={`checkbox-${key}`}>{key}</Label>
-              </div>
-            );
-          }
+            // Para tipos complexos (arrays, objects), usar JSON
+            if (valueType === 'object') {
+              return (
+                <div key={key} className="mb-4">
+                  <Label>{key}</Label>
+                  <Textarea
+                    value={JSON.stringify(value, null, 2)}
+                    onChange={e => {
+                      try {
+                        const parsed = JSON.parse(e.target.value);
+                        handleChange(key, parsed);
+                      } catch {
+                        // Ignorar parse errors enquanto digita
+                      }
+                    }}
+                    className="font-mono text-xs"
+                    rows={6}
+                  />
+                </div>
+              );
+            }
 
-          // Para tipos complexos (arrays, objects), usar JSON
-          if (valueType === 'object') {
-            return (
-              <div key={key} className="mb-4">
-                <Label>{key}</Label>
-                <Textarea
-                  value={JSON.stringify(value, null, 2)}
-                  onChange={e => {
-                    try {
-                      const parsed = JSON.parse(e.target.value);
-                      handleChange(key, parsed);
-                    } catch {
-                      // Ignorar parse errors enquanto digita
-                    }
-                  }}
-                  className="font-mono text-xs"
-                  rows={6}
-                />
-              </div>
-            );
-          }
-
-          return null;
-        })}
+            return null;
+          })
+        )}
       </ScrollArea>
       <div className="border-t p-4 flex gap-2">
         <Button size="sm" variant="secondary" disabled={!hasChanges} onClick={() => setHasChanges(false)}>

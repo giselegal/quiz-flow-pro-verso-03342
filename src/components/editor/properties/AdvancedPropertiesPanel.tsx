@@ -450,6 +450,136 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 group: 'layout'
             }
         }
+    },
+
+    'result-calculation': {
+        elementType: 'result-calculation',
+        groups: [
+            {
+                id: 'calculation',
+                label: 'Cálculo',
+                icon: '🧮',
+                order: 1,
+                properties: ['calculationMethod', 'minThreshold']
+            },
+            {
+                id: 'styles',
+                label: 'Estilos',
+                icon: '🎨',
+                order: 2,
+                properties: ['scoreMapping']
+            },
+            {
+                id: 'logic',
+                label: 'Lógica',
+                icon: '⚡',
+                order: 3,
+                properties: ['winnerSelection', 'tieBreaker']
+            },
+            {
+                id: 'lead',
+                label: 'Lead Capture',
+                icon: '📧',
+                order: 4,
+                properties: ['leadCaptureEnabled', 'submitText', 'formFields']
+            }
+        ],
+        properties: {
+            calculationMethod: {
+                key: 'calculationMethod',
+                label: 'Método de Cálculo',
+                type: 'select',
+                defaultValue: 'weighted_sum',
+                options: [
+                    { value: 'weighted_sum', label: 'Soma Ponderada' },
+                    { value: 'percentage', label: 'Percentual' },
+                    { value: 'ranking', label: 'Ranking' }
+                ],
+                group: 'calculation',
+                description: 'Como os resultados do quiz serão calculados'
+            },
+            minThreshold: {
+                key: 'minThreshold',
+                label: 'Limite Mínimo (%)',
+                type: 'range',
+                defaultValue: 20,
+                validation: { min: 0, max: 100 },
+                unit: '%',
+                group: 'calculation',
+                description: 'Pontuação mínima para considerar um estilo'
+            },
+            scoreMapping: {
+                key: 'scoreMapping',
+                label: 'Mapeamento de Estilos',
+                type: 'json',
+                defaultValue: {
+                    romantico: { min: 0, max: 100, label: 'Romântico' },
+                    classico: { min: 0, max: 100, label: 'Clássico' },
+                    moderno: { min: 0, max: 100, label: 'Moderno' },
+                    criativo: { min: 0, max: 100, label: 'Criativo' },
+                    dramatico: { min: 0, max: 100, label: 'Dramático' }
+                },
+                group: 'styles',
+                description: 'Configuração dos estilos e suas faixas de pontuação'
+            },
+            winnerSelection: {
+                key: 'winnerSelection',
+                label: 'Seleção do Vencedor',
+                type: 'select',
+                defaultValue: 'highest_score',
+                options: [
+                    { value: 'highest_score', label: 'Maior Pontuação' },
+                    { value: 'threshold_based', label: 'Baseado em Limite' }
+                ],
+                group: 'logic',
+                description: 'Como determinar o estilo principal'
+            },
+            tieBreaker: {
+                key: 'tieBreaker',
+                label: 'Critério de Desempate',
+                type: 'select',
+                defaultValue: 'secondary_scores',
+                options: [
+                    { value: 'secondary_scores', label: 'Pontuações Secundárias' },
+                    { value: 'random', label: 'Aleatório' },
+                    { value: 'first_encountered', label: 'Primeiro Encontrado' }
+                ],
+                group: 'logic',
+                description: 'Como resolver empates entre estilos'
+            },
+            leadCaptureEnabled: {
+                key: 'leadCaptureEnabled',
+                label: 'Capturar Lead',
+                type: 'boolean',
+                defaultValue: true,
+                group: 'lead',
+                description: 'Mostrar formulário de captura de leads'
+            },
+            submitText: {
+                key: 'submitText',
+                label: 'Texto do Botão',
+                type: 'string',
+                defaultValue: 'Receber Guia Gratuito',
+                group: 'lead',
+                conditional: { property: 'leadCaptureEnabled', value: true, operator: '===' },
+                description: 'Texto do botão de submissão do formulário'
+            },
+            formFields: {
+                key: 'formFields',
+                label: 'Campos do Formulário',
+                type: 'multiselect',
+                defaultValue: ['name', 'email', 'phone'],
+                options: [
+                    { value: 'name', label: 'Nome' },
+                    { value: 'email', label: 'E-mail' },
+                    { value: 'phone', label: 'Telefone' },
+                    { value: 'company', label: 'Empresa' }
+                ],
+                group: 'lead',
+                conditional: { property: 'leadCaptureEnabled', value: true, operator: '===' },
+                description: 'Campos a serem exibidos no formulário'
+            }
+        }
     }
 };
 
