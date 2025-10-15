@@ -33,7 +33,6 @@ import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
 import { serviceManager } from './services/core/UnifiedServiceManager';
-import { withSyncDiagnostic } from './components/diagnostics/SyncDiagnosticIntegration';
 // Remover LocalConfigProvider complexo - usando sistema JavaScript simples
 
 // 🚀 FASE 2: Consolidated Provider (único provider necessário)
@@ -386,7 +385,4 @@ function AppCore() {
     );
 }
 
-// Aplicar diagnóstico de sincronização Canvas-Preview
-const App = withSyncDiagnostic(AppCore);
-
-export default App;
+export default AppCore;
