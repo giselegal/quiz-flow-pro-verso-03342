@@ -1,8 +1,5 @@
 /**
  * ⚡ SMART RENDERING OPTIMIZER - Otimizador Inteligente de Rendering
- * 
- * Sistema avançado de otimização de rendering que detecta mudanças mínimas,
- * aplica virtualization inteligente e otimiza re-renders desnecessários.
  */
 
 import React, { 
@@ -38,23 +35,6 @@ interface RenderMetrics {
     memoryUsage: number;
 }
 
-interface VirtualizationState {
-    scrollTop: number;
-    itemHeight: number;
-    containerHeight: number;
-    visibleStartIndex: number;
-    visibleEndIndex: number;
-    totalItems: number;
-}
-
-interface RenderProfileEntry {
-    componentName: string;
-    renderTime: number;
-    timestamp: number;
-    propsChanged: string[];
-    wasSkipped: boolean;
-}
-
 // ============================================================================
 // SMART DIFFER
 // ============================================================================
@@ -80,8 +60,8 @@ class SmartDiffer {
     }
     
     private static shallowCompare(prev: any, next: any): boolean {
-        const prevKeys = Object.keys(prev);
-        const nextKeys = Object.keys(next);
+        const prevKeys = Object.keys(prev || {});
+        const nextKeys = Object.keys(next || {});
         
         if (prevKeys.length !== nextKeys.length) return true;
         
@@ -106,7 +86,7 @@ class SmartDiffer {
         
         const criticalProps = ['steps', 'selectedStep', 'selectedBlockId', 'isVisible'];
         for (const prop of criticalProps) {
-            if (prev[prop] !== next[prop]) {
+            if (prev?.[prop] !== next?.[prop]) {
                 shouldUpdate = true;
                 break;
             }
@@ -118,6 +98,7 @@ class SmartDiffer {
         
         this.cache.set(cacheKey, shouldUpdate);
         
+        // Limpar cache se muito grande
         if (this.cache.size > 1000) {
             const entries = Array.from(this.cache.entries());
             const toKeep = entries.slice(-500);
@@ -139,6 +120,8 @@ class SmartDiffer {
     }
     
     private static extractCriticalProps(obj: any): any {
+        if (!obj) return {};
+        
         const critical = ['id', 'type', 'order', 'visible', 'selected'];
         const result: any = {};
         
@@ -155,6 +138,14 @@ class SmartDiffer {
 // ============================================================================
 // RENDER PROFILER
 // ============================================================================
+
+interface RenderProfileEntry {
+    componentName: string;
+    renderTime: number;
+    timestamp: number;
+    propsChanged: string[];
+    wasSkipped: boolean;
+}
 
 class RenderProfiler {
     private static profiles: RenderProfileEntry[] = [];
@@ -194,6 +185,7 @@ class RenderProfiler {
         
         this.profiles.push(entry);
         
+        // Limitar histórico
         if (this.profiles.length > 1000) {
             this.profiles = this.profiles.slice(-1000);
         }
@@ -242,10 +234,6 @@ class RenderProfiler {
         };
     }
     
-    static getProfile(): RenderProfileEntry[] {
-        return [...this.profiles];
-    }
-    
     static clear(): void {
         this.profiles = [];
     }
@@ -265,177 +253,6 @@ class RenderProfiler {
         return changed;
     }
 }
-
-// ============================================================================
-// VIRTUALIZATION HOOK
-// ============================================================================
-
-export const useVirtualization = (
-    items: any[],
-    itemHeight: number,
-    containerHeight: number,
-    buffer: number = 5
-) => {
-    const [scrollTop, setScrollTop] = useState(0);
-    const scrollElementRef = useRef<HTMLElement>(null);
-    
-    const virtualState = useMemo((): VirtualizationState => {
-        const totalItems = items.length;
-        const visibleCount = Math.ceil(containerHeight / itemHeight);
-        const startIndex = Math.floor(scrollTop / itemHeight);
-        const endIndex = Math.min(startIndex + visibleCount + buffer, totalItems);
-        const bufferedStartIndex = Math.max(0, startIndex - buffer);
-        
-        return {
-            scrollTop,
-            itemHeight,
-            containerHeight,
-            visibleStartIndex: bufferedStartIndex,
-            visibleEndIndex: endIndex,
-            totalItems
-        };
-    }, [items.length, itemHeight, containerHeight, scrollTop, buffer]);
-    
-    const visibleItems = useMemo(() => {
-        return items.slice(virtualState.visibleStartIndex, virtualState.visibleEndIndex);
-    }, [items, virtualState.visibleStartIndex, virtualState.visibleEndIndex]);
-    
-    const handleScroll = useCallback((event: Event) => {
-        const target = event.target as HTMLElement;
-        setScrollTop(target.scrollTop);
-    }, []);
-    
-    useEffect(() => {
-        const element = scrollElementRef.current;
-        if (element) {
-            element.addEventListener('scroll', handleScroll);
-            return () => element.removeEventListener('scroll', handleScroll);
-        }
-    }, [handleScroll]);
-    
-    const getItemProps = useCallback((index: number) => {
-        const actualIndex = virtualState.visibleStartIndex + index;
-        const offsetY = actualIndex * itemHeight;
-        
-        return {
-            style: {
-                position: 'absolute' as const,
-                top: offsetY,
-                height: itemHeight,
-                width: '100%'
-            },
-            'data-index': actualIndex
-        };
-    }, [virtualState.visibleStartIndex, itemHeight]);
-    
-    const containerProps = {
-        ref: scrollElementRef,
-        style: {
-            height: containerHeight,
-            overflow: 'auto',
-            position: 'relative' as const
-        }
-    };
-    
-    const innerProps = {
-        style: {
-            height: virtualState.totalItems * itemHeight,
-            position: 'relative' as const
-        }
-    };
-    
-    return {
-        containerProps,
-        innerProps,
-        visibleItems,
-        getItemProps,
-        virtualState
-    };
-};
-
-// ============================================================================
-// OPTIMIZED COMPONENT WRAPPER
-// ============================================================================
-
-export const withRenderOptimization = <P extends Record<string, any>>(
-    Component: React.ComponentType<P>,
-    config: Partial<RenderOptimizationConfig> = {}
-) => {
-    const defaultConfig: RenderOptimizationConfig = {
-        enableVirtualization: false,
-        viewportBuffer: 5,
-        diffingStrategy: 'smart',
-        batchingDelay: 16,
-        memoizationLevel: 'basic',
-        enableRenderProfiling: process.env.NODE_ENV === 'development'
-    };
-    
-    const finalConfig = { ...defaultConfig, ...config };
-    
-    const OptimizedComponent = memo<P>((props) => {
-        const prevPropsRef = useRef<P>();
-        const renderCountRef = useRef(0);
-        const lastRenderTime = useRef(0);
-        
-        const [batchedProps, setBatchedProps] = useState<P>(props);
-        const batchTimeoutRef = useRef<NodeJS.Timeout>();
-        
-        useEffect(() => {
-            if (finalConfig.batchingDelay > 0) {
-                clearTimeout(batchTimeoutRef.current);
-                batchTimeoutRef.current = setTimeout(() => {
-                    setBatchedProps(props);
-                }, finalConfig.batchingDelay);
-            } else {
-                setBatchedProps(props);
-            }
-            
-            return () => clearTimeout(batchTimeoutRef.current);
-        }, [props]);
-        
-        useEffect(() => {
-            if (finalConfig.enableRenderProfiling) {
-                renderCountRef.current++;
-                lastRenderTime.current = performance.now();
-                
-                if (renderCountRef.current % 100 === 0) {
-                    console.log(`[${Component.name}] Renders: ${renderCountRef.current}`);
-                }
-            }
-        });
-        
-        return useMemo(() => {
-            if (finalConfig.enableRenderProfiling) {
-                return RenderProfiler.profile(
-                    Component.displayName || Component.name || 'Anonymous',
-                    () => React.createElement(Component, batchedProps),
-                    prevPropsRef.current,
-                    batchedProps
-                );
-            }
-            
-            return React.createElement(Component, batchedProps);
-        }, [batchedProps]);
-    }, (prevProps, nextProps) => {
-        const shouldUpdate = SmartDiffer.shouldUpdate(
-            prevProps,
-            nextProps,
-            finalConfig.diffingStrategy
-        );
-        
-        if (!shouldUpdate && finalConfig.enableRenderProfiling) {
-            RenderProfiler.recordSkipped(
-                Component.displayName || Component.name || 'Anonymous'
-            );
-        }
-        
-        return !shouldUpdate;
-    });
-    
-    OptimizedComponent.displayName = `OptimizedComponent(${Component.displayName || Component.name})`;
-    
-    return OptimizedComponent;
-};
 
 // ============================================================================
 // RENDER OPTIMIZATION CONTEXT
@@ -536,45 +353,85 @@ export const useRenderOptimization = () => {
 };
 
 // ============================================================================
-// UTILITY HOOKS
+// OPTIMIZED COMPONENT WRAPPER
 // ============================================================================
 
-export const useOptimizedCallback = <T extends (...args: any[]) => any>(
-    callback: T,
-    deps: React.DependencyList,
-    delay: number = 0
-): T => {
-    const timeoutRef = useRef<NodeJS.Timeout>();
+export const withRenderOptimization = <P extends Record<string, any>>(
+    Component: React.ComponentType<P>,
+    config: Partial<RenderOptimizationConfig> = {}
+) => {
+    const defaultConfig: RenderOptimizationConfig = {
+        enableVirtualization: false,
+        viewportBuffer: 5,
+        diffingStrategy: 'smart',
+        batchingDelay: 16,
+        memoizationLevel: 'basic',
+        enableRenderProfiling: process.env.NODE_ENV === 'development'
+    };
     
-    return useCallback((...args: Parameters<T>) => {
-        if (delay > 0) {
-            clearTimeout(timeoutRef.current);
-            timeoutRef.current = setTimeout(() => {
-                callback(...args);
-            }, delay);
-        } else {
-            return callback(...args);
+    const finalConfig = { ...defaultConfig, ...config };
+    
+    const OptimizedComponent = memo<P>((props) => {
+        const prevPropsRef = useRef<P>();
+        const renderCountRef = useRef(0);
+        
+        const [batchedProps, setBatchedProps] = useState<P>(props);
+        const batchTimeoutRef = useRef<NodeJS.Timeout>();
+        
+        useEffect(() => {
+            if (finalConfig.batchingDelay > 0) {
+                clearTimeout(batchTimeoutRef.current);
+                batchTimeoutRef.current = setTimeout(() => {
+                    setBatchedProps(props);
+                }, finalConfig.batchingDelay);
+            } else {
+                setBatchedProps(props);
+            }
+            
+            return () => clearTimeout(batchTimeoutRef.current);
+        }, [props]);
+        
+        useEffect(() => {
+            if (finalConfig.enableRenderProfiling) {
+                renderCountRef.current++;
+                
+                if (renderCountRef.current % 100 === 0) {
+                    console.log(`[${Component.name}] Renders: ${renderCountRef.current}`);
+                }
+            }
+        });
+        
+        return useMemo(() => {
+            if (finalConfig.enableRenderProfiling) {
+                return RenderProfiler.profile(
+                    Component.displayName || Component.name || 'Anonymous',
+                    () => React.createElement(Component, batchedProps),
+                    prevPropsRef.current,
+                    batchedProps
+                );
+            }
+            
+            return React.createElement(Component, batchedProps);
+        }, [batchedProps]);
+    }, (prevProps, nextProps) => {
+        const shouldUpdate = SmartDiffer.shouldUpdate(
+            prevProps,
+            nextProps,
+            finalConfig.diffingStrategy
+        );
+        
+        if (!shouldUpdate && finalConfig.enableRenderProfiling) {
+            RenderProfiler.recordSkipped(
+                Component.displayName || Component.name || 'Anonymous'
+            );
         }
-    }, deps) as T;
-};
-
-export const useOptimizedMemo = <T>(
-    factory: () => T,
-    deps: React.DependencyList,
-    compareStrategy: 'shallow' | 'deep' = 'shallow'
-): T => {
-    const prevDepsRef = useRef<React.DependencyList>();
-    const memoizedValueRef = useRef<T>();
+        
+        return !shouldUpdate;
+    });
     
-    const shouldRecompute = !prevDepsRef.current || 
-        SmartDiffer.shouldUpdate(prevDepsRef.current, deps, compareStrategy);
+    OptimizedComponent.displayName = `OptimizedComponent(${Component.displayName || Component.name})`;
     
-    if (shouldRecompute) {
-        memoizedValueRef.current = factory();
-        prevDepsRef.current = deps;
-    }
-    
-    return memoizedValueRef.current!;
+    return OptimizedComponent;
 };
 
 export { SmartDiffer, RenderProfiler };
