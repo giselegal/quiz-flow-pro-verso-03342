@@ -33,6 +33,7 @@ import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
 import { serviceManager } from './services/core/UnifiedServiceManager';
+import { withSyncDiagnostic } from './components/diagnostics/SyncDiagnosticIntegration';
 
 // 🚀 FASE 2: Consolidated Provider (único provider necessário)
 import { ConsolidatedProvider } from '@/providers';
@@ -88,7 +89,7 @@ const AdminCreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
 
 
 
-function App() {
+function AppCore() {
     useEffect(() => {
         console.log('🚀 App initialized with SuperUnifiedProvider v1.0');
 
@@ -376,5 +377,8 @@ function App() {
         </HelmetProvider>
     );
 }
+
+// Aplicar diagnóstico de sincronização Canvas-Preview
+const App = withSyncDiagnostic(AppCore);
 
 export default App;
