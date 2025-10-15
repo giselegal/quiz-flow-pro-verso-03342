@@ -59,7 +59,7 @@ export const QuizDataProvider: React.FC<QuizDataProviderProps> = ({
     )
   } : null;
 
-  const processedSecondaryStyles = (secondaryStyles || []).map(style => ({
+  const processedSecondaryStyles = (secondaryStyles || []).map((style: any) => ({
     style: mapToFriendlyStyle(style.style || style.category || 'Complementar'),
     category: style.category || style.style || 'Complementar',
     percentage: style.percentage || 0

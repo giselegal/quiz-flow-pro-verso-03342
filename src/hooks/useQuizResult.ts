@@ -2,5 +2,12 @@
  * useQuizResult Stub
  */
 export function useQuizResult() {
-  return { result: null, loading: false };
+  return {
+    primaryStyle: null,
+    secondaryStyles: [],
+    hasResult: false,
+    isLoading: false,
+    error: null,
+    retry: () => {},
+  };
 }

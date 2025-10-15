@@ -61,7 +61,7 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
           block={block}
           isSelected={isSelected}
           onClick={() => handleBlockClick(block)}
-          onPropertyChange={(key, value) => handlePropertyChange(block.id, key, value)}
+          onPropertyChange={(key: any, value: any) => handlePropertyChange(block.id, key, value)}
         />
       </div>
     );

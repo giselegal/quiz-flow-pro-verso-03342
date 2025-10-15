@@ -148,7 +148,7 @@ const getCategoryIcon = (category: string): React.ReactNode => {
 /**
  * Converte AVAILABLE_COMPONENTS do registry para o formato ComponentLibraryItem do editor
  */
-const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp => ({
+const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map((comp: any) => ({
     type: comp.type,
     label: comp.label,
     icon: getCategoryIcon(comp.category),

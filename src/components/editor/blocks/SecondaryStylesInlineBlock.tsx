@@ -14,7 +14,7 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({ block }) =>
   const title = props.title || 'Seus estilos complementares';
   const subtitle = props.subtitle || 'Você também apresenta elementos destes estilos:';
 
-  const styles = (secondaryStyles || []).slice(0, 2).map(s => ({
+  const styles = (secondaryStyles || []).slice(0, 2).map((s: any) => ({
     ...s,
     style: mapToFriendlyStyle((s as any)?.style || (s as any)?.name || ''),
     name: mapToFriendlyStyle((s as any)?.name || (s as any)?.style || ''),
