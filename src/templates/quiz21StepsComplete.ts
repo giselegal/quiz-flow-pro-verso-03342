@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-15T14:33:11.295Z
+ * Gerado em: 2025-10-15T20:04:46.844Z
  * Versão: 3.0.0
  */
 
@@ -3530,9 +3530,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
   'step-20': {
     "templateVersion": "3.0",
     "metadata": {
-      "id": "step-20-resultado-v3",
-      "name": "Página de Resultado - 5 Passos Vista-se de Você",
-      "description": "Página completa de resultado do quiz com oferta integrada",
+      "id": "step-20-hybrid",
+      "name": "Resultado com Cálculos + Visual Moderno",
+      "description": "Híbrido: lógica v.2 + visual v.3",
       "category": "quiz-result",
       "tags": [
         "quiz",
@@ -3543,7 +3543,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       ],
       "createdAt": "2025-10-11T10:44:14.174Z",
       "updatedAt": "2025-10-11T23:30:00.000Z",
-      "author": "Gisele Galvão - Branding & Imagem Pessoal"
+      "author": "Gisele Galvão - Branding & Imagem Pessoal",
+      "mergedAt": "2025-10-15T14:38:32.847Z"
     },
     "offer": {
       "productName": "5 Passos – Vista-se de Você",
@@ -3607,14 +3608,73 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "maxWidth": "1280px",
       "spacing": "comfortable",
       "backgroundColor": "#fffaf7",
-      "responsive": true
+      "responsive": true,
+      "supportsCalculation": true,
+      "calculationMode": "server_side"
     },
     "sections": [
+      {
+        "id": "result-calculation",
+        "type": "ResultCalculationSection",
+        "enabled": true,
+        "order": 0,
+        "title": "Processamento de Resultados",
+        "props": {
+          "calculationMethod": "weighted_sum",
+          "scoreMapping": {
+            "romantico": {
+              "min": 0,
+              "max": 100,
+              "label": "Romântico"
+            },
+            "classico": {
+              "min": 0,
+              "max": 100,
+              "label": "Clássico"
+            },
+            "moderno": {
+              "min": 0,
+              "max": 100,
+              "label": "Moderno"
+            },
+            "criativo": {
+              "min": 0,
+              "max": 100,
+              "label": "Criativo"
+            },
+            "dramatico": {
+              "min": 0,
+              "max": 100,
+              "label": "Dramático"
+            }
+          },
+          "resultLogic": {
+            "winnerSelection": "highest_score",
+            "tieBreaker": "secondary_scores",
+            "minThreshold": 20
+          },
+          "leadCapture": {
+            "id": "step20-form",
+            "type": "lead-form",
+            "position": 2,
+            "properties": {
+              "fields": [
+                "name",
+                "email",
+                "phone"
+              ],
+              "submitText": "Receber Guia Gratuito",
+              "containerWidth": "full",
+              "spacing": "small"
+            }
+          }
+        }
+      },
       {
         "id": "hero",
         "type": "HeroSection",
         "enabled": true,
-        "order": 1,
+        "order": 2,
         "title": "Comemoração e Apresentação do Estilo",
         "props": {
           "showCelebration": true,
@@ -3639,7 +3699,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "style-profile",
         "type": "StyleProfileSection",
         "enabled": true,
-        "order": 2,
+        "order": 3,
         "title": "Perfil Completo de Estilo",
         "props": {
           "layout": "two-column",
@@ -3710,7 +3770,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "cta-primary",
         "type": "CTAButton",
         "enabled": true,
-        "order": 3,
+        "order": 4,
         "title": "CTA Principal (Após Perguntas Persuasivas)",
         "props": {
           "text": "Quero Dominar Meu Estilo em 5 Passos",
@@ -3742,7 +3802,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "transformation",
         "type": "TransformationSection",
         "enabled": true,
-        "order": 4,
+        "order": 5,
         "title": "Transformação e Valor",
         "props": {
           "mainTitle": "Transforme Sua Imagem, Revele Sua Essência",
@@ -3782,7 +3842,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "method-steps",
         "type": "MethodStepsSection",
         "enabled": true,
-        "order": 5,
+        "order": 6,
         "title": "O Método 5 Passos",
         "props": {
           "sectionTitle": "O que você vai aprender no Método 5 Passos",
@@ -3833,7 +3893,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "bonus",
         "type": "BonusSection",
         "enabled": true,
-        "order": 6,
+        "order": 7,
         "title": "Bônus Exclusivos",
         "props": {
           "sectionTitle": "💎 Bônus Exclusivos",
@@ -3869,7 +3929,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "social-proof",
         "type": "SocialProofSection",
         "enabled": true,
-        "order": 7,
+        "order": 8,
         "title": "Transformações Reais",
         "props": {
           "sectionTitle": "Veja os Resultados de Quem Já Transformou Sua Imagem",
@@ -3912,7 +3972,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "offer",
         "type": "OfferSection",
         "enabled": true,
-        "order": 8,
+        "order": 9,
         "title": "Oferta Principal",
         "props": {
           "layout": "centered-card",
@@ -3971,7 +4031,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "cta-secondary",
         "type": "CTAButton",
         "enabled": true,
-        "order": 9,
+        "order": 10,
         "title": "CTA Secundário (Após Oferta)",
         "props": {
           "text": "Começar Minha Transformação Agora",
@@ -3996,7 +4056,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "guarantee",
         "type": "GuaranteeSection",
         "enabled": true,
-        "order": 10,
+        "order": 11,
         "title": "Garantia",
         "props": {
           "days": 7,
@@ -4020,7 +4080,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "cta-final",
         "type": "CTAButton",
         "enabled": true,
-        "order": 11,
+        "order": 12,
         "title": "CTA Final (Após Garantia)",
         "props": {
           "text": "Garantir Minha Vaga com 7 Dias de Garantia",
@@ -4046,16 +4106,19 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "required": [
         "userName",
         "styleName",
-        "scores"
+        "scores",
+        "calculatedResult"
       ],
-      "optional": [
-        "secondaryStyles",
-        "keywords",
-        "specialTips"
-      ]
+      "minAnswers": 1,
+      "maxAnswers": 3,
+      "validationMessage": "Selecione pelo menos uma opção!"
     },
     "analytics": {
       "events": [
+        "page_view",
+        "option_selected",
+        "validation_error",
+        "completion",
         "page_view",
         "step_completed",
         "cta_primary_click",
@@ -4064,15 +4127,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "section_viewed",
         "offer_viewed"
       ],
-      "trackingId": "step-20-v3",
-      "utmParams": true,
-      "customEvents": [
-        "component_mounted",
-        "user_interaction",
-        "scroll_depth",
-        "time_on_page"
-      ],
-      "pixelId": "PIXEL_CHECKOUT_PRIMARY"
+      "trackingId": "step-20-hybrid"
     }
   },
 
