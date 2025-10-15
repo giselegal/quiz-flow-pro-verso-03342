@@ -1,13 +1,19 @@
 /**
- * FunnelUnifiedService Stub - Legacy compatibility
+ * FunnelUnifiedService Stub
  */
 
 export interface UnifiedFunnelData {
     id: string;
     name: string;
     type: string;
+    slug: string;
+    steps: Record<string, any>;
+    isPublished: boolean;
+    version: number;
     [key: string]: any;
 }
+
+export type CreateFunnelOptions = any;
 
 export class FunnelUnifiedService {
     private static instance: FunnelUnifiedService;
@@ -34,12 +40,13 @@ export class FunnelUnifiedService {
         return [];
     }
 
-    async createFunnel(data: Partial<UnifiedFunnelData>): Promise<UnifiedFunnelData> {
+    async createFunnel(data: Partial<UnifiedFunnelData>, context?: any): Promise<UnifiedFunnelData> {
         console.warn('FunnelUnifiedService.createFunnel is a stub');
         return {
             id: 'stub-id',
             name: data.name || 'Stub Funnel',
             slug: data.slug || 'stub-funnel',
+            type: data.type || 'quiz',
             steps: {},
             isPublished: false,
             version: 1
@@ -57,6 +64,7 @@ export class FunnelUnifiedService {
             id: 'stub-duplicated-id',
             name: newName || 'Duplicated Funnel',
             slug: 'stub-duplicated',
+            type: 'quiz',
             steps: {},
             isPublished: false,
             version: 1

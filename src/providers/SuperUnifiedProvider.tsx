@@ -54,10 +54,10 @@ export function useUnifiedAuth() {
         user: null, 
         loading: false, 
         isLoading: false,
-        signIn: async () => {}, 
+        signIn: async (_email?: string, _password?: string) => {}, 
         signOut: async () => {},
-        login: async () => {},
-        signup: async () => {},
+        login: async (_email?: string, _password?: string) => {},
+        signup: async (_email?: string, _password?: string) => {},
         logout: async () => {}
     };
 }

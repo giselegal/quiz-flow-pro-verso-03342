@@ -14,6 +14,7 @@ interface UnifiedCRUDContextType {
   createFunnel: (data: any, context?: any) => Promise<any>;
   isLoading: boolean;
   isSaving: boolean;
+  funnels: any[];
 }
 
 const UnifiedCRUDContext = createContext<UnifiedCRUDContextType | null>(null);
@@ -29,7 +30,8 @@ export function UnifiedCRUDProvider({ children }: { children: ReactNode }) {
     loadFunnel: async () => {},
     createFunnel: async () => null,
     isLoading: false,
-    isSaving: false
+    isSaving: false,
+    funnels: []
   };
 
   return (
@@ -52,7 +54,8 @@ export function useUnifiedCRUD() {
       loadFunnel: async () => {},
       createFunnel: async () => null,
       isLoading: false,
-      isSaving: false
+      isSaving: false,
+      funnels: []
     };
   }
   return context;
