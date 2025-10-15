@@ -269,18 +269,14 @@ interface RenderOptimizationContextType {
 
 const RenderOptimizationContext = createContext<RenderOptimizationContextType | null>(null);
 
-export const RenderOptimizationProvider: React.FC<{
-    children: React.ReactNode;
-    config?: Partial<RenderOptimizationConfig>;
-}> = ({ children, config = {} }) => {
+export const useRenderOptimizationConfig = () => {
     const [currentConfig, setCurrentConfig] = useState<RenderOptimizationConfig>({
         enableVirtualization: false,
         viewportBuffer: 5,
         diffingStrategy: 'smart',
         batchingDelay: 16,
         memoizationLevel: 'basic',
-        enableRenderProfiling: process.env.NODE_ENV === 'development',
-        ...config
+        enableRenderProfiling: process.env.NODE_ENV === 'development'
     });
     
     const [metrics, setMetrics] = useState<RenderMetrics>({
@@ -328,7 +324,7 @@ export const RenderOptimizationProvider: React.FC<{
         updateConfig({ enableRenderProfiling: false });
     }, [updateConfig]);
     
-    const contextValue: RenderOptimizationContextType = {
+    return {
         config: currentConfig,
         metrics,
         updateConfig,
@@ -336,102 +332,31 @@ export const RenderOptimizationProvider: React.FC<{
         enableProfiling,
         disableProfiling
     };
-    
-    return (
-        <RenderOptimizationContext.Provider value={contextValue}>
-            {children}
-        </RenderOptimizationContext.Provider>
-    );
 };
 
-export const useRenderOptimization = () => {
-    const context = useContext(RenderOptimizationContext);
-    if (!context) {
-        throw new Error('useRenderOptimization must be used within RenderOptimizationProvider');
-    }
-    return context;
-};
+export const useRenderOptimization = useRenderOptimizationConfig;
 
 // ============================================================================
 // OPTIMIZED COMPONENT WRAPPER
 // ============================================================================
 
-export const withRenderOptimization = <P extends Record<string, any>>(
-    Component: React.ComponentType<P>,
-    config: Partial<RenderOptimizationConfig> = {}
-) => {
-    const defaultConfig: RenderOptimizationConfig = {
-        enableVirtualization: false,
-        viewportBuffer: 5,
-        diffingStrategy: 'smart',
-        batchingDelay: 16,
-        memoizationLevel: 'basic',
-        enableRenderProfiling: process.env.NODE_ENV === 'development'
-    };
+export const useOptimizedCallback = <T extends (...args: any[]) => any>(
+    callback: T,
+    deps: React.DependencyList,
+    delay: number = 0
+): T => {
+    const timeoutRef = useRef<NodeJS.Timeout>();
     
-    const finalConfig = { ...defaultConfig, ...config };
-    
-    const OptimizedComponent = memo<P>((props) => {
-        const prevPropsRef = useRef<P>();
-        const renderCountRef = useRef(0);
-        
-        const [batchedProps, setBatchedProps] = useState<P>(props);
-        const batchTimeoutRef = useRef<NodeJS.Timeout>();
-        
-        useEffect(() => {
-            if (finalConfig.batchingDelay > 0) {
-                clearTimeout(batchTimeoutRef.current);
-                batchTimeoutRef.current = setTimeout(() => {
-                    setBatchedProps(props);
-                }, finalConfig.batchingDelay);
-            } else {
-                setBatchedProps(props);
-            }
-            
-            return () => clearTimeout(batchTimeoutRef.current);
-        }, [props]);
-        
-        useEffect(() => {
-            if (finalConfig.enableRenderProfiling) {
-                renderCountRef.current++;
-                
-                if (renderCountRef.current % 100 === 0) {
-                    console.log(`[${Component.name}] Renders: ${renderCountRef.current}`);
-                }
-            }
-        });
-        
-        return useMemo(() => {
-            if (finalConfig.enableRenderProfiling) {
-                return RenderProfiler.profile(
-                    Component.displayName || Component.name || 'Anonymous',
-                    () => React.createElement(Component, batchedProps),
-                    prevPropsRef.current,
-                    batchedProps
-                );
-            }
-            
-            return React.createElement(Component, batchedProps);
-        }, [batchedProps]);
-    }, (prevProps, nextProps) => {
-        const shouldUpdate = SmartDiffer.shouldUpdate(
-            prevProps,
-            nextProps,
-            finalConfig.diffingStrategy
-        );
-        
-        if (!shouldUpdate && finalConfig.enableRenderProfiling) {
-            RenderProfiler.recordSkipped(
-                Component.displayName || Component.name || 'Anonymous'
-            );
+    return useCallback((...args: Parameters<T>) => {
+        if (delay > 0) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = setTimeout(() => {
+                callback(...args);
+            }, delay);
+        } else {
+            return callback(...args);
         }
-        
-        return !shouldUpdate;
-    });
-    
-    OptimizedComponent.displayName = `OptimizedComponent(${Component.displayName || Component.name})`;
-    
-    return OptimizedComponent;
+    }, deps) as T;
 };
 
 export { SmartDiffer, RenderProfiler };
