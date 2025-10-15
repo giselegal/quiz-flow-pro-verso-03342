@@ -574,3 +574,106 @@ export function validateBlock(type: string, values: Record<string, any>): BlockV
     }
     return { valid: errors.length === 0, errors };
 }
+
+// ============================================================================
+// SCHEMAS ADICIONAIS PARA TEMPLATE QUIZ 21-STEPS
+// ============================================================================
+
+// Schema para intro-hero (seção inicial do quiz)
+const introHeroSchema: BlockPropertySchemaDefinition = {
+    type: 'intro-hero',
+    groups: [
+        { id: 'content', label: 'Conteúdo', order: 1 },
+        { id: 'logo', label: 'Logo', order: 2 },
+        { id: 'image', label: 'Imagem', order: 3 },
+        { id: 'style', label: 'Estilo', order: 4 },
+        { id: 'progress', label: 'Progresso', order: 5 }
+    ],
+    properties: [
+        // Conteúdo
+        { key: 'title', label: 'Título', type: 'richtext', required: true, default: 'Bem-vindo ao Quiz', group: 'content' },
+        { key: 'subtitle', label: 'Subtítulo', type: 'richtext', default: 'Descubra seu perfil', group: 'content' },
+        { key: 'description', label: 'Descrição', type: 'richtext', default: '', group: 'content' },
+        // Logo
+        { key: 'logoUrl', label: 'URL do Logo', type: 'string', default: '', group: 'logo' },
+        { key: 'logoAlt', label: 'Alt do Logo', type: 'string', default: 'Logo', group: 'logo' },
+        { key: 'logoWidth', label: 'Largura do Logo', type: 'number', default: 96, min: 20, max: 300, group: 'logo' },
+        { key: 'logoHeight', label: 'Altura do Logo', type: 'number', default: 96, min: 20, max: 300, group: 'logo' },
+        // Imagem
+        { key: 'imageUrl', label: 'URL da Imagem', type: 'string', default: '', group: 'image' },
+        { key: 'imageAlt', label: 'Alt da Imagem', type: 'string', default: 'Imagem Hero', group: 'image' },
+        // Estilo
+        { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', default: '#FAF9F7', group: 'style' },
+        { key: 'textColor', label: 'Cor do Texto', type: 'color', default: '#432818', group: 'style' },
+        { key: 'padding', label: 'Padding', type: 'number', default: 24, min: 0, max: 100, group: 'style' },
+        // Progresso
+        { key: 'showProgress', label: 'Mostrar Progresso', type: 'boolean', default: false, group: 'progress' },
+        { key: 'progressValue', label: 'Valor do Progresso (%)', type: 'number', default: 0, min: 0, max: 100, group: 'progress', when: c => c.showProgress }
+    ]
+};
+
+// Schema para welcome-form (formulário de boas-vindas)
+const welcomeFormSchema: BlockPropertySchemaDefinition = {
+    type: 'welcome-form',
+    groups: [
+        { id: 'content', label: 'Conteúdo', order: 1 },
+        { id: 'fields', label: 'Campos', order: 2 },
+        { id: 'button', label: 'Botão', order: 3 },
+        { id: 'style', label: 'Estilo', order: 4 },
+        { id: 'behavior', label: 'Comportamento', order: 5 }
+    ],
+    properties: [
+        // Conteúdo
+        { key: 'questionText', label: 'Texto da Pergunta', type: 'richtext', required: true, default: 'Como posso te chamar?', group: 'content' },
+        // Campos
+        { key: 'nameLabel', label: 'Label do Nome', type: 'string', default: 'Seu primeiro nome', group: 'fields' },
+        { key: 'namePlaceholder', label: 'Placeholder do Nome', type: 'string', default: 'Digite seu primeiro nome...', group: 'fields' },
+        { key: 'emailLabel', label: 'Label do Email', type: 'string', default: 'Seu melhor email', group: 'fields' },
+        { key: 'emailPlaceholder', label: 'Placeholder do Email', type: 'string', default: 'Digite seu email...', group: 'fields' },
+        { key: 'phoneLabel', label: 'Label do Telefone', type: 'string', default: 'Seu telefone', group: 'fields' },
+        { key: 'phonePlaceholder', label: 'Placeholder do Telefone', type: 'string', default: '(00) 00000-0000', group: 'fields' },
+        // Botão
+        { key: 'buttonText', label: 'Texto do Botão', type: 'string', default: 'Iniciar Quiz', group: 'button' },
+        { key: 'buttonBackgroundColor', label: 'Cor do Botão', type: 'color', default: '#B89B7A', group: 'button' },
+        { key: 'buttonTextColor', label: 'Cor do Texto do Botão', type: 'color', default: '#FFFFFF', group: 'button' },
+        // Estilo
+        { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', default: '#FFFFFF', group: 'style' },
+        { key: 'textColor', label: 'Cor do Texto', type: 'color', default: '#432818', group: 'style' },
+        { key: 'padding', label: 'Padding', type: 'number', default: 24, min: 0, max: 100, group: 'style' },
+        // Comportamento
+        { key: 'requiredFields', label: 'Campos Obrigatórios', type: 'boolean', default: true, group: 'behavior' },
+        { key: 'validateEmail', label: 'Validar Email', type: 'boolean', default: true, group: 'behavior' },
+        { key: 'autoAdvanceOnComplete', label: 'Avançar Automaticamente', type: 'boolean', default: true, group: 'behavior' }
+    ]
+};
+
+// Schema para question-hero (cabeçalho de pergunta)
+const questionHeroSchema: BlockPropertySchemaDefinition = {
+    type: 'question-hero',
+    groups: [
+        { id: 'content', label: 'Conteúdo', order: 1 },
+        { id: 'logo', label: 'Logo', order: 2 },
+        { id: 'progress', label: 'Progresso', order: 3 },
+        { id: 'style', label: 'Estilo', order: 4 }
+    ],
+    properties: [
+        // Conteúdo
+        { key: 'questionNumber', label: 'Número/Título da Questão', type: 'string', default: 'Q1', group: 'content' },
+        { key: 'questionText', label: 'Texto da Pergunta', type: 'richtext', required: true, default: 'Sua pergunta aqui', group: 'content' },
+        // Logo
+        { key: 'logoUrl', label: 'URL do Logo', type: 'string', default: '', group: 'logo' },
+        { key: 'logoAlt', label: 'Alt do Logo', type: 'string', default: 'Logo', group: 'logo' },
+        // Progresso
+        { key: 'showProgress', label: 'Mostrar Progresso', type: 'boolean', default: true, group: 'progress' },
+        { key: 'currentQuestion', label: 'Questão Atual', type: 'number', default: 1, min: 1, group: 'progress', when: c => c.showProgress },
+        { key: 'totalQuestions', label: 'Total de Questões', type: 'number', default: 10, min: 1, group: 'progress', when: c => c.showProgress },
+        { key: 'progressValue', label: 'Valor do Progresso (%)', type: 'number', default: 0, min: 0, max: 100, group: 'progress', when: c => c.showProgress },
+        // Estilo
+        { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', default: 'transparent', group: 'style' },
+        { key: 'textColor', label: 'Cor do Texto', type: 'color', default: '#432818', group: 'style' },
+        { key: 'padding', label: 'Padding', type: 'number', default: 16, min: 0, max: 100, group: 'style' }
+    ]
+};
+
+// Adicionar os schemas ao array INITIAL_BLOCK_SCHEMAS
+INITIAL_BLOCK_SCHEMAS.push(introHeroSchema, welcomeFormSchema, questionHeroSchema);
