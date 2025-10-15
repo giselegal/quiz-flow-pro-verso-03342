@@ -24,8 +24,7 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    // Porta do servidor Vite em dev. Mantemos 5173 (padrão) para alinhar com HMR e com o redirecionador 8080 -> 5173
-    port: 5173,
+    port: 8080,
     open: false,
     cors: true,
     strictPort: true,
@@ -47,8 +46,8 @@ export default defineConfig({
     },
     hmr: {
       overlay: false,
-      clientPort: 5173,
-      port: 5173,
+      clientPort: 8080,
+      port: 8080,
     },
   },
   preview: {
@@ -88,7 +87,10 @@ export default defineConfig({
       loader: { '.js': 'jsx' },
     },
   },
-  define: { global: 'globalThis' },
+  define: { 
+    global: 'globalThis',
+  },
+  envPrefix: 'VITE_',
   esbuild: { target: 'es2020' },
   test: {
     environment: 'jsdom',
