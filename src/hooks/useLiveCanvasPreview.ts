@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { useQuizRuntimeRegistry } from '@/hooks/useQuizRuntimeRegistry';
+import { useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 
 // ============================================================================
 // TYPES

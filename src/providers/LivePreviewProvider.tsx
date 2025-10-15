@@ -256,7 +256,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                 }
 
                 // Auto-reconnect if enabled
-                if (autoReconnect && prev.reconnectAttempts < maxReconnectAttempts) {
+                if (autoReconnect && connectionState.reconnectAttempts < maxReconnectAttempts) {
                     reconnectTimeoutRef.current = setTimeout(() => {
                         setConnectionState(prev => ({
                             ...prev,

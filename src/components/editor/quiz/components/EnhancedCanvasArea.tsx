@@ -111,12 +111,19 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
     });
 
     // ===== VIRTUALIZATION =====
-    const { virtualizedBlocks, containerHeight, isVirtualizationActive } = useVirtualBlocks({
+    const {
+        visible: virtualizedBlocks,
+        topSpacer,
+        bottomSpacer,
+        containerRef,
+        total: totalBlocks
+    } = useVirtualBlocks({
         blocks: selectedStep?.blocks || [],
-        itemHeight: 100,
-        containerMaxHeight: 600,
+        rowHeight: 100,
         enabled: (selectedStep?.blocks || []).length > 20
     });
+
+    const isVirtualizationActive = (selectedStep?.blocks || []).length > 20;
 
     // ===== HANDLERS =====
     const handleStepChangeInternal = useCallback((stepId: string) => {
@@ -229,10 +236,11 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
                 >
                     <TooltipProvider>
                         <div
-                            className="space-y-4 min-h-[400px]"
-                            style={{ height: isVirtualizationActive ? containerHeight : 'auto' }}
+                            ref={containerRef}
+                            className="space-y-4 min-h-[400px] overflow-auto"
                         >
-                            {(isVirtualizationActive ? virtualizedBlocks : selectedStep?.blocks || []).map((block, index) => (
+                            {isVirtualizationActive && <div style={{ height: topSpacer }} />}
+                            {(isVirtualizationActive ? virtualizedBlocks : selectedStep?.blocks || []).map((block: any, index: number) => (
                                 <BlockRow
                                     key={block.id}
                                     block={block}
@@ -246,9 +254,10 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
                                         setBlockPendingDuplicate(block.id);
                                         setTargetStepId(selectedStep.id);
                                         setDuplicateModalOpen(true);
-                                    }}
+                                    )}
                                 />
                             ))}
+                            {isVirtualizationActive && <div style={{ height: bottomSpacer }} />}
                         </div>
                     </TooltipProvider>
                 </SortableContext>
