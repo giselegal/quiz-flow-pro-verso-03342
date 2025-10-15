@@ -52,7 +52,7 @@ interface SystemHealth {
 // VALIDATORS
 // ============================================================================
 
-class SystemValidator {
+class SystemValidatorClass {
     private results: ValidationResult[] = [];
 
     // Validar imports e dependências
@@ -471,7 +471,7 @@ export const SystemValidator: React.FC<{
     const [isValidating, setIsValidating] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<string>('overview');
 
-    const validator = new SystemValidator();
+    const validator = new SystemValidatorClass();
 
     // Executar validação
     const runValidation = async () => {

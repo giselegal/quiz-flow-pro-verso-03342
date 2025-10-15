@@ -56,7 +56,7 @@ interface TestSuite {
     id: string;
     name: string;
     tests: TestResult[];
-    status: 'pending' | 'running' | 'passed' | 'failed';
+    status: 'pending' | 'running' | 'passed' | 'failed' | 'warning';
     duration?: number;
 }
 
