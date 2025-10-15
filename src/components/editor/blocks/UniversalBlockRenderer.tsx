@@ -128,6 +128,7 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'step20-complete-template': Step20ResultHeaderBlock, // TODO: se quiser renderização compacta usar Step20CompleteTemplateBlock diretamente em outro fluxo
   // ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
   'result-calculation': ResultCalculationSection,
+  'ResultCalculationSection': ResultCalculationSection,
   // ✅ FASE 3A: Componentes inline específicos
   'image-display-inline': ImageDisplayInlineBlock,
   'decorative-bar-inline': DecorativeBarInlineBlock,
