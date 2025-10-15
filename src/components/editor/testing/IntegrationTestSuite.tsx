@@ -35,9 +35,9 @@ import { useAdvancedWebSocket } from '@/hooks/useAdvancedWebSocket';
 import { useLiveCanvasPreview } from '@/hooks/useLiveCanvasPreview';
 
 // Providers
-import { FeatureFlagProvider } from '@/components/editor/testing/FeatureFlagSystem';
-import { LivePreviewProvider } from '@/components/editor/providers/LivePreviewProvider';
-import { RenderOptimizationProvider } from '@/hooks/useRenderOptimization';
+import { FeatureFlagProvider } from '../testing/FeatureFlagSystem';
+import { LivePreviewProvider } from '../../../providers/LivePreviewProvider';
+// import { RenderOptimizationProvider } from '../../../hooks/useRenderOptimization'; // Removed - using hooks instead
 
 // ============================================================================
 // TYPES

@@ -150,7 +150,7 @@ export const PerformanceDashboard: React.FC<{
                 },
                 preview: {
                     updateTime: livePreview.metrics?.averageUpdateTime || 0,
-                    cacheEfficiency: livePreview.metrics?.cacheHitRate || 0,
+                    cacheEfficiency: livePreview.metrics?.cacheEfficiency || 0,
                     errorRate: livePreview.metrics?.errorRate || 0,
                     updatesPerSecond: livePreview.metrics?.updatesPerSecond || 0
                 }
@@ -279,7 +279,7 @@ export const PerformanceDashboard: React.FC<{
                 metadata: {
                     stepsCount: steps.length,
                     selectedStepId,
-                    featureFlags: featureFlags.getActiveFlags?.() || {}
+                    featureFlags: featureFlags.flags || {}
                 }
             };
 

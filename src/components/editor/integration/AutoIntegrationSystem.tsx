@@ -27,7 +27,7 @@ import { PreviewMigrationWrapper } from '../migration/PreviewMigrationWrapper';
 import { PerformanceDashboard } from '../dashboard/PerformanceDashboard';
 import { LivePreviewProvider } from '../../../providers/LivePreviewProvider';
 import { FeatureFlagProvider } from '../testing/FeatureFlagSystem';
-import { RenderOptimizationProvider } from '../../../hooks/useRenderOptimization';
+// import { RenderOptimizationProvider } from '../../../hooks/useRenderOptimization'; // Removed - using hooks instead
 
 // Hooks
 import { useAdvancedCache } from '../../../hooks/useAdvancedCache';
@@ -572,11 +572,9 @@ export const SmartIntegrationWrapper: React.FC<{
             return (
                 <FeatureFlagProvider>
                     <LivePreviewProvider>
-                        <RenderOptimizationProvider>
-                            <AutoIntegrationProvider>
-                                {children}
-                            </AutoIntegrationProvider>
-                        </RenderOptimizationProvider>
+                        <AutoIntegrationProvider>
+                            {children}
+                        </AutoIntegrationProvider>
                     </LivePreviewProvider>
                 </FeatureFlagProvider>
             );
