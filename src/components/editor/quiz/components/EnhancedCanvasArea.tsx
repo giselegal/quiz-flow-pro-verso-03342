@@ -27,6 +27,7 @@ import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
 import { LiveCanvasPreview } from '@/components/editor/canvas/LiveCanvasPreview';
 import { useLiveCanvasPreview } from '@/hooks/canvas/useLiveCanvasPreview';
 import { LivePreviewProvider } from '@/providers/LivePreviewProvider';
+import PreviewMonitor from '@/components/debug/PreviewMonitor';
 
 export interface EnhancedCanvasAreaProps {
     activeTab: 'canvas' | 'preview';
@@ -394,7 +395,10 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
 
     // ===== MAIN RENDER =====
     return (
-        <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex flex-col min-h-0 relative">
+            {/* Preview Monitor (desenvolvimento) */}
+            <PreviewMonitor />
+
             {/* Tabs Header */}
             <Tabs value={activeTab} onValueChange={onTabChange as any} className="flex-1 flex flex-col">
                 <TabsList className="grid w-full grid-cols-2 mx-4 mt-4">

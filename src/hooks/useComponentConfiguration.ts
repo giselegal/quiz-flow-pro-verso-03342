@@ -93,7 +93,45 @@ export function useComponentConfiguration(
     const loadConfiguration = useCallback(async () => {
         if (!componentId) return;
 
-        // 🛡️ TIMEOUT DE SEGURANÇA: 3 segundos em dev, 15 em produção
+        // 🚀 VERIFICAR CACHE PRIMEIRO
+        const cacheKey = `${componentId}-${funnelId || 'default'}`;
+        const cachedConfig = configurationCache.get<{properties: Record<string, any>, definition: ComponentDefinition}>(cacheKey);
+        if (cachedConfig) {
+            console.log(`⚡ Cache hit para ${componentId}`);
+            setProperties(cachedConfig.properties || {});
+            setComponentDefinition(cachedConfig.definition);
+            setIsConnected(true);
+            setConnectionStatus('connected');
+            setIsLoading(false);
+            return;
+        }
+
+        // 🚀 MODO PREVIEW OFFLINE: Skip API calls em desenvolvimento para preview
+        const isPreviewMode = editorMode || process.env.NODE_ENV === 'development';
+        if (isPreviewMode) {
+            console.log(`🎯 Preview mode: usando configuração local para ${componentId}`);
+            try {
+                const definition = await apiRef.current.getComponentDefinition(componentId);
+                setComponentDefinition(definition);
+                const properties = definition.defaultProperties || {};
+                setProperties(properties);
+                setIsConnected(true);
+                setConnectionStatus('connected');
+                setIsLoading(false);
+                
+                // Cachear para próximas vezes
+                configurationCache.set(cacheKey, { properties, definition }, 2 * 60 * 1000); // 2 min cache
+                return;
+            } catch (err) {
+                console.warn(`⚠️ Fallback para ${componentId}:`, err);
+                setProperties({});
+                setIsLoading(false);
+                setConnectionStatus('disconnected');
+                return;
+            }
+        }
+
+        // �🛡️ TIMEOUT DE SEGURANÇA: 3 segundos em dev, 15 em produção
         const timeoutMs = process.env.NODE_ENV === 'development' ? 3000 : 15000;
         const safetyTimeout = setTimeout(() => {
             console.warn(`⚠️ Loading timeout for ${componentId} - usando valores padrão`);
