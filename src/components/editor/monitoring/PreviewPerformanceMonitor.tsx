@@ -19,7 +19,7 @@ import {
     BarChart3,
     Settings
 } from 'lucide-react';
-import { useLiveCanvasPreview } from '@/hooks/useLiveCanvasPreview';
+import { useLiveCanvasPreview } from '@/hooks/canvas/useLiveCanvasPreview';
 
 // ============================================================================
 // TYPES

@@ -30,9 +30,9 @@ import { AutoIntegrationPanel } from '@/components/editor/integration/AutoIntegr
 
 // Hooks a serem testados
 import { useAdvancedCache } from '@/hooks/performance/useAdvancedCache';
-import { useRenderOptimization } from '@/hooks/useRenderOptimization';
-import { useAdvancedWebSocket } from '@/hooks/useAdvancedWebSocket';
-import { useLiveCanvasPreview } from '@/hooks/useLiveCanvasPreview';
+import { useRenderOptimization } from '@/hooks/performance/useRenderOptimization';
+import { useAdvancedWebSocket } from '@/hooks/websocket/useAdvancedWebSocket';
+import { useLiveCanvasPreview } from '@/hooks/canvas/useLiveCanvasPreview';
 
 // Providers
 import { FeatureFlagProvider } from '../testing/FeatureFlagSystem';

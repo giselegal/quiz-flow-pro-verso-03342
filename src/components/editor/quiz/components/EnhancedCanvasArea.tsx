@@ -25,7 +25,7 @@ import {
 import { BlockComponent, EditableQuizStep } from '../types';
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
 import { LiveCanvasPreview } from '@/components/editor/canvas/LiveCanvasPreview';
-import { useLiveCanvasPreview } from '@/hooks/useLiveCanvasPreview';
+import { useLiveCanvasPreview } from '@/hooks/canvas/useLiveCanvasPreview';
 import { LivePreviewProvider } from '@/providers/LivePreviewProvider';
 
 export interface EnhancedCanvasAreaProps {
