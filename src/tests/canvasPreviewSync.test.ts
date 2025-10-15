@@ -201,7 +201,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
         const updatedStep = {
             ...previewState.steps[0],
             title: 'Título Atualizado',
-            type: 'question',
+            type: 'question' as const,
             properties: {
                 backgroundColor: '#ff0000',
                 textColor: '#ffffff',
@@ -216,7 +216,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
 
         // Verificar propriedades
         expect(previewState.steps[0].title).toBe('Título Atualizado');
-        expect(previewState.steps[0].properties?.backgroundColor).toBe('#ff0000');
+        expect((previewState.steps[0] as any).properties?.backgroundColor).toBe('#ff0000');
         expect(previewState.updateCount).toBeGreaterThan(0);
 
         console.log('✅ Mudanças de propriedades funcionando');
