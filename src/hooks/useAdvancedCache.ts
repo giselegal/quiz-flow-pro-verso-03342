@@ -210,7 +210,7 @@ class AdvancedCache<T = any> {
     invalidateByDependency(dependency: string): number {
         let invalidated = 0;
         
-        for (const [key, entry] of this.cache.entries()) {
+        for (const [key, entry] of Array.from(this.cache.entries())) {
             if (entry.dependencies?.includes(dependency)) {
                 this.cache.delete(key);
                 invalidated++;
@@ -223,7 +223,7 @@ class AdvancedCache<T = any> {
     invalidateByPattern(pattern: RegExp): number {
         let invalidated = 0;
         
-        for (const key of this.cache.keys()) {
+        for (const key of Array.from(this.cache.keys())) {
             if (pattern.test(key)) {
                 this.cache.delete(key);
                 invalidated++;
@@ -282,7 +282,7 @@ class AdvancedCache<T = any> {
         let oldestKey = '';
         let oldestTime = Date.now();
         
-        for (const [key, entry] of this.cache.entries()) {
+        for (const [key, entry] of Array.from(this.cache.entries())) {
             if (entry.lastAccessed < oldestTime) {
                 oldestTime = entry.lastAccessed;
                 oldestKey = key;
@@ -299,7 +299,7 @@ class AdvancedCache<T = any> {
         let largestKey = '';
         let largestSize = 0;
         
-        for (const [key, entry] of this.cache.entries()) {
+        for (const [key, entry] of Array.from(this.cache.entries())) {
             const size = entry.size || 0;
             if (size > largestSize) {
                 largestSize = size;
