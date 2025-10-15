@@ -6,7 +6,12 @@
  */
 
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
+
+// Mock implementation for useQuizRuntimeRegistry
+const useQuizRuntimeRegistry = () => ({
+    setSteps: (steps: any) => { console.log('Mock setSteps called with:', steps); },
+    version: '1.0.0'
+});
 
 // ============================================================================
 // TYPES
