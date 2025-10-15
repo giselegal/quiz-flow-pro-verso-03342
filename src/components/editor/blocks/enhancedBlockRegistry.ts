@@ -8,6 +8,10 @@ export function getEnhancedBlockComponent(type: string) {
   return null;
 }
 
+export function normalizeBlockProperties(props: any) {
+  return props;
+}
+
 export function getRegistryStats() {
   return { total: 0 };
 }

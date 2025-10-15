@@ -1953,9 +1953,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
         if (EnhancedComponent) {
             // Componente existe no registry - renderizar com props básicas
+            const ComponentToRender = EnhancedComponent as React.ComponentType<any>;
             node = (
                 <div className="relative">
-                    <EnhancedComponent
+                    <ComponentToRender
                         block={block}
                         properties={properties || {}}
                         content={content || {}}
