@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { ConfigurationAPI } from '@/services/ConfigurationAPI';
 import type { ComponentDefinition } from '@/types/componentConfiguration';
+import { configurationCache } from '@/utils/ConfigurationCache';
 
 // ============================================================================
 // TYPES
@@ -92,13 +93,14 @@ export function useComponentConfiguration(
     const loadConfiguration = useCallback(async () => {
         if (!componentId) return;
 
-        // 🛡️ TIMEOUT DE SEGURANÇA: 15 segundos (Supabase pode demorar)
+        // 🛡️ TIMEOUT DE SEGURANÇA: 3 segundos em dev, 15 em produção
+        const timeoutMs = process.env.NODE_ENV === 'development' ? 3000 : 15000;
         const safetyTimeout = setTimeout(() => {
             console.warn(`⚠️ Loading timeout for ${componentId} - usando valores padrão`);
             setIsLoading(false);
             setConnectionStatus('disconnected'); // Não é erro, apenas desconectado
             // NÃO definir erro - timeout não é erro fatal, apenas usa fallback
-        }, 15000); // 15s para dar tempo ao Supabase
+        }, timeoutMs);
 
         try {
             setIsLoading(true);

@@ -279,7 +279,7 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                     { key: 'fontFamily', label: 'Font Family', type: PropertyType.FONT_FAMILY, category: 'visual' as any, editor: { component: 'FontSelector' }, defaultValue: 'Inter, sans-serif', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } }
                 ]
             },
-            'quiz-theme-config': {
+                        'quiz-theme-config': {
                 id: 'quiz-theme-config',
                 name: 'Quiz Theme Configuration',
                 description: 'Configurações de tema visual',
@@ -288,7 +288,11 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                 defaultProperties: {
                     backgroundColor: '#fefefe',
                     textColor: '#5b4135',
-                    borderRadius: 8
+                    borderRadius: 8,
+                    buttonColor: '#B89B7A',
+                    buttonTextColor: '#ffffff',
+                    cardShadow: 'sm',
+                    fontWeight: 'normal'
                 },
                 editorConfig: {
                     propertiesPanelTitle: 'Configurações de Tema',
@@ -296,9 +300,36 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                     categories: ['visual' as any]
                 },
                 properties: [
-                    { key: 'backgroundColor', label: 'Background Color', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#fefefe', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
-                    { key: 'textColor', label: 'Text Color', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#5b4135', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
-                    { key: 'borderRadius', label: 'Border Radius', type: PropertyType.NUMBER, category: 'visual' as any, editor: { component: 'NumberInput' }, defaultValue: 8, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } }
+                    { key: 'backgroundColor', label: 'Cor de Fundo', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#fefefe', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                    { key: 'textColor', label: 'Cor do Texto', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#5b4135', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                    { key: 'borderRadius', label: 'Raio da Borda', type: PropertyType.RANGE, category: 'visual' as any, editor: { component: 'RangeSlider' }, defaultValue: 8, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                    { key: 'buttonColor', label: 'Cor do Botão', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#B89B7A', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                    { key: 'buttonTextColor', label: 'Cor do Texto do Botão', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#ffffff', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } }
+                ]
+            },
+            'quiz-step-1': {
+                id: 'quiz-step-1',
+                name: 'Quiz Step 1 Configuration',
+                description: 'Configurações da primeira etapa do quiz',
+                category: 'step',
+                apiEndpoint: '/api/components/quiz-step-1',
+                defaultProperties: {
+                    title: 'Bem-vindo ao Quiz!',
+                    subtitle: 'Descubra seu perfil em alguns passos simples',
+                    buttonText: 'Começar Quiz',
+                    showAnimation: true,
+                    backgroundColor: '#ffffff'
+                },
+                editorConfig: {
+                    propertiesPanelTitle: 'Configurações do Step 1',
+                    previewComponent: 'QuizStep1Preview',
+                    categories: ['content' as any, 'visual' as any]
+                },
+                properties: [
+                    { key: 'title', label: 'Título', type: PropertyType.TEXT, category: 'content' as any, editor: { component: 'TextInput' }, defaultValue: 'Bem-vindo ao Quiz!', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                    { key: 'subtitle', label: 'Subtítulo', type: PropertyType.TEXT, category: 'content' as any, editor: { component: 'TextInput' }, defaultValue: 'Descubra seu perfil em alguns passos simples', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                    { key: 'buttonText', label: 'Texto do Botão', type: PropertyType.TEXT, category: 'content' as any, editor: { component: 'TextInput' }, defaultValue: 'Começar Quiz', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                    { key: 'showAnimation', label: 'Animação', type: PropertyType.BOOLEAN, category: 'visual' as any, editor: { component: 'Switch' }, defaultValue: true, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } }
                 ]
             },
             'quiz-options-grid': {

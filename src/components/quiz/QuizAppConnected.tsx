@@ -76,7 +76,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         funnelId,
         realTimeSync: true,
         autoSave: editorMode,
-        editorMode // 🎨 Modo editor: carregamento instantâneo
+        editorMode: editorMode || previewMode // 🎨 Modo editor/preview: carregamento instantâneo
     });
 
     // Configurações de tema e visual
@@ -87,7 +87,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         componentId: 'quiz-theme-config',
         funnelId,
         realTimeSync: true,
-        editorMode // 🎨 Modo editor: carregamento instantâneo
+        editorMode: editorMode || previewMode // 🎨 Modo editor/preview: carregamento instantâneo
     });
 
     // ============================================================================
