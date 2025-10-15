@@ -77,7 +77,7 @@ const QuizModularProductionEditor: React.FC<IntegrationExampleProps> = ({
         >
             <div className="editor-layout">
                 {/* Outras colunas... */}
-                
+
                 {/* Substituir CanvasArea por EnhancedCanvasArea */}
                 <EnhancedCanvasArea
                     activeTab={activeTab}
@@ -120,7 +120,7 @@ const QuizModularProductionEditor: React.FC<IntegrationExampleProps> = ({
                                 const updatedSteps = [...steps];
                                 updatedSteps[stepIndex] = {
                                     ...step,
-                                    blocks: step.blocks.map((block: any, idx: number) => 
+                                    blocks: step.blocks.map((block: any, idx: number) =>
                                         idx === blockIndex ? { ...block, ...updates } : block
                                     )
                                 };
@@ -129,7 +129,7 @@ const QuizModularProductionEditor: React.FC<IntegrationExampleProps> = ({
                         }
                     }}
                 />
-                
+
                 {/* Outras colunas... */}
             </div>
         </LivePreviewProvider>
