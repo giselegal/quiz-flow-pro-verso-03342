@@ -90,6 +90,14 @@ export function useComponentConfiguration(
     const loadConfiguration = useCallback(async () => {
         if (!componentId) return;
 
+        // 🛡️ TIMEOUT DE SEGURANÇA: Forçar isLoading=false após 5 segundos
+        const safetyTimeout = setTimeout(() => {
+            console.warn(`⚠️ Loading timeout for ${componentId} - forcing isLoading=false`);
+            setIsLoading(false);
+            setConnectionStatus('error');
+            setError('Timeout ao carregar configuração - usando valores padrão');
+        }, 5000);
+
         try {
             setIsLoading(true);
             setConnectionStatus('connecting');
@@ -115,6 +123,9 @@ export function useComponentConfiguration(
 
             console.log(`✅ Configuration loaded for ${componentId}:`, config);
 
+            // Limpar timeout de segurança se tudo correu bem
+            clearTimeout(safetyTimeout);
+
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar configuração';
             setError(errorMessage);
@@ -122,6 +133,9 @@ export function useComponentConfiguration(
             setConnectionStatus('error');
 
             console.error(`❌ Error loading configuration for ${componentId}:`, err);
+
+            // Limpar timeout de segurança mesmo em caso de erro
+            clearTimeout(safetyTimeout);
 
         } finally {
             setIsLoading(false);

@@ -342,16 +342,42 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
 
     /**
      * ⚙️ GET DEFAULT CONFIGURATION
+     * 🛡️ GARANTIA: SEMPRE retorna um objeto válido, nunca falha
      */
     private async getDefaultConfiguration(componentId: string): Promise<Record<string, any>> {
-        const definition = await this.getComponentDefinition(componentId);
-        const defaultConfig: Record<string, any> = {};
+        try {
+            const definition = await this.getComponentDefinition(componentId);
+            const defaultConfig: Record<string, any> = {};
 
-        for (const prop of definition.properties) {
-            defaultConfig[prop.key] = prop.defaultValue;
+            for (const prop of definition.properties) {
+                defaultConfig[prop.key] = prop.defaultValue;
+            }
+
+            // Se não tiver nenhuma propriedade, retornar objeto vazio mas válido
+            if (Object.keys(defaultConfig).length === 0) {
+                console.warn(`⚠️ No default properties for ${componentId} - returning empty config`);
+                return {};
+            }
+
+            return defaultConfig;
+
+        } catch (error) {
+            // 🛡️ FALLBACK FINAL: Nunca deixar essa função falhar
+            console.error(`❌ Error getting default configuration for ${componentId}:`, error);
+            console.warn(`⚠️ Returning emergency fallback for ${componentId}`);
+            
+            // Retornar configuração mínima de emergência baseada no componentId
+            if (componentId.includes('global')) {
+                return { primaryColor: '#B89B7A', secondaryColor: '#432818', fontFamily: 'Inter, sans-serif' };
+            } else if (componentId.includes('theme')) {
+                return { backgroundColor: '#fefefe', textColor: '#5b4135', borderRadius: 8 };
+            } else if (componentId.includes('step') || componentId.includes('question')) {
+                return { title: 'Pergunta', description: '', required: true };
+            } else {
+                // Último recurso: objeto vazio
+                return {};
+            }
         }
-
-        return defaultConfig;
     }
 
     /**

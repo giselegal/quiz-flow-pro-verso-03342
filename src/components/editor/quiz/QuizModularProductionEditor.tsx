@@ -2624,6 +2624,14 @@ interface LiveRuntimePreviewProps {
 const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ steps, funnelId, selectedStepId }) => {
     const { setSteps, version } = useQuizRuntimeRegistry();
 
+    // 🐛 DEBUG: Log de renderização crítico
+    console.log(`🎨 LiveRuntimePreview RENDERIZADO`, {
+        stepsCount: steps.length,
+        funnelId,
+        selectedStepId,
+        hasSteps: steps.length > 0
+    });
+
     // Contador de renders para debug
     const renderCountRef = React.useRef(0);
     renderCountRef.current++;

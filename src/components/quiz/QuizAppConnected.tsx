@@ -34,6 +34,14 @@ interface QuizAppConnectedProps {
 }
 
 export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false, initialStepId }: QuizAppConnectedProps) {
+    // 🐛 DEBUG CRÍTICO: Log de props recebidas
+    console.log(`🎯 QuizAppConnected RENDERIZADO`, {
+        funnelId,
+        editorMode,
+        initialStepId,
+        timestamp: new Date().toISOString()
+    });
+
     // Registrar steps de produção (seguro chamar múltiplas vezes - stepRegistry lida com duplicatas)
     useEffect(() => {
         registerProductionSteps();
