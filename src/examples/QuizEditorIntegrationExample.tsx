@@ -21,9 +21,9 @@ import {
 } from 'lucide-react';
 
 // ===== NOVOS IMPORTS - Sistema Otimizado =====
-import { PreviewMigrationWrapper } from '@/components/editor/migration/PreviewMigrationWrapper';
-import { LivePreviewProvider } from '@/components/editor/providers/LivePreviewProvider';
-import { FeatureFlagProvider, useFeatureFlags } from '@/components/editor/testing/FeatureFlagSystem';
+import { PreviewMigrationWrapper } from '../components/editor/migration/PreviewMigrationWrapper';
+import { LivePreviewProvider } from '../providers/LivePreviewProvider';
+import { FeatureFlagProvider, useFeatureFlags } from '../components/editor/testing/FeatureFlagSystem';
 
 // ===== IMPORTS EXISTENTES (mantidos para compatibilidade) =====
 // import { CanvasArea } from '@/components/editor/canvas/CanvasArea'; // ❌ Removido
@@ -57,7 +57,7 @@ const QuizEditorWithLivePreview: React.FC = () => {
     const {
         isEnabled: useOptimizedPreview,
         recordMetric,
-        getTestVariant
+        getVariant: getTestVariant
     } = useFeatureFlags();
 
     const optimizedEnabled = useOptimizedPreview('optimized_preview');
