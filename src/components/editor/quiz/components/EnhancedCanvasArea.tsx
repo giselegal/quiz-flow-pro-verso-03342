@@ -254,7 +254,7 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
                                         setBlockPendingDuplicate(block.id);
                                         setTargetStepId(selectedStep.id);
                                         setDuplicateModalOpen(true);
-                                    )}
+                                    }}
                                 />
                             ))}
                             {isVirtualizationActive && <div style={{ height: bottomSpacer }} />}
