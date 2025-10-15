@@ -96,11 +96,21 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
         }
 
         if (prop.type === 'color') {
+            // Normalizar cor para formato #rrggbb (remover canal alpha se presente)
+            const normalizeColor = (color: string): string => {
+                if (!color) return '#000000';
+                // Se a cor tiver 8 ou 9 caracteres (#rrggbbaa), remover os últimos 2
+                if (color.startsWith('#') && (color.length === 9 || color.length === 8)) {
+                    return color.substring(0, 7);
+                }
+                return color;
+            };
+
             return (
                 <Input
                     type="color"
                     {...common}
-                    value={value || '#000000'}
+                    value={normalizeColor(value)}
                     onChange={e => onChange({ [prop.key]: e.target.value })}
                 />
             );
