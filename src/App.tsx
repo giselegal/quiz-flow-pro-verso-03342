@@ -33,6 +33,7 @@ import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
 import { serviceManager } from './services/core/UnifiedServiceManager';
+import { setupCriticalRoutes } from '@/config/criticalRoutes.config';
 // Remover LocalConfigProvider complexo - usando sistema JavaScript simples
 
 // 🚀 FASE 2: Unified Provider (substitui Consolidated)
@@ -52,11 +53,9 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 // 🔍 PÁGINAS DE DIAGNÓSTICO
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 
-// 🚀 EDITORES MODERNOS
-const QuizFunnelEditorSimplified = lazy(() => import('./components/editor/quiz/QuizFunnelEditorSimplified').then(module => ({ default: module.default })));
-const QuizFunnelEditorWYSIWYG_Refactored = lazy(() => import('./components/editor/quiz/QuizFunnelEditorWYSIWYG_Refactored').then(module => ({ default: module.default })));
-const ModernUnifiedEditor = lazy(() => import('./pages/editor/ModernUnifiedEditor').then(module => ({ default: module.default })));
-const QuizModularProductionEditor = lazy(() => import('./components/editor/quiz/QuizModularProductionEditor').then(module => ({ default: module.default })));
+// 🚀 EDITOR CONFIGURATION (P2 Optimized)
+import QuizModularProductionEditor from '@/config/editorRoutes.config';
+import { editorVariants } from '@/config/editorRoutes.config';
 
 
 // 🧪 PÁGINAS DE QUIZ
@@ -94,7 +93,10 @@ function AppCore() {
     console.log('🚀 AppCore rendering...');
     
     useEffect(() => {
-        console.log('🚀 App initialized with SuperUnifiedProvider v1.0');
+        console.log('🚀 App initialized with UnifiedAppProvider v2.0 (P2 Optimized)');
+
+        // 🚀 P2: Setup critical routes preload
+        setupCriticalRoutes();
 
         // Initialize services with idle callback
         const initializeServices = () => {
@@ -150,11 +152,13 @@ function AppCore() {
                                     }}
                                 </Route>
 
-                                {/* 🚀 EDITOR NOVO (REFATORADO) - FASE 2 */}
+                                {/* 🚀 EDITOR EXPERIMENTAL (DEV ONLY) */}
                                 <Route path="/editor-new">
                                     <EditorErrorBoundary>
-                                        <div data-testid="quiz-editor-refactored-page">
-                                            <QuizFunnelEditorWYSIWYG_Refactored />
+                                        <div data-testid="quiz-editor-wysiwyg-page">
+                                            <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
+                                                {React.createElement(editorVariants.wysiwyg)}
+                                            </Suspense>
                                         </div>
                                     </EditorErrorBoundary>
                                 </Route>
@@ -162,8 +166,10 @@ function AppCore() {
                                 <Route path="/editor-new/:funnelId">
                                     {(params) => (
                                         <EditorErrorBoundary>
-                                            <div data-testid="quiz-editor-refactored-funnel-page">
-                                                <QuizFunnelEditorWYSIWYG_Refactored funnelId={params.funnelId} />
+                                            <div data-testid="quiz-editor-wysiwyg-funnel-page">
+                                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
+                                                    {React.createElement(editorVariants.wysiwyg, { funnelId: params.funnelId })}
+                                                </Suspense>
                                             </div>
                                         </EditorErrorBoundary>
                                     )}
