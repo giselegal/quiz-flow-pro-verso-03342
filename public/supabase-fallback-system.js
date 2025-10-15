@@ -221,6 +221,16 @@ class SupabaseErrorInterceptor {
             // Detectar URLs do Supabase
             if (url.includes('supabase.co') && (url.includes('quiz_drafts') || url.includes('quiz_production'))) {
                 console.log(`🔍 Interceptando requisição Supabase: ${url}`);
+                // Em dev ou quando explicitamente desabilitado, usar fallback sem tocar a rede
+                try {
+                    const host = window.location && window.location.hostname;
+                    const inDev = host === 'localhost' || host === '127.0.0.1';
+                    const disableNetwork = !!localStorage.getItem('supabase:disableNetwork');
+                    if (inDev || disableNetwork) {
+                        console.log('🎯 Dev/local detectado. Respondendo com fallback local imediato.');
+                        return self.createFallbackResponse(url);
+                    }
+                } catch {}
                 try {
                     // Tentar requisição original primeiro
                     const response = await self.originalFetch(input, init);
