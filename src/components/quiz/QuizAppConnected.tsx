@@ -19,7 +19,7 @@ import ResultStep from './ResultStep';
 import OfferStep from './OfferStep';
 // Sistema unificado de renderização (Fase 3)
 import { UnifiedStepRenderer, registerProductionSteps } from '@/components/editor/unified';
-import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, useBlockRegistry } from '@/runtime/quiz/blocks/BlockRegistry';
+import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, useBlockRegistry, useBlockRegistryOptional } from '@/runtime/quiz/blocks/BlockRegistry';
 import sanitizeHtml from '@/utils/sanitizeHtml';
 
 import { useEffect, useState } from 'react';
@@ -634,165 +634,176 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         }
     };
 
-    return (
-        <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
-            <div className="min-h-screen" style={dynamicStyles}>
-                <div className="quiz-container mx-auto">
+    // Se já existe um BlockRegistryProvider acima (ex.: Editor), não sobrescrever; caso contrário, usar defaults
+    const existingRegistry = useBlockRegistryOptional();
 
-                    {/* Editor Overlay */}
-                    {EditorOverlay && <EditorOverlay />}
+    const AppContent = (
+        <div className="min-h-screen" style={dynamicStyles}>
+            <div className="quiz-container mx-auto">
 
-                    {/* Progress Bar Configurável */}
-                    {showProgress && (
-                        <div className="mb-6 max-w-6xl mx-auto px-4 py-8">
+                {/* Editor Overlay */}
+                {EditorOverlay && <EditorOverlay />}
+
+                {/* Progress Bar Configurável */}
+                {showProgress && (
+                    <div className="mb-6 max-w-6xl mx-auto px-4 py-8">
+                        <div
+                            className={`w-full bg-${progressConfig.backgroundColor} rounded-full mb-4`}
+                            style={{ height: `${progressConfig.height}px` }}
+                        >
                             <div
-                                className={`w-full bg-${progressConfig.backgroundColor} rounded-full mb-4`}
-                                style={{ height: `${progressConfig.height}px` }}
-                            >
-                                <div
-                                    className="h-full rounded-full transition-all"
-                                    style={{
-                                        width: `${progress}%`,
-                                        backgroundColor: 'var(--progress-color)',
-                                        transitionDuration: `${progressConfig.animationDuration}ms`
-                                    }}
-                                ></div>
-                            </div>
-
-                            {progressConfig.showPercentage && (
-                                <p className="text-sm text-center mb-4">
-                                    Progresso: {progress}%
-                                </p>
-                            )}
-
-                            {progressConfig.showStepInfo && (
-                                <p className="text-xs text-center text-gray-500">
-                                    Etapa {currentStepNumber} de 21 • {currentStepData.type}
-                                </p>
-                            )}
+                                className="h-full rounded-full transition-all"
+                                style={{
+                                    width: `${progress}%`,
+                                    backgroundColor: 'var(--progress-color)',
+                                    transitionDuration: `${progressConfig.animationDuration}ms`
+                                }}
+                            ></div>
                         </div>
-                    )}
 
-                    {/* Renderização Híbrida: Blocks dinâmicos para result/offer, Unified para demais */}
-                    {/* Indicador de modo no editor */}
-                    {editorMode && (
-                        <div className="max-w-6xl mx-auto px-4 pb-2 text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-3 flex-wrap">
-                            <span>Renderer: {rendererMode}{normalizedStep ? ' (normalized)' : legacyEnabled ? ' (legacy)' : ''}</span>
-                            {normalizedStep && (
-                                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded border border-emerald-300 font-semibold">
-                                    UNIFIED • {normalizedStep.blocks?.length || 0} blocks
-                                </span>
-                            )}
-                            {normalizedStep && !legacyEnabled && (
-                                <span className="text-[9px] text-gray-400">(&normalizedDebug=1 para contornos)</span>
-                            )}
-                            {/* Toggle buttons */}
-                            <div className="flex items-center gap-1">
-                                {['legacy', 'unified', 'auto'].map(mode => (
-                                    <button
-                                        key={mode}
-                                        type="button"
-                                        onClick={() => {
-                                            const sp = new URLSearchParams(window.location.search);
-                                            sp.set('renderer', mode);
-                                            const url = `${window.location.pathname}?${sp.toString()}`;
-                                            window.history.replaceState({}, '', url);
-                                            setRendererMode(mode as any);
-                                        }}
-                                        className={`px-2 py-0.5 rounded border text-[10px] tracking-normal ${rendererMode === mode ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-100'}`}
-                                    >{mode}</button>
-                                ))}
+                        {progressConfig.showPercentage && (
+                            <p className="text-sm text-center mb-4">
+                                Progresso: {progress}%
+                            </p>
+                        )}
+
+                        {progressConfig.showStepInfo && (
+                            <p className="text-xs text-center text-gray-500">
+                                Etapa {currentStepNumber} de 21 • {currentStepData.type}
+                            </p>
+                        )}
+                    </div>
+                )}
+
+                {/* Renderização Híbrida: Blocks dinâmicos para result/offer, Unified para demais */}
+                {/* Indicador de modo no editor */}
+                {editorMode && (
+                    <div className="max-w-6xl mx-auto px-4 pb-2 text-[10px] uppercase tracking-wide text-gray-500 flex items-center gap-3 flex-wrap">
+                        <span>Renderer: {rendererMode}{normalizedStep ? ' (normalized)' : legacyEnabled ? ' (legacy)' : ''}</span>
+                        {normalizedStep && (
+                            <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded border border-emerald-300 font-semibold">
+                                UNIFIED • {normalizedStep.blocks?.length || 0} blocks
+                            </span>
+                        )}
+                        {normalizedStep && !legacyEnabled && (
+                            <span className="text-[9px] text-gray-400">(&normalizedDebug=1 para contornos)</span>
+                        )}
+                        {/* Toggle buttons */}
+                        <div className="flex items-center gap-1">
+                            {['legacy', 'unified', 'auto'].map(mode => (
                                 <button
+                                    key={mode}
                                     type="button"
                                     onClick={() => {
                                         const sp = new URLSearchParams(window.location.search);
-                                        const cur = sp.get('normalizedDebug');
-                                        const next = (cur === '1' || cur === 'true') ? null : '1';
-                                        if (next) sp.set('normalizedDebug', next); else sp.delete('normalizedDebug');
+                                        sp.set('renderer', mode);
                                         const url = `${window.location.pathname}?${sp.toString()}`;
                                         window.history.replaceState({}, '', url);
-                                        setNormalizedDebug(!!next);
+                                        setRendererMode(mode as any);
                                     }}
-                                    className={`ml-1 px-2 py-0.5 rounded border text-[10px] tracking-normal ${normalizedDebug ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-emerald-600 border-emerald-400 hover:bg-emerald-50'}`}
-                                    title="Toggle normalized debug"
-                                >debug</button>
-                            </div>
-                        </div>
-                    )}
-                    {legacyEnabled ? (
-                        <div className="max-w-6xl mx-auto px-4 py-8">
-                            {legacyRender() || (
-                                <div className="text-sm text-gray-500 italic">(Sem renderização legacy para este tipo: {currentStepData.type})</div>
-                            )}
-                        </div>
-                    ) : normalizedStep ? (
-                        <div className={"max-w-6xl mx-auto px-4 py-8 space-y-8" + (normalizedDebug ? ' normalized-debug-mode' : '')}>
-                            {normalizedStep.blocks.map((b: any, idx: number) => (
-                                <NormalizedBlockRenderer key={idx} block={b} idx={idx} debug={normalizedDebug} />
+                                    className={`px-2 py-0.5 rounded border text-[10px] tracking-normal ${rendererMode === mode ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-100'}`}
+                                >{mode}</button>
                             ))}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const sp = new URLSearchParams(window.location.search);
+                                    const cur = sp.get('normalizedDebug');
+                                    const next = (cur === '1' || cur === 'true') ? null : '1';
+                                    if (next) sp.set('normalizedDebug', next); else sp.delete('normalizedDebug');
+                                    const url = `${window.location.pathname}?${sp.toString()}`;
+                                    window.history.replaceState({}, '', url);
+                                    setNormalizedDebug(!!next);
+                                }}
+                                className={`ml-1 px-2 py-0.5 rounded border text-[10px] tracking-normal ${normalizedDebug ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-emerald-600 border-emerald-400 hover:bg-emerald-50'}`}
+                                title="Toggle normalized debug"
+                            >debug</button>
                         </div>
-                    ) : shouldUseBlocks(currentStepData.type) ? (
-                        // Caminho dinâmico (result/offer com blocks)
-                        currentStepData.type === 'result' ? (
-                            <div className="max-w-4xl mx-auto px-4 py-8">
-                                <BlocksRuntimeRenderer
-                                    stepType="result"
-                                    blocks={(currentStepData as any).blocks as any}
-                                    context={{ userProfile: state.userProfile, step: currentStepData, applyPlaceholders }}
-                                />
-                            </div>
-                        ) : (
-                            <div className="max-w-4xl mx-auto px-4 py-8">
-                                <BlocksRuntimeRenderer
-                                    stepType="offer"
-                                    blocks={(currentStepData as any).blocks as any}
-                                    context={{ userProfile: state.userProfile, offerKey: getOfferKey(), step: currentStepData, applyPlaceholders }}
-                                />
-                            </div>
-                        )
-                    ) : currentStepData.type === 'transition-result' ? (
-                        // Fallback para tipo legado ainda não registrado
-                        <TransitionStep
-                            data={{ ...currentStepData, ...currentStepConfig }}
-                            onComplete={() => nextStep()}
-                        />
+                    </div>
+                )}
+                {legacyEnabled ? (
+                    <div className="max-w-6xl mx-auto px-4 py-8">
+                        {legacyRender() || (
+                            <div className="text-sm text-gray-500 italic">(Sem renderização legacy para este tipo: {currentStepData.type})</div>
+                        )}
+                    </div>
+                ) : normalizedStep ? (
+                    <div className={"max-w-6xl mx-auto px-4 py-8 space-y-8" + (normalizedDebug ? ' normalized-debug-mode' : '')}>
+                        {normalizedStep.blocks.map((b: any, idx: number) => (
+                            <NormalizedBlockRenderer key={idx} block={b} idx={idx} debug={normalizedDebug} />
+                        ))}
+                    </div>
+                ) : shouldUseBlocks(currentStepData.type) ? (
+                    // Caminho dinâmico (result/offer com blocks)
+                    currentStepData.type === 'result' ? (
+                        <div className="max-w-4xl mx-auto px-4 py-8">
+                            <BlocksRuntimeRenderer
+                                stepType="result"
+                                blocks={(currentStepData as any).blocks as any}
+                                context={{ userProfile: state.userProfile, step: currentStepData, applyPlaceholders }}
+                            />
+                        </div>
                     ) : (
-                        <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
-                            <div className="max-w-6xl mx-auto px-4 py-8">
-                                <UnifiedStepRenderer
-                                    stepId={currentStepId}
-                                    mode="production"
-                                    stepProps={unifiedStepProps}
-                                    quizState={unifiedQuizState}
-                                    onStepUpdate={handleStepUpdate}
-                                    onNext={handleNext}
-                                    onNameSubmit={(name: string) => {
-                                        setUserName(name);
-                                        nextStep();
-                                    }}
-                                    onPrevious={() => {
-                                        // (Opcional) implementar voltar no futuro
-                                        console.log('Navegar para step anterior (não implementado)');
-                                    }}
-                                    className="unified-production-step"
-                                />
-                            </div>
+                        <div className="max-w-4xl mx-auto px-4 py-8">
+                            <BlocksRuntimeRenderer
+                                stepType="offer"
+                                blocks={(currentStepData as any).blocks as any}
+                                context={{ userProfile: state.userProfile, offerKey: getOfferKey(), step: currentStepData, applyPlaceholders }}
+                            />
                         </div>
-                    )}
+                    )
+                ) : currentStepData.type === 'transition-result' ? (
+                    // Fallback para tipo legado ainda não registrado
+                    <TransitionStep
+                        data={{ ...currentStepData, ...currentStepConfig }}
+                        onComplete={() => nextStep()}
+                    />
+                ) : (
+                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
+                        <div className="max-w-6xl mx-auto px-4 py-8">
+                            <UnifiedStepRenderer
+                                stepId={currentStepId}
+                                mode="production"
+                                stepProps={unifiedStepProps}
+                                quizState={unifiedQuizState}
+                                onStepUpdate={handleStepUpdate}
+                                onNext={handleNext}
+                                onNameSubmit={(name: string) => {
+                                    setUserName(name);
+                                    nextStep();
+                                }}
+                                onPrevious={() => {
+                                    // (Opcional) implementar voltar no futuro
+                                    console.log('Navegar para step anterior (não implementado)');
+                                }}
+                                className="unified-production-step"
+                            />
+                        </div>
+                    </div>
+                )}
 
-                    {/* Debug Info (modo editor) */}
-                    {editorMode && (
-                        <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded-lg font-mono text-xs max-w-md">
-                            <div className="space-y-1">
-                                <div>🔧 <strong>Editor Mode Active</strong></div>
-                                <div>📡 API: {connectionStatus}</div>
-                                <div>⚡ Real-time: {mergedConfig.realTimeSync ? 'ON' : 'OFF'}</div>
-                                <div>💾 Auto-save: {mergedConfig.autoSave ? 'ON' : 'OFF'}</div>
-                            </div>
+                {/* Debug Info (modo editor) */}
+                {editorMode && (
+                    <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded-lg font-mono text-xs max-w-md">
+                        <div className="space-y-1">
+                            <div>🔧 <strong>Editor Mode Active</strong></div>
+                            <div>📡 API: {connectionStatus}</div>
+                            <div>⚡ Real-time: {mergedConfig.realTimeSync ? 'ON' : 'OFF'}</div>
+                            <div>💾 Auto-save: {mergedConfig.autoSave ? 'ON' : 'OFF'}</div>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
+        </div>
+    );
+
+    if (existingRegistry) {
+        return AppContent;
+    }
+
+    return (
+        <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
+            {AppContent}
         </BlockRegistryProvider>
     );
 }
