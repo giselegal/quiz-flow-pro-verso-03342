@@ -157,13 +157,26 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     // ========================= AUTO-AVANÇO QUANDO COMPLETAR RESPOSTAS =========================
     // Detecta quando usuário completa as seleções necessárias e avança automaticamente
     useEffect(() => {
-        if (!currentStepData) return;
+        if (!currentStepData) {
+            console.log('🔍 Auto-avanço: currentStepData não existe');
+            return;
+        }
 
         // Apenas para perguntas (normais e estratégicas)
         const isQuestion = currentStepData.type === 'question';
         const isStrategic = currentStepData.type === 'strategic-question';
 
-        if (!isQuestion && !isStrategic) return;
+        console.log(`🔍 Auto-avanço check [${state.currentStep}]:`, {
+            type: currentStepData.type,
+            isQuestion,
+            isStrategic,
+            requiredSelections: currentStepData.requiredSelections
+        });
+
+        if (!isQuestion && !isStrategic) {
+            console.log(`⏭️ Skip auto-avanço: tipo '${currentStepData.type}' não é pergunta`);
+            return;
+        }
 
         // Obter respostas atuais
         const currentAnswers = state.answers[state.currentStep] || [];
@@ -176,19 +189,34 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         if (isStrategic) {
             // Perguntas estratégicas: avançar imediatamente após selecionar
             shouldAutoAdvance = !!strategicAnswer;
+            console.log(`🎯 Estratégica [${state.currentStep}]:`, {
+                strategicAnswer,
+                shouldAutoAdvance
+            });
         } else {
             // Perguntas normais: avançar quando atingir requiredSelections
             shouldAutoAdvance = currentAnswers.length === requiredCount;
+            console.log(`📝 Pergunta [${state.currentStep}]:`, {
+                currentAnswers: currentAnswers.length,
+                requiredCount,
+                shouldAutoAdvance
+            });
         }
 
         if (shouldAutoAdvance) {
+            console.log(`⏰ Agendando auto-avanço em 800ms para ${state.currentStep}`);
             // Aguardar 800ms antes de avançar para dar feedback visual
             const timeout = setTimeout(() => {
                 console.log(`✨ Auto-avanço: ${state.currentStep} → próxima step`);
                 nextStep();
             }, 800);
 
-            return () => clearTimeout(timeout);
+            return () => {
+                console.log(`🚫 Cleanup timeout de auto-avanço para ${state.currentStep}`);
+                clearTimeout(timeout);
+            };
+        } else {
+            console.log(`⏸️ Auto-avanço NÃO acionado: aguardando seleções em ${state.currentStep}`);
         }
     }, [
         state.currentStep,
