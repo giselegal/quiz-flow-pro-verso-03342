@@ -61,12 +61,67 @@ function getTemplateFromCache(stepNumber: number): any[] {
   return [];
 }
 
-// Inicializar pré-carregamento quando possível
+// ✅ INICIALIZAÇÃO IMEDIATA E LAZY LOADING
+let preloadingStarted = false;
+
+function ensureTemplateLoaded(stepNumber: number): any[] {
+  // Se já tem no cache, retornar imediatamente
+  if (TEMPLATE_CACHE.has(stepNumber)) {
+    const cached = TEMPLATE_CACHE.get(stepNumber);
+    console.log(`⚡ Template ${stepNumber} do cache: ${cached.length} blocos`);
+    return cached;
+  }
+
+  // Se não está carregando ainda, iniciar agora
+  if (!preloadingStarted && typeof window !== 'undefined') {
+    console.log('🚀 Iniciando carregamento lazy de templates...');
+    preloadingStarted = true;
+    preloadAllTemplates(); // Não bloqueia
+  }
+
+  // Tentar carregar específico síncrono como fallback
+  const stepId = stepNumber.toString().padStart(2, '0');
+  const templatePath = `/templates/step-${stepId}-v3.json`;
+
+  try {
+    console.log(`🔄 Tentando carregar síncrono: ${templatePath}`);
+    
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', templatePath, false); // síncrono
+    xhr.send();
+
+    if (xhr.status === 200) {
+      const template = JSON.parse(xhr.responseText);
+      if (template.sections && Array.isArray(template.sections)) {
+        const blocks = template.sections.map((section: any, index: number) => ({
+          id: section.id || `section-${index}`,
+          type: section.type,
+          properties: section.props || {},
+          content: {},
+          position: section.order || index
+        }));
+        
+        // Cachear para uso futuro
+        TEMPLATE_CACHE.set(stepNumber, blocks);
+        console.log(`💾 Template ${stepNumber} carregado síncrono e cacheado: ${blocks.length} blocos`);
+        return blocks;
+      }
+    }
+  } catch (error) {
+    console.warn(`⚠️ Fallback síncrono falhou para step ${stepNumber}:`, error);
+  }
+
+  console.warn(`❌ Nenhum template encontrado para step ${stepNumber}`);
+  return [];
+}
+
+// Inicializar imediatamente se possível
 if (typeof window !== 'undefined') {
-  // Aguardar um pouco para o DOM carregar
-  setTimeout(() => {
+  // Aguardar um frame para evitar bloquear renderização inicial
+  requestAnimationFrame(() => {
+    preloadingStarted = true;
     preloadAllTemplates();
-  }, 1000);
+  });
 }
 
 export interface StepInfo {
@@ -136,7 +191,7 @@ class StepTemplateService {
     // ✅ USAR TEMPLATE JSON v3 SÍNCRONO
     try {
       console.log(`🎯 [CORREÇÃO] Carregando template v3 SYNC para etapa ${stepNumber}...`);
-      const syncTemplate = getTemplateFromCache(stepNumber);
+      const syncTemplate = ensureTemplateLoaded(stepNumber);
       
       if (syncTemplate && Array.isArray(syncTemplate) && syncTemplate.length > 0) {
         console.log(`✅ Template v3 SYNC carregado para etapa ${stepNumber}: ${syncTemplate.length} blocos`);
