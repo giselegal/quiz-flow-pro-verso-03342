@@ -97,6 +97,12 @@
     </div>
   </div>
 
+  <!-- Supabase Fallback System (deve carregar ANTES do app) -->
+  <script src="/supabase-fallback-system.js" type="text/javascript"></script>
+
+  <!-- Sistema de Configuração Local Simples (também antes do app) -->
+  <script src="/simple-local-config.js" type="text/javascript"></script>
+
   <script type="module" src="/src/main.tsx"></script>
 
   <!-- 🔄 Chunk Recovery: Recarrega aplicação ao detectar falha de carregamento de chunk (404 / network) -->
@@ -157,12 +163,6 @@
       }
     }
   </script>
-
-  <!-- Supabase Fallback System (Deve carregar PRIMEIRO) -->
-  <script src="/supabase-fallback-system.js" type="text/javascript"></script>
-
-  <!-- Sistema de Configuração Local Simples -->
-  <script src="/simple-local-config.js" type="text/javascript"></script>
 
   <!-- Canvas-Preview Sync Test -->
   <script type="text/javascript">

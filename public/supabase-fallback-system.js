@@ -195,56 +195,51 @@ const LOCAL_FALLBACK_DATA = {
 
 // Sistema de interceptação de requisições
 class SupabaseErrorInterceptor {
-    private static instance: SupabaseErrorInterceptor;
-    private interceptedUrls = new Set<string>();
-    private fallbackCache = new Map<string, any>();
-    private originalFetch: typeof fetch;
+    static instance;
+    interceptedUrls = new Set();
+    fallbackCache = new Map();
+    originalFetch;
 
     constructor() {
         this.originalFetch = window.fetch;
         this.setupInterceptor();
         this.populateCache();
-        
         console.log('🔧 Supabase Error Interceptor ativo');
     }
 
-    static getInstance(): SupabaseErrorInterceptor {
+    static getInstance() {
         if (!this.instance) {
             this.instance = new SupabaseErrorInterceptor();
         }
         return this.instance;
     }
 
-    private setupInterceptor() {
-        window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    setupInterceptor() {
+        const self = this;
+        window.fetch = async (input, init) => {
             const url = typeof input === 'string' ? input : input.toString();
-            
             // Detectar URLs do Supabase
             if (url.includes('supabase.co') && (url.includes('quiz_drafts') || url.includes('quiz_production'))) {
                 console.log(`🔍 Interceptando requisição Supabase: ${url}`);
-                
                 try {
                     // Tentar requisição original primeiro
-                    const response = await this.originalFetch(input, init);
-                    
+                    const response = await self.originalFetch(input, init);
                     if (response.status === 404) {
                         console.log(`📦 Fornecendo dados locais para: ${url}`);
-                        return this.createFallbackResponse(url);
+                        return self.createFallbackResponse(url);
                     }
-                    
                     return response;
                 } catch (error) {
                     console.log(`🚨 Erro na requisição Supabase, usando fallback: ${error}`);
-                    return this.createFallbackResponse(url);
+                    return self.createFallbackResponse(url);
                 }
             }
-            
             // Para URLs normais, usar fetch original
-            return this.originalFetch(input, init);
+            return self.originalFetch(input, init);
         };
     }
 
-    private populateCache() {
+    populateCache() {
         // Carregar dados do localStorage se existirem
         try {
             const savedData = localStorage.getItem('supabase-fallback-cache');
@@ -257,7 +252,6 @@ class SupabaseErrorInterceptor {
         } catch (error) {
             console.log('Cache local não disponível, usando dados padrão');
         }
-
         // Popular com dados padrão se cache vazio
         if (this.fallbackCache.size === 0) {
             Object.entries(LOCAL_FALLBACK_DATA).forEach(([key, value]) => {
@@ -266,9 +260,8 @@ class SupabaseErrorInterceptor {
         }
     }
 
-    private createFallbackResponse(url: string): Response {
-        let responseData: any = {};
-
+    createFallbackResponse(url) {
+        let responseData = {};
         // Determinar que tipo de dados retornar baseado na URL
         if (url.includes('quiz_drafts')) {
             responseData = [LOCAL_FALLBACK_DATA.quiz_drafts];
@@ -277,9 +270,8 @@ class SupabaseErrorInterceptor {
         } else {
             responseData = { message: 'Fallback response' };
         }
-
         // Criar response mock
-        const responseInit: ResponseInit = {
+        const responseInit = {
             status: 200,
             statusText: 'OK (Local Fallback)',
             headers: {
@@ -287,18 +279,17 @@ class SupabaseErrorInterceptor {
                 'X-Fallback': 'true'
             }
         };
-
         return new Response(JSON.stringify(responseData), responseInit);
     }
 
     // Método para adicionar dados personalizados ao cache
-    public addToCache(key: string, data: any) {
+    addToCache(key, data) {
         this.fallbackCache.set(key, data);
         this.saveCache();
     }
 
     // Método para salvar cache no localStorage
-    private saveCache() {
+    saveCache() {
         try {
             const cacheObj = Object.fromEntries(this.fallbackCache.entries());
             localStorage.setItem('supabase-fallback-cache', JSON.stringify(cacheObj));
@@ -308,25 +299,24 @@ class SupabaseErrorInterceptor {
     }
 
     // Método para obter dados do cache
-    public getFromCache(key: string): any {
+    getFromCache(key) {
         return this.fallbackCache.get(key);
     }
 
     // Método para limpar cache
-    public clearCache() {
+    clearCache() {
         this.fallbackCache.clear();
         localStorage.removeItem('supabase-fallback-cache');
         this.populateCache();
     }
 
     // Métodos para configurações
-    public getConfiguration(configId: string): any {
-        const config = LOCAL_FALLBACK_DATA.configurations[configId as keyof typeof LOCAL_FALLBACK_DATA.configurations];
+    getConfiguration(configId) {
+        const config = LOCAL_FALLBACK_DATA.configurations[configId];
         if (config) {
             console.log(`📋 Retornando configuração local: ${configId}`);
             return config;
         }
-        
         // Configuração padrão genérica
         return {
             theme: 'default',
@@ -338,10 +328,10 @@ class SupabaseErrorInterceptor {
 
 // Sistema de configuração local para resolver timeouts
 class LocalConfigurationManager {
-    private static instance: LocalConfigurationManager;
-    private configs = new Map<string, any>();
+    static instance;
+    configs = new Map();
 
-    static getInstance(): LocalConfigurationManager {
+    static getInstance() {
         if (!this.instance) {
             this.instance = new LocalConfigurationManager();
         }
@@ -353,23 +343,21 @@ class LocalConfigurationManager {
         this.interceptConfigurationRequests();
     }
 
-    private loadDefaultConfigurations() {
+    loadDefaultConfigurations() {
         Object.entries(LOCAL_FALLBACK_DATA.configurations).forEach(([key, value]) => {
             this.configs.set(key, value);
         });
     }
 
-    private interceptConfigurationRequests() {
+    interceptConfigurationRequests() {
         // Interceptar chamadas para configurações que estão dando timeout
-        const originalSetTimeout = window.setTimeout;
         let configTimeouts = 0;
-
         // Detectar quando há muitos timeouts de configuração
         window.addEventListener('error', (event) => {
-            if (event.message?.includes('timeout') && event.message?.includes('config')) {
+            const message = event && event.message ? event.message : '';
+            if (typeof message === 'string' && message.includes('timeout') && message.includes('config')) {
                 configTimeouts++;
                 console.log(`⚡ Timeout de configuração detectado (${configTimeouts})`);
-                
                 // Após 3 timeouts, forçar uso de configurações locais
                 if (configTimeouts >= 3) {
                     this.forceLocalConfigurations();
@@ -378,21 +366,19 @@ class LocalConfigurationManager {
         });
     }
 
-    private forceLocalConfigurations() {
+    forceLocalConfigurations() {
         console.log('🔄 Forçando uso de configurações locais devido a timeouts');
-        
         // Disparar evento para informar componentes
         window.dispatchEvent(new CustomEvent('force-local-config', {
             detail: { configurations: Object.fromEntries(this.configs.entries()) }
         }));
     }
 
-    public getConfig(configId: string): any {
+    getConfig(configId) {
         if (this.configs.has(configId)) {
             console.log(`⚡ Configuração local carregada instantaneamente: ${configId}`);
             return this.configs.get(configId);
         }
-        
         // Retornar configuração padrão
         return {
             loaded: true,
@@ -401,9 +387,8 @@ class LocalConfigurationManager {
         };
     }
 
-    public setConfig(configId: string, config: any) {
+    setConfig(configId, config) {
         this.configs.set(configId, config);
-        
         // Salvar no localStorage
         try {
             localStorage.setItem(`config-${configId}`, JSON.stringify(config));
@@ -414,8 +399,8 @@ class LocalConfigurationManager {
 }
 
 // Inicializar sistemas ao carregar a página
-let interceptor: SupabaseErrorInterceptor;
-let configManager: LocalConfigurationManager;
+let interceptor;
+let configManager;
 
 const initializeFallbackSystems = () => {
     try {
@@ -425,11 +410,11 @@ const initializeFallbackSystems = () => {
         console.log('✅ Sistemas de fallback inicializados com sucesso');
         
         // Expor para uso global
-        (window as any).supabaseFallback = {
+        window.supabaseFallback = {
             interceptor,
             configManager,
-            getConfig: (id: string) => configManager.getConfig(id),
-            addData: (key: string, data: any) => interceptor.addToCache(key, data),
+            getConfig: (id) => configManager.getConfig(id),
+            addData: (key, data) => interceptor.addToCache(key, data),
             clearCache: () => interceptor.clearCache()
         };
 
@@ -448,26 +433,15 @@ if (document.readyState === 'loading') {
     initializeFallbackSystems();
 }
 
-// Exportar para módulos
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        SupabaseErrorInterceptor,
-        LocalConfigurationManager,
-        LOCAL_FALLBACK_DATA
-    };
-}
-
-// Tipos TypeScript
-declare global {
-    interface Window {
-        supabaseFallback?: {
-            interceptor: SupabaseErrorInterceptor;
-            configManager: LocalConfigurationManager;
-            getConfig: (id: string) => any;
-            addData: (key: string, data: any) => void;
-            clearCache: () => void;
+// Exportar para módulos (Node/CommonJS) – ignorado no navegador
+try {
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = {
+            SupabaseErrorInterceptor,
+            LocalConfigurationManager,
+            LOCAL_FALLBACK_DATA
         };
     }
-}
+} catch {}
 
 console.log('🔧 Supabase Error Interceptor & Local Fallback carregado');
