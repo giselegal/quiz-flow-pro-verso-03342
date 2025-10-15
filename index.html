@@ -158,11 +158,152 @@
     }
   </script>
 
-  <!-- Cloudinary Upload Widget -->
-  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+  <!-- Supabase Fallback System (Deve carregar PRIMEIRO) -->
+  <script src="/supabase-fallback-system.js" type="text/javascript"></script>
 
   <!-- Canvas-Preview Sync Test -->
-  <script src="/test-canvas-preview-sync.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    // Embed do script diretamente para evitar problemas de MIME type
+    /**
+     * 🧪 TESTE PRÁTICO CANVAS-PREVIEW SYNCHRONIZATION
+     * Execute no console do navegador para testar sincronização real
+     */
+
+    window.testCanvasPreviewSync = async () => {
+      console.log('🚀 Iniciando teste prático de sincronização Canvas ↔ Preview...');
+
+      const results = {
+        tests: [],
+        passed: 0,
+        failed: 0,
+        total: 0
+      };
+
+      const addResult = (name, success, message = '') => {
+        results.tests.push({ name, success, message });
+        results.total++;
+        if (success) {
+          results.passed++;
+          console.log(`✅ ${name}: OK`);
+        } else {
+          results.failed++;
+          console.log(`❌ ${name}: ${message}`);
+        }
+      };
+
+      try {
+        // Teste 1: Verificar fallback system
+        addResult(
+          'Sistema de Fallback Ativo',
+          !!window.supabaseFallback,
+          window.supabaseFallback ? 'Sistema carregado' : 'Sistema não encontrado'
+        );
+
+        // Teste 2: Verificar canvas
+        const canvasContainer = document.querySelector('.canvas-container, [data-canvas], .editor-canvas, .quiz-editor');
+        addResult(
+          'Canvas Container Encontrado',
+          !!canvasContainer,
+          canvasContainer ? 'Canvas encontrado' : 'Canvas não encontrado'
+        );
+
+        // Teste 3: Verificar preview
+        const previewContainer = document.querySelector('.preview-container, [data-preview], .quiz-preview, .preview-area');
+        addResult(
+          'Preview Container Encontrado',
+          !!previewContainer,
+          previewContainer ? 'Preview encontrado' : 'Preview não encontrado'
+        );
+
+        // Teste 4: Verificar etapas
+        const steps = document.querySelectorAll('[data-step], .step, .quiz-step, [data-canvas-step], [data-preview-step]');
+        addResult(
+          'Etapas Detectadas',
+          steps.length > 0,
+          `${steps.length} etapas encontradas`
+        );
+
+        // Teste 5: Testar configurações locais
+        if (window.supabaseFallback) {
+          const config = window.supabaseFallback.getConfig('quiz-global-config');
+          addResult(
+            'Configuração Local Funcional',
+            !!config && !!config.theme,
+            config ? 'Configuração carregada' : 'Falha ao carregar configuração'
+          );
+        }
+
+        // Teste 6: Verificar localStorage sync
+        const hasLocalData = Object.keys(localStorage).some(key =>
+          key.includes('canvas') || key.includes('quiz') || key.includes('config')
+        );
+        addResult(
+          'Dados Locais Disponíveis',
+          hasLocalData,
+          hasLocalData ? 'LocalStorage com dados' : 'Sem dados locais'
+        );
+
+      } catch (error) {
+        console.error('Erro durante testes:', error);
+        addResult('Erro Global', false, error.message);
+      }
+
+      console.log('\n📊 RELATÓRIO FINAL - Teste Canvas ↔ Preview');
+      console.log('='.repeat(50));
+      console.log(`✅ Passou: ${results.passed}/${results.total}`);
+      console.log(`❌ Falhou: ${results.failed}/${results.total}`);
+      console.log(`📈 Taxa: ${((results.passed / results.total) * 100).toFixed(1)}%`);
+
+      results.tests.forEach((test, i) => {
+        const icon = test.success ? '✅' : '❌';
+        console.log(`${i + 1}. ${icon} ${test.name} ${test.message ? `- ${test.message}` : ''}`);
+      });
+
+      return results;
+    };
+
+    window.startSyncDiagnostic = () => {
+      console.log('🔄 Iniciando diagnóstico contínuo...');
+      let issues = 0;
+
+      const check = () => {
+        const canvas = document.querySelectorAll('[data-canvas], .canvas-container');
+        const preview = document.querySelectorAll('[data-preview], .preview-container');
+
+        if (canvas.length !== preview.length && issues++ < 5) {
+          console.warn(`⚠️ Dessincronização: Canvas ${canvas.length} vs Preview ${preview.length}`);
+        }
+      };
+
+      const interval = setInterval(check, 2000);
+      console.log('✅ Diagnóstico iniciado. Use stopSyncDiagnostic() para parar.');
+
+      window.stopSyncDiagnostic = () => {
+        clearInterval(interval);
+        console.log('🛑 Diagnóstico parado.');
+      };
+
+      return interval;
+    };
+
+    // Auto-executar quando pronto
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        console.log('🔍 Sistema de Teste Canvas-Preview pronto!');
+        console.log('💻 Execute: testCanvasPreviewSync()');
+        console.log('🔄 Execute: startSyncDiagnostic()');
+
+        // Auto-teste se sistema de fallback estiver ativo
+        if (window.supabaseFallback) {
+          console.log('🚀 Auto-executando teste devido ao sistema de fallback...');
+          setTimeout(window.testCanvasPreviewSync, 1000);
+        }
+      }, 500);
+    });
+  </script>
+
+  <!-- Cloudinary Upload Widget -->
+  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 </body>
 
 </html>
