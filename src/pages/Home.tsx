@@ -14,12 +14,12 @@ import {
   Star, 
   ArrowRight
 } from 'lucide-react';
-import { useAuth } from '@/contexts';
+import { useAuth } from '@/providers/SuperUnifiedProvider';
 
 export const Home: React.FC = () => {
   console.log('🏠 Home component rendering...');
   
-  const { user, logout } = useAuth();
+  const { user, signOut: logout } = useAuth();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(true);
 
