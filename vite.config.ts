@@ -1,12 +1,16 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { defineConfig } from 'vitest/config';
+import { defineConfig, loadEnv } from 'vitest/config';
 
 // Configuração consolidada e sanitizada (UTF-8, sem duplicações) + suporte a testes
-export default defineConfig({
-  base: '/',
-  plugins: [
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), 'VITE_');
+  
+  return {
+    base: '/',
+    envPrefix: 'VITE_',
+    plugins: [
     react(),
     visualizer({
       open: false,
@@ -22,10 +26,9 @@ export default defineConfig({
     },
     dedupe: ['react', 'react-dom'],
   },
-  server: {
-    host: '0.0.0.0',
-    // Porta do servidor Vite em dev. Mantemos 5173 (padrão) para alinhar com HMR e com o redirecionador 8080 -> 5173
-    port: 5173,
+    server: {
+      host: '0.0.0.0',
+      port: 8080,
     open: false,
     cors: true,
     strictPort: true,
@@ -45,11 +48,11 @@ export default defineConfig({
       'Access-Control-Allow-Headers': '*',
       'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
     },
-    hmr: {
-      overlay: false,
-      clientPort: 5173,
-      port: 5173,
-    },
+      hmr: {
+        overlay: false,
+        clientPort: 8080,
+        port: 8080,
+      },
   },
   preview: {
     host: '0.0.0.0',
@@ -88,8 +91,13 @@ export default defineConfig({
       loader: { '.js': 'jsx' },
     },
   },
-  define: { global: 'globalThis' },
-  esbuild: { target: 'es2020' },
+    define: { 
+      global: 'globalThis',
+      'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
+      'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(env.VITE_SUPABASE_PUBLISHABLE_KEY),
+      'import.meta.env.VITE_SUPABASE_PROJECT_ID': JSON.stringify(env.VITE_SUPABASE_PROJECT_ID),
+    },
+    esbuild: { target: 'es2020' },
   test: {
     environment: 'jsdom',
     globals: true,
@@ -109,5 +117,6 @@ export default defineConfig({
       'src/__tests__/PropertiesPanel.visual.test.tsx',
       'src/adapters/__tests__/QuizStepAdapter.test.ts',
     ],
-  },
+    },
+  };
 });
