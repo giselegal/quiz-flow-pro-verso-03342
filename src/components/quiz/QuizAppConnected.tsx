@@ -29,15 +29,17 @@ import { loadNormalizedStep } from '@/lib/normalizedLoader';
 
 interface QuizAppConnectedProps {
     funnelId?: string;
-    editorMode?: boolean; // Permite visualização no /editor
-    initialStepId?: string; // Etapa inicial/ativa quando em modo editor
+    editorMode?: boolean; // Permite visualização no /editor (LEGACY - usar previewMode)
+    previewMode?: boolean; // 🆕 Preview sincronizado mas com comportamento de produção
+    initialStepId?: string; // Etapa inicial/ativa quando em modo editor/preview
 }
 
-export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false, initialStepId }: QuizAppConnectedProps) {
+export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false, previewMode = false, initialStepId }: QuizAppConnectedProps) {
     // 🐛 DEBUG CRÍTICO: Log de props recebidas
     console.log(`🎯 QuizAppConnected RENDERIZADO`, {
         funnelId,
         editorMode,
+        previewMode,
         initialStepId,
         timestamp: new Date().toISOString()
     });
@@ -115,10 +117,11 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         if (mode === 'unified' || mode === 'legacy' || mode === 'auto') {
             setRendererMode(mode);
         } else {
-            setRendererMode(editorMode ? 'legacy' : 'auto');
+            // 🎯 NOVO: previewMode usa 'auto' (produção), editorMode usa 'legacy' (compatibilidade)
+            setRendererMode(previewMode ? 'auto' : editorMode ? 'legacy' : 'auto');
         }
         setNormalizedDebug(debug === '1' || debug === 'true');
-    }, [editorMode]);
+    }, [editorMode, previewMode]);
 
     // Carregar normalized se solicitado e disponível
     useEffect(() => {
@@ -144,21 +147,25 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         return () => { cancelled = true; };
     }, [state.currentStep, rendererMode]);
 
-    // ========================= SINCRONIZAR ETAPA ATIVA NO MODO EDITOR =========================
-    // Quando usado dentro do editor, opcionalmente alinhar a etapa atual do runtime com a etapa selecionada no editor
+    // ========================= SINCRONIZAR ETAPA ATIVA NO MODO EDITOR/PREVIEW =========================
+    // Quando usado dentro do editor ou preview, alinhar a etapa atual com a selecionada no Canvas
     useEffect(() => {
-        if (!editorMode || !initialStepId) return;
+        // 🎯 NOVO: Sincroniza tanto em editorMode quanto em previewMode
+        if ((!editorMode && !previewMode) || !initialStepId) return;
+
         // Normalizar ID recebido (aceita step-1 ou step-01)
         const normalizeIncoming = (id: string) => {
             const numeric = id.replace('step-', '');
             return `step-${numeric.padStart(2, '0')}`;
         };
         const target = normalizeIncoming(initialStepId);
+
         if (state.currentStep !== target) {
+            console.log(`🔄 Sincronizando Preview: ${state.currentStep} → ${target}`);
             nextStep(target);
         }
         // deps incluem apenas valores estáveis
-    }, [editorMode, initialStepId, state.currentStep, nextStep]);
+    }, [editorMode, previewMode, initialStepId, state.currentStep, nextStep]);
 
     // ========================= AUTO-AVANÇO QUANDO COMPLETAR RESPOSTAS =========================
     // Detecta quando usuário completa as seleções necessárias e avança automaticamente
