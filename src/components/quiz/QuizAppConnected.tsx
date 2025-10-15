@@ -431,6 +431,44 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         );
     };
 
+    // ================= NORMALIZED BLOCK RENDERER =================
+    // Componente para renderizar normalized blocks com hooks
+    const NormalizedBlockRenderer: React.FC<{ block: any; idx: number; debug: boolean }> = ({ block, idx, debug }) => {
+        const registry = useBlockRegistry();
+        const def = registry.get(block.type);
+
+        if (!def) {
+            return <div key={idx} className="text-xs text-red-600">Bloco não registrado: {block.type}</div>;
+        }
+
+        try {
+            return (
+                <div
+                    key={idx}
+                    className={"normalized-block-wrapper" + (debug ? ' outline outline-2 outline-emerald-400/70 rounded-sm relative' : '')}
+                    data-block-type={block.type}
+                >
+                    {debug && (
+                        <div className="absolute -top-2 -left-2 bg-emerald-500 text-white text-[10px] px-1 rounded shadow">
+                            {block.type}
+                        </div>
+                    )}
+                    {def.render({
+                        config: { ...def.defaultConfig, ...block.config },
+                        state: {
+                            userProfile: state.userProfile,
+                            onNameSubmit: (name: string) => { setUserName(name); nextStep(); },
+                            onAnswersChange: (answers: string[]) => { addAnswer(state.currentStep, answers); },
+                            onComplete: () => nextStep()
+                        }
+                    })}
+                </div>
+            );
+        } catch (e: any) {
+            return <div key={idx} className="text-xs text-red-600">Erro bloco {block.type}: {e.message}</div>;
+        }
+    };
+
     // =========================================================================
     // PREPARAÇÃO PARA UNIFIEDSTEPRENDERER
     // =========================================================================
@@ -676,36 +714,9 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         </div>
                     ) : normalizedStep ? (
                         <div className={"max-w-6xl mx-auto px-4 py-8 space-y-8" + (normalizedDebug ? ' normalized-debug-mode' : '')}>
-                            {normalizedStep.blocks.map((b: any, idx: number) => {
-                                const def = useBlockRegistry().get(b.type);
-                                if (!def) return <div key={idx} className="text-xs text-red-600">Bloco não registrado: {b.type}</div>;
-                                try {
-                                    return (
-                                        <div
-                                            key={idx}
-                                            className={"normalized-block-wrapper" + (normalizedDebug ? ' outline outline-2 outline-emerald-400/70 rounded-sm relative' : '')}
-                                            data-block-type={b.type}
-                                        >
-                                            {normalizedDebug && (
-                                                <div className="absolute -top-2 -left-2 bg-emerald-500 text-white text-[10px] px-1 rounded shadow">
-                                                    {b.type}
-                                                </div>
-                                            )}
-                                            {def.render({
-                                                config: { ...def.defaultConfig, ...b.config },
-                                                state: {
-                                                    userProfile: state.userProfile,
-                                                    onNameSubmit: (name: string) => { setUserName(name); nextStep(); },
-                                                    onAnswersChange: (answers: string[]) => { addAnswer(state.currentStep, answers); },
-                                                    onComplete: () => nextStep()
-                                                }
-                                            })}
-                                        </div>
-                                    );
-                                } catch (e: any) {
-                                    return <div key={idx} className="text-xs text-red-600">Erro bloco {b.type}: {e.message}</div>;
-                                }
-                            })}
+                            {normalizedStep.blocks.map((b: any, idx: number) => (
+                                <NormalizedBlockRenderer key={idx} block={b} idx={idx} debug={normalizedDebug} />
+                            ))}
                         </div>
                     ) : shouldUseBlocks(currentStepData.type) ? (
                         // Caminho dinâmico (result/offer com blocks)
