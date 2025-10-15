@@ -12,42 +12,71 @@ async function loadRealTemplate(stepNumber: number): Promise<any> {
   const stepId = stepNumber.toString().padStart(2, '0');
   
   try {
-    // 🏆 PRIORIDADE 1: Templates JSON reais
-    try {
-      const localPath = `./step-${stepId}.json`;
-      const moduleImport = await import(localPath);
-      const template = moduleImport.default || moduleImport;
+    console.log(`🔍 Carregando template para step ${stepNumber} (${stepId})`);
 
-      if (template && template.blocks && Array.isArray(template.blocks)) {
-        console.log(`🏆 Template REAL JSON carregado: ${stepNumber} com ${template.blocks.length} blocos`);
-        return template;
-      }
-    } catch (importError) {
-      console.warn(`⚠️ Template JSON não encontrado para step ${stepNumber}:`, importError);
-    }
-
-    // 🔄 PRIORIDADE 2: Fetch HTTP (desenvolvimento)
-    if (import.meta.env.DEV && typeof window !== 'undefined') {
-      const templatePath = `/src/config/templates/step-${stepId}.json`;
+    // 🏆 PRIORIDADE 1: Templates v3 híbridos via HTTP
+    if (typeof window !== 'undefined') {
+      const templatePath = `/templates/step-${stepId}-v3.json`;
       
       try {
+        console.log(`📥 Fazendo fetch: ${templatePath}`);
         const response = await fetch(templatePath);
+        
         if (response.ok) {
           const template = await response.json();
-          if (template && template.blocks) {
-            console.log(`✅ Template carregado via fetch: ${stepNumber}`);
+          console.log(`✅ Template v3 carregado via HTTP: step ${stepNumber}`);
+          console.log(`📊 Template info:`, {
+            version: template.templateVersion,
+            sections: template.sections?.length || 0,
+            blocks: template.blocks?.length || 0,
+            id: template.metadata?.id
+          });
+          
+          // Converter template v3 para formato compatível com editor
+          if (template.sections && Array.isArray(template.sections)) {
+            // Template v3 com seções
+            return {
+              ...template,
+              blocks: template.sections.map((section: any) => ({
+                id: section.id,
+                type: section.type,
+                properties: section.props || {},
+                content: {},
+                position: section.order || 0
+              }))
+            };
+          } else if (template.blocks && Array.isArray(template.blocks)) {
+            // Template v2 com blocos
             return template;
+          } else {
+            console.warn(`⚠️ Template ${stepNumber} tem estrutura inválida`);
           }
+        } else {
+          console.warn(`⚠️ HTTP ${response.status} para template ${stepNumber}: ${templatePath}`);
         }
       } catch (fetchError) {
         console.warn(`⚠️ Fetch falhou para template ${stepNumber}:`, fetchError);
       }
     }
 
-    console.warn(`⚠️ NENHUM TEMPLATE REAL encontrado para step ${stepNumber}`);
+    // 🔄 PRIORIDADE 2: Tentar template local (fallback)
+    try {
+      const localPath = `./step-${stepId}.json`;
+      const moduleImport = await import(localPath);
+      const template = moduleImport.default || moduleImport;
+
+      if (template && (template.blocks || template.sections)) {
+        console.log(`📁 Template local carregado: ${stepNumber}`);
+        return template;
+      }
+    } catch (importError) {
+      console.warn(`⚠️ Template local não encontrado para step ${stepNumber}:`, importError);
+    }
+
+    console.warn(`❌ NENHUM TEMPLATE encontrado para step ${stepNumber}`);
     return null;
   } catch (error) {
-    console.error(`❌ Erro ao carregar template real ${stepNumber}:`, error);
+    console.error(`❌ Erro ao carregar template ${stepNumber}:`, error);
     return null;
   }
 }

@@ -4,6 +4,71 @@
 // ⚠️ NOTA: Migrado para sistema JSON (step-XX.json) - usa templates dinâmicos
 import { getStepTemplate as getJSONTemplate } from '@/config/templates/templates';
 
+// 🔧 CACHE GLOBAL DE TEMPLATES
+const TEMPLATE_CACHE = new Map<number, any>();
+
+// 🔧 FUNÇÃO PARA PRÉ-CARREGAR TODOS OS TEMPLATES
+async function preloadAllTemplates(): Promise<void> {
+  if (typeof window === 'undefined') return;
+  
+  console.log('🚀 Pré-carregando todos os templates v3...');
+  
+  const promises = Array.from({ length: 21 }, (_, i) => {
+    const stepNumber = i + 1;
+    const stepId = stepNumber.toString().padStart(2, '0');
+    const templatePath = `/templates/step-${stepId}-v3.json`;
+    
+    return fetch(templatePath)
+      .then(response => {
+        if (response.ok) {
+          return response.json().then(template => {
+            // Converter template para formato compatível
+            if (template.sections && Array.isArray(template.sections)) {
+              const blocks = template.sections.map((section: any, index: number) => ({
+                id: section.id || `section-${index}`,
+                type: section.type,
+                properties: section.props || {},
+                content: {},
+                position: section.order || index
+              }));
+              TEMPLATE_CACHE.set(stepNumber, blocks);
+              console.log(`✅ Template ${stepNumber} pré-carregado: ${blocks.length} blocos`);
+            } else if (template.blocks && Array.isArray(template.blocks)) {
+              TEMPLATE_CACHE.set(stepNumber, template.blocks);
+              console.log(`✅ Template ${stepNumber} pré-carregado: ${template.blocks.length} blocos`);
+            }
+          });
+        }
+      })
+      .catch(error => {
+        console.warn(`⚠️ Falha ao pré-carregar template ${stepNumber}:`, error);
+      });
+  });
+  
+  await Promise.allSettled(promises);
+  console.log(`🎯 Pré-carregamento concluído: ${TEMPLATE_CACHE.size}/21 templates`);
+}
+
+// 🔧 FUNÇÃO SÍNCRONA QUE USA CACHE
+function getTemplateFromCache(stepNumber: number): any[] {
+  const cached = TEMPLATE_CACHE.get(stepNumber);
+  if (cached && Array.isArray(cached)) {
+    console.log(`💾 Template ${stepNumber} do cache: ${cached.length} blocos`);
+    return cached;
+  }
+  
+  console.warn(`❌ Template ${stepNumber} não está no cache`);
+  return [];
+}
+
+// Inicializar pré-carregamento quando possível
+if (typeof window !== 'undefined') {
+  // Aguardar um pouco para o DOM carregar
+  setTimeout(() => {
+    preloadAllTemplates();
+  }, 1000);
+}
+
 export interface StepInfo {
   id: string;
   name: string;
@@ -68,29 +133,50 @@ class StepTemplateService {
     console.log(`🧪 [DEBUG] stepId original:`, stepId);
     console.log(`🧪 [DEBUG] stepNumber convertido:`, stepNumber);
 
-    const stepMapping = STEP_MAPPING[stepNumber];
-
-    if (!stepMapping) {
-      console.warn(`⚠️ Template não encontrado para etapa ${stepNumber}`);
-      console.log(`🧪 [DEBUG] STEP_MAPPING disponíveis:`, Object.keys(STEP_MAPPING));
-      return this.getDefaultTemplate(stepNumber);
-    }
-
-    console.log(`✅ Mapping encontrado para etapa ${stepNumber}:`, stepMapping.name);
-
+    // ✅ USAR TEMPLATE JSON v3 SÍNCRONO
     try {
-      const template = stepMapping.getTemplate();
-      console.log(`✅ Template carregado para etapa ${stepNumber}: ${template.length} blocos`);
-      console.log(`🧱 [DEBUG] Primeiro bloco:`, template[0]);
-      console.log(
-        `🧱 [DEBUG] Tipos de blocos:`,
-        template.map(b => b.type)
-      );
-      return template;
+      console.log(`🎯 [CORREÇÃO] Carregando template v3 SYNC para etapa ${stepNumber}...`);
+      const syncTemplate = getTemplateFromCache(stepNumber);
+      
+      if (syncTemplate && Array.isArray(syncTemplate) && syncTemplate.length > 0) {
+        console.log(`✅ Template v3 SYNC carregado para etapa ${stepNumber}: ${syncTemplate.length} blocos`);
+        console.log(`🧱 [DEBUG] Tipos de blocos:`, syncTemplate.map((b: any) => b.type));
+        return syncTemplate;
+      }
+      
+      console.warn(`⚠️ Template v3 SYNC vazio para etapa ${stepNumber}, tentando async...`);
+      
+      // Fallback async (não retorna imediatamente, mas popula cache)
+      getJSONTemplate(stepNumber).then((asyncTemplate) => {
+        if (asyncTemplate && asyncTemplate.blocks) {
+          console.log(`🔄 Template async carregado para cache: etapa ${stepNumber}`);
+        }
+      }).catch(err => {
+        console.warn(`⚠️ Template async falhou para etapa ${stepNumber}:`, err);
+      });
+      
     } catch (error) {
-      console.error(`❌ Erro ao carregar template da etapa ${stepNumber}:`, error);
-      return this.getDefaultTemplate(stepNumber);
+      console.error(`❌ Erro ao carregar template SYNC da etapa ${stepNumber}:`, error);
     }
+
+    // Fallback para o sistema antigo (só como backup)
+    const stepMapping = STEP_MAPPING[stepNumber];
+    if (stepMapping) {
+      console.log(`🔄 Fallback para mapping da etapa ${stepNumber}:`, stepMapping.name);
+      try {
+        const template = stepMapping.getTemplate();
+        if (template && template.length > 0) {
+          console.log(`✅ Template fallback carregado para etapa ${stepNumber}: ${template.length} blocos`);
+          return template;
+        }
+      } catch (error) {
+        console.error(`❌ Erro no fallback da etapa ${stepNumber}:`, error);
+      }
+    }
+
+    // Template padrão como último recurso
+    console.warn(`⚠️ Usando template padrão para etapa ${stepNumber}`);
+    return this.getDefaultTemplate(stepNumber);
   }
 
   /**
