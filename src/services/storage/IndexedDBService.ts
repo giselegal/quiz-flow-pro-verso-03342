@@ -17,7 +17,7 @@ interface StorageItem {
 
 class IndexedDBService {
   private dbName = 'QuizQuestStorage';
-  private version = 1;
+  private version = 2; // ✅ Corrigido: Incrementado para resolver VersionError
   private db: IDBDatabase | null = null;
 
   async init(): Promise<void> {

@@ -5,7 +5,7 @@
  * Fornece métodos padronizados para autenticação, CRUD e analytics.
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import type { User, Session } from '@supabase/supabase-js';
 
 export interface ApiResponse<T> {

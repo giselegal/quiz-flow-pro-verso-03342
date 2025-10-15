@@ -6,7 +6,7 @@
  * Mapeia entidades Quiz, Question e Answer para as tabelas do banco.
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { 
   Quiz, 
   Question, 

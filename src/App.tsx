@@ -42,6 +42,7 @@ import { FunnelContext } from '@/core/contexts/FunnelContext';
 // import SuperUnifiedProvider from '@/providers/SuperUnifiedProvider';
 // import { UnifiedCRUDProvider } from '@/contexts/data/UnifiedCRUDProvider';
 import { EditorProviderUnified } from '@/components/editor/EditorProviderUnified';
+import { ProviderGuard } from '@/components/ProviderGuard';
 
 // 🏠 PÁGINAS ESSENCIAIS
 const Home = lazy(() => import('./pages/Home'));
@@ -272,7 +273,9 @@ function AppCore() {
 
                                 {/* 🔐 AUTENTICAÇÃO */}
                                 <Route path="/auth">
-                                    <AuthPage />
+                                    <ProviderGuard>
+                                        <AuthPage />
+                                    </ProviderGuard>
                                 </Route>
 
                                 {/* 🏢 ADMIN DASHBOARDS - CONSOLIDADO */}

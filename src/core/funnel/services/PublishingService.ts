@@ -5,7 +5,7 @@
  * Suporte para múltiplos ambientes e integrações
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { FunnelState } from '../types';
 
 // ============================================================================

@@ -8,7 +8,7 @@
  * - Sincronização automática entre admin/dashboard/editor
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import type { Database } from '@/integrations/supabase/types';
 import { UnifiedDataService, type UnifiedMetrics, type UnifiedFunnel } from './UnifiedDataService';
 

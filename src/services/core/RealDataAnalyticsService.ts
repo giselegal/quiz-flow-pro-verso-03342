@@ -6,7 +6,7 @@
  */
 
 import { BaseUnifiedService } from './UnifiedServiceManager';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 // ============================================================================
 // TYPES

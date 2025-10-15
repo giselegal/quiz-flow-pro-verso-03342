@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useSecurityMonitor } from '@/hooks/useSecurityMonitor';
 import { useBackupSystem } from '@/hooks/useBackupSystem';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { 
   Shield, 
   Lock, 

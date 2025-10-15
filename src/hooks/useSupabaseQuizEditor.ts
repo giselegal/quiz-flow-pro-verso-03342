@@ -1,5 +1,5 @@
 import { toast } from '@/components/ui/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { useCallback, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 

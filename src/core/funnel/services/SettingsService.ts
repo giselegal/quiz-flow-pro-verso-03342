@@ -5,7 +5,7 @@
  * Suporte para Supabase + LocalStorage fallback
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { FunnelSettings, FunnelTheme } from '../types';
 
 // ============================================================================

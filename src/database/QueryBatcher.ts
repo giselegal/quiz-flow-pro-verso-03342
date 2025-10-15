@@ -13,7 +13,7 @@
  * ✅ Cache integration
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 import { queryCache } from '@/cache/IntelligentCacheSystem';
 
 interface BatchQuery {

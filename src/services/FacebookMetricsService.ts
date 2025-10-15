@@ -4,7 +4,7 @@
  * Serviço para integrar métricas do Facebook com funis específicos
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 // ============================================================================
 // TYPES

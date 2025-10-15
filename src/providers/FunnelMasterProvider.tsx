@@ -17,7 +17,7 @@
  */
 
 import React, { createContext, useContext, useReducer, useEffect, useMemo, ReactNode } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 // 🎯 UNIFIED TYPES
 interface UnifiedFunnelData {

@@ -8,7 +8,7 @@
 import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/adapters/UnifiedQuizStepAdapter';
 import { useUnifiedQuizLoader } from '@/hooks/useUnifiedQuizLoader';
 import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/customClient';
 
 export interface UnifiedFunnelData {
   id: string;
