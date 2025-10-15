@@ -81,6 +81,7 @@ export function useComponentConfiguration(
     const apiRef = useRef<ConfigurationAPI>(ConfigurationAPI.getInstance());
     const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const unsavedChangesRef = useRef<Record<string, any>>({});
+    const definitionLoadedRef = useRef<boolean>(false);
 
     // ============================================================================
     // LOAD CONFIGURATION
@@ -96,14 +97,17 @@ export function useComponentConfiguration(
 
             console.log(`🔄 Loading configuration for ${componentId}${funnelId ? ` (${funnelId})` : ''}`);
 
-            // Carregar definição do componente
-            const definition = await apiRef.current.getComponentDefinition(componentId);
+            // Carregar definição do componente (apenas uma vez para evitar loop)
+            if (!definitionLoadedRef.current) {
+                const definition = await apiRef.current.getComponentDefinition(componentId);
+                setComponentDefinition(definition);
+                definitionLoadedRef.current = true;
+            }
             
             // Carregar configuração atual
             const config = await apiRef.current.getConfiguration(componentId, funnelId);
 
             // Atualizar estados - separado para evitar loop
-            setComponentDefinition(definition);
             setProperties(config);
             setIsConnected(true);
             setConnectionStatus('connected');
@@ -272,6 +276,11 @@ export function useComponentConfiguration(
     // ============================================================================
     // EFFECTS
     // ============================================================================
+
+    // Resetar flag de definição carregada quando componentId mudar
+    useEffect(() => {
+        definitionLoadedRef.current = false;
+    }, [componentId]);
 
     // Carregar configuração inicial
     useEffect(() => {

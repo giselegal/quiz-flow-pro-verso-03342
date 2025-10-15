@@ -510,10 +510,6 @@ export const INITIAL_BLOCK_SCHEMAS: BlockPropertySchemaDefinition[] = [
     }
 ];
 
-export const blockSchemaMap: Record<string, BlockPropertySchemaDefinition> = Object.fromEntries(
-    INITIAL_BLOCK_SCHEMAS.map(def => [def.type, def])
-);
-
 // 🔄 INTEGRAÇÃO COM NOVO SISTEMA MODULAR
 // Tenta carregar schema do novo sistema primeiro, fallback para legado
 let newSchemaSystemAvailable = false;
@@ -677,3 +673,8 @@ const questionHeroSchema: BlockPropertySchemaDefinition = {
 
 // Adicionar os schemas ao array INITIAL_BLOCK_SCHEMAS
 INITIAL_BLOCK_SCHEMAS.push(introHeroSchema, welcomeFormSchema, questionHeroSchema);
+
+// Recriar o mapa com os novos schemas incluídos
+export const blockSchemaMap: Record<string, BlockPropertySchemaDefinition> = Object.fromEntries(
+    INITIAL_BLOCK_SCHEMAS.map(def => [def.type, def])
+);
