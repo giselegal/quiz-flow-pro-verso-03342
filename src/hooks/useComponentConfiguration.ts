@@ -94,10 +94,10 @@ export function useComponentConfiguration(
 
         // 🛡️ TIMEOUT DE SEGURANÇA: 15 segundos (Supabase pode demorar)
         const safetyTimeout = setTimeout(() => {
-            console.warn(`⚠️ Loading timeout for ${componentId} - forcing isLoading=false`);
+            console.warn(`⚠️ Loading timeout for ${componentId} - usando valores padrão`);
             setIsLoading(false);
-            setConnectionStatus('error');
-            setError('Timeout ao carregar configuração - usando valores padrão');
+            setConnectionStatus('disconnected'); // Não é erro, apenas desconectado
+            // NÃO definir erro - timeout não é erro fatal, apenas usa fallback
         }, 15000); // 15s para dar tempo ao Supabase
 
         try {
@@ -130,11 +130,21 @@ export function useComponentConfiguration(
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar configuração';
-            setError(errorMessage);
+            
+            // 🛡️ Erros de timeout ou 404 não são fatais - apenas usar fallback
+            const isNonFatalError = errorMessage.includes('404') || 
+                                   errorMessage.includes('not found') ||
+                                   errorMessage.includes('Timeout');
+            
+            if (!isNonFatalError) {
+                setError(errorMessage);
+                console.error(`❌ Error loading configuration for ${componentId}:`, err);
+            } else {
+                console.warn(`⚠️ Non-fatal error for ${componentId}: ${errorMessage} - usando fallback`);
+            }
+            
             setIsConnected(false);
-            setConnectionStatus('error');
-
-            console.error(`❌ Error loading configuration for ${componentId}:`, err);
+            setConnectionStatus('disconnected');
 
             // Limpar timeout de segurança mesmo em caso de erro
             clearTimeout(safetyTimeout);

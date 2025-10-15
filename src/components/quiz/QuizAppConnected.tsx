@@ -223,7 +223,10 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     // ============================================================================
 
     const isLoading = globalLoading || themeLoading || stepLoading;
-    const hasError = globalError;
+
+    // 🛡️ TIMEOUT NÃO É ERRO FATAL: Se for timeout, ignorar e usar fallback
+    const isTimeoutError = globalError?.includes('Timeout') || globalError?.includes('timeout');
+    const hasError = globalError && !isTimeoutError;
 
     if (isLoading) {
         return (
