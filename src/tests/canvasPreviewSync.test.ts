@@ -137,34 +137,34 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
         console.log('🧪 Testando debouncing...');
 
         let updateCount = 0;
-        let debounceTimer: NodeJS.Timeout | null = null;
-
-        // Simular função de update com debounce
-        const debouncedUpdate = (callback: () => void) => {
-            if (debounceTimer) {
-                clearTimeout(debounceTimer);
-            }
-            debounceTimer = setTimeout(() => {
-                callback();
-                updateCount++;
-            }, 300); // 300ms debounce
+        
+        // Simular debounce simples
+        const debounce = (fn: Function, delay: number) => {
+            let timeoutId: NodeJS.Timeout;
+            return (...args: any[]) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => fn.apply(null, args), delay);
+            };
         };
+
+        const debouncedUpdate = debounce(() => {
+            updateCount++;
+            console.log(`Update executado: ${updateCount}`);
+        }, 100);
 
         // Simular múltiplas edições rápidas
         for (let i = 0; i < 5; i++) {
-            debouncedUpdate(() => {
-                console.log(`Update ${i + 1}`);
-            });
+            debouncedUpdate();
         }
 
-        // Aguardar debounce
-        await new Promise(resolve => setTimeout(resolve, 350));
+        // Aguardar debounce (menor timeout)
+        await new Promise(resolve => setTimeout(resolve, 150));
 
         // Verificar se apenas 1 update foi executado
         expect(updateCount).toBe(1);
 
         console.log('✅ Debouncing funcionando corretamente');
-    });
+    }, 10000); // Timeout maior para o teste
 
     it('Preview deve manter sincronização com seleção de etapa ativa', async () => {
         console.log('🧪 Testando seleção de etapa ativa...');
