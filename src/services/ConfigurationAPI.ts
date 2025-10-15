@@ -17,7 +17,7 @@ import { SupabaseConfigurationStorage, type StoredConfiguration } from './Supaba
 export class ConfigurationAPI implements ComponentConfigurationAPI {
     private static instance: ConfigurationAPI;
     private cache = new Map<string, any>();
-    private cacheTimeout = 5 * 60 * 1000; // 5 minutos
+    private cacheTimeout = 30 * 60 * 1000; // 30 minutos (cache mais agressivo)
     private useHttp = typeof window !== 'undefined' && (import.meta as any)?.env?.VITE_CONFIG_API_HTTP === 'true';
     private baseUrl = typeof window !== 'undefined' ? '' : '';
     private storage = SupabaseConfigurationStorage.getInstance();

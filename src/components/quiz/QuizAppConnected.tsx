@@ -186,8 +186,13 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             <div className="min-h-screen bg-[#fefefe] flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B89B7A] mx-auto mb-4"></div>
-                    <p className="text-[#5b4135]">Carregando configurações...</p>
-                    <p className="text-sm text-gray-500">Status: {connectionStatus}</p>
+                    <p className="text-[#5b4135] font-medium">Carregando configurações...</p>
+                    <p className="text-sm text-gray-500 mt-2">Status: {connectionStatus}</p>
+                    {editorMode && (
+                        <p className="text-xs text-gray-400 mt-2">
+                            🎨 Modo Preview - Carregando comportamento de produção
+                        </p>
+                    )}
                 </div>
             </div>
         );
