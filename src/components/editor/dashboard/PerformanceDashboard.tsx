@@ -97,12 +97,23 @@ export const PerformanceDashboard: React.FC<{
         // ===== HOOKS =====
         const { metrics: cacheMetrics } = useAdvancedCache('preview');
         const renderOptimization = useRenderOptimization();
-        const websocketState = useAdvancedWebSocket().state;
+        const { state: websocketState } = useAdvancedWebSocket({
+            url: 'ws://localhost:3001/ws',
+            reconnectInterval: 3000,
+            maxReconnectAttempts: 5,
+            heartbeatInterval: 30000,
+            messageTimeout: 10000,
+            enableCompression: true,
+            rateLimit: { maxMessages: 100, windowMs: 60000 },
+            debug: false
+        });
         const featureFlags = useFeatureFlags();
-        const livePreview = useLiveCanvasPreview({
-            steps,
-            funnelId: 'quiz-estilo-21-steps',
-            selectedStepId
+        const livePreview = useLiveCanvasPreview(steps, selectedStepId, {
+            enableDebounce: true,
+            debounceDelay: 300,
+            enableCache: true,
+            cacheTTL: 30000,
+            enableDebug: false
         });
 
         // ===== STATE =====
