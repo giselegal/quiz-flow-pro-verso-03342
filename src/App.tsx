@@ -75,6 +75,7 @@ const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'))
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
 const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
+const TestImplementation = lazy(() => import('./pages/TestImplementation'));
 
 // 🛠️ PÁGINAS ADMIN - Agora consolidadas em admin-unified
 
@@ -292,11 +293,17 @@ function AppCore() {
                                     </div>
                                 </Route>
 
-                                <Route path="/system/indexeddb-migration">
-                                    <div data-testid="indexeddb-migration-page">
-                                        <IndexedDBMigrationTestPage />
-                                    </div>
-                                </Route>
+                <Route path="/system/indexeddb-migration">
+                    <div data-testid="indexeddb-migration-page">
+                        <IndexedDBMigrationTestPage />
+                    </div>
+                </Route>
+
+                <Route path="/test-implementation">
+                    <div data-testid="test-implementation-page">
+                        <TestImplementation />
+                    </div>
+                </Route>
 
                 {/* Rotas antigas do admin removidas - agora consolidadas em AdminDashboardUnified */}
 
