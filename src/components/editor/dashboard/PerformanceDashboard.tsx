@@ -28,11 +28,11 @@ import {
 } from 'lucide-react';
 
 // Hooks
-import { useAdvancedCache } from '../../../hooks/useAdvancedCache';
-import { useRenderOptimization } from '../../../hooks/useRenderOptimization';
-import { useAdvancedWebSocket } from '../../../hooks/useAdvancedWebSocket';
+import { useAdvancedCache } from '../../../hooks/performance/useAdvancedCache';
+import { useRenderOptimization } from '../../../hooks/performance/useRenderOptimization';
+import { useAdvancedWebSocket } from '../../../hooks/websocket/useAdvancedWebSocket';
 import { useFeatureFlags } from '../testing/FeatureFlagSystem';
-import { useLiveCanvasPreview } from '../../../hooks/useLiveCanvasPreview';
+import { useLiveCanvasPreview } from '../../../hooks/canvas/useLiveCanvasPreview';
 
 // ============================================================================
 // TYPES

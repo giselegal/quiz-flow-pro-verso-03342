@@ -29,7 +29,7 @@ import { PerformanceDashboard } from '@/components/editor/dashboard/PerformanceD
 import { AutoIntegrationPanel } from '@/components/editor/integration/AutoIntegrationSystem';
 
 // Hooks a serem testados
-import { useAdvancedCache } from '@/hooks/useAdvancedCache';
+import { useAdvancedCache } from '@/hooks/performance/useAdvancedCache';
 import { useRenderOptimization } from '@/hooks/useRenderOptimization';
 import { useAdvancedWebSocket } from '@/hooks/useAdvancedWebSocket';
 import { useLiveCanvasPreview } from '@/hooks/useLiveCanvasPreview';
