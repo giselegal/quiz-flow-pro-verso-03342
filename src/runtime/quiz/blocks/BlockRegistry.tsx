@@ -324,3 +324,270 @@ export const DEFAULT_BLOCK_DEFINITIONS: BlockDefinition<any>[] = [
     OfferUrgencyBlock,
     OfferTestimonialBlock
 ];
+
+// =============== REGISTROS COMPLEMENTARES (paridade com Canvas) ===============
+// Nota: Esses blocos aproximam visual/comportamento dos tipos inline do editor.
+// Eles são simples e seguros (sem dependências externas) para evitar 'Bloco não encontrado'.
+
+export const ResultHeaderInlineBlock = defineBlock({
+    id: 'result-header-inline',
+    label: 'Resultado: Cabeçalho Inline',
+    category: 'resultado',
+    schema: z.object({
+        title: z.string().default('Seu Resultado:'),
+        subtitle: z.string().optional()
+    }),
+    defaultConfig: { title: 'Seu Resultado:' },
+    render: ({ config }) => (
+        <div className="text-center space-y-2 py-4">
+            <h2 className="text-2xl font-bold text-slate-800">{config.title}</h2>
+            {config.subtitle && <p className="text-sm text-slate-600">{config.subtitle}</p>}
+        </div>
+    )
+});
+
+export const StyleCardInlineBlock = defineBlock({
+    id: 'style-card-inline',
+    label: 'Resultado: Cartão de Estilo',
+    category: 'resultado',
+    schema: z.object({
+        styleId: z.string().optional(),
+        styleName: z.string().default('Seu Estilo'),
+        image: z.string().url().optional(),
+        description: z.string().default('Descrição do estilo')
+    }),
+    defaultConfig: { styleName: 'Seu Estilo', description: 'Descrição do estilo' },
+    render: ({ config }) => (
+        <div className="border rounded-lg p-6 bg-gradient-to-br from-white to-slate-50 shadow-sm">
+            <h3 className="text-lg font-bold mb-2">{config.styleName}</h3>
+            {config.image && <img src={config.image} alt={config.styleName} className="w-full h-48 object-cover rounded-lg mb-3" />}
+            <p className="text-sm text-slate-600">{config.description}</p>
+        </div>
+    )
+});
+
+export const SecondaryStylesInlineBlock = defineBlock({
+    id: 'secondary-styles',
+    label: 'Resultado: Estilos Secundários (Inline)',
+    category: 'resultado',
+    schema: z.object({
+        styles: z.array(z.object({ id: z.string().optional(), name: z.string().optional(), score: z.number().optional() })).default([]),
+        max: z.number().default(2)
+    }),
+    defaultConfig: { styles: [], max: 2 },
+    render: ({ config, state }) => {
+        // Se vazio, derive do userProfile
+        let styles = Array.isArray(config.styles) && config.styles.length ? config.styles : [];
+        if (!styles.length && state?.userProfile?.secondaryStyles) {
+            styles = (state.userProfile.secondaryStyles as string[]).slice(0, config.max).map(s => ({ name: s }));
+        }
+        return (
+            <div className="space-y-2">
+                <div className="text-sm font-medium text-slate-700 mb-2">Estilos Secundários:</div>
+                <div className="grid grid-cols-2 gap-2">
+                    {(styles as any[]).map((style, idx) => (
+                        <div key={idx} className="border rounded-lg p-3 bg-white text-center">
+                            <div className="text-sm font-medium">{style.name || `Estilo ${idx + 1}`}</div>
+                            {style.score != null && <div className="text-xs text-slate-500">{style.score}%</div>}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+});
+
+export const QuizOfferCtaInlineBlock = defineBlock({
+    id: 'quiz-offer-cta-inline',
+    label: 'Oferta: CTA Inline',
+    category: 'oferta',
+    schema: z.object({
+        title: z.string().default('Oferta Especial'),
+        description: z.string().default('Conteúdo exclusivo liberado'),
+        buttonText: z.string().default('Quero Aproveitar'),
+        buttonUrl: z.string().url().default('#'),
+        image: z.string().url().optional(),
+        offerKey: z.string().optional()
+    }),
+    defaultConfig: { title: 'Oferta Especial', description: 'Conteúdo exclusivo liberado', buttonText: 'Quero Aproveitar', buttonUrl: '#' },
+    render: ({ config }) => (
+        <div className="bg-gradient-to-r from-[#B89B7A] to-[#D4AF37] text-white rounded-lg p-6 shadow-lg">
+            {config.image && <img src={config.image} alt={config.title} className="w-full h-40 object-cover rounded mb-3 opacity-95" />}
+            <h3 className="text-xl font-bold mb-2">{config.title}</h3>
+            <p className="text-sm mb-4 opacity-90">{config.description}</p>
+            <a href={config.buttonUrl} target="_blank" rel="noreferrer">
+                <button type="button" className="bg-white text-[#B89B7A] px-6 py-3 rounded-md font-semibold hover:bg-gray-100 transition-colors">
+                    {config.buttonText}
+                </button>
+            </a>
+        </div>
+    )
+});
+
+export const ConversionInlineBlock = defineBlock({
+    id: 'conversion',
+    label: 'Conversão (Inline)',
+    category: 'oferta',
+    schema: z.object({
+        headline: z.string().default('Pronta para transformar seu estilo?'),
+        subheadline: z.string().default('Conheça nosso programa completo.'),
+        ctaText: z.string().default('Quero participar')
+    }),
+    defaultConfig: { headline: 'Pronta para transformar seu estilo?', subheadline: 'Conheça nosso programa completo.', ctaText: 'Quero participar' },
+    render: ({ config }) => (
+        <div className="rounded-lg p-6 border bg-white shadow-sm text-center">
+            <h3 className="text-xl font-bold text-slate-800 mb-1">{config.headline}</h3>
+            <p className="text-sm text-slate-600 mb-4">{config.subheadline}</p>
+            <button type="button" className="px-6 py-3 rounded-md bg-[#B89B7A] text-white font-semibold">{config.ctaText}</button>
+        </div>
+    )
+});
+
+export const UrgencyTimerInlineBlock = defineBlock({
+    id: 'urgency-timer-inline',
+    label: 'Urgência: Timer Inline',
+    category: 'oferta',
+    schema: z.object({}),
+    defaultConfig: {},
+    render: () => (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+            <div className="text-sm font-medium text-red-700 mb-2">⏰ Oferta Expira em:</div>
+            <div className="text-2xl font-bold text-red-600 font-mono">00:15:00</div>
+        </div>
+    )
+});
+
+export const GuaranteeInlineBlock = defineBlock({
+    id: 'guarantee',
+    label: 'Garantia',
+    category: 'oferta',
+    schema: z.object({ title: z.string().default('Garantia'), description: z.string().default('Satisfação garantida') }),
+    defaultConfig: { title: 'Garantia', description: 'Satisfação garantida' },
+    render: ({ config }) => (
+        <div className="border-2 border-green-200 bg-green-50 rounded-lg p-4 text-center">
+            <div className="text-lg font-bold text-green-700 mb-2">✓ {config.title}</div>
+            <p className="text-sm text-green-600">{config.description}</p>
+        </div>
+    )
+});
+
+export const BonusInlineBlock = defineBlock({
+    id: 'bonus',
+    label: 'Bônus',
+    category: 'oferta',
+    schema: z.object({ title: z.string().default('Bônus Exclusivo'), description: z.string().default('Aproveite este bônus') }),
+    defaultConfig: { title: 'Bônus Exclusivo', description: 'Aproveite este bônus' },
+    render: ({ config }) => (
+        <div className="border-2 border-yellow-300 bg-yellow-50 rounded-lg p-4">
+            <div className="text-lg font-bold text-yellow-700 mb-2">🎁 {config.title}</div>
+            <p className="text-sm text-yellow-600">{config.description}</p>
+        </div>
+    )
+});
+
+export const BenefitsInlineBlock = defineBlock({
+    id: 'benefits',
+    label: 'Benefícios',
+    category: 'oferta',
+    schema: z.object({ benefits: z.array(z.union([z.string(), z.object({ text: z.string() })])).default([]) }),
+    defaultConfig: { benefits: [] },
+    render: ({ config }) => (
+        <div className="space-y-2">
+            {(config.benefits as any[]).map((benefit, idx) => (
+                <div key={idx} className="flex items-start gap-2">
+                    <span className="text-green-500 font-bold">✓</span>
+                    <span className="text-sm text-slate-700">{typeof benefit === 'string' ? benefit : benefit.text}</span>
+                </div>
+            ))}
+            {(!config.benefits || (config.benefits as any[]).length === 0) && (
+                <div className="text-xs text-slate-400 italic">Nenhum benefício adicionado</div>
+            )}
+        </div>
+    )
+});
+
+export const SecurePurchaseInlineBlock = defineBlock({
+    id: 'secure-purchase',
+    label: 'Compra Segura',
+    category: 'oferta',
+    schema: z.object({ text: z.string().default('Compra 100% Segura') }),
+    defaultConfig: { text: 'Compra 100% Segura' },
+    render: ({ config }) => (
+        <div className="flex items-center justify-center gap-2 text-sm text-slate-600">
+            <span>🔒</span>
+            <span>{config.text}</span>
+        </div>
+    )
+});
+
+export const ValueAnchoringInlineBlock = defineBlock({
+    id: 'value-anchoring',
+    label: 'Ancoragem de Valor',
+    category: 'oferta',
+    schema: z.object({ oldPrice: z.string().default('R$ 297,00'), newPrice: z.string().default('R$ 97,00'), discount: z.string().default('Economize 67%') }),
+    defaultConfig: { oldPrice: 'R$ 297,00', newPrice: 'R$ 97,00', discount: 'Economize 67%' },
+    render: ({ config }) => (
+        <div className="text-center space-y-2">
+            <div className="text-sm text-slate-500 line-through">{config.oldPrice}</div>
+            <div className="text-3xl font-bold text-green-600">{config.newPrice}</div>
+            <div className="text-sm text-red-600 font-medium">{config.discount}</div>
+        </div>
+    )
+});
+
+export const BeforeAfterInlineBlock = defineBlock({
+    id: 'before-after-inline',
+    label: 'Antes e Depois',
+    category: 'oferta',
+    schema: z.object({ beforeImage: z.string().url().optional(), afterImage: z.string().url().optional(), beforeText: z.string().default('Situação anterior'), afterText: z.string().default('Resultado alcançado') }),
+    defaultConfig: { beforeText: 'Situação anterior', afterText: 'Resultado alcançado' },
+    render: ({ config }) => (
+        <div className="grid grid-cols-2 gap-4">
+            <div className="text-center">
+                <div className="text-sm font-medium text-slate-600 mb-2">Antes</div>
+                {config.beforeImage && <img src={config.beforeImage} alt="Antes" className="w-full rounded-lg" />}
+                <p className="text-xs text-slate-500 mt-2">{config.beforeText}</p>
+            </div>
+            <div className="text-center">
+                <div className="text-sm font-medium text-green-600 mb-2">Depois</div>
+                {config.afterImage && <img src={config.afterImage} alt="Depois" className="w-full rounded-lg" />}
+                <p className="text-xs text-slate-700 mt-2">{config.afterText}</p>
+            </div>
+        </div>
+    )
+});
+
+export const MentorSectionInlineBlock = defineBlock({
+    id: 'mentor-section-inline',
+    label: 'Seção Mentor (Inline)',
+    category: 'oferta',
+    schema: z.object({ mentorImage: z.string().url().optional(), mentorName: z.string().default('Mentor'), mentorBio: z.string().default('Descrição do mentor') }),
+    defaultConfig: { mentorName: 'Mentor', mentorBio: 'Descrição do mentor' },
+    render: ({ config }) => (
+        <div className="flex items-start gap-4 bg-slate-50 border rounded-lg p-4">
+            {config.mentorImage && <img src={config.mentorImage} alt={config.mentorName} className="w-20 h-20 rounded-full object-cover flex-shrink-0" />}
+            <div className="flex-1">
+                <div className="text-sm font-bold text-slate-800 mb-1">{config.mentorName}</div>
+                <p className="text-xs text-slate-600">{config.mentorBio}</p>
+            </div>
+        </div>
+    )
+});
+
+// Estender a lista padrão com os registros complementares
+export const EXTENDED_BLOCK_DEFINITIONS: BlockDefinition<any>[] = [
+    ...DEFAULT_BLOCK_DEFINITIONS,
+    ResultHeaderInlineBlock,
+    StyleCardInlineBlock,
+    SecondaryStylesInlineBlock,
+    QuizOfferCtaInlineBlock,
+    ConversionInlineBlock,
+    UrgencyTimerInlineBlock,
+    GuaranteeInlineBlock,
+    BonusInlineBlock,
+    BenefitsInlineBlock,
+    SecurePurchaseInlineBlock,
+    ValueAnchoringInlineBlock,
+    BeforeAfterInlineBlock,
+    MentorSectionInlineBlock,
+];

@@ -78,7 +78,7 @@ import { convertBlocksToStep as convertBlocksToStepUtil } from '@/utils/quizConv
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { buildNavigationMap, formatNavigationReport } from '@/utils/funnelNavigation';
 import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
-import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
+import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, EXTENDED_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
 import { usePanelWidths } from './hooks/usePanelWidths.tsx';
@@ -1294,7 +1294,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             childIds,
             JSON.stringify(properties || {}),
             JSON.stringify(content || {}),
-            dynamicContextHash
+            dynamicContextHash,
+            // Hash leve de unifiedConfig relevante (estilos, ofertas, scoring) para invalidar cache ao mudar
+            JSON.stringify({
+                styles: Object.keys((unifiedConfig?.results?.styles as any) || {}),
+                offers: Object.keys((unifiedConfig?.results?.offersMap as any) || {}),
+                scoring: (unifiedConfig?.runtime as any)?.scoring ? Object.keys((unifiedConfig?.runtime as any).scoring) : []
+            })
         ].join('|');
         const cached = previewCacheRef.current.get(id);
         if (cached && cached.key === key) return cached.node;
