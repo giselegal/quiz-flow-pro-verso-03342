@@ -6,11 +6,11 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Badge } from '../../ui/badge';
+import { Button } from '../../ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import { Alert, AlertDescription } from '../../ui/alert';
 import {
     BarChart3,
     Activity,
@@ -28,11 +28,11 @@ import {
 } from 'lucide-react';
 
 // Hooks
-import { useAdvancedCache } from '@/hooks/useAdvancedCache';
-import { useRenderOptimization } from '@/hooks/useRenderOptimization';
-import { useAdvancedWebSocket } from '@/hooks/useAdvancedWebSocket';
-import { useFeatureFlags } from '@/components/editor/testing/FeatureFlagSystem';
-import { useLiveCanvasPreview } from '@/hooks/useLiveCanvasPreview';
+import { useAdvancedCache } from '../../../hooks/useAdvancedCache';
+import { useRenderOptimization } from '../../../hooks/useRenderOptimization';
+import { useAdvancedWebSocket } from '../../../hooks/useAdvancedWebSocket';
+import { useFeatureFlags } from '../testing/FeatureFlagSystem';
+import { useLiveCanvasPreview } from '../../../hooks/useLiveCanvasPreview';
 
 // ============================================================================
 // TYPES
@@ -317,7 +317,7 @@ export const PerformanceDashboard: React.FC<{
                         <div className="text-right">
                             {status && (
                                 <div className={`w-2 h-2 rounded-full mb-1 ${status === 'good' ? 'bg-green-500' :
-                                        status === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
+                                    status === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
                                     }`} />
                             )}
 
