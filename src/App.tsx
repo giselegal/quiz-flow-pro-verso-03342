@@ -91,6 +91,8 @@ const AdminCreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
 
 
 function AppCore() {
+    console.log('🚀 AppCore rendering...');
+    
     useEffect(() => {
         console.log('🚀 App initialized with SuperUnifiedProvider v1.0');
 
@@ -141,9 +143,14 @@ function AppCore() {
                             <Switch>
                                 {/* 🏠 PÁGINA INICIAL */}
                                 <Route path="/">
-                                    <div data-testid="index-page">
-                                        <Home />
-                                    </div>
+                                    {() => {
+                                        console.log('🏠 Home route matched');
+                                        return (
+                                            <div data-testid="index-page">
+                                                <Home />
+                                            </div>
+                                        );
+                                    }}
                                 </Route>
 
                                 {/* 🚀 EDITOR NOVO (REFATORADO) - FASE 2 */}

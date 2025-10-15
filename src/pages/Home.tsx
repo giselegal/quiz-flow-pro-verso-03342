@@ -17,12 +17,15 @@ import {
 import { useAuth } from '@/contexts';
 
 export const Home: React.FC = () => {
+  console.log('🏠 Home component rendering...');
+  
   const { user, logout } = useAuth();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(true);
 
   // Navigation helper function
   const navigate = (path: string) => {
+    console.log('🔄 Navigating to:', path);
     setLocation(path);
   };
 
