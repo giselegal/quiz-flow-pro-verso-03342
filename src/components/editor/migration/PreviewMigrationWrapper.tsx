@@ -6,10 +6,10 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Badge } from '../../ui/badge';
+import { Button } from '../../ui/button';
+import { Alert, AlertDescription } from '../../ui/alert';
 import {
     GitBranch,
     Clock,
@@ -21,14 +21,14 @@ import {
 } from 'lucide-react';
 
 // Componentes do sistema
-import { LiveCanvasPreview } from '@/components/editor/canvas/LiveCanvasPreview';
-import { PreviewPerformanceMonitor } from '@/components/editor/monitoring/PreviewPerformanceMonitor';
+import { LiveCanvasPreview } from '../canvas/LiveCanvasPreview';
+import { PreviewPerformanceMonitor } from '../monitoring/PreviewPerformanceMonitor';
 import {
     useFeatureFlags,
     useOptimizedPreview,
     usePreviewMonitoring,
     usePreviewVariant
-} from '@/components/editor/testing/FeatureFlagSystem';
+} from '../testing/FeatureFlagSystem';
 
 // ============================================================================
 // TYPES
@@ -231,8 +231,8 @@ export const PreviewMigrationWrapper: React.FC<PreviewMigrationWrapperProps> = (
         <Badge
             variant={isActive ? 'default' : 'outline'}
             className={`text-xs ${system === 'optimized'
-                    ? isActive ? 'bg-green-600' : 'border-green-600 text-green-600'
-                    : isActive ? 'bg-blue-600' : 'border-blue-600 text-blue-600'
+                ? isActive ? 'bg-green-600' : 'border-green-600 text-green-600'
+                : isActive ? 'bg-blue-600' : 'border-blue-600 text-blue-600'
                 }`}
         >
             {system === 'optimized' ? '🚀 Optimized' : '📝 Legacy'}
