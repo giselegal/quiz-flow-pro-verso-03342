@@ -1,4 +1,5 @@
-import { useAuth } from '@/contexts';
+// Importa do caminho compatível com os testes, que mockam '@/context/AuthContext'
+import { useAuth } from '@/context/AuthContext';
 import { useEffect, useMemo, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 
