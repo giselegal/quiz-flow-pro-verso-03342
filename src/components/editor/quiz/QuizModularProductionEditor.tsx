@@ -78,6 +78,7 @@ import { convertBlocksToStep as convertBlocksToStepUtil } from '@/utils/quizConv
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { buildNavigationMap, formatNavigationReport } from '@/utils/funnelNavigation';
 import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
+import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 import { LayoutShell } from './LayoutShell';
 import { usePanelWidths } from './hooks/usePanelWidths.tsx';
@@ -2679,7 +2680,9 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
     return (
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">
-                <QuizAppConnected funnelId={funnelId} editorMode initialStepId={selectedStepId} />
+                <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
+                    <QuizAppConnected funnelId={funnelId} editorMode initialStepId={selectedStepId} />
+                </BlockRegistryProvider>
             </div>
             <div className="px-2 py-1 border-t bg-slate-50 text-[10px] text-slate-500 flex items-center justify-between">
                 <span>Live Runtime v{version}</span>
