@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { SystemValidator } from '../src/components/editor/validation/SystemValidator';
+import { SystemValidator } from './src/components/editor/validation/SystemValidator';
 
 // Teste básico de importação e renderização
 export const TestSystemValidator: React.FC = () => {
@@ -44,6 +44,20 @@ export const TestSystemValidator: React.FC = () => {
                     <li><strong>A/B Testing:</strong> Sistema de feature flags com rollout gradual</li>
                     <li><strong>Integração:</strong> Sistema de migração zero-breaking-change</li>
                     <li><strong>Validação:</strong> Verificação automática de saúde do sistema</li>
+                </ul>
+            </div>
+
+            <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f0f8ff', borderRadius: '8px' }}>
+                <h3>🚀 Como Testar o Sistema</h3>
+                <p><strong>Servidor rodando em:</strong> <a href="http://localhost:5173/" target="_blank">http://localhost:5173/</a></p>
+                <p>
+                    Para acessar os componentes implementados:
+                </p>
+                <ul>
+                    <li><strong>Editor Principal:</strong> Navegue para o editor de quiz</li>
+                    <li><strong>Preview ao Vivo:</strong> Disponível no painel do canvas</li>
+                    <li><strong>Dashboard Performance:</strong> Métricas em tempo real</li>
+                    <li><strong>SystemValidator:</strong> Validation completa do sistema</li>
                 </ul>
             </div>
         </div>
