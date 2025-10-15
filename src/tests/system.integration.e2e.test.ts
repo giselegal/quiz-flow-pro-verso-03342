@@ -219,10 +219,15 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
     it('Servidor de desenvolvimento está rodando', async () => {
       try {
         // Tentar fazer uma requisição para o servidor local
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
         const response = await fetch('http://localhost:5173/', {
           method: 'GET',
-          timeout: 5000
+          signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
         
         expect(response.status).toBeLessThan(500);
         console.log('✅ Servidor rodando em http://localhost:5173/');
