@@ -6,10 +6,10 @@
  */
 
 import React, { useEffect, useState, createContext, useContext } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Badge } from '../../ui/badge';
+import { Button } from '../../ui/button';
+import { Alert, AlertDescription } from '../../ui/alert';
 import {
     Zap,
     CheckCircle,
@@ -23,15 +23,15 @@ import {
 } from 'lucide-react';
 
 // Sistema Components
-import { PreviewMigrationWrapper } from '@/components/editor/migration/PreviewMigrationWrapper';
-import { PerformanceDashboard } from '@/components/editor/dashboard/PerformanceDashboard';
-import { LivePreviewProvider } from '@/components/editor/providers/LivePreviewProvider';
-import { FeatureFlagProvider } from '@/components/editor/testing/FeatureFlagSystem';
-import { RenderOptimizationProvider } from '@/hooks/useRenderOptimization';
+import { PreviewMigrationWrapper } from '../migration/PreviewMigrationWrapper';
+import { PerformanceDashboard } from '../dashboard/PerformanceDashboard';
+import { LivePreviewProvider } from '../../../providers/LivePreviewProvider';
+import { FeatureFlagProvider } from '../testing/FeatureFlagSystem';
+import { RenderOptimizationProvider } from '../../../hooks/useRenderOptimization';
 
 // Hooks
-import { useAdvancedCache } from '@/hooks/useAdvancedCache';
-import { useAdvancedWebSocket } from '@/hooks/useAdvancedWebSocket';
+import { useAdvancedCache } from '../../../hooks/useAdvancedCache';
+import { useAdvancedWebSocket } from '../../../hooks/useAdvancedWebSocket';
 
 // ============================================================================
 // TYPES
