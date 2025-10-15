@@ -61,6 +61,7 @@ import {
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { shouldAutoAdvance } from '@/lib/quiz/requiredSelections';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import QuizProductionPreview from './QuizProductionPreview';
 import QuizAppConnected from '@/components/quiz/QuizAppConnected';
@@ -2047,9 +2048,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             if (hasImages) gridClass = 'quiz-options-3col';
             else if (options.length >= 4) gridClass = 'quiz-options-2col';
         }
-        // Efeito de auto-avance
+        // Efeito de auto-avanço unificado
         useEffect(() => {
-            if (autoAdvance && selections.length === required && required > 0 && selectedStep?.nextStep) {
+            if (shouldAutoAdvance({ answersLength: selections.length, required, enabled: autoAdvance }) && selectedStep?.nextStep) {
                 const t = setTimeout(() => advanceStep(selectedStep.nextStep!), previewRuntimeFlags.autoAdvanceDelayMs);
                 return () => clearTimeout(t);
             }

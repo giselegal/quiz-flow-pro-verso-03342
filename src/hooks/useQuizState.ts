@@ -15,6 +15,7 @@ import { styleMapping, type StyleId } from '../data/styles';
 import { resolveStyleId } from '@/utils/styleIds';
 import { QUIZ_STEPS, STEP_ORDER } from '../data/quizSteps';
 import { computeResult } from '@/utils/result/computeResult';
+import { getEffectiveRequiredSelections, shouldAutoAdvance } from '@/lib/quiz/requiredSelections';
 import { mergeRuntimeFlags, type QuizRuntimeFlags } from '@/config/quizRuntimeFlags';
 import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/utils/quizStepIds';
 import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
@@ -221,22 +222,23 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       }
     }));
 
-    const sourceStep = QUIZ_STEPS[stepId];
+  const sourceStep = (externalSteps || loadedSteps || QUIZ_STEPS)[stepId];
     if (sourceStep?.type === 'strategic-question') {
       setTimeout(() => calculateResult(), 100);
     }
 
-    // Auto advance: apenas para questions normais
+    // Auto advance: apenas para questions normais (regra unificada)
     if (flags.enableAutoAdvance && sourceStep?.type === 'question') {
-      const nextId = sourceStep.nextStep;
-      if (nextId) {
+      const required = getEffectiveRequiredSelections({ step: sourceStep });
+      if (shouldAutoAdvance({ answersLength: selections.length, required, enabled: true })) {
+        const nextId = sourceStep.nextStep;
         autoAdvanceTimerRef.current = setTimeout(() => {
-          nextStep(nextId);
+          if (nextId) nextStep(nextId); else nextStep();
           autoAdvanceTimerRef.current = null;
         }, flags.autoAdvanceDelayMs);
       }
     }
-  }, [calculateResult, flags.enableAutoAdvance, flags.autoAdvanceDelayMs, nextStep]);
+  }, [calculateResult, flags.enableAutoAdvance, flags.autoAdvanceDelayMs, nextStep, externalSteps, loadedSteps]);
 
   // Adicionar resposta estratégica
   const addStrategicAnswer = useCallback((question: string, answer: string) => {
@@ -285,7 +287,8 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
 
     if (currentStepData.type === 'question') {
       const answers = state.answers[state.currentStep] || [];
-      return answers.length === currentStepData.requiredSelections;
+      const required = getEffectiveRequiredSelections({ step: currentStepData });
+      return answers.length === required;
     }
 
     if (currentStepData.type === 'strategic-question') {

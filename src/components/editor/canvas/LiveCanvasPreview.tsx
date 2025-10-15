@@ -171,6 +171,7 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
 
     // ===== REGISTRY HOOK =====
     const { setSteps: setRegistrySteps, version } = useQuizRuntimeRegistry();
+    const runtimeRegistry = useQuizRuntimeRegistry();
 
     // ===== HANDLERS =====
     const handleTogglePreview = useCallback(() => {
@@ -380,6 +381,30 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
                     previewMode={true}
                     initialStepId={debouncedSelectedStepId || undefined}
                 />
+                {config.showDebugInfo && (
+                    <div className="mt-3 p-2 text-[10px] bg-slate-50 border rounded">
+                        <div className="font-semibold mb-1">Diagnóstico Preview</div>
+                        <div className="grid grid-cols-2 gap-2">
+                            <div>
+                                <div className="text-[10px] text-slate-500">Editor</div>
+                                <div>steps: {debouncedSteps.length}</div>
+                                {debouncedSelectedStepId && (
+                                    <div>step ativo: {debouncedSelectedStepId}</div>
+                                )}
+                            </div>
+                            <div>
+                                <div className="text-[10px] text-slate-500">Runtime</div>
+                                <div>overrides: {Object.keys(runtimeRegistry.steps || {}).length}</div>
+                                {debouncedSelectedStepId && runtimeRegistry.steps && runtimeRegistry.steps[debouncedSelectedStepId] && (
+                                    <div>
+                                        <div>blocks: {Array.isArray(runtimeRegistry.steps[debouncedSelectedStepId].blocks) ? runtimeRegistry.steps[debouncedSelectedStepId].blocks!.length : 0}</div>
+                                        <div>options: {Array.isArray(runtimeRegistry.steps[debouncedSelectedStepId].options) ? runtimeRegistry.steps[debouncedSelectedStepId].options!.length : 0}</div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     };
