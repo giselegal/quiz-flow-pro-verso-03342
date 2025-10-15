@@ -6,11 +6,11 @@
  */
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Switch } from '../../ui/switch';
+import { Separator } from '../../ui/separator';
 import {
     Eye,
     EyeOff,
@@ -24,9 +24,9 @@ import {
     Clock,
     Settings
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import QuizAppConnected from '@/components/quiz/QuizAppConnected';
-import { useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
+import { cn } from '../../../lib/utils';
+import QuizAppConnected from '../../quiz/QuizAppConnected';
+import { useQuizRuntimeRegistry } from '../../../runtime/quiz/QuizRuntimeRegistry';
 
 // ============================================================================
 // TYPES & INTERFACES
