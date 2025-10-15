@@ -20,6 +20,7 @@ export interface UseComponentConfigurationOptions {
     cacheEnabled?: boolean;
     autoSave?: boolean;
     autoSaveDelay?: number;
+    editorMode?: boolean; // 🎨 Modo editor: usa valores padrão instantaneamente (sem API)
 }
 
 export interface UseComponentConfigurationReturn {
@@ -58,7 +59,8 @@ export function useComponentConfiguration(
         realTimeSync = false,
         cacheEnabled = true,
         autoSave = false,
-        autoSaveDelay = 2000
+        autoSaveDelay = 2000,
+        editorMode = false // 🎨 Modo editor otimizado
     } = options;
 
     // ============================================================================
@@ -90,20 +92,44 @@ export function useComponentConfiguration(
     const loadConfiguration = useCallback(async () => {
         if (!componentId) return;
 
-        // 🛡️ TIMEOUT DE SEGURANÇA: Forçar isLoading=false após 5 segundos
-        const safetyTimeout = setTimeout(() => {
-            console.warn(`⚠️ Loading timeout for ${componentId} - forcing isLoading=false`);
-            setIsLoading(false);
-            setConnectionStatus('error');
-            setError('Timeout ao carregar configuração - usando valores padrão');
-        }, 5000);
-
         try {
             setIsLoading(true);
             setConnectionStatus('connecting');
             setError(null);
 
-            console.log(`🔄 Loading configuration for ${componentId}${funnelId ? ` (${funnelId})` : ''}`);
+            console.log(`🔄 Loading configuration for ${componentId}${funnelId ? ` (${funnelId})` : ''}${editorMode ? ' [EDITOR MODE - FAST]' : ''}`);
+
+            // 🎨 MODO EDITOR: Usar valores padrão instantaneamente (sem API, sem timeout)
+            if (editorMode) {
+                console.log(`⚡ Editor mode: loading defaults instantly for ${componentId}`);
+                
+                // Carregar definição (apenas uma vez)
+                if (!definitionLoadedRef.current) {
+                    const definition = await apiRef.current.getComponentDefinition(componentId);
+                    setComponentDefinition(definition);
+                    definitionLoadedRef.current = true;
+                }
+
+                // Usar valores padrão da definição (instantâneo, sem Supabase)
+                const defaultConfig = componentDefinition?.defaultProperties || {};
+                
+                setProperties(defaultConfig);
+                setIsConnected(true);
+                setConnectionStatus('connected');
+                setHasUnsavedChanges(false);
+
+                console.log(`✅ [EDITOR] Configuration loaded instantly for ${componentId}:`, defaultConfig);
+                setIsLoading(false);
+                return;
+            }
+
+            // 🛡️ MODO PRODUÇÃO: Timeout de segurança (5s)
+            const safetyTimeout = setTimeout(() => {
+                console.warn(`⚠️ Loading timeout for ${componentId} - forcing isLoading=false`);
+                setIsLoading(false);
+                setConnectionStatus('error');
+                setError('Timeout ao carregar configuração - usando valores padrão');
+            }, 5000);
 
             // Carregar definição do componente (apenas uma vez para evitar loop)
             if (!definitionLoadedRef.current) {
@@ -112,7 +138,7 @@ export function useComponentConfiguration(
                 definitionLoadedRef.current = true;
             }
             
-            // Carregar configuração atual
+            // Carregar configuração atual da API/Supabase
             const config = await apiRef.current.getConfiguration(componentId, funnelId);
 
             // Atualizar estados - separado para evitar loop
@@ -134,13 +160,10 @@ export function useComponentConfiguration(
 
             console.error(`❌ Error loading configuration for ${componentId}:`, err);
 
-            // Limpar timeout de segurança mesmo em caso de erro
-            clearTimeout(safetyTimeout);
-
         } finally {
             setIsLoading(false);
         }
-    }, [componentId, funnelId]);
+    }, [componentId, funnelId, editorMode, componentDefinition]);
 
     // ============================================================================
     // UPDATE PROPERTY
