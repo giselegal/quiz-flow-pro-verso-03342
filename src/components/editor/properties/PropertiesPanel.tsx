@@ -23,14 +23,17 @@ import { Trash2, Copy, ArrowUp, ArrowDown, X, Save, AlertCircle } from 'lucide-r
 import { cn } from '@/lib/utils';
 
 interface PropertiesPanelProps {
-  blockId: string | null;
-  stepIndex: number;
+  blockId?: string | null;
+  stepIndex?: number;
+  selectedBlock?: any | null;
+  onUpdate?: (updates: any) => void;
+  onDelete?: (id: string) => void;
   onClose?: () => void;
 }
 
 const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   blockId,
-  stepIndex,
+  stepIndex = 0,
   onClose
 }) => {
   const {

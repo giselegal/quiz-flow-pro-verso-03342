@@ -200,7 +200,7 @@ export const INITIAL_BLOCK_SCHEMAS: BlockPropertySchemaDefinition[] = [
         ],
         properties: [
             { key: 'question', label: 'Pergunta', type: 'richtext', required: true, default: 'Pergunta do quiz', group: 'content' },
-            // Observação: edição completa das opções (com imagem) será abordada em iteração futura
+            { key: 'options', label: 'Opções', type: 'options-list', required: true, default: [], group: 'content', description: 'Lista de opções com imagem, texto, pontos e categoria' },
             { key: 'columns', label: 'Colunas', type: 'number', default: 2, min: 1, max: 4, group: 'style' },
             { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean', default: true, group: 'style' },
             { key: 'imageSize', label: 'Tamanho Imagem', type: 'select', enumValues: ['auto', 'custom'], default: 'custom', group: 'style', when: c => c.showImages },

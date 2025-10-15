@@ -98,12 +98,13 @@ export function useComponentConfiguration(
 
             // Carregar definição do componente
             const definition = await apiRef.current.getComponentDefinition(componentId);
-            setComponentDefinition(definition);
-
+            
             // Carregar configuração atual
             const config = await apiRef.current.getConfiguration(componentId, funnelId);
-            setProperties(config);
 
+            // Atualizar estados - separado para evitar loop
+            setComponentDefinition(definition);
+            setProperties(config);
             setIsConnected(true);
             setConnectionStatus('connected');
             setHasUnsavedChanges(false);
@@ -118,16 +119,10 @@ export function useComponentConfiguration(
 
             console.error(`❌ Error loading configuration for ${componentId}:`, err);
 
-            // Em caso de erro, usar configuração padrão se disponível
-            if (componentDefinition?.defaultProperties) {
-                setProperties(componentDefinition.defaultProperties);
-                console.log(`⚙️ Using default configuration for ${componentId}`);
-            }
-
         } finally {
             setIsLoading(false);
         }
-    }, [componentId, funnelId, componentDefinition]);
+    }, [componentId, funnelId]);
 
     // ============================================================================
     // UPDATE PROPERTY

@@ -70,7 +70,8 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
       if (useCloudinary && cloudName && uploadPreset) {
         setIsUploading(true);
         openCloudinaryWidget({ cloudName, uploadPreset })
-          .then(url => {
+          .then(result => {
+            const url = typeof result === 'string' ? result : result.secureUrl;
             onImageChange(url);
             toast.success('Imagem enviada (Cloudinary)');
           })
