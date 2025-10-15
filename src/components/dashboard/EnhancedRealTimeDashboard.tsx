@@ -4,3 +4,4 @@
 export function EnhancedRealTimeDashboard() {
   return <div>EnhancedRealTimeDashboard - Disabled</div>;
 }
+export default EnhancedRealTimeDashboard;
