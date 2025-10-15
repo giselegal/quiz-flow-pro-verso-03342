@@ -283,7 +283,7 @@ class HybridTemplateService {
 
             // Normalizar stepId para formato correto (step-01, step-02, etc.)
             const normalizedStepId = this.normalizeStepId(stepId);
-            const templatePath = `/templates/${normalizedStepId}-template.json`;
+            const templatePath = `/templates/${normalizedStepId}-v3.json`;
 
             console.log(`🔍 HybridTemplateService: Tentando carregar template: ${templatePath}`);
 

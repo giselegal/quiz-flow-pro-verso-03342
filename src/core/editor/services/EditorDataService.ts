@@ -97,11 +97,11 @@ class EditorDataService {
     private async loadStepJson(stepNumber: number): Promise<FunnelStep | null> {
         try {
             const stepId = String(stepNumber).padStart(2, '0');
-            const templatePath = `/templates/step-${stepId}-template.json`;
+            const templatePath = `/templates/step-${stepId}-v3.json`;
 
             const response = await fetch(templatePath);
             if (!response.ok) {
-                console.warn(`⚠️ Template step-${stepId} não encontrado`);
+                console.warn(`⚠️ Template step-${stepId}-v3 não encontrado`);
                 return null;
             }
 

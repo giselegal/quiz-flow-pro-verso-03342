@@ -72,7 +72,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
             // Tentar carregar templates JSON dos arquivos
             const templatePromises = Array.from({ length: 21 }, (_, i) => {
                 const stepNumber = String(i + 1).padStart(2, '0');
-                return fetch(`/templates/step-${stepNumber}-template.json`)
+                return fetch(`/templates/step-${stepNumber}-v3.json`)
                     .then(res => res.ok ? res.json() : null)
                     .catch(() => null);
             });
@@ -311,8 +311,8 @@ const EditorJsonTemplatesPage: React.FC = () => {
                             <Card
                                 key={template.metadata.id}
                                 className={`cursor-pointer transition-all hover:shadow-md ${selectedTemplate?.metadata.id === template.metadata.id
-                                        ? 'ring-2 ring-primary'
-                                        : ''
+                                    ? 'ring-2 ring-primary'
+                                    : ''
                                     }`}
                                 onClick={() => handleSelectTemplate(template)}
                             >

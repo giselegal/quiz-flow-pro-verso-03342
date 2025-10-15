@@ -677,7 +677,7 @@ Forneça previsões e recomendações em JSON:
             }
 
             const normalizedStepId = this.normalizeStepId(stepId);
-            const templatePath = `/templates/${normalizedStepId}-template.json`;
+            const templatePath = `/templates/${normalizedStepId}-v3.json`;
 
             const response = await fetch(templatePath);
             if (response.ok) {

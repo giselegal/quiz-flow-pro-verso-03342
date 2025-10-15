@@ -76,7 +76,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
 
         const jsonModule = await import(
           /* @vite-ignore */
-          `/templates/${stepId}-template.json`
+          `/templates/${stepId}-v3.json`
         );
 
         const jsonTemplate = jsonModule.default || jsonModule;
