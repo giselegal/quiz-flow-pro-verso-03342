@@ -47,7 +47,7 @@ export { useQuizConfig } from './useQuizConfig';
 export { useQuizLogic } from './useQuizLogic';
 export { useQuizResults } from './useQuizResults';
 export { useQuizTracking } from './useQuizTracking';
-export { useQuizCRUD } from './useQuizCRUD';
+// useQuizCRUD disabled - legacy code
 
 // Responsividade
 export { useIsLowPerformanceDevice, useIsMobile } from './use-mobile';

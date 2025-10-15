@@ -34,7 +34,7 @@ export { default as Quiz21StepsProvider } from './Quiz21StepsProvider';
  * Navegação do Quiz
  */
 export { default as QuizNavigation } from './QuizNavigation';
-export { default as Quiz21StepsNavigation } from './Quiz21StepsNavigation';
+export { Quiz21StepsNavigation } from './Quiz21StepsNavigation';
 
 /**
  * Container e Wrapper
@@ -130,12 +130,12 @@ export { QuizErrorBoundary } from './QuizErrorBoundary';
  * Preview e Visualização
  */
 export { QuizPreview } from './QuizPreview';
-export { default as QuizOptimizedRenderer } from './QuizOptimizedRenderer';
+export { QuizOptimizedRenderer } from './QuizOptimizedRenderer';
 
 /**
  * Backend Integration
  */
-export { default as QuizBackendStatus } from './QuizBackendStatus';
+export { QuizBackendStatus } from './QuizBackendStatus';
 
 /**
  * Validação e Métricas

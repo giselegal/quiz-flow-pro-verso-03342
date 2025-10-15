@@ -5,7 +5,7 @@
 
 import React, { Suspense, lazy } from 'react';
 import { Route, Switch } from 'wouter';
-import { AdminLayout } from './AdminLayout';
+import AdminLayout from './AdminLayout';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 // Lazy load pages
