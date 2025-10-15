@@ -27,11 +27,11 @@ import { PreviewMigrationWrapper } from '../migration/PreviewMigrationWrapper';
 import { PerformanceDashboard } from '../dashboard/PerformanceDashboard';
 import { LivePreviewProvider } from '../../../providers/LivePreviewProvider';
 import { FeatureFlagProvider } from '../testing/FeatureFlagSystem';
-// import { RenderOptimizationProvider } from '../../../hooks/useRenderOptimization'; // Removed - using hooks instead
+// import { RenderOptimizationProvider } from '../../../hooks/performance/useRenderOptimization'; // Removed - using hooks instead
 
 // Hooks
-import { useAdvancedCache } from '../../../hooks/useAdvancedCache';
-import { useAdvancedWebSocket } from '../../../hooks/useAdvancedWebSocket';
+import { useAdvancedCache } from '../../../hooks/performance/useAdvancedCache';
+import { useAdvancedWebSocket } from '../../../hooks/websocket/useAdvancedWebSocket';
 
 // ============================================================================
 // TYPES

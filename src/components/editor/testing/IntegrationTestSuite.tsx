@@ -37,7 +37,7 @@ import { useLiveCanvasPreview } from '@/hooks/useLiveCanvasPreview';
 // Providers
 import { FeatureFlagProvider } from '../testing/FeatureFlagSystem';
 import { LivePreviewProvider } from '../../../providers/LivePreviewProvider';
-// import { RenderOptimizationProvider } from '../../../hooks/useRenderOptimization'; // Removed - using hooks instead
+// import { RenderOptimizationProvider } from '../../../hooks/performance/useRenderOptimization'; // Removed - using hooks instead
 
 // ============================================================================
 // TYPES
