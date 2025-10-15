@@ -34,7 +34,7 @@ import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
 import { serviceManager } from './services/core/UnifiedServiceManager';
 import { withSyncDiagnostic } from './components/diagnostics/SyncDiagnosticIntegration';
-import { LocalConfigProvider } from './components/providers/LocalConfigProvider';
+// Remover LocalConfigProvider complexo - usando sistema JavaScript simples
 
 // 🚀 FASE 2: Consolidated Provider (único provider necessário)
 import { ConsolidatedProvider } from '@/providers';
