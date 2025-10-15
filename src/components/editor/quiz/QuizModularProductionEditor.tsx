@@ -2689,7 +2689,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
     return (
         <div className="h-full flex flex-col bg-white">
             <div className="flex-1 overflow-auto">
-                <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
+                <BlockRegistryProvider definitions={EXTENDED_BLOCK_DEFINITIONS}>
                     {/* 🎯 previewMode: Sincroniza com Canvas + usa comportamento de produção */}
                     <QuizAppConnected funnelId={funnelId} previewMode initialStepId={selectedStepId} />
                 </BlockRegistryProvider>
