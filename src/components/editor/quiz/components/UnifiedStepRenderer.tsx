@@ -116,7 +116,21 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
 
   // Mapear IDs lógicos dos blocos para tipos reais do registry
   const resolveRealBlockId = useCallback((logicalId: string): string | undefined => {
-    switch (logicalId) {
+    // Normalização: aceitar IDs completos com prefixo do step (ex.: "step-20-congrats")
+    const normalize = (id: string): string => {
+      const lower = String(id || '').toLowerCase();
+      // Mapeamentos por sufixo para RESULT
+      if (/-congrats$/.test(lower)) return 'result-congrats';
+      if (/(^|-)result$/.test(lower)) return 'result-main';
+      if (/-image$/.test(lower)) return 'result-image';
+      if (/-description$/.test(lower)) return 'result-description';
+      if (/-characteristics$/.test(lower)) return 'result-characteristics';
+      if (/-cta$/.test(lower)) return 'result-cta';
+      return lower;
+    };
+
+    const key = normalize(logicalId);
+    switch (key) {
       // INTRO (step-01)
       case 'intro-header': {
         return (
@@ -169,6 +183,43 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       case 'question-button': {
         // Navegação do quiz (botões próximo/anterior)
         return findBlockIdByTypes(['quiz-navigation', 'button']);
+      }
+
+      // RESULT (ex.: step-20)
+      case 'result-congrats': {
+        // Título/Parabéns: texto simples
+        return (
+          findBlockIdByTypes(['title', 'text-inline', 'paragraph'])
+        );
+      }
+      case 'result-main': {
+        // Bloco principal do resultado (hero/título grande)
+        return (
+          findBlockIdByTypes(['result-hero', 'title', 'text-inline'])
+        );
+      }
+      case 'result-image': {
+        return (
+          findBlockIdByTypes(['image-display-inline', 'image'])
+        );
+      }
+      case 'result-description': {
+        return (
+          // Preferir text-inline com id contendo 'result'/'description'
+          findBlockId(b => String(b.type || '').toLowerCase() === 'text-inline' && /result|description/i.test(String(b.id)))
+          || findBlockIdByTypes(['text-inline', 'paragraph'])
+        );
+      }
+      case 'result-characteristics': {
+        return (
+          findBlockIdByTypes(['feature-list', 'list-inline', 'bullet-list'])
+          || findBlockIdByTypes(['text-inline'])
+        );
+      }
+      case 'result-cta': {
+        return (
+          findBlockIdByTypes(['button-inline', 'button', 'quiz-navigation'])
+        );
       }
       default:
         return undefined;
@@ -356,6 +407,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
                 resultStyle: sessionData.resultStyle || 'natural',
                 secondaryStyles: sessionData.secondaryStyles || [],
               }}
+              onOpenProperties={handleOpenProperties}
             />
           );
         }
