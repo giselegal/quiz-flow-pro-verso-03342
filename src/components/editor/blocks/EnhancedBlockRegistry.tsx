@@ -121,15 +121,15 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'loading-animation': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
     'loader-inline': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
     
-    // ✅ STEP 12 & 19 - BLOCOS ATÔMICOS DE TRANSIÇÃO (100% Modulares)
-    'transition-title': lazy(() => import('./TransitionTitleBlock')),
+    // ✅ STEP 12 & 19 - BLOCOS ATÔMICOS DE TRANSIÇÃO (100% Modulares) - Direct imports para performance
+    'transition-title': lazy(() => import('./atomic/TransitionTitleBlock')),
     'transition-subtitle': lazy(() => import('./TransitionSubtitleBlock')),
     'transition-image': lazy(() => import('./TransitionImageBlock')),
     'transition-description': lazy(() => import('./TransitionDescriptionBlock')),
-    'transition-loader': lazy(() => import('./TransitionLoaderBlock')),
-    'transition-text': lazy(() => import('./TransitionTextBlock')),
-    'transition-progress': lazy(() => import('./TransitionProgressBlock')),
-    'transition-message': lazy(() => import('./TransitionMessageBlock')),
+    'transition-loader': lazy(() => import('./atomic/TransitionLoaderBlock')),
+    'transition-text': lazy(() => import('./atomic/TransitionTextBlock')),
+    'transition-progress': lazy(() => import('./atomic/TransitionProgressBlock')),
+    'transition-message': lazy(() => import('./atomic/TransitionMessageBlock')),
 
     // ✅ STEPS 13-18 - PERGUNTAS AVANÇADAS
     'quiz-advanced-question': TextInlineBlock,
@@ -151,16 +151,16 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
     'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
     
-    // ✅ STEP 20 - BLOCOS ATÔMICOS DE RESULTADO (100% Modulares)
+    // ✅ STEP 20 - BLOCOS ATÔMICOS DE RESULTADO (100% Modulares) - Direct imports para performance
     'result-congrats': lazy(() => import('./ResultCongratsBlock')),
-    'result-main': lazy(() => import('./ResultMainBlock')),
-    'result-image': lazy(() => import('./ResultImageBlock')),
-    'result-description': lazy(() => import('./ResultDescriptionBlock')),
-    'result-header': lazy(() => import('./ResultHeaderBlock')),
-    'result-characteristics': lazy(() => import('./ResultCharacteristicsBlock')),
-    'result-cta': lazy(() => import('./ResultCTABlock')),
+    'result-main': lazy(() => import('./atomic/ResultMainBlock')),
+    'result-image': lazy(() => import('./atomic/ResultImageBlock')),
+    'result-description': lazy(() => import('./atomic/ResultDescriptionBlock')),
+    'result-header': lazy(() => import('./atomic/ResultHeaderBlock')),
+    'result-characteristics': lazy(() => import('./atomic/ResultCharacteristicsBlock')),
+    'result-cta': lazy(() => import('./atomic/ResultCTABlock')),
     'result-progress-bars': lazy(() => import('./ResultProgressBarsBlock')),
-    'result-secondary-styles': lazy(() => import('./ResultSecondaryStylesBlock')),
+    'result-secondary-styles': lazy(() => import('./atomic/ResultSecondaryStylesBlock')),
 
     // 🤖 IA - FASHION AI GENERATOR
     'fashion-ai-generator': FashionAIGeneratorBlock,

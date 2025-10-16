@@ -36,10 +36,45 @@ export default function ModularTransitionStep({
     const editor = useEditor({ optional: true });
     const stepKey = data?.id || 'step-12';
 
-    // Buscar blocos do provider
-    const blocks = useMemo(() => {
-        return editor?.state?.stepBlocks?.[stepKey] || [];
-    }, [editor?.state?.stepBlocks, stepKey]);
+    // Buscar blocos do provider com local state para forçar re-render
+    const [localBlocks, setLocalBlocks] = React.useState<any[]>([]);
+    const [isLoadingBlocks, setIsLoadingBlocks] = React.useState(true);
+
+    React.useEffect(() => {
+        const currentBlocks = editor?.state?.stepBlocks?.[stepKey] || [];
+        
+        // Inicializar loading
+        if (isLoadingBlocks && currentBlocks.length === 0) {
+            // Tentar carregar os blocos se não existem
+            if (editor?.actions?.ensureStepLoaded) {
+                editor.actions.ensureStepLoaded(stepKey).then(() => {
+                    setIsLoadingBlocks(false);
+                }).catch(() => {
+                    setIsLoadingBlocks(false);
+                });
+            } else {
+                setIsLoadingBlocks(false);
+            }
+        } else if (currentBlocks.length > 0) {
+            setLocalBlocks(currentBlocks);
+            setIsLoadingBlocks(false);
+        }
+    }, [editor?.state?.stepBlocks, stepKey, editor?.state?.stepBlocks?.[stepKey]?.length, editor?.actions, isLoadingBlocks]);
+
+    // Usar localBlocks ao invés de memoized blocks
+    const blocks = localBlocks;
+
+    // Loading state
+    if (isLoadingBlocks && localBlocks.length === 0) {
+        return (
+            <div className="flex items-center justify-center p-12 min-h-[400px]">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <span className="text-muted-foreground">Carregando blocos...</span>
+                </div>
+            </div>
+        );
+    }
 
     // Ordenação dos blocos via metadata
     const [localOrder, setLocalOrder] = React.useState<string[]>([]);

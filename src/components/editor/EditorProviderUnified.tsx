@@ -396,34 +396,59 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const ensureStepLoaded = useCallback(async (step: number | string) => {
         const stepKey = typeof step === 'string' ? step : `step-${step}`;
 
-        // Se já tem blocos para este step, não fazer nada
-        if (state.stepBlocks[stepKey]?.length > 0) {
-            return;
-        }
+        console.group(`🔍 [ensureStepLoaded] ${stepKey}`);
+        console.log('hasModularTemplate:', hasModularTemplate(stepKey));
+        console.log('existingBlocks:', state.stepBlocks[stepKey]?.length || 0);
 
-        // ✅ PRIORIDADE: Templates JSON modulares (steps 12, 19, 20)
+        // ✅ PRIORIDADE 1: Templates JSON modulares (steps 12, 19, 20)
         if (hasModularTemplate(stepKey)) {
+            const existingBlocks = state.stepBlocks[stepKey] || [];
             const modularBlocks = loadStepTemplate(stepKey);
-            console.log(`🎯 Carregando template modular para ${stepKey}:`, {
-                blockCount: modularBlocks.length,
-                blockTypes: modularBlocks.map(b => b.type)
-            });
             
-            setState(prev => ({
-                ...prev,
-                stepBlocks: {
-                    ...prev.stepBlocks,
-                    [stepKey]: modularBlocks
-                }
-            }));
+            console.log('✅ Loaded modular blocks:', {
+                count: modularBlocks.length,
+                types: modularBlocks.map(b => b.type)
+            });
+
+            // Se já tem blocos modulares com mesma estrutura, não recarregar
+            const existingTypes = existingBlocks.map(b => b.type).sort().join(',');
+            const modularTypes = modularBlocks.map(b => b.type).sort().join(',');
+            
+            if (existingBlocks.length > 0 && existingTypes === modularTypes) {
+                console.log('⏭️ Skip: blocos modulares já carregados');
+                console.groupEnd();
+                return;
+            }
+
+            // Carregar/substituir com blocos modulares
+            console.log('📝 setState: carregando blocos modulares');
+            setState(prev => {
+                const newState = {
+                    ...prev,
+                    stepBlocks: {
+                        ...prev.stepBlocks,
+                        [stepKey]: modularBlocks
+                    }
+                };
+                return newState;
+            });
+            console.groupEnd();
             return;
         }
 
-        // Carregar template padrão para outros steps (compatível com estruturas com/sem .steps)
+        // Se já tem blocos não-modulares, manter
+        if (state.stepBlocks[stepKey]?.length > 0) {
+            console.log('⏭️ Skip: blocos legacy já carregados');
+            console.groupEnd();
+            return;
+        }
+
+        // Carregar template padrão para outros steps
         const source: any = (QUIZ_STYLE_21_STEPS_TEMPLATE as any);
         const templateSteps: any = source?.steps && typeof source.steps === 'object' ? source.steps : source;
         const templateBlocks = templateSteps?.[stepKey] || [];
 
+        console.log('📝 setState: carregando template padrão');
         setState(prev => ({
             ...prev,
             stepBlocks: {
@@ -431,7 +456,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 [stepKey]: Array.isArray(templateBlocks) ? templateBlocks : []
             }
         }));
-    }, [state.stepBlocks]);
+        console.groupEnd();
+    }, []); // ✅ CORREÇÃO: Sem dependências para evitar re-execuções
 
     const loadDefaultTemplate = useCallback(() => {
         console.log('🎨 Loading default template');
