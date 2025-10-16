@@ -7,6 +7,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import QuizApp from '@/components/quiz/QuizApp';
+import ModularPreviewContainer from '@/components/editor/quiz/ModularPreviewContainer';
 import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -42,6 +43,7 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
 }) => {
     // Live steps via WebSocket (se houver outro cliente broadcastando)
     const { liveSteps } = useFunnelLivePreview(funnelId);
+    const [useModularPreview, setUseModularPreview] = useState<boolean>(true);
     const [isPlaying, setIsPlaying] = useState(true);
     const [showControls, setShowControls] = useState(true);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -123,6 +125,14 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
 
                 <div className="flex items-center gap-2">
                     <Button
+                        variant={useModularPreview ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setUseModularPreview(prev => !prev)}
+                        title={useModularPreview ? 'Usando preview modular' : 'Usar preview modular'}
+                    >
+                        {useModularPreview ? 'Modular' : 'Produção'}
+                    </Button>
+                    <Button
                         variant="ghost"
                         size="sm"
                         onClick={handleRefresh}
@@ -174,7 +184,11 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             >
                 {isPlaying ? (
                     <div key={refreshKey}>
-                        <QuizApp funnelId={funnelId} externalSteps={liveSteps || undefined as any} />
+                        {useModularPreview ? (
+                            <ModularPreviewContainer funnelId={funnelId} externalSteps={liveSteps || undefined as any} />
+                        ) : (
+                            <QuizApp funnelId={funnelId} externalSteps={liveSteps || undefined as any} />
+                        )}
                     </div>
                 ) : (
                     <div className="flex items-center justify-center h-full">
