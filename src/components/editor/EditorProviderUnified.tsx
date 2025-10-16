@@ -215,7 +215,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     const [history] = useState(() => new UnifiedHistory());
     const [historyState, setHistoryState] = useState({ canUndo: false, canRedo: false });
-    
+
     // Refs para debounce
     const saveTimeoutRef = useRef<NodeJS.Timeout>();
     const lastSaveRef = useRef<number>(0);
@@ -398,9 +398,10 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             return;
         }
 
-        // Carregar template padrão para o step
-        const templateSteps = QUIZ_STYLE_21_STEPS_TEMPLATE.steps as any;
-        const templateBlocks = templateSteps[stepKey] || [];
+        // Carregar template padrão para o step (compatível com estruturas com/sem .steps)
+        const source: any = (QUIZ_STYLE_21_STEPS_TEMPLATE as any);
+        const templateSteps: any = source?.steps && typeof source.steps === 'object' ? source.steps : source;
+        const templateBlocks = templateSteps?.[stepKey] || [];
 
         setState(prev => ({
             ...prev,
@@ -412,7 +413,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     }, [state.stepBlocks]);
 
     const loadDefaultTemplate = useCallback(() => {
-        const templateSteps = QUIZ_STYLE_21_STEPS_TEMPLATE.steps as any;
+        const source: any = (QUIZ_STYLE_21_STEPS_TEMPLATE as any);
+        const templateSteps: any = source?.steps && typeof source.steps === 'object' ? source.steps : source;
         const stepBlocks: Record<string, Block[]> = {};
 
         // Converter template steps para formato correto
@@ -425,7 +427,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             ...getInitialState(enableSupabase),
             stepBlocks
         }));
-        
+
         history.clear();
         console.log('✅ Template padrão carregado com', Object.keys(stepBlocks).length, 'steps');
     }, [updateStateWithHistory, history, enableSupabase]);
