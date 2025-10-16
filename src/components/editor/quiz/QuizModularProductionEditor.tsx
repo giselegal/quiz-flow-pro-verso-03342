@@ -545,6 +545,56 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     useEffect(() => {
         // Carregamento inicial: se houver ?template=, construir steps default
         console.log('🎯 EDITOR: useEffect inicial disparado');
+        
+        // 🎯 SINCRONIZAR COM EDITOR PROVIDER - Usar blocos inicializados
+        if (editorCtx?.state?.blocks && editorCtx.state.blocks.length > 0) {
+            console.log('✅ Sincronizando steps com blocos do EditorProvider:', {
+                totalBlocks: editorCtx.state.blocks.length,
+                stepsWithBlocks: Object.keys(editorCtx.state.blocksByStep || {}).length
+            });
+            
+            // Converter blocksByStep para steps
+            const stepsFromBlocks: EditableQuizStep[] = [];
+            const blocksByStep = editorCtx.state.blocksByStep || {};
+            
+            Object.keys(blocksByStep).sort().forEach((stepId, index) => {
+                const stepNumber = parseInt(stepId.replace('step-', ''), 10);
+                const blockIds = blocksByStep[stepId] || [];
+                const stepBlocks = blockIds
+                    .map(id => editorCtx.state.blocks?.find(b => b.id === id))
+                    .filter((b): b is any => b !== undefined);
+                
+                // Determinar tipo do step baseado nos blocos
+                let stepType: EditableQuizStep['type'] = 'question';
+                if (stepNumber === 1) stepType = 'intro';
+                else if (stepNumber === 20) stepType = 'result';
+                else if (stepNumber === 21) stepType = 'offer';
+                else if (stepNumber === 15) stepType = 'transition';
+                
+                stepsFromBlocks.push({
+                    id: stepId,
+                    order: index,
+                    type: stepType,
+                    blocks: stepBlocks,
+                    metadata: {
+                        title: `Step ${stepNumber}`,
+                        description: `Step ${stepNumber} with ${stepBlocks.length} blocks`
+                    }
+                });
+            });
+            
+            if (stepsFromBlocks.length > 0) {
+                console.log('✅ Steps criados a partir dos blocos:', stepsFromBlocks.length);
+                setSteps(stepsFromBlocks);
+                if (!selectedStepId && stepsFromBlocks[0]) {
+                    setSelectedStepId(stepsFromBlocks[0].id);
+                }
+                setIsLoading(false);
+                return;
+            }
+        }
+        
+        // FALLBACK: Carregar do template se não houver blocos no provider
         try {
             const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
             const templateId = sp.get('template');
@@ -848,7 +898,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch {/* ignore */ }
         console.log('🏁 Finalizando useEffect (loading avaliado)');
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [editorCtx?.state?.blocks]);
 
     // ✅ FASE 3: FALLBACK Empty State - Mostrar mensagem se nenhum step foi carregado
     useEffect(() => {
