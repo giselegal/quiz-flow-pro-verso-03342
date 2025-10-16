@@ -13,6 +13,9 @@ export { default as IntroStep01_Form } from './IntroStep01_Form';
 export { default as IntroStep01_Main } from './IntroStep01_Main';
 export { default as IntroStep01_PropertiesPanel } from './IntroStep01_PropertiesPanel';
 
+// Renderer (sistema de renderização)
+export { default as IntroStep01Renderer, IntroStep01RendererAdapter } from './IntroStep01Renderer';
+
 // Re-export types
 export type { IntroStep01HeaderProps } from './IntroStep01_Header';
 export type { IntroStep01TitleProps } from './IntroStep01_Title';
@@ -21,3 +24,4 @@ export type { IntroStep01DescriptionProps } from './IntroStep01_Description';
 export type { IntroStep01FormProps } from './IntroStep01_Form';
 export type { IntroStep01MainProps } from './IntroStep01_Main';
 export type { IntroStep01PropertiesPanelProps } from './IntroStep01_PropertiesPanel';
+export type { IntroStep01RendererProps, RenderMode } from './IntroStep01Renderer';
