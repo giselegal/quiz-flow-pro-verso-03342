@@ -1,15 +1,24 @@
 /**
- * 🎯 UNIFIED APP PROVIDER - ARQUITETURA SIMPLIFICADA
+ * 🎯 UNIFIED APP PROVIDER - PROVIDER CANÔNICO ÚNICO
  * 
  * Provider único que consolida TODOS os contextos essenciais:
  * ✅ SuperUnifiedProvider (estado + auth + theme)
  * ✅ UnifiedCRUDProvider (operações CRUD)
  * ✅ ThemeProvider (next-themes)
  * 
+ * API COMPLETA:
+ * - context: FunnelContext (EDITOR | PRODUCTION | PREVIEW)
+ * - autoLoad: boolean (carregar dados automaticamente)
+ * - debugMode: boolean (logs de desenvolvimento)
+ * - initialFeatures: configuração de features
+ * 
  * RESULTADO:
  * - De 4 níveis → 1 provider único
  * - 70% menos re-renders
- * - API mais simples
+ * - API mais simples e consistente
+ * 
+ * @version 2.0.0 - Provider canônico consolidado
+ * @date 2025-01-16
  */
 
 import React, { ReactNode } from 'react';
@@ -32,7 +41,10 @@ export interface UnifiedAppProviderProps {
 }
 
 /**
- * Provider único consolidado - Use este em vez de ConsolidatedProvider
+ * ⭐ PROVIDER CANÔNICO ÚNICO
+ * 
+ * Use este em TODA a aplicação para garantir consistência.
+ * Substitui qualquer outro provider de app/editor.
  */
 export const UnifiedAppProvider: React.FC<UnifiedAppProviderProps> = ({
   children,
@@ -60,5 +72,12 @@ export const UnifiedAppProvider: React.FC<UnifiedAppProviderProps> = ({
     </ThemeProvider>
   );
 };
+
+/**
+ * Hook para acessar contexto unificado
+ * Re-exporta hooks dos providers internos para API consistente
+ */
+export { useUnifiedCRUD as useUnifiedApp } from '@/contexts/data/UnifiedCRUDProvider';
+export { useUnifiedCRUD as useUnifiedAppSelector } from '@/contexts/data/UnifiedCRUDProvider';
 
 export default UnifiedAppProvider;
