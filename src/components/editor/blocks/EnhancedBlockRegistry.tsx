@@ -403,7 +403,7 @@ export const AVAILABLE_COMPONENTS = [
     { type: 'heading', label: 'Título (H1-H6)', category: 'content', description: 'Títulos com níveis hierárquicos editáveis' },
     { type: 'text-inline', label: 'Texto', category: 'content', description: 'Parágrafo de texto com formatação completa' },
     { type: 'image-inline', label: 'Imagem', category: 'content', description: 'Imagem com URL, alt, dimensões e estilos' },
-    { type: 'image-display-inline', label: 'Imagem Display', category: 'content', description: 'Imagem otimizada para exibição' },
+    // ❌ REMOVED: duplicate 'image-display-inline' (already defined in quiz section above)
 
     // ============================================================================
     // 🎨 COMPONENTES VISUAIS (Decoração)
