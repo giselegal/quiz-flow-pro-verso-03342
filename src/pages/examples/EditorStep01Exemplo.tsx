@@ -184,7 +184,7 @@ export function EditorExemploSeparado() {
                         textColor="#000000"
                         accentColor="#FF6B6B"
                         isEditable={true}
-                        onEdit={(field, value) => setTitle(value)}
+                        onEdit={(field: string, value: string) => setTitle(value)}
                     />
                     <input
                         type="text"
@@ -203,7 +203,7 @@ export function EditorExemploSeparado() {
                         maxHeight={300}
                         showShadow={true}
                         isEditable={true}
-                        onEdit={(field, value) => setImageUrl(value)}
+                        onEdit={(field: string, value: string) => setImageUrl(value)}
                     />
                     <input
                         type="text"
@@ -220,9 +220,9 @@ export function EditorExemploSeparado() {
                         formQuestion="Qual seu nome?"
                         buttonText={buttonText}
                         buttonColor="#FF6B6B"
-                        onSubmit={(name) => alert(`Nome: ${name}`)}
+                        onSubmit={(name: string) => alert(`Nome: ${name}`)}
                         isEditable={true}
-                        onEdit={(field, value) => {
+                        onEdit={(field: string, value: string) => {
                             if (field === 'buttonText') setButtonText(value);
                         }}
                     />
