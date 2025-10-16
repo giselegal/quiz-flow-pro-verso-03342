@@ -751,12 +751,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             centered: true
                                         }
                                     });
-                                    // Title (remove HTML tags)
+                                    // Title (use color markup instead of HTML)
                                     if (quizStep.title) {
-                                        const plainTitle = quizStep.title.replace(/<[^>]*>/g, '');
+                                        // Convert HTML highlights to color markup: <span style="color: #B89B7A">text</span> → [#B89B7A]**text**[/#B89B7A]
+                                        let titleWithMarkup = quizStep.title
+                                            .replace(/<span[^>]*style="[^"]*color:\s*#B89B7A[^"]*"[^>]*>(.*?)<\/span>/gi, '[#B89B7A]**$1**[/#B89B7A]')
+                                            .replace(/<[^>]*>/g, ''); // Remove any remaining HTML tags
+                                        
                                         push({
                                             type: 'text-inline',
-                                            content: { content: plainTitle },
+                                            content: { content: titleWithMarkup },
                                             properties: { 
                                                 fontSize: 'text-2xl sm:text-3xl md:text-4xl',
                                                 fontWeight: 'font-bold',
@@ -1752,11 +1756,42 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const align = properties?.textAlign || 'left';
             const size = properties?.fontSize || 'base';
             const weight = properties?.fontWeight || 'normal';
+            const color = properties?.textColor || 'text-slate-700';
             const sizeClass = size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-lg' : size === 'xl' ? 'text-xl' : 'text-base';
             const weightClass = weight === 'bold' ? 'font-bold' : weight === 'semibold' ? 'font-semibold' : 'font-normal';
+            
+            const textContent = content.content || content.text || 'Texto inline';
+            const processedText = replacePlaceholders(textContent, placeholderContext);
+            
+            // Parse color markup: [#HEX]**text**[/#HEX]
+            const parseColorMarkup = (text: string) => {
+                const parts: React.ReactNode[] = [];
+                const regex = /\[#([0-9A-Fa-f]{6})\]\*\*(.*?)\*\*\[\/\#\1\]/g;
+                let lastIndex = 0;
+                let match;
+                
+                while ((match = regex.exec(text)) !== null) {
+                    if (match.index > lastIndex) {
+                        parts.push(text.slice(lastIndex, match.index));
+                    }
+                    parts.push(
+                        <span key={match.index} style={{ color: `#${match[1]}`, fontWeight: 'bold' }}>
+                            {match[2]}
+                        </span>
+                    );
+                    lastIndex = regex.lastIndex;
+                }
+                
+                if (lastIndex < text.length) {
+                    parts.push(text.slice(lastIndex));
+                }
+                
+                return parts.length > 0 ? parts : text;
+            };
+            
             node = (
-                <p className={cn('leading-relaxed text-slate-700', sizeClass, weightClass)} style={{ textAlign: align }}>
-                    {replacePlaceholders(content.text || 'Texto inline', placeholderContext)}
+                <p className={cn('leading-relaxed', color, sizeClass, weightClass)} style={{ textAlign: align }}>
+                    {parseColorMarkup(processedText)}
                 </p>
             );
             previewCacheRef.current.set(id, { key, node });

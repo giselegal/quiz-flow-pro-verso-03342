@@ -59,7 +59,7 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
       type: 'text-inline',
       order: 2,
       props: {
-        content: 'Chega de um guarda-roupa lotado e da sensação de que nada combina com você.',
+        content: '[#B89B7A]**Chega**[/#B89B7A] de um guarda-roupa lotado e da sensação de que [#B89B7A]**nada combina com você**[/#B89B7A].',
         fontSize: 'text-2xl sm:text-3xl md:text-4xl',
         fontWeight: 'font-bold',
         fontFamily: 'playfair-display',
