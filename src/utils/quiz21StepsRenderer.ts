@@ -41,7 +41,11 @@ export function loadStepBlocks(stepNumber: number): Block[] {
 function mapBlockType(templateType: string): any {
   const typeMapping: Record<string, string> = {
     'quiz-intro-header': 'quiz-intro-header',
-    // Mapear diretamente para o container de formulário para preservar input + botão do Step 01
+    'decorative-bar-inline': 'decorative-bar-inline',
+    'text-inline': 'text-inline',
+    'image-display-inline': 'image-display-inline',
+    'form-input': 'form-input',
+    'button-inline': 'button-inline',
     'form-container': 'form-container',
     'options-grid': 'options-grid',
     hero: 'hero',

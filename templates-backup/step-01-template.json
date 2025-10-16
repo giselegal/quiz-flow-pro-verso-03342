@@ -52,11 +52,20 @@
       }
     },
     {
-      "id": "step01-text-inline-1",
-      "type": "text-inline",
+      "id": "step01-decorative-bar-1",
+      "type": "decorative-bar-inline",
       "position": 1,
       "properties": {
-        "content": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você.</span>",
+        "color": "#B89B7A",
+        "height": 2
+      }
+    },
+    {
+      "id": "step01-text-inline-1",
+      "type": "text-inline",
+      "position": 2,
+      "properties": {
+        "content": "[#B89B7A]**Chega**[/#B89B7A] de um guarda-roupa lotado e da sensação de que [#B89B7A]**nada combina com você**[/#B89B7A].",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center"
@@ -65,30 +74,52 @@
     {
       "id": "step01-image-display-inline-1",
       "type": "image-display-inline",
-      "position": 2,
+      "position": 3,
       "properties": {
         "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
-        "alt": "Quiz image"
+        "alt": "Descubra seu estilo predominante"
+      }
+    },
+    {
+      "id": "step01-text-description-1",
+      "type": "text-inline",
+      "position": 4,
+      "properties": {
+        "content": "Descubra seu **ESTILO PREDOMINANTE** em apenas alguns minutos!",
+        "textAlign": "text-center"
       }
     },
     {
       "id": "step01-form-input-1",
       "type": "form-input",
-      "position": 3,
+      "position": 5,
       "properties": {
-        "label": "Como posso te chamar?",
+        "label": "Antes de começarmos, como posso te chamar?",
         "placeholder": "Digite seu primeiro nome aqui...",
         "inputType": "text",
-        "required": true
+        "required": true,
+        "name": "userName"
       }
     },
     {
       "id": "step01-button-inline-1",
       "type": "button-inline",
-      "position": 4,
+      "position": 6,
       "properties": {
         "text": "Quero Descobrir meu Estilo Agora!",
-        "variant": "primary"
+        "variant": "primary",
+        "action": "next-step"
+      }
+    },
+    {
+      "id": "step01-footer-text-1",
+      "type": "text-inline",
+      "position": 7,
+      "properties": {
+        "content": "Um quiz personalizado que vai revelar qual estilo te representa e como valorizar sua essência através das roupas.",
+        "fontSize": "text-sm",
+        "textAlign": "text-center",
+        "opacity": 0.7
       }
     }
   ]

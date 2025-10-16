@@ -648,35 +648,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 });
                             };
                             switch (quizStep.type) {
-                                case 'intro': {
-                                    if (quizStep.title) {
-                                        push({
-                                            type: 'heading',
-                                            content: { text: quizStep.title },
-                                            properties: { level: 2, allowHtml: true, textAlign: 'center' }
-                                        });
-                                    }
-                                    if (quizStep.image) {
-                                        push({
-                                            type: 'image',
-                                            content: { src: quizStep.image, alt: 'Intro' },
-                                            properties: { width: '100%', borderRadius: '12px' }
-                                        });
-                                    }
-                                    if (quizStep.formQuestion) {
-                                        push({
-                                            type: 'form-input',
-                                            content: { label: quizStep.formQuestion, placeholder: quizStep.placeholder || '' },
-                                            properties: { required: true }
-                                        });
-                                    }
-                                    push({
-                                        type: 'button',
-                                        content: { text: quizStep.buttonText || 'Continuar' },
-                                        properties: { action: 'next-step' }
-                                    });
-                                    break;
-                                }
                                 case 'question': {
                                     if (quizStep.questionText) {
                                         push({
