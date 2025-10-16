@@ -7,7 +7,7 @@
 
 import React, { lazy, Suspense, memo, useMemo, useCallback } from 'react';
 import { EditableQuizStep } from '../types';
-import { adaptStepData } from '@/utils/StepDataAdapter';
+import { adaptStepData, extractStepNumber } from '@/utils/StepDataAdapter';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizScores } from '@/hooks/useQuizState';
@@ -67,8 +67,11 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const isPreviewMode = mode === 'preview';
 
   // Adaptar dados do step para o formato esperado dos componentes
-  // Usar a mesma fonte (merge) em ambos os modos para manter consistência
-  const stepData = adaptStepData(step);
+  // Etapas 12, 19, 20, 21 devem refletir ESTRITAMENTE QUIZ_STEPS (production-only)
+  // Demais etapas usam merge (metadata do editor + produção)
+  const stepNumber = useMemo(() => extractStepNumber(step?.id || ''), [step?.id]);
+  const forceProductionOnly = stepNumber === 12 || stepNumber === 19 || stepNumber === 20 || stepNumber === 21;
+  const stepData = adaptStepData(step, { source: forceProductionOnly ? 'production-only' : 'merge' });
 
   // Helper: extrair respostas salvas no preview (answers_<stepId> => string[])
   const getPreviewAnswers = useCallback((): Record<string, string[]> => {
