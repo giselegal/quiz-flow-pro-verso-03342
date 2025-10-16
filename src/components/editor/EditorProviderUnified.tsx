@@ -496,23 +496,39 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
             const funnelData = {
                 id: funnelId,
-                steps: state.stepBlocks,
-                settings: {
-                    lastModified: new Date().toISOString(),
-                    currentStep: state.currentStep
+                name: `Funnel ${funnelId}`,
+                type: 'quiz',
+                config: {
+                    steps: state.stepBlocks,
+                    settings: {
+                        currentStep: state.currentStep,
+                        selectedBlockId: state.selectedBlockId
+                    }
+                },
+                metadata: {
+                    lastSaved: new Date().toISOString(),
+                    version: '1.0.0',
+                    editorVersion: '5.0.0'
                 }
             };
 
-            if (unifiedCrud.saveFunnel) {
-                await unifiedCrud.saveFunnel(funnelData);
-                console.log('✅ Salvo no Supabase com sucesso');
+            await unifiedCrud.saveFunnel(funnelData);
+            
+            console.log('✅ Salvo no Supabase com sucesso');
+            
+            // Salvar também no persistence service local
+            if (funnelId) {
+                const { editorPersistence } = await import('@/services/persistence/EditorPersistenceService');
+                await editorPersistence.saveSnapshot(state.stepBlocks, funnelId);
             }
+            
         } catch (error) {
             console.error('❌ Erro ao salvar no Supabase:', error);
+            throw error;
         } finally {
             setState(prev => ({ ...prev, isLoading: false }));
         }
-    }, [enableSupabase, unifiedCrud, funnelId, state]);
+    }, [enableSupabase, unifiedCrud, funnelId, state.stepBlocks, state.currentStep, state.selectedBlockId]);
 
     const loadSupabaseComponents = useCallback(async () => {
         if (!enableSupabase || !funnelId) {
