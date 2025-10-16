@@ -1,15 +1,17 @@
 /**
- * 🎯 EDITOR ROUTES CONFIGURATION (P2 Optimization)
+ * 🎯 EDITOR ROUTES CONFIGURATION (Sprint 1 - Consolidado)
+ * 
+ * ✅ TK-ED-01 COMPLETO: Editor único em produção
  * 
  * Configuração centralizada das rotas de editor
+ * - QuizModularProductionEditor como ÚNICO editor oficial
  * - Code splitting otimizado
  * - Lazy loading inteligente
- * - Preload estratégico
  */
 
-import { lazy, ComponentType } from 'react';
+import { lazy } from 'react';
 
-// 🎯 EDITOR CANÔNICO (único editor de produção)
+// 🎯 EDITOR CANÔNICO (ÚNICO EDITOR DE PRODUÇÃO)
 export const QuizModularProductionEditor = lazy(() => 
   import(
     /* webpackChunkName: "editor-production" */
@@ -18,46 +20,15 @@ export const QuizModularProductionEditor = lazy(() =>
   ).then(module => ({ default: module.default }))
 );
 
-// 🧪 EDITORES EXPERIMENTAIS (apenas dev/debug)
-export const editorVariants = {
-  simplified: lazy(() => 
-    import(
-      /* webpackChunkName: "editor-simplified" */
-      '@/components/editor/quiz/QuizFunnelEditorSimplified'
-    ).then(module => ({ default: module.default }))
-  ),
-  
-  wysiwyg: lazy(() => 
-    import(
-      /* webpackChunkName: "editor-wysiwyg" */
-      '@/components/editor/quiz/QuizFunnelEditorWYSIWYG_Refactored'
-    ).then(module => ({ default: module.default }))
-  ),
-  
+// ⚠️ EDITORES DEPRECADOS (apenas para compatibilidade temporária)
+// Serão removidos no Sprint 2 (TK-ED-04)
+export const deprecatedEditors = {
   modern: lazy(() => 
     import(
-      /* webpackChunkName: "editor-modern" */
-      '@/pages/editor/ModernUnifiedEditor'
+      /* webpackChunkName: "editor-deprecated-modern" */
+      '@/pages/editor/deprecated/ModernUnifiedEditor'
     ).then(module => ({ default: module.default }))
   ),
-};
-
-// 🔧 Editor variant selector (dev only)
-export const getEditorVariant = (variant?: string): ComponentType<any> => {
-  if (process.env.NODE_ENV !== 'development') {
-    return QuizModularProductionEditor;
-  }
-  
-  switch (variant) {
-    case 'simplified':
-      return editorVariants.simplified;
-    case 'wysiwyg':
-      return editorVariants.wysiwyg;
-    case 'modern':
-      return editorVariants.modern;
-    default:
-      return QuizModularProductionEditor;
-  }
 };
 
 export default QuizModularProductionEditor;

@@ -53,9 +53,8 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 // 🔍 PÁGINAS DE DIAGNÓSTICO
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 
-// 🚀 EDITOR CONFIGURATION (P2 Optimized)
+// 🚀 EDITOR CONFIGURATION (Sprint 1 - Consolidated)
 import QuizModularProductionEditor from '@/config/editorRoutes.config';
-import { editorVariants } from '@/config/editorRoutes.config';
 
 
 // 🧪 PÁGINAS DE QUIZ
@@ -156,9 +155,9 @@ function AppCore() {
                                 <Route path="/editor-new">
                                     <EditorErrorBoundary>
                                         <div data-testid="quiz-editor-wysiwyg-page">
-                                            <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
-                                                {React.createElement(editorVariants.wysiwyg)}
-                                            </Suspense>
+                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
+                                    <QuizModularProductionEditor />
+                                </Suspense>
                                         </div>
                                     </EditorErrorBoundary>
                                 </Route>
@@ -168,7 +167,7 @@ function AppCore() {
                                         <EditorErrorBoundary>
                                             <div data-testid="quiz-editor-wysiwyg-funnel-page">
                                                 <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
-                                                    {React.createElement(editorVariants.wysiwyg, { funnelId: params.funnelId })}
+                                                    <QuizModularProductionEditor />
                                                 </Suspense>
                                             </div>
                                         </EditorErrorBoundary>
