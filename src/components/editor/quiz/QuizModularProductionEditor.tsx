@@ -791,6 +791,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 setSteps(enriched);
                                 setSelectedStepIdUnified(enriched[0]?.id || '');
                                 setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                
+                                // 🎯 CARREGAR TEMPLATE PADRÃO NO PROVIDER (incluindo steps modulares)
+                                if (editorCtx?.actions?.loadDefaultTemplate) {
+                                    console.log('🎨 Carregando template padrão no EditorProvider...');
+                                    editorCtx.actions.loadDefaultTemplate();
+                                }
+                                
                                 setIsLoading(false);
                                 console.log('✅ Fallback enriquecido concluído! Total de steps:', enriched.length);
                             } catch (err) {
@@ -977,6 +984,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const n = stepNumberFromId(id);
             if (!isNaN(n)) editorCtx.actions.setCurrentStep(n);
         }
+        
+        // 🎯 GARANTIR BLOCOS DO STEP CARREGADOS (incluindo modulares 12, 19, 20)
+        if (editorCtx?.actions?.ensureStepLoaded) {
+            editorCtx.actions.ensureStepLoaded(id).catch(err => {
+                console.error(`❌ Erro ao carregar step ${id}:`, err);
+            });
+        }
+        
         // 🚀 Pré-carregar steps adjacentes para melhorar UX
         preloadAdjacentSteps(id, 2);
     }, [setSelectedStepId, editorCtx, stepNumberFromId]);
@@ -1024,6 +1039,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [effectiveSelectedStepId]);
+    
+    // 🎯 GARANTIR STEP INICIAL CARREGADO quando editor monta com provider ativo
+    useEffect(() => {
+        if (!editorCtx?.actions?.ensureStepLoaded) return;
+        if (!effectiveSelectedStepId) return;
+        
+        // Carregar step inicial
+        editorCtx.actions.ensureStepLoaded(effectiveSelectedStepId).catch(err => {
+            console.error(`❌ Erro ao carregar step inicial ${effectiveSelectedStepId}:`, err);
+        });
+    }, [editorCtx?.actions, effectiveSelectedStepId]);
 
     // Persistência de seleção por etapa agora tratada no hook
 
