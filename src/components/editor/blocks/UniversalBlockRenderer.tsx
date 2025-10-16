@@ -22,7 +22,6 @@ import QuizOptionBlock from './QuizOptionBlock';
 import QuizHeaderBlock from './QuizHeaderBlock';
 import QuizTitleBlock from './QuizTitleBlock';
 import FormInputBlock from './FormInputBlock';
-import QuizOptionsGridBlock from '@/components/blocks/quiz/QuizOptionsGridBlock';
 
 // Importações dos componentes Step20
 import {
@@ -111,7 +110,7 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'quiz-intro-header': QuizIntroHeaderBlock,
   'quiz-question': QuizQuestionBlock,
   'quiz-option': QuizOptionBlock,
-  'quiz-options': QuizOptionsGridBlock,
+  'quiz-options': OptionsGridBlock, // ✅ CORRIGIDO: usar componente novo
   'quiz-header': QuizHeaderBlock,
   'quiz-title': QuizTitleBlock,
   'options-grid': OptionsGridBlock,
