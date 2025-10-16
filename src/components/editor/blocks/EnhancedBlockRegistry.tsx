@@ -80,6 +80,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'quiz-start-page-inline': QuizIntroHeaderBlock,
     'quiz-personal-info-inline': FormInputBlock,
     'quiz-question-inline': TextInlineBlock,
+    'quiz-options': OptionsGridBlock, // ✅ Mapeamento direto para quiz-options
     'quiz-options-inline': OptionsGridBlock,
     'options-grid': OptionsGridBlock,
     'question-hero': QuestionHeroSection, // ✅ NOVO - Section para question-hero
