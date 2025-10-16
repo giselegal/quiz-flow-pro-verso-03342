@@ -15,11 +15,15 @@ import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBloc
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
 import SalesHeroBlock from '@/components/editor/blocks/SalesHeroBlock';
 import DecorativeBarInlineBlock from '@/components/editor/blocks/DecorativeBarInlineBlock';
-// Lazy imports otimizados - Componentes Modulares
+// Lazy imports otimizados - Componentes Modulares do Quiz
 const QuizLogoBlock = lazy(() => import('@/components/editor/blocks/QuizLogoBlock'));
 const QuizProgressBlock = lazy(() => import('@/components/editor/blocks/QuizProgressBlock'));
 const QuizBackButtonBlock = lazy(() => import('@/components/editor/blocks/QuizBackButtonBlock'));
 const ImageDisplayInlineBlock = lazy(() => import('@/components/editor/blocks/ImageDisplayInlineBlock'));
+const QuizQuestionHeaderBlock = lazy(() => import('@/components/editor/blocks/QuizQuestionHeaderBlock'));
+const QuizTransitionLoaderBlock = lazy(() => import('@/components/editor/blocks/QuizTransitionLoaderBlock'));
+const QuizResultHeaderBlock = lazy(() => import('@/components/editor/blocks/QuizResultHeaderBlock'));
+const QuizOfferHeroBlock = lazy(() => import('@/components/editor/blocks/QuizOfferHeroBlock'));
 
 import HeadingInlineBlock from '@/components/editor/blocks/HeadingInlineBlock';
 import {
@@ -71,6 +75,10 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'quiz-logo': QuizLogoBlock,
     'quiz-progress-bar': QuizProgressBlock,
     'quiz-back-button': QuizBackButtonBlock,
+    'quiz-question-header': QuizQuestionHeaderBlock,
+    'quiz-transition-loader': QuizTransitionLoaderBlock,
+    'quiz-result-header': QuizResultHeaderBlock,
+    'quiz-offer-hero': QuizOfferHeroBlock,
     'image-display-inline': ImageDisplayInlineBlock,
 
     // ✅ STEP 01 - COMPONENTES BÁSICOS
@@ -128,7 +136,6 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // ✅ STEP 20 - RESULTADO
     'result-header-inline': lazy(() => import('@/components/editor/blocks/ResultHeaderInlineBlock')),
     'modular-result-header': lazy(() => import('@/components/editor/modules/ModularResultHeader')),
-    'quiz-result-header': QuizIntroHeaderBlock,
     'quiz-result-style': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
     'secondary-styles': lazy(() => import('@/components/editor/blocks/SecondaryStylesInlineBlock')),
     'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
@@ -331,6 +338,30 @@ export const AVAILABLE_COMPONENTS = [
         label: 'Botão Voltar',
         category: 'quiz',
         description: 'Navegação para etapa anterior',
+    },
+    {
+        type: 'quiz-question-header',
+        label: 'Cabeçalho de Pergunta',
+        category: 'quiz',
+        description: 'Título da pergunta com número do step',
+    },
+    {
+        type: 'quiz-transition-loader',
+        label: 'Loader de Transição',
+        category: 'quiz',
+        description: 'Animação de loading entre steps',
+    },
+    {
+        type: 'quiz-result-header',
+        label: 'Cabeçalho de Resultado',
+        category: 'quiz',
+        description: 'Exibição do resultado do quiz',
+    },
+    {
+        type: 'quiz-offer-hero',
+        label: 'Hero de Oferta',
+        category: 'quiz',
+        description: 'Seção hero para página de oferta',
     },
     {
         type: 'image-display-inline',

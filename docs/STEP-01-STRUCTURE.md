@@ -25,7 +25,81 @@
 
 ---
 
-## ✅ Tipos Registrados
+## 🎯 Componentes Modulares Expandidos
+
+### Componentes de Quiz (8 componentes modulares)
+
+#### 1. **QuizLogoBlock** (`quiz-logo`)
+- Logo do quiz isolado
+- **Propriedades**: logoUrl, logoAlt, width, height, margins, padding, objectFit
+
+#### 2. **QuizProgressBlock** (`quiz-progress-bar`)
+- Barra de progresso independente
+- **Propriedades**: showProgress, progressValue, progressMax, color, height
+
+#### 3. **QuizBackButtonBlock** (`quiz-back-button`)
+- Botão de navegação voltar
+- **Propriedades**: text, showIcon, variant, size, colors
+
+#### 4. **QuizQuestionHeaderBlock** (`quiz-question-header`) - ✨ NOVO
+- Cabeçalho para perguntas do quiz
+- **Propriedades**: questionNumber, totalQuestions, questionText, showProgress
+- **Uso**: Steps 2-11, 13-18
+
+#### 5. **QuizTransitionLoaderBlock** (`quiz-transition-loader`) - ✨ NOVO
+- Loader animado para transições
+- **Propriedades**: text, subtext, showSpinner, spinnerSize, colors
+- **Uso**: Step 12 (Transição)
+
+#### 6. **QuizResultHeaderBlock** (`quiz-result-header`) - ✨ NOVO
+- Cabeçalho de resultado com estilo descoberto
+- **Propriedades**: title, subtitle, styleName, showBadge, badgeText
+- **Uso**: Step 20 (Resultado)
+
+#### 7. **QuizOfferHeroBlock** (`quiz-offer-hero`) - ✨ NOVO
+- Hero de oferta com imagem
+- **Propriedades**: title, subtitle, description, imageUrl, showImage
+- **Uso**: Step 21 (Oferta)
+
+#### 8. **ImageDisplayInlineBlock** (`image-display-inline`)
+- Imagem com propriedades universais
+- **Propriedades**: src, alt, width, height, objectFit, borders, shadows
+
+---
+
+## ✅ Status da Implementação
+
+### Fase 1-3: Componentes Base ✅ COMPLETO
+- [x] QuizLogoBlock
+- [x] QuizProgressBlock  
+- [x] QuizBackButtonBlock
+- [x] ImageDisplayInlineBlock
+- [x] UniversalPropertiesPanel
+- [x] Registry atualizado
+
+### Fase 4: Template Step 1 ✅ COMPLETO
+- [x] Template migrado para blocos modulares
+- [x] 9 blocos independentes (0-8)
+- [x] Erros de sintaxe corrigidos
+
+### Fase 5: Componentes Expandidos ✅ COMPLETO
+- [x] QuizQuestionHeaderBlock (Steps 2-18)
+- [x] QuizTransitionLoaderBlock (Step 12)
+- [x] QuizResultHeaderBlock (Step 20)
+- [x] QuizOfferHeroBlock (Step 21)
+
+### Fase 6: Próximos Passos 🚧 PENDENTE
+- [ ] Migrar Steps 2-11 (Perguntas) para blocos modulares
+- [ ] Migrar Step 12 (Transição) para blocos modulares
+- [ ] Migrar Steps 13-18 (Perguntas Estratégicas) para blocos modulares
+- [ ] Migrar Step 19 (Processamento) para blocos modulares
+- [ ] Migrar Step 20 (Resultado) para blocos modulares
+- [ ] Migrar Step 21 (Oferta) para blocos modulares
+
+### Fase 7: Documentação ✅ COMPLETO
+- [x] MODULAR-COMPONENTS-SYSTEM.md criado
+- [x] STEP-01-STRUCTURE.md atualizado
+- [x] Guia completo de criação de novos blocos
 
 Todos os blocos usam tipos devidamente registrados no sistema:
 
