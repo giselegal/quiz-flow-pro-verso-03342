@@ -83,9 +83,53 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
     }
   }, [editor?.state?.stepBlocks, stepKey]);
 
+  // Helper: busca por predicado customizado
+  const findBlockId = useCallback((predicate: (b: any) => boolean): string | undefined => {
+    try {
+      const blocks: any[] = editor?.state?.stepBlocks?.[stepKey] || [];
+      const found = blocks.find(predicate);
+      return found?.id;
+    } catch {
+      return undefined;
+    }
+  }, [editor?.state?.stepBlocks, stepKey]);
+
   // Mapear IDs lógicos dos blocos para tipos reais do registry
   const resolveRealBlockId = useCallback((logicalId: string): string | undefined => {
     switch (logicalId) {
+      // INTRO (step-01)
+      case 'intro-header': {
+        return (
+          findBlockIdByTypes(['quiz-intro-header'])
+          || findBlockIdByTypes(['quiz-logo'])
+          || findBlockIdByTypes(['decorative-bar-inline'])
+        );
+      }
+      case 'intro-title': {
+        // Título: text-inline com id contendo 'text-inline' (evitar 'text-description' e 'footer')
+        return (
+          findBlockId(b => String(b.type || '').toLowerCase() === 'text-inline' && /text-inline/i.test(String(b.id)))
+        );
+      }
+      case 'intro-image': {
+        return findBlockIdByTypes(['image-display-inline']);
+      }
+      case 'intro-description': {
+        // Descrição: text-inline com id contendo 'text-description'
+        return findBlockId(b => String(b.type || '').toLowerCase() === 'text-inline' && /text-description/i.test(String(b.id)));
+      }
+      case 'intro-form': {
+        // Form principal: prioriza input; botão pode ficar próximo
+        return (
+          findBlockIdByTypes(['form-input'])
+          || findBlockIdByTypes(['button-inline'])
+        );
+      }
+      case 'intro-footer': {
+        // Footer: text-inline com id contendo 'footer-text'
+        return findBlockId(b => String(b.type || '').toLowerCase() === 'text-inline' && /footer-text/i.test(String(b.id)));
+      }
+
       case 'question-number':
       case 'question-text': {
         // Cabeçalho de pergunta concentra campos de número/texto
@@ -179,7 +223,13 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       case 'intro': {
         if (isEditMode) {
           return (
-            <ModularIntroStep data={stepData as any} isEditable={true} />
+            <ModularIntroStep
+              data={stepData as any}
+              isEditable={true}
+              onEdit={handleEdit}
+              onBlocksReorder={handleBlocksReorder}
+              onOpenProperties={handleOpenProperties}
+            />
           );
         }
         return (
