@@ -154,7 +154,7 @@ export const QUESTION_STEP_SCHEMA: StepSchema = {
       type: 'ProgressBarBlock',
       order: 0,
       props: {
-        progress: '{{progress}}', // Dinâmico
+        progress: '{{progress}}',
         height: 8,
         fillColor: '#B89B7A',
         bgColor: '#e5e7eb',
@@ -170,7 +170,7 @@ export const QUESTION_STEP_SCHEMA: StepSchema = {
       type: 'HeadlineBlock',
       order: 1,
       props: {
-        text: '{{questionNumber}}', // Dinâmico
+        text: '{{questionNumber}}',
         fontSize: 'text-xl md:text-2xl',
         fontWeight: 'font-bold',
         align: 'center',
@@ -185,7 +185,7 @@ export const QUESTION_STEP_SCHEMA: StepSchema = {
       type: 'HeadlineBlock',
       order: 2,
       props: {
-        text: '{{questionText}}', // Dinâmico
+        text: '{{questionText}}',
         fontSize: 'text-xl md:text-2xl',
         fontWeight: 'font-bold',
         fontFamily: 'playfair-display',
@@ -201,7 +201,7 @@ export const QUESTION_STEP_SCHEMA: StepSchema = {
       type: 'TextBlock',
       order: 3,
       props: {
-        text: 'Selecione {{requiredSelections}} opções ({{currentSelections}}/{{requiredSelections}})', // Dinâmico
+        text: 'Selecione {{requiredSelections}} opções ({{currentSelections}}/{{requiredSelections}})',
         size: 'text-sm',
         color: 'text-gray-600',
         align: 'center'
@@ -226,13 +226,13 @@ export const QUESTION_STEP_SCHEMA: StepSchema = {
       type: 'GridOptionsBlock',
       order: 5,
       props: {
-        options: '{{options}}', // Array dinâmico
+        options: '{{options}}',
         columns: 2,
         gap: 'gap-3 sm:gap-4',
         hasImages: true,
         selectionIndicator: 'checkbox',
-        maxSelections: '{{maxSelections}}', // Dinâmico
-        minSelections: '{{requiredSelections}}' // Dinâmico
+        maxSelections: '{{maxSelections}}',
+        minSelections: '{{requiredSelections}}'
       },
       editable: false,
       deletable: false,
@@ -259,7 +259,7 @@ export const QUESTION_STEP_SCHEMA: StepSchema = {
         size: 'lg',
         fullWidth: true,
         bgColor: '#B89B7A',
-        disabled: '{{!canProceed}}', // Dinâmico
+        disabled: '{{!canProceed}}',
         animate: 'pulse'
       },
       editable: true,
@@ -270,7 +270,140 @@ export const QUESTION_STEP_SCHEMA: StepSchema = {
 };
 
 /**
- * 🎯 RESULT STEP SCHEMA (Simplificado - pode ser expandido)
+ * 🎯 STRATEGIC QUESTION STEP SCHEMA
+ */
+export const STRATEGIC_QUESTION_STEP_SCHEMA: StepSchema = {
+  type: 'strategic-question',
+  blocks: [
+    {
+      id: 'strategic-icon',
+      type: 'TextBlock',
+      order: 0,
+      props: {
+        text: '💭',
+        size: 'text-5xl',
+        align: 'center'
+      },
+      editable: true,
+      deletable: true,
+      movable: true
+    },
+    {
+      id: 'strategic-question',
+      type: 'HeadlineBlock',
+      order: 1,
+      props: {
+        text: '{{questionText}}',
+        fontSize: 'text-xl md:text-2xl',
+        fontWeight: 'font-bold',
+        fontFamily: 'playfair-display',
+        align: 'center',
+        color: '#deac6d'
+      },
+      editable: false,
+      deletable: false,
+      movable: false
+    },
+    {
+      id: 'strategic-options',
+      type: 'GridOptionsBlock',
+      order: 2,
+      props: {
+        options: '{{options}}',
+        hasImages: false,
+        columns: 1,
+        selectionIndicator: 'radio',
+        gap: 'gap-4'
+      },
+      editable: false,
+      deletable: false,
+      movable: false
+    },
+    {
+      id: 'strategic-progress-indicator',
+      type: 'TextBlock',
+      order: 3,
+      props: {
+        text: '{{currentAnswer ? "Processando resposta..." : ""}}',
+        size: 'text-sm',
+        color: 'text-[#deac6d]',
+        align: 'center'
+      },
+      editable: true,
+      deletable: true,
+      movable: true
+    }
+  ]
+};
+
+/**
+ * ⏳ TRANSITION STEP SCHEMA
+ */
+export const TRANSITION_STEP_SCHEMA: StepSchema = {
+  type: 'transition',
+  blocks: [
+    {
+      id: 'transition-loading',
+      type: 'LoadingAnimationBlock',
+      order: 0,
+      props: {
+        type: 'spinner',
+        size: 'large',
+        color: '#deac6d'
+      },
+      editable: true,
+      deletable: false,
+      movable: true
+    },
+    {
+      id: 'transition-title',
+      type: 'HeadlineBlock',
+      order: 1,
+      props: {
+        text: '{{title}}',
+        fontSize: 'text-2xl md:text-3xl',
+        fontWeight: 'font-bold',
+        fontFamily: 'playfair-display',
+        align: 'center',
+        color: '#5b4135'
+      },
+      editable: true,
+      deletable: false,
+      movable: true
+    },
+    {
+      id: 'transition-message',
+      type: 'TextBlock',
+      order: 2,
+      props: {
+        text: '{{text}}',
+        size: 'text-lg',
+        color: 'text-gray-600',
+        align: 'center'
+      },
+      editable: true,
+      deletable: false,
+      movable: true
+    },
+    {
+      id: 'transition-dots',
+      type: 'ProgressIndicatorBlock',
+      order: 3,
+      props: {
+        current: 0,
+        total: 3,
+        showLabel: false,
+        animated: true
+      },
+      editable: true,
+      deletable: true,
+      movable: true
+    }
+  ]
+};
+
+/**
+ * 🎯 RESULT STEP SCHEMA
  */
 export const RESULT_STEP_SCHEMA: StepSchema = {
   type: 'result',
@@ -294,7 +427,7 @@ export const RESULT_STEP_SCHEMA: StepSchema = {
       type: 'HeadlineBlock',
       order: 1,
       props: {
-        text: '{{userName}}, seu estilo predominante é:', // Dinâmico
+        text: '{{userName}}, seu estilo predominante é:',
         fontSize: 'text-2xl md:text-3xl',
         fontWeight: 'font-bold',
         align: 'center',
@@ -309,7 +442,7 @@ export const RESULT_STEP_SCHEMA: StepSchema = {
       type: 'HeadlineBlock',
       order: 2,
       props: {
-        text: '{{styleName}}', // Dinâmico
+        text: '{{styleName}}',
         fontSize: 'text-3xl md:text-5xl',
         fontWeight: 'font-bold',
         fontFamily: '"Playfair Display", serif',
@@ -325,7 +458,7 @@ export const RESULT_STEP_SCHEMA: StepSchema = {
       type: 'ImageBlock',
       order: 3,
       props: {
-        src: '{{styleImage}}', // Dinâmico
+        src: '{{styleImage}}',
         alt: 'Seu estilo',
         aspectRatio: '1',
         maxWidth: '400px',
@@ -341,7 +474,7 @@ export const RESULT_STEP_SCHEMA: StepSchema = {
       type: 'TextBlock',
       order: 4,
       props: {
-        text: '{{styleDescription}}', // Dinâmico
+        text: '{{styleDescription}}',
         size: 'text-base',
         align: 'center',
         color: 'text-gray-700'
@@ -354,13 +487,104 @@ export const RESULT_STEP_SCHEMA: StepSchema = {
 };
 
 /**
+ * 🎁 OFFER STEP SCHEMA
+ */
+export const OFFER_STEP_SCHEMA: StepSchema = {
+  type: 'offer',
+  blocks: [
+    {
+      id: 'offer-hero-gradient',
+      type: 'HeadlineBlock',
+      order: 0,
+      props: {
+        text: '{{title}}',
+        fontSize: 'text-2xl md:text-3xl',
+        fontWeight: 'font-bold',
+        align: 'center',
+        backgroundColor: 'linear-gradient(to right, #deac6d, #c49548)',
+        textColor: '#ffffff',
+        padding: '32px'
+      },
+      editable: true,
+      deletable: false,
+      movable: false
+    },
+    {
+      id: 'offer-image',
+      type: 'ImageBlock',
+      order: 1,
+      props: {
+        src: '{{guideImage}}',
+        alt: 'Oferta Especial',
+        rounded: true,
+        shadow: true,
+        badge: {
+          text: 'Oferta Especial',
+          color: '#bd0000',
+          position: 'top-right'
+        }
+      },
+      editable: true,
+      deletable: false,
+      movable: true
+    },
+    {
+      id: 'offer-description',
+      type: 'TextBlock',
+      order: 2,
+      props: {
+        text: '{{description}}',
+        size: 'text-base',
+        backgroundColor: 'gradient-to-r from-gray-50 to-gray-100',
+        padding: '24px',
+        icon: '💡'
+      },
+      editable: true,
+      deletable: false,
+      movable: true
+    },
+    {
+      id: 'offer-cta',
+      type: 'ButtonBlock',
+      order: 3,
+      props: {
+        text: '{{buttonText}}',
+        bgColor: '#65c83a',
+        size: 'lg',
+        fullWidth: true
+      },
+      editable: true,
+      deletable: false,
+      movable: true
+    },
+    {
+      id: 'offer-guarantee',
+      type: 'TextBlock',
+      order: 4,
+      props: {
+        text: '🛡️ Satisfação 100% garantida',
+        size: 'text-sm',
+        color: 'text-gray-600',
+        align: 'center'
+      },
+      editable: true,
+      deletable: true,
+      movable: true
+    }
+  ]
+};
+
+/**
  * 📊 REGISTRY DE SCHEMAS
  */
 export const STEP_SCHEMAS_REGISTRY: Record<string, StepSchema> = {
   intro: INTRO_STEP_SCHEMA,
   question: QUESTION_STEP_SCHEMA,
-  'strategic-question': QUESTION_STEP_SCHEMA, // Reutiliza schema de question
-  result: RESULT_STEP_SCHEMA
+  'strategic-question': STRATEGIC_QUESTION_STEP_SCHEMA,
+  transition: TRANSITION_STEP_SCHEMA,
+  'transition-result': TRANSITION_STEP_SCHEMA,
+  result: RESULT_STEP_SCHEMA,
+  offer: OFFER_STEP_SCHEMA
 };
 
 /**

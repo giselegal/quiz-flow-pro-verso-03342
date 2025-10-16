@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
-// import { Button } from '@/components/ui/button'; // Commented - not used
+import { useEffect, useMemo } from 'react';
 import type { QuizStep } from '../../data/quizSteps';
+import { TRANSITION_STEP_SCHEMA } from '@/data/stepBlockSchemas';
+import { Block } from '@/types/editor';
 
 interface TransitionStepProps {
     data: QuizStep;
@@ -8,10 +9,9 @@ interface TransitionStepProps {
 }
 
 /**
- * ⏳ COMPONENTE DE TRANSIÇÃO
+ * ⏳ COMPONENTE DE TRANSIÇÃO - MODULAR
  * 
- * Exibe telas de loading entre seções do quiz (etapas 12 e 19)
- * com animação e mensagens contextuais.
+ * Usa sistema de blocos para renderização modular
  */
 export default function TransitionStep({ data, onComplete }: TransitionStepProps) {
     useEffect(() => {
@@ -22,6 +22,22 @@ export default function TransitionStep({ data, onComplete }: TransitionStepProps
     }, [onComplete]);
 
     const isResultTransition = data.type === 'transition-result';
+
+    // Preparar blocos do schema com dados dinâmicos
+    const blocks: Block[] = useMemo(() => {
+        return TRANSITION_STEP_SCHEMA.blocks.map((schemaBlock, index) => ({
+            id: `transition-${data.id || 'unknown'}-${schemaBlock.id}`,
+            type: schemaBlock.type as any,
+            order: index,
+            content: {},
+            properties: {
+                ...schemaBlock.props,
+                text: schemaBlock.props.text
+                    ?.replace('{{title}}', data.title || '')
+                    ?.replace('{{text}}', data.text || '')
+            }
+        }));
+    }, [data]);
 
     return (
         <div className="flex flex-col items-center justify-center p-8 text-center max-w-2xl mx-auto min-h-[60vh]">
@@ -76,22 +92,6 @@ export default function TransitionStep({ data, onComplete }: TransitionStepProps
                     </p>
                 </div>
             )}
-
-            {/* Subtle Animation */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-30">
-                <div className="flex space-x-1">
-                    {[...Array(5)].map((_, i) => (
-                        <div
-                            key={i}
-                            className="w-1 h-8 bg-[#deac6d] rounded-full animate-pulse"
-                            style={{
-                                animationDelay: `${i * 0.1}s`,
-                                animationDuration: '2s'
-                            }}
-                        ></div>
-                    ))}
-                </div>
-            </div>
         </div>
     );
 }

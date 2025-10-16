@@ -5,13 +5,9 @@
     "name": "Obrigada por compartilhar.",
     "description": "transition-result step for quiz",
     "category": "quiz-transition-result",
-    "tags": [
-      "quiz",
-      "style",
-      "transition-result"
-    ],
+    "tags": ["quiz", "style", "transition-result"],
     "createdAt": "2025-10-11T10:44:14.174Z",
-    "updatedAt": "2025-10-11T22:09:33.848Z"
+    "updatedAt": "2025-10-16T00:00:00.000Z"
   },
   "layout": {
     "containerWidth": "full",
@@ -21,16 +17,54 @@
   },
   "validation": {},
   "analytics": {
-    "events": [
-      "page_view",
-      "step_completed"
-    ],
+    "events": ["page_view", "step_completed"],
     "trackingId": "step-19",
     "utmParams": true,
-    "customEvents": [
-      "component_mounted",
-      "user_interaction"
-    ]
+    "customEvents": ["component_mounted", "user_interaction"]
   },
-  "blocks": []
+  "blocks": [
+    {
+      "id": "step19-celebration",
+      "type": "text-inline",
+      "position": 0,
+      "properties": {
+        "content": "🎉",
+        "fontSize": "text-6xl",
+        "align": "center"
+      }
+    },
+    {
+      "id": "step19-loading",
+      "type": "loading-animation",
+      "position": 1,
+      "properties": {
+        "type": "spinner",
+        "size": "large",
+        "color": "#deac6d"
+      }
+    },
+    {
+      "id": "step19-title",
+      "type": "text-inline",
+      "position": 2,
+      "properties": {
+        "content": "Obrigada por compartilhar.",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "color": "#5b4135",
+        "align": "center"
+      }
+    },
+    {
+      "id": "step19-message",
+      "type": "text-inline",
+      "position": 3,
+      "properties": {
+        "content": "Seu resultado personalizado está quase pronto!",
+        "fontSize": "text-lg",
+        "color": "text-gray-600",
+        "align": "center"
+      }
+    }
+  ]
 }

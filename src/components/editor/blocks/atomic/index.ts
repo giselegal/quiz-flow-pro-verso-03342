@@ -33,3 +33,16 @@ export type { SpacerBlockProps } from './SpacerBlock';
 
 export { ProgressBarBlock } from './ProgressBarBlock';
 export type { ProgressBarBlockProps } from './ProgressBarBlock';
+
+// New atomic blocks
+export { SubtitleBlock } from './SubtitleBlock';
+export type { SubtitleBlockProps } from './SubtitleBlock';
+
+export { ProgressIndicatorBlock } from './ProgressIndicatorBlock';
+export type { ProgressIndicatorBlockProps } from './ProgressIndicatorBlock';
+
+export { DividerBlock } from './DividerBlock';
+export type { DividerBlockProps } from './DividerBlock';
+
+export { VideoBlock } from './VideoBlock';
+export type { VideoBlockProps } from './VideoBlock';

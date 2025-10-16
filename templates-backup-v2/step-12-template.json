@@ -5,13 +5,9 @@
     "name": "🕐 Enquanto calculamos o seu resultado...",
     "description": "transition step for quiz",
     "category": "quiz-transition",
-    "tags": [
-      "quiz",
-      "style",
-      "transition"
-    ],
+    "tags": ["quiz", "style", "transition"],
     "createdAt": "2025-10-11T10:44:14.173Z",
-    "updatedAt": "2025-10-11T22:09:33.846Z"
+    "updatedAt": "2025-10-16T00:00:00.000Z"
   },
   "layout": {
     "containerWidth": "full",
@@ -21,32 +17,52 @@
   },
   "validation": {},
   "analytics": {
-    "events": [
-      "page_view",
-      "step_completed"
-    ],
+    "events": ["page_view", "step_completed"],
     "trackingId": "step-12",
     "utmParams": true,
-    "customEvents": [
-      "component_mounted",
-      "user_interaction"
-    ]
+    "customEvents": ["component_mounted", "user_interaction"]
   },
   "blocks": [
     {
-      "id": "step12-text-inline-1",
-      "type": "text-inline",
+      "id": "step12-loading-animation",
+      "type": "loading-animation",
       "position": 0,
       "properties": {
-        "content": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+        "type": "spinner",
+        "size": "large",
+        "color": "#deac6d"
       }
     },
     {
-      "id": "step12-button-inline-1",
-      "type": "button-inline",
+      "id": "step12-title",
+      "type": "text-inline",
       "position": 1,
       "properties": {
-        "text": "Continuar"
+        "content": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.",
+        "fontSize": "text-lg",
+        "color": "text-gray-600",
+        "align": "center"
+      }
+    },
+    {
+      "id": "step12-subtitle",
+      "type": "text-inline",
+      "position": 2,
+      "properties": {
+        "content": "Responda com sinceridade. Isso é só entre você e a sua nova versão.",
+        "fontSize": "text-base",
+        "color": "text-gray-500",
+        "align": "center"
+      }
+    },
+    {
+      "id": "step12-button",
+      "type": "button-inline",
+      "position": 3,
+      "properties": {
+        "text": "Continuar",
+        "bgColor": "#B89B7A",
+        "textColor": "#FFFFFF"
       }
     }
   ]
