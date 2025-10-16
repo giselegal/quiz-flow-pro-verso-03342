@@ -153,7 +153,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       default:
         return undefined;
     }
-  }, [findBlockIdByTypes]);
+  }, [findBlockIdByTypes, findBlockId]);
 
   // Abrir painel de propriedades: selecionar bloco real via provider
   const handleOpenProperties = useCallback((logicalBlockId: string) => {
@@ -194,6 +194,12 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       // Construir array mutável com a ordem atual de IDs reais
       const currentIds: string[] = blocks.map(b => String(b.id));
 
+      // Índice base: manter itens anteriores fixos (ex.: header/logo/progress)
+      const currentIndices = desiredRealOrder
+        .map(id => currentIds.indexOf(id))
+        .filter(idx => idx >= 0);
+      const baseIndex = currentIndices.length > 0 ? Math.min(...currentIndices) : 0;
+
       // Helper para simular movimentação local acompanhando as chamadas ao provider
       const moveLocal = (arr: string[], from: number, to: number) => {
         const item = arr.splice(from, 1)[0];
@@ -206,9 +212,10 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
           const targetId = desiredRealOrder[i];
           const currentIndex = currentIds.indexOf(targetId);
           if (currentIndex === -1) continue; // bloco não existe no provider
-          if (currentIndex !== i) {
-            await editor.actions.reorderBlocks(stepKey, currentIndex, i);
-            moveLocal(currentIds, currentIndex, i);
+          const targetIndex = baseIndex + i;
+          if (currentIndex !== targetIndex) {
+            await editor.actions.reorderBlocks(stepKey, currentIndex, targetIndex);
+            moveLocal(currentIds, currentIndex, targetIndex);
           }
         }
       })();
