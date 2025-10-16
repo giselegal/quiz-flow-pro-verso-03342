@@ -727,31 +727,104 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             };
                             switch (quizStep.type) {
                                 case 'intro': {
+                                    // Logo
+                                    push({
+                                        type: 'image-inline',
+                                        content: { 
+                                            src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png',
+                                            alt: 'Gisele Galvão Logo'
+                                        },
+                                        properties: { 
+                                            width: '132px', 
+                                            height: '55px',
+                                            maxWidth: '132px'
+                                        }
+                                    });
+                                    // Decorative bar
+                                    push({
+                                        type: 'decorative-bar-inline',
+                                        content: {},
+                                        properties: {
+                                            height: '3px',
+                                            color: '#B89B7A',
+                                            maxWidth: '300px',
+                                            centered: true
+                                        }
+                                    });
+                                    // Title (remove HTML tags)
                                     if (quizStep.title) {
+                                        const plainTitle = quizStep.title.replace(/<[^>]*>/g, '');
                                         push({
-                                            type: 'heading',
-                                            content: { text: quizStep.title },
-                                            properties: { level: 2, allowHtml: true, textAlign: 'center' }
+                                            type: 'text-inline',
+                                            content: { content: plainTitle },
+                                            properties: { 
+                                                fontSize: 'text-2xl sm:text-3xl md:text-4xl',
+                                                fontWeight: 'font-bold',
+                                                fontFamily: 'playfair-display',
+                                                textAlign: 'text-center',
+                                                textColor: 'text-[#432818]'
+                                            }
                                         });
                                     }
+                                    // Image
                                     if (quizStep.image) {
                                         push({
-                                            type: 'image',
-                                            content: { src: quizStep.image, alt: 'Intro' },
-                                            properties: { width: '100%', borderRadius: '12px' }
+                                            type: 'image-inline',
+                                            content: { src: quizStep.image, alt: 'Descubra seu estilo predominante' },
+                                            properties: { 
+                                                aspectRatio: '1.47',
+                                                maxWidth: '300px',
+                                                rounded: true
+                                            }
                                         });
                                     }
+                                    // Description
+                                    push({
+                                        type: 'text-inline',
+                                        content: { content: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.' },
+                                        properties: {
+                                            fontSize: 'text-sm sm:text-base',
+                                            textAlign: 'text-center',
+                                            textColor: 'text-gray-700'
+                                        }
+                                    });
+                                    // Form input with correct ID
                                     if (quizStep.formQuestion) {
                                         push({
                                             type: 'form-input',
-                                            content: { label: quizStep.formQuestion, placeholder: quizStep.placeholder || '' },
-                                            properties: { required: true }
+                                            content: { label: quizStep.formQuestion, placeholder: quizStep.placeholder || 'Digite seu primeiro nome aqui...' },
+                                            properties: { 
+                                                required: true,
+                                                fieldName: 'userName',
+                                                id: 'intro-name-input',
+                                                name: 'userName'
+                                            }
                                         });
                                     }
+                                    // Button with correct ID
                                     push({
-                                        type: 'button',
-                                        content: { text: quizStep.buttonText || 'Continuar' },
-                                        properties: { action: 'next-step' }
+                                        type: 'button-inline',
+                                        content: { text: quizStep.buttonText || 'Quero Descobrir meu Estilo Agora!' },
+                                        properties: { 
+                                            action: 'next-step',
+                                            variant: 'primary',
+                                            size: 'lg',
+                                            fullWidth: true,
+                                            bgColor: '#B89B7A',
+                                            hoverBgColor: '#A1835D',
+                                            textColor: '#ffffff',
+                                            id: 'intro-cta-button'
+                                        }
+                                    });
+                                    // Footer
+                                    push({
+                                        type: 'text-inline',
+                                        content: { content: '© 2025 Gisele Galvão - Todos os direitos reservados' },
+                                        properties: {
+                                            fontSize: 'text-xs',
+                                            textAlign: 'text-center',
+                                            textColor: 'text-gray-500'
+                                        }
                                     });
                                     break;
                                 }

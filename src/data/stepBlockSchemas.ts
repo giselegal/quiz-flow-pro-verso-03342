@@ -27,31 +27,44 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
   blocks: [
     {
       id: 'intro-logo',
-      type: 'LogoBlock',
+      type: 'image-inline',
       order: 0,
       props: {
-        logoUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png',
-        height: 55,
-        width: 132,
-        showDecorator: true,
-        decoratorColor: '#B89B7A',
-        decoratorHeight: 3,
-        alt: 'Gisele Galvão Logo'
+        src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png',
+        alt: 'Gisele Galvão Logo',
+        width: '132px',
+        height: '55px',
+        maxWidth: '132px'
       },
       editable: true,
       deletable: false,
       movable: false
     },
     {
-      id: 'intro-headline',
-      type: 'HeadlineBlock',
+      id: 'intro-decorator',
+      type: 'decorative-bar-inline',
       order: 1,
       props: {
-        html: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você</span>.',
+        height: '3px',
+        color: '#B89B7A',
+        maxWidth: '300px',
+        centered: true
+      },
+      editable: true,
+      deletable: true,
+      movable: true
+    },
+    {
+      id: 'intro-headline',
+      type: 'text-inline',
+      order: 2,
+      props: {
+        content: 'Chega de um guarda-roupa lotado e da sensação de que nada combina com você.',
         fontSize: 'text-2xl sm:text-3xl md:text-4xl',
         fontWeight: 'font-bold',
-        fontFamily: '"Playfair Display", serif',
-        align: 'center'
+        fontFamily: 'playfair-display',
+        textAlign: 'text-center',
+        textColor: 'text-[#432818]'
       },
       editable: true,
       deletable: true,
@@ -59,15 +72,14 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
     },
     {
       id: 'intro-image',
-      type: 'ImageBlock',
-      order: 2,
+      type: 'image-inline',
+      order: 3,
       props: {
         src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
         alt: 'Descubra seu estilo predominante',
         aspectRatio: '1.47',
         maxWidth: '300px',
-        rounded: true,
-        shadow: false
+        rounded: true
       },
       editable: true,
       deletable: true,
@@ -75,55 +87,41 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
     },
     {
       id: 'intro-description',
-      type: 'TextBlock',
-      order: 3,
+      type: 'text-inline',
+      order: 4,
       props: {
-        text: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
-        size: 'text-sm sm:text-base',
-        align: 'center',
-        color: 'text-gray-700',
-        highlights: [
-          {
-            text: 'Estilo Predominante',
-            color: '#B89B7A',
-            weight: 'font-semibold'
-          },
-          {
-            text: 'essência',
-            color: '#432818',
-            weight: 'font-semibold'
-          },
-          {
-            text: 'confiança',
-            color: '#432818',
-            weight: 'font-semibold'
-          }
-        ]
+        content: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+        fontSize: 'text-sm sm:text-base',
+        textAlign: 'text-center',
+        textColor: 'text-gray-700'
       },
       editable: true,
       deletable: true,
       movable: true
     },
     {
-      id: 'intro-form',
-      type: 'FormInputBlock',
-      order: 4,
+      id: 'intro-name-input',
+      type: 'form-input',
+      order: 5,
       props: {
-        id: 'name-input',
+        id: 'intro-name-input',
+        name: 'userName',
         label: 'Como posso te chamar?',
         placeholder: 'Digite seu primeiro nome aqui...',
         required: true,
-        inputType: 'text'
+        fieldType: 'text',
+        fieldName: 'userName'
       },
       editable: true,
       deletable: false,
       movable: true
     },
     {
-      id: 'intro-button',
-      type: 'ButtonBlock',
-      order: 5,
+      id: 'intro-cta-button',
+      type: 'button-inline',
+      order: 6,
       props: {
+        id: 'intro-cta-button',
         text: 'Quero Descobrir meu Estilo Agora!',
         variant: 'primary',
         size: 'lg',
@@ -138,13 +136,13 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
     },
     {
       id: 'intro-footer',
-      type: 'FooterBlock',
-      order: 6,
+      type: 'text-inline',
+      order: 7,
       props: {
-        text: '© 2025 Gisele Galvão - Todos os direitos reservados',
-        align: 'center',
-        size: 'text-xs',
-        color: 'text-gray-500'
+        content: '© 2025 Gisele Galvão - Todos os direitos reservados',
+        fontSize: 'text-xs',
+        textAlign: 'text-center',
+        textColor: 'text-gray-500'
       },
       editable: true,
       deletable: true,

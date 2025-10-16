@@ -33,70 +33,81 @@
   "blocks": [
     {
       "id": "intro-logo",
-      "type": "logo-block",
+      "type": "image-inline",
       "position": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
-        "height": 55,
-        "width": 132,
-        "showDecorator": true,
-        "decoratorColor": "#B89B7A",
-        "decoratorHeight": 3,
-        "alt": "Gisele Galvão Logo"
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+        "alt": "Gisele Galvão Logo",
+        "width": "132px",
+        "height": "55px",
+        "maxWidth": "132px"
+      }
+    },
+    {
+      "id": "intro-decorator",
+      "type": "decorative-bar-inline",
+      "position": 1,
+      "properties": {
+        "height": "3px",
+        "color": "#B89B7A",
+        "maxWidth": "300px",
+        "centered": true
       }
     },
     {
       "id": "intro-headline",
-      "type": "heading-inline",
-      "position": 1,
+      "type": "text-inline",
+      "position": 2,
       "properties": {
-        "html": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você</span>.",
+        "content": "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
         "fontSize": "text-2xl sm:text-3xl md:text-4xl",
         "fontWeight": "font-bold",
         "fontFamily": "playfair-display",
-        "textAlign": "text-center"
+        "textAlign": "text-center",
+        "textColor": "text-[#432818]"
       }
     },
     {
       "id": "intro-image",
-      "type": "image-display-inline",
-      "position": 2,
+      "type": "image-inline",
+      "position": 3,
       "properties": {
         "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
         "alt": "Descubra seu estilo predominante",
         "aspectRatio": "1.47",
         "maxWidth": "300px",
-        "rounded": true,
-        "shadow": false
+        "rounded": true
       }
     },
     {
       "id": "intro-description",
       "type": "text-inline",
-      "position": 3,
+      "position": 4,
       "properties": {
-        "content": "Em poucos minutos, descubra seu <strong style=\"color: #B89B7A;\">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua <strong style=\"color: #432818;\">essência</strong>, com praticidade e <strong style=\"color: #432818;\">confiança</strong>.",
+        "content": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
         "fontSize": "text-sm sm:text-base",
         "textAlign": "text-center",
         "textColor": "text-gray-700"
       }
     },
     {
-      "id": "intro-form",
+      "id": "intro-name-input",
       "type": "form-input",
-      "position": 4,
+      "position": 5,
       "properties": {
         "label": "Como posso te chamar?",
         "placeholder": "Digite seu primeiro nome aqui...",
         "fieldType": "text",
         "required": true,
-        "fieldName": "userName"
+        "fieldName": "userName",
+        "id": "intro-name-input",
+        "name": "userName"
       }
     },
     {
-      "id": "intro-button",
+      "id": "intro-cta-button",
       "type": "button-inline",
-      "position": 5,
+      "position": 6,
       "properties": {
         "text": "Quero Descobrir meu Estilo Agora!",
         "variant": "primary",
@@ -104,13 +115,14 @@
         "fullWidth": true,
         "bgColor": "#B89B7A",
         "hoverBgColor": "#A1835D",
-        "textColor": "#ffffff"
+        "textColor": "#ffffff",
+        "id": "intro-cta-button"
       }
     },
     {
       "id": "intro-footer",
       "type": "text-inline",
-      "position": 6,
+      "position": 7,
       "properties": {
         "content": "© 2025 Gisele Galvão - Todos os direitos reservados",
         "fontSize": "text-xs",
