@@ -30,9 +30,6 @@ interface OptionsGridBlockProps extends BlockComponentProps {
   sessionData?: Record<string, any>;
   onStepComplete?: (data: any) => void;
   autoAdvanceOnComplete?: boolean;
-  
-  // 🎯 NOVO: Controle de interatividade (Canvas Unificado)
-  isInteractive?: boolean;
 
   properties: {
     question?: string;
@@ -134,8 +131,6 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   onUpdateSessionData,
   sessionData = {},
   onStepComplete,
-  // 🎯 NOVO: Controle de interatividade
-  isInteractive = true, // Default: true (comportamento normal)
 }) => {
   // Fallbacks: permitir injeção via block.properties (quando vem do QuizRenderer em preview)
   const injectedOnNext = (block?.properties as any)?.onNext as undefined | (() => void);
@@ -515,12 +510,6 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   }, [currentStepFromEditor, getStepBehavior]);
 
   const handleOptionSelect = (optionId: string) => {
-    // 🎯 CANVAS UNIFICADO: Bloquear interatividade em Edit Mode
-    if (!isInteractive) {
-      console.log('🔒 OptionsGrid: Seleção bloqueada - Edit Mode');
-      return;
-    }
-
     console.log('🔍 OptionsGridBlock: handleOptionSelect called', {
       optionId,
       isPreviewMode,

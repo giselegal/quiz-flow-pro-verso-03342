@@ -1,21 +1,22 @@
 /**
- * 🎯 ISOLATED PREVIEW - Simplificado com UnifiedCanvas
+ * 🎯 TK-CANVAS-05: ISOLATED PREVIEW
  * 
- * Preview que usa UnifiedCanvas em modo 'preview'.
- * - Usa PreviewProvider + QuizFlowProvider
- * - Conecta ao EditorContext apenas para sincronização
- * - Renderiza componentes finais 100% produção
+ * Preview completamente isolado do contexto do editor.
+ * - Usa apenas PreviewProvider + QuizFlowProvider
+ * - ZERO acesso a EditorProvider
+ * - Carrega apenas runtime de produção
+ * - Bundle otimizado sem dependências de edição
  */
 
-import React, { Suspense, useMemo, useEffect, useState } from 'react';
+import React, { Suspense, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { PreviewProvider } from '@/contexts/ui/PreviewContext';
 import { QuizFlowProvider } from '@/contexts/quiz/QuizFlowProvider';
+import { PreviewBlock } from './PreviewBlock';
 import { Block } from '@/types/editor';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePreviewDevice } from '@/contexts/editor/EditorModeContext';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
-import { UnifiedCanvas } from '../components/UnifiedCanvas';
 
 export interface IsolatedPreviewProps {
   blocks: Block[];
@@ -61,20 +62,16 @@ const PreviewContainer: React.FC<{ children: React.ReactNode }> = ({ children })
 
 /**
  * 🎯 ISOLATED PREVIEW COMPONENT
- * Preview isolado usando UnifiedCanvas em modo 'preview'
+ * Preview isolado que funciona independente do editor
  */
 export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({ 
   blocks, 
   funnelId,
   className 
 }) => {
-  // 🎯 Conectar ao editor context para sincronização
+  // 🎯 FASE 3: CONECTAR ao editor context
   const editorCtx = useEditor({ optional: true } as any);
   const selectedBlockId = editorCtx?.state?.selectedBlockId;
-  
-  // 🎯 Estado local de preview (session data)
-  const [sessionData, setSessionData] = useState<Record<string, any>>({});
-  const [currentStep, setCurrentStep] = useState(1);
   
   console.log('🔍 IsolatedPreview render:', {
     blocksCount: blocks.length,
@@ -83,7 +80,7 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
     hasEditorContext: !!editorCtx
   });
 
-  // 🎯 Reagir a mudanças nos blocos
+  // 🎯 FASE 3: REAGIR a mudanças nos blocos (com debounce implícito via useEffect)
   useEffect(() => {
     console.log('⚡ Preview atualizado:', {
       blocksCount: blocks.length,
@@ -92,39 +89,43 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
     });
   }, [blocks, selectedBlockId]);
 
-  // Atualizar session data
-  const handleUpdateSessionData = (key: string, value: any) => {
-    setSessionData(prev => ({ ...prev, [key]: value }));
-  };
+  // Memoizar sessionData para evitar re-renders
+  const sessionData = useMemo(() => ({
+    funnelId: funnelId || 'preview',
+    startedAt: new Date().toISOString(),
+    answers: [],
+  }), [funnelId]);
 
-  // Criar step fake para UnifiedCanvas
-  const previewStep = useMemo(() => ({
-    id: 'preview-step',
-    type: 'question' as any,
-    order: 1,
-    blocks: blocks.map(block => ({
-      ...block,
-      properties: block.properties || {}
-    })) as any,
-    nextStep: undefined
-  }), [blocks]);
+  // Memoizar blocks sorted
+  const sortedBlocks = useMemo(() => {
+    return [...blocks].sort((a, b) => a.order - b.order);
+  }, [blocks]);
 
   return (
     <div className={cn('isolated-preview h-full', className)}>
       <Suspense fallback={<PreviewSkeleton />}>
-        {/* 🎯 PROVIDERS ISOLADOS */}
+        {/* 🎯 PROVIDERS ISOLADOS - Sem EditorProvider */}
         <PreviewProvider>
           <QuizFlowProvider>
             <PreviewContainer>
-              {/* 🎯 USAR UNIFIED CANVAS EM MODO PREVIEW */}
-              <UnifiedCanvas
-                steps={[previewStep]}
-                selectedStep={previewStep}
-                mode="preview"
-                sessionData={sessionData}
-                onUpdateSessionData={handleUpdateSessionData}
-                onStepChange={setCurrentStep}
-              />
+              <div className="preview-blocks-container">
+                {sortedBlocks.length === 0 ? (
+                  <div className="flex items-center justify-center h-64 text-muted-foreground">
+                    <div className="text-center">
+                      <p className="text-sm">Nenhum bloco para preview</p>
+                      <p className="text-xs mt-1">Adicione blocos no editor</p>
+                    </div>
+                  </div>
+                ) : (
+                  sortedBlocks.map((block) => (
+                    <PreviewBlock
+                      key={block.id}
+                      block={block}
+                      sessionData={sessionData}
+                    />
+                  ))
+                )}
+              </div>
             </PreviewContainer>
           </QuizFlowProvider>
         </PreviewProvider>
