@@ -166,9 +166,6 @@ export const blockSchemas = {
   'quiz-intro': quizIntroBlockSchema,
   'quiz-progress': quizProgressBlockSchema,
   'quiz-question': quizStepBlockSchema, // Usa o mesmo schema
-  
-  // Quiz Estilo - Step 01 (Novo)
-  'intro-step-01': quizIntroBlockSchema, // Reutiliza schema similar
 } as const;
 
 export type BlockType = keyof typeof blockSchemas;

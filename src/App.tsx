@@ -90,7 +90,7 @@ const AdminCreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
 
 function AppCore() {
     console.log('🚀 AppCore rendering...');
-
+    
     useEffect(() => {
         console.log('🚀 App initialized with UnifiedAppProvider v2.0 (P2 Optimized)');
 
@@ -155,9 +155,9 @@ function AppCore() {
                                 <Route path="/editor-new">
                                     <EditorErrorBoundary>
                                         <div data-testid="quiz-editor-wysiwyg-page">
-                                            <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
-                                                <QuizModularProductionEditor />
-                                            </Suspense>
+                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
+                                    <QuizModularProductionEditor />
+                                </Suspense>
                                         </div>
                                     </EditorErrorBoundary>
                                 </Route>
@@ -229,19 +229,7 @@ function AppCore() {
                                     </div>
                                 </Route>
 
-                                {/* � EXEMPLO: COMPONENTES STEP-01 */}
-                                <Route path="/examples/step-01">
-                                    {() => {
-                                        const EditorStep01Exemplo = lazy(() => import('./pages/examples/EditorStep01Exemplo'));
-                                        return (
-                                            <Suspense fallback={<EnhancedLoadingFallback />}>
-                                                <EditorStep01Exemplo />
-                                            </Suspense>
-                                        );
-                                    }}
-                                </Route>
-
-                                {/* �🎯 QUIZ - ROTAS ESPECÍFICAS PRIMEIRO */}
+                                {/* 🎯 QUIZ - ROTAS ESPECÍFICAS PRIMEIRO */}
                                 {/* 🤖 QUIZ COM IA */}
                                 <Route path="/quiz-ai-21-steps">
                                     <QuizAIPage />

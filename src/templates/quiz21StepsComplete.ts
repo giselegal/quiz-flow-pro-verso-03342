@@ -111,9 +111,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "name-input"
       ],
       "createdAt": "2025-01-13T00:00:00.000Z",
-      "updatedAt": "2025-01-16T12:00:00.000Z",
+      "updatedAt": "2025-01-13T00:00:00.000Z",
       "author": "Quiz Flow Pro",
-      "version": "3.0.1"
+      "version": "3.0.0"
     },
     "theme": {
       "colors": {
@@ -147,15 +147,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "type": "intro-hero",
         "id": "intro-hero-01",
         "content": {
-          "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
-          "logoAlt": "Logo Gisele Galvão",
-          "logoWidth": 132,
-          "logoHeight": 55,
-          "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>.",
-          "subtitle": "",
-          "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
+          "logoWidth": 96,
+          "logoHeight": 96,
+          "title": "<span style=\"color: #B89B7A\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style=\"color: #B89B7A\">Você</span>.",
+          "subtitle": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
+          "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
           "imageAlt": "Descubra seu estilo predominante",
-          "description": "Em poucos minutos, descubra seu <strong style=\"color: #B89B7A;\">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua <strong style=\"color: #432818;\">essência</strong>, com praticidade e <strong style=\"color: #432818;\">confiança</strong>.",
+          "description": "Um quiz personalizado que vai revelar qual estilo te representa e como valorizar sua essência através das roupas.",
           "showProgress": false,
           "progressValue": 0
         },
@@ -175,8 +175,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "type": "welcome-form",
         "id": "intro-form-01",
         "content": {
-          "questionText": "Como posso te chamar?",
-          "nameLabel": "Como posso te chamar?",
+          "questionText": "Antes de começarmos, como posso te chamar?",
+          "nameLabel": "Seu primeiro nome",
           "namePlaceholder": "Digite seu primeiro nome aqui...",
           "submitText": "Quero Descobrir meu Estilo Agora!",
           "loadingText": "Preparando seu quiz personalizado...",

@@ -1,7 +1,4 @@
-import { useMemo } from 'react';
 import type { QuizStep } from '../../data/quizSteps';
-import { STRATEGIC_QUESTION_STEP_SCHEMA } from '@/data/stepBlockSchemas';
-import { Block } from '@/types/editor';
 
 interface StrategicQuestionStepProps {
     data: QuizStep;
@@ -10,9 +7,10 @@ interface StrategicQuestionStepProps {
 }
 
 /**
- * 🎯 COMPONENTE DE PERGUNTA ESTRATÉGICA - MODULAR
+ * 🎯 COMPONENTE DE PERGUNTA ESTRATÉGICA
  * 
- * Usa sistema de blocos para renderização modular
+ * Renderiza as perguntas estratégicas (etapas 13-18) que são usadas
+ * para personalizar a oferta final baseada no perfil do usuário.
  */
 export default function StrategicQuestionStep({
     data,
@@ -25,23 +23,6 @@ export default function StrategicQuestionStep({
                 console.warn('[StrategicQuestionStep] onAnswerChange ausente ou inválido – noop usado. answer=', answer);
             }
         };
-
-    // Preparar blocos do schema com dados dinâmicos
-    const blocks: Block[] = useMemo(() => {
-        return STRATEGIC_QUESTION_STEP_SCHEMA.blocks.map((schemaBlock, index) => ({
-            id: `strategic-${data.id || 'unknown'}-${schemaBlock.id}`,
-            type: schemaBlock.type as any,
-            order: index,
-            content: {},
-            properties: {
-                ...schemaBlock.props,
-                // Substituir placeholders dinâmicos
-                text: schemaBlock.props.text?.replace('{{questionText}}', data.questionText || ''),
-                options: schemaBlock.type === 'GridOptionsBlock' ? data.options : undefined
-            }
-        }));
-    }, [data]);
-
     const handleOptionClick = (optionId: string) => {
         safeOnAnswerChange(optionId);
     };
@@ -55,6 +36,7 @@ export default function StrategicQuestionStep({
                 <p className="text-xl md:text-2xl font-bold text-[#deac6d] playfair-display leading-tight">
                     {data.questionText}
                 </p>
+                {/* Imagem reflexiva removida conforme rollback solicitado */}
             </div>
 
             <div className="grid grid-cols-1 gap-4">
@@ -71,6 +53,7 @@ export default function StrategicQuestionStep({
                             {option.text}
                         </p>
 
+                        {/* Indicador de seleção */}
                         {currentAnswer === option.id && (
                             <div className="mt-3 flex items-center text-[#deac6d]">
                                 <div className="w-4 h-4 bg-[#deac6d] rounded-full mr-2 flex items-center justify-center">
@@ -83,6 +66,7 @@ export default function StrategicQuestionStep({
                 ))}
             </div>
 
+            {/* Indicador de progresso */}
             {currentAnswer && (
                 <div className="mt-8 text-center">
                     <div className="inline-flex items-center px-4 py-2 bg-[#deac6d]/10 rounded-full">

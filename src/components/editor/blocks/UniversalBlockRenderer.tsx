@@ -33,14 +33,6 @@ import {
   Step20PersonalizedOfferBlock
 } from './Step20ModularBlocks';
 
-// ✅ Importações dos novos blocos atômicos
-import { 
-  SubtitleBlock, 
-  ProgressIndicatorBlock, 
-  DividerBlock, 
-  VideoBlock 
-} from './atomic';
-
 // ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
 import { default as ResultCalculationSection } from '@/components/blocks/ResultCalculationSection';
 
@@ -118,7 +110,7 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'quiz-intro-header': QuizIntroHeaderBlock,
   'quiz-question': QuizQuestionBlock,
   'quiz-option': QuizOptionBlock,
-  'quiz-options': OptionsGridBlock,
+  'quiz-options': OptionsGridBlock, // ✅ CORRIGIDO: usar componente novo
   'quiz-header': QuizHeaderBlock,
   'quiz-title': QuizTitleBlock,
   'options-grid': OptionsGridBlock,
@@ -136,7 +128,7 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'step20-compatibility': Step20CompatibilityBlock,
   'step20-secondary-styles': Step20SecondaryStylesBlock,
   'step20-personalized-offer': Step20PersonalizedOfferBlock,
-  'step20-complete-template': Step20ResultHeaderBlock,
+  'step20-complete-template': Step20ResultHeaderBlock, // TODO: se quiser renderização compacta usar Step20CompleteTemplateBlock diretamente em outro fluxo
   // ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
   'result-calculation': ResultCalculationSection,
   'ResultCalculationSection': ResultCalculationSection,
@@ -156,15 +148,6 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'offer-pricing-table': QuizOfferPricingInlineBlock,
   'offer-faq-section': OfferFaqSectionInlineBlock,
   'offer-cta-section': QuizOfferCTAInlineBlock,
-  // ✅ NOVOS BLOCOS ATÔMICOS
-  'SubtitleBlock': SubtitleBlock,
-  'subtitle': SubtitleBlock,
-  'ProgressIndicatorBlock': ProgressIndicatorBlock,
-  'progress-indicator': ProgressIndicatorBlock,
-  'DividerBlock': DividerBlock,
-  'divider': DividerBlock,
-  'VideoBlock': VideoBlock,
-  'video': VideoBlock,
   // Fallbacks para tipos básicos
   'text': createFallbackComponent('text'),
   'headline': createFallbackComponent('headline'),

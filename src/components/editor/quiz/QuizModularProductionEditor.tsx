@@ -109,7 +109,6 @@ import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 import { useUnsavedChanges } from '@/hooks/useUnsavedChanges';
 import { UnsavedChangesIndicator } from './components/UnsavedChangesIndicator';
 import { DirtyBadge } from './components/DirtyBadge';
-import { BlocksDebugPanel } from '@/components/editor/debug/BlocksDebugPanel';
 // Cálculo real de resultado (produção)
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
@@ -414,6 +413,8 @@ interface QuizModularProductionEditorProps {
 export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorProps> = ({
     funnelId: initialFunnelId
 }) => {
+    console.log('✅ QuizModularProductionEditor: Component rendering', { initialFunnelId });
+
     // 🎯 FASE 5: Cache Service para otimização
     const cacheService = useMemo(() => EditorCacheService.getInstance(), []);
 
@@ -433,31 +434,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Editor unified provider (opcional durante migração)
     const editorCtx = useEditor({ optional: true } as any);
 
-    console.log('✅ QuizModularProductionEditor: Component rendering', { 
-        initialFunnelId,
-        hasEditorContext: !!editorCtx,
-        editorBlocksCount: editorCtx?.state?.blocks?.length || 0,
-        editorStepsCount: Object.keys(editorCtx?.state?.blocksByStep || {}).length
-    });
-
     const stepIdFromNumber = useCallback((n: number) => `step-${String(n).padStart(2, '0')}`, []);
     const stepNumberFromId = useCallback((id: string) => {
         const m = id?.match(/step-(\d+)/);
         return m ? parseInt(m[1], 10) : NaN;
-    }, []);
-
-    /**
-     * 🎯 Mapeia número do step para tipo exato baseado no template
-     */
-    const getStepTypeFromNumber = useCallback((stepNumber: number): EditableQuizStep['type'] => {
-        if (stepNumber === 1) return 'intro';
-        if (stepNumber >= 2 && stepNumber <= 11) return 'question';
-        if (stepNumber === 12) return 'transition'; // Transição após perguntas de roupa
-        if (stepNumber >= 13 && stepNumber <= 18) return 'question'; // Perguntas estratégicas
-        if (stepNumber === 19) return 'transition'; // Transição antes do resultado
-        if (stepNumber === 20) return 'result';
-        if (stepNumber === 21) return 'offer';
-        return 'question'; // fallback
     }, []);
 
     // Quando o provider está presente, sincronizar o estado local com o provider (somente leitura → local)
@@ -565,64 +545,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     useEffect(() => {
         // Carregamento inicial: se houver ?template=, construir steps default
         console.log('🎯 EDITOR: useEffect inicial disparado');
-        
-        // 🎯 SINCRONIZAR COM EDITOR PROVIDER - Usar blocos inicializados
-        if (editorCtx?.state?.blocks && editorCtx.state.blocks.length > 0) {
-            console.log('✅ Sincronizando steps com blocos do EditorProvider:', {
-                totalBlocks: editorCtx.state.blocks.length,
-                stepsWithBlocks: Object.keys(editorCtx.state.blocksByStep || {}).length
-            });
-            
-            // Converter blocksByStep para steps
-            const stepsFromBlocks: EditableQuizStep[] = [];
-            const blocksByStep = editorCtx.state.blocksByStep || {};
-            
-            Object.keys(blocksByStep).sort().forEach((stepId, index) => {
-                const stepNumber = parseInt(stepId.replace('step-', ''), 10);
-                const blockIds = blocksByStep[stepId] || [];
-                const stepBlocks = blockIds
-                    .map(id => editorCtx.state.blocks?.find(b => b.id === id))
-                    .filter((b): b is any => b !== undefined);
-                
-                // 🎯 Determinar tipo do step baseado no template quiz21StepsComplete
-                const stepType = getStepTypeFromNumber(stepNumber);
-                
-                stepsFromBlocks.push({
-                    id: stepId,
-                    order: index,
-                    type: stepType,
-                    blocks: stepBlocks.map(b => ({
-                        ...b,
-                        stepId // Garantir que stepId está presente em cada bloco
-                    })),
-                    metadata: {
-                        title: `Step ${stepNumber}`,
-                        description: `Step ${stepNumber} with ${stepBlocks.length} blocks`,
-                        stepType
-                    }
-                });
-
-                console.log(`📦 Step ${stepNumber} (${stepType}):`, {
-                    stepId,
-                    type: stepType,
-                    blockCount: stepBlocks.length,
-                    blockTypes: stepBlocks.map(b => b.type),
-                    firstBlock: stepBlocks[0]
-                });
-            });
-            
-            if (stepsFromBlocks.length > 0) {
-                console.log('✅ Steps criados a partir dos blocos:', stepsFromBlocks.length);
-                setSteps(stepsFromBlocks);
-                if (!selectedStepId && stepsFromBlocks[0]) {
-                    setSelectedStepId(stepsFromBlocks[0].id);
-                }
-                setIsLoading(false);
-                return;
-            }
-        }
-        
-        // FALLBACK: Carregar do template se não houver blocos no provider
         try {
             const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
             const templateId = sp.get('template');
@@ -727,108 +649,31 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             };
                             switch (quizStep.type) {
                                 case 'intro': {
-                                    // Logo
-                                    push({
-                                        type: 'image-inline',
-                                        content: { 
-                                            src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png',
-                                            alt: 'Gisele Galvão Logo'
-                                        },
-                                        properties: { 
-                                            width: '132px', 
-                                            height: '55px',
-                                            maxWidth: '132px'
-                                        }
-                                    });
-                                    // Decorative bar
-                                    push({
-                                        type: 'decorative-bar-inline',
-                                        content: {},
-                                        properties: {
-                                            height: '3px',
-                                            color: '#B89B7A',
-                                            maxWidth: '300px',
-                                            centered: true
-                                        }
-                                    });
-                                    // Title (use color markup instead of HTML)
                                     if (quizStep.title) {
-                                        // Convert HTML highlights to color markup: <span style="color: #B89B7A">text</span> → [#B89B7A]**text**[/#B89B7A]
-                                        let titleWithMarkup = quizStep.title
-                                            .replace(/<span[^>]*style="[^"]*color:\s*#B89B7A[^"]*"[^>]*>(.*?)<\/span>/gi, '[#B89B7A]**$1**[/#B89B7A]')
-                                            .replace(/<[^>]*>/g, ''); // Remove any remaining HTML tags
-                                        
                                         push({
-                                            type: 'text-inline',
-                                            content: { content: titleWithMarkup },
-                                            properties: { 
-                                                fontSize: 'text-2xl sm:text-3xl md:text-4xl',
-                                                fontWeight: 'font-bold',
-                                                fontFamily: 'playfair-display',
-                                                textAlign: 'text-center',
-                                                textColor: 'text-[#432818]'
-                                            }
+                                            type: 'heading',
+                                            content: { text: quizStep.title },
+                                            properties: { level: 2, allowHtml: true, textAlign: 'center' }
                                         });
                                     }
-                                    // Image
                                     if (quizStep.image) {
                                         push({
-                                            type: 'image-inline',
-                                            content: { src: quizStep.image, alt: 'Descubra seu estilo predominante' },
-                                            properties: { 
-                                                aspectRatio: '1.47',
-                                                maxWidth: '300px',
-                                                rounded: true
-                                            }
+                                            type: 'image',
+                                            content: { src: quizStep.image, alt: 'Intro' },
+                                            properties: { width: '100%', borderRadius: '12px' }
                                         });
                                     }
-                                    // Description
-                                    push({
-                                        type: 'text-inline',
-                                        content: { content: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.' },
-                                        properties: {
-                                            fontSize: 'text-sm sm:text-base',
-                                            textAlign: 'text-center',
-                                            textColor: 'text-gray-700'
-                                        }
-                                    });
-                                    // Form input with correct ID
                                     if (quizStep.formQuestion) {
                                         push({
                                             type: 'form-input',
-                                            content: { label: quizStep.formQuestion, placeholder: quizStep.placeholder || 'Digite seu primeiro nome aqui...' },
-                                            properties: { 
-                                                required: true,
-                                                fieldName: 'userName',
-                                                id: 'intro-name-input',
-                                                name: 'userName'
-                                            }
+                                            content: { label: quizStep.formQuestion, placeholder: quizStep.placeholder || '' },
+                                            properties: { required: true }
                                         });
                                     }
-                                    // Button with correct ID
                                     push({
-                                        type: 'button-inline',
-                                        content: { text: quizStep.buttonText || 'Quero Descobrir meu Estilo Agora!' },
-                                        properties: { 
-                                            action: 'next-step',
-                                            variant: 'primary',
-                                            size: 'lg',
-                                            fullWidth: true,
-                                            bgColor: '#B89B7A',
-                                            hoverBgColor: '#A1835D',
-                                            textColor: '#ffffff',
-                                            id: 'intro-cta-button'
-                                        }
-                                    });
-                                    // Footer
-                                    push({
-                                        type: 'text-inline',
-                                        content: { content: '© 2025 Gisele Galvão - Todos os direitos reservados' },
-                                        properties: {
-                                            fontSize: 'text-xs',
-                                            textAlign: 'text-center',
-                                            textColor: 'text-gray-500'
-                                        }
+                                        type: 'button',
+                                        content: { text: quizStep.buttonText || 'Continuar' },
+                                        properties: { action: 'next-step' }
                                     });
                                     break;
                                 }
@@ -1003,7 +848,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch {/* ignore */ }
         console.log('🏁 Finalizando useEffect (loading avaliado)');
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editorCtx?.state?.blocks]);
+    }, []);
 
     // ✅ FASE 3: FALLBACK Empty State - Mostrar mensagem se nenhum step foi carregado
     useEffect(() => {
@@ -1756,42 +1601,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const align = properties?.textAlign || 'left';
             const size = properties?.fontSize || 'base';
             const weight = properties?.fontWeight || 'normal';
-            const color = properties?.textColor || 'text-slate-700';
             const sizeClass = size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-lg' : size === 'xl' ? 'text-xl' : 'text-base';
             const weightClass = weight === 'bold' ? 'font-bold' : weight === 'semibold' ? 'font-semibold' : 'font-normal';
-            
-            const textContent = content.content || content.text || 'Texto inline';
-            const processedText = replacePlaceholders(textContent, placeholderContext);
-            
-            // Parse color markup: [#HEX]**text**[/#HEX]
-            const parseColorMarkup = (text: string) => {
-                const parts: React.ReactNode[] = [];
-                const regex = /\[#([0-9A-Fa-f]{6})\]\*\*(.*?)\*\*\[\/\#\1\]/g;
-                let lastIndex = 0;
-                let match;
-                
-                while ((match = regex.exec(text)) !== null) {
-                    if (match.index > lastIndex) {
-                        parts.push(text.slice(lastIndex, match.index));
-                    }
-                    parts.push(
-                        <span key={match.index} style={{ color: `#${match[1]}`, fontWeight: 'bold' }}>
-                            {match[2]}
-                        </span>
-                    );
-                    lastIndex = regex.lastIndex;
-                }
-                
-                if (lastIndex < text.length) {
-                    parts.push(text.slice(lastIndex));
-                }
-                
-                return parts.length > 0 ? parts : text;
-            };
-            
             node = (
-                <p className={cn('leading-relaxed', color, sizeClass, weightClass)} style={{ textAlign: align }}>
-                    {parseColorMarkup(processedText)}
+                <p className={cn('leading-relaxed text-slate-700', sizeClass, weightClass)} style={{ textAlign: align }}>
+                    {replacePlaceholders(content.text || 'Texto inline', placeholderContext)}
                 </p>
             );
             previewCacheRef.current.set(id, { key, node });

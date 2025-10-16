@@ -37,8 +37,8 @@ export type RenderMode = 'preview' | 'production' | 'editable';
 // mesmo no modo 'production'. Antes, importávamos os componentes originais e
 // perdíamos a lógica de adaptação → resultando em props ausentes e erros.
 const LazyStepComponents = {
-    // Step de Introdução (NOVO - Componentes Modulares)
-    'step-01': lazy(() => import('@/components/editor/quiz-estilo/step-01').then(m => ({ default: m.IntroStep01RendererAdapter }))),
+    // Step de Introdução
+    'step-01': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.IntroStepAdapter }))),
 
     // Steps de Perguntas (2-11)
     'step-02': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.QuestionStepAdapter }))),
