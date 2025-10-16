@@ -10,6 +10,9 @@ export { StepCanvas, type StepCanvasProps } from './StepCanvas';
 // Fase 3: BlockBasedStepRenderer - Renderer baseado em blocos
 export { BlockBasedStepRenderer, type BlockBasedStepRendererProps } from './BlockBasedStepRenderer';
 
+// Modal de adicionar blocos
+export { AddBlockModal } from './AddBlockModal';
+
 // Componentes existentes (manter por compatibilidade)
 export { default as OptimizedCanvasDropZone } from './OptimizedCanvasDropZone';
 export { default as SortableBlockWrapper } from './SortableBlockWrapper';

@@ -17,7 +17,8 @@ import { useEditor } from '../EditorProviderMigrationAdapter';
 import { StepCanvas } from './StepCanvas';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { Block } from '@/types/editor';
+import { Block, BlockType } from '@/types/editor';
+import { AddBlockModal } from './AddBlockModal';
 
 export interface BlockBasedStepRendererProps {
   /** Número do step (1-21) */
@@ -64,6 +65,9 @@ export function BlockBasedStepRenderer({
   // Session data local (se não fornecido externamente)
   const [localSessionData, setLocalSessionData] = useState<Record<string, any>>({});
   
+  // Modal de adicionar bloco
+  const [isAddBlockModalOpen, setIsAddBlockModalOpen] = useState(false);
+  
   // Usar session data externo ou local
   const sessionData = externalSessionData || localSessionData;
   
@@ -93,12 +97,27 @@ export function BlockBasedStepRenderer({
   };
   
   /**
-   * Handler para adicionar novo bloco
+   * Handler para abrir modal de adicionar bloco
    */
   const handleAddBlock = useCallback(() => {
-    // TODO: Abrir modal para selecionar tipo de bloco
-    console.log('🎯 Adicionar bloco ao step', stepNumber);
-  }, [stepNumber]);
+    setIsAddBlockModalOpen(true);
+  }, []);
+  
+  /**
+   * Handler para selecionar tipo de bloco e adicionar
+   */
+  const handleSelectBlockType = useCallback((blockType: BlockType) => {
+    const newBlock: Block = {
+      id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      type: blockType,
+      order: blocks.length,
+      content: {},
+      properties: {},
+    };
+    
+    actions.addBlock(stepKey, newBlock);
+    console.log('✅ Bloco adicionado:', blockType);
+  }, [blocks.length, stepKey, actions]);
   
   /**
    * Handler para duplicar bloco
@@ -119,46 +138,55 @@ export function BlockBasedStepRenderer({
   }, [blocks, stepKey, actions]);
   
   return (
-    <div className={`block-based-step-renderer ${className}`} data-step={stepNumber}>
-      {/* Header do step (apenas em modo editor) */}
-      {mode === 'editor' && (
-        <div className="flex items-center justify-between mb-4 pb-2 border-b">
-          <div>
-            <h3 className="text-lg font-semibold">
-              Step {stepNumber}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {blocks.length} {blocks.length === 1 ? 'bloco' : 'blocos'}
-            </p>
-          </div>
-          
-          <Button
-            size="sm"
-            onClick={handleAddBlock}
-            className="gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            Adicionar Bloco
-          </Button>
-        </div>
-      )}
-      
-      {/* Canvas com blocos */}
-      <StepCanvas
-        stepId={stepKey}
-        blocks={blocks}
-        mode={mode}
-        sharedContext={sharedContext}
-        selectedBlockId={state.selectedBlockId}
-        onBlockSelect={actions.setSelectedBlockId}
-        onBlockUpdate={actions.updateBlock.bind(null, stepKey)}
-        onBlockDelete={actions.removeBlock.bind(null, stepKey)}
-        onBlockDuplicate={handleDuplicateBlock}
-        onBlockReorder={(oldIndex, newIndex) => 
-          actions.reorderBlocks(stepKey, oldIndex, newIndex)
-        }
+    <>
+      {/* Modal de adicionar bloco */}
+      <AddBlockModal
+        open={isAddBlockModalOpen}
+        onOpenChange={setIsAddBlockModalOpen}
+        onSelectBlock={handleSelectBlockType}
       />
-    </div>
+      
+      <div className={`block-based-step-renderer ${className}`} data-step={stepNumber}>
+        {/* Header do step (apenas em modo editor) */}
+        {mode === 'editor' && (
+          <div className="flex items-center justify-between mb-4 pb-2 border-b">
+            <div>
+              <h3 className="text-lg font-semibold">
+                Step {stepNumber}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {blocks.length} {blocks.length === 1 ? 'bloco' : 'blocos'}
+              </p>
+            </div>
+            
+            <Button
+              size="sm"
+              onClick={handleAddBlock}
+              className="gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Adicionar Bloco
+            </Button>
+          </div>
+        )}
+        
+        {/* Canvas com blocos */}
+        <StepCanvas
+          stepId={stepKey}
+          blocks={blocks}
+          mode={mode}
+          sharedContext={sharedContext}
+          selectedBlockId={state.selectedBlockId}
+          onBlockSelect={actions.setSelectedBlockId}
+          onBlockUpdate={actions.updateBlock.bind(null, stepKey)}
+          onBlockDelete={actions.removeBlock.bind(null, stepKey)}
+          onBlockDuplicate={handleDuplicateBlock}
+          onBlockReorder={(oldIndex, newIndex) => 
+            actions.reorderBlocks(stepKey, oldIndex, newIndex)
+          }
+        />
+      </div>
+    </>
   );
 }
 
