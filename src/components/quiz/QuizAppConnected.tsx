@@ -11,16 +11,13 @@ import { useQuizState } from '../../hooks/useQuizState';
 import { useOptionalQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { useComponentConfiguration } from '../../hooks/useComponentConfiguration';
 // Componentes originais (ainda usados como fallback para alguns casos especiais)
-import IntroStep from './IntroStep';
-import QuestionStep from './QuestionStep';
-import StrategicQuestionStep from './StrategicQuestionStep';
-import TransitionStep from './TransitionStep';
-import ResultStep from './ResultStep';
-import OfferStep from './OfferStep';
+
+
 // Sistema unificado de renderização (Fase 3)
 import { UnifiedStepRenderer, registerProductionSteps } from '@/components/editor/unified';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, useBlockRegistry, useBlockRegistryOptional } from '@/runtime/quiz/blocks/BlockRegistry';
 import sanitizeHtml from '@/utils/sanitizeHtml';
+import { EditorProviderUnified, useEditorOptional as useUnifiedEditorOptional } from '@/components/editor/EditorProviderUnified';
 
 import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
@@ -117,8 +114,8 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         if (mode === 'unified' || mode === 'legacy' || mode === 'auto') {
             setRendererMode(mode);
         } else {
-            // 🎯 NOVO: previewMode usa 'auto' (produção), editorMode usa 'legacy' (compatibilidade)
-            setRendererMode(previewMode ? 'auto' : editorMode ? 'legacy' : 'auto');
+            // 🎯 Ajuste: no editor usar 'unified' por padrão (modular), no preview manter 'auto'
+            setRendererMode(previewMode ? 'auto' : editorMode ? 'unified' : 'auto');
         }
         setNormalizedDebug(debug === '1' || debug === 'true');
     }, [editorMode, previewMode]);
@@ -797,13 +794,24 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         </div>
     );
 
-    if (existingRegistry) {
-        return AppContent;
-    }
-
-    return (
+    // Montar árvore com BlockRegistry se necessário
+    const WithBlocks = existingRegistry ? (
+        AppContent
+    ) : (
         <BlockRegistryProvider definitions={DEFAULT_BLOCK_DEFINITIONS}>
             {AppContent}
         </BlockRegistryProvider>
     );
+
+    // Permitir edição inline: envolver com EditorProviderUnified quando editorMode=true e não houver um já presente
+    const maybeEditorContext = useUnifiedEditorOptional?.();
+    if (editorMode && !maybeEditorContext) {
+        return (
+            <EditorProviderUnified>
+                {WithBlocks}
+            </EditorProviderUnified>
+        );
+    }
+
+    return WithBlocks;
 }
