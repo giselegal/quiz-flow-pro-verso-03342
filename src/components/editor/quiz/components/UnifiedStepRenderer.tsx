@@ -1,12 +1,22 @@
 /**
- * 🎯 UNIFIED STEP RENDERER v2.0 - MODULARIZAÇÃO COMPLETA
+ * 🎯 UNIFIED STEP RENDERER v2.0 - DEPRECATED
  * 
- * Renderiza steps usando componentes reais de produção com StepDataAdapter.
+ * ⚠️ DEPRECATION NOTICE:
+ * Este componente renderiza steps monolíticos (IntroStep, QuestionStep, ResultStep).
  * 
- * FEATURES v2.0:
- * - Adapter robusto com fallbacks (StepDataAdapter)
- * - Lazy loading para performance
- * - 100% WYSIWYG entre edit e preview
+ * **USE INSTEAD:** BlockBasedStepRenderer from '@/components/editor/canvas'
+ * 
+ * BlockBasedStepRenderer oferece:
+ * - ✅ Blocos completamente independentes
+ * - ✅ Edição individual de cada bloco
+ * - ✅ Reordenação livre
+ * - ✅ Performance otimizada (re-render granular)
+ * - ✅ Adicionar/remover blocos dinamicamente
+ * 
+ * Este componente será removido em uma versão futura.
+ * 
+ * @deprecated Use BlockBasedStepRenderer ao invés
+ * @see {@link BlockBasedStepRenderer} para a implementação recomendada
  */
 
 import React, { lazy, Suspense, memo } from 'react';

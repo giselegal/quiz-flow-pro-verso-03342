@@ -7,7 +7,7 @@ import { Eye, Edit3, Smartphone, Tablet, Monitor } from 'lucide-react';
 
 import { BlockComponent, EditableQuizStep } from '../types';
 import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeContext';
-import { UnifiedStepRenderer } from './UnifiedStepRenderer';
+import { BlockBasedStepRenderer } from '@/components/editor/canvas';
 import { smartMigration } from '@/utils/stepDataMigration';
 
 // Virtualização agora tratada internamente via hook
@@ -171,18 +171,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 </div>
                             </div>
                             
-                            {/* 🎯 WYSIWYG Real: Renderizar componente de step real */}
-                            <UnifiedStepRenderer
-                                step={migratedStep}
-                                mode="edit"
-                                isSelected={selectedBlockId === migratedStep.id}
-                                onStepClick={(e, step) => handleBlockClick(e, step as any)}
-                                onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
-                                onDuplicate={() => {
-                                    setBlockPendingDuplicate(migratedStep as any);
-                                    setTargetStepId(migratedStep.id);
-                                    setDuplicateModalOpen(true);
-                                }}
+                            {/* 🎯 WYSIWYG Real: Renderizar blocos independentes */}
+                            <BlockBasedStepRenderer
+                                stepNumber={parseInt(migratedStep.id.replace('step-', ''), 10) || 1}
+                                mode="editor"
                             />
                         </CardContent>
                     </Card>
@@ -208,17 +200,17 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 </div>
                             </div>
                             
-                            {/* 🎯 WYSIWYG Real: Mesmo componente, totalmente interativo */}
+                            {/* 🎯 WYSIWYG Real: Blocos independentes interativos */}
                             <Suspense fallback={
                                 <div className="flex items-center justify-center py-8">
                                     <div className="text-sm text-muted-foreground">Carregando preview...</div>
                                 </div>
                             }>
-                                <UnifiedStepRenderer
-                                    step={migratedStep}
+                                <BlockBasedStepRenderer
+                                    stepNumber={parseInt(migratedStep.id.replace('step-', ''), 10) || 1}
                                     mode="preview"
                                     sessionData={previewSessionData}
-                                    onUpdateSessionData={updatePreviewSessionData}
+                                    onSessionDataUpdate={updatePreviewSessionData}
                                 />
                             </Suspense>
                         </CardContent>
