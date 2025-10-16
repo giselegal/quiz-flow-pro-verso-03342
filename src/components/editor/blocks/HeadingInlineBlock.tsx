@@ -63,6 +63,12 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
   // onPropertyChange, // not used here
   className = '',
 }) => {
+  // 🛡️ VALIDAÇÃO DE SEGURANÇA
+  if (!block) {
+    console.error('HeadingInlineBlock: block is undefined');
+    return <div className="p-4 text-destructive">Erro: bloco inválido</div>;
+  }
+
   const {
     content = 'Título Principal',
     level = 'h2', // h1, h2, h3, h4, h5, h6
@@ -78,6 +84,9 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
     marginLeft = 0,
     marginRight = 0,
   } = block?.properties || {};
+
+  // 🛡️ GARANTIR QUE CONTENT É STRING
+  const safeContent = typeof content === 'string' ? content : String(content || 'Título Principal');
 
   // Tamanhos responsivos por nível
   const levelClasses = {
@@ -155,7 +164,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
           backgroundColor: backgroundColor === 'transparent' ? undefined : backgroundColor,
         }}
       >
-        {content || 'Título Principal'}
+        {safeContent}
       </HeadingTag>
 
       {/* Indicador de seleção */}
@@ -166,15 +175,15 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
       )}
 
       {/* Empty state com instruções */}
-      {!content && (
-        <div style={{ color: '#8B7355' }}>
+      {!safeContent && (
+        <div className="flex items-center" style={{ color: '#8B7355' }}>
           <Type className="w-6 h-6 mr-2" />
           <span className="text-sm">Clique e edite no painel de propriedades →</span>
         </div>
       )}
 
       {/* Instrução quando selecionado */}
-      {isSelected && content && (
+      {isSelected && safeContent && (
         <div className="absolute -bottom-8 left-0 bg-[#B89B7A] text-white text-xs px-2 py-1 rounded text-nowrap">
           💡 Edite no painel de propriedades
         </div>
