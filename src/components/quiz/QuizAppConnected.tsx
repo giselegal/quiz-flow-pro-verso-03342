@@ -23,6 +23,12 @@ import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
 import { getEffectiveRequiredSelections } from '@/lib/quiz/requiredSelections';
 import { loadNormalizedStep } from '@/lib/normalizedLoader';
+// Importar componentes legados usados no modo legacy
+import IntroStep from '@/components/quiz/IntroStep';
+import QuestionStep from '@/components/quiz/QuestionStep';
+import StrategicQuestionStep from '@/components/quiz/StrategicQuestionStep';
+import TransitionStep from '@/components/quiz/TransitionStep';
+import ResultStep from '@/components/quiz/ResultStep';
 
 interface QuizAppConnectedProps {
     funnelId?: string;
@@ -582,7 +588,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                     <QuestionStep
                         data={currentStepData as any}
                         currentAnswers={answers}
-                        onAnswersChange={(newAnswers) => {
+                        onAnswersChange={(newAnswers: string[]) => {
                             // Atualiza respostas e avança se completou requiredSelections
                             addAnswer(state.currentStep, newAnswers);
                             const required = (currentStepData as any).requiredSelections || 1;
