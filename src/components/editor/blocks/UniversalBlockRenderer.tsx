@@ -299,6 +299,11 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
     onUpdate ? (updates: any) => onUpdate(block.id, updates) : undefined
     , [block.id, onUpdate]);
 
+  // 🎯 Handler específico para blocos atômicos (AtomicBlockProps)
+  const handleAtomicUpdate = React.useMemo(() =>
+    onUpdate ? (updates: Partial<Block>) => onUpdate(block.id, updates) : undefined
+    , [block.id, onUpdate]);
+
   const handleClick = React.useMemo(() => {
     if (onSelect) {
       return () => onSelect(block.id);
@@ -410,7 +415,10 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
               block={block}
               isSelected={isSelected}
               isPreviewing={isPreviewing}
-              onUpdate={handleUpdate}
+              isEditable={isEditMode}
+              onUpdate={handleAtomicUpdate}
+              onDelete={onDelete ? () => onDelete(block.id) : undefined}
+              onClick={handleClick}
             />
           )}
         </ErrorBoundary>

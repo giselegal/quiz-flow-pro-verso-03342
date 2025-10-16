@@ -97,15 +97,33 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const stepBlocks = useMemo(() => {
     try {
       const blocks: any[] = editor?.state?.stepBlocks?.[stepKey] || [];
-      return blocks.sort((a, b) => (a.order || 0) - (b.order || 0));
-    } catch {
+      const sorted = blocks.sort((a, b) => (a.order || 0) - (b.order || 0));
+      
+      console.log('🔍 [UnifiedStepRenderer] stepBlocks:', {
+        stepKey,
+        blockCount: sorted.length,
+        blockTypes: sorted.map(b => b.type),
+        isEditMode
+      });
+      
+      return sorted;
+    } catch (err) {
+      console.error('❌ [UnifiedStepRenderer] Error loading stepBlocks:', err);
       return [];
     }
-  }, [editor?.state?.stepBlocks, stepKey]);
+  }, [editor?.state?.stepBlocks, stepKey, isEditMode]);
 
   // 🎯 FASE 3: Garantir que blocos sejam carregados no modo edição
   React.useEffect(() => {
+    console.log('🔍 [UnifiedStepRenderer] useEffect trigger:', {
+      isEditMode,
+      hasEditor: !!editor,
+      hasEnsureStepLoaded: !!editor?.actions?.ensureStepLoaded,
+      stepKey
+    });
+    
     if (isEditMode && editor?.actions?.ensureStepLoaded && stepKey) {
+      console.log('🔄 [UnifiedStepRenderer] Calling ensureStepLoaded:', stepKey);
       editor.actions.ensureStepLoaded(stepKey);
     }
   }, [stepKey, isEditMode, editor]);
@@ -398,20 +416,36 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         if (isEditMode) {
           // 🎯 RENDERIZAR BLOCOS ATÔMICOS INDIVIDUAIS
           if (stepBlocks.length > 0) {
+            console.log('✅ [UnifiedStepRenderer] Renderizando blocos atômicos:', {
+              stepKey,
+              blockCount: stepBlocks.length,
+              blockTypes: stepBlocks.map(b => b.type)
+            });
+            
             return (
               <div className="space-y-4 p-4">
-                {stepBlocks.map(block => (
-                  <UniversalBlockRenderer
-                    key={block.id}
-                    block={block}
-                    isSelected={editor?.state?.selectedBlockId === block.id}
-                    onUpdate={(id: string, updates: any) => editor?.actions?.updateBlock?.(stepKey, id, updates)}
-                    onDelete={(id: string) => editor?.actions?.removeBlock?.(stepKey, id)}
-                    onSelect={(id: string) => editor?.actions?.setSelectedBlockId?.(id)}
-                  />
-                ))}
+                {stepBlocks.map(block => {
+                  console.log('🔍 [UnifiedStepRenderer] Renderizando bloco:', {
+                    id: block.id,
+                    type: block.type,
+                    isSelected: editor?.state?.selectedBlockId === block.id
+                  });
+                  
+                  return (
+                    <UniversalBlockRenderer
+                      key={block.id}
+                      block={block}
+                      isSelected={editor?.state?.selectedBlockId === block.id}
+                      onUpdate={(id: string, updates: any) => editor?.actions?.updateBlock?.(stepKey, id, updates)}
+                      onDelete={(id: string) => editor?.actions?.removeBlock?.(stepKey, id)}
+                      onSelect={(id: string) => editor?.actions?.setSelectedBlockId?.(id)}
+                    />
+                  );
+                })}
               </div>
             );
+          } else {
+            console.warn('⚠️ [UnifiedStepRenderer] Nenhum bloco encontrado, usando fallback:', stepKey);
           }
           // Fallback para componente modular se não houver blocos
           return (
@@ -437,6 +471,12 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         if (isEditMode) {
           // 🎯 RENDERIZAR BLOCOS ATÔMICOS INDIVIDUAIS
           if (stepBlocks.length > 0) {
+            console.log('✅ [UnifiedStepRenderer] Renderizando blocos atômicos de resultado:', {
+              stepKey,
+              blockCount: stepBlocks.length,
+              blockTypes: stepBlocks.map(b => b.type)
+            });
+            
             return (
               <div className="space-y-4 p-4">
                 {stepBlocks.map(block => (
@@ -451,6 +491,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
                 ))}
               </div>
             );
+          } else {
+            console.warn('⚠️ [UnifiedStepRenderer] Nenhum bloco de resultado encontrado, usando fallback:', stepKey);
           }
           // Fallback para componente modular se não houver blocos
           return (

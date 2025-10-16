@@ -37,6 +37,20 @@ import {
 } from '@/components/editor/blocks/Step20ModularBlocks';
 import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
 
+// 🎯 ATOMIC BLOCKS - Componentes modulares para steps 12, 19, 20
+import TransitionLoaderBlock from './atomic/TransitionLoaderBlock';
+import TransitionTitleBlock from './atomic/TransitionTitleBlock';
+import TransitionTextBlock from './atomic/TransitionTextBlock';
+import TransitionProgressBlock from './atomic/TransitionProgressBlock';
+import TransitionMessageBlock from './atomic/TransitionMessageBlock';
+import ResultHeaderBlock from './atomic/ResultHeaderBlock';
+import ResultMainBlock from './atomic/ResultMainBlock';
+import ResultImageBlock from './atomic/ResultImageBlock';
+import ResultDescriptionBlock from './atomic/ResultDescriptionBlock';
+import ResultCharacteristicsBlock from './atomic/ResultCharacteristicsBlock';
+import ResultSecondaryStylesBlock from './atomic/ResultSecondaryStylesBlock';
+import ResultCTABlock from './atomic/ResultCTABlock';
+
 // Lazy imports para Sections V3 (Question, Transition, Offer)
 const QuestionHeroSection = lazy(() => import('@/components/sections/questions').then(m => ({ default: m.QuestionHeroSection })));
 const TransitionHeroSection = lazy(() => import('@/components/sections/transitions').then(m => ({ default: m.TransitionHeroSection })));
@@ -121,15 +135,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'loading-animation': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
     'loader-inline': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
     
-    // ✅ STEP 12 & 19 - BLOCOS ATÔMICOS DE TRANSIÇÃO (100% Modulares)
-    'transition-title': lazy(() => import('./TransitionTitleBlock')),
-    'transition-subtitle': lazy(() => import('./TransitionSubtitleBlock')),
-    'transition-image': lazy(() => import('./TransitionImageBlock')),
-    'transition-description': lazy(() => import('./TransitionDescriptionBlock')),
-    'transition-loader': lazy(() => import('./TransitionLoaderBlock')),
-    'transition-text': lazy(() => import('./TransitionTextBlock')),
-    'transition-progress': lazy(() => import('./TransitionProgressBlock')),
-    'transition-message': lazy(() => import('./TransitionMessageBlock')),
+    // ✅ STEP 12 & 19 - BLOCOS ATÔMICOS DE TRANSIÇÃO (Registrados abaixo com imports estáticos)
 
     // ✅ STEPS 13-18 - PERGUNTAS AVANÇADAS
     'quiz-advanced-question': TextInlineBlock,
@@ -151,16 +157,9 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
     'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
     
-    // ✅ STEP 20 - BLOCOS ATÔMICOS DE RESULTADO (100% Modulares)
+    // ✅ STEP 20 - BLOCOS ATÔMICOS DE RESULTADO (Registrados abaixo com imports estáticos)
     'result-congrats': lazy(() => import('./ResultCongratsBlock')),
-    'result-main': lazy(() => import('./ResultMainBlock')),
-    'result-image': lazy(() => import('./ResultImageBlock')),
-    'result-description': lazy(() => import('./ResultDescriptionBlock')),
-    'result-header': lazy(() => import('./ResultHeaderBlock')),
-    'result-characteristics': lazy(() => import('./ResultCharacteristicsBlock')),
-    'result-cta': lazy(() => import('./ResultCTABlock')),
     'result-progress-bars': lazy(() => import('./ResultProgressBarsBlock')),
-    'result-secondary-styles': lazy(() => import('./ResultSecondaryStylesBlock')),
 
     // 🤖 IA - FASHION AI GENERATOR
     'fashion-ai-generator': FashionAIGeneratorBlock,
@@ -173,6 +172,20 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'step20-secondary-styles': Step20SecondaryStylesBlock,
     'step20-personalized-offer': Step20PersonalizedOfferBlock,
     'step20-complete-template': Step20CompleteTemplateBlock,
+
+    // 🎯 ATOMIC BLOCKS - Steps 12, 19 (Transition) e 20 (Result)
+    'transition-loader': TransitionLoaderBlock,
+    'transition-title': TransitionTitleBlock,
+    'transition-text': TransitionTextBlock,
+    'transition-progress': TransitionProgressBlock,
+    'transition-message': TransitionMessageBlock,
+    'result-header': ResultHeaderBlock,
+    'result-main': ResultMainBlock,
+    'result-image': ResultImageBlock,
+    'result-description': ResultDescriptionBlock,
+    'result-characteristics': ResultCharacteristicsBlock,
+    'result-secondary-styles': ResultSecondaryStylesBlock,
+    'result-cta': ResultCTABlock,
 
     // ✅ STEP 21 - OFERTA
     'offer-hero': OfferHeroSection, // ✅ NOVO - Section para offer-hero
