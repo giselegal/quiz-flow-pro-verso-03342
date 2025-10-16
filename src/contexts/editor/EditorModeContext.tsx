@@ -19,10 +19,15 @@ interface EditorModeState {
   viewMode: ViewMode;
   previewDevice: PreviewDevice;
   
+  // 🆕 Preview session data (para quiz interativo)
+  previewSessionData: Record<string, any>;
+  
   // Actions
   setViewMode: (mode: ViewMode) => void;
   setPreviewDevice: (device: PreviewDevice) => void;
   toggleViewMode: () => void;
+  updatePreviewSessionData: (key: string, value: any) => void;
+  resetPreviewSession: () => void;
   
   // Computed properties (getters)
   isEditMode: () => boolean;
@@ -39,11 +44,17 @@ export const useEditorMode = create<EditorModeState>()(
       // Initial state
       viewMode: 'edit',
       previewDevice: 'desktop',
+      previewSessionData: {},
       
       // Actions
       setViewMode: (mode) => {
         console.log('🔄 EditorMode: Mudando para', mode);
-        set({ viewMode: mode });
+        // Reset preview session ao entrar em preview mode
+        if (mode === 'preview') {
+          set({ viewMode: mode, previewSessionData: {} });
+        } else {
+          set({ viewMode: mode });
+        }
       },
       
       setPreviewDevice: (device) => {
@@ -55,7 +66,22 @@ export const useEditorMode = create<EditorModeState>()(
         const current = get().viewMode;
         const next = current === 'edit' ? 'preview' : 'edit';
         console.log('🔄 EditorMode: Toggle', current, '→', next);
-        set({ viewMode: next });
+        get().setViewMode(next);
+      },
+      
+      updatePreviewSessionData: (key, value) => {
+        console.log('💾 EditorMode: Atualizando preview session', { key, value });
+        set(state => ({
+          previewSessionData: {
+            ...state.previewSessionData,
+            [key]: value
+          }
+        }));
+      },
+      
+      resetPreviewSession: () => {
+        console.log('🔄 EditorMode: Resetando preview session');
+        set({ previewSessionData: {} });
       },
       
       // Computed properties

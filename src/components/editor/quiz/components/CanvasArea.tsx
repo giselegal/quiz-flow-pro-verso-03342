@@ -8,6 +8,7 @@ import { Eye, Edit3, Smartphone, Tablet, Monitor } from 'lucide-react';
 import { BlockComponent, EditableQuizStep } from '../types';
 import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeContext';
 import { IsolatedPreview } from '../canvas/IsolatedPreview';
+import { UnifiedBlockRenderer } from './UnifiedBlockRenderer';
 
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
@@ -69,7 +70,15 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     OfferMap,
 }) => {
     // 🎯 USAR EDITOR MODE CONTEXT ao invés de activeTab
-    const { viewMode, setViewMode, isEditMode, isPreviewMode } = useEditorMode();
+    const { 
+        viewMode, 
+        setViewMode, 
+        isEditMode, 
+        isPreviewMode,
+        previewSessionData,
+        updatePreviewSessionData,
+        resetPreviewSession
+    } = useEditorMode();
     const { previewDevice, setPreviewDevice } = useEditorMode();
     
     console.log('🔍 CanvasArea render - selectedStep:', selectedStep?.id, 'viewMode:', viewMode);
@@ -184,20 +193,23 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                                 <div style={{ position: 'relative' }}>
                                                     {virtualizationEnabled && topSpacer > 0 && <div style={{ height: topSpacer }} />}
                                                     {visible.map(block => (
-                                                        <BlockRow
+                                                        <UnifiedBlockRenderer
                                                             key={block.id}
                                                             block={block}
-                                                            byBlock={byBlock}
-                                                            selectedBlockId={selectedBlockId}
-                                                            isMultiSelected={isMultiSelected}
-                                                            handleBlockClick={handleBlockClick}
-                                                            renderBlockPreview={renderBlockPreview}
                                                             allBlocks={selectedStep.blocks}
-                                                            removeBlock={removeBlock}
-                                                            stepId={selectedStep.id}
-                                                            setBlockPendingDuplicate={setBlockPendingDuplicate}
-                                                            setTargetStepId={setTargetStepId}
-                                                            setDuplicateModalOpen={setDuplicateModalOpen}
+                                                            mode="edit"
+                                                            isSelected={selectedBlockId === block.id}
+                                                            isMultiSelected={isMultiSelected(block.id)}
+                                                            hasErrors={!!byBlock[block.id]?.length}
+                                                            errors={byBlock[block.id] || []}
+                                                            onBlockClick={handleBlockClick}
+                                                            onDelete={() => removeBlock(selectedStep.id, block.id)}
+                                                            onDuplicate={() => {
+                                                                setBlockPendingDuplicate(block);
+                                                                setTargetStepId(selectedStep.id);
+                                                                setDuplicateModalOpen(true);
+                                                            }}
+                                                            renderBlockPreview={renderBlockPreview}
                                                         />
                                                     ))}
                                                     {virtualizationEnabled && bottomSpacer > 0 && <div style={{ height: bottomSpacer }} />}
@@ -224,32 +236,49 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 )}
             </div>
 
-            {/* 🎯 PREVIEW MODE - Sempre montado, visível apenas quando isPreviewMode */}
+            {/* 🎯 PREVIEW MODE - WYSIWYG Real: Mesma renderização do Edit, mas interativo */}
             <div 
-                className="flex-1 overflow-hidden"
-                style={{ display: isPreviewMode() ? 'flex' : 'none' }}
+                className="flex-1 overflow-auto p-4"
+                style={{ display: isPreviewMode() ? 'block' : 'none' }}
                 data-testid="canvas-preview-mode"
             >
-                <Suspense fallback={
-                    <div className="flex items-center justify-center w-full h-full">
-                        <div className="text-sm text-muted-foreground">Carregando preview...</div>
-                    </div>
-                }>
-                    {selectedStep && selectedStep.blocks && selectedStep.blocks.length > 0 ? (
-                        <IsolatedPreview 
-                            blocks={selectedStep.blocks as any}
-                            funnelId="editor-preview"
-                            className="w-full h-full"
-                        />
-                    ) : (
-                        <div className="flex items-center justify-center w-full h-full">
-                            <div className="text-center text-muted-foreground">
-                                <p className="text-sm">Preview vazio</p>
-                                <p className="text-xs mt-1">Adicione blocos no editor</p>
+                {selectedStep && selectedStep.blocks && selectedStep.blocks.length > 0 ? (
+                    <Card className="border-0 shadow-none bg-transparent">
+                        <CardContent>
+                            <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
+                                <div className="px-3 py-2">
+                                    <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={selectedStep.id} />
+                                </div>
                             </div>
+                            <div className="space-y-2 pr-1 bg-white/40">
+                                <Suspense fallback={
+                                    <div className="flex items-center justify-center py-8">
+                                        <div className="text-sm text-muted-foreground">Carregando preview...</div>
+                                    </div>
+                                }>
+                                    {rootBlocks.map(block => (
+                                        <UnifiedBlockRenderer
+                                            key={block.id}
+                                            block={block}
+                                            allBlocks={selectedStep.blocks}
+                                            mode="preview"
+                                            sessionData={previewSessionData}
+                                            onUpdateSessionData={updatePreviewSessionData}
+                                            renderBlockPreview={renderBlockPreview}
+                                        />
+                                    ))}
+                                </Suspense>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <div className="flex items-center justify-center h-full">
+                        <div className="text-center text-muted-foreground">
+                            <p className="text-sm">Preview vazio</p>
+                            <p className="text-xs mt-1">Adicione blocos no editor</p>
                         </div>
-                    )}
-                </Suspense>
+                    </div>
+                )}
             </div>
         </div>
     );
