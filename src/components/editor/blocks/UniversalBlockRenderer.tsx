@@ -407,10 +407,22 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         <ErrorBoundary blockType={block.type} blockId={block.id}>
           {BlockComponent && (
             <BlockComponent
+              // ✅ CORE PROPS - AtomicBlockProps padrão
               block={block}
               isSelected={isSelected}
-              isPreviewing={isPreviewing}
-              onUpdate={handleUpdate}
+              isEditable={!isPreviewing}
+              
+              // ✅ CALLBACKS - Assinaturas corretas
+              onClick={handleClick}
+              
+              onUpdate={handleUpdate ? (updates: Partial<Block>) => {
+                // ✅ Adapter: AtomicBlockProps (updates) → UniversalBlockRenderer (blockId, updates)
+                handleUpdate(updates);
+              } : undefined}
+              
+              onDelete={onDelete ? () => onDelete(block.id) : undefined}
+              
+              // ❌ REMOVED: isPreviewing (deprecated - use isEditable instead)
             />
           )}
         </ErrorBoundary>
