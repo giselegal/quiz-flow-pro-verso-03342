@@ -7,8 +7,8 @@ import { Eye, Edit3, Smartphone, Tablet, Monitor } from 'lucide-react';
 
 import { BlockComponent, EditableQuizStep } from '../types';
 import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeContext';
-import { IsolatedPreview } from '../canvas/IsolatedPreview';
-import { UnifiedBlockRenderer } from './UnifiedBlockRenderer';
+import { UnifiedStepRenderer } from './UnifiedStepRenderer';
+import { smartMigration } from '@/utils/stepDataMigration';
 
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
@@ -91,27 +91,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         );
     }
 
-    // Usar useMemo para calcular rootBlocks uma vez
-    const rootBlocks = useMemo(() => {
-        if (!selectedStep || !selectedStep.blocks) return [];
-        return selectedStep.blocks
-            .filter(b => !b.parentId)
-            .sort((a, b) => a.order - b.order);
+    // 🎯 MIGRAÇÃO INTELIGENTE: Converter blocos para metadata se necessário
+    const migratedStep = useMemo(() => {
+        if (!selectedStep) return null;
+        return smartMigration(selectedStep);
     }, [selectedStep]);
-    console.log('✅ Hook 2: useMemo(rootBlocks) -', rootBlocks.length, 'blocks');
-
-    // ✅ CORREÇÃO: Chamar hook useVirtualBlocks no nível superior
-    const virtualizationThreshold = 60;
-    const virtualizationEnabled = rootBlocks.length >= virtualizationThreshold && !activeId;
-    console.log('✅ Hook 3: useVirtualBlocks - enabled:', virtualizationEnabled);
-
-    const { visible, topSpacer, bottomSpacer, containerRef } = useVirtualBlocks({
-        blocks: rootBlocks,
-        rowHeight: 140,
-        overscan: 6,
-        enabled: virtualizationEnabled,
-    });
-    console.log('✅ Hooks completos - visible:', visible.length, 'total:', rootBlocks.length);
+    
+    console.log('🔍 CanvasArea - migratedStep:', migratedStep?.id, 'type:', migratedStep?.type);
 
     return (
         <div className="flex-1 bg-gray-100 flex flex-col overflow-hidden">
@@ -170,65 +156,36 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 )}
             </div>
 
-            {/* 🎯 EDIT MODE - Sempre montado, visível apenas quando isEditMode */}
+            {/* 🎯 EDIT MODE - Renderização modular com componentes reais */}
             <div 
                 className="flex-1 overflow-auto p-4"
                 style={{ display: isEditMode() ? 'block' : 'none' }}
                 data-testid="canvas-edit-mode"
             >
-                    {selectedStep ? (
-                        <Card className="border-0 shadow-none bg-transparent">
-                            <CardContent>
-                                <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
-                                    <div className="px-3 py-2">
-                                        <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={selectedStep.id} />
-                                    </div>
+                {migratedStep ? (
+                    <Card className="border-0 shadow-none bg-transparent">
+                        <CardContent>
+                            <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
+                                <div className="px-3 py-2">
+                                    <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={migratedStep.id} />
                                 </div>
-                                {(!selectedStep.blocks || selectedStep.blocks.length === 0) ? (
-                                    <div className="text-center py-8 text-muted-foreground text-xs border border-dashed rounded-md bg-white/40">(vazio)</div>
-                                ) : (
-                                    <div ref={containerRef} className="space-y-2 pr-1 bg-white/40 overflow-visible">
-                                        <SortableContext items={[...rootBlocks.map(b => b.id), 'canvas-end']} strategy={verticalListSortingStrategy}>
-                                            <TooltipProvider>
-                                                <div style={{ position: 'relative' }}>
-                                                    {virtualizationEnabled && topSpacer > 0 && <div style={{ height: topSpacer }} />}
-                                                    {visible.map(block => (
-                                                        <UnifiedBlockRenderer
-                                                            key={block.id}
-                                                            block={block}
-                                                            allBlocks={selectedStep.blocks}
-                                                            mode="edit"
-                                                            isSelected={selectedBlockId === block.id}
-                                                            isMultiSelected={isMultiSelected(block.id)}
-                                                            hasErrors={!!byBlock[block.id]?.length}
-                                                            errors={byBlock[block.id] || []}
-                                                            onBlockClick={handleBlockClick}
-                                                            onDelete={() => removeBlock(selectedStep.id, block.id)}
-                                                            onDuplicate={() => {
-                                                                setBlockPendingDuplicate(block);
-                                                                setTargetStepId(selectedStep.id);
-                                                                setDuplicateModalOpen(true);
-                                                            }}
-                                                            renderBlockPreview={renderBlockPreview}
-                                                        />
-                                                    ))}
-                                                    {virtualizationEnabled && bottomSpacer > 0 && <div style={{ height: bottomSpacer }} />}
-                                                    <div id="canvas-end" className="h-8 flex items-center justify-center text-[10px] text-slate-400 border border-dashed mx-2 my-2 rounded">Soltar aqui para final</div>
-                                                    {!virtualizationEnabled && visible.length === 0 && (
-                                                        <div className="text-[11px] text-muted-foreground italic">(sem blocos raiz)</div>
-                                                    )}
-                                                </div>
-                                            </TooltipProvider>
-                                        </SortableContext>
-                                        {virtualizationEnabled && (
-                                            <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/90 to-transparent text-[10px] text-center py-1 text-slate-500 border-t">
-                                                Virtualização ativa · {rootBlocks.length} blocos · exibindo {visible.length}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
+                            </div>
+                            
+                            {/* 🎯 WYSIWYG Real: Renderizar componente de step real */}
+                            <UnifiedStepRenderer
+                                step={migratedStep}
+                                mode="edit"
+                                isSelected={selectedBlockId === migratedStep.id}
+                                onStepClick={(e, step) => handleBlockClick(e, step as any)}
+                                onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
+                                onDuplicate={() => {
+                                    setBlockPendingDuplicate(migratedStep as any);
+                                    setTargetStepId(migratedStep.id);
+                                    setDuplicateModalOpen(true);
+                                }}
+                            />
+                        </CardContent>
+                    </Card>
                 ) : (
                     <div className="flex items-center justify-center h-full text-muted-foreground">
                         Selecione uma etapa para editar
@@ -236,46 +193,41 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 )}
             </div>
 
-            {/* 🎯 PREVIEW MODE - WYSIWYG Real: Mesma renderização do Edit, mas interativo */}
+            {/* 🎯 PREVIEW MODE - WYSIWYG Real: Mesmo componente do Edit, totalmente interativo */}
             <div 
                 className="flex-1 overflow-auto p-4"
                 style={{ display: isPreviewMode() ? 'block' : 'none' }}
                 data-testid="canvas-preview-mode"
             >
-                {selectedStep && selectedStep.blocks && selectedStep.blocks.length > 0 ? (
+                {migratedStep ? (
                     <Card className="border-0 shadow-none bg-transparent">
                         <CardContent>
                             <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
                                 <div className="px-3 py-2">
-                                    <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={selectedStep.id} />
+                                    <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={migratedStep.id} />
                                 </div>
                             </div>
-                            <div className="space-y-2 pr-1 bg-white/40">
-                                <Suspense fallback={
-                                    <div className="flex items-center justify-center py-8">
-                                        <div className="text-sm text-muted-foreground">Carregando preview...</div>
-                                    </div>
-                                }>
-                                    {rootBlocks.map(block => (
-                                        <UnifiedBlockRenderer
-                                            key={block.id}
-                                            block={block}
-                                            allBlocks={selectedStep.blocks}
-                                            mode="preview"
-                                            sessionData={previewSessionData}
-                                            onUpdateSessionData={updatePreviewSessionData}
-                                            renderBlockPreview={renderBlockPreview}
-                                        />
-                                    ))}
-                                </Suspense>
-                            </div>
+                            
+                            {/* 🎯 WYSIWYG Real: Mesmo componente, totalmente interativo */}
+                            <Suspense fallback={
+                                <div className="flex items-center justify-center py-8">
+                                    <div className="text-sm text-muted-foreground">Carregando preview...</div>
+                                </div>
+                            }>
+                                <UnifiedStepRenderer
+                                    step={migratedStep}
+                                    mode="preview"
+                                    sessionData={previewSessionData}
+                                    onUpdateSessionData={updatePreviewSessionData}
+                                />
+                            </Suspense>
                         </CardContent>
                     </Card>
                 ) : (
                     <div className="flex items-center justify-center h-full">
                         <div className="text-center text-muted-foreground">
                             <p className="text-sm">Preview vazio</p>
-                            <p className="text-xs mt-1">Adicione blocos no editor</p>
+                            <p className="text-xs mt-1">Selecione uma etapa</p>
                         </div>
                     </div>
                 )}
