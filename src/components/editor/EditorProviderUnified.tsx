@@ -394,7 +394,17 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     }, []);
 
     const ensureStepLoaded = useCallback(async (step: number | string) => {
-        const stepKey = typeof step === 'string' ? step : `step-${step}`;
+    const stepKey = typeof step === 'string' 
+      ? step 
+      : `step-${step.toString().padStart(2, '0')}`;
+
+    // Debug log
+    console.log('🔍 [ensureStepLoaded] Verificando step:', {
+      input: step,
+      stepKey,
+      hasModular: hasModularTemplate(stepKey),
+      existingBlocks: state.stepBlocks[stepKey]?.length || 0
+    });
 
         // Se já tem blocos para este step, não fazer nada
         if (state.stepBlocks[stepKey]?.length > 0) {
