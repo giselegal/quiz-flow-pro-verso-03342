@@ -10,6 +10,7 @@
  */
 
 import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
+import { convertSectionsToBlocks } from '@/utils/sectionToBlockConverter';
 
 export class UnifiedTemplateService {
   private static instance: UnifiedTemplateService;
@@ -69,7 +70,30 @@ export class UnifiedTemplateService {
    */
   loadStepBlocks(stepId: string, funnelId?: string): any[] {
     const template = this.getStepTemplate(stepId, funnelId);
-    return template?.blocks || [];
+    
+    if (!template) {
+      return [];
+    }
+
+    // Se template já é um array de blocos (formato legacy)
+    if (Array.isArray(template)) {
+      return template;
+    }
+
+    // Se template tem propriedade blocks
+    if (template.blocks && Array.isArray(template.blocks)) {
+      return template.blocks;
+    }
+
+    // Se template tem propriedade sections (v3.0)
+    if (template.sections && Array.isArray(template.sections)) {
+      console.log(`🔄 Converting sections to blocks for ${stepId}`);
+      const blocks = convertSectionsToBlocks(template.sections);
+      console.log(`✅ Converted ${blocks.length} blocks from sections`);
+      return blocks;
+    }
+
+    return [];
   }
 
   /**

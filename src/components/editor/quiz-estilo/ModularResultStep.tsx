@@ -101,11 +101,23 @@ export default function ModularResultStep({
 }: ModularResultStepProps) {
     const editor = useEditor({ optional: true });
     const stepKey = data?.id || 'step-20';
+    const [isLoadingBlocks, setIsLoadingBlocks] = React.useState(false);
 
     // Buscar blocos do provider
     const rawBlocks = useMemo(() => {
         return editor?.state?.stepBlocks?.[stepKey] || [];
     }, [editor?.state?.stepBlocks, stepKey]);
+
+    // Carregar blocos se ainda não existirem (igual ao ModularTransitionStep)
+    React.useEffect(() => {
+        if (rawBlocks.length === 0 && editor?.actions?.ensureStepLoaded && !isLoadingBlocks) {
+            console.log(`🔄 ModularResultStep: Loading blocks for ${stepKey}...`);
+            setIsLoadingBlocks(true);
+            editor.actions.ensureStepLoaded(stepKey).finally(() => {
+                setIsLoadingBlocks(false);
+            });
+        }
+    }, [stepKey, rawBlocks.length, editor?.actions, isLoadingBlocks]);
 
     // Injetar dados dinâmicos nos blocos
     const blocks = useMemo(() => {
