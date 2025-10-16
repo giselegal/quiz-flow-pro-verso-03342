@@ -15,6 +15,8 @@ import { adaptStepData } from '@/utils/StepDataAdapter';
 
 // Lazy loading de componentes
 const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
+// Versão modular para edição (Etapa 1)
+const ModularIntroStep = lazy(() => import('@/components/editor/quiz-estilo/ModularIntroStep'));
 const QuestionStep = lazy(() => import('@/components/quiz/QuestionStep'));
 const StrategicQuestionStep = lazy(() => import('@/components/quiz/StrategicQuestionStep'));
 const TransitionStep = lazy(() => import('@/components/quiz/TransitionStep'));
@@ -34,13 +36,13 @@ const StepLoadingFallback = () => (
 export interface UnifiedStepRendererProps {
   step: EditableQuizStep;
   mode: 'edit' | 'preview';
-  
+
   // Props para modo edição
   isSelected?: boolean;
   onStepClick?: (e: React.MouseEvent, step: EditableQuizStep) => void;
   onDelete?: () => void;
   onDuplicate?: () => void;
-  
+
   // Props para modo preview (interatividade)
   sessionData?: Record<string, any>;
   onUpdateSessionData?: (key: string, value: any) => void;
@@ -67,6 +69,16 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const renderStepComponent = () => {
     switch (step.type) {
       case 'intro':
+        // Em modo edição, usar versão modular com blocos independentes
+        if (isEditMode) {
+          return (
+            <ModularIntroStep
+              data={stepData as any}
+              isEditable={true}
+            />
+          );
+        }
+        // Em preview, manter componente de produção
         return (
           <IntroStep
             data={stepData as any}
@@ -157,9 +169,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   if (isEditMode) {
     return (
       <div
-        className={`relative group transition-all ${
-          isSelected ? 'ring-2 ring-primary ring-offset-2' : ''
-        }`}
+        className={`relative group transition-all ${isSelected ? 'ring-2 ring-primary ring-offset-2' : ''
+          }`}
         onClick={(e) => onStepClick?.(e, step)}
         data-step-id={step.id}
       >
@@ -174,7 +185,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             >
               <GripVertical className="w-4 h-4" />
             </Button>
-            
+
             {/* Delete */}
             <Button
               variant="ghost"
@@ -187,7 +198,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             >
               <Trash2 className="w-4 h-4" />
             </Button>
-            
+
             {/* Duplicate */}
             <Button
               variant="ghost"
@@ -209,7 +220,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         </div>
 
         {/* Componente real com Suspense */}
-        <div className="pointer-events-none">
+        {/* Para a Etapa 1 (intro) em modo edição, liberar eventos para blocos internos */}
+        <div className={step.type === 'intro' ? '' : 'pointer-events-none'}>
           <Suspense fallback={<StepLoadingFallback />}>
             {renderStepComponent()}
           </Suspense>
