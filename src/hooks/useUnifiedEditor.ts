@@ -113,6 +113,8 @@ const detectActiveEditorContext = (): UnifiedEditorContext | null => {
         if (coreContext) {
             return {
                 state: {
+                    blocks: [],
+                    blocksByStep: {},
                     stepBlocks: {},
                     currentStep: 1,
                     selectedBlockId: null,
@@ -130,6 +132,9 @@ const detectActiveEditorContext = (): UnifiedEditorContext | null => {
                     removeBlock: async () => { },
                     reorderBlocks: async () => { },
                     updateBlock: async () => { },
+                    moveBlockToStep: async () => { },
+                    duplicateBlock: async () => { },
+                    getBlocksForStep: () => [],
                     ensureStepLoaded: async () => { },
                     loadDefaultTemplate: () => { },
                     undo: () => { },

@@ -147,11 +147,10 @@ export const getUnifiedSystemDiagnostics = () => {
 };
 
 // 🎯 FASE 3: SISTEMA UNIFICADO DE RENDERIZAÇÃO
-export {
-  UnifiedStepRenderer,
-  UnifiedStepRendererStyles,
-  type UnifiedStepRendererProps,
-  type RenderMode
+export { 
+    UnifiedStepRenderer, 
+    type UnifiedStepRendererProps, 
+    type RenderMode 
 } from './UnifiedStepRenderer';
 
 // 🚀 OTIMIZAÇÕES DE PERFORMANCE

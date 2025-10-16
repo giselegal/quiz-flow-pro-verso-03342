@@ -470,6 +470,9 @@ export interface Block extends BaseBlock {
   type: BlockType;
   content: BlockContent;
 
+  // Step association (para flat structure)
+  stepId?: string;
+
   // Validation properties
   validation?: {
     required?: boolean;

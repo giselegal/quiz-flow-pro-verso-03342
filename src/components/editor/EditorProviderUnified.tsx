@@ -28,7 +28,11 @@ import { arrayMove } from '@dnd-kit/sortable';
 // ============================================================================
 
 export interface EditorState {
-    /** Blocos organizados por step */
+    /** Lista flat de TODOS os blocos (NOVA ESTRUTURA) */
+    blocks: Block[];
+    /** Índice de IDs de blocos por step (NOVA ESTRUTURA) */
+    blocksByStep: Record<string, string[]>;
+    /** DEPRECATED: Blocos organizados por step (mantido para compatibilidade) */
     stepBlocks: Record<string, Block[]>;
     /** Step atual selecionado */
     currentStep: number;
@@ -56,6 +60,11 @@ export interface EditorActions {
     removeBlock: (stepKey: string, blockId: string) => Promise<void>;
     reorderBlocks: (stepKey: string, oldIndex: number, newIndex: number) => Promise<void>;
     updateBlock: (stepKey: string, blockId: string, updates: Record<string, any>) => Promise<void>;
+
+    // NOVOS: Operações flat de blocos
+    moveBlockToStep: (blockId: string, targetStepId: string) => Promise<void>;
+    duplicateBlock: (blockId: string, targetStepId?: string) => Promise<void>;
+    getBlocksForStep: (stepId: string) => Block[];
 
     // Step management
     ensureStepLoaded: (step: number | string) => Promise<void>;
@@ -187,6 +196,8 @@ export interface EditorProviderUnifiedProps {
 }
 
 const getInitialState = (enableSupabase: boolean = false): EditorState => ({
+    blocks: [],
+    blocksByStep: {},
     stepBlocks: {},
     currentStep: 1,
     selectedBlockId: null,
@@ -308,24 +319,50 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     }, [pushToHistory]);
 
     const addBlock = useCallback(async (stepKey: string, block: Block) => {
-        updateStateWithHistory(prev => ({
-            ...prev,
-            stepBlocks: {
-                ...prev.stepBlocks,
-                [stepKey]: [...(prev.stepBlocks[stepKey] || []), block]
-            }
-        }));
+        updateStateWithHistory(prev => {
+            const blockWithStep = { ...block, stepId: stepKey };
+            
+            return {
+                ...prev,
+                // Adicionar à lista flat
+                blocks: [...prev.blocks, blockWithStep],
+                // Adicionar ID ao índice de step
+                blocksByStep: {
+                    ...prev.blocksByStep,
+                    [stepKey]: [...(prev.blocksByStep[stepKey] || []), block.id]
+                },
+                // DEPRECATED: manter stepBlocks para compatibilidade
+                stepBlocks: {
+                    ...prev.stepBlocks,
+                    [stepKey]: [...(prev.stepBlocks[stepKey] || []), blockWithStep]
+                }
+            };
+        });
     }, [updateStateWithHistory]);
 
     const addBlockAtIndex = useCallback(async (stepKey: string, block: Block, index: number) => {
         updateStateWithHistory(prev => {
-            const blocks = [...(prev.stepBlocks[stepKey] || [])];
-            blocks.splice(index, 0, block);
+            const blockWithStep = { ...block, stepId: stepKey };
+            const stepBlockIds = [...(prev.blocksByStep[stepKey] || [])];
+            stepBlockIds.splice(index, 0, block.id);
+            
             return {
                 ...prev,
+                // Adicionar à lista flat
+                blocks: [...prev.blocks, blockWithStep],
+                // Atualizar índice com nova posição
+                blocksByStep: {
+                    ...prev.blocksByStep,
+                    [stepKey]: stepBlockIds
+                },
+                // DEPRECATED: manter stepBlocks
                 stepBlocks: {
                     ...prev.stepBlocks,
-                    [stepKey]: blocks
+                    [stepKey]: (() => {
+                        const blocks = [...(prev.stepBlocks[stepKey] || [])];
+                        blocks.splice(index, 0, blockWithStep);
+                        return blocks;
+                    })()
                 }
             };
         });
@@ -334,6 +371,14 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const removeBlock = useCallback(async (stepKey: string, blockId: string) => {
         updateStateWithHistory(prev => ({
             ...prev,
+            // Remover da lista flat
+            blocks: prev.blocks.filter(block => block.id !== blockId),
+            // Remover do índice
+            blocksByStep: {
+                ...prev.blocksByStep,
+                [stepKey]: (prev.blocksByStep[stepKey] || []).filter(id => id !== blockId)
+            },
+            // DEPRECATED: manter stepBlocks
             stepBlocks: {
                 ...prev.stepBlocks,
                 [stepKey]: (prev.stepBlocks[stepKey] || []).filter(block => block.id !== blockId)
@@ -344,11 +389,20 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     const reorderBlocks = useCallback(async (stepKey: string, oldIndex: number, newIndex: number) => {
         updateStateWithHistory(prev => {
+            const blockIds = [...(prev.blocksByStep[stepKey] || [])];
+            const reorderedIds = arrayMove(blockIds, oldIndex, newIndex);
+            
             const blocks = [...(prev.stepBlocks[stepKey] || [])];
             const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
 
             return {
                 ...prev,
+                // Atualizar índice flat
+                blocksByStep: {
+                    ...prev.blocksByStep,
+                    [stepKey]: reorderedIds
+                },
+                // DEPRECATED: manter stepBlocks
                 stepBlocks: {
                     ...prev.stepBlocks,
                     [stepKey]: reorderedBlocks
@@ -360,6 +414,13 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const updateBlock = useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
         updateStateWithHistory(prev => ({
             ...prev,
+            // Atualizar na lista flat
+            blocks: prev.blocks.map(block =>
+                block.id === blockId
+                    ? { ...block, ...updates }
+                    : block
+            ),
+            // DEPRECATED: manter stepBlocks
             stepBlocks: {
                 ...prev.stepBlocks,
                 [stepKey]: (prev.stepBlocks[stepKey] || []).map(block =>
@@ -370,6 +431,71 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             }
         }));
     }, [updateStateWithHistory]);
+
+    // ============================================================================
+    // NOVOS: FLAT BLOCK OPERATIONS
+    // ============================================================================
+
+    const getBlocksForStep = useCallback((stepId: string): Block[] => {
+        const blockIds = state.blocksByStep[stepId] || [];
+        return blockIds
+            .map(id => state.blocks.find(b => b.id === id))
+            .filter((block): block is Block => block !== undefined);
+    }, [state.blocks, state.blocksByStep]);
+
+    const moveBlockToStep = useCallback(async (blockId: string, targetStepId: string) => {
+        updateStateWithHistory(prev => {
+            const block = prev.blocks.find(b => b.id === blockId);
+            if (!block) return prev;
+
+            const sourceStepId = (block as any).stepId;
+            if (!sourceStepId) return prev;
+
+            // Remover do step original
+            const newBlocksByStep = { ...prev.blocksByStep };
+            newBlocksByStep[sourceStepId] = (newBlocksByStep[sourceStepId] || []).filter(id => id !== blockId);
+            
+            // Adicionar ao novo step
+            if (!newBlocksByStep[targetStepId]) {
+                newBlocksByStep[targetStepId] = [];
+            }
+            newBlocksByStep[targetStepId].push(blockId);
+
+            // Atualizar stepId do bloco
+            const updatedBlocks = prev.blocks.map(b =>
+                b.id === blockId ? { ...b, stepId: targetStepId } : b
+            );
+
+            // DEPRECATED: atualizar stepBlocks
+            const newStepBlocks = { ...prev.stepBlocks };
+            newStepBlocks[sourceStepId] = (newStepBlocks[sourceStepId] || []).filter(b => b.id !== blockId);
+            const movedBlock = { ...block, stepId: targetStepId };
+            newStepBlocks[targetStepId] = [...(newStepBlocks[targetStepId] || []), movedBlock];
+
+            return {
+                ...prev,
+                blocks: updatedBlocks,
+                blocksByStep: newBlocksByStep,
+                stepBlocks: newStepBlocks
+            };
+        });
+    }, [updateStateWithHistory]);
+
+    const duplicateBlock = useCallback(async (blockId: string, targetStepId?: string) => {
+        const block = state.blocks.find(b => b.id === blockId);
+        if (!block) return;
+
+        const sourceStepId = targetStepId || (block as any).stepId;
+        if (!sourceStepId) return;
+
+        const newBlock: Block = {
+            ...block,
+            id: `${blockId}-copy-${Date.now()}`,
+            stepId: sourceStepId
+        };
+
+        await addBlock(sourceStepId, newBlock);
+    }, [state.blocks, addBlock]);
 
     // ============================================================================
     // NAVIGATION & STEP MANAGEMENT
@@ -564,6 +690,11 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             removeBlock,
             reorderBlocks,
             updateBlock,
+
+            // NEW: Flat block operations
+            moveBlockToStep,
+            duplicateBlock,
+            getBlocksForStep,
 
             // Step management
             ensureStepLoaded,
