@@ -43,9 +43,9 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Tamanhos modulares responsivos
   const sizeClasses = {
-    small: 'w-full sm:w-48 md:w-56',
+    small: 'w-full max-w-[12rem] sm:max-w-[14rem] md:max-w-[16rem]',
     medium: 'w-full max-w-md mx-auto',
-    large: 'w-full sm:w-80 md:w-96 lg:w-[28rem]',
+    large: 'w-full max-w-[28rem] sm:max-w-[32rem] md:max-w-[36rem]',
   };
 
   // Aspect ratios
@@ -170,7 +170,7 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
           height={typeof height === 'number' ? height : height ? parseInt(height) : 400}
           aspectRatio={aspectRatio === 'square' ? 1 : aspectRatio === 'portrait' ? 3 / 4 : aspectRatio === 'landscape' ? 4 / 3 : 16 / 9}
           className={cn(
-            'w-full h-full transition-transform duration-500 hover:scale-105',
+            'w-full h-auto transition-transform duration-500 hover:scale-105',
             objectFitClasses[objectFit as keyof typeof objectFitClasses],
             customClassName && 'w-auto h-auto' // Se tem className customizada, não forçar w-full h-full
           )}

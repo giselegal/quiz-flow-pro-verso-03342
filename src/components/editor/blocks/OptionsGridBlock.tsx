@@ -804,7 +804,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       )}
 
       <div
-        className={`${layout === 'list' ? 'flex flex-col' : `grid ${gridColsClass}`} ${blockClassName || ''
+        className={`${layout === 'list' ? 'flex flex-col' : `grid w-full ${gridColsClass}`} ${blockClassName || ''
           }`}
         style={{ gap: `${gridGap}px` }}
       >
@@ -952,10 +952,14 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                 <img
                   src={opt.imageUrl}
                   alt={opt.text || 'opção'}
-                  className={`object-cover rounded-md flex-shrink-0 ${imageOrderClass}`}
+                  className={`rounded-md flex-shrink-0 ${imageOrderClass} ${effectiveImageLayout === 'horizontal' ? 'max-w-full h-auto md:h-auto object-cover' : 'w-full h-auto object-cover'}`}
                   width={imgW}
                   height={imgH}
-                  style={{ width: `${imgW}px`, height: `${imgH}px` }}
+                  style={
+                    effectiveImageLayout === 'horizontal'
+                      ? { width: `${imgW}px`, height: `${imgH}px`, maxWidth: '100%' }
+                      : { width: '100%', height: 'auto' }
+                  }
                   loading="lazy"
                   decoding="async"
                   onError={e => {
@@ -967,8 +971,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               )}
               {showTextEffective && (
                 <p
-                  className={`${effectiveImageLayout === 'horizontal' ? 'flex-1' : 'text-center'
-                    } font-medium`}
+                  className={`${effectiveImageLayout === 'horizontal' ? 'flex-1' : 'text-center'} font-medium text-sm sm:text-base break-words`}
                 >
                   {opt.text}
                 </p>
