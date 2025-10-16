@@ -68,7 +68,13 @@ const STEP_DEFAULTS: Record<StepType, Partial<QuizStep>> = {
  * 🔄 ADAPTER PRINCIPAL
  * Converte EditableQuizStep para QuizStep com fallbacks completos
  */
-export const adaptStepData = (editableStep: EditableQuizStep): QuizStep => {
+export type AdaptSourceMode = 'merge' | 'production-only';
+
+export const adaptStepData = (
+  editableStep: EditableQuizStep,
+  options?: { source?: AdaptSourceMode }
+): QuizStep => {
+  const mode: AdaptSourceMode = options?.source ?? 'merge';
   const stepType = editableStep.type;
   const defaults = STEP_DEFAULTS[stepType] || {};
   
@@ -78,6 +84,32 @@ export const adaptStepData = (editableStep: EditableQuizStep): QuizStep => {
   // Buscar dados de produção se disponível
   const productionData = getProductionStepData(editableStep.id);
   
+  // Se solicitado, usar apenas dados canônicos de produção + defaults (ignora metadata do editor)
+  if (mode === 'production-only') {
+    const adaptedProductionOnly: QuizStep = {
+      id: editableStep.id,
+      type: stepType,
+      title: productionData?.title || defaults.title,
+      questionNumber: productionData?.questionNumber || defaults.questionNumber,
+      questionText: productionData?.questionText || defaults.questionText,
+      formQuestion: productionData?.formQuestion || defaults.formQuestion,
+      placeholder: productionData?.placeholder || defaults.placeholder,
+      buttonText: productionData?.buttonText || defaults.buttonText,
+      text: productionData?.text || defaults.text,
+      image: productionData?.image || defaults.image,
+      requiredSelections: productionData?.requiredSelections || defaults.requiredSelections,
+      options: productionData?.options || defaults.options || [],
+      nextStep: productionData?.nextStep,
+      offerMap: productionData?.offerMap || defaults.offerMap,
+      showContinueButton: productionData?.showContinueButton ?? defaults.showContinueButton,
+      continueButtonText: productionData?.continueButtonText,
+      duration: productionData?.duration || defaults.duration,
+    };
+
+    validateAdaptedData(adaptedProductionOnly);
+    return adaptedProductionOnly;
+  }
+
   // Merge com prioridade: metadata > productionData > defaults
   const adapted: QuizStep = {
     id: editableStep.id,
