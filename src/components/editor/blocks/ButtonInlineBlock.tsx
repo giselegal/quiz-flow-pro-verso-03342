@@ -67,12 +67,13 @@ const getMarginClass = (
   return `${prefix}-32`; // Máximo suportado
 };
 
-const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
+const ButtonInlineBlock: React.FC<BlockComponentProps & { isInteractive?: boolean }> = ({
   block,
   isSelected = false,
   onClick,
   onPropertyChange: _onPropertyChange,
   className = '',
+  isInteractive = true, // 🎯 Default: interativo (comportamento normal)
 }) => {
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
@@ -558,6 +559,13 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         }}
         onClick={async e => {
           e.stopPropagation();
+          
+          // 🎯 CANVAS UNIFICADO: Bloquear cliques em Edit Mode
+          if (!isInteractive) {
+            console.log('🔒 ButtonInline: Click bloqueado - Edit Mode');
+            return;
+          }
+          
           // Validação robusta: se exigir input válido, checar DOM e storage em tempo real
           let allowProceed = true;
           if (finalRequiresValidInput) {

@@ -59,7 +59,7 @@ const getMarginClass = (
   return `${prefix}-32`; // Máximo suportado
 };
 
-const FormInputBlock: React.FC<FormInputBlockProps> = ({
+const FormInputBlock: React.FC<FormInputBlockProps & { isInteractive?: boolean }> = ({
   block,
   isSelected = false,
   onClick,
@@ -67,6 +67,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   className = '',
   funnelId: _funnelId,
   onValueChange,
+  isInteractive = true, // 🎯 Default: interativo (comportamento normal)
 }) => {
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
@@ -164,6 +165,12 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   }, [block?.id, effectiveFunnelId]);
 
   const handleInputChange = async (newValue: string) => {
+    // 🎯 CANVAS UNIFICADO: Bloquear edição em Edit Mode
+    if (!isInteractive) {
+      console.log('🔒 FormInput: Edição bloqueada - Edit Mode');
+      return;
+    }
+    
     setValue(newValue);
     const valid = !required || newValue.trim().length > 0;
     setIsValid(valid);
@@ -312,7 +319,14 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           id={String(block?.id || name)}
           placeholder={placeholder}
           value={value}
-          onChange={e => handleInputChange(e.target.value)}
+          onChange={e => {
+            // 🎯 CANVAS UNIFICADO: Bloquear digitação em Edit Mode
+            if (!isInteractive) {
+              e.preventDefault();
+              return;
+            }
+            handleInputChange(e.target.value);
+          }}
           style={{
             backgroundColor: backgroundColor,
             borderColor: borderColor,
