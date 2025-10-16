@@ -114,20 +114,33 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
         isolatePreviewState: true
     });
 
-    // ===== VIRTUALIZATION =====
+    // Hook do editor para operações de bloco
+    const editor = useEditor();
+    const { state: editorState, actions } = editor;
+
+    // Obter blocos do step atual via editor
+    const currentStepBlocks = useMemo(() => {
+        const stepKey = selectedStep?.id || '';
+        const blocks = editorState.stepBlocks[stepKey] || [];
+        return blocksToBlockComponents(blocks);
+    }, [editorState.stepBlocks, selectedStep?.id]);
+
+    // ===== VIRTUALIZATION (auto-ativa quando >10 blocos) =====
+    const shouldVirtualize = currentStepBlocks.length > 10;
+    
     const {
-        visible: virtualizedBlocks,
-        topSpacer,
-        bottomSpacer,
-        containerRef,
-        total: totalBlocks
+        visible: canvasVirtualizedBlocks,
+        topSpacer: canvasTopSpacer,
+        bottomSpacer: canvasBottomSpacer,
+        containerRef: virtualContainerRef,
+        total: totalCanvasBlocks
     } = useVirtualBlocks({
-        blocks: selectedStep?.blocks || [],
+        blocks: currentStepBlocks,
         rowHeight: 100,
-        enabled: (selectedStep?.blocks || []).length > 20
+        enabled: shouldVirtualize
     });
 
-    const isVirtualizationActive = (selectedStep?.blocks || []).length > 20;
+    const blocksToRender = shouldVirtualize ? canvasVirtualizedBlocks : currentStepBlocks;
 
     // ===== HANDLERS =====
     const handleStepChangeInternal = useCallback((stepId: string) => {
@@ -214,17 +227,6 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
         );
     };
 
-    // Hook do editor para operações de bloco
-    const editor = useEditor();
-    const { state: editorState, actions } = editor;
-
-    // Obter blocos do step atual via editor
-    const currentStepBlocks = useMemo(() => {
-        const stepKey = selectedStep?.id || '';
-        const blocks = editorState.stepBlocks[stepKey] || [];
-        return blocksToBlockComponents(blocks);
-    }, [editorState.stepBlocks, selectedStep?.id]);
-
     const renderCanvasContent = () => (
         <div className="flex-1 overflow-auto">
             {/* Cabeçalho do Canvas */}
@@ -237,6 +239,12 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
                     <Badge variant="secondary" className="text-xs">
                         {currentStepBlocks.length} blocos
                     </Badge>
+                    {shouldVirtualize && (
+                        <Badge variant="default" className="text-xs">
+                            <Activity className="w-3 h-3 mr-1" />
+                            Virtual
+                        </Badge>
+                    )}
                 </div>
             </div>
 
@@ -254,8 +262,12 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
                         items={currentStepBlocks.map((b: BlockComponent) => b.id)}
                         strategy={verticalListSortingStrategy}
                     >
-                        <div className="space-y-4 min-h-[400px]">
-                            {currentStepBlocks
+                        <div 
+                            ref={shouldVirtualize ? virtualContainerRef : undefined}
+                            className="space-y-4 min-h-[400px]"
+                        >
+                            {shouldVirtualize && <div style={{ height: canvasTopSpacer }} />}
+                            {blocksToRender
                                 .sort((a: BlockComponent, b: BlockComponent) => a.order - b.order)
                                 .map((block: BlockComponent) => (
                                     <UnifiedBlockRenderer
@@ -284,6 +296,7 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
                                         }}
                                     />
                                 ))}
+                            {shouldVirtualize && <div style={{ height: canvasBottomSpacer }} />}
                         </div>
                     </SortableContext>
                 )}
