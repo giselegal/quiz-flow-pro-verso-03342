@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { useLogger } from '@/utils/logger/SmartLogger';
+import { shallowEqual, MemoizationMetrics } from '@/utils/performance/memoization';
 
 export interface PreviewBlockProps {
   block: Block;
@@ -52,13 +53,16 @@ export const PreviewBlock: React.FC<PreviewBlockProps> = memo(({
   const logger = useLogger('PreviewBlock');
   const BlockComponent = useBlockComponent(block.type);
 
-  // Log de render (apenas em dev)
+  // Log de render e métricas (apenas em dev)
   React.useEffect(() => {
-    logger.render(`PreviewBlock[${block.type}]`, {
-      blockId: block.id,
-      hasComponent: !!BlockComponent,
-      hasSessionData: !!sessionData
-    });
+    if (process.env.NODE_ENV === 'development') {
+      MemoizationMetrics.recordRender('PreviewBlock');
+      logger.render(`PreviewBlock[${block.type}]`, {
+        blockId: block.id,
+        hasComponent: !!BlockComponent,
+        hasSessionData: !!sessionData
+      });
+    }
   }, [block.type, block.id, BlockComponent, sessionData, logger]);
 
   if (!BlockComponent) {
@@ -99,13 +103,24 @@ export const PreviewBlock: React.FC<PreviewBlockProps> = memo(({
     </div>
   );
 }, (prev, next) => {
-  // Memoização agressiva: preview muda menos
-  return (
-    prev.block.id === next.block.id &&
-    prev.block.type === next.block.type &&
-    JSON.stringify(prev.block.content) === JSON.stringify(next.block.content) &&
-    JSON.stringify(prev.sessionData) === JSON.stringify(next.sessionData)
-  );
+  // 🎯 TK-CANVAS-07: Memoização agressiva otimizada
+  // Preview muda menos, então podemos ser mais agressivos
+  
+  // IDs diferentes = sempre re-render
+  if (prev.block.id !== next.block.id) return false;
+  if (prev.block.type !== next.block.type) return false;
+  
+  // Usar shallow comparison (mais rápido que JSON.stringify)
+  const contentEqual = shallowEqual(prev.block.content, next.block.content);
+  const sessionEqual = shallowEqual(prev.sessionData, next.sessionData);
+  
+  const areEqual = contentEqual && sessionEqual;
+  
+  if (areEqual && process.env.NODE_ENV === 'development') {
+    MemoizationMetrics.recordMemoHit('PreviewBlock');
+  }
+  
+  return areEqual;
 });
 
 PreviewBlock.displayName = 'PreviewBlock';

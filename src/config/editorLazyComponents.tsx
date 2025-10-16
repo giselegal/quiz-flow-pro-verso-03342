@@ -1,11 +1,14 @@
 /**
- * 🎯 EDITOR LAZY COMPONENTS (Sprint 2 - TK-ED-06)
+ * 🎯 EDITOR LAZY COMPONENTS (Sprint 2 - TK-ED-06 / Sprint 3 - TK-CANVAS-08)
  * 
  * Configuração centralizada de lazy loading para componentes pesados do editor
  * Reduz bundle inicial de ~500KB para ~180KB
+ * 
+ * Sprint 3: Adicionado lazy loading do IsolatedPreview e preload strategy
  */
 
 import React, { lazy } from 'react';
+import { lazyWithRetry } from '@/utils/performanceOptimizations';
 
 /**
  * Preview de produção (~80KB)
@@ -83,20 +86,62 @@ export const LazyLoadingFallback = () => (
 );
 
 /**
+ * 🎯 TK-CANVAS-08: Isolated Preview (~35KB)
+ * Preview isolado sem EditorProvider
+ * Bundle 60% menor que preview completo
+ */
+export const LazyIsolatedPreview = lazyWithRetry(
+  () => import(
+    /* webpackChunkName: "isolated-preview" */
+    /* webpackPrefetch: true */
+    '@/components/editor/quiz/canvas/IsolatedPreview'
+  ),
+  3 // 3 tentativas com retry
+);
+
+/**
  * Preload de componentes críticos
  * Chame isso quando usuário passar o mouse sobre botões
  */
 export const preloadEditorComponents = {
   preview: () => {
     const component = LazyQuizProductionPreview as any;
-    if (component.preload) component.preload();
+    if (component._ctor) component._ctor();
   },
   theme: () => {
     const component = LazyThemeEditorPanel as any;
-    if (component.preload) component.preload();
+    if (component._ctor) component._ctor();
   },
   analytics: () => {
     const component = LazyAnalyticsDashboard as any;
-    if (component.preload) component.preload();
+    if (component._ctor) component._ctor();
+  },
+  isolatedPreview: () => {
+    const component = LazyIsolatedPreview as any;
+    if (component._ctor) component._ctor();
   },
 };
+
+/**
+ * Preload strategy: carregar componentes em ordem de prioridade
+ * quando browser estiver idle
+ */
+export function preloadAllComponents(): void {
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => {
+      // Prioridade 1: Preview (mais usado)
+      preloadEditorComponents.isolatedPreview();
+      
+      setTimeout(() => {
+        // Prioridade 2: Theme e Analytics
+        preloadEditorComponents.theme();
+        preloadEditorComponents.analytics();
+      }, 1000);
+      
+      setTimeout(() => {
+        // Prioridade 3: Preview de produção
+        preloadEditorComponents.preview();
+      }, 2000);
+    }, { timeout: 2000 });
+  }
+}

@@ -14,6 +14,7 @@ import { Block } from '@/types/editor';
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { useLogger } from '@/utils/logger/SmartLogger';
 import { Trash2, GripVertical, Copy } from 'lucide-react';
+import { blockPropsAreEqual, MemoizationMetrics } from '@/utils/performance/memoization';
 
 export interface EditableBlockProps {
   block: Block;
@@ -87,13 +88,16 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
     [block.id, onDuplicate]
   );
 
-  // Log de render (apenas em dev)
+  // Log de render e métricas (apenas em dev)
   React.useEffect(() => {
-    logger.render(`EditableBlock[${block.type}]`, {
-      blockId: block.id,
-      isSelected,
-      hasComponent: !!BlockComponent
-    });
+    if (process.env.NODE_ENV === 'development') {
+      MemoizationMetrics.recordRender('EditableBlock');
+      logger.render(`EditableBlock[${block.type}]`, {
+        blockId: block.id,
+        isSelected,
+        hasComponent: !!BlockComponent
+      });
+    }
   }, [block.type, block.id, BlockComponent, isSelected, logger]);
 
   if (!BlockComponent) {
@@ -177,14 +181,14 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
     </div>
   );
 }, (prev, next) => {
-  // Memoização inteligente: só re-render se mudou algo relevante
-  return (
-    prev.block.id === next.block.id &&
-    prev.isSelected === next.isSelected &&
-    prev.block.type === next.block.type &&
-    JSON.stringify(prev.block.content) === JSON.stringify(next.block.content) &&
-    JSON.stringify(prev.block.properties) === JSON.stringify(next.block.properties)
-  );
+  // 🎯 TK-CANVAS-07: Memoização inteligente otimizada
+  const areEqual = blockPropsAreEqual(prev, next);
+  
+  if (areEqual && process.env.NODE_ENV === 'development') {
+    MemoizationMetrics.recordMemoHit('EditableBlock');
+  }
+  
+  return areEqual;
 });
 
 EditableBlock.displayName = 'EditableBlock';
