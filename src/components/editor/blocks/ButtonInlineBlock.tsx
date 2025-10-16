@@ -503,10 +503,10 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   const getResponsiveClasses = () => {
     return cn(
       // Classes base do botão
-  'inline-flex items-center justify-center font-medium transition-all duration-300',
+      'inline-flex items-center justify-center font-medium transition-all duration-300',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89B7A] focus-visible:ring-offset-2',
       'disabled:pointer-events-none disabled:opacity-50',
-  'border-2 w-full max-w-full',
+      'border-2 w-full max-w-full',
 
       // Aplicar tamanho
       sizeClasses[size as keyof typeof sizeClasses],
