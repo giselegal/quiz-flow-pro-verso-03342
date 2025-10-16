@@ -15,7 +15,7 @@ import {
     IntroStep01_Image,
     IntroStep01_Description,
     IntroStep01_Form
-} from '@/components/editor/quiz-estilo/step-01';
+} from '../../components/editor/quiz-estilo/step-01';
 
 // ============================================================================
 // EXEMPLO 1: USO INTEGRADO (RECOMENDADO)

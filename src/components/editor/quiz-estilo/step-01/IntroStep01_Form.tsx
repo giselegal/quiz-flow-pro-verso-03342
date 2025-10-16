@@ -109,7 +109,6 @@ export const IntroStep01_Form: React.FC<IntroStep01FormProps> = ({
 
             {/* Botão de submissão */}
             <button
-                onClick={handleSubmit}
                 disabled={required && !nome.trim()}
                 className="w-full py-4 px-6 rounded-lg font-bold text-base transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
                 style={{
