@@ -64,17 +64,8 @@ export default function ModularTransitionStep({
     // Usar localBlocks ao invés de memoized blocks
     const blocks = localBlocks;
 
-    // Loading state
-    if (isLoadingBlocks && localBlocks.length === 0) {
-        return (
-            <div className="flex items-center justify-center p-12 min-h-[400px]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                    <span className="text-muted-foreground">Carregando blocos...</span>
-                </div>
-            </div>
-        );
-    }
+// Loading state: evitar early return para manter ordem de hooks
+const showLoading = isLoadingBlocks && localBlocks.length === 0;
 
     // Ordenação dos blocos via metadata
     const [localOrder, setLocalOrder] = React.useState<string[]>([]);
