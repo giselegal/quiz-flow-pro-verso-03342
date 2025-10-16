@@ -1,6 +1,9 @@
+import { useMemo } from 'react';
 import { styleConfigGisele } from '../../data/styles';
 import { resolveStyleId } from '@/utils/styleIds';
 import type { QuizStep } from '../../data/quizSteps';
+import { OFFER_STEP_SCHEMA } from '@/data/stepBlockSchemas';
+import { Block } from '@/types/editor';
 
 interface OfferStepProps {
     data: QuizStep;
@@ -12,10 +15,9 @@ interface OfferStepProps {
 }
 
 /**
- * 🎁 COMPONENTE DE OFERTA PERSONALIZADA
+ * 🎁 COMPONENTE DE OFERTA PERSONALIZADA - MODULAR
  * 
- * Exibe a oferta final personalizada (etapa 21) baseada nas respostas
- * estratégicas do usuário, com call-to-action otimizado.
+ * Usa sistema de blocos para renderização modular
  */
 export default function OfferStep({
     data,
@@ -38,7 +40,6 @@ export default function OfferStep({
     const canonicalStyleId = resolveStyleId(userProfile.resultStyle);
     let styleConfig = styleConfigGisele[canonicalStyleId] || styleConfigGisele[userProfile.resultStyle];
 
-    // Se não encontrar o estilo, usar o primeiro disponível como fallback
     if (!styleConfig) {
         console.warn(`⚠️ Estilo "${userProfile.resultStyle}" (canonical: ${canonicalStyleId}) não encontrado no OfferStep, usando fallback`);
         const firstStyle = Object.keys(styleConfigGisele)[0];
@@ -46,6 +47,24 @@ export default function OfferStep({
     }
 
     const guideImage = styleConfig?.guideImage || data.image;
+
+    // Preparar blocos do schema com dados dinâmicos
+    const blocks: Block[] = useMemo(() => {
+        return OFFER_STEP_SCHEMA.blocks.map((schemaBlock, index) => ({
+            id: `offer-${data.id || 'unknown'}-${schemaBlock.id}`,
+            type: schemaBlock.type as any,
+            order: index,
+            content: {},
+            properties: {
+                ...schemaBlock.props,
+                text: schemaBlock.props.text
+                    ?.replace('{{title}}', offerContent.title.replace('{userName}', userProfile.userName))
+                    ?.replace('{{description}}', offerContent.description)
+                    ?.replace('{{buttonText}}', offerContent.buttonText)
+                    ?.replace('{{guideImage}}', guideImage || '')
+            }
+        }));
+    }, [data, offerContent, userProfile, guideImage]);
 
     return (
         <div className="bg-white rounded-xl shadow-2xl text-center max-w-5xl mx-auto overflow-hidden">

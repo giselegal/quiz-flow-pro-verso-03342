@@ -825,6 +825,53 @@ function sectionToBlocks(section: any, stepId: string, sectionIndex: number): Bl
       break;
     }
 
+    case 'strategic-question-hero': {
+      // Strategic question with icon
+      blocks.push({
+        id: `${stepId}-strategic-icon-${blockOrder}`,
+        type: 'text-inline',
+        order: blockOrder++,
+        content: {
+          text: '💭',
+          fontSize: '48px',
+          textAlign: 'center'
+        },
+        properties: { marginBottom: '16px' }
+      });
+
+      if (section.content.title) {
+        blocks.push({
+          id: `${stepId}-strategic-question-${blockOrder}`,
+          type: 'heading-inline',
+          order: blockOrder++,
+          content: {
+            text: section.content.title,
+            level: 2,
+            fontSize: '24px',
+            color: '#deac6d',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '24px' }
+        });
+      }
+
+      // Form input for strategic question
+      blocks.push({
+        id: `${stepId}-strategic-input-${blockOrder}`,
+        type: 'form-input',
+        order: blockOrder++,
+        content: {
+          label: '',
+          placeholder: 'Sua resposta...',
+          fieldType: 'text',
+          required: false,
+          fieldName: 'strategicAnswer'
+        },
+        properties: { marginBottom: '24px' }
+      });
+      break;
+    }
+
     default:
       console.warn(`⚠️ Section type não mapeado: ${section.type}`, {
         stepId,

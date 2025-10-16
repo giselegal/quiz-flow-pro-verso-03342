@@ -5,13 +5,9 @@
     "name": "Step step-21",
     "description": "offer step for quiz",
     "category": "quiz-offer",
-    "tags": [
-      "quiz",
-      "style",
-      "offer"
-    ],
+    "tags": ["quiz", "style", "offer"],
     "createdAt": "2025-10-11T10:44:14.174Z",
-    "updatedAt": "2025-10-11T22:09:33.849Z"
+    "updatedAt": "2025-10-16T00:00:00.000Z"
   },
   "layout": {
     "containerWidth": "full",
@@ -21,23 +17,107 @@
   },
   "validation": {},
   "analytics": {
-    "events": [
-      "page_view",
-      "step_completed"
-    ],
+    "events": ["page_view", "step_completed"],
     "trackingId": "step-21",
     "utmParams": true,
-    "customEvents": [
-      "component_mounted",
-      "user_interaction"
-    ]
+    "customEvents": ["component_mounted", "user_interaction"]
   },
   "blocks": [
     {
-      "id": "step21-offer-card-1",
-      "type": "offer-card",
+      "id": "step21-hero-icon",
+      "type": "text-inline",
       "position": 0,
-      "properties": {}
+      "properties": {
+        "content": "🎯",
+        "fontSize": "text-5xl",
+        "align": "center"
+      }
+    },
+    {
+      "id": "step21-hero-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "{userName}, esta oferta foi feita especialmente para você",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "color": "#FFFFFF",
+        "backgroundColor": "linear-gradient(to right, #deac6d, #c49548)",
+        "padding": "32px",
+        "align": "center"
+      }
+    },
+    {
+      "id": "step21-offer-image",
+      "type": "image-display-inline",
+      "position": 2,
+      "properties": {
+        "src": "{guideImage}",
+        "alt": "Oferta Especial",
+        "rounded": true,
+        "shadow": true,
+        "badge": "Oferta Especial"
+      }
+    },
+    {
+      "id": "step21-description",
+      "type": "text-inline",
+      "position": 3,
+      "properties": {
+        "content": "💡 Transforme seu guarda-roupa e sua confiança com esta oferta exclusiva.",
+        "fontSize": "text-lg",
+        "color": "#5b4135",
+        "backgroundColor": "#f3f4f6",
+        "padding": "24px",
+        "align": "center"
+      }
+    },
+    {
+      "id": "step21-testimonial",
+      "type": "testimonial-card-inline",
+      "position": 4,
+      "properties": {
+        "quote": "{testimonial.quote}",
+        "author": "{testimonial.author}",
+        "rating": 5
+      }
+    },
+    {
+      "id": "step21-urgency",
+      "type": "text-inline",
+      "position": 5,
+      "properties": {
+        "content": "⏰ Oferta por tempo limitado",
+        "fontSize": "text-sm",
+        "fontWeight": "font-bold",
+        "color": "#bd0000",
+        "backgroundColor": "#bd0000/10",
+        "padding": "16px",
+        "align": "center"
+      }
+    },
+    {
+      "id": "step21-cta",
+      "type": "button-inline",
+      "position": 6,
+      "properties": {
+        "text": "{buttonText}",
+        "bgColor": "#65c83a",
+        "textColor": "#FFFFFF",
+        "size": "lg",
+        "fullWidth": true
+      }
+    },
+    {
+      "id": "step21-guarantee",
+      "type": "text-inline",
+      "position": 7,
+      "properties": {
+        "content": "🛡️ Satisfação 100% garantida ou seu dinheiro de volta",
+        "fontSize": "text-sm",
+        "color": "text-gray-600",
+        "align": "center"
+      }
     }
   ]
 }

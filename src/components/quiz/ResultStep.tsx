@@ -1,18 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { styleConfigGisele } from '../../data/styles';
 import { resolveStyleId } from '@/utils/styleIds';
 import type { QuizStep } from '../../data/quizSteps';
 import type { QuizScores } from '../../hooks/useQuizState';
 import { useImageWithFallback } from '../../hooks/useImageWithFallback';
-import { ShoppingCart, Lock, Star, Shield, Clock } from 'lucide-react';
-
-// Componentes modulares
-import {
-    HeroSection,
-    SocialProofSection,
-    OfferSection,
-    GuaranteeSection
-} from './result';
+import { RESULT_STEP_SCHEMA } from '@/data/stepBlockSchemas';
+import { Block } from '@/types/editor';
 
 interface ResultStepProps {
     data: QuizStep;
@@ -25,22 +18,20 @@ interface ResultStepProps {
 }
 
 /**
- * 🏆 PÁGINA UNIFICADA DE RESULTADO + OFERTA
+ * 🏆 PÁGINA UNIFICADA DE RESULTADO + OFERTA - MODULAR
  * 
- * Combina o resultado do quiz com a página de vendas numa experiência única
+ * Usa sistema de blocos para renderização modular
  */
 export default function ResultStep({
     data,
     userProfile,
     scores
 }: ResultStepProps) {
-    // Estados para interatividade
     const [isButtonHovered, setIsButtonHovered] = useState(false);
 
     // Verificação de segurança para o estilo
     let styleConfig = styleConfigGisele[userProfile.resultStyle];
 
-    // Se não encontrar o estilo, usar o primeiro disponível como fallback
     if (!styleConfig) {
         console.warn(`⚠️ Estilo "${userProfile.resultStyle}" não encontrado, usando fallback`);
         const firstStyle = Object.keys(styleConfigGisele)[0];
@@ -62,23 +53,40 @@ export default function ResultStep({
         fallbackText: `Guia ${styleConfig?.name || 'Estilo'}`,
         fallbackBgColor: '#f1f5f9',
         fallbackTextColor: '#64748b'
-    });    // Scroll para o topo quando carregar
+    });
+
+    // Preparar blocos do schema com dados dinâmicos
+    const blocks: Block[] = useMemo(() => {
+        return RESULT_STEP_SCHEMA.blocks.map((schemaBlock, index) => ({
+            id: `result-${data.id || 'unknown'}-${schemaBlock.id}`,
+            type: schemaBlock.type as any,
+            order: index,
+            content: {},
+            properties: {
+                ...schemaBlock.props,
+                text: schemaBlock.props.text
+                    ?.replace('{{userName}}', userProfile.userName)
+                    ?.replace('{{styleName}}', styleConfig?.name || '')
+                    ?.replace('{{styleDescription}}', styleConfig?.description || '')
+                    ?.replace('{{styleImage}}', styleImage.src || ''),
+                src: schemaBlock.props.src?.replace('{{styleImage}}', styleImage.src || '')
+            }
+        }));
+    }, [data, userProfile, styleConfig, styleImage]);
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
     if (!styleConfig) {
-        // Fallback silencioso: usar primeiro estilo definido para evitar mensagem de erro visual
         const firstKey = Object.keys(styleConfigGisele)[0];
         styleConfig = styleConfigGisele[firstKey];
     }
 
-    // Processar estilos com porcentagens para as barras de progresso
+    // Processar estilos com porcentagens
     const processStylesWithPercentages = () => {
         if (!scores) return [];
 
-        // Converter QuizScores para array de entradas (internamente sem acento)
-        // A ORDEM AQUI DEFINE O DESEMPATE: primeiro aparece = primeira escolha do usuário
         const scoresEntries = [
             ['natural', scores.natural],
             ['classico', scores.classico],
@@ -90,47 +98,39 @@ export default function ResultStep({
             ['criativo', scores.criativo]
         ] as [string, number][];
 
-        // Calcular total de pontos
         const totalPoints = scoresEntries.reduce((sum, [, score]) => sum + score, 0);
         if (totalPoints === 0) return [];
 
-        // Ordenar estilos por pontuação e calcular porcentagens
-        // DESEMPATE: mantém ordem original (índice menor = escolhido primeiro)
         return scoresEntries
             .map(([styleKey, score], originalIndex) => {
-                const displayKey = resolveStyleId(styleKey); // chave canônica (acentuada se existir)
+                const displayKey = resolveStyleId(styleKey);
                 return {
                     key: styleKey,
                     displayKey: displayKey,
                     name: styleConfigGisele[displayKey]?.name || displayKey,
                     score,
                     percentage: ((score / totalPoints) * 100),
-                    originalIndex // Preserva ordem original para desempate
+                    originalIndex
                 };
             })
             .filter(style => style.score > 0)
             .sort((a, b) => {
-                // Ordenar por pontuação (decrescente)
                 if (b.score !== a.score) {
                     return b.score - a.score;
                 }
-                // Em caso de EMPATE: menor índice (escolhido primeiro) vem antes
                 return a.originalIndex - b.originalIndex;
             })
-            .slice(0, 3); // ✅ Mostrar apenas TOP 3 estilos
+            .slice(0, 3);
     };
 
     const stylesWithPercentages = processStylesWithPercentages();
 
-    // Estilos secundários para fallback
     const secondaryStyleNames = userProfile.secondaryStyles
         .map(styleId => styleConfigGisele[styleId]?.name)
         .filter(Boolean)
         .join(' e ');
 
-    // Função para lidar com o CTA
     const handleCTAClick = () => {
-        // Analytics tracking
         if (typeof window !== 'undefined' && (window as any).gtag) {
             (window as any).gtag('event', 'checkout_initiated', {
                 'event_category': 'ecommerce',
@@ -139,10 +139,9 @@ export default function ResultStep({
             });
         }
 
-        // Link da oferta: 5 Passos – Vista-se de Você
         window.open('https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912', '_blank');
     };
-    // Dados para a seção de oferta (componente modular)
+
     const offerFeatures = [
         { icon: '✅', label: '31 Aulas Online (Acesso Imediato)', value: 'R$ 297,00' },
         { icon: '✅', label: 'Bônus: Guia de Visagismo Facial (PDF)', value: 'R$ 67,00' },
@@ -156,7 +155,6 @@ export default function ResultStep({
         discount: 78
     };
 
-    // Dados para a seção de prova social (componente modular)
     const testimonials = [
         {
             name: "Maria Silva",
@@ -292,24 +290,6 @@ export default function ResultStep({
                                 </div>
                             )}
 
-                            {/* Mensagem de Fechamento - Singularidade */}
-                            <div className="mb-6 p-4 bg-gradient-to-r from-[#B89B7A]/10 to-[#a08966]/10 rounded-lg text-center border border-[#B89B7A]/20">
-                                <p className="text-sm sm:text-base text-gray-800 leading-relaxed font-medium">
-                                    <span className="text-lg mr-1">✨</span>
-                                    <span className="italic">É a mistura desses elementos que torna a sua imagem única.</span>
-                                </p>
-                            </div>
-
-                            {/* Fallback para estilos secundários caso não haja scores */}
-                            {stylesWithPercentages.length === 0 && secondaryStyleNames && (
-                                <div className="mb-6 p-4 bg-[#B89B7A]/10 rounded-lg border border-[#B89B7A]/20">
-                                    <h4 className="font-semibold text-[#432818] mb-2">Estilos Complementares:</h4>
-                                    <p className="text-sm text-gray-700">
-                                        Você também tem influências de: <span className="font-medium text-[#B89B7A]">{secondaryStyleNames}</span>
-                                    </p>
-                                </div>
-                            )}
-
                             {/* Keywords */}
                             <div className="mb-6">
                                 <h4 className="font-semibold text-[#432818] mb-2 sm:mb-3">Palavras que te definem:</h4>
@@ -325,144 +305,20 @@ export default function ResultStep({
                                 </div>
                             </div>
 
-                            {/* Perguntas Persuasivas (specialTips) */}
-                            {styleConfig.specialTips && styleConfig.specialTips.length > 0 && (
-                                <div className="mb-6 p-4 bg-gradient-to-br from-[#B89B7A]/5 to-[#a08966]/5 rounded-lg border border-[#B89B7A]/30">
-                                    <h4 className="font-semibold text-[#432818] mb-3 sm:mb-4 text-base sm:text-lg">
-                                        💭 Você já se perguntou...
-                                    </h4>
-                                    <ul className="space-y-3">
-                                        {styleConfig.specialTips.map((tip: string, index: number) => (
-                                            <li key={index} className="text-sm sm:text-base text-gray-700 flex items-start leading-relaxed">
-                                                <span className="text-[#B89B7A] mr-2 text-lg flex-shrink-0">❓</span>
-                                                <span className="italic">{tip}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-
-                            {/* Texto de Transição + CTA Imediato (OTIMIZAÇÃO DE CONVERSÃO) */}
+                            {/* CTA Button */}
                             <div className="mb-8 text-center">
-                                <div className="mb-6 p-5 bg-gradient-to-r from-[#B89B7A]/10 to-[#a08966]/10 rounded-lg border border-[#B89B7A]/20">
-                                    <p className="text-base sm:text-lg text-[#432818] font-semibold mb-2">
-                                        <span className="text-2xl mr-2">💡</span>
-                                        Decodifique sua Imagem de Sucesso em 5 Passos
-                                    </p>
-                                    <p className="text-sm sm:text-base text-gray-700">
-                                        Método completo: Autoconhecimento + estratégia visual 👇
-                                    </p>
-                                </div>
-
-                                {/* CTA Principal (MOVIDO PARA CIMA - após perguntas) */}
                                 <button
                                     onClick={handleCTAClick}
-                                    className="bg-gradient-to-r from-[#B89B7A] to-[#a08966] text-white py-4 px-8 rounded-lg shadow-xl transition-all duration-300 text-lg font-bold hover:scale-105 transform w-full sm:w-auto hover:shadow-2xl"
                                     onMouseEnter={() => setIsButtonHovered(true)}
                                     onMouseLeave={() => setIsButtonHovered(false)}
+                                    className="w-full bg-[#65c83a] hover:bg-[#5ab532] text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105 shadow-xl text-lg uppercase tracking-wide"
                                 >
-                                    <span className="flex items-center justify-center gap-3">
-                                        <ShoppingCart className={`w-6 h-6 transition-transform duration-300 ${isButtonHovered ? 'scale-110 animate-bounce' : ''}`} />
-                                        Quero Destravar Minha Imagem
-                                    </span>
+                                    Ver Oferta Exclusiva
                                 </button>
                             </div>
                         </div>
                     </div>
-
-                    {/* Imagem do Guia (MOVIDA PARA BAIXO - após CTA) */}
-                    <div className="mt-6 md:mt-8 text-center">
-                        {guideImage.isLoading ? (
-                            <div className="mx-auto max-w-md w-full rounded-lg shadow-md bg-gray-100 animate-pulse flex items-center justify-center min-h-[320px] sm:min-h-[360px] md:min-h-[400px]">
-                                <span className="text-gray-500">Carregando guia...</span>
-                            </div>
-                        ) : (
-                            <div className="relative mx-auto max-w-md aspect-[4/5] rounded-lg overflow-hidden shadow-md w-[93%] sm:w-full">
-                                <img
-                                    src={guideImage.src}
-                                    alt={`Guia de Estilo ${styleConfig.name}`}
-                                    className={`w-full h-full object-cover hover:scale-105 transition-transform duration-300 ${guideImage.isFallback ? 'border-2 border-dashed border-gray-300' : ''}`}
-                                    loading="lazy"
-                                />
-                                {guideImage.isFallback && (
-                                    <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                                        <div className="text-white text-center p-4">
-                                            <p className="text-sm">📷 Imagem do guia será carregada em breve</p>
-                                            <button
-                                                onClick={guideImage.retry}
-                                                className="mt-2 px-3 py-1 bg-white bg-opacity-20 rounded text-xs hover:bg-opacity-30 transition-colors"
-                                            >
-                                                Tentar novamente
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
                 </div>
-
-                {/* ====================== SEÇÃO 2: TRANSFORMAÇÃO E VALOR ====================== */}
-                <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg mb-10 md:mb-12">
-                    <div className="text-center">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#432818] mb-5 md:mb-6 tracking-tight">
-                            Transforme Sua Imagem, <span className="text-[#B89B7A]">Revele Sua Essência</span>
-                        </h2>
-                        <p className="text-gray-700 mb-6 md:mb-8 leading-relaxed max-w-3xl mx-auto text-base sm:text-lg">
-                            Seu estilo é uma ferramenta poderosa. Não se trata apenas de
-                            roupas, mas de comunicar quem você é e aspira ser. Com a
-                            orientação certa, você pode:
-                        </p>
-
-                        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 max-w-4xl mx-auto mb-6 md:mb-8">
-                            {[
-                                { text: "Construir looks com intenção e identidade visual", icon: "🎯" },
-                                { text: "Utilizar cores, modelagens e tecidos a seu favor", icon: "🎨" },
-                                { text: "Alinhar sua imagem aos seus objetivos profissionais", icon: "💼" },
-                                { text: "Desenvolver um guarda-roupa funcional e inteligente", icon: "👗" }
-                            ].map((item, idx) => (
-                                <div key={idx} className="flex items-center text-left p-4 bg-[#B89B7A]/5 rounded-lg">
-                                    <span className="text-2xl mr-4">{item.icon}</span>
-                                    <span className="text-gray-700">{item.text}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* ====================== SEÇÃO 3: PROVA SOCIAL ====================== */}
-                <SocialProofSection
-                    title="Veja os Resultados de Quem Já Transformou Sua Imagem"
-                    testimonials={testimonials}
-                    stats={[]} // Sem stats por enquanto, apenas testimonials
-                />
-
-                {/* ====================== SEÇÃO 4: OFERTA E PREÇO ====================== */}
-                <OfferSection
-                    title="Método 5 Passos – Vista-se de Você"
-                    subtitle="Por Gisele Galvão | Consultora de Imagem e Branding Pessoal"
-                    description="Autoconhecimento + estratégia visual para transformar sua imagem"
-                    features={offerFeatures}
-                    pricing={offerPricing}
-                    cta={{
-                        text: "✨ Começar Minha Transformação Agora",
-                        onClick: handleCTAClick
-                    }}
-                    countdown={{
-                        enabled: false // Removido countdown - usando mensagem estática
-                    }}
-                    urgencyNote="⚡ Esta é uma oferta exclusiva para você que completou o diagnóstico"
-                    returnPriceNote="O preço volta para R$ 447,00 quando você sair desta página"
-                />
-
-                {/* ====================== SEÇÃO 5: GARANTIA ====================== */}
-                <GuaranteeSection
-                    days={7}
-                    title="Garantia de Satisfação Total"
-                    description="Você tem 7 dias para testar o guia. Se não ficar 100% satisfeita, devolvemos seu investimento sem perguntas."
-                    urgencyNote="⚡ Esta é uma oferta exclusiva para você que completou o diagnóstico"
-                    returnPriceNote="O preço volta para R$ 447,00 quando você sair desta página"
-                />
             </div>
         </div>
     );

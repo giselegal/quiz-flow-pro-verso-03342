@@ -5,13 +5,9 @@
     "name": "Step step-13",
     "description": "strategic-question step for quiz",
     "category": "quiz-strategic-question",
-    "tags": [
-      "quiz",
-      "style",
-      "strategic-question"
-    ],
+    "tags": ["quiz", "style", "strategic-question"],
     "createdAt": "2025-10-11T10:44:14.173Z",
-    "updatedAt": "2025-10-11T22:09:33.847Z"
+    "updatedAt": "2025-10-16T00:00:00.000Z"
   },
   "layout": {
     "containerWidth": "full",
@@ -21,34 +17,40 @@
   },
   "validation": {},
   "analytics": {
-    "events": [
-      "page_view",
-      "step_completed"
-    ],
+    "events": ["page_view", "step_completed"],
     "trackingId": "step-13",
     "utmParams": true,
-    "customEvents": [
-      "component_mounted",
-      "user_interaction"
-    ]
+    "customEvents": ["component_mounted", "user_interaction"]
   },
   "blocks": [
     {
-      "id": "step13-text-inline-1",
+      "id": "step13-icon",
       "type": "text-inline",
       "position": 0,
       "properties": {
-        "content": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
-        "fontSize": "text-xl",
-        "fontWeight": "font-bold"
+        "content": "💭",
+        "fontSize": "text-5xl",
+        "align": "center"
       }
     },
     {
-      "id": "step13-form-input-1",
-      "type": "form-input",
+      "id": "step13-question",
+      "type": "text-inline",
       "position": 1,
       "properties": {
-        "placeholder": "",
+        "content": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold",
+        "color": "#deac6d",
+        "align": "center"
+      }
+    },
+    {
+      "id": "step13-form-input",
+      "type": "form-input",
+      "position": 2,
+      "properties": {
+        "placeholder": "Sua resposta...",
         "inputType": "text"
       }
     }
