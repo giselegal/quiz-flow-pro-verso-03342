@@ -65,10 +65,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const isPreviewMode = mode === 'preview';
 
   // Adaptar dados do step para o formato esperado dos componentes
-  // Preview: forçar fonte canônica (production-only). Edit: merge (metadata + produção)
-  const stepData = isPreviewMode
-    ? adaptStepData(step, { source: 'production-only' })
-    : adaptStepData(step);
+  // Usar a mesma fonte (merge) em ambos os modos para manter consistência
+  const stepData = adaptStepData(step);
 
   // Provider opcional do Editor para seleção/persistência de blocos reais
   const editor = useEditor({ optional: true } as any);
