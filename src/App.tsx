@@ -54,7 +54,8 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 
 // 🚀 EDITOR CONFIGURATION (Sprint 1 - Consolidated)
-import QuizModularProductionEditor from '@/config/editorRoutes.config';
+import QuizModularProductionEditor from './components/editor/quiz/QuizModularProductionEditor';
+const EditorSimplified = lazy(() => import('./pages/EditorSimplified'));
 
 
 // 🧪 PÁGINAS DE QUIZ
@@ -194,6 +195,14 @@ function AppCore() {
                                             </div>
                                         </EditorErrorBoundary>
                                     )}
+                                </Route>
+
+                                <Route path="/editor-simple">
+                                    <EditorErrorBoundary>
+                                        <Suspense fallback={<div className="p-8">Carregando editor simplificado...</div>}>
+                                            <EditorSimplified />
+                                        </Suspense>
+                                    </EditorErrorBoundary>
                                 </Route>
 
                                 <Route path="/editor">
