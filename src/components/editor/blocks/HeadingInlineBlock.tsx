@@ -56,6 +56,20 @@ const getMarginClass = (
   return `${prefix}-32`; // Máximo suportado
 };
 
+// Normaliza o nível do heading para tags válidas h1..h6
+function normalizeHeadingLevel(lv: unknown): 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' {
+  if (typeof lv === 'number' && Number.isFinite(lv)) {
+    const n = Math.min(6, Math.max(1, Math.floor(lv)));
+    return (`h${n}` as unknown) as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  }
+  if (typeof lv === 'string') {
+    const t = lv.trim().toLowerCase();
+    if (/^h[1-6]$/.test(t)) return t as any;
+    if (/^[1-6]$/.test(t)) return (`h${t}`) as any;
+  }
+  return 'h2';
+}
+
 const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
@@ -85,9 +99,12 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
     marginRight = 0,
   } = block?.properties || {};
 
-  // 🛡️ GARANTIR QUE CONTENT É STRING
-  const safeContent = typeof content === 'string' ? content : String(content || 'Título Principal');
-
+// 🛡️ GARANTIR QUE CONTENT É STRING E LER DE DIFERENTES FONTES
+const rawContent = (block as any)?.content?.text ?? (block as any)?.content?.content ?? content ?? (block as any)?.properties?.text ?? '';
+const safeContent =
+  typeof rawContent === 'string' || typeof rawContent === 'number'
+    ? String(rawContent)
+    : 'Título Principal';
   // Tamanhos responsivos por nível
   const levelClasses = {
     h1: 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl',
@@ -125,7 +142,8 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
     full: 'max-w-full',
   };
 
-  const HeadingTag = level as keyof JSX.IntrinsicElements;
+const tagName = normalizeHeadingLevel(level as any);
+const HeadingTag = tagName as keyof JSX.IntrinsicElements;
 
   return (
     <div
@@ -149,7 +167,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
       <HeadingTag
         className={cn(
           // Tamanho responsivo
-          levelClasses[level as keyof typeof levelClasses],
+          levelClasses[tagName as keyof typeof levelClasses],
           // Alinhamento
           textAlignClasses[textAlign as keyof typeof textAlignClasses],
           // Peso da fonte
