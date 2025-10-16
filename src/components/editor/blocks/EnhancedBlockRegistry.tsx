@@ -15,6 +15,7 @@ import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBloc
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
 import SalesHeroBlock from '@/components/editor/blocks/SalesHeroBlock';
 import DecorativeBarInlineBlock from '@/components/editor/blocks/DecorativeBarInlineBlock';
+import HeadingInlineBlock from '@/components/editor/blocks/HeadingInlineBlock';
 import {
     Step20ResultHeaderBlock,
     Step20StyleRevealBlock,
@@ -172,11 +173,11 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'cta-inline': ButtonInlineBlock,
 
     // ✅ BLOCOS UNIVERSAIS
-    heading: lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
-    'heading-inline': lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
+    heading: HeadingInlineBlock,
+    'heading-inline': HeadingInlineBlock,
     // Aliases para compatibilidade com templates antigos
-    headline: lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
-    'headline-inline': lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
+    headline: HeadingInlineBlock,
+    'headline-inline': HeadingInlineBlock,
     'image-display-inline': lazy(() => import('@/components/editor/blocks/ImageDisplayInline')),
     'lead-form': lazy(() => import('@/components/editor/blocks/LeadFormBlock')),
     'connected-lead-form': lazy(() => import('@/components/editor/blocks/ConnectedLeadFormBlock')),
