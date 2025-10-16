@@ -1,18 +1,26 @@
-import React, { Suspense, useState, useMemo } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React, { Suspense, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
+import { Eye, Edit3, Smartphone, Tablet, Monitor } from 'lucide-react';
 
 import { BlockComponent, EditableQuizStep } from '../types';
+import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeContext';
+import { IsolatedPreview } from '../canvas/IsolatedPreview';
 
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
 
 export interface CanvasAreaProps {
-    activeTab: string;
-    onTabChange: (tab: string) => void;
+    /**
+     * @deprecated Use viewMode from EditorModeContext instead
+     */
+    activeTab?: string;
+    /**
+     * @deprecated Use EditorModeContext actions instead
+     */
+    onTabChange?: (tab: string) => void;
     steps: EditableQuizStep[];
     selectedStep?: EditableQuizStep;
     headerConfig: any;
@@ -30,15 +38,15 @@ export interface CanvasAreaProps {
     setTargetStepId: (id: string) => void;
     setDuplicateModalOpen: (open: boolean) => void;
     activeId: string | null; // usado para desativar virtualização durante drag
-    previewNode: React.ReactNode;
+    previewNode?: React.ReactNode;
     FixedProgressHeader: React.ComponentType<{ config: any; steps: EditableQuizStep[]; currentStepId: string }>;
-    StyleResultCard: React.ComponentType<any>;
-    OfferMap: React.ComponentType<any>;
+    StyleResultCard?: React.ComponentType<any>;
+    OfferMap?: React.ComponentType<any>;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
-    activeTab,
-    onTabChange,
+    activeTab, // deprecated
+    onTabChange, // deprecated
     steps,
     selectedStep,
     headerConfig,
@@ -60,11 +68,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     StyleResultCard,
     OfferMap,
 }) => {
-    console.log('🔍 CanvasArea render - selectedStep:', selectedStep?.id, 'activeTab:', activeTab);
-
-    // Controle de preview responsivo
-    const [previewSize, setPreviewSize] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
-    console.log('✅ Hook 1: useState(previewSize)');
+    // 🎯 USAR EDITOR MODE CONTEXT ao invés de activeTab
+    const { viewMode, setViewMode, isEditMode, isPreviewMode } = useEditorMode();
+    const { previewDevice, setPreviewDevice } = useEditorMode();
+    
+    console.log('🔍 CanvasArea render - selectedStep:', selectedStep?.id, 'viewMode:', viewMode);
+    
+    // 🚨 DEPRECATION WARNING para activeTab/onTabChange
+    if (activeTab !== undefined && process.env.NODE_ENV === 'development') {
+        console.warn(
+            '⚠️ DEPRECATION: activeTab/onTabChange estão deprecated.\n' +
+            'Use EditorModeContext (viewMode) ao invés.'
+        );
+    }
 
     // Usar useMemo para calcular rootBlocks uma vez
     const rootBlocks = useMemo(() => {
@@ -89,15 +105,68 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     console.log('✅ Hooks completos - visible:', visible.length, 'total:', rootBlocks.length);
 
     return (
-        <div className="flex-1 bg-gray-100 flex flex-col overflow-y-auto">
-            <Tabs value={activeTab} onValueChange={onTabChange} className="flex-1 flex flex-col">
-                <div className="px-4 py-2 bg-white border-b">
-                    <TabsList>
-                        <TabsTrigger value="canvas" data-testid="tab-trigger-canvas">Canvas</TabsTrigger>
-                        <TabsTrigger value="preview" data-testid="tab-trigger-preview">Preview</TabsTrigger>
-                    </TabsList>
+        <div className="flex-1 bg-gray-100 flex flex-col overflow-hidden">
+            {/* 🎯 CANVAS HEADER - Controles de modo e device */}
+            <div className="px-4 py-2 bg-white border-b flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <Button
+                        onClick={() => setViewMode('edit')}
+                        variant={isEditMode() ? 'default' : 'outline'}
+                        size="sm"
+                        className="gap-2"
+                    >
+                        <Edit3 className="w-4 h-4" />
+                        Editor
+                    </Button>
+                    <Button
+                        onClick={() => setViewMode('preview')}
+                        variant={isPreviewMode() ? 'default' : 'outline'}
+                        size="sm"
+                        className="gap-2"
+                    >
+                        <Eye className="w-4 h-4" />
+                        Preview
+                    </Button>
                 </div>
-                <TabsContent value="canvas" className="flex-1 overflow-visible p-4 m-0" data-testid="tab-content-canvas">
+                
+                {/* 🎯 DEVICE CONTROLS - Apenas em modo preview */}
+                {isPreviewMode() && (
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground mr-2">Device:</span>
+                        <Button
+                            onClick={() => setPreviewDevice('mobile')}
+                            variant={previewDevice === 'mobile' ? 'default' : 'outline'}
+                            size="sm"
+                            className="gap-1"
+                        >
+                            <Smartphone className="w-3 h-3" />
+                        </Button>
+                        <Button
+                            onClick={() => setPreviewDevice('tablet')}
+                            variant={previewDevice === 'tablet' ? 'default' : 'outline'}
+                            size="sm"
+                            className="gap-1"
+                        >
+                            <Tablet className="w-3 h-3" />
+                        </Button>
+                        <Button
+                            onClick={() => setPreviewDevice('desktop')}
+                            variant={previewDevice === 'desktop' ? 'default' : 'outline'}
+                            size="sm"
+                            className="gap-1"
+                        >
+                            <Monitor className="w-3 h-3" />
+                        </Button>
+                    </div>
+                )}
+            </div>
+
+            {/* 🎯 EDIT MODE - Sempre montado, visível apenas quando isEditMode */}
+            <div 
+                className="flex-1 overflow-auto p-4"
+                style={{ display: isEditMode() ? 'block' : 'none' }}
+                data-testid="canvas-edit-mode"
+            >
                     {selectedStep ? (
                         <Card className="border-0 shadow-none bg-transparent">
                             <CardContent>
@@ -148,55 +217,40 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 )}
                             </CardContent>
                         </Card>
+                ) : (
+                    <div className="flex items-center justify-center h-full text-muted-foreground">
+                        Selecione uma etapa para editar
+                    </div>
+                )}
+            </div>
+
+            {/* 🎯 PREVIEW MODE - Sempre montado, visível apenas quando isPreviewMode */}
+            <div 
+                className="flex-1 overflow-hidden"
+                style={{ display: isPreviewMode() ? 'flex' : 'none' }}
+                data-testid="canvas-preview-mode"
+            >
+                <Suspense fallback={
+                    <div className="flex items-center justify-center w-full h-full">
+                        <div className="text-sm text-muted-foreground">Carregando preview...</div>
+                    </div>
+                }>
+                    {selectedStep && selectedStep.blocks && selectedStep.blocks.length > 0 ? (
+                        <IsolatedPreview 
+                            blocks={selectedStep.blocks as any}
+                            funnelId="editor-preview"
+                            className="w-full h-full"
+                        />
                     ) : (
-                        <div className="flex items-center justify-center h-full text-muted-foreground">Selecione uma etapa para editar</div>
-                    )}
-                </TabsContent>
-                {activeTab === 'preview' && (
-                    <TabsContent
-                        value="preview"
-                        className="flex-1 m-0 p-0"
-                        data-testid="tab-content-preview"
-                    >
-                        {/* Barra de controle de tamanho do preview */}
-                        <div className="flex items-center gap-2 px-4 py-2 border-b bg-white">
-                            <span className="text-xs text-muted-foreground">Modo preview:</span>
-                            <Button onClick={() => setPreviewSize('mobile')} variant={previewSize === 'mobile' ? 'default' : 'outline'} size="sm" aria-label="Preview Mobile">
-                                📱
-                            </Button>
-                            <Button onClick={() => setPreviewSize('tablet')} variant={previewSize === 'tablet' ? 'default' : 'outline'} size="sm" aria-label="Preview Tablet">
-                                💊
-                            </Button>
-                            <Button onClick={() => setPreviewSize('desktop')} variant={previewSize === 'desktop' ? 'default' : 'outline'} size="sm" aria-label="Preview Desktop">
-                                🖥️
-                            </Button>
-                        </div>
-                        {/* Área do preview com classes condicionais */}
-                        <div className="flex-1 overflow-auto p-4">
-                            <div className="w-full h-full flex items-start justify-center">
-                                <div
-                                    className={
-                                        [
-                                            'w-full',
-                                            previewSize === 'mobile' && 'max-w-[375px] border rounded-md shadow-sm',
-                                            previewSize === 'tablet' && 'max-w-[768px] border rounded-md shadow-sm',
-                                            previewSize === 'desktop' && 'max-w-full',
-                                            'bg-white'
-                                        ]
-                                            .filter(Boolean)
-                                            .join(' ')
-                                    }
-                                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                                >
-                                    {previewNode || (
-                                        <p className="text-xs text-muted-foreground italic p-6 text-center">Preview indisponível</p>
-                                    )}
-                                </div>
+                        <div className="flex items-center justify-center w-full h-full">
+                            <div className="text-center text-muted-foreground">
+                                <p className="text-sm">Preview vazio</p>
+                                <p className="text-xs mt-1">Adicione blocos no editor</p>
                             </div>
                         </div>
-                    </TabsContent>
-                )}
-            </Tabs>
+                    )}
+                </Suspense>
+            </div>
         </div>
     );
 };
