@@ -9,6 +9,8 @@ import React, { lazy, Suspense, memo, useMemo, useCallback } from 'react';
 import { EditableQuizStep } from '../types';
 import { adaptStepData } from '@/utils/StepDataAdapter';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { computeResult } from '@/utils/result/computeResult';
+import type { QuizScores } from '@/hooks/useQuizState';
 
 // Produção (preview)
 const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
@@ -67,6 +69,23 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   // Adaptar dados do step para o formato esperado dos componentes
   // Usar a mesma fonte (merge) em ambos os modos para manter consistência
   const stepData = adaptStepData(step);
+
+  // Helper: extrair respostas salvas no preview (answers_<stepId> => string[])
+  const getPreviewAnswers = useCallback((): Record<string, string[]> => {
+    const map: Record<string, string[]> = {};
+    try {
+      Object.keys(sessionData || {}).forEach((k) => {
+        if (k.startsWith('answers_')) {
+          const stepId = k.replace(/^answers_/, '');
+          const arr = sessionData[k];
+          if (Array.isArray(arr) && arr.length > 0) {
+            map[stepId] = arr.filter(Boolean);
+          }
+        }
+      });
+    } catch { }
+    return map;
+  }, [sessionData]);
 
   // Provider opcional do Editor para seleção/persistência de blocos reais
   const editor = useEditor({ optional: true } as any);
@@ -340,15 +359,28 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             />
           );
         }
+        // Preview: calcular resultado real a partir das respostas atuais
+        const answers = getPreviewAnswers();
+        const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers });
+        const typedScores: QuizScores = {
+          natural: (scores as any).natural || 0,
+          classico: (scores as any).classico || 0,
+          contemporaneo: (scores as any).contemporaneo || 0,
+          elegante: (scores as any).elegante || 0,
+          romantico: (scores as any).romantico || 0,
+          sexy: (scores as any).sexy || 0,
+          dramatico: (scores as any).dramatico || 0,
+          criativo: (scores as any).criativo || 0,
+        };
         return (
           <ResultStep
             data={stepData as any}
             userProfile={{
               userName: sessionData.userName || 'Visitante',
-              resultStyle: sessionData.resultStyle || 'natural',
-              secondaryStyles: sessionData.secondaryStyles || [],
+              resultStyle: primaryStyleId || sessionData.resultStyle || 'natural',
+              secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : (sessionData.secondaryStyles || []),
             }}
-            scores={sessionData.scores}
+            scores={typedScores}
           />
         );
       }
@@ -368,12 +400,15 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             />
           );
         }
+        // Preview: alinhar oferta ao resultado calculado atual
+        const answers = getPreviewAnswers();
+        const { primaryStyleId, secondaryStyleIds } = computeResult({ answers });
         return (
           <OfferStep
             data={stepData as any}
             userProfile={{
               userName: sessionData.userName || 'Visitante',
-              resultStyle: sessionData.resultStyle || 'natural',
+              resultStyle: primaryStyleId || sessionData.resultStyle || 'natural',
             }}
             offerKey={sessionData.offerKey || 'default'}
           />
