@@ -68,8 +68,41 @@ export default function ModularStrategicQuestionStep({
 
     // ===== DnD - Reordenação dos blocos =====
     const stepId = data?.id || 'step-strategic-question';
-    const DEFAULT_ORDER = ['question-number', 'question-text', 'question-instructions', 'question-options', 'question-button'];
+    const DEFAULT_ORDER = ['question-number', 'question-text', 'question-options', 'question-button'];
     const initialOrder: string[] = (data?.metadata?.blockOrder && Array.isArray(data.metadata.blockOrder))
+        ? data.metadata.blockOrder
+        : DEFAULT_ORDER;
+    const [order, setOrder] = React.useState<string[]>(initialOrder);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+    );
+
+    const handleDragEnd = (event: any) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+        const oldIndex = order.indexOf(String(active.id));
+        const newIndex = order.indexOf(String(over.id));
+        const newOrder = arrayMove(order, oldIndex, newIndex);
+        setOrder(newOrder);
+        onBlocksReorder?.(stepId, newOrder);
+        onEdit?.('blockOrder', newOrder);
+    };
+
+    const SortableBlock: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+        const style = {
+            transform: CSS.Transform.toString(transform),
+            transition,
+            opacity: isDragging ? 0.7 : 1,
+        } as React.CSSProperties;
+        return (
+            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+                {children}
+            </div>
+        );
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
             {/* BLOCO 1: Barra de Progresso */}
@@ -164,7 +197,7 @@ export default function ModularStrategicQuestionStep({
                                                         <button
                                                             key={option.id}
                                                             onClick={() => handleOptionClick(option.id)}
-                                                            className={`p-4 border-2 rounded-lg transition-all duration-200 hover:border-[#deac6d] hover:shadow-md ${currentAnswer === option.id
+                                                            className={`p-4 border-2 rounded-lg transition-all duração-200 hover:border-[#deac6d] hover:shadow-md ${currentAnswer === option.id
                                                                 ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg'
                                                                 : 'border-gray-200'
                                                                 }`}
@@ -217,38 +250,5 @@ export default function ModularStrategicQuestionStep({
                 </div>
             </main>
         </div>
-    );
-}
-if (blockId === 'question-button') {
-    return (
-        <SortableBlock key={blockId} id={blockId}>
-            <SelectableBlock
-                blockId="question-button"
-                isSelected={selectedBlockId === 'question-button'}
-                isEditable={isEditable}
-                onSelect={() => onBlockSelect?.('question-button')}
-                blockType="Botão de Ação"
-                blockIndex={index + 1}
-                onOpenProperties={() => onOpenProperties?.('question-button')}
-                isDraggable={true}
-            >
-                <button
-                    disabled={!canProceed}
-                    className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${canProceed
-                        ? 'bg-[#deac6d] text-white animate-pulse'
-                        : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
-                        }`}
-                >
-                    {canProceed ? 'Avançando...' : 'Próxima'}
-                </button>
-            </SelectableBlock>
-        </SortableBlock>
-    );
-}
-return null;
-                    })}
-                </SortableContext >
-            </DndContext >
-        </div >
     );
 }
