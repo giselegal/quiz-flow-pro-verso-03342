@@ -1,26 +1,35 @@
 /**
- * 🎯 UNIFIED STEP RENDERER - MODULARIZAÇÃO FASE 2
+ * 🎯 UNIFIED STEP RENDERER v2.0 - MODULARIZAÇÃO COMPLETA
  * 
- * Renderiza steps usando os componentes reais de produção:
- * - IntroStep, QuestionStep, StrategicQuestionStep, TransitionStep, ResultStep, OfferStep
+ * Renderiza steps usando componentes reais de produção com StepDataAdapter.
  * 
- * WYSIWYG 100% Real: Edit e Preview renderizam EXATAMENTE os mesmos componentes
+ * FEATURES v2.0:
+ * - Adapter robusto com fallbacks (StepDataAdapter)
+ * - Lazy loading para performance
+ * - 100% WYSIWYG entre edit e preview
  */
 
-import React, { memo } from 'react';
+import React, { lazy, Suspense, memo } from 'react';
 import { EditableQuizStep } from '../types';
+import { adaptStepData } from '@/utils/StepDataAdapter';
 
-// Componentes reais de produção
-import IntroStep from '@/components/quiz/IntroStep';
-import QuestionStep from '@/components/quiz/QuestionStep';
-import StrategicQuestionStep from '@/components/quiz/StrategicQuestionStep';
-import TransitionStep from '@/components/quiz/TransitionStep';
-import ResultStep from '@/components/quiz/ResultStep';
-import OfferStep from '@/components/quiz/OfferStep';
+// Lazy loading de componentes
+const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
+const QuestionStep = lazy(() => import('@/components/quiz/QuestionStep'));
+const StrategicQuestionStep = lazy(() => import('@/components/quiz/StrategicQuestionStep'));
+const TransitionStep = lazy(() => import('@/components/quiz/TransitionStep'));
+const ResultStep = lazy(() => import('@/components/quiz/ResultStep'));
+const OfferStep = lazy(() => import('@/components/quiz/OfferStep'));
 
 // Ícones para overlay de edição
 import { GripVertical, Trash2, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+const StepLoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  </div>
+);
 
 export interface UnifiedStepRendererProps {
   step: EditableQuizStep;
@@ -37,32 +46,6 @@ export interface UnifiedStepRendererProps {
   onUpdateSessionData?: (key: string, value: any) => void;
 }
 
-/**
- * Extrai dados necessários para cada tipo de step a partir do EditableQuizStep
- */
-const extractStepData = (step: EditableQuizStep) => {
-  // Tentar extrair dos metadata primeiro, depois fallback para step direto
-  const metadata = (step as any).metadata || {};
-  
-  return {
-    type: step.type,
-    title: metadata.title || step.title,
-    questionNumber: metadata.questionNumber,
-    questionText: metadata.questionText || metadata.question,
-    formQuestion: metadata.formQuestion,
-    placeholder: metadata.placeholder,
-    buttonText: metadata.buttonText,
-    text: metadata.text || metadata.description,
-    image: metadata.image || metadata.imageUrl,
-    requiredSelections: metadata.requiredSelections || 1,
-    options: metadata.options || [],
-    nextStep: step.nextStep,
-    offerMap: (step as any).offerMap,
-    showContinueButton: metadata.showContinueButton,
-    continueButtonText: metadata.continueButtonText,
-    duration: metadata.duration,
-  };
-};
 
 const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   step,
@@ -77,7 +60,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const isEditMode = mode === 'edit';
   const isPreviewMode = mode === 'preview';
 
-  const stepData = extractStepData(step);
+  // Usar StepDataAdapter para normalização robusta
+  const stepData = adaptStepData(step);
 
   // Renderizar o componente correto baseado no tipo
   const renderStepComponent = () => {
@@ -224,18 +208,22 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
           {step.type}
         </div>
 
-        {/* Componente real */}
+        {/* Componente real com Suspense */}
         <div className="pointer-events-none">
-          {renderStepComponent()}
+          <Suspense fallback={<StepLoadingFallback />}>
+            {renderStepComponent()}
+          </Suspense>
         </div>
       </div>
     );
   }
 
-  // PREVIEW MODE: Step totalmente interativo
+  // PREVIEW MODE: Step totalmente interativo com Suspense
   return (
     <div data-step-id={step.id}>
-      {renderStepComponent()}
+      <Suspense fallback={<StepLoadingFallback />}>
+        {renderStepComponent()}
+      </Suspense>
     </div>
   );
 };
