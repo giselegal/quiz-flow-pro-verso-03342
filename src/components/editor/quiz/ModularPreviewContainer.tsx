@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useQuizState } from '@/hooks/useQuizState';
 import { UnifiedStepRenderer as ModularUnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
@@ -27,6 +27,22 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
 
     // Detecta se já existe um EditorProviderUnified acima
     const maybeEditor = useEditorOptional?.();
+
+    // Sincroniza o provider unificado com a etapa atual do preview e garante que os blocos sejam carregados
+    useEffect(() => {
+        if (!maybeEditor?.actions) return;
+        const current = state.currentStep;
+        const numeric = parseInt(current.replace('step-', '')) || 1;
+        try {
+            maybeEditor.actions.setCurrentStep(numeric);
+            // Garante que templates/blocos modulares da etapa sejam carregados no provider
+            maybeEditor.actions.ensureStepLoaded(current).catch((e: any) => {
+                console.warn('[ModularPreviewContainer] ensureStepLoaded falhou:', e?.message || e);
+            });
+        } catch (e) {
+            console.warn('[ModularPreviewContainer] sync step no provider falhou:', e);
+        }
+    }, [state.currentStep, maybeEditor?.actions]);
 
     const sessionData = useMemo(() => {
         const map: Record<string, any> = {
