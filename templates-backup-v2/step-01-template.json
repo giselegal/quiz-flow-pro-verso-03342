@@ -2,16 +2,12 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-01",
-    "name": "<span style=\"color: #B89B7A; font-weight: 700;\" cl",
-    "description": "intro step for quiz",
+    "name": "Introdução - Quiz de Estilo",
+    "description": "Etapa inicial do quiz para captura de nome",
     "category": "quiz-intro",
-    "tags": [
-      "quiz",
-      "style",
-      "intro"
-    ],
+    "tags": ["quiz", "style", "intro"],
     "createdAt": "2025-10-11T10:44:14.169Z",
-    "updatedAt": "2025-10-11T22:09:33.840Z"
+    "updatedAt": "2025-10-16T05:15:00.000Z"
   },
   "layout": {
     "containerWidth": "full",
@@ -29,66 +25,97 @@
     }
   },
   "analytics": {
-    "events": [
-      "page_view",
-      "step_completed"
-    ],
+    "events": ["page_view", "step_completed"],
     "trackingId": "step-01",
     "utmParams": true,
-    "customEvents": [
-      "component_mounted",
-      "user_interaction"
-    ]
+    "customEvents": ["component_mounted", "user_interaction"]
   },
   "blocks": [
     {
-      "id": "step01-quiz-intro-header-1",
-      "type": "quiz-intro-header",
+      "id": "intro-logo",
+      "type": "logo-block",
       "position": 0,
       "properties": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão",
-        "showProgress": false
+        "logoUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo%20GG-6w33qkEHxzZCbYI93W2BxxqxbFNr78.png",
+        "height": 55,
+        "width": 132,
+        "showDecorator": true,
+        "decoratorColor": "#B89B7A",
+        "decoratorHeight": 2,
+        "alt": "Gisele Galvão Logo"
       }
     },
     {
-      "id": "step01-text-inline-1",
-      "type": "text-inline",
+      "id": "intro-headline",
+      "type": "heading-inline",
       "position": 1,
       "properties": {
-        "content": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você.</span>",
-        "fontSize": "text-2xl",
+        "html": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você.</span>",
+        "fontSize": "text-2xl sm:text-3xl",
         "fontWeight": "font-bold",
+        "fontFamily": "playfair-display",
         "textAlign": "text-center"
       }
     },
     {
-      "id": "step01-image-display-inline-1",
+      "id": "intro-image",
       "type": "image-display-inline",
       "position": 2,
       "properties": {
         "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
-        "alt": "Quiz image"
+        "alt": "Descubra seu estilo pessoal",
+        "aspectRatio": "1.47",
+        "maxWidth": "300px",
+        "rounded": true,
+        "shadow": false
       }
     },
     {
-      "id": "step01-form-input-1",
-      "type": "form-input",
+      "id": "intro-description",
+      "type": "text-inline",
       "position": 3,
+      "properties": {
+        "content": "Em poucos minutos, descubra seu <strong style=\"color: #B89B7A;\">Estilo Predominante</strong> e aprenda a criar looks perfeitos para o seu corpo e ocasiões do dia a dia.",
+        "fontSize": "text-sm sm:text-base",
+        "textAlign": "text-center",
+        "textColor": "text-gray-700"
+      }
+    },
+    {
+      "id": "intro-form",
+      "type": "form-input",
+      "position": 4,
       "properties": {
         "label": "Como posso te chamar?",
         "placeholder": "Digite seu primeiro nome aqui...",
-        "inputType": "text",
-        "required": true
+        "fieldType": "text",
+        "required": true,
+        "fieldName": "userName"
       }
     },
     {
-      "id": "step01-button-inline-1",
+      "id": "intro-button",
       "type": "button-inline",
-      "position": 4,
+      "position": 5,
       "properties": {
         "text": "Quero Descobrir meu Estilo Agora!",
-        "variant": "primary"
+        "variant": "primary",
+        "size": "lg",
+        "fullWidth": true,
+        "bgColor": "#B89B7A",
+        "hoverBgColor": "#A1835D",
+        "textColor": "#ffffff"
+      }
+    },
+    {
+      "id": "intro-footer",
+      "type": "text-inline",
+      "position": 6,
+      "properties": {
+        "content": "© 2025 Gisele Galvão - Todos os direitos reservados",
+        "fontSize": "text-xs",
+        "textAlign": "text-center",
+        "textColor": "text-gray-500"
       }
     }
   ]
