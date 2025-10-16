@@ -178,6 +178,20 @@ export type BlockType =
   | 'step20-personalized-offer'
   | 'step20-complete-template'
   | 'price-display'
+  
+  // Result Page Block Types (for step-20 sections conversion)
+  | 'result-congrats'
+  | 'result-title'
+  | 'result-style-name'
+  | 'result-image'
+  | 'result-text'
+  | 'result-description'
+  | 'result-progress-bars'
+  | 'result-keywords'
+  | 'result-questions'
+  | 'result-cta'
+  | 'result-section-title'
+  | 'result-benefits'
 
   // AI Integration Components (NEW)
   | 'fashion-ai-generator'
