@@ -5,9 +5,10 @@
  * Em modo preview renderiza os componentes de produção com interatividade real.
  */
 
-import React, { lazy, Suspense, memo } from 'react';
+import React, { lazy, Suspense, memo, useMemo, useCallback } from 'react';
 import { EditableQuizStep } from '../types';
 import { adaptStepData } from '@/utils/StepDataAdapter';
+import { useEditor } from '@/components/editor/EditorProviderUnified';
 
 // Produção (preview)
 const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
@@ -66,6 +67,58 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   // Adaptar dados do step para o formato esperado dos componentes
   const stepData = adaptStepData(step);
 
+  // Provider opcional do Editor para seleção/persistência de blocos reais
+  const editor = useEditor({ optional: true } as any);
+  const stepKey = useMemo(() => step?.id || '', [step?.id]);
+
+  // Helper: procurar primeiro bloco do tipo desejado no provider
+  const findBlockIdByTypes = useCallback((types: string[]): string | undefined => {
+    try {
+      const blocks: any[] = editor?.state?.stepBlocks?.[stepKey] || [];
+      const lowerTypes = types.map(t => t.toLowerCase());
+      const found = blocks.find(b => lowerTypes.includes(String(b.type || '').toLowerCase()));
+      return found?.id;
+    } catch {
+      return undefined;
+    }
+  }, [editor?.state?.stepBlocks, stepKey]);
+
+  // Mapear IDs lógicos dos blocos para tipos reais do registry
+  const resolveRealBlockId = useCallback((logicalId: string): string | undefined => {
+    switch (logicalId) {
+      case 'question-number':
+      case 'question-text': {
+        // Cabeçalho de pergunta concentra campos de número/texto
+        return findBlockIdByTypes(['quiz-question-header']);
+      }
+      case 'question-instructions': {
+        // Tentativas comuns para instruções; fallback no header
+        return (
+          findBlockIdByTypes(['text-inline', 'paragraph', 'quiz-question-header'])
+          || undefined
+        );
+      }
+      case 'question-options': {
+        // Preferir quiz-options; fallback options-grid
+        return findBlockIdByTypes(['quiz-options', 'options-grid']);
+      }
+      case 'question-button': {
+        // Navegação do quiz (botões próximo/anterior)
+        return findBlockIdByTypes(['quiz-navigation', 'button']);
+      }
+      default:
+        return undefined;
+    }
+  }, [findBlockIdByTypes]);
+
+  // Abrir painel de propriedades: selecionar bloco real via provider
+  const handleOpenProperties = useCallback((logicalBlockId: string) => {
+    const realId = resolveRealBlockId(logicalBlockId);
+    if (realId && editor?.actions?.setSelectedBlockId) {
+      editor.actions.setSelectedBlockId(realId);
+    }
+  }, [editor?.actions, resolveRealBlockId]);
+
   // Callbacks para persistência (no futuro: integrar com EditorProvider)
   const handleEdit = (field: string, value: any) => {
     // Patch dentro de metadata por padrão
@@ -108,6 +161,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
               currentAnswers={sessionData[`answers_${step.id}`] || []}
               onEdit={handleEdit}
               onBlocksReorder={handleBlocksReorder}
+              onOpenProperties={handleOpenProperties}
             />
           );
         }
@@ -133,6 +187,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
               currentAnswer={sessionData[`answer_${step.id}`] || ''}
               onEdit={handleEdit}
               onBlocksReorder={handleBlocksReorder}
+              onOpenProperties={handleOpenProperties}
             />
           );
         }
