@@ -137,160 +137,160 @@ export default function ModularQuestionStep({
                 </div>
             </SelectableBlock>
 
-            {/* BLOCO 2: Container Principal */
-                <div className="w-full max-w-6xl mx-auto px-4">
-                    <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-6xl mx-auto">
+            {/* BLOCO 2: Container Principal */}
+            <div className="w-full max-w-6xl mx-auto px-4">
+                <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-6xl mx-auto">
 
-                        {/* LISTA ORDENÁVEL: Número, Texto, Instruções, Opções, Botão */}
-                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                            <SortableContext items={order} strategy={verticalListSortingStrategy}>
-                                {order.map((blockId, index) => {
-                                    if (blockId === 'question-number') {
-                                        return (
-                                            <SortableBlock key={blockId} id={blockId}>
-                                                <SelectableBlock
-                                                    blockId="question-number"
-                                                    isSelected={selectedBlockId === 'question-number'}
-                                                    isEditable={isEditable}
-                                                    onSelect={() => onBlockSelect?.('question-number')}
-                                                    blockType="Número da Pergunta"
-                                                    blockIndex={index + 1}
-                                                    onOpenProperties={() => onOpenProperties?.('question-number')}
-                                                    isDraggable={true}
+                    {/* LISTA ORDENÁVEL: Número, Texto, Instruções, Opções, Botão */}
+                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                        <SortableContext items={order} strategy={verticalListSortingStrategy}>
+                            {order.map((blockId, index) => {
+                                if (blockId === 'question-number') {
+                                    return (
+                                        <SortableBlock key={blockId} id={blockId}>
+                                            <SelectableBlock
+                                                blockId="question-number"
+                                                isSelected={selectedBlockId === 'question-number'}
+                                                isEditable={isEditable}
+                                                onSelect={() => onBlockSelect?.('question-number')}
+                                                blockType="Número da Pergunta"
+                                                blockIndex={index + 1}
+                                                onOpenProperties={() => onOpenProperties?.('question-number')}
+                                                isDraggable={true}
+                                            >
+                                                <h2 className="text-xl md:text-2xl font-bold mb-4 text-[#432818]">
+                                                    {safeData.questionNumber}
+                                                </h2>
+                                            </SelectableBlock>
+                                        </SortableBlock>
+                                    );
+                                }
+                                if (blockId === 'question-text') {
+                                    return (
+                                        <SortableBlock key={blockId} id={blockId}>
+                                            <SelectableBlock
+                                                blockId="question-text"
+                                                isSelected={selectedBlockId === 'question-text'}
+                                                isEditable={isEditable}
+                                                onSelect={() => onBlockSelect?.('question-text')}
+                                                blockType="Texto da Pergunta"
+                                                blockIndex={index + 1}
+                                                onOpenProperties={() => onOpenProperties?.('question-text')}
+                                                isDraggable={true}
+                                            >
+                                                <p
+                                                    className="text-xl md:text-2xl font-bold text-[#deac6d] mb-4"
+                                                    style={{ fontFamily: '"Playfair Display", serif' }}
                                                 >
-                                                    <h2 className="text-xl md:text-2xl font-bold mb-4 text-[#432818]">
-                                                        {safeData.questionNumber}
-                                                    </h2>
-                                                </SelectableBlock>
-                                            </SortableBlock>
-                                        );
-                                    }
-                                    if (blockId === 'question-text') {
-                                        return (
-                                            <SortableBlock key={blockId} id={blockId}>
-                                                <SelectableBlock
-                                                    blockId="question-text"
-                                                    isSelected={selectedBlockId === 'question-text'}
-                                                    isEditable={isEditable}
-                                                    onSelect={() => onBlockSelect?.('question-text')}
-                                                    blockType="Texto da Pergunta"
-                                                    blockIndex={index + 1}
-                                                    onOpenProperties={() => onOpenProperties?.('question-text')}
-                                                    isDraggable={true}
-                                                >
-                                                    <p
-                                                        className="text-xl md:text-2xl font-bold text-[#deac6d] mb-4"
-                                                        style={{ fontFamily: '"Playfair Display", serif' }}
-                                                    >
-                                                        {safeData.questionText}
-                                                    </p>
-                                                </SelectableBlock>
-                                            </SortableBlock>
-                                        );
-                                    }
-                                    if (blockId === 'question-instructions') {
-                                        return (
-                                            <SortableBlock key={blockId} id={blockId}>
-                                                <SelectableBlock
-                                                    blockId="question-instructions"
-                                                    isSelected={selectedBlockId === 'question-instructions'}
-                                                    isEditable={isEditable}
-                                                    onSelect={() => onBlockSelect?.('question-instructions')}
-                                                    blockType="Instruções"
-                                                    blockIndex={index + 1}
-                                                    onOpenProperties={() => onOpenProperties?.('question-instructions')}
-                                                    isDraggable={true}
-                                                >
-                                                    <p className="text-sm text-gray-600 mb-8">
-                                                        {selectionText} ({currentAnswers.length}/{safeData.requiredSelections})
-                                                        {isEditable && (
-                                                            <span className="block text-blue-500 mt-1 text-xs">
-                                                                ✏️ Editável via Painel de Propriedades
-                                                            </span>
-                                                        )}
-                                                    </p>
-                                                </SelectableBlock>
-                                            </SortableBlock>
-                                        );
-                                    }
-                                    if (blockId === 'question-options') {
-                                        return (
-                                            <SortableBlock key={blockId} id={blockId}>
-                                                <SelectableBlock
-                                                    blockId="question-options"
-                                                    isSelected={selectedBlockId === 'question-options'}
-                                                    isEditable={isEditable}
-                                                    onSelect={() => onBlockSelect?.('question-options')}
-                                                    blockType="Opções da Pergunta"
-                                                    blockIndex={index + 1}
-                                                    onOpenProperties={() => onOpenProperties?.('question-options')}
-                                                    isDraggable={true}
-                                                >
-                                                    <div className={`grid ${gridClass} gap-6 mb-8 max-w-4xl mx-auto`}>
-                                                        {safeData.options.map((option: any) => (
-                                                            <div
-                                                                key={option.id}
-                                                                onClick={() => handleOptionClick(option.id)}
-                                                                className={`flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-[#deac6d] hover:shadow-md ${currentAnswers.includes(option.id)
-                                                                    ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg transform -translate-y-1'
-                                                                    : 'border-gray-200'
-                                                                    }`}
-                                                            >
-                                                                {option.image && (
-                                                                    <img
-                                                                        src={option.image}
-                                                                        alt={option.text}
-                                                                        className="rounded-md w-full mb-2 object-cover max-h-48"
-                                                                    />
-                                                                )}
-                                                                <p className="text-center font-medium text-sm leading-relaxed text-[#432818]">
-                                                                    {option.text}
-                                                                </p>
+                                                    {safeData.questionText}
+                                                </p>
+                                            </SelectableBlock>
+                                        </SortableBlock>
+                                    );
+                                }
+                                if (blockId === 'question-instructions') {
+                                    return (
+                                        <SortableBlock key={blockId} id={blockId}>
+                                            <SelectableBlock
+                                                blockId="question-instructions"
+                                                isSelected={selectedBlockId === 'question-instructions'}
+                                                isEditable={isEditable}
+                                                onSelect={() => onBlockSelect?.('question-instructions')}
+                                                blockType="Instruções"
+                                                blockIndex={index + 1}
+                                                onOpenProperties={() => onOpenProperties?.('question-instructions')}
+                                                isDraggable={true}
+                                            >
+                                                <p className="text-sm text-gray-600 mb-8">
+                                                    {selectionText} ({currentAnswers.length}/{safeData.requiredSelections})
+                                                    {isEditable && (
+                                                        <span className="block text-blue-500 mt-1 text-xs">
+                                                            ✏️ Editável via Painel de Propriedades
+                                                        </span>
+                                                    )}
+                                                </p>
+                                            </SelectableBlock>
+                                        </SortableBlock>
+                                    );
+                                }
+                                if (blockId === 'question-options') {
+                                    return (
+                                        <SortableBlock key={blockId} id={blockId}>
+                                            <SelectableBlock
+                                                blockId="question-options"
+                                                isSelected={selectedBlockId === 'question-options'}
+                                                isEditable={isEditable}
+                                                onSelect={() => onBlockSelect?.('question-options')}
+                                                blockType="Opções da Pergunta"
+                                                blockIndex={index + 1}
+                                                onOpenProperties={() => onOpenProperties?.('question-options')}
+                                                isDraggable={true}
+                                            >
+                                                <div className={`grid ${gridClass} gap-6 mb-8 max-w-4xl mx-auto`}>
+                                                    {safeData.options.map((option: any) => (
+                                                        <div
+                                                            key={option.id}
+                                                            onClick={() => handleOptionClick(option.id)}
+                                                            className={`flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-[#deac6d] hover:shadow-md ${currentAnswers.includes(option.id)
+                                                                ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg transform -translate-y-1'
+                                                                : 'border-gray-200'
+                                                                }`}
+                                                        >
+                                                            {option.image && (
+                                                                <img
+                                                                    src={option.image}
+                                                                    alt={option.text}
+                                                                    className="rounded-md w-full mb-2 object-cover max-h-48"
+                                                                />
+                                                            )}
+                                                            <p className="text-center font-medium text-sm leading-relaxed text-[#432818]">
+                                                                {option.text}
+                                                            </p>
 
-                                                                {currentAnswers.includes(option.id) && (
-                                                                    <div className="mt-2 w-6 h-6 bg-[#deac6d] rounded-full flex items-center justify-center">
-                                                                        <span className="text-white text-xs font-bold">✓</span>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </SelectableBlock>
-                                            </SortableBlock>
-                                        );
-                                    }
-                                    if (blockId === 'question-button') {
-                                        return (
-                                            <SortableBlock key={blockId} id={blockId}>
-                                                <SelectableBlock
-                                                    blockId="question-button"
-                                                    isSelected={selectedBlockId === 'question-button'}
-                                                    isEditable={isEditable}
-                                                    onSelect={() => onBlockSelect?.('question-button')}
-                                                    blockType="Botão de Ação"
-                                                    blockIndex={index + 1}
-                                                    onOpenProperties={() => onOpenProperties?.('question-button')}
-                                                    isDraggable={true}
+                                                            {currentAnswers.includes(option.id) && (
+                                                                <div className="mt-2 w-6 h-6 bg-[#deac6d] rounded-full flex items-center justify-center">
+                                                                    <span className="text-white text-xs font-bold">✓</span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </SelectableBlock>
+                                        </SortableBlock>
+                                    );
+                                }
+                                if (blockId === 'question-button') {
+                                    return (
+                                        <SortableBlock key={blockId} id={blockId}>
+                                            <SelectableBlock
+                                                blockId="question-button"
+                                                isSelected={selectedBlockId === 'question-button'}
+                                                isEditable={isEditable}
+                                                onSelect={() => onBlockSelect?.('question-button')}
+                                                blockType="Botão de Ação"
+                                                blockIndex={index + 1}
+                                                onOpenProperties={() => onOpenProperties?.('question-button')}
+                                                isDraggable={true}
+                                            >
+                                                <button
+                                                    disabled={!canProceed}
+                                                    className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${canProceed
+                                                        ? 'bg-[#deac6d] text-white animate-pulse'
+                                                        : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
+                                                        }`}
                                                 >
-                                                    <button
-                                                        disabled={!canProceed}
-                                                        className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${canProceed
-                                                            ? 'bg-[#deac6d] text-white animate-pulse'
-                                                            : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
-                                                            }`}
-                                                    >
-                                                        {canProceed ? 'Avançando...' : 'Próxima'}
-                                                    </button>
-                                                </SelectableBlock>
-                                            </SortableBlock>
-                                        );
-                                    }
-                                    return null;
-                                })}
-                            </SortableContext>
-                        </DndContext>
-                    </div>
+                                                    {canProceed ? 'Avançando...' : 'Próxima'}
+                                                </button>
+                                            </SelectableBlock>
+                                        </SortableBlock>
+                                    );
+                                }
+                                return null;
+                            })}
+                        </SortableContext>
+                    </DndContext>
                 </div>
+            </div>
         </div>
     );
 }

@@ -66,6 +66,18 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   // Adaptar dados do step para o formato esperado dos componentes
   const stepData = adaptStepData(step);
 
+  // Callbacks para persistência (no futuro: integrar com EditorProvider)
+  const handleEdit = (field: string, value: any) => {
+    // Patch dentro de metadata por padrão
+    (stepData as any).metadata = {
+      ...((stepData as any).metadata || {}),
+      [field]: value,
+    };
+  };
+  const handleBlocksReorder = (stepId: string, newOrder: string[]) => {
+    handleEdit('blockOrder', newOrder);
+  };
+
   // Renderizar componente correspondente ao tipo
   const renderStepComponent = () => {
     switch (step.type) {
@@ -94,6 +106,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
               data={stepData as any}
               isEditable={true}
               currentAnswers={sessionData[`answers_${step.id}`] || []}
+              onEdit={handleEdit}
+              onBlocksReorder={handleBlocksReorder}
             />
           );
         }
@@ -117,6 +131,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
               data={stepData as any}
               isEditable={true}
               currentAnswer={sessionData[`answer_${step.id}`] || ''}
+              onEdit={handleEdit}
+              onBlocksReorder={handleBlocksReorder}
             />
           );
         }
