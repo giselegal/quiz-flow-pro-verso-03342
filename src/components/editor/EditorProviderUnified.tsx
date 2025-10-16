@@ -398,7 +398,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
       ? step 
       : `step-${step.toString().padStart(2, '0')}`;
 
-    // Debug log
+    // Debug log inicial
     console.log('🔍 [ensureStepLoaded] Verificando step:', {
       input: step,
       stepKey,
@@ -408,24 +408,34 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
         // Se já tem blocos para este step, não fazer nada
         if (state.stepBlocks[stepKey]?.length > 0) {
+            console.log(`✅ [ensureStepLoaded] Step ${stepKey} já carregado com ${state.stepBlocks[stepKey].length} blocos`);
             return;
         }
 
         // ✅ PRIORIDADE: Templates JSON modulares (steps 12, 19, 20)
         if (hasModularTemplate(stepKey)) {
+            console.log(`🎯 [ensureStepLoaded] Carregando template modular para ${stepKey}...`);
             const modularBlocks = loadStepTemplate(stepKey);
-            console.log(`🎯 Carregando template modular para ${stepKey}:`, {
-                blockCount: modularBlocks.length,
-                blockTypes: modularBlocks.map(b => b.type)
+            
+            console.log(`📦 [ensureStepLoaded] Blocos recebidos do template:`, {
+                stepKey,
+                count: modularBlocks.length,
+                blockTypes: modularBlocks.map(b => b.type),
+                blocks: modularBlocks // Log completo
             });
             
-            setState(prev => ({
-                ...prev,
-                stepBlocks: {
-                    ...prev.stepBlocks,
-                    [stepKey]: modularBlocks
-                }
-            }));
+            if (modularBlocks.length > 0) {
+                setState(prev => ({
+                    ...prev,
+                    stepBlocks: {
+                        ...prev.stepBlocks,
+                        [stepKey]: modularBlocks
+                    }
+                }));
+                console.log(`✅ [ensureStepLoaded] Blocos salvos no estado para ${stepKey}`);
+            } else {
+                console.warn(`⚠️ [ensureStepLoaded] Nenhum bloco retornado para ${stepKey}`);
+            }
             return;
         }
 
