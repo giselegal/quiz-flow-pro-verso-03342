@@ -1,0 +1,100 @@
+/**
+ * 🎯 STEP TEMPLATE LOADER
+ * 
+ * Carrega templates JSON dos steps modulares (12, 19, 20)
+ * e converte para o formato Block[] usado pelo EditorProvider
+ */
+
+import { Block } from '@/types/editor';
+import step12Template from '@/data/templates/step-12-template.json';
+import step19Template from '@/data/templates/step-19-template.json';
+import step20Template from '@/data/templates/step-20-template.json';
+
+interface StepTemplate {
+  id: string;
+  type: string;
+  metadata?: {
+    name: string;
+    description: string;
+  };
+  blocks: Array<{
+    id: string;
+    type: string;
+    order: number;
+    properties: Record<string, any>;
+    content: Record<string, any>;
+  }>;
+}
+
+/**
+ * Converte blocos do template JSON para formato Block
+ */
+function convertTemplateBlocksToBlocks(templateBlocks: StepTemplate['blocks']): Block[] {
+  return templateBlocks.map((block) => ({
+    id: block.id,
+    type: block.type as any, // Forçar para aceitar tipos personalizados
+    order: block.order,
+    properties: block.properties || {},
+    content: block.content || {},
+  }));
+}
+
+/**
+ * Carrega template de um step específico
+ */
+export function loadStepTemplate(stepId: string): Block[] {
+  const templates: Record<string, StepTemplate> = {
+    'step-12': step12Template as StepTemplate,
+    'step-19': step19Template as StepTemplate,
+    'step-20': step20Template as StepTemplate,
+  };
+
+  const template = templates[stepId];
+  
+  if (!template) {
+    console.warn(`⚠️ Template não encontrado para ${stepId}`);
+    return [];
+  }
+
+  const blocks = convertTemplateBlocksToBlocks(template.blocks);
+  
+  console.log(`✅ Template carregado para ${stepId}:`, {
+    stepId,
+    blockCount: blocks.length,
+    blockTypes: blocks.map(b => b.type),
+  });
+
+  return blocks;
+}
+
+/**
+ * Carrega todos os templates modulares
+ */
+export function loadAllModularTemplates(): Record<string, Block[]> {
+  return {
+    'step-12': loadStepTemplate('step-12'),
+    'step-19': loadStepTemplate('step-19'),
+    'step-20': loadStepTemplate('step-20'),
+  };
+}
+
+/**
+ * Verifica se um step tem template modular
+ */
+export function hasModularTemplate(stepId: string): boolean {
+  return ['step-12', 'step-19', 'step-20'].includes(stepId);
+}
+
+/**
+ * Obtém metadata do template
+ */
+export function getTemplateMetadata(stepId: string): { name: string; description: string } | null {
+  const templates: Record<string, StepTemplate> = {
+    'step-12': step12Template as StepTemplate,
+    'step-19': step19Template as StepTemplate,
+    'step-20': step20Template as StepTemplate,
+  };
+
+  const template = templates[stepId];
+  return template?.metadata || null;
+}

@@ -24,6 +24,7 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
 import { useToast } from '@/hooks/use-toast';
+import { loadStepTemplate, hasModularTemplate } from '@/utils/loadStepTemplates';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -400,7 +401,25 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             return;
         }
 
-        // Carregar template padrão para o step (compatível com estruturas com/sem .steps)
+        // ✅ PRIORIDADE: Templates JSON modulares (steps 12, 19, 20)
+        if (hasModularTemplate(stepKey)) {
+            const modularBlocks = loadStepTemplate(stepKey);
+            console.log(`🎯 Carregando template modular para ${stepKey}:`, {
+                blockCount: modularBlocks.length,
+                blockTypes: modularBlocks.map(b => b.type)
+            });
+            
+            setState(prev => ({
+                ...prev,
+                stepBlocks: {
+                    ...prev.stepBlocks,
+                    [stepKey]: modularBlocks
+                }
+            }));
+            return;
+        }
+
+        // Carregar template padrão para outros steps (compatível com estruturas com/sem .steps)
         const source: any = (QUIZ_STYLE_21_STEPS_TEMPLATE as any);
         const templateSteps: any = source?.steps && typeof source.steps === 'object' ? source.steps : source;
         const templateBlocks = templateSteps?.[stepKey] || [];
@@ -431,6 +450,16 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         // Carregar todos os steps do template
         Object.entries(template.steps).forEach(([stepKey, stepConfig]) => {
             try {
+                // ✅ PRIORIDADE: Templates JSON modulares (steps 12, 19, 20)
+                if (hasModularTemplate(stepKey)) {
+                    const modularBlocks = loadStepTemplate(stepKey);
+                    newStepBlocks[stepKey] = modularBlocks;
+                    totalBlocks += modularBlocks.length;
+                    console.log(`🎯 Loaded ${modularBlocks.length} modular blocks for ${stepKey}`);
+                    return;
+                }
+
+                // Carregar templates padrão para outros steps
                 const blockComponents = safeGetTemplateBlocks(stepKey, template);
                 
                 // Validar conversão
