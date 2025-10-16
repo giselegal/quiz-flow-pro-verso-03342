@@ -398,33 +398,17 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
       ? step 
       : `step-${step.toString().padStart(2, '0')}`;
 
-    // Debug log inicial
-    console.log('🔍 [ensureStepLoaded] Verificando step:', {
-      input: step,
-      stepKey,
-      hasModular: hasModularTemplate(stepKey),
-      existingBlocks: state.stepBlocks[stepKey]?.length || 0
-    });
-
         // Se já tem blocos para este step, não fazer nada
         if (state.stepBlocks[stepKey]?.length > 0) {
-            console.log(`✅ [ensureStepLoaded] Step ${stepKey} já carregado com ${state.stepBlocks[stepKey].length} blocos`);
             return;
         }
 
         // ✅ PRIORIDADE: Templates JSON modulares (steps 12, 19, 20)
         if (hasModularTemplate(stepKey)) {
-            console.log(`🎯 [ensureStepLoaded] Carregando template modular para ${stepKey}...`);
             const modularBlocks = loadStepTemplate(stepKey);
             
-            console.log(`📦 [ensureStepLoaded] Blocos recebidos do template:`, {
-                stepKey,
-                count: modularBlocks.length,
-                blockTypes: modularBlocks.map(b => b.type),
-                blocks: modularBlocks // Log completo
-            });
-            
             if (modularBlocks.length > 0) {
+                console.log(`✅ Modular step ${stepKey} carregado com ${modularBlocks.length} blocos`);
                 setState(prev => ({
                     ...prev,
                     stepBlocks: {
@@ -432,9 +416,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         [stepKey]: modularBlocks
                     }
                 }));
-                console.log(`✅ [ensureStepLoaded] Blocos salvos no estado para ${stepKey}`);
             } else {
-                console.warn(`⚠️ [ensureStepLoaded] Nenhum bloco retornado para ${stepKey}`);
+                console.warn(`⚠️ Nenhum bloco retornado para ${stepKey}`);
             }
             return;
         }

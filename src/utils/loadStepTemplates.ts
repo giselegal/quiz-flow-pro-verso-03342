@@ -57,11 +57,6 @@ export function loadStepTemplate(stepId: string): Block[] {
   // Normalizar para formato sem padding (step-12, step-19, step-20)
   const normalizedId = normalizeStepId(stepId);
   
-  console.log('🔍 [loadStepTemplate] Tentando carregar:', {
-    original: stepId,
-    normalized: normalizedId
-  });
-  
   const templates: Record<string, StepTemplate> = {
     'step-12': step12Template as StepTemplate,
     'step-19': step19Template as StepTemplate,
@@ -71,19 +66,13 @@ export function loadStepTemplate(stepId: string): Block[] {
   const template = templates[normalizedId];
   
   if (!template) {
-    console.warn(`⚠️ [loadStepTemplate] Template não encontrado para ${stepId} (normalizado: ${normalizedId})`);
+    console.warn(`⚠️ Template não encontrado para ${stepId} (normalizado: ${normalizedId})`);
     return [];
   }
 
   const blocks = convertTemplateBlocksToBlocks(template.blocks);
   
-  console.log(`✅ [loadStepTemplate] Template carregado:`, {
-    stepId,
-    normalized: normalizedId,
-    blockCount: blocks.length,
-    blockTypes: blocks.map(b => b.type),
-    blocks: blocks // Log completo dos blocos
-  });
+  console.log(`✅ Template carregado para ${stepId}: ${blocks.length} blocos [${blocks.map(b => b.type).join(', ')}]`);
 
   return blocks;
 }

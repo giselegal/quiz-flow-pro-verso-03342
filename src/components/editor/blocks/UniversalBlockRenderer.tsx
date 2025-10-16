@@ -215,12 +215,6 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 }) => {
   const logger = useLogger('BlockRenderer');
 
-  // 🎯 DEBUG: Log de entrada para diagnóstico
-  console.log('🎨 [UniversalBlockRenderer] Renderizando bloco:', {
-    id: block.id,
-    type: block.type,
-  });
-
   // 🚨 DEPRECATION WARNING
   if (isPreviewing !== undefined && process.env.NODE_ENV === 'development') {
     console.warn(
@@ -239,12 +233,6 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 
   // ✅ OTIMIZAÇÃO: Usar hook cacheado ao invés de lookup direto
   const BlockComponent = useBlockComponent(block.type);
-  
-  // 🎯 DEBUG: Log do resultado do lookup
-  console.log('🔍 [UniversalBlockRenderer] Componente encontrado:', {
-    type: block.type,
-    hasComponent: !!BlockComponent
-  });
 
   React.useEffect(() => {
     if (!renderStartTime.current) return;
