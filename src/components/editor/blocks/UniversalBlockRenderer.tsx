@@ -56,6 +56,10 @@ import QuizOfferCTAInlineBlock from '@/components/blocks/inline/QuizOfferCTAInli
 export interface UniversalBlockRendererProps {
   block: Block;
   isSelected?: boolean;
+  /**
+   * @deprecated Use EditableBlock or PreviewBlock instead
+   * Esta prop será removida na próxima versão
+   */
   isPreviewing?: boolean;
   mode?: 'editor' | 'preview' | 'production';
   onUpdate?: (blockId: string, updates: any) => void;
@@ -202,7 +206,7 @@ const useBlockComponent = (blockType: string): React.ComponentType<any> | null =
 const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   block,
   isSelected = false,
-  isPreviewing = false,
+  isPreviewing = false, // @deprecated - Use EditableBlock ou PreviewBlock
   onUpdate,
   onDelete,
   onSelect,
@@ -211,6 +215,15 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   onClick,
 }) => {
   const logger = useLogger('BlockRenderer');
+
+  // 🚨 DEPRECATION WARNING
+  if (isPreviewing !== undefined && process.env.NODE_ENV === 'development') {
+    console.warn(
+      `⚠️ DEPRECATION WARNING: A prop 'isPreviewing' está deprecated.\n` +
+      `Use EditableBlock para modo edição ou PreviewBlock para preview.\n` +
+      `Block ID: ${block.id}, Type: ${block.type}`
+    );
+  }
 
   // ✅ MONITORAMENTO DE PERFORMANCE
   const renderStartTime = React.useRef<number>();
@@ -347,20 +360,24 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
     );
   }
 
+  // 🎯 MODO DE OPERAÇÃO: Determinar baseado em isPreviewing (legacy)
+  const isEditMode = !isPreviewing;
+
   return (
     <div
       className={cn(
         'universal-block-renderer relative group transition-all duration-200',
         isSelected && 'ring-2 ring-blue-500 ring-offset-2',
-        !isPreviewing && 'hover:shadow-sm cursor-pointer',
+        isEditMode && 'hover:shadow-sm cursor-pointer',
         className
       )}
       style={style}
-      onClick={!isPreviewing ? handleClick : undefined}
+      onClick={isEditMode ? handleClick : undefined}
       data-block-id={block.id}
       data-block-type={block.type}
     >
-      {!isPreviewing && onDelete && (
+      {/* 🎯 CONTROLES DE EDIÇÃO - Apenas em modo edição */}
+      {isEditMode && onDelete && (
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -372,7 +389,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         </button>
       )}
 
-      {!isPreviewing && isSelected && (
+      {isEditMode && isSelected && (
         <div className="absolute top-0 left-0 -mt-6 text-xs bg-blue-500 text-white px-2 py-1 rounded z-10">
           {block.type} #{block.id}
         </div>
