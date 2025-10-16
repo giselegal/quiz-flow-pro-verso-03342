@@ -11,6 +11,7 @@ import { adaptStepData, extractStepNumber } from '@/utils/StepDataAdapter';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizScores } from '@/hooks/useQuizState';
+import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 
 // Produção (preview)
 const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
@@ -91,6 +92,23 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   // Provider opcional do Editor para seleção/persistência de blocos reais
   const editor = useEditor({ optional: true } as any);
   const stepKey = useMemo(() => step?.id || '', [step?.id]);
+
+  // 🎯 FASE 3: Buscar blocos modulares do EditorProvider
+  const stepBlocks = useMemo(() => {
+    try {
+      const blocks: any[] = editor?.state?.stepBlocks?.[stepKey] || [];
+      return blocks.sort((a, b) => (a.order || 0) - (b.order || 0));
+    } catch {
+      return [];
+    }
+  }, [editor?.state?.stepBlocks, stepKey]);
+
+  // 🎯 FASE 3: Garantir que blocos sejam carregados no modo edição
+  React.useEffect(() => {
+    if (isEditMode && editor?.actions?.ensureStepLoaded && stepKey) {
+      editor.actions.ensureStepLoaded(stepKey);
+    }
+  }, [stepKey, isEditMode, editor]);
 
   // Helper: procurar primeiro bloco do tipo desejado no provider
   const findBlockIdByTypes = useCallback((types: string[]): string | undefined => {
@@ -378,6 +396,24 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       case 'transition':
       case 'transition-result': {
         if (isEditMode) {
+          // 🎯 RENDERIZAR BLOCOS ATÔMICOS INDIVIDUAIS
+          if (stepBlocks.length > 0) {
+            return (
+              <div className="space-y-4 p-4">
+                {stepBlocks.map(block => (
+                  <UniversalBlockRenderer
+                    key={block.id}
+                    block={block}
+                    isSelected={editor?.state?.selectedBlockId === block.id}
+                    onUpdate={(id: string, updates: any) => editor?.actions?.updateBlock?.(stepKey, id, updates)}
+                    onDelete={(id: string) => editor?.actions?.removeBlock?.(stepKey, id)}
+                    onSelect={(id: string) => editor?.actions?.setSelectedBlockId?.(id)}
+                  />
+                ))}
+              </div>
+            );
+          }
+          // Fallback para componente modular se não houver blocos
           return (
             <ModularTransitionStep
               data={{ ...stepData, type: step.type } as any}
@@ -399,6 +435,24 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
 
       case 'result': {
         if (isEditMode) {
+          // 🎯 RENDERIZAR BLOCOS ATÔMICOS INDIVIDUAIS
+          if (stepBlocks.length > 0) {
+            return (
+              <div className="space-y-4 p-4">
+                {stepBlocks.map(block => (
+                  <UniversalBlockRenderer
+                    key={block.id}
+                    block={block}
+                    isSelected={editor?.state?.selectedBlockId === block.id}
+                    onUpdate={(id: string, updates: any) => editor?.actions?.updateBlock?.(stepKey, id, updates)}
+                    onDelete={(id: string) => editor?.actions?.removeBlock?.(stepKey, id)}
+                    onSelect={(id: string) => editor?.actions?.setSelectedBlockId?.(id)}
+                  />
+                ))}
+              </div>
+            );
+          }
+          // Fallback para componente modular se não houver blocos
           return (
             <ModularResultStep
               data={stepData as any}
