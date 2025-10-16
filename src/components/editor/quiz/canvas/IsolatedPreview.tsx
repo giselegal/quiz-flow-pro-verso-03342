@@ -8,7 +8,7 @@
  * - Bundle otimizado sem dependências de edição
  */
 
-import React, { Suspense, useMemo } from 'react';
+import React, { Suspense, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { PreviewProvider } from '@/contexts/ui/PreviewContext';
 import { QuizFlowProvider } from '@/contexts/quiz/QuizFlowProvider';
@@ -16,6 +16,7 @@ import { PreviewBlock } from './PreviewBlock';
 import { Block } from '@/types/editor';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePreviewDevice } from '@/contexts/editor/EditorModeContext';
+import { useEditor } from '@/components/editor/EditorProviderUnified';
 
 export interface IsolatedPreviewProps {
   blocks: Block[];
@@ -68,10 +69,25 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
   funnelId,
   className 
 }) => {
+  // 🎯 FASE 3: CONECTAR ao editor context
+  const editorCtx = useEditor({ optional: true } as any);
+  const selectedBlockId = editorCtx?.state?.selectedBlockId;
+  
   console.log('🔍 IsolatedPreview render:', {
     blocksCount: blocks.length,
     funnelId,
+    selectedBlockId,
+    hasEditorContext: !!editorCtx
   });
+
+  // 🎯 FASE 3: REAGIR a mudanças nos blocos (com debounce implícito via useEffect)
+  useEffect(() => {
+    console.log('⚡ Preview atualizado:', {
+      blocksCount: blocks.length,
+      selectedBlock: selectedBlockId,
+      timestamp: Date.now()
+    });
+  }, [blocks, selectedBlockId]);
 
   // Memoizar sessionData para evitar re-renders
   const sessionData = useMemo(() => ({

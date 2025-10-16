@@ -21,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { User, Target, Trophy, CheckCircle } from 'lucide-react';
 import Step20Result from '@/components/steps/Step20Result';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export interface InteractivePreviewEngineProps {
   blocks: Block[];
@@ -84,6 +85,9 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   const isProductionMode = mode === 'production';
   const isEditorMode = mode === 'editor';
   const isPreviewMode = mode === 'preview';
+
+  // 🎯 FASE 3: DEBOUNCE dos blocos para performance
+  const debouncedBlocks = useDebounce(blocks, 300);
 
   // 🎯 ESTADO INTEGRADO DO QUIZ
   const [quizState, setQuizState] = useState<QuizState>({
@@ -226,12 +230,12 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
     };
   }, [enableRealExperience]);
 
-  // 🎯 SISTEMA DE ATUALIZAÇÃO EM TEMPO REAL
+  // 🎯 SISTEMA DE ATUALIZAÇÃO EM TEMPO REAL (FASE 3)
   useEffect(() => {
-    if (realTimeUpdate && blocks.length > 0) {
-      console.log('⚡ Preview atualizado em tempo real:', {
+    if (realTimeUpdate && debouncedBlocks.length > 0) {
+      console.log('⚡ [FASE 3] Preview atualizado em tempo real (debounced):', {
         step: quizState.currentStep,
-        blocksCount: blocks.length,
+        blocksCount: debouncedBlocks.length,
         selectedBlock: selectedBlockId,
         funnelId,
         timestamp: new Date().toISOString()
@@ -244,7 +248,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
 
       // Notificar sobre mudanças se callback disponível
       if (onBlockUpdate && selectedBlockId) {
-        const updatedBlock = blocks.find(b => b.id === selectedBlockId);
+        const updatedBlock = debouncedBlocks.find(b => b.id === selectedBlockId);
         if (updatedBlock) {
           console.log('📝 Notificando mudança do bloco:', updatedBlock.id);
           // Trigger uma pequena atualização para forçar re-render
@@ -252,7 +256,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
         }
       }
     }
-  }, [blocks, selectedBlockId, quizState.currentStep, realTimeUpdate, onBlockUpdate, funnelId]);
+  }, [debouncedBlocks, selectedBlockId, quizState.currentStep, realTimeUpdate, onBlockUpdate, funnelId]);
 
   // 🎯 SINCRONIZAÇÃO COM STEP EXTERNO
   useEffect(() => {
@@ -497,8 +501,8 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
         </div>
       )}
 
-      {/* Renderizar blocos com integração real */}
-      {blocks.map((block, index) => {
+      {/* Renderizar blocos com integração real - FASE 3: usando debouncedBlocks */}
+      {debouncedBlocks.map((block, index) => {
         const isSelected = selectedBlockId === block.id;
         const blockValidationState = quizState.validationStates[block.id];
 

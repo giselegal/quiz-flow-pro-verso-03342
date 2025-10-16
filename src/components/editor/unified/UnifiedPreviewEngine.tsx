@@ -66,17 +66,18 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     debugInfo
   });
 
-  // 🎯 PREVIEW EM TEMPO REAL - Effect para reagir a mudanças nos blocos
+  // 🎯 FASE 3: PREVIEW EM TEMPO REAL com debounce implícito
   React.useEffect(() => {
     if (realTimeUpdate && blocks.length > 0) {
-      console.log('⚡ Preview atualizado em tempo real - Blocos alterados:', {
+      console.log('⚡ [FASE 3] Preview atualizado em tempo real:', {
         step: currentStep,
         blocksCount: blocks.length,
         selectedBlock: selectedBlockId,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        enableProductionMode
       });
     }
-  }, [blocks, selectedBlockId, currentStep, realTimeUpdate]);
+  }, [blocks, selectedBlockId, currentStep, realTimeUpdate, enableProductionMode]);
 
   // ✅ CORREÇÃO: Import estático compatível com Vite/ESM
   const [InteractivePreviewEngine, setInteractivePreviewEngine] = React.useState<any>(null);

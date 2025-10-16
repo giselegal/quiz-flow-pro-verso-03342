@@ -23,10 +23,22 @@ export function editorStepsToRuntimeMap(steps: EditableQuizStepLite[]): Record<s
     for (const s of steps) {
         if (!s?.id) continue;
 
-        // ✅ FASE 1 (P0): Usar função unificada de merge
+        // ✅ FASE 2: MERGE COMPLETO - Propagar TODAS as propriedades
         const blocksArray = Array.isArray((s as any).blocks) ? (s as any).blocks : [];
         const normalizedBlocks = blocksArray.length
-            ? blocksArray.map((b: any) => ({ id: b.id, type: b.type, config: getBlockConfig(b) }))
+            ? blocksArray.map((b: any) => ({
+                id: b.id,
+                type: b.type,
+                order: b.order,
+                // 🎯 MERGE COMPLETO: content + properties + config
+                config: getBlockConfig(b),
+                // 🎯 PRESERVAR ESTRUTURA ORIGINAL para fallback
+                properties: b.properties || {},
+                content: b.content || {},
+                // 🎯 METADADOS adicionais
+                parentId: b.parentId,
+                metadata: b.metadata || {},
+              }))
             : undefined;
 
         // ✅ FASE 1 (P0): Derivar questionText / options usando funções unificadas

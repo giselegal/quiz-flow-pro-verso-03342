@@ -113,6 +113,8 @@ import { DirtyBadge } from './components/DirtyBadge';
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
 import { StorageService } from '@/services/core/StorageService';
+import { EditorCacheService } from '@/services/EditorCacheService';
+import { UnifiedQuizStepAdapter } from '@/services/editor/UnifiedQuizStepAdapter';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -412,6 +414,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     funnelId: initialFunnelId
 }) => {
     console.log('✅ QuizModularProductionEditor: Component rendering', { initialFunnelId });
+
+    // 🎯 FASE 5: Cache Service para otimização
+    const cacheService = useMemo(() => EditorCacheService.getInstance(), []);
 
     // ======================
     // Larguras redimensionáveis dos painéis (persistidas)
