@@ -83,10 +83,22 @@ export function BlockBasedStepRenderer({
   }, [onSessionDataUpdate]);
   
   // Step key para buscar blocos
-  const stepKey = `step-${stepNumber}`;
+  const stepKey = `step-${String(stepNumber).padStart(2, '0')}`;
   
-  // Buscar blocos do step
-  const blocks = state.stepBlocks[stepKey] || [];
+  // 🎯 Buscar blocos do step (priorizar flat structure)
+  const blocks = actions.getBlocksForStep?.(stepKey) || state.stepBlocks[stepKey] || [];
+
+  // 🐛 DEBUG: Log de renderização
+  console.log(`🎨 BlockBasedStepRenderer rendering step ${stepNumber}:`, {
+    stepKey,
+    mode,
+    totalBlocks: blocks.length,
+    blockTypes: blocks.map((b: any) => b.type),
+    blockIds: blocks.map((b: any) => b.id),
+    selectedBlockId: state.selectedBlockId,
+    hasGetBlocksForStep: !!actions.getBlocksForStep,
+    flatStructureAvailable: !!(state.blocks && state.blocksByStep)
+  });
   
   // Context compartilhado para todos os blocos
   const sharedContext = {

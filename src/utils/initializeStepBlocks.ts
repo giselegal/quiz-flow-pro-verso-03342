@@ -11,6 +11,33 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 const BRAND_LOGO_URL = 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png';
 
 /**
+ * 🗺️ MAPEAMENTO DE SECTION TYPES → BLOCK TYPES
+ * Documentação explícita de conversões suportadas
+ */
+export const SECTION_TO_BLOCK_TYPE_MAP: Record<string, string[]> = {
+  'intro-hero': ['image-inline', 'heading-inline', 'text-inline', 'image-inline', 'text-inline'],
+  'welcome-form': ['heading-inline', 'form-input', 'button-inline'],
+  'question-hero': ['progress-inline', 'text-inline', 'heading-inline'],
+  'options-grid': ['options-grid', 'button-inline?'],
+  'result-header': ['result-header-inline'],
+  'result-cards': ['style-card-inline'],
+  'offer-hero': ['heading-inline', 'text-inline'],
+  'pricing': ['pricing-card-inline'],
+  'cta': ['button-inline'],
+  'transition-hero': ['heading-inline', 'text-inline', 'loading-animation', 'text-inline'],
+  'ResultCalculationSection': ['text-inline', 'heading-inline'],
+  'HeroSection': ['text-inline', 'heading-inline'],
+  'StyleProfileSection': ['text-inline', 'text-inline'],
+  'CTAButton': ['button-inline'],
+  'TransformationSection': ['heading-inline', 'text-inline', 'text-inline[]'],
+  'MethodStepsSection': ['heading-inline', 'text-inline[]'],
+  'BonusSection': ['heading-inline', 'image-inline?', 'text-inline[]'],
+  'SocialProofSection': ['heading-inline', 'text-inline[]'],
+  'OfferSection': ['pricing-card-inline', 'heading-inline'],
+  'GuaranteeSection': ['text-inline']
+};
+
+/**
  * Converte uma section do template para blocos individuais
  */
 function sectionToBlocks(section: any, stepId: string, sectionIndex: number): Block[] {
@@ -798,8 +825,19 @@ function sectionToBlocks(section: any, stepId: string, sectionIndex: number): Bl
     }
 
     default:
-      console.warn(`⚠️ Section type não mapeado: ${section.type}`);
+      console.warn(`⚠️ Section type não mapeado: ${section.type}`, {
+        stepId,
+        sectionId: section.id,
+        availableTypes: Object.keys(SECTION_TO_BLOCK_TYPE_MAP)
+      });
   }
+
+  console.log(`🔍 Section convertida: ${section.type} → ${blocks.length} blocos`, {
+    stepId,
+    sectionType: section.type,
+    blockTypes: blocks.map(b => b.type),
+    blockIds: blocks.map(b => b.id)
+  });
 
   return blocks;
 }

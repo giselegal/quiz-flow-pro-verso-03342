@@ -109,6 +109,7 @@ import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 import { useUnsavedChanges } from '@/hooks/useUnsavedChanges';
 import { UnsavedChangesIndicator } from './components/UnsavedChangesIndicator';
 import { DirtyBadge } from './components/DirtyBadge';
+import { BlocksDebugPanel } from '@/components/editor/debug/BlocksDebugPanel';
 // Cálculo real de resultado (produção)
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
@@ -413,8 +414,6 @@ interface QuizModularProductionEditorProps {
 export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorProps> = ({
     funnelId: initialFunnelId
 }) => {
-    console.log('✅ QuizModularProductionEditor: Component rendering', { initialFunnelId });
-
     // 🎯 FASE 5: Cache Service para otimização
     const cacheService = useMemo(() => EditorCacheService.getInstance(), []);
 
@@ -434,10 +433,31 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Editor unified provider (opcional durante migração)
     const editorCtx = useEditor({ optional: true } as any);
 
+    console.log('✅ QuizModularProductionEditor: Component rendering', { 
+        initialFunnelId,
+        hasEditorContext: !!editorCtx,
+        editorBlocksCount: editorCtx?.state?.blocks?.length || 0,
+        editorStepsCount: Object.keys(editorCtx?.state?.blocksByStep || {}).length
+    });
+
     const stepIdFromNumber = useCallback((n: number) => `step-${String(n).padStart(2, '0')}`, []);
     const stepNumberFromId = useCallback((id: string) => {
         const m = id?.match(/step-(\d+)/);
         return m ? parseInt(m[1], 10) : NaN;
+    }, []);
+
+    /**
+     * 🎯 Mapeia número do step para tipo exato baseado no template
+     */
+    const getStepTypeFromNumber = useCallback((stepNumber: number): EditableQuizStep['type'] => {
+        if (stepNumber === 1) return 'intro';
+        if (stepNumber >= 2 && stepNumber <= 11) return 'question';
+        if (stepNumber === 12) return 'transition'; // Transição após perguntas de roupa
+        if (stepNumber >= 13 && stepNumber <= 18) return 'question'; // Perguntas estratégicas
+        if (stepNumber === 19) return 'transition'; // Transição antes do resultado
+        if (stepNumber === 20) return 'result';
+        if (stepNumber === 21) return 'offer';
+        return 'question'; // fallback
     }, []);
 
     // Quando o provider está presente, sincronizar o estado local com o provider (somente leitura → local)
@@ -564,22 +584,30 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     .map(id => editorCtx.state.blocks?.find(b => b.id === id))
                     .filter((b): b is any => b !== undefined);
                 
-                // Determinar tipo do step baseado nos blocos
-                let stepType: EditableQuizStep['type'] = 'question';
-                if (stepNumber === 1) stepType = 'intro';
-                else if (stepNumber === 20) stepType = 'result';
-                else if (stepNumber === 21) stepType = 'offer';
-                else if (stepNumber === 15) stepType = 'transition';
+                // 🎯 Determinar tipo do step baseado no template quiz21StepsComplete
+                const stepType = getStepTypeFromNumber(stepNumber);
                 
                 stepsFromBlocks.push({
                     id: stepId,
                     order: index,
                     type: stepType,
-                    blocks: stepBlocks,
+                    blocks: stepBlocks.map(b => ({
+                        ...b,
+                        stepId // Garantir que stepId está presente em cada bloco
+                    })),
                     metadata: {
                         title: `Step ${stepNumber}`,
-                        description: `Step ${stepNumber} with ${stepBlocks.length} blocks`
+                        description: `Step ${stepNumber} with ${stepBlocks.length} blocks`,
+                        stepType
                     }
+                });
+
+                console.log(`📦 Step ${stepNumber} (${stepType}):`, {
+                    stepId,
+                    type: stepType,
+                    blockCount: stepBlocks.length,
+                    blockTypes: stepBlocks.map(b => b.type),
+                    firstBlock: stepBlocks[0]
                 });
             });
             
