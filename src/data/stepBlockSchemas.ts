@@ -30,12 +30,12 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
       type: 'LogoBlock',
       order: 0,
       props: {
-        logoUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo%20GG-6w33qkEHxzZCbYI93W2BxxqxbFNr78.png',
+        logoUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png',
         height: 55,
         width: 132,
         showDecorator: true,
         decoratorColor: '#B89B7A',
-        decoratorHeight: 2,
+        decoratorHeight: 3,
         alt: 'Gisele Galvão Logo'
       },
       editable: true,
@@ -47,7 +47,7 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
       type: 'HeadlineBlock',
       order: 1,
       props: {
-        html: '<span style="color: #B89B7A;">Chega</span> de um guarda-roupa <span style="color: #B89B7A;">cheio</span> e a sensação de <span style="color: #B89B7A;">não ter nada</span> para vestir!',
+        html: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você</span>.',
         fontSize: 'text-2xl sm:text-3xl md:text-4xl',
         fontWeight: 'font-bold',
         fontFamily: '"Playfair Display", serif',
@@ -62,8 +62,8 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
       type: 'ImageBlock',
       order: 2,
       props: {
-        src: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20(10)-jSEJlJtUY9lO7BHo7r1f6Wv39CKSbg.png',
-        alt: 'Descubra seu estilo pessoal',
+        src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
+        alt: 'Descubra seu estilo predominante',
         aspectRatio: '1.47',
         maxWidth: '300px',
         rounded: true,
@@ -78,7 +78,7 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
       type: 'TextBlock',
       order: 3,
       props: {
-        text: 'Em poucos minutos, descubra seu Estilo Predominante e aprenda a criar looks perfeitos para o seu corpo e ocasiões do dia a dia.',
+        text: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
         size: 'text-sm sm:text-base',
         align: 'center',
         color: 'text-gray-700',
@@ -86,6 +86,16 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
           {
             text: 'Estilo Predominante',
             color: '#B89B7A',
+            weight: 'font-semibold'
+          },
+          {
+            text: 'essência',
+            color: '#432818',
+            weight: 'font-semibold'
+          },
+          {
+            text: 'confiança',
+            color: '#432818',
             weight: 'font-semibold'
           }
         ]
@@ -101,7 +111,7 @@ export const INTRO_STEP_SCHEMA: StepSchema = {
       props: {
         id: 'name-input',
         label: 'Como posso te chamar?',
-        placeholder: 'Digite seu primeiro nome',
+        placeholder: 'Digite seu primeiro nome aqui...',
         required: true,
         inputType: 'text'
       },

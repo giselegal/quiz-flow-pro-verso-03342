@@ -36,12 +36,12 @@
       "type": "logo-block",
       "position": 0,
       "properties": {
-        "logoUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo%20GG-6w33qkEHxzZCbYI93W2BxxqxbFNr78.png",
+        "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
         "height": 55,
         "width": 132,
         "showDecorator": true,
         "decoratorColor": "#B89B7A",
-        "decoratorHeight": 2,
+        "decoratorHeight": 3,
         "alt": "Gisele Galvão Logo"
       }
     },
@@ -50,8 +50,8 @@
       "type": "heading-inline",
       "position": 1,
       "properties": {
-        "html": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você.</span>",
-        "fontSize": "text-2xl sm:text-3xl",
+        "html": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você</span>.",
+        "fontSize": "text-2xl sm:text-3xl md:text-4xl",
         "fontWeight": "font-bold",
         "fontFamily": "playfair-display",
         "textAlign": "text-center"
@@ -62,8 +62,8 @@
       "type": "image-display-inline",
       "position": 2,
       "properties": {
-        "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
-        "alt": "Descubra seu estilo pessoal",
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+        "alt": "Descubra seu estilo predominante",
         "aspectRatio": "1.47",
         "maxWidth": "300px",
         "rounded": true,
@@ -75,7 +75,7 @@
       "type": "text-inline",
       "position": 3,
       "properties": {
-        "content": "Em poucos minutos, descubra seu <strong style=\"color: #B89B7A;\">Estilo Predominante</strong> e aprenda a criar looks perfeitos para o seu corpo e ocasiões do dia a dia.",
+        "content": "Em poucos minutos, descubra seu <strong style=\"color: #B89B7A;\">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua <strong style=\"color: #432818;\">essência</strong>, com praticidade e <strong style=\"color: #432818;\">confiança</strong>.",
         "fontSize": "text-sm sm:text-base",
         "textAlign": "text-center",
         "textColor": "text-gray-700"
