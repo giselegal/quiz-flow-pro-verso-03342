@@ -1,0 +1,79 @@
+{
+  "id": "step-19",
+  "type": "transition",
+  "title": "Etapa de Transição 2",
+  "blocks": [
+    {
+      "id": "step19-loader",
+      "type": "transition-loader",
+      "order": 1,
+      "properties": {
+        "color": "#deac6d",
+        "dots": 3,
+        "size": "12px",
+        "animationDelay": 0.1
+      },
+      "content": {}
+    },
+    {
+      "id": "step19-title",
+      "type": "transition-title",
+      "order": 2,
+      "properties": {
+        "fontSize": "3xl",
+        "fontFamily": "Playfair Display",
+        "color": "#5b4135",
+        "textAlign": "center",
+        "marginBottom": "4"
+      },
+      "content": {
+        "text": "Estamos quase lá!"
+      }
+    },
+    {
+      "id": "step19-text",
+      "type": "transition-text",
+      "order": 3,
+      "properties": {
+        "fontSize": "lg",
+        "color": "#6b7280",
+        "textAlign": "center",
+        "marginBottom": "6",
+        "maxWidth": "28rem"
+      },
+      "content": {
+        "text": "Finalizando a análise do seu perfil de estilo personalizado..."
+      }
+    },
+    {
+      "id": "step19-progress",
+      "type": "transition-progress",
+      "order": 4,
+      "properties": {
+        "dots": 3,
+        "color": "#deac6d",
+        "animationDelay": 0.2,
+        "animationDuration": "1.2s",
+        "spacing": "0.5rem",
+        "size": "0.75rem"
+      },
+      "content": {}
+    },
+    {
+      "id": "step19-message",
+      "type": "transition-message",
+      "order": 5,
+      "properties": {
+        "variant": "result",
+        "gradientFrom": "rgba(222, 172, 109, 0.1)",
+        "gradientTo": "rgba(196, 149, 72, 0.1)",
+        "borderColor": "rgba(222, 172, 109, 0.2)",
+        "textColor": "#5b4135"
+      },
+      "content": {
+        "emoji": "🎉",
+        "text": "Seu resultado personalizado está quase pronto!"
+      }
+    }
+  ]
+}

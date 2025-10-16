@@ -127,6 +127,9 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'transition-image': lazy(() => import('./TransitionImageBlock')),
     'transition-description': lazy(() => import('./TransitionDescriptionBlock')),
     'transition-loader': lazy(() => import('./TransitionLoaderBlock')),
+    'transition-text': lazy(() => import('./TransitionTextBlock')),
+    'transition-progress': lazy(() => import('./TransitionProgressBlock')),
+    'transition-message': lazy(() => import('./TransitionMessageBlock')),
 
     // ✅ STEPS 13-18 - PERGUNTAS AVANÇADAS
     'quiz-advanced-question': TextInlineBlock,
@@ -153,6 +156,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'result-main': lazy(() => import('./ResultMainBlock')),
     'result-image': lazy(() => import('./ResultImageBlock')),
     'result-description': lazy(() => import('./ResultDescriptionBlock')),
+    'result-header': lazy(() => import('./ResultHeaderBlock')),
     'result-characteristics': lazy(() => import('./ResultCharacteristicsBlock')),
     'result-cta': lazy(() => import('./ResultCTABlock')),
     'result-progress-bars': lazy(() => import('./ResultProgressBarsBlock')),

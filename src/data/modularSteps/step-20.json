@@ -1,0 +1,95 @@
+{
+  "id": "step-20",
+  "type": "result",
+  "title": "Seu Resultado",
+  "blocks": [
+    {
+      "id": "step20-header",
+      "type": "result-header",
+      "order": 1,
+      "properties": {
+        "title": "Parabéns!",
+        "subtitle": "Descobrimos seu estilo predominante",
+        "fontSize": "3xl",
+        "textAlign": "center"
+      },
+      "content": {}
+    },
+    {
+      "id": "step20-main-style",
+      "type": "result-main",
+      "order": 2,
+      "properties": {
+        "styleName": "Clássico",
+        "percentage": 65,
+        "color": "#5b4135"
+      },
+      "content": {}
+    },
+    {
+      "id": "step20-image",
+      "type": "result-image",
+      "order": 3,
+      "properties": {
+        "url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400",
+        "alt": "Estilo Clássico",
+        "borderRadius": "12px",
+        "width": "100%",
+        "maxWidth": "500px"
+      },
+      "content": {}
+    },
+    {
+      "id": "step20-description",
+      "type": "result-description",
+      "order": 4,
+      "properties": {
+        "fontSize": "lg",
+        "textAlign": "center",
+        "maxWidth": "700px"
+      },
+      "content": {
+        "text": "Você tem um estilo sofisticado e atemporal, com preferência por peças clássicas e elegantes."
+      }
+    },
+    {
+      "id": "step20-characteristics",
+      "type": "result-characteristics",
+      "order": 5,
+      "properties": {
+        "title": "Suas Características",
+        "items": [
+          "Peças atemporais e versáteis",
+          "Cores neutras e elegantes",
+          "Cortes clássicos e estruturados",
+          "Qualidade acima de quantidade"
+        ]
+      },
+      "content": {}
+    },
+    {
+      "id": "step20-secondary-styles",
+      "type": "result-secondary-styles",
+      "order": 6,
+      "properties": {
+        "title": "Estilos Complementares",
+        "styles": [
+          { "name": "Minimalista", "percentage": 25, "color": "#6b7280" },
+          { "name": "Romântico", "percentage": 10, "color": "#c49548" }
+        ]
+      },
+      "content": {}
+    },
+    {
+      "id": "step20-cta",
+      "type": "result-cta",
+      "order": 7,
+      "properties": {
+        "text": "Descubra Como Aplicar Seu Estilo",
+        "variant": "default",
+        "size": "lg"
+      },
+      "content": {}
+    }
+  ]
+}

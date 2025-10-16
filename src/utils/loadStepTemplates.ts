@@ -6,9 +6,9 @@
  */
 
 import { Block } from '@/types/editor';
-import step12Template from '@/data/templates/step-12-template.json';
-import step19Template from '@/data/templates/step-19-template.json';
-import step20Template from '@/data/templates/step-20-template.json';
+import step12Template from '@/data/modularSteps/step-12.json';
+import step19Template from '@/data/modularSteps/step-19.json';
+import step20Template from '@/data/modularSteps/step-20.json';
 
 interface StepTemplate {
   id: string;

@@ -1,0 +1,79 @@
+{
+  "id": "step-12",
+  "type": "transition",
+  "title": "Etapa de Transição 1",
+  "blocks": [
+    {
+      "id": "step12-loader",
+      "type": "transition-loader",
+      "order": 1,
+      "properties": {
+        "color": "#deac6d",
+        "dots": 3,
+        "size": "12px",
+        "animationDelay": 0.1
+      },
+      "content": {}
+    },
+    {
+      "id": "step12-title",
+      "type": "transition-title",
+      "order": 2,
+      "properties": {
+        "fontSize": "3xl",
+        "fontFamily": "Playfair Display",
+        "color": "#5b4135",
+        "textAlign": "center",
+        "marginBottom": "4"
+      },
+      "content": {
+        "text": "🕐 Enquanto calculamos o seu resultado..."
+      }
+    },
+    {
+      "id": "step12-text",
+      "type": "transition-text",
+      "order": 3,
+      "properties": {
+        "fontSize": "lg",
+        "color": "#6b7280",
+        "textAlign": "center",
+        "marginBottom": "6",
+        "maxWidth": "28rem"
+      },
+      "content": {
+        "text": "Queremos te fazer algumas perguntas estratégicas para entender melhor o seu estilo pessoal."
+      }
+    },
+    {
+      "id": "step12-progress",
+      "type": "transition-progress",
+      "order": 4,
+      "properties": {
+        "dots": 3,
+        "color": "#deac6d",
+        "animationDelay": 0.2,
+        "animationDuration": "1.2s",
+        "spacing": "0.5rem",
+        "size": "0.75rem"
+      },
+      "content": {}
+    },
+    {
+      "id": "step12-message",
+      "type": "transition-message",
+      "order": 5,
+      "properties": {
+        "variant": "default",
+        "gradientFrom": "rgba(222, 172, 109, 0.1)",
+        "gradientTo": "rgba(196, 149, 72, 0.1)",
+        "borderColor": "rgba(222, 172, 109, 0.2)",
+        "textColor": "#5b4135"
+      },
+      "content": {
+        "emoji": "🧮",
+        "text": "Analisando suas respostas e calculando seu estilo predominante..."
+      }
+    }
+  ]
+}
