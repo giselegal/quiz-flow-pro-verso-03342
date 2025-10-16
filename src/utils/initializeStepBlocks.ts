@@ -405,6 +405,398 @@ function sectionToBlocks(section: any, stepId: string, sectionIndex: number): Bl
       break;
     }
 
+    case 'transition-hero': {
+      // Transition screen with loading animation
+      if (section.content.title) {
+        blocks.push({
+          id: `${stepId}-transition-title-${blockOrder}`,
+          type: 'heading-inline',
+          order: blockOrder++,
+          content: {
+            text: section.content.title,
+            level: 1,
+            fontSize: '28px',
+            color: section.style?.textColor || '#432818',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '16px' }
+        });
+      }
+
+      if (section.content.subtitle) {
+        blocks.push({
+          id: `${stepId}-transition-subtitle-${blockOrder}`,
+          type: 'text-inline',
+          order: blockOrder++,
+          content: {
+            text: section.content.subtitle,
+            fontSize: '16px',
+            color: section.style?.textColor || '#6B7280',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '24px' }
+        });
+      }
+
+      // Loading animation
+      blocks.push({
+        id: `${stepId}-loading-${blockOrder}`,
+        type: 'loading-animation',
+        order: blockOrder++,
+        content: {
+          type: 'spinner',
+          color: '#B89B7A',
+          size: 'medium'
+        },
+        properties: { marginBottom: '24px' }
+      });
+
+      if (section.content.message) {
+        blocks.push({
+          id: `${stepId}-transition-message-${blockOrder}`,
+          type: 'text-inline',
+          order: blockOrder++,
+          content: {
+            text: section.content.message,
+            fontSize: '14px',
+            color: section.style?.textColor || '#9CA3AF',
+            textAlign: 'center'
+          },
+          properties: { marginTop: '24px' }
+        });
+      }
+      break;
+    }
+
+    case 'ResultCalculationSection':
+    case 'HeroSection': {
+      // Result hero
+      if (section.props?.greetingFormat) {
+        blocks.push({
+          id: `${stepId}-greeting-${blockOrder}`,
+          type: 'text-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props.greetingFormat,
+            fontSize: '18px',
+            color: '#6B7280',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '16px' }
+        });
+      }
+
+      if (section.props?.titleFormat || section.title) {
+        blocks.push({
+          id: `${stepId}-hero-title-${blockOrder}`,
+          type: 'heading-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props?.titleFormat || section.title,
+            level: 1,
+            fontSize: '32px',
+            color: '#432818',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '24px' }
+        });
+      }
+      break;
+    }
+
+    case 'StyleProfileSection': {
+      // Style profile with image and description
+      if (section.props?.showIntroText && section.props?.introText?.text) {
+        blocks.push({
+          id: `${stepId}-intro-text-${blockOrder}`,
+          type: 'text-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props.introText.text,
+            fontSize: '16px',
+            color: '#4B5563',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '24px' }
+        });
+      }
+
+      if (section.props?.showTransitionText && section.props?.transitionText) {
+        blocks.push({
+          id: `${stepId}-transition-${blockOrder}`,
+          type: 'text-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props.transitionText,
+            fontSize: '18px',
+            color: '#432818',
+            textAlign: 'center',
+            fontWeight: 'semibold'
+          },
+          properties: { marginBottom: '32px' }
+        });
+      }
+      break;
+    }
+
+    case 'CTAButton': {
+      // CTA Button from props
+      if (section.props?.text) {
+        blocks.push({
+          id: `${stepId}-cta-${section.id}-${blockOrder}`,
+          type: 'button-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props.text,
+            backgroundColor: '#B89B7A',
+            textColor: '#FFFFFF',
+            action: 'external-link'
+          },
+          properties: {
+            width: '100%',
+            padding: '20px',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            marginBottom: '24px'
+          }
+        });
+      }
+      break;
+    }
+
+    case 'TransformationSection': {
+      // Transformation benefits
+      if (section.props?.mainTitle) {
+        blocks.push({
+          id: `${stepId}-transformation-title-${blockOrder}`,
+          type: 'heading-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props.mainTitle,
+            level: 2,
+            fontSize: '28px',
+            color: '#432818',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '16px' }
+        });
+      }
+
+      if (section.props?.subtitle) {
+        blocks.push({
+          id: `${stepId}-transformation-subtitle-${blockOrder}`,
+          type: 'text-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props.subtitle,
+            fontSize: '16px',
+            color: '#6B7280',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '32px' }
+        });
+      }
+
+      // Benefits list
+      if (section.props?.benefits) {
+        section.props.benefits.forEach((benefit: any, idx: number) => {
+          blocks.push({
+            id: `${stepId}-benefit-${idx}-${blockOrder}`,
+            type: 'text-inline',
+            order: blockOrder++,
+            content: {
+              text: `${benefit.icon} ${benefit.text}`,
+              fontSize: '14px',
+              color: '#4B5563'
+            },
+            properties: { marginBottom: '12px' }
+          });
+        });
+      }
+      break;
+    }
+
+    case 'MethodStepsSection': {
+      // Method steps
+      if (section.props?.sectionTitle) {
+        blocks.push({
+          id: `${stepId}-method-title-${blockOrder}`,
+          type: 'heading-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props.sectionTitle,
+            level: 2,
+            fontSize: '24px',
+            color: '#432818',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '32px' }
+        });
+      }
+
+      if (section.props?.steps) {
+        section.props.steps.forEach((step: any, idx: number) => {
+          blocks.push({
+            id: `${stepId}-method-step-${idx}-${blockOrder}`,
+            type: 'text-inline',
+            order: blockOrder++,
+            content: {
+              text: `${step.icon} ${step.title}\n${step.description}`,
+              fontSize: '14px',
+              color: '#4B5563'
+            },
+            properties: { marginBottom: '24px' }
+          });
+        });
+      }
+      break;
+    }
+
+    case 'BonusSection': {
+      // Bonus items
+      if (section.props?.sectionTitle) {
+        blocks.push({
+          id: `${stepId}-bonus-title-${blockOrder}`,
+          type: 'heading-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props.sectionTitle,
+            level: 2,
+            fontSize: '24px',
+            color: '#432818',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '24px' }
+        });
+      }
+
+      if (section.props?.items) {
+        section.props.items.forEach((item: any, idx: number) => {
+          if (item.image) {
+            blocks.push({
+              id: `${stepId}-bonus-img-${idx}-${blockOrder}`,
+              type: 'image-inline',
+              order: blockOrder++,
+              content: {
+                url: item.image,
+                alt: item.title,
+                width: '100%',
+                borderRadius: '8px'
+              },
+              properties: { marginBottom: '12px' }
+            });
+          }
+          
+          blocks.push({
+            id: `${stepId}-bonus-${idx}-${blockOrder}`,
+            type: 'text-inline',
+            order: blockOrder++,
+            content: {
+              text: `${item.icon} ${item.title}\n${item.description}`,
+              fontSize: '14px',
+              color: '#4B5563'
+            },
+            properties: { marginBottom: '24px' }
+          });
+        });
+      }
+      break;
+    }
+
+    case 'SocialProofSection': {
+      // Testimonials
+      if (section.props?.sectionTitle) {
+        blocks.push({
+          id: `${stepId}-testimonials-title-${blockOrder}`,
+          type: 'heading-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props.sectionTitle,
+            level: 2,
+            fontSize: '24px',
+            color: '#432818',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '24px' }
+        });
+      }
+
+      if (section.props?.testimonials) {
+        section.props.testimonials.forEach((testimonial: any, idx: number) => {
+          blocks.push({
+            id: `${stepId}-testimonial-${idx}-${blockOrder}`,
+            type: 'text-inline',
+            order: blockOrder++,
+            content: {
+              text: `"${testimonial.text}"\n— ${testimonial.name}, ${testimonial.role}`,
+              fontSize: '14px',
+              color: '#4B5563',
+              textAlign: 'center'
+            },
+            properties: { marginBottom: '24px' }
+          });
+        });
+      }
+      break;
+    }
+
+    case 'OfferSection': {
+      // Main offer section
+      if (section.props?.pricing) {
+        const pricing = section.props.pricing;
+        
+        blocks.push({
+          id: `${stepId}-offer-price-${blockOrder}`,
+          type: 'pricing-card-inline',
+          order: blockOrder++,
+          content: {
+            regularPrice: pricing.originalPrice,
+            salePrice: pricing.salePrice,
+            currency: 'R$',
+            installments: pricing.installments?.count,
+            installmentValue: pricing.installments?.value
+          },
+          properties: { marginBottom: '24px' }
+        });
+      }
+
+      if (section.props?.includes?.title) {
+        blocks.push({
+          id: `${stepId}-offer-includes-${blockOrder}`,
+          type: 'heading-inline',
+          order: blockOrder++,
+          content: {
+            text: section.props.includes.title,
+            level: 3,
+            fontSize: '20px',
+            color: '#432818',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '16px' }
+        });
+      }
+      break;
+    }
+
+    case 'GuaranteeSection': {
+      // Guarantee badge/section
+      if (section.props?.title) {
+        blocks.push({
+          id: `${stepId}-guarantee-${blockOrder}`,
+          type: 'text-inline',
+          order: blockOrder++,
+          content: {
+            text: `${section.props.icon || '🛡️'} ${section.props.title}\n${section.props.description || ''}`,
+            fontSize: '16px',
+            color: '#4B5563',
+            textAlign: 'center'
+          },
+          properties: { marginBottom: '24px' }
+        });
+      }
+      break;
+    }
+
     default:
       console.warn(`⚠️ Section type não mapeado: ${section.type}`);
   }
