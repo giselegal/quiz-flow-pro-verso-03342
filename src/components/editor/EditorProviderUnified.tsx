@@ -22,6 +22,8 @@ import { useUnifiedCRUD } from '@/contexts';
 import { Block, BlockType } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
+import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { useToast } from '@/hooks/use-toast';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -413,23 +415,63 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     }, [state.stepBlocks]);
 
     const loadDefaultTemplate = useCallback(() => {
-        const source: any = (QUIZ_STYLE_21_STEPS_TEMPLATE as any);
-        const templateSteps: any = source?.steps && typeof source.steps === 'object' ? source.steps : source;
-        const stepBlocks: Record<string, Block[]> = {};
+        console.log('🎨 Loading default template');
+        
+        const template = QUIZ_STYLE_21_STEPS_TEMPLATE;
+        
+        if (!template || !template.steps) {
+            console.error('❌ Template inválido');
+            return;
+        }
 
-        // Converter template steps para formato correto
-        Object.keys(templateSteps).forEach(key => {
-            const blocks = templateSteps[key];
-            stepBlocks[key] = Array.isArray(blocks) ? blocks : [];
+        const newStepBlocks: Record<string, Block[]> = {};
+        let totalBlocks = 0;
+        let conversionErrors = 0;
+
+        // Carregar todos os steps do template
+        Object.entries(template.steps).forEach(([stepKey, stepConfig]) => {
+            try {
+                const blockComponents = safeGetTemplateBlocks(stepKey, template);
+                
+                // Validar conversão
+                if (blockComponents.length === 0 && stepConfig) {
+                    console.warn(`⚠️ No blocks converted for ${stepKey}`, stepConfig);
+                    conversionErrors++;
+                }
+                
+                // Converter BlockComponent[] para Block[]
+                const blocks = blockComponentsToBlocks(blockComponents);
+                
+                // Filtrar blocos deprecated
+                const validBlocks = blocks.filter(block => {
+                    if (block.type === 'quiz-intro-header' as any) {
+                        console.warn(`🗑️ Filtered deprecated block: quiz-intro-header from ${stepKey}`);
+                        return false;
+                    }
+                    return true;
+                });
+                
+                newStepBlocks[stepKey] = validBlocks;
+                totalBlocks += validBlocks.length;
+                console.log(`📦 Loaded ${validBlocks.length} blocks for ${stepKey}`);
+            } catch (error) {
+                console.error(`❌ Error converting ${stepKey}:`, error);
+                conversionErrors++;
+                newStepBlocks[stepKey] = [];
+            }
         });
 
         updateStateWithHistory(() => ({
             ...getInitialState(enableSupabase),
-            stepBlocks
+            stepBlocks: newStepBlocks
         }));
 
         history.clear();
-        console.log('✅ Template padrão carregado com', Object.keys(stepBlocks).length, 'steps');
+        console.log(`✅ Template loaded: ${totalBlocks} blocos em ${Object.keys(newStepBlocks).length} steps`);
+        
+        if (conversionErrors > 0) {
+            console.warn(`⚠️ ${conversionErrors} steps tiveram problemas na conversão`);
+        }
     }, [updateStateWithHistory, history, enableSupabase]);
 
     // ============================================================================

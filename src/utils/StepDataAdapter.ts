@@ -70,11 +70,18 @@ const STEP_DEFAULTS: Record<StepType, Partial<QuizStep>> = {
  */
 export type AdaptSourceMode = 'merge' | 'production-only';
 
+export interface AdaptOptions {
+  source?: AdaptSourceMode;
+  editorMode?: boolean; // Flag para indicar se está no contexto do editor
+}
+
 export const adaptStepData = (
   editableStep: EditableQuizStep,
-  options?: { source?: AdaptSourceMode }
+  options?: AdaptOptions
 ): QuizStep => {
-  const mode: AdaptSourceMode = options?.source ?? 'merge';
+  const { source, editorMode = false } = options || {};
+  // Se estiver no editor, SEMPRE usar 'merge' para preservar edições
+  const mode: AdaptSourceMode = editorMode ? 'merge' : (source ?? 'merge');
   const stepType = editableStep.type;
   const defaults = STEP_DEFAULTS[stepType] || {};
   

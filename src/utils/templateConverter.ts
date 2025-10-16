@@ -1,10 +1,24 @@
 import { BlockComponent } from '@/components/editor/quiz/types';
+import { Block, BlockType } from '@/types/editor';
 
 /**
  * 🔄 TEMPLATE CONVERTER UTILITY
  * 
  * Converts various quiz template formats to standardized BlockComponent arrays
  */
+
+/**
+ * Converts BlockComponent array to Block array for EditorProviderUnified
+ */
+export function blockComponentsToBlocks(components: BlockComponent[]): Block[] {
+  return components.map(comp => ({
+    id: comp.id,
+    type: comp.type as BlockType,
+    order: comp.order,
+    properties: comp.properties || {},
+    content: comp.content || {} as any,
+  } as Block));
+}
 
 /**
  * Converts a quiz template section/step object to BlockComponent array

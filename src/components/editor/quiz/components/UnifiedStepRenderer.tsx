@@ -67,11 +67,9 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const isPreviewMode = mode === 'preview';
 
   // Adaptar dados do step para o formato esperado dos componentes
-  // Etapas 12, 19, 20, 21 devem refletir ESTRITAMENTE QUIZ_STEPS (production-only)
-  // Demais etapas usam merge (metadata do editor + produção)
-  const stepNumber = useMemo(() => extractStepNumber(step?.id || ''), [step?.id]);
-  const forceProductionOnly = stepNumber === 12 || stepNumber === 19 || stepNumber === 20 || stepNumber === 21;
-  const stepData = adaptStepData(step, { source: forceProductionOnly ? 'production-only' : 'merge' });
+  // SEMPRE usar 'merge' no editor para preservar metadata de edição
+  // O modo 'production-only' só deve ser usado no runtime final (fora do editor)
+  const stepData = adaptStepData(step, { source: 'merge', editorMode: true });
 
   // Helper: extrair respostas salvas no preview (answers_<stepId> => string[])
   const getPreviewAnswers = useCallback((): Record<string, string[]> => {
