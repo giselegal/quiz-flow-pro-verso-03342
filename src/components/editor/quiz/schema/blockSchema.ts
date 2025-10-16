@@ -39,642 +39,173 @@ export interface BlockPropertySchemaDefinition {
     properties: BasePropertySchema[];
 }
 
-// Registro inicial mínimo por tipo de bloco existente
-export const INITIAL_BLOCK_SCHEMAS: BlockPropertySchemaDefinition[] = [
-    {
-        type: 'heading',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'text', label: 'Texto', type: 'string', required: true, default: 'Novo Título', group: 'content' },
-            { key: 'allowHtml', label: 'Permitir HTML', type: 'boolean', default: false, group: 'content', advanced: true, description: 'Habilita interpretação de spans estilizadas (sanitizado)' },
-            { key: 'level', label: 'Nível', type: 'number', default: 2, min: 1, max: 6, group: 'style' },
-            { key: 'textAlign', label: 'Alinhamento', type: 'select', enumValues: ['left', 'center', 'right'], default: 'center', group: 'style' },
-            { key: 'color', label: 'Cor', type: 'color', default: '#432818', group: 'style' },
-            { key: 'fontSize', label: 'Tamanho Fonte', type: 'string', default: '24px', group: 'style' }
-        ]
-    },
-    {
-        type: 'text',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'text', label: 'Texto', type: 'richtext', required: true, default: 'Novo texto', group: 'content' },
-            { key: 'textAlign', label: 'Alinhamento', type: 'select', enumValues: ['left', 'center', 'right'], default: 'left', group: 'style' },
-            { key: 'color', label: 'Cor', type: 'color', default: '#432818', group: 'style' },
-            { key: 'fontSize', label: 'Tamanho Fonte', type: 'string', default: '16px', group: 'style' }
-        ]
-    },
-    {
-        type: 'image',
-        groups: [{ id: 'content', label: 'Conteúdo', order: 1 }, { id: 'style', label: 'Estilo', order: 2 }],
-        properties: [
-            { key: 'src', label: 'URL', type: 'string', required: true, default: 'https://via.placeholder.com/400x300', group: 'content' },
-            { key: 'alt', label: 'Alt', type: 'string', default: 'Imagem', group: 'content' },
-            { key: 'width', label: 'Largura', type: 'string', default: '100%', group: 'style' },
-            { key: 'height', label: 'Altura', type: 'string', default: 'auto', group: 'style' },
-            { key: 'alignment', label: 'Alinhamento', type: 'select', enumValues: ['left', 'center', 'right'], default: 'center', group: 'style' },
-            { key: 'borderRadius', label: 'Raio Borda', type: 'string', default: '8px', group: 'style' }
-        ]
-    },
-    {
-        type: 'button',
-        groups: [{ id: 'content', label: 'Conteúdo', order: 1 }, { id: 'style', label: 'Estilo', order: 2 }, { id: 'logic', label: 'Lógica', order: 3 }],
-        properties: [
-            { key: 'text', label: 'Texto', type: 'string', required: true, default: 'Clique aqui', group: 'content' },
-            { key: 'backgroundColor', label: 'Fundo', type: 'color', default: '#B89B7A', group: 'style' },
-            { key: 'textColor', label: 'Cor Texto', type: 'color', default: '#FFFFFF', group: 'style' },
-            { key: 'action', label: 'Ação', type: 'select', enumValues: ['next-step', 'open-url', 'submit-form'], default: 'next-step', group: 'logic' },
-            { key: 'url', label: 'URL (se open-url)', type: 'string', group: 'logic', when: (current) => current.action === 'open-url' }
-        ]
-    },
-    {
-        type: 'quiz-options',
-        groups: [{ id: 'content', label: 'Conteúdo', order: 1 }, { id: 'logic', label: 'Lógica', order: 2 }, { id: 'style', label: 'Estilo', order: 3 }],
-        properties: [
-            { key: 'question', label: 'Pergunta', type: 'richtext', required: false, default: '', group: 'content' },
-            { key: 'options', label: 'Opções', type: 'options-list', required: true, default: [], group: 'content' },
-            { key: 'multiSelect', label: 'Multi Seleção', type: 'boolean', default: true, group: 'logic' },
-            { key: 'requiredSelections', label: 'Seleções Necessárias', type: 'number', default: 1, min: 1, group: 'logic', validate: (value, current) => (current.multiSelect && value < 1 ? 'Valor mínimo 1' : null) },
-            { key: 'maxSelections', label: 'Máx Seleções', type: 'number', default: 3, min: 1, group: 'logic', when: (current) => current.multiSelect, validate: (value, current) => (current.multiSelect && value < (current.requiredSelections || 1) ? 'Máx não pode ser < necessárias' : null) },
-            { key: 'autoAdvance', label: 'Auto Avançar', type: 'boolean', default: true, group: 'logic' },
-            { key: 'showNextButton', label: 'Mostrar Botão Avançar', type: 'boolean', default: true, group: 'logic' },
-            { key: 'enableButtonOnlyWhenValid', label: 'Habilitar Botão quando Válido', type: 'boolean', default: true, group: 'logic' },
-            { key: 'nextButtonText', label: 'Texto do Botão', type: 'string', default: 'Avançar', group: 'content' },
-            { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean', default: true, group: 'style' },
-            { key: 'layout', label: 'Layout', type: 'select', enumValues: ['auto', 'grid-2', 'grid-3'], default: 'auto', group: 'style' },
-            // Cores e tamanho (aplicadas no preview via CSS vars e estilos inline)
-            { key: 'selectedColor', label: 'Cor Selecionado', type: 'color', default: '#deac6d', group: 'style' },
-            { key: 'hoverColor', label: 'Cor Hover', type: 'color', default: '#d4a05a', group: 'style' },
-            { key: 'imageMaxWidth', label: 'Largura Máx. Imagem (px)', type: 'number', default: 200, min: 40, group: 'style', when: (c) => c.showImages },
-            { key: 'imageMaxHeight', label: 'Altura Máx. Imagem (px)', type: 'number', default: 160, min: 40, group: 'style', when: (c) => c.showImages }
-        ]
-    },
-    {
-        type: 'form-input',
-        groups: [{ id: 'content', label: 'Conteúdo', order: 1 }, { id: 'validation', label: 'Validação', order: 2 }, { id: 'style', label: 'Estilo', order: 3 }],
-        properties: [
-            { key: 'label', label: 'Rótulo', type: 'string', required: true, default: 'Nome', group: 'content' },
-            { key: 'placeholder', label: 'Placeholder', type: 'string', default: 'Digite aqui...', group: 'content' },
-            { key: 'name', label: 'Nome do Campo', type: 'string', default: 'field', group: 'content' },
-            { key: 'inputType', label: 'Tipo de Entrada', type: 'select', enumValues: ['text', 'email', 'tel'], default: 'text', group: 'content' },
-            { key: 'required', label: 'Obrigatório', type: 'boolean', default: true, group: 'validation' },
-            { key: 'minLength', label: 'Mín. caracteres', type: 'number', default: 0, min: 0, group: 'validation' },
-            { key: 'maxLength', label: 'Máx. caracteres', type: 'number', default: 100, min: 1, group: 'validation' },
-            { key: 'fullWidth', label: 'Largura Total', type: 'boolean', default: true, group: 'style' }
-        ]
-    },
-    {
-        type: 'container',
-        groups: [{ id: 'style', label: 'Estilo', order: 1 }, { id: 'advanced', label: 'Avançado', order: 2 }],
-        properties: [
-            { key: 'backgroundColor', label: 'Fundo', type: 'color', default: '#F8F9FA', group: 'style' },
-            { key: 'padding', label: 'Padding', type: 'string', default: '16px', group: 'style' },
-            { key: 'borderRadius', label: 'Borda', type: 'string', default: '8px', group: 'style' }
-        ]
-    },
-    {
-        type: 'progress-header',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'appearance', label: 'Aparência', order: 2 },
-            { id: 'logic', label: 'Lógica', order: 3 }
-        ],
-        properties: [
-            { key: 'showLogo', label: 'Exibir Logo', type: 'boolean', default: true, group: 'content' },
-            { key: 'logoUrl', label: 'Logo URL', type: 'string', default: 'https://via.placeholder.com/120x40?text=Logo', group: 'content', when: c => c.showLogo },
-            { key: 'logoWidth', label: 'Largura Logo', type: 'string', default: '120px', group: 'appearance', when: c => c.showLogo },
-            { key: 'progressEnabled', label: 'Exibir Barra', type: 'boolean', default: true, group: 'logic' },
-            { key: 'progressPercent', label: 'Porcentagem', type: 'number', default: 0, min: 0, max: 100, group: 'logic', when: c => c.progressEnabled },
-            { key: 'autoProgress', label: 'Auto (etapas)', type: 'boolean', default: true, group: 'logic', when: c => c.progressEnabled, description: 'Calcula % baseado na posição da etapa atual' },
-            { key: 'barHeight', label: 'Espessura Barra', type: 'string', default: '4px', group: 'appearance', when: c => c.progressEnabled },
-            { key: 'barColor', label: 'Cor Barra', type: 'color', default: '#D4AF37', group: 'appearance', when: c => c.progressEnabled },
-            { key: 'barBackground', label: 'Fundo Barra', type: 'color', default: '#E5E7EB', group: 'appearance', when: c => c.progressEnabled }
-        ]
-    }
-    ,
-    // ===================== Tipos do template 21-steps =====================
-    {
-        type: 'quiz-intro-header',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 },
-            { id: 'layout', label: 'Layout', order: 3 },
-            { id: 'behavior', label: 'Comportamento', order: 4 }
-        ],
-        properties: [
-            // Conteúdo
-            { key: 'showLogo', label: 'Exibir Logo', type: 'boolean', default: true, group: 'content' },
-            { key: 'showProgress', label: 'Mostrar Progresso', type: 'boolean', default: false, group: 'content' },
-            { key: 'showNavigation', label: 'Mostrar Navegação', type: 'boolean', default: false, group: 'content' },
-            // Estilo
-            { key: 'backgroundColor', label: 'Fundo', type: 'color', default: '#F8F9FA', group: 'style' },
-            { key: 'textAlign', label: 'Alinhamento', type: 'select', enumValues: ['left', 'center', 'right'], default: 'center', group: 'style' },
-            { key: 'showBackground', label: 'Mostrar Fundo', type: 'boolean', default: true, group: 'style' },
-            { key: 'boxShadow', label: 'Sombra', type: 'select', enumValues: ['none', 'sm', 'md', 'lg'], default: 'sm', group: 'style' },
-            { key: 'logoUrl', label: 'Logo URL', type: 'string', default: 'https://via.placeholder.com/120x40?text=Logo', group: 'style', when: c => c.showLogo },
-            { key: 'logoAlt', label: 'Logo Alt', type: 'string', default: 'Logo', group: 'style', when: c => c.showLogo },
-            // Layout
-            { key: 'padding', label: 'Padding', type: 'string', default: '24px', group: 'layout' },
-            { key: 'borderRadius', label: 'Borda', type: 'string', default: '8px', group: 'layout' },
-            { key: 'marginBottom', label: 'Margem Inferior', type: 'string', default: '16px', group: 'layout' },
-            { key: 'contentMaxWidth', label: 'Largura Máx. Conteúdo', type: 'number', default: 640, group: 'layout' },
-            // Comportamento
-            { key: 'enableProgressBar', label: 'Ativar Barra de Progresso', type: 'boolean', default: false, group: 'behavior' },
-            { key: 'progressValue', label: 'Progresso (%)', type: 'number', default: 0, min: 0, max: 100, group: 'behavior', when: c => c.enableProgressBar },
-            { key: 'progressMax', label: 'Progresso Máx', type: 'number', default: 100, min: 1, group: 'behavior', when: c => c.enableProgressBar },
-            { key: 'progressHeight', label: 'Altura Barra', type: 'number', default: 8, min: 1, group: 'behavior', when: c => c.enableProgressBar },
-            { key: 'showBackButton', label: 'Mostrar Botão Voltar', type: 'boolean', default: false, group: 'behavior' }
-        ]
-    },
-    {
-        type: 'options-grid',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'logic', label: 'Lógica', order: 2 },
-            { id: 'style', label: 'Estilo', order: 3 }
-        ],
-        properties: [
-            { key: 'question', label: 'Pergunta', type: 'richtext', required: true, default: 'Pergunta do quiz', group: 'content' },
-            { key: 'options', label: 'Opções', type: 'options-list', required: true, default: [], group: 'content', description: 'Lista de opções com imagem, texto, pontos e categoria' },
-            { key: 'columns', label: 'Colunas', type: 'number', default: 2, min: 1, max: 4, group: 'style' },
-            { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean', default: true, group: 'style' },
-            { key: 'imageSize', label: 'Tamanho Imagem', type: 'select', enumValues: ['auto', 'custom'], default: 'custom', group: 'style', when: c => c.showImages },
-            { key: 'imageWidth', label: 'Largura Imagem', type: 'number', default: 300, min: 40, group: 'style', when: c => c.showImages && c.imageSize === 'custom' },
-            { key: 'imageHeight', label: 'Altura Imagem', type: 'number', default: 300, min: 40, group: 'style', when: c => c.showImages && c.imageSize === 'custom' },
-            { key: 'gridGap', label: 'Espaçamento', type: 'number', default: 16, min: 0, group: 'style' },
-            { key: 'responsiveColumns', label: 'Colunas Responsivas', type: 'boolean', default: true, group: 'style' },
-            { key: 'multipleSelection', label: 'Multi Seleção', type: 'boolean', default: true, group: 'logic' },
-            { key: 'requiredSelections', label: 'Seleções Necessárias', type: 'number', default: 3, min: 1, group: 'logic' },
-            { key: 'maxSelections', label: 'Máx Seleções', type: 'number', default: 3, min: 1, group: 'logic', when: c => c.multipleSelection },
-            { key: 'minSelections', label: 'Mín Seleções', type: 'number', default: 1, min: 1, group: 'logic', when: c => c.multipleSelection },
-            { key: 'autoAdvanceOnComplete', label: 'Avançar Automaticamente', type: 'boolean', default: true, group: 'logic' },
-            { key: 'autoAdvanceDelay', label: 'Delay Auto (ms)', type: 'number', default: 1500, min: 0, group: 'logic', when: c => c.autoAdvanceOnComplete },
-            { key: 'enableButtonOnlyWhenValid', label: 'Habilitar Botão quando Válido', type: 'boolean', default: true, group: 'logic' },
-            { key: 'showValidationFeedback', label: 'Mostrar Validação', type: 'boolean', default: true, group: 'logic' },
-            { key: 'validationMessage', label: 'Mensagem de Validação', type: 'string', default: 'Selecione as opções necessárias', group: 'logic', when: c => c.showValidationFeedback },
-            { key: 'progressMessage', label: 'Mensagem de Progresso', type: 'string', default: 'Você selecionou {count} de {required} opções', group: 'logic' },
-            { key: 'showSelectionCount', label: 'Mostrar Contador', type: 'boolean', default: true, group: 'logic' },
-            { key: 'selectionStyle', label: 'Estilo de Seleção', type: 'select', enumValues: ['border', 'background'], default: 'border', group: 'style' },
-            { key: 'selectedColor', label: 'Cor Selecionado', type: 'color', default: '#3B82F6', group: 'style' },
-            { key: 'hoverColor', label: 'Cor Hover', type: 'color', default: '#EBF5FF', group: 'style' }
-        ]
-    },
-    {
-        type: 'text-inline',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'text', label: 'Texto', type: 'richtext', required: true, default: 'Texto inline', group: 'content' },
-            { key: 'textAlign', label: 'Alinhamento', type: 'select', enumValues: ['left', 'center', 'right'], default: 'left', group: 'style' },
-            { key: 'fontSize', label: 'Tamanho', type: 'select', enumValues: ['sm', 'base', 'lg', 'xl'], default: 'base', group: 'style' },
-            { key: 'fontWeight', label: 'Peso', type: 'select', enumValues: ['normal', 'semibold', 'bold'], default: 'normal', group: 'style' },
-            { key: 'color', label: 'Cor', type: 'color', default: '#432818', group: 'style' }
-        ]
-    },
-    {
-        type: 'button-inline',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 },
-            { id: 'logic', label: 'Lógica', order: 3 }
-        ],
-        properties: [
-            { key: 'text', label: 'Texto', type: 'string', required: true, default: 'Clique aqui', group: 'content' },
-            { key: 'backgroundColor', label: 'Fundo', type: 'color', default: '#B89B7A', group: 'style' },
-            { key: 'textColor', label: 'Cor do Texto', type: 'color', default: '#FFFFFF', group: 'style' },
-            { key: 'borderColor', label: 'Borda', type: 'color', default: '#B89B7A', group: 'style' },
-            { key: 'fontSize', label: 'Tamanho Fonte', type: 'string', default: '16', group: 'style' },
-            { key: 'fontWeight', label: 'Peso Fonte', type: 'select', enumValues: ['400', '500', '600', '700'], default: '500', group: 'style' },
-            { key: 'borderRadius', label: 'Raio Borda', type: 'number', default: 8, min: 0, group: 'style' },
-            { key: 'showDisabledState', label: 'Estado Desabilitado', type: 'boolean', default: true, group: 'style' },
-            { key: 'disabledText', label: 'Texto Desabilitado', type: 'string', default: 'Preencha para continuar', group: 'style', when: c => c.showDisabledState },
-            { key: 'action', label: 'Ação', type: 'select', enumValues: ['next-step', 'open-url', 'submit-form'], default: 'next-step', group: 'logic' },
-            { key: 'nextStepId', label: 'Próximo Step ID', type: 'string', group: 'logic', when: c => c.action === 'next-step' },
-            { key: 'url', label: 'URL', type: 'string', group: 'logic', when: c => c.action === 'open-url' },
-            { key: 'autoAdvanceOnComplete', label: 'Auto Avançar', type: 'boolean', default: true, group: 'logic' },
-            { key: 'autoAdvanceDelay', label: 'Delay Auto (ms)', type: 'number', default: 600, min: 0, group: 'logic', when: c => c.autoAdvanceOnComplete }
-        ]
-    },
-    {
-        type: 'decorative-bar',
-        groups: [
-            { id: 'style', label: 'Estilo', order: 1 },
-            { id: 'layout', label: 'Layout', order: 2 }
-        ],
-        properties: [
-            { key: 'backgroundColor', label: 'Cor', type: 'color', default: '#B89B7A', group: 'style' },
-            { key: 'height', label: 'Altura', type: 'number', default: 4, min: 1, group: 'style' },
-            { key: 'width', label: 'Largura', type: 'string', default: 'min(640px, 100%)', group: 'layout' },
-            { key: 'borderRadius', label: 'Raio Borda', type: 'number', default: 3, min: 0, group: 'layout' },
-            { key: 'showShadow', label: 'Mostrar Sombra', type: 'boolean', default: true, group: 'style' }
-        ]
-    },
-    {
-        type: 'form-container',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'behavior', label: 'Comportamento', order: 2 },
-            { id: 'style', label: 'Estilo', order: 3 },
-            { id: 'layout', label: 'Layout', order: 4 }
-        ],
-        properties: [
-            { key: 'title', label: 'Título', type: 'string', default: 'Formulário', group: 'content' },
-            { key: 'placeholder', label: 'Placeholder', type: 'string', default: 'Digite aqui...', group: 'content' },
-            { key: 'buttonText', label: 'Texto do Botão', type: 'string', default: 'Enviar', group: 'content' },
-            { key: 'requiredMessage', label: 'Mensagem Obrigatório', type: 'string', default: 'Campo obrigatório', group: 'content' },
-            { key: 'enableButtonOnlyWhenValid', label: 'Habilitar Botão se Válido', type: 'boolean', default: true, group: 'behavior' },
-            { key: 'showValidationFeedback', label: 'Mostrar Validação', type: 'boolean', default: true, group: 'behavior' },
-            { key: 'autoAdvanceOnComplete', label: 'Avançar Automaticamente', type: 'boolean', default: true, group: 'behavior' },
-            { key: 'autoAdvanceDelay', label: 'Delay Auto (ms)', type: 'number', default: 600, min: 0, group: 'behavior', when: c => c.autoAdvanceOnComplete },
-            { key: 'backgroundColor', label: 'Fundo', type: 'color', default: '#FFFFFF', group: 'style' },
-            { key: 'borderColor', label: 'Borda', type: 'color', default: '#B89B7A', group: 'style' },
-            { key: 'textColor', label: 'Cor do Texto', type: 'color', default: '#432818', group: 'style' },
-            { key: 'paddingTop', label: 'Padding Top', type: 'number', default: 16, group: 'layout' },
-            { key: 'paddingBottom', label: 'Padding Bottom', type: 'number', default: 16, group: 'layout' },
-            { key: 'paddingLeft', label: 'Padding Left', type: 'number', default: 16, group: 'layout' },
-            { key: 'paddingRight', label: 'Padding Right', type: 'number', default: 16, group: 'layout' },
-            { key: 'borderRadius', label: 'Raio Borda', type: 'number', default: 8, group: 'layout' }
-        ]
-    },
-    {
-        type: 'legal-notice',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 },
-            { id: 'layout', label: 'Layout', order: 3 }
-        ],
-        properties: [
-            { key: 'copyrightText', label: 'Copyright', type: 'string', default: '© 2025 Sua Marca', group: 'content' },
-            { key: 'privacyText', label: 'Texto Privacidade', type: 'string', default: 'Política de Privacidade', group: 'content' },
-            { key: 'termsText', label: 'Texto Termos', type: 'string', default: 'Termos de Uso', group: 'content' },
-            { key: 'privacyLinkUrl', label: 'URL Privacidade', type: 'string', default: '/privacy', group: 'content' },
-            { key: 'termsLinkUrl', label: 'URL Termos', type: 'string', default: '/terms', group: 'content' },
-            { key: 'showPrivacyLink', label: 'Mostrar Link Privacidade', type: 'boolean', default: true, group: 'content' },
-            { key: 'showTermsLink', label: 'Mostrar Link Termos', type: 'boolean', default: true, group: 'content' },
-            { key: 'textColor', label: 'Cor do Texto', type: 'color', default: '#9CA3AF', group: 'style' },
-            { key: 'linkColor', label: 'Cor dos Links', type: 'color', default: '#B89B7A', group: 'style' },
-            { key: 'fontSize', label: 'Tamanho Fonte', type: 'string', default: 'text-xs', group: 'style' },
-            { key: 'textAlign', label: 'Alinhamento', type: 'select', enumValues: ['left', 'center', 'right'], default: 'center', group: 'layout' },
-            { key: 'marginTop', label: 'Margem Topo', type: 'number', default: 32, group: 'layout' },
-            { key: 'marginBottom', label: 'Margem Inferior', type: 'number', default: 8, group: 'layout' }
-        ]
-    },
-    {
-        type: 'quiz-offer-cta-inline',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'title', label: 'Título', type: 'string', default: 'Oferta Especial', group: 'content', required: true },
-            { key: 'description', label: 'Descrição', type: 'richtext', default: 'Aproveite esta oportunidade única', group: 'content' },
-            { key: 'buttonText', label: 'Texto do Botão', type: 'string', default: 'Quero Aproveitar', group: 'content' },
-            { key: 'gradientStart', label: 'Gradiente Início', type: 'color', default: '#B89B7A', group: 'style' },
-            { key: 'gradientEnd', label: 'Gradiente Fim', type: 'color', default: '#D4AF37', group: 'style' },
-            { key: 'textColor', label: 'Cor do Texto', type: 'color', default: '#FFFFFF', group: 'style' }
-        ]
-    },
-    {
-        type: 'result-header-inline',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'title', label: 'Título', type: 'string', default: 'Seu Resultado', group: 'content', required: true },
-            { key: 'subtitle', label: 'Subtítulo', type: 'string', default: '', group: 'content' },
-            { key: 'textAlign', label: 'Alinhamento', type: 'select', enumValues: ['left', 'center', 'right'], default: 'center', group: 'style' }
-        ]
-    },
-    {
-        type: 'style-card-inline',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'styleName', label: 'Nome do Estilo', type: 'string', default: 'Seu Estilo', group: 'content' },
-            { key: 'image', label: 'Imagem (URL)', type: 'string', default: '', group: 'content' },
-            { key: 'description', label: 'Descrição', type: 'richtext', default: 'Descrição do estilo', group: 'content' },
-            { key: 'cardBackground', label: 'Fundo do Card', type: 'color', default: '#FFFFFF', group: 'style' }
-        ]
-    },
-    {
-        type: 'urgency-timer-inline',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'label', label: 'Rótulo', type: 'string', default: 'Oferta Expira em:', group: 'content' },
-            { key: 'durationSeconds', label: 'Duração (s)', type: 'number', default: 900, min: 0, group: 'content' },
-            { key: 'backgroundColor', label: 'Fundo', type: 'color', default: '#FEF2F2', group: 'style' },
-            { key: 'accentColor', label: 'Cor Destaque', type: 'color', default: '#DC2626', group: 'style' }
-        ]
-    },
-    {
-        type: 'guarantee',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'title', label: 'Título', type: 'string', default: 'Garantia', group: 'content' },
-            { key: 'description', label: 'Descrição', type: 'richtext', default: 'Satisfação garantida', group: 'content' },
-            { key: 'borderColor', label: 'Cor da Borda', type: 'color', default: '#A7F3D0', group: 'style' },
-            { key: 'backgroundColor', label: 'Fundo', type: 'color', default: '#ECFDF5', group: 'style' }
-        ]
-    },
-    {
-        type: 'bonus',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'title', label: 'Título', type: 'string', default: 'Bônus Exclusivo', group: 'content' },
-            { key: 'description', label: 'Descrição', type: 'richtext', default: 'Aproveite este bônus', group: 'content' },
-            { key: 'borderColor', label: 'Cor da Borda', type: 'color', default: '#FDE68A', group: 'style' },
-            { key: 'backgroundColor', label: 'Fundo', type: 'color', default: '#FFFBEB', group: 'style' }
-        ]
-    },
-    {
-        type: 'benefits',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 }
-        ],
-        properties: [
-            { key: 'benefits', label: 'Benefícios', type: 'options-list', default: [], group: 'content' }
-        ]
-    },
-    {
-        type: 'secure-purchase',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 }
-        ],
-        properties: [
-            { key: 'text', label: 'Texto', type: 'string', default: 'Compra 100% Segura', group: 'content' }
-        ]
-    },
-    {
-        type: 'value-anchoring',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 }
-        ],
-        properties: [
-            { key: 'oldPrice', label: 'Preço Antigo', type: 'string', default: 'R$ 297,00', group: 'content' },
-            { key: 'newPrice', label: 'Preço Novo', type: 'string', default: 'R$ 97,00', group: 'content' },
-            { key: 'discount', label: 'Desconto', type: 'string', default: 'Economize 67%', group: 'content' }
-        ]
-    },
-    {
-        type: 'before-after-inline',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 }
-        ],
-        properties: [
-            { key: 'beforeImage', label: 'Imagem Antes (URL)', type: 'string', default: '', group: 'content' },
-            { key: 'beforeText', label: 'Texto Antes', type: 'string', default: 'Situação anterior', group: 'content' },
-            { key: 'afterImage', label: 'Imagem Depois (URL)', type: 'string', default: '', group: 'content' },
-            { key: 'afterText', label: 'Texto Depois', type: 'string', default: 'Resultado alcançado', group: 'content' }
-        ]
-    },
-    {
-        type: 'mentor-section-inline',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 }
-        ],
-        properties: [
-            { key: 'mentorImage', label: 'Imagem Mentor (URL)', type: 'string', default: '', group: 'content' },
-            { key: 'mentorName', label: 'Nome do Mentor', type: 'string', default: 'Mentor', group: 'content' },
-            { key: 'mentorBio', label: 'Bio do Mentor', type: 'richtext', default: 'Descrição do mentor', group: 'content' }
-        ]
-    },
-    {
-        type: 'fashion-ai-generator',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 }
-        ],
-        properties: [
-            { key: 'note', label: 'Observação', type: 'richtext', default: 'Componente interativo de IA (placeholder no editor).', group: 'content' }
-        ]
-    },
-    {
-        type: 'connected-template-wrapper',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'title', label: 'Título Interno', type: 'string', default: 'Wrapper', group: 'content' },
-            { key: 'backgroundColor', label: 'Fundo', type: 'color', default: '#F8FAFC', group: 'style' }
-        ]
-    },
-    {
-        type: 'testimonials',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 }
-        ],
-        properties: [
-            { key: 'testimonials', label: 'Depoimentos (texto simples)', type: 'options-list', default: [], group: 'content', description: 'Versão simples: apenas o texto do depoimento. Para avatar/autor use o editor avançado futuramente.' }
-        ]
-    },
-    {
-        type: 'secondary-styles',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 }
-        ],
-        properties: [
-            { key: 'styles', label: 'Estilos (nomes)', type: 'options-list', default: [], group: 'content', description: 'Informe os nomes dos estilos secundários. Pontuações serão calculadas automaticamente.' }
-        ]
-    },
-    {
-        type: 'conversion',
-        groups: [
-            { id: 'content', label: 'Conteúdo', order: 1 },
-            { id: 'style', label: 'Estilo', order: 2 }
-        ],
-        properties: [
-            { key: 'headline', label: 'Headline', type: 'string', default: 'Pronta para transformar seu estilo?', group: 'content' },
-            { key: 'subheadline', label: 'Subheadline', type: 'richtext', default: 'Conheça nosso programa completo.', group: 'content' },
-            { key: 'ctaText', label: 'Texto do CTA', type: 'string', default: 'Quero participar', group: 'content' },
-            { key: 'backgroundColor', label: 'Fundo', type: 'color', default: '#FFFFFF', group: 'style' }
-        ]
-    }
-];
+export const INITIAL_BLOCK_SCHEMAS: BlockPropertySchemaDefinition[] = [];
 
-// 🔄 INTEGRAÇÃO COM NOVO SISTEMA MODULAR
-// Tenta carregar schema do novo sistema primeiro, fallback para legado
-let newSchemaSystemAvailable = false;
-let getSchemaFromNewSystem: ((type: string) => BlockPropertySchemaDefinition | null) | null = null;
-
-try {
-    // Tenta importar o novo sistema (lazy)
-    import('@/config/schemas/adapter').then(adapter => {
-        newSchemaSystemAvailable = true;
-        getSchemaFromNewSystem = adapter.getHybridSchema;
-    }).catch(() => {
-        // Novo sistema não disponível, usa legado
-        console.log('[BlockSchema] Using legacy schema system');
-    });
-} catch {
-    // Ignora erro se módulo não existir
-}
-
-export function getBlockSchema(type: string): BlockPropertySchemaDefinition | undefined {
-    // Tenta novo sistema se disponível
-    if (newSchemaSystemAvailable && getSchemaFromNewSystem) {
-        const newSchema = getSchemaFromNewSystem(type);
-        if (newSchema) return newSchema;
-    }
-    
-    // Fallback para legado
-    return blockSchemaMap[type];
-}
-
-export interface BlockValidationResult {
-    valid: boolean;
-    errors: string[];
-}
-
-export function validateBlock(type: string, values: Record<string, any>): BlockValidationResult {
-    const schema = getBlockSchema(type);
-    if (!schema) return { valid: true, errors: [] };
-    const errors: string[] = [];
-    for (const prop of schema.properties) {
-        if (prop.when && !prop.when(values)) continue; // skip condicional
-        const value = values[prop.key];
-        if (prop.required && (value === undefined || value === null || value === '')) {
-            errors.push(`${prop.label} é obrigatório`);
-            continue;
-        }
-        if (prop.type === 'number' && value !== undefined) {
-            if (typeof value !== 'number') errors.push(`${prop.label} deve ser número`);
-            if (prop.min !== undefined && value < prop.min) errors.push(`${prop.label} mínimo ${prop.min}`);
-            if (prop.max !== undefined && value > prop.max) errors.push(`${prop.label} máximo ${prop.max}`);
-        }
-        if (prop.pattern && value && !prop.pattern.test(String(value))) {
-            errors.push(`${prop.label} formato inválido`);
-        }
-        if (prop.validate) {
-            const msg = prop.validate(value, values);
-            if (msg) errors.push(msg);
-        }
-    }
-    return { valid: errors.length === 0, errors };
-}
-
-// ============================================================================
-// SCHEMAS ADICIONAIS PARA TEMPLATE QUIZ 21-STEPS
-// ============================================================================
-
-// Schema para intro-hero (seção inicial do quiz)
-const introHeroSchema: BlockPropertySchemaDefinition = {
-    type: 'intro-hero',
-    groups: [
-        { id: 'content', label: 'Conteúdo', order: 1 },
-        { id: 'logo', label: 'Logo', order: 2 },
-        { id: 'image', label: 'Imagem', order: 3 },
-        { id: 'style', label: 'Estilo', order: 4 },
-        { id: 'progress', label: 'Progresso', order: 5 }
+export const blockSchemaMap: Record<string, any> = {
+  'decorative-bar-inline': {
+    type: 'decorative-bar-inline',
+    label: 'Barra Decorativa Inline',
+    icon: 'separator',
+    category: 'decoration',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: {
+      barColor: '#E5E7EB',
+      barHeight: 4,
+      marginTop: 8,
+      marginBottom: 8,
+    },
+    propertySchema: [
+      { key: 'barColor', type: 'color', label: 'Cor da Barra', required: false, defaultValue: '#E5E7EB' },
+      { key: 'barHeight', type: 'number', label: 'Altura (px)', required: false, defaultValue: 4, min: 1, max: 20 },
+      { key: 'marginTop', type: 'number', label: 'Margem Superior (px)', required: false, defaultValue: 8 },
+      { key: 'marginBottom', type: 'number', label: 'Margem Inferior (px)', required: false, defaultValue: 8 },
     ],
-    properties: [
-        // Conteúdo
-        { key: 'title', label: 'Título', type: 'richtext', required: true, default: 'Bem-vindo ao Quiz', group: 'content' },
-        { key: 'subtitle', label: 'Subtítulo', type: 'richtext', default: 'Descubra seu perfil', group: 'content' },
-        { key: 'description', label: 'Descrição', type: 'richtext', default: '', group: 'content' },
-        // Logo
-        { key: 'logoUrl', label: 'URL do Logo', type: 'string', default: '', group: 'logo' },
-        { key: 'logoAlt', label: 'Alt do Logo', type: 'string', default: 'Logo', group: 'logo' },
-        { key: 'logoWidth', label: 'Largura do Logo', type: 'number', default: 96, min: 20, max: 300, group: 'logo' },
-        { key: 'logoHeight', label: 'Altura do Logo', type: 'number', default: 96, min: 20, max: 300, group: 'logo' },
-        // Imagem
-        { key: 'imageUrl', label: 'URL da Imagem', type: 'string', default: '', group: 'image' },
-        { key: 'imageAlt', label: 'Alt da Imagem', type: 'string', default: 'Imagem Hero', group: 'image' },
-        // Estilo
-        { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', default: '#FAF9F7', group: 'style' },
-        { key: 'textColor', label: 'Cor do Texto', type: 'color', default: '#432818', group: 'style' },
-        { key: 'padding', label: 'Padding', type: 'number', default: 24, min: 0, max: 100, group: 'style' },
-        // Progresso
-        { key: 'showProgress', label: 'Mostrar Progresso', type: 'boolean', default: false, group: 'progress' },
-        { key: 'progressValue', label: 'Valor do Progresso (%)', type: 'number', default: 0, min: 0, max: 100, group: 'progress', when: c => c.showProgress }
-    ]
-};
+  },
 
-// Schema para welcome-form (formulário de boas-vindas)
-const welcomeFormSchema: BlockPropertySchemaDefinition = {
-    type: 'welcome-form',
-    groups: [
-        { id: 'content', label: 'Conteúdo', order: 1 },
-        { id: 'fields', label: 'Campos', order: 2 },
-        { id: 'button', label: 'Botão', order: 3 },
-        { id: 'style', label: 'Estilo', order: 4 },
-        { id: 'behavior', label: 'Comportamento', order: 5 }
+  // 🎯 SCHEMAS MODULARES COMPLETOS
+  'quiz-logo': {
+    type: 'quiz-logo',
+    label: 'Logo do Quiz',
+    icon: 'image',
+    category: 'branding',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { logoUrl: 'https://via.placeholder.com/120x40', logoWidth: 120, logoHeight: 40, altText: 'Logo' },
+    propertySchema: [
+      { key: 'logoUrl', type: 'text', label: 'URL da Logo', required: true, defaultValue: 'https://via.placeholder.com/120x40' },
+      { key: 'logoWidth', type: 'number', label: 'Largura (px)', required: false, defaultValue: 120, min: 50, max: 400 },
+      { key: 'logoHeight', type: 'number', label: 'Altura (px)', required: false, defaultValue: 40, min: 20, max: 200 },
+      { key: 'altText', type: 'text', label: 'Texto Alternativo', required: false, defaultValue: 'Logo' },
     ],
-    properties: [
-        // Conteúdo
-        { key: 'questionText', label: 'Texto da Pergunta', type: 'richtext', required: true, default: 'Como posso te chamar?', group: 'content' },
-        // Campos
-        { key: 'nameLabel', label: 'Label do Nome', type: 'string', default: 'Seu primeiro nome', group: 'fields' },
-        { key: 'namePlaceholder', label: 'Placeholder do Nome', type: 'string', default: 'Digite seu primeiro nome...', group: 'fields' },
-        { key: 'emailLabel', label: 'Label do Email', type: 'string', default: 'Seu melhor email', group: 'fields' },
-        { key: 'emailPlaceholder', label: 'Placeholder do Email', type: 'string', default: 'Digite seu email...', group: 'fields' },
-        { key: 'phoneLabel', label: 'Label do Telefone', type: 'string', default: 'Seu telefone', group: 'fields' },
-        { key: 'phonePlaceholder', label: 'Placeholder do Telefone', type: 'string', default: '(00) 00000-0000', group: 'fields' },
-        // Botão
-        { key: 'buttonText', label: 'Texto do Botão', type: 'string', default: 'Iniciar Quiz', group: 'button' },
-        { key: 'buttonBackgroundColor', label: 'Cor do Botão', type: 'color', default: '#B89B7A', group: 'button' },
-        { key: 'buttonTextColor', label: 'Cor do Texto do Botão', type: 'color', default: '#FFFFFF', group: 'button' },
-        // Estilo
-        { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', default: '#FFFFFF', group: 'style' },
-        { key: 'textColor', label: 'Cor do Texto', type: 'color', default: '#432818', group: 'style' },
-        { key: 'padding', label: 'Padding', type: 'number', default: 24, min: 0, max: 100, group: 'style' },
-        // Comportamento
-        { key: 'requiredFields', label: 'Campos Obrigatórios', type: 'boolean', default: true, group: 'behavior' },
-        { key: 'validateEmail', label: 'Validar Email', type: 'boolean', default: true, group: 'behavior' },
-        { key: 'autoAdvanceOnComplete', label: 'Avançar Automaticamente', type: 'boolean', default: true, group: 'behavior' }
-    ]
-};
+  },
 
-// Schema para question-hero (cabeçalho de pergunta)
-const questionHeroSchema: BlockPropertySchemaDefinition = {
-    type: 'question-hero',
-    groups: [
-        { id: 'content', label: 'Conteúdo', order: 1 },
-        { id: 'logo', label: 'Logo', order: 2 },
-        { id: 'progress', label: 'Progresso', order: 3 },
-        { id: 'style', label: 'Estilo', order: 4 }
+  'quiz-progress-bar': {
+    type: 'quiz-progress-bar',
+    label: 'Barra de Progresso',
+    icon: 'activity',
+    category: 'navigation',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { currentStep: 1, totalSteps: 21, barColor: '#3B82F6', backgroundColor: '#E5E7EB', height: 8, showPercentage: true },
+    propertySchema: [
+      { key: 'currentStep', type: 'number', label: 'Etapa Atual', required: true, defaultValue: 1, min: 1 },
+      { key: 'totalSteps', type: 'number', label: 'Total de Etapas', required: true, defaultValue: 21, min: 1 },
+      { key: 'barColor', type: 'color', label: 'Cor da Barra', required: false, defaultValue: '#3B82F6' },
+      { key: 'backgroundColor', type: 'color', label: 'Cor de Fundo', required: false, defaultValue: '#E5E7EB' },
+      { key: 'height', type: 'number', label: 'Altura (px)', required: false, defaultValue: 8, min: 4, max: 20 },
+      { key: 'showPercentage', type: 'boolean', label: 'Mostrar Percentual', required: false, defaultValue: true },
     ],
-    properties: [
-        // Conteúdo
-        { key: 'questionNumber', label: 'Número/Título da Questão', type: 'string', default: 'Q1', group: 'content' },
-        { key: 'questionText', label: 'Texto da Pergunta', type: 'richtext', required: true, default: 'Sua pergunta aqui', group: 'content' },
-        // Logo
-        { key: 'logoUrl', label: 'URL do Logo', type: 'string', default: '', group: 'logo' },
-        { key: 'logoAlt', label: 'Alt do Logo', type: 'string', default: 'Logo', group: 'logo' },
-        // Progresso
-        { key: 'showProgress', label: 'Mostrar Progresso', type: 'boolean', default: true, group: 'progress' },
-        { key: 'currentQuestion', label: 'Questão Atual', type: 'number', default: 1, min: 1, group: 'progress', when: c => c.showProgress },
-        { key: 'totalQuestions', label: 'Total de Questões', type: 'number', default: 10, min: 1, group: 'progress', when: c => c.showProgress },
-        { key: 'progressValue', label: 'Valor do Progresso (%)', type: 'number', default: 0, min: 0, max: 100, group: 'progress', when: c => c.showProgress },
-        // Estilo
-        { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', default: 'transparent', group: 'style' },
-        { key: 'textColor', label: 'Cor do Texto', type: 'color', default: '#432818', group: 'style' },
-        { key: 'padding', label: 'Padding', type: 'number', default: 16, min: 0, max: 100, group: 'style' }
-    ]
+  },
+
+  'quiz-back-button': {
+    type: 'quiz-back-button',
+    label: 'Botão Voltar',
+    icon: 'arrow-left',
+    category: 'navigation',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { buttonText: 'Voltar', showIcon: true, variant: 'ghost' },
+    propertySchema: [
+      { key: 'buttonText', type: 'text', label: 'Texto do Botão', required: false, defaultValue: 'Voltar' },
+      { key: 'showIcon', type: 'boolean', label: 'Mostrar Ícone', required: false, defaultValue: true },
+      { key: 'variant', type: 'select', label: 'Variante', required: false, defaultValue: 'ghost', options: ['default', 'ghost', 'outline', 'secondary'] },
+    ],
+  },
+
+  'image-display-inline': {
+    type: 'image-display-inline',
+    label: 'Imagem Display Inline',
+    icon: 'image',
+    category: 'media',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { imageUrl: 'https://via.placeholder.com/600x400', altText: 'Imagem', width: '100%', height: 'auto', objectFit: 'cover', borderRadius: 8 },
+    propertySchema: [
+      { key: 'imageUrl', type: 'text', label: 'URL da Imagem', required: true, defaultValue: 'https://via.placeholder.com/600x400' },
+      { key: 'altText', type: 'text', label: 'Texto Alternativo', required: false, defaultValue: 'Imagem' },
+      { key: 'width', type: 'text', label: 'Largura', required: false, defaultValue: '100%' },
+      { key: 'height', type: 'text', label: 'Altura', required: false, defaultValue: 'auto' },
+      { key: 'objectFit', type: 'select', label: 'Ajuste da Imagem', required: false, defaultValue: 'cover', options: ['cover', 'contain', 'fill', 'none', 'scale-down'] },
+      { key: 'borderRadius', type: 'number', label: 'Arredondamento (px)', required: false, defaultValue: 8, min: 0, max: 50 },
+    ],
+  },
+
+  'quiz-question-header': {
+    type: 'quiz-question-header',
+    label: 'Cabeçalho de Pergunta',
+    icon: 'help-circle',
+    category: 'content',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { questionText: 'Qual é a sua pergunta?', questionNumber: 1, showNumber: true, fontSize: 24, fontWeight: 'bold', textAlign: 'center' },
+    propertySchema: [
+      { key: 'questionText', type: 'textarea', label: 'Texto da Pergunta', required: true, defaultValue: 'Qual é a sua pergunta?' },
+      { key: 'questionNumber', type: 'number', label: 'Número da Pergunta', required: false, defaultValue: 1, min: 1 },
+      { key: 'showNumber', type: 'boolean', label: 'Mostrar Número', required: false, defaultValue: true },
+      { key: 'fontSize', type: 'number', label: 'Tamanho da Fonte (px)', required: false, defaultValue: 24, min: 12, max: 48 },
+      { key: 'fontWeight', type: 'select', label: 'Peso da Fonte', required: false, defaultValue: 'bold', options: ['normal', 'medium', 'semibold', 'bold'] },
+      { key: 'textAlign', type: 'select', label: 'Alinhamento', required: false, defaultValue: 'center', options: ['left', 'center', 'right'] },
+    ],
+  },
+
+  'quiz-transition-loader': {
+    type: 'quiz-transition-loader',
+    label: 'Loader de Transição',
+    icon: 'loader',
+    category: 'feedback',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { message: 'Analisando suas respostas...', duration: 2000, spinnerSize: 48, spinnerColor: '#3B82F6' },
+    propertySchema: [
+      { key: 'message', type: 'text', label: 'Mensagem', required: false, defaultValue: 'Analisando suas respostas...' },
+      { key: 'duration', type: 'number', label: 'Duração (ms)', required: false, defaultValue: 2000, min: 500, max: 10000 },
+      { key: 'spinnerSize', type: 'number', label: 'Tamanho do Spinner (px)', required: false, defaultValue: 48, min: 24, max: 96 },
+      { key: 'spinnerColor', type: 'color', label: 'Cor do Spinner', required: false, defaultValue: '#3B82F6' },
+    ],
+  },
+
+  'quiz-result-header': {
+    type: 'quiz-result-header',
+    label: 'Cabeçalho de Resultado',
+    icon: 'check-circle',
+    category: 'content',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { title: 'Seu Resultado', subtitle: 'Baseado nas suas respostas', showIcon: true, iconType: 'success', textAlign: 'center' },
+    propertySchema: [
+      { key: 'title', type: 'text', label: 'Título', required: true, defaultValue: 'Seu Resultado' },
+      { key: 'subtitle', type: 'text', label: 'Subtítulo', required: false, defaultValue: 'Baseado nas suas respostas' },
+      { key: 'showIcon', type: 'boolean', label: 'Mostrar Ícone', required: false, defaultValue: true },
+      { key: 'iconType', type: 'select', label: 'Tipo de Ícone', required: false, defaultValue: 'success', options: ['success', 'info', 'warning', 'error'] },
+      { key: 'textAlign', type: 'select', label: 'Alinhamento', required: false, defaultValue: 'center', options: ['left', 'center', 'right'] },
+    ],
+  },
+
+  'quiz-offer-hero': {
+    type: 'quiz-offer-hero',
+    label: 'Hero de Oferta',
+    icon: 'gift',
+    category: 'conversion',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { headline: 'Oferta Especial para Você!', subheadline: 'Aproveite esta oportunidade única', ctaText: 'Quero Aproveitar', ctaUrl: '#', backgroundImage: '', backgroundColor: '#3B82F6' },
+    propertySchema: [
+      { key: 'headline', type: 'text', label: 'Título Principal', required: true, defaultValue: 'Oferta Especial para Você!' },
+      { key: 'subheadline', type: 'textarea', label: 'Subtítulo', required: false, defaultValue: 'Aproveite esta oportunidade única' },
+      { key: 'ctaText', type: 'text', label: 'Texto do Botão', required: true, defaultValue: 'Quero Aproveitar' },
+      { key: 'ctaUrl', type: 'text', label: 'URL do Botão', required: false, defaultValue: '#' },
+      { key: 'backgroundImage', type: 'text', label: 'Imagem de Fundo (URL)', required: false, defaultValue: '' },
+      { key: 'backgroundColor', type: 'color', label: 'Cor de Fundo', required: false, defaultValue: '#3B82F6' },
+    ],
+  },
 };
-
-// Adicionar os schemas ao array INITIAL_BLOCK_SCHEMAS
-INITIAL_BLOCK_SCHEMAS.push(introHeroSchema, welcomeFormSchema, questionHeroSchema);
-
-// Recriar o mapa com os novos schemas incluídos
-export const blockSchemaMap: Record<string, BlockPropertySchemaDefinition> = Object.fromEntries(
-    INITIAL_BLOCK_SCHEMAS.map(def => [def.type, def])
-);

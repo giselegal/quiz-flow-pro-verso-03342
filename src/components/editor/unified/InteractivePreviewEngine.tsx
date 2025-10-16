@@ -22,6 +22,9 @@ import { Button } from '@/components/ui/button';
 import { User, Target, Trophy, CheckCircle } from 'lucide-react';
 import Step20Result from '@/components/steps/Step20Result';
 import { useDebounce } from '@/hooks/useDebounce';
+import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
 
 export interface InteractivePreviewEngineProps {
   blocks: Block[];
@@ -66,6 +69,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   viewportSize = 'desktop',
   onBlockSelect,
   onBlockUpdate,
+  onBlocksReordered,
   funnelId = 'quiz21StepsComplete',
   currentStep: initialStep = 1,
   mode = 'preview',
@@ -373,6 +377,57 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
     }
   }, [quizState.currentStep, quizState.selections, enableRealExperience, mockSelections]);
 
+  // 🎯 DND-KIT SETUP
+  const sortedBlocks = useMemo(() => {
+    return [...blocks].sort((a, b) => a.order - b.order);
+  }, [blocks]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor)
+  );
+
+  const handleDragStart = useCallback(() => {
+    console.log('🎯 Drag iniciado');
+  }, []);
+
+  const handleDragEnd = useCallback((event: any) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = sortedBlocks.findIndex(b => b.id === active.id);
+      const newIndex = sortedBlocks.findIndex(b => b.id === over.id);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const reordered = [...sortedBlocks];
+        const [moved] = reordered.splice(oldIndex, 1);
+        reordered.splice(newIndex, 0, moved);
+
+        // Atualizar ordem
+        const updated = reordered.map((block, idx) => ({
+          ...block,
+          order: idx
+        }));
+
+        if (onBlocksReordered) {
+          onBlocksReordered(updated);
+        }
+      }
+    }
+  }, [sortedBlocks, onBlocksReordered]);
+
+  const renderBlockPreview = useCallback((block: Block) => {
+    return (
+      <EnhancedBlockRenderer
+        key={block.id}
+        block={block}
+        onSelect={() => onBlockSelect?.(block.id)}
+        onUpdate={(updates: any) => onBlockUpdate?.(block.id, updates)}
+        isSelected={selectedBlockId === block.id}
+      />
+    );
+  }, [sortedBlocks, selectedBlockId, onBlockSelect, onBlockUpdate]);
+
   // 🎯 RENDERIZAR STEP 20 COM RESULTADO REAL
   if (quizState.currentStep === 20) {
     return (
@@ -414,170 +469,58 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
 
   // 🎯 RENDER DOS BLOCOS NORMAIS
   return (
-    <div className={cn(
-      'interactive-preview-engine w-full',
-      'space-y-4',
-      viewportSize === 'mobile' && 'max-w-sm mx-auto',
-      viewportSize === 'tablet' && 'max-w-3xl mx-auto',
-      viewportSize === 'desktop' && 'max-w-5xl mx-auto',
-      className
-    )}>
-      {/* Header de status da experiência real */}
+    <div
+      className={cn(
+        'interactive-preview-engine relative h-full overflow-y-auto',
+        'transition-all duration-300',
+        className
+      )}
+      style={{
+        maxWidth: viewportSize === 'mobile' ? '375px' : viewportSize === 'tablet' ? '768px' : '100%',
+        margin: '0 auto',
+        backgroundColor: 'hsl(var(--background))',
+      }}
+    >
       {enableRealExperience && (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Target className="w-6 h-6 text-blue-600" />
-              <div>
-                <h3 className="font-semibold text-blue-800">
-                  🚀 Experiência Real do Usuário Final Ativada
-                </h3>
-                <p className="text-sm text-blue-700 mt-1">
-                  Validação funcional • Auto-advance • Dados reais • SmartNavigation
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {quizState.userName && (
-                <Badge variant="outline" className="text-blue-700 border-blue-300">
-                  <User className="w-3 h-3 mr-1" />
-                  {quizState.userName}
-                </Badge>
-              )}
-
-              <Badge variant="outline" className="text-blue-700 border-blue-300">
-                Step {quizState.currentStep}/{quizState.totalSteps}
-              </Badge>
-
-              {quizState.autoAdvanceEnabled && quizState.timeToAutoAdvance > 0 && (
-                <Badge variant="default" className="bg-green-600">
-                  <CheckCircle className="w-3 h-3 mr-1" />
-                  Auto {Math.ceil(quizState.timeToAutoAdvance / 1000)}s
-                </Badge>
-              )}
-            </div>
-          </div>
+        <div className="absolute top-2 right-2 z-50 bg-green-500/90 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+          🎯 Experiência Real
         </div>
       )}
 
-      {/* Debug info (apenas em modo desenvolvimento) */}
-      {process.env.NODE_ENV === 'development' && mode === 'editor' && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-xs">
-          <div className="font-semibold text-yellow-800 mb-1">
-            🔧 Interactive Preview Engine
-          </div>
-          <div className="grid grid-cols-3 gap-2 text-yellow-700">
-            <div>Funil: {funnelId}</div>
-            <div>Step: {quizState.currentStep}</div>
-            <div>Blocos: {blocks.length}</div>
-            <div>Modo: {mode}</div>
-            <div>Real: {enableRealExperience ? 'ON' : 'OFF'}</div>
-            <div>Validações: {Object.keys(quizState.validationStates).length}</div>
-          </div>
-          </div>
-        )}
-  
-        {/* DEBUG PANEL REMOVIDO - Preview limpo sem informações de debug */}
-
-      {/* Canvas vazio */}
-      {blocks.length === 0 && (
-        <div className="min-h-[400px] border-2 border-dashed border-stone-200 rounded-xl flex items-center justify-center">
-          <div className="text-center space-y-3">
-            <div className="text-6xl text-stone-300">📝</div>
-            <h3 className="text-xl font-semibold text-stone-600">Canvas Vazio</h3>
-            <p className="text-stone-500 max-w-sm">
-              {isEditorMode
-                ? 'Adicione componentes da sidebar para começar a construir esta etapa'
-                : 'Nenhum componente configurado para esta etapa'
-              }
-            </p>
-            {isEditorMode && (
-              <div className="text-sm text-stone-400 mt-2">
-                Arraste componentes da sidebar → para esta área
-              </div>
-            )}
-          </div>
-        </div>
+      {!isPreviewing && enableInteractions && (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext items={sortedBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+            <div className="space-y-0">
+              {sortedBlocks.map(block => (
+                <SortablePreviewBlockWrapper
+                  key={block.id}
+                  block={block}
+                  isSelected={selectedBlockId === block.id}
+                  isPreviewing={false}
+                  onClick={() => onBlockSelect?.(block.id)}
+                  onUpdate={(updates: Partial<Block>) => onBlockUpdate?.(block.id, updates)}
+                  onSelect={onBlockSelect}
+                >
+                  <EnhancedBlockRenderer
+                    block={block}
+                    onSelect={() => onBlockSelect?.(block.id)}
+                    onUpdate={(updates: any) => onBlockUpdate?.(block.id, updates)}
+                    isSelected={selectedBlockId === block.id}
+                  />
+                </SortablePreviewBlockWrapper>
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       )}
 
-      {/* Renderizar blocos com integração real - FASE 3: usando debouncedBlocks */}
-      {debouncedBlocks.map((block, index) => {
-        const isSelected = selectedBlockId === block.id;
-        const blockValidationState = quizState.validationStates[block.id];
-
-        return (
-          <EnhancedBlockRenderer
-            key={block.id || `block-${index}`}
-            block={block}
-            isSelected={isSelected}
-            isPreview={isPreviewing || isProductionMode}
-            currentStep={quizState.currentStep}
-            funnelId={funnelId}
-            onSelect={() => {
-              if (onBlockSelect && !isPreviewing && enableInteractions) {
-                onBlockSelect(block.id);
-              }
-            }}
-            onUpdate={(updates: any) => {
-              if (onBlockUpdate && enableInteractions) {
-                onBlockUpdate(block.id, updates);
-              }
-            }}
-            onValidationChange={(blockId: string, isValid: boolean) => {
-              if (enableRealExperience && orchestrator) {
-                orchestrator.updateValidation(blockId, isValid);
-              }
-
-              setQuizState(prev => ({
-                ...prev,
-                validationStates: { ...prev.validationStates, [blockId]: isValid }
-              }));
-            }}
-            enableValidation={enableRealExperience}
-            enableAutoAdvance={enableRealExperience && quizState.autoAdvanceEnabled}
-            className="mb-4"
-            // Props específicos para experiência real
-            realExperienceProps={enableRealExperience ? {
-              quizState,
-              selections: quizState.selections,
-              userName: quizState.userName,
-              isValidated: blockValidationState,
-              canAutoAdvance: quizState.timeToAutoAdvance > 0,
-              onSelectionChange: (selections: string[]) => {
-                if (orchestrator) {
-                  orchestrator.updateSelections(`step-${quizState.currentStep}`, selections);
-                }
-              }
-            } : undefined}
-          />
-        );
-      })}
-
-      {/* Toggle experiência real (apenas no editor) */}
-      {isEditorMode && (
-        <div className="border border-dashed border-stone-200 rounded-lg p-6 text-center">
-          <div className="space-y-4">
-            <div className="text-lg font-semibold text-stone-700">
-              🎯 Modo de Experiência Real
-            </div>
-            <p className="text-sm text-stone-500 max-w-md mx-auto">
-              Ative para testar a experiência completa do usuário final com validação funcional,
-              auto-advance e resultados personalizados
-            </p>
-            <Button
-              variant={enableRealExperience ? "default" : "outline"}
-              onClick={() => {
-                // Esta funcionalidade será implementada no componente pai
-                console.log('Toggle real experience:', !enableRealExperience);
-              }}
-              className="mx-auto"
-            >
-              <Target className="w-4 h-4 mr-2" />
-              {enableRealExperience ? 'Desativar' : 'Ativar'} Experiência Real
-            </Button>
-          </div>
-        </div>
+      {isPreviewing && (
+        <div className="space-y-0">{sortedBlocks.map(renderBlockPreview)}</div>
       )}
     </div>
   );
