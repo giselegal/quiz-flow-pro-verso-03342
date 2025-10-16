@@ -43,7 +43,6 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
 }) => {
     // Live steps via WebSocket (se houver outro cliente broadcastando)
     const { liveSteps } = useFunnelLivePreview(funnelId);
-    const [useModularPreview, setUseModularPreview] = useState<boolean>(true);
     const [isPlaying, setIsPlaying] = useState(true);
     const [showControls, setShowControls] = useState(true);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -111,7 +110,7 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
                 <div className="flex items-center gap-3">
                     <Eye className="w-5 h-5 text-blue-500" />
                     <div>
-                        <h3 className="text-sm font-semibold">Preview de Produção</h3>
+                        <h3 className="text-sm font-semibold">Preview Modular (Editável)</h3>
                         <p className="text-xs text-muted-foreground">
                             {funnelId ? `Draft: ${funnelId}` : 'Versão atual'}
                         </p>
@@ -124,14 +123,6 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <Button
-                        variant={useModularPreview ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setUseModularPreview(prev => !prev)}
-                        title={useModularPreview ? 'Usando preview modular' : 'Usar preview modular'}
-                    >
-                        {useModularPreview ? 'Modular' : 'Produção'}
-                    </Button>
                     <Button
                         variant="ghost"
                         size="sm"
@@ -184,11 +175,7 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             >
                 {isPlaying ? (
                     <div key={refreshKey}>
-                        {useModularPreview ? (
-                            <ModularPreviewContainer funnelId={funnelId} externalSteps={liveSteps || undefined as any} />
-                        ) : (
-                            <QuizApp funnelId={funnelId} externalSteps={liveSteps || undefined as any} />
-                        )}
+                        <ModularPreviewContainer funnelId={funnelId} externalSteps={liveSteps || undefined as any} />
                     </div>
                 ) : (
                     <div className="flex items-center justify-center h-full">
