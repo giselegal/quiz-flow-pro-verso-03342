@@ -15,7 +15,7 @@ export interface DynamicPropertiesFormProps {
 
 // Helper para extrair propriedades ativas (when)
 function filterActive(props: BasePropertySchema[], values: Record<string, any>) {
-    return props.filter(p => !p.when || p.when(values));
+    return props.filter((p: BasePropertySchema) => !p.when || p.when(values));
 }
 
 export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ type, values, onChange }) => {
@@ -31,7 +31,7 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
         const ordered = [...(schema.groups || [])].sort((a, b) => (a.order || 0) - (b.order || 0));
         return ordered.map(g => ({
             ...g,
-            properties: filterActive(schema.properties.filter(p => p.group === g.id), values)
+            properties: filterActive(schema.properties.filter((p: BasePropertySchema) => p.group === g.id), values)
         })).filter(g => g.properties.length > 0);
     }, [schema, values]);
 
@@ -250,7 +250,7 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
                         )}
                     </div>
                     <div className="space-y-4">
-                        {group.properties.map(prop => {
+                        {group.properties.map((prop: BasePropertySchema) => {
                             const error = prop.validate ? prop.validate(values[prop.key], values) : null;
                             return (
                                 <div key={prop.key} className={cn('space-y-1', error && 'animate-pulse')}>

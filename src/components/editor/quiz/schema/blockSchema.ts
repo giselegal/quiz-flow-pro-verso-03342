@@ -209,3 +209,68 @@ export const blockSchemaMap: Record<string, any> = {
     ],
   },
 };
+
+// Helper function to get block schema by type
+export function getBlockSchema(type: string): BlockPropertySchemaDefinition | null {
+  // First check INITIAL_BLOCK_SCHEMAS
+  const initialSchema = INITIAL_BLOCK_SCHEMAS.find(s => s.type === type);
+  if (initialSchema) return initialSchema;
+
+  // Then check blockSchemaMap
+  const mapSchema = blockSchemaMap[type];
+  if (mapSchema && mapSchema.propertySchema) {
+    return {
+      type: mapSchema.type,
+      groups: mapSchema.groups,
+      properties: mapSchema.propertySchema
+    };
+  }
+
+  return null;
+}
+
+// Helper function to get default values for a block type
+export function getBlockDefaults(type: string): Record<string, any> {
+  const schema = getBlockSchema(type);
+  if (!schema) return {};
+
+  const defaults: Record<string, any> = {};
+  schema.properties.forEach((prop: BasePropertySchema) => {
+    if (prop.default !== undefined) {
+      defaults[prop.key] = prop.default;
+    }
+  });
+
+  return defaults;
+}
+
+// Helper to validate block properties
+export function validateBlockProperties(
+  type: string,
+  properties: Record<string, any>
+): { isValid: boolean; errors: string[] } {
+  const schema = getBlockSchema(type);
+  if (!schema) return { isValid: false, errors: ['Schema not found'] };
+
+  const errors: string[] = [];
+
+  schema.properties.forEach((prop: BasePropertySchema) => {
+    const value = properties[prop.key];
+
+    // Check required fields
+    if (prop.required && (value === undefined || value === null || value === '')) {
+      errors.push(`${prop.label} é obrigatório`);
+    }
+
+    // Run custom validation if present
+    if (prop.validate && value !== undefined) {
+      const error = prop.validate(value, properties);
+      if (error) errors.push(error);
+    }
+  });
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}

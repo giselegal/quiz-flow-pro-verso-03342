@@ -1,6 +1,6 @@
 import { ReactNode, lazy, createElement } from 'react';
 import { Type, Image as ImageIcon, MousePointer, List, Layout } from 'lucide-react';
-import { getBlockSchema } from './blockSchema';
+import { getBlockSchema, BasePropertySchema } from './blockSchema';
 
 export interface BlockRegistryItem {
     type: string;
@@ -41,7 +41,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         icon: textIcon,
         category: 'content',
         defaultProps: deriveDefaults('text'),
-        schemaKeys: getBlockSchema('text')?.properties.map(p => p.key) || [],
+        schemaKeys: getBlockSchema('text')?.properties.map((p: BasePropertySchema) => p.key) || [],
         renderer: LazyNotImplemented
     },
     {
@@ -50,7 +50,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         icon: headingIcon,
         category: 'content',
         defaultProps: deriveDefaults('heading'),
-        schemaKeys: getBlockSchema('heading')?.properties.map(p => p.key) || [],
+        schemaKeys: getBlockSchema('heading')?.properties.map((p: BasePropertySchema) => p.key) || [],
         renderer: LazyNotImplemented
     },
     {
@@ -59,7 +59,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         icon: imageIcon,
         category: 'media',
         defaultProps: deriveDefaults('image'),
-        schemaKeys: getBlockSchema('image')?.properties.map(p => p.key) || [],
+        schemaKeys: getBlockSchema('image')?.properties.map((p: BasePropertySchema) => p.key) || [],
         renderer: LazyNotImplemented
     },
     {
@@ -68,7 +68,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         icon: buttonIcon,
         category: 'interactive',
         defaultProps: deriveDefaults('button'),
-        schemaKeys: getBlockSchema('button')?.properties.map(p => p.key) || [],
+        schemaKeys: getBlockSchema('button')?.properties.map((p: BasePropertySchema) => p.key) || [],
         renderer: LazyNotImplemented
     },
     {
@@ -77,7 +77,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         icon: listIcon,
         category: 'interactive',
         defaultProps: deriveDefaults('quiz-options'),
-        schemaKeys: getBlockSchema('quiz-options')?.properties.map(p => p.key) || [],
+        schemaKeys: getBlockSchema('quiz-options')?.properties.map((p: BasePropertySchema) => p.key) || [],
         renderer: LazyNotImplemented
     },
     {
@@ -86,7 +86,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         icon: textIcon,
         category: 'interactive',
         defaultProps: deriveDefaults('form-input'),
-        schemaKeys: getBlockSchema('form-input')?.properties.map(p => p.key) || [],
+        schemaKeys: getBlockSchema('form-input')?.properties.map((p: BasePropertySchema) => p.key) || [],
         renderer: LazyNotImplemented
     },
     {
@@ -95,7 +95,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         icon: layoutIcon,
         category: 'layout',
         defaultProps: deriveDefaults('container'),
-        schemaKeys: getBlockSchema('container')?.properties.map(p => p.key) || [],
+        schemaKeys: getBlockSchema('container')?.properties.map((p: BasePropertySchema) => p.key) || [],
         renderer: LazyNotImplemented
     }
 ];
