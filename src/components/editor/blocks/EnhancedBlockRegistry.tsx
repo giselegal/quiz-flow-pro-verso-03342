@@ -15,6 +15,12 @@ import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBloc
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
 import SalesHeroBlock from '@/components/editor/blocks/SalesHeroBlock';
 import DecorativeBarInlineBlock from '@/components/editor/blocks/DecorativeBarInlineBlock';
+// Lazy imports otimizados - Componentes Modulares
+const QuizLogoBlock = lazy(() => import('@/components/editor/blocks/QuizLogoBlock'));
+const QuizProgressBlock = lazy(() => import('@/components/editor/blocks/QuizProgressBlock'));
+const QuizBackButtonBlock = lazy(() => import('@/components/editor/blocks/QuizBackButtonBlock'));
+const ImageDisplayInlineBlock = lazy(() => import('@/components/editor/blocks/ImageDisplayInlineBlock'));
+
 import HeadingInlineBlock from '@/components/editor/blocks/HeadingInlineBlock';
 import {
     Step20ResultHeaderBlock,
@@ -60,6 +66,12 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // ============================================================================
     // 📦 COMPONENTES MODULARES (Editor e Casos Avançados)
     // ============================================================================
+
+    // 🧩 COMPONENTES MODULARES DO QUIZ (100% Editáveis)
+    'quiz-logo': QuizLogoBlock,
+    'quiz-progress-bar': QuizProgressBlock,
+    'quiz-back-button': QuizBackButtonBlock,
+    'image-display-inline': ImageDisplayInlineBlock,
 
     // ✅ STEP 01 - COMPONENTES BÁSICOS
     // Preferir versões estáticas para tipos críticos usados no template
@@ -179,7 +191,6 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // Aliases para compatibilidade com templates antigos
     headline: HeadingInlineBlock,
     'headline-inline': HeadingInlineBlock,
-    'image-display-inline': lazy(() => import('@/components/editor/blocks/ImageDisplayInline')),
     'lead-form': lazy(() => import('@/components/editor/blocks/LeadFormBlock')),
     'connected-lead-form': lazy(() => import('@/components/editor/blocks/ConnectedLeadFormBlock')),
 
@@ -300,6 +311,34 @@ export const getEnhancedBlockComponent = (type: string) => {
  * Versão otimizada sem duplicações
  */
 export const AVAILABLE_COMPONENTS = [
+    // ============================================================================
+    // 🧩 COMPONENTES MODULARES DO QUIZ (100% Editáveis)
+    // ============================================================================
+    {
+        type: 'quiz-logo',
+        label: 'Logo do Quiz',
+        category: 'quiz',
+        description: 'Logo com dimensões e estilos editáveis',
+    },
+    {
+        type: 'quiz-progress-bar',
+        label: 'Barra de Progresso',
+        category: 'quiz',
+        description: 'Indicador visual de progresso com estilos customizáveis',
+    },
+    {
+        type: 'quiz-back-button',
+        label: 'Botão Voltar',
+        category: 'quiz',
+        description: 'Navegação para etapa anterior',
+    },
+    {
+        type: 'image-display-inline',
+        label: 'Imagem Display',
+        category: 'content',
+        description: 'Imagem com controles completos de tamanho e estilo',
+    },
+    
     // ============================================================================
     // 🏗️ COMPONENTES ESTRUTURAIS (Layout & Containers)
     // ============================================================================

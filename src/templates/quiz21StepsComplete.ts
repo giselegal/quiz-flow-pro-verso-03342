@@ -110,6 +110,136 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       properties: {}
     },
     {
+      id: 'step01-logo-1',
+      type: 'quiz-logo',
+      order: 0,
+      properties: {
+        logoUrl: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=200',
+        logoAlt: 'Logo do Quiz',
+        width: 120,
+        height: 40,
+        marginBottom: 16,
+      },
+      content: {},
+    },
+    // 🧩 Progress Bar (oculta)
+    {
+      id: 'step01-progress-1',
+      type: 'quiz-progress-bar',
+      order: 1,
+      properties: {
+        showProgress: false,
+        progressValue: 0,
+        progressMax: 21,
+      },
+      content: {},
+    },
+    // Barra Decorativa
+    {
+      id: 'step01-decorative-bar-1',
+      type: 'decorative-bar-inline',
+      order: 2,
+      properties: {
+        backgroundColor: '#B89B7A',
+        height: 4,
+        marginBottom: 24,
+      },
+      content: {},
+    },
+    // Título
+    {
+      id: 'step01-text-inline-1',
+      type: 'text-inline',
+      order: 3,
+      properties: {
+        content: 'Descubra Seu [#B89B7A]**Estilo Predominante**[/#B89B7A] em [#B89B7A]**Apenas 3 Minutos**[/#B89B7A]',
+        fontSize: '32px',
+        fontWeight: '700',
+        textAlign: 'center',
+        marginBottom: 24,
+      },
+      content: {},
+    },
+    // Imagem Hero (Modular)
+    {
+      id: 'step01-image-display-inline-1',
+      type: 'image-display-inline',
+      order: 4,
+      properties: {
+        src: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800',
+        alt: 'Quiz de Estilo',
+        width: '100%',
+        maxWidth: '600px',
+        borderRadius: 16,
+        marginBottom: 24,
+      },
+      content: {},
+    },
+    // Descrição
+    {
+      id: 'step01-text-description-1',
+      type: 'text-inline',
+      order: 5,
+      properties: {
+        content: 'Descubra seu ESTILO PREDOMINANTE e receba recomendações personalizadas',
+        fontSize: '18px',
+        textAlign: 'center',
+        marginBottom: 24,
+      },
+      content: {},
+    },
+    // Input Nome
+    {
+      id: 'step01-form-input-1',
+      type: 'form-input',
+      order: 6,
+      properties: {
+        label: 'Qual é o seu nome?',
+        placeholder: 'Digite seu nome aqui',
+        required: true,
+        marginBottom: 24,
+      },
+      content: {},
+    },
+    // Botão CTA
+    {
+      id: 'step01-button-inline-1',
+      type: 'button-inline',
+      order: 7,
+      properties: {
+        text: 'Quero Descobrir meu Estilo Agora!',
+        variant: 'primary',
+        size: 'lg',
+        marginBottom: 16,
+      },
+      content: {},
+    },
+    // Footer Text
+    {
+      id: 'step01-footer-text-1',
+      type: 'text-inline',
+      order: 8,
+      properties: {
+        content: '⏱️ Leva apenas 3 minutos • 100% Gratuito',
+        fontSize: '14px',
+        textAlign: 'center',
+        opacity: 0.7,
+      },
+      content: {},
+    },
+  ],
+      id: 'step01-quiz-intro-header-1',
+      type: 'quiz-intro-header',
+      order: 0,
+      parentId: null,
+      content: {
+        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        showProgress: false
+      },
+      properties: {}
+    },
+    {
       id: 'step01-decorative-bar-1',
       type: 'decorative-bar-inline',
       order: 1,

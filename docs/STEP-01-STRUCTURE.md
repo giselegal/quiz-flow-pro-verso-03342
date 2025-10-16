@@ -29,12 +29,134 @@
 
 Todos os blocos usam tipos devidamente registrados no sistema:
 
-- ✅ `quiz-intro-header`
+- ✅ `quiz-logo` - **NOVO MODULAR**
+- ✅ `quiz-progress-bar` - **NOVO MODULAR**
 - ✅ `decorative-bar-inline`
 - ✅ `text-inline`
-- ✅ `image-display-inline`
+- ✅ `image-display-inline` - **REFATORADO PARA MODULAR**
 - ✅ `form-input`
 - ✅ `button-inline`
+
+---
+
+## 🧩 Componentes Modulares
+
+Cada bloco do Step 1 é 100% independente:
+
+### `QuizLogoBlock` (`quiz-logo`)
+- **Propriedades Editáveis**: 
+  - logoUrl, logoAlt
+  - width, height
+  - backgroundColor, borderRadius
+  - Sistema completo de margens e padding
+  - objectFit (contain, cover, fill, etc.)
+- **Editável**: ✅ Sim (via UniversalPropertiesPanel)
+- **Reordenável**: ✅ Sim (drag & drop)
+- **Arquivo**: `src/components/editor/blocks/QuizLogoBlock.tsx`
+
+### `QuizProgressBlock` (`quiz-progress-bar`)
+- **Propriedades Editáveis**:
+  - showProgress (mostra/oculta)
+  - progressValue, progressMax
+  - color, backgroundColor
+  - height, borderRadius
+  - Sistema de margens
+  - showLabel, labelPosition, labelText
+- **Editável**: ✅ Sim
+- **Reordenável**: ✅ Sim
+- **Arquivo**: `src/components/editor/blocks/QuizProgressBlock.tsx`
+
+### `DecorativeBarInline` (`decorative-bar-inline`)
+- **Propriedades Editáveis**:
+  - backgroundColor (padrão: #B89B7A dourado)
+  - height, width
+  - Sistema de margens
+  - borderRadius, opacity
+- **Editável**: ✅ Sim
+- **Reordenável**: ✅ Sim
+- **Arquivo**: `src/components/editor/blocks/DecorativeBarInlineBlock.tsx`
+
+### `TextInlineBlock` (`text-inline`)
+- **Propriedades Editáveis**:
+  - content (markdown com cores inline)
+  - fontSize, fontWeight, fontFamily
+  - textAlign, color, lineHeight
+  - Sistema de margens e padding
+  - backgroundColor, borderRadius
+- **Editável**: ✅ Sim
+- **Reordenável**: ✅ Sim
+- **Suporta**: Markdown com cores `[#B89B7A]**texto**[/#B89B7A]`
+
+### `ImageDisplayInlineBlock` (`image-display-inline`) - **✨ REFATORADO**
+- **Propriedades Editáveis**:
+  - src, alt
+  - width, height, maxWidth, minHeight
+  - objectFit (contain, cover, fill, none, scale-down)
+  - borderRadius, borderColor, borderWidth
+  - Sistema completo de margens e padding
+  - backgroundColor, boxShadow, opacity
+- **Editável**: ✅ Sim (agora com propriedades universais)
+- **Reordenável**: ✅ Sim
+- **Arquivo**: `src/components/editor/blocks/ImageDisplayInlineBlock.tsx`
+- **Melhorias**: Sistema universal de propriedades + painel de edição
+
+### `FormInputBlock` (`form-input`)
+- **Propriedades Editáveis**:
+  - placeholder, label
+  - required, minLength, maxLength
+  - Sistema de margens
+  - borderRadius, backgroundColor
+- **Editável**: ✅ Sim
+- **Reordenável**: ✅ Sim
+
+### `ButtonInlineBlock` (`button-inline`)
+- **Propriedades Editáveis**:
+  - text, variant (primary, secondary, outline, etc.)
+  - size (sm, md, lg)
+  - backgroundColor, textColor
+  - Sistema de margens e padding
+  - borderRadius, disabled
+- **Editável**: ✅ Sim
+- **Reordenável**: ✅ Sim
+
+---
+
+## 🎨 Sistema de Propriedades Universais
+
+Todos os blocos modulares agora implementam `UniversalBlockProperties`:
+
+### Categorias de Propriedades
+
+#### 📐 Layout
+- width, height, maxWidth, minHeight
+
+#### 📏 Spacing
+- marginTop, marginBottom, marginLeft, marginRight
+- paddingTop, paddingBottom, paddingLeft, paddingRight
+
+#### 🎨 Visual
+- backgroundColor, borderColor, borderWidth, borderRadius
+- boxShadow, opacity
+
+#### 📝 Typography (blocos de texto)
+- fontSize, fontWeight, fontFamily
+- textAlign, color, lineHeight
+
+#### 🖼️ Image (blocos de imagem)
+- src, alt, objectFit
+
+### Painel Universal de Propriedades
+
+O `UniversalPropertiesPanel` renderiza dinamicamente os campos de edição apropriados para cada tipo de bloco:
+
+**Arquivo**: `src/components/editor/panels/UniversalPropertiesPanel.tsx`
+
+**Recursos**:
+- ✅ Accordion com categorias (Layout, Spacing, Visual, Typography, Image)
+- ✅ Sliders para margens e padding (0-100px, step de 4px)
+- ✅ Color pickers para cores
+- ✅ Selects para font-weight, text-align, object-fit
+- ✅ Inputs para dimensões (aceita px, %, rem, etc.)
 
 **Mapeamento**: Definido em `src/utils/quiz21StepsRenderer.ts` (linhas 41-60)
 
