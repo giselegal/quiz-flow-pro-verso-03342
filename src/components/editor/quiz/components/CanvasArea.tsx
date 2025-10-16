@@ -7,7 +7,8 @@ import { Eye, Edit3, Smartphone, Tablet, Monitor } from 'lucide-react';
 
 import { BlockComponent, EditableQuizStep } from '../types';
 import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeContext';
-import { BlockBasedStepRenderer } from '@/components/editor/canvas';
+// 🎯 USAR UNIFIED STEP RENDERER para renderizar componentes modulares
+import UnifiedStepRenderer from '@/components/editor/unified/UnifiedStepRenderer';
 import { smartMigration } from '@/utils/stepDataMigration';
 
 // Virtualização agora tratada internamente via hook
@@ -70,19 +71,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     OfferMap,
 }) => {
     // 🎯 USAR EDITOR MODE CONTEXT ao invés de activeTab
-    const { 
-        viewMode, 
-        setViewMode, 
-        isEditMode, 
+    const {
+        viewMode,
+        setViewMode,
+        isEditMode,
         isPreviewMode,
         previewSessionData,
         updatePreviewSessionData,
         resetPreviewSession
     } = useEditorMode();
     const { previewDevice, setPreviewDevice } = useEditorMode();
-    
+
     console.log('🔍 CanvasArea render - selectedStep:', selectedStep?.id, 'viewMode:', viewMode);
-    
+
     // 🚨 DEPRECATION WARNING para activeTab/onTabChange
     if (activeTab !== undefined && process.env.NODE_ENV === 'development') {
         console.warn(
@@ -96,7 +97,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         if (!selectedStep) return null;
         return smartMigration(selectedStep);
     }, [selectedStep]);
-    
+
     console.log('🔍 CanvasArea - migratedStep:', migratedStep?.id, 'type:', migratedStep?.type);
 
     return (
@@ -123,7 +124,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                         Preview
                     </Button>
                 </div>
-                
+
                 {/* 🎯 DEVICE CONTROLS - Apenas em modo preview */}
                 {isPreviewMode() && (
                     <div className="flex items-center gap-2">
@@ -157,7 +158,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             </div>
 
             {/* 🎯 EDIT MODE - Renderização modular com componentes reais */}
-            <div 
+            <div
                 className="flex-1 overflow-auto p-4"
                 style={{ display: isEditMode() ? 'block' : 'none' }}
                 data-testid="canvas-edit-mode"
@@ -170,11 +171,31 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={migratedStep.id} />
                                 </div>
                             </div>
-                            
-                            {/* 🎯 WYSIWYG Real: Renderizar blocos independentes */}
-                            <BlockBasedStepRenderer
-                                stepNumber={parseInt(migratedStep.id.replace('step-', ''), 10) || 1}
-                                mode="editor"
+
+                            {/* 🎯 UNIFIED STEP RENDERER: Renderizar componentes modulares reais */}
+                            <UnifiedStepRenderer
+                                stepId={migratedStep.id}
+                                mode="editable"
+                                stepProps={{
+                                    ...(migratedStep as any).data,
+                                    ...(migratedStep as any).metadata,
+                                    ...migratedStep,
+                                }}
+                                quizState={{
+                                    currentStep: parseInt(migratedStep.id.replace('step-', ''), 10) || 1,
+                                    answers: previewSessionData?.answers || {},
+                                    strategicAnswers: previewSessionData?.strategicAnswers || {},
+                                    userName: previewSessionData?.userName,
+                                    resultStyle: previewSessionData?.resultStyle,
+                                    secondaryStyles: previewSessionData?.secondaryStyles,
+                                }}
+                                onStepUpdate={(stepId, updates) => {
+                                    console.log(`🔄 Step ${stepId} updated:`, updates);
+                                    updatePreviewSessionData(stepId, updates);
+                                }}
+                                onStepSelect={(stepId) => {
+                                    console.log(`📍 Step selected: ${stepId}`);
+                                }}
                             />
                         </CardContent>
                     </Card>
@@ -186,7 +207,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             </div>
 
             {/* 🎯 PREVIEW MODE - WYSIWYG Real: Mesmo componente do Edit, totalmente interativo */}
-            <div 
+            <div
                 className="flex-1 overflow-auto p-4"
                 style={{ display: isPreviewMode() ? 'block' : 'none' }}
                 data-testid="canvas-preview-mode"
@@ -199,18 +220,33 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={migratedStep.id} />
                                 </div>
                             </div>
-                            
-                            {/* 🎯 WYSIWYG Real: Blocos independentes interativos */}
+
+                            {/* 🎯 UNIFIED STEP RENDERER: Preview interativo */}
                             <Suspense fallback={
                                 <div className="flex items-center justify-center py-8">
                                     <div className="text-sm text-muted-foreground">Carregando preview...</div>
                                 </div>
                             }>
-                                <BlockBasedStepRenderer
-                                    stepNumber={parseInt(migratedStep.id.replace('step-', ''), 10) || 1}
+                                <UnifiedStepRenderer
+                                    stepId={migratedStep.id}
                                     mode="preview"
-                                    sessionData={previewSessionData}
-                                    onSessionDataUpdate={updatePreviewSessionData}
+                                    stepProps={{
+                                        ...(migratedStep as any).data,
+                                        ...(migratedStep as any).metadata,
+                                        ...migratedStep,
+                                    }}
+                                    quizState={{
+                                        currentStep: parseInt(migratedStep.id.replace('step-', ''), 10) || 1,
+                                        answers: previewSessionData?.answers || {},
+                                        strategicAnswers: previewSessionData?.strategicAnswers || {},
+                                        userName: previewSessionData?.userName,
+                                        resultStyle: previewSessionData?.resultStyle,
+                                        secondaryStyles: previewSessionData?.secondaryStyles,
+                                    }}
+                                    onStepUpdate={(stepId, updates) => {
+                                        console.log(`🔄 Preview step ${stepId} updated:`, updates);
+                                        updatePreviewSessionData(stepId, updates);
+                                    }}
                                 />
                             </Suspense>
                         </CardContent>
