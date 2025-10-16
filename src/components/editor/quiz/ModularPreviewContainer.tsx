@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useQuizState } from '@/hooks/useQuizState';
 import { UnifiedStepRenderer as ModularUnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
+import { EditorProviderUnified, useEditorOptional } from '@/components/editor/EditorProviderUnified';
 
 export interface ModularPreviewContainerProps {
     funnelId?: string;
@@ -23,6 +24,9 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
         addAnswer,
         addStrategicAnswer,
     } = useQuizState(funnelId, externalSteps);
+
+    // Detecta se já existe um EditorProviderUnified acima
+    const maybeEditor = useEditorOptional?.();
 
     const sessionData = useMemo(() => {
         const map: Record<string, any> = {
@@ -69,7 +73,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     const numeric = parseInt(state.currentStep.replace('step-', '')) || 1;
     const useSharedHeader = numeric > 1 && numeric < 20; // 2..19
 
-    return (
+    const Content = (
         <div className="min-h-screen bg-[#fefefe] text-[#5b4135]">
             <div className="quiz-container mx-auto">
                 {useSharedHeader && (
@@ -78,7 +82,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
                 <div className={`max-w-6xl mx-auto px-4 ${useSharedHeader ? 'pt-4 pb-8' : 'py-8'}`}>
                     <ModularUnifiedStepRenderer
                         step={currentStepData as any}
-                        mode="preview"
+                        mode="edit"
                         sessionData={sessionData}
                         onUpdateSessionData={onUpdateSessionData}
                     />
@@ -101,6 +105,17 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
             </div>
         </div>
     );
+
+    // Se não houver provider, encapsula para habilitar seleção de blocos e propriedades
+    if (!maybeEditor) {
+        return (
+            <EditorProviderUnified>
+                {Content}
+            </EditorProviderUnified>
+        );
+    }
+
+    return Content;
 };
 
 export default ModularPreviewContainer;
