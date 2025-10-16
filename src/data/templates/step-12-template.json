@@ -1,0 +1,83 @@
+{
+  "id": "step-12",
+  "type": "transition",
+  "metadata": {
+    "name": "Transição - Calculando Resultado",
+    "description": "Step de transição entre perguntas e resultado"
+  },
+  "blocks": [
+    {
+      "id": "step-12-title",
+      "type": "transition-title",
+      "order": 0,
+      "properties": {
+        "fontSize": "3xl",
+        "fontFamily": "Playfair Display",
+        "color": "hsl(var(--primary))",
+        "textAlign": "center",
+        "marginBottom": "6"
+      },
+      "content": {
+        "text": "Calculando seu resultado..."
+      }
+    },
+    {
+      "id": "step-12-image",
+      "type": "transition-image",
+      "order": 1,
+      "properties": {
+        "width": "300px",
+        "height": "auto",
+        "borderRadius": "8px",
+        "marginY": "6"
+      },
+      "content": {
+        "url": "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400",
+        "alt": "Calculando resultado"
+      }
+    },
+    {
+      "id": "step-12-subtitle",
+      "type": "transition-subtitle",
+      "order": 2,
+      "properties": {
+        "fontSize": "xl",
+        "fontFamily": "Lato",
+        "color": "hsl(var(--muted-foreground))",
+        "textAlign": "center",
+        "marginBottom": "4"
+      },
+      "content": {
+        "text": "Analisando suas respostas..."
+      }
+    },
+    {
+      "id": "step-12-description",
+      "type": "transition-description",
+      "order": 3,
+      "properties": {
+        "fontSize": "base",
+        "fontFamily": "Lato",
+        "color": "hsl(var(--foreground))",
+        "textAlign": "center",
+        "marginBottom": "6",
+        "maxWidth": "600px"
+      },
+      "content": {
+        "text": "Em poucos segundos você descobrirá seu estilo predominante e receberá recomendações personalizadas."
+      }
+    },
+    {
+      "id": "step-12-loader",
+      "type": "transition-loader",
+      "order": 4,
+      "properties": {
+        "color": "hsl(var(--primary))",
+        "dots": 3,
+        "size": "12px",
+        "animationDelay": 0.1
+      },
+      "content": {}
+    }
+  ]
+}

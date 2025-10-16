@@ -1,5 +1,19 @@
-import React from 'react';
-import { SelectableBlock } from '@/components/editor/SelectableBlock';
+/**
+ * 🏆 RESULT STEP 100% MODULARIZADO
+ * 
+ * Agora usa blocos atômicos do registry (result-congrats, result-main, etc.)
+ * - 100% editável via painel de propriedades
+ * - Reordenável via drag-and-drop (@dnd-kit)
+ * - Persistente via EditorProvider
+ * - Injeção dinâmica de dados do usuário ({userName}, {resultStyle})
+ */
+
+import React, { useMemo } from 'react';
+import { DndContext, closestCenter, useSensors, useSensor, PointerSensor, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { Block } from '@/types/editor';
 
 interface ModularResultStepProps {
     data: any;
@@ -7,6 +21,7 @@ interface ModularResultStepProps {
         userName: string;
         resultStyle: string;
         secondaryStyles?: string[];
+        scores?: Array<{ name: string; score: number }>;
     };
     onEdit?: (field: string, value: any) => void;
     isEditable?: boolean;
@@ -16,176 +31,182 @@ interface ModularResultStepProps {
 }
 
 /**
- * 🏆 RESULT STEP MODULARIZADO
- * 
- * Cada seção é um bloco editável independente:
- * - Título de parabéns
- * - Resultado principal
- * - Imagem do resultado
- * - Descrição
- * - Características
- * - Call to Action
+ * Injeta dados dinâmicos do usuário nos blocos
+ * Substitui placeholders como {userName}, {resultStyle}
  */
+function injectDynamicData(block: Block, userProfile?: ModularResultStepProps['userProfile']): Block {
+    if (!userProfile) return block;
+
+    const injectedBlock = { ...block };
+    const blockType = String(injectedBlock.type);
+
+    // Injetar no content.text
+    if (injectedBlock.content?.text) {
+        injectedBlock.content.text = injectedBlock.content.text
+            .replace(/{userName}/g, userProfile.userName || 'Visitante')
+            .replace(/{resultStyle}/g, userProfile.resultStyle || 'Clássico Elegante');
+    }
+
+    // Injetar no content.styleName
+    if (injectedBlock.content?.styleName) {
+        injectedBlock.content.styleName = injectedBlock.content.styleName
+            .replace(/{resultStyle}/g, userProfile.resultStyle || 'Clássico Elegante');
+    }
+
+    // Injetar dados no content para blocos específicos
+    if (blockType === 'result-congrats') {
+        injectedBlock.content = {
+            ...injectedBlock.content,
+            userName: userProfile.userName,
+        };
+    }
+
+    if (blockType === 'result-main') {
+        injectedBlock.content = {
+            ...injectedBlock.content,
+            resultStyle: userProfile.resultStyle,
+        };
+    }
+
+    if (blockType === 'result-progress-bars' && userProfile.scores) {
+        injectedBlock.content = {
+            ...injectedBlock.content,
+            scores: userProfile.scores,
+        };
+    }
+
+    if (blockType === 'result-secondary-styles' && userProfile.secondaryStyles) {
+        injectedBlock.content = {
+            ...injectedBlock.content,
+            styles: userProfile.secondaryStyles.map(name => ({ name })),
+        };
+    }
+
+    // Injetar no content.url (para imagens dinâmicas)
+    if (injectedBlock.content?.url) {
+        injectedBlock.content.url = injectedBlock.content.url
+            .replace(/{resultStyle}/g, (userProfile.resultStyle || 'natural').toLowerCase().replace(/\s+/g, '-'));
+    }
+
+    return injectedBlock;
+}
+
 export default function ModularResultStep({
     data,
     userProfile,
-    onEdit,
     isEditable = false,
     selectedBlockId,
     onBlockSelect = () => {},
     onOpenProperties = () => {}
 }: ModularResultStepProps) {
+    const editor = useEditor({ optional: true });
+    const stepKey = data?.id || 'step-20';
 
-    const safeData = {
-        title: data.title || 'Seu Estilo Predominante é:',
-        resultStyle: userProfile?.resultStyle || 'Clássico Elegante',
-        userName: userProfile?.userName || 'João',
-        description: data.description || 'Parabéns! Você descobriu seu estilo único.',
-        image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
-        characteristics: data.characteristics || [
-            'Elegante e refinado',
-            'Atemporal e sofisticado',
-            'Valoriza qualidade'
-        ]
+    // Buscar blocos do provider
+    const rawBlocks = useMemo(() => {
+        return editor?.state?.stepBlocks?.[stepKey] || [];
+    }, [editor?.state?.stepBlocks, stepKey]);
+
+    // Injetar dados dinâmicos nos blocos
+    const blocks = useMemo(() => {
+        return rawBlocks.map((block: Block) => injectDynamicData(block, userProfile));
+    }, [rawBlocks, userProfile]);
+
+    // Ordenação dos blocos via metadata
+    const [localOrder, setLocalOrder] = React.useState<string[]>([]);
+
+    React.useEffect(() => {
+        if (blocks.length > 0) {
+            const orderFromMetadata = data?.metadata?.blockOrder;
+            if (orderFromMetadata && Array.isArray(orderFromMetadata)) {
+                setLocalOrder(orderFromMetadata);
+            } else {
+                setLocalOrder(blocks.map((b: Block) => b.id));
+            }
+        }
+    }, [blocks, data?.metadata?.blockOrder]);
+
+    // Configurar sensores de drag
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: { distance: 4 }
+        })
+    );
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+
+        const oldIndex = localOrder.indexOf(active.id as string);
+        const newIndex = localOrder.indexOf(over.id as string);
+
+        if (oldIndex !== -1 && newIndex !== -1) {
+            const newOrder = arrayMove(localOrder, oldIndex, newIndex);
+            setLocalOrder(newOrder);
+
+            // Persistir no editor
+            if (editor?.actions?.reorderBlocks) {
+                editor.actions.reorderBlocks(stepKey, oldIndex, newIndex);
+            }
+        }
     };
 
-    // Block IDs
-    const congratsBlockId = `${data.id}-congrats`;
-    const resultBlockId = `${data.id}-result`;
-    const imageBlockId = `${data.id}-image`;
-    const descriptionBlockId = `${data.id}-description`;
-    const characteristicsBlockId = `${data.id}-characteristics`;
-    const ctaBlockId = `${data.id}-cta`;
+    const orderedBlocks = useMemo(() => {
+        if (localOrder.length === 0) return blocks;
+        return localOrder
+            .map(id => blocks.find((b: Block) => b.id === id))
+            .filter(Boolean) as Block[];
+    }, [blocks, localOrder]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+        <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
             <main className="w-full max-w-6xl mx-auto px-4 py-8">
-                <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-4xl mx-auto">
-                    {/* BLOCO 1: Título de Parabéns */}
-                    <SelectableBlock
-                        blockId={congratsBlockId}
-                        isSelected={selectedBlockId === congratsBlockId}
-                        isEditable={isEditable}
-                        onSelect={onBlockSelect}
-                        blockType="Título de Parabéns"
-                        onOpenProperties={onOpenProperties}
-                        isDraggable={true}
-                    >
-                        <h1
-                            className="text-2xl md:text-3xl font-bold text-[#432818] mb-2"
-                            style={{ fontFamily: '"Playfair Display", serif' }}
+                <div className="bg-card p-6 md:p-12 rounded-lg shadow-lg max-w-4xl mx-auto">
+                    {isEditable && orderedBlocks.length > 0 ? (
+                        <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            onDragEnd={handleDragEnd}
                         >
-                            Parabéns, {safeData.userName}!
-                        </h1>
-
-                        <h2 className="text-lg text-gray-600 mb-6">
-                            {safeData.title}
-                        </h2>
-                    </SelectableBlock>
-
-                    {/* BLOCO 2: Resultado Principal */}
-                    <SelectableBlock
-                        blockId={resultBlockId}
-                        isSelected={selectedBlockId === resultBlockId}
-                        isEditable={isEditable}
-                        onSelect={onBlockSelect}
-                        blockType="Resultado Principal"
-                        onOpenProperties={onOpenProperties}
-                        isDraggable={true}
-                    >
-                        <div className="bg-gradient-to-br from-[#B89B7A] to-[#A1835D] text-white p-6 rounded-lg shadow-lg mb-8">
-                            <h3
-                                className="text-3xl md:text-4xl font-bold mb-4"
-                                style={{ fontFamily: '"Playfair Display", serif' }}
+                            <SortableContext
+                                items={localOrder}
+                                strategy={verticalListSortingStrategy}
                             >
-                                {safeData.resultStyle}
-                            </h3>
-                        </div>
-                    </SelectableBlock>
-
-                    {/* BLOCO 3: Imagem do Resultado */}
-                    <SelectableBlock
-                        blockId={imageBlockId}
-                        isSelected={selectedBlockId === imageBlockId}
-                        isEditable={isEditable}
-                        onSelect={onBlockSelect}
-                        blockType="Imagem do Resultado"
-                        onOpenProperties={onOpenProperties}
-                        isDraggable={true}
-                    >
-                        <div className="w-full max-w-sm mx-auto mb-6">
-                            <img
-                                src={safeData.image}
-                                alt={`Estilo ${safeData.resultStyle}`}
-                                className="w-full h-auto rounded-lg shadow-sm"
-                            />
-                        </div>
-                    </SelectableBlock>
-
-                    {/* BLOCO 4: Descrição */}
-                    <SelectableBlock
-                        blockId={descriptionBlockId}
-                        isSelected={selectedBlockId === descriptionBlockId}
-                        isEditable={isEditable}
-                        onSelect={onBlockSelect}
-                        blockType="Descrição"
-                        onOpenProperties={onOpenProperties}
-                        isDraggable={true}
-                    >
-                        <p className="text-gray-700 mb-8 leading-relaxed text-lg">
-                            {safeData.description}
-                        </p>
-                    </SelectableBlock>
-
-                    {/* BLOCO 5: Características */}
-                    <SelectableBlock
-                        blockId={characteristicsBlockId}
-                        isSelected={selectedBlockId === characteristicsBlockId}
-                        isEditable={isEditable}
-                        onSelect={onBlockSelect}
-                        blockType="Características"
-                        onOpenProperties={onOpenProperties}
-                        isDraggable={true}
-                    >
-                        <div className="bg-gray-50 p-6 rounded-lg mb-8">
-                            <h4 className="text-lg font-semibold text-[#432818] mb-4">
-                                Suas principais características:
-                            </h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {safeData.characteristics.map((characteristic: string, index: number) => (
-                                    <div
-                                        key={index}
-                                        className="bg-white p-3 rounded-md shadow-sm border-l-4 border-[#B89B7A]"
-                                    >
-                                        <p className="text-sm font-medium text-[#432818]">
-                                            {characteristic}
-                                        </p>
-                                    </div>
+                                {orderedBlocks.map((block) => (
+                                    <UniversalBlockRenderer
+                                        key={block.id}
+                                        block={block}
+                                        mode="editor"
+                                        isSelected={selectedBlockId === block.id}
+                                        onSelect={() => onBlockSelect(block.id)}
+                                    />
                                 ))}
-                            </div>
-                        </div>
-                    </SelectableBlock>
+                            </SortableContext>
+                        </DndContext>
+                    ) : (
+                        <>
+                            {orderedBlocks.map((block) => (
+                                <UniversalBlockRenderer
+                                    key={block.id}
+                                    block={block}
+                                    mode="preview"
+                                />
+                            ))}
+                        </>
+                    )}
 
-                    {/* BLOCO 6: Call to Action */}
-                    <SelectableBlock
-                        blockId={ctaBlockId}
-                        isSelected={selectedBlockId === ctaBlockId}
-                        isEditable={isEditable}
-                        onSelect={onBlockSelect}
-                        blockType="Call to Action"
-                        onOpenProperties={onOpenProperties}
-                        isDraggable={true}
-                    >
-                        <button className="bg-[#B89B7A] hover:bg-[#A1835D] text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105">
-                            Descobrir Minha Consultoria Personalizada
-                        </button>
-
-                        {isEditable && (
-                            <p className="text-xs text-blue-500 mt-4">
-                                ✏️ Editável via Painel de Propriedades
+                    {orderedBlocks.length === 0 && (
+                        <div className="text-center py-12">
+                            <p className="text-muted-foreground mb-4">
+                                Nenhum bloco configurado para este step.
                             </p>
-                        )}
-                    </SelectableBlock>
+                            {isEditable && (
+                                <p className="text-sm text-primary">
+                                    Adicione blocos usando o template JSON ou via editor.
+                                </p>
+                            )}
+                        </div>
+                    )}
                 </div>
             </main>
         </div>

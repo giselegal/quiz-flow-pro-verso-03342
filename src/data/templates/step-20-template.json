@@ -1,0 +1,139 @@
+{
+  "id": "step-20",
+  "type": "result",
+  "metadata": {
+    "name": "Resultado Final",
+    "description": "Exibição do resultado do quiz com estilo predominante"
+  },
+  "blocks": [
+    {
+      "id": "step-20-congrats",
+      "type": "result-congrats",
+      "order": 0,
+      "properties": {
+        "showUserName": true,
+        "fontSize": "2xl",
+        "fontFamily": "Playfair Display",
+        "color": "hsl(var(--primary))",
+        "textAlign": "center",
+        "marginBottom": "4"
+      },
+      "content": {
+        "text": "Parabéns, {userName}!"
+      }
+    },
+    {
+      "id": "step-20-main",
+      "type": "result-main",
+      "order": 1,
+      "properties": {
+        "showGradient": true,
+        "fontSize": "4xl",
+        "fontFamily": "Playfair Display",
+        "gradientColors": ["hsl(var(--primary))", "hsl(var(--accent))"],
+        "textAlign": "center",
+        "marginBottom": "6"
+      },
+      "content": {
+        "title": "Seu Estilo Predominante:",
+        "styleName": "{resultStyle}"
+      }
+    },
+    {
+      "id": "step-20-image",
+      "type": "result-image",
+      "order": 2,
+      "properties": {
+        "width": "300px",
+        "height": "auto",
+        "borderRadius": "8px",
+        "marginY": "6",
+        "shadow": "lg"
+      },
+      "content": {
+        "url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400",
+        "alt": "Estilo {resultStyle}"
+      }
+    },
+    {
+      "id": "step-20-description",
+      "type": "result-description",
+      "order": 3,
+      "properties": {
+        "fontSize": "lg",
+        "fontFamily": "Lato",
+        "color": "hsl(var(--foreground))",
+        "textAlign": "center",
+        "marginBottom": "8",
+        "maxWidth": "700px"
+      },
+      "content": {
+        "text": "Parabéns! Você descobriu seu estilo único. Confira abaixo as características que definem sua personalidade de moda."
+      }
+    },
+    {
+      "id": "step-20-progress-bars",
+      "type": "result-progress-bars",
+      "order": 4,
+      "properties": {
+        "showTop3": true,
+        "barColor": "hsl(var(--primary))",
+        "title": "Compatibilidade com estilos:",
+        "marginBottom": "8"
+      },
+      "content": {
+        "scores": []
+      }
+    },
+    {
+      "id": "step-20-characteristics",
+      "type": "result-characteristics",
+      "order": 5,
+      "properties": {
+        "columns": 3,
+        "title": "Suas principais características:",
+        "borderColor": "hsl(var(--primary))",
+        "marginBottom": "8"
+      },
+      "content": {
+        "items": [
+          "Elegante e refinado",
+          "Atemporal e sofisticado",
+          "Valoriza qualidade",
+          "Clássico e versátil",
+          "Discreto e elegante",
+          "Peças de investimento"
+        ]
+      }
+    },
+    {
+      "id": "step-20-secondary-styles",
+      "type": "result-secondary-styles",
+      "order": 6,
+      "properties": {
+        "showTop2": true,
+        "columns": 2,
+        "title": "Estilos Complementares:",
+        "marginBottom": "8"
+      },
+      "content": {
+        "styles": []
+      }
+    },
+    {
+      "id": "step-20-cta",
+      "type": "result-cta",
+      "order": 7,
+      "properties": {
+        "variant": "default",
+        "size": "lg",
+        "marginTop": "8",
+        "action": "navigate",
+        "targetUrl": "/consultoria"
+      },
+      "content": {
+        "text": "Descobrir Minha Consultoria Personalizada"
+      }
+    }
+  ]
+}

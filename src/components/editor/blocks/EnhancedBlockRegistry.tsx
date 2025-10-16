@@ -120,6 +120,13 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'transition-hero': TransitionHeroSection, // ✅ NOVO - Section para transition-hero
     'loading-animation': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
     'loader-inline': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
+    
+    // ✅ STEP 12 & 19 - BLOCOS ATÔMICOS DE TRANSIÇÃO (100% Modulares)
+    'transition-title': lazy(() => import('./TransitionTitleBlock')),
+    'transition-subtitle': lazy(() => import('./TransitionSubtitleBlock')),
+    'transition-image': lazy(() => import('./TransitionImageBlock')),
+    'transition-description': lazy(() => import('./TransitionDescriptionBlock')),
+    'transition-loader': lazy(() => import('./TransitionLoaderBlock')),
 
     // ✅ STEPS 13-18 - PERGUNTAS AVANÇADAS
     'quiz-advanced-question': TextInlineBlock,
@@ -140,6 +147,16 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'secondary-styles': lazy(() => import('@/components/editor/blocks/SecondaryStylesInlineBlock')),
     'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
     'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
+    
+    // ✅ STEP 20 - BLOCOS ATÔMICOS DE RESULTADO (100% Modulares)
+    'result-congrats': lazy(() => import('./ResultCongratsBlock')),
+    'result-main': lazy(() => import('./ResultMainBlock')),
+    'result-image': lazy(() => import('./ResultImageBlock')),
+    'result-description': lazy(() => import('./ResultDescriptionBlock')),
+    'result-characteristics': lazy(() => import('./ResultCharacteristicsBlock')),
+    'result-cta': lazy(() => import('./ResultCTABlock')),
+    'result-progress-bars': lazy(() => import('./ResultProgressBarsBlock')),
+    'result-secondary-styles': lazy(() => import('./ResultSecondaryStylesBlock')),
 
     // 🤖 IA - FASHION AI GENERATOR
     'fashion-ai-generator': FashionAIGeneratorBlock,
