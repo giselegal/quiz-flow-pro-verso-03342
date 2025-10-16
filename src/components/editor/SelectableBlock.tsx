@@ -112,13 +112,9 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = ({
             data-block-type={blockType}
             data-block-index={blockIndex}
         >
-            {/* Selection Indicator */}
+            {/* Selection Overlay (limpo: sem rótulos) */}
             {isSelected && isEditable && (
                 <div className="absolute -top-6 left-0 z-20 flex items-center gap-2">
-                    <div className="bg-blue-500 text-white text-xs px-2 py-1 rounded-md font-medium shadow-sm">
-                        {blockType} #{blockIndex + 1}
-                    </div>
-
                     {/* Properties Button */}
                     {onOpenProperties && (
                         <button
@@ -139,15 +135,6 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = ({
                             <Move className="w-3 h-3" />
                         </div>
                     )}
-                </div>
-            )}
-
-            {/* Hover Indicator */}
-            {!isSelected && isEditable && (
-                <div className="absolute -top-5 left-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="bg-gray-500 text-white text-xs px-2 py-1 rounded-md font-medium shadow-sm">
-                        {blockType} #{blockIndex + 1}
-                    </div>
                 </div>
             )}
 
