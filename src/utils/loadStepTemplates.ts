@@ -40,39 +40,29 @@ function convertTemplateBlocksToBlocks(templateBlocks: StepTemplate['blocks']): 
 }
 
 /**
- * Normaliza stepId para aceitar ambos formatos (step-01, step-1)
- */
-function normalizeStepId(stepId: string): string {
-  const match = stepId.match(/step-0?(\d+)/);
-  if (match) {
-    return `step-${match[1]}`;
-  }
-  return stepId;
-}
-
-/**
  * Carrega template de um step específico
  */
 export function loadStepTemplate(stepId: string): Block[] {
-  // Normalizar para formato sem padding (step-12, step-19, step-20)
-  const normalizedId = normalizeStepId(stepId);
-  
   const templates: Record<string, StepTemplate> = {
     'step-12': step12Template as StepTemplate,
     'step-19': step19Template as StepTemplate,
     'step-20': step20Template as StepTemplate,
   };
 
-  const template = templates[normalizedId];
+  const template = templates[stepId];
   
   if (!template) {
-    console.warn(`⚠️ Template não encontrado para ${stepId} (normalizado: ${normalizedId})`);
+    console.warn(`⚠️ Template não encontrado para ${stepId}`);
     return [];
   }
 
   const blocks = convertTemplateBlocksToBlocks(template.blocks);
   
-  console.log(`✅ Template carregado para ${stepId}: ${blocks.length} blocos [${blocks.map(b => b.type).join(', ')}]`);
+  console.log(`✅ Template carregado para ${stepId}:`, {
+    stepId,
+    blockCount: blocks.length,
+    blockTypes: blocks.map(b => b.type),
+  });
 
   return blocks;
 }
@@ -92,22 +82,19 @@ export function loadAllModularTemplates(): Record<string, Block[]> {
  * Verifica se um step tem template modular
  */
 export function hasModularTemplate(stepId: string): boolean {
-  const normalizedId = normalizeStepId(stepId);
-  return ['step-12', 'step-19', 'step-20'].includes(normalizedId);
+  return ['step-12', 'step-19', 'step-20'].includes(stepId);
 }
 
 /**
  * Obtém metadata do template
  */
 export function getTemplateMetadata(stepId: string): { name: string; description: string } | null {
-  const normalizedId = normalizeStepId(stepId);
-  
   const templates: Record<string, StepTemplate> = {
     'step-12': step12Template as StepTemplate,
     'step-19': step19Template as StepTemplate,
     'step-20': step20Template as StepTemplate,
   };
 
-  const template = templates[normalizedId];
+  const template = templates[stepId];
   return template?.metadata || null;
 }

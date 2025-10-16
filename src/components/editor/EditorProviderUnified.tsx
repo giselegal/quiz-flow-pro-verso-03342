@@ -394,9 +394,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     }, []);
 
     const ensureStepLoaded = useCallback(async (step: number | string) => {
-    const stepKey = typeof step === 'string' 
-      ? step 
-      : `step-${step.toString().padStart(2, '0')}`;
+        const stepKey = typeof step === 'string' ? step : `step-${step}`;
 
         // Se já tem blocos para este step, não fazer nada
         if (state.stepBlocks[stepKey]?.length > 0) {
@@ -406,19 +404,18 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         // ✅ PRIORIDADE: Templates JSON modulares (steps 12, 19, 20)
         if (hasModularTemplate(stepKey)) {
             const modularBlocks = loadStepTemplate(stepKey);
+            console.log(`🎯 Carregando template modular para ${stepKey}:`, {
+                blockCount: modularBlocks.length,
+                blockTypes: modularBlocks.map(b => b.type)
+            });
             
-            if (modularBlocks.length > 0) {
-                console.log(`✅ Modular step ${stepKey} carregado com ${modularBlocks.length} blocos`);
-                setState(prev => ({
-                    ...prev,
-                    stepBlocks: {
-                        ...prev.stepBlocks,
-                        [stepKey]: modularBlocks
-                    }
-                }));
-            } else {
-                console.warn(`⚠️ Nenhum bloco retornado para ${stepKey}`);
-            }
+            setState(prev => ({
+                ...prev,
+                stepBlocks: {
+                    ...prev.stepBlocks,
+                    [stepKey]: modularBlocks
+                }
+            }));
             return;
         }
 
