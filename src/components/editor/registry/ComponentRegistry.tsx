@@ -88,7 +88,28 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '🔲',
     type: 'options-grid',
     difficulty: 'intermediate',
-    component: () => import('@/components/blocks/inline/ButtonInline')
+    defaultProps: {
+      columns: 2,
+      gridGap: 16,
+      showImages: true,
+      imageSize: 'medium',
+      imagePosition: 'top',
+      imageLayout: 'vertical',
+      multipleSelection: false,
+      maxSelections: 1,
+      minSelections: 1,
+      requiredSelections: 1,
+      allowDeselection: true,
+      showSelectionCount: true,
+      options: [
+        { id: '1', text: 'Opção 1', imageUrl: '' },
+        { id: '2', text: 'Opção 2', imageUrl: '' },
+        { id: '3', text: 'Opção 3', imageUrl: '' },
+        { id: '4', text: 'Opção 4', imageUrl: '' }
+      ]
+    },
+    requiredProps: ['options'],
+    component: () => import('@/components/editor/blocks/OptionsGridBlock')
   },
 
   'multiple-choice': {
