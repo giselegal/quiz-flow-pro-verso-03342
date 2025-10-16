@@ -1,29 +1,31 @@
 /**
- * 🎯 UNIFIED STEP RENDERER v2.0 - MODULARIZAÇÃO COMPLETA
- * 
- * Renderiza steps usando componentes reais de produção com StepDataAdapter.
- * 
- * FEATURES v2.0:
- * - Adapter robusto com fallbacks (StepDataAdapter)
- * - Lazy loading para performance
- * - 100% WYSIWYG entre edit e preview
+ * 🎯 UNIFIED STEP RENDERER v2.1 - MODULARIZAÇÃO COMPLETA
+ *
+ * Uso: Em modo edição renderiza componentes modulares (blocos independentes).
+ * Em modo preview renderiza os componentes de produção com interatividade real.
  */
 
 import React, { lazy, Suspense, memo } from 'react';
 import { EditableQuizStep } from '../types';
 import { adaptStepData } from '@/utils/StepDataAdapter';
 
-// Lazy loading de componentes
+// Produção (preview)
 const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
-// Versão modular para edição (Etapa 1)
-const ModularIntroStep = lazy(() => import('@/components/editor/quiz-estilo/ModularIntroStep'));
 const QuestionStep = lazy(() => import('@/components/quiz/QuestionStep'));
 const StrategicQuestionStep = lazy(() => import('@/components/quiz/StrategicQuestionStep'));
 const TransitionStep = lazy(() => import('@/components/quiz/TransitionStep'));
 const ResultStep = lazy(() => import('@/components/quiz/ResultStep'));
 const OfferStep = lazy(() => import('@/components/quiz/OfferStep'));
 
-// Ícones para overlay de edição
+// Modulares (edição)
+const ModularIntroStep = lazy(() => import('@/components/editor/quiz-estilo/ModularIntroStep'));
+const ModularQuestionStep = lazy(() => import('@/components/editor/quiz-estilo/ModularQuestionStep'));
+const ModularStrategicQuestionStep = lazy(() => import('@/components/editor/quiz-estilo/ModularStrategicQuestionStep'));
+const ModularTransitionStep = lazy(() => import('@/components/editor/quiz-estilo/ModularTransitionStep'));
+const ModularResultStep = lazy(() => import('@/components/editor/quiz-estilo/ModularResultStep'));
+const ModularOfferStep = lazy(() => import('@/components/editor/quiz-estilo/ModularOfferStep'));
+
+// UI do overlay de edição
 import { GripVertical, Trash2, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -37,17 +39,16 @@ export interface UnifiedStepRendererProps {
   step: EditableQuizStep;
   mode: 'edit' | 'preview';
 
-  // Props para modo edição
+  // Edição
   isSelected?: boolean;
   onStepClick?: (e: React.MouseEvent, step: EditableQuizStep) => void;
   onDelete?: () => void;
   onDuplicate?: () => void;
 
-  // Props para modo preview (interatividade)
+  // Preview (interatividade)
   sessionData?: Record<string, any>;
   onUpdateSessionData?: (key: string, value: any) => void;
 }
-
 
 const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   step,
@@ -62,23 +63,18 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const isEditMode = mode === 'edit';
   const isPreviewMode = mode === 'preview';
 
-  // Usar StepDataAdapter para normalização robusta
+  // Adaptar dados do step para o formato esperado dos componentes
   const stepData = adaptStepData(step);
 
-  // Renderizar o componente correto baseado no tipo
+  // Renderizar componente correspondente ao tipo
   const renderStepComponent = () => {
     switch (step.type) {
-      case 'intro':
-        // Em modo edição, usar versão modular com blocos independentes
+      case 'intro': {
         if (isEditMode) {
           return (
-            <ModularIntroStep
-              data={stepData as any}
-              isEditable={true}
-            />
+            <ModularIntroStep data={stepData as any} isEditable={true} />
           );
         }
-        // Em preview, manter componente de produção
         return (
           <IntroStep
             data={stepData as any}
@@ -89,8 +85,18 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             }}
           />
         );
+      }
 
-      case 'question':
+      case 'question': {
+        if (isEditMode) {
+          return (
+            <ModularQuestionStep
+              data={stepData as any}
+              isEditable={true}
+              currentAnswers={sessionData[`answers_${step.id}`] || []}
+            />
+          );
+        }
         return (
           <QuestionStep
             data={stepData as any}
@@ -102,8 +108,18 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             }}
           />
         );
+      }
 
-      case 'strategic-question':
+      case 'strategic-question': {
+        if (isEditMode) {
+          return (
+            <ModularStrategicQuestionStep
+              data={stepData as any}
+              isEditable={true}
+              currentAnswer={sessionData[`answer_${step.id}`] || ''}
+            />
+          );
+        }
         return (
           <StrategicQuestionStep
             data={stepData as any}
@@ -115,9 +131,18 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             }}
           />
         );
+      }
 
       case 'transition':
-      case 'transition-result':
+      case 'transition-result': {
+        if (isEditMode) {
+          return (
+            <ModularTransitionStep
+              data={{ ...stepData, type: step.type } as any}
+              isEditable={true}
+            />
+          );
+        }
         return (
           <TransitionStep
             data={{ ...stepData, type: step.type } as any}
@@ -128,8 +153,22 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             }}
           />
         );
+      }
 
-      case 'result':
+      case 'result': {
+        if (isEditMode) {
+          return (
+            <ModularResultStep
+              data={stepData as any}
+              isEditable={true}
+              userProfile={{
+                userName: sessionData.userName || 'Visitante',
+                resultStyle: sessionData.resultStyle || 'natural',
+                secondaryStyles: sessionData.secondaryStyles || [],
+              }}
+            />
+          );
+        }
         return (
           <ResultStep
             data={stepData as any}
@@ -141,8 +180,23 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             scores={sessionData.scores}
           />
         );
+      }
 
-      case 'offer':
+      case 'offer': {
+        if (isEditMode) {
+          return (
+            <ModularOfferStep
+              data={stepData as any}
+              isEditable={true}
+              userProfile={{
+                userName: sessionData.userName || 'Visitante',
+                resultStyle: sessionData.resultStyle || 'natural',
+                secondaryStyles: sessionData.secondaryStyles || [],
+              }}
+              offerKey={sessionData.offerKey || 'default'}
+            />
+          );
+        }
         return (
           <OfferStep
             data={stepData as any}
@@ -153,6 +207,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             offerKey={sessionData.offerKey || 'default'}
           />
         );
+      }
 
       default:
         return (
@@ -219,9 +274,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
           {step.type}
         </div>
 
-        {/* Componente real com Suspense */}
-        {/* Para a Etapa 1 (intro) em modo edição, liberar eventos para blocos internos */}
-        <div className={step.type === 'intro' ? '' : 'pointer-events-none'}>
+        {/* Conteúdo real - eventos liberados no modo edição */}
+        <div>
           <Suspense fallback={<StepLoadingFallback />}>
             {renderStepComponent()}
           </Suspense>
@@ -230,7 +284,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
     );
   }
 
-  // PREVIEW MODE: Step totalmente interativo com Suspense
+  // PREVIEW MODE: Step totalmente interativo
   return (
     <div data-step-id={step.id}>
       <Suspense fallback={<StepLoadingFallback />}>
