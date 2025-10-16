@@ -21,6 +21,20 @@ export function blockComponentsToBlocks(components: BlockComponent[]): Block[] {
 }
 
 /**
+ * Converts Block array to BlockComponent array
+ */
+export function blocksToBlockComponents(blocks: Block[]): BlockComponent[] {
+  return blocks.map(block => ({
+    id: block.id,
+    type: block.type,
+    order: block.order,
+    properties: block.properties || {},
+    content: block.content || {},
+    parentId: null
+  }));
+}
+
+/**
  * Converts a quiz template section/step object to BlockComponent array
  */
 export function convertTemplateToBlocks(template: any): BlockComponent[] {

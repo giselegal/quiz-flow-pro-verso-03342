@@ -28,6 +28,9 @@ import { LiveCanvasPreview } from '@/components/editor/canvas/LiveCanvasPreview'
 import { useLiveCanvasPreview } from '@/hooks/canvas/useLiveCanvasPreview';
 import { LivePreviewProvider } from '@/providers/LivePreviewProvider';
 import PreviewMonitor from '@/components/debug/PreviewMonitor';
+import UnifiedBlockRenderer from './UnifiedBlockRenderer';
+import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { blocksToBlockComponents } from '@/utils/templateConverter';
 
 export interface EnhancedCanvasAreaProps {
     activeTab: 'canvas' | 'preview';
@@ -211,6 +214,17 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
         );
     };
 
+    // Hook do editor para operações de bloco
+    const editor = useEditor();
+    const { state: editorState, actions } = editor;
+
+    // Obter blocos do step atual via editor
+    const currentStepBlocks = useMemo(() => {
+        const stepKey = selectedStep?.id || '';
+        const blocks = editorState.stepBlocks[stepKey] || [];
+        return blocksToBlockComponents(blocks);
+    }, [editorState.stepBlocks, selectedStep?.id]);
+
     const renderCanvasContent = () => (
         <div className="flex-1 overflow-auto">
             {/* Cabeçalho do Canvas */}
@@ -220,48 +234,59 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
                     <Badge variant="outline" className="text-xs">
                         Step {selectedStep?.order || '?'}
                     </Badge>
-                    {isVirtualizationActive && (
-                        <Badge variant="secondary" className="text-xs">
-                            <Activity className="w-3 h-3 mr-1" />
-                            Virtualizado ({(selectedStep?.blocks || []).length} itens)
-                        </Badge>
-                    )}
+                    <Badge variant="secondary" className="text-xs">
+                        {currentStepBlocks.length} blocos
+                    </Badge>
                 </div>
             </div>
 
-            {/* Área de Canvas */}
+            {/* Área de Canvas - Renderização Individual de Blocos */}
             <div className="p-4">
-                <SortableContext
-                    items={(selectedStep?.blocks || []).map(b => b.id)}
-                    strategy={verticalListSortingStrategy}
-                >
-                    <TooltipProvider>
-                        <div
-                            ref={containerRef}
-                            className="space-y-4 min-h-[400px] overflow-auto"
-                        >
-                            {isVirtualizationActive && <div style={{ height: topSpacer }} />}
-                            {(isVirtualizationActive ? virtualizedBlocks : selectedStep?.blocks || []).map((block: any, index: number) => (
-                                <BlockRow
-                                    key={block.id}
-                                    block={block}
-                                    index={index}
-                                    isSelected={selectedBlockId === block.id}
-                                    isMultiSelected={isMultiSelected(block.id)}
-                                    onClick={(event: React.MouseEvent) => handleBlockClick(block, event)}
-                                    renderPreview={() => renderBlockPreview(block)}
-                                    onRemove={() => removeBlock(block.id)}
-                                    onDuplicate={() => {
-                                        setBlockPendingDuplicate(block.id);
-                                        setTargetStepId(selectedStep.id);
-                                        setDuplicateModalOpen(true);
-                                    }}
-                                />
-                            ))}
-                            {isVirtualizationActive && <div style={{ height: bottomSpacer }} />}
+                {currentStepBlocks.length === 0 ? (
+                    <div className="flex items-center justify-center h-64 text-muted-foreground">
+                        <div className="text-center">
+                            <p className="mb-2">Nenhum bloco neste step</p>
+                            <p className="text-sm">Adicione blocos pelo painel lateral</p>
                         </div>
-                    </TooltipProvider>
-                </SortableContext>
+                    </div>
+                ) : (
+                    <SortableContext
+                        items={currentStepBlocks.map((b: BlockComponent) => b.id)}
+                        strategy={verticalListSortingStrategy}
+                    >
+                        <div className="space-y-4 min-h-[400px]">
+                            {currentStepBlocks
+                                .sort((a: BlockComponent, b: BlockComponent) => a.order - b.order)
+                                .map((block: BlockComponent) => (
+                                    <UnifiedBlockRenderer
+                                        key={block.id}
+                                        block={block}
+                                        allBlocks={currentStepBlocks}
+                                        mode="edit"
+                                        isSelected={selectedBlockId === block.id}
+                                        isMultiSelected={isMultiSelected(block.id)}
+                                        onBlockClick={(e) => {
+                                            e.stopPropagation();
+                                            handleBlockClick(block, e);
+                                        }}
+                                        onDelete={() => {
+                                            const stepKey = selectedStep?.id || '';
+                                            actions.removeBlock(stepKey, block.id);
+                                        }}
+                                        onDuplicate={() => {
+                                            setBlockPendingDuplicate(block.id);
+                                            setTargetStepId(selectedStep.id);
+                                            setDuplicateModalOpen(true);
+                                        }}
+                                        renderBlockPreview={(blk) => {
+                                            // Renderização visual básica do bloco
+                                            return renderBlockPreview(blk as any);
+                                        }}
+                                    />
+                                ))}
+                        </div>
+                    </SortableContext>
+                )}
             </div>
         </div>
     );
