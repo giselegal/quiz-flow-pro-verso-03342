@@ -100,7 +100,9 @@ export default function ModularResultStep({
     onOpenProperties = () => {}
 }: ModularResultStepProps) {
     const editor = useEditor({ optional: true });
-    const stepKey = data?.id || 'step-20';
+    const computedId = data?.id as string | undefined;
+    const isStandardStepId = typeof computedId === 'string' && /^step-\d{1,2}$/.test(computedId);
+    const stepKey = isStandardStepId ? (computedId as string) : 'step-20';
     const [isLoadingBlocks, setIsLoadingBlocks] = React.useState(false);
 
     // Buscar blocos do provider
@@ -119,10 +121,29 @@ export default function ModularResultStep({
         }
     }, [stepKey, rawBlocks.length, editor?.actions, isLoadingBlocks]);
 
+    // Fallback local: carregar via TemplateManager se provider não carregar
+    const [localBlocks, setLocalBlocks] = React.useState<Block[]>([]);
+    React.useEffect(() => {
+        if (rawBlocks.length === 0 && !isLoadingBlocks) {
+            import('@/utils/TemplateManager')
+                .then(({ TemplateManager }) => TemplateManager.loadStepBlocks(stepKey))
+                .then((loaded) => {
+                    if (Array.isArray(loaded) && loaded.length > 0) {
+                        console.log(`✅ ModularResultStep: Fallback loaded ${loaded.length} blocks for ${stepKey}`);
+                        setLocalBlocks(loaded as Block[]);
+                    }
+                })
+                .catch((e) => console.warn('⚠️ ModularResultStep fallback failed:', e));
+        }
+    }, [rawBlocks.length, isLoadingBlocks, stepKey]);
+
+    const sourceBlocks: Block[] = rawBlocks.length > 0 ? rawBlocks : localBlocks;
+    console.log('🧪 ModularResultStep source blocks:', { stepKey, raw: rawBlocks.length, local: localBlocks.length });
+
     // Injetar dados dinâmicos nos blocos
     const blocks = useMemo(() => {
-        return rawBlocks.map((block: Block) => injectDynamicData(block, userProfile));
-    }, [rawBlocks, userProfile]);
+        return sourceBlocks.map((block: Block) => injectDynamicData(block, userProfile));
+    }, [sourceBlocks, userProfile]);
 
     // Ordenação dos blocos via metadata
     const [localOrder, setLocalOrder] = React.useState<string[]>([]);
