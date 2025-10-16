@@ -261,6 +261,42 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             };
         }
 
+        // 🎯 INICIALIZAR BLOCOS a partir do template se não houver blocos
+        const initializeBlocks = async () => {
+            if (state.blocks.length === 0 && Object.keys(state.blocksByStep).length === 0) {
+                console.log('📦 Inicializando blocos a partir do template...');
+                
+                try {
+                    const { initializeAllStepBlocks } = await import('@/utils/initializeStepBlocks');
+                    const { blocks, blocksByStep } = initializeAllStepBlocks();
+                    
+                    // Criar stepBlocks para compatibilidade
+                    const stepBlocks: Record<string, Block[]> = {};
+                    Object.entries(blocksByStep).forEach(([stepId, blockIds]) => {
+                        stepBlocks[stepId] = blockIds
+                            .map(id => blocks.find(b => b.id === id))
+                            .filter((b): b is Block => b !== undefined);
+                    });
+                    
+                    setState(prev => ({
+                        ...prev,
+                        blocks,
+                        blocksByStep,
+                        stepBlocks
+                    }));
+                    
+                    console.log('✅ Blocos inicializados:', {
+                        totalBlocks: blocks.length,
+                        steps: Object.keys(blocksByStep).length
+                    });
+                } catch (error) {
+                    console.error('❌ Erro ao inicializar blocos:', error);
+                }
+            }
+        };
+
+        initializeBlocks();
+
         return () => {
             if (typeof window !== 'undefined') {
                 (window as any).__UNIFIED_EDITOR_PROVIDER__ = {

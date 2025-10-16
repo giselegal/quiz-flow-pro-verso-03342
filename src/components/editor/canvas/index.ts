@@ -17,5 +17,8 @@ export { AddBlockModal } from './AddBlockModal';
 export { default as OptimizedCanvasDropZone } from './OptimizedCanvasDropZone';
 export { default as SortableBlockWrapper } from './SortableBlockWrapper';
 
-// Re-export do simple wrapper se necessário
-// export { default as SortableBlockWrapperSimple } from './SortableBlockWrapper.simple';
+// Utilitários de inicialização de blocos
+export { 
+  initializeStepBlocks,
+  initializeAllStepBlocks 
+} from '@/utils/initializeStepBlocks';
