@@ -128,7 +128,49 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
     };
   };
   const handleBlocksReorder = (stepId: string, newOrder: string[]) => {
+    // 1) Persistir preferência de ordem na camada de dados do step (para o UI modular)
     handleEdit('blockOrder', newOrder);
+
+    // 2) Se houver provider do editor, reordenar os blocos reais conforme possível
+    try {
+      if (!editor?.actions?.reorderBlocks || !editor?.state?.stepBlocks) return;
+
+      const blocks: any[] = editor.state.stepBlocks[stepKey] || [];
+      if (!Array.isArray(blocks) || blocks.length === 0) return;
+
+      // Mapear ordem lógica -> IDs reais (deduplicado, pois alguns lógicos mapeiam ao mesmo bloco real)
+      const desiredRealOrder: string[] = [];
+      for (const logicalId of newOrder) {
+        const realId = resolveRealBlockId(logicalId);
+        if (realId && !desiredRealOrder.includes(realId)) {
+          desiredRealOrder.push(realId);
+        }
+      }
+
+      // Construir array mutável com a ordem atual de IDs reais
+      const currentIds: string[] = blocks.map(b => String(b.id));
+
+      // Helper para simular movimentação local acompanhando as chamadas ao provider
+      const moveLocal = (arr: string[], from: number, to: number) => {
+        const item = arr.splice(from, 1)[0];
+        arr.splice(to, 0, item);
+      };
+
+      // Reposicionar, na sequência, cada alvo na posição desejada
+      (async () => {
+        for (let i = 0; i < desiredRealOrder.length; i++) {
+          const targetId = desiredRealOrder[i];
+          const currentIndex = currentIds.indexOf(targetId);
+          if (currentIndex === -1) continue; // bloco não existe no provider
+          if (currentIndex !== i) {
+            await editor.actions.reorderBlocks(stepKey, currentIndex, i);
+            moveLocal(currentIds, currentIndex, i);
+          }
+        }
+      })();
+    } catch (err) {
+      console.warn('Falha ao aplicar reordenação no provider, seguirá apenas metadata:', err);
+    }
   };
 
   // Renderizar componente correspondente ao tipo
