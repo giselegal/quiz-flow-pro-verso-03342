@@ -25,6 +25,7 @@ interface ModularTransitionStepProps {
     selectedBlockId?: string;
     onBlockSelect?: (blockId: string) => void;
     onOpenProperties?: (blockId: string) => void;
+    editor?: any;
 }
 
 export default function ModularTransitionStep({
@@ -34,10 +35,28 @@ export default function ModularTransitionStep({
     enableAutoAdvance = false,
     selectedBlockId,
     onBlockSelect = () => { },
-    onOpenProperties = () => { }
+    onOpenProperties = () => { },
+    editor: editorProp
 }: ModularTransitionStepProps) {
-    const editor = useEditor({ optional: true });
+    const editorContext = useEditor({ optional: true });
+    const editor = editorProp || editorContext;
     const stepKey = data?.id || 'step-12';
+
+    // Handler para clique em blocos
+    const handleBlockClick = React.useCallback((blockId: string) => {
+        console.log(`🎯 Bloco clicado: ${blockId}`);
+        
+        // 1. Notificar componente pai
+        onBlockSelect(blockId);
+        
+        // 2. Atualizar estado no editor (se disponível)
+        if (editor?.actions?.setSelectedBlockId) {
+            editor.actions.setSelectedBlockId(blockId);
+        }
+        
+        // 3. Abrir painel de propriedades
+        onOpenProperties(blockId);
+    }, [onBlockSelect, onOpenProperties, editor]);
 
     // ✅ FASE 1: Buscar blocos diretamente sem disparar carregamento
     const blocks = useMemo(() => {
@@ -133,20 +152,21 @@ export default function ModularTransitionStep({
                                 items={localOrder}
                                 strategy={verticalListSortingStrategy}
                             >
-                                {orderedBlocks.map((block) => (
+                                {orderedBlocks.map((block: Block) => (
                                     <UniversalBlockRenderer
                                         key={block.id}
                                         block={block}
                                         mode="editor"
                                         isSelected={selectedBlockId === block.id}
-                                        onSelect={() => onBlockSelect(block.id)}
+                                        onSelect={() => handleBlockClick(block.id)}
+                                        onClick={() => handleBlockClick(block.id)}
                                     />
                                 ))}
                             </SortableContext>
                         </DndContext>
                     ) : (
                         <>
-                            {orderedBlocks.map((block) => (
+                            {orderedBlocks.map((block: Block) => (
                                 <UniversalBlockRenderer
                                     key={block.id}
                                     block={block}

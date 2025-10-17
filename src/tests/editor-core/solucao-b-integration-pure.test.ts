@@ -391,7 +391,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
         });
 
         it('deve aceitar offer map com múltiplas entradas', () => {
-            const offerMap = {};
+            const offerMap: Record<string, any> = {};
             for (let i = 1; i <= 10; i++) {
                 offerMap[`offer${i}`] = {
                     title: `Oferta ${i}`,

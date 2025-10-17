@@ -2133,6 +2133,193 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     ]
   },
 
+  // =====================================================================
+  // BLOCOS ATÔMICOS - TRANSIÇÃO (Steps 12 & 19)
+  // =====================================================================
+
+  'transition-title': {
+    label: 'Título de Transição',
+    fields: [
+      { key: 'text', label: 'Texto', type: 'text', group: 'content', required: true },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', 
+        options: [
+          { label: '2xl', value: '2xl' },
+          { label: '3xl', value: '3xl' },
+          { label: '4xl', value: '4xl' }
+        ], 
+        defaultValue: '3xl' 
+      },
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#5b4135' },
+      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style',
+        options: [
+          { label: 'Esquerda', value: 'left' },
+          { label: 'Centro', value: 'center' },
+          { label: 'Direita', value: 'right' }
+        ],
+        defaultValue: 'center'
+      }
+    ]
+  },
+
+  'transition-loader': {
+    label: 'Loader de Transição',
+    fields: [
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#deac6d' },
+      { key: 'dots', label: 'Número de Pontos', type: 'number', group: 'config', defaultValue: 3, min: 2, max: 5 },
+      { key: 'size', label: 'Tamanho', type: 'text', group: 'style', defaultValue: '12px' }
+    ]
+  },
+
+  'transition-text': {
+    label: 'Texto de Transição',
+    fields: [
+      { key: 'text', label: 'Texto', type: 'textarea', group: 'content', required: true },
+      { key: 'fontSize', label: 'Tamanho', type: 'select', group: 'style',
+        options: [
+          { label: 'Normal (base)', value: 'base' },
+          { label: 'Grande (lg)', value: 'lg' },
+          { label: 'Extra Grande (xl)', value: 'xl' }
+        ],
+        defaultValue: 'lg'
+      },
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#6b7280' },
+      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style',
+        options: [
+          { label: 'Esquerda', value: 'left' },
+          { label: 'Centro', value: 'center' },
+          { label: 'Direita', value: 'right' }
+        ],
+        defaultValue: 'center'
+      }
+    ]
+  },
+
+  'transition-progress': {
+    label: 'Progress de Transição',
+    fields: [
+      { key: 'dots', label: 'Número de Pontos', type: 'number', group: 'config', defaultValue: 3, min: 2, max: 5 },
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#deac6d' }
+    ]
+  },
+
+  'transition-message': {
+    label: 'Mensagem de Transição',
+    fields: [
+      { key: 'emoji', label: 'Emoji', type: 'text', group: 'content', defaultValue: '🧮' },
+      { key: 'text', label: 'Mensagem', type: 'textarea', group: 'content', required: true },
+      { key: 'gradientFrom', label: 'Gradiente Início', type: 'color', group: 'style' },
+      { key: 'gradientTo', label: 'Gradiente Fim', type: 'color', group: 'style' }
+    ]
+  },
+
+  // =====================================================================
+  // BLOCOS ATÔMICOS - RESULTADO (Step 20)
+  // =====================================================================
+
+  'result-header': {
+    label: 'Cabeçalho de Resultado',
+    fields: [
+      { key: 'text', label: 'Título', type: 'text', group: 'content', required: true },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content' },
+      { key: 'emoji', label: 'Emoji', type: 'text', group: 'content', defaultValue: '🎉' },
+      { key: 'titleColor', label: 'Cor do Título', type: 'color', group: 'style', defaultValue: '#5b4135' },
+      { key: 'subtitleColor', label: 'Cor do Subtítulo', type: 'color', group: 'style', defaultValue: '#8F7A6A' }
+    ]
+  },
+
+  'result-main': {
+    label: 'Estilo Principal',
+    fields: [
+      { key: 'styleName', label: 'Nome do Estilo', type: 'text', group: 'content', required: true },
+      { key: 'percentage', label: 'Porcentagem', type: 'number', group: 'content', min: 0, max: 100, defaultValue: 65 },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#F5EDE4' },
+      { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#5b4135' },
+      { key: 'accentColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#B89B7A' }
+    ]
+  },
+
+  'result-image': {
+    label: 'Imagem de Resultado',
+    fields: [
+      { key: 'url', label: 'URL da Imagem', type: 'text', group: 'content', required: true },
+      { key: 'alt', label: 'Texto Alternativo', type: 'text', group: 'content' },
+      { key: 'borderRadius', label: 'Raio da Borda', type: 'text', group: 'style', defaultValue: '12px' },
+      { key: 'width', label: 'Largura', type: 'text', group: 'style', defaultValue: '100%' },
+      { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'style', defaultValue: '500px' }
+    ]
+  },
+
+  'result-description': {
+    label: 'Descrição do Resultado',
+    fields: [
+      { key: 'text', label: 'Texto', type: 'textarea', group: 'content', required: true },
+      { key: 'fontSize', label: 'Tamanho', type: 'select', group: 'style',
+        options: [
+          { label: 'Normal (base)', value: 'base' },
+          { label: 'Grande (lg)', value: 'lg' },
+          { label: 'Extra Grande (xl)', value: 'xl' }
+        ],
+        defaultValue: 'lg'
+      },
+      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style',
+        options: [
+          { label: 'Esquerda', value: 'left' },
+          { label: 'Centro', value: 'center' },
+          { label: 'Direita', value: 'right' }
+        ],
+        defaultValue: 'center'
+      }
+    ]
+  },
+
+  'result-characteristics': {
+    label: 'Características do Resultado',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'items', label: 'Itens (JSON)', type: 'json', group: 'content', 
+        description: 'Array de strings com as características',
+        defaultValue: JSON.stringify(['Item 1', 'Item 2', 'Item 3'], null, 2)
+      }
+    ]
+  },
+
+  'result-cta': {
+    label: 'CTA do Resultado',
+    fields: [
+      { key: 'text', label: 'Texto do Botão', type: 'text', group: 'content', required: true },
+      { key: 'variant', label: 'Variante', type: 'select', group: 'style',
+        options: [
+          { label: 'Padrão', value: 'default' },
+          { label: 'Secundário', value: 'secondary' },
+          { label: 'Outline', value: 'outline' }
+        ],
+        defaultValue: 'default'
+      },
+      { key: 'size', label: 'Tamanho', type: 'select', group: 'style',
+        options: [
+          { label: 'Pequeno', value: 'sm' },
+          { label: 'Médio', value: 'md' },
+          { label: 'Grande', value: 'lg' }
+        ],
+        defaultValue: 'lg'
+      }
+    ]
+  },
+
+  'result-secondary-styles': {
+    label: 'Estilos Secundários',
+    fields: [
+      { key: 'title', label: 'Título', type: 'text', group: 'content' },
+      { key: 'styles', label: 'Estilos (JSON)', type: 'json', group: 'content',
+        description: 'Array de objetos com name, percentage, color',
+        defaultValue: JSON.stringify([
+          { name: 'Minimalista', percentage: 25, color: '#6b7280' },
+          { name: 'Romântico', percentage: 10, color: '#c49548' }
+        ], null, 2)
+      }
+    ]
+  },
+
   'step20-secondary-styles': {
     label: 'Step 20 - Estilos Secundários',
     fields: [

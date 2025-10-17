@@ -33,6 +33,22 @@ import {
   Step20PersonalizedOfferBlock
 } from './Step20ModularBlocks';
 
+// Blocos Atômicos de Transição (Steps 12 & 19)
+import TransitionTitleBlock from './atomic/TransitionTitleBlock';
+import TransitionLoaderBlock from './atomic/TransitionLoaderBlock';
+import TransitionTextBlock from './atomic/TransitionTextBlock';
+import TransitionProgressBlock from './atomic/TransitionProgressBlock';
+import TransitionMessageBlock from './atomic/TransitionMessageBlock';
+
+// Blocos Atômicos de Resultado (Step 20)
+import ResultHeaderBlock from './atomic/ResultHeaderBlock';
+import ResultMainBlock from './atomic/ResultMainBlock';
+import ResultImageBlock from './atomic/ResultImageBlock';
+import ResultDescriptionBlock from './atomic/ResultDescriptionBlock';
+import ResultCharacteristicsBlock from './atomic/ResultCharacteristicsBlock';
+import ResultCTABlock from './atomic/ResultCTABlock';
+import ResultSecondaryStylesBlock from './atomic/ResultSecondaryStylesBlock';
+
 // ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
 import { default as ResultCalculationSection } from '@/components/blocks/ResultCalculationSection';
 
@@ -128,10 +144,24 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'step20-compatibility': Step20CompatibilityBlock,
   'step20-secondary-styles': Step20SecondaryStylesBlock,
   'step20-personalized-offer': Step20PersonalizedOfferBlock,
-  'step20-complete-template': Step20ResultHeaderBlock, // TODO: se quiser renderização compacta usar Step20CompleteTemplateBlock diretamente em outro fluxo
+  'step20-complete-template': Step20ResultHeaderBlock,
   // ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
   'result-calculation': ResultCalculationSection,
   'ResultCalculationSection': ResultCalculationSection,
+  // ✅ BLOCOS ATÔMICOS - Transição (Steps 12 & 19)
+  'transition-title': TransitionTitleBlock,
+  'transition-loader': TransitionLoaderBlock,
+  'transition-text': TransitionTextBlock,
+  'transition-progress': TransitionProgressBlock,
+  'transition-message': TransitionMessageBlock,
+  // ✅ BLOCOS ATÔMICOS - Resultado (Step 20)
+  'result-header': ResultHeaderBlock,
+  'result-main': ResultMainBlock,
+  'result-image': ResultImageBlock,
+  'result-description': ResultDescriptionBlock,
+  'result-characteristics': ResultCharacteristicsBlock,
+  'result-cta': ResultCTABlock,
+  'result-secondary-styles': ResultSecondaryStylesBlock,
   // ✅ FASE 3A: Componentes inline específicos
   'image-display-inline': ImageDisplayInlineBlock,
   'decorative-bar-inline': DecorativeBarInlineBlock,

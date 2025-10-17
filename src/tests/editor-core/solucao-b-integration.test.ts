@@ -62,12 +62,12 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
             expect(converted.blocks.length).toBeGreaterThan(0);
 
             // Deve ter heading
-            const headingBlock = converted.blocks.find(b => b.type === 'heading');
+            const headingBlock = converted.blocks.find((b: any) => b.type === 'heading');
             expect(headingBlock).toBeDefined();
             expect(headingBlock?.content.text).toContain('estilo predominante');
 
             // Deve ter quiz-options
-            const optionsBlock = converted.blocks.find(b => b.type === 'quiz-options');
+            const optionsBlock = converted.blocks.find((b: any) => b.type === 'quiz-options');
             expect(optionsBlock).toBeDefined();
             expect(optionsBlock?.content.options.length).toBe(3);
             expect(optionsBlock?.properties.multiSelect).toBe(true);
@@ -131,10 +131,10 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
             const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
 
             expect(converted.blocks.length).toBeGreaterThan(0);
-            const headingBlock = converted.blocks.find(b => b.type === 'heading');
+            const headingBlock = converted.blocks.find((b: any) => b.type === 'heading');
             expect(headingBlock?.content.text).toBe('Bem-vindo ao Quiz');
 
-            const buttonBlock = converted.blocks.find(b => b.type === 'button');
+            const buttonBlock = converted.blocks.find((b: any) => b.type === 'button');
             expect(buttonBlock?.content.text).toBe('Começar Agora');
         });
     });
@@ -167,15 +167,15 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
             expect(converted.blocks.length).toBeGreaterThan(0);
 
             // Verificar resultado header
-            const headerBlock = converted.blocks.find(b => b.type === 'result-header-inline');
+            const headerBlock = converted.blocks.find((b: any) => b.type === 'result-header-inline');
             expect(headerBlock).toBeDefined();
 
             // Verificar style card
-            const styleBlock = converted.blocks.find(b => b.type === 'style-card-inline');
+            const styleBlock = converted.blocks.find((b: any) => b.type === 'style-card-inline');
             expect(styleBlock).toBeDefined();
 
             // Verificar ofertas
-            const offerBlocks = converted.blocks.filter(b => b.type === 'quiz-offer-cta-inline');
+            const offerBlocks = converted.blocks.filter((b: any) => b.type === 'quiz-offer-cta-inline');
             expect(offerBlocks.length).toBeGreaterThanOrEqual(2);
         });
     });
@@ -213,7 +213,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
             };
             const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
 
-            const offerBlocks = converted.blocks.filter(b => b.type === 'quiz-offer-cta-inline');
+            const offerBlocks = converted.blocks.filter((b: any) => b.type === 'quiz-offer-cta-inline');
             expect(offerBlocks.length).toBe(2);
 
             expect(offerBlocks[0].content.title).toBe('Guia de Estilos');
@@ -317,7 +317,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
             const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
 
             expect(converted.blocks.length).toBeGreaterThan(0);
-            const heading = converted.blocks.find(b => b.type === 'heading');
+            const heading = converted.blocks.find((b: any) => b.type === 'heading');
             expect(heading?.content.text).toBe('Quase lá!');
         });
 
@@ -343,7 +343,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
             };
             const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
 
-            const optionsBlock = converted.blocks.find(b => b.type === 'quiz-options');
+            const optionsBlock = converted.blocks.find((b: any) => b.type === 'quiz-options');
             expect(optionsBlock?.properties.multiSelect).toBe(false);
             expect(optionsBlock?.properties.maxSelections).toBe(1);
         });
