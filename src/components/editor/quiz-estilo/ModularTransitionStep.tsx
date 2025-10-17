@@ -10,7 +10,8 @@
 
 import React, { useMemo } from 'react';
 import { DndContext, closestCenter, useSensors, useSensor, PointerSensor, DragEndEvent } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { Block } from '@/types/editor';
@@ -150,6 +151,21 @@ export default function ModularTransitionStep({
             .filter(Boolean) as Block[];
     }, [blocks, localOrder]);
 
+    // ✅ Wrapper para tornar blocos individuais arrastáveis
+    const SortableBlock: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+        const style = {
+            transform: CSS.Transform.toString(transform),
+            transition,
+            opacity: isDragging ? 0.7 : 1,
+        } as React.CSSProperties;
+        return (
+            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+                {children}
+            </div>
+        );
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
             <main className="w-full max-w-6xl mx-auto px-4 py-8">
@@ -165,14 +181,15 @@ export default function ModularTransitionStep({
                                 strategy={verticalListSortingStrategy}
                             >
                                 {orderedBlocks.map((block: Block) => (
-                                    <UniversalBlockRenderer
-                                        key={block.id}
-                                        block={block}
-                                        mode="editor"
-                                        isSelected={selectedBlockId === block.id}
-                                        onSelect={() => handleBlockClick(block.id)}
-                                        onClick={() => handleBlockClick(block.id)}
-                                    />
+                                    <SortableBlock key={block.id} id={block.id}>
+                                        <UniversalBlockRenderer
+                                            block={block}
+                                            mode="editor"
+                                            isSelected={selectedBlockId === block.id}
+                                            onSelect={() => handleBlockClick(block.id)}
+                                            onClick={() => handleBlockClick(block.id)}
+                                        />
+                                    </SortableBlock>
                                 ))}
                             </SortableContext>
                         </DndContext>
