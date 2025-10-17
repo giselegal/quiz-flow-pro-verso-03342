@@ -105,6 +105,33 @@ const inferStepTypeFromTemplate = (
   return 'custom';
 };
 
+/**
+ * Gera descrição do step baseada no tipo inferido do template
+ * Remove hardcoding de stepNumber === 20, etc.
+ */
+const generateStepDescription = (
+  stepType: string,
+  stepNumber: number,
+  questionText: string
+): string => {
+  switch (stepType) {
+    case 'lead-collection':
+      return 'Página de captura de leads';
+    case 'scored-question':
+      return `Pergunta do quiz: ${questionText}`;
+    case 'strategic-question':
+      return `Pergunta estratégica: ${questionText}`;
+    case 'transition':
+      return 'Página de transição';
+    case 'result':
+      return 'Página de resultado';
+    case 'offer':
+      return 'Página de vendas';
+    default:
+      return `Etapa ${stepNumber}`;
+  }
+};
+
 // ✅ FUNÇÃO HELPER: Obter template unificado com fallback legacy
 const getTemplateWithFallback = (templateId: string) => {
   // Primeiro, tentar buscar no registry unificado
@@ -520,15 +547,11 @@ const FUNNEL_TEMPLATES: Record<
           stepNumber,
           QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || []
         ),
-        description: stepNumber === 1
-          ? 'Página de captura de leads'
-          : stepNumber <= 11
-            ? `Pergunta do quiz: ${questionText}`
-            : stepNumber === 12 || stepNumber === 19
-              ? 'Página de transição'
-              : stepNumber === 20
-                ? 'Página de resultado'
-                : 'Página de vendas',
+        description: generateStepDescription(
+          inferStepTypeFromTemplate(stepId, stepNumber, QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || []),
+          stepNumber,
+          questionText
+        ),
       };
     }),
   },

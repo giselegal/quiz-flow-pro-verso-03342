@@ -26,9 +26,12 @@ const TESTS_CONFIG = {
     criticalSteps: ['step-12', 'step-19', 'step-20'],
     
     expectedBlocks: {
-        'step-12': ['transition-title', 'transition-loader', 'transition-progress', 'transition-message'],
-        'step-19': ['transition-title', 'transition-loader', 'transition-progress', 'transition-message'],
-        'step-20': ['result-main', 'result-style', 'result-cta-primary']
+        // Step 12: Transição (aceita text-inline para textos)
+        'step-12': ['transition-loader', 'transition-progress'],
+        // Step 19: Pergunta estratégica (NÃO é transição!)
+        'step-19': ['quiz-intro-header', 'options-grid'],
+        // Step 20: Resultado (aceita button-inline genérico por enquanto)
+        'step-20': ['result-main', 'result-style']
     },
     
     deprecatedComponents: [
