@@ -161,7 +161,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 )}
             </div>
 
-            {/* 🎯 EDIT MODE - Renderização com Drop Zones */}
+            {/* 🎯 EDIT MODE - Renderização modular com componentes especializados */}
             <div
                 className="flex-1 overflow-auto p-4"
                 style={{ display: isEditMode() ? 'block' : 'none' }}
@@ -176,49 +176,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 </div>
                             </div>
 
-                            {/* 🎯 BLOCOS INDIVIDUAIS COM DROP ZONES */}
-                            {migratedStep.blocks && migratedStep.blocks.length > 0 ? (
-                                <SortableContext
-                                    items={migratedStep.blocks.map(b => b.id)}
-                                    strategy={verticalListSortingStrategy}
-                                >
-                                    <div className="space-y-2">
-                                        {migratedStep.blocks
-                                            .filter(b => !b.parentId) // Apenas blocos raiz
-                                            .sort((a, b) => a.order - b.order)
-                                            .map(block => (
-                                                <BlockRow
-                                                    key={block.id}
-                                                    block={block}
-                                                    byBlock={byBlock}
-                                                    selectedBlockId={selectedBlockId}
-                                                    isMultiSelected={isMultiSelected}
-                                                    handleBlockClick={handleBlockClick}
-                                                    renderBlockPreview={renderBlockPreview}
-                                                    allBlocks={migratedStep.blocks}
-                                                    removeBlock={removeBlock}
-                                                    stepId={migratedStep.id}
-                                                    setBlockPendingDuplicate={setBlockPendingDuplicate}
-                                                    setTargetStepId={setTargetStepId}
-                                                    setDuplicateModalOpen={setDuplicateModalOpen}
-                                                />
-                                            ))}
-                                    </div>
-                                </SortableContext>
-                            ) : (
-                                <UnifiedStepRenderer
-                                    step={migratedStep}
-                                    mode="edit"
-                                    isSelected={selectedBlockId === migratedStep.id}
-                                    onStepClick={(e, step) => handleBlockClick(e, step as any)}
-                                    onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
-                                    onDuplicate={() => {
-                                        setBlockPendingDuplicate(migratedStep as any);
-                                        setTargetStepId(migratedStep.id);
-                                        setDuplicateModalOpen(true);
-                                    }}
-                                />
-                            )}
+                            {/* 🎯 COMPONENTES MODULARES - Mantém arquitetura do template */}
+                            <UnifiedStepRenderer
+                                step={migratedStep}
+                                mode="edit"
+                                isSelected={selectedBlockId === migratedStep.id}
+                                onStepClick={(e, step) => handleBlockClick(e, step as any)}
+                                onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
+                                onDuplicate={() => {
+                                    setBlockPendingDuplicate(migratedStep as any);
+                                    setTargetStepId(migratedStep.id);
+                                    setDuplicateModalOpen(true);
+                                }}
+                            />
 
                             {/* ✅ ZONA DROPPABLE - Aceita componentes arrastados da biblioteca */}
                             <div
