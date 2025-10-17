@@ -7,10 +7,10 @@ export default function TransitionTextBlock({
   onClick
 }: AtomicBlockProps) {
   const text = block.content?.text || '';
-  const fontSize = block.properties?.fontSize || 'lg';
-  const color = block.properties?.color || '#8F7A6A';
-  const textAlign = block.properties?.textAlign || 'center';
-  
+  const fontSize = block.content?.fontSize || 'lg';
+  const color = block.content?.color || '#8F7A6A';
+  const textAlign = block.content?.textAlign || 'center';
+
   const fontSizeClasses: Record<string, string> = {
     'sm': 'text-sm',
     'base': 'text-base',

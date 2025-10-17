@@ -8,14 +8,14 @@ export default function TransitionMessageBlock({
 }: AtomicBlockProps) {
   const emoji = block.content?.emoji || '✨';
   const message = block.content?.text || '';
-  const backgroundColor = block.properties?.backgroundColor || '#F5EDE4';
-  const textColor = block.properties?.textColor || '#5b4135';
-  const borderRadius = block.properties?.borderRadius || '12px';
+  const backgroundColor = block.content?.backgroundColor || '#F5EDE4';
+  const textColor = block.content?.textColor || '#5b4135';
+  const borderRadius = block.content?.borderRadius || '12px';
 
   return (
     <div
       className={`p-6 mt-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      style={{ 
+      style={{
         backgroundColor,
         borderRadius
       }}

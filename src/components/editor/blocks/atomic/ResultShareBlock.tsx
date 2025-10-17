@@ -8,10 +8,10 @@ export default function ResultShareBlock({
     isSelected,
     onClick
 }: AtomicBlockProps) {
-    // Ler de content primeiro, fallback para properties
-    const title = block.content?.title || block.properties?.title || 'Compartilhe seu resultado';
-    const platforms = block.content?.platforms || block.properties?.platforms || ['facebook', 'twitter', 'whatsapp', 'linkedin'];
-    const message = block.content?.message || block.properties?.message || 'Confira meu resultado!';
+    // ✅ Ler apenas de content
+    const title = block.content?.title || 'Compartilhe seu resultado';
+    const platforms = block.content?.platforms || ['facebook', 'twitter', 'whatsapp', 'linkedin'];
+    const message = block.content?.message || 'Confira meu resultado!';
 
     const shareHandlers: Record<string, () => void> = {
         facebook: () => {

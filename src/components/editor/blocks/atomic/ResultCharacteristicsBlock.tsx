@@ -6,16 +6,16 @@ export default function ResultCharacteristicsBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  // Ler de content primeiro, fallback para properties
-  const characteristics = block.content?.items || block.properties?.items || [];
-  const icon = block.properties?.icon || '✓';
-  const iconColor = block.properties?.iconColor || '#B89B7A';
-  const textColor = block.properties?.textColor || '#5b4135';
+  // ✅ Ler apenas de content
+  const characteristics = block.content?.items || [];
+  const icon = block.content?.icon || '✓';
+  const iconColor = block.content?.iconColor || '#B89B7A';
+  const textColor = block.content?.textColor || '#5b4135';
 
   if (characteristics.length === 0) return null;
 
   return (
-    <div 
+    <div
       className={`mb-6 ${isSelected ? 'ring-2 ring-primary' : ''}`}
       onClick={onClick}
     >

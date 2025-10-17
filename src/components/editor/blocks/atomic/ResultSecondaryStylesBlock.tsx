@@ -6,15 +6,15 @@ export default function ResultSecondaryStylesBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  // Ler de content primeiro, fallback para properties
-  const styles = block.content?.styles || block.properties?.styles || [];
-  const backgroundColor = block.properties?.backgroundColor || '#FFFFFF';
-  const borderColor = block.properties?.borderColor || '#E5D5C3';
+  // ✅ Ler apenas de content
+  const styles = block.content?.styles || [];
+  const backgroundColor = block.content?.backgroundColor || '#FFFFFF';
+  const borderColor = block.content?.borderColor || '#E5D5C3';
 
   if (styles.length === 0) return null;
 
   return (
-    <div 
+    <div
       className={`mb-6 ${isSelected ? 'ring-2 ring-primary' : ''}`}
       onClick={onClick}
     >
@@ -26,7 +26,7 @@ export default function ResultSecondaryStylesBlock({
           <div
             key={index}
             className="p-4 rounded-lg border-2 transition-all"
-            style={{ 
+            style={{
               backgroundColor,
               borderColor
             }}

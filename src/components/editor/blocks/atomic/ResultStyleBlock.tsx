@@ -6,12 +6,12 @@ export default function ResultStyleBlock({
     isSelected,
     onClick
 }: AtomicBlockProps) {
-    // Ler de content primeiro, fallback para properties
-    const styleName = block.content?.styleName || block.properties?.styleName || 'Estilo';
-    const percentage = block.content?.percentage || block.properties?.percentage || 0;
-    const description = block.content?.description || block.properties?.description || '';
-    const color = block.properties?.color || '#3B82F6';
-    const showBar = block.properties?.showBar !== false;
+    // ✅ Ler apenas de content
+    const styleName = block.content?.styleName || 'Estilo';
+    const percentage = block.content?.percentage || 0;
+    const description = block.content?.description || '';
+    const color = block.content?.color || '#3B82F6';
+    const showBar = block.content?.showBar !== false;
 
     return (
         <div

@@ -7,10 +7,10 @@ export default function TransitionTitleBlock({
   onClick
 }: AtomicBlockProps) {
   const title = block.content?.text || 'Preparando...';
-  const fontSize = block.properties?.fontSize || '3xl';
-  const color = block.properties?.color || '#5b4135';
-  const textAlign = block.properties?.textAlign || 'center';
-  
+  const fontSize = block.content?.fontSize || '3xl';
+  const color = block.content?.color || '#5b4135';
+  const textAlign = block.content?.textAlign || 'center';
+
   const fontSizeClasses: Record<string, string> = {
     '2xl': 'text-2xl',
     '3xl': 'text-3xl',
