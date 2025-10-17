@@ -421,23 +421,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
 
       case 'result': {
-        if (isEditMode) {
-          return (
-            <ModularResultStep
-              data={stepData as any}
-              isEditable={true}
-              userProfile={{
-                userName: sessionData.userName || 'Visitante',
-                resultStyle: sessionData.resultStyle || 'natural',
-                secondaryStyles: sessionData.secondaryStyles || [],
-              }}
-              selectedBlockId={selectedBlockId || undefined}
-              onBlockSelect={handleSelectBlock}
-              onOpenProperties={handleOpenProperties}
-            />
-          );
-        }
-        // Preview: calcular resultado real a partir das respostas atuais
+        // Calcular resultado real (tanto para edição quanto para preview) a partir das respostas atuais
         const answers = getPreviewAnswers();
         const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers });
         const typedScores: QuizScores = {
@@ -450,6 +434,27 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
           dramatico: (scores as any).dramatico || 0,
           criativo: (scores as any).criativo || 0,
         };
+
+        if (isEditMode) {
+          // Em modo edição, usamos o componente modular mas com os dados reais calculados
+          return (
+            <ModularResultStep
+              data={stepData as any}
+              isEditable={true}
+              userProfile={{
+                userName: sessionData.userName || 'Visitante',
+                resultStyle: primaryStyleId || sessionData.resultStyle || 'natural',
+                secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : (sessionData.secondaryStyles || []),
+                scores: Object.entries(typedScores).map(([name, score]) => ({ name, score: Number(score) })),
+              }}
+              selectedBlockId={selectedBlockId || undefined}
+              onBlockSelect={handleSelectBlock}
+              onOpenProperties={handleOpenProperties}
+            />
+          );
+        }
+
+        // Preview: componentes de produção com os mesmos dados calculados
         return (
           <ResultStep
             data={stepData as any}

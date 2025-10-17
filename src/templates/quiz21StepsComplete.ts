@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-15T20:04:46.844Z
+ * Gerado em: 2025-10-17T01:00:39.198Z
  * Versão: 3.0.0
  */
 
@@ -96,138 +96,152 @@ const MINIMAL_TEST_TEMPLATE: Record<string, Block[]> = {
 
 
 export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIMAL_TEST_TEMPLATE : {
-  'step-01': [
-    {
-      id: 'step01-quiz-intro-header-1',
-      type: 'quiz-intro-header',
-      order: 0,
-      parentId: null,
-      content: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        logoAlt: 'Logo Gisele Galvão',
-        showProgress: false
-      },
-      properties: {}
+  'step-01': {
+    "templateVersion": "3.0",
+    "metadata": {
+      "id": "step-01-intro-v3",
+      "name": "Introdução - Bem-vindo ao Quiz de Estilo",
+      "description": "Página inicial do quiz com apresentação e coleta do nome do usuário",
+      "category": "intro",
+      "tags": [
+        "quiz",
+        "style",
+        "intro",
+        "welcome",
+        "name-input"
+      ],
+      "createdAt": "2025-01-13T00:00:00.000Z",
+      "updatedAt": "2025-01-13T00:00:00.000Z",
+      "author": "Quiz Flow Pro",
+      "version": "3.0.0"
     },
-    {
-      id: 'step01-logo-1',
-      type: 'quiz-logo',
-      order: 0,
-      properties: {
-        logoUrl: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=200',
-        logoAlt: 'Logo do Quiz',
-        width: 120,
-        height: 40,
-        marginBottom: 16,
+    "theme": {
+      "colors": {
+        "primary": "#B89B7A",
+        "primaryHover": "#A68B6A",
+        "primaryLight": "#F3E8D3",
+        "secondary": "#432818",
+        "background": "#FAF9F7",
+        "text": "#1F2937",
+        "border": "#E5E7EB"
       },
-      content: {},
-    },
-    // 🧩 Progress Bar (oculta)
-    {
-      id: 'step01-progress-1',
-      type: 'quiz-progress-bar',
-      order: 1,
-      properties: {
-        showProgress: false,
-        progressValue: 0,
-        progressMax: 21,
+      "fonts": {
+        "heading": "Playfair Display, serif",
+        "body": "Inter, sans-serif"
       },
-      content: {},
-    },
-    // Barra Decorativa
-    {
-      id: 'step01-decorative-bar-1',
-      type: 'decorative-bar-inline',
-      order: 2,
-      properties: {
-        backgroundColor: '#B89B7A',
-        height: 4,
-        marginBottom: 24,
+      "spacing": {
+        "sm": 8,
+        "md": 16,
+        "lg": 24,
+        "xl": 32
       },
-      content: {},
+      "borderRadius": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16
+      }
     },
-    // Título
-    {
-      id: 'step01-text-inline-1',
-      type: 'text-inline',
-      order: 3,
-      properties: {
-        content: 'Descubra Seu [#B89B7A]**Estilo Predominante**[/#B89B7A] em [#B89B7A]**Apenas 3 Minutos**[/#B89B7A]',
-        fontSize: '32px',
-        fontWeight: '700',
-        textAlign: 'center',
-        marginBottom: 24,
+    "sections": [
+      {
+        "type": "intro-hero",
+        "id": "intro-hero-01",
+        "content": {
+          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
+          "logoWidth": 96,
+          "logoHeight": 96,
+          "title": "<span style=\"color: #B89B7A\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style=\"color: #B89B7A\">Você</span>.",
+          "subtitle": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
+          "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
+          "imageAlt": "Descubra seu estilo predominante",
+          "description": "Um quiz personalizado que vai revelar qual estilo te representa e como valorizar sua essência através das roupas.",
+          "showProgress": false,
+          "progressValue": 0
+        },
+        "style": {
+          "backgroundColor": "#FAF9F7",
+          "textColor": "#432818",
+          "padding": 24
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 500,
+          "delay": 0,
+          "easing": "ease-out"
+        }
       },
-      content: {},
+      {
+        "type": "welcome-form",
+        "id": "intro-form-01",
+        "content": {
+          "questionText": "Antes de começarmos, como posso te chamar?",
+          "nameLabel": "Seu primeiro nome",
+          "namePlaceholder": "Digite seu primeiro nome aqui...",
+          "submitText": "Quero Descobrir meu Estilo Agora!",
+          "loadingText": "Preparando seu quiz personalizado...",
+          "successText": "Perfeito! Vamos descobrir seu estilo!",
+          "showNameField": true,
+          "showEmailField": false,
+          "requiredFields": "name",
+          "validationMessage": "Por favor, digite seu nome para continuar"
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 400,
+          "delay": 200,
+          "easing": "ease-out"
+        }
+      }
+    ],
+    "validation": {
+      "required": [
+        "userName"
+      ],
+      "rules": {
+        "userName": {
+          "minLength": 2,
+          "maxLength": 50,
+          "pattern": "^[a-zA-ZÀ-ÿ\\s]+$",
+          "errorMessage": "Por favor, digite um nome válido (apenas letras)"
+        }
+      }
     },
-    // Imagem Hero (Modular)
-    {
-      id: 'step01-image-display-inline-1',
-      type: 'image-display-inline',
-      order: 4,
-      properties: {
-        src: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800',
-        alt: 'Quiz de Estilo',
-        width: '100%',
-        maxWidth: '600px',
-        borderRadius: 16,
-        marginBottom: 24,
-      },
-      content: {},
+    "navigation": {
+      "nextStep": "step-02",
+      "prevStep": null,
+      "allowBack": false,
+      "requiresUserInput": true,
+      "autoAdvance": false
     },
-    // Descrição
-    {
-      id: 'step01-text-description-1',
-      type: 'text-inline',
-      order: 5,
-      properties: {
-        content: 'Descubra seu ESTILO PREDOMINANTE e receba recomendações personalizadas',
-        fontSize: '18px',
-        textAlign: 'center',
-        marginBottom: 24,
-      },
-      content: {},
+    "analytics": {
+      "events": [
+        "page_view",
+        "section_view",
+        "field_focus",
+        "form_submit",
+        "validation_error"
+      ],
+      "trackingId": "step-01-intro-v3",
+      "fbPixelId": null,
+      "gaTrackingId": null
     },
-    // Input Nome
-    {
-      id: 'step01-form-input-1',
-      type: 'form-input',
-      order: 6,
-      properties: {
-        label: 'Qual é o seu nome?',
-        placeholder: 'Digite seu nome aqui',
-        required: true,
-        marginBottom: 24,
-      },
-      content: {},
-    },
-    // Botão CTA
-    {
-      id: 'step01-button-inline-1',
-      type: 'button-inline',
-      order: 7,
-      properties: {
-        text: 'Quero Descobrir meu Estilo Agora!',
-        variant: 'primary',
-        size: 'lg',
-        marginBottom: 16,
-      },
-      content: {},
-    },
-    // Footer Text
-    {
-      id: 'step01-footer-text-1',
-      type: 'text-inline',
-      order: 8,
-      properties: {
-        content: '⏱️ Leva apenas 3 minutos • 100% Gratuito',
-        fontSize: '14px',
-        textAlign: 'center',
-        opacity: 0.7,
-      },
-      content: {},
-    },
-  ],
+    "seo": {
+      "title": "Quiz de Estilo Pessoal - Descubra seu Estilo Predominante",
+      "description": "Descubra qual estilo te representa em apenas alguns minutos. Quiz personalizado de consultoria de estilo por Gisele Galvão.",
+      "keywords": [
+        "quiz de estilo",
+        "estilo pessoal",
+        "consultoria de estilo",
+        "guarda-roupa",
+        "moda feminina"
+      ]
+    }
+  },
 
   'step-02': {
     "templateVersion": "3.0",
