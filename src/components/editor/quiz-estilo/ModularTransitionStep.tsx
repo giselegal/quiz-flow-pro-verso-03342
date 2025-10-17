@@ -39,49 +39,22 @@ export default function ModularTransitionStep({
     const editor = useEditor({ optional: true });
     const stepKey = data?.id || 'step-12';
 
-    // Buscar blocos do provider com local state para forçar re-render
-    const [localBlocks, setLocalBlocks] = React.useState<any[]>([]);
-    const [isLoadingBlocks, setIsLoadingBlocks] = React.useState(true);
-
-    React.useEffect(() => {
-        const currentBlocks = editor?.state?.stepBlocks?.[stepKey] || [];
-
-        // Inicializar loading
-        if (isLoadingBlocks && currentBlocks.length === 0) {
-            // Tentar carregar os blocos se não existem
-            if (editor?.actions?.ensureStepLoaded) {
-                editor.actions.ensureStepLoaded(stepKey).then(() => {
-                    setIsLoadingBlocks(false);
-                }).catch(() => {
-                    setIsLoadingBlocks(false);
-                });
-            } else {
-                setIsLoadingBlocks(false);
-            }
-        } else if (currentBlocks.length > 0) {
-            setLocalBlocks(currentBlocks);
-            setIsLoadingBlocks(false);
-        }
-    }, [editor?.state?.stepBlocks, stepKey, editor?.state?.stepBlocks?.[stepKey]?.length, editor?.actions, isLoadingBlocks]);
-
-    // Usar localBlocks ao invés de memoized blocks
-    const blocks = localBlocks;
+    // ✅ FASE 1: Buscar blocos diretamente sem disparar carregamento
+    const blocks = useMemo(() => {
+        return editor?.state?.stepBlocks?.[stepKey] || [];
+    }, [editor?.state?.stepBlocks, stepKey]);
 
     // ✅ FASE 2: Debug logs apenas em DEV
     React.useEffect(() => {
         if (import.meta.env.DEV) {
             console.log(`🔍 ModularTransitionStep [${stepKey}]:`, {
-                isLoadingBlocks,
                 blocksCount: blocks.length,
                 blockTypes: blocks.map((b: any) => b.type),
                 isEditable,
                 enableAutoAdvance
             });
         }
-    }, [stepKey, isLoadingBlocks, blocks.length, isEditable, enableAutoAdvance]);
-
-    // Loading state: evitar early return para manter ordem de hooks
-    const showLoading = isLoadingBlocks && localBlocks.length === 0;
+    }, [stepKey, blocks.length, isEditable, enableAutoAdvance]);
 
     // Ordenação dos blocos via metadata
     const [localOrder, setLocalOrder] = React.useState<string[]>([]);

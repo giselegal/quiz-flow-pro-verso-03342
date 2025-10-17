@@ -393,13 +393,25 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         }));
     }, []);
 
+    // ✅ FASE 3: Proteção contra loops - rastrear steps sendo carregados
+    const loadingStepsRef = useRef<Set<string>>(new Set());
+
     const ensureStepLoaded = useCallback(async (step: number | string) => {
         const stepKey = typeof step === 'string' ? step : `step-${step}`;
 
-        console.group(`🔍 [ensureStepLoaded] ${stepKey}`);
+        // ✅ FASE 3: Skip se já está carregando
+        if (loadingStepsRef.current.has(stepKey)) {
+            console.log(`⏭️ Skip: ${stepKey} já está sendo carregado`);
+            return;
+        }
 
-        // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
-        setState(prev => {
+        loadingStepsRef.current.add(stepKey);
+
+        try {
+            console.group(`🔍 [ensureStepLoaded] ${stepKey}`);
+
+            // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
+            setState(prev => {
             console.log('hasModularTemplate:', hasModularTemplate(stepKey));
             console.log('existingBlocks:', prev.stepBlocks[stepKey]?.length || 0);
 
@@ -457,7 +469,22 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 }
             };
         });
+        } finally {
+            // ✅ FASE 3: Remover da lista de carregamento
+            loadingStepsRef.current.delete(stepKey);
+        }
     }, []); // ✅ EMPTY DEPS AGORA É SEGURO com functional setState
+
+    // ✅ FASE 2: Carregar blocos antecipadamente quando step muda
+    useEffect(() => {
+        const stepKey = `step-${state.currentStep}`;
+        
+        // Carregar apenas se não tem blocos
+        if (!state.stepBlocks[stepKey] || state.stepBlocks[stepKey].length === 0) {
+            console.log(`🔄 Auto-loading blocks for ${stepKey}`);
+            ensureStepLoaded(state.currentStep);
+        }
+    }, [state.currentStep, state.stepBlocks, ensureStepLoaded]);
 
     const loadDefaultTemplate = useCallback(() => {
         console.log('🎨 Loading default template');

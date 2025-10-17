@@ -103,41 +103,11 @@ export default function ModularResultStep({
     const computedId = data?.id as string | undefined;
     const isStandardStepId = typeof computedId === 'string' && /^step-\d{1,2}$/.test(computedId);
     const stepKey = isStandardStepId ? (computedId as string) : 'step-20';
-    const [isLoadingBlocks, setIsLoadingBlocks] = React.useState(false);
 
-    // Buscar blocos do provider
-    const rawBlocks = useMemo(() => {
+    // ✅ FASE 1: Buscar blocos diretamente sem disparar carregamento
+    const sourceBlocks = useMemo(() => {
         return editor?.state?.stepBlocks?.[stepKey] || [];
     }, [editor?.state?.stepBlocks, stepKey]);
-
-    // Carregar blocos se ainda não existirem (igual ao ModularTransitionStep)
-    React.useEffect(() => {
-        if (rawBlocks.length === 0 && editor?.actions?.ensureStepLoaded && !isLoadingBlocks) {
-            console.log(`🔄 ModularResultStep: Loading blocks for ${stepKey}...`);
-            setIsLoadingBlocks(true);
-            editor.actions.ensureStepLoaded(stepKey).finally(() => {
-                setIsLoadingBlocks(false);
-            });
-        }
-    }, [stepKey, rawBlocks.length, editor?.actions, isLoadingBlocks]);
-
-    // Fallback local: carregar via TemplateManager se provider não carregar
-    const [localBlocks, setLocalBlocks] = React.useState<Block[]>([]);
-    React.useEffect(() => {
-        if (rawBlocks.length === 0 && !isLoadingBlocks) {
-            import('@/utils/TemplateManager')
-                .then(({ TemplateManager }) => TemplateManager.loadStepBlocks(stepKey))
-                .then((loaded) => {
-                    if (Array.isArray(loaded) && loaded.length > 0) {
-                        console.log(`✅ ModularResultStep: Fallback loaded ${loaded.length} blocks for ${stepKey}`);
-                        setLocalBlocks(loaded as Block[]);
-                    }
-                })
-                .catch((e) => console.warn('⚠️ ModularResultStep fallback failed:', e));
-        }
-    }, [rawBlocks.length, isLoadingBlocks, stepKey]);
-
-    const sourceBlocks: Block[] = rawBlocks.length > 0 ? rawBlocks : localBlocks;
     
     // Injetar dados dinâmicos nos blocos
     const blocks = useMemo(() => {
@@ -148,10 +118,7 @@ export default function ModularResultStep({
     React.useEffect(() => {
         if (import.meta.env.DEV) {
             console.log(`🔍 ModularResultStep [${stepKey}]:`, {
-                isLoadingBlocks,
-                rawBlocksCount: rawBlocks.length,
-                localBlocksCount: localBlocks.length,
-                blocksAfterInjection: blocks.length,
+                blocksCount: blocks.length,
                 blockTypes: blocks.map((b: Block) => b.type),
                 blockIds: blocks.map((b: Block) => b.id),
                 userProfile: userProfile ? {
@@ -162,7 +129,7 @@ export default function ModularResultStep({
                 } : 'none'
             });
         }
-    }, [stepKey, isLoadingBlocks, rawBlocks.length, localBlocks.length, blocks.length, userProfile]);
+    }, [stepKey, blocks.length, userProfile]);
 
     // Ordenação dos blocos via metadata
     const [localOrder, setLocalOrder] = React.useState<string[]>([]);
