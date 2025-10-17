@@ -78,7 +78,7 @@ export const PropsToBlocksAdapter = {
         break;
       }
       case 'offer': {
-        const offers = normalizeOfferMap(props.offerMap || {});
+        const offers = normalizeOfferMap(props.offerMap || {}, stepId);
         Object.keys(offers).forEach((k) => {
           const o = offers[k];
           push({

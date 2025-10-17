@@ -34,8 +34,8 @@ export function normalizeOptions(options: any[] = [], stepId: string) {
   return options.map((o, i) => normalizeOption(o, stepId, i));
 }
 
-export function normalizeOfferEntry(key: string, entry: any) {
-  const id = entry.id || key || genId('offer');
+export function normalizeOfferEntry(key: string, entry: any, stepId?: string) {
+  const id = entry.id || (stepId ? `${stepId}-${slugify(key || entry.title || genId('o'))}` : (key || genId('offer')));
   return {
     ...entry,
     id,
@@ -50,10 +50,10 @@ export function normalizeOfferEntry(key: string, entry: any) {
   };
 }
 
-export function normalizeOfferMap(map: Record<string, any> = {}) {
+export function normalizeOfferMap(map: Record<string, any> = {}, stepId?: string) {
   const out: Record<string, any> = {};
   Object.entries(map).forEach(([k, v]) => {
-    const entry = normalizeOfferEntry(k, v);
+    const entry = normalizeOfferEntry(k, v, stepId);
     out[entry.id] = { ...entry };
   });
   return out;
