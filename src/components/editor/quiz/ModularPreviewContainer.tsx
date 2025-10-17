@@ -22,6 +22,10 @@ export interface ModularPreviewContainerProps {
     onViewportChange?: (viewport: 'full' | 'desktop' | 'tablet' | 'mobile') => void;
     /** Callback opcional para acompanhar mudanças de sessão (userName/answers/etc.). */
     onSessionChange?: (session: Record<string, any>) => void;
+    /** Replica comportamentos do preview no modo edição mantendo modularidade. Default: true. */
+    productionParityInEdit?: boolean;
+    /** Habilita auto-avance em transições durante edição para QA. Default: false. */
+    autoAdvanceInEdit?: boolean;
 }
 
 /**
@@ -36,6 +40,8 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     viewport,
     onViewportChange,
     onSessionChange,
+    productionParityInEdit = true,
+    autoAdvanceInEdit = false,
 }) => {
     const {
         state,
@@ -82,7 +88,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     // Atalho de teclado: tecla "p" abre o painel de propriedades
     const setSelectedBlockId = maybeEditor?.actions?.setSelectedBlockId;
     const stepBlocks = maybeEditor?.state?.stepBlocks;
-    
+
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
             // Evitar conflitos com inputs
@@ -179,6 +185,24 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     const [isEditLocal, setIsEditLocal] = useState<boolean>(!!editable);
     useEffect(() => { setIsEditLocal(!!editable); }, [editable]);
 
+    // Permite toggles por querystring para QA: ?editParity=0/1 & ?auto=1
+    const [qsParity, setQsParity] = useState<boolean | null>(null);
+    const [qsAuto, setQsAuto] = useState<boolean | null>(null);
+    useEffect(() => {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('editParity')) {
+                setQsParity(params.get('editParity') === '1');
+            }
+            if (params.has('auto')) {
+                setQsAuto(params.get('auto') === '1');
+            }
+        } catch { /* noop */ }
+    }, []);
+
+    const effectiveParity = qsParity !== null ? qsParity : productionParityInEdit;
+    const effectiveAuto = qsAuto !== null ? qsAuto : autoAdvanceInEdit;
+
     const Content = (
         <div className="min-h-screen bg-[#fefefe] text-[#5b4135]">
             {/* Barra de controles do preview modular */}
@@ -223,6 +247,8 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
                             mode={isEditLocal ? 'edit' : 'preview'}
                             sessionData={sessionData}
                             onUpdateSessionData={onUpdateSessionData}
+                            productionParityInEdit={effectiveParity}
+                            autoAdvanceInEdit={effectiveAuto}
                         />
                         {/* Navegação básica para facilitar o preview */}
                         <div className="flex items-center justify-between mt-6">

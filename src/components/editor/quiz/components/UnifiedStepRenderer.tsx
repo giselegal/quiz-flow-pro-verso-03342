@@ -48,6 +48,15 @@ export interface UnifiedStepRendererProps {
   onStepClick?: (e: React.MouseEvent, step: EditableQuizStep) => void;
   onDelete?: () => void;
   onDuplicate?: () => void;
+  /**
+   * Quando true, o modo edição replica comportamentos do preview (ex.: atualiza sessionData em respostas)
+   * mantendo os componentes modulares e o overlay. Default: true.
+   */
+  productionParityInEdit?: boolean;
+  /**
+   * Habilita auto-avançar em telas de transição durante a edição (para QA). Default: false.
+   */
+  autoAdvanceInEdit?: boolean;
 
   // Preview (interatividade)
   sessionData?: Record<string, any>;
@@ -63,6 +72,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   onDuplicate,
   sessionData = {},
   onUpdateSessionData,
+  productionParityInEdit = true,
+  autoAdvanceInEdit = false,
 }) => {
   const isEditMode = mode === 'edit';
   const isPreviewMode = mode === 'preview';
@@ -70,8 +81,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
 
   // ✅ FASE 4: Memoizar adaptStepData para evitar recálculos desnecessários
   const stepData = useMemo(() => {
-    return adaptStepData(step, { source: 'merge', editorMode: true });
-  }, [step, mode]);
+    return adaptStepData(step, { source: 'merge', editorMode: isEditMode });
+  }, [step, mode, isEditMode]);
 
   // Helper: extrair respostas salvas no preview (answers_<stepId> => string[])
   const getPreviewAnswers = useCallback((): Record<string, string[]> => {
@@ -362,6 +373,11 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
               data={stepData as any}
               isEditable={true}
               currentAnswers={sessionData[`answers_${step.id}`] || []}
+              onAnswersChange={(answers: string[]) => {
+                if (productionParityInEdit && onUpdateSessionData) {
+                  onUpdateSessionData(`answers_${step.id}`, answers);
+                }
+              }}
               onEdit={handleEdit}
               onBlocksReorder={handleBlocksReorder}
               onOpenProperties={handleOpenProperties}
@@ -388,6 +404,11 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
               data={stepData as any}
               isEditable={true}
               currentAnswer={sessionData[`answer_${step.id}`] || ''}
+              onAnswerChange={(answer: string) => {
+                if (productionParityInEdit && onUpdateSessionData) {
+                  onUpdateSessionData(`answer_${step.id}`, answer);
+                }
+              }}
               onEdit={handleEdit}
               onBlocksReorder={handleBlocksReorder}
               onOpenProperties={handleOpenProperties}
@@ -414,7 +435,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             <ModularTransitionStep
               data={{ ...stepData, type: step.type } as any}
               isEditable={true}
-              enableAutoAdvance={false}
+              enableAutoAdvance={!!autoAdvanceInEdit}
               selectedBlockId={selectedBlockId || undefined}
               onBlockSelect={handleSelectBlock}
             />
@@ -481,6 +502,10 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
 
       case 'offer': {
+        // Calcular resultado corrente (para paridade no modo edição também)
+        const answers = getPreviewAnswers();
+        const { primaryStyleId, secondaryStyleIds } = computeResult({ answers });
+
         if (isEditMode) {
           return (
             <ModularOfferStep
@@ -488,16 +513,14 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
               isEditable={true}
               userProfile={{
                 userName: sessionData.userName || 'Visitante',
-                resultStyle: sessionData.resultStyle || 'natural',
-                secondaryStyles: sessionData.secondaryStyles || [],
+                resultStyle: (productionParityInEdit ? (primaryStyleId || sessionData.resultStyle) : sessionData.resultStyle) || 'natural',
+                secondaryStyles: (productionParityInEdit ? (secondaryStyleIds || []) : (sessionData.secondaryStyles || [])),
               }}
               offerKey={sessionData.offerKey || 'default'}
             />
           );
         }
         // Preview: alinhar oferta ao resultado calculado atual
-        const answers = getPreviewAnswers();
-        const { primaryStyleId, secondaryStyleIds } = computeResult({ answers });
         return (
           <OfferStep
             data={stepData as any}
