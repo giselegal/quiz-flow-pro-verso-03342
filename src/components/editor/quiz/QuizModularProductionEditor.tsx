@@ -855,6 +855,50 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // ✅ CRÍTICO: Sincronizar mudanças do EditorProvider de volta para o estado steps
+    useEffect(() => {
+        if (!editorCtx?.state?.stepBlocks) return;
+
+        const stepBlocks = editorCtx.state.stepBlocks;
+        const stepKeys = Object.keys(stepBlocks);
+
+        if (stepKeys.length === 0) return;
+
+        console.log('🔄 Sincronizando EditorProvider.stepBlocks → QuizModularProductionEditor.steps', {
+            stepsKeys: stepKeys,
+            currentStepsCount: steps.length
+        });
+
+        // Atualizar blocos nos steps correspondentes
+        setSteps(prevSteps => {
+            return prevSteps.map(step => {
+                const stepKey = step.id;
+                const newBlocks = stepBlocks[stepKey];
+
+                // Se há novos blocos para este step, atualizar
+                if (newBlocks && Array.isArray(newBlocks)) {
+                    console.log(`✅ Atualizando ${stepKey} com ${newBlocks.length} blocos`);
+                    return {
+                        ...step,
+                        blocks: newBlocks.map((block: any) => ({
+                            id: block.id,
+                            type: block.type,
+                            content: block.content || {},
+                            properties: block.properties || {},
+                            order: block.order || 0,
+                            parentId: block.parentId || null
+                        }))
+                    };
+                }
+
+                return step;
+            });
+        });
+
+        // Marcar como alterado
+        setIsDirty(true);
+    }, [editorCtx?.state?.stepBlocks]);
+
     // ✅ FASE 3: FALLBACK Empty State - Mostrar mensagem se nenhum step foi carregado
     useEffect(() => {
         if (!isLoading && (!steps || steps.length === 0)) {
