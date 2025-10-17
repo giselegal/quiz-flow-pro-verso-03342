@@ -49,10 +49,16 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
     funnelId,
     className,
     onStateChange,
-    refreshToken
+    refreshToken,
+    editorSteps
 }) => {
     // Live steps via WebSocket (se houver outro cliente broadcastando)
     const { liveSteps } = useFunnelLivePreview(funnelId);
+
+    // ✅ PRIORIDADE: editorSteps > liveSteps > undefined
+    // Se editorSteps fornecido (modo editor), usa ele em tempo real
+    // Senão, tenta liveSteps do WebSocket
+    const externalStepsToUse = editorSteps || liveSteps;
     const [isPlaying, setIsPlaying] = useState(true);
     const [showControls, setShowControls] = useState(true);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -255,7 +261,7 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
                     <div key={refreshKey}>
                         <ModularPreviewContainer
                             funnelId={funnelId}
-                            externalSteps={liveSteps || undefined as any}
+                            externalSteps={externalStepsToUse || undefined as any}
                             editable={editable}
                             showViewportControls={false}
                             viewport={viewport}
