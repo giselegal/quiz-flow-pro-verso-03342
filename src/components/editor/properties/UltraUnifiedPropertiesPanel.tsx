@@ -296,7 +296,11 @@ const SpecializedEditorRenderer: React.FC<{
 }> = React.memo(({ blockType, selectedBlock, onUpdate }) => {
     const editorType = SPECIALIZED_EDITORS[blockType as keyof typeof SPECIALIZED_EDITORS];
 
-    if (!editorType) return null;
+    // ✅ FALLBACK: Se não tiver editor especializado, retorna null para usar extração automática
+    if (!editorType) {
+        console.log(`⚙️ [UltraUnified] Nenhum editor especializado para ${blockType}, usando fallback`);
+        return null;
+    }
 
     const handleUpdate = useCallback((updates: any) => {
         onUpdate(updates);
