@@ -404,7 +404,12 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         if (hasModularTemplate(stepKey)) {
             const existingBlocks = state.stepBlocks[stepKey] || [];
             const modularBlocks = loadStepTemplate(stepKey);
-            
+            // DEBUG: expor temporariamente para inspeção no console do browser
+            try {
+                // @ts-ignore
+                if (typeof window !== 'undefined') (window as any).__loadStepTemplate = loadStepTemplate;
+            } catch { }
+
             console.log('✅ Loaded modular blocks:', {
                 count: modularBlocks.length,
                 types: modularBlocks.map(b => b.type)
@@ -413,7 +418,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             // Se já tem blocos modulares com mesma estrutura, não recarregar
             const existingTypes = existingBlocks.map(b => b.type).sort().join(',');
             const modularTypes = modularBlocks.map(b => b.type).sort().join(',');
-            
+
             if (existingBlocks.length > 0 && existingTypes === modularTypes) {
                 console.log('⏭️ Skip: blocos modulares já carregados');
                 console.groupEnd();
@@ -461,9 +466,9 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     const loadDefaultTemplate = useCallback(() => {
         console.log('🎨 Loading default template');
-        
+
         const template = QUIZ_STYLE_21_STEPS_TEMPLATE;
-        
+
         if (!template || !template.steps) {
             console.error('❌ Template inválido');
             return;
@@ -487,16 +492,16 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
                 // Carregar templates padrão para outros steps
                 const blockComponents = safeGetTemplateBlocks(stepKey, template);
-                
+
                 // Validar conversão
                 if (blockComponents.length === 0 && stepConfig) {
                     console.warn(`⚠️ No blocks converted for ${stepKey}`, stepConfig);
                     conversionErrors++;
                 }
-                
+
                 // Converter BlockComponent[] para Block[]
                 const blocks = blockComponentsToBlocks(blockComponents);
-                
+
                 // Filtrar blocos deprecated
                 const validBlocks = blocks.filter(block => {
                     if (block.type === 'quiz-intro-header' as any) {
@@ -505,7 +510,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     }
                     return true;
                 });
-                
+
                 newStepBlocks[stepKey] = validBlocks;
                 totalBlocks += validBlocks.length;
                 console.log(`📦 Loaded ${validBlocks.length} blocks for ${stepKey}`);
@@ -523,7 +528,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
         history.clear();
         console.log(`✅ Template loaded: ${totalBlocks} blocos em ${Object.keys(newStepBlocks).length} steps`);
-        
+
         if (conversionErrors > 0) {
             console.warn(`⚠️ ${conversionErrors} steps tiveram problemas na conversão`);
         }
@@ -568,15 +573,15 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             };
 
             await unifiedCrud.saveFunnel(funnelData);
-            
+
             console.log('✅ Salvo no Supabase com sucesso');
-            
+
             // Salvar também no persistence service local
             if (funnelId) {
                 const { editorPersistence } = await import('@/services/persistence/EditorPersistenceService');
                 await editorPersistence.saveSnapshot(state.stepBlocks, funnelId);
             }
-            
+
         } catch (error) {
             console.error('❌ Erro ao salvar no Supabase:', error);
             throw error;
