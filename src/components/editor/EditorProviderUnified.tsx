@@ -475,16 +475,26 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         }
     }, []); // ✅ EMPTY DEPS AGORA É SEGURO com functional setState
 
-    // ✅ FASE 2: Carregar blocos antecipadamente quando step muda
+    // ✅ FASE 2 + FASE 4: Carregar blocos antecipadamente quando step muda
+    const autoLoadedRef = useRef<Set<string>>(new Set());
+    
     useEffect(() => {
         const stepKey = `step-${state.currentStep}`;
+        
+        // Skip se já foi auto-carregado
+        if (autoLoadedRef.current.has(stepKey)) return;
         
         // Carregar apenas se não tem blocos
         if (!state.stepBlocks[stepKey] || state.stepBlocks[stepKey].length === 0) {
             console.log(`🔄 Auto-loading blocks for ${stepKey}`);
-            ensureStepLoaded(state.currentStep);
+            ensureStepLoaded(state.currentStep).finally(() => {
+                autoLoadedRef.current.add(stepKey);
+            });
+        } else {
+            // Marcar como carregado mesmo que já tenha blocos
+            autoLoadedRef.current.add(stepKey);
         }
-    }, [state.currentStep, state.stepBlocks, ensureStepLoaded]);
+    }, [state.currentStep]); // ✅ DEPS ESTÁVEIS: apenas currentStep
 
     const loadDefaultTemplate = useCallback(() => {
         console.log('🎨 Loading default template');

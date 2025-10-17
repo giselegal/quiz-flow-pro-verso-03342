@@ -256,15 +256,18 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
 }) => {
   const { state, actions } = useEditor();
 
+  // Extrair funções estáveis
+  const { ensureStepLoaded, setCurrentStep } = actions;
+
   // 🎯 INITIALIZE STEP ON MOUNT
   React.useEffect(() => {
     if (initialStep !== state.currentStep) {
-      actions.setCurrentStep(initialStep);
+      setCurrentStep(initialStep);
     }
 
     // Ensure current step is loaded
-    actions.ensureStepLoaded(state.currentStep);
-  }, [initialStep, state.currentStep, actions]);
+    ensureStepLoaded(state.currentStep);
+  }, [initialStep, state.currentStep, ensureStepLoaded, setCurrentStep]);
 
   // 🎯 PERFORMANCE MONITORING
   const performanceStats = useMemo(() => ({

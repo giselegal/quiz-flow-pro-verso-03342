@@ -533,55 +533,76 @@ export const useGlobalState = (): UseGlobalStateReturn => {
  * Hook for components that only need config
  */
 export const useGlobalConfig = () => {
-  return useGlobalStore((state) => ({
-    config: state.config,
-    updateConfig: state.updateConfig,
-    resetConfig: state.resetConfig,
-    loadConfig: state.loadConfig,
-    saveConfig: state.saveConfig,
-  }));
+  const config = useGlobalStore((state) => state.config);
+  const updateConfig = useGlobalStore((state) => state.updateConfig);
+  const resetConfig = useGlobalStore((state) => state.resetConfig);
+  const loadConfig = useGlobalStore((state) => state.loadConfig);
+  const saveConfig = useGlobalStore((state) => state.saveConfig);
+  
+  return { config, updateConfig, resetConfig, loadConfig, saveConfig };
 };
 
 /**
  * Hook for components that only need UI state
  */
 export const useGlobalUI = () => {
-  return useGlobalStore((state) => ({
-    ui: state.ui,
-    toggleSidebar: state.toggleSidebar,
-    togglePropertiesPanel: state.togglePropertiesPanel,
-    setPreviewMode: state.setPreviewMode,
-    setViewMode: state.setViewMode,
-    setCurrentRoute: state.setCurrentRoute,
-    toggleFullscreen: state.toggleFullscreen,
-  }));
+  const ui = useGlobalStore((state) => state.ui);
+  const toggleSidebar = useGlobalStore((state) => state.toggleSidebar);
+  const togglePropertiesPanel = useGlobalStore((state) => state.togglePropertiesPanel);
+  const setPreviewMode = useGlobalStore((state) => state.setPreviewMode);
+  const setViewMode = useGlobalStore((state) => state.setViewMode);
+  const setCurrentRoute = useGlobalStore((state) => state.setCurrentRoute);
+  const toggleFullscreen = useGlobalStore((state) => state.toggleFullscreen);
+  
+  return { 
+    ui, 
+    toggleSidebar, 
+    togglePropertiesPanel, 
+    setPreviewMode, 
+    setViewMode, 
+    setCurrentRoute, 
+    toggleFullscreen 
+  };
 };
 
 /**
  * Hook for components that only need funnel state
  */
 export const useGlobalFunnel = () => {
-  return useGlobalStore((state) => ({
-    funnel: state.funnel,
-    setActiveFunnel: state.setActiveFunnel,
-    addToFunnelHistory: state.addToFunnelHistory,
-    addToRecentFunnels: state.addToRecentFunnels,
-    clearFunnelHistory: state.clearFunnelHistory,
-  }));
+  const funnel = useGlobalStore((state) => state.funnel);
+  const setActiveFunnel = useGlobalStore((state) => state.setActiveFunnel);
+  const addToFunnelHistory = useGlobalStore((state) => state.addToFunnelHistory);
+  const addToRecentFunnels = useGlobalStore((state) => state.addToRecentFunnels);
+  const clearFunnelHistory = useGlobalStore((state) => state.clearFunnelHistory);
+  
+  return { 
+    funnel, 
+    setActiveFunnel, 
+    addToFunnelHistory, 
+    addToRecentFunnels, 
+    clearFunnelHistory 
+  };
 };
 
 /**
  * Hook for components that only need notifications
  */
 export const useGlobalNotifications = () => {
-  return useGlobalStore((state) => ({
-    notifications: state.notifications,
-    addNotification: state.addNotification,
-    markNotificationRead: state.markNotificationRead,
-    markAllNotificationsRead: state.markAllNotificationsRead,
-    removeNotification: state.removeNotification,
-    clearNotifications: state.clearNotifications,
-  }));
+  const notifications = useGlobalStore((state) => state.notifications);
+  const addNotification = useGlobalStore((state) => state.addNotification);
+  const markNotificationRead = useGlobalStore((state) => state.markNotificationRead);
+  const markAllNotificationsRead = useGlobalStore((state) => state.markAllNotificationsRead);
+  const removeNotification = useGlobalStore((state) => state.removeNotification);
+  const clearNotifications = useGlobalStore((state) => state.clearNotifications);
+  
+  return { 
+    notifications, 
+    addNotification, 
+    markNotificationRead, 
+    markAllNotificationsRead, 
+    removeNotification, 
+    clearNotifications 
+  };
 };
 
 export default useGlobalState;

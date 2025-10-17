@@ -37,23 +37,30 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     } catch { }
     const { ui, togglePropertiesPanel } = useGlobalUI();
 
+    // Extrair referências estáveis
+    const setCurrentStep = maybeEditor?.actions?.setCurrentStep;
+    const ensureStepLoaded = maybeEditor?.actions?.ensureStepLoaded;
+
     // Sincroniza o provider unificado com a etapa atual do preview e garante que os blocos sejam carregados
     useEffect(() => {
-        if (!maybeEditor?.actions) return;
+        if (!setCurrentStep || !ensureStepLoaded) return;
         const current = state.currentStep;
         const numeric = parseInt(current.replace('step-', '')) || 1;
         try {
-            maybeEditor.actions.setCurrentStep(numeric);
+            setCurrentStep(numeric);
             // Garante que templates/blocos modulares da etapa sejam carregados no provider
-            maybeEditor.actions.ensureStepLoaded(current).catch((e: any) => {
+            ensureStepLoaded(current).catch((e: any) => {
                 console.warn('[ModularPreviewContainer] ensureStepLoaded falhou:', e?.message || e);
             });
         } catch (e) {
             console.warn('[ModularPreviewContainer] sync step no provider falhou:', e);
         }
-    }, [state.currentStep, maybeEditor?.actions]);
+    }, [state.currentStep, setCurrentStep, ensureStepLoaded]);
 
     // Atalho de teclado: tecla "p" abre o painel de propriedades
+    const setSelectedBlockId = maybeEditor?.actions?.setSelectedBlockId;
+    const stepBlocks = maybeEditor?.state?.stepBlocks;
+    
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
             // Evitar conflitos com inputs
@@ -65,16 +72,16 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
                     if (!ui?.propertiesPanelOpen) togglePropertiesPanel();
                     // Se não há seleção ainda, tentar selecionar o primeiro bloco do step atual
                     const stepKey = state.currentStep;
-                    const firstBlockId = maybeEditor?.state?.stepBlocks?.[stepKey]?.[0]?.id;
-                    if (firstBlockId && maybeEditor?.actions?.setSelectedBlockId) {
-                        maybeEditor.actions.setSelectedBlockId(firstBlockId);
+                    const firstBlockId = stepBlocks?.[stepKey]?.[0]?.id;
+                    if (firstBlockId && setSelectedBlockId) {
+                        setSelectedBlockId(firstBlockId);
                     }
                 } catch { /* noop */ }
             }
         };
         window.addEventListener('keydown', onKeyDown);
         return () => window.removeEventListener('keydown', onKeyDown);
-    }, [ui?.propertiesPanelOpen, togglePropertiesPanel, state.currentStep, maybeEditor?.state?.stepBlocks, maybeEditor?.actions]);
+    }, [ui?.propertiesPanelOpen, togglePropertiesPanel, state.currentStep, stepBlocks, setSelectedBlockId]);
 
     const sessionData = useMemo(() => {
         const map: Record<string, any> = {

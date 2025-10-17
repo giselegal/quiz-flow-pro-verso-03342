@@ -133,15 +133,18 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         desc: `Configuração do step ${step}`
     }), []);
 
+    // Extrair funções estáveis
+    const { setCurrentStep: actionsSetCurrentStep, ensureStepLoaded } = actions;
+
     const handleStepSelect = useCallback((step: number) => {
-        actions.setCurrentStep(step);
+        actionsSetCurrentStep(step);
         onStepChange?.(step.toString());
 
         // Garantir que a etapa seja carregada se não existir
-        if (actions.ensureStepLoaded) {
-            actions.ensureStepLoaded(step);
+        if (ensureStepLoaded) {
+            ensureStepLoaded(step);
         }
-    }, [actions, onStepChange]);
+    }, [actionsSetCurrentStep, ensureStepLoaded, onStepChange]);
 
     const handleUpdateBlock = useCallback((updates: any) => {
         console.log('🔄 handleUpdateBlock chamado:', {
