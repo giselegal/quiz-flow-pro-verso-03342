@@ -561,15 +561,15 @@ export const PRODUCTION_STEPS: StepComponent[] = [
             metadata: { category: 'strategic' }
         })
     })),
-    // Transição para resultado (19)
+    // Pergunta estratégica 19 (antes incorretamente como transição)
     {
         id: 'step-19',
-        name: 'Transição Resultado',
-        component: TransitionStepAdapter,
+        name: 'Pergunta Estratégica Final',
+        component: StrategicQuestionStepAdapter,
         config: createStepConfig({
-            allowNavigation: { next: false, previous: false },
-            // Usamos 'transition' como categoria padrão; o componente identifica 'transition-result' pelo tipo real no data source original
-            metadata: { category: 'transition' }
+            validation: { required: true },
+            // ✅ CORREÇÃO: Step-19 é strategicQuestion no JSON, não transition
+            metadata: { category: 'strategic' }
         })
     },
     // Resultado (20)
