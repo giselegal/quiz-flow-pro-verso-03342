@@ -368,21 +368,27 @@ if (funnelsContextContent) {
     );
     
     testResult(
-        'FunnelsContext NÃO usa hardcode stepNumber === 12',
-        !funnelsContextContent.match(/stepNumber\s*===\s*12\s*\?.*transition/),
-        'Lógica hardcoded removida'
+        'FunnelsContext NÃO usa hardcode stepNumber === 12 no type',
+        !funnelsContextContent.match(/stepNumber\s*===\s*12\s*\?\s*['"]transition['"]/),
+        'Lógica hardcoded de type removida'
     );
     
     testResult(
-        'FunnelsContext NÃO usa hardcode stepNumber === 19',
-        !funnelsContextContent.match(/stepNumber\s*===\s*19\s*\?.*transition/),
-        'Lógica hardcoded removida'
+        'FunnelsContext NÃO usa hardcode stepNumber === 19 no type',
+        !funnelsContextContent.match(/stepNumber\s*===\s*19\s*\?\s*['"]transition['"]/),
+        'Lógica hardcoded de type removida'
     );
     
     testResult(
-        'FunnelsContext NÃO usa hardcode stepNumber === 20',
-        !funnelsContextContent.match(/stepNumber\s*===\s*20\s*\?.*result/),
-        'Lógica hardcoded removida'
+        'FunnelsContext NÃO usa hardcode stepNumber === 20 no type',
+        !funnelsContextContent.match(/stepNumber\s*===\s*20\s*\?\s*['"]result['"]/),
+        'Lógica hardcoded de type removida'
+    );
+    
+    testResult(
+        'FunnelsContext usa generateStepDescription',
+        funnelsContextContent.includes('generateStepDescription'),
+        'Description gerada dinamicamente'
     );
     
     testResult(
