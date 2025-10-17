@@ -353,7 +353,6 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             selectedBlockId={selectedBlockId || undefined}
             onBlockSelect={handleSelectBlock}
             onEdit={handleEdit}
-            onBlocksReorder={handleBlocksReorder}
             onOpenProperties={handleOpenProperties}
             onNameSubmit={(name: string) => {
               if ((isEditMode && productionParityInEdit) || isPreviewMode) {
@@ -377,7 +376,6 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
               }
             }}
             onEdit={handleEdit}
-            onBlocksReorder={handleBlocksReorder}
             onOpenProperties={handleOpenProperties}
           />
         );
@@ -389,14 +387,13 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
           <ModularStrategicQuestionStep
             data={stepData as any}
             isEditable={isEditMode}
-            currentAnswer={sessionData[`answer_${step.id}`] || ''}
-            onAnswerChange={(answer: string) => {
+            currentAnswers={sessionData[`answers_${step.id}`] ? [sessionData[`answers_${step.id}`]] : []}
+            onAnswersChange={(answers: string[]) => {
               if ((isEditMode && productionParityInEdit) || isPreviewMode) {
-                onUpdateSessionData?.(`answer_${step.id}`, answer);
+                onUpdateSessionData?.(`answers_${step.id}`, answers[0] || '');
               }
             }}
             onEdit={handleEdit}
-            onBlocksReorder={handleBlocksReorder}
             onOpenProperties={handleOpenProperties}
           />
         );

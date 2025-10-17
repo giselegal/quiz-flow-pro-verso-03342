@@ -1,8 +1,8 @@
-import React from 'react';
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { SelectableBlock } from '@/components/editor/SelectableBlock';
+import React, { useMemo } from 'react';
+import { useDroppable } from '@dnd-kit/core';
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { Block } from '@/types/editor';
 
 interface ModularQuestionStepProps {
     data: any;
@@ -13,284 +13,151 @@ interface ModularQuestionStepProps {
     selectedBlockId?: string;
     onBlockSelect?: (blockId: string) => void;
     onOpenProperties?: (blockId: string) => void;
-    onBlocksReorder?: (stepId: string, newOrder: string[]) => void;
     onBlockUpdate?: (blockId: string, updates: Record<string, any>) => void;
+    editor?: any;
 }
 
 /**
- * ❓ QUESTION STEP MODULARIZADO
+ * ❓ QUESTION STEP 100% MODULARIZADO
  * 
- * Cada seção é um bloco editável independente:
- * - Barra de progresso
- * - Número da pergunta
- * - Texto da pergunta
- * - Grid de opções
- * - Botão de ação
+ * Agora usa blocos atômicos do registry (question-progress, question-text, etc.)
+ * - 100% editável via painel de propriedades
+ * - Drop zones para drag-and-drop de componentes
+ * - Persistente via EditorProvider
+ * - Mesma fonte de dados em edit/preview
  */
 export default function ModularQuestionStep({
     data,
     currentAnswers = [],
     onAnswersChange,
-    onEdit,
     isEditable = false,
     selectedBlockId,
-    onBlockSelect,
-    onOpenProperties,
-    onBlocksReorder,
-    onBlockUpdate
+    onBlockSelect = () => { },
+    onOpenProperties = () => { },
+    editor: editorProp
 }: ModularQuestionStepProps) {
+    const editorContext = useEditor({ optional: true });
+    const editor = editorProp || editorContext;
+    const stepKey = data?.id || 'step-question';
 
-    const safeData = {
-        questionNumber: data.questionNumber || 'Pergunta 1',
-        questionText: data.questionText || 'Qual é a sua preferência?',
-        requiredSelections: data.requiredSelections || 1,
-        options: data.options || [
-            { id: 'opt1', text: 'Opção 1', image: undefined },
-            { id: 'opt2', text: 'Opção 2', image: undefined },
-            { id: 'opt3', text: 'Opção 3', image: undefined }
-        ]
-    };
-
-    const hasImages = safeData.options[0]?.image;
-    const gridClass = hasImages ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1';
-
-    const handleOptionClick = (optionId: string) => {
-        if (!onAnswersChange) return;
-
-        const isSelected = currentAnswers.includes(optionId);
-        if (isSelected) {
-            const newAnswers = currentAnswers.filter(id => id !== optionId);
-            onAnswersChange(newAnswers);
-        } else if (currentAnswers.length < safeData.requiredSelections) {
-            const newAnswers = [...currentAnswers, optionId];
-            onAnswersChange(newAnswers);
+    const handleBlockClick = React.useCallback((blockId: string) => {
+        console.log(`🎯 Bloco clicado: ${blockId}`);
+        onBlockSelect(blockId);
+        if (editor?.actions?.setSelectedBlockId) {
+            editor.actions.setSelectedBlockId(blockId);
         }
-    };
+        onOpenProperties(blockId);
+    }, [onBlockSelect, onOpenProperties, editor]);
 
-    const canProceed = currentAnswers.length === safeData.requiredSelections;
-    const selectionText = safeData.requiredSelections > 1
-        ? `Selecione ${safeData.requiredSelections} opções`
-        : 'Selecione uma opção';
+    const blocks = useMemo(() => {
+        return editor?.state?.stepBlocks?.[stepKey] || [];
+    }, [editor?.state?.stepBlocks, stepKey]);
 
-    const stepNumber = parseInt(data.questionNumber?.replace(/\\D/g, '') || '1');
-    const progress = Math.round((stepNumber / 21) * 100);
+    React.useEffect(() => {
+        if (blocks.length === 0 && editor?.actions?.ensureStepLoaded) {
+            console.log(`🔄 [ModularQuestionStep] Auto-loading ${stepKey}`);
+            editor.actions.ensureStepLoaded(stepKey).catch((err: Error) => {
+                console.error(`❌ [ModularQuestionStep] Failed to load ${stepKey}:`, err);
+            });
+        }
+    }, [stepKey, blocks.length, editor?.actions]);
 
-    // ===== DnD - Reordenação dos blocos (sem o progress) =====
-    const stepId = data?.id || 'step-question';
-    const DEFAULT_ORDER = ['question-number', 'question-text', 'question-instructions', 'question-options', 'question-button'];
-    const initialOrder: string[] = (data?.metadata?.blockOrder && Array.isArray(data.metadata.blockOrder))
-        ? data.metadata.blockOrder
-        : DEFAULT_ORDER;
-    const [order, setOrder] = React.useState<string[]>(initialOrder);
+    const [localOrder, setLocalOrder] = React.useState<string[]>([]);
 
-    const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
-    );
+    React.useEffect(() => {
+        if (blocks.length > 0) {
+            const orderFromMetadata = data?.metadata?.blockOrder;
+            if (orderFromMetadata && Array.isArray(orderFromMetadata)) {
+                setLocalOrder(orderFromMetadata);
+            } else {
+                setLocalOrder(blocks.map((b: Block) => b.id));
+            }
+        }
+    }, [blocks, data?.metadata?.blockOrder]);
 
-    const handleDragEnd = (event: any) => {
-        const { active, over } = event;
-        if (!over || active.id === over.id) return;
-        const oldIndex = order.indexOf(String(active.id));
-        const newIndex = order.indexOf(String(over.id));
-        const newOrder = arrayMove(order, oldIndex, newIndex);
-        setOrder(newOrder);
-        // Persistir no estado do editor/template
-        onBlocksReorder?.(stepId, newOrder);
-        onEdit?.('blockOrder', newOrder);
-    };
+    const orderedBlocks = useMemo(() => {
+        if (localOrder.length === 0) return blocks;
+        return localOrder.map(id => blocks.find((b: Block) => b.id === id)).filter(Boolean) as Block[];
+    }, [blocks, localOrder]);
 
-    const SortableBlock: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
-        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
-        const style = {
-            transform: CSS.Transform.toString(transform),
-            transition,
-            opacity: isDragging ? 0.7 : 1,
-        } as React.CSSProperties;
+    const BlockWrapper: React.FC<{ id: string; children: React.ReactNode; index: number }> = ({ id, children, index }) => {
+        const dropZoneId = `drop-before-${id}`;
+        const { setNodeRef, isOver } = useDroppable({
+            id: dropZoneId,
+            data: { dropZone: 'before', blockId: id, stepKey: stepKey, insertIndex: index }
+        });
+
         return (
-            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-                {children}
+            <div className="relative group">
+                <div
+                    ref={setNodeRef}
+                    className={`h-3 -my-1.5 relative transition-all duration-200 border-2 rounded ${isOver ? 'bg-blue-100 border-blue-400 border-dashed' : 'border-transparent hover:bg-blue-50 hover:border-blue-300 hover:border-dashed'
+                        }`}
+                >
+                    <div className={`absolute inset-0 flex items-center justify-center ${isOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                        <span className="text-[10px] font-medium text-blue-600 bg-white px-2 py-0.5 rounded shadow-sm">
+                            {isOver ? '⬇ Soltar aqui' : '+ Soltar antes'}
+                        </span>
+                    </div>
+                </div>
+                <div className="my-2">{children}</div>
+            </div>
+        );
+    };
+
+    const DropZoneEnd: React.FC<{ insertIndex: number }> = ({ insertIndex }) => {
+        const dropZoneId = `drop-end-${stepKey}`;
+        const { setNodeRef, isOver } = useDroppable({
+            id: dropZoneId,
+            data: { dropZone: 'after', stepKey: stepKey, insertIndex: insertIndex }
+        });
+
+        return (
+            <div
+                ref={setNodeRef}
+                className={`h-16 mt-4 border-2 border-dashed rounded-lg transition-all flex items-center justify-center text-sm cursor-pointer ${isOver ? 'border-blue-400 bg-blue-100 text-blue-700' : 'border-gray-300 text-gray-500 hover:border-blue-400 hover:bg-blue-50'
+                    }`}
+            >
+                <span className="font-medium">{isOver ? '⬇ Soltar aqui' : '+ Solte componente aqui para adicionar ao final'}</span>
             </div>
         );
     };
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-            {/* BLOCO 1: Barra de Progresso */}
-            <SelectableBlock
-                blockId="question-progress"
-                isSelected={selectedBlockId === 'question-progress'}
-                isEditable={isEditable}
-                onSelect={() => onBlockSelect?.('question-progress')}
-                blockType="Barra de Progresso"
-                blockIndex={0}
-                onOpenProperties={() => onOpenProperties?.('question-progress')}
-                isDraggable={false}
-            >
-                <div className="mb-6 max-w-6xl mx-auto px-4 py-4">
-                    <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                        <div
-                            className="bg-[#deac6d] h-2.5 rounded-full transition-all duration-500"
-                            style={{ width: `${progress}%` }}
-                        ></div>
-                    </div>
-                    <p className="text-sm text-center mb-4 text-gray-600">Progresso: {progress}%</p>
-                </div>
-            </SelectableBlock>
-
-            {/* BLOCO 2: Container Principal */}
-            <div className="w-full max-w-6xl mx-auto px-4">
+            <main className="w-full max-w-6xl mx-auto px-4 py-8">
                 <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-6xl mx-auto">
+                    {isEditable && orderedBlocks.length > 0 ? (
+                        <div className="space-y-2">
+                            {orderedBlocks.map((block: Block, index: number) => (
+                                <BlockWrapper key={block.id} id={block.id} index={index}>
+                                    <UniversalBlockRenderer
+                                        block={block}
+                                        mode="editor"
+                                        isSelected={selectedBlockId === block.id}
+                                        onSelect={() => handleBlockClick(block.id)}
+                                        onClick={() => handleBlockClick(block.id)}
+                                    />
+                                </BlockWrapper>
+                            ))}
+                            <DropZoneEnd insertIndex={orderedBlocks.length} />
+                        </div>
+                    ) : (
+                        <>
+                            {orderedBlocks.map((block: Block) => (
+                                <UniversalBlockRenderer key={block.id} block={block} mode="preview" />
+                            ))}
+                        </>
+                    )}
 
-                    {/* LISTA ORDENÁVEL: Número, Texto, Instruções, Opções, Botão */}
-                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                        <SortableContext items={order} strategy={verticalListSortingStrategy}>
-                            {order.map((blockId, index) => {
-                                if (blockId === 'question-number') {
-                                    return (
-                                        <SortableBlock key={blockId} id={blockId}>
-                                            <SelectableBlock
-                                                blockId="question-number"
-                                                isSelected={selectedBlockId === 'question-number'}
-                                                isEditable={isEditable}
-                                                onSelect={() => onBlockSelect?.('question-number')}
-                                                blockType="Número da Pergunta"
-                                                blockIndex={index + 1}
-                                                onOpenProperties={() => onOpenProperties?.('question-number')}
-                                                isDraggable={true}
-                                            >
-                                                <h2 className="text-xl md:text-2xl font-bold mb-4 text-[#432818]">
-                                                    {safeData.questionNumber}
-                                                </h2>
-                                            </SelectableBlock>
-                                        </SortableBlock>
-                                    );
-                                }
-                                if (blockId === 'question-text') {
-                                    return (
-                                        <SortableBlock key={blockId} id={blockId}>
-                                            <SelectableBlock
-                                                blockId="question-text"
-                                                isSelected={selectedBlockId === 'question-text'}
-                                                isEditable={isEditable}
-                                                onSelect={() => onBlockSelect?.('question-text')}
-                                                blockType="Texto da Pergunta"
-                                                blockIndex={index + 1}
-                                                onOpenProperties={() => onOpenProperties?.('question-text')}
-                                                isDraggable={true}
-                                            >
-                                                <p
-                                                    className="text-xl md:text-2xl font-bold text-[#deac6d] mb-4"
-                                                    style={{ fontFamily: '"Playfair Display", serif' }}
-                                                >
-                                                    {safeData.questionText}
-                                                </p>
-                                            </SelectableBlock>
-                                        </SortableBlock>
-                                    );
-                                }
-                                if (blockId === 'question-instructions') {
-                                    return (
-                                        <SortableBlock key={blockId} id={blockId}>
-                                            <SelectableBlock
-                                                blockId="question-instructions"
-                                                isSelected={selectedBlockId === 'question-instructions'}
-                                                isEditable={isEditable}
-                                                onSelect={() => onBlockSelect?.('question-instructions')}
-                                                blockType="Instruções"
-                                                blockIndex={index + 1}
-                                                onOpenProperties={() => onOpenProperties?.('question-instructions')}
-                                                isDraggable={true}
-                                            >
-                                                <p className="text-sm text-gray-600 mb-8">
-                                                    {selectionText} ({currentAnswers.length}/{safeData.requiredSelections})
-                                                    {isEditable && (
-                                                        <span className="block text-blue-500 mt-1 text-xs">
-                                                            ✏️ Editável via Painel de Propriedades
-                                                        </span>
-                                                    )}
-                                                </p>
-                                            </SelectableBlock>
-                                        </SortableBlock>
-                                    );
-                                }
-                                if (blockId === 'question-options') {
-                                    return (
-                                        <SortableBlock key={blockId} id={blockId}>
-                                            <SelectableBlock
-                                                blockId="question-options"
-                                                isSelected={selectedBlockId === 'question-options'}
-                                                isEditable={isEditable}
-                                                onSelect={() => onBlockSelect?.('question-options')}
-                                                blockType="Opções da Pergunta"
-                                                blockIndex={index + 1}
-                                                onOpenProperties={() => onOpenProperties?.('question-options')}
-                                                isDraggable={true}
-                                            >
-                                                <div className={`grid ${gridClass} gap-6 mb-8 max-w-4xl mx-auto`}>
-                                                    {safeData.options.map((option: any) => (
-                                                        <div
-                                                            key={option.id}
-                                                            onClick={() => handleOptionClick(option.id)}
-                                                            className={`flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-[#deac6d] hover:shadow-md ${currentAnswers.includes(option.id)
-                                                                ? 'border-[#5b4135] bg-gradient-to-br from-white to-[#f8f5f0] shadow-lg transform -translate-y-1'
-                                                                : 'border-gray-200'
-                                                                }`}
-                                                        >
-                                                            {option.image && (
-                                                                <img
-                                                                    src={option.image}
-                                                                    alt={option.text}
-                                                                    className="rounded-md w-full mb-2 object-cover max-h-48"
-                                                                />
-                                                            )}
-                                                            <p className="text-center font-medium text-sm leading-relaxed text-[#432818]">
-                                                                {option.text}
-                                                            </p>
-
-                                                            {currentAnswers.includes(option.id) && (
-                                                                <div className="mt-2 w-6 h-6 bg-[#deac6d] rounded-full flex items-center justify-center">
-                                                                    <span className="text-white text-xs font-bold">✓</span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </SelectableBlock>
-                                        </SortableBlock>
-                                    );
-                                }
-                                if (blockId === 'question-button') {
-                                    return (
-                                        <SortableBlock key={blockId} id={blockId}>
-                                            <SelectableBlock
-                                                blockId="question-button"
-                                                isSelected={selectedBlockId === 'question-button'}
-                                                isEditable={isEditable}
-                                                onSelect={() => onBlockSelect?.('question-button')}
-                                                blockType="Botão de Ação"
-                                                blockIndex={index + 1}
-                                                onOpenProperties={() => onOpenProperties?.('question-button')}
-                                                isDraggable={true}
-                                            >
-                                                <button
-                                                    disabled={!canProceed}
-                                                    className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${canProceed
-                                                        ? 'bg-[#deac6d] text-white animate-pulse'
-                                                        : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
-                                                        }`}
-                                                >
-                                                    {canProceed ? 'Avançando...' : 'Próxima'}
-                                                </button>
-                                            </SelectableBlock>
-                                        </SortableBlock>
-                                    );
-                                }
-                                return null;
-                            })}
-                        </SortableContext>
-                    </DndContext>
+                    {orderedBlocks.length === 0 && (
+                        <div className="text-center py-12">
+                            <p className="text-muted-foreground mb-4">Nenhum bloco configurado para este step.</p>
+                            {isEditable && <p className="text-sm text-primary">Adicione blocos usando o template JSON ou via editor.</p>}
+                        </div>
+                    )}
                 </div>
-            </div>
+            </main>
         </div>
     );
 }
