@@ -1,7 +1,5 @@
 import React from 'react';
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { BlockWrapper, DropZoneEnd } from './DropZoneHelpers';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 
 interface ModularIntroStepProps {
