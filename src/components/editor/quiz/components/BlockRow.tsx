@@ -47,10 +47,10 @@ const DropZoneBefore: React.FC<{ blockId: string; blockIndex: number; stepId: st
         <div
             ref={setNodeRef}
             className={cn(
-                'h-3 -my-1.5 relative transition-all duration-200 border-2 rounded',
+                'h-8 -my-2 relative transition-all duration-200 border-2 rounded-md',
                 isOver
-                    ? 'bg-blue-100 border-blue-400 border-dashed'
-                    : 'border-transparent hover:bg-blue-50 hover:border-blue-300 hover:border-dashed'
+                    ? 'bg-blue-100 border-blue-400 border-dashed shadow-lg'
+                    : 'bg-gray-50 border-gray-300 border-dashed opacity-40 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400'
             )}
         >
             <div className={cn(
@@ -79,8 +79,8 @@ const Inner: React.FC<BlockRowProps> = (props) => {
     const isHoverTarget = hoverContainerId === block.id;
     const isExpanded = !isContainer || (expandedContainers?.has?.(block.id) ?? false);
 
-    // Calcular índice do bloco atual
-    const blockIndex = allBlocks.filter(b => !b.parentId).findIndex(b => b.id === block.id);
+    // Calcular índice do bloco atual (índice real no array, não filtrado)
+    const blockIndex = allBlocks.findIndex(b => b.id === block.id);
 
     return (
         <>

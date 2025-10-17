@@ -1209,10 +1209,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             // 🎯 NOVO: Detectar drop zones (drop-before-{blockId})
             if (over.id && String(over.id).startsWith('drop-before-')) {
                 const targetBlockId = String(over.id).replace('drop-before-', '');
-                const targetBlockIndex = currentStep.blocks.findIndex(b => b.id === targetBlockId && !b.parentId);
+                console.log('🎯 DROP ZONE detectado:', { targetBlockId, allBlocks: currentStep.blocks.map(b => ({ id: b.id, order: b.order })) });
+                
+                // Remover filtro parentId - buscar pelo ID real
+                const targetBlockIndex = currentStep.blocks.findIndex(b => b.id === targetBlockId);
                 if (targetBlockIndex >= 0) {
                     insertPosition = targetBlockIndex; // Inserir ANTES do bloco
-                    console.log(`🎯 Drop zone detectado: inserindo ANTES do bloco ${targetBlockId} na posição ${insertPosition}`);
+                    console.log(`✅ Inserindo ANTES do bloco "${targetBlockId}" na posição ${insertPosition}`);
+                } else {
+                    console.warn('❌ Bloco alvo não encontrado:', targetBlockId);
                 }
             } else if (over.id && over.id !== 'canvas-end' && !String(over.id).startsWith('container-slot:')) {
                 // Dropped sobre outro bloco - inserir APÓS ele
