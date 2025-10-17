@@ -24,6 +24,22 @@ export const QuestionStepSchema = z
         path: ['requiredSelections'],
       });
     }
+    // Garantir que requiredSelections e maxSelections não ultrapassem o número de opções
+    const optionsLength = Array.isArray(data.options) ? data.options.length : 0;
+    if (data.requiredSelections > optionsLength) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: '`requiredSelections` cannot exceed number of options',
+        path: ['requiredSelections'],
+      });
+    }
+    if (data.maxSelections > optionsLength) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: '`maxSelections` cannot exceed number of options',
+        path: ['maxSelections'],
+      });
+    }
   });
 
 export type QuestionStepProps = z.infer<typeof QuestionStepSchema>;

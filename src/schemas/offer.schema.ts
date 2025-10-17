@@ -5,7 +5,7 @@ export const OfferEntrySchema = z.object({
   id: z.string().optional(),
   title: z.string().min(1),
   description: z.string().optional().default(''),
-  price: z.number().optional().nullable(),
+  price: z.number().nonnegative().optional().nullable(),
   currency: z.string().optional().default('BRL'),
   image: z.string().url().optional().nullable(),
   ctaLabel: z.string().optional().default('Aproveitar'),
