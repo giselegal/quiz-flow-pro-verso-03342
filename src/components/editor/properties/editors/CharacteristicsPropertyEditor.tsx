@@ -36,7 +36,7 @@ export const CharacteristicsPropertyEditor: React.FC<CharacteristicsPropertyEdit
 
     // Propriedades específicas das características
     const items: Characteristic[] = Array.isArray(content.items) && content.items.length > 0 && typeof content.items[0] === 'object' && 'label' in content.items[0] && 'value' in content.items[0]
-        ? content.items as Characteristic[]
+        ? (content.items as unknown) as Characteristic[]
         : [];
     const layout = content.layout || 'list'; const handleContentUpdate = (field: string, value: any) => {
         const updates = {
