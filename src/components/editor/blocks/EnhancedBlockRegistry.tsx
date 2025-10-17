@@ -50,6 +50,13 @@ import StrategicQuestionStep from '@/components/quiz/StrategicQuestionStep';
 import TransitionStep from '@/components/quiz/TransitionStep';
 import ResultStep from '@/components/quiz/ResultStep';
 
+// Imports estáticos dos blocos atômicos de transição para evitar falhas de dynamic import no preview remoto
+import TransitionTitleBlock from '@/components/editor/blocks/atomic/TransitionTitleBlock';
+import TransitionLoaderBlock from '@/components/editor/blocks/atomic/TransitionLoaderBlock';
+import TransitionTextBlock from '@/components/editor/blocks/atomic/TransitionTextBlock';
+import TransitionProgressBlock from '@/components/editor/blocks/atomic/TransitionProgressBlock';
+import TransitionMessageBlock from '@/components/editor/blocks/atomic/TransitionMessageBlock';
+
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // ============================================================================
@@ -122,14 +129,14 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'loader-inline': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
 
     // ✅ STEP 12 & 19 - BLOCOS ATÔMICOS DE TRANSIÇÃO (100% Modulares) - Direct imports para performance
-    'transition-title': lazy(() => import('./atomic/TransitionTitleBlock')),
+    'transition-title': TransitionTitleBlock,
     'transition-subtitle': lazy(() => import('./TransitionSubtitleBlock')),
     'transition-image': lazy(() => import('./TransitionImageBlock')),
     'transition-description': lazy(() => import('./TransitionDescriptionBlock')),
-    'transition-loader': lazy(() => import('./atomic/TransitionLoaderBlock')),
-    'transition-text': lazy(() => import('./atomic/TransitionTextBlock')),
-    'transition-progress': lazy(() => import('./atomic/TransitionProgressBlock')),
-    'transition-message': lazy(() => import('./atomic/TransitionMessageBlock')),
+    'transition-loader': TransitionLoaderBlock,
+    'transition-text': TransitionTextBlock,
+    'transition-progress': TransitionProgressBlock,
+    'transition-message': TransitionMessageBlock,
 
     // ✅ STEPS 13-18 - PERGUNTAS AVANÇADAS
     'quiz-advanced-question': TextInlineBlock,
