@@ -3,6 +3,7 @@ import { useQuizState } from '@/hooks/useQuizState';
 import { UnifiedStepRenderer as ModularUnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
 import { EditorProviderUnified, useEditorOptional } from '@/components/editor/EditorProviderUnified';
+import { useGlobalUI } from '@/hooks/core/useGlobalState';
 
 export interface ModularPreviewContainerProps {
     funnelId?: string;
@@ -27,6 +28,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
 
     // Detecta se já existe um EditorProviderUnified acima
     const maybeEditor = useEditorOptional?.();
+    const { ui, togglePropertiesPanel } = useGlobalUI();
 
     // Sincroniza o provider unificado com a etapa atual do preview e garante que os blocos sejam carregados
     useEffect(() => {
@@ -43,6 +45,29 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
             console.warn('[ModularPreviewContainer] sync step no provider falhou:', e);
         }
     }, [state.currentStep, maybeEditor?.actions]);
+
+    // Atalho de teclado: tecla "p" abre o painel de propriedades
+    useEffect(() => {
+        const onKeyDown = (e: KeyboardEvent) => {
+            // Evitar conflitos com inputs
+            const target = e.target as HTMLElement;
+            const isTyping = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+            if (isTyping) return;
+            if ((e.key === 'p' || e.key === 'P')) {
+                try {
+                    if (!ui?.propertiesPanelOpen) togglePropertiesPanel();
+                    // Se não há seleção ainda, tentar selecionar o primeiro bloco do step atual
+                    const stepKey = state.currentStep;
+                    const firstBlockId = maybeEditor?.state?.stepBlocks?.[stepKey]?.[0]?.id;
+                    if (firstBlockId && maybeEditor?.actions?.setSelectedBlockId) {
+                        maybeEditor.actions.setSelectedBlockId(firstBlockId);
+                    }
+                } catch { /* noop */ }
+            }
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [ui?.propertiesPanelOpen, togglePropertiesPanel, state.currentStep, maybeEditor?.state?.stepBlocks, maybeEditor?.actions]);
 
     const sessionData = useMemo(() => {
         const map: Record<string, any> = {

@@ -11,6 +11,7 @@ import { adaptStepData, extractStepNumber } from '@/utils/StepDataAdapter';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizScores } from '@/hooks/useQuizState';
+import { useGlobalUI } from '@/hooks/core/useGlobalState';
 
 // Produção (preview)
 const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
@@ -65,6 +66,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
 }) => {
   const isEditMode = mode === 'edit';
   const isPreviewMode = mode === 'preview';
+  const { ui, togglePropertiesPanel } = useGlobalUI();
 
   // Adaptar dados do step para o formato esperado dos componentes
   // SEMPRE usar 'merge' no editor para preservar metadata de edição
@@ -232,6 +234,12 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
     const realId = resolveRealBlockId(logicalBlockId);
     if (realId && editor?.actions?.setSelectedBlockId) {
       editor.actions.setSelectedBlockId(realId);
+      // Garantir painel de propriedades aberto
+      try {
+        if (!ui?.propertiesPanelOpen) {
+          togglePropertiesPanel();
+        }
+      } catch { /* noop */ }
     }
   }, [editor?.actions, resolveRealBlockId]);
 
