@@ -72,7 +72,9 @@ const Inner: React.FC<BlockRowProps> = (props) => {
     const expandedContainers = props.expandedContainers ?? new Set<string>();
     const toggleContainer = props.toggleContainer;
     const setHoverContainerId = props.setHoverContainerId;
-    const hasErrors = !!byBlock[block.id]?.length;
+    // Defensive default for byBlock
+    const byBlockSafe: Record<string, any[]> = byBlock || {} as any;
+    const hasErrors = !!byBlockSafe[block.id]?.length;
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: block.id });
     const style: React.CSSProperties = { transform: transform ? CSS.Transform.toString(transform) : undefined, transition };
     const isContainer = block.type === 'container';
@@ -107,13 +109,13 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                 {hasErrors && (
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <div className="absolute -top-1 -right-1 text-white text-[9px] px-1 rounded shadow cursor-default select-none" style={{ background: byBlock[block.id].some(e => e.severity === 'error') ? '#dc2626' : '#d97706' }}>
-                                {byBlock[block.id].length}
+                            <div className="absolute -top-1 -right-1 text-white text-[9px] px-1 rounded shadow cursor-default select-none" style={{ background: byBlockSafe[block.id].some(e => e.severity === 'error') ? '#dc2626' : '#d97706' }}>
+                                {byBlockSafe[block.id].length}
                             </div>
                         </TooltipTrigger>
                         <TooltipContent side="left" className="max-w-xs p-2">
                             <div className="space-y-1">
-                                {byBlock[block.id].map((e: any) => (
+                                {byBlockSafe[block.id].map((e: any) => (
                                     <p key={e.id} className={cn('text-[11px] leading-snug', e.severity === 'error' ? 'text-red-600' : 'text-amber-600')}>
                                         {e.message}
                                     </p>
@@ -165,7 +167,7 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                                         <MemoBlockRow
                                             key={child.id}
                                             block={child}
-                                            byBlock={byBlock}
+                                            byBlock={byBlockSafe}
                                             selectedBlockId={selectedBlockId}
                                             isMultiSelected={isMultiSelected}
                                             handleBlockClick={handleBlockClick}
@@ -227,8 +229,8 @@ const Inner: React.FC<BlockRowProps> = (props) => {
     if (prevMulti !== nextMulti) return false;
     if (prev.block.properties !== next.block.properties) return false;
     if (prev.block.content !== next.block.content) return false;
-    const prevErrs = prev.byBlock[prev.block.id];
-    const nextErrs = next.byBlock[next.block.id];
+    const prevErrs = (prev.byBlock as any)?.[prev.block.id] || [];
+    const nextErrs = (next.byBlock as any)?.[next.block.id] || [];
     if ((prevErrs?.length || 0) !== (nextErrs?.length || 0)) return false;
     if (prevErrs && nextErrs) {
         for (let i = 0; i < prevErrs.length; i++) {

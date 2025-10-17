@@ -209,7 +209,22 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     )}
                                     {vTopSpacer > 0 && <div style={{ height: vTopSpacer }} />}
                                     {vVisible.map((block: any) => (
-                                        <BlockRow key={block.id} block={block} allBlocks={rootBlocks} />
+                                        <BlockRow
+                                            key={block.id}
+                                            block={block}
+                                            allBlocks={rootBlocks}
+                                            // Defaults defensivos para compat com testes
+                                            byBlock={{}}
+                                            selectedBlockId={selectedBlockId || ''}
+                                            isMultiSelected={isMultiSelected || ((id: string) => false)}
+                                            handleBlockClick={handleBlockClick || ((e: any) => { })}
+                                            renderBlockPreview={renderBlockPreview || ((b: any) => null)}
+                                            removeBlock={removeBlock || (() => { })}
+                                            stepId={migratedStep.id}
+                                            setBlockPendingDuplicate={setBlockPendingDuplicate || (() => { })}
+                                            setTargetStepId={setTargetStepId || (() => { })}
+                                            setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
+                                        />
                                     ))}
                                     {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
                                 </div>

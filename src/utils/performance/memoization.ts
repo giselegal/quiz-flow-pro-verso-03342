@@ -190,11 +190,14 @@ export class MemoizationMetrics {
   private static memoHits = new Map<string, number>();
   
   static recordRender(componentName: string): void {
+    // Contabilizar em dev e test; ignorar somente em produção
+    if (process.env.NODE_ENV === 'production') return;
     const current = this.renderCount.get(componentName) || 0;
     this.renderCount.set(componentName, current + 1);
   }
   
   static recordMemoHit(componentName: string): void {
+    if (process.env.NODE_ENV === 'production') return;
     const current = this.memoHits.get(componentName) || 0;
     this.memoHits.set(componentName, current + 1);
   }
