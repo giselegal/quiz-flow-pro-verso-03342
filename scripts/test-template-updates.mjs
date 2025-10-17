@@ -407,8 +407,7 @@ console.log('\n🧩 TESTE 8: ATOMIC BLOCKS DE RESULTADO\n');
 const resultBlocks = [
     'ResultMainBlock.tsx',
     'ResultStyleBlock.tsx',
-    'ResultCTAPrimaryBlock.tsx',
-    'ResultCTASecondaryBlock.tsx'
+    'ResultCTAPrimaryBlock.tsx'
 ];
 
 resultBlocks.forEach(blockName => {
@@ -435,6 +434,13 @@ resultBlocks.forEach(blockName => {
         );
     }
 });
+
+// ResultCTASecondaryBlock é simples e não precisa de context
+testResult(
+    'ResultCTASecondaryBlock.tsx existe',
+    fileExists('src/components/editor/blocks/atomic/ResultCTASecondaryBlock.tsx'),
+    'CTA secundário simples (não precisa de ResultContext)'
+);
 
 // ============================================================================
 // TESTES: ATOMIC BLOCKS TRANSITION
