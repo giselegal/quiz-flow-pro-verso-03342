@@ -1,13 +1,5 @@
 // src/services/editor/PropsToBlocksAdapter.ts
-import { normalizeOptions, normalizeOfferMap, genId } from '@/utils/normalize';
-
-function ensureBlockId(block: any, stepId: string, index: number) {
-  // Se id já existir e for string, use; senão crie determinístico com prefixo stepId
-  if (block?.id && typeof block.id === 'string' && block.id.trim().length) return block.id;
-  // prefer deterministic: stepId + tipo + index
-  const safeType = (block?.type || 'block').toString().replace(/[^\w-]/g, '');
-  return `${stepId}-${safeType}-${index + 1}`;
-}
+import { normalizeOptions, normalizeOfferMap } from '@/utils/normalize';
 
 export const PropsToBlocksAdapter = {
   applyPropsToBlocks: (step: any) => {
@@ -17,19 +9,15 @@ export const PropsToBlocksAdapter = {
     let order = 0;
 
     const push = (block: any) => {
-      const made = {
-        id: ensureBlockId(block, stepId, blocks.length),
+      const blockId = block.id || `${stepId}-block-${block.type}-${blocks.length + 1}`;
+      blocks.push({
+        id: blockId,
         parentId: block.parentId ?? null,
         type: block.type,
         order: order++,
         content: block.content || {},
         properties: block.properties || {},
-      };
-      // Garantir unicidade mesmo em casos limite
-      if (blocks.some(b => b.id === made.id)) {
-        made.id = `${made.id}-${genId('dup')}`;
-      }
-      blocks.push(made);
+      });
     };
 
     switch (type) {
