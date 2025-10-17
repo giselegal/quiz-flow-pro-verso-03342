@@ -98,68 +98,146 @@
       }
     },
     {
-      "id": "step20-result-header",
-      "type": "result-header-inline",
+      "id": "step20-result-title",
+      "type": "text-inline",
       "properties": {
-        "title": "Seu Estilo Predominante",
-        "subtitle": "Estilo {resultStyle}",
-        "description": "Com base nas suas respostas, identificamos que seu estilo predominante é o {resultStyle}. Descubra como aplicar essa essência única no seu dia a dia.",
-        "imageUrl": "",
-        "styleGuideImageUrl": "",
-        "showBothImages": true,
-        "showSpecialTips": true,
-        "backgroundColor": "#FAF9F7",
-        "textAlign": "center",
-        "imageWidth": 320,
-        "imageHeight": 400,
-        "borderRadius": 16,
-        "boxShadow": "lg",
-        "padding": 32,
-        "marginBottom": 32,
-        "progressColor": "#B89B7A",
-        "badgeText": "Exclusivo",
-        "showUserName": true
-      }
-    },
-    {
-      "id": "step20-personalized-hook",
-      "type": "personalized-hook-inline",
-      "properties": {
-        "styleCategory": "Elegante",
-        "userName": "",
-        "title": "Seu Estilo {styleCategory} foi Revelado! ✨",
-        "subtitle": "Agora que descobrimos sua essência estilística, é hora de transformar isso em looks poderosos que comunicam exatamente quem você é.",
-        "ctaText": "Quero Transformar Minha Imagem",
-        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "showCTA": true,
-        "backgroundColor": "#ffffff",
-        "accentColor": "#B89B7A",
-        "containerWidth": "xlarge",
-        "spacing": "large",
+        "content": "✨ Seu Estilo Predominante",
+        "fontSize": "text-3xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "fontFamily": "'Playfair Display', serif",
         "marginBottom": 16
       }
     },
     {
-      "id": "step20-final-value-proposition",
-      "type": "final-value-proposition-inline",
+      "id": "step20-result-main",
+      "type": "result-main",
+      "content": {
+        "styleName": "{resultStyle}",
+        "description": "Com base nas suas respostas, identificamos que seu estilo predominante é o {resultStyle}. Descubra como aplicar essa essência única no seu dia a dia.",
+        "imageUrl": "",
+        "backgroundColor": "#FAF9F7",
+        "showIcon": true
+      }
+    },
+    {
+      "id": "step20-result-style-primary",
+      "type": "result-style",
+      "content": {
+        "styleName": "{resultStyle}",
+        "percentage": "{percentage}",
+        "description": "Seu estilo predominante",
+        "color": "#B89B7A",
+        "showBar": true
+      }
+    },
+    {
+      "id": "step20-result-characteristics",
+      "type": "result-characteristics",
+      "content": {
+        "title": "✨ Suas Características Marcantes",
+        "items": ["{characteristic1}", "{characteristic2}", "{characteristic3}"],
+        "icon": "check",
+        "iconColor": "#B89B7A",
+        "textColor": "#432818"
+      }
+    },
+    {
+      "id": "step20-hook-title",
+      "type": "text-inline",
       "properties": {
-        "title": "Vista-se de Você — na Prática",
-        "subtitle": "Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção.",
-        "description": "O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir com autenticidade e transformar sua imagem em ferramenta de poder.",
-        "originalPrice": 175,
-        "currentPrice": 39,
-        "discount": 78,
-        "installments": "5x de R$ 8,83",
-        "ctaText": "GARANTIR MEU GUIA PERSONALIZADO AGORA",
-        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "urgencyMessage": "⚡ Esta oferta expira ao sair desta página",
-        "backgroundColor": "#ffffff",
-        "accentColor": "#458B74",
-        "primaryColor": "#B89B7A",
-        "textColor": "#432818",
-        "containerWidth": "xlarge",
-        "spacing": "large",
-        "marginBottom": 0
+        "content": "🎯 Seu Estilo {resultStyle} foi Revelado!",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#B89B7A",
+        "fontFamily": "'Playfair Display', serif",
+        "marginTop": 32,
+        "marginBottom": 16
+      }
+    },
+    {
+      "id": "step20-hook-subtitle",
+      "type": "text-inline",
+      "properties": {
+        "content": "Agora que descobrimos sua essência estilística, é hora de transformar isso em looks poderosos que comunicam exatamente quem você é.",
+        "fontSize": "text-lg",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 24
+      }
+    },
+    {
+      "id": "step20-value-title",
+      "type": "text-inline",
+      "properties": {
+        "content": "💎 Vista-se de Você — na Prática",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "fontFamily": "'Playfair Display', serif",
+        "marginTop": 32,
+        "marginBottom": 16
+      }
+    },
+    {
+      "id": "step20-value-description",
+      "type": "text-inline",
+      "properties": {
+        "content": "O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir com autenticidade e transformar sua imagem em ferramenta de poder.",
+        "fontSize": "text-base",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 24
+      }
+    },
+    {
+      "id": "step20-pricing",
+      "type": "text-inline",
+      "properties": {
+        "content": "<div style='text-align: center;'><span style='text-decoration: line-through; color: #9CA3AF;'>De R$ 175</span> <span style='font-size: 2rem; font-weight: bold; color: #B89B7A;'>por apenas R$ 39</span><br/><span style='color: #6B7280;'>ou 5x de R$ 8,83</span><br/><span style='color: #EF4444; font-weight: 600;'>⚡ 78% de desconto</span></div>",
+        "fontSize": "text-lg",
+        "textAlign": "text-center",
+        "marginBottom": 24
+      }
+    },
+    {
+      "id": "step20-cta-primary",
+      "type": "button-inline",
+      "properties": {
+        "text": "✨ GARANTIR MEU GUIA PERSONALIZADO AGORA ✨",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#FFFFFF",
+        "fontSize": "text-lg",
+        "fontWeight": "font-bold",
+        "onClick": "window.location.href='https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912'",
+        "marginBottom": 16
+      }
+    },
+    {
+      "id": "step20-urgency",
+      "type": "text-inline",
+      "properties": {
+        "content": "⚡ Esta oferta expira ao sair desta página",
+        "fontSize": "text-sm",
+        "fontWeight": "font-semibold",
+        "textAlign": "text-center",
+        "color": "#EF4444",
+        "marginBottom": 32
+      }
+    },
+    {
+      "id": "step20-share",
+      "type": "result-share",
+      "content": {
+        "title": "💬 Compartilhe seu resultado",
+        "platforms": ["facebook", "twitter", "whatsapp"],
+        "message": "Descobri meu estilo predominante! ✨ {resultStyle}"
       }
     }
   ],
