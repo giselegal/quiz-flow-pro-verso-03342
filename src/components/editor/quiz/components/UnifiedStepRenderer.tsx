@@ -1,8 +1,9 @@
 /**
- * 🎯 UNIFIED STEP RENDERER v2.1 - MODULARIZAÇÃO COMPLETA
+ * 🎯 UNIFIED STEP RENDERER v3.0 - 100% MODULAR
  *
- * Uso: Em modo edição renderiza componentes modulares (blocos independentes).
- * Em modo preview renderiza os componentes de produção com interatividade real.
+ * ✅ PRODUÇÃO E EDIÇÃO usam os MESMOS componentes modulares
+ * ✅ Diferença: isEditable (true = editor com drag-and-drop | false = preview interativo)
+ * ✅ Blocos vêm de JSON templates, renderizados via UniversalBlockRenderer
  */
 
 import React, { lazy, Suspense, memo, useMemo, useCallback } from 'react';
@@ -13,21 +14,22 @@ import { computeResult } from '@/utils/result/computeResult';
 import type { QuizScores } from '@/hooks/useQuizState';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
 
-// Produção (preview)
-const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
-const QuestionStep = lazy(() => import('@/components/quiz/QuestionStep'));
-const StrategicQuestionStep = lazy(() => import('@/components/quiz/StrategicQuestionStep'));
-const TransitionStep = lazy(() => import('@/components/quiz/TransitionStep'));
-const ResultStep = lazy(() => import('@/components/quiz/ResultStep'));
-const OfferStep = lazy(() => import('@/components/quiz/OfferStep'));
-
-// Modulares (edição) - usar import estático para evitar falhas de fetch de chunks em ambientes de preview
+// ✅ COMPONENTES MODULARES - Usados em EDIÇÃO e PRODUÇÃO
+// Import estático para evitar falhas de fetch de chunks
 import ModularIntroStep from '@/components/editor/quiz-estilo/ModularIntroStep';
 import ModularQuestionStep from '@/components/editor/quiz-estilo/ModularQuestionStep';
 import ModularStrategicQuestionStep from '@/components/editor/quiz-estilo/ModularStrategicQuestionStep';
 import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
 import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
 import ModularOfferStep from '@/components/editor/quiz-estilo/ModularOfferStep';
+
+// ⚠️ LEGADOS - Removidos, agora usamos componentes modulares em produção também
+// const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
+// const QuestionStep = lazy(() => import('@/components/quiz/QuestionStep'));
+// const StrategicQuestionStep = lazy(() => import('@/components/quiz/StrategicQuestionStep'));
+// const TransitionStep = lazy(() => import('@/components/quiz/TransitionStep'));
+// const ResultStep = lazy(() => import('@/components/quiz/ResultStep'));
+// const OfferStep = lazy(() => import('@/components/quiz/OfferStep'));
 
 // UI do overlay de edição
 import { GripVertical, Trash2, Copy } from 'lucide-react';
