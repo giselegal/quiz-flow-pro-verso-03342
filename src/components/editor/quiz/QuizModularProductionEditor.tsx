@@ -98,6 +98,7 @@ import { useVirtualBlocks } from './hooks/useVirtualBlocks';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
 import { BuilderSystemPanel } from '@/components/editor/BuilderSystemPanel';
+import { loadStepTemplate } from '@/utils/loadStepTemplates';
 // Dados canônicos das etapas (lazy loading para performance)
 import { loadQuizStep, loadAllQuizSteps, STEP_ORDER, preloadAdjacentSteps } from '@/data/quizStepsLazy';
 import type { QuizStep } from '@/data/quizSteps';
@@ -637,7 +638,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         // ==========================
                         // 🔄 NOVO: Construção enriquecida baseada em QUIZ_STEPS (substitui apenas se dados canônicos disponíveis)
                         // ==========================
-                        const buildEnrichedBlocksForStep = (stepId: string, quizStep: any): any[] => {
+                        const buildEnrichedBlocksForStep = async (stepId: string, quizStep: any): Promise<any[]> => {
                             const blocks: any[] = [];
                             let order = 0;
                             const push = (partial: Partial<EditorBlockComponent> & { type: string }) => {
@@ -696,6 +697,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 }
                                 case 'transition':
                                 case 'transition-result': {
+                                    // ✅ MODULAR: Carregar blocos de JSON estático para Steps 12, 19
+                                    const stepNumber = parseInt(stepId.split('-')[1]);
+                                    if (stepNumber === 12 || stepNumber === 19) {
+                                        console.log(`✅ Carregando blocos modulares para ${stepId} (transition)`);
+                                        const templateBlocks = await loadStepTemplate(stepId);
+                                        if (templateBlocks && templateBlocks.length > 0) {
+                                            return templateBlocks.map((block: any, idx: number) => ({
+                                                ...block,
+                                                id: block.id || `${stepId}-block-${idx + 1}`,
+                                                order: idx,
+                                                parentId: null
+                                            }));
+                                        }
+                                    }
+                                    // Fallback para steps sem template JSON
                                     if (quizStep.title) {
                                         push({
                                             type: 'heading',
@@ -720,6 +736,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     break;
                                 }
                                 case 'result': {
+                                    // ✅ MODULAR: Carregar blocos de JSON estático para Step 20
+                                    const stepNumber = parseInt(stepId.split('-')[1]);
+                                    if (stepNumber === 20) {
+                                        console.log(`✅ Carregando blocos modulares para ${stepId} (result)`);
+                                        const templateBlocks = await loadStepTemplate(stepId);
+                                        if (templateBlocks && templateBlocks.length > 0) {
+                                            return templateBlocks.map((block: any, idx: number) => ({
+                                                ...block,
+                                                id: block.id || `${stepId}-block-${idx + 1}`,
+                                                order: idx,
+                                                parentId: null
+                                            }));
+                                        }
+                                    }
+                                    // Fallback para steps sem template JSON
                                     push({
                                         type: 'result-header-inline',
                                         content: { title: quizStep.title || 'Seu Resultado:' },
@@ -765,14 +796,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 const stepsMap = await loadAllQuizSteps();
                                 console.timeEnd('⚡ Lazy load all steps');
 
-                                const enriched: EditableQuizStep[] = STEP_ORDER.map((stepId, idx) => {
+                                const enriched: EditableQuizStep[] = await Promise.all(STEP_ORDER.map(async (stepId, idx) => {
                                     const quizStep = stepsMap.get(stepId);
                                     const legacyType = buildStepType(idx);
                                     const next = quizStep?.nextStep || (idx < STEP_ORDER.length - 1 ? STEP_ORDER[idx + 1] : undefined);
                                     let blocks: any[] = [];
                                     try {
                                         if (quizStep) {
-                                            blocks = buildEnrichedBlocksForStep(stepId, quizStep);
+                                            blocks = await buildEnrichedBlocksForStep(stepId, quizStep);
                                         } else {
                                             blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
                                         }
@@ -789,7 +820,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         // Metadados completos do quizStep para futura edição detalhada
                                         meta: quizStep
                                     } as EditableQuizStep;
-                                });
+                                }));
 
                                 setSteps(enriched);
                                 setSelectedStepIdUnified(enriched[0]?.id || '');
