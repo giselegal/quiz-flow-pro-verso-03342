@@ -1203,31 +1203,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 parentId: null
             };
 
-            // ✅ NOVO: Detectar drop zones explícitas (antes/depois de blocos)
+            // Determinar posição de inserção
             let insertPosition = currentStep.blocks.length; // Default: final
 
-            // Verificar se foi solto em uma drop zone específica
-            const dropZoneType = over?.data?.current?.dropZone;
-            const targetBlockId = over?.data?.current?.blockId;
-            const explicitIndex = over?.data?.current?.insertIndex;
-
-            if (dropZoneType === 'before' && targetBlockId) {
-                // Inserir ANTES do bloco alvo
-                const targetIndex = currentStep.blocks.findIndex(b => b.id === targetBlockId);
-                if (targetIndex >= 0) {
-                    insertPosition = targetIndex;
-                    console.log(`🎯 Inserindo ANTES do bloco ${targetBlockId} na posição ${insertPosition}`);
-                }
-            } else if (dropZoneType === 'after' || explicitIndex !== undefined) {
-                // Inserir na posição explícita (zona "after" ou final)
-                insertPosition = typeof explicitIndex === 'number' ? explicitIndex : currentStep.blocks.length;
-                console.log(`🎯 Inserindo na posição explícita ${insertPosition}`);
-            } else if (over.id && over.id !== 'canvas-end' && !String(over.id).startsWith('container-slot:')) {
-                // Fallback: Dropped sobre outro bloco - inserir APÓS ele
+            if (over.id && over.id !== 'canvas-end' && !String(over.id).startsWith('container-slot:')) {
+                // Dropped sobre outro bloco - inserir APÓS ele
                 const targetBlockIndex = currentStep.blocks.findIndex(b => b.id === over.id);
                 if (targetBlockIndex >= 0) {
                     insertPosition = targetBlockIndex + 1;
-                    console.log(`🎯 Inserindo APÓS bloco na posição ${insertPosition}`);
                 }
             }
 
@@ -2854,7 +2837,6 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
             setSyncStatus('synced');
         } else {
             console.log('⏭️ Skip update - conteúdo idêntico');
-
             setRegistryReady(true);
             setSyncStatus('synced');
         }

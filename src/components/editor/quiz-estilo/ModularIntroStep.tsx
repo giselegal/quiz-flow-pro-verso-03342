@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
-import { useEditor } from '@/components/editor/EditorProviderUnified';
-import { Block } from '@/types/editor';
+import React from 'react';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { SelectableBlock } from '@/components/editor/SelectableBlock';
 
 interface ModularIntroStepProps {
     data: any;
@@ -12,149 +12,304 @@ interface ModularIntroStepProps {
     onBlockSelect?: (blockId: string) => void;
     onOpenProperties?: (blockId: string) => void;
     onBlocksReorder?: (stepId: string, newOrder: string[]) => void;
-    /** Emite o nome digitado quando o botão do formulário é clicado */
+    /** Emite o nome digitado quando o botão do formulário é clicado (paridade com preview). */
     onNameSubmit?: (name: string) => void;
-    editor?: any;
 }
 
 /**
- * 🏠 INTRO STEP 100% MODULARIZADO
+ * 🏠 INTRO STEP MODULARIZADO
  * 
- * Agora usa blocos atômicos do registry (intro-header, intro-title, etc.)
- * - 100% editável via painel de propriedades
- * - Drop zones para drag-and-drop de componentes
- * - Persistente via EditorProvider
- * - Mesma fonte de dados em edit/preview
+ * Cada seção é um bloco editável independente:
+ * - Header com logo
+ * - Título principal 
+ * - Imagem
+ * - Texto descritivo
+ * - Formulário
+ * - Footer
  */
 export default function ModularIntroStep({
     data,
+    onEdit,
     isEditable = false,
     selectedBlockId,
-    onBlockSelect = () => { },
-    onOpenProperties = () => { },
-    onNameSubmit,
-    editor: editorProp
+    onBlockSelect,
+    onOpenProperties,
+    onBlocksReorder,
+    onNameSubmit
 }: ModularIntroStepProps) {
-    const editorContext = useEditor({ optional: true });
-    const editor = editorProp || editorContext;
-    const stepKey = data?.id || 'step-intro';
 
-    const handleBlockClick = React.useCallback((blockId: string) => {
-        console.log(`🎯 Bloco clicado: ${blockId}`);
-        onBlockSelect(blockId);
-        if (editor?.actions?.setSelectedBlockId) {
-            editor.actions.setSelectedBlockId(blockId);
-        }
-        onOpenProperties(blockId);
-    }, [onBlockSelect, onOpenProperties, editor]);
+    const safeData = {
+        title: data.title || '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você</span>.',
+        formQuestion: data.formQuestion || 'Como posso te chamar?',
+        placeholder: data.placeholder || 'Digite seu primeiro nome aqui...',
+        buttonText: data.buttonText || 'Quero Descobrir meu Estilo Agora!',
+        image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
+        description: data.description || 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.'
+    };
 
-    const blocks = useMemo(() => {
-        return editor?.state?.stepBlocks?.[stepKey] || [];
-    }, [editor?.state?.stepBlocks, stepKey]);
+    // Ordem dos blocos reordenáveis
+    const STEP_ID = data?.id || 'step-intro';
+    const DEFAULT_ORDER = [
+        'intro-title',
+        'intro-image',
+        'intro-description',
+        'intro-form'
+    ];
+    const initialOrder: string[] = (data?.metadata?.blockOrder && Array.isArray(data.metadata.blockOrder))
+        ? data.metadata.blockOrder
+        : DEFAULT_ORDER;
+    const [order, setOrder] = React.useState<string[]>(initialOrder);
 
-    React.useEffect(() => {
-        if (blocks.length === 0 && editor?.actions?.ensureStepLoaded) {
-            console.log(`🔄 [ModularIntroStep] Auto-loading ${stepKey}`);
-            editor.actions.ensureStepLoaded(stepKey).catch((err: Error) => {
-                console.error(`❌ [ModularIntroStep] Failed to load ${stepKey}:`, err);
-            });
-        }
-    }, [stepKey, blocks.length, editor?.actions]);
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+    );
 
-    const [localOrder, setLocalOrder] = React.useState<string[]>([]);
+    const handleDragEnd = (event: any) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+        const oldIndex = order.indexOf(String(active.id));
+        const newIndex = order.indexOf(String(over.id));
+        const newOrder = arrayMove(order, oldIndex, newIndex);
+        setOrder(newOrder);
+        // Persistir no estado do editor/template
+        onBlocksReorder?.(STEP_ID, newOrder);
+        onEdit?.('blockOrder', newOrder);
+    };
 
-    React.useEffect(() => {
-        if (blocks.length > 0) {
-            const orderFromMetadata = data?.metadata?.blockOrder;
-            if (orderFromMetadata && Array.isArray(orderFromMetadata)) {
-                setLocalOrder(orderFromMetadata);
-            } else {
-                setLocalOrder(blocks.map((b: Block) => b.id));
-            }
-        }
-    }, [blocks, data?.metadata?.blockOrder]);
-
-    const orderedBlocks = useMemo(() => {
-        if (localOrder.length === 0) return blocks;
-        return localOrder.map(id => blocks.find((b: Block) => b.id === id)).filter(Boolean) as Block[];
-    }, [blocks, localOrder]);
-
-    const BlockWrapper: React.FC<{ id: string; children: React.ReactNode; index: number }> = ({ id, children, index }) => {
-        const dropZoneId = `drop-before-${id}`;
-        const { setNodeRef, isOver } = useDroppable({
-            id: dropZoneId,
-            data: { dropZone: 'before', blockId: id, stepKey: stepKey, insertIndex: index }
-        });
-
+    const SortableBlock: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+        const style = {
+            transform: CSS.Transform.toString(transform),
+            transition,
+            opacity: isDragging ? 0.7 : 1,
+        } as React.CSSProperties;
         return (
-            <div className="relative group">
-                <div
-                    ref={setNodeRef}
-                    className={`h-3 -my-1.5 relative transition-all duration-200 border-2 rounded ${isOver ? 'bg-blue-100 border-blue-400 border-dashed' : 'border-transparent hover:bg-blue-50 hover:border-blue-300 hover:border-dashed'
-                        }`}
-                >
-                    <div className={`absolute inset-0 flex items-center justify-center ${isOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                        <span className="text-[10px] font-medium text-blue-600 bg-white px-2 py-0.5 rounded shadow-sm">
-                            {isOver ? '⬇ Soltar aqui' : '+ Soltar antes'}
-                        </span>
-                    </div>
-                </div>
-                <div className="my-2">{children}</div>
+            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+                {children}
             </div>
         );
     };
 
-    const DropZoneEnd: React.FC<{ insertIndex: number }> = ({ insertIndex }) => {
-        const dropZoneId = `drop-end-${stepKey}`;
-        const { setNodeRef, isOver } = useDroppable({
-            id: dropZoneId,
-            data: { dropZone: 'after', stepKey: stepKey, insertIndex: insertIndex }
-        });
-
-        return (
-            <div
-                ref={setNodeRef}
-                className={`h-16 mt-4 border-2 border-dashed rounded-lg transition-all flex items-center justify-center text-sm cursor-pointer ${isOver ? 'border-blue-400 bg-blue-100 text-blue-700' : 'border-gray-300 text-gray-500 hover:border-blue-400 hover:bg-blue-50'
-                    }`}
-            >
-                <span className="font-medium">{isOver ? '⬇ Soltar aqui' : '+ Solte componente aqui para adicionar ao final'}</span>
-            </div>
-        );
-    };
+    const inputRef = React.useRef<HTMLInputElement | null>(null);
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-            <main className="w-full max-w-6xl mx-auto px-4 py-8">
-                {isEditable && orderedBlocks.length > 0 ? (
-                    <div className="space-y-2">
-                        {orderedBlocks.map((block: Block, index: number) => (
-                            <BlockWrapper key={block.id} id={block.id} index={index}>
-                                <UniversalBlockRenderer
-                                    block={block}
-                                    mode="editor"
-                                    isSelected={selectedBlockId === block.id}
-                                    onSelect={() => handleBlockClick(block.id)}
-                                    onClick={() => handleBlockClick(block.id)}
-                                />
-                            </BlockWrapper>
-                        ))}
-                        <DropZoneEnd insertIndex={orderedBlocks.length} />
+            {/* BLOCO 1: Header com Logo (fixo) */}
+            <SelectableBlock
+                blockId="intro-header"
+                isSelected={selectedBlockId === 'intro-header'}
+                isEditable={isEditable}
+                onSelect={() => onBlockSelect?.('intro-header')}
+                blockType="Header com Logo"
+                blockIndex={0}
+                onOpenProperties={() => onOpenProperties?.('intro-header')}
+                isDraggable={false}
+            >
+                <header className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 py-8 mx-auto space-y-8">
+                    <div className="flex flex-col items-center space-y-2">
+                        <div className="relative">
+                            <img
+                                src="https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png"
+                                alt="Logo Gisele Galvão"
+                                className="h-auto mx-auto"
+                                width={120}
+                                height={50}
+                                style={{
+                                    objectFit: 'contain',
+                                    maxWidth: '120px',
+                                    aspectRatio: '120 / 50',
+                                }}
+                            />
+                            <div
+                                className="h-[3px] bg-[#B89B7A] rounded-full mt-1.5 mx-auto"
+                                style={{
+                                    width: '300px',
+                                    maxWidth: '90%',
+                                }}
+                            />
+                        </div>
                     </div>
-                ) : (
-                    <>
-                        {orderedBlocks.map((block: Block) => (
-                            <UniversalBlockRenderer key={block.id} block={block} mode="preview" />
-                        ))}
-                    </>
-                )}
+                </header>
+            </SelectableBlock>
 
-                {orderedBlocks.length === 0 && (
-                    <div className="text-center py-12">
-                        <p className="text-muted-foreground mb-4">Nenhum bloco configurado para este step.</p>
-                        {isEditable && <p className="text-sm text-primary">Adicione blocos usando o template JSON ou via editor.</p>}
-                    </div>
-                )}
-            </main>
+            {/* BLOCOs reordenáveis */}
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={order} strategy={verticalListSortingStrategy}>
+                    {order.map((blockId, index) => {
+                        if (blockId === 'intro-title') {
+                            return (
+                                <SortableBlock key={blockId} id={blockId}>
+                                    <SelectableBlock
+                                        blockId="intro-title"
+                                        isSelected={selectedBlockId === 'intro-title'}
+                                        isEditable={isEditable}
+                                        onSelect={() => onBlockSelect?.('intro-title')}
+                                        blockType="Título Principal"
+                                        blockIndex={index + 1}
+                                        onOpenProperties={() => onOpenProperties?.('intro-title')}
+                                        isDraggable={true}
+                                    >
+                                        <div className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto">
+                                            <h1
+                                                className="text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl text-[#432818]"
+                                                style={{
+                                                    fontFamily: '"Playfair Display", serif',
+                                                    fontWeight: 400,
+                                                }}
+                                            >
+                                                <span dangerouslySetInnerHTML={{ __html: safeData.title }} />
+                                            </h1>
+                                        </div>
+                                    </SelectableBlock>
+                                </SortableBlock>
+                            );
+                        }
+                        if (blockId === 'intro-image') {
+                            return (
+                                <SortableBlock key={blockId} id={blockId}>
+                                    <SelectableBlock
+                                        blockId="intro-image"
+                                        isSelected={selectedBlockId === 'intro-image'}
+                                        isEditable={isEditable}
+                                        onSelect={() => onBlockSelect?.('intro-image')}
+                                        blockType="Imagem Principal"
+                                        blockIndex={index + 1}
+                                        onOpenProperties={() => onOpenProperties?.('intro-image')}
+                                        isDraggable={true}
+                                    >
+                                        <div className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto mt-8">
+                                            <div className="mt-2 w-full mx-auto flex justify-center">
+                                                <div
+                                                    className="overflow-hidden rounded-lg shadow-sm"
+                                                    style={{
+                                                        aspectRatio: '1.47',
+                                                        maxHeight: '204px',
+                                                        width: '100%',
+                                                        maxWidth: '300px'
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={safeData.image}
+                                                        alt="Descubra seu estilo predominante"
+                                                        className="w-full h-full object-contain"
+                                                        width={300}
+                                                        height={204}
+                                                        style={{
+                                                            maxWidth: '300px',
+                                                            maxHeight: '204px',
+                                                            width: '100%',
+                                                            height: 'auto',
+                                                            objectFit: 'contain'
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </SelectableBlock>
+                                </SortableBlock>
+                            );
+                        }
+                        if (blockId === 'intro-description') {
+                            return (
+                                <SortableBlock key={blockId} id={blockId}>
+                                    <SelectableBlock
+                                        blockId="intro-description"
+                                        isSelected={selectedBlockId === 'intro-description'}
+                                        isEditable={isEditable}
+                                        onSelect={() => onBlockSelect?.('intro-description')}
+                                        blockType="Texto Descritivo"
+                                        blockIndex={index + 1}
+                                        onOpenProperties={() => onOpenProperties?.('intro-description')}
+                                        isDraggable={true}
+                                    >
+                                        <div className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto mt-6">
+                                            <p className="text-sm text-center leading-relaxed px-2 sm:text-base text-gray-600">
+                                                {safeData.description}
+                                            </p>
+                                        </div>
+                                    </SelectableBlock>
+                                </SortableBlock>
+                            );
+                        }
+                        if (blockId === 'intro-form') {
+                            return (
+                                <SortableBlock key={blockId} id={blockId}>
+                                    <SelectableBlock
+                                        blockId="intro-form"
+                                        isSelected={selectedBlockId === 'intro-form'}
+                                        isEditable={isEditable}
+                                        onSelect={() => onBlockSelect?.('intro-form')}
+                                        blockType="Formulário"
+                                        blockIndex={index + 1}
+                                        onOpenProperties={() => onOpenProperties?.('intro-form')}
+                                        isDraggable={true}
+                                    >
+                                        <div className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto mt-8">
+                                            <form className="w-full space-y-6" autoComplete="off" onSubmit={(e) => { e.preventDefault(); }}>
+                                                <div>
+                                                    <label
+                                                        htmlFor="name"
+                                                        className="block text-xs font-semibold text-[#432818] mb-1.5"
+                                                    >
+                                                        {safeData.formQuestion} <span className="text-red-500">*</span>
+                                                    </label>
+                                                    <input
+                                                        id="name"
+                                                        type="text"
+                                                        placeholder={safeData.placeholder}
+                                                        className="w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 border-[#B89B7A] focus:outline-none focus:ring-2 focus:ring-[#A1835D]"
+                                                        required
+                                                        ref={inputRef}
+                                                    />
+                                                </div>
+
+                                                <button
+                                                    type="button"
+                                                    className="w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 bg-[#B89B7A] text-white hover:bg-[#A1835D] hover:shadow-lg"
+                                                    onClick={() => {
+                                                        const name = String(inputRef.current?.value || '').trim();
+                                                        if (name && onNameSubmit) onNameSubmit(name);
+                                                    }}
+                                                >
+                                                    {safeData.buttonText}
+                                                </button>
+
+                                                <p className="text-xs text-center text-gray-500 pt-1">
+                                                    Seu nome é necessário para personalizar sua experiência.
+                                                    {isEditable && (
+                                                        <span className="block text-blue-500 mt-1">
+                                                            ✏️ Editável via Painel de Propriedades
+                                                        </span>
+                                                    )}
+                                                </p>
+                                            </form>
+                                        </div>
+                                    </SelectableBlock>
+                                </SortableBlock>
+                            );
+                        }
+                        return null;
+                    })}
+                </SortableContext>
+            </DndContext>
+
+            {/* BLOCO 6: Footer (fixo) */}
+            <SelectableBlock
+                blockId="intro-footer"
+                isSelected={selectedBlockId === 'intro-footer'}
+                isEditable={isEditable}
+                onSelect={() => onBlockSelect?.('intro-footer')}
+                blockType="Footer"
+                blockIndex={order.length + 1}
+                onOpenProperties={() => onOpenProperties?.('intro-footer')}
+                isDraggable={false}
+            >
+                <footer className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto">
+                    <p className="text-xs text-gray-500">
+                        © {new Date().getFullYear()} Gisele Galvão - Todos os direitos reservados
+                    </p>
+                </footer>
+            </SelectableBlock>
         </div>
     );
 }
