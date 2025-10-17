@@ -120,7 +120,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'transition-hero': TransitionHeroSection, // ✅ NOVO - Section para transition-hero
     'loading-animation': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
     'loader-inline': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
-    
+
     // ✅ STEP 12 & 19 - BLOCOS ATÔMICOS DE TRANSIÇÃO (100% Modulares) - Direct imports para performance
     'transition-title': lazy(() => import('./atomic/TransitionTitleBlock')),
     'transition-subtitle': lazy(() => import('./TransitionSubtitleBlock')),
@@ -150,7 +150,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'secondary-styles': lazy(() => import('@/components/editor/blocks/SecondaryStylesInlineBlock')),
     'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
     'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
-    
+
     // ✅ STEP 20 - BLOCOS ATÔMICOS DE RESULTADO (100% Modulares) - Direct imports para performance
     'result-congrats': lazy(() => import('./ResultCongratsBlock')),
     'result-main': lazy(() => import('./atomic/ResultMainBlock')),
@@ -250,6 +250,10 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
  * Inclui fallbacks inteligentes para tipos desconhecidos
  */
 export const getEnhancedBlockComponent = (type: string) => {
+    // 🔒 Validação robusta para evitar React error #185 (element type invalid)
+    const isValidReactComponent = (value: any) =>
+        typeof value === 'function' || (typeof value === 'object' && value !== null && '$$typeof' in value);
+
     console.log(`🔍 getEnhancedBlockComponent chamado para tipo: "${type}"`);
 
     // 🧪 TESTE: Verificar se o registry está populado
@@ -265,9 +269,13 @@ export const getEnhancedBlockComponent = (type: string) => {
         console.log(`🎯 Componente encontrado para "${type}":`, {
             exists: !!component,
             type: typeof component,
-            name: component?.name || component?.displayName || 'Sem nome'
+            name: (component as any)?.name || (component as any)?.displayName || 'Sem nome'
         });
-        return component;
+        if (isValidReactComponent(component)) {
+            return component;
+        }
+        console.error(`❌ Componente inválido registrado para "${type}". Aplicando fallback TextInlineBlock.`);
+        return TextInlineBlock;
     }
 
     if (!type) {
@@ -280,20 +288,23 @@ export const getEnhancedBlockComponent = (type: string) => {
     // Verificar se o tipo existe diretamente no registro
     if (ENHANCED_BLOCK_REGISTRY[type]) {
         console.log(`✅ Tipo exato encontrado no registry: "${type}"`);
-        return ENHANCED_BLOCK_REGISTRY[type];
+        const comp = ENHANCED_BLOCK_REGISTRY[type];
+        return isValidReactComponent(comp) ? comp : TextInlineBlock;
     }    // Verificar se há um alias exato para o tipo
     const normalizedType = type.toLowerCase().replace(/[^a-z0-9-]/g, '-');
     if (ENHANCED_BLOCK_REGISTRY[normalizedType]) {
         console.log(`🎨 Alias: ${type} → ${normalizedType}`);
-        return ENHANCED_BLOCK_REGISTRY[normalizedType];
+        const comp = ENHANCED_BLOCK_REGISTRY[normalizedType];
+        return isValidReactComponent(comp) ? comp : TextInlineBlock;
     }
 
     // Verificar se há um fallback baseado em prefixo
     const prefix = type.split('-')[0];
     const fallbackKey = `${prefix}-*`;
     if (ENHANCED_BLOCK_REGISTRY[fallbackKey]) {
-        console.log(`🎨 Fallback: ${type} → ${fallbackKey} (${ENHANCED_BLOCK_REGISTRY[fallbackKey].name})`);
-        return ENHANCED_BLOCK_REGISTRY[fallbackKey];
+        const comp = ENHANCED_BLOCK_REGISTRY[fallbackKey];
+        console.log(`🎨 Fallback: ${type} → ${fallbackKey} (${(comp as any).name || 'component'})`);
+        return isValidReactComponent(comp) ? comp : TextInlineBlock;
     }
 
     // Verificar se há um fallback baseado em sufixo
@@ -301,7 +312,8 @@ export const getEnhancedBlockComponent = (type: string) => {
     const suffixFallbackKey = `*-${suffix}`;
     if (ENHANCED_BLOCK_REGISTRY[suffixFallbackKey]) {
         console.log(`🎨 Fallback: ${type} → ${suffixFallbackKey}`);
-        return ENHANCED_BLOCK_REGISTRY[suffixFallbackKey];
+        const comp = ENHANCED_BLOCK_REGISTRY[suffixFallbackKey];
+        return isValidReactComponent(comp) ? comp : TextInlineBlock;
     }
 
     // Verificar se é um tipo de quiz
@@ -330,7 +342,8 @@ export const getEnhancedBlockComponent = (type: string) => {
 
     // Fallback final para tipos desconhecidos
     console.log(`🎨 Fallback: ${type} → style-card-inline (StyleCardInlineBlock)`);
-    return ENHANCED_BLOCK_REGISTRY['style-card-inline'];
+    const finalComp = ENHANCED_BLOCK_REGISTRY['style-card-inline'];
+    return isValidReactComponent(finalComp) ? finalComp : TextInlineBlock;
 };
 
 /**
@@ -390,7 +403,7 @@ export const AVAILABLE_COMPONENTS = [
         category: 'content',
         description: 'Imagem com controles completos de tamanho e estilo',
     },
-    
+
     // ============================================================================
     // 🏗️ COMPONENTES ESTRUTURAIS (Layout & Containers)
     // ============================================================================

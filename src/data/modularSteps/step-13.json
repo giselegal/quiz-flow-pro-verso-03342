@@ -1,0 +1,40 @@
+{
+    "id": "step-13",
+    "type": "strategic-question",
+    "metadata": {
+        "name": "Strategic Question Step (Modular)",
+        "description": "Pergunta estratégica com opções e botão"
+    },
+    "blocks": [
+        {
+            "id": "strategic-question-13",
+            "type": "strategic-question",
+            "order": 1,
+            "properties": {
+                "questionNumber": "1 de 6",
+                "questionText": "Para um jantar especial, você prefere…?",
+                "options": [
+                    {
+                        "id": "sq-1",
+                        "text": "Look minimalista"
+                    },
+                    {
+                        "id": "sq-2",
+                        "text": "Look com destaque"
+                    }
+                ]
+            },
+            "content": {}
+        },
+        {
+            "id": "strategic-next-13",
+            "type": "button-inline",
+            "order": 2,
+            "properties": {
+                "text": "Continuar",
+                "style": "primary"
+            },
+            "content": {}
+        }
+    ]
+}

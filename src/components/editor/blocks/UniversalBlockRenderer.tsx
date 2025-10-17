@@ -181,8 +181,12 @@ const useBlockComponent = (blockType: string): React.ComponentType<any> | null =
     if (!component) {
       // Fallback para enhanced registry - converter para React.FC
       const enhancedComponent = getEnhancedBlockComponent(blockType);
-      if (enhancedComponent) {
+      const isValid = typeof enhancedComponent === 'function' || (typeof enhancedComponent === 'object' && enhancedComponent !== null && '$$typeof' in enhancedComponent);
+      if (isValid) {
         component = enhancedComponent as React.FC<any>;
+      } else {
+        logger.error(`Enhanced registry retornou componente inválido para ${blockType}. Usando fallback de placeholder.`);
+        component = BlockComponentRegistry['text'];
       }
     }
 
@@ -411,18 +415,18 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
               block={block}
               isSelected={isSelected}
               isEditable={!isPreviewing}
-              
+
               // ✅ CALLBACKS - Assinaturas corretas
               onClick={handleClick}
-              
+
               onUpdate={handleUpdate ? (updates: Partial<Block>) => {
                 // ✅ Adapter: AtomicBlockProps (updates) → UniversalBlockRenderer (blockId, updates)
                 handleUpdate(updates);
               } : undefined}
-              
+
               onDelete={onDelete ? () => onDelete(block.id) : undefined}
-              
-              // ❌ REMOVED: isPreviewing (deprecated - use isEditable instead)
+
+            // ❌ REMOVED: isPreviewing (deprecated - use isEditable instead)
             />
           )}
         </ErrorBoundary>

@@ -1,0 +1,65 @@
+{
+    "id": "step-01",
+    "type": "intro",
+    "metadata": {
+        "name": "Intro Step (Modular)",
+        "description": "Etapa de introdução com cabeçalho, imagem, descrição e formulário de nome"
+    },
+    "blocks": [
+        {
+            "id": "intro-header",
+            "type": "quiz-intro-header",
+            "order": 1,
+            "properties": {
+                "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                "title": "Descubra seu Estilo Pessoal"
+            },
+            "content": {}
+        },
+        {
+            "id": "intro-image",
+            "type": "image-inline",
+            "order": 2,
+            "properties": {
+                "src": "https://placehold.co/1200x600/eee/333?text=Intro+Hero",
+                "alt": "Imagem de abertura",
+                "width": 1200,
+                "height": 600,
+                "rounded": true
+            },
+            "content": {}
+        },
+        {
+            "id": "intro-description",
+            "type": "text-inline",
+            "order": 3,
+            "properties": {},
+            "content": {
+                "text": "Em poucos passos, descubra o estilo que mais combina com você."
+            }
+        },
+        {
+            "id": "intro-name-input",
+            "type": "form-input",
+            "order": 4,
+            "properties": {
+                "fieldId": "intro-name-input",
+                "label": "Como posso te chamar?",
+                "placeholder": "Digite seu nome",
+                "required": true
+            },
+            "content": {}
+        },
+        {
+            "id": "intro-cta-button",
+            "type": "button-inline",
+            "order": 5,
+            "properties": {
+                "text": "Começar agora",
+                "style": "primary",
+                "targetButtonId": "intro-cta-button"
+            },
+            "content": {}
+        }
+    ]
+}

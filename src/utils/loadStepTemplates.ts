@@ -9,6 +9,9 @@ import { Block } from '@/types/editor';
 import step12Template from '@/data/modularSteps/step-12.json';
 import step19Template from '@/data/modularSteps/step-19.json';
 import step20Template from '@/data/modularSteps/step-20.json';
+import step01Template from '@/data/modularSteps/step-01.json';
+import step02Template from '@/data/modularSteps/step-02.json';
+import step13Template from '@/data/modularSteps/step-13.json';
 
 interface StepTemplate {
   id: string;
@@ -44,20 +47,23 @@ function convertTemplateBlocksToBlocks(templateBlocks: StepTemplate['blocks']): 
  */
 export function loadStepTemplate(stepId: string): Block[] {
   const templates: Record<string, StepTemplate> = {
+    'step-01': step01Template as StepTemplate,
+    'step-02': step02Template as StepTemplate,
     'step-12': step12Template as StepTemplate,
+    'step-13': step13Template as StepTemplate,
     'step-19': step19Template as StepTemplate,
     'step-20': step20Template as StepTemplate,
   };
 
   const template = templates[stepId];
-  
+
   if (!template) {
     console.warn(`⚠️ Template não encontrado para ${stepId}`);
     return [];
   }
 
   const blocks = convertTemplateBlocksToBlocks(template.blocks);
-  
+
   console.log(`✅ Template carregado para ${stepId}:`, {
     stepId,
     blockCount: blocks.length,
@@ -72,7 +78,10 @@ export function loadStepTemplate(stepId: string): Block[] {
  */
 export function loadAllModularTemplates(): Record<string, Block[]> {
   return {
+    'step-01': loadStepTemplate('step-01'),
+    'step-02': loadStepTemplate('step-02'),
     'step-12': loadStepTemplate('step-12'),
+    'step-13': loadStepTemplate('step-13'),
     'step-19': loadStepTemplate('step-19'),
     'step-20': loadStepTemplate('step-20'),
   };
@@ -82,7 +91,7 @@ export function loadAllModularTemplates(): Record<string, Block[]> {
  * Verifica se um step tem template modular
  */
 export function hasModularTemplate(stepId: string): boolean {
-  return ['step-12', 'step-19', 'step-20'].includes(stepId);
+  return ['step-01', 'step-02', 'step-12', 'step-13', 'step-19', 'step-20'].includes(stepId);
 }
 
 /**

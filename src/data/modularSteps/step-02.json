@@ -1,0 +1,60 @@
+{
+    "id": "step-02",
+    "type": "question",
+    "metadata": {
+        "name": "Question Step (Modular)",
+        "description": "Pergunta com header e grid de opções"
+    },
+    "blocks": [
+        {
+            "id": "question-header-02",
+            "type": "quiz-question-header",
+            "order": 1,
+            "properties": {
+                "questionNumber": "1 de 10",
+                "question": "Qual visual combina mais com você?"
+            },
+            "content": {}
+        },
+        {
+            "id": "step02-options-grid",
+            "type": "options-grid",
+            "order": 2,
+            "properties": {
+                "question": "Qual visual combina mais com você?",
+                "multipleSelection": false,
+                "autoAdvance": true,
+                "showImages": true,
+                "imageSize": "280",
+                "options": [
+                    {
+                        "id": "opt-1",
+                        "text": "Casual",
+                        "imageUrl": "https://placehold.co/300x300?text=Casual"
+                    },
+                    {
+                        "id": "opt-2",
+                        "text": "Elegante",
+                        "imageUrl": "https://placehold.co/300x300?text=Elegante"
+                    },
+                    {
+                        "id": "opt-3",
+                        "text": "Moderno",
+                        "imageUrl": "https://placehold.co/300x300?text=Moderno"
+                    }
+                ]
+            },
+            "content": {}
+        },
+        {
+            "id": "question-next-02",
+            "type": "button-inline",
+            "order": 3,
+            "properties": {
+                "text": "Próxima",
+                "style": "primary"
+            },
+            "content": {}
+        }
+    ]
+}
