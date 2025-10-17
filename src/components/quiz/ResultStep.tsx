@@ -25,6 +25,78 @@ interface ResultStepProps {
 }
 
 /**
+ * @deprecated Este componente monolítico será substituído por atomic blocks modulares.
+ * 
+ * 🚨 PROBLEMAS ATUAIS:
+ * - 469 linhas monolíticas (difícil manutenção)
+ * - UI hardcoded (não configurável via JSON)
+ * - Lógica de cálculo acoplada (score, TOP 3, tie-breaking)
+ * - Não modular (viola arquitetura atomic blocks)
+ * - Dificulta A/B testing e personalização
+ * 
+ * ✅ SUBSTITUIR POR (Template JSON + Atomic Blocks):
+ * 
+ * ```json
+ * // @/templates/step-20.json
+ * {
+ *   "id": 20,
+ *   "blocks": [
+ *     {
+ *       "id": "result-main-1",
+ *       "type": "result-main",
+ *       "content": {
+ *         "title": "Seu Estilo é:",
+ *         "showCelebration": true
+ *       }
+ *     },
+ *     {
+ *       "id": "result-style-1",
+ *       "type": "result-style",
+ *       "content": {
+ *         "showProgressBars": true,
+ *         "showConfidence": true
+ *       }
+ *     },
+ *     {
+ *       "id": "result-cta-primary-1",
+ *       "type": "result-cta-primary",
+ *       "content": {
+ *         "text": "Quero Descobrir Minhas Peças Ideais",
+ *         "href": "/oferta"
+ *       }
+ *     }
+ *   ]
+ * }
+ * ```
+ * 
+ * 🔧 COMPONENTES DE SUBSTITUIÇÃO:
+ * - ResultMainBlock: Exibe nome do estilo principal + percentual
+ * - ResultStyleBlock: Mostra TOP 3 estilos com barras de progresso
+ * - ResultCTAPrimaryBlock: CTA principal com analytics
+ * - ResultCTASecondaryBlock: CTA secundário
+ * - ResultSocialProofBlock: Depoimentos e prova social
+ * - ResultOfferBlock: Detalhes da oferta
+ * - ResultGuaranteeBlock: Garantia e segurança
+ * - ResultImageBlock: Imagem do estilo
+ * 
+ * 🧮 LÓGICA DE CÁLCULOS (Extraída para):
+ * - useResultCalculations hook (@/hooks/useResultCalculations.ts)
+ * - ResultContext (@/contexts/ResultContext.tsx)
+ * 
+ * 📚 DOCUMENTAÇÃO:
+ * - ANALISE_ACOPLAMENTO_STEPS_12_19_20.md (Coupling analysis)
+ * - LOGICA_CALCULOS_RESULTADOS.md (Calculation logic preservation)
+ * - PLANO_ACAO_DESACOPLAMENTO.md (Migration roadmap)
+ * 
+ * ⚠️ REMOÇÃO PLANEJADA: v2.0 (após migração completa)
+ * 
+ * Para usar os novos componentes:
+ * 1. Template define blocks[] em @/templates/step-20.json
+ * 2. ProductionStepsRegistry.ResultStepAdapter carrega template
+ * 3. Se template.blocks existe: usa UniversalBlockRenderer + ResultProvider
+ * 4. ResultProvider executa useResultCalculations (mesma lógica, modular)
+ * 5. Atomic blocks consomem ResultContext via useResult()
+ * 
  * 🏆 PÁGINA UNIFICADA DE RESULTADO + OFERTA
  * 
  * Combina o resultado do quiz com a página de vendas numa experiência única
@@ -34,6 +106,28 @@ export default function ResultStep({
     userProfile,
     scores
 }: ResultStepProps) {
+    // ⚠️ DEPRECATION WARNING (Development Only)
+    if (process.env.NODE_ENV === 'development') {
+        console.warn(
+            '⚠️ COMPONENTE LEGADO DETECTADO: ResultStep.tsx\n\n' +
+            '📋 PROBLEMAS:\n' +
+            '  • 469 linhas monolíticas (difícil manutenção)\n' +
+            '  • UI hardcoded (não configurável via JSON)\n' +
+            '  • Lógica de cálculo acoplada\n' +
+            '  • Não modular (viola atomic blocks)\n\n' +
+            '✅ MIGRAÇÃO:\n' +
+            '  • Template: @/templates/step-20.json\n' +
+            '  • Blocks: result-main, result-style, result-cta-primary, result-cta-secondary\n' +
+            '  • Hook: useResultCalculations (@/hooks/useResultCalculations.ts)\n' +
+            '  • Context: ResultContext (@/contexts/ResultContext.tsx)\n\n' +
+            '📚 DOCS:\n' +
+            '  • ANALISE_ACOPLAMENTO_STEPS_12_19_20.md\n' +
+            '  • LOGICA_CALCULOS_RESULTADOS.md\n' +
+            '  • PLANO_ACAO_DESACOPLAMENTO.md\n\n' +
+            '🗑️ REMOÇÃO: Planejada para v2.0'
+        );
+    }
+
     // Estados para interatividade
     const [isButtonHovered, setIsButtonHovered] = useState(false);
 

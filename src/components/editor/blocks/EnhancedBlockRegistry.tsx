@@ -60,21 +60,6 @@ import TransitionMessageBlock from '@/components/editor/blocks/atomic/Transition
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // ============================================================================
-    // 🏆 COMPONENTES LEGADOS (Runtime Otimizado)
-    // Componentes auto-contidos e performáticos usados no quiz em produção
-    // ============================================================================
-    'intro-step': IntroStep,
-    'intro-step-legacy': IntroStep,
-    'question-step': QuestionStep,
-    'question-step-legacy': QuestionStep,
-    'strategic-question-step': StrategicQuestionStep,
-    'strategic-question-legacy': StrategicQuestionStep,
-    'transition-step': TransitionStep,
-    'transition-step-legacy': TransitionStep,
-    'result-step': ResultStep,
-    'result-step-legacy': ResultStep,
-
-    // ============================================================================
     // 📦 COMPONENTES MODULARES (Editor e Casos Avançados)
     // ============================================================================
 
@@ -640,5 +625,73 @@ export const getRegistryStats = () => {
         availableComponentsCount: AVAILABLE_COMPONENTS.length,
     };
 };
+
+// ============================================================================
+// 🗃️ COMPONENTES LEGADOS (DEPRECATED)
+// ⚠️ Mantidos apenas para compatibilidade retroativa
+// 🚨 NÃO USAR EM NOVOS TEMPLATES - Usar atomic blocks modulares
+// 🗑️ REMOÇÃO PLANEJADA: v2.0
+// ============================================================================
+
+/**
+ * @deprecated Usar atomic blocks modulares:
+ * - intro-* blocks (intro-header, intro-text, intro-button)
+ * - Template: @/templates/step-01.json
+ */
+export const LEGACY_INTRO_STEP = IntroStep;
+
+/**
+ * @deprecated Usar atomic blocks modulares:
+ * - question-* blocks (question-title, question-text, options-grid)
+ * - Template: @/templates/step-02.json
+ */
+export const LEGACY_QUESTION_STEP = QuestionStep;
+
+/**
+ * @deprecated Usar atomic blocks modulares:
+ * - strategic-question-* blocks
+ * - Template: @/templates/step-strategic.json
+ */
+export const LEGACY_STRATEGIC_QUESTION_STEP = StrategicQuestionStep;
+
+/**
+ * @deprecated Usar atomic blocks modulares:
+ * - transition-title, transition-loader, transition-text, transition-progress, transition-message
+ * - Template: @/templates/step-12.json, @/templates/step-19.json
+ * - Hook: useTransition (@/hooks/useTransition.ts)
+ * - Docs: ANALISE_ACOPLAMENTO_STEPS_12_19_20.md
+ */
+export const LEGACY_TRANSITION_STEP = TransitionStep;
+
+/**
+ * @deprecated Usar atomic blocks modulares:
+ * - result-main, result-style, result-cta-primary, result-cta-secondary
+ * - result-social-proof, result-offer, result-guarantee, result-image
+ * - Template: @/templates/step-20.json
+ * - Hook: useResultCalculations (@/hooks/useResultCalculations.ts)
+ * - Context: ResultContext (@/contexts/ResultContext.tsx)
+ * - Docs: ANALISE_ACOPLAMENTO_STEPS_12_19_20.md, LOGICA_CALCULOS_RESULTADOS.md
+ */
+export const LEGACY_RESULT_STEP = ResultStep;
+
+/**
+ * Registry aliases para componentes legados (compatibilidade retroativa)
+ * ⚠️ Apenas para templates antigos - novos templates devem usar atomic blocks
+ */
+export const LEGACY_REGISTRY: Record<string, ComponentType<any>> = {
+    'intro-step': LEGACY_INTRO_STEP,
+    'intro-step-legacy': LEGACY_INTRO_STEP,
+    'question-step': LEGACY_QUESTION_STEP,
+    'question-step-legacy': LEGACY_QUESTION_STEP,
+    'strategic-question-step': LEGACY_STRATEGIC_QUESTION_STEP,
+    'strategic-question-legacy': LEGACY_STRATEGIC_QUESTION_STEP,
+    'transition-step': LEGACY_TRANSITION_STEP,
+    'transition-step-legacy': LEGACY_TRANSITION_STEP,
+    'result-step': LEGACY_RESULT_STEP,
+    'result-step-legacy': LEGACY_RESULT_STEP,
+};
+
+// Merge legacy registry com main registry para compatibilidade
+Object.assign(ENHANCED_BLOCK_REGISTRY, LEGACY_REGISTRY);
 
 export default ENHANCED_BLOCK_REGISTRY;
