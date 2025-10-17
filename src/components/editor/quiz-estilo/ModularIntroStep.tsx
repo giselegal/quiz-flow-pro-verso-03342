@@ -12,6 +12,8 @@ interface ModularIntroStepProps {
     onBlockSelect?: (blockId: string) => void;
     onOpenProperties?: (blockId: string) => void;
     onBlocksReorder?: (stepId: string, newOrder: string[]) => void;
+    /** Emite o nome digitado quando o botão do formulário é clicado (paridade com preview). */
+    onNameSubmit?: (name: string) => void;
 }
 
 /**
@@ -32,7 +34,8 @@ export default function ModularIntroStep({
     selectedBlockId,
     onBlockSelect,
     onOpenProperties,
-    onBlocksReorder
+    onBlocksReorder,
+    onNameSubmit
 }: ModularIntroStepProps) {
 
     const safeData = {
@@ -86,6 +89,8 @@ export default function ModularIntroStep({
             </div>
         );
     };
+
+    const inputRef = React.useRef<HTMLInputElement | null>(null);
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -240,7 +245,7 @@ export default function ModularIntroStep({
                                         isDraggable={true}
                                     >
                                         <div className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto mt-8">
-                                            <form className="w-full space-y-6" autoComplete="off">
+                                            <form className="w-full space-y-6" autoComplete="off" onSubmit={(e) => { e.preventDefault(); }}>
                                                 <div>
                                                     <label
                                                         htmlFor="name"
@@ -254,12 +259,17 @@ export default function ModularIntroStep({
                                                         placeholder={safeData.placeholder}
                                                         className="w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 border-[#B89B7A] focus:outline-none focus:ring-2 focus:ring-[#A1835D]"
                                                         required
+                                                        ref={inputRef}
                                                     />
                                                 </div>
 
                                                 <button
                                                     type="button"
                                                     className="w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 bg-[#B89B7A] text-white hover:bg-[#A1835D] hover:shadow-lg"
+                                                    onClick={() => {
+                                                        const name = String(inputRef.current?.value || '').trim();
+                                                        if (name && onNameSubmit) onNameSubmit(name);
+                                                    }}
                                                 >
                                                     {safeData.buttonText}
                                                 </button>

@@ -49,6 +49,8 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [viewport, setViewport] = useState<'full' | 'desktop' | 'tablet' | 'mobile'>('desktop');
     const [editable, setEditable] = useState<boolean>(true);
+    const [editParity, setEditParity] = useState<boolean>(true);
+    const [autoAdvance, setAutoAdvance] = useState<boolean>(false);
 
     // Estado do quiz para debug
     const [quizState, setQuizState] = useState<any>(null);
@@ -78,11 +80,19 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             const params = new URLSearchParams(window.location.search);
             const vp = params.get('viewport');
             const md = params.get('mode');
+            const ep = params.get('editParity');
+            const au = params.get('auto');
             if (vp === 'full' || vp === 'desktop' || vp === 'tablet' || vp === 'mobile') {
                 setViewport(vp);
             }
             if (md === 'edit' || md === 'preview') {
                 setEditable(md === 'edit');
+            }
+            if (ep === '0' || ep === '1') {
+                setEditParity(ep === '1');
+            }
+            if (au === '0' || au === '1') {
+                setAutoAdvance(au === '1');
             }
         } catch { }
     }, []);
@@ -92,9 +102,11 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             const url = new URL(window.location.href);
             url.searchParams.set('viewport', viewport);
             url.searchParams.set('mode', editable ? 'edit' : 'preview');
+            url.searchParams.set('editParity', editParity ? '1' : '0');
+            url.searchParams.set('auto', autoAdvance ? '1' : '0');
             window.history.replaceState({}, '', url.toString());
         } catch { }
-    }, [viewport, editable]);
+    }, [viewport, editable, editParity, autoAdvance]);
 
     const handleRefresh = useCallback(() => {
         setRefreshKey(prev => prev + 1);
@@ -165,6 +177,20 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
                         <Button variant={!editable ? 'default' : 'ghost'} size="sm" onClick={() => setEditable(false)}>Preview</Button>
                     </div>
 
+                    {/* Edit Parity */}
+                    <div className="hidden md:flex items-center gap-1 pr-2 mr-2 border-r">
+                        <span className="text-[11px] text-muted-foreground">Paridade</span>
+                        <Button variant={editParity ? 'default' : 'ghost'} size="sm" onClick={() => setEditParity(true)}>On</Button>
+                        <Button variant={!editParity ? 'default' : 'ghost'} size="sm" onClick={() => setEditParity(false)}>Off</Button>
+                    </div>
+
+                    {/* Auto Advance */}
+                    <div className="hidden md:flex items-center gap-1 pr-2 mr-2 border-r">
+                        <span className="text-[11px] text-muted-foreground">Auto</span>
+                        <Button variant={autoAdvance ? 'default' : 'ghost'} size="sm" onClick={() => setAutoAdvance(true)}>On</Button>
+                        <Button variant={!autoAdvance ? 'default' : 'ghost'} size="sm" onClick={() => setAutoAdvance(false)}>Off</Button>
+                    </div>
+
                     <Button
                         variant="ghost"
                         size="sm"
@@ -225,6 +251,8 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
                             viewport={viewport}
                             onViewportChange={setViewport}
                             onSessionChange={setQuizState}
+                            productionParityInEdit={editParity}
+                            autoAdvanceInEdit={autoAdvance}
                         />
                     </div>
                 ) : (

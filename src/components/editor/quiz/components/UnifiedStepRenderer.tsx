@@ -351,6 +351,11 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
               onEdit={handleEdit}
               onBlocksReorder={handleBlocksReorder}
               onOpenProperties={handleOpenProperties}
+              onNameSubmit={(name: string) => {
+                if (productionParityInEdit && onUpdateSessionData) {
+                  onUpdateSessionData('userName', name);
+                }
+              }}
             />
           );
         }
