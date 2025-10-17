@@ -257,9 +257,8 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
                             key={block.id || `${block.type}-${index}`}
                             block={block}
                             isSelected={false}
-                            isPreview={true}
+                            mode="production"  // ✅ CORREÇÃO: Usar mode production para comportamento dinâmico completo
                             onUpdate={() => { }}
-                            showEditControls={false}
                         />
                     ))}
                 </div>
@@ -405,9 +404,8 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
                                 key={block.id || `${block.type}-${index}`}
                                 block={block}
                                 isSelected={false}
-                                isPreview={true}
+                                mode="production"  // ✅ CORREÇÃO: Usar mode production para comportamento dinâmico completo
                                 onUpdate={() => { }}
-                                showEditControls={false}
                             />
                         ))}
                     </div>
