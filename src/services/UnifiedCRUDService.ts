@@ -181,12 +181,12 @@ export class UnifiedCRUDService {
         .from('funnels')
         .select(`
           *,
-          stages (
+          stages!inner (
             *,
-            blocks (*)
+            blocks!inner (*)
           )
         `)
-        .order('updated_at', { ascending: false });
+        .order('updated_at', { ascending: false, foreignTable: undefined });
 
       if (error) {
         console.warn('⚠️ Erro ao carregar do Supabase:', error.message);
