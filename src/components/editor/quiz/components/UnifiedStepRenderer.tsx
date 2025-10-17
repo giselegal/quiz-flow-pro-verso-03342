@@ -345,28 +345,19 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const renderStepComponent = () => {
     switch (step.type) {
       case 'intro': {
-        if (isEditMode) {
-          return (
-            <ModularIntroStep
-              data={stepData as any}
-              isEditable={true}
-              onEdit={handleEdit}
-              onBlocksReorder={handleBlocksReorder}
-              onOpenProperties={handleOpenProperties}
-              onNameSubmit={(name: string) => {
-                if (productionParityInEdit && onUpdateSessionData) {
-                  onUpdateSessionData('userName', name);
-                }
-              }}
-            />
-          );
-        }
+        // ✅ MODULAR para EDIÇÃO e PRODUÇÃO
         return (
-          <IntroStep
+          <ModularIntroStep
             data={stepData as any}
+            isEditable={isEditMode}
+            selectedBlockId={selectedBlockId || undefined}
+            onBlockSelect={handleSelectBlock}
+            onEdit={handleEdit}
+            onBlocksReorder={handleBlocksReorder}
+            onOpenProperties={handleOpenProperties}
             onNameSubmit={(name: string) => {
-              if (isPreviewMode && onUpdateSessionData) {
-                onUpdateSessionData('userName', name);
+              if ((isEditMode && productionParityInEdit) || isPreviewMode) {
+                onUpdateSessionData?.('userName', name);
               }
             }}
           />
@@ -374,88 +365,53 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
 
       case 'question': {
-        if (isEditMode) {
-          return (
-            <ModularQuestionStep
-              data={stepData as any}
-              isEditable={true}
-              currentAnswers={sessionData[`answers_${step.id}`] || []}
-              onAnswersChange={(answers: string[]) => {
-                if (productionParityInEdit && onUpdateSessionData) {
-                  onUpdateSessionData(`answers_${step.id}`, answers);
-                }
-              }}
-              onEdit={handleEdit}
-              onBlocksReorder={handleBlocksReorder}
-              onOpenProperties={handleOpenProperties}
-            />
-          );
-        }
+        // ✅ MODULAR para EDIÇÃO e PRODUÇÃO
         return (
-          <QuestionStep
+          <ModularQuestionStep
             data={stepData as any}
+            isEditable={isEditMode}
             currentAnswers={sessionData[`answers_${step.id}`] || []}
             onAnswersChange={(answers: string[]) => {
-              if (isPreviewMode && onUpdateSessionData) {
-                onUpdateSessionData(`answers_${step.id}`, answers);
+              if ((isEditMode && productionParityInEdit) || isPreviewMode) {
+                onUpdateSessionData?.(`answers_${step.id}`, answers);
               }
             }}
+            onEdit={handleEdit}
+            onBlocksReorder={handleBlocksReorder}
+            onOpenProperties={handleOpenProperties}
           />
         );
       }
 
       case 'strategic-question': {
-        if (isEditMode) {
-          return (
-            <ModularStrategicQuestionStep
-              data={stepData as any}
-              isEditable={true}
-              currentAnswer={sessionData[`answer_${step.id}`] || ''}
-              onAnswerChange={(answer: string) => {
-                if (productionParityInEdit && onUpdateSessionData) {
-                  onUpdateSessionData(`answer_${step.id}`, answer);
-                }
-              }}
-              onEdit={handleEdit}
-              onBlocksReorder={handleBlocksReorder}
-              onOpenProperties={handleOpenProperties}
-            />
-          );
-        }
+        // ✅ MODULAR para EDIÇÃO e PRODUÇÃO
         return (
-          <StrategicQuestionStep
+          <ModularStrategicQuestionStep
             data={stepData as any}
+            isEditable={isEditMode}
             currentAnswer={sessionData[`answer_${step.id}`] || ''}
             onAnswerChange={(answer: string) => {
-              if (isPreviewMode && onUpdateSessionData) {
-                onUpdateSessionData(`answer_${step.id}`, answer);
+              if ((isEditMode && productionParityInEdit) || isPreviewMode) {
+                onUpdateSessionData?.(`answer_${step.id}`, answer);
               }
             }}
+            onEdit={handleEdit}
+            onBlocksReorder={handleBlocksReorder}
+            onOpenProperties={handleOpenProperties}
           />
         );
       }
 
       case 'transition':
       case 'transition-result': {
-        if (isEditMode) {
-          return (
-            <ModularTransitionStep
-              data={{ ...stepData, type: step.type } as any}
-              isEditable={true}
-              enableAutoAdvance={!!autoAdvanceInEdit}
-              selectedBlockId={selectedBlockId || undefined}
-              onBlockSelect={handleSelectBlock}
-            />
-          );
-        }
+        // ✅ MODULAR para EDIÇÃO e PRODUÇÃO (Steps 12, 19)
         return (
-          <TransitionStep
+          <ModularTransitionStep
             data={{ ...stepData, type: step.type } as any}
-            onComplete={() => {
-              if (isPreviewMode && onUpdateSessionData) {
-                onUpdateSessionData('transitionComplete', true);
-              }
-            }}
+            isEditable={isEditMode}
+            enableAutoAdvance={isEditMode ? !!autoAdvanceInEdit : true}
+            selectedBlockId={selectedBlockId || undefined}
+            onBlockSelect={handleSelectBlock}
           />
         );
       }
@@ -509,31 +465,19 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
 
       case 'offer': {
-        // Calcular resultado corrente (para paridade no modo edição também)
+        // ✅ Calcular resultado corrente (edição e produção)
         const answers = getPreviewAnswers();
         const { primaryStyleId, secondaryStyleIds } = computeResult({ answers });
 
-        if (isEditMode) {
-          return (
-            <ModularOfferStep
-              data={stepData as any}
-              isEditable={true}
-              userProfile={{
-                userName: sessionData.userName || 'Visitante',
-                resultStyle: (productionParityInEdit ? (primaryStyleId || sessionData.resultStyle) : sessionData.resultStyle) || 'natural',
-                secondaryStyles: (productionParityInEdit ? (secondaryStyleIds || []) : (sessionData.secondaryStyles || [])),
-              }}
-              offerKey={sessionData.offerKey || 'default'}
-            />
-          );
-        }
-        // Preview: alinhar oferta ao resultado calculado atual
+        // ✅ MODULAR para EDIÇÃO e PRODUÇÃO
         return (
-          <OfferStep
+          <ModularOfferStep
             data={stepData as any}
+            isEditable={isEditMode}
             userProfile={{
               userName: sessionData.userName || 'Visitante',
               resultStyle: primaryStyleId || sessionData.resultStyle || 'natural',
+              secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : (sessionData.secondaryStyles || []),
             }}
             offerKey={sessionData.offerKey || 'default'}
           />
