@@ -161,13 +161,17 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // ✅ STEP 20 - BLOCOS ATÔMICOS DE RESULTADO (100% Modulares) - Direct imports para performance
     'result-congrats': lazy(() => import('./ResultCongratsBlock')),
     'result-main': lazy(() => import('./atomic/ResultMainBlock')),
+    'result-style': lazy(() => import('./atomic/ResultStyleBlock')),
     'result-image': lazy(() => import('./atomic/ResultImageBlock')),
     'result-description': lazy(() => import('./atomic/ResultDescriptionBlock')),
     'result-header': lazy(() => import('./atomic/ResultHeaderBlock')),
     'result-characteristics': lazy(() => import('./atomic/ResultCharacteristicsBlock')),
     'result-cta': lazy(() => import('./atomic/ResultCTABlock')),
+    'result-cta-primary': lazy(() => import('./atomic/ResultCTAPrimaryBlock')),
+    'result-cta-secondary': lazy(() => import('./atomic/ResultCTASecondaryBlock')),
     'result-progress-bars': lazy(() => import('./ResultProgressBarsBlock')),
     'result-secondary-styles': lazy(() => import('./atomic/ResultSecondaryStylesBlock')),
+    'result-share': lazy(() => import('./atomic/ResultShareBlock')),
 
     // 🤖 IA - FASHION AI GENERATOR
     'fashion-ai-generator': FashionAIGeneratorBlock,
