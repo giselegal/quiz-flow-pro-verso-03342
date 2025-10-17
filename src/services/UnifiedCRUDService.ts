@@ -130,14 +130,14 @@ export class UnifiedCRUDService {
    */
   private async initializeService(): Promise<void> {
     console.log('🚀 Inicializando UnifiedCRUDService...');
-    
+
     try {
       // Carregar dados persistidos se disponíveis
       await this.loadPersistedData();
-      
+
       // Configurar auto-cleanup de operações antigas
       setInterval(() => this.cleanupOldOperations(), 5 * 60 * 1000); // 5 minutos
-      
+
       console.log('✅ UnifiedCRUDService inicializado com sucesso');
     } catch (error) {
       console.error('❌ Erro ao inicializar UnifiedCRUDService:', error);
@@ -172,19 +172,10 @@ export class UnifiedCRUDService {
    */
   private async loadFromSupabase(): Promise<void> {
     try {
-      // Importação dinâmica do Supabase para evitar erros de build
-      const { createClient } = await import('@supabase/supabase-js');
-      
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      
-      if (!supabaseUrl || !supabaseKey) {
-        console.log('📝 Supabase não configurado, usando apenas localStorage');
-        return;
-      }
+      // Usar loader seguro para evitar multi-instâncias/SSR
+      const { getSupabaseClient } = await import('@/integrations/supabase/supabaseLazy');
+      const supabase = await getSupabaseClient({ mockOnMissingEnv: true });
 
-      const supabase = createClient(supabaseUrl, supabaseKey);
-      
       // Carregar funis do Supabase
       const { data: funnels, error } = await supabase
         .from('funnels')
@@ -203,7 +194,7 @@ export class UnifiedCRUDService {
       }
 
       if (funnels && funnels.length > 0) {
-        funnels.forEach(funnel => {
+        funnels.forEach((funnel: any) => {
           const normalizedFunnel = this.validateAndNormalizeFunnel(funnel);
           this.funnels.set(normalizedFunnel.id, normalizedFunnel);
         });
@@ -222,10 +213,10 @@ export class UnifiedCRUDService {
     try {
       const data = Object.fromEntries(this.funnels.entries());
       StorageService.safeSetJSON('unifiedEditor:funnels', data);
-      
+
       // Sync com Supabase
       await this.syncToSupabase(data);
-      
+
     } catch (error) {
       console.error('❌ Erro ao persistir dados:', error);
     }
@@ -236,25 +227,16 @@ export class UnifiedCRUDService {
    */
   private async syncToSupabase(data: Record<string, any>): Promise<void> {
     try {
-      const { createClient } = await import('@supabase/supabase-js');
-      
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      
-      if (!supabaseUrl || !supabaseKey) {
-        console.log('📝 Supabase não configurado, sync ignorado');
-        return;
-      }
+      const { getSupabaseClient } = await import('@/integrations/supabase/supabaseLazy');
+      const supabase = await getSupabaseClient({ mockOnMissingEnv: true });
 
-      const supabase = createClient(supabaseUrl, supabaseKey);
-      
       // Sincronizar cada funnel
       for (const [funnelId, funnelData] of Object.entries(data)) {
         await this.syncFunnelToSupabase(supabase, funnelData as any);
       }
-      
+
       console.log('✅ Sincronização com Supabase concluída');
-      
+
     } catch (error) {
       console.warn('⚠️ Erro ao sincronizar com Supabase:', error);
     }
@@ -366,7 +348,7 @@ export class UnifiedCRUDService {
    */
   private validateAndNormalizeFunnel(data: any): UnifiedFunnel {
     const now = new Date();
-    
+
     return {
       id: data.id || `funnel-${Date.now()}`,
       name: data.name || 'Funil Sem Nome',
@@ -453,7 +435,7 @@ export class UnifiedCRUDService {
     };
 
     this.operations.push(fullOperation);
-    
+
     // Manter apenas as últimas 100 operações
     if (this.operations.length > 100) {
       this.operations.splice(0, this.operations.length - 100);
@@ -479,10 +461,10 @@ export class UnifiedCRUDService {
    */
   async getFunnel(id: string): Promise<CRUDResult<UnifiedFunnel>> {
     const startTime = Date.now();
-    
+
     try {
       const funnel = this.funnels.get(id);
-      
+
       if (!funnel) {
         return {
           success: false,
@@ -523,7 +505,7 @@ export class UnifiedCRUDService {
    */
   async saveFunnel(funnel: UnifiedFunnel): Promise<CRUDResult<UnifiedFunnel>> {
     const startTime = Date.now();
-    
+
     try {
       // Validar dados antes de salvar
       const validatedFunnel = this.validateAndNormalizeFunnel(funnel);
@@ -550,7 +532,7 @@ export class UnifiedCRUDService {
       if (isUpdate) {
         try {
           await versioningService.createSnapshot(validatedFunnel, 'auto', 'Auto-snapshot após salvamento');
-          
+
           // Rastrear no histórico
           await historyManager.trackCRUDChange(
             'update',
@@ -584,7 +566,7 @@ export class UnifiedCRUDService {
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao salvar funil';
-      
+
       toast({
         title: 'Erro ao Salvar',
         description: errorMessage,
@@ -607,7 +589,7 @@ export class UnifiedCRUDService {
    */
   async deleteFunnel(id: string): Promise<CRUDResult<boolean>> {
     const startTime = Date.now();
-    
+
     try {
       const funnel = this.funnels.get(id);
       if (!funnel) {
@@ -656,7 +638,7 @@ export class UnifiedCRUDService {
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao excluir funil';
-      
+
       toast({
         title: 'Erro ao Excluir',
         description: errorMessage,
@@ -679,7 +661,7 @@ export class UnifiedCRUDService {
    */
   async duplicateFunnel(id: string, newName?: string): Promise<CRUDResult<UnifiedFunnel>> {
     const startTime = Date.now();
-    
+
     try {
       const originalFunnel = this.funnels.get(id);
       if (!originalFunnel) {
@@ -712,7 +694,7 @@ export class UnifiedCRUDService {
 
       // Salvar o funil duplicado
       const saveResult = await this.saveFunnel(duplicatedFunnel);
-      
+
       if (saveResult.success) {
         toast({
           title: 'Funil Duplicado',
@@ -732,7 +714,7 @@ export class UnifiedCRUDService {
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao duplicar funil';
-      
+
       toast({
         title: 'Erro ao Duplicar',
         description: errorMessage,
@@ -759,7 +741,7 @@ export class UnifiedCRUDService {
    */
   async addStage(funnelId: string, stage: Partial<UnifiedStage>): Promise<CRUDResult<UnifiedStage>> {
     const startTime = Date.now();
-    
+
     try {
       const funnel = this.funnels.get(funnelId);
       if (!funnel) {
@@ -826,7 +808,7 @@ export class UnifiedCRUDService {
    */
   async updateStage(funnelId: string, stageId: string, updates: Partial<UnifiedStage>): Promise<CRUDResult<UnifiedStage>> {
     const startTime = Date.now();
-    
+
     try {
       const funnel = this.funnels.get(funnelId);
       if (!funnel) {
@@ -899,7 +881,7 @@ export class UnifiedCRUDService {
    */
   async deleteStage(funnelId: string, stageId: string): Promise<CRUDResult<boolean>> {
     const startTime = Date.now();
-    
+
     try {
       const funnel = this.funnels.get(funnelId);
       if (!funnel) {
@@ -972,7 +954,7 @@ export class UnifiedCRUDService {
    */
   async reorderStages(funnelId: string, startIndex: number, endIndex: number): Promise<CRUDResult<UnifiedStage[]>> {
     const startTime = Date.now();
-    
+
     try {
       const funnel = this.funnels.get(funnelId);
       if (!funnel) {
@@ -983,8 +965,8 @@ export class UnifiedCRUDService {
       }
 
       // Validar índices
-      if (startIndex < 0 || startIndex >= funnel.stages.length || 
-          endIndex < 0 || endIndex >= funnel.stages.length) {
+      if (startIndex < 0 || startIndex >= funnel.stages.length ||
+        endIndex < 0 || endIndex >= funnel.stages.length) {
         return {
           success: false,
           error: 'Índices de reordenação inválidos',
@@ -1046,7 +1028,7 @@ export class UnifiedCRUDService {
    */
   async addBlock(funnelId: string, stageId: string, block: Partial<Block>): Promise<CRUDResult<Block>> {
     const startTime = Date.now();
-    
+
     try {
       const stage = await this.findStage(funnelId, stageId);
       if (!stage.success || !stage.data) {
@@ -1114,7 +1096,7 @@ export class UnifiedCRUDService {
    */
   async updateBlock(funnelId: string, stageId: string, blockId: string, updates: Partial<Block>): Promise<CRUDResult<Block>> {
     const startTime = Date.now();
-    
+
     try {
       const stage = await this.findStage(funnelId, stageId);
       if (!stage.success || !stage.data) {
@@ -1183,7 +1165,7 @@ export class UnifiedCRUDService {
    */
   async deleteBlock(funnelId: string, stageId: string, blockId: string): Promise<CRUDResult<boolean>> {
     const startTime = Date.now();
-    
+
     try {
       const stage = await this.findStage(funnelId, stageId);
       if (!stage.success || !stage.data) {
@@ -1254,7 +1236,7 @@ export class UnifiedCRUDService {
    */
   async duplicateBlock(funnelId: string, stageId: string, blockId: string): Promise<CRUDResult<Block>> {
     const startTime = Date.now();
-    
+
     try {
       const stage = await this.findStage(funnelId, stageId);
       if (!stage.success || !stage.data) {
@@ -1310,7 +1292,7 @@ export class UnifiedCRUDService {
    */
   async reorderBlocks(funnelId: string, stageId: string, startIndex: number, endIndex: number): Promise<CRUDResult<Block[]>> {
     const startTime = Date.now();
-    
+
     try {
       const stage = await this.findStage(funnelId, stageId);
       if (!stage.success || !stage.data) {
@@ -1321,8 +1303,8 @@ export class UnifiedCRUDService {
       }
 
       // Validar índices
-      if (startIndex < 0 || startIndex >= stage.data.blocks.length || 
-          endIndex < 0 || endIndex >= stage.data.blocks.length) {
+      if (startIndex < 0 || startIndex >= stage.data.blocks.length ||
+        endIndex < 0 || endIndex >= stage.data.blocks.length) {
         return {
           success: false,
           error: 'Índices de reordenação inválidos',
@@ -1414,8 +1396,8 @@ export class UnifiedCRUDService {
   private validateFunnel(funnel: UnifiedFunnel): boolean {
     try {
       return (
-        Boolean(funnel.id) && 
-        Boolean(funnel.name) && 
+        Boolean(funnel.id) &&
+        Boolean(funnel.name) &&
         Array.isArray(funnel.stages) &&
         funnel.stages.length > 0 &&
         funnel.stages.every(stage => this.validateStage(stage))
@@ -1431,8 +1413,8 @@ export class UnifiedCRUDService {
   private validateStage(stage: UnifiedStage): boolean {
     try {
       return (
-        Boolean(stage.id) && 
-        Boolean(stage.name) && 
+        Boolean(stage.id) &&
+        Boolean(stage.name) &&
         Array.isArray(stage.blocks) &&
         typeof stage.order === 'number'
       );
@@ -1467,7 +1449,7 @@ export class UnifiedCRUDService {
    * 📋 LISTAR FUNIS
    */
   listFunnels(): UnifiedFunnel[] {
-    return Array.from(this.funnels.values()).sort((a, b) => 
+    return Array.from(this.funnels.values()).sort((a, b) =>
       b.updatedAt.getTime() - a.updatedAt.getTime()
     );
   }
@@ -1490,7 +1472,7 @@ export class UnifiedCRUDService {
   async importData(data: any): Promise<CRUDResult<number>> {
     try {
       let imported = 0;
-      
+
       if (data.funnels && Array.isArray(data.funnels)) {
         for (const funnelData of data.funnels) {
           const funnel = this.validateAndNormalizeFunnel(funnelData);

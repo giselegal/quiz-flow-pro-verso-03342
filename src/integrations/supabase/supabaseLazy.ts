@@ -71,7 +71,9 @@ export async function getSupabaseClient(opts: SupabaseLazyOptions = {}) {
             auth: {
                 persistSession: !isServer,
                 autoRefreshToken: !isServer,
-                detectSessionInUrl: !isServer
+                detectSessionInUrl: !isServer,
+                // Evitar colisão de múltiplas instâncias sob a mesma storageKey
+                storageKey: 'sb-editor'
             },
             global: { headers: { 'x-lazy-supabase': '1' } }
         }
