@@ -145,9 +145,30 @@
         "fontWeight": "font-medium",
         "textAlign": "text-center",
         "color": "#B89B7A",
-        "marginBottom": 32,
+        "marginBottom": 16,
         "containerWidth": "full",
         "spacing": "small"
+      }
+    },
+    {
+      "id": "step12-transition-loader",
+      "type": "transition-loader",
+      "content": {
+        "color": "#B89B7A",
+        "dots": 3,
+        "size": "md",
+        "animationSpeed": "normal"
+      }
+    },
+    {
+      "id": "step12-transition-progress",
+      "type": "transition-progress",
+      "content": {
+        "currentStep": 12,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "color": "#B89B7A",
+        "height": 8
       }
     },
     {
