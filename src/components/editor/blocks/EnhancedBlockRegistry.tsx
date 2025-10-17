@@ -21,7 +21,7 @@ const QuizProgressBlock = lazy(() => import('@/components/editor/blocks/QuizProg
 const QuizBackButtonBlock = lazy(() => import('@/components/editor/blocks/QuizBackButtonBlock'));
 const ImageDisplayInlineBlock = lazy(() => import('@/components/editor/blocks/ImageDisplayInlineBlock'));
 const QuizQuestionHeaderBlock = lazy(() => import('@/components/editor/blocks/QuizQuestionHeaderBlock'));
-const QuizTransitionLoaderBlock = lazy(() => import('@/components/editor/blocks/QuizTransitionLoaderBlock'));
+import QuizTransitionLoaderBlock from '@/components/editor/blocks/QuizTransitionLoaderBlock';
 const QuizResultHeaderBlock = lazy(() => import('@/components/editor/blocks/QuizResultHeaderBlock'));
 const QuizOfferHeroBlock = lazy(() => import('@/components/editor/blocks/QuizOfferHeroBlock'));
 
