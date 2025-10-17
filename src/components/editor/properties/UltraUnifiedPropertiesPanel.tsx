@@ -593,11 +593,18 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
         }
 
         try {
+            // ✅ SISTEMA HÍBRIDO:
+            // 1. Extrai propriedades automaticamente via mockPropertyExtractionService
+            // 2. Identifica campos que suportam interpolação
+            // 3. Categoriza em content, style, layout, interaction, advanced
+            // 4. Verifica se existe editor especializado no SPECIALIZED_EDITORS
             const extracted = mockPropertyExtractionService.extractAllProperties(selectedBlock);
             const withInterpolation = mockPropertyExtractionService.identifyInterpolationFields(extracted);
             const categorized = mockPropertyExtractionService.categorizeProperties(withInterpolation);
             const hasSpecialized = selectedBlock.type in SPECIALIZED_EDITORS;
 
+            // Se hasSpecialized = true → Usa editor especializado
+            // Se hasSpecialized = false → Usa renderUniversalEditor() como fallback
             return {
                 extractedProperties: withInterpolation,
                 categorizedProperties: categorized,
