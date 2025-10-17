@@ -349,6 +349,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         return (
           <ModularIntroStep
             data={stepData as any}
+            blocks={(step as any)?.blocks || editorState.stepBlocks[stepKey] || []}
             isEditable={isEditMode}
             selectedBlockId={selectedBlockId || undefined}
             onBlockSelect={handleSelectBlock}
