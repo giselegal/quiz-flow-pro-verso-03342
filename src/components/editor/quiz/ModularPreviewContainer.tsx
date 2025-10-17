@@ -28,6 +28,13 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
 
     // Detecta se já existe um EditorProviderUnified acima
     const maybeEditor = useEditorOptional?.();
+    // Debug: status do provider
+    try {
+        const hasProvider = !!maybeEditor;
+        const hasActions = !!maybeEditor?.actions;
+        // eslint-disable-next-line no-console
+        console.debug('[ModularPreviewContainer] Provider status:', { hasProvider, hasActions });
+    } catch {}
     const { ui, togglePropertiesPanel } = useGlobalUI();
 
     // Sincroniza o provider unificado com a etapa atual do preview e garante que os blocos sejam carregados
@@ -148,7 +155,8 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     );
 
     // Se não houver provider, encapsula para habilitar seleção de blocos e propriedades
-    if (!maybeEditor) {
+    // Encapsular com provider se não houver provider OU se provider não expõe actions (parcial/legacy)
+    if (!maybeEditor || !maybeEditor.actions) {
         return (
             <EditorProviderUnified>
                 {Content}
