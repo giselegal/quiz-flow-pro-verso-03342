@@ -1,95 +1,212 @@
 {
   "id": "step-20",
-  "type": "result",
-  "title": "Seu Resultado",
+  "type": "conversionResult",
+  "title": "Página de Conversão - Resultado Personalizado",
   "blocks": [
     {
       "id": "step20-header",
-      "type": "result-header",
+      "type": "quiz-intro-header",
+      "order": 0,
+      "properties": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 120,
+        "logoHeight": 50,
+        "showProgress": true,
+        "progressValue": 20,
+        "progressMax": 21,
+        "showBackButton": true,
+        "containerWidth": "full",
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
+      },
+      "content": {}
+    },
+    {
+      "id": "step20-result-title",
+      "type": "text-inline",
       "order": 1,
       "properties": {
-        "title": "Parabéns!",
-        "subtitle": "Descobrimos seu estilo predominante",
-        "fontSize": "3xl",
-        "textAlign": "center"
+        "content": "✨ Seu Estilo Predominante",
+        "fontSize": "text-3xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "fontFamily": "'Playfair Display', serif",
+        "marginBottom": 16
       },
-      "content": {}
+      "content": "✨ Seu Estilo Predominante"
     },
     {
-      "id": "step20-main-style",
+      "id": "step20-result-main",
       "type": "result-main",
       "order": 2,
-      "properties": {
-        "styleName": "Clássico",
-        "percentage": 65,
-        "color": "#5b4135"
-      },
-      "content": {}
-    },
-    {
-      "id": "step20-image",
-      "type": "result-image",
-      "order": 3,
-      "properties": {
-        "url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400",
-        "alt": "Estilo Clássico",
-        "borderRadius": "12px",
-        "width": "100%",
-        "maxWidth": "500px"
-      },
-      "content": {}
-    },
-    {
-      "id": "step20-description",
-      "type": "result-description",
-      "order": 4,
-      "properties": {
-        "fontSize": "lg",
-        "textAlign": "center",
-        "maxWidth": "700px"
-      },
+      "properties": {},
       "content": {
-        "text": "Você tem um estilo sofisticado e atemporal, com preferência por peças clássicas e elegantes."
+        "styleName": "{resultStyle}",
+        "description": "Com base nas suas respostas, identificamos que seu estilo predominante é o {resultStyle}. Descubra como aplicar essa essência única no seu dia a dia.",
+        "imageUrl": "",
+        "backgroundColor": "#FAF9F7",
+        "showIcon": true
       }
     },
     {
-      "id": "step20-characteristics",
+      "id": "step20-result-style-primary",
+      "type": "result-style",
+      "order": 3,
+      "properties": {},
+      "content": {
+        "styleName": "{resultStyle}",
+        "percentage": "{percentage}",
+        "description": "Seu estilo predominante",
+        "color": "#B89B7A",
+        "showBar": true
+      }
+    },
+    {
+      "id": "step20-result-characteristics",
       "type": "result-characteristics",
+      "order": 4,
+      "properties": {},
+      "content": {
+        "title": "✨ Suas Características Marcantes",
+        "items": [
+          "{characteristic1}",
+          "{characteristic2}",
+          "{characteristic3}"
+        ],
+        "icon": "check",
+        "iconColor": "#B89B7A",
+        "textColor": "#432818"
+      }
+    },
+    {
+      "id": "step20-hook-title",
+      "type": "text-inline",
       "order": 5,
       "properties": {
-        "title": "Suas Características",
-        "items": [
-          "Peças atemporais e versáteis",
-          "Cores neutras e elegantes",
-          "Cortes clássicos e estruturados",
-          "Qualidade acima de quantidade"
-        ]
+        "content": "🎯 Seu Estilo {resultStyle} foi Revelado!",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#B89B7A",
+        "fontFamily": "'Playfair Display', serif",
+        "marginTop": 32,
+        "marginBottom": 16
       },
-      "content": {}
+      "content": "🎯 Seu Estilo {resultStyle} foi Revelado!"
     },
     {
-      "id": "step20-secondary-styles",
-      "type": "result-secondary-styles",
+      "id": "step20-hook-subtitle",
+      "type": "text-inline",
       "order": 6,
       "properties": {
-        "title": "Estilos Complementares",
-        "styles": [
-          { "name": "Minimalista", "percentage": 25, "color": "#6b7280" },
-          { "name": "Romântico", "percentage": 10, "color": "#c49548" }
-        ]
+        "content": "Agora que descobrimos sua essência estilística, é hora de transformar isso em looks poderosos que comunicam exatamente quem você é.",
+        "fontSize": "text-lg",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 24
+      },
+      "content": "Agora que descobrimos sua essência estilística, é hora de transformar isso em looks poderosos que comunicam exatamente quem você é."
+    },
+    {
+      "id": "step20-value-title",
+      "type": "text-inline",
+      "order": 7,
+      "properties": {
+        "content": "💎 Vista-se de Você — na Prática",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "fontFamily": "'Playfair Display', serif",
+        "marginTop": 32,
+        "marginBottom": 16
+      },
+      "content": "💎 Vista-se de Você — na Prática"
+    },
+    {
+      "id": "step20-value-description",
+      "type": "text-inline",
+      "order": 8,
+      "properties": {
+        "content": "O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir com autenticidade e transformar sua imagem em ferramenta de poder.",
+        "fontSize": "text-base",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 24
+      },
+      "content": "O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir com autenticidade e transformar sua imagem em ferramenta de poder."
+    },
+    {
+      "id": "step20-pricing",
+      "type": "text-inline",
+      "order": 9,
+      "properties": {
+        "content": "<div style='text-align: center;'><span style='text-decoration: line-through; color: #9CA3AF;'>De R$ 175</span> <span style='font-size: 2rem; font-weight: bold; color: #B89B7A;'>por apenas R$ 39</span><br/><span style='color: #6B7280;'>ou 5x de R$ 8,83</span><br/><span style='color: #EF4444; font-weight: 600;'>⚡ 78% de desconto</span></div>",
+        "fontSize": "text-lg",
+        "textAlign": "text-center",
+        "marginBottom": 24
+      },
+      "content": "<div style='text-align: center;'><span style='text-decoration: line-through; color: #9CA3AF;'>De R$ 175</span> <span style='font-size: 2rem; font-weight: bold; color: #B89B7A;'>por apenas R$ 39</span><br/><span style='color: #6B7280;'>ou 5x de R$ 8,83</span><br/><span style='color: #EF4444; font-weight: 600;'>⚡ 78% de desconto</span></div>"
+    },
+    {
+      "id": "step20-cta-primary",
+      "type": "button-inline",
+      "order": 10,
+      "properties": {
+        "text": "✨ GARANTIR MEU GUIA PERSONALIZADO AGORA ✨",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#FFFFFF",
+        "fontSize": "text-lg",
+        "fontWeight": "font-bold",
+        "onClick": "window.location.href='https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912'",
+        "marginBottom": 16
       },
       "content": {}
     },
     {
-      "id": "step20-cta",
-      "type": "result-cta",
-      "order": 7,
+      "id": "step20-urgency",
+      "type": "text-inline",
+      "order": 11,
       "properties": {
-        "text": "Descubra Como Aplicar Seu Estilo",
-        "variant": "default",
-        "size": "lg"
+        "content": "⚡ Esta oferta expira ao sair desta página",
+        "fontSize": "text-sm",
+        "fontWeight": "font-semibold",
+        "textAlign": "text-center",
+        "color": "#EF4444",
+        "marginBottom": 32
       },
-      "content": {}
+      "content": "⚡ Esta oferta expira ao sair desta página"
+    },
+    {
+      "id": "step20-share",
+      "type": "result-share",
+      "order": 12,
+      "properties": {},
+      "content": {
+        "title": "💬 Compartilhe seu resultado",
+        "platforms": [
+          "facebook",
+          "twitter",
+          "whatsapp"
+        ],
+        "message": "Descobri meu estilo predominante! ✨ {resultStyle}"
+      }
     }
   ]
 }
