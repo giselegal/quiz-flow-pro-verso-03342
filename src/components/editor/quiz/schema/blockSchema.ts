@@ -232,6 +232,278 @@ export const blockSchemaMap: Record<string, any> = {
       { key: 'autoProgress', type: 'boolean', label: 'Avanço Automático', required: false, default: true },
     ],
   },
+
+  // =====================================================================
+  // BLOCOS ATÔMICOS DE TRANSIÇÃO (Steps 12 & 19) 
+  // =====================================================================
+
+  'transition-title': {
+    type: 'transition-title',
+    label: 'Título de Transição',
+    icon: 'type',
+    category: 'transition',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      text: 'Analisando suas respostas...', 
+      fontSize: '2xl', 
+      color: '#1F2937', 
+      textAlign: 'center', 
+      fontWeight: 'bold' 
+    },
+    propertySchema: [
+      { key: 'text', type: 'string', label: 'Texto', required: true, default: 'Analisando suas respostas...' },
+      { key: 'fontSize', type: 'select', label: 'Tamanho da Fonte', required: false, default: '2xl', enumValues: ['xl', '2xl', '3xl', '4xl'] },
+      { key: 'color', type: 'color', label: 'Cor do Texto', required: false, default: '#1F2937' },
+      { key: 'textAlign', type: 'select', label: 'Alinhamento', required: false, default: 'center', enumValues: ['left', 'center', 'right'] },
+      { key: 'fontWeight', type: 'select', label: 'Peso da Fonte', required: false, default: 'bold', enumValues: ['normal', 'bold', 'semibold'] },
+    ],
+  },
+
+  'transition-loader': {
+    type: 'transition-loader',
+    label: 'Loader de Transição',
+    icon: 'loader',
+    category: 'transition',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      color: '#3B82F6', 
+      dots: 3, 
+      size: 'md', 
+      animationSpeed: 'normal' 
+    },
+    propertySchema: [
+      { key: 'color', type: 'color', label: 'Cor do Loader', required: false, default: '#3B82F6' },
+      { key: 'dots', type: 'number', label: 'Número de Dots', required: false, default: 3, min: 2, max: 5 },
+      { key: 'size', type: 'select', label: 'Tamanho', required: false, default: 'md', enumValues: ['sm', 'md', 'lg'] },
+      { key: 'animationSpeed', type: 'select', label: 'Velocidade', required: false, default: 'normal', enumValues: ['slow', 'normal', 'fast'] },
+    ],
+  },
+
+  'transition-text': {
+    type: 'transition-text',
+    label: 'Texto de Transição',
+    icon: 'text',
+    category: 'transition',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      text: 'Aguarde um momento...', 
+      fontSize: 16, 
+      color: '#6B7280', 
+      textAlign: 'center' 
+    },
+    propertySchema: [
+      { key: 'text', type: 'string', label: 'Texto', required: true, default: 'Aguarde um momento...' },
+      { key: 'fontSize', type: 'number', label: 'Tamanho da Fonte (px)', required: false, default: 16, min: 12, max: 48 },
+      { key: 'color', type: 'color', label: 'Cor do Texto', required: false, default: '#6B7280' },
+      { key: 'textAlign', type: 'select', label: 'Alinhamento', required: false, default: 'center', enumValues: ['left', 'center', 'right'] },
+    ],
+  },
+
+  'transition-progress': {
+    type: 'transition-progress',
+    label: 'Progresso de Transição',
+    icon: 'activity',
+    category: 'transition',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      currentStep: 1, 
+      totalSteps: 5, 
+      showPercentage: true, 
+      color: '#3B82F6', 
+      height: 4 
+    },
+    propertySchema: [
+      { key: 'currentStep', type: 'number', label: 'Etapa Atual', required: true, default: 1, min: 1 },
+      { key: 'totalSteps', type: 'number', label: 'Total de Etapas', required: true, default: 5, min: 1 },
+      { key: 'showPercentage', type: 'boolean', label: 'Mostrar Percentual', required: false, default: true },
+      { key: 'color', type: 'color', label: 'Cor da Barra', required: false, default: '#3B82F6' },
+      { key: 'height', type: 'number', label: 'Altura (px)', required: false, default: 4, min: 2, max: 10 },
+    ],
+  },
+
+  'transition-message': {
+    type: 'transition-message',
+    label: 'Mensagem de Transição',
+    icon: 'message-square',
+    category: 'transition',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      message: 'Preparando seus resultados...', 
+      icon: 'info', 
+      variant: 'info' 
+    },
+    propertySchema: [
+      { key: 'message', type: 'string', label: 'Mensagem', required: true, default: 'Preparando seus resultados...' },
+      { key: 'icon', type: 'string', label: 'Ícone', required: false, default: 'info' },
+      { key: 'variant', type: 'select', label: 'Variante', required: false, default: 'info', enumValues: ['info', 'success', 'warning'] },
+    ],
+  },
+
+  // =====================================================================
+  // BLOCOS ATÔMICOS DE RESULTADO (Step 20)
+  // =====================================================================
+
+  'result-main': {
+    type: 'result-main',
+    label: 'Estilo Principal de Resultado',
+    icon: 'star',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      styleName: 'Estilo Dominante', 
+      description: 'Descrição do seu estilo principal', 
+      imageUrl: '', 
+      showIcon: true, 
+      backgroundColor: '#F3F4F6' 
+    },
+    propertySchema: [
+      { key: 'styleName', type: 'string', label: 'Nome do Estilo', required: true, default: 'Estilo Dominante' },
+      { key: 'description', type: 'string', label: 'Descrição', required: false, default: 'Descrição do seu estilo principal' },
+      { key: 'imageUrl', type: 'string', label: 'URL da Imagem', required: false, default: '' },
+      { key: 'showIcon', type: 'boolean', label: 'Mostrar Ícone', required: false, default: true },
+      { key: 'backgroundColor', type: 'color', label: 'Cor de Fundo', required: false, default: '#F3F4F6' },
+    ],
+  },
+
+  'result-style': {
+    type: 'result-style',
+    label: 'Card de Estilo',
+    icon: 'layers',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      styleName: 'Seu Estilo', 
+      percentage: 0, 
+      description: '', 
+      color: '#3B82F6', 
+      showBar: true 
+    },
+    propertySchema: [
+      { key: 'styleName', type: 'string', label: 'Nome do Estilo', required: true, default: 'Seu Estilo' },
+      { key: 'percentage', type: 'number', label: 'Percentual', required: true, default: 0, min: 0, max: 100 },
+      { key: 'description', type: 'string', label: 'Descrição', required: false, default: '' },
+      { key: 'color', type: 'color', label: 'Cor', required: false, default: '#3B82F6' },
+      { key: 'showBar', type: 'boolean', label: 'Mostrar Barra', required: false, default: true },
+    ],
+  },
+
+  'result-characteristics': {
+    type: 'result-characteristics',
+    label: 'Características do Resultado',
+    icon: 'list',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      title: 'Características', 
+      items: [] 
+    },
+    propertySchema: [
+      { key: 'title', type: 'string', label: 'Título', required: true, default: 'Características' },
+      { key: 'items', type: 'options-list', label: 'Características', required: false, default: [] },
+    ],
+  },
+
+  'result-secondary-styles': {
+    type: 'result-secondary-styles',
+    label: 'Estilos Secundários',
+    icon: 'pie-chart',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      title: 'Outros Estilos', 
+      styles: [], 
+      showPercentages: true 
+    },
+    propertySchema: [
+      { key: 'title', type: 'string', label: 'Título', required: true, default: 'Outros Estilos' },
+      { key: 'styles', type: 'options-list', label: 'Estilos', required: false, default: [] },
+      { key: 'showPercentages', type: 'boolean', label: 'Mostrar Percentuais', required: false, default: true },
+    ],
+  },
+
+  'result-cta-primary': {
+    type: 'result-cta-primary',
+    label: 'CTA Principal',
+    icon: 'mouse-pointer',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      text: 'Ver Oferta Personalizada', 
+      url: '#', 
+      backgroundColor: '#3B82F6', 
+      textColor: '#FFFFFF', 
+      size: 'lg' 
+    },
+    propertySchema: [
+      { key: 'text', type: 'string', label: 'Texto do Botão', required: true, default: 'Ver Oferta Personalizada' },
+      { key: 'url', type: 'string', label: 'URL', required: false, default: '#' },
+      { key: 'backgroundColor', type: 'color', label: 'Cor de Fundo', required: false, default: '#3B82F6' },
+      { key: 'textColor', type: 'color', label: 'Cor do Texto', required: false, default: '#FFFFFF' },
+      { key: 'size', type: 'select', label: 'Tamanho', required: false, default: 'lg', enumValues: ['sm', 'md', 'lg', 'xl'] },
+    ],
+  },
+
+  'result-cta-secondary': {
+    type: 'result-cta-secondary',
+    label: 'CTA Secundário',
+    icon: 'mouse-pointer-2',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      text: 'Refazer Quiz', 
+      url: '#', 
+      variant: 'outline', 
+      size: 'md' 
+    },
+    propertySchema: [
+      { key: 'text', type: 'string', label: 'Texto do Botão', required: true, default: 'Refazer Quiz' },
+      { key: 'url', type: 'string', label: 'URL', required: false, default: '#' },
+      { key: 'variant', type: 'select', label: 'Variante', required: false, default: 'outline', enumValues: ['outline', 'ghost', 'link'] },
+      { key: 'size', type: 'select', label: 'Tamanho', required: false, default: 'md', enumValues: ['sm', 'md', 'lg'] },
+    ],
+  },
+
+  'result-share': {
+    type: 'result-share',
+    label: 'Compartilhamento',
+    icon: 'share-2',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: { 
+      title: 'Compartilhe seu resultado', 
+      platforms: ['facebook', 'twitter', 'whatsapp', 'linkedin'], 
+      message: 'Confira meu resultado!' 
+    },
+    propertySchema: [
+      { key: 'title', type: 'string', label: 'Título', required: false, default: 'Compartilhe seu resultado' },
+      { key: 'platforms', type: 'options-list', label: 'Plataformas', required: false, default: ['facebook', 'twitter', 'whatsapp', 'linkedin'] },
+      { key: 'message', type: 'string', label: 'Mensagem', required: false, default: 'Confira meu resultado!' },
+    ],
+  },
 };
 
 // Helper function to get block schema by type
