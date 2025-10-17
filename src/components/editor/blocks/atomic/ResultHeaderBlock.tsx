@@ -6,9 +6,10 @@ export default function ResultHeaderBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const title = block.content?.text || 'Parabéns!';
-  const subtitle = block.content?.subtitle || 'Resultado pronto';
-  const emoji = block.content?.emoji || '🎉';
+  // Ler de content primeiro, fallback para properties
+  const title = block.content?.text || block.properties?.title || 'Parabéns!';
+  const subtitle = block.content?.subtitle || block.properties?.subtitle || 'Resultado pronto';
+  const emoji = block.content?.emoji || block.properties?.emoji || '🎉';
   const titleColor = block.properties?.titleColor || '#5b4135';
   const subtitleColor = block.properties?.subtitleColor || '#8F7A6A';
 

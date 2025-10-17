@@ -7,7 +7,8 @@ export default function ResultCTABlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const buttonText = block.content?.text || 'Ver Recomendações';
+  // Ler de content primeiro, fallback para properties
+  const buttonText = block.content?.text || block.properties?.text || 'Ver Recomendações';
   const backgroundColor = block.properties?.backgroundColor || '#B89B7A';
   const textColor = block.properties?.textColor || '#FFFFFF';
   const size = block.properties?.size || 'lg';

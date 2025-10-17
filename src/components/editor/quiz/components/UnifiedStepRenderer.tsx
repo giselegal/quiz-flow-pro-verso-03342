@@ -402,7 +402,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             <ModularTransitionStep
               data={{ ...stepData, type: step.type } as any}
               isEditable={true}
-              enableAutoAdvance={true}
+              enableAutoAdvance={false}
               selectedBlockId={selectedBlockId || undefined}
               onBlockSelect={handleSelectBlock}
             />

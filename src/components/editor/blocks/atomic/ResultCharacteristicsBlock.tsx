@@ -6,7 +6,8 @@ export default function ResultCharacteristicsBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const characteristics = block.content?.items || [];
+  // Ler de content primeiro, fallback para properties
+  const characteristics = block.content?.items || block.properties?.items || [];
   const icon = block.properties?.icon || '✓';
   const iconColor = block.properties?.iconColor || '#B89B7A';
   const textColor = block.properties?.textColor || '#5b4135';

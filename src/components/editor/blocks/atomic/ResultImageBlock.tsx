@@ -6,8 +6,9 @@ export default function ResultImageBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const imageUrl = block.content?.imageUrl || block.content?.src || '';
-  const alt = block.content?.alt || 'Imagem do resultado';
+  // Ler de content primeiro, fallback para properties
+  const imageUrl = block.content?.imageUrl || block.content?.src || block.properties?.url || '';
+  const alt = block.content?.alt || block.properties?.alt || 'Imagem do resultado';
   const borderRadius = block.properties?.borderRadius || '12px';
   const maxHeight = block.properties?.maxHeight || '400px';
 

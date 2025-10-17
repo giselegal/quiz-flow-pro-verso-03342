@@ -6,7 +6,8 @@ export default function ResultSecondaryStylesBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const styles = block.content?.styles || [];
+  // Ler de content primeiro, fallback para properties
+  const styles = block.content?.styles || block.properties?.styles || [];
   const backgroundColor = block.properties?.backgroundColor || '#FFFFFF';
   const borderColor = block.properties?.borderColor || '#E5D5C3';
 

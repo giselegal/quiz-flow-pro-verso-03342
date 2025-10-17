@@ -6,8 +6,9 @@ export default function ResultMainBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const styleName = block.content?.styleName || 'Seu Estilo';
-  const percentage = block.content?.percentage || '85%';
+  // Ler de content primeiro, fallback para properties
+  const styleName = block.content?.styleName || block.properties?.styleName || 'Seu Estilo';
+  const percentage = block.content?.percentage || block.properties?.percentage || '85%';
   const backgroundColor = block.properties?.backgroundColor || '#F5EDE4';
   const textColor = block.properties?.textColor || '#5b4135';
   const accentColor = block.properties?.accentColor || '#B89B7A';
