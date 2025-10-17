@@ -5,7 +5,6 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { Eye, Edit3, Smartphone, Tablet, Monitor, Plus } from 'lucide-react';
 import { useDroppable } from '@dnd-kit/core';
-
 import { BlockComponent, EditableQuizStep } from '../types';
 import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeContext';
 import { UnifiedStepRenderer } from './UnifiedStepRenderer';
