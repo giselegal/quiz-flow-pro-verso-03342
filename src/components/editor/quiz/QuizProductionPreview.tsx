@@ -59,6 +59,19 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
     // Se editorSteps fornecido (modo editor), usa ele em tempo real
     // Senão, tenta liveSteps do WebSocket
     const externalStepsToUse = editorSteps || liveSteps;
+
+    // 🐛 DEBUG: Log quando externalStepsToUse muda
+    useEffect(() => {
+        const stepsArray = Array.isArray(externalStepsToUse) ? externalStepsToUse : [];
+        console.log('🎯 QuizProductionPreview: externalStepsToUse atualizado', {
+            fonte: editorSteps ? 'editorSteps' : (liveSteps ? 'liveSteps' : 'nenhum'),
+            stepsCount: stepsArray.length,
+            primeiroStepId: stepsArray[0]?.id,
+            editorStepsCount: editorSteps?.length || 0,
+            liveStepsCount: Array.isArray(liveSteps) ? liveSteps.length : 0
+        });
+    }, [externalStepsToUse, editorSteps, liveSteps]);
+
     const [isPlaying, setIsPlaying] = useState(true);
     const [showControls, setShowControls] = useState(true);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -82,6 +95,17 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             setRefreshKey(prev => prev + 1);
         }
     }, [refreshToken]);
+
+    // ✅ CRÍTICO: Refresh quando editorSteps mudar (modo preview refletir edições)
+    useEffect(() => {
+        if (editorSteps && editorSteps.length > 0) {
+            setRefreshKey(prev => prev + 1);
+            console.log('🔄 QuizProductionPreview: editorSteps mudou, forçando refresh', {
+                stepsCount: editorSteps.length,
+                refreshKey: refreshKey + 1
+            });
+        }
+    }, [editorSteps]);
 
     // Notificar mudanças de estado
     useEffect(() => {
