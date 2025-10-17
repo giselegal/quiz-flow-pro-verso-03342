@@ -148,6 +148,111 @@ export const quizProgressBlockSchema = z.object({
 });
 
 // =====================================================================
+// SCHEMAS DE BLOCOS DE TRANSIÇÃO (Steps 12 & 19)
+// =====================================================================
+
+export const transitionTitleBlockSchema = z.object({
+  text: z.string().min(1, 'Texto é obrigatório'),
+  fontSize: z.enum(['xl', '2xl', '3xl', '4xl']).optional(),
+  color: colorSchema.optional(),
+  textAlign: z.enum(['left', 'center', 'right']).optional(),
+  fontWeight: z.enum(['normal', 'bold', 'semibold']).optional(),
+});
+
+export const transitionLoaderBlockSchema = z.object({
+  color: colorSchema.optional(),
+  dots: z.number().min(2).max(5).optional(),
+  size: z.string().optional(),
+  animationSpeed: z.enum(['slow', 'normal', 'fast']).optional(),
+});
+
+export const transitionTextBlockSchema = z.object({
+  text: z.string().min(1, 'Texto é obrigatório'),
+  fontSize: z.number().min(12).max(48).optional(),
+  color: colorSchema.optional(),
+  textAlign: z.enum(['left', 'center', 'right']).optional(),
+});
+
+export const transitionProgressBlockSchema = z.object({
+  currentStep: z.number().min(1),
+  totalSteps: z.number().min(1),
+  showPercentage: z.boolean().optional(),
+  color: colorSchema.optional(),
+  height: z.number().min(2).max(10).optional(),
+});
+
+export const transitionMessageBlockSchema = z.object({
+  message: z.string().min(1, 'Mensagem é obrigatória'),
+  icon: z.string().optional(),
+  variant: z.enum(['info', 'success', 'warning']).optional(),
+});
+
+// =====================================================================
+// SCHEMAS DE BLOCOS DE RESULTADO (Step 20)
+// =====================================================================
+
+export const resultHeaderBlockSchema = z.object({
+  title: z.string().min(1, 'Título é obrigatório'),
+  subtitle: z.string().optional(),
+  showBackButton: z.boolean().optional(),
+  backgroundColor: colorSchema.optional(),
+  textColor: colorSchema.optional(),
+});
+
+export const resultMainBlockSchema = z.object({
+  styleName: z.string().min(1, 'Nome do estilo é obrigatório'),
+  description: z.string().optional(),
+  showIcon: z.boolean().optional(),
+  customImage: urlSchema.optional(),
+  backgroundColor: colorSchema.optional(),
+});
+
+export const resultImageBlockSchema = z.object({
+  src: z.string().url('URL da imagem é obrigatória'),
+  alt: z.string().min(1, 'Texto alternativo é obrigatório'),
+  width: z.string().optional(),
+  height: z.string().optional(),
+  borderRadius: z.string().optional(),
+  objectFit: z.enum(['contain', 'cover', 'fill']).optional(),
+});
+
+export const resultDescriptionBlockSchema = z.object({
+  text: z.string().min(1, 'Descrição é obrigatória'),
+  fontSize: z.number().min(12).max(24).optional(),
+  textAlign: z.enum(['left', 'center', 'right', 'justify']).optional(),
+  maxWidth: z.string().optional(),
+});
+
+export const resultCharacteristicsBlockSchema = z.object({
+  items: z.array(z.object({
+    id: z.string(),
+    label: z.string().min(1, 'Label é obrigatório'),
+    value: z.string().min(1, 'Valor é obrigatório'),
+    icon: z.string().optional(),
+  })).min(1, 'Adicione pelo menos 1 característica'),
+  layout: z.enum(['grid', 'list']).optional(),
+});
+
+export const resultCTABlockSchema = z.object({
+  buttonText: z.string().min(1, 'Texto do botão é obrigatório'),
+  buttonUrl: urlSchema,
+  variant: z.enum(['default', 'secondary', 'outline']).optional(),
+  size: z.enum(['sm', 'md', 'lg']).optional(),
+  icon: z.string().optional(),
+});
+
+export const resultSecondaryStylesBlockSchema = z.object({
+  title: z.string().min(1, 'Título é obrigatório'),
+  styles: z.array(z.object({
+    id: z.string(),
+    name: z.string().min(1, 'Nome é obrigatório'),
+    percentage: z.number().min(0).max(100),
+    description: z.string().optional(),
+  })).min(1, 'Adicione pelo menos 1 estilo secundário'),
+  showPercentages: z.boolean().optional(),
+});
+
+// =====================================================================
 // MAPEAMENTO DE SCHEMAS
 // =====================================================================
 
@@ -166,6 +271,22 @@ export const blockSchemas = {
   'quiz-intro': quizIntroBlockSchema,
   'quiz-progress': quizProgressBlockSchema,
   'quiz-question': quizStepBlockSchema, // Usa o mesmo schema
+
+  // Transição (Steps 12 & 19)
+  'transition-title': transitionTitleBlockSchema,
+  'transition-loader': transitionLoaderBlockSchema,
+  'transition-text': transitionTextBlockSchema,
+  'transition-progress': transitionProgressBlockSchema,
+  'transition-message': transitionMessageBlockSchema,
+
+  // Resultado (Step 20)
+  'result-header': resultHeaderBlockSchema,
+  'result-main': resultMainBlockSchema,
+  'result-image': resultImageBlockSchema,
+  'result-description': resultDescriptionBlockSchema,
+  'result-characteristics': resultCharacteristicsBlockSchema,
+  'result-cta': resultCTABlockSchema,
+  'result-secondary-styles': resultSecondaryStylesBlockSchema,
 } as const;
 
 export type BlockType = keyof typeof blockSchemas;
@@ -181,6 +302,22 @@ export type QuizStepBlockData = z.infer<typeof quizStepBlockSchema>;
 export type QuizIntroBlockData = z.infer<typeof quizIntroBlockSchema>;
 export type QuizProgressBlockData = z.infer<typeof quizProgressBlockSchema>;
 export type QuizOptionData = z.infer<typeof quizOptionSchema>;
+
+// Tipos de blocos de transição
+export type TransitionTitleBlockData = z.infer<typeof transitionTitleBlockSchema>;
+export type TransitionLoaderBlockData = z.infer<typeof transitionLoaderBlockSchema>;
+export type TransitionTextBlockData = z.infer<typeof transitionTextBlockSchema>;
+export type TransitionProgressBlockData = z.infer<typeof transitionProgressBlockSchema>;
+export type TransitionMessageBlockData = z.infer<typeof transitionMessageBlockSchema>;
+
+// Tipos de blocos de resultado
+export type ResultHeaderBlockData = z.infer<typeof resultHeaderBlockSchema>;
+export type ResultMainBlockData = z.infer<typeof resultMainBlockSchema>;
+export type ResultImageBlockData = z.infer<typeof resultImageBlockSchema>;
+export type ResultDescriptionBlockData = z.infer<typeof resultDescriptionBlockSchema>;
+export type ResultCharacteristicsBlockData = z.infer<typeof resultCharacteristicsBlockSchema>;
+export type ResultCTABlockData = z.infer<typeof resultCTABlockSchema>;
+export type ResultSecondaryStylesBlockData = z.infer<typeof resultSecondaryStylesBlockSchema>;
 
 // Helper para validar um bloco
 export function validateBlockData(blockType: BlockType, data: unknown) {
