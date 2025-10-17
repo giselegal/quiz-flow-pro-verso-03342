@@ -13,6 +13,29 @@ export const getQuiz21StepsTemplate = () => QUIZ_STYLE_21_STEPS_TEMPLATE;
 
 // Função para carregar template de forma consistente
 export const loadTemplate = async (templateId: string) => {
+  // 🎯 CORREÇÃO: Carregar JSONs V2 do src/config/templates/ que têm "blocks"
+  // em vez de sempre retornar QUIZ_STYLE_21_STEPS_TEMPLATE que tem "sections"
+  
+  // Normalizar stepId (aceitar "step-12" ou "12")
+  const stepNumber = templateId.replace(/^step-/, '').padStart(2, '0');
+  const stepId = `step-${stepNumber}`;
+  
+  try {
+    // Tentar carregar JSON V2 com blocks[]
+    const jsonTemplate = await import(`@/config/templates/${stepId}.json`);
+    
+    if (jsonTemplate.default && jsonTemplate.default.blocks) {
+      console.log(`✅ [loadTemplate] Carregando JSON V2 com blocks: ${stepId}`);
+      return {
+        template: { [stepId]: jsonTemplate.default },
+        source: 'json-v2-blocks'
+      };
+    }
+  } catch (error) {
+    console.warn(`⚠️  [loadTemplate] JSON V2 não encontrado para ${stepId}, usando fallback TS`);
+  }
+  
+  // Fallback: template TypeScript (tem sections, não blocks)
   switch (templateId) {
     case 'quiz21StepsComplete':
     case 'step-1':
@@ -36,9 +59,10 @@ export const loadTemplate = async (templateId: string) => {
     case 'step-19':
     case 'step-20':
     case 'step-21':
+      console.log(`⚠️  [loadTemplate] Usando fallback TS (sections) para ${templateId}`);
       return {
         template: QUIZ_STYLE_21_STEPS_TEMPLATE,
-        source: 'static-import'
+        source: 'static-import-sections'
       };
     default:
       return null;

@@ -48,6 +48,8 @@ import ResultDescriptionBlock from './atomic/ResultDescriptionBlock';
 import ResultCharacteristicsBlock from './atomic/ResultCharacteristicsBlock';
 import ResultCTABlock from './atomic/ResultCTABlock';
 import ResultSecondaryStylesBlock from './atomic/ResultSecondaryStylesBlock';
+import ResultStyleBlock from './atomic/ResultStyleBlock';
+import ResultShareBlock from './atomic/ResultShareBlock';
 
 // ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
 import { default as ResultCalculationSection } from '@/components/blocks/ResultCalculationSection';
@@ -162,6 +164,8 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'result-characteristics': ResultCharacteristicsBlock,
   'result-cta': ResultCTABlock,
   'result-secondary-styles': ResultSecondaryStylesBlock,
+  'result-style': ResultStyleBlock,
+  'result-share': ResultShareBlock,
   // ✅ FASE 3A: Componentes inline específicos
   'image-display-inline': ImageDisplayInlineBlock,
   'decorative-bar-inline': DecorativeBarInlineBlock,
