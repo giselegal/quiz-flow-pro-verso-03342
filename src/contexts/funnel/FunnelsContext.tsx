@@ -47,6 +47,64 @@ const LEGACY_TEMPLATE_MAPPING: Record<string, string> = {
   'quiz-vazio': 'quiz-style-basic' // Fallback
 };
 
+// ✅ FUNÇÃO HELPER: Determinar tipo do step baseado no template (não hardcoded)
+/**
+ * Infere o tipo do step analisando os blocos do template
+ * Substitui lógica hardcoded de stepNumber === 12/19/20
+ */
+const inferStepTypeFromTemplate = (
+  stepId: string,
+  stepNumber: number,
+  template: any[]
+): string => {
+  // Se não há template ou está vazio, usar fallback baseado em número (temporário)
+  if (!template || template.length === 0) {
+    // Fallback temporário para compatibilidade (será removido quando todos templates tiverem blocks)
+    if (stepNumber === 1) return 'lead-collection';
+    if (stepNumber >= 2 && stepNumber <= 11) return 'scored-question';
+    if (stepNumber === 12 || stepNumber === 19) return 'transition';
+    if (stepNumber >= 13 && stepNumber <= 18) return 'strategic-question';
+    if (stepNumber === 20) return 'result';
+    return 'offer';
+  }
+
+  // Analisar blocos para inferir tipo
+  const blockTypes = template.map(block => block.type);
+
+  // Lead collection: tem form-input
+  if (blockTypes.includes('form-input') || blockTypes.includes('input')) {
+    return 'lead-collection';
+  }
+
+  // Transition: tem transition-* blocks
+  if (blockTypes.some(type => type.startsWith('transition-'))) {
+    return 'transition';
+  }
+
+  // Result: tem result-* blocks
+  if (blockTypes.some(type => type.startsWith('result-'))) {
+    return 'result';
+  }
+
+  // Strategic question: tem strategic-* blocks
+  if (blockTypes.some(type => type.startsWith('strategic-'))) {
+    return 'strategic-question';
+  }
+
+  // Scored question: tem options-grid ou question-* blocks
+  if (blockTypes.includes('options-grid') || blockTypes.some(type => type.startsWith('question-'))) {
+    return 'scored-question';
+  }
+
+  // Offer: tem offer-* blocks
+  if (blockTypes.some(type => type.startsWith('offer-'))) {
+    return 'offer';
+  }
+
+  // Fallback genérico
+  return 'custom';
+};
+
 // ✅ FUNÇÃO HELPER: Obter template unificado com fallback legacy
 const getTemplateWithFallback = (templateId: string) => {
   // Primeiro, tentar buscar no registry unificado
