@@ -20,7 +20,6 @@ console.log('📦 QuizModularProductionEditor: Module loading...');
 
 import React, { useState, useCallback, useEffect, useMemo, Suspense, useRef } from 'react';
 import '@/styles/globals.css'; // garante estilos de produção (quiz-option*, quiz-options-*)
-import '@/styles/editor-overlays.css'; // corrige pointer-events do overlay de DnD para não bloquear cliques
 import { useLocation } from 'wouter';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors, useDraggable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
