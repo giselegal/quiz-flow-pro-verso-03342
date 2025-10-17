@@ -479,11 +479,15 @@ export const AVAILABLE_COMPONENTS = [
     // 🎨 Step 20 - Blocos Atômicos
     { type: 'result-header', label: 'Resultado: Cabeçalho', category: 'result', description: 'Cabeçalho da página de resultado' },
     { type: 'result-main', label: 'Resultado: Estilo Principal', category: 'result', description: 'Card do estilo principal identificado' },
+    { type: 'result-style', label: 'Resultado: Card de Estilo', category: 'result', description: 'Card de estilo com barra de progresso' },
     { type: 'result-image', label: 'Resultado: Imagem', category: 'result', description: 'Imagem ilustrativa do resultado' },
     { type: 'result-description', label: 'Resultado: Descrição', category: 'result', description: 'Texto descritivo do estilo' },
     { type: 'result-characteristics', label: 'Resultado: Características', category: 'result', description: 'Lista de características do estilo' },
     { type: 'result-cta', label: 'Resultado: Call to Action', category: 'result', description: 'Botão de ação principal' },
+    { type: 'result-cta-primary', label: 'Resultado: CTA Principal', category: 'result', description: 'Botão de ação principal destacado' },
+    { type: 'result-cta-secondary', label: 'Resultado: CTA Secundário', category: 'result', description: 'Botão de ação secundário' },
     { type: 'result-secondary-styles', label: 'Resultado: Estilos Secundários', category: 'result', description: 'Lista de estilos compatíveis' },
+    { type: 'result-share', label: 'Resultado: Compartilhar', category: 'result', description: 'Botões de compartilhamento social' },
 
     // 🆕 Step 20 - Módulos Especializados
     { type: 'step20-result-header', label: 'Step20: Header', category: 'result', description: 'Header modular do resultado' },

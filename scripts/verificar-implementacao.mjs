@@ -71,12 +71,26 @@ console.log('\n📝 2. VERIFICANDO propertySchema EM CADA BLOCO\n');
 let propertySchemasOk = true;
 
 schemasFound.forEach(schema => {
-  // Busca por propertySchema dentro do bloco
-  const blockPattern = new RegExp(`'${schema}':\\s*{[^}]*propertySchema:\\s*\\[`, 'gs');
-  const hasPropertySchema = blockPattern.test(schemaContent);
+  // Busca simples por 'schema-name': { seguido de propertySchema: [ em qualquer lugar do arquivo
+  const blockStartPattern = new RegExp(`'${schema}':\\s*\\{`, 'g');
+  const propertySchemaPattern = /propertySchema:\s*\[/g;
   
-  if (hasPropertySchema) {
-    console.log(`   ✅ '${schema}' - tem propertySchema`);
+  // Encontra a posição do início do bloco
+  blockStartPattern.lastIndex = 0;
+  const blockMatch = blockStartPattern.exec(schemaContent);
+  
+  if (blockMatch) {
+    // Busca propertySchema após o início do bloco (próximos 5000 caracteres)
+    const searchArea = schemaContent.slice(blockMatch.index, blockMatch.index + 5000);
+    propertySchemaPattern.lastIndex = 0;
+    const hasPropertySchema = propertySchemaPattern.test(searchArea);
+    
+    if (hasPropertySchema) {
+      console.log(`   ✅ '${schema}' - tem propertySchema`);
+    } else {
+      console.log(`   ❌ '${schema}' - SEM propertySchema`);
+      propertySchemasOk = false;
+    }
   } else {
     console.log(`   ❌ '${schema}' - SEM propertySchema`);
     propertySchemasOk = false;
@@ -103,9 +117,10 @@ const componentsFound = [];
 const componentsMissing = [];
 
 expectedSchemas.forEach(schema => {
-  // Busca por: '  'schema-name': Component,
-  const pattern = new RegExp(`'${schema}':\\s*[A-Z]`, 'g');
-  const found = pattern.test(registryContent);
+  // Busca por: '  'schema-name': Component, OU '  'schema-name': lazy(() => import(...))
+  const directPattern = new RegExp(`'${schema}':\\s*[A-Z]`, 'g');
+  const lazyPattern = new RegExp(`'${schema}':\\s*lazy\\(`, 'g');
+  const found = directPattern.test(registryContent) || lazyPattern.test(registryContent);
   
   if (found) {
     componentsFound.push(schema);
