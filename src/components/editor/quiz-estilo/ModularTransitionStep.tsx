@@ -130,7 +130,51 @@ export default function ModularTransitionStep({
         const { active, over } = event;
         if (!over || active.id === over.id) return;
 
-        const oldIndex = localOrder.indexOf(active.id as string);
+        const activeIdStr = String(active.id);
+
+        // ✅ NOVO COMPONENTE DA BIBLIOTECA (lib:tipo-componente)
+        if (activeIdStr.startsWith('lib:')) {
+            console.log('🎯 ModularTransitionStep: Novo componente arrastado da biblioteca', {
+                activeId: activeIdStr,
+                overId: over.id,
+                stepKey
+            });
+
+            const componentType = activeIdStr.slice(4); // Remove 'lib:' prefix
+
+            // Determinar posição de inserção
+            let insertIndex = orderedBlocks.length; // Default: ao final
+
+            if (over.id !== 'canvas-end') {
+                const targetIndex = orderedBlocks.findIndex((b: Block) => b.id === over.id);
+                if (targetIndex >= 0) {
+                    insertIndex = targetIndex + 1; // Inserir APÓS o bloco alvo
+                }
+            }
+
+            console.log(`✅ Inserindo ${componentType} na posição ${insertIndex}`);
+
+            // Criar novo bloco
+            const newBlock: Block = {
+                id: `${stepKey}-${componentType}-${Date.now()}`,
+                type: componentType as any, // Type assertion para BlockType
+                order: insertIndex,
+                content: {},
+                properties: {}
+            };
+
+            // Adicionar via editor actions
+            if (editor?.actions?.addBlockAtIndex) {
+                editor.actions.addBlockAtIndex(stepKey, newBlock, insertIndex).catch((err: Error) => {
+                    console.error('❌ Erro ao adicionar bloco:', err);
+                });
+            }
+
+            return;
+        }
+
+        // ✅ REORDENAÇÃO DE BLOCOS EXISTENTES
+        const oldIndex = localOrder.indexOf(activeIdStr);
         const newIndex = localOrder.indexOf(over.id as string);
 
         if (oldIndex !== -1 && newIndex !== -1) {
