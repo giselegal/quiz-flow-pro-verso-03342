@@ -33,6 +33,16 @@ interface QuizProductionPreviewProps {
      * Quando alterado, força a atualização do preview (ex: após autosave do draft)
      */
     refreshToken?: number;
+    /**
+     * ✅ NOVO: Steps editados no editor (para preview em tempo real)
+     * Se fornecido, usa estes steps em vez de carregar do banco
+     */
+    editorSteps?: Array<{
+        id: string;
+        type: string;
+        blocks: any[];
+        [key: string]: any;
+    }>;
 }
 
 export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({

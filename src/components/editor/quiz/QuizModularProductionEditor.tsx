@@ -2695,7 +2695,11 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = React.memo(({ 
         <div className="flex flex-col h-full">
             <div className="flex-1 overflow-hidden">
                 {mode === 'production' ? (
-                    <QuizProductionPreview funnelId={funnelId} className="h-full" />
+                    <QuizProductionPreview
+                        funnelId={funnelId}
+                        className="h-full"
+                        editorSteps={debouncedSteps}
+                    />
                 ) : (
                     <QuizRuntimeRegistryProvider>
                         <LiveRuntimePreview steps={debouncedSteps} funnelId={funnelId} selectedStepId={selectedStepId} />
