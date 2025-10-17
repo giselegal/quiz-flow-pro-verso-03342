@@ -34,7 +34,7 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
         const hasActions = !!maybeEditor?.actions;
         // eslint-disable-next-line no-console
         console.debug('[ModularPreviewContainer] Provider status:', { hasProvider, hasActions });
-    } catch {}
+    } catch { }
     const { ui, togglePropertiesPanel } = useGlobalUI();
 
     // Sincroniza o provider unificado com a etapa atual do preview e garante que os blocos sejam carregados
