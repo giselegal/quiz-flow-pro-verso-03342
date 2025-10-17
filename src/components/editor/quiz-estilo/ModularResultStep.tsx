@@ -138,12 +138,29 @@ export default function ModularResultStep({
     }, [rawBlocks.length, isLoadingBlocks, stepKey]);
 
     const sourceBlocks: Block[] = rawBlocks.length > 0 ? rawBlocks : localBlocks;
-    console.log('🧪 ModularResultStep source blocks:', { stepKey, raw: rawBlocks.length, local: localBlocks.length });
-
+    
     // Injetar dados dinâmicos nos blocos
     const blocks = useMemo(() => {
         return sourceBlocks.map((block: Block) => injectDynamicData(block, userProfile));
     }, [sourceBlocks, userProfile]);
+
+    // DEBUG: log detalhado
+    React.useEffect(() => {
+        console.log(`🔍 ModularResultStep [${stepKey}]:`, {
+            isLoadingBlocks,
+            rawBlocksCount: rawBlocks.length,
+            localBlocksCount: localBlocks.length,
+            blocksAfterInjection: blocks.length,
+            blockTypes: blocks.map((b: Block) => b.type),
+            blockIds: blocks.map((b: Block) => b.id),
+            userProfile: userProfile ? {
+                userName: userProfile.userName,
+                resultStyle: userProfile.resultStyle,
+                hasScores: !!userProfile.scores,
+                hasSecondaryStyles: !!userProfile.secondaryStyles
+            } : 'none'
+        });
+    }, [stepKey, isLoadingBlocks, rawBlocks.length, localBlocks.length, blocks.length, userProfile]);
 
     // Ordenação dos blocos via metadata
     const [localOrder, setLocalOrder] = React.useState<string[]>([]);

@@ -67,6 +67,17 @@ export default function ModularTransitionStep({
     // Usar localBlocks ao invés de memoized blocks
     const blocks = localBlocks;
 
+    // DEBUG: log de status
+    React.useEffect(() => {
+        console.log(`🔍 ModularTransitionStep [${stepKey}]:`, {
+            isLoadingBlocks,
+            blocksCount: blocks.length,
+            blockTypes: blocks.map((b: any) => b.type),
+            isEditable,
+            enableAutoAdvance
+        });
+    }, [stepKey, isLoadingBlocks, blocks.length, isEditable, enableAutoAdvance]);
+
     // Loading state: evitar early return para manter ordem de hooks
     const showLoading = isLoadingBlocks && localBlocks.length === 0;
 
