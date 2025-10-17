@@ -20,6 +20,8 @@ interface ModularTransitionStepProps {
     onComplete?: () => void;
     onEdit?: (field: string, value: any) => void;
     isEditable?: boolean;
+    /** Quando true, permite auto avançar mesmo em modo edição (útil no preview modular) */
+    enableAutoAdvance?: boolean;
     selectedBlockId?: string;
     onBlockSelect?: (blockId: string) => void;
     onOpenProperties?: (blockId: string) => void;
@@ -29,9 +31,10 @@ export default function ModularTransitionStep({
     data,
     onComplete,
     isEditable = false,
+    enableAutoAdvance = false,
     selectedBlockId,
-    onBlockSelect = () => {},
-    onOpenProperties = () => {}
+    onBlockSelect = () => { },
+    onOpenProperties = () => { }
 }: ModularTransitionStepProps) {
     const editor = useEditor({ optional: true });
     const stepKey = data?.id || 'step-12';
@@ -42,7 +45,7 @@ export default function ModularTransitionStep({
 
     React.useEffect(() => {
         const currentBlocks = editor?.state?.stepBlocks?.[stepKey] || [];
-        
+
         // Inicializar loading
         if (isLoadingBlocks && currentBlocks.length === 0) {
             // Tentar carregar os blocos se não existem
@@ -64,8 +67,8 @@ export default function ModularTransitionStep({
     // Usar localBlocks ao invés de memoized blocks
     const blocks = localBlocks;
 
-// Loading state: evitar early return para manter ordem de hooks
-const showLoading = isLoadingBlocks && localBlocks.length === 0;
+    // Loading state: evitar early return para manter ordem de hooks
+    const showLoading = isLoadingBlocks && localBlocks.length === 0;
 
     // Ordenação dos blocos via metadata
     const [localOrder, setLocalOrder] = React.useState<string[]>([]);
@@ -81,15 +84,22 @@ const showLoading = isLoadingBlocks && localBlocks.length === 0;
         }
     }, [blocks, data?.metadata?.blockOrder]);
 
-    // Timer de transição (3 segundos)
+    // Timer de transição usando delay do template (fallback 3000ms)
     React.useEffect(() => {
-        if (!isEditable && onComplete) {
+        const delay = Number(
+            data?.navigation?.autoAdvanceDelay ??
+            data?.metadata?.autoAdvanceDelay ??
+            3000
+        );
+
+        const shouldAutoAdvance = (!!onComplete) && (enableAutoAdvance || !isEditable);
+        if (shouldAutoAdvance) {
             const timer = setTimeout(() => {
                 onComplete();
-            }, 3000);
+            }, isFinite(delay) ? delay : 3000);
             return () => clearTimeout(timer);
         }
-    }, [isEditable, onComplete]);
+    }, [isEditable, enableAutoAdvance, onComplete, data?.navigation?.autoAdvanceDelay, data?.metadata?.autoAdvanceDelay]);
 
     // Configurar sensores de drag
     const sensors = useSensors(

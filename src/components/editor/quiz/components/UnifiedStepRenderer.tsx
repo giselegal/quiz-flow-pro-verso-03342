@@ -95,7 +95,6 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const stepKey = useMemo(() => step?.id || '', [step?.id]);
   const selectedBlockId = editor?.state?.selectedBlockId || null;
 
-  // Helper: procurar primeiro bloco do tipo desejado no provider
   const findBlockIdByTypes = useCallback((types: string[]): string | undefined => {
     try {
       const blocks: any[] = editor?.state?.stepBlocks?.[stepKey] || [];
@@ -403,6 +402,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             <ModularTransitionStep
               data={{ ...stepData, type: step.type } as any}
               isEditable={true}
+              enableAutoAdvance={true}
               selectedBlockId={selectedBlockId || undefined}
               onBlockSelect={handleSelectBlock}
             />
