@@ -258,7 +258,23 @@ const SPECIALIZED_EDITORS = {
     'navigation': 'NavigationPropertyEditor',
     'testimonial': 'TestimonialPropertyEditor',
     'pricing': 'PricingPropertyEditor',
-    'result-common': 'ResultCommonPropertyEditor'
+    'result-common': 'ResultCommonPropertyEditor',
+
+    // Blocos de Transição (Steps 12 & 19)
+    'transition-title': 'TextPropertyEditor',
+    'transition-loader': 'LoaderPropertyEditor',
+    'transition-text': 'TextPropertyEditor',
+    'transition-progress': 'ProgressPropertyEditor',
+    'transition-message': 'MessagePropertyEditor',
+
+    // Blocos de Resultado (Step 20)
+    'result-header': 'HeaderPropertyEditor',
+    'result-main': 'StyleResultPropertyEditor',
+    'result-image': 'ImagePropertyEditor',
+    'result-description': 'TextPropertyEditor',
+    'result-characteristics': 'CharacteristicsPropertyEditor',
+    'result-cta': 'ButtonPropertyEditor',
+    'result-secondary-styles': 'SecondaryStylesPropertyEditor',
 };
 
 // ===== SPECIALIZED EDITOR RENDERER =====
