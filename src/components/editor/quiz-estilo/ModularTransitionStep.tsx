@@ -151,17 +151,40 @@ export default function ModularTransitionStep({
             .filter(Boolean) as Block[];
     }, [blocks, localOrder]);
 
-    // ✅ Wrapper para tornar blocos individuais arrastáveis
-    const SortableBlock: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
-        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+    // ✅ Wrapper para tornar blocos individuais arrastáveis E droppable
+    const SortableBlock: React.FC<{ id: string; children: React.ReactNode; index: number }> = ({ id, children, index }) => {
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging, isOver } = useSortable({ id });
         const style = {
             transform: CSS.Transform.toString(transform),
             transition,
             opacity: isDragging ? 0.7 : 1,
         } as React.CSSProperties;
+
         return (
-            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-                {children}
+            <div className="relative">
+                {/* 🎯 ZONA DROPPABLE antes do bloco */}
+                <div
+                    className={`
+                        h-8 -my-4 relative
+                        transition-all duration-200
+                        ${isOver ? 'bg-blue-100 border-2 border-dashed border-blue-400' : 'hover:bg-gray-100'}
+                    `}
+                    data-drop-zone="before"
+                    data-block-index={index}
+                >
+                    {isOver && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-xs font-medium text-blue-600">
+                                Solte aqui para inserir antes
+                            </span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Bloco arrastável */}
+                <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+                    {children}
+                </div>
             </div>
         );
     };
@@ -180,8 +203,8 @@ export default function ModularTransitionStep({
                                 items={localOrder}
                                 strategy={verticalListSortingStrategy}
                             >
-                                {orderedBlocks.map((block: Block) => (
-                                    <SortableBlock key={block.id} id={block.id}>
+                                {orderedBlocks.map((block: Block, index: number) => (
+                                    <SortableBlock key={block.id} id={block.id} index={index}>
                                         <UniversalBlockRenderer
                                             block={block}
                                             mode="editor"
@@ -191,6 +214,17 @@ export default function ModularTransitionStep({
                                         />
                                     </SortableBlock>
                                 ))}
+
+                                {/* 🎯 ZONA DROPPABLE ao final */}
+                                <div
+                                    className="h-12 mt-2 border-2 border-dashed border-gray-300 rounded-lg
+                                              hover:border-gray-400 hover:bg-gray-50 transition-all
+                                              flex items-center justify-center text-xs text-gray-500"
+                                    data-drop-zone="after"
+                                    data-block-index={orderedBlocks.length}
+                                >
+                                    <span>+ Solte componente aqui para adicionar ao final</span>
+                                </div>
                             </SortableContext>
                         </DndContext>
                     ) : (
