@@ -98,6 +98,16 @@ const TextPropertyEditor = lazy(() => import('./editors/TextPropertyEditor'));
 import OptionsGridPropertyEditor from './editors/OptionsGridPropertyEditor';
 const ImagePropertyEditor = lazy(() => import('./editors/ImagePropertyEditor'));
 
+// Editores de blocos de transição
+const LoaderPropertyEditor = lazy(() => import('./editors/LoaderPropertyEditor').then(m => ({ default: m.LoaderPropertyEditor })));
+const ProgressPropertyEditor = lazy(() => import('./editors/ProgressPropertyEditor').then(m => ({ default: m.ProgressPropertyEditor })));
+const MessagePropertyEditor = lazy(() => import('./editors/MessagePropertyEditor').then(m => ({ default: m.MessagePropertyEditor })));
+
+// Editores de blocos de resultado
+const StyleResultPropertyEditor = lazy(() => import('./editors/StyleResultPropertyEditor').then(m => ({ default: m.StyleResultPropertyEditor })));
+const CharacteristicsPropertyEditor = lazy(() => import('./editors/CharacteristicsPropertyEditor').then(m => ({ default: m.CharacteristicsPropertyEditor })));
+const SecondaryStylesPropertyEditor = lazy(() => import('./editors/SecondaryStylesPropertyEditor').then(m => ({ default: m.SecondaryStylesPropertyEditor })));
+
 // Mock service para extração de propriedades
 const mockPropertyExtractionService = {
     extractAllProperties: (block: Block): PropertyField[] => {
@@ -345,6 +355,60 @@ const SpecializedEditorRenderer: React.FC<{
             return (
                 <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de imagem...</div>}>
                     <ImagePropertyEditor
+                        block={selectedBlock}
+                        onUpdate={onUpdate}
+                    />
+                </Suspense>
+            );
+        case 'LoaderPropertyEditor':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de loader...</div>}>
+                    <LoaderPropertyEditor
+                        block={selectedBlock}
+                        onUpdate={onUpdate}
+                    />
+                </Suspense>
+            );
+        case 'ProgressPropertyEditor':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de progresso...</div>}>
+                    <ProgressPropertyEditor
+                        block={selectedBlock}
+                        onUpdate={onUpdate}
+                    />
+                </Suspense>
+            );
+        case 'MessagePropertyEditor':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de mensagem...</div>}>
+                    <MessagePropertyEditor
+                        block={selectedBlock}
+                        onUpdate={onUpdate}
+                    />
+                </Suspense>
+            );
+        case 'StyleResultPropertyEditor':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de resultado...</div>}>
+                    <StyleResultPropertyEditor
+                        block={selectedBlock}
+                        onUpdate={onUpdate}
+                    />
+                </Suspense>
+            );
+        case 'CharacteristicsPropertyEditor':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de características...</div>}>
+                    <CharacteristicsPropertyEditor
+                        block={selectedBlock}
+                        onUpdate={onUpdate}
+                    />
+                </Suspense>
+            );
+        case 'SecondaryStylesPropertyEditor':
+            return (
+                <Suspense fallback={<div className="p-4 text-center text-sm text-muted-foreground">Carregando editor de estilos secundários...</div>}>
+                    <SecondaryStylesPropertyEditor
                         block={selectedBlock}
                         onUpdate={onUpdate}
                     />
