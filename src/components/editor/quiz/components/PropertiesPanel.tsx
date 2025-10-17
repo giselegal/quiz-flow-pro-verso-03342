@@ -47,6 +47,8 @@ export interface PropertiesPanelProps {
     // Configs globais/unificadas para exibir e editar na UI
     unifiedConfig?: { runtime?: any; results?: any; ui?: any; settings?: any } | null;
     onUnifiedConfigPatch?: (patch: Partial<{ runtime: any; results: any; ui: any; settings: any }>) => void;
+    // Novo: aplicar props do Step (Solução B)
+    onStepPropsApply?: (props: any) => void;
 }
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
@@ -81,6 +83,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     currentRuntimeScoring,
     unifiedConfig,
     onUnifiedConfigPatch,
+    onStepPropsApply,
 }) => {
     // Estado local para edição simples de scoring (UI leve)
     const [tieBreak, setTieBreak] = React.useState<'alphabetical' | 'first' | 'natural-first' | 'random'>(
@@ -280,6 +283,21 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                     </>)}
                                 </div>
                                 <p className="text-[10px] text-muted-foreground leading-snug">O cabeçalho se aplica a todas as etapas (exceto resultado e oferta). Desative logo ou barra conforme necessário.</p>
+
+                                {/* Editor simples de Props do Step (Solução B) */}
+                                {selectedStep && (
+                                    <div className="pt-3 mt-2 border-t space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Propriedades da Etapa</h3>
+                                            <span className="text-[10px] text-muted-foreground">tipo: {selectedStep.type}</span>
+                                        </div>
+                                        <StepPropsEditor
+                                            key={selectedStep.id}
+                                            step={selectedStep}
+                                            onApply={(props) => onStepPropsApply && onStepPropsApply(props)}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         )}
                     </ScrollArea>
@@ -409,6 +427,44 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     </ScrollArea>
                 </TabsContent>
             </Tabs>
+        </div>
+    );
+};
+
+// Editor leve de propriedades do Step (JSON) para Solução B
+const StepPropsEditor: React.FC<{ step: EditableQuizStep; onApply: (props: any) => void }> = ({ step, onApply }) => {
+    const [text, setText] = React.useState<string>('{}');
+    const [error, setError] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+        // Carrega meta.props se existir, senão cria base por tipo
+        const base = (step as any).meta?.props || {};
+        setText(JSON.stringify(base, null, 2));
+        setError(null);
+    }, [step?.id]);
+
+    const handleApply = () => {
+        try {
+            const obj = JSON.parse(text);
+            setError(null);
+            onApply(obj);
+        } catch (e: any) {
+            setError(e.message || 'JSON inválido');
+        }
+    };
+
+    return (
+        <div className="space-y-2">
+            <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                className="w-full border rounded px-2 py-1 font-mono text-[11px] leading-snug"
+                rows={8}
+            />
+            {error && <div className="text-[11px] text-red-600">{error}</div>}
+            <div className="flex gap-2">
+                <Button size="sm" className="h-7 px-3 text-[11px]" onClick={handleApply}>Aplicar Props → Blocks</Button>
+            </div>
         </div>
     );
 };

@@ -115,6 +115,9 @@ import type { QuizFunnelSchema } from '@/types/quiz-schema';
 import { StorageService } from '@/services/core/StorageService';
 import { EditorCacheService } from '@/services/EditorCacheService';
 import { UnifiedQuizStepAdapter } from '@/services/editor/UnifiedQuizStepAdapter';
+import { SCHEMAS, migrateProps } from '@/schemas';
+import { normalizeByType } from '@/utils/normalizeByType';
+import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -2523,6 +2526,29 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     return { ...base, runtime: nextRuntime } as any;
                                 });
                             }}
+                            onStepPropsApply={async (rawProps: any) => {
+                                if (!selectedStep) return;
+                                try {
+                                    const type = selectedStep.type;
+                                    const schema: any = (SCHEMAS as any)[type];
+                                    if (!schema) throw new Error(`Schema não encontrado para tipo: ${type}`);
+                                    const validated = schema.parse(rawProps);
+                                    const migrated = migrateProps(type, validated);
+                                    const normalized = normalizeByType(type, migrated, selectedStep.id);
+                                    const stepWithMeta = { ...selectedStep, meta: { ...(selectedStep as any).meta, props: normalized } } as any;
+                                    const converted = PropsToBlocksAdapter.applyPropsToBlocks(stepWithMeta);
+                                    setSteps(prev => {
+                                        const next = prev.map(s => (s.id === selectedStep.id ? { ...converted } : s));
+                                        pushHistory(next);
+                                        return next;
+                                    });
+                                    setIsDirty(true);
+                                    toast({ title: 'Props aplicadas', description: 'Canvas atualizado a partir das propriedades' });
+                                } catch (e: any) {
+                                    console.error('Erro ao aplicar props → blocks', e);
+                                    toast({ title: 'Erro ao aplicar props', description: e?.message || 'Falha de validação', variant: 'destructive' } as any);
+                                }
+                            }}
                         />
                     )}
                     duplicateDialog={(
@@ -2657,17 +2683,17 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
             // ✅ FASE 2 (P1): Ao invés de abortar, resetar contador após delay
             if (updateCountRef.current > 10) {
                 console.warn('⚠️ LOOP DETECTADO! Resetando contador em 2s...');
-                
+
                 // Resetar contador após 2s de inatividade
                 if (loopResetTimerRef.current) {
                     clearTimeout(loopResetTimerRef.current);
                 }
-                
+
                 loopResetTimerRef.current = setTimeout(() => {
                     console.log('🔄 Reset de loop counter');
                     updateCountRef.current = 0;
                 }, 2000);
-                
+
                 setSyncStatus('error');
                 return;
             }
