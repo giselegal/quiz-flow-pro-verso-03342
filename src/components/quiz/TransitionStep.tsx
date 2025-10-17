@@ -8,12 +8,59 @@ interface TransitionStepProps {
 }
 
 /**
+ * ⚠️ @deprecated COMPONENTE LEGADO - NÃO USAR EM NOVOS STEPS
+ * 
+ * Este componente será substituído por blocos atômicos nos templates JSON:
+ * - transition-title
+ * - transition-subtitle  
+ * - transition-loader
+ * - transition-progress
+ * 
+ * **Migração:**
+ * ```json
+ * // ANTES: TransitionStep hardcoded
+ * 
+ * // DEPOIS: Template JSON com blocos atômicos
+ * {
+ *   "stepNumber": 12,
+ *   "blocks": [
+ *     { "type": "transition-title", "content": { "text": "Analisando..." } },
+ *     { "type": "transition-loader", "content": { "color": "#B89B7A" } }
+ *   ]
+ * }
+ * ```
+ * 
+ * **Problemas do componente legado:**
+ * - ❌ UI hardcoded (não editável no editor)
+ * - ❌ Timer fixo de 3 segundos
+ * - ❌ Não usa templates JSON
+ * - ❌ Não modular
+ * 
+ * **Ver documentação:**
+ * - ANALISE_ACOPLAMENTO_STEPS_12_19_20.md
+ * - LOGICA_CALCULOS_RESULTADOS.md
+ * 
+ * @see src/components/editor/blocks/atomic/TransitionTitleBlock.tsx
+ * @see src/components/editor/blocks/atomic/TransitionLoaderBlock.tsx
+ * @see src/config/templates/step-12.json
+ * 
  * ⏳ COMPONENTE DE TRANSIÇÃO
  * 
  * Exibe telas de loading entre seções do quiz (etapas 12 e 19)
  * com animação e mensagens contextuais.
  */
 export default function TransitionStep({ data, onComplete }: TransitionStepProps) {
+    // ⚠️ Log de deprecação em desenvolvimento
+    useEffect(() => {
+        if (process.env.NODE_ENV === 'development') {
+            console.warn(
+                '⚠️ TransitionStep está deprecated e será removido na v2.0. ' +
+                'Migre para blocos atômicos no template JSON. ' +
+                'Ver ANALISE_ACOPLAMENTO_STEPS_12_19_20.md'
+            );
+        }
+    }, []);
+
     useEffect(() => {
         const timer = setTimeout(() => {
             onComplete();
