@@ -1,0 +1,25 @@
+/* src/styles/editor-overlays.css
+   Patch: evita que overlay de drag/drop bloqueie cliques no Canvas quando não está em dragging.
+   Importe este CSS no seu bundle (ou mescle com arquivos de estilos existentes).
+*/
+
+.drag-overlay {
+    pointer-events: none;
+    /* não bloqueia cliques quando inativo */
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    /* baixo o suficiente para não cobrir interações quando inativo */
+}
+
+.drag-overlay.dragging {
+    pointer-events: auto;
+    /* permite interação durante arrasto */
+    z-index: 9999;
+    /* garante comportamento esperado em drag */
+}
+
+/* visual helper para debug (removível) */
+.block-preview.block-selected {
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.22);
+}
