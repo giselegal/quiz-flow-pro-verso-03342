@@ -15,7 +15,7 @@ export default function ResultCTASecondaryBlock({
 
     const handleClick = (e: React.MouseEvent) => {
         if (onClick) {
-            onClick(e);
+            onClick();
         }
         // Em preview mode, navegar para URL
         if (url && url !== '#' && !isSelected) {
