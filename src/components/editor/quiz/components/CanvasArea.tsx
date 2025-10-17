@@ -11,6 +11,7 @@ import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeCon
 import { UnifiedStepRenderer } from './UnifiedStepRenderer';
 import { smartMigration } from '@/utils/stepDataMigration';
 import BlockRow from './BlockRow';
+import { useEditor } from '@/components/editor/EditorProviderUnified';
 
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
@@ -101,6 +102,14 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     console.log('🔍 CanvasArea - migratedStep:', migratedStep?.id, 'type:', migratedStep?.type);
 
+    // 🔗 Integrar com EditorProvider: pegar blocos do estado para o step atual
+    const editor = useEditor({ optional: true } as any);
+    const stepBlocks = useMemo(() => {
+        if (!migratedStep) return [] as any[];
+        const key = migratedStep.id;
+        return (editor?.state?.stepBlocks?.[key] || migratedStep.blocks || []) as any[];
+    }, [editor?.state?.stepBlocks, migratedStep]);
+
     // ✅ NOVO: Zona droppable ao final do canvas para aceitar novos componentes
     const { setNodeRef: setDropZoneRef, isOver } = useDroppable({
         id: 'canvas-end'
@@ -178,7 +187,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
                             {/* 🎯 COMPONENTES MODULARES - Mantém arquitetura do template */}
                             <UnifiedStepRenderer
-                                step={migratedStep}
+                                step={{
+                                    ...migratedStep,
+                                    blocks: stepBlocks
+                                } as any}
                                 mode="edit"
                                 isSelected={selectedBlockId === migratedStep.id}
                                 onStepClick={(e, step) => handleBlockClick(e, step as any)}
@@ -242,7 +254,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 </div>
                             }>
                                 <UnifiedStepRenderer
-                                    step={migratedStep}
+                                    step={{
+                                        ...migratedStep,
+                                        blocks: stepBlocks
+                                    } as any}
                                     mode="preview"
                                     sessionData={previewSessionData}
                                     onUpdateSessionData={updatePreviewSessionData}
