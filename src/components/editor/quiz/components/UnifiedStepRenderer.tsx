@@ -93,6 +93,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   // Provider opcional do Editor para seleção/persistência de blocos reais
   const editor = useEditor({ optional: true } as any);
   const stepKey = useMemo(() => step?.id || '', [step?.id]);
+  const selectedBlockId = editor?.state?.selectedBlockId || null;
 
   // Helper: procurar primeiro bloco do tipo desejado no provider
   const findBlockIdByTypes = useCallback((types: string[]): string | undefined => {
@@ -243,6 +244,18 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
     }
   }, [editor?.actions, resolveRealBlockId]);
 
+  // Selecionar um bloco real diretamente (usado pelos steps modulares)
+  const handleSelectBlock = useCallback((blockId: string) => {
+    try {
+      if (editor?.actions?.setSelectedBlockId) {
+        editor.actions.setSelectedBlockId(blockId);
+      }
+      if (!ui?.propertiesPanelOpen) {
+        togglePropertiesPanel();
+      }
+    } catch { /* noop */ }
+  }, [editor?.actions, ui?.propertiesPanelOpen, togglePropertiesPanel]);
+
   // Callbacks para persistência (no futuro: integrar com EditorProvider)
   const handleEdit = (field: string, value: any) => {
     // Patch dentro de metadata por padrão
@@ -390,6 +403,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             <ModularTransitionStep
               data={{ ...stepData, type: step.type } as any}
               isEditable={true}
+              selectedBlockId={selectedBlockId || undefined}
+              onBlockSelect={handleSelectBlock}
             />
           );
         }
@@ -416,6 +431,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
                 resultStyle: sessionData.resultStyle || 'natural',
                 secondaryStyles: sessionData.secondaryStyles || [],
               }}
+              selectedBlockId={selectedBlockId || undefined}
+              onBlockSelect={handleSelectBlock}
               onOpenProperties={handleOpenProperties}
             />
           );
