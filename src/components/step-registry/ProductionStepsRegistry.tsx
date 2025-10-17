@@ -199,8 +199,12 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
             try {
                 // Carregar template do step
                 const { loadTemplate: loadTemplateFunc } = await import('@/templates/imports');
-                const templateData = await loadTemplateFunc(stepId);
-                setTemplate(templateData);
+                const result = await loadTemplateFunc(stepId);
+                // loadTemplate retorna { template, source }
+                const templateData = result?.template || result;
+                // Buscar blocos do step específico
+                const stepBlocks = (templateData as any)?.[stepId];
+                setTemplate({ blocks: stepBlocks });
             } catch (error) {
                 console.error('Erro ao carregar template:', error);
             } finally {
@@ -297,8 +301,12 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
             try {
                 // Carregar template do step 20
                 const { loadTemplate: loadTemplateFunc } = await import('@/templates/imports');
-                const templateData = await loadTemplateFunc(stepId);
-                setTemplate(templateData);
+                const result = await loadTemplateFunc(stepId);
+                // loadTemplate retorna { template, source }
+                const templateData = result?.template || result;
+                // Buscar blocos do step específico
+                const stepBlocks = (templateData as any)?.[stepId];
+                setTemplate({ blocks: stepBlocks });
             } catch (error) {
                 console.error('Erro ao carregar template:', error);
             } finally {
