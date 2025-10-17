@@ -6,9 +6,9 @@ export default function TransitionLoaderBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const color = block.properties?.color || '#5b4135';
-  const size = block.properties?.size || 'md';
-  
+  const color = block.content?.color || '#5b4135';
+  const size = block.content?.size || 'md';
+
   const sizeClasses = {
     sm: 'w-2 h-2',
     md: 'w-3 h-3',
@@ -16,7 +16,7 @@ export default function TransitionLoaderBlock({
   };
 
   return (
-    <div 
+    <div
       className={`flex gap-2 justify-center items-center py-8 ${isSelected ? 'ring-2 ring-primary' : ''}`}
       onClick={onClick}
     >
@@ -24,7 +24,7 @@ export default function TransitionLoaderBlock({
         <div
           key={i}
           className={`${sizeClasses[size as keyof typeof sizeClasses]} rounded-full animate-pulse`}
-          style={{ 
+          style={{
             backgroundColor: color,
             animationDelay: `${i * 0.15}s`
           }}

@@ -7,12 +7,12 @@ export default function ResultCTAPrimaryBlock({
     isSelected,
     onClick
 }: AtomicBlockProps) {
-    // Ler de content primeiro, fallback para properties
-    const text = block.content?.text || block.properties?.text || 'Ver Oferta Personalizada';
-    const url = block.content?.url || block.properties?.url || '#';
-    const backgroundColor = block.properties?.backgroundColor || '#3B82F6';
-    const textColor = block.properties?.textColor || '#FFFFFF';
-    const size = block.properties?.size || 'lg';
+    // Ler apenas de content
+    const text = block.content?.text || 'Ver Oferta Personalizada';
+    const url = block.content?.url || '#';
+    const backgroundColor = block.content?.backgroundColor || '#3B82F6';
+    const textColor = block.content?.textColor || '#FFFFFF';
+    const size = block.content?.size || 'lg';
 
     const handleClick = (e: React.MouseEvent) => {
         if (onClick) {

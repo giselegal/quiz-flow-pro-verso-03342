@@ -13,6 +13,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // ============================================================
+// HELPER: Converte kebab-case para PascalCase com suporte a acronimos
+// ============================================================
+function toPascalCase(str) {
+  const acronyms = ['CTA', 'API', 'URL', 'HTML', 'CSS', 'JSON', 'ID'];
+  
+  return str
+    .split('-')
+    .map(word => {
+      const upper = word.toUpperCase();
+      if (acronyms.includes(upper)) return upper;
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join('');
+}
+
+// ============================================================
 // CONFIGURAÇÃO
 // ============================================================
 
@@ -93,7 +109,7 @@ const importAnalysis = {
 
 // Verificar imports dos componentes atômicos
 ATOMIC_BLOCKS.forEach(block => {
-  const pascalName = block.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+  const pascalName = toPascalCase(block);
   const fileName = `${pascalName}Block.tsx`;
   const filePath = join(FILES_TO_CHECK.atomicDir, fileName);
   
@@ -381,7 +397,7 @@ const renderAnalysis = {
 };
 
 ATOMIC_BLOCKS.forEach(block => {
-  const pascalName = block.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+  const pascalName = toPascalCase(block);
   const fileName = `${pascalName}Block.tsx`;
   const filePath = join(FILES_TO_CHECK.atomicDir, fileName);
   
@@ -512,7 +528,7 @@ const modularityAnalysis = {
 };
 
 ATOMIC_BLOCKS.forEach(block => {
-  const pascalName = block.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+  const pascalName = toPascalCase(block);
   const fileName = `${pascalName}Block.tsx`;
   const filePath = join(FILES_TO_CHECK.atomicDir, fileName);
   
