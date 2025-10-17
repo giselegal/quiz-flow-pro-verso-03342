@@ -1210,7 +1210,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             if (over.id && String(over.id).startsWith('drop-before-')) {
                 const targetBlockId = String(over.id).replace('drop-before-', '');
                 console.log('🎯 DROP ZONE detectado:', { targetBlockId, allBlocks: currentStep.blocks.map(b => ({ id: b.id, order: b.order })) });
-                
+
                 // Remover filtro parentId - buscar pelo ID real
                 const targetBlockIndex = currentStep.blocks.findIndex(b => b.id === targetBlockId);
                 if (targetBlockIndex >= 0) {
