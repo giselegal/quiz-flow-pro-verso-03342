@@ -11,6 +11,7 @@ interface ModularIntroStepProps {
     selectedBlockId?: string;
     onBlockSelect?: (blockId: string) => void;
     onOpenProperties?: (blockId: string) => void;
+    onBlocksReorder?: (stepId: string, newOrder: string[]) => void;
     /** Emite o nome digitado quando o botão do formulário é clicado */
     onNameSubmit?: (name: string) => void;
     editor?: any;
