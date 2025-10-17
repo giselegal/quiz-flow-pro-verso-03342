@@ -3,7 +3,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
-import { Eye, Edit3, Smartphone, Tablet, Monitor } from 'lucide-react';
+import { Eye, Edit3, Smartphone, Tablet, Monitor, Plus } from 'lucide-react';
+import { useDroppable } from '@dnd-kit/core';
 
 import { BlockComponent, EditableQuizStep } from '../types';
 import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeContext';
@@ -70,19 +71,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     OfferMap,
 }) => {
     // 🎯 USAR EDITOR MODE CONTEXT ao invés de activeTab
-    const { 
-        viewMode, 
-        setViewMode, 
-        isEditMode, 
+    const {
+        viewMode,
+        setViewMode,
+        isEditMode,
         isPreviewMode,
         previewSessionData,
         updatePreviewSessionData,
         resetPreviewSession
     } = useEditorMode();
     const { previewDevice, setPreviewDevice } = useEditorMode();
-    
+
     console.log('🔍 CanvasArea render - selectedStep:', selectedStep?.id, 'viewMode:', viewMode);
-    
+
     // 🚨 DEPRECATION WARNING para activeTab/onTabChange
     if (activeTab !== undefined && process.env.NODE_ENV === 'development') {
         console.warn(
@@ -96,10 +97,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         if (!selectedStep) return null;
         return smartMigration(selectedStep);
     }, [selectedStep]);
-    
+
     console.log('🔍 CanvasArea - migratedStep:', migratedStep?.id, 'type:', migratedStep?.type);
 
-    return (
+    // ✅ NOVO: Zona droppable ao final do canvas para aceitar novos componentes
+    const { setNodeRef: setDropZoneRef, isOver } = useDroppable({
+        id: 'canvas-end'
+    }); return (
         <div className="flex-1 bg-gray-100 flex flex-col overflow-hidden">
             {/* 🎯 CANVAS HEADER - Controles de modo e device */}
             <div className="px-4 py-2 bg-white border-b flex items-center justify-between">
@@ -123,7 +127,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                         Preview
                     </Button>
                 </div>
-                
+
                 {/* 🎯 DEVICE CONTROLS - Apenas em modo preview */}
                 {isPreviewMode() && (
                     <div className="flex items-center gap-2">
@@ -157,7 +161,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             </div>
 
             {/* 🎯 EDIT MODE - Renderização modular com componentes reais */}
-            <div 
+            <div
                 className="flex-1 overflow-auto p-4"
                 style={{ display: isEditMode() ? 'block' : 'none' }}
                 data-testid="canvas-edit-mode"
@@ -170,7 +174,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={migratedStep.id} />
                                 </div>
                             </div>
-                            
+
                             {/* 🎯 WYSIWYG Real: Renderizar componente de step real */}
                             <UnifiedStepRenderer
                                 step={migratedStep}
@@ -194,7 +198,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             </div>
 
             {/* 🎯 PREVIEW MODE - WYSIWYG Real: Mesmo componente do Edit, totalmente interativo */}
-            <div 
+            <div
                 className="flex-1 overflow-auto p-4"
                 style={{ display: isPreviewMode() ? 'block' : 'none' }}
                 data-testid="canvas-preview-mode"
@@ -207,7 +211,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={migratedStep.id} />
                                 </div>
                             </div>
-                            
+
                             {/* 🎯 WYSIWYG Real: Mesmo componente, totalmente interativo */}
                             <Suspense fallback={
                                 <div className="flex items-center justify-center py-8">
