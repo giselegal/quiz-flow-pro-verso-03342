@@ -31,11 +31,11 @@ const useBlockComponent = (blockType: string): React.ComponentType<any> | null =
 
   return useMemo(() => {
     const component = getEnhancedBlockComponent(blockType);
-    
+
     if (!component) {
       logger.warn(`Componente não encontrado para tipo: ${blockType}`);
     }
-    
+
     return component as React.ComponentType<any> | null;
   }, [blockType, logger]);
 };
@@ -53,16 +53,16 @@ export const PreviewBlock: React.FC<PreviewBlockProps> = memo(({
   const logger = useLogger('PreviewBlock');
   const BlockComponent = useBlockComponent(block.type);
 
-  // Log de render e métricas (apenas em dev)
+  // Registrar render imediatamente (inclusive em ambiente de teste)
+  MemoizationMetrics.recordRender('PreviewBlock');
+
+  // Log de render (apenas logging; métrica já registrada acima)
   React.useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      MemoizationMetrics.recordRender('PreviewBlock');
-      logger.render(`PreviewBlock[${block.type}]`, {
-        blockId: block.id,
-        hasComponent: !!BlockComponent,
-        hasSessionData: !!sessionData
-      });
-    }
+    logger.render(`PreviewBlock[${block.type}]`, {
+      blockId: block.id,
+      hasComponent: !!BlockComponent,
+      hasSessionData: !!sessionData
+    });
   }, [block.type, block.id, BlockComponent, sessionData, logger]);
 
   if (!BlockComponent) {
@@ -105,21 +105,21 @@ export const PreviewBlock: React.FC<PreviewBlockProps> = memo(({
 }, (prev, next) => {
   // 🎯 TK-CANVAS-07: Memoização agressiva otimizada
   // Preview muda menos, então podemos ser mais agressivos
-  
+
   // IDs diferentes = sempre re-render
   if (prev.block.id !== next.block.id) return false;
   if (prev.block.type !== next.block.type) return false;
-  
+
   // Usar shallow comparison (mais rápido que JSON.stringify)
   const contentEqual = shallowEqual(prev.block.content, next.block.content);
   const sessionEqual = shallowEqual(prev.sessionData, next.sessionData);
-  
+
   const areEqual = contentEqual && sessionEqual;
-  
-  if (areEqual && process.env.NODE_ENV === 'development') {
+
+  if (areEqual) {
     MemoizationMetrics.recordMemoHit('PreviewBlock');
   }
-  
+
   return areEqual;
 });
 

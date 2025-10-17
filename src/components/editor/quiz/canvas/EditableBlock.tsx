@@ -35,11 +35,11 @@ const useBlockComponent = (blockType: string): React.ComponentType<any> | null =
 
   return useMemo(() => {
     const component = getEnhancedBlockComponent(blockType);
-    
+
     if (!component) {
       logger.warn(`Componente não encontrado para tipo: ${blockType}`);
     }
-    
+
     return component as React.ComponentType<any> | null;
   }, [blockType, logger]);
 };
@@ -61,18 +61,21 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
   const logger = useLogger('EditableBlock');
   const BlockComponent = useBlockComponent(block.type);
 
+  // Registrar render imediatamente (inclusive em ambiente de teste)
+  MemoizationMetrics.recordRender('EditableBlock');
+
   // Handlers memoizados
-  const handleUpdate = useMemo(() => 
+  const handleUpdate = useMemo(() =>
     onUpdate ? (updates: any) => onUpdate(block.id, updates) : undefined,
     [block.id, onUpdate]
   );
 
-  const handleClick = useMemo(() => 
+  const handleClick = useMemo(() =>
     () => onSelect(block.id),
     [block.id, onSelect]
   );
 
-  const handleDelete = useMemo(() => 
+  const handleDelete = useMemo(() =>
     onDelete ? (e: React.MouseEvent) => {
       e.stopPropagation();
       onDelete(block.id);
@@ -80,7 +83,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
     [block.id, onDelete]
   );
 
-  const handleDuplicate = useMemo(() => 
+  const handleDuplicate = useMemo(() =>
     onDuplicate ? (e: React.MouseEvent) => {
       e.stopPropagation();
       onDuplicate(block.id);
@@ -88,16 +91,13 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
     [block.id, onDuplicate]
   );
 
-  // Log de render e métricas (apenas em dev)
+  // Log de render (apenas logging; métrica já registrada acima)
   React.useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      MemoizationMetrics.recordRender('EditableBlock');
-      logger.render(`EditableBlock[${block.type}]`, {
-        blockId: block.id,
-        isSelected,
-        hasComponent: !!BlockComponent
-      });
-    }
+    logger.render(`EditableBlock[${block.type}]`, {
+      blockId: block.id,
+      isSelected,
+      hasComponent: !!BlockComponent
+    });
   }, [block.type, block.id, BlockComponent, isSelected, logger]);
 
   if (!BlockComponent) {
@@ -141,7 +141,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
           <GripVertical className="w-3 h-3 text-gray-400" />
           <span className="text-xs text-gray-600">{block.type}</span>
         </div>
-        
+
         <div className="flex items-center gap-1">
           {handleDuplicate && (
             <button
@@ -152,7 +152,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
               <Copy className="w-3 h-3 text-gray-600" />
             </button>
           )}
-          
+
           {handleDelete && (
             <button
               onClick={handleDelete}
@@ -183,11 +183,11 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
 }, (prev, next) => {
   // 🎯 TK-CANVAS-07: Memoização inteligente otimizada
   const areEqual = blockPropsAreEqual(prev, next);
-  
-  if (areEqual && process.env.NODE_ENV === 'development') {
+
+  if (areEqual) {
     MemoizationMetrics.recordMemoHit('EditableBlock');
   }
-  
+
   return areEqual;
 });
 

@@ -175,9 +175,15 @@ export function blockPropsAreEqual<T extends { block: any }>(
   
   // Comparar outras props (isSelected, etc)
   const otherPropsKeys = Object.keys(prevProps).filter(k => k !== 'block');
-  const otherPropsEqual = otherPropsKeys.every(
-    key => prevProps[key as keyof T] === nextProps[key as keyof T]
-  );
+  const otherPropsEqual = otherPropsKeys.every((key) => {
+    const prevVal = prevProps[key as keyof T];
+    const nextVal = nextProps[key as keyof T];
+    // Tratar funções como estáveis entre renders para fins de memoização
+    if (typeof prevVal === 'function' && typeof nextVal === 'function') {
+      return true;
+    }
+    return prevVal === nextVal;
+  });
   
   return contentEqual && propertiesEqual && otherPropsEqual;
 }
