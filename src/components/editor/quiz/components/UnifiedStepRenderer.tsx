@@ -417,7 +417,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
 
       case 'result': {
-        // Calcular resultado real (tanto para edição quanto para preview) a partir das respostas atuais
+        // ✅ Calcular resultado real (edição e produção) a partir das respostas atuais
         const answers = getPreviewAnswers();
         const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers });
         const typedScores: QuizScores = {
@@ -431,35 +431,20 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
           criativo: (scores as any).criativo || 0,
         };
 
-        if (isEditMode) {
-          // Em modo edição, usamos o componente modular mas com os dados reais calculados
-          return (
-            <ModularResultStep
-              data={stepData as any}
-              isEditable={true}
-              userProfile={{
-                userName: sessionData.userName || 'Visitante',
-                resultStyle: primaryStyleId || sessionData.resultStyle || 'natural',
-                secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : (sessionData.secondaryStyles || []),
-                scores: Object.entries(typedScores).map(([name, score]) => ({ name, score: Number(score) })),
-              }}
-              selectedBlockId={selectedBlockId || undefined}
-              onBlockSelect={handleSelectBlock}
-              onOpenProperties={handleOpenProperties}
-            />
-          );
-        }
-
-        // Preview: componentes de produção com os mesmos dados calculados
+        // ✅ MODULAR para EDIÇÃO e PRODUÇÃO (Step 20)
         return (
-          <ResultStep
+          <ModularResultStep
             data={stepData as any}
+            isEditable={isEditMode}
             userProfile={{
               userName: sessionData.userName || 'Visitante',
               resultStyle: primaryStyleId || sessionData.resultStyle || 'natural',
               secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : (sessionData.secondaryStyles || []),
+              scores: Object.entries(typedScores).map(([name, score]) => ({ name, score: Number(score) })),
             }}
-            scores={typedScores}
+            selectedBlockId={selectedBlockId || undefined}
+            onBlockSelect={handleSelectBlock}
+            onOpenProperties={handleOpenProperties}
           />
         );
       }
