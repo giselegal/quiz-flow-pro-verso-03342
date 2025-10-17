@@ -47,6 +47,8 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
     const [showControls, setShowControls] = useState(true);
     const [refreshKey, setRefreshKey] = useState(0);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [viewport, setViewport] = useState<'full' | 'desktop' | 'tablet' | 'mobile'>('desktop');
+    const [editable, setEditable] = useState<boolean>(true);
 
     // Estado do quiz para debug
     const [quizState, setQuizState] = useState<any>(null);
@@ -69,6 +71,30 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             onStateChange(quizState);
         }
     }, [quizState, onStateChange]);
+
+    // =================== URL SYNC (viewport/mode) ===================
+    useEffect(() => {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const vp = params.get('viewport');
+            const md = params.get('mode');
+            if (vp === 'full' || vp === 'desktop' || vp === 'tablet' || vp === 'mobile') {
+                setViewport(vp);
+            }
+            if (md === 'edit' || md === 'preview') {
+                setEditable(md === 'edit');
+            }
+        } catch { }
+    }, []);
+
+    useEffect(() => {
+        try {
+            const url = new URL(window.location.href);
+            url.searchParams.set('viewport', viewport);
+            url.searchParams.set('mode', editable ? 'edit' : 'preview');
+            window.history.replaceState({}, '', url.toString());
+        } catch { }
+    }, [viewport, editable]);
 
     const handleRefresh = useCallback(() => {
         setRefreshKey(prev => prev + 1);
@@ -123,6 +149,22 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2">
+                    {/* Viewport Controls */}
+                    <div className="hidden md:flex items-center gap-1 pr-2 mr-2 border-r">
+                        <span className="text-[11px] text-muted-foreground">Viewport</span>
+                        <Button variant={viewport === 'mobile' ? 'default' : 'ghost'} size="sm" onClick={() => setViewport('mobile')}>Mobile</Button>
+                        <Button variant={viewport === 'tablet' ? 'default' : 'ghost'} size="sm" onClick={() => setViewport('tablet')}>Tablet</Button>
+                        <Button variant={viewport === 'desktop' ? 'default' : 'ghost'} size="sm" onClick={() => setViewport('desktop')}>Desktop</Button>
+                        <Button variant={viewport === 'full' ? 'default' : 'ghost'} size="sm" onClick={() => setViewport('full')}>Full</Button>
+                    </div>
+
+                    {/* Mode Controls */}
+                    <div className="hidden md:flex items-center gap-1 pr-2 mr-2 border-r">
+                        <span className="text-[11px] text-muted-foreground">Modo</span>
+                        <Button variant={editable ? 'default' : 'ghost'} size="sm" onClick={() => setEditable(true)}>Editar</Button>
+                        <Button variant={!editable ? 'default' : 'ghost'} size="sm" onClick={() => setEditable(false)}>Preview</Button>
+                    </div>
+
                     <Button
                         variant="ghost"
                         size="sm"
@@ -175,7 +217,15 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             >
                 {isPlaying ? (
                     <div key={refreshKey}>
-                        <ModularPreviewContainer funnelId={funnelId} externalSteps={liveSteps || undefined as any} />
+                        <ModularPreviewContainer
+                            funnelId={funnelId}
+                            externalSteps={liveSteps || undefined as any}
+                            editable={editable}
+                            showViewportControls={false}
+                            viewport={viewport}
+                            onViewportChange={setViewport}
+                            onSessionChange={setQuizState}
+                        />
                     </div>
                 ) : (
                     <div className="flex items-center justify-center h-full">

@@ -315,3 +315,12 @@ Componentes de Produção (/src/components/quiz/)
 ```
 
 **Você pode ter 100% de confiança que o preview mostra exatamente o que vai estar em produção!** 🎉
+
+---
+
+## ✅ Checklist prático de verificação
+
+Para uma validação objetiva e operacional das diferenças e garantias entre os modos edição e preview, use o checklist:
+
+- Arquivo: `CHECKLIST_MODO_EDICAO_VS_PREVIEW.md`
+- Cobre: componentes usados, providers/estado, navegação/auto-avanço, UI de edição/overlays, dados/persistência, tema/estilo, performance/carregamento, atalhos, estados de erro, resultados/ofertas, e ações de QA.

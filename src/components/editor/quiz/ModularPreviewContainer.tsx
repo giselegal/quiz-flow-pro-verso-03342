@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useQuizState } from '@/hooks/useQuizState';
 import { UnifiedStepRenderer as ModularUnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
@@ -8,13 +8,35 @@ import { useGlobalUI } from '@/hooks/core/useGlobalState';
 export interface ModularPreviewContainerProps {
     funnelId?: string;
     externalSteps?: Record<string, any>;
+    /**
+     * Quando true, renderiza com capacidades de edição (modulares) no próprio preview.
+     * Quando false, renderiza em modo "preview" (componentes de produção) sem overlays.
+     * Default: true
+     */
+    editable?: boolean;
+    /** Exibe controles de viewport (mobile/tablet/desktop/full). Default: true */
+    showViewportControls?: boolean;
+    /** Controla o viewport externamente (full|desktop|tablet|mobile). */
+    viewport?: 'full' | 'desktop' | 'tablet' | 'mobile';
+    /** Callback quando viewport local muda (modo não-controlado). */
+    onViewportChange?: (viewport: 'full' | 'desktop' | 'tablet' | 'mobile') => void;
+    /** Callback opcional para acompanhar mudanças de sessão (userName/answers/etc.). */
+    onSessionChange?: (session: Record<string, any>) => void;
 }
 
 /**
  * Preview modular que renderiza as etapas usando o UnifiedStepRenderer (modo "preview").
  * Mantém interatividade real via useQuizState, sem acoplar ao QuizApp completo.
  */
-export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = ({ funnelId, externalSteps }) => {
+export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = ({
+    funnelId,
+    externalSteps,
+    editable = true,
+    showViewportControls = true,
+    viewport,
+    onViewportChange,
+    onSessionChange,
+}) => {
     const {
         state,
         currentStepData,
@@ -95,6 +117,11 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
         return map;
     }, [state.userProfile.userName, state.userProfile.resultStyle, state.userProfile.secondaryStyles, state.answers]);
 
+    // Expor sessão para consumidores (ex.: integrar com outras UIs no editor)
+    useEffect(() => {
+        if (onSessionChange) onSessionChange(sessionData);
+    }, [sessionData, onSessionChange]);
+
     const onUpdateSessionData = (key: string, value: any) => {
         if (key === 'userName') {
             setUserName(String(value || ''));
@@ -128,33 +155,90 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
     const numeric = parseInt(state.currentStep.replace('step-', '')) || 1;
     const useSharedHeader = numeric > 1 && numeric < 20; // 2..19
 
+    // VIEWPORT: controlado ou não-controlado
+    const [localViewport, setLocalViewport] = useState<'full' | 'desktop' | 'tablet' | 'mobile'>(viewport || 'desktop');
+    useEffect(() => {
+        if (viewport) setLocalViewport(viewport);
+    }, [viewport]);
+
+    const updateViewport = (v: 'full' | 'desktop' | 'tablet' | 'mobile') => {
+        if (!viewport) setLocalViewport(v);
+        onViewportChange?.(v);
+    };
+
+    const maxWidthPx = useMemo(() => {
+        switch (localViewport) {
+            case 'mobile': return 390; // iPhone 15-ish
+            case 'tablet': return 768;
+            case 'desktop': return 1024;
+            case 'full':
+            default: return undefined;
+        }
+    }, [localViewport]);
+
+    const [isEditLocal, setIsEditLocal] = useState<boolean>(!!editable);
+    useEffect(() => { setIsEditLocal(!!editable); }, [editable]);
+
     const Content = (
         <div className="min-h-screen bg-[#fefefe] text-[#5b4135]">
+            {/* Barra de controles do preview modular */}
+            {showViewportControls && (
+                <div className="sticky top-0 z-30 bg-white/80 backdrop-blur border-b">
+                    <div className="max-w-6xl mx-auto px-3 py-2 flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-1">
+                            <span className="text-[#5b4135]/70 mr-2">Viewport:</span>
+                            <button className={`px-2 py-1 rounded ${localViewport === 'mobile' ? 'bg-[#B89B7A] text-white' : 'hover:bg-gray-100'}`} onClick={() => updateViewport('mobile')}>Mobile</button>
+                            <button className={`px-2 py-1 rounded ${localViewport === 'tablet' ? 'bg-[#B89B7A] text-white' : 'hover:bg-gray-100'}`} onClick={() => updateViewport('tablet')}>Tablet</button>
+                            <button className={`px-2 py-1 rounded ${localViewport === 'desktop' ? 'bg-[#B89B7A] text-white' : 'hover:bg-gray-100'}`} onClick={() => updateViewport('desktop')}>Desktop</button>
+                            <button className={`px-2 py-1 rounded ${localViewport === 'full' ? 'bg-[#B89B7A] text-white' : 'hover:bg-gray-100'}`} onClick={() => updateViewport('full')}>Full</button>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[#5b4135]/70">Modo:</span>
+                            <button
+                                className={`px-2 py-1 rounded ${isEditLocal ? 'bg-[#B89B7A] text-white' : 'hover:bg-gray-100'}`}
+                                onClick={() => setIsEditLocal(true)}
+                                title="Edição modular (abrir propriedades, reordenar, etc.)"
+                            >Editar</button>
+                            <button
+                                className={`px-2 py-1 rounded ${!isEditLocal ? 'bg-[#B89B7A] text-white' : 'hover:bg-gray-100'}`}
+                                onClick={() => setIsEditLocal(false)}
+                                title="Preview (componentes de produção)"
+                            >Preview</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="quiz-container mx-auto">
                 {useSharedHeader && (
                     <SharedProgressHeader progress={progress} />
                 )}
-                <div className={`max-w-6xl mx-auto px-4 ${useSharedHeader ? 'pt-4 pb-8' : 'py-8'}`}>
-                    <ModularUnifiedStepRenderer
-                        step={currentStepData as any}
-                        mode="edit"
-                        sessionData={sessionData}
-                        onUpdateSessionData={onUpdateSessionData}
-                    />
-                    {/* Navegação básica para facilitar o preview */}
-                    <div className="flex items-center justify-between mt-6">
-                        <button
-                            onClick={() => previousStep()}
-                            className="text-sm text-[#5b4135]/70 hover:text-[#5b4135]"
-                        >
-                            ← Anterior
-                        </button>
-                        <button
-                            onClick={() => nextStep()}
-                            className="text-sm text-[#5b4135]/70 hover:text-[#5b4135]"
-                        >
-                            Próximo →
-                        </button>
+                <div className="w-full flex justify-center">
+                    <div
+                        className={`mx-auto px-4 ${useSharedHeader ? 'pt-4 pb-8' : 'py-8'}`}
+                        style={{ width: '100%', maxWidth: maxWidthPx ? `${maxWidthPx}px` : undefined }}
+                    >
+                        <ModularUnifiedStepRenderer
+                            step={currentStepData as any}
+                            mode={isEditLocal ? 'edit' : 'preview'}
+                            sessionData={sessionData}
+                            onUpdateSessionData={onUpdateSessionData}
+                        />
+                        {/* Navegação básica para facilitar o preview */}
+                        <div className="flex items-center justify-between mt-6">
+                            <button
+                                onClick={() => previousStep()}
+                                className="text-sm text-[#5b4135]/70 hover:text-[#5b4135]"
+                            >
+                                ← Anterior
+                            </button>
+                            <button
+                                onClick={() => nextStep()}
+                                className="text-sm text-[#5b4135]/70 hover:text-[#5b4135]"
+                            >
+                                Próximo →
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
