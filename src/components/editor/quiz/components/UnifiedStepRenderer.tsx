@@ -21,13 +21,13 @@ const TransitionStep = lazy(() => import('@/components/quiz/TransitionStep'));
 const ResultStep = lazy(() => import('@/components/quiz/ResultStep'));
 const OfferStep = lazy(() => import('@/components/quiz/OfferStep'));
 
-// Modulares (edição)
-const ModularIntroStep = lazy(() => import('@/components/editor/quiz-estilo/ModularIntroStep'));
-const ModularQuestionStep = lazy(() => import('@/components/editor/quiz-estilo/ModularQuestionStep'));
-const ModularStrategicQuestionStep = lazy(() => import('@/components/editor/quiz-estilo/ModularStrategicQuestionStep'));
-const ModularTransitionStep = lazy(() => import('@/components/editor/quiz-estilo/ModularTransitionStep'));
-const ModularResultStep = lazy(() => import('@/components/editor/quiz-estilo/ModularResultStep'));
-const ModularOfferStep = lazy(() => import('@/components/editor/quiz-estilo/ModularOfferStep'));
+// Modulares (edição) - usar import estático para evitar falhas de fetch de chunks em ambientes de preview
+import ModularIntroStep from '@/components/editor/quiz-estilo/ModularIntroStep';
+import ModularQuestionStep from '@/components/editor/quiz-estilo/ModularQuestionStep';
+import ModularStrategicQuestionStep from '@/components/editor/quiz-estilo/ModularStrategicQuestionStep';
+import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
+import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
+import ModularOfferStep from '@/components/editor/quiz-estilo/ModularOfferStep';
 
 // UI do overlay de edição
 import { GripVertical, Trash2, Copy } from 'lucide-react';
