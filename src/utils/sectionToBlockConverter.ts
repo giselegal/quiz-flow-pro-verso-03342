@@ -37,37 +37,34 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
           }
         });
         
-        // Título principal
+        // Título principal → result-header
         blocks.push({
           id: `${section.id}-title`,
-          type: 'result-title',
+          type: 'result-header',
           order: section.order * 10 + 1,
           properties: {
+            title: section.props?.titleFormat || 'Seu Estilo Predominante é:',
             fontSize: '3xl',
             fontWeight: 'bold',
-            textAlign: 'center',
-            color: section.props?.colors?.title || 'secondary'
+            textAlign: 'center'
           },
-          content: {
-            text: section.props?.titleFormat || 'Seu Estilo Predominante é:'
-          }
+          content: {}
         });
         
-        // Nome do estilo
+        // Nome do estilo → result-main
         blocks.push({
           id: `${section.id}-style-name`,
-          type: 'result-style-name',
+          type: 'result-main',
           order: section.order * 10 + 2,
           properties: {
+            styleName: '{styleName}',
+            percentage: 100,
+            showGradient: true,
             fontSize: '5xl',
             fontWeight: 'bold',
-            textAlign: 'center',
-            color: section.props?.colors?.styleName || 'primary',
-            showGradient: true
+            textAlign: 'center'
           },
-          content: {
-            text: section.props?.styleNameDisplay || '{styleName}'
-          }
+          content: {}
         });
         break;
       }
@@ -92,19 +89,16 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
           });
         }
         
-        // Texto introdutório
+        // Texto introdutório → result-description
         if (section.props?.showIntroText && section.props?.introText?.text) {
           blocks.push({
             id: `${section.id}-intro`,
-            type: 'result-text',
+            type: 'result-description',
             order: section.order * 10 + 1,
             properties: {
               fontSize: 'lg',
               textAlign: 'center',
-              fontStyle: section.props.introText.style || 'normal',
-              backgroundColor: section.props.introText.background || 'transparent',
-              padding: '1rem',
-              borderLeft: section.props.introText.borderLeft
+              maxWidth: '700px'
             },
             content: {
               text: section.props.introText.text
@@ -128,17 +122,16 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
           });
         }
         
-        // Texto de transição
+        // Texto de transição → result-description
         if (section.props?.showTransitionText && section.props?.transitionText) {
           blocks.push({
             id: `${section.id}-transition`,
-            type: 'result-text',
+            type: 'result-description',
             order: section.order * 10 + 3,
             properties: {
               fontSize: 'lg',
               textAlign: 'center',
-              fontWeight: 'medium',
-              marginY: '2rem'
+              maxWidth: '700px'
             },
             content: {
               text: section.props.transitionText
@@ -164,56 +157,51 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
           });
         }
         
-        // Keywords/Tags
+        // Keywords/Tags → result-characteristics
         if (section.props?.showKeywords) {
           blocks.push({
             id: `${section.id}-keywords`,
-            type: 'result-keywords',
+            type: 'result-characteristics',
             order: section.order * 10 + 5,
             properties: {
               title: section.props.keywords?.title || 'Palavras que te definem:',
-              tagColor: section.props.keywords?.tagColor || 'primary',
-              tagStyle: section.props.keywords?.tagStyle || 'rounded-full'
+              items: [] // Será preenchido dinamicamente
             },
-            content: {
-              keywords: [] // Será preenchido dinamicamente
-            }
+            content: {}
           });
         }
         
-        // Perguntas persuasivas
+        // Perguntas persuasivas → result-description
         if (section.props?.showPersuasiveQuestions) {
+          const questions = section.props.persuasiveQuestions?.questions || [];
+          const questionText = (section.props.persuasiveQuestions?.title || '💭 Você já se perguntou...') + 
+            '\n\n' + questions.join('\n');
+          
           blocks.push({
             id: `${section.id}-questions`,
-            type: 'result-questions',
+            type: 'result-description',
             order: section.order * 10 + 6,
             properties: {
-              title: section.props.persuasiveQuestions?.title || '💭 Você já se perguntou...',
-              icon: section.props.persuasiveQuestions?.icon || '❓',
-              fontStyle: section.props.persuasiveQuestions?.style || 'italic',
-              backgroundColor: section.props.persuasiveQuestions?.background || 'primary/5',
-              borderColor: section.props.persuasiveQuestions?.border || 'primary/30'
+              fontSize: 'base',
+              textAlign: 'left',
+              maxWidth: '700px'
             },
             content: {
-              questions: [] // Será preenchido dinamicamente
+              text: questionText
             }
           });
         }
         
-        // Mensagem de fechamento
+        // Mensagem de fechamento → result-description
         if (section.props?.showClosingMessage && section.props?.closingMessage?.text) {
           blocks.push({
             id: `${section.id}-closing`,
-            type: 'result-text',
+            type: 'result-description',
             order: section.order * 10 + 7,
             properties: {
               fontSize: 'lg',
               textAlign: section.props.closingMessage.textAlign || 'center',
-              fontStyle: section.props.closingMessage.style || 'normal',
-              fontWeight: section.props.closingMessage.fontWeight || 'normal',
-              backgroundColor: section.props.closingMessage.background || 'transparent',
-              padding: '1.5rem',
-              marginY: '2rem'
+              maxWidth: '700px'
             },
             content: {
               text: section.props.closingMessage.text
@@ -268,55 +256,33 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
       }
       
       case 'TransformationSection': {
+        // Título da seção → result-header
         blocks.push({
           id: `${section.id}-title`,
-          type: 'result-section-title',
+          type: 'result-header',
           order: section.order * 10,
           properties: {
+            title: section.props?.mainTitle || 'Transformação',
+            subtitle: section.props?.subtitle,
             fontSize: '3xl',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            highlightWords: section.props?.highlightWords || [],
-            highlightColor: section.props?.highlightColor || 'primary'
+            textAlign: 'center'
           },
-          content: {
-            text: section.props?.mainTitle || 'Transformação'
-          }
+          content: {}
         });
         
-        if (section.props?.subtitle) {
-          blocks.push({
-            id: `${section.id}-subtitle`,
-            type: 'result-text',
-            order: section.order * 10 + 1,
-            properties: {
-              fontSize: 'lg',
-              textAlign: 'center',
-              color: 'muted-foreground'
-            },
-            content: {
-              text: section.props.subtitle
-            }
-          });
-        }
-        
-        // Benefits/Features grid
+        // Benefits/Features → result-characteristics
         if (section.props?.benefits && Array.isArray(section.props.benefits)) {
           blocks.push({
             id: `${section.id}-benefits`,
-            type: 'result-benefits',
-            order: section.order * 10 + 2,
+            type: 'result-characteristics',
+            order: section.order * 10 + 1,
             properties: {
-              layout: section.props.layout || 'grid-2x2',
-              columns: 2
+              title: 'Benefícios',
+              items: section.props.benefits.map((b: any) => 
+                `${b.icon || '✨'} ${b.text}${b.description ? ': ' + b.description : ''}`
+              )
             },
-            content: {
-              items: section.props.benefits.map((b: any) => ({
-                icon: b.icon,
-                text: b.text,
-                description: b.description
-              }))
-            }
+            content: {}
           });
         }
         break;

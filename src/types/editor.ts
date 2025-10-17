@@ -181,15 +181,20 @@ export type BlockType =
   
   // Result Page Block Types (for step-20 sections conversion)
   | 'result-congrats'
-  | 'result-title'
-  | 'result-style-name'
+  | 'result-main'
+  | 'result-header'
   | 'result-image'
-  | 'result-text'
   | 'result-description'
   | 'result-progress-bars'
+  | 'result-characteristics'
+  | 'result-cta'
+  | 'result-secondary-styles'
+  // Legacy/deprecated types (kept for backward compatibility)
+  | 'result-title'
+  | 'result-style-name'
+  | 'result-text'
   | 'result-keywords'
   | 'result-questions'
-  | 'result-cta'
   | 'result-section-title'
   | 'result-benefits'
 
