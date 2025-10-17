@@ -2,7 +2,17 @@
 export const genId = (prefix = 'id') => `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
 export function slugify(text = '') {
-  return text.toString().toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+  // Normaliza acentos (NFD) e remove diacríticos, mantendo apenas a-z 0-9 e '-'
+  return text
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove diacríticos
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-') // espaços -> '-'
+    .replace(/[^a-z0-9-]/g, '') // remove caracteres não permitidos
+    .replace(/--+/g, '-') // condensa múltiplos '-'
+    .replace(/^-+|-+$/g, ''); // remove '-' nas extremidades
 }
 
 export function normalizeOption(opt: any, stepId: string, idx: number) {
