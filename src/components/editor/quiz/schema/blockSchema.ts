@@ -208,6 +208,30 @@ export const blockSchemaMap: Record<string, any> = {
       { key: 'backgroundColor', type: 'color', label: 'Cor de Fundo', required: false, defaultValue: '#3B82F6' },
     ],
   },
+
+  // Progress Header (usado no topo do quiz) — requerido por testes
+  'progress-header': {
+    type: 'progress-header',
+    label: 'Cabeçalho de Progresso',
+    icon: 'progress',
+    category: 'navigation',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: {
+      showLogo: true,
+      progressEnabled: true,
+      barColor: '#D4AF37',
+      autoProgress: true,
+    },
+    // Importante: usar a chave `default` (não `defaultValue`) conforme BasePropertySchema e testes
+    propertySchema: [
+      { key: 'showLogo', type: 'boolean', label: 'Mostrar Logo', required: false, default: true },
+      { key: 'progressEnabled', type: 'boolean', label: 'Mostrar Progresso', required: false, default: true },
+      { key: 'barColor', type: 'color', label: 'Cor da Barra', required: false, default: '#D4AF37' },
+      { key: 'autoProgress', type: 'boolean', label: 'Avanço Automático', required: false, default: true },
+    ],
+  },
 };
 
 // Helper function to get block schema by type
