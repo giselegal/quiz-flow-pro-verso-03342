@@ -397,72 +397,67 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         const stepKey = typeof step === 'string' ? step : `step-${step}`;
 
         console.group(`🔍 [ensureStepLoaded] ${stepKey}`);
-        console.log('hasModularTemplate:', hasModularTemplate(stepKey));
-        console.log('existingBlocks:', state.stepBlocks[stepKey]?.length || 0);
 
-        // ✅ PRIORIDADE 1: Templates JSON modulares (steps 12, 19, 20)
-        if (hasModularTemplate(stepKey)) {
-            const existingBlocks = state.stepBlocks[stepKey] || [];
-            const modularBlocks = loadStepTemplate(stepKey);
-            // DEBUG: expor temporariamente para inspeção no console do browser
-            try {
-                // @ts-ignore
-                if (typeof window !== 'undefined') (window as any).__loadStepTemplate = loadStepTemplate;
-            } catch { }
+        // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
+        setState(prev => {
+            console.log('hasModularTemplate:', hasModularTemplate(stepKey));
+            console.log('existingBlocks:', prev.stepBlocks[stepKey]?.length || 0);
 
-            console.log('✅ Loaded modular blocks:', {
-                count: modularBlocks.length,
-                types: modularBlocks.map(b => b.type)
-            });
+            // ✅ PRIORIDADE 1: Templates JSON modulares (steps 12, 19, 20)
+            if (hasModularTemplate(stepKey)) {
+                const existingBlocks = prev.stepBlocks[stepKey] || [];
+                const modularBlocks = loadStepTemplate(stepKey);
 
-            // Se já tem blocos modulares com mesma estrutura, não recarregar
-            const existingTypes = existingBlocks.map(b => b.type).sort().join(',');
-            const modularTypes = modularBlocks.map(b => b.type).sort().join(',');
+                console.log('✅ Loaded modular blocks:', {
+                    count: modularBlocks.length,
+                    types: modularBlocks.map(b => b.type)
+                });
 
-            if (existingBlocks.length > 0 && existingTypes === modularTypes) {
-                console.log('⏭️ Skip: blocos modulares já carregados');
+                // Se já tem blocos modulares com mesma estrutura, não recarregar
+                const existingTypes = existingBlocks.map(b => b.type).sort().join(',');
+                const modularTypes = modularBlocks.map(b => b.type).sort().join(',');
+
+                if (existingBlocks.length > 0 && existingTypes === modularTypes) {
+                    console.log('⏭️ Skip: blocos modulares já carregados');
+                    console.groupEnd();
+                    return prev; // ✅ NO UPDATE = NO LOOP
+                }
+
+                // Carregar/substituir com blocos modulares
+                console.log('📝 Carregando blocos modulares');
                 console.groupEnd();
-                return;
-            }
-
-            // Carregar/substituir com blocos modulares
-            console.log('📝 setState: carregando blocos modulares');
-            setState(prev => {
-                const newState = {
+                return {
                     ...prev,
                     stepBlocks: {
                         ...prev.stepBlocks,
                         [stepKey]: modularBlocks
                     }
                 };
-                return newState;
-            });
-            console.groupEnd();
-            return;
-        }
-
-        // Se já tem blocos não-modulares, manter
-        if (state.stepBlocks[stepKey]?.length > 0) {
-            console.log('⏭️ Skip: blocos legacy já carregados');
-            console.groupEnd();
-            return;
-        }
-
-        // Carregar template padrão para outros steps
-        const source: any = (QUIZ_STYLE_21_STEPS_TEMPLATE as any);
-        const templateSteps: any = source?.steps && typeof source.steps === 'object' ? source.steps : source;
-        const templateBlocks = templateSteps?.[stepKey] || [];
-
-        console.log('📝 setState: carregando template padrão');
-        setState(prev => ({
-            ...prev,
-            stepBlocks: {
-                ...prev.stepBlocks,
-                [stepKey]: Array.isArray(templateBlocks) ? templateBlocks : []
             }
-        }));
-        console.groupEnd();
-    }, []); // ✅ CORREÇÃO: Sem dependências para evitar re-execuções
+
+            // Se já tem blocos não-modulares, manter
+            if (prev.stepBlocks[stepKey]?.length > 0) {
+                console.log('⏭️ Skip: blocos legacy já carregados');
+                console.groupEnd();
+                return prev; // ✅ NO UPDATE
+            }
+
+            // Carregar template padrão para outros steps
+            const source: any = (QUIZ_STYLE_21_STEPS_TEMPLATE as any);
+            const templateSteps: any = source?.steps && typeof source.steps === 'object' ? source.steps : source;
+            const templateBlocks = templateSteps?.[stepKey] || [];
+
+            console.log('📝 Carregando template padrão');
+            console.groupEnd();
+            return {
+                ...prev,
+                stepBlocks: {
+                    ...prev.stepBlocks,
+                    [stepKey]: Array.isArray(templateBlocks) ? templateBlocks : []
+                }
+            };
+        });
+    }, []); // ✅ EMPTY DEPS AGORA É SEGURO com functional setState
 
     const loadDefaultTemplate = useCallback(() => {
         console.log('🎨 Loading default template');

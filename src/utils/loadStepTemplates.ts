@@ -1,11 +1,14 @@
 /**
- * 🎯 STEP TEMPLATE LOADER
+ * 🎯 STEP TEMPLATE LOADER - FASE 4 (Com Cache)
  * 
  * Carrega templates JSON dos steps modulares (12, 19, 20)
  * e converte para o formato Block[] usado pelo EditorProvider
+ * 
+ * ✅ FASE 4: Integrado com TemplateCache para performance
  */
 
 import { Block } from '@/types/editor';
+import { templateCache } from '@/utils/TemplateCache';
 import step12Template from '@/data/modularSteps/step-12.json';
 import step19Template from '@/data/modularSteps/step-19.json';
 import step20Template from '@/data/modularSteps/step-20.json';
@@ -44,8 +47,18 @@ function convertTemplateBlocksToBlocks(templateBlocks: StepTemplate['blocks']): 
 
 /**
  * Carrega template de um step específico
+ * ✅ FASE 4: Com cache para evitar conversões repetidas
  */
 export function loadStepTemplate(stepId: string): Block[] {
+  // ✅ CACHE HIT
+  const cacheKey = `template:${stepId}`;
+  if (templateCache.has(cacheKey)) {
+    const cached = templateCache.get<Block[]>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+  }
+
   const templates: Record<string, StepTemplate> = {
     'step-01': step01Template as StepTemplate,
     'step-02': step02Template as StepTemplate,
@@ -64,11 +77,17 @@ export function loadStepTemplate(stepId: string): Block[] {
 
   const blocks = convertTemplateBlocksToBlocks(template.blocks);
 
-  console.log(`✅ Template carregado para ${stepId}:`, {
-    stepId,
-    blockCount: blocks.length,
-    blockTypes: blocks.map(b => b.type),
-  });
+  // ✅ CACHE SET
+  templateCache.set(cacheKey, blocks);
+
+  if (import.meta.env.DEV) {
+    console.log(`✅ Template carregado para ${stepId}:`, {
+      stepId,
+      blockCount: blocks.length,
+      blockTypes: blocks.map(b => b.type),
+      cached: false
+    });
+  }
 
   return blocks;
 }

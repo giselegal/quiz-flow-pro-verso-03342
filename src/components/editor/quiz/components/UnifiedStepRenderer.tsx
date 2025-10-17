@@ -68,10 +68,10 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const isPreviewMode = mode === 'preview';
   const { ui, togglePropertiesPanel } = useGlobalUI();
 
-  // Adaptar dados do step para o formato esperado dos componentes
-  // SEMPRE usar 'merge' no editor para preservar metadata de edição
-  // O modo 'production-only' só deve ser usado no runtime final (fora do editor)
-  const stepData = adaptStepData(step, { source: 'merge', editorMode: true });
+  // ✅ FASE 4: Memoizar adaptStepData para evitar recálculos desnecessários
+  const stepData = useMemo(() => {
+    return adaptStepData(step, { source: 'merge', editorMode: true });
+  }, [step, mode]);
 
   // Helper: extrair respostas salvas no preview (answers_<stepId> => string[])
   const getPreviewAnswers = useCallback((): Record<string, string[]> => {
@@ -93,29 +93,41 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   // Provider opcional do Editor para seleção/persistência de blocos reais
   const editor = useEditor({ optional: true } as any);
   const stepKey = useMemo(() => step?.id || '', [step?.id]);
-  const selectedBlockId = editor?.state?.selectedBlockId || null;
+
+  // ✅ CORREÇÃO CRÍTICA: Memoizar estado do editor para evitar re-renders
+  const editorState = useMemo(() => ({
+    stepBlocks: editor?.state?.stepBlocks || {},
+    selectedBlockId: editor?.state?.selectedBlockId || null,
+    currentStep: editor?.state?.currentStep || 1
+  }), [
+    editor?.state?.stepBlocks,
+    editor?.state?.selectedBlockId,
+    editor?.state?.currentStep
+  ]);
+
+  const selectedBlockId = editorState.selectedBlockId;
 
   const findBlockIdByTypes = useCallback((types: string[]): string | undefined => {
     try {
-      const blocks: any[] = editor?.state?.stepBlocks?.[stepKey] || [];
+      const blocks: any[] = editorState.stepBlocks[stepKey] || [];
       const lowerTypes = types.map(t => t.toLowerCase());
       const found = blocks.find(b => lowerTypes.includes(String(b.type || '').toLowerCase()));
       return found?.id;
     } catch {
       return undefined;
     }
-  }, [editor?.state?.stepBlocks, stepKey]);
+  }, [editorState.stepBlocks, stepKey]); // ✅ DEPENDENCY ESTÁVEL
 
   // Helper: busca por predicado customizado
   const findBlockId = useCallback((predicate: (b: any) => boolean): string | undefined => {
     try {
-      const blocks: any[] = editor?.state?.stepBlocks?.[stepKey] || [];
+      const blocks: any[] = editorState.stepBlocks[stepKey] || [];
       const found = blocks.find(predicate);
       return found?.id;
     } catch {
       return undefined;
     }
-  }, [editor?.state?.stepBlocks, stepKey]);
+  }, [editorState.stepBlocks, stepKey]); // ✅ DEPENDENCY ESTÁVEL
 
   // Mapear IDs lógicos dos blocos para tipos reais do registry
   const resolveRealBlockId = useCallback((logicalId: string): string | undefined => {
