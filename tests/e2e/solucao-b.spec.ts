@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('🎯 Solução B: Props → Blocks E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
-    // Navegar para o editor
-    await page.goto('http://localhost:8080/editor?template=quiz21StepsComplete');
+    // Navegar para o editor (porta 5173 é a padrão do Vite)
+    await page.goto('http://localhost:5173/editor?template=quiz21StepsComplete');
     
     // Aguardar carregamento do template
     await page.waitForSelector('[data-testid="steps-panel"]', { timeout: 10000 }).catch(() => {
