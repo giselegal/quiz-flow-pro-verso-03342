@@ -72,6 +72,21 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     StyleResultCard,
     OfferMap,
 }) => {
+    // Compat: sempre calcular virtualização dos blocos raiz (sem parentId)
+    const rawBlocks = Array.isArray(selectedStep?.blocks) ? (selectedStep!.blocks as any[]) : [];
+    const rootBlocks = useMemo(() => {
+        if (!Array.isArray(rawBlocks)) return [] as any[];
+        const roots = rawBlocks.filter((b: any) => !('parentId' in b) || !b.parentId);
+        return roots.sort((a: any, b: any) => (a?.order ?? 0) - (b?.order ?? 0));
+    }, [rawBlocks]);
+    const virtualizationEnabled = (rawBlocks?.length || 0) >= 60 && (activeId == null);
+    const {
+        visible: vVisible,
+        topSpacer: vTopSpacer,
+        bottomSpacer: vBottomSpacer,
+        total: vTotal
+    } = useVirtualBlocks({ blocks: rootBlocks, rowHeight: 140, overscan: 6, enabled: virtualizationEnabled });
+
     // 🎯 USAR EDITOR MODE CONTEXT ao invés de activeTab
     const {
         viewMode,
@@ -170,13 +185,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 )}
             </div>
 
-            {/* 🎯 EDIT MODE - Renderização modular com componentes especializados */}
+            // 🎯 EDIT MODE - Renderização modular com componentes especializados (ou caminho legacy/virtualizado)
             <div
                 className="flex-1 overflow-auto p-4"
                 style={{ display: isEditMode() ? 'block' : 'none' }}
                 data-testid="canvas-edit-mode"
             >
-                {migratedStep ? (
+                        {migratedStep ? (
                     <Card className="border-0 shadow-none bg-transparent">
                         <CardContent>
                             <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
@@ -185,22 +200,38 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 </div>
                             </div>
 
-                            {/* 🎯 COMPONENTES MODULARES - Mantém arquitetura do template */}
-                            <UnifiedStepRenderer
-                                step={{
-                                    ...migratedStep,
-                                    blocks: stepBlocks
-                                } as any}
-                                mode="edit"
-                                isSelected={selectedBlockId === migratedStep.id}
-                                onStepClick={(e, step) => handleBlockClick(e, step as any)}
-                                onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
-                                onDuplicate={() => {
-                                    setBlockPendingDuplicate(migratedStep as any);
-                                    setTargetStepId(migratedStep.id);
-                                    setDuplicateModalOpen(true);
-                                }}
-                            />
+                                    {/* Se BlockRow for fornecido, usar caminho de renderização virtualizado simples */}
+                                    {BlockRow ? (
+                                        <div data-testid="canvas-legacy-virtualized">
+                                            {virtualizationEnabled && (
+                                                <div className="mb-2 text-xs text-muted-foreground">
+                                                    Virtualização ativa — {vTotal} blocos — exibindo {vVisible.length}
+                                                </div>
+                                            )}
+                                            {vTopSpacer > 0 && <div style={{ height: vTopSpacer }} />}
+                                            {vVisible.map((block: any) => (
+                                                <BlockRow key={block.id} block={block} allBlocks={rootBlocks} />
+                                            ))}
+                                            {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
+                                        </div>
+                                    ) : (
+                                        // 🎯 COMPONENTES MODULARES - Mantém arquitetura do template
+                                        <UnifiedStepRenderer
+                                            step={{
+                                                ...migratedStep,
+                                                blocks: stepBlocks
+                                            } as any}
+                                            mode="edit"
+                                            isSelected={selectedBlockId === migratedStep.id}
+                                            onStepClick={(e, step) => handleBlockClick(e, step as any)}
+                                            onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
+                                            onDuplicate={() => {
+                                                setBlockPendingDuplicate(migratedStep as any);
+                                                setTargetStepId(migratedStep.id);
+                                                setDuplicateModalOpen(true);
+                                            }}
+                                        />
+                                    )}
 
                             {/* ✅ ZONA DROPPABLE - Aceita componentes arrastados da biblioteca */}
                             <div
@@ -247,22 +278,37 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 </div>
                             </div>
 
-                            {/* 🎯 WYSIWYG Real: Mesmo componente, totalmente interativo */}
-                            <Suspense fallback={
-                                <div className="flex items-center justify-center py-8">
-                                    <div className="text-sm text-muted-foreground">Carregando preview...</div>
+                            {/* Suporte ao modo legado controlado via props activeTab/onTabChange */}
+                            {typeof activeTab !== 'undefined' && (
+                                <div className="mb-3 flex items-center gap-2">
+                                    <button data-testid="tab-trigger-canvas" onClick={() => onTabChange?.('canvas')}>Canvas</button>
+                                    <button data-testid="tab-trigger-preview" onClick={() => onTabChange?.('preview')}>Preview</button>
                                 </div>
-                            }>
-                                <UnifiedStepRenderer
-                                    step={{
-                                        ...migratedStep,
-                                        blocks: stepBlocks
-                                    } as any}
-                                    mode="preview"
-                                    sessionData={previewSessionData}
-                                    onUpdateSessionData={updatePreviewSessionData}
-                                />
-                            </Suspense>
+                            )}
+
+                            {BlockRow ? (
+                                // Em caminho legacy, previewNode só aparece quando activeTab === 'preview'
+                                <>
+                                    {activeTab === 'preview' && previewNode}
+                                </>
+                            ) : (
+                                // 🎯 WYSIWYG Real: Mesmo componente, totalmente interativo
+                                <Suspense fallback={
+                                    <div className="flex items-center justify-center py-8">
+                                        <div className="text-sm text-muted-foreground">Carregando preview...</div>
+                                    </div>
+                                }>
+                                    <UnifiedStepRenderer
+                                        step={{
+                                            ...migratedStep,
+                                            blocks: stepBlocks
+                                        } as any}
+                                        mode="preview"
+                                        sessionData={previewSessionData}
+                                        onUpdateSessionData={updatePreviewSessionData}
+                                    />
+                                </Suspense>
+                            )}
                         </CardContent>
                     </Card>
                 ) : (
