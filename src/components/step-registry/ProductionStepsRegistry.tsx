@@ -174,7 +174,8 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
 };
 
 /**
- * ⏳ TRANSITION STEP ADAPTER
+ * ⏳ TRANSITION STEP ADAPTER - ATUALIZADO COM BLOCOS ATÔMICOS
+ * ✨ Usa blocos atômicos dos templates JSON
  */
 const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
     const {
@@ -189,6 +190,55 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
         ...otherProps
     } = props as any;
 
+    // ✅ Carregar template JSON para obter blocos
+    const [template, setTemplate] = React.useState<any>(null);
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const loadTemplate = async () => {
+            try {
+                // Carregar template do step
+                const { loadTemplate: loadTemplateFunc } = await import('@/templates/imports');
+                const templateData = await loadTemplateFunc(stepId);
+                setTemplate(templateData);
+            } catch (error) {
+                console.error('Erro ao carregar template:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadTemplate();
+    }, [stepId]);
+
+    // Se template tem blocos, usar blocos atômicos
+    if (template?.blocks && template.blocks.length > 0) {
+        const UniversalBlockRenderer = require('@/components/editor/blocks/UniversalBlockRenderer').default;
+
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen bg-[#fffaf7]">
+                <div className="max-w-2xl w-full px-4">
+                    {template.blocks.map((block: any, index: number) => (
+                        <UniversalBlockRenderer
+                            key={block.id || `${block.type}-${index}`}
+                            block={block}
+                            isSelected={false}
+                            isPreview={true}
+                            onUpdate={() => { }}
+                            showEditControls={false}
+                        />
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    // Fallback: usar componente legado (compatibilidade)
+    if (loading) {
+        return <div className="flex items-center justify-center p-12">Carregando...</div>;
+    }
+
+    // Se não há blocos, usar TransitionStep legado
     const adaptedProps = {
         data: {
             id: stepId,
@@ -221,8 +271,8 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
 };
 
 /**
- * 🏆 RESULT STEP ADAPTER
- * ✨ INTEGRADO COM StyleResultCard (Fase 6.6)
+ * 🏆 RESULT STEP ADAPTER - ATUALIZADO COM BLOCOS ATÔMICOS
+ * ✨ Usa ResultProvider + blocos atômicos dos templates JSON
  */
 const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
     const {
@@ -238,14 +288,78 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
         ...otherProps
     } = props as any;
 
-    // Importar StyleResultCard dinamicamente para evitar dependência circular
+    // ✅ Carregar template JSON para obter blocos
+    const [template, setTemplate] = React.useState<any>(null);
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const loadTemplate = async () => {
+            try {
+                // Carregar template do step 20
+                const { loadTemplate: loadTemplateFunc } = await import('@/templates/imports');
+                const templateData = await loadTemplateFunc(stepId);
+                setTemplate(templateData);
+            } catch (error) {
+                console.error('Erro ao carregar template:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadTemplate();
+    }, [stepId]);
+
+    // Preparar userProfile para ResultProvider
+    const userProfile = {
+        userName: quizState?.userName || 'Usuário',
+        resultStyle: quizState?.resultStyle || 'classico',
+        secondaryStyles: quizState?.secondaryStyles || []
+    };
+
+    // Se template tem blocos, usar blocos atômicos
+    if (template?.blocks && template.blocks.length > 0) {
+        const { ResultProvider } = require('@/contexts/ResultContext');
+        const UniversalBlockRenderer = require('@/components/editor/blocks/UniversalBlockRenderer').default;
+
+        return (
+            <ResultProvider
+                userProfile={userProfile}
+                scores={quizState?.scores}
+            >
+                <div className="min-h-screen bg-[#fffaf7] relative overflow-hidden">
+                    {/* Elementos decorativos */}
+                    <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-[#B89B7A]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                    <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-[#a08966]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+
+                    <div className="container mx-auto px-3 sm:px-5 py-6 md:py-8 max-w-5xl relative z-10">
+                        {template.blocks.map((block: any, index: number) => (
+                            <UniversalBlockRenderer
+                                key={block.id || `${block.type}-${index}`}
+                                block={block}
+                                isSelected={false}
+                                isPreview={true}
+                                onUpdate={() => { }}
+                                showEditControls={false}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </ResultProvider>
+        );
+    }
+
+    // Fallback: usar componente legado (compatibilidade)
+    if (loading) {
+        return <div className="flex items-center justify-center p-12">Carregando resultado...</div>;
+    }
+
+    // Se não há blocos no template, usar StyleResultCard (legado)
     const StyleResultCard = React.lazy(() =>
         import('@/components/editor/quiz/components/StyleResultCard').then(m => ({
             default: m.StyleResultCard
         }))
     );
 
-    // Props para o novo componente
     const cardProps = {
         resultStyle: quizState?.resultStyle || 'classico',
         userName: quizState?.userName || 'Usuário',
