@@ -3,7 +3,6 @@ import React, { Suspense, useMemo } from 'react';
 import { SCHEMAS, migrateProps } from '@/schemas';
 import { normalizeByType } from '@/utils/normalizeByType';
 import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
-import { StepEditorRegistry } from '@/components/editor/step-registry/StepEditorRegistry';
 
 type Props = {
     selectedStep?: any;
@@ -61,10 +60,19 @@ const StepEditorWrapper: React.FC<Props> = ({ selectedStep, onUpdateSteps, pushH
         }
     };
 
-    // Resolve via StepEditorRegistry com fallback para editor JSON
+    // Lazy mapping simples por tipo (poderia vir de um stepRegistry dedicado)
     const EditorComp = useMemo(() => {
-        const loader = StepEditorRegistry.getEditorLoader(selectedStep.type);
-        return loader ? React.lazy(loader) : null;
+        switch (selectedStep.type) {
+            case 'transition':
+            case 'transition-result':
+                return React.lazy(() => import('@/components/editor/step-editors/TransitionStepEditor'));
+            case 'result':
+                return React.lazy(() => import('@/components/editor/step-editors/ResultStepEditor'));
+            case 'offer':
+                return React.lazy(() => import('@/components/editor/step-editors/OfferStepEditor'));
+            default:
+                return null;
+        }
     }, [selectedStep.type]);
 
     return (
