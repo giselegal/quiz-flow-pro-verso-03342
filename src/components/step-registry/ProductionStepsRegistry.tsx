@@ -205,10 +205,35 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
                 const result = await loadTemplateFunc(stepId);
                 // loadTemplate retorna { template, source }
                 const templateData = result?.template || result;
-                // Buscar blocos do step específico
-                const stepBlocks = (templateData as any)?.[stepId];
-                console.log('✅ [TransitionStepAdapter] Template loaded:', { stepId, blocksCount: stepBlocks?.length });
-                setTemplate({ blocks: stepBlocks });
+                // Buscar dados do step específico
+                const stepData = (templateData as any)?.[stepId];
+
+                console.log('📄 [TransitionStepAdapter] Raw template data:', {
+                    stepId,
+                    hasStepData: !!stepData,
+                    hasSections: !!stepData?.sections,
+                    hasBlocks: !!stepData?.blocks,
+                    type: typeof stepData
+                });
+
+                // ✅ CORREÇÃO: Verificar se tem sections (template TS) ou blocks (template JSON)
+                let blocks: any[] = [];
+
+                if (stepData?.blocks && Array.isArray(stepData.blocks)) {
+                    // Template JSON moderno com blocks
+                    console.log('✅ [TransitionStepAdapter] Using blocks from JSON template');
+                    blocks = stepData.blocks;
+                } else if (stepData?.sections && Array.isArray(stepData.sections)) {
+                    // Template TS legado com sections - converter para blocks
+                    console.log('🔄 [TransitionStepAdapter] Converting sections to blocks');
+                    const { convertSectionsToBlocks } = await import('@/utils/sectionToBlockConverter');
+                    blocks = convertSectionsToBlocks(stepData.sections);
+                } else {
+                    console.warn('⚠️ [TransitionStepAdapter] No blocks or sections found');
+                }
+
+                console.log('✅ [TransitionStepAdapter] Template loaded:', { stepId, blocksCount: blocks.length });
+                setTemplate({ blocks });
             } catch (error) {
                 console.error('❌ [TransitionStepAdapter] Erro ao carregar template:', error);
             } finally {
@@ -305,6 +330,7 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
+        console.log('📦 [ResultStepAdapter] Loading template for', stepId);
         const loadTemplate = async () => {
             try {
                 // Carregar template do step 20
@@ -312,11 +338,37 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
                 const result = await loadTemplateFunc(stepId);
                 // loadTemplate retorna { template, source }
                 const templateData = result?.template || result;
-                // Buscar blocos do step específico
-                const stepBlocks = (templateData as any)?.[stepId];
-                setTemplate({ blocks: stepBlocks });
+                // Buscar dados do step específico
+                const stepData = (templateData as any)?.[stepId];
+
+                console.log('📄 [ResultStepAdapter] Raw template data:', {
+                    stepId,
+                    hasStepData: !!stepData,
+                    hasSections: !!stepData?.sections,
+                    hasBlocks: !!stepData?.blocks,
+                    type: typeof stepData
+                });
+
+                // ✅ CORREÇÃO: Verificar se tem sections (template TS) ou blocks (template JSON)
+                let blocks: any[] = [];
+
+                if (stepData?.blocks && Array.isArray(stepData.blocks)) {
+                    // Template JSON moderno com blocks
+                    console.log('✅ [ResultStepAdapter] Using blocks from JSON template');
+                    blocks = stepData.blocks;
+                } else if (stepData?.sections && Array.isArray(stepData.sections)) {
+                    // Template TS legado com sections - converter para blocks
+                    console.log('🔄 [ResultStepAdapter] Converting sections to blocks');
+                    const { convertSectionsToBlocks } = await import('@/utils/sectionToBlockConverter');
+                    blocks = convertSectionsToBlocks(stepData.sections);
+                } else {
+                    console.warn('⚠️ [ResultStepAdapter] No blocks or sections found');
+                }
+
+                console.log('✅ [ResultStepAdapter] Template loaded:', { stepId, blocksCount: blocks.length });
+                setTemplate({ blocks });
             } catch (error) {
-                console.error('Erro ao carregar template:', error);
+                console.error('❌ [ResultStepAdapter] Erro ao carregar template:', error);
             } finally {
                 setLoading(false);
             }

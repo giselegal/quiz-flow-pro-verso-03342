@@ -558,12 +558,15 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     };
 
     // Estratégia de renderização híbrida:
-    // - Para result/offer com blocks dinâmicos: manter caminho custom
+    // - Para offer com blocks dinâmicos: manter caminho custom via BlocksRuntimeRenderer
+    // - Para result: usar UnifiedStepRenderer → ResultStepAdapter (fornece ResultProvider)
     // - Para transition-result (não registrado): fallback manual
     // - Demais steps: usar UnifiedStepRenderer
 
     const shouldUseBlocks = (type: string) => {
-        const hasBlocks = ['result', 'offer'].includes(type) && (currentStepData as any).blocks?.length;
+        // ✅ CORREÇÃO: Apenas 'offer' usa BlocksRuntimeRenderer direto
+        // 'result' deve passar pelo ResultStepAdapter para ter ResultProvider
+        const hasBlocks = ['offer'].includes(type) && (currentStepData as any).blocks?.length;
         console.log('🔍 [shouldUseBlocks]', { stepId: currentStepId, type, hasBlocks, blocks: (currentStepData as any).blocks?.length });
         return hasBlocks;
     };
@@ -741,24 +744,15 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         ))}
                     </div>
                 ) : shouldUseBlocks(currentStepData.type) ? (
-                    // Caminho dinâmico (result/offer com blocks)
-                    currentStepData.type === 'result' ? (
-                        <div className="max-w-4xl mx-auto px-4 py-8">
-                            <BlocksRuntimeRenderer
-                                stepType="result"
-                                blocks={(currentStepData as any).blocks as any}
-                                context={{ userProfile: state.userProfile, step: currentStepData, applyPlaceholders }}
-                            />
-                        </div>
-                    ) : (
-                        <div className="max-w-4xl mx-auto px-4 py-8">
-                            <BlocksRuntimeRenderer
-                                stepType="offer"
-                                blocks={(currentStepData as any).blocks as any}
-                                context={{ userProfile: state.userProfile, offerKey: getOfferKey(), step: currentStepData, applyPlaceholders }}
-                            />
-                        </div>
-                    )
+                    // ✅ APENAS OFFER usa BlocksRuntimeRenderer direto
+                    // result vai para UnifiedStepRenderer → ResultStepAdapter
+                    <div className="max-w-4xl mx-auto px-4 py-8">
+                        <BlocksRuntimeRenderer
+                            stepType="offer"
+                            blocks={(currentStepData as any).blocks as any}
+                            context={{ userProfile: state.userProfile, offerKey: getOfferKey(), step: currentStepData, applyPlaceholders }}
+                        />
+                    </div>
                 ) : currentStepData.type === 'transition-result' ? (
                     // Fallback para tipo legado ainda não registrado
                     (() => {
