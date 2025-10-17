@@ -17,7 +17,7 @@ export function normalizeByType(type: string, props: any, stepId: string) {
     case 'offer':
       return {
         ...props,
-        offerMap: normalizeOfferMap(props.offerMap || {}, stepId),
+        offerMap: normalizeOfferMap(props.offerMap || {}),
       };
     default:
       return { ...props };
