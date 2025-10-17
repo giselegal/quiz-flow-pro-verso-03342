@@ -60,7 +60,20 @@ const StepEditorWrapper: React.FC<Props> = ({ selectedStep, onUpdateSteps, pushH
         }
     };
 
-    const EditorComp = null as any;
+    // Lazy mapping simples por tipo (poderia vir de um stepRegistry dedicado)
+    const EditorComp = useMemo(() => {
+        switch (selectedStep.type) {
+            case 'transition':
+            case 'transition-result':
+                return React.lazy(() => import('@/components/editor/step-editors/TransitionStepEditor'));
+            case 'result':
+                return React.lazy(() => import('@/components/editor/step-editors/ResultStepEditor'));
+            case 'offer':
+                return React.lazy(() => import('@/components/editor/step-editors/OfferStepEditor'));
+            default:
+                return null;
+        }
+    }, [selectedStep.type]);
 
     return (
         <div>
