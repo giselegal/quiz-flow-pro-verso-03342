@@ -17,34 +17,28 @@ export const SCHEMAS: Record<string, z.ZodTypeAny> = {
   offer: OfferStepSchema,
 };
 
-export const LATEST_SCHEMA_VERSION: Record<string, number> = {
-  intro: 1,
-  question: 1,
-  'strategic-question': 1,
-  transition: 1,
-  'transition-result': 1,
-  result: 1,
-  offer: 1,
-};
+// Versão global atual dos schemas (mantida como número para integração simples)
+export const LATEST_SCHEMA_VERSION = 1;
 
 // migrações futuras por tipo e versão
 const MIGRATIONS: Record<string, Record<number, (p: any) => any>> = {
-  question: {},
-  intro: {},
-  'strategic-question': {},
-  transition: {},
-  'transition-result': {},
-  result: {},
-  offer: {},
+  question: { 1: (p: any) => p },
+  intro: { 1: (p: any) => p },
+  'strategic-question': { 1: (p: any) => p },
+  transition: { 1: (p: any) => p },
+  'transition-result': { 1: (p: any) => p },
+  result: { 1: (p: any) => p },
+  offer: { 1: (p: any) => p },
 };
 
 export function migrateProps(type: string, props: any) {
   const current = Number(props?.schemaVersion || 1);
-  const latest = LATEST_SCHEMA_VERSION[type] || current;
-  let next = { ...props };
+  // Em cenário real, 'latest' poderia variar por tipo; por ora mantemos global = 1
+  const latest = Math.max(1, LATEST_SCHEMA_VERSION);
+  let next = { ...(props || {}) };
   for (let v = current + 1; v <= latest; v++) {
     const fn = MIGRATIONS[type]?.[v];
-    if (fn) next = fn(next);
+    if (typeof fn === 'function') next = fn(next);
   }
   next.schemaVersion = latest;
   return next;
