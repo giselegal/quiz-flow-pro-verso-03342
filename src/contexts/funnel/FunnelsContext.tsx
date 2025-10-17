@@ -167,20 +167,11 @@ const FUNNEL_TEMPLATES: Record<
         order: stepNumber,
         blocksCount: QUIZ_STYLE_21_STEPS_TEMPLATE[stepId]?.length || 1,
         isActive: true,
-        type:
-          stepNumber === 1
-            ? 'lead-collection'
-            : stepNumber >= 2 && stepNumber <= 11
-              ? 'scored-question'
-              : stepNumber === 12
-                ? 'transition'
-                : stepNumber >= 13 && stepNumber <= 18
-                  ? 'strategic-question'
-                  : stepNumber === 19
-                    ? 'transition'
-                    : stepNumber === 20
-                      ? 'result'
-                      : 'offer',
+        type: inferStepTypeFromTemplate(
+          stepId,
+          stepNumber,
+          QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || []
+        ),
         description: questionText,
       };
     }),
@@ -302,20 +293,11 @@ const FUNNEL_TEMPLATES: Record<
         order: stepNumber,
         blocksCount: QUIZ_STYLE_21_STEPS_TEMPLATE[stepId]?.length || 1,
         isActive: true,
-        type:
-          stepNumber === 1
-            ? 'lead-collection'
-            : stepNumber >= 2 && stepNumber <= 11
-              ? 'scored-question'
-              : stepNumber === 12
-                ? 'transition'
-                : stepNumber >= 13 && stepNumber <= 18
-                  ? 'strategic-question'
-                  : stepNumber === 19
-                    ? 'transition'
-                    : stepNumber === 20
-                      ? 'result'
-                      : 'offer',
+        type: inferStepTypeFromTemplate(
+          stepId,
+          stepNumber,
+          QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || []
+        ),
         description: questionText,
       };
     }),
@@ -533,20 +515,11 @@ const FUNNEL_TEMPLATES: Record<
         order: stepNumber,
         blocksCount: QUIZ_STYLE_21_STEPS_TEMPLATE[stepId]?.length || 1,
         isActive: true,
-        type:
-          stepNumber === 1
-            ? 'lead-collection'
-            : stepNumber >= 2 && stepNumber <= 11
-              ? 'scored-question'
-              : stepNumber === 12
-                ? 'transition'
-                : stepNumber >= 13 && stepNumber <= 18
-                  ? 'strategic-question'
-                  : stepNumber === 19
-                    ? 'transition'
-                    : stepNumber === 20
-                      ? 'result'
-                      : 'sales-page',
+        type: inferStepTypeFromTemplate(
+          stepId,
+          stepNumber,
+          QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || []
+        ),
         description: stepNumber === 1
           ? 'Página de captura de leads'
           : stepNumber <= 11
