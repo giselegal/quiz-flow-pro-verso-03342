@@ -251,7 +251,7 @@ export default function ModularResultStep({
                                 ))}
                             </SortableContext>
                         </DndContext>
-                    ) : (
+                    ) : orderedBlocks.length > 0 ? (
                         <>
                             {orderedBlocks.map((block: Block) => (
                                 <UniversalBlockRenderer
@@ -261,7 +261,7 @@ export default function ModularResultStep({
                                 />
                             ))}
                         </>
-                    )}
+                    ) : null}
 
                     {orderedBlocks.length === 0 && (
                         <div className="text-center py-12">
