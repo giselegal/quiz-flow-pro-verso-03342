@@ -191,7 +191,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 style={{ display: isEditMode() ? 'block' : 'none' }}
                 data-testid="canvas-edit-mode"
             >
-                        {migratedStep ? (
+                {migratedStep ? (
                     <Card className="border-0 shadow-none bg-transparent">
                         <CardContent>
                             <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
@@ -200,38 +200,38 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 </div>
                             </div>
 
-                                    {/* Se BlockRow for fornecido, usar caminho de renderização virtualizado simples */}
-                                    {BlockRow ? (
-                                        <div data-testid="canvas-legacy-virtualized">
-                                            {virtualizationEnabled && (
-                                                <div className="mb-2 text-xs text-muted-foreground">
-                                                    Virtualização ativa — {vTotal} blocos — exibindo {vVisible.length}
-                                                </div>
-                                            )}
-                                            {vTopSpacer > 0 && <div style={{ height: vTopSpacer }} />}
-                                            {vVisible.map((block: any) => (
-                                                <BlockRow key={block.id} block={block} allBlocks={rootBlocks} />
-                                            ))}
-                                            {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
+                            {/* Se BlockRow for fornecido, usar caminho de renderização virtualizado simples */}
+                            {BlockRow ? (
+                                <div data-testid="canvas-legacy-virtualized">
+                                    {virtualizationEnabled && (
+                                        <div className="mb-2 text-xs text-muted-foreground">
+                                            Virtualização ativa — {vTotal} blocos — exibindo {vVisible.length}
                                         </div>
-                                    ) : (
-                                        // 🎯 COMPONENTES MODULARES - Mantém arquitetura do template
-                                        <UnifiedStepRenderer
-                                            step={{
-                                                ...migratedStep,
-                                                blocks: stepBlocks
-                                            } as any}
-                                            mode="edit"
-                                            isSelected={selectedBlockId === migratedStep.id}
-                                            onStepClick={(e, step) => handleBlockClick(e, step as any)}
-                                            onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
-                                            onDuplicate={() => {
-                                                setBlockPendingDuplicate(migratedStep as any);
-                                                setTargetStepId(migratedStep.id);
-                                                setDuplicateModalOpen(true);
-                                            }}
-                                        />
                                     )}
+                                    {vTopSpacer > 0 && <div style={{ height: vTopSpacer }} />}
+                                    {vVisible.map((block: any) => (
+                                        <BlockRow key={block.id} block={block} allBlocks={rootBlocks} />
+                                    ))}
+                                    {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
+                                </div>
+                            ) : (
+                                // 🎯 COMPONENTES MODULARES - Mantém arquitetura do template
+                                <UnifiedStepRenderer
+                                    step={{
+                                        ...migratedStep,
+                                        blocks: stepBlocks
+                                    } as any}
+                                    mode="edit"
+                                    isSelected={selectedBlockId === migratedStep.id}
+                                    onStepClick={(e, step) => handleBlockClick(e, step as any)}
+                                    onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
+                                    onDuplicate={() => {
+                                        setBlockPendingDuplicate(migratedStep as any);
+                                        setTargetStepId(migratedStep.id);
+                                        setDuplicateModalOpen(true);
+                                    }}
+                                />
+                            )}
 
                             {/* ✅ ZONA DROPPABLE - Aceita componentes arrastados da biblioteca */}
                             <div
