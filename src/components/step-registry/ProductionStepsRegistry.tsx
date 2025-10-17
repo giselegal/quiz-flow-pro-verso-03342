@@ -178,6 +178,8 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
  * ✨ Usa blocos atômicos dos templates JSON
  */
 const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
+    console.log('🔧 [TransitionStepAdapter] Called for', props.stepId);
+
     const {
         stepId,
         stepNumber,
@@ -195,6 +197,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
+        console.log('📦 [TransitionStepAdapter] Loading template for', stepId);
         const loadTemplate = async () => {
             try {
                 // Carregar template do step
@@ -204,9 +207,10 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
                 const templateData = result?.template || result;
                 // Buscar blocos do step específico
                 const stepBlocks = (templateData as any)?.[stepId];
+                console.log('✅ [TransitionStepAdapter] Template loaded:', { stepId, blocksCount: stepBlocks?.length });
                 setTemplate({ blocks: stepBlocks });
             } catch (error) {
-                console.error('Erro ao carregar template:', error);
+                console.error('❌ [TransitionStepAdapter] Erro ao carregar template:', error);
             } finally {
                 setLoading(false);
             }
@@ -217,6 +221,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
 
     // Se template tem blocos, usar blocos atômicos
     if (template?.blocks && template.blocks.length > 0) {
+        console.log('🎨 [TransitionStepAdapter] Rendering atomic blocks:', template.blocks.length);
         const UniversalBlockRenderer = require('@/components/editor/blocks/UniversalBlockRenderer').default;
 
         return (
@@ -238,6 +243,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
     }
 
     // Fallback: usar componente legado (compatibilidade)
+    console.log('⚠️ [TransitionStepAdapter] Using legacy fallback (no blocks)');
     if (loading) {
         return <div className="flex items-center justify-center p-12">Carregando...</div>;
     }
@@ -279,6 +285,8 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
  * ✨ Usa ResultProvider + blocos atômicos dos templates JSON
  */
 const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
+    console.log('🏆 [ResultStepAdapter] Called for', props.stepId);
+
     const {
         stepId,
         stepNumber,

@@ -562,7 +562,11 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     // - Para transition-result (não registrado): fallback manual
     // - Demais steps: usar UnifiedStepRenderer
 
-    const shouldUseBlocks = (type: string) => ['result', 'offer'].includes(type) && (currentStepData as any).blocks?.length;
+    const shouldUseBlocks = (type: string) => {
+        const hasBlocks = ['result', 'offer'].includes(type) && (currentStepData as any).blocks?.length;
+        console.log('🔍 [shouldUseBlocks]', { stepId: currentStepId, type, hasBlocks, blocks: (currentStepData as any).blocks?.length });
+        return hasBlocks;
+    };
 
     // ============================================================================
     // LEGACY STEP RENDERING (Editor Mode) - Permite visualizar componentes antigos
@@ -757,32 +761,42 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                     )
                 ) : currentStepData.type === 'transition-result' ? (
                     // Fallback para tipo legado ainda não registrado
-                    <TransitionStep
-                        data={{ ...currentStepData, ...currentStepConfig }}
-                        onComplete={() => nextStep()}
-                    />
-                ) : (
-                    <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
-                        <div className="max-w-6xl mx-auto px-4 py-8">
-                            <UnifiedStepRenderer
-                                stepId={currentStepId}
-                                mode="production"
-                                stepProps={unifiedStepProps}
-                                quizState={unifiedQuizState}
-                                onStepUpdate={handleStepUpdate}
-                                onNext={handleNext}
-                                onNameSubmit={(name: string) => {
-                                    setUserName(name);
-                                    nextStep();
-                                }}
-                                onPrevious={() => {
-                                    // (Opcional) implementar voltar no futuro
-                                    console.log('Navegar para step anterior (não implementado)');
-                                }}
-                                className="unified-production-step"
+                    (() => {
+                        console.log('⚠️ [transition-result bypass]', { stepId: currentStepId, type: currentStepData.type });
+                        return (
+                            <TransitionStep
+                                data={{ ...currentStepData, ...currentStepConfig }}
+                                onComplete={() => nextStep()}
                             />
-                        </div>
-                    </div>
+                        );
+                    })()
+                ) : (
+                    (() => {
+                        console.log('✅ [UnifiedStepRenderer path]', { stepId: currentStepId, type: currentStepData.type });
+                        return (
+                            <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
+                                <div className="max-w-6xl mx-auto px-4 py-8">
+                                    <UnifiedStepRenderer
+                                        stepId={currentStepId}
+                                        mode="production"
+                                        stepProps={unifiedStepProps}
+                                        quizState={unifiedQuizState}
+                                        onStepUpdate={handleStepUpdate}
+                                        onNext={handleNext}
+                                        onNameSubmit={(name: string) => {
+                                            setUserName(name);
+                                            nextStep();
+                                        }}
+                                        onPrevious={() => {
+                                            // (Opcional) implementar voltar no futuro
+                                            console.log('Navegar para step anterior (não implementado)');
+                                        }}
+                                        className="unified-production-step"
+                                    />
+                                </div>
+                            </div>
+                        );
+                    })()
                 )}
 
                 {/* Debug Info (modo editor) */}
