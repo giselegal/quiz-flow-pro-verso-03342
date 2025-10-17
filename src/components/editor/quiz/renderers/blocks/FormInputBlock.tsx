@@ -38,6 +38,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({ block, isSelected, isEd
                             placeholder={placeholder}
                             className="w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 border-[#B89B7A] focus:outline-none focus:ring-2 focus:ring-[#A1835D]"
                             ref={inputRef}
+                            name="userName"
+                            data-name-input
                             required
                         />
                     </div>
