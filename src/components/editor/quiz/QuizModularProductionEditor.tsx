@@ -1137,12 +1137,65 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (!over) { setActiveId(null); setHoverContainerId(null); return; }
         const droppedAtEnd = over.id === 'canvas-end';
         const targetContainerId = !droppedAtEnd && String(over.id).startsWith('container-slot:') ? String(over.id).slice('container-slot:'.length) : null;
-        // Novo bloco da paleta
+
+        // ✅ NOVO BLOCO DA PALETA - Inserir na posição do drop
         if (String(active.id).startsWith('lib:')) {
             const componentType = String(active.id).slice(4);
-            addBlockToStep(curStepId, componentType);
-            setActiveId(null); setHoverContainerId(null); return;
+            const component = COMPONENT_LIBRARY.find(c => c.type === componentType || c.blockType === componentType);
+            if (!component) { setActiveId(null); setHoverContainerId(null); return; }
+
+            // Encontrar step atual
+            const currentStep = steps.find(s => s.id === curStepId);
+            if (!currentStep) { setActiveId(null); setHoverContainerId(null); return; }
+
+            // Criar novo bloco
+            const newBlockId = `${curStepId}-${component.type}-${Date.now()}`;
+            const newBlock = {
+                id: newBlockId,
+                type: component.blockType || component.type,
+                order: 0, // Será recalculado
+                properties: { ...component.defaultProps },
+                content: { ...(component.defaultContent || {}) },
+                parentId: null
+            };
+
+            // Determinar posição de inserção
+            let insertPosition = currentStep.blocks.length; // Default: final
+
+            if (over.id && over.id !== 'canvas-end' && !String(over.id).startsWith('container-slot:')) {
+                // Dropped sobre outro bloco - inserir APÓS ele
+                const targetBlockIndex = currentStep.blocks.findIndex(b => b.id === over.id);
+                if (targetBlockIndex >= 0) {
+                    insertPosition = targetBlockIndex + 1;
+                }
+            }
+
+            // Inserir bloco na posição
+            const updatedBlocks = [...currentStep.blocks];
+            updatedBlocks.splice(insertPosition, 0, newBlock);
+
+            // Reordenar todos os blocos
+            updatedBlocks.forEach((block, idx) => {
+                block.order = idx;
+            });
+
+            // Atualizar step
+            const updatedSteps = steps.map(step =>
+                step.id === curStepId
+                    ? { ...step, blocks: updatedBlocks }
+                    : step
+            );
+
+            setSteps(updatedSteps);
+            pushHistory(updatedSteps);
+            setSelectedBlockIdUnified(newBlockId);
+            setIsDirty(true);
+            toastRef.current({ title: 'Componente adicionado', description: `${component.label} inserido na posição ${insertPosition + 1}` });
+            setActiveId(null);
+            setHoverContainerId(null);
+            return;
         }
+
         if (active.id === over.id && !targetContainerId && !droppedAtEnd) { setActiveId(null); setHoverContainerId(null); return; }
         // Reordenação / movimento
         const overId = String(over.id).startsWith('container-slot:') ? null : over.id;
