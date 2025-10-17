@@ -188,6 +188,28 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     setDuplicateModalOpen(true);
                                 }}
                             />
+
+                            {/* ✅ ZONA DROPPABLE - Aceita componentes arrastados da biblioteca */}
+                            <div
+                                ref={setDropZoneRef}
+                                className={`
+                                    mt-4 p-8 border-2 border-dashed rounded-lg transition-all
+                                    ${isOver
+                                        ? 'border-blue-500 bg-blue-50'
+                                        : 'border-gray-300 bg-gray-50 hover:border-gray-400'
+                                    }
+                                `}
+                            >
+                                <div className="flex flex-col items-center justify-center text-center gap-2">
+                                    <Plus className="w-8 h-8 text-gray-400" />
+                                    <p className="text-sm text-gray-600 font-medium">
+                                        {isOver ? 'Solte aqui' : 'Arraste componentes aqui'}
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                        Componentes serão adicionados ao final
+                                    </p>
+                                </div>
+                            </div>
                         </CardContent>
                     </Card>
                 ) : (
