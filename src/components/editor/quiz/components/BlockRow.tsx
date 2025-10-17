@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSortable, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { useDroppable } from '@dnd-kit/core';
 import { GripVertical, Trash2, ArrowRightCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,44 @@ export interface BlockRowProps {
     setHoverContainerId?: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
+/**
+ * 🎯 DROP ZONE - Zona droppable antes de cada bloco
+ * Permite inserir componentes da biblioteca ENTRE os blocos existentes
+ */
+const DropZoneBefore: React.FC<{ blockId: string; blockIndex: number; stepId: string }> = ({ blockId, blockIndex, stepId }) => {
+    const dropZoneId = `drop-before-${blockId}`;
+    const { setNodeRef, isOver } = useDroppable({
+        id: dropZoneId,
+        data: {
+            dropZone: 'before',
+            blockId: blockId,
+            stepId: stepId,
+            insertIndex: blockIndex
+        }
+    });
+
+    return (
+        <div
+            ref={setNodeRef}
+            className={cn(
+                'h-3 -my-1.5 relative transition-all duration-200 border-2 rounded',
+                isOver
+                    ? 'bg-blue-100 border-blue-400 border-dashed'
+                    : 'border-transparent hover:bg-blue-50 hover:border-blue-300 hover:border-dashed'
+            )}
+        >
+            <div className={cn(
+                'absolute inset-0 flex items-center justify-center',
+                isOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+            )}>
+                <span className="text-[10px] font-medium text-blue-600 bg-white px-2 py-0.5 rounded shadow-sm">
+                    {isOver ? '⬇ Soltar aqui' : '+ Soltar antes'}
+                </span>
+            </div>
+        </div>
+    );
+};
+
 const Inner: React.FC<BlockRowProps> = (props) => {
     const { block, byBlock, selectedBlockId, isMultiSelected, handleBlockClick, renderBlockPreview, allBlocks, removeBlock, stepId, setBlockPendingDuplicate, setTargetStepId, setDuplicateModalOpen } = props;
     // Defensive defaults for optional props
@@ -39,131 +78,138 @@ const Inner: React.FC<BlockRowProps> = (props) => {
     const isContainer = block.type === 'container';
     const isHoverTarget = hoverContainerId === block.id;
     const isExpanded = !isContainer || (expandedContainers?.has?.(block.id) ?? false);
-    return (
-        <div
-            key={block.id}
-            className={cn(
-                'group relative p-3 rounded-lg cursor-move bg-white overflow-hidden transition-shadow',
-                (selectedBlockId === block.id || isMultiSelected(block.id)) && 'border border-blue-500 ring-2 ring-blue-200 shadow-sm',
-                hasErrors && !(selectedBlockId === block.id || isMultiSelected(block.id)) && 'shadow-[0_0_0_1px_#dc2626]',
-                isMultiSelected(block.id) && 'bg-blue-50',
-                isDragging && 'opacity-50',
-                isContainer && 'pb-8',
-                isContainer && isHoverTarget && 'outline outline-2 outline-blue-400'
-            )}
-            onClick={(e) => handleBlockClick(e, block)}
-            ref={setNodeRef}
-            style={style}
-            {...attributes}
-            {...listeners}
-        >
-            {hasErrors && (
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div className="absolute -top-1 -right-1 text-white text-[9px] px-1 rounded shadow cursor-default select-none" style={{ background: byBlock[block.id].some(e => e.severity === 'error') ? '#dc2626' : '#d97706' }}>
-                            {byBlock[block.id].length}
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="left" className="max-w-xs p-2">
-                        <div className="space-y-1">
-                            {byBlock[block.id].map((e: any) => (
-                                <p key={e.id} className={cn('text-[11px] leading-snug', e.severity === 'error' ? 'text-red-600' : 'text-amber-600')}>
-                                    {e.message}
-                                </p>
-                            ))}
-                        </div>
-                    </TooltipContent>
-                </Tooltip>
-            )}
-            <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
-                <GripVertical className="w-4 h-4 text-gray-400" />
-            </div>
-            <div className="pl-6 pr-8">
-                <div className="text-left flex items-start gap-2">
-                    {isContainer && (
-                        <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); toggleContainer && toggleContainer(block.id); }}
-                            className="mt-1 text-[10px] px-1 rounded border bg-white hover:bg-blue-50"
-                        >
-                            {isExpanded ? '−' : '+'}
-                        </button>
-                    )}
-                    <div className="flex-1">{renderBlockPreview(block, allBlocks)}</div>
-                </div>
-                {isContainer && isExpanded && (
-                    <div className="mt-3 relative">
-                        <div className="text-[10px] text-slate-400 italic mb-1 flex items-center gap-2">
-                            <span>Conteúdo</span>
-                            <span className="text-[9px] text-slate-400">{allBlocks.filter(b => b.parentId === block.id).length}</span>
-                        </div>
-                        <SortableContext
-                            items={[...allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order).map(c => c.id), `container-slot:${block.id}`]}
-                            strategy={verticalListSortingStrategy}
-                        >
-                            <div
-                                className={cn(
-                                    'min-h-[32px] rounded-md border border-dashed flex flex-col gap-2 p-2 bg-white/40 transition-colors',
-                                    isHoverTarget && 'border-blue-400 bg-blue-50/40'
-                                )}
-                                onDragOver={() => setHoverContainerId && setHoverContainerId(block.id)}
-                                onDragLeave={(e) => {
-                                    if (!e.currentTarget.contains(e.relatedTarget as Node)) setHoverContainerId && setHoverContainerId((prev: string | null) => (prev === block.id ? null : prev));
-                                }}
-                            >
-                                {allBlocks.filter(b => b.parentId === block.id).length === 0 && (
-                                    <div className="text-[10px] text-slate-400 italic">Solte aqui para aninhar</div>
-                                )}
-                                {allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order).map(child => (
-                                    <MemoBlockRow
-                                        key={child.id}
-                                        block={child}
-                                        byBlock={byBlock}
-                                        selectedBlockId={selectedBlockId}
-                                        isMultiSelected={isMultiSelected}
-                                        handleBlockClick={handleBlockClick}
-                                        renderBlockPreview={renderBlockPreview}
-                                        allBlocks={allBlocks}
-                                        removeBlock={removeBlock}
-                                        stepId={stepId}
-                                        setBlockPendingDuplicate={setBlockPendingDuplicate}
-                                        setTargetStepId={setTargetStepId}
-                                        setDuplicateModalOpen={setDuplicateModalOpen}
-                                        hoverContainerId={hoverContainerId}
-                                        expandedContainers={expandedContainers}
-                                        toggleContainer={toggleContainer}
-                                        setHoverContainerId={setHoverContainerId}
-                                    />
-                                ))}
-                                <div id={`container-slot:${block.id}`} className="h-2 w-full" />
-                            </div>
-                        </SortableContext>
-                    </div>
-                )}
-            </div>
-            <div className="absolute right-1 top-1 flex flex-col gap-1">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={(e) => { e.stopPropagation(); removeBlock(stepId, block.id); }}
-                >
-                    <Trash2 className="w-3 h-3 text-red-500" />
-                </Button>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={(e) => { e.stopPropagation(); setBlockPendingDuplicate(block); setTargetStepId(stepId); setDuplicateModalOpen(true); }}
-                >
-                    <ArrowRightCircle className="w-3 h-3 text-blue-500" />
-                </Button>
-            </div>
-        </div>
-    );
-};
 
-const comparator = (prev: BlockRowProps, next: BlockRowProps) => {
+    // Calcular índice do bloco atual
+    const blockIndex = allBlocks.filter(b => !b.parentId).findIndex(b => b.id === block.id);
+
+    return (
+        <>
+            {/* 🎯 DROP ZONE ANTES DO BLOCO */}
+            {!block.parentId && <DropZoneBefore blockId={block.id} blockIndex={blockIndex} stepId={stepId} />}
+
+            <div
+                key={block.id}
+                className={cn(
+                    'group relative p-3 rounded-lg cursor-move bg-white overflow-hidden transition-shadow',
+                    (selectedBlockId === block.id || isMultiSelected(block.id)) && 'border border-blue-500 ring-2 ring-blue-200 shadow-sm',
+                    hasErrors && !(selectedBlockId === block.id || isMultiSelected(block.id)) && 'shadow-[0_0_0_1px_#dc2626]',
+                    isMultiSelected(block.id) && 'bg-blue-50',
+                    isDragging && 'opacity-50',
+                    isContainer && 'pb-8',
+                    isContainer && isHoverTarget && 'outline outline-2 outline-blue-400'
+                )}
+                onClick={(e) => handleBlockClick(e, block)}
+                ref={setNodeRef}
+                style={style}
+                {...attributes}
+                {...listeners}
+            >
+                {hasErrors && (
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <div className="absolute -top-1 -right-1 text-white text-[9px] px-1 rounded shadow cursor-default select-none" style={{ background: byBlock[block.id].some(e => e.severity === 'error') ? '#dc2626' : '#d97706' }}>
+                                {byBlock[block.id].length}
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="left" className="max-w-xs p-2">
+                            <div className="space-y-1">
+                                {byBlock[block.id].map((e: any) => (
+                                    <p key={e.id} className={cn('text-[11px] leading-snug', e.severity === 'error' ? 'text-red-600' : 'text-amber-600')}>
+                                        {e.message}
+                                    </p>
+                                ))}
+                            </div>
+                        </TooltipContent>
+                    </Tooltip>
+                )}
+                <div className="absolute left-2 top-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <GripVertical className="w-4 h-4 text-gray-400" />
+                </div>
+                <div className="pl-6 pr-8">
+                    <div className="text-left flex items-start gap-2">
+                        {isContainer && (
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); toggleContainer && toggleContainer(block.id); }}
+                                className="mt-1 text-[10px] px-1 rounded border bg-white hover:bg-blue-50"
+                            >
+                                {isExpanded ? '−' : '+'}
+                            </button>
+                        )}
+                        <div className="flex-1">{renderBlockPreview(block, allBlocks)}</div>
+                    </div>
+                    {isContainer && isExpanded && (
+                        <div className="mt-3 relative">
+                            <div className="text-[10px] text-slate-400 italic mb-1 flex items-center gap-2">
+                                <span>Conteúdo</span>
+                                <span className="text-[9px] text-slate-400">{allBlocks.filter(b => b.parentId === block.id).length}</span>
+                            </div>
+                            <SortableContext
+                                items={[...allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order).map(c => c.id), `container-slot:${block.id}`]}
+                                strategy={verticalListSortingStrategy}
+                            >
+                                <div
+                                    className={cn(
+                                        'min-h-[32px] rounded-md border border-dashed flex flex-col gap-2 p-2 bg-white/40 transition-colors',
+                                        isHoverTarget && 'border-blue-400 bg-blue-50/40'
+                                    )}
+                                    onDragOver={() => setHoverContainerId && setHoverContainerId(block.id)}
+                                    onDragLeave={(e) => {
+                                        if (!e.currentTarget.contains(e.relatedTarget as Node)) setHoverContainerId && setHoverContainerId((prev: string | null) => (prev === block.id ? null : prev));
+                                    }}
+                                >
+                                    {allBlocks.filter(b => b.parentId === block.id).length === 0 && (
+                                        <div className="text-[10px] text-slate-400 italic">Solte aqui para aninhar</div>
+                                    )}
+                                    {allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order).map(child => (
+                                        <MemoBlockRow
+                                            key={child.id}
+                                            block={child}
+                                            byBlock={byBlock}
+                                            selectedBlockId={selectedBlockId}
+                                            isMultiSelected={isMultiSelected}
+                                            handleBlockClick={handleBlockClick}
+                                            renderBlockPreview={renderBlockPreview}
+                                            allBlocks={allBlocks}
+                                            removeBlock={removeBlock}
+                                            stepId={stepId}
+                                            setBlockPendingDuplicate={setBlockPendingDuplicate}
+                                            setTargetStepId={setTargetStepId}
+                                            setDuplicateModalOpen={setDuplicateModalOpen}
+                                            hoverContainerId={hoverContainerId}
+                                            expandedContainers={expandedContainers}
+                                            toggleContainer={toggleContainer}
+                                            setHoverContainerId={setHoverContainerId}
+                                        />
+                                    ))}
+                                    <div id={`container-slot:${block.id}`} className="h-2 w-full" />
+                                </div>
+                            </SortableContext>
+                        </div>
+                    )}
+                </div>
+                <div className="absolute right-1 top-1 flex flex-col gap-1">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => { e.stopPropagation(); removeBlock(stepId, block.id); }}
+                    >
+                        <Trash2 className="w-3 h-3 text-red-500" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => { e.stopPropagation(); setBlockPendingDuplicate(block); setTargetStepId(stepId); setDuplicateModalOpen(true); }}
+                    >
+                        <ArrowRightCircle className="w-3 h-3 text-blue-500" />
+                    </Button>
+                </div>
+            </div>
+        </>
+    );
+}; const comparator = (prev: BlockRowProps, next: BlockRowProps) => {
     if (prev.block.id !== next.block.id) return false;
     if (prev.block.order !== next.block.order) return false;
     if (prev.block.type !== next.block.type) return false;

@@ -1206,7 +1206,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             // Determinar posição de inserção
             let insertPosition = currentStep.blocks.length; // Default: final
 
-            if (over.id && over.id !== 'canvas-end' && !String(over.id).startsWith('container-slot:')) {
+            // 🎯 NOVO: Detectar drop zones (drop-before-{blockId})
+            if (over.id && String(over.id).startsWith('drop-before-')) {
+                const targetBlockId = String(over.id).replace('drop-before-', '');
+                const targetBlockIndex = currentStep.blocks.findIndex(b => b.id === targetBlockId && !b.parentId);
+                if (targetBlockIndex >= 0) {
+                    insertPosition = targetBlockIndex; // Inserir ANTES do bloco
+                    console.log(`🎯 Drop zone detectado: inserindo ANTES do bloco ${targetBlockId} na posição ${insertPosition}`);
+                }
+            } else if (over.id && over.id !== 'canvas-end' && !String(over.id).startsWith('container-slot:')) {
                 // Dropped sobre outro bloco - inserir APÓS ele
                 const targetBlockIndex = currentStep.blocks.findIndex(b => b.id === over.id);
                 if (targetBlockIndex >= 0) {
