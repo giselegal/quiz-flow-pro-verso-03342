@@ -107,9 +107,21 @@ export function loadAllModularTemplates(): Record<string, Block[]> {
 }
 
 /**
- * Verifica se um step tem template modular
+ * Verifica se um step tem blocos JSON estáticos (steps 12, 19, 20)
+ * Estes steps têm arrays de blocos direto no JSON, sem conversão
+ */
+export function hasStaticBlocksJSON(stepId: string): boolean {
+  return ['step-12', 'step-19', 'step-20'].includes(stepId);
+}
+
+/**
+ * @deprecated Use hasStaticBlocksJSON() para clareza semântica
+ * MANTIDO para backward compatibility
  */
 export function hasModularTemplate(stepId: string): boolean {
+  // ⚠️ ATENÇÃO: O nome está semanticamente invertido!
+  // Steps 1-11,13-18 são os que TÊM modularidade (sections → blocks)
+  // Steps 12,19,20 são JSON estáticos (blocks direto)
   return ['step-01', 'step-02', 'step-12', 'step-13', 'step-19', 'step-20'].includes(stepId);
 }
 

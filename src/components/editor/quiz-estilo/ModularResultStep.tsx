@@ -97,8 +97,8 @@ export default function ModularResultStep({
     userProfile,
     isEditable = false,
     selectedBlockId,
-    onBlockSelect = () => {},
-    onOpenProperties = () => {},
+    onBlockSelect = () => { },
+    onOpenProperties = () => { },
     editor: editorProp
 }: ModularResultStepProps) {
     const editorContext = useEditor({ optional: true });
@@ -110,15 +110,15 @@ export default function ModularResultStep({
     // Handler para clique em blocos
     const handleBlockClick = React.useCallback((blockId: string) => {
         console.log(`🎯 Bloco clicado: ${blockId}`);
-        
+
         // 1. Notificar componente pai
         onBlockSelect(blockId);
-        
+
         // 2. Atualizar estado no editor (se disponível)
         if (editor?.actions?.setSelectedBlockId) {
             editor.actions.setSelectedBlockId(blockId);
         }
-        
+
         // 3. Abrir painel de propriedades
         onOpenProperties(blockId);
     }, [onBlockSelect, onOpenProperties, editor]);
@@ -127,11 +127,23 @@ export default function ModularResultStep({
     const sourceBlocks = useMemo(() => {
         return editor?.state?.stepBlocks?.[stepKey] || [];
     }, [editor?.state?.stepBlocks, stepKey]);
-    
+
     // Injetar dados dinâmicos nos blocos
     const blocks = useMemo(() => {
         return sourceBlocks.map((block: Block) => injectDynamicData(block, userProfile));
     }, [sourceBlocks, userProfile]);
+
+    // ✅ FASE 1.5: Auto-load se blocos estão vazios (CORREÇÃO CRÍTICA)
+    React.useEffect(() => {
+        if (sourceBlocks.length === 0 && editor?.actions?.ensureStepLoaded) {
+            console.log(`🔄 [ModularResultStep] Auto-loading ${stepKey} (blocks empty)`);
+            editor.actions.ensureStepLoaded(stepKey).then(() => {
+                console.log(`✅ [ModularResultStep] Loaded ${stepKey} successfully`);
+            }).catch((err: Error) => {
+                console.error(`❌ [ModularResultStep] Failed to load ${stepKey}:`, err);
+            });
+        }
+    }, [stepKey, sourceBlocks.length, editor?.actions]);
 
     // ✅ FASE 2: Debug logs apenas em DEV
     React.useEffect(() => {

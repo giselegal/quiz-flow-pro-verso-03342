@@ -45,15 +45,15 @@ export default function ModularTransitionStep({
     // Handler para clique em blocos
     const handleBlockClick = React.useCallback((blockId: string) => {
         console.log(`🎯 Bloco clicado: ${blockId}`);
-        
+
         // 1. Notificar componente pai
         onBlockSelect(blockId);
-        
+
         // 2. Atualizar estado no editor (se disponível)
         if (editor?.actions?.setSelectedBlockId) {
             editor.actions.setSelectedBlockId(blockId);
         }
-        
+
         // 3. Abrir painel de propriedades
         onOpenProperties(blockId);
     }, [onBlockSelect, onOpenProperties, editor]);
@@ -63,7 +63,19 @@ export default function ModularTransitionStep({
         return editor?.state?.stepBlocks?.[stepKey] || [];
     }, [editor?.state?.stepBlocks, stepKey]);
 
-    // ✅ FASE 2: Debug logs apenas em DEV
+    // ✅ FASE 2: Auto-load se blocos estão vazios (CORREÇÃO CRÍTICA)
+    React.useEffect(() => {
+        if (blocks.length === 0 && editor?.actions?.ensureStepLoaded) {
+            console.log(`🔄 [ModularTransitionStep] Auto-loading ${stepKey} (blocks empty)`);
+            editor.actions.ensureStepLoaded(stepKey).then(() => {
+                console.log(`✅ [ModularTransitionStep] Loaded ${stepKey} successfully`);
+            }).catch((err: Error) => {
+                console.error(`❌ [ModularTransitionStep] Failed to load ${stepKey}:`, err);
+            });
+        }
+    }, [stepKey, blocks.length, editor?.actions]);
+
+    // ✅ FASE 3: Debug logs apenas em DEV
     React.useEffect(() => {
         if (import.meta.env.DEV) {
             console.log(`🔍 ModularTransitionStep [${stepKey}]:`, {
