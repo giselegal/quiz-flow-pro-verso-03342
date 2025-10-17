@@ -456,12 +456,30 @@ export const AVAILABLE_COMPONENTS = [
     { type: 'legal-notice', label: 'Aviso Legal', category: 'action', description: 'Texto legal com checkbox' },
 
     // ============================================================================
-    // 📊 COMPONENTES DE RESULTADO (Step 20)
+    // � COMPONENTES DE TRANSIÇÃO (Steps 12 & 19) - Blocos Atômicos
+    // ============================================================================
+    { type: 'transition-title', label: 'Transição: Título', category: 'transition', description: 'Título da tela de transição' },
+    { type: 'transition-loader', label: 'Transição: Loader', category: 'transition', description: 'Animação de loading personalizada' },
+    { type: 'transition-text', label: 'Transição: Texto', category: 'transition', description: 'Texto explicativo da transição' },
+    { type: 'transition-progress', label: 'Transição: Progresso', category: 'transition', description: 'Barra de progresso da análise' },
+    { type: 'transition-message', label: 'Transição: Mensagem', category: 'transition', description: 'Mensagem contextual com ícone' },
+
+    // ============================================================================
+    // �📊 COMPONENTES DE RESULTADO (Step 20)
     // ============================================================================
     { type: 'result-card', label: 'Card de Resultado', category: 'result', description: 'Card com resultado do quiz' },
     { type: 'result-header-inline', label: 'Header de Resultado', category: 'result', description: 'Cabeçalho da página de resultado' },
     { type: 'style-card-inline', label: 'Card de Estilo', category: 'result', description: 'Card individual de estilo' },
     { type: 'style-cards-grid', label: 'Grid de Estilos', category: 'result', description: 'Grade de cards de estilo' },
+
+    // 🎨 Step 20 - Blocos Atômicos
+    { type: 'result-header', label: 'Resultado: Cabeçalho', category: 'result', description: 'Cabeçalho da página de resultado' },
+    { type: 'result-main', label: 'Resultado: Estilo Principal', category: 'result', description: 'Card do estilo principal identificado' },
+    { type: 'result-image', label: 'Resultado: Imagem', category: 'result', description: 'Imagem ilustrativa do resultado' },
+    { type: 'result-description', label: 'Resultado: Descrição', category: 'result', description: 'Texto descritivo do estilo' },
+    { type: 'result-characteristics', label: 'Resultado: Características', category: 'result', description: 'Lista de características do estilo' },
+    { type: 'result-cta', label: 'Resultado: Call to Action', category: 'result', description: 'Botão de ação principal' },
+    { type: 'result-secondary-styles', label: 'Resultado: Estilos Secundários', category: 'result', description: 'Lista de estilos compatíveis' },
 
     // 🆕 Step 20 - Módulos Especializados
     { type: 'step20-result-header', label: 'Step20: Header', category: 'result', description: 'Header modular do resultado' },
