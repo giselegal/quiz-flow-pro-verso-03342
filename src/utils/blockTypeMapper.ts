@@ -47,12 +47,33 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
     'Pricing': 'pricing-inline',
     'pricing-inline': 'pricing-inline',
     'pricing': 'pricing',
+
+    // ====== Mapeamentos adicionais do master JSON (step-20/21 e afins) ======
+    // Seções de alto nível personalizadas do template v3 consolidado
+    'HeroSection': 'result-header',
+    'StyleProfileSection': 'result-characteristics',
+    'TransformationSection': 'benefits-list',
+    // SocialProofSection / GuaranteeSection / BonusSection já mapeados acima
+    'OfferSection': 'offer-hero',
+    // Aliases/variações em minúsculo
+    'heroSection': 'result-hero',
+    'styleProfileSection': 'result-characteristics',
+    'transformationSection': 'benefits-list',
+    'socialProofSection': 'testimonials',
+    'guaranteeSection': 'guarantee',
+    'bonusSection': 'benefits-list',
+    'offerSection': 'offer-hero',
 };
 
 export function mapBlockType(templateType: string): string {
     if (!templateType) return templateType;
     const key = String(templateType).trim();
-    return BLOCK_TYPE_MAP[key] || key;
+    // Normalizar capitalização mais comum (começar minúsculo exceto casos específicos)
+    const normalized = BLOCK_TYPE_MAP[key]
+        || BLOCK_TYPE_MAP[key.charAt(0).toUpperCase() + key.slice(1)]
+        || BLOCK_TYPE_MAP[key.charAt(0).toLowerCase() + key.slice(1)]
+        || key;
+    return normalized;
 }
 
 export function isCustomBlockType(type: string): boolean {

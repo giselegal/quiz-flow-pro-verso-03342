@@ -91,7 +91,8 @@ import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEdita
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
-import { safeGetTemplateBlocks } from '@/utils/templateConverter';
+import { safeGetTemplateBlocks, blocksToBlockComponents, convertTemplateToBlocks } from '@/utils/templateConverter';
+import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import type { StepType } from '@/types/quiz-schema';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
 import { useVirtualBlocks } from './hooks/useVirtualBlocks';
@@ -622,9 +623,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                         setIsLoading(false);
                     } else if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
-                        // 🎯 Suporte para ambos os IDs de template
-                        // NOTA: QuizTemplateAdapter.loadLegacyTemplate() retorna null - usando fallback legacy diretamente
-                        console.log('🎯 Carregando template legacy diretamente:', templateId);
+                        // 🎯 Novo caminho primário: usar JSON público consolidado (quiz21-complete.json) como master
+                        console.log('🎯 Carregando template público consolidado (master) com hidratação:', templateId);
                         const buildStepType = (idx: number): EditableQuizStep['type'] => {
                             if (idx === 0) return 'intro';
                             if (idx >= 1 && idx <= 10) return 'question';
@@ -635,8 +635,64 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             return 'offer'; // idx === 20
                         };
 
+                        const toStepId = (n: number) => `step-${String(n).padStart(2, '0')}`;
+
+                        try {
+                            const resp = await fetch('/templates/quiz21-complete.json');
+                            if (resp.ok) {
+                                const master = await resp.json();
+                                const stepIds = Array.from({ length: 21 }).map((_, i) => toStepId(i + 1));
+
+                                const built: EditableQuizStep[] = stepIds.map((stepId, idx) => {
+                                    const stepConf = master?.steps?.[stepId];
+                                    // Hidratar sections com QUIZ_STEPS (titulos, perguntas, opções, CTA...)
+                                    const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
+                                    // Converter sections → BlockComponent[] usando o mapeador central
+                                    const blocks = safeGetTemplateBlocks(stepId, { [stepId]: { sections } }) || [];
+
+                                    return {
+                                        id: stepId,
+                                        type: (stepConf?.type as EditableQuizStep['type']) || buildStepType(idx),
+                                        order: idx + 1,
+                                        blocks,
+                                        nextStep: idx < 20 ? stepIds[idx + 1] : undefined,
+                                        metadata: stepConf?.metadata || {}
+                                    } as EditableQuizStep;
+                                });
+
+                                // Opcional: substituir steps 12/19/20 por JSON estático mais rico (se disponível)
+                                try {
+                                    const preferStatic = ['step-12', 'step-19', 'step-20'] as const;
+                                    built.forEach((s, i) => {
+                                        if (preferStatic.includes(s.id as any)) {
+                                            const staticBlocks = loadStepTemplate(s.id);
+                                            if (Array.isArray(staticBlocks) && staticBlocks.length > 0) {
+                                                // Converter Block[] (editor) → BlockComponent[] (editor UI)
+                                                const asComponents = blocksToBlockComponents(staticBlocks as any);
+                                                built[i] = { ...s, blocks: asComponents };
+                                                console.log(`✅ Substituído por JSON estático rico: ${s.id} (${asComponents.length} blocos)`);
+                                            }
+                                        }
+                                    });
+                                } catch (e) {
+                                    console.warn('⚠️ Falha ao aplicar substituição por JSON estático (12/19/20):', e);
+                                }
+
+                                setSteps(built);
+                                setSelectedStepIdUnified(built[0]?.id || 'step-01');
+                                setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                setIsLoading(false);
+                                console.log('✅ Master JSON carregado e convertido com sucesso. Steps:', built.length);
+                                return;
+                            } else {
+                                console.warn('⚠️ Falha ao carregar master JSON:', resp.status, resp.statusText);
+                            }
+                        } catch (e) {
+                            console.warn('⚠️ Erro ao carregar/usar master JSON, caindo no fallback enriquecido:', e);
+                        }
+
                         // ==========================
-                        // 🔄 NOVO: Construção enriquecida baseada em QUIZ_STEPS (substitui apenas se dados canônicos disponíveis)
+                        // Fallback: Construção enriquecida baseada em QUIZ_STEPS (como antes)
                         // ==========================
                         const buildEnrichedBlocksForStep = async (stepId: string, quizStep: any): Promise<any[]> => {
                             const blocks: any[] = [];
