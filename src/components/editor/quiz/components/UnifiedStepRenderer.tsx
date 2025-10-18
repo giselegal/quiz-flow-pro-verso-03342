@@ -461,6 +461,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         return (
           <ModularOfferStep
             data={stepData as any}
+            blocks={(step as any)?.blocks || editorState.stepBlocks[stepKey] || []}
             isEditable={isEditMode}
             userProfile={{
               userName: sessionData.userName || 'Visitante',
@@ -468,6 +469,11 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
               secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : (sessionData.secondaryStyles || []),
             }}
             offerKey={sessionData.offerKey || 'default'}
+            onEdit={handleEdit}
+            onBlocksReorder={handleBlocksReorder}
+            selectedBlockId={selectedBlockId || undefined}
+            onBlockSelect={handleSelectBlock}
+            onOpenProperties={handleOpenProperties}
           />
         );
       }

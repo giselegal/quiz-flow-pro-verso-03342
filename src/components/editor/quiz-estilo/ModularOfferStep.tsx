@@ -1,8 +1,15 @@
 import React from 'react';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
+import type { Block } from '@/types/editor';
+import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
+import { cn } from '@/lib/utils';
 
 interface ModularOfferStepProps {
     data: any;
+    blocks?: Block[];
     userProfile?: {
         userName: string;
         resultStyle: string;
@@ -14,6 +21,7 @@ interface ModularOfferStepProps {
     selectedBlockId?: string;
     onBlockSelect?: (blockId: string) => void;
     onOpenProperties?: (blockId: string) => void;
+    onBlocksReorder?: (stepId: string, newOrder: string[]) => void;
 }
 
 /**
@@ -32,15 +40,32 @@ interface ModularOfferStepProps {
  */
 export default function ModularOfferStep({
     data,
+    blocks = [],
     userProfile,
     offerKey = 'default',
     onEdit,
     isEditable = false,
     selectedBlockId,
-    onBlockSelect = () => {},
-    onOpenProperties = () => {}
+    onBlockSelect = () => { },
+    onOpenProperties = () => { },
+    onBlocksReorder
 }: ModularOfferStepProps) {
-    
+
+    const STEP_ID = data?.id || 'step-offer';
+
+    // Suporte a blocos reais (Block[])
+    const hasRealBlocks = Array.isArray(blocks) && blocks.length > 0;
+    const topLevelBlocks: Block[] = React.useMemo(() => {
+        if (!hasRealBlocks) return [];
+        const list = (blocks as Block[]).filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
+        return list.sort((a, b) => (a.order || 0) - (b.order || 0));
+    }, [blocks, hasRealBlocks]);
+
+    // DnD (para blocos reais e fallback lógico)
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+    );
+
     const safeData = {
         title: data.title || 'Oferta Especial Para Você!',
         subtitle: data.subtitle || 'Consultoria de Imagem Personalizada',
@@ -58,7 +83,7 @@ export default function ModularOfferStep({
         image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png'
     };
 
-    // Block IDs
+    // Block IDs (fallback legado)
     const personalizedTitleBlockId = `${data.id}-personalized-title`;
     const resultHighlightBlockId = `${data.id}-result-highlight`;
     const offerTitleBlockId = `${data.id}-offer-title`;
@@ -68,6 +93,101 @@ export default function ModularOfferStep({
     const pricingBlockId = `${data.id}-pricing`;
     const ctaBlockId = `${data.id}-cta`;
     const guaranteeBlockId = `${data.id}-guarantee`;
+
+    // Ordem lógica (fallback)
+    const DEFAULT_ORDER = [
+        'offer-personalized-title',
+        'offer-result-highlight',
+        'offer-title',
+        'offer-image',
+        'offer-description',
+        'offer-benefits',
+        'offer-pricing',
+        'offer-cta',
+        'offer-guarantee'
+    ];
+    const initialOrder: string[] = (data?.metadata?.blockOrder && Array.isArray(data.metadata.blockOrder))
+        ? data.metadata.blockOrder
+        : DEFAULT_ORDER;
+    const [order, setOrder] = React.useState<string[]>(initialOrder);
+
+    const handleDragEnd = (event: any) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+        if (hasRealBlocks) {
+            const ids = topLevelBlocks.map(b => b.id);
+            const oldIndex = ids.indexOf(String(active.id));
+            const newIndex = ids.indexOf(String(over.id));
+            if (oldIndex >= 0 && newIndex >= 0) {
+                const newIds = arrayMove(ids, oldIndex, newIndex);
+                onBlocksReorder?.(STEP_ID, newIds);
+            }
+        } else {
+            const oldIndex = order.indexOf(String(active.id));
+            const newIndex = order.indexOf(String(over.id));
+            const newOrder = arrayMove(order, oldIndex, newIndex);
+            setOrder(newOrder);
+            onBlocksReorder?.(STEP_ID, newOrder);
+            onEdit?.('blockOrder', newOrder);
+        }
+    };
+
+    // Sortable item wrapper
+    const SortableItem: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+        const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.7 : 1 } as React.CSSProperties;
+        return (
+            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+                {children}
+            </div>
+        );
+    };
+
+    // Drop zone entre blocos reais
+    const DropZoneBefore: React.FC<{ blockId: string; insertIndex: number }> = ({ blockId, insertIndex }) => {
+        const dropZoneId = `drop-before-${blockId}`;
+        const { setNodeRef, isOver } = useDroppable({ id: dropZoneId, data: { dropZone: 'before', blockId, stepId: STEP_ID, insertIndex } });
+        return <div ref={setNodeRef} className={cn('h-4 -my-1 transition-all border-2 border-dashed rounded', isOver ? 'bg-blue-100 border-blue-400' : 'bg-gray-50 border-gray-300 opacity-60 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400')} />;
+    };
+
+    // NOVO: Renderização por blocos reais
+    if (hasRealBlocks) {
+        return (
+            <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+                <main className="w-full max-w-6xl mx-auto px-4 py-8">
+                    <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg text-center max-w-4xl mx-auto">
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                            <SortableContext items={topLevelBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+                                {topLevelBlocks.map((block, index) => (
+                                    <React.Fragment key={block.id}>
+                                        <DropZoneBefore blockId={block.id} insertIndex={index} />
+                                        <SortableItem id={block.id}>
+                                            <BlockTypeRenderer
+                                                block={block}
+                                                isSelected={selectedBlockId === block.id}
+                                                isEditable={isEditable}
+                                                onSelect={onBlockSelect}
+                                                onOpenProperties={onOpenProperties}
+                                                contextData={{
+                                                    userProfile,
+                                                    offerKey,
+                                                    onCTA: (payload?: any) => {
+                                                        try {
+                                                            window.dispatchEvent(new CustomEvent('quiz-offer-cta', { detail: { stepId: STEP_ID, blockId: block.id, payload } }));
+                                                        } catch { /* noop */ }
+                                                    }
+                                                }}
+                                            />
+                                        </SortableItem>
+                                    </React.Fragment>
+                                ))}
+                            </SortableContext>
+                        </DndContext>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -83,7 +203,7 @@ export default function ModularOfferStep({
                         onOpenProperties={onOpenProperties}
                         isDraggable={true}
                     >
-                        <h1 
+                        <h1
                             className="text-2xl md:text-3xl font-bold text-[#432818] mb-2"
                             style={{ fontFamily: '"Playfair Display", serif' }}
                         >
