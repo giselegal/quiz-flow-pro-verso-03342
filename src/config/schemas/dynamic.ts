@@ -126,6 +126,54 @@ export function initializeSchemaRegistry(): void {
     import('./blocks/urgency-timer-inline').then(m => m.urgencyTimerInlineSchema)
   );
 
+  // NEW: Intro blocks (já existentes em outro módulo, manter quando forem criados)
+  // registerSchema('intro-logo', () => import('./blocks/intro-blocks').then(m => m.introLogoSchema));
+  // registerSchema('intro-title', () => import('./blocks/intro-blocks').then(m => m.introTitleSchema));
+  // registerSchema('intro-image', () => import('./blocks/intro-blocks').then(m => m.introImageSchema));
+  // registerSchema('intro-description', () => import('./blocks/intro-blocks').then(m => m.introDescriptionSchema));
+  // registerSchema('intro-form', () => import('./blocks/intro-blocks').then(m => m.introFormSchema));
+
+  // NEW: Question blocks
+  registerSchema('question-hero', () => 
+    import('./blocks/question-blocks').then(m => m.questionHeroSchema)
+  );
+  registerSchema('question-title', () => 
+    import('./blocks/question-blocks').then(m => m.questionTitleSchema)
+  );
+
+  // NEW: Transition blocks
+  registerSchema('transition-subtitle', () => 
+    import('./blocks/transition-blocks').then(m => m.transitionSubtitleSchema)
+  );
+  registerSchema('transition-image', () => 
+    import('./blocks/transition-blocks').then(m => m.transitionImageSchema)
+  );
+  registerSchema('transition-description', () => 
+    import('./blocks/transition-blocks').then(m => m.transitionDescriptionSchema)
+  );
+
+  // NEW: Offer blocks
+  registerSchema('offer-hero', () => 
+    import('./blocks/offer-blocks').then(m => m.offerHeroSchema)
+  );
+  registerSchema('bonus', () => 
+    import('./blocks/offer-blocks').then(m => m.bonusSchema)
+  );
+  registerSchema('benefits', () => 
+    import('./blocks/offer-blocks').then(m => m.benefitsSchema)
+  );
+  registerSchema('guarantee', () => 
+    import('./blocks/offer-blocks').then(m => m.guaranteeSchema)
+  );
+
+  // NEW: Step 20 blocks
+  registerSchema('step20-result-header', () => 
+    import('./blocks/step20-blocks').then(m => m.step20ResultHeaderSchema)
+  );
+  registerSchema('step20-style-reveal', () => 
+    import('./blocks/step20-blocks').then(m => m.step20StyleRevealSchema)
+  );
+
   // TODO: Adicionar mais schemas conforme criados
   // registerSchema('text', () => import('./blocks/text').then(m => m.textSchema));
   // registerSchema('divider', () => import('./blocks/divider').then(m => m.dividerSchema));

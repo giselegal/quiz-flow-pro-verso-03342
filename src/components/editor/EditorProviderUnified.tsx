@@ -26,6 +26,7 @@ import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/template
 import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
+import { masterTemplateKey, stepBlocksKey, masterBlocksKey } from '@/utils/cacheKeys';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -433,9 +434,9 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         try {
             console.group(`🔍 [ensureStepLoaded] ${normalizedKey}`);
 
-            // � Tentativa 0: servir diretamente de cache unificado por step
+            // 🔎 Tentativa 0: servir diretamente de cache unificado por step
             try {
-                const cachedStepBlocks = unifiedCache.get(`step:${normalizedKey}:blocks`) || unifiedCache.get(`masterBlocks:${normalizedKey}`);
+                const cachedStepBlocks = unifiedCache.get(stepBlocksKey(normalizedKey)) || unifiedCache.get(masterBlocksKey(normalizedKey));
                 if (Array.isArray(cachedStepBlocks) && cachedStepBlocks.length > 0) {
                     console.log(`📦 UnifiedCache hit (step): ${normalizedKey} → ${cachedStepBlocks.length} blocos`);
                     setState(prev => {
@@ -467,9 +468,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             let masterBlocks: Block[] | null = null;
             try {
                 if (typeof window !== 'undefined' && window.location) {
-                    const masterCacheKey = 'master:quiz21-complete.json';
                     if (!masterTemplateRef.current) {
-                        const cachedMaster = unifiedCache.get(masterCacheKey);
+                        const cachedMaster = unifiedCache.get(masterTemplateKey());
                         if (cachedMaster) {
                             masterTemplateRef.current = cachedMaster;
                         } else {
@@ -482,7 +482,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                                     });
                                     if (resp.ok) {
                                         masterTemplateRef.current = await resp.json();
-                                        unifiedCache.set(masterCacheKey, masterTemplateRef.current);
+                                        unifiedCache.set(masterTemplateKey(), masterTemplateRef.current);
                                         console.log(`✅ Master JSON carregado (tentativa ${attempt + 1})`);
                                         break;
                                     } else {
@@ -514,8 +514,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         // Converter via util existente usando template mínimo
                         const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
                         masterBlocks = blockComponentsToBlocks(blockComponents);
-                        unifiedCache.set(`masterBlocks:${normalizedKey}`, masterBlocks);
-                        unifiedCache.set(`step:${normalizedKey}:blocks`, masterBlocks);
+                        unifiedCache.set(masterBlocksKey(normalizedKey), masterBlocks);
+                        unifiedCache.set(stepBlocksKey(normalizedKey), masterBlocks);
                         console.log(`📦 Master JSON → ${normalizedKey}: ${masterBlocks.length} blocos`);
                     }
                 }
@@ -552,7 +552,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
                     // Carregar/substituir com blocos modulares
                     // Persistir no cache unificado
-                    try { unifiedCache.set(`step:${normalizedKey}:blocks`, modularBlocks); } catch { }
+                    try { unifiedCache.set(stepBlocksKey(normalizedKey), modularBlocks); } catch { }
                     console.log('📝 Carregando blocos modulares');
                     console.groupEnd();
                     return {
@@ -578,7 +578,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 // ✅ NOVO: se conseguimos masterBlocks (JSON público hidratado), usar
                 if (masterBlocks && masterBlocks.length > 0) {
                     console.log('📝 Aplicando blocos do master JSON hidratado');
-                    try { unifiedCache.set(`step:${normalizedKey}:blocks`, masterBlocks); } catch { }
+                    try { unifiedCache.set(stepBlocksKey(normalizedKey), masterBlocks); } catch { }
                     console.groupEnd();
                     return {
                         ...prev,
@@ -598,7 +598,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.log('📝 Carregando template padrão (sections → blocks)');
                 const blockComponents = safeGetTemplateBlocks(normalizedKey, template);
                 const convertedBlocks = blockComponentsToBlocks(blockComponents);
-                try { unifiedCache.set(`step:${normalizedKey}:blocks`, convertedBlocks); } catch { }
+                try { unifiedCache.set(stepBlocksKey(normalizedKey), convertedBlocks); } catch { }
                 console.groupEnd();
                 return {
                     ...prev,
@@ -658,7 +658,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             const t = setTimeout(() => {
                 // Evitar trabalho se já em cache local ou unificado
                 const hasLocal = (state.stepBlocks[normalizedNext]?.length || 0) > 0;
-                const cached = unifiedCache.get(`step:${normalizedNext}:blocks`);
+                const cached = unifiedCache.get(stepBlocksKey(normalizedNext));
                 if (!hasLocal && !(Array.isArray(cached) && cached.length > 0)) {
                     ensureStepLoaded(next);
                 } else if (!hasLocal && Array.isArray(cached) && cached.length > 0) {
