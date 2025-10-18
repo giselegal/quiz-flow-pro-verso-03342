@@ -52,6 +52,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 // 🔍 PÁGINAS DE DIAGNÓSTICO
 const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
+const EditorBlocksDiagnosticPage = lazy(() => import('./pages/EditorBlocksDiagnosticPage'));
 
 // 🚀 EDITOR CONFIGURATION (Sprint 1 - Consolidated)
 import QuizModularProductionEditor from '@/config/editorRoutes.config';
@@ -90,7 +91,7 @@ const AdminCreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
 
 function AppCore() {
     console.log('🚀 AppCore rendering...');
-    
+
     useEffect(() => {
         console.log('🚀 App initialized with UnifiedAppProvider v2.0 (P2 Optimized)');
 
@@ -155,9 +156,9 @@ function AppCore() {
                                 <Route path="/editor-new">
                                     <EditorErrorBoundary>
                                         <div data-testid="quiz-editor-wysiwyg-page">
-                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
-                                    <QuizModularProductionEditor />
-                                </Suspense>
+                                            <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
+                                                <QuizModularProductionEditor />
+                                            </Suspense>
                                         </div>
                                     </EditorErrorBoundary>
                                 </Route>
@@ -226,6 +227,15 @@ function AppCore() {
                                 <Route path="/debug/templates">
                                     <div data-testid="template-diagnostic-page">
                                         <TemplateDiagnosticPage />
+                                    </div>
+                                </Route>
+
+                                <Route path="/debug/editor-blocks">
+                                    <div data-testid="editor-blocks-diagnostic-page">
+                                        {/* Importante: envolver no provider para ter acesso ao estado */}
+                                        <EditorProviderUnified enableSupabase={false}>
+                                            <EditorBlocksDiagnosticPage />
+                                        </EditorProviderUnified>
                                     </div>
                                 </Route>
 
