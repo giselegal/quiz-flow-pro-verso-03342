@@ -34,6 +34,8 @@ import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQ
 export interface EditorState {
     /** Blocos organizados por step */
     stepBlocks: Record<string, Block[]>;
+    /** Origem dos blocos por step (diagnóstico) */
+    stepSources?: Record<string, 'modular-json' | 'master-hydrated' | 'ts-template'>;
     /** Step atual selecionado */
     currentStep: number;
     /** Bloco selecionado para edição */
@@ -192,6 +194,7 @@ export interface EditorProviderUnifiedProps {
 
 const getInitialState = (enableSupabase: boolean = false): EditorState => ({
     stepBlocks: {},
+    stepSources: {},
     currentStep: 1,
     selectedBlockId: null,
     stepValidation: {},
@@ -496,6 +499,10 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         stepBlocks: {
                             ...prev.stepBlocks,
                             [normalizedKey]: modularBlocks
+                        },
+                        stepSources: {
+                            ...(prev.stepSources || {}),
+                            [normalizedKey]: 'modular-json'
                         }
                     };
                 }
@@ -516,6 +523,10 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         stepBlocks: {
                             ...prev.stepBlocks,
                             [normalizedKey]: masterBlocks
+                        },
+                        stepSources: {
+                            ...(prev.stepSources || {}),
+                            [normalizedKey]: 'master-hydrated'
                         }
                     };
                 }
@@ -531,6 +542,10 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     stepBlocks: {
                         ...prev.stepBlocks,
                         [normalizedKey]: convertedBlocks
+                    },
+                    stepSources: {
+                        ...(prev.stepSources || {}),
+                        [normalizedKey]: 'ts-template'
                     }
                 };
             });
@@ -582,6 +597,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         }
 
         const newStepBlocks: Record<string, Block[]> = {};
+        const newStepSources: Record<string, 'modular-json' | 'master-hydrated' | 'ts-template'> = {};
         let totalBlocks = 0;
         let conversionErrors = 0;
 
@@ -592,6 +608,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 if (hasModularTemplate(stepKey)) {
                     const modularBlocks = loadStepTemplate(stepKey);
                     newStepBlocks[stepKey] = modularBlocks;
+                    newStepSources[stepKey] = 'modular-json';
                     totalBlocks += modularBlocks.length;
                     console.log(`🎯 Loaded ${modularBlocks.length} modular blocks for ${stepKey}`);
                     return;
@@ -619,6 +636,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 });
 
                 newStepBlocks[stepKey] = validBlocks;
+                newStepSources[stepKey] = 'ts-template';
                 totalBlocks += validBlocks.length;
                 console.log(`📦 Loaded ${validBlocks.length} blocks for ${stepKey}`);
             } catch (error) {
@@ -630,7 +648,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
         updateStateWithHistory(() => ({
             ...getInitialState(enableSupabase),
-            stepBlocks: newStepBlocks
+            stepBlocks: newStepBlocks,
+            stepSources: newStepSources
         }));
 
         history.clear();

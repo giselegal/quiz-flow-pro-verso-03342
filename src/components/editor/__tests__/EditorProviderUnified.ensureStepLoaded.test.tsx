@@ -3,6 +3,7 @@ import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
 import { EditorProviderUnified, useEditor } from '@/components/editor/EditorProviderUnified';
+import * as loadStepTemplates from '@/utils/loadStepTemplates';
 
 const MasterJSONFixture = {
     templateVersion: '3.0',
@@ -93,12 +94,57 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
             </EditorProviderUnified>
         );
 
+        const spy = vi.spyOn(loadStepTemplates, 'loadStepTemplate');
         await actions.ensureStepLoaded('step-20');
 
         await waitFor(() => {
             const blocks = state.stepBlocks['step-20'];
             expect(Array.isArray(blocks)).toBe(true);
             expect(blocks.length).toBeGreaterThan(0);
+            // confirma que veio do JSON modular
+            expect(spy).toHaveBeenCalledWith('step-20');
+        });
+    });
+
+    it('prioriza JSON estático modular para step-12 (transition)', async () => {
+        let actions: any;
+        let state: any;
+        const onReady = (ctx: any) => { actions = ctx.actions; state = ctx.state; };
+        render(
+            <EditorProviderUnified>
+                <TestConsumer onReady={onReady} />
+            </EditorProviderUnified>
+        );
+
+        const spy = vi.spyOn(loadStepTemplates, 'loadStepTemplate');
+        await actions.ensureStepLoaded('step-12');
+
+        await waitFor(() => {
+            const blocks = state.stepBlocks['step-12'];
+            expect(Array.isArray(blocks)).toBe(true);
+            expect(blocks.length).toBeGreaterThan(0);
+            expect(spy).toHaveBeenCalledWith('step-12');
+        });
+    });
+
+    it('prioriza JSON estático modular para step-19 (strategic-question)', async () => {
+        let actions: any;
+        let state: any;
+        const onReady = (ctx: any) => { actions = ctx.actions; state = ctx.state; };
+        render(
+            <EditorProviderUnified>
+                <TestConsumer onReady={onReady} />
+            </EditorProviderUnified>
+        );
+
+        const spy = vi.spyOn(loadStepTemplates, 'loadStepTemplate');
+        await actions.ensureStepLoaded('step-19');
+
+        await waitFor(() => {
+            const blocks = state.stepBlocks['step-19'];
+            expect(Array.isArray(blocks)).toBe(true);
+            expect(blocks.length).toBeGreaterThan(0);
+            expect(spy).toHaveBeenCalledWith('step-19');
         });
     });
 });
