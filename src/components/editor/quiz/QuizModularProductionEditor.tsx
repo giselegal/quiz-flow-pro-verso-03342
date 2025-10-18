@@ -2114,23 +2114,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const EnhancedComponent = getEnhancedBlockComponent(type);
 
         if (EnhancedComponent) {
-            // Componente existe no registry - renderizar com Suspense para suportar lazy()
+            // Componente existe no registry - renderizar diretamente (evitar Suspense duplicado)
             node = (
                 <div className="relative">
-                    <React.Suspense fallback={
-                        <div className="border rounded p-3 text-center text-[11px] text-slate-500 bg-white/70">
-                            Carregando componente…
-                        </div>
-                    }>
-                        <EnhancedComponent
-                            block={block}
-                            properties={properties || {}}
-                            content={content || {}}
-                            isSelected={false}
-                            isPreviewing={true}
-                            isEditor={false}
-                        />
-                    </React.Suspense>
+                    <EnhancedComponent
+                        block={block}
+                        properties={properties || {}}
+                        content={content || {}}
+                        isSelected={false}
+                        isPreviewing={true}
+                        isEditor={false}
+                    />
                 </div>
             );
         } else {
@@ -2444,6 +2438,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const stepId = (editorCtx ? effectiveSelectedStepId : selectedStepId) || selectedStep?.id;
         return <LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={stepId} />;
     }, [funnelId, steps, editorCtx, effectiveSelectedStepId, selectedStepId, selectedStep?.id]);
+
+    // Gargalo #2/#3: Validar ordem de renderização via logs em DEV
+    useEffect(() => {
+        if (import.meta?.env?.DEV) {
+            const curId = (editorCtx ? effectiveSelectedStepId : selectedStepId) || selectedStep?.id;
+            const currentBlocks = steps.find(s => s.id === curId)?.blocks;
+            if (currentBlocks) {
+                // Garantir ordenação consistente
+                const sorted = [...currentBlocks].sort((a, b) => (a.order || 0) - (b.order || 0));
+                console.log('📐 Ordem de blocos:', sorted.map(b => ({ id: b.id, type: b.type, order: b.order })));
+            }
+        }
+    }, [steps, editorCtx, effectiveSelectedStepId, selectedStepId, selectedStep?.id]);
 
     if (isLoading) {
         return (

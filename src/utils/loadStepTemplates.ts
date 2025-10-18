@@ -9,6 +9,7 @@
 
 import { Block } from '@/types/editor';
 import { templateCache } from '@/utils/TemplateCache';
+import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import step12Template from '@/data/modularSteps/step-12.json';
 import step19Template from '@/data/modularSteps/step-19.json';
 import step20Template from '@/data/modularSteps/step-20.json';
@@ -52,9 +53,15 @@ function convertTemplateBlocksToBlocks(templateBlocks: StepTemplate['blocks']): 
 export function loadStepTemplate(stepId: string): Block[] {
   // ✅ CACHE HIT
   const cacheKey = `template:${stepId}`;
+  // Primeiro, tentar cache unificado
+  const unifiedCached = unifiedCache.get<Block[]>(cacheKey);
+  if (unifiedCached) return unifiedCached;
+  // Manter compatibilidade com TemplateCache existente
   if (templateCache.has(cacheKey)) {
     const cached = templateCache.get<Block[]>(cacheKey);
     if (cached) {
+      // também salvar no unificado para chamadas futuras
+      unifiedCache.set(cacheKey, cached);
       return cached;
     }
   }
@@ -79,6 +86,7 @@ export function loadStepTemplate(stepId: string): Block[] {
 
   // ✅ CACHE SET
   templateCache.set(cacheKey, blocks);
+  unifiedCache.set(cacheKey, blocks);
 
   if (import.meta.env.DEV) {
     console.log(`✅ Template carregado para ${stepId}:`, {

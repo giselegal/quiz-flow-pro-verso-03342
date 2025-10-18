@@ -550,7 +550,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 };
             });
         } finally {
-            // ✅ FASE 3: Remover da lista de carregamento
+            // ✅ FASE 1: Evitar loops e travamentos — remover da lista de carregamento e fechar grupos de log
+            try { console.groupEnd(); } catch { /* noop */ }
             loadingStepsRef.current.delete(normalizedKey);
         }
     }, []); // ✅ EMPTY DEPS AGORA É SEGURO com functional setState

@@ -8,10 +8,11 @@ export default function IntroFormBlock({
   isEditable
 }: AtomicBlockProps) {
   const [inputValue, setInputValue] = useState('');
-  
+
   const label = block.properties?.label || 'Antes de começarmos, como posso te chamar?';
   const placeholder = block.properties?.placeholder || 'Digite seu primeiro nome aqui...';
   const buttonText = block.properties?.buttonText || 'Começar';
+  const buttonVariant = block.properties?.buttonVariant || 'primary';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +44,12 @@ export default function IntroFormBlock({
       <button
         type="submit"
         disabled={isEditable || !inputValue.trim()}
-        className="w-full py-3 px-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className={[
+          'w-full py-3 px-4 font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
+          buttonVariant === 'primary' ? 'bg-primary text-white hover:bg-primary/90' : '',
+          buttonVariant === 'secondary' ? 'bg-secondary text-white hover:bg-secondary/90' : '',
+          buttonVariant === 'outline' ? 'bg-transparent text-primary border border-primary hover:bg-primary/5' : '',
+        ].join(' ')}
       >
         {buttonText}
       </button>

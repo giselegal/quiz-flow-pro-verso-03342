@@ -16,6 +16,7 @@
  */
 
 import { Block } from '../types/editor';
+import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 
 // 🔧 PERFORMANCE E CACHE OTIMIZADO
 const TEMPLATE_CACHE = new Map<string, any>();
@@ -23,13 +24,21 @@ const FUNNEL_TEMPLATE_CACHE = new Map<string, any>();
 
 // 🚀 FUNÇÃO DE CARREGAMENTO OTIMIZADO PARA PERFORMANCE
 export function getStepTemplate(stepId: string): any {
+  // Primeiro, tentar cache unificado
+  const unifiedKey = `template:${stepId}`;
+  const unified = unifiedCache.get(unifiedKey);
+  if (unified) return unified;
   if (TEMPLATE_CACHE.has(stepId)) {
-    return TEMPLATE_CACHE.get(stepId);
+    const v = TEMPLATE_CACHE.get(stepId);
+    // propagar para unificado
+    unifiedCache.set(unifiedKey, v);
+    return v;
   }
 
   const template = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
   if (template) {
     TEMPLATE_CACHE.set(stepId, template);
+    unifiedCache.set(unifiedKey, template);
     return template;
   }
 

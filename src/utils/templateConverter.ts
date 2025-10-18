@@ -75,7 +75,8 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
           ...(section.properties || {}),
           _originalType: originalType
         },
-        order: index,
+        // Gargalo #3: respeitar position do JSON quando presente
+        order: (section.position != null ? section.position : index),
         parentId: null
       };
     });
