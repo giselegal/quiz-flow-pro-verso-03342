@@ -8,6 +8,17 @@ import ButtonInlineBlock from './blocks/ButtonInlineBlock';
 import FormInputBlock from './blocks/FormInputBlock';
 import QuizQuestionHeaderBlock from './blocks/QuizQuestionHeaderBlock';
 import QuizNavigationBlock from './blocks/QuizNavigationBlock';
+// Blocos de oferta (editor) — importados do registro aprimorado
+import CTAInlineBlock from '@/components/editor/blocks/CTAInlineBlock';
+import ValueAnchoringBlock from '@/components/editor/blocks/ValueAnchoringBlock';
+import SecurePurchaseBlock from '@/components/editor/blocks/SecurePurchaseBlock';
+import UrgencyTimerInlineBlock from '@/components/editor/blocks/UrgencyTimerInlineBlock';
+import GuaranteeBlock from '@/components/editor/blocks/GuaranteeBlock';
+import BenefitsListBlock from '@/components/editor/blocks/BenefitsListBlock';
+import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
+import PricingInlineBlock from '@/components/editor/blocks/PricingInlineBlock';
+import QuizOfferHeroBlock from '@/components/editor/blocks/QuizOfferHeroBlock';
+import { SelectableBlock } from '@/components/editor/SelectableBlock';
 
 export interface BlockRendererProps {
     block: Block;
@@ -68,6 +79,141 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         case 'quiz-navigation':
         case 'navigation':
             return <QuizNavigationBlock block={block} {...rest} />;
+        // ===== MAPEAMENTOS ESPECÍFICOS DE OFERTA =====
+        case 'quiz-offer-hero':
+        case 'offer-hero':
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="Hero da Oferta"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    <QuizOfferHeroBlock properties={(block as any).properties || {}} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />
+                </SelectableBlock>
+            );
+        case 'quiz-offer-cta-inline':
+        case 'cta-inline':
+        case 'offer.core':
+        case 'conversion':
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="CTA da Oferta"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    <CTAInlineBlock block={block as any} isSelected={rest.isSelected} />
+                </SelectableBlock>
+            );
+        case 'value-anchoring':
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="Ancoragem de Valor"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    {React.createElement(ValueAnchoringBlock as any, { block } as any)}
+                </SelectableBlock>
+            );
+        case 'secure-purchase':
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="Compra Segura"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    <SecurePurchaseBlock block={block as any} />
+                </SelectableBlock>
+            );
+        case 'urgency-timer-inline':
+        case 'offer.urgency':
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="Urgência"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    <UrgencyTimerInlineBlock block={block as any} isSelected={rest.isSelected} />
+                </SelectableBlock>
+            );
+        case 'guarantee':
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="Garantia"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    <GuaranteeBlock block={block as any} />
+                </SelectableBlock>
+            );
+        case 'benefits':
+        case 'benefits-list':
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="Benefícios"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    <BenefitsListBlock block={block as any} />
+                </SelectableBlock>
+            );
+        case 'testimonials':
+        case 'testimonials-grid':
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="Depoimentos"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    <TestimonialsBlock block={block as any} />
+                </SelectableBlock>
+            );
+        case 'pricing-inline':
+        case 'pricing':
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="Preço"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    <PricingInlineBlock block={block as any} isSelected={rest.isSelected} />
+                </SelectableBlock>
+            );
         default:
             return <GenericBlock block={block} {...rest} />;
     }
