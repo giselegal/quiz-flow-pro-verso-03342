@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
 // Mocks utilitários antes dos imports dos componentes
 vi.mock('@/utils/templateConverter', async (orig) => {
@@ -65,11 +65,11 @@ describe('Modular Components autoload behavior', () => {
         expect(await screen.findAllByTestId('universal-block')).toHaveLength(1);
     });
 
-        it('ModularTransitionStep: autoloads when props.blocks empty', async () => {
-            const ensureStepLoaded = vi.fn().mockResolvedValue(undefined);
+    it('ModularTransitionStep: autoloads when props.blocks empty', async () => {
+        const ensureStepLoaded = vi.fn().mockResolvedValue(undefined);
         const editor = { state: { stepBlocks: {} }, actions: { ensureStepLoaded } };
 
-            render(
+        render(
             <ModularTransitionStep
                 data={{ id: 'step-12' }}
                 blocks={[]}
@@ -77,13 +77,13 @@ describe('Modular Components autoload behavior', () => {
             />
         );
 
-            await vi.waitFor(() => {
-                expect(ensureStepLoaded).toHaveBeenCalledWith('step-12');
-            });
+        await waitFor(() => {
+            expect(ensureStepLoaded).toHaveBeenCalledWith('step-12');
+        });
     });
 
-        it('ModularResultStep: does NOT autoload when props.blocks provided', async () => {
-            const ensureStepLoaded = vi.fn().mockResolvedValue(undefined);
+    it('ModularResultStep: does NOT autoload when props.blocks provided', async () => {
+        const ensureStepLoaded = vi.fn().mockResolvedValue(undefined);
         const editor = { state: { stepBlocks: {} }, actions: { ensureStepLoaded } };
 
         render(
@@ -96,15 +96,15 @@ describe('Modular Components autoload behavior', () => {
             />
         );
 
-            expect(ensureStepLoaded).not.toHaveBeenCalled();
+        expect(ensureStepLoaded).not.toHaveBeenCalled();
         expect(await screen.findAllByTestId('universal-block')).toHaveLength(1);
     });
 
-        it('ModularResultStep: autoloads when props.blocks empty', async () => {
-            const ensureStepLoaded = vi.fn().mockResolvedValue(undefined);
+    it('ModularResultStep: autoloads when props.blocks empty', async () => {
+        const ensureStepLoaded = vi.fn().mockResolvedValue(undefined);
         const editor = { state: { stepBlocks: {} }, actions: { ensureStepLoaded } };
 
-            render(
+        render(
             <ModularResultStep
                 data={{ id: 'step-20' }}
                 blocks={[]}
@@ -113,9 +113,9 @@ describe('Modular Components autoload behavior', () => {
             />
         );
 
-            await vi.waitFor(() => {
-                expect(ensureStepLoaded).toHaveBeenCalledWith('step-20');
-            });
+        await waitFor(() => {
+            expect(ensureStepLoaded).toHaveBeenCalledWith('step-20');
+        });
     });
 
     it('Intro/Question/Strategic: do NOT call safeGetTemplateBlocks when props.blocks provided', async () => {
