@@ -8,6 +8,8 @@ import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeR
 import { cn } from '@/lib/utils';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { Question } from '@/core/domains/quiz/entities/Question';
+import { Answer } from '@/core/domains/quiz/entities/Answer';
 
 interface ModularQuestionStepProps {
     data: any;
@@ -58,6 +60,9 @@ export default function ModularQuestionStep({
         ]
     };
 
+    // Estado local para feedback de validação (fallback UI)
+    const [validationMessage, setValidationMessage] = React.useState<string | null>(null);
+
     const hasImages = safeData.options[0]?.image;
     const gridClass = hasImages ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1';
 
@@ -99,6 +104,95 @@ export default function ModularQuestionStep({
             }));
         } catch { }
     };
+
+    // ===== Integração: construir Question do domínio a partir dos dados do step =====
+    const domainQuestion = React.useMemo(() => {
+        const qType: Question['type'] = safeData.requiredSelections > 1 ? 'multiple-choice' : 'single-choice';
+        const qOptions = (safeData.options || []).map((o: any) => ({
+            id: String(o.id),
+            text: String(o.text ?? o.label ?? o.id),
+            value: String(o.value ?? o.id),
+            // Se houver peso opcional vindo do template, preserve
+            weight: typeof o.weight === 'number' ? o.weight : undefined,
+            image: o.image || o.imageUrl,
+        }));
+        const logic = (data?.logic && typeof data.logic === 'object') ? data.logic : undefined;
+        return new Question(
+            String(data?.id || `step-${stepNumber.toString().padStart(2, '0')}`),
+            qType,
+            String(safeData.questionText),
+            undefined,
+            qOptions,
+            undefined,
+            { required: true },
+            logic as any,
+            {
+                order: stepNumber || 0,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data?.id, data?.logic, safeData.requiredSelections, safeData.questionText, JSON.stringify(safeData.options)]);
+
+    // Helper: validar seleção atual contra a Question do domínio
+    const validateCurrentAnswer = React.useCallback((): { ok: boolean; message?: string } => {
+        // Regra de contagem mínima/exata
+        if (safeData.requiredSelections > 1) {
+            if (currentAnswers.length < safeData.requiredSelections) {
+                return { ok: false, message: `Selecione mais ${safeData.requiredSelections - currentAnswers.length}` };
+            }
+        } else {
+            if (currentAnswers.length !== 1) {
+                return { ok: false, message: 'Selecione uma opção' };
+            }
+        }
+
+        // Validar contra o domínio
+        const ans = new Answer(
+            `${domainQuestion.id}-attempt`,
+            domainQuestion.id,
+            'participant-temp',
+            safeData.requiredSelections > 1 ? [...currentAnswers] : currentAnswers[0] || '',
+            { submittedAt: new Date(), timeSpent: 0, attemptNumber: 1 }
+        );
+        const res = ans.validateAgainst(domainQuestion);
+        if (!res.isValid) {
+            return { ok: false, message: res.message || 'Resposta inválida' };
+        }
+        return { ok: true };
+    }, [currentAnswers, domainQuestion, safeData.requiredSelections]);
+
+    // Navegar respeitando lógica skipTo quando definida
+    const navigateWithLogic = React.useCallback(() => {
+        const valid = validateCurrentAnswer();
+        if (!valid.ok) {
+            setValidationMessage(valid.message || 'Resposta inválida');
+            // Disparar evento global opcional para UI
+            try {
+                window.dispatchEvent(new CustomEvent('quiz-validation-error', { detail: { stepId: domainQuestion.id, message: valid.message } }));
+            } catch { }
+            return;
+        }
+
+        setValidationMessage(null);
+
+        // Skip condicional (apenas quando seleção única faz sentido)
+        if (domainQuestion?.logic?.skipTo && currentAnswers.length > 0) {
+            const selected = currentAnswers[0];
+            const targetId = domainQuestion.getNextQuestionId(String(selected));
+            if (targetId) {
+                const n = parseInt(String(targetId).replace(/\D/g, ''), 10);
+                if (!isNaN(n)) {
+                    emitNavigate(n);
+                    return;
+                }
+            }
+        }
+
+        // Fallback: próximo step sequencial
+        if (typeof currentStepReal === 'number') emitNavigate(currentStepReal + 1);
+    }, [currentAnswers, currentStepReal, domainQuestion, validateCurrentAnswer]);
 
     // ===== DnD - Reordenação dos blocos (sem o progress) =====
     const stepId = data?.id || 'step-question';
@@ -205,9 +299,7 @@ export default function ModularQuestionStep({
                                             currentAnswers,
                                             onAnswersChange,
                                             canProceed,
-                                            onNext: () => {
-                                                if (typeof currentStepReal === 'number') emitNavigate(currentStepReal + 1);
-                                            },
+                                            onNext: () => navigateWithLogic(),
                                             onPrev: () => {
                                                 if (typeof currentStepReal === 'number') emitNavigate(currentStepReal - 1);
                                             },
@@ -388,9 +480,13 @@ export default function ModularQuestionStep({
                                                         ? 'bg-[#deac6d] text-white animate-pulse'
                                                         : 'bg-[#e6ddd4] text-[#8a7663] opacity-50 cursor-not-allowed'
                                                         }`}
+                                                    onClick={() => navigateWithLogic()}
                                                 >
                                                     {canProceed ? 'Avançando...' : 'Próxima'}
                                                 </button>
+                                                {validationMessage && (
+                                                    <p className="mt-2 text-sm text-red-600" role="alert" aria-live="polite">{validationMessage}</p>
+                                                )}
                                             </SelectableBlock>
                                         </SortableBlock>
                                     );
