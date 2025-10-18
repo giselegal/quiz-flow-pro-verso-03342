@@ -2114,17 +2114,23 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const EnhancedComponent = getEnhancedBlockComponent(type);
 
         if (EnhancedComponent) {
-            // Componente existe no registry - renderizar com props básicas
+            // Componente existe no registry - renderizar com Suspense para suportar lazy()
             node = (
                 <div className="relative">
-                    <EnhancedComponent
-                        block={block}
-                        properties={properties || {}}
-                        content={content || {}}
-                        isSelected={false}
-                        isPreviewing={true}
-                        isEditor={false}
-                    />
+                    <React.Suspense fallback={
+                        <div className="border rounded p-3 text-center text-[11px] text-slate-500 bg-white/70">
+                            Carregando componente…
+                        </div>
+                    }>
+                        <EnhancedComponent
+                            block={block}
+                            properties={properties || {}}
+                            content={content || {}}
+                            isSelected={false}
+                            isPreviewing={true}
+                            isEditor={false}
+                        />
+                    </React.Suspense>
                 </div>
             );
         } else {
