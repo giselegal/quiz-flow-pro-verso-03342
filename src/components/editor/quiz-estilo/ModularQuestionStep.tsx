@@ -6,6 +6,8 @@ import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { Block } from '@/types/editor';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { cn } from '@/lib/utils';
+import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 interface ModularQuestionStepProps {
     data: any;
@@ -100,12 +102,27 @@ export default function ModularQuestionStep({
 
     // ===== DnD - Reordenação dos blocos (sem o progress) =====
     const stepId = data?.id || 'step-question';
-    const hasRealBlocks = Array.isArray(blocks) && blocks.length > 0;
+
+    // Fallback: carregar blocos do template v3 quando props.blocks vier vazio
+    const [fallbackBlocks, setFallbackBlocks] = React.useState<Block[]>([]);
+    const effectiveBlocks = React.useMemo(() => (Array.isArray(blocks) && blocks.length > 0) ? blocks : fallbackBlocks, [blocks, fallbackBlocks]);
+    React.useEffect(() => {
+        if (Array.isArray(blocks) && blocks.length > 0) return;
+        const m = String(data?.id || '').match(/step-\d{2}/);
+        const stepKey = m ? m[0] : 'step-02';
+        try {
+            const comps = safeGetTemplateBlocks(stepKey, QUIZ_STYLE_21_STEPS_TEMPLATE);
+            const asBlocks = blockComponentsToBlocks(comps);
+            if (asBlocks.length) setFallbackBlocks(asBlocks as any);
+        } catch { }
+    }, [data?.id, blocks]);
+
+    const hasRealBlocks = Array.isArray(effectiveBlocks) && effectiveBlocks.length > 0;
     const topLevelBlocks: Block[] = React.useMemo(() => {
         if (!hasRealBlocks) return [];
-        const list = (blocks as Block[]).filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
+        const list = (effectiveBlocks as Block[]).filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
         return list.sort((a, b) => (a.order || 0) - (b.order || 0));
-    }, [blocks, hasRealBlocks]);
+    }, [effectiveBlocks, hasRealBlocks]);
     const DEFAULT_ORDER = ['question-number', 'question-text', 'question-instructions', 'question-options', 'question-button'];
     const initialOrder: string[] = (data?.metadata?.blockOrder && Array.isArray(data.metadata.blockOrder))
         ? data.metadata.blockOrder

@@ -6,6 +6,8 @@ import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { Block } from '@/types/editor';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { cn } from '@/lib/utils';
+import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 interface ModularIntroStepProps {
     data?: any; // legacy fallback
@@ -55,13 +57,32 @@ export default function ModularIntroStep({
     // Identificador do step
     const STEP_ID = data?.id || 'step-intro';
 
+    // Fallback: autoload de blocos do template v3 quando não vierem via props/provider
+    const [fallbackBlocks, setFallbackBlocks] = React.useState<Block[]>([]);
+    const effectiveBlocks = React.useMemo(() => (Array.isArray(blocks) && blocks.length > 0) ? blocks : fallbackBlocks, [blocks, fallbackBlocks]);
+
+    React.useEffect(() => {
+        // Se já temos blocos via props, não precisa carregar
+        if (Array.isArray(blocks) && blocks.length > 0) return;
+        // Tentar extrair step key canônica (ex.: step-01)
+        const m = String(data?.id || '').match(/step-\d{2}/);
+        const stepKey = m ? m[0] : 'step-01';
+        try {
+            const comps = safeGetTemplateBlocks(stepKey, QUIZ_STYLE_21_STEPS_TEMPLATE);
+            const asBlocks = blockComponentsToBlocks(comps);
+            if (asBlocks.length) setFallbackBlocks(asBlocks as any);
+        } catch (e) {
+            // noop
+        }
+    }, [data?.id, blocks]);
+
     // NOVO: Se recebemos Block[], renderizamos iterativamente com DnD
-    const hasRealBlocks = Array.isArray(blocks) && blocks.length > 0;
+    const hasRealBlocks = Array.isArray(effectiveBlocks) && effectiveBlocks.length > 0;
     const topLevelBlocks: Block[] = React.useMemo(() => {
         if (!hasRealBlocks) return [];
-        const list = (blocks as Block[]).filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
+        const list = (effectiveBlocks as Block[]).filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
         return list.sort((a, b) => (a.order || 0) - (b.order || 0));
-    }, [blocks, hasRealBlocks]);
+    }, [effectiveBlocks, hasRealBlocks]);
 
     // Ordem legacy (fallback) para layout hard-coded
     const DEFAULT_ORDER = ['intro-title', 'intro-image', 'intro-description', 'intro-form'];
