@@ -25,6 +25,7 @@ import { arrayMove } from '@dnd-kit/sortable';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
 import { useToast } from '@/hooks/use-toast';
 import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
+import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -410,6 +411,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // ✅ FASE 3: Proteção contra loops - rastrear steps sendo carregados
     const loadingStepsRef = useRef<Set<string>>(new Set());
 
+    const masterTemplateRef = useRef<any | null>(null);
+
     const ensureStepLoaded = useCallback(async (step: number | string) => {
         // Normaliza a chave do step para o formato step-XX (zero à esquerda para 1–9)
         const rawKey = typeof step === 'string' ? step : `step-${step}`;
@@ -426,6 +429,37 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
         try {
             console.group(`🔍 [ensureStepLoaded] ${normalizedKey}`);
+
+            // 🔄 Tentar pré-carregar master JSON público uma vez
+            let masterBlocks: Block[] | null = null;
+            try {
+                if (typeof window !== 'undefined' && window.location) {
+                    if (!masterTemplateRef.current) {
+                        const resp = await fetch('/templates/quiz21-complete.json');
+                        if (resp.ok) {
+                            masterTemplateRef.current = await resp.json();
+                            console.log('✅ Master JSON carregado (quiz21-complete.json)');
+                        } else {
+                            console.warn('⚠️ Falha ao carregar master JSON:', resp.status);
+                        }
+                    }
+                    const master = masterTemplateRef.current;
+                    const stepConfig = master?.steps?.[normalizedKey];
+                    if (stepConfig) {
+                        // Hidratar sections com quizSteps antes da conversão
+                        const hydrated = {
+                            ...stepConfig,
+                            sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections)
+                        };
+                        // Converter via util existente usando template mínimo
+                        const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
+                        masterBlocks = blockComponentsToBlocks(blockComponents);
+                        console.log(`📦 Master JSON → ${normalizedKey}: ${masterBlocks.length} blocos`);
+                    }
+                }
+            } catch (e) {
+                console.warn('⚠️ Erro ao preparar masterBlocks:', e);
+            }
 
             // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
             setState(prev => {
@@ -473,14 +507,24 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     return prev; // ✅ NO UPDATE
                 }
 
-                // Carregar template padrão para outros steps
+                // ✅ NOVO: se conseguimos masterBlocks (JSON público hidratado), usar
+                if (masterBlocks && masterBlocks.length > 0) {
+                    console.log('📝 Aplicando blocos do master JSON hidratado');
+                    console.groupEnd();
+                    return {
+                        ...prev,
+                        stepBlocks: {
+                            ...prev.stepBlocks,
+                            [normalizedKey]: masterBlocks
+                        }
+                    };
+                }
+
+                // Fallback: Carregar template padrão TS (sections → blocks)
                 const template = QUIZ_STYLE_21_STEPS_TEMPLATE;
                 console.log('📝 Carregando template padrão (sections → blocks)');
-
-                // Converte seções v3 para BlockComponent[] e depois para Block[]
                 const blockComponents = safeGetTemplateBlocks(normalizedKey, template);
                 const convertedBlocks = blockComponentsToBlocks(blockComponents);
-
                 console.groupEnd();
                 return {
                     ...prev,
