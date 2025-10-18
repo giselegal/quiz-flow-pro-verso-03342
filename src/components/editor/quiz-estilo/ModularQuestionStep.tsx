@@ -1,11 +1,15 @@
 import React from 'react';
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
+import type { Block } from '@/types/editor';
+import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
+import { cn } from '@/lib/utils';
 
 interface ModularQuestionStepProps {
     data: any;
+    blocks?: Block[]; // NOVO: suportar blocos reais
     currentAnswers?: string[];
     onAnswersChange?: (answers: string[]) => void;
     onEdit?: (field: string, value: any) => void;
@@ -29,6 +33,7 @@ interface ModularQuestionStepProps {
  */
 export default function ModularQuestionStep({
     data,
+    blocks = [],
     currentAnswers = [],
     onAnswersChange,
     onEdit,
@@ -77,6 +82,12 @@ export default function ModularQuestionStep({
 
     // ===== DnD - Reordenação dos blocos (sem o progress) =====
     const stepId = data?.id || 'step-question';
+    const hasRealBlocks = Array.isArray(blocks) && blocks.length > 0;
+    const topLevelBlocks: Block[] = React.useMemo(() => {
+        if (!hasRealBlocks) return [];
+        const list = (blocks as Block[]).filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
+        return list.sort((a, b) => (a.order || 0) - (b.order || 0));
+    }, [blocks, hasRealBlocks]);
     const DEFAULT_ORDER = ['question-number', 'question-text', 'question-instructions', 'question-options', 'question-button'];
     const initialOrder: string[] = (data?.metadata?.blockOrder && Array.isArray(data.metadata.blockOrder))
         ? data.metadata.blockOrder
@@ -90,13 +101,23 @@ export default function ModularQuestionStep({
     const handleDragEnd = (event: any) => {
         const { active, over } = event;
         if (!over || active.id === over.id) return;
-        const oldIndex = order.indexOf(String(active.id));
-        const newIndex = order.indexOf(String(over.id));
-        const newOrder = arrayMove(order, oldIndex, newIndex);
-        setOrder(newOrder);
-        // Persistir no estado do editor/template
-        onBlocksReorder?.(stepId, newOrder);
-        onEdit?.('blockOrder', newOrder);
+        if (hasRealBlocks) {
+            const ids = topLevelBlocks.map(b => b.id);
+            const oldIndex = ids.indexOf(String(active.id));
+            const newIndex = ids.indexOf(String(over.id));
+            if (oldIndex >= 0 && newIndex >= 0) {
+                const newIds = arrayMove(ids, oldIndex, newIndex);
+                onBlocksReorder?.(stepId, newIds);
+            }
+        } else {
+            const oldIndex = order.indexOf(String(active.id));
+            const newIndex = order.indexOf(String(over.id));
+            const newOrder = arrayMove(order, oldIndex, newIndex);
+            setOrder(newOrder);
+            // Persistir no estado do editor/template
+            onBlocksReorder?.(stepId, newOrder);
+            onEdit?.('blockOrder', newOrder);
+        }
     };
 
     const SortableBlock: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
@@ -113,6 +134,54 @@ export default function ModularQuestionStep({
         );
     };
 
+    // Render com blocos reais se disponíveis
+    if (hasRealBlocks) {
+        const SortableItem: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+            const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+            const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.7 : 1 } as React.CSSProperties;
+            return (
+                <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+                    {children}
+                </div>
+            );
+        };
+
+        const DropZoneBefore: React.FC<{ blockId: string; insertIndex: number }> = ({ blockId, insertIndex }) => {
+            const dropZoneId = `drop-before-${blockId}`;
+            const { setNodeRef, isOver } = useDroppable({ id: dropZoneId, data: { dropZone: 'before', blockId, stepId, insertIndex } });
+            return <div ref={setNodeRef} className={cn('h-4 -my-1 transition-all border-2 border-dashed rounded', isOver ? 'bg-blue-100 border-blue-400' : 'bg-gray-50 border-gray-300 opacity-60 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400')} />;
+        };
+
+        return (
+            <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={topLevelBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+                        {topLevelBlocks.map((block, index) => (
+                            <React.Fragment key={block.id}>
+                                <DropZoneBefore blockId={block.id} insertIndex={index} />
+                                <SortableItem id={block.id}>
+                                    <BlockTypeRenderer
+                                        block={block}
+                                        isSelected={selectedBlockId === block.id}
+                                        isEditable={isEditable}
+                                        onSelect={onBlockSelect}
+                                        onOpenProperties={onOpenProperties}
+                                        contextData={{
+                                            currentAnswers,
+                                            onAnswersChange,
+                                            canProceed,
+                                        }}
+                                    />
+                                </SortableItem>
+                            </React.Fragment>
+                        ))}
+                    </SortableContext>
+                </DndContext>
+            </div>
+        );
+    }
+
+    // Fallback legado (layout hard-coded)
     return (
         <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
             {/* BLOCO 1: Barra de Progresso */}

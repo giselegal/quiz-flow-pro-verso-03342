@@ -370,6 +370,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         return (
           <ModularQuestionStep
             data={stepData as any}
+            blocks={(step as any)?.blocks || editorState.stepBlocks[stepKey] || []}
             isEditable={isEditMode}
             currentAnswers={sessionData[`answers_${step.id}`] || []}
             onAnswersChange={(answers: string[]) => {
