@@ -23,7 +23,6 @@ import { Block, BlockType } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
-import { useToast } from '@/hooks/use-toast';
 import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
@@ -434,7 +433,36 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         try {
             console.group(`🔍 [ensureStepLoaded] ${normalizedKey}`);
 
-            // 🔄 Tentar pré-carregar master JSON público uma vez (usa unifiedCache)
+            // � Tentativa 0: servir diretamente de cache unificado por step
+            try {
+                const cachedStepBlocks = unifiedCache.get(`step:${normalizedKey}:blocks`) || unifiedCache.get(`masterBlocks:${normalizedKey}`);
+                if (Array.isArray(cachedStepBlocks) && cachedStepBlocks.length > 0) {
+                    console.log(`📦 UnifiedCache hit (step): ${normalizedKey} → ${cachedStepBlocks.length} blocos`);
+                    setState(prev => {
+                        if ((prev.stepBlocks[normalizedKey]?.length || 0) > 0) {
+                            console.groupEnd();
+                            return prev;
+                        }
+                        console.groupEnd();
+                        return {
+                            ...prev,
+                            stepBlocks: {
+                                ...prev.stepBlocks,
+                                [normalizedKey]: cachedStepBlocks as Block[]
+                            },
+                            stepSources: {
+                                ...(prev.stepSources || {}),
+                                [normalizedKey]: 'master-hydrated'
+                            }
+                        };
+                    });
+                    return;
+                }
+            } catch (e) {
+                console.warn('⚠️ Erro ao ler unifiedCache (step blocks):', e);
+            }
+
+            // �🔄 Tentar pré-carregar master JSON público uma vez (usa unifiedCache)
             let masterBlocks: Block[] | null = null;
             try {
                 if (typeof window !== 'undefined' && window.location) {
@@ -466,6 +494,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
                         masterBlocks = blockComponentsToBlocks(blockComponents);
                         unifiedCache.set(`masterBlocks:${normalizedKey}`, masterBlocks);
+                        unifiedCache.set(`step:${normalizedKey}:blocks`, masterBlocks);
                         console.log(`📦 Master JSON → ${normalizedKey}: ${masterBlocks.length} blocos`);
                     }
                 }
@@ -501,6 +530,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     }
 
                     // Carregar/substituir com blocos modulares
+                    // Persistir no cache unificado
+                    try { unifiedCache.set(`step:${normalizedKey}:blocks`, modularBlocks); } catch { }
                     console.log('📝 Carregando blocos modulares');
                     console.groupEnd();
                     return {
@@ -526,6 +557,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 // ✅ NOVO: se conseguimos masterBlocks (JSON público hidratado), usar
                 if (masterBlocks && masterBlocks.length > 0) {
                     console.log('📝 Aplicando blocos do master JSON hidratado');
+                    try { unifiedCache.set(`step:${normalizedKey}:blocks`, masterBlocks); } catch { }
                     console.groupEnd();
                     return {
                         ...prev,
@@ -545,6 +577,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.log('📝 Carregando template padrão (sections → blocks)');
                 const blockComponents = safeGetTemplateBlocks(normalizedKey, template);
                 const convertedBlocks = blockComponentsToBlocks(blockComponents);
+                try { unifiedCache.set(`step:${normalizedKey}:blocks`, convertedBlocks); } catch { }
                 console.groupEnd();
                 return {
                     ...prev,
@@ -600,8 +633,20 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     useEffect(() => {
         const next = state.currentStep + 1;
         if (next <= 21) {
+            const normalizedNext = `step-${next.toString().padStart(2, '0')}`;
             const t = setTimeout(() => {
-                ensureStepLoaded(next);
+                // Evitar trabalho se já em cache local ou unificado
+                const hasLocal = (state.stepBlocks[normalizedNext]?.length || 0) > 0;
+                const cached = unifiedCache.get(`step:${normalizedNext}:blocks`);
+                if (!hasLocal && !(Array.isArray(cached) && cached.length > 0)) {
+                    ensureStepLoaded(next);
+                } else if (!hasLocal && Array.isArray(cached) && cached.length > 0) {
+                    setState(prev => ({
+                        ...prev,
+                        stepBlocks: { ...prev.stepBlocks, [normalizedNext]: cached as Block[] },
+                        stepSources: { ...(prev.stepSources || {}), [normalizedNext]: 'master-hydrated' }
+                    }));
+                }
             }, 500);
             return () => clearTimeout(t);
         }
