@@ -213,12 +213,12 @@ const QuizEditorCanvas: React.FC<QuizEditorCanvasProps> = memo(({
     return (
         <div className={`quiz-editor-canvas ${previewMode}-mode ${useModularSystem ? 'modular' : 'traditional'}`}>
             <div className="canvas-content">
-                {steps.map((step, index) => renderStep(step, index))}
+                {currentSteps.map((step, index) => renderStep(step as any, index))}
             </div>
 
             {/* Canvas Info */}
             <div className="canvas-info">
-                <span className="step-count">{steps.length} steps</span>
+                <span className="step-count">{currentSteps.length} steps</span>
                 <span className="mode-indicator">{previewMode === 'edit' ? 'Editando' : 'Visualizando'}</span>
                 {useModularSystem && <span className="system-indicator">Sistema Modular</span>}
             </div>
