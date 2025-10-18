@@ -36,6 +36,7 @@
     "format:hooks": "prettier --write \"src/hooks/**/*.{ts,tsx}\"",
     "convert:templates": "tsx scripts/convert-quiz-steps-to-json.ts",
     "validate:templates": "tsx scripts/validate-templates.ts",
+  "templates:update-master": "tsx scripts/update-master-from-quizSteps.ts",
     "templates:all": "npm run convert:templates && npm run validate:templates",
     "test": "vitest",
     "test:ui": "vitest --ui",

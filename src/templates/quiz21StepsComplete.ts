@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-18T04:06:55.336Z
+ * Gerado em: 2025-10-18T18:49:27.983Z
  * Versão: 3.0.0
  */
 
@@ -295,6 +295,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-02-question-title",
+        "content": {
+          "text": "Qual tipo de roupa você mais se identifica?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-02",
         "content": {
@@ -374,6 +391,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-02-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -489,6 +526,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-03-question-title",
+        "content": {
+          "text": "Como você prefere que as pessoas te chamem no dia a dia?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-03",
         "content": {
@@ -568,6 +622,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-03-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -681,6 +755,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-04-question-title",
+        "content": {
+          "text": "Qual palavra melhor descreve seu estilo?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-04",
         "content": {
@@ -760,6 +851,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-04-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -873,6 +984,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-05-question-title",
+        "content": {
+          "text": "Para quais ocasiões você mais compra roupas?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-05",
         "content": {
@@ -952,6 +1080,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-05-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -1065,6 +1213,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-06-question-title",
+        "content": {
+          "text": "Quais cores mais aparecem no seu guarda-roupa?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-06",
         "content": {
@@ -1144,6 +1309,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-06-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -1257,6 +1442,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-07-question-title",
+        "content": {
+          "text": "Que tipo de acessórios você mais usa?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-07",
         "content": {
@@ -1336,6 +1538,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-07-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -1449,6 +1671,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-08-question-title",
+        "content": {
+          "text": "O que é mais importante para você ao escolher uma roupa?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-08",
         "content": {
@@ -1528,6 +1767,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-08-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -1641,6 +1900,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-09-question-title",
+        "content": {
+          "text": "Onde você busca inspiração de moda?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-09",
         "content": {
@@ -1720,6 +1996,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-09-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -1833,6 +2129,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-10-question-title",
+        "content": {
+          "text": "Qual tipo de sapato você mais usa no dia a dia?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-10",
         "content": {
@@ -1912,6 +2225,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-10-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -2025,6 +2358,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-11-question-title",
+        "content": {
+          "text": "Qual peça você não pode viver sem?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-11",
         "content": {
@@ -2104,6 +2454,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-11-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -2230,6 +2600,43 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "delay": 0,
           "easing": "ease-out"
         }
+      },
+      {
+        "type": "text-inline",
+        "id": "step-12-transition-text",
+        "content": {
+          "text": "Página de transição no meio do quiz com mensagem motivacional"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginTop": 8
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-12-transition-cta",
+        "content": {
+          "label": "Continuar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "medium"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginTop": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
+          "easing": "ease-out"
+        }
       }
     ],
     "navigation": {
@@ -2302,6 +2709,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       }
     },
     "sections": [
+      {
+        "type": "question-title",
+        "id": "step-13-question-title",
+        "content": {
+          "text": "Qual é o seu principal objetivo com seu guarda-roupa?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
       {
         "type": "question-hero",
         "id": "question-hero-13",
@@ -2382,6 +2806,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-13-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -2501,6 +2945,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-14-question-title",
+        "content": {
+          "text": "Qual é o seu maior desafio ao se vestir?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-14",
         "content": {
@@ -2580,6 +3041,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-14-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -2699,6 +3180,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-15-question-title",
+        "content": {
+          "text": "O que você prioriza ao escolher uma roupa?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-15",
         "content": {
@@ -2778,6 +3276,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-15-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -2897,6 +3415,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-16-question-title",
+        "content": {
+          "text": "Onde você prefere investir mais?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-16",
         "content": {
@@ -2976,6 +3511,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-16-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -3095,6 +3650,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-17-question-title",
+        "content": {
+          "text": "O que você mais gostaria de mudar?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-17",
         "content": {
@@ -3174,6 +3746,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-17-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -3293,6 +3885,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
+        "type": "question-title",
+        "id": "step-18-question-title",
+        "content": {
+          "text": "Qual resultado você mais gostaria de alcançar?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
         "type": "question-hero",
         "id": "question-hero-18",
         "content": {
@@ -3372,6 +3981,26 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 300,
           "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-18-cta-next",
+        "content": {
+          "label": "Avançar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "marginTop": 16,
+          "textAlign": "center"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }
@@ -3502,6 +4131,43 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "scale",
           "duration": 500,
           "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "text-inline",
+        "id": "step-19-transition-text",
+        "content": {
+          "text": "Página de transição antes da exibição do resultado final"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginTop": 8
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-19-transition-cta",
+        "content": {
+          "label": "Continuar",
+          "href": "#next",
+          "variant": "primary",
+          "size": "medium"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginTop": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 50,
           "easing": "ease-out"
         }
       }

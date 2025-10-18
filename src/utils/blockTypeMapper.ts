@@ -13,6 +13,8 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
     // Question blocks
     'question-hero': 'quiz-question-header',
     'options-grid': 'options-grid', // já existe
+    // Título separado da questão (novo section v3)
+    'question-title': 'heading-inline',
 
     // Transition blocks
     'transition-hero': 'transition-hero', // já existe no registry

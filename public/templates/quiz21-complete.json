@@ -5,7 +5,7 @@
   "description": "Template completo v3.0 com todos os blocos e seções dos 21 steps",
   "metadata": {
     "createdAt": "2025-01-13",
-    "updatedAt": "2025-10-13",
+    "updatedAt": "2025-10-18T18:47:55.339Z",
     "author": "Sistema - Consolidador Automático",
     "version": "3.0.0",
     "consolidated": true,
@@ -69,11 +69,11 @@
             "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
             "logoWidth": 96,
             "logoHeight": 96,
-            "title": "<span style=\"color: #B89B7A\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style=\"color: #B89B7A\">Você</span>.",
+            "title": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você.</span>",
             "subtitle": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
-            "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
             "imageAlt": "Descubra seu estilo predominante",
-            "description": "Um quiz personalizado que vai revelar qual estilo te representa e como valorizar sua essência através das roupas.",
+            "description": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
             "showProgress": false,
             "progressValue": 0
           },
@@ -93,7 +93,7 @@
           "type": "welcome-form",
           "id": "intro-form-01",
           "content": {
-            "questionText": "Antes de começarmos, como posso te chamar?",
+            "questionText": "Como posso te chamar?",
             "nameLabel": "Seu primeiro nome",
             "namePlaceholder": "Digite seu primeiro nome aqui...",
             "submitText": "Quero Descobrir meu Estilo Agora!",
@@ -132,7 +132,10 @@
       "behavior": {},
       "type": "intro",
       "title": "Introdução - Bem-vindo ao Quiz de Estilo",
-      "redirectPath": "/quiz-estilo/step-01"
+      "redirectPath": "/quiz-estilo/step-01",
+      "navigation": {
+        "nextStep": "step-02"
+      }
     },
     "step-02": {
       "templateVersion": "3.0",
@@ -186,10 +189,24 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-02-question-title",
+          "content": {
+            "text": "QUAL O SEU TIPO DE ROUPA FAVORITA?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-02",
           "content": {
-            "questionNumber": "Q1 - ROUPA FAVORITA",
+            "questionNumber": "1 de 10",
             "questionText": "QUAL O SEU TIPO DE ROUPA FAVORITA?",
             "currentQuestion": 1,
             "totalQuestions": 13,
@@ -215,76 +232,52 @@
           "content": {
             "options": [
               {
-                "id": "2a",
+                "id": "natural",
                 "text": "Conforto, leveza e praticidade no vestir",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "2a",
-                "category": "Natural",
-                "points": 1,
-                "styleType": "natural"
+                "value": "natural"
               },
               {
-                "id": "2b",
+                "id": "classico",
                 "text": "Discrição, caimento clássico e sobriedade",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "2b",
-                "category": "Clássico",
-                "points": 1,
-                "styleType": "classico"
+                "value": "classico"
               },
               {
-                "id": "2c",
+                "id": "contemporaneo",
                 "text": "Praticidade com um toque de estilo atual",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "2c",
-                "category": "Contemporâneo",
-                "points": 1,
-                "styleType": "contemporaneo"
+                "value": "contemporaneo"
               },
               {
-                "id": "2d",
+                "id": "elegante",
                 "text": "Elegância refinada, moderna e sem exageros",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "2d",
-                "category": "Elegante",
-                "points": 1,
-                "styleType": "elegante"
+                "value": "elegante"
               },
               {
-                "id": "2e",
+                "id": "romantico",
                 "text": "Delicadeza em tecidos suaves e fluidos",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
-                "value": "2e",
-                "category": "romantico",
-                "points": 1,
-                "styleType": "romantico"
+                "value": "romantico"
               },
               {
-                "id": "2f",
+                "id": "sexy",
                 "text": "Sensualidade com destaque para o corpo",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
-                "value": "2f",
-                "category": "sexy",
-                "points": 1,
-                "styleType": "sexy"
+                "value": "sexy"
               },
               {
-                "id": "2g",
+                "id": "dramatico",
                 "text": "Impacto visual com peças estruturadas e assimétricas",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
-                "value": "2g",
-                "category": "dramatico",
-                "points": 1,
-                "styleType": "dramatico"
+                "value": "dramatico"
               },
               {
-                "id": "2h",
+                "id": "criativo",
                 "text": "Mix criativo com formas ousadas e originais",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
-                "value": "2h",
-                "category": "criativo",
-                "points": 1,
-                "styleType": "criativo"
+                "value": "criativo"
               }
             ],
             "columns": 2,
@@ -308,6 +301,23 @@
             "delay": 100,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-02-cta-next",
+          "content": {
+            "label": "Avançar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {
@@ -325,7 +335,10 @@
       "behavior": {},
       "type": "question",
       "title": "Q1 - Roupa Favorita",
-      "redirectPath": "/quiz-estilo/step-02"
+      "redirectPath": "/quiz-estilo/step-02",
+      "navigation": {
+        "nextStep": "step-03"
+      }
     },
     "step-03": {
       "templateVersion": "3.0",
@@ -377,10 +390,24 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-03-question-title",
+          "content": {
+            "text": "RESUMA A SUA PERSONALIDADE:"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-03",
           "content": {
-            "questionNumber": "Q2 - NOME PESSOAL",
+            "questionNumber": "2 de 10",
             "questionText": "RESUMA A SUA PERSONALIDADE:",
             "currentQuestion": 2,
             "totalQuestions": 13,
@@ -406,76 +433,44 @@
           "content": {
             "options": [
               {
-                "id": "3a",
+                "id": "natural",
                 "text": "Informal, espontânea, alegre, essencialista",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "3a",
-                "category": "Natural",
-                "points": 1,
-                "styleType": "natural"
+                "value": "natural"
               },
               {
-                "id": "3b",
+                "id": "classico",
                 "text": "Conservadora, séria, organizada",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "3b",
-                "category": "Clássico",
-                "points": 1,
-                "styleType": "classico"
+                "value": "classico"
               },
               {
-                "id": "3c",
+                "id": "contemporaneo",
                 "text": "Informada, ativa, prática",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "3c",
-                "category": "Contemporâneo",
-                "points": 1,
-                "styleType": "contemporaneo"
+                "value": "contemporaneo"
               },
               {
-                "id": "3d",
+                "id": "elegante",
                 "text": "Exigente, sofisticada, seletiva",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "3d",
-                "category": "Elegante",
-                "points": 1,
-                "styleType": "elegante"
+                "value": "elegante"
               },
               {
-                "id": "3e",
+                "id": "romantico",
                 "text": "Feminina, meiga, delicada, sensível",
-                "imageUrl": "",
-                "value": "3e",
-                "category": "romantico",
-                "points": 1,
-                "styleType": "romantico"
+                "value": "romantico"
               },
               {
-                "id": "3f",
+                "id": "sexy",
                 "text": "Glamorosa, vaidosa, sensual",
-                "imageUrl": "",
-                "value": "3f",
-                "category": "sexy",
-                "points": 1,
-                "styleType": "sexy"
+                "value": "sexy"
               },
               {
-                "id": "3g",
+                "id": "dramatico",
                 "text": "Cosmopolita, moderna e audaciosa",
-                "imageUrl": "",
-                "value": "3g",
-                "category": "dramatico",
-                "points": 1,
-                "styleType": "dramatico"
+                "value": "dramatico"
               },
               {
-                "id": "3h",
+                "id": "criativo",
                 "text": "Exótica, aventureira, livre",
-                "imageUrl": "",
-                "value": "3h",
-                "category": "criativo",
-                "points": 1,
-                "styleType": "criativo"
+                "value": "criativo"
               }
             ],
             "columns": 2,
@@ -499,6 +494,23 @@
             "delay": 100,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-03-cta-next",
+          "content": {
+            "label": "Avançar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {
@@ -516,7 +528,10 @@
       "behavior": {},
       "type": "question",
       "title": "Q2 - Nome pessoal",
-      "redirectPath": "/quiz-estilo/step-03"
+      "redirectPath": "/quiz-estilo/step-03",
+      "navigation": {
+        "nextStep": "step-04"
+      }
     },
     "step-04": {
       "templateVersion": "3.0",
@@ -568,10 +583,24 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-04-question-title",
+          "content": {
+            "text": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-04",
           "content": {
-            "questionNumber": "Q3 - ESTILO PESSOAL",
+            "questionNumber": "3 de 10",
             "questionText": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
             "currentQuestion": 3,
             "totalQuestions": 13,
@@ -597,76 +626,52 @@
           "content": {
             "options": [
               {
-                "id": "4a",
+                "id": "natural",
                 "text": "Visual leve, despojado e natural",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-                "value": "4a",
-                "category": "Natural",
-                "points": 1,
-                "styleType": "natural"
+                "value": "natural"
               },
               {
-                "id": "4b",
+                "id": "classico",
                 "text": "Visual clássico e tradicional",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
-                "value": "4b",
-                "category": "Clássico",
-                "points": 1,
-                "styleType": "classico"
+                "value": "classico"
               },
               {
-                "id": "4c",
+                "id": "contemporaneo",
                 "text": "Visual casual com toque atual",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
-                "value": "4c",
-                "category": "Contemporâneo",
-                "points": 1,
-                "styleType": "contemporaneo"
+                "value": "contemporaneo"
               },
               {
-                "id": "4d",
+                "id": "elegante",
                 "text": "Visual refinado e imponente",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
-                "value": "4d",
-                "category": "Elegante",
-                "points": 1,
-                "styleType": "elegante"
+                "value": "elegante"
               },
               {
-                "id": "4e",
+                "id": "romantico",
                 "text": "Visual romântico, feminino e delicado",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
-                "value": "4e",
-                "category": "romantico",
-                "points": 1,
-                "styleType": "romantico"
+                "value": "romantico"
               },
               {
-                "id": "4f",
+                "id": "sexy",
                 "text": "Visual sensual, com saia justa e decote",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
-                "value": "4f",
-                "category": "sexy",
-                "points": 1,
-                "styleType": "sexy"
+                "value": "sexy"
               },
               {
-                "id": "4g",
+                "id": "dramatico",
                 "text": "Visual marcante e urbano (jeans + jaqueta)",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
-                "value": "4g",
-                "category": "dramatico",
-                "points": 1,
-                "styleType": "dramatico"
+                "value": "dramatico"
               },
               {
-                "id": "4h",
+                "id": "criativo",
                 "text": "Visual criativo, colorido e ousado",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
-                "value": "4h",
-                "category": "criativo",
-                "points": 1,
-                "styleType": "criativo"
+                "value": "criativo"
               }
             ],
             "columns": 2,
@@ -690,6 +695,23 @@
             "delay": 100,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-04-cta-next",
+          "content": {
+            "label": "Avançar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {
@@ -707,7 +729,10 @@
       "behavior": {},
       "type": "question",
       "title": "Q3 - Estilo pessoal",
-      "redirectPath": "/quiz-estilo/step-04"
+      "redirectPath": "/quiz-estilo/step-04",
+      "navigation": {
+        "nextStep": "step-05"
+      }
     },
     "step-05": {
       "templateVersion": "3.0",
@@ -759,10 +784,24 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-05-question-title",
+          "content": {
+            "text": "QUAIS DETALHES VOCÊ GOSTA?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-05",
           "content": {
-            "questionNumber": "Q4 - OCASIÕES",
+            "questionNumber": "4 de 10",
             "questionText": "QUAIS DETALHES VOCÊ GOSTA?",
             "currentQuestion": 4,
             "totalQuestions": 13,
@@ -788,76 +827,44 @@
           "content": {
             "options": [
               {
-                "id": "5a",
+                "id": "natural",
                 "text": "Poucos detalhes, básico e prático",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "5a",
-                "category": "Natural",
-                "points": 1,
-                "styleType": "natural"
+                "value": "natural"
               },
               {
-                "id": "5b",
+                "id": "classico",
                 "text": "Bem discretos e sutis, clean e clássico",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "5b",
-                "category": "Clássico",
-                "points": 1,
-                "styleType": "classico"
+                "value": "classico"
               },
               {
-                "id": "5c",
+                "id": "contemporaneo",
                 "text": "Básico, mas com um toque de estilo",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "5c",
-                "category": "Contemporâneo",
-                "points": 1,
-                "styleType": "contemporaneo"
+                "value": "contemporaneo"
               },
               {
-                "id": "5d",
+                "id": "elegante",
                 "text": "Detalhes refinados, chic e que deem status",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "5d",
-                "category": "Elegante",
-                "points": 1,
-                "styleType": "elegante"
+                "value": "elegante"
               },
               {
-                "id": "5e",
+                "id": "romantico",
                 "text": "Detalhes delicados, laços, babados",
-                "imageUrl": "",
-                "value": "5e",
-                "category": "romantico",
-                "points": 1,
-                "styleType": "romantico"
+                "value": "romantico"
               },
               {
-                "id": "5f",
+                "id": "sexy",
                 "text": "Roupas que valorizem meu corpo: couro, zíper, fendas",
-                "imageUrl": "",
-                "value": "5f",
-                "category": "sexy",
-                "points": 1,
-                "styleType": "sexy"
+                "value": "sexy"
               },
               {
-                "id": "5g",
+                "id": "dramatico",
                 "text": "Detalhes marcantes, firmeza e peso",
-                "imageUrl": "",
-                "value": "5g",
-                "category": "dramatico",
-                "points": 1,
-                "styleType": "dramatico"
+                "value": "dramatico"
               },
               {
-                "id": "5h",
+                "id": "criativo",
                 "text": "Detalhes diferentes do convencional, produções ousadas",
-                "imageUrl": "",
-                "value": "5h",
-                "category": "criativo",
-                "points": 1,
-                "styleType": "criativo"
+                "value": "criativo"
               }
             ],
             "columns": 2,
@@ -881,6 +888,23 @@
             "delay": 100,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-05-cta-next",
+          "content": {
+            "label": "Avançar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {
@@ -898,7 +922,10 @@
       "behavior": {},
       "type": "question",
       "title": "Q4 - Ocasiões",
-      "redirectPath": "/quiz-estilo/step-05"
+      "redirectPath": "/quiz-estilo/step-05",
+      "navigation": {
+        "nextStep": "step-06"
+      }
     },
     "step-06": {
       "templateVersion": "3.0",
@@ -950,10 +977,24 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-06-question-title",
+          "content": {
+            "text": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-06",
           "content": {
-            "questionNumber": "Q5 - CORES FAVORITAS",
+            "questionNumber": "5 de 10",
             "questionText": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
             "currentQuestion": 5,
             "totalQuestions": 13,
@@ -979,76 +1020,52 @@
           "content": {
             "options": [
               {
-                "id": "6a",
+                "id": "natural",
                 "text": "Estampas clean, com poucas informações",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
-                "value": "6a",
-                "category": "Natural",
-                "points": 1,
-                "styleType": "natural"
+                "value": "natural"
               },
               {
-                "id": "6b",
+                "id": "classico",
                 "text": "Estampas clássicas e atemporais",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
-                "value": "6b",
-                "category": "Clássico",
-                "points": 1,
-                "styleType": "classico"
+                "value": "classico"
               },
               {
-                "id": "6c",
+                "id": "contemporaneo",
                 "text": "Atemporais, mas que tenham uma pegada atual e moderna",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
-                "value": "6c",
-                "category": "Contemporâneo",
-                "points": 1,
-                "styleType": "contemporaneo"
+                "value": "contemporaneo"
               },
               {
-                "id": "6d",
+                "id": "elegante",
                 "text": "Estampas clássicas e atemporais, mas sofisticadas",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
-                "value": "6d",
-                "category": "Elegante",
-                "points": 1,
-                "styleType": "elegante"
+                "value": "elegante"
               },
               {
-                "id": "6e",
+                "id": "romantico",
                 "text": "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
-                "value": "6e",
-                "category": "romantico",
-                "points": 1,
-                "styleType": "romantico"
+                "value": "romantico"
               },
               {
-                "id": "6f",
+                "id": "sexy",
                 "text": "Estampas de animal print, como onça, zebra e cobra",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
-                "value": "6f",
-                "category": "sexy",
-                "points": 1,
-                "styleType": "sexy"
+                "value": "sexy"
               },
               {
-                "id": "6g",
+                "id": "dramatico",
                 "text": "Estampas geométricas, abstratas e exageradas como grandes poás",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
-                "value": "6g",
-                "category": "dramatico",
-                "points": 1,
-                "styleType": "dramatico"
+                "value": "dramatico"
               },
               {
-                "id": "6h",
+                "id": "criativo",
                 "text": "Estampas diferentes do usual, como africanas, xadrez grandes",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
-                "value": "6h",
-                "category": "criativo",
-                "points": 1,
-                "styleType": "criativo"
+                "value": "criativo"
               }
             ],
             "columns": 2,
@@ -1072,6 +1089,23 @@
             "delay": 100,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-06-cta-next",
+          "content": {
+            "label": "Avançar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {
@@ -1089,7 +1123,10 @@
       "behavior": {},
       "type": "question",
       "title": "Q5 - Cores favoritas",
-      "redirectPath": "/quiz-estilo/step-06"
+      "redirectPath": "/quiz-estilo/step-06",
+      "navigation": {
+        "nextStep": "step-07"
+      }
     },
     "step-07": {
       "templateVersion": "3.0",
@@ -1141,10 +1178,24 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-07-question-title",
+          "content": {
+            "text": "QUAL CASACO É SEU FAVORITO?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-07",
           "content": {
-            "questionNumber": "Q6 - ACESSÓRIOS",
+            "questionNumber": "6 de 10",
             "questionText": "QUAL CASACO É SEU FAVORITO?",
             "currentQuestion": 6,
             "totalQuestions": 13,
@@ -1170,76 +1221,52 @@
           "content": {
             "options": [
               {
-                "id": "7a",
+                "id": "natural",
                 "text": "Cardigã bege confortável e casual",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
-                "value": "7a",
-                "category": "Natural",
-                "points": 1,
-                "styleType": "natural"
+                "value": "natural"
               },
               {
-                "id": "7b",
+                "id": "classico",
                 "text": "Blazer verde estruturado",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp",
-                "value": "7b",
-                "category": "Clássico",
-                "points": 1,
-                "styleType": "classico"
+                "value": "classico"
               },
               {
-                "id": "7c",
+                "id": "contemporaneo",
                 "text": "Trench coat bege tradicional",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp",
-                "value": "7c",
-                "category": "Contemporâneo",
-                "points": 1,
-                "styleType": "contemporaneo"
+                "value": "contemporaneo"
               },
               {
-                "id": "7d",
+                "id": "elegante",
                 "text": "Blazer branco refinado",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp",
-                "value": "7d",
-                "category": "Elegante",
-                "points": 1,
-                "styleType": "elegante"
+                "value": "elegante"
               },
               {
-                "id": "7e",
+                "id": "romantico",
                 "text": "Casaco pink vibrante e moderno",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp",
-                "value": "7e",
-                "category": "romantico",
-                "points": 1,
-                "styleType": "romantico"
+                "value": "romantico"
               },
               {
-                "id": "7f",
+                "id": "sexy",
                 "text": "Jaqueta vinho de couro estilosa",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
-                "value": "7f",
-                "category": "sexy",
-                "points": 1,
-                "styleType": "sexy"
+                "value": "sexy"
               },
               {
-                "id": "7g",
+                "id": "dramatico",
                 "text": "Jaqueta preta estilo rocker",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
-                "value": "7g",
-                "category": "dramatico",
-                "points": 1,
-                "styleType": "dramatico"
+                "value": "dramatico"
               },
               {
-                "id": "7h",
+                "id": "criativo",
                 "text": "Casaco estampado criativo e colorido",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
-                "value": "7h",
-                "category": "criativo",
-                "points": 1,
-                "styleType": "criativo"
+                "value": "criativo"
               }
             ],
             "columns": 2,
@@ -1263,6 +1290,23 @@
             "delay": 100,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-07-cta-next",
+          "content": {
+            "label": "Avançar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {
@@ -1280,7 +1324,10 @@
       "behavior": {},
       "type": "question",
       "title": "Q6 - Acessórios",
-      "redirectPath": "/quiz-estilo/step-07"
+      "redirectPath": "/quiz-estilo/step-07",
+      "navigation": {
+        "nextStep": "step-08"
+      }
     },
     "step-08": {
       "templateVersion": "3.0",
@@ -1332,10 +1379,24 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-08-question-title",
+          "content": {
+            "text": "QUAL SUA CALÇA FAVORITA?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-08",
           "content": {
-            "questionNumber": "Q7 - CONFORTO",
+            "questionNumber": "7 de 10",
             "questionText": "QUAL SUA CALÇA FAVORITA?",
             "currentQuestion": 7,
             "totalQuestions": 13,
@@ -1361,76 +1422,52 @@
           "content": {
             "options": [
               {
-                "id": "8a",
+                "id": "natural",
                 "text": "Calça fluida acetinada bege",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
-                "value": "8a",
-                "category": "Natural",
-                "points": 1,
-                "styleType": "natural"
+                "value": "natural"
               },
               {
-                "id": "8b",
+                "id": "classico",
                 "text": "Calça de alfaiataria cinza",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
-                "value": "8b",
-                "category": "Clássico",
-                "points": 1,
-                "styleType": "classico"
+                "value": "classico"
               },
               {
-                "id": "8c",
+                "id": "contemporaneo",
                 "text": "Jeans reto e básico",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
-                "value": "8c",
-                "category": "Contemporâneo",
-                "points": 1,
-                "styleType": "contemporaneo"
+                "value": "contemporaneo"
               },
               {
-                "id": "8d",
+                "id": "elegante",
                 "text": "Calça reta bege de tecido",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
-                "value": "8d",
-                "category": "Elegante",
-                "points": 1,
-                "styleType": "elegante"
+                "value": "elegante"
               },
               {
-                "id": "8e",
+                "id": "romantico",
                 "text": "Calça ampla rosa alfaiatada",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
-                "value": "8e",
-                "category": "romantico",
-                "points": 1,
-                "styleType": "romantico"
+                "value": "romantico"
               },
               {
-                "id": "8f",
+                "id": "sexy",
                 "text": "Legging preta de couro",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
-                "value": "8f",
-                "category": "sexy",
-                "points": 1,
-                "styleType": "sexy"
+                "value": "sexy"
               },
               {
-                "id": "8g",
+                "id": "dramatico",
                 "text": "Calça reta preta de couro",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
-                "value": "8g",
-                "category": "dramatico",
-                "points": 1,
-                "styleType": "dramatico"
+                "value": "dramatico"
               },
               {
-                "id": "8h",
+                "id": "criativo",
                 "text": "Calça estampada floral leve e ampla",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
-                "value": "8h",
-                "category": "criativo",
-                "points": 1,
-                "styleType": "criativo"
+                "value": "criativo"
               }
             ],
             "columns": 2,
@@ -1454,6 +1491,23 @@
             "delay": 100,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-08-cta-next",
+          "content": {
+            "label": "Avançar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {
@@ -1471,7 +1525,10 @@
       "behavior": {},
       "type": "question",
       "title": "Q7 - Conforto",
-      "redirectPath": "/quiz-estilo/step-08"
+      "redirectPath": "/quiz-estilo/step-08",
+      "navigation": {
+        "nextStep": "step-09"
+      }
     },
     "step-09": {
       "templateVersion": "3.0",
@@ -1523,10 +1580,24 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-09-question-title",
+          "content": {
+            "text": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-09",
           "content": {
-            "questionNumber": "Q8 - INSPIRAÇÃO",
+            "questionNumber": "8 de 10",
             "questionText": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
             "currentQuestion": 8,
             "totalQuestions": 13,
@@ -1552,76 +1623,52 @@
           "content": {
             "options": [
               {
-                "id": "9a",
+                "id": "natural",
                 "text": "Tênis nude casual e confortável",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
-                "value": "9a",
-                "category": "Natural",
-                "points": 1,
-                "styleType": "natural"
+                "value": "natural"
               },
               {
-                "id": "9b",
+                "id": "classico",
                 "text": "Scarpin nude de salto baixo",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
-                "value": "9b",
-                "category": "Clássico",
-                "points": 1,
-                "styleType": "classico"
+                "value": "classico"
               },
               {
-                "id": "9c",
+                "id": "contemporaneo",
                 "text": "Sandália dourada com salto bloco",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
-                "value": "9c",
-                "category": "Contemporâneo",
-                "points": 1,
-                "styleType": "contemporaneo"
+                "value": "contemporaneo"
               },
               {
-                "id": "9d",
+                "id": "elegante",
                 "text": "Scarpin nude salto alto e fino",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
-                "value": "9d",
-                "category": "Elegante",
-                "points": 1,
-                "styleType": "elegante"
+                "value": "elegante"
               },
               {
-                "id": "9e",
+                "id": "romantico",
                 "text": "Sandália anabela off white",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
-                "value": "9e",
-                "category": "romantico",
-                "points": 1,
-                "styleType": "romantico"
+                "value": "romantico"
               },
               {
-                "id": "9f",
+                "id": "sexy",
                 "text": "Sandália rosa de tiras finas",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
-                "value": "9f",
-                "category": "sexy",
-                "points": 1,
-                "styleType": "sexy"
+                "value": "sexy"
               },
               {
-                "id": "9g",
+                "id": "dramatico",
                 "text": "Scarpin preto moderno com vinil transparente",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
-                "value": "9g",
-                "category": "dramatico",
-                "points": 1,
-                "styleType": "dramatico"
+                "value": "dramatico"
               },
               {
-                "id": "9h",
+                "id": "criativo",
                 "text": "Scarpin colorido estampado",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
-                "value": "9h",
-                "category": "criativo",
-                "points": 1,
-                "styleType": "criativo"
+                "value": "criativo"
               }
             ],
             "columns": 2,
@@ -1645,6 +1692,23 @@
             "delay": 100,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-09-cta-next",
+          "content": {
+            "label": "Avançar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {
@@ -1662,7 +1726,10 @@
       "behavior": {},
       "type": "question",
       "title": "Q8 - Inspiração",
-      "redirectPath": "/quiz-estilo/step-09"
+      "redirectPath": "/quiz-estilo/step-09",
+      "navigation": {
+        "nextStep": "step-10"
+      }
     },
     "step-10": {
       "templateVersion": "3.0",
@@ -1714,10 +1781,24 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-10-question-title",
+          "content": {
+            "text": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-10",
           "content": {
-            "questionNumber": "Q9 - SAPATOS",
+            "questionNumber": "9 de 10",
             "questionText": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
             "currentQuestion": 9,
             "totalQuestions": 13,
@@ -1743,76 +1824,52 @@
           "content": {
             "options": [
               {
-                "id": "10a",
+                "id": "natural",
                 "text": "Pequenos e discretos, às vezes nem uso",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.png",
-                "value": "10a",
-                "category": "Natural",
-                "points": 1,
-                "styleType": "natural"
+                "value": "natural"
               },
               {
-                "id": "10b",
+                "id": "classico",
                 "text": "Brincos pequenos e discretos. Corrente fininha",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.png",
-                "value": "10b",
-                "category": "Clássico",
-                "points": 1,
-                "styleType": "classico"
+                "value": "classico"
               },
               {
-                "id": "10c",
+                "id": "contemporaneo",
                 "text": "Acessórios que elevem meu look com um toque moderno",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.png",
-                "value": "10c",
-                "category": "Contemporâneo",
-                "points": 1,
-                "styleType": "contemporaneo"
+                "value": "contemporaneo"
               },
               {
-                "id": "10d",
+                "id": "elegante",
                 "text": "Acessórios sofisticados, joias ou semijoias",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.png",
-                "value": "10d",
-                "category": "Elegante",
-                "points": 1,
-                "styleType": "elegante"
+                "value": "elegante"
               },
               {
-                "id": "10e",
+                "id": "romantico",
                 "text": "Peças delicadas e com um toque feminino",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.png",
-                "value": "10e",
-                "category": "romantico",
-                "points": 1,
-                "styleType": "romantico"
+                "value": "romantico"
               },
               {
-                "id": "10f",
+                "id": "sexy",
                 "text": "Brincos longos, colares que valorizem minha beleza",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.png",
-                "value": "10f",
-                "category": "sexy",
-                "points": 1,
-                "styleType": "sexy"
+                "value": "sexy"
               },
               {
-                "id": "10g",
+                "id": "dramatico",
                 "text": "Acessórios pesados, que causem um impacto",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.png",
-                "value": "10g",
-                "category": "dramatico",
-                "points": 1,
-                "styleType": "dramatico"
+                "value": "dramatico"
               },
               {
-                "id": "10h",
+                "id": "criativo",
                 "text": "Acessórios diferentes, grandes e marcantes",
                 "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.png",
-                "value": "10h",
-                "category": "criativo",
-                "points": 1,
-                "styleType": "criativo"
+                "value": "criativo"
               }
             ],
             "columns": 2,
@@ -1836,6 +1893,23 @@
             "delay": 100,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-10-cta-next",
+          "content": {
+            "label": "Avançar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {
@@ -1853,7 +1927,10 @@
       "behavior": {},
       "type": "question",
       "title": "Q9 - Sapatos",
-      "redirectPath": "/quiz-estilo/step-10"
+      "redirectPath": "/quiz-estilo/step-10",
+      "navigation": {
+        "nextStep": "step-11"
+      }
     },
     "step-11": {
       "templateVersion": "3.0",
@@ -1905,10 +1982,24 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-11-question-title",
+          "content": {
+            "text": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES..."
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-11",
           "content": {
-            "questionNumber": "Q10 - PEÇAS-CHAVE",
+            "questionNumber": "10 de 10",
             "questionText": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
             "currentQuestion": 10,
             "totalQuestions": 13,
@@ -1934,76 +2025,44 @@
           "content": {
             "options": [
               {
-                "id": "11a",
+                "id": "natural",
                 "text": "São fáceis de cuidar",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "11a",
-                "category": "Natural",
-                "points": 1,
-                "styleType": "natural"
+                "value": "natural"
               },
               {
-                "id": "11b",
+                "id": "classico",
                 "text": "São de excelente qualidade",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "11b",
-                "category": "Clássico",
-                "points": 1,
-                "styleType": "classico"
+                "value": "classico"
               },
               {
-                "id": "11c",
+                "id": "contemporaneo",
                 "text": "São fáceis de cuidar e modernos",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "11c",
-                "category": "Contemporâneo",
-                "points": 1,
-                "styleType": "contemporaneo"
+                "value": "contemporaneo"
               },
               {
-                "id": "11d",
+                "id": "elegante",
                 "text": "São sofisticados",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "11d",
-                "category": "Elegante",
-                "points": 1,
-                "styleType": "elegante"
+                "value": "elegante"
               },
               {
-                "id": "11e",
+                "id": "romantico",
                 "text": "São delicados",
-                "imageUrl": "",
-                "value": "11e",
-                "category": "romantico",
-                "points": 1,
-                "styleType": "romantico"
+                "value": "romantico"
               },
               {
-                "id": "11f",
+                "id": "sexy",
                 "text": "São perfeitos ao meu corpo",
-                "imageUrl": "",
-                "value": "11f",
-                "category": "sexy",
-                "points": 1,
-                "styleType": "sexy"
+                "value": "sexy"
               },
               {
-                "id": "11g",
+                "id": "dramatico",
                 "text": "São diferentes, e trazem um efeito para minha roupa",
-                "imageUrl": "",
-                "value": "11g",
-                "category": "dramatico",
-                "points": 1,
-                "styleType": "dramatico"
+                "value": "dramatico"
               },
               {
-                "id": "11h",
+                "id": "criativo",
                 "text": "São exclusivos, criam identidade no look",
-                "imageUrl": "",
-                "value": "11h",
-                "category": "criativo",
-                "points": 1,
-                "styleType": "criativo"
+                "value": "criativo"
               }
             ],
             "columns": 2,
@@ -2027,6 +2086,23 @@
             "delay": 100,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-11-cta-next",
+          "content": {
+            "label": "Avançar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {
@@ -2044,7 +2120,10 @@
       "behavior": {},
       "type": "question",
       "title": "Q10 - Peças-chave",
-      "redirectPath": "/quiz-estilo/step-11"
+      "redirectPath": "/quiz-estilo/step-11",
+      "navigation": {
+        "nextStep": "step-12"
+      }
     },
     "step-12": {
       "templateVersion": "3.0",
@@ -2093,10 +2172,11 @@
           "type": "transition-hero",
           "id": "transition-hero-12",
           "content": {
-            "title": "Analisando suas respostas...",
+            "title": "🕐 Enquanto calculamos o seu resultado...",
             "subtitle": "Estamos montando seu perfil de estilo personalizado",
             "message": "Continue para descobrir ainda mais sobre seu estilo único!",
-            "autoAdvanceDelay": 3000
+            "autoAdvanceDelay": 3500,
+            "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
           },
           "style": {
             "backgroundColor": "#FAF9F7",
@@ -2109,13 +2189,49 @@
             "delay": 0,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "text-inline",
+          "id": "step-12-transition-text",
+          "content": {
+            "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-12-transition-cta",
+          "content": {
+            "label": "Continuar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "medium"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {},
       "behavior": {},
       "type": "transition",
       "title": "Transição Mid-Quiz",
-      "redirectPath": "/quiz-estilo/step-12"
+      "redirectPath": "/quiz-estilo/step-12",
+      "navigation": {
+        "autoAdvance": true,
+        "autoAdvanceDelay": 3500,
+        "nextStep": "step-13"
+      }
     },
     "step-13": {
       "templateVersion": "3.0",
@@ -2168,11 +2284,25 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-13-question-title",
+          "content": {
+            "text": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-13",
           "content": {
             "questionNumber": "Q11 - OBJETIVOS",
-            "questionText": "Qual é o seu principal objetivo com seu guarda-roupa?",
+            "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
             "currentQuestion": 11,
             "totalQuestions": 13,
             "progressValue": 57,
@@ -2197,42 +2327,30 @@
           "content": {
             "options": [
               {
-                "id": "13a",
-                "text": "Opção A para Q11",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "13a",
-                "category": "Natural",
-                "points": 1
+                "id": "desconectada",
+                "text": "Me sinto desconectada da mulher que sou hoje",
+                "value": "desconectada"
               },
               {
-                "id": "13b",
-                "text": "Opção B para Q11",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "13b",
-                "category": "Clássico",
-                "points": 2
+                "id": "duvidas",
+                "text": "Tenho dúvidas sobre o que realmente me valoriza",
+                "value": "duvidas"
               },
               {
-                "id": "13c",
-                "text": "Opção C para Q11",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "13c",
-                "category": "Contemporâneo",
-                "points": 2
+                "id": "as-vezes-acerto",
+                "text": "Às vezes acerto, às vezes erro",
+                "value": "as-vezes-acerto"
               },
               {
-                "id": "13d",
-                "text": "Opção D para Q11",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "13d",
-                "category": "Elegante",
-                "points": 3
+                "id": "segura-evoluir",
+                "text": "Me sinto segura, mas sei que posso evoluir",
+                "value": "segura-evoluir"
               }
             ],
             "columns": 2,
-            "multipleSelection": true,
-            "minSelections": 3,
-            "maxSelections": 3,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
             "showImages": true,
             "imageSize": 256,
             "autoAdvance": true,
@@ -2247,6 +2365,23 @@
             "type": "slideUp",
             "duration": 300,
             "delay": 100,
+            "easing": "ease-out"
+          }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-13-cta-next",
+          "content": {
+            "label": "Continuar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
             "easing": "ease-out"
           }
         }
@@ -2266,7 +2401,10 @@
       "behavior": {},
       "type": "strategic-question",
       "title": "Q11 - Objetivos (Estratégica)",
-      "redirectPath": "/quiz-estilo/step-13"
+      "redirectPath": "/quiz-estilo/step-13",
+      "navigation": {
+        "nextStep": "step-14"
+      }
     },
     "step-14": {
       "templateVersion": "3.0",
@@ -2319,11 +2457,25 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-14-question-title",
+          "content": {
+            "text": "O que mais te desafia na hora de se vestir?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-14",
           "content": {
             "questionNumber": "Q12 - DESAFIOS",
-            "questionText": "Qual é o seu maior desafio ao se vestir?",
+            "questionText": "O que mais te desafia na hora de se vestir?",
             "currentQuestion": 12,
             "totalQuestions": 13,
             "progressValue": 62,
@@ -2348,42 +2500,30 @@
           "content": {
             "options": [
               {
-                "id": "14a",
-                "text": "Opção A para Q12",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "14a",
-                "category": "Natural",
-                "points": 1
+                "id": "combinar-pecas",
+                "text": "Tenho peças, mas não sei como combiná-las",
+                "value": "combinar-pecas"
               },
               {
-                "id": "14b",
-                "text": "Opção B para Q12",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "14b",
-                "category": "Clássico",
-                "points": 2
+                "id": "comprar-impulso",
+                "text": "Compro por impulso e me arrependo depois",
+                "value": "comprar-impulso"
               },
               {
-                "id": "14c",
-                "text": "Opção C para Q12",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "14c",
-                "category": "Contemporâneo",
-                "points": 2
+                "id": "imagem-nao-reflete",
+                "text": "Minha imagem não reflete quem eu sou",
+                "value": "imagem-nao-reflete"
               },
               {
-                "id": "14d",
-                "text": "Opção D para Q12",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "14d",
-                "category": "Elegante",
-                "points": 3
+                "id": "perco-tempo",
+                "text": "Perco tempo e acabo usando sempre os mesmos looks",
+                "value": "perco-tempo"
               }
             ],
             "columns": 2,
-            "multipleSelection": true,
-            "minSelections": 3,
-            "maxSelections": 3,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
             "showImages": true,
             "imageSize": 256,
             "autoAdvance": true,
@@ -2398,6 +2538,23 @@
             "type": "slideUp",
             "duration": 300,
             "delay": 100,
+            "easing": "ease-out"
+          }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-14-cta-next",
+          "content": {
+            "label": "Continuar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
             "easing": "ease-out"
           }
         }
@@ -2417,7 +2574,10 @@
       "behavior": {},
       "type": "strategic-question",
       "title": "Q12 - Desafios (Estratégica)",
-      "redirectPath": "/quiz-estilo/step-14"
+      "redirectPath": "/quiz-estilo/step-14",
+      "navigation": {
+        "nextStep": "step-15"
+      }
     },
     "step-15": {
       "templateVersion": "3.0",
@@ -2470,11 +2630,25 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-15-question-title",
+          "content": {
+            "text": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-15",
           "content": {
             "questionNumber": "Q13 - PRIORIDADES",
-            "questionText": "O que você prioriza ao escolher uma roupa?",
+            "questionText": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
             "currentQuestion": 13,
             "totalQuestions": 13,
             "progressValue": 67,
@@ -2499,42 +2673,30 @@
           "content": {
             "options": [
               {
-                "id": "15a",
-                "text": "Opção A para Q13",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "15a",
-                "category": "Natural",
-                "points": 1
+                "id": "quase-todos-dias",
+                "text": "Quase todos os dias — é sempre uma indecisão",
+                "value": "quase-todos-dias"
               },
               {
-                "id": "15b",
-                "text": "Opção B para Q13",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "15b",
-                "category": "Clássico",
-                "points": 2
+                "id": "compromissos-importantes",
+                "text": "Sempre que tenho um compromisso importante",
+                "value": "compromissos-importantes"
               },
               {
-                "id": "15c",
-                "text": "Opção C para Q13",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "15c",
-                "category": "Contemporâneo",
-                "points": 2
+                "id": "as-vezes-limitada",
+                "text": "Às vezes, mas me sinto limitada nas escolhas",
+                "value": "as-vezes-limitada"
               },
               {
-                "id": "15d",
-                "text": "Opção D para Q13",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "15d",
-                "category": "Elegante",
-                "points": 3
+                "id": "raramente-segura",
+                "text": "Raramente — já me sinto segura ao me vestir",
+                "value": "raramente-segura"
               }
             ],
             "columns": 2,
-            "multipleSelection": true,
-            "minSelections": 3,
-            "maxSelections": 3,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
             "showImages": true,
             "imageSize": 256,
             "autoAdvance": true,
@@ -2549,6 +2711,23 @@
             "type": "slideUp",
             "duration": 300,
             "delay": 100,
+            "easing": "ease-out"
+          }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-15-cta-next",
+          "content": {
+            "label": "Continuar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
             "easing": "ease-out"
           }
         }
@@ -2568,7 +2747,10 @@
       "behavior": {},
       "type": "strategic-question",
       "title": "Q13 - Prioridades (Estratégica)",
-      "redirectPath": "/quiz-estilo/step-15"
+      "redirectPath": "/quiz-estilo/step-15",
+      "navigation": {
+        "nextStep": "step-16"
+      }
     },
     "step-16": {
       "templateVersion": "3.0",
@@ -2621,11 +2803,25 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-16-question-title",
+          "content": {
+            "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-16",
           "content": {
             "questionNumber": "Q14 - INVESTIMENTO",
-            "questionText": "Onde você prefere investir mais?",
+            "questionText": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
             "currentQuestion": 14,
             "totalQuestions": 13,
             "progressValue": 71,
@@ -2650,42 +2846,30 @@
           "content": {
             "options": [
               {
-                "id": "16a",
-                "text": "Opção A para Q14",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "16a",
-                "category": "Natural",
-                "points": 1
+                "id": "sim-quero",
+                "text": "Sim! Se existisse algo assim, eu quero",
+                "value": "sim-quero"
               },
               {
-                "id": "16b",
-                "text": "Opção B para Q14",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "16b",
-                "category": "Clássico",
-                "points": 2
+                "id": "sim-momento-certo",
+                "text": "Sim, mas teria que ser no momento certo",
+                "value": "sim-momento-certo"
               },
               {
-                "id": "16c",
-                "text": "Opção C para Q14",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "16c",
-                "category": "Contemporâneo",
-                "points": 2
+                "id": "tenho-duvidas",
+                "text": "Tenho dúvidas se funcionaria pra mim",
+                "value": "tenho-duvidas"
               },
               {
-                "id": "16d",
-                "text": "Opção D para Q14",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "16d",
-                "category": "Elegante",
-                "points": 3
+                "id": "nao-prefiro-continuar",
+                "text": "Não, prefiro continuar como estou",
+                "value": "nao-prefiro-continuar"
               }
             ],
             "columns": 2,
-            "multipleSelection": true,
-            "minSelections": 3,
-            "maxSelections": 3,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
             "showImages": true,
             "imageSize": 256,
             "autoAdvance": true,
@@ -2700,6 +2884,23 @@
             "type": "slideUp",
             "duration": 300,
             "delay": 100,
+            "easing": "ease-out"
+          }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-16-cta-next",
+          "content": {
+            "label": "Continuar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
             "easing": "ease-out"
           }
         }
@@ -2719,7 +2920,10 @@
       "behavior": {},
       "type": "strategic-question",
       "title": "Q14 - Investimento (Estratégica)",
-      "redirectPath": "/quiz-estilo/step-16"
+      "redirectPath": "/quiz-estilo/step-16",
+      "navigation": {
+        "nextStep": "step-17"
+      }
     },
     "step-17": {
       "templateVersion": "3.0",
@@ -2772,11 +2976,25 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-17-question-title",
+          "content": {
+            "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-17",
           "content": {
             "questionNumber": "Q15 - TRANSFORMAÇÃO",
-            "questionText": "O que você mais gostaria de mudar?",
+            "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
             "currentQuestion": 15,
             "totalQuestions": 13,
             "progressValue": 76,
@@ -2801,42 +3019,30 @@
           "content": {
             "options": [
               {
-                "id": "17a",
-                "text": "Opção A para Q15",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "17a",
-                "category": "Natural",
-                "points": 1
+                "id": "sim-vale-muito",
+                "text": "Sim! Por esse resultado, vale muito",
+                "value": "sim-vale-muito"
               },
               {
-                "id": "17b",
-                "text": "Opção B para Q15",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "17b",
-                "category": "Clássico",
-                "points": 2
+                "id": "sim-se-certeza",
+                "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
+                "value": "sim-se-certeza"
               },
               {
-                "id": "17c",
-                "text": "Opção C para Q15",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "17c",
-                "category": "Contemporâneo",
-                "points": 2
+                "id": "talvez-depende",
+                "text": "Talvez — depende do que está incluso",
+                "value": "talvez-depende"
               },
               {
-                "id": "17d",
-                "text": "Opção D para Q15",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "17d",
-                "category": "Elegante",
-                "points": 3
+                "id": "nao-nao-pronta",
+                "text": "Não, ainda não estou pronta para investir",
+                "value": "nao-nao-pronta"
               }
             ],
             "columns": 2,
-            "multipleSelection": true,
-            "minSelections": 3,
-            "maxSelections": 3,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
             "showImages": true,
             "imageSize": 256,
             "autoAdvance": true,
@@ -2851,6 +3057,23 @@
             "type": "slideUp",
             "duration": 300,
             "delay": 100,
+            "easing": "ease-out"
+          }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-17-cta-next",
+          "content": {
+            "label": "Continuar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
             "easing": "ease-out"
           }
         }
@@ -2870,7 +3093,10 @@
       "behavior": {},
       "type": "strategic-question",
       "title": "Q15 - Transformação (Estratégica)",
-      "redirectPath": "/quiz-estilo/step-17"
+      "redirectPath": "/quiz-estilo/step-17",
+      "navigation": {
+        "nextStep": "step-18"
+      }
     },
     "step-18": {
       "templateVersion": "3.0",
@@ -2923,11 +3149,25 @@
       },
       "sections": [
         {
+          "type": "question-title",
+          "id": "step-18-question-title",
+          "content": {
+            "text": "Qual desses resultados você mais gostaria de alcançar?"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
           "type": "question-hero",
           "id": "question-hero-18",
           "content": {
             "questionNumber": "Q16 - RESULTADO",
-            "questionText": "Qual resultado você mais gostaria de alcançar?",
+            "questionText": "Qual desses resultados você mais gostaria de alcançar?",
             "currentQuestion": 16,
             "totalQuestions": 13,
             "progressValue": 81,
@@ -2952,42 +3192,30 @@
           "content": {
             "options": [
               {
-                "id": "18a",
-                "text": "Opção A para Q16",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "18a",
-                "category": "Natural",
-                "points": 1
+                "id": "montar-looks-facilidade",
+                "text": "Montar looks com mais facilidade e confiança",
+                "value": "montar-looks-facilidade"
               },
               {
-                "id": "18b",
-                "text": "Opção B para Q16",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "18b",
-                "category": "Clássico",
-                "points": 2
+                "id": "usar-que-tenho",
+                "text": "Usar o que já tenho e me sentir estilosa",
+                "value": "usar-que-tenho"
               },
               {
-                "id": "18c",
-                "text": "Opção C para Q16",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "18c",
-                "category": "Contemporâneo",
-                "points": 2
+                "id": "comprar-consciencia",
+                "text": "Comprar com mais consciência e sem culpa",
+                "value": "comprar-consciencia"
               },
               {
-                "id": "18d",
-                "text": "Opção D para Q16",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "18d",
-                "category": "Elegante",
-                "points": 3
+                "id": "ser-admirada",
+                "text": "Ser admirada pela imagem que transmito",
+                "value": "ser-admirada"
               }
             ],
             "columns": 2,
-            "multipleSelection": true,
-            "minSelections": 3,
-            "maxSelections": 3,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
             "showImages": true,
             "imageSize": 256,
             "autoAdvance": true,
@@ -3002,6 +3230,23 @@
             "type": "slideUp",
             "duration": 300,
             "delay": 100,
+            "easing": "ease-out"
+          }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-18-cta-next",
+          "content": {
+            "label": "Continuar",
+            "href": "#next",
+            "variant": "primary",
+            "size": "large"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
             "easing": "ease-out"
           }
         }
@@ -3021,7 +3266,10 @@
       "behavior": {},
       "type": "strategic-question",
       "title": "Q16 - Resultado (Estratégica)",
-      "redirectPath": "/quiz-estilo/step-18"
+      "redirectPath": "/quiz-estilo/step-18",
+      "navigation": {
+        "nextStep": "step-19"
+      }
     },
     "step-19": {
       "templateVersion": "3.0",
@@ -3071,7 +3319,7 @@
           "type": "transition-hero",
           "id": "transition-hero-19",
           "content": {
-            "title": "Calculando seu estilo predominante...",
+            "title": "Obrigada por compartilhar.",
             "subtitle": "Preparando seu resultado personalizado",
             "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
             "autoAdvanceDelay": 3000
@@ -3087,13 +3335,44 @@
             "delay": 0,
             "easing": "ease-out"
           }
+        },
+        {
+          "type": "text-inline",
+          "id": "step-19-transition-text",
+          "content": {},
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
+        },
+        {
+          "type": "CTAButton",
+          "id": "step-19-transition-cta",
+          "content": {
+            "label": "...",
+            "variant": "outline",
+            "size": "small"
+          },
+          "style": {},
+          "animation": {
+            "type": "fade",
+            "duration": 300,
+            "delay": 0,
+            "easing": "ease-out"
+          }
         }
       ],
       "validation": {},
       "behavior": {},
       "type": "transition-result",
       "title": "Transição Pré-Resultado",
-      "redirectPath": "/quiz-estilo/step-19"
+      "redirectPath": "/quiz-estilo/step-19",
+      "navigation": {
+        "nextStep": "step-20"
+      }
     },
     "step-20": {
       "templateVersion": "3.0",
@@ -3586,7 +3865,10 @@
       "behavior": {},
       "type": "result",
       "title": "Página de Resultado - 5 Passos Vista-se de Você",
-      "redirectPath": "/quiz-estilo/step-20"
+      "redirectPath": "/quiz-estilo/step-20",
+      "navigation": {
+        "nextStep": "step-21"
+      }
     },
     "step-21": {
       "templateVersion": "3.0",
@@ -3701,7 +3983,8 @@
       "behavior": {},
       "type": "offer",
       "title": "Oferta Final - 5 Passos Vista-se de Você",
-      "redirectPath": "/quiz-estilo/step-21"
+      "redirectPath": "/quiz-estilo/step-21",
+      "navigation": {}
     }
   },
   "settings": {
