@@ -438,6 +438,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         return (
           <ModularResultStep
             data={stepData as any}
+            blocks={(step as any)?.blocks || editorState.stepBlocks[stepKey] || []}
             isEditable={isEditMode}
             userProfile={{
               userName: sessionData.userName || 'Visitante',

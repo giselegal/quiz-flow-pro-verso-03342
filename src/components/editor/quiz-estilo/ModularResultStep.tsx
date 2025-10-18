@@ -18,6 +18,7 @@ import { Block } from '@/types/editor';
 
 interface ModularResultStepProps {
     data: any;
+    blocks?: Block[]; // ✅ Novo: permitir injeção direta de blocos (preview/produção)
     userProfile?: {
         userName: string;
         resultStyle: string;
@@ -95,6 +96,7 @@ function injectDynamicData(block: Block, userProfile?: ModularResultStepProps['u
 
 export default function ModularResultStep({
     data,
+    blocks: blocksProp,
     userProfile,
     isEditable = false,
     selectedBlockId,
@@ -126,8 +128,12 @@ export default function ModularResultStep({
 
     // ✅ FASE 1: Buscar blocos diretamente sem disparar carregamento
     const sourceBlocks = useMemo(() => {
+        // Preferir blocos passados por props (preview/produção sem provider)
+        if (Array.isArray(blocksProp) && blocksProp.length > 0) {
+            return blocksProp;
+        }
         return editor?.state?.stepBlocks?.[stepKey] || [];
-    }, [editor?.state?.stepBlocks, stepKey]);
+    }, [blocksProp, editor?.state?.stepBlocks, stepKey]);
 
     // Injetar dados dinâmicos nos blocos
     const blocks = useMemo(() => {
@@ -136,7 +142,8 @@ export default function ModularResultStep({
 
     // ✅ FASE 1.5: Auto-load se blocos estão vazios (CORREÇÃO CRÍTICA)
     React.useEffect(() => {
-        if (sourceBlocks.length === 0 && editor?.actions?.ensureStepLoaded) {
+        // Só autoload se não foram fornecidos blocos por props
+        if ((Array.isArray(blocksProp) ? blocksProp.length === 0 : true) && sourceBlocks.length === 0 && editor?.actions?.ensureStepLoaded) {
             console.log(`🔄 [ModularResultStep] Auto-loading ${stepKey} (blocks empty)`);
             editor.actions.ensureStepLoaded(stepKey).then(() => {
                 console.log(`✅ [ModularResultStep] Loaded ${stepKey} successfully`);
@@ -144,7 +151,7 @@ export default function ModularResultStep({
                 console.error(`❌ [ModularResultStep] Failed to load ${stepKey}:`, err);
             });
         }
-    }, [stepKey, sourceBlocks.length, editor?.actions]);
+    }, [stepKey, blocksProp, sourceBlocks.length, editor?.actions]);
 
     // ✅ FASE 2: Debug logs apenas em DEV
     React.useEffect(() => {
