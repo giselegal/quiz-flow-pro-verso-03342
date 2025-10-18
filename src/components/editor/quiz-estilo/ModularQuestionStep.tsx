@@ -79,6 +79,24 @@ export default function ModularQuestionStep({
 
     const stepNumber = parseInt(data.questionNumber?.replace(/\\D/g, '') || '1');
     const progress = Math.round((stepNumber / 21) * 100);
+    // Passo atual real do quiz (parse do id ex.: "step-02") para navegação global
+    const currentStepReal = React.useMemo(() => {
+        try {
+            const id = String(data?.id || '');
+            const n = parseInt(id.replace(/\D/g, ''), 10);
+            return isNaN(n) ? undefined : n;
+        } catch {
+            return undefined;
+        }
+    }, [data?.id]);
+
+    const emitNavigate = (target: number) => {
+        try {
+            window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', {
+                detail: { step: target, stepId: `step-${String(target).padStart(2, '0')}`, source: 'modular-question-step' }
+            }));
+        } catch { }
+    };
 
     // ===== DnD - Reordenação dos blocos (sem o progress) =====
     const stepId = data?.id || 'step-question';
@@ -170,6 +188,12 @@ export default function ModularQuestionStep({
                                             currentAnswers,
                                             onAnswersChange,
                                             canProceed,
+                                            onNext: () => {
+                                                if (typeof currentStepReal === 'number') emitNavigate(currentStepReal + 1);
+                                            },
+                                            onPrev: () => {
+                                                if (typeof currentStepReal === 'number') emitNavigate(currentStepReal - 1);
+                                            },
                                         }}
                                     />
                                 </SortableItem>
