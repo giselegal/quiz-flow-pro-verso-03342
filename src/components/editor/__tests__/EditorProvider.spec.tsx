@@ -48,24 +48,26 @@ describe('EditorProvider actions (unit)', () => {
       content: {},
     } as any;
 
+    // Use um step sem blocos pré-carregados no template por padrão
+    const targetStep = 'step-99';
     // Add A at position 0
-    await actionsRef.current.addBlockAtIndex('step-1', blockA, 0);
+    await actionsRef.current.addBlockAtIndex(targetStep, blockA, 0);
     // Add B at position 1
-    await actionsRef.current.addBlockAtIndex('step-1', blockB, 1);
+    await actionsRef.current.addBlockAtIndex(targetStep, blockB, 1);
 
     // Check current state (aguarda refletir no ConsumerBridge)
     await waitFor(() => {
-      const list = stateRef.current.stepBlocks['step-1'] || [];
+      const list = stateRef.current.stepBlocks[targetStep] || [];
       expect(list.length).toBeGreaterThanOrEqual(2);
       expect(String(list[0].id)).toBe('temp-a');
       expect(String(list[1].id)).toBe('temp-b');
     });
 
     // Reorder: move index 0 to 1
-    await actionsRef.current.reorderBlocks('step-1', 0, 1);
+    await actionsRef.current.reorderBlocks(targetStep, 0, 1);
 
     await waitFor(() => {
-      const list2 = stateRef.current.stepBlocks['step-1'] || [];
+      const list2 = stateRef.current.stepBlocks[targetStep] || [];
       expect(list2.length).toBeGreaterThanOrEqual(2);
       expect(String(list2[0].id)).toBe('temp-b');
       expect(String(list2[1].id)).toBe('temp-a');
