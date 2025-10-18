@@ -35,6 +35,7 @@ export const QuestionHeroSection: React.FC<QuestionHeroSectionProps> = ({
     onAnalytics,
 }) => {
     const { isMobile } = useResponsive();
+    const titleId = `${id}-question-title`;
 
     const {
         questionNumber,
@@ -88,6 +89,11 @@ export const QuestionHeroSection: React.FC<QuestionHeroSectionProps> = ({
                 {/* Progress Bar */}
                 {showProgress && (
                     <div
+                        role="progressbar"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={Math.max(0, Math.min(100, Math.round(progressValue)))}
+                        aria-label="Progresso"
                         style={{
                             width: '100%',
                             height: 6,
@@ -109,9 +115,9 @@ export const QuestionHeroSection: React.FC<QuestionHeroSectionProps> = ({
                 )}
 
                 {/* Question Number */}
-                <h2
+                <p
                     style={{
-                        fontSize: isMobile ? DesignTokens.fontSizes.xl : DesignTokens.fontSizes['2xl'],
+                        fontSize: isMobile ? DesignTokens.fontSizes.lg : DesignTokens.fontSizes.xl,
                         fontWeight: DesignTokens.fontWeights.bold,
                         color: DesignTokens.colors.secondary,
                         marginBottom: DesignTokens.spacing.sm,
@@ -119,7 +125,7 @@ export const QuestionHeroSection: React.FC<QuestionHeroSectionProps> = ({
                     }}
                 >
                     {questionNumber}
-                </h2>
+                </p>
 
                 {/* Question Counter */}
                 {currentQuestion && totalQuestions && (
@@ -129,13 +135,15 @@ export const QuestionHeroSection: React.FC<QuestionHeroSectionProps> = ({
                             color: DesignTokens.colors.textSecondary,
                             marginBottom: DesignTokens.spacing.md,
                         }}
+                        aria-live="polite"
                     >
                         Questão {currentQuestion} de {totalQuestions}
                     </p>
                 )}
 
                 {/* Question Text */}
-                <p
+                <h2
+                    id={titleId}
                     style={{
                         fontSize: isMobile ? DesignTokens.fontSizes.lg : DesignTokens.fontSizes.xl,
                         fontWeight: DesignTokens.fontWeights.bold,
@@ -147,7 +155,7 @@ export const QuestionHeroSection: React.FC<QuestionHeroSectionProps> = ({
                     }}
                 >
                     {questionText}
-                </p>
+                </h2>
             </AnimatedTransition>
         </SectionContainer>
     );

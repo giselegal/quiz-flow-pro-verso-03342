@@ -69,6 +69,9 @@ interface SectionRendererProps {
 
     /** CSS classes adicionais (opcional) */
     className?: string;
+
+    /** Propriedades extras para injeção (override) ao componente da section */
+    extraProps?: Record<string, any>;
 }
 
 // ============================================================================
@@ -231,6 +234,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
     userData,
     onSectionView,
     className,
+    extraProps,
 }) => {
     // Intersection Observer para tracking de visualizações
     const sectionRef = React.useRef<HTMLDivElement>(null);
@@ -318,6 +322,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
                     <Component
                         // Props da section
                         {...section.props}
+                        {...(extraProps || {})}
 
                         // Props do sistema
                         theme={theme}
@@ -372,6 +377,27 @@ export const SectionsContainer: React.FC<{
                 .sort((a, b) => a.order - b.order);
         }, [sections]);
 
+        // Calcular extraProps para sections específicas (ex.: options-grid -> aria-labelledby do question-hero anterior)
+        const extraPropsMap = React.useMemo(() => {
+            const map: Record<string, Record<string, any>> = {};
+            let lastQuestionHeroId: string | null = null;
+            for (const s of activeSections) {
+                const typeKey = String(s.type);
+                if (typeKey === 'question-hero') {
+                    lastQuestionHeroId = s.id;
+                }
+                if (typeKey === 'options-grid') {
+                    if (lastQuestionHeroId) {
+                        map[s.id] = {
+                            ...(map[s.id] || {}),
+                            ariaLabelledById: `${lastQuestionHeroId}-question-title`,
+                        };
+                    }
+                }
+            }
+            return map;
+        }, [activeSections]);
+
         // CSS variables do theme
         const cssVariables = React.useMemo(() => {
             const vars: Record<string, string> = {};
@@ -411,6 +437,7 @@ export const SectionsContainer: React.FC<{
                         offer={offer}
                         userData={userData}
                         onSectionView={onSectionView}
+                        extraProps={extraPropsMap[section.id]}
                     />
                 ))}
             </div>

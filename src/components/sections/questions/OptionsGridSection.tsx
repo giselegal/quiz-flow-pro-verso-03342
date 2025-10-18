@@ -4,7 +4,7 @@
  * Componente modular para exibir opções de quiz em grid responsivo
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { SectionContainer } from '../shared/SectionContainer';
 import { AnimatedTransition } from '../shared/AnimatedTransition';
 import { DesignTokens } from '@/styles/design-tokens';
@@ -39,6 +39,11 @@ export interface OptionsGridSectionProps extends BaseSectionProps {
     onSelectionChange: (selectedIds: string[]) => void;
     onComplete?: () => void;
     onAnalytics?: (event: string, data?: any) => void;
+    /**
+     * Opcional: id do elemento que contém o título da pergunta para aria-labelledby
+     * Ex.: o id do componente "question-title" correspondente
+     */
+    ariaLabelledById?: string;
 }
 
 export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
@@ -50,9 +55,11 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
     style: customStyle,
     animation,
     onAnalytics,
+    ariaLabelledById,
 }) => {
     const { isMobile, isTablet } = useResponsive();
     const [localSelected, setLocalSelected] = useState<string[]>(selectedOptions);
+    const autoAdvanceTimeoutRef = useRef<number | null>(null);
 
     const {
         options,
@@ -72,7 +79,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
         setLocalSelected(selectedOptions);
     }, [selectedOptions]);
 
-    const handleOptionClick = (optionId: string) => {
+    const handleOptionClick = useCallback((optionId: string) => {
         let newSelection: string[];
 
         if (multipleSelection) {
@@ -88,6 +95,12 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
                     newSelection = [...localSelected, optionId];
                 } else {
                     // Já atingiu máximo
+                    onAnalytics?.('selection_limit_reached', {
+                        sectionId: id,
+                        optionId,
+                        totalSelected: localSelected.length,
+                        limit: maxSelections,
+                    });
                     return;
                 }
             }
@@ -104,18 +117,13 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
             optionId,
             totalSelected: newSelection.length,
             isMultiple: multipleSelection,
+            selectionMode: multipleSelection ? 'multiple' : 'single',
+            optionMeta: options.find(o => o.id === optionId) ? {
+                category: options.find(o => o.id === optionId)!.category,
+                points: options.find(o => o.id === optionId)!.points,
+            } : undefined,
         });
-
-        // Auto-advance se atingiu número necessário
-        if (
-            autoAdvance &&
-            newSelection.length === (multipleSelection ? maxSelections : 1)
-        ) {
-            setTimeout(() => {
-                onComplete?.();
-            }, autoAdvanceDelay);
-        }
-    };
+    }, [autoAdvance, autoAdvanceDelay, id, maxSelections, multipleSelection, onAnalytics, onSelectionChange, options, localSelected]);
 
     const isOptionSelected = (optionId: string) => localSelected.includes(optionId);
 
@@ -127,12 +135,40 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
 
     const gridColumns = getGridColumns();
 
-    const gridStyles: React.CSSProperties = {
+    const gridStyles: React.CSSProperties = useMemo(() => ({
         display: 'grid',
         gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
         gap: DesignTokens.spacing.md,
         width: '100%',
-    };
+    }), [gridColumns]);
+
+    // Auto-advance seguro: programa e cancela conforme mudanças
+    useEffect(() => {
+        if (!autoAdvance) return;
+
+        const targetCount = multipleSelection ? maxSelections : 1;
+        const hasReached = localSelected.length === targetCount;
+
+        // Limpar timeout anterior
+        if (autoAdvanceTimeoutRef.current) {
+            window.clearTimeout(autoAdvanceTimeoutRef.current);
+            autoAdvanceTimeoutRef.current = null;
+        }
+
+        if (hasReached) {
+            autoAdvanceTimeoutRef.current = window.setTimeout(() => {
+                onComplete?.();
+                autoAdvanceTimeoutRef.current = null;
+            }, autoAdvanceDelay);
+        }
+
+        return () => {
+            if (autoAdvanceTimeoutRef.current) {
+                window.clearTimeout(autoAdvanceTimeoutRef.current);
+                autoAdvanceTimeoutRef.current = null;
+            }
+        };
+    }, [autoAdvance, autoAdvanceDelay, localSelected, maxSelections, multipleSelection, onComplete]);
 
     return (
         <SectionContainer
@@ -145,9 +181,15 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
                 ...customStyle,
             }}
         >
-            <div style={gridStyles}>
+            <div
+                style={gridStyles}
+                role={multipleSelection ? 'group' : 'radiogroup'}
+                aria-labelledby={ariaLabelledById}
+                aria-label={ariaLabelledById ? undefined : 'Opções'}
+            >
                 {options.map((option, index) => {
                     const isSelected = isOptionSelected(option.id);
+                    const disableUnselectedDueToLimit = multipleSelection && !isSelected && localSelected.length >= maxSelections;
 
                     const optionStyles: React.CSSProperties = {
                         position: 'relative',
@@ -156,10 +198,12 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
                             }`,
                         borderRadius: DesignTokens.borderRadius.lg,
                         padding: DesignTokens.spacing.md,
-                        cursor: 'pointer',
+                        cursor: disableUnselectedDueToLimit ? 'not-allowed' : 'pointer',
                         transition: DesignTokens.transitions.base,
                         boxShadow: isSelected ? DesignTokens.shadows.md : DesignTokens.shadows.sm,
                         transform: isSelected ? 'scale(1.02)' : 'scale(1)',
+                        opacity: disableUnselectedDueToLimit ? 0.6 : 1,
+                        outline: 'none',
                     };
 
                     return (
@@ -169,20 +213,22 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
                             duration={300}
                             delay={index * 50}
                         >
-                            <div
+                            <button
+                                type="button"
                                 onClick={() => handleOptionClick(option.id)}
                                 style={optionStyles}
-                                onMouseEnter={(e) => {
-                                    if (!isSelected) {
-                                        e.currentTarget.style.borderColor = DesignTokens.colors.primaryLight;
-                                        e.currentTarget.style.backgroundColor = DesignTokens.colors.hover;
-                                    }
+                                role={multipleSelection ? 'checkbox' : 'radio'}
+                                aria-checked={isSelected}
+                                aria-disabled={disableUnselectedDueToLimit}
+                                disabled={disableUnselectedDueToLimit}
+                                data-selected={isSelected || undefined}
+                                data-disabled={disableUnselectedDueToLimit || undefined}
+                                onFocus={(e) => {
+                                    // realçar foco sem depender de :focus-visible css
+                                    e.currentTarget.style.boxShadow = DesignTokens.shadows.md;
                                 }}
-                                onMouseLeave={(e) => {
-                                    if (!isSelected) {
-                                        e.currentTarget.style.borderColor = DesignTokens.colors.border;
-                                        e.currentTarget.style.backgroundColor = DesignTokens.colors.backgroundWhite;
-                                    }
+                                onBlur={(e) => {
+                                    e.currentTarget.style.boxShadow = isSelected ? DesignTokens.shadows.md : DesignTokens.shadows.sm;
                                 }}
                             >
                                 {/* Selected Indicator */}
@@ -255,7 +301,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
                                         {option.category}
                                     </span>
                                 )}
-                            </div>
+                            </button>
                         </AnimatedTransition>
                     );
                 })}
@@ -270,6 +316,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
                         color: DesignTokens.colors.textSecondary,
                         textAlign: 'center',
                     }}
+                    aria-live="polite"
                 >
                     {validationMessage.replace(
                         '{count}',
@@ -288,6 +335,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
                         color: DesignTokens.colors.primary,
                         textAlign: 'center',
                     }}
+                    aria-live="polite"
                 >
                     {localSelected.length} de {maxSelections} selecionados
                 </p>
