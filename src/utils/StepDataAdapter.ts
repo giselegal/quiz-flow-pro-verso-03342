@@ -82,14 +82,17 @@ export const adaptStepData = (
   const { source, editorMode = false } = options || {};
   // Se estiver no editor, SEMPRE usar 'merge' para preservar edições
   const mode: AdaptSourceMode = editorMode ? 'merge' : (source ?? 'merge');
-  const stepType = editableStep.type;
+  
+  // Extração de metadata e dados de produção
+  const metadata = extractMetadata(editableStep);
+  const productionData = getProductionStepData(editableStep.id);
+
+  // 🔒 Tipo canônico do step: prioriza produção (QUIZ_STEPS) e, como fallback, infere pelo número
+  const stepNumber = extractStepNumber(editableStep.id);
+  const stepType = (productionData?.type as StepType) || inferStepType(stepNumber);
   const defaults = STEP_DEFAULTS[stepType] || {};
   
-  // Extrair metadata (pode estar em vários lugares)
-  const metadata = extractMetadata(editableStep);
-  
-  // Buscar dados de produção se disponível
-  const productionData = getProductionStepData(editableStep.id);
+  // Observação: ignoramos editableStep.type caso divirja do canônico
   
   // Se solicitado, usar apenas dados canônicos de produção + defaults (ignora metadata do editor)
   if (mode === 'production-only') {
@@ -149,6 +152,21 @@ export const adaptStepData = (
     continueButtonText: metadata.continueButtonText || productionData?.continueButtonText,
     duration: metadata.duration || productionData?.duration || defaults.duration,
   };
+
+  // 🔒 CANONICALIZAÇÃO PARA PERGUNTAS
+  // Para garantir que os dados das questões venham SEMPRE da fonte canônica (quizSteps.ts),
+  // sobrescrevemos campos críticos quando disponíveis em produção.
+  if (stepType === 'question' || stepType === 'strategic-question') {
+    if (productionData) {
+      adapted.questionText = productionData.questionText || adapted.questionText;
+      adapted.options = productionData.options || adapted.options || [];
+      if (typeof productionData.requiredSelections !== 'undefined') {
+        adapted.requiredSelections = productionData.requiredSelections;
+      }
+      // Mantém numeração oficial se existir
+      adapted.questionNumber = productionData.questionNumber || adapted.questionNumber;
+    }
+  }
   
   // Validação pós-adaptação
   validateAdaptedData(adapted);
