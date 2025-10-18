@@ -16,10 +16,11 @@ interface QuizQuestionHeaderRendererProps extends BlockRendererCommonProps {
 
 const QuizQuestionHeaderBlock: React.FC<QuizQuestionHeaderRendererProps> = ({ block, isSelected, isEditable, onSelect, onOpenProperties }) => {
     const props = block.properties || {};
-    const questionNumber: number = Number(props.questionNumber ?? 1);
-    const totalQuestions: number = Number(props.totalQuestions ?? 21);
-    const questionText: string = String(props.questionText ?? 'Qual é a sua preferência?');
-    const showProgress: boolean = Boolean(props.showProgress ?? true);
+    const content = (block as any).content || {};
+    const questionNumber: number = Number(props.questionNumber ?? content.currentQuestion ?? 1);
+    const totalQuestions: number = Number(props.totalQuestions ?? content.totalQuestions ?? 21);
+    const questionText: string = String(props.questionText ?? content.questionText ?? 'Qual é a sua preferência?');
+    const showProgress: boolean = Boolean(props.showProgress ?? content.showProgress ?? true);
 
     return (
         <SelectableBlock

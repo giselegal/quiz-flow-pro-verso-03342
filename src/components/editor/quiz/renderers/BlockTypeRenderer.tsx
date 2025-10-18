@@ -19,6 +19,8 @@ import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
 import PricingInlineBlock from '@/components/editor/blocks/PricingInlineBlock';
 import QuizOfferHeroBlock from '@/components/editor/blocks/QuizOfferHeroBlock';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
+// Blocos atômicos específicos usados no Step 01
+import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
 
 export interface BlockRendererProps {
     block: Block;
@@ -56,6 +58,27 @@ const GenericBlock: React.FC<BlockRendererProps> = ({ block, isSelected, isEdita
 
 export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest }) => {
     switch (String(block.type)) {
+        // ===== INTRO (Step 01) =====
+        case 'intro-logo':
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="Intro • Logo"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    <IntroLogoBlock block={block as any} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />
+                </SelectableBlock>
+            );
+        case 'intro-form':
+            // Alias direto para o bloco de input de formulário
+            return <FormInputBlock block={block} {...rest} />;
+        // ===== HEADER/TÍTULO GENÉRICO =====
+        case 'heading-inline':
+            return <TextInlineBlock block={block} {...rest} />;
         case 'quiz-question-header':
         case 'question-header':
             return <QuizQuestionHeaderBlock block={block} {...rest} />;

@@ -9,9 +9,10 @@ interface FormInputBlockProps extends BlockRendererCommonProps {
 
 const FormInputBlock: React.FC<FormInputBlockProps> = ({ block, isSelected, isEditable, onSelect, onOpenProperties, contextData }) => {
     const props = block.properties || {};
-    const label = props.label || 'Como posso te chamar?';
-    const placeholder = props.placeholder || 'Digite seu primeiro nome aqui...';
-    const buttonText = props.buttonText || 'Continuar';
+    const content = (block as any).content || {};
+    const label = props.label || content.nameLabel || content.questionText || 'Como posso te chamar?';
+    const placeholder = props.placeholder || content.namePlaceholder || 'Digite seu primeiro nome aqui...';
+    const buttonText = props.buttonText || content.submitText || 'Continuar';
     const onNameSubmit: ((name: string) => void) | undefined = contextData?.onNameSubmit;
 
     const inputRef = React.useRef<HTMLInputElement | null>(null);

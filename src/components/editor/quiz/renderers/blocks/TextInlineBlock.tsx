@@ -10,9 +10,9 @@ interface TextInlineBlockProps extends BlockRendererCommonProps {
 
 const TextInlineBlock: React.FC<TextInlineBlockProps> = ({ block, isSelected, isEditable, onSelect, onOpenProperties }) => {
     const props = block.properties || {};
-    const content: string = props.content || block.content?.text || '';
+    const contentText: string = props.content || (block as any).content?.text || '';
     const size: string = props.size || 'h2';
-    const align: 'left' | 'center' | 'right' | 'justify' = props.align || 'center';
+    const align: 'left' | 'center' | 'right' | 'justify' = (props.textAlign || props.align || 'center') as any;
     const color: string = props.color || '#432818';
 
     // Mapear size para classes tailwind simples
@@ -33,7 +33,7 @@ const TextInlineBlock: React.FC<TextInlineBlockProps> = ({ block, isSelected, is
                     className={`${sizeClass} font-semibold text-${align}`}
                     style={{ color, lineHeight: 1.2 }}
                 >
-                    <span dangerouslySetInnerHTML={{ __html: content }} />
+                    <span dangerouslySetInnerHTML={{ __html: contentText }} />
                 </div>
             </div>
         </SelectableBlock>
