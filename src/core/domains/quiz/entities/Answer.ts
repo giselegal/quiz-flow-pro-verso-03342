@@ -38,6 +38,18 @@ export class Answer {
     );
   }
 
+  /**
+   * Valida a resposta contra as regras de uma pergunta específica
+   * Retorna o mesmo contrato de Question.validateAnswer
+   */
+  validateAgainst(question: import('./Question').Question): { isValid: boolean; message?: string } {
+    try {
+      return question.validateAnswer(this.value as any);
+    } catch {
+      return { isValid: false, message: 'Falha ao validar resposta' };
+    }
+  }
+
   // 🔍 Business Rules - Answer Analysis
   getWeight(): number {
     // Se a resposta é um array de strings (múltipla escolha)
@@ -99,6 +111,22 @@ export class Answer {
     return this.value === otherAnswer.value;
   }
 
+  /**
+   * Compara valores de forma semântica (ordem-insensível para arrays, case-insensitive para strings)
+   */
+  equalsSemantically(other: Answer): boolean {
+    if (Array.isArray(this.value) && Array.isArray(other.value)) {
+      const a = [...this.value].map(String).sort();
+      const b = [...other.value].map(String).sort();
+      if (a.length !== b.length) return false;
+      return a.every((v, i) => v === b[i]);
+    }
+    if (typeof this.value === 'string' && typeof other.value === 'string') {
+      return this.value.trim().toLowerCase() === other.value.trim().toLowerCase();
+    }
+    return this.value === other.value;
+  }
+
   // 🔍 Business Rules - Answer Transformation
   normalizeValue(): string {
     if (Array.isArray(this.value)) {
@@ -110,6 +138,25 @@ export class Answer {
     }
     
     return String(this.value).toLowerCase().trim();
+  }
+
+  /**
+   * Normaliza para um array de strings (útil para scoring e comparação), mantendo ordem estável
+   */
+  normalizeToArray(): string[] {
+    if (Array.isArray(this.value)) return [...this.value].map(String);
+    if (typeof this.value === 'boolean') return [this.value ? 'true' : 'false'];
+    return [String(this.value)];
+  }
+
+  /**
+   * Indica se a resposta está vazia/inválida semanticamente
+   */
+  isEmpty(): boolean {
+    if (this.value === null || this.value === undefined) return true;
+    if (typeof this.value === 'string') return this.value.trim().length === 0;
+    if (Array.isArray(this.value)) return this.value.length === 0;
+    return false;
   }
 
   // 🔍 Business Rules - Answer Categorization
@@ -148,6 +195,54 @@ export class Answer {
     if (Array.isArray(this.value) && this.value.length === 0) return false;
     
     return true;
+  }
+
+  /**
+   * Calcula score ponderado com base nos pesos de opções de uma Question
+   * - Para múltipla escolha: soma dos pesos
+   * - Para escolha única: peso da opção
+   * - Fallback: se peso ausente, usa 1 quando a opção existe (padrão) ou 0 se configuredFallback = 'zero'
+   */
+  getWeightedScore(question: import('./Question').Question, configuredFallback: 'one' | 'zero' = 'one'): number {
+    try {
+      const valueArray = this.normalizeToArray();
+      const options = (question.options || []) as Array<{ id: string; weight?: number }>;
+      const fallback = configuredFallback === 'one' ? 1 : 0;
+      let total = 0;
+      for (const v of valueArray) {
+        const opt = options.find(o => String(o.id) === v);
+        if (opt) {
+          const w = typeof opt.weight === 'number' ? opt.weight! : fallback;
+          total += Number(w) || 0;
+        }
+      }
+      return total;
+    } catch {
+      return 0;
+    }
+  }
+
+  /**
+   * Estrutura padronizada para eventos de analytics desta resposta
+   */
+  toAnalytics(): Record<string, any> {
+    return {
+      event: 'answer_submitted',
+      answerId: this.id,
+      questionId: this.questionId,
+      participantId: this.participantId,
+      value: this.value,
+      valueType: this.getAnswerType(),
+      normalized: this.normalizeValue(),
+      timeSpent: this.metadata.timeSpent,
+      submittedAt: this.metadata.submittedAt?.toISOString?.() || this.metadata.submittedAt,
+      attemptNumber: this.metadata.attemptNumber,
+      device: this.metadata.deviceInfo ? {
+        userAgent: this.metadata.deviceInfo.userAgent,
+        viewport: this.metadata.deviceInfo.viewport,
+        timestamp: this.metadata.deviceInfo.timestamp?.toISOString?.() || this.metadata.deviceInfo.timestamp,
+      } : undefined,
+    };
   }
 
   // 🔍 Utility Methods
