@@ -38,8 +38,10 @@ export function computeResult({ answers, steps = QUIZ_STEPS, scoring }: ComputeR
 
     let totalAnswers = 0;
 
-    // Pesos opcionais por estilo
+    // Pesos opcionais por estilo (baseline atual)
     const weights: Record<string, number> | undefined = (scoring as any)?.weights;
+    // Pesos por opção (override mais específico): scoring.optionWeights[stepId][optionId] = weight
+    const optionWeights: Record<string, Record<string, number>> | undefined = (scoring as any)?.optionWeights;
 
     for (const [stepId, selections] of Object.entries(answers)) {
         const step = (steps as any)[stepId];
@@ -49,7 +51,12 @@ export function computeResult({ answers, steps = QUIZ_STEPS, scoring }: ComputeR
             // Mantemos ids internos SEM acento para consistência, convertendo caso venha acentuado
             const internalId = scores[rawOptId] !== undefined ? rawOptId : toUnaccentedStyleId(rawOptId);
             if (scores[internalId] === undefined) continue; // ignora ids não reconhecidos
-            const w = (weights && typeof weights[internalId] === 'number') ? weights[internalId] : 1;
+            // 1) Peso específico por opção, se configurado
+            const wByOption = optionWeights?.[stepId]?.[rawOptId];
+            // 2) Peso por estilo (legacy/atual) se não houver peso específico
+            const wByStyle = (weights && typeof weights[internalId] === 'number') ? weights[internalId] : undefined;
+            // 3) Fallback: 1 ponto
+            const w = typeof wByOption === 'number' ? wByOption : (typeof wByStyle === 'number' ? wByStyle : 1);
             scores[internalId] += w;
             totalAnswers += 1;
         }
