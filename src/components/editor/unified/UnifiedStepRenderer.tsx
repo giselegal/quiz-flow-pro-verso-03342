@@ -130,7 +130,8 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
         // 🆕 V3.0: Verificar se step tem template v3.0
         console.log('🔍 [UnifiedStepRenderer] Debug:', { stepId, mode });
 
-        if (mode === 'production') {
+        const v3Enabled = (import.meta as any)?.env?.VITE_ENABLE_V3_RENDER === 'true';
+        if (mode === 'production' && v3Enabled) {
             try {
                 const template = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
                 console.log('🔍 [Template Check]:', {

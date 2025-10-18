@@ -72,8 +72,10 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
     if (isLoadingTemplate) {
         return (
             <div className="min-h-screen bg-[#fefefe] flex items-center justify-center">
-                <div className="text-center">
-                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#deac6d] mb-4"></div>
+                <div className="text-center px-4">
+                    {/* Heading presente durante o loading para estabilizar E2E que aguarda um <h1> */}
+                    <h1 className="text-2xl font-semibold text-[#432818] mb-3">Carregando quiz…</h1>
+                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#deac6d] mb-4" aria-label="Carregando" />
                     <p className="text-[#5b4135] text-lg">Carregando template...</p>
                     {useJsonTemplates && (
                         <p className="text-[#5b4135]/60 text-sm mt-2">Usando Templates JSON</p>
