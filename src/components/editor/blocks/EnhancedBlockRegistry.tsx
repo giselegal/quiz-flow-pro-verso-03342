@@ -57,6 +57,13 @@ import TransitionTextBlock from '@/components/editor/blocks/atomic/TransitionTex
 import TransitionProgressBlock from '@/components/editor/blocks/atomic/TransitionProgressBlock';
 import TransitionMessageBlock from '@/components/editor/blocks/atomic/TransitionMessageBlock';
 
+// Imports estáticos dos blocos atômicos de intro (Step 1)
+import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
+import IntroTitleBlock from '@/components/editor/blocks/atomic/IntroTitleBlock';
+import IntroImageBlock from '@/components/editor/blocks/atomic/IntroImageBlock';
+import IntroDescriptionBlock from '@/components/editor/blocks/atomic/IntroDescriptionBlock';
+import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
+
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     // ============================================================================
@@ -87,6 +94,13 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'button-inline': ButtonInlineBlock,
     'legal-notice': LegalNoticeInlineBlock,
     'legal-notice-inline': LegalNoticeInlineBlock,
+
+    // ✅ STEP 01 - BLOCOS ATÔMICOS DE INTRO (100% Modulares)
+    'intro-logo': IntroLogoBlock,
+    'intro-title': IntroTitleBlock,
+    'intro-image': IntroImageBlock,
+    'intro-description': IntroDescriptionBlock,
+    'intro-form': IntroFormBlock,
 
     // ✅ STEPS 02-11 - PERGUNTAS DO QUIZ
     'quiz-start-page-inline': QuizIntroHeaderBlock,

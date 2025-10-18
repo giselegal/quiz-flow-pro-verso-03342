@@ -6,9 +6,9 @@
  */
 
 export const BLOCK_TYPE_MAP: Record<string, string> = {
-    // Intro blocks
-    'intro-hero': 'container',
-    'welcome-form': 'form-container',
+    // Intro blocks - agora mapeados para blocos atômicos específicos
+    'intro-hero': 'intro-logo', // Mapeia para o componente de logo
+    'welcome-form': 'intro-form', // Mapeia para o componente de formulário
 
     // Question blocks
     'question-hero': 'quiz-question-header',
