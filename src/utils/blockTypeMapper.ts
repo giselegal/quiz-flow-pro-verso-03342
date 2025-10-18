@@ -6,21 +6,35 @@
  */
 
 export const BLOCK_TYPE_MAP: Record<string, string> = {
+    // ====== V3 SECTIONS → BLOCK TYPES (MAPEAMENTO COMPLETO) ======
     // Intro blocks - agora mapeados para blocos atômicos específicos
     'intro-hero': 'intro-logo', // Mapeia para o componente de logo
     'welcome-form': 'intro-form', // Mapeia para o componente de formulário
 
     // Question blocks
     'question-hero': 'quiz-question-header',
+    'question-title': 'heading-inline', // Título separado da questão (novo section v3)
     'options-grid': 'options-grid', // já existe
-    // Título separado da questão (novo section v3)
-    'question-title': 'heading-inline',
+
+    // Common elements
+    'text-inline': 'text-inline', // Mapeamento identidade
+    'CTAButton': 'button-inline', // CTA genérico usado em múltiplos steps
 
     // Transition blocks
     'transition-hero': 'transition-hero', // já existe no registry
     'transition-content': 'text',
 
-    // Result blocks
+    // Result blocks (Step 20 sections → componentes)
+    'HeroSection': 'result-header',
+    'StyleProfileSection': 'result-characteristics',
+    'TransformationSection': 'benefits-list',
+    'MethodStepsSection': 'benefits-list', // ou criar 'method-steps' dedicado
+    'BonusSection': 'benefits-list',
+    'SocialProofSection': 'testimonials',
+    'OfferSection': 'offer-hero',
+    'GuaranteeSection': 'guarantee',
+
+    // Result blocks (legacy aliases)
     'result-header': 'result-header', // já existe no registry
     'result-content': 'text',
     'result-card': 'result-card', // container estilizado existente
@@ -31,14 +45,6 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
     'offer-cta': 'button',
 
     // ====== Step 20/21 aliases (v3 → editor registry) ======
-    // CTA principal da oferta
-    'CTAButton': 'cta-inline',
-
-    // Seções de prova social, benefícios e garantia
-    'BonusSection': 'benefits-list',
-    'SocialProofSection': 'testimonials',
-    'GuaranteeSection': 'guarantee',
-
     // Elementos de ancoragem de valor, segurança e urgência
     'ValueAnchor': 'value-anchoring',
     'SecurePurchase': 'secure-purchase',
@@ -50,13 +56,6 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
     'pricing-inline': 'pricing-inline',
     'pricing': 'pricing',
 
-    // ====== Mapeamentos adicionais do master JSON (step-20/21 e afins) ======
-    // Seções de alto nível personalizadas do template v3 consolidado
-    'HeroSection': 'result-header',
-    'StyleProfileSection': 'result-characteristics',
-    'TransformationSection': 'benefits-list',
-    // SocialProofSection / GuaranteeSection / BonusSection já mapeados acima
-    'OfferSection': 'offer-hero',
     // Aliases/variações em minúsculo
     'heroSection': 'result-hero',
     'styleProfileSection': 'result-characteristics',

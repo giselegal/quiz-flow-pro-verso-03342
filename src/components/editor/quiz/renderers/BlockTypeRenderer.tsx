@@ -59,6 +59,12 @@ const GenericBlock: React.FC<BlockRendererProps> = ({ block, isSelected, isEdita
 export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest }) => {
     switch (String(block.type)) {
         // ===== INTRO (Step 01) =====
+        case 'intro-hero':
+            // Template v3: intro-hero section → usar QuizIntroHeaderBlock
+            return <QuizIntroHeaderBlock block={block} {...rest} />;
+        case 'welcome-form':
+            // Template v3: welcome-form section → input com botão
+            return <FormInputBlock block={block} {...rest} />;
         case 'intro-logo':
             return (
                 <SelectableBlock
@@ -76,6 +82,16 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         case 'intro-form':
             // Alias direto para o bloco de input de formulário
             return <FormInputBlock block={block} {...rest} />;
+        // ===== QUESTIONS (Steps 02-18) =====
+        case 'question-title':
+            // Template v3: question-title section → heading
+            return <TextInlineBlock block={block} {...rest} />;
+        case 'question-hero':
+            // Template v3: question-hero section → header completo
+            return <QuizQuestionHeaderBlock block={block} {...rest} />;
+        case 'CTAButton':
+            // Template v3: CTAButton usado em várias etapas
+            return <ButtonInlineBlock block={block} {...rest} />;
         // ===== HEADER/TÍTULO GENÉRICO =====
         case 'heading-inline':
             return <TextInlineBlock block={block} {...rest} />;
@@ -102,7 +118,37 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         case 'quiz-navigation':
         case 'navigation':
             return <QuizNavigationBlock block={block} {...rest} />;
-        // ===== MAPEAMENTOS ESPECÍFICOS DE OFERTA =====
+        // ===== TRANSITION (Steps 12, 19) =====
+        case 'transition-hero':
+            // Template v3: transition-hero section → usar GenericBlock temporariamente
+            // TODO: criar TransitionHeroBlock dedicado ou lazy load TransitionHeroSection
+            return <GenericBlock block={block} {...rest} />;
+        // ===== RESULT (Step 20) =====
+        case 'HeroSection':
+            // Step 20: Hero do resultado → usar GenericBlock temporariamente
+            return <GenericBlock block={block} {...rest} />;
+        case 'StyleProfileSection':
+            // Step 20: Perfil de estilo → usar GenericBlock temporariamente
+            return <GenericBlock block={block} {...rest} />;
+        case 'TransformationSection':
+            // Step 20: Transformação → GenericBlock até criar componente dedicado
+            return <GenericBlock block={block} {...rest} />;
+        case 'MethodStepsSection':
+            // Step 20: Passos do método → usar GenericBlock temporariamente
+            return <GenericBlock block={block} {...rest} />;
+        case 'BonusSection':
+            // Step 20: Bônus → GenericBlock até criar componente dedicado
+            return <GenericBlock block={block} {...rest} />;
+        case 'SocialProofSection':
+            // Step 20: Prova social → GenericBlock até criar componente dedicado
+            return <GenericBlock block={block} {...rest} />;
+        case 'OfferSection':
+            // Step 20: Oferta → GenericBlock até criar componente dedicado
+            return <GenericBlock block={block} {...rest} />;
+        case 'GuaranteeSection':
+            // Step 20: Garantia → GenericBlock até criar componente dedicado
+            return <GenericBlock block={block} {...rest} />;
+        // ===== OFFER (Steps 20, 21) =====
         case 'quiz-offer-hero':
         case 'offer-hero':
             return (
