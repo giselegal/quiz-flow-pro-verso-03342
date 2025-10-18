@@ -26,6 +26,7 @@ import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/template
 import { useToast } from '@/hooks/use-toast';
 import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
+import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -433,17 +434,24 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         try {
             console.group(`🔍 [ensureStepLoaded] ${normalizedKey}`);
 
-            // 🔄 Tentar pré-carregar master JSON público uma vez
+            // 🔄 Tentar pré-carregar master JSON público uma vez (usa unifiedCache)
             let masterBlocks: Block[] | null = null;
             try {
                 if (typeof window !== 'undefined' && window.location) {
+                    const masterCacheKey = 'master:quiz21-complete.json';
                     if (!masterTemplateRef.current) {
-                        const resp = await fetch('/templates/quiz21-complete.json');
-                        if (resp.ok) {
-                            masterTemplateRef.current = await resp.json();
-                            console.log('✅ Master JSON carregado (quiz21-complete.json)');
+                        const cachedMaster = unifiedCache.get(masterCacheKey);
+                        if (cachedMaster) {
+                            masterTemplateRef.current = cachedMaster;
                         } else {
-                            console.warn('⚠️ Falha ao carregar master JSON:', resp.status);
+                            const resp = await fetch('/templates/quiz21-complete.json');
+                            if (resp.ok) {
+                                masterTemplateRef.current = await resp.json();
+                                unifiedCache.set(masterCacheKey, masterTemplateRef.current);
+                                console.log('✅ Master JSON carregado (quiz21-complete.json)');
+                            } else {
+                                console.warn('⚠️ Falha ao carregar master JSON:', resp.status);
+                            }
                         }
                     }
                     const master = masterTemplateRef.current;
@@ -457,6 +465,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         // Converter via util existente usando template mínimo
                         const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
                         masterBlocks = blockComponentsToBlocks(blockComponents);
+                        unifiedCache.set(`masterBlocks:${normalizedKey}`, masterBlocks);
                         console.log(`📦 Master JSON → ${normalizedKey}: ${masterBlocks.length} blocos`);
                     }
                 }
@@ -586,6 +595,17 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             autoLoadedRef.current.add(normalizedKey);
         }
     }, [state.currentStep]); // ✅ DEPS ESTÁVEIS: apenas currentStep
+
+    // 🚀 Pré-carregar step adjacente para reduzir latência ao navegar
+    useEffect(() => {
+        const next = state.currentStep + 1;
+        if (next <= 21) {
+            const t = setTimeout(() => {
+                ensureStepLoaded(next);
+            }, 500);
+            return () => clearTimeout(t);
+        }
+    }, [state.currentStep, ensureStepLoaded]);
 
     const loadDefaultTemplate = useCallback(() => {
         console.log('🎨 Loading default template');
