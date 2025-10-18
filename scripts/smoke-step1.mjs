@@ -2,8 +2,13 @@
 // Verifica se o campo de nome da etapa 1 aparece em /quiz
 
 import { chromium } from 'playwright';
+import { spawn } from 'node:child_process';
 
-const url = process.env.SMOKE_URL || 'http://localhost:8080/quiz';
+const DEFAULTS = {
+    primary: 'http://localhost:8080/quiz',
+    fallback: 'http://localhost:4173/quiz',
+};
+let url = process.env.SMOKE_URL || DEFAULTS.primary;
 
 const SELECTORS = [
     // IDs mais comuns
@@ -32,13 +37,45 @@ const SELECTORS = [
 
 const log = (...args) => console.log('[SMOKE-STEP1]', ...args);
 
+async function tryGoto(page, targetUrl, attempts = 1, label = 'goto') {
+    let lastErr = null;
+    for (let i = 0; i < attempts; i++) {
+        try {
+            await page.goto(targetUrl, { waitUntil: 'domcontentloaded' });
+            return true;
+        } catch (err) {
+            lastErr = err;
+            await page.waitForTimeout(300);
+        }
+    }
+    if (lastErr) log(`${label} falhou:`, lastErr.message || lastErr);
+    return false;
+}
+
 (async () => {
     const browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     const page = await browser.newPage();
     page.setDefaultTimeout(25000);
+    let serverProc = null;
     try {
         log('Abrindo', url);
-        await page.goto(url, { waitUntil: 'domcontentloaded' });
+        let ok = await tryGoto(page, url, 1, 'primeira tentativa');
+        if (!ok) {
+            // Se a URL principal falhar, tenta iniciar o preview server e usar fallback
+            if (!process.env.SMOKE_URL) {
+                try {
+                    log('Servidor não acessível. Iniciando preview server (npm run preview)...');
+                    serverProc = spawn('npm', ['run', 'preview'], { stdio: 'inherit', env: process.env });
+                } catch (spawnErr) {
+                    log('Falha ao iniciar preview server:', spawnErr?.message || spawnErr);
+                }
+                url = DEFAULTS.fallback;
+                // tenta várias vezes até o servidor subir
+                ok = await tryGoto(page, url, 20, 'tentando fallback 4173');
+            }
+        }
+        if (!ok) throw new Error(`Não foi possível acessar ${url}`);
+
         // aguarda render inicial e possível preload
         await page.waitForTimeout(1200);
 
@@ -90,7 +127,11 @@ const log = (...args) => console.log('[SMOKE-STEP1]', ...args);
         console.error('[SMOKE-STEP1] Erro:', err);
         process.exitCode = 1;
     } finally {
-        await page.close();
-        await browser.close();
+        try { await page.close(); } catch {}
+        try { await browser.close(); } catch {}
+        if (serverProc && !serverProc.killed) {
+            log('Encerrando preview server...');
+            try { serverProc.kill('SIGINT'); } catch {}
+        }
     }
 })();
