@@ -19,7 +19,7 @@
 import * as React from 'react';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState, useRef } from 'react';
 import { useUnifiedCRUD } from '@/contexts';
-import { Block, BlockType } from '@/types/editor';
+import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
