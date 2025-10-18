@@ -1,0 +1,104 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - banner [ref=e6]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - img [ref=e11]
+            - generic [ref=e13]: QuizFlow
+            - generic [ref=e14]: Pro
+          - generic [ref=e16]:
+            - button "Sign In" [ref=e17] [cursor=pointer]
+            - button "Start Free Trial" [ref=e18] [cursor=pointer]
+      - main [ref=e19]:
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - img [ref=e26]
+            - text: Plataforma de Quizzes Interativos
+          - heading "Crie Quizzes Interativos Que Convertem" [level=1] [ref=e28]:
+            - text: Crie
+            - generic [ref=e29]: Quizzes Interativos
+            - text: Que Convertem
+          - paragraph [ref=e30]: Transforme visitantes em clientes com quizzes personalizados e interativos. Design profissional, integração perfeita, resultados comprovados.
+          - generic [ref=e31]:
+            - button "Começar Teste Grátis" [ref=e32] [cursor=pointer]:
+              - img [ref=e33] [cursor=pointer]
+              - text: Começar Teste Grátis
+            - button "Ver Templates" [ref=e35] [cursor=pointer]:
+              - img [ref=e36] [cursor=pointer]
+              - text: Ver Templates
+          - generic [ref=e40]:
+            - generic [ref=e41]:
+              - img [ref=e42]
+              - generic [ref=e44]: 4.9/5 avaliação
+            - generic [ref=e45]:
+              - img [ref=e46]
+              - generic [ref=e51]: 10.000+ usuários
+            - generic [ref=e52]:
+              - img [ref=e53]
+              - generic [ref=e56]: 5 min configuração
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - heading "Confiado por Líderes da Indústria" [level=2] [ref=e60]
+            - paragraph [ref=e61]: Junte-se a milhares de empresas que transformaram seu engajamento de visitantes e taxas de conversão
+          - generic [ref=e62]:
+            - generic [ref=e64]:
+              - img [ref=e66]
+              - generic [ref=e70]: 15K+
+              - generic [ref=e71]: Quizzes Criados
+            - generic [ref=e73]:
+              - img [ref=e75]
+              - generic [ref=e78]: 94%
+              - generic [ref=e79]: Taxa de Conversão
+            - generic [ref=e81]:
+              - img [ref=e83]
+              - generic [ref=e85]: 2min
+              - generic [ref=e86]: Tempo de Configuração
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - heading "Tudo Que Você Precisa Para Ter Sucesso" [level=2] [ref=e90]
+            - paragraph [ref=e91]: Recursos poderosos projetados para ajudá-lo a criar, otimizar e escalar suas campanhas de quiz
+          - generic [ref=e92]:
+            - generic [ref=e94]:
+              - img [ref=e96]
+              - heading "Editor Visual" [level=3] [ref=e100]
+              - paragraph [ref=e101]: Interface intuitiva de arrastar e soltar para criar quizzes sem programação
+            - generic [ref=e103]:
+              - img [ref=e105]
+              - heading "Análises Avançadas" [level=3] [ref=e107]
+              - paragraph [ref=e108]: Métricas detalhadas de performance e rastreamento de conversão para otimização
+            - generic [ref=e110]:
+              - img [ref=e112]
+              - heading "Captura de Leads" [level=3] [ref=e117]
+              - paragraph [ref=e118]: Integração perfeita com CRM e ferramentas de automação de marketing
+            - generic [ref=e120]:
+              - img [ref=e122]
+              - heading "Templates Prontos" [level=3] [ref=e124]
+              - paragraph [ref=e125]: Biblioteca de designs profissionais com templates específicos por setor
+            - generic [ref=e127]:
+              - img [ref=e129]
+              - heading "Teste A/B" [level=3] [ref=e132]
+              - paragraph [ref=e133]: Teste diferentes versões para maximizar engajamento e conversões
+            - generic [ref=e135]:
+              - img [ref=e137]
+              - heading "Responsivo Mobile" [level=3] [ref=e140]
+              - paragraph [ref=e141]: Performance perfeita em todos os dispositivos e tamanhos de tela
+        - generic [ref=e143]:
+          - heading "Pronto Para Transformar Seu Negócio?" [level=2] [ref=e144]
+          - paragraph [ref=e145]: Junte-se a milhares de empresas já usando QuizFlow para aumentar engajamento e conversões
+          - generic [ref=e146]:
+            - button "Começar Teste Grátis" [ref=e147] [cursor=pointer]:
+              - img [ref=e148] [cursor=pointer]
+              - text: Começar Teste Grátis
+            - button "Falar com Vendas" [ref=e150] [cursor=pointer]:
+              - img [ref=e151] [cursor=pointer]
+              - text: Falar com Vendas
+      - contentinfo [ref=e153]:
+        - paragraph [ref=e155]: © 2024 QuizFlow. Todos os direitos reservados.
+    - region "Notifications (F8)":
+      - list
+  - generic [ref=e156]: 🔧 Modo Local Ativo - Configurações carregadas localmente devido a problemas de conexão
+```

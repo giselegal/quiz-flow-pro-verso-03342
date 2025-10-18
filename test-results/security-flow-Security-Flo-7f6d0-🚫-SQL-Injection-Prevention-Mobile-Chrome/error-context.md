@@ -1,0 +1,63 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - img [ref=e9]
+      - heading "404" [level=1] [ref=e11]
+      - paragraph [ref=e12]: Página não encontrada
+      - paragraph [ref=e13]: A página que você está procurando não existe ou foi movida.
+    - generic [ref=e15]:
+      - heading "Informações de Debug" [level=3] [ref=e16]
+      - generic [ref=e17]:
+        - paragraph [ref=e18]:
+          - strong [ref=e19]: "Rota atual:"
+          - text: /funnels/search
+        - paragraph [ref=e20]:
+          - strong [ref=e21]: "Timestamp:"
+          - text: 10/18/2025, 1:29:18 AM
+        - paragraph [ref=e22]:
+          - strong [ref=e23]: "User Agent:"
+          - text: Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 ...
+    - generic [ref=e25]:
+      - heading "Que tal visitar uma dessas páginas?" [level=2] [ref=e26]
+      - generic [ref=e27]:
+        - link "Página Inicial" [ref=e28] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e29] [cursor=pointer]:
+            - img [ref=e30] [cursor=pointer]
+            - generic [ref=e33] [cursor=pointer]: Página Inicial
+        - link "Dashboard Admin" [ref=e34] [cursor=pointer]:
+          - /url: /admin
+          - generic [ref=e35] [cursor=pointer]:
+            - img [ref=e36] [cursor=pointer]
+            - generic [ref=e39] [cursor=pointer]: Dashboard Admin
+        - link "Editor de Funis" [ref=e40] [cursor=pointer]:
+          - /url: /editor
+          - generic [ref=e41] [cursor=pointer]:
+            - img [ref=e42] [cursor=pointer]
+            - generic [ref=e46] [cursor=pointer]: Editor de Funis
+        - link "Templates" [ref=e47] [cursor=pointer]:
+          - /url: /templates
+          - generic [ref=e48] [cursor=pointer]:
+            - img [ref=e49] [cursor=pointer]
+            - generic [ref=e53] [cursor=pointer]: Templates
+    - generic [ref=e54]:
+      - button "Voltar" [ref=e55] [cursor=pointer]:
+        - img [ref=e56] [cursor=pointer]
+        - generic [ref=e58] [cursor=pointer]: Voltar
+      - link "Página Inicial" [ref=e59] [cursor=pointer]:
+        - /url: /
+        - button "Página Inicial" [ref=e60] [cursor=pointer]:
+          - img [ref=e61] [cursor=pointer]
+          - generic [ref=e64] [cursor=pointer]: Página Inicial
+    - generic [ref=e65]:
+      - paragraph [ref=e66]: Ainda com problemas? Entre em contato com o suporte.
+      - paragraph [ref=e67]:
+        - text: "Email:"
+        - link "suporte@empresa.com" [ref=e68] [cursor=pointer]:
+          - /url: mailto:suporte@empresa.com
+  - region "Notifications (F8)":
+    - list
+```
