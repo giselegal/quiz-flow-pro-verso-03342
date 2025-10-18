@@ -5,6 +5,15 @@
 import { expect, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
+import React from 'react';
+
+// Mock global de next-themes para evitar dependências de DOM complexas nos testes
+vi.mock('next-themes', () => {
+    return {
+        ThemeProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
+        useTheme: () => ({ theme: 'light', setTheme: () => {} })
+    };
+});
 
 // Estende os matchers do Vitest com os do jest-dom
 expect.extend(matchers);
