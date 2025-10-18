@@ -81,10 +81,17 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
   const isPreviewMode = mode === 'preview';
   const { ui, togglePropertiesPanel } = useGlobalUI();
 
+  // ✅ ORDENAR BLOCOS ANTES DE ADAPTAR - Fix para renderização fora de ordem
+  const sortedStep = useMemo(() => {
+    if (!step?.blocks || !Array.isArray(step.blocks)) return step;
+    const sortedBlocks = [...step.blocks].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    return { ...step, blocks: sortedBlocks };
+  }, [step]);
+
   // ✅ FASE 4: Memoizar adaptStepData para evitar recálculos desnecessários
   const stepData = useMemo(() => {
-    return adaptStepData(step, { source: 'merge', editorMode: isEditMode });
-  }, [step, mode, isEditMode]);
+    return adaptStepData(sortedStep, { source: 'merge', editorMode: isEditMode });
+  }, [sortedStep, mode, isEditMode]);
 
   // Helper: extrair respostas salvas no preview (answers_<stepId> => string[])
   const getPreviewAnswers = useCallback((): Record<string, string[]> => {

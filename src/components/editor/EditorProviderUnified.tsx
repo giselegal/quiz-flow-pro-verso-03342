@@ -462,7 +462,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.warn('⚠️ Erro ao ler unifiedCache (step blocks):', e);
             }
 
-            // �🔄 Tentar pré-carregar master JSON público uma vez (usa unifiedCache)
+            // 🔄 Tentar pré-carregar master JSON público uma vez (usa unifiedCache)
+            // ✅ RETRY COM EXPONENTIAL BACKOFF - Fix para falhas de rede
             let masterBlocks: Block[] | null = null;
             try {
                 if (typeof window !== 'undefined' && window.location) {
@@ -472,13 +473,33 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         if (cachedMaster) {
                             masterTemplateRef.current = cachedMaster;
                         } else {
-                            const resp = await fetch('/templates/quiz21-complete.json');
-                            if (resp.ok) {
-                                masterTemplateRef.current = await resp.json();
-                                unifiedCache.set(masterCacheKey, masterTemplateRef.current);
-                                console.log('✅ Master JSON carregado (quiz21-complete.json)');
-                            } else {
-                                console.warn('⚠️ Falha ao carregar master JSON:', resp.status);
+                            // ✅ RETRY LOGIC: 3 tentativas com backoff exponencial
+                            let lastError: any = null;
+                            for (let attempt = 0; attempt < 3; attempt++) {
+                                try {
+                                    const resp = await fetch('/templates/quiz21-complete.json', {
+                                        cache: 'force-cache' // Use browser cache when available
+                                    });
+                                    if (resp.ok) {
+                                        masterTemplateRef.current = await resp.json();
+                                        unifiedCache.set(masterCacheKey, masterTemplateRef.current);
+                                        console.log(`✅ Master JSON carregado (tentativa ${attempt + 1})`);
+                                        break;
+                                    } else {
+                                        lastError = new Error(`HTTP ${resp.status}`);
+                                        console.warn(`⚠️ Tentativa ${attempt + 1}/3 falhou:`, resp.status);
+                                    }
+                                } catch (err) {
+                                    lastError = err;
+                                    console.warn(`⚠️ Tentativa ${attempt + 1}/3 erro de rede:`, err);
+                                }
+                                // Exponential backoff: 200ms, 400ms, 800ms
+                                if (attempt < 2) {
+                                    await new Promise(resolve => setTimeout(resolve, 200 * Math.pow(2, attempt)));
+                                }
+                            }
+                            if (!masterTemplateRef.current) {
+                                console.error('❌ Falha ao carregar master JSON após 3 tentativas:', lastError);
                             }
                         }
                     }

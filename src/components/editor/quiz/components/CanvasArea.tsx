@@ -78,7 +78,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         const roots = rawBlocks.filter((b: any) => !('parentId' in b) || !b.parentId);
         return roots.sort((a: any, b: any) => (a?.order ?? 0) - (b?.order ?? 0));
     }, [rawBlocks]);
-    const virtualizationEnabled = (rawBlocks?.length || 0) >= 60 && (activeId == null);
+    // 🚨 TEMPORARIAMENTE DESABILITADO - Causing "invisible steps" issue
+    const virtualizationEnabled = false; // (rawBlocks?.length || 0) >= 60 && (activeId == null);
     const {
         visible: vVisible,
         topSpacer: vTopSpacer,
@@ -307,21 +308,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 </>
                             ) : (
                                 // 🎯 WYSIWYG Real: Mesmo componente, totalmente interativo
-                                <Suspense fallback={
-                                    <div className="flex items-center justify-center py-8">
-                                        <div className="text-sm text-muted-foreground">Carregando preview...</div>
-                                    </div>
-                                }>
-                                    <UnifiedStepRenderer
-                                        step={{
-                                            ...migratedStep,
-                                            blocks: stepBlocks
-                                        } as any}
-                                        mode="preview"
-                                        sessionData={previewSessionData}
-                                        onUpdateSessionData={updatePreviewSessionData}
-                                    />
-                                </Suspense>
+                                // ✅ SUSPENSE REMOVIDO - lazy() components já têm Suspense interno
+                                <UnifiedStepRenderer
+                                    step={{
+                                        ...migratedStep,
+                                        blocks: stepBlocks
+                                    } as any}
+                                    mode="preview"
+                                    sessionData={previewSessionData}
+                                    onUpdateSessionData={updatePreviewSessionData}
+                                />
                             )}
                         </CardContent>
                     </Card>
