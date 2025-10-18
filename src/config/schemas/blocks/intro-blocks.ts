@@ -34,6 +34,17 @@ export const introDescriptionSchema = templates
   .version('2.0.0')
   .build();
 
+export const introHeroSchema = templates
+  .full('intro-hero', 'Intro • Hero')
+  .category('intro')
+  .icon('Sparkles')
+  .addField(titleField('content'))
+  .addField(subtitleField('content'))
+  .addFields(...imageFields('content'))
+  .addFields(...buttonFields('content'))
+  .version('2.0.0')
+  .build();
+
 export const introFormSchema = templates
   .full('intro-form', 'Intro • Formulário')
   .category('intro')

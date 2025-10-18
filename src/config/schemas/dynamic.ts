@@ -121,6 +121,9 @@ export function initializeSchemaRegistry(): void {
   registerSchema('options-grid', () => 
     import('./blocks/options-grid').then(m => m.optionsGridSchema)
   );
+  registerSchema('text-inline', () => 
+    import('./blocks/text-inline').then(m => m.textInlineSchema)
+  );
   
   registerSchema('urgency-timer-inline', () => 
     import('./blocks/urgency-timer-inline').then(m => m.urgencyTimerInlineSchema)
@@ -132,6 +135,7 @@ export function initializeSchemaRegistry(): void {
   registerSchema('intro-image', () => import('./blocks/intro-blocks').then(m => m.introImageSchema));
   registerSchema('intro-description', () => import('./blocks/intro-blocks').then(m => m.introDescriptionSchema));
   registerSchema('intro-form', () => import('./blocks/intro-blocks').then(m => m.introFormSchema));
+  registerSchema('intro-hero', () => import('./blocks/intro-blocks').then(m => m.introHeroSchema));
 
   // NEW: Question blocks
   registerSchema('question-hero', () => 
@@ -181,6 +185,17 @@ export function initializeSchemaRegistry(): void {
   registerSchema('input-field', () => import('./blocks/form-and-navigation').then(m => m.formInputSchema));
   registerSchema('form-input', () => import('./blocks/form-and-navigation').then(m => m.formInputSchema));
   registerSchema('quiz-navigation', () => import('./blocks/form-and-navigation').then(m => m.quizNavigationSchema));
+  registerSchema('navigation', () => import('./blocks/form-and-navigation').then(m => m.quizNavigationSchema));
+  registerSchema('image-display-inline', () => import('./blocks/image').then(m => m.imageSchema));
+  registerSchema('image-inline', () => import('./blocks/image').then(m => m.imageSchema));
+  registerSchema('button-inline', () => import('./blocks/button').then(m => m.buttonSchema));
+  registerSchema('CTAButton', () => import('./blocks/button').then(m => m.buttonSchema));
+  registerSchema('quiz-options', () => import('./blocks/options-grid').then(m => m.optionsGridSchema));
+  registerSchema('quiz-intro-header', () => import('./blocks/intro-blocks').then(m => m.introHeroSchema));
+  registerSchema('quiz-offer-hero', () => import('./blocks/offer-blocks').then(m => m.offerHeroSchema));
+  registerSchema('offer.urgency', () => import('./blocks/urgency-timer-inline').then(m => m.urgencyTimerInlineSchema));
+  registerSchema('offer.core', () => import('./blocks/button').then(m => m.buttonSchema));
+  registerSchema('conversion', () => import('./blocks/button').then(m => m.buttonSchema));
 
   // TODO: Adicionar mais schemas conforme criados
   // registerSchema('text', () => import('./blocks/text').then(m => m.textSchema));
