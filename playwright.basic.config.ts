@@ -30,4 +30,12 @@ export default defineConfig({
             use: { ...devices['Desktop Chrome'] },
         },
     ],
+
+    // Inicia a stack de desenvolvimento (backend + Vite + redirect) antes dos testes
+    webServer: {
+        command: 'npm run dev:stack:wait',
+        url: 'http://localhost:5173',
+        reuseExistingServer: !process.env.CI,
+        timeout: 60000,
+    },
 });
