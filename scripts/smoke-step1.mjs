@@ -3,7 +3,7 @@
 
 import { chromium } from 'playwright';
 
-const url = process.env.SMOKE_URL || 'http://localhost:5173/quiz';
+const url = process.env.SMOKE_URL || 'http://localhost:8080/quiz';
 
 const SELECTORS = [
     // IDs mais comuns
@@ -33,7 +33,7 @@ const SELECTORS = [
 const log = (...args) => console.log('[SMOKE-STEP1]', ...args);
 
 (async () => {
-    const browser = await chromium.launch({ headless: true });
+    const browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     const page = await browser.newPage();
     page.setDefaultTimeout(25000);
     try {
