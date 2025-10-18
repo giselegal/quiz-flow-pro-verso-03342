@@ -127,11 +127,11 @@ export function initializeSchemaRegistry(): void {
   );
 
   // NEW: Intro blocks (já existentes em outro módulo, manter quando forem criados)
-  // registerSchema('intro-logo', () => import('./blocks/intro-blocks').then(m => m.introLogoSchema));
-  // registerSchema('intro-title', () => import('./blocks/intro-blocks').then(m => m.introTitleSchema));
-  // registerSchema('intro-image', () => import('./blocks/intro-blocks').then(m => m.introImageSchema));
-  // registerSchema('intro-description', () => import('./blocks/intro-blocks').then(m => m.introDescriptionSchema));
-  // registerSchema('intro-form', () => import('./blocks/intro-blocks').then(m => m.introFormSchema));
+  registerSchema('intro-logo', () => import('./blocks/intro-blocks').then(m => m.introLogoSchema));
+  registerSchema('intro-title', () => import('./blocks/intro-blocks').then(m => m.introTitleSchema));
+  registerSchema('intro-image', () => import('./blocks/intro-blocks').then(m => m.introImageSchema));
+  registerSchema('intro-description', () => import('./blocks/intro-blocks').then(m => m.introDescriptionSchema));
+  registerSchema('intro-form', () => import('./blocks/intro-blocks').then(m => m.introFormSchema));
 
   // NEW: Question blocks
   registerSchema('question-hero', () => 
@@ -150,6 +150,9 @@ export function initializeSchemaRegistry(): void {
   );
   registerSchema('transition-description', () => 
     import('./blocks/transition-blocks').then(m => m.transitionDescriptionSchema)
+  );
+  registerSchema('transition-hero', () => 
+    import('./blocks/transition-blocks').then(m => m.transitionHeroSchema)
   );
 
   // NEW: Offer blocks
@@ -173,6 +176,11 @@ export function initializeSchemaRegistry(): void {
   registerSchema('step20-style-reveal', () => 
     import('./blocks/step20-blocks').then(m => m.step20StyleRevealSchema)
   );
+
+  // Aliases úteis para compatibilidade
+  registerSchema('input-field', () => import('./blocks/form-and-navigation').then(m => m.formInputSchema));
+  registerSchema('form-input', () => import('./blocks/form-and-navigation').then(m => m.formInputSchema));
+  registerSchema('quiz-navigation', () => import('./blocks/form-and-navigation').then(m => m.quizNavigationSchema));
 
   // TODO: Adicionar mais schemas conforme criados
   // registerSchema('text', () => import('./blocks/text').then(m => m.textSchema));

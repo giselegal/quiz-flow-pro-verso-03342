@@ -1,5 +1,5 @@
 import { templates } from '../base/builder';
-import { subtitleField, descriptionField, imageFields, typographyFields, colorFields, animationField, durationField } from '../base/presets';
+import { subtitleField, descriptionField, imageFields, typographyFields, colorFields, animationField, durationField, titleField } from '../base/presets';
 
 export const transitionSubtitleSchema = templates
   .full('transition-subtitle', 'Subtítulo de Transição')
@@ -27,5 +27,15 @@ export const transitionDescriptionSchema = templates
   .icon('AlignLeft')
   .addField(descriptionField('content'))
   .addFields(...typographyFields('style'))
+  .version('2.0.0')
+  .build();
+
+export const transitionHeroSchema = templates
+  .full('transition-hero', 'Hero de Transição')
+  .category('transition')
+  .icon('Image')
+  .addField(titleField('content'))
+  .addField(subtitleField('content'))
+  .addFields(...imageFields('content'))
   .version('2.0.0')
   .build();
