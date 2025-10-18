@@ -25,7 +25,28 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
 
     // Offer blocks
     'offer-hero': 'offer-hero', // já existe no registry
+    'offer-hero-section': 'offer-hero', // variação vista em backups
     'offer-cta': 'button',
+
+    // ====== Step 20/21 aliases (v3 → editor registry) ======
+    // CTA principal da oferta
+    'CTAButton': 'cta-inline',
+
+    // Seções de prova social, benefícios e garantia
+    'BonusSection': 'benefits-list',
+    'SocialProofSection': 'testimonials',
+    'GuaranteeSection': 'guarantee',
+
+    // Elementos de ancoragem de valor, segurança e urgência
+    'ValueAnchor': 'value-anchoring',
+    'SecurePurchase': 'secure-purchase',
+    'UrgencyTimer': 'urgency-timer-inline',
+
+    // Preços (variações)
+    'PricingInline': 'pricing-inline',
+    'Pricing': 'pricing-inline',
+    'pricing-inline': 'pricing-inline',
+    'pricing': 'pricing',
 };
 
 export function mapBlockType(templateType: string): string {
