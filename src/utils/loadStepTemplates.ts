@@ -11,11 +11,9 @@ import { Block } from '@/types/editor';
 import { templateCache } from '@/utils/TemplateCache';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import step12Template from '@/data/modularSteps/step-12.json';
+import step13Template from '@/data/modularSteps/step-13.json';
 import step19Template from '@/data/modularSteps/step-19.json';
 import step20Template from '@/data/modularSteps/step-20.json';
-import step01Template from '@/data/modularSteps/step-01.json';
-import step02Template from '@/data/modularSteps/step-02.json';
-import step13Template from '@/data/modularSteps/step-13.json';
 
 interface StepTemplate {
   id: string;
@@ -67,8 +65,6 @@ export function loadStepTemplate(stepId: string): Block[] {
   }
 
   const templates: Record<string, StepTemplate> = {
-    'step-01': step01Template as StepTemplate,
-    'step-02': step02Template as StepTemplate,
     'step-12': step12Template as StepTemplate,
     'step-13': step13Template as StepTemplate,
     'step-19': step19Template as StepTemplate,
@@ -105,8 +101,6 @@ export function loadStepTemplate(stepId: string): Block[] {
  */
 export function loadAllModularTemplates(): Record<string, Block[]> {
   return {
-    'step-01': loadStepTemplate('step-01'),
-    'step-02': loadStepTemplate('step-02'),
     'step-12': loadStepTemplate('step-12'),
     'step-13': loadStepTemplate('step-13'),
     'step-19': loadStepTemplate('step-19'),
@@ -127,10 +121,9 @@ export function hasStaticBlocksJSON(stepId: string): boolean {
  * MANTIDO para backward compatibility
  */
 export function hasModularTemplate(stepId: string): boolean {
-  // ⚠️ ATENÇÃO: O nome está semanticamente invertido!
-  // Steps 1-11,13-18 são os que TÊM modularidade (sections → blocks)
-  // Steps 12,19,20 são JSON estáticos (blocks direto)
-  return ['step-01', 'step-02', 'step-12', 'step-13', 'step-19', 'step-20'].includes(stepId);
+  // ✅ Apenas steps com JSON modular específico (12, 13, 19, 20)
+  // Steps 1-11, 14-18, 21 usam Master JSON ou TypeScript fallback
+  return ['step-12', 'step-13', 'step-19', 'step-20'].includes(stepId);
 }
 
 /**
