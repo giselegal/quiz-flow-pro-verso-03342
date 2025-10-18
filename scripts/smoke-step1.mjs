@@ -6,7 +6,9 @@ import { spawn } from 'node:child_process';
 
 const DEFAULTS = {
     primary: 'http://localhost:8080/quiz',
+    primaryAlts: ['http://localhost:8080/quiz-estilo', 'http://localhost:8080/'],
     fallback: 'http://localhost:4173/quiz',
+    fallbackAlts: ['http://localhost:4173/quiz-estilo', 'http://localhost:4173/'],
 };
 let url = process.env.SMOKE_URL || DEFAULTS.primary;
 
@@ -42,6 +44,8 @@ async function tryGoto(page, targetUrl, attempts = 1, label = 'goto') {
     for (let i = 0; i < attempts; i++) {
         try {
             await page.goto(targetUrl, { waitUntil: 'domcontentloaded' });
+            // aguardar redes ociosas para SPAs carregarem bundles
+            try { await page.waitForLoadState('networkidle', { timeout: 5000 }); } catch { }
             return true;
         } catch (err) {
             lastErr = err;
@@ -76,8 +80,23 @@ async function tryGoto(page, targetUrl, attempts = 1, label = 'goto') {
         }
         if (!ok) throw new Error(`Não foi possível acessar ${url}`);
 
-        // aguarda render inicial e possível preload
-        await page.waitForTimeout(1200);
+        // Se abriu mas não houve input, também tentamos URLs alternativas no mesmo host
+        const tryAlternatives = async () => {
+            const alts = (url.includes('4173') ? DEFAULTS.fallbackAlts : DEFAULTS.primaryAlts);
+            for (const alt of alts) {
+                if (alt === url) continue;
+                log('Tentando URL alternativa:', alt);
+                const okAlt = await tryGoto(page, alt, 2, 'alternativa');
+                if (okAlt) {
+                    url = alt;
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        // aguarda render inicial e possível preload/hidratação
+        await page.waitForTimeout(1600);
 
         let found = null;
         for (const sel of SELECTORS) {
@@ -104,6 +123,21 @@ async function tryGoto(page, targetUrl, attempts = 1, label = 'goto') {
         }
 
         if (!found) {
+            // tenta URLs alternativas do mesmo servidor
+            const moved = await tryAlternatives();
+            if (moved) {
+                await page.waitForTimeout(1200);
+                for (const sel of SELECTORS) {
+                    try {
+                        await page.waitForSelector(sel, { timeout: 2000, state: 'visible' });
+                        found = sel;
+                        break;
+                    } catch { }
+                }
+            }
+        }
+
+        if (!found) {
             // Debug: listar inputs visíveis na tela
             const inputs = await page.evaluate(() => {
                 const arr = Array.from(document.querySelectorAll('input'));
@@ -117,7 +151,13 @@ async function tryGoto(page, targetUrl, attempts = 1, label = 'goto') {
                     dataBlockType: el.closest('[data-block-type]')?.getAttribute('data-block-type') || null,
                 }));
             });
+            const loc = page.url();
+            const title = await page.title().catch(() => '');
+            const bodySnippet = await page.evaluate(() => document.body?.innerText?.slice(0, 600) || '').catch(() => '');
+            log('DEBUG URL:', loc);
+            log('DEBUG title:', title);
             log('DEBUG inputs visíveis:', inputs);
+            log('DEBUG body snippet:', bodySnippet);
         }
 
         const result = { ok: Boolean(found), selector: found };
@@ -127,11 +167,11 @@ async function tryGoto(page, targetUrl, attempts = 1, label = 'goto') {
         console.error('[SMOKE-STEP1] Erro:', err);
         process.exitCode = 1;
     } finally {
-        try { await page.close(); } catch {}
-        try { await browser.close(); } catch {}
+        try { await page.close(); } catch { }
+        try { await browser.close(); } catch { }
         if (serverProc && !serverProc.killed) {
             log('Encerrando preview server...');
-            try { serverProc.kill('SIGINT'); } catch {}
+            try { serverProc.kill('SIGINT'); } catch { }
         }
     }
 })();
