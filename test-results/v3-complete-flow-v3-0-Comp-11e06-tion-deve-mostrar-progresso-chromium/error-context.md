@@ -1,0 +1,42 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - main [ref=e5]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - img "Logo" [ref=e9]
+        - paragraph [ref=e13]: 5%
+      - generic [ref=e17]:
+        - heading "1 de 10" [level=2] [ref=e18]
+        - paragraph [ref=e19]: QUAL O SEU TIPO DE ROUPA FAVORITA?
+        - paragraph [ref=e20]: Selecione 3 opções (0/3)
+        - generic [ref=e21]:
+          - button "Conforto, leveza e praticidade no vestir Conforto, leveza e praticidade no vestir" [ref=e22] [cursor=pointer]:
+            - img "Conforto, leveza e praticidade no vestir" [ref=e24] [cursor=pointer]
+            - paragraph [ref=e25] [cursor=pointer]: Conforto, leveza e praticidade no vestir
+          - button "Discrição, caimento clássico e sobriedade Discrição, caimento clássico e sobriedade" [ref=e26] [cursor=pointer]:
+            - img "Discrição, caimento clássico e sobriedade" [ref=e28] [cursor=pointer]
+            - paragraph [ref=e29] [cursor=pointer]: Discrição, caimento clássico e sobriedade
+          - button "Praticidade com um toque de estilo atual Praticidade com um toque de estilo atual" [ref=e30] [cursor=pointer]:
+            - img "Praticidade com um toque de estilo atual" [ref=e32] [cursor=pointer]
+            - paragraph [ref=e33] [cursor=pointer]: Praticidade com um toque de estilo atual
+          - button "Elegância refinada, moderna e sem exageros Elegância refinada, moderna e sem exageros" [ref=e34] [cursor=pointer]:
+            - img "Elegância refinada, moderna e sem exageros" [ref=e36] [cursor=pointer]
+            - paragraph [ref=e37] [cursor=pointer]: Elegância refinada, moderna e sem exageros
+          - button "Delicadeza em tecidos suaves e fluidos Delicadeza em tecidos suaves e fluidos" [ref=e38] [cursor=pointer]:
+            - img "Delicadeza em tecidos suaves e fluidos" [ref=e40] [cursor=pointer]
+            - paragraph [ref=e41] [cursor=pointer]: Delicadeza em tecidos suaves e fluidos
+          - button "Sensualidade com destaque para o corpo Sensualidade com destaque para o corpo" [ref=e42] [cursor=pointer]:
+            - img "Sensualidade com destaque para o corpo" [ref=e44] [cursor=pointer]
+            - paragraph [ref=e45] [cursor=pointer]: Sensualidade com destaque para o corpo
+          - button "Impacto visual com peças estruturadas e assimétricas Impacto visual com peças estruturadas e assimétricas" [ref=e46] [cursor=pointer]:
+            - img "Impacto visual com peças estruturadas e assimétricas" [ref=e48] [cursor=pointer]
+            - paragraph [ref=e49] [cursor=pointer]: Impacto visual com peças estruturadas e assimétricas
+          - button "Mix criativo com formas ousadas e originais Mix criativo com formas ousadas e originais" [ref=e50] [cursor=pointer]:
+            - img "Mix criativo com formas ousadas e originais" [ref=e52] [cursor=pointer]
+            - paragraph [ref=e53] [cursor=pointer]: Mix criativo com formas ousadas e originais
+        - button "Selecionar e Continuar" [disabled] [ref=e55]
+  - region "Notifications (F8)":
+    - list
+```
