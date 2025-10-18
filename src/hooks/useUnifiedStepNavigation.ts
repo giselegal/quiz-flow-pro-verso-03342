@@ -46,11 +46,11 @@ export interface UseUnifiedStepNavigationReturn {
 
 export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
     const editorContext = useEditor({ optional: true });
-    
+
     if (!editorContext) {
         throw new Error('useUnifiedStepNavigation must be used within EditorProvider');
     }
-    
+
     const { state, actions } = editorContext;
     const { currentStep, stepBlocks, stepValidation, isLoading } = state;
     const { setCurrentStep } = actions;
@@ -66,13 +66,16 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
     }, [stepBlocks]);
 
     // IDs formatados
-    const currentStepId = useMemo(() => `step-${currentStep}`, [currentStep]);
+    // Normaliza IDs de step para formato step-XX (com zero à esquerda para 1–9)
+    const currentStepId = useMemo(() => `step-${currentStep.toString().padStart(2, '0')}`, [currentStep]);
     const activeStageId = currentStepId; // Alias para compatibilidade
 
     // Blocos do step atual
     const currentStepBlocks = useMemo(() => {
-        return stepBlocks[currentStepId] || [];
-    }, [stepBlocks, currentStepId]);
+        // Tenta chave normalizada e depois chave crua (sem padding) por compatibilidade
+        const rawId = `step-${currentStep}`;
+        return stepBlocks[currentStepId] || stepBlocks[rawId] || [];
+    }, [stepBlocks, currentStepId, currentStep]);
 
     // Estado de validação
     const isCurrentStepValid = useMemo(() => {
@@ -99,8 +102,10 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
                 console.log('🧭 useUnifiedStepNavigation: Navegando para step', {
                     from: currentStep,
                     to: targetStep,
-                    stepId: `step-${targetStep}`,
-                    hasBlocks: stepBlocks[`step-${targetStep}`]?.length || 0
+                    stepId: `step-${targetStep.toString().padStart(2, '0')}`,
+                    hasBlocks: (stepBlocks[`step-${targetStep.toString().padStart(2, '0')}`]?.length
+                        || stepBlocks[`step-${targetStep}`]?.length
+                        || 0)
                 });
             }
         }

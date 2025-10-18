@@ -301,6 +301,15 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // BLOCK OPERATIONS
     // ============================================================================
 
+    // Normaliza a chave do step para o formato step-XX
+    const normalizeStepKey = useCallback((stepKey: string): string => {
+        const match = String(stepKey).match(/^step-(\d{1,2})$/);
+        if (match) {
+            return `step-${parseInt(match[1], 10).toString().padStart(2, '0')}`;
+        }
+        return stepKey;
+    }, []);
+
     const updateStateWithHistory = useCallback((updater: (prev: EditorState) => EditorState) => {
         setState(prevState => {
             const newState = updater(prevState);
@@ -311,68 +320,73 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     }, [pushToHistory]);
 
     const addBlock = useCallback(async (stepKey: string, block: Block) => {
+        const key = normalizeStepKey(stepKey);
         updateStateWithHistory(prev => ({
             ...prev,
             stepBlocks: {
                 ...prev.stepBlocks,
-                [stepKey]: [...(prev.stepBlocks[stepKey] || []), block]
+                [key]: [...(prev.stepBlocks[key] || []), block]
             }
         }));
-    }, [updateStateWithHistory]);
+    }, [updateStateWithHistory, normalizeStepKey]);
 
     const addBlockAtIndex = useCallback(async (stepKey: string, block: Block, index: number) => {
+        const key = normalizeStepKey(stepKey);
         updateStateWithHistory(prev => {
-            const blocks = [...(prev.stepBlocks[stepKey] || [])];
+            const blocks = [...(prev.stepBlocks[key] || [])];
             blocks.splice(index, 0, block);
             return {
                 ...prev,
                 stepBlocks: {
                     ...prev.stepBlocks,
-                    [stepKey]: blocks
+                    [key]: blocks
                 }
             };
         });
-    }, [updateStateWithHistory]);
+    }, [updateStateWithHistory, normalizeStepKey]);
 
     const removeBlock = useCallback(async (stepKey: string, blockId: string) => {
+        const key = normalizeStepKey(stepKey);
         updateStateWithHistory(prev => ({
             ...prev,
             stepBlocks: {
                 ...prev.stepBlocks,
-                [stepKey]: (prev.stepBlocks[stepKey] || []).filter(block => block.id !== blockId)
+                [key]: (prev.stepBlocks[key] || []).filter(block => block.id !== blockId)
             },
             selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId
         }));
-    }, [updateStateWithHistory]);
+    }, [updateStateWithHistory, normalizeStepKey]);
 
     const reorderBlocks = useCallback(async (stepKey: string, oldIndex: number, newIndex: number) => {
+        const key = normalizeStepKey(stepKey);
         updateStateWithHistory(prev => {
-            const blocks = [...(prev.stepBlocks[stepKey] || [])];
+            const blocks = [...(prev.stepBlocks[key] || [])];
             const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
 
             return {
                 ...prev,
                 stepBlocks: {
                     ...prev.stepBlocks,
-                    [stepKey]: reorderedBlocks
+                    [key]: reorderedBlocks
                 }
             };
         });
-    }, [updateStateWithHistory]);
+    }, [updateStateWithHistory, normalizeStepKey]);
 
     const updateBlock = useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
+        const key = normalizeStepKey(stepKey);
         updateStateWithHistory(prev => ({
             ...prev,
             stepBlocks: {
                 ...prev.stepBlocks,
-                [stepKey]: (prev.stepBlocks[stepKey] || []).map(block =>
+                [key]: (prev.stepBlocks[key] || []).map(block =>
                     block.id === blockId
                         ? { ...block, ...updates }
                         : block
                 )
             }
         }));
-    }, [updateStateWithHistory]);
+    }, [updateStateWithHistory, normalizeStepKey]);
 
     // ============================================================================
     // NAVIGATION & STEP MANAGEMENT
@@ -397,30 +411,33 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const loadingStepsRef = useRef<Set<string>>(new Set());
 
     const ensureStepLoaded = useCallback(async (step: number | string) => {
-        const stepKey = typeof step === 'string' ? step : `step-${step}`;
+        // Normaliza a chave do step para o formato step-XX (zero à esquerda para 1–9)
+        const rawKey = typeof step === 'string' ? step : `step-${step}`;
+        const match = rawKey.match(/^step-(\d{1,2})$/);
+        const normalizedKey = match ? `step-${parseInt(match[1], 10).toString().padStart(2, '0')}` : rawKey;
 
         // ✅ FASE 3: Skip se já está carregando
-        if (loadingStepsRef.current.has(stepKey)) {
-            console.log(`⏭️ Skip: ${stepKey} já está sendo carregado`);
+        if (loadingStepsRef.current.has(normalizedKey)) {
+            console.log(`⏭️ Skip: ${normalizedKey} já está sendo carregado`);
             return;
         }
 
-        loadingStepsRef.current.add(stepKey);
+        loadingStepsRef.current.add(normalizedKey);
 
         try {
-            console.group(`🔍 [ensureStepLoaded] ${stepKey}`);
+            console.group(`🔍 [ensureStepLoaded] ${normalizedKey}`);
 
             // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
             setState(prev => {
-                console.log('hasModularTemplate:', hasModularTemplate(stepKey));
-                console.log('hasStaticBlocksJSON:', hasStaticBlocksJSON(stepKey));
-                console.log('existingBlocks:', prev.stepBlocks[stepKey]?.length || 0);
+                console.log('hasModularTemplate:', hasModularTemplate(normalizedKey));
+                console.log('hasStaticBlocksJSON:', hasStaticBlocksJSON(normalizedKey));
+                console.log('existingBlocks:', prev.stepBlocks[normalizedKey]?.length || 0);
                 console.log('loadingStepsRef:', Array.from(loadingStepsRef.current));
 
                 // ✅ PRIORIDADE 1: Templates JSON modulares (steps 12, 19, 20)
-                if (hasModularTemplate(stepKey)) {
-                    const existingBlocks = prev.stepBlocks[stepKey] || [];
-                    const modularBlocks = loadStepTemplate(stepKey);
+                if (hasModularTemplate(normalizedKey)) {
+                    const existingBlocks = prev.stepBlocks[normalizedKey] || [];
+                    const modularBlocks = loadStepTemplate(normalizedKey);
 
                     console.log('✅ Loaded modular blocks:', {
                         count: modularBlocks.length,
@@ -444,36 +461,38 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         ...prev,
                         stepBlocks: {
                             ...prev.stepBlocks,
-                            [stepKey]: modularBlocks
+                            [normalizedKey]: modularBlocks
                         }
                     };
                 }
 
                 // Se já tem blocos não-modulares, manter
-                if (prev.stepBlocks[stepKey]?.length > 0) {
+                if (prev.stepBlocks[normalizedKey]?.length > 0) {
                     console.log('⏭️ Skip: blocos legacy já carregados');
                     console.groupEnd();
                     return prev; // ✅ NO UPDATE
                 }
 
                 // Carregar template padrão para outros steps
-                const source: any = (QUIZ_STYLE_21_STEPS_TEMPLATE as any);
-                const templateSteps: any = source?.steps && typeof source.steps === 'object' ? source.steps : source;
-                const templateBlocks = templateSteps?.[stepKey] || [];
+                const template = QUIZ_STYLE_21_STEPS_TEMPLATE;
+                console.log('📝 Carregando template padrão (sections → blocks)');
 
-                console.log('📝 Carregando template padrão');
+                // Converte seções v3 para BlockComponent[] e depois para Block[]
+                const blockComponents = safeGetTemplateBlocks(normalizedKey, template);
+                const convertedBlocks = blockComponentsToBlocks(blockComponents);
+
                 console.groupEnd();
                 return {
                     ...prev,
                     stepBlocks: {
                         ...prev.stepBlocks,
-                        [stepKey]: Array.isArray(templateBlocks) ? templateBlocks : []
+                        [normalizedKey]: convertedBlocks
                     }
                 };
             });
         } finally {
             // ✅ FASE 3: Remover da lista de carregamento
-            loadingStepsRef.current.delete(stepKey);
+            loadingStepsRef.current.delete(normalizedKey);
         }
     }, []); // ✅ EMPTY DEPS AGORA É SEGURO com functional setState
 
@@ -481,13 +500,15 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const autoLoadedRef = useRef<Set<string>>(new Set());
 
     useEffect(() => {
-        const stepKey = `step-${state.currentStep}`;
+        // Normaliza a chave usada para auto-carregamento
+        const rawKey = `step-${state.currentStep}`;
+        const normalizedKey = `step-${state.currentStep.toString().padStart(2, '0')}`;
 
         // Skip se já foi auto-carregado
-        if (autoLoadedRef.current.has(stepKey)) return;
+        if (autoLoadedRef.current.has(normalizedKey)) return;
 
         // ✅ CORREÇÃO CRÍTICA: Verificar múltiplas condições de "vazio"
-        const stepBlocks = state.stepBlocks[stepKey];
+        const stepBlocks = state.stepBlocks[normalizedKey] ?? state.stepBlocks[rawKey];
         const needsLoad = (
             !stepBlocks ||                    // Não existe
             stepBlocks.length === 0 ||        // Array vazio
@@ -496,13 +517,13 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
         if (needsLoad) {
             const reason = !stepBlocks ? 'missing' : 'empty array';
-            console.log(`🔄 [EditorProvider] Auto-loading ${stepKey} (reason: ${reason})`);
+            console.log(`🔄 [EditorProvider] Auto-loading ${normalizedKey} (reason: ${reason})`);
             ensureStepLoaded(state.currentStep).finally(() => {
-                autoLoadedRef.current.add(stepKey);
+                autoLoadedRef.current.add(normalizedKey);
             });
         } else {
             // Marcar como carregado mesmo que já tenha blocos
-            autoLoadedRef.current.add(stepKey);
+            autoLoadedRef.current.add(normalizedKey);
         }
     }, [state.currentStep]); // ✅ DEPS ESTÁVEIS: apenas currentStep
 
