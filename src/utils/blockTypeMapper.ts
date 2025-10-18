@@ -7,9 +7,9 @@
 
 export const BLOCK_TYPE_MAP: Record<string, string> = {
     // ====== V3 SECTIONS → BLOCK TYPES (MAPEAMENTO COMPLETO) ======
-    // Intro blocks - agora mapeados para blocos atômicos específicos
-    'intro-hero': 'intro-logo', // Mapeia para o componente de logo
-    'welcome-form': 'intro-form', // Mapeia para o componente de formulário
+    // Intro blocks - mapear para componentes completos usados no editor/preview
+    'intro-hero': 'quiz-intro-header', // Usa header completo com suporte a título/subtítulo/descrição/imagem
+    'welcome-form': 'form-input', // Usa input padrão com suporte a content v3
 
     // Question blocks
     'question-hero': 'quiz-question-header',
@@ -18,7 +18,7 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
 
     // Common elements
     'text-inline': 'text-inline', // Mapeamento identidade
-    'CTAButton': 'button-inline', // CTA genérico usado em múltiplos steps
+    'CTAButton': 'cta-inline', // CTA genérico usado em múltiplos steps
 
     // Transition blocks
     'transition-hero': 'transition-hero', // já existe no registry

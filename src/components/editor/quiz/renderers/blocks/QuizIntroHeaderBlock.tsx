@@ -16,8 +16,16 @@ interface QuizIntroHeaderBlockProps extends BlockRendererCommonProps {
 
 const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({ block, isSelected, isEditable, onSelect, onOpenProperties }) => {
     const props = block.properties || {};
-    const logoUrl: string = props.logoUrl || props.url || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png';
-    const logoAlt: string = props.logoAlt || props.alt || 'Logo';
+    const content = (block as any).content || {};
+    const logoUrl: string = props.logoUrl || content.logoUrl || props.url || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png';
+    const logoAlt: string = props.logoAlt || content.logoAlt || props.alt || 'Logo';
+    const title: string | undefined = content.title || (props as any).title;
+    const subtitle: string | undefined = content.subtitle || (props as any).subtitle;
+    const description: string | undefined = content.description || (props as any).description;
+    const imageUrl: string | undefined = content.imageUrl || (props as any).introImageUrl;
+    const imageAlt: string | undefined = content.imageAlt || (props as any).introImageAlt || 'Imagem introdutória';
+    const showProgress: boolean = Boolean(content.showProgress ?? (props as any).showProgress);
+    const progressValue: number = Number(content.progressValue ?? (props as any).progressValue ?? 0);
 
     return (
         <SelectableBlock
@@ -25,11 +33,11 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({ block, isSe
             isSelected={!!isSelected}
             isEditable={!!isEditable}
             onSelect={() => onSelect?.(block.id)}
-            blockType="Header com Logo"
+            blockType="Header de Introdução"
             onOpenProperties={() => onOpenProperties?.(block.id)}
             isDraggable={true}
         >
-            <header className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 py-8 mx-auto space-y-8">
+            <header className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 py-8 mx-auto space-y-6">
                 <div className="flex flex-col items-center space-y-2">
                     <div className="relative">
                         <img
@@ -43,6 +51,46 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({ block, isSe
                         <div className="h-[3px] bg-[#B89B7A] rounded-full mt-1.5 mx-auto" style={{ width: '300px', maxWidth: '90%' }} />
                     </div>
                 </div>
+
+                {(title || subtitle || description) && (
+                    <div className="text-center space-y-3">
+                        {title && (
+                            <h1
+                                className="text-2xl md:text-3xl font-bold leading-snug"
+                                style={{ color: '#432818' }}
+                                dangerouslySetInnerHTML={{ __html: title }}
+                            />
+                        )}
+                        {subtitle && (
+                            <div
+                                className="text-base md:text-lg"
+                                style={{ color: '#432818' }}
+                                dangerouslySetInnerHTML={{ __html: subtitle }}
+                            />
+                        )}
+                        {description && (
+                            <p className="text-sm md:text-base text-gray-700">{description}</p>
+                        )}
+                    </div>
+                )}
+
+                {imageUrl && (
+                    <div className="flex justify-center">
+                        <img
+                            src={imageUrl}
+                            alt={imageAlt}
+                            className="object-cover w-full max-w-lg h-auto rounded-xl shadow"
+                        />
+                    </div>
+                )}
+
+                {showProgress && (
+                    <div className="mt-2">
+                        <div className="w-full bg-gray-200 rounded-full h-1.5">
+                            <div className="bg-[#B89B7A] h-1.5 rounded-full" style={{ width: `${Math.max(0, Math.min(100, progressValue))}%` }} />
+                        </div>
+                    </div>
+                )}
             </header>
         </SelectableBlock>
     );

@@ -1700,41 +1700,25 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             previewCacheRef.current.set(id, { key, node });
             return node;
         }
-        // Quiz Intro Header
+        // Quiz Intro Header → delegar ao EnhancedBlockRegistry (render completo)
         if (type === 'quiz-intro-header') {
-            const showLogo = (properties?.showLogo ?? content?.showLogo) !== false;
-            const enableProgressBar = properties?.enableProgressBar ?? content?.showProgress ?? false;
-            const showBackButton = properties?.showBackButton ?? content?.showNavigation ?? false;
-            node = (
-                <div className="w-full bg-white rounded-lg p-4 space-y-3 border shadow-sm">
-                    <div className="flex items-center justify-between">
-                        {showLogo && (
-                            <div className="flex-shrink-0">
-                                <img
-                                    src={properties?.logoUrl || BRAND_LOGO_URL}
-                                    alt={properties?.logoAlt || 'Logo'}
-                                    className="h-10 object-contain"
-                                />
-                            </div>
-                        )}
-                        {enableProgressBar && (
-                            <div className="flex-1 ml-4">
-                                <div className="w-full bg-gray-200 rounded-full h-1">
-                                    <div className="bg-[#B89B7A] h-1 rounded-full" style={{ width: '0%' }} />
-                                </div>
-                            </div>
-                        )}
-                        {showBackButton && (
-                            <button type="button" className="ml-2 text-gray-400 hover:text-gray-600 text-sm">
-                                ← Voltar
-                            </button>
-                        )}
+            const EnhancedComponent = getEnhancedBlockComponent(type);
+            if (EnhancedComponent) {
+                node = (
+                    <div className="relative">
+                        <EnhancedComponent
+                            block={block}
+                            properties={properties || {}}
+                            content={content || {}}
+                            isSelected={false}
+                            isPreviewing={true}
+                            isEditor={false}
+                        />
                     </div>
-                    <div className="text-[10px] text-slate-400 italic">Quiz Header</div>
-                </div>
-            );
-            previewCacheRef.current.set(id, { key, node });
-            return node;
+                );
+                previewCacheRef.current.set(id, { key, node });
+                return node;
+            }
         }
         // Options Grid (grade de opções similar a quiz-options mas com layout grid específico)
         if (type === 'options-grid') {

@@ -60,7 +60,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
     switch (String(block.type)) {
         // ===== INTRO (Step 01) =====
         case 'intro-hero':
-            // Template v3: intro-hero section → usar QuizIntroHeaderBlock
+        case 'quiz-intro-header':
+            // Template v3: intro-hero → quiz-intro-header (header completo)
             return <QuizIntroHeaderBlock block={block} {...rest} />;
         case 'welcome-form':
             // Template v3: welcome-form section → input com botão
