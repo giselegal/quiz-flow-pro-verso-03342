@@ -1,5 +1,6 @@
 import { BlockComponent } from '@/components/editor/quiz/types';
 import { Block, BlockType } from '@/types/editor';
+import { mapBlockType } from './blockTypeMapper';
 
 /**
  * 🔄 TEMPLATE CONVERTER UTILITY
@@ -39,7 +40,7 @@ export function blocksToBlockComponents(blocks: Block[]): BlockComponent[] {
  */
 export function convertTemplateToBlocks(template: any): BlockComponent[] {
   if (!template) return [];
-  
+
   // If it's already an array of blocks, return it
   if (Array.isArray(template)) {
     return template.map((block, index) => ({
@@ -51,23 +52,35 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
       parentId: block.parentId || null
     }));
   }
-  
+
   // If it's a step object with sections (new template format v3.0)
   if (template.sections && Array.isArray(template.sections)) {
-    return template.sections.map((section: any, index: number) => ({
-      id: section.id || `block-${index}`,
-      type: section.type || 'container',
-      content: section.content || {},
-      properties: {
-        ...section.style,
-        ...section.animation,
-        ...(section.properties || {})
-      },
-      order: index,
-      parentId: null
-    }));
+    return template.sections.map((section: any, index: number) => {
+      const originalType = section.type || 'container';
+      const mappedType = mapBlockType(originalType);
+
+      if (originalType !== mappedType && typeof console !== 'undefined') {
+        try {
+          console.log(`🔄 Mapeando tipo de bloco: ${originalType} → ${mappedType}`);
+        } catch {/* noop */ }
+      }
+
+      return {
+        id: section.id || `block-${index}`,
+        type: mappedType,
+        content: section.content || {},
+        properties: {
+          ...section.style,
+          ...section.animation,
+          ...(section.properties || {}),
+          _originalType: originalType
+        },
+        order: index,
+        parentId: null
+      };
+    });
   }
-  
+
   // Fallback: empty blocks array
   console.warn('⚠️ Template format not recognized, returning empty blocks:', template);
   return [];
@@ -79,12 +92,12 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
 export function safeGetTemplateBlocks(stepId: string, template: any, funnelId?: string): BlockComponent[] {
   try {
     const stepTemplate = template[stepId];
-    
+
     if (!stepTemplate) {
       console.warn(`⚠️ No template found for ${stepId}`);
       return [];
     }
-    
+
     // ✅ FASE 1: Detectar formato v3.0 com sections
     if (stepTemplate?.sections && Array.isArray(stepTemplate.sections)) {
       console.log(`✅ Template v3.0 detectado para ${stepId}, convertendo ${stepTemplate.sections.length} sections`);
@@ -92,7 +105,7 @@ export function safeGetTemplateBlocks(stepId: string, template: any, funnelId?: 
       console.log(`✅ Convertidos ${blocks.length} blocos para ${stepId}`);
       return blocks;
     }
-    
+
     // ✅ Detectar array direto (formato legacy)
     if (Array.isArray(stepTemplate)) {
       console.log(`✅ Template legacy (array) detectado para ${stepId}, ${stepTemplate.length} blocks`);
@@ -100,7 +113,7 @@ export function safeGetTemplateBlocks(stepId: string, template: any, funnelId?: 
       console.log(`✅ Convertidos ${blocks.length} blocos para ${stepId}`);
       return blocks;
     }
-    
+
     console.warn(`⚠️ Formato não reconhecido para ${stepId}:`, stepTemplate);
     return [];
   } catch (error) {
