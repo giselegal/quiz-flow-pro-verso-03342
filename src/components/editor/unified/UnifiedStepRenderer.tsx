@@ -306,6 +306,7 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
         // Props básicas
         mode,
         data: stepProps,
+        blocks: stepProps?.blocks || [], // ✅ FASE 3: Passar blocos para componentes modulares
 
         // Estado do quiz
         quizState,
