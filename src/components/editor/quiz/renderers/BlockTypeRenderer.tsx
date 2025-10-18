@@ -6,6 +6,8 @@ import ImageDisplayBlock from './blocks/ImageDisplayBlock';
 import QuizOptionsBlock from './blocks/QuizOptionsBlock';
 import ButtonInlineBlock from './blocks/ButtonInlineBlock';
 import FormInputBlock from './blocks/FormInputBlock';
+import QuizQuestionHeaderBlock from './blocks/QuizQuestionHeaderBlock';
+import QuizNavigationBlock from './blocks/QuizNavigationBlock';
 
 export interface BlockRendererProps {
     block: Block;
@@ -43,6 +45,9 @@ const GenericBlock: React.FC<BlockRendererProps> = ({ block, isSelected, isEdita
 
 export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest }) => {
     switch (String(block.type)) {
+        case 'quiz-question-header':
+        case 'question-header':
+            return <QuizQuestionHeaderBlock block={block} {...rest} />;
         case 'quiz-intro-header':
             return <QuizIntroHeaderBlock block={block} {...rest} />;
         case 'text-inline':
@@ -60,6 +65,9 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         case 'quiz-options':
         case 'options-grid':
             return <QuizOptionsBlock block={block} {...rest} />;
+        case 'quiz-navigation':
+        case 'navigation':
+            return <QuizNavigationBlock block={block} {...rest} />;
         default:
             return <GenericBlock block={block} {...rest} />;
     }
