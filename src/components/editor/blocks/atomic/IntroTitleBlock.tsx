@@ -12,19 +12,21 @@ export default function IntroTitleBlock({
   const textAlign = block.properties?.textAlign || 'text-center';
   const color = block.properties?.color;
 
-  // Parse custom color tags [#color]text[/#color]
-  const parseColoredText = (text: string) => {
-    const regex = /\[#([^\]]+)\]\*\*(.*?)\*\*\[\/#\1\]/g;
-    const parts: React.ReactNode[] = [];
+  // Parse custom color tags [#color]**text**[/#color]
+  const renderContent = () => {
+    if (!content.includes('[#')) {
+      return content;
+    }
+
+    const parts = [];
+    const regex = /\[#([A-F0-9]{6})\]\*\*(.*?)\*\*\[\/#\1\]/gi;
     let lastIndex = 0;
     let match;
 
-    while ((match = regex.exec(text)) !== null) {
-      // Add text before the match
+    while ((match = regex.exec(content)) !== null) {
       if (match.index > lastIndex) {
-        parts.push(text.substring(lastIndex, match.index));
+        parts.push(content.substring(lastIndex, match.index));
       }
-      // Add colored text
       parts.push(
         <span key={match.index} style={{ color: `#${match[1]}` }} className="font-bold">
           {match[2]}
@@ -33,12 +35,11 @@ export default function IntroTitleBlock({
       lastIndex = regex.lastIndex;
     }
 
-    // Add remaining text
-    if (lastIndex < text.length) {
-      parts.push(text.substring(lastIndex));
+    if (lastIndex < content.length) {
+      parts.push(content.substring(lastIndex));
     }
 
-    return parts.length > 0 ? parts : text;
+    return parts;
   };
 
   return (
@@ -47,7 +48,7 @@ export default function IntroTitleBlock({
       style={color ? { color } : undefined}
       onClick={onClick}
     >
-      {parseColoredText(content)}
+      {renderContent()}
     </h1>
   );
 }
