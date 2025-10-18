@@ -1,0 +1,163 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - heading "Templates de Funis" [level=1] [ref=e14]
+        - paragraph [ref=e15]: Escolha um template para começar ou crie seu funil do zero
+      - generic [ref=e17]:
+        - button "Todos" [ref=e18] [cursor=pointer]
+        - button "quiz-complete" [ref=e19] [cursor=pointer]
+        - button "quiz-express" [ref=e20] [cursor=pointer]
+        - button "quiz-style" [ref=e21] [cursor=pointer]
+        - button "personal-branding" [ref=e22] [cursor=pointer]
+        - button "lead-magnet" [ref=e23] [cursor=pointer]
+        - button "product-launch" [ref=e24] [cursor=pointer]
+        - button "webinar" [ref=e25] [cursor=pointer]
+        - button "ecommerce" [ref=e26] [cursor=pointer]
+        - button "Básico" [ref=e27] [cursor=pointer]
+      - generic [ref=e28]:
+        - generic [ref=e29] [cursor=pointer]:
+          - generic [ref=e30] [cursor=pointer]:
+            - generic [ref=e31] [cursor=pointer]:
+              - img [ref=e33] [cursor=pointer]
+              - generic [ref=e39] [cursor=pointer]:
+                - generic [ref=e40] [cursor=pointer]: Popular
+                - generic [ref=e41] [cursor=pointer]: 21 etapas
+            - heading "Quiz de Estilo Pessoal - 21 Etapas Completo" [level=3] [ref=e42] [cursor=pointer]
+            - paragraph [ref=e43] [cursor=pointer]: Template principal completo para descoberta do estilo pessoal com 21 etapas, incluindo coleta de dados, quiz pontuado, questões estratégicas e ofertas
+          - generic [ref=e45] [cursor=pointer]:
+            - generic [ref=e46] [cursor=pointer]: quiz-complete
+            - button "Usar Template" [ref=e47] [cursor=pointer]
+        - generic [ref=e48] [cursor=pointer]:
+          - generic [ref=e49] [cursor=pointer]:
+            - generic [ref=e50] [cursor=pointer]:
+              - img [ref=e52] [cursor=pointer]
+              - generic [ref=e57] [cursor=pointer]:
+                - generic [ref=e58] [cursor=pointer]: Popular
+                - generic [ref=e59] [cursor=pointer]: 10 etapas
+            - heading "Quiz de Estilo Express - 10 Etapas" [level=3] [ref=e60] [cursor=pointer]
+            - paragraph [ref=e61] [cursor=pointer]: Versão rápida e otimizada do quiz de estilo, herda do template principal com customizações para conversão
+          - generic [ref=e63] [cursor=pointer]:
+            - generic [ref=e64] [cursor=pointer]: quiz-express
+            - button "Usar Template" [ref=e65] [cursor=pointer]
+        - generic [ref=e66] [cursor=pointer]:
+          - generic [ref=e67] [cursor=pointer]:
+            - generic [ref=e68] [cursor=pointer]:
+              - img [ref=e70] [cursor=pointer]
+              - generic [ref=e77] [cursor=pointer]: 21 etapas
+            - heading "Com que Roupa Eu Vou?" [level=3] [ref=e78] [cursor=pointer]
+            - paragraph [ref=e79] [cursor=pointer]: Quiz especializado em combinações de looks perfeitos com IA para cada ocasião
+          - generic [ref=e81] [cursor=pointer]:
+            - generic [ref=e82] [cursor=pointer]: quiz-style
+            - button "Usar Template" [ref=e83] [cursor=pointer]
+        - generic [ref=e84] [cursor=pointer]:
+          - generic [ref=e85] [cursor=pointer]:
+            - generic [ref=e86] [cursor=pointer]:
+              - img [ref=e88] [cursor=pointer]
+              - generic [ref=e94] [cursor=pointer]: 15 etapas
+            - heading "Personal Branding Quiz" [level=3] [ref=e95] [cursor=pointer]
+            - paragraph [ref=e96] [cursor=pointer]: Descubra seu estilo de marca pessoal com análise completa de personalidade
+          - generic [ref=e98] [cursor=pointer]:
+            - generic [ref=e99] [cursor=pointer]: personal-branding
+            - button "Usar Template" [ref=e100] [cursor=pointer]
+        - generic [ref=e101] [cursor=pointer]:
+          - generic [ref=e102] [cursor=pointer]:
+            - generic [ref=e103] [cursor=pointer]:
+              - img [ref=e105] [cursor=pointer]
+              - generic [ref=e109] [cursor=pointer]: 5 etapas
+            - heading "Lead Magnet Moda" [level=3] [ref=e110] [cursor=pointer]
+            - paragraph [ref=e111] [cursor=pointer]: Ímã de leads focado em capturar leads qualificados no nicho de moda
+          - generic [ref=e113] [cursor=pointer]:
+            - generic [ref=e114] [cursor=pointer]: lead-magnet
+            - button "Usar Template" [ref=e115] [cursor=pointer]
+        - generic [ref=e116] [cursor=pointer]:
+          - generic [ref=e117] [cursor=pointer]:
+            - generic [ref=e118] [cursor=pointer]:
+              - img [ref=e120] [cursor=pointer]
+              - generic [ref=e127] [cursor=pointer]: 12 etapas
+            - heading "Quiz Descubra Seu Tipo de Corpo" [level=3] [ref=e128] [cursor=pointer]
+            - paragraph [ref=e129] [cursor=pointer]: Quiz interativo para identificar formato corporal e sugestões de looks ideais
+          - generic [ref=e131] [cursor=pointer]:
+            - generic [ref=e132] [cursor=pointer]: quiz-style
+            - button "Usar Template" [ref=e133] [cursor=pointer]
+        - generic [ref=e134] [cursor=pointer]:
+          - generic [ref=e135] [cursor=pointer]:
+            - generic [ref=e136] [cursor=pointer]:
+              - img [ref=e138] [cursor=pointer]
+              - generic [ref=e145] [cursor=pointer]: 15 etapas
+            - heading "Consultoria de Imagem Premium" [level=3] [ref=e146] [cursor=pointer]
+            - paragraph [ref=e147] [cursor=pointer]: Funil completo para venda de consultoria de imagem de alto valor
+          - generic [ref=e149] [cursor=pointer]:
+            - generic [ref=e150] [cursor=pointer]: product-launch
+            - button "Usar Template" [ref=e151] [cursor=pointer]
+        - generic [ref=e152] [cursor=pointer]:
+          - generic [ref=e153] [cursor=pointer]:
+            - generic [ref=e154] [cursor=pointer]:
+              - img [ref=e156] [cursor=pointer]
+              - generic [ref=e160] [cursor=pointer]: 8 etapas
+            - heading "Guia Capsule Wardrobe" [level=3] [ref=e161] [cursor=pointer]
+            - paragraph [ref=e162] [cursor=pointer]: Funil educativo para criação de guarda-roupa cápsula funcional
+          - generic [ref=e164] [cursor=pointer]:
+            - generic [ref=e165] [cursor=pointer]: lead-magnet
+            - button "Usar Template" [ref=e166] [cursor=pointer]
+        - generic [ref=e167] [cursor=pointer]:
+          - generic [ref=e168] [cursor=pointer]:
+            - generic [ref=e169] [cursor=pointer]:
+              - img [ref=e171] [cursor=pointer]
+              - generic [ref=e177] [cursor=pointer]:
+                - generic [ref=e178] [cursor=pointer]: Popular
+                - generic [ref=e179] [cursor=pointer]: 6 etapas
+            - 'heading "Masterclass: Arte das Combinações" [level=3] [ref=e180] [cursor=pointer]'
+            - paragraph [ref=e181] [cursor=pointer]: Webinar gratuito sobre como criar looks incríveis com peças básicas
+          - generic [ref=e183] [cursor=pointer]:
+            - generic [ref=e184] [cursor=pointer]: webinar
+            - button "Usar Template" [ref=e185] [cursor=pointer]
+        - generic [ref=e186] [cursor=pointer]:
+          - generic [ref=e187] [cursor=pointer]:
+            - generic [ref=e188] [cursor=pointer]:
+              - img [ref=e190] [cursor=pointer]
+              - generic [ref=e197] [cursor=pointer]: 10 etapas
+            - 'heading "Quiz: Suas Cores Perfeitas" [level=3] [ref=e198] [cursor=pointer]'
+            - paragraph [ref=e199] [cursor=pointer]: Descubra sua cartela de cores ideal com análise colorimétrica personalizada
+          - generic [ref=e201] [cursor=pointer]:
+            - generic [ref=e202] [cursor=pointer]: quiz-style
+            - button "Usar Template" [ref=e203] [cursor=pointer]
+        - generic [ref=e204] [cursor=pointer]:
+          - generic [ref=e205] [cursor=pointer]:
+            - generic [ref=e206] [cursor=pointer]:
+              - img [ref=e208] [cursor=pointer]
+              - generic [ref=e212] [cursor=pointer]: 7 etapas
+            - 'heading "Shopping Inteligente: Economia & Estilo" [level=3] [ref=e213] [cursor=pointer]'
+            - paragraph [ref=e214] [cursor=pointer]: Aprenda a comprar roupas de forma inteligente economizando até 70%
+          - generic [ref=e216] [cursor=pointer]:
+            - generic [ref=e217] [cursor=pointer]: ecommerce
+            - button "Usar Template" [ref=e218] [cursor=pointer]
+        - generic [ref=e219] [cursor=pointer]:
+          - generic [ref=e220] [cursor=pointer]:
+            - generic [ref=e221] [cursor=pointer]:
+              - img [ref=e223] [cursor=pointer]
+              - generic [ref=e230] [cursor=pointer]: 1 etapas
+            - heading "Template Vazio" [level=3] [ref=e231] [cursor=pointer]
+            - paragraph [ref=e232] [cursor=pointer]: Comece do zero com total liberdade
+          - generic [ref=e234] [cursor=pointer]:
+            - generic [ref=e235] [cursor=pointer]: Básico
+            - button "Usar Template" [ref=e236] [cursor=pointer]
+      - generic [ref=e237]:
+        - button "Criar Funil Vazio" [ref=e238] [cursor=pointer]:
+          - img [ref=e239] [cursor=pointer]
+          - text: Criar Funil Vazio
+        - button "Templates Avançados" [ref=e242] [cursor=pointer]:
+          - img [ref=e243] [cursor=pointer]
+          - text: Templates Avançados
+        - button "Meus Funis" [ref=e249] [cursor=pointer]:
+          - img [ref=e250] [cursor=pointer]
+          - text: Meus Funis
+    - region "Notifications (F8)":
+      - list
+  - generic [ref=e253]: 🔧 Modo Local Ativo - Configurações carregadas localmente devido a problemas de conexão
+```

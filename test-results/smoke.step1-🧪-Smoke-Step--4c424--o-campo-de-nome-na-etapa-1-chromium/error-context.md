@@ -1,0 +1,96 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]: Bem-vindo
+          - generic [ref=e12]: 1/21
+        - generic [ref=e14]:
+          - generic [ref=e15]: 0%
+          - generic [ref=e16]: 0%
+          - generic [ref=e17]: 100%
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - button "Voltar" [disabled]:
+            - img
+            - text: Voltar
+          - generic [ref=e20]: 1/21
+          - button "Avançar" [ref=e21] [cursor=pointer]:
+            - text: Avançar
+            - img [ref=e22] [cursor=pointer]
+        - generic [ref=e24]:
+          - button "Resetar Quiz" [ref=e25] [cursor=pointer]:
+            - img [ref=e26] [cursor=pointer]
+          - button "Voltar ao Início" [ref=e29] [cursor=pointer]:
+            - img [ref=e30] [cursor=pointer]
+      - generic [ref=e37]: Backend Offline
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - generic [ref=e42]: Etapa 1 de 21
+          - heading "Quiz de Estilo Pessoal" [level=1] [ref=e43]
+          - paragraph [ref=e44]: Responda com sinceridade para descobrir seu estilo predominante
+        - generic [ref=e45]:
+          - button "Standard" [ref=e46] [cursor=pointer]
+          - button "Backend Integrated" [ref=e47] [cursor=pointer]
+      - tabpanel [ref=e49]:
+        - generic [ref=e51]:
+          - generic [ref=e53]:
+            - generic [ref=e55]:
+              - generic [ref=e56]: Etapa 1 de 1
+              - generic [ref=e57]: 100%
+            - paragraph [ref=e62]: Carregando step...
+            - generic [ref=e63]:
+              - button "← Anterior" [disabled] [ref=e64]
+              - button "Finalizar →" [ref=e65] [cursor=pointer]
+          - generic [ref=e66]:
+            - generic [ref=e68]:
+              - generic [ref=e69]:
+                - generic [ref=e70]:
+                  - img [ref=e71]
+                  - heading "Backend Integration" [level=3] [ref=e73]
+                  - generic [ref=e74]:
+                    - img [ref=e75]
+                    - text: Offline
+                - generic [ref=e77]:
+                  - button "Refresh Metrics" [ref=e78] [cursor=pointer]:
+                    - img [ref=e79] [cursor=pointer]
+                  - button "Get AI Suggestions" [ref=e81] [cursor=pointer]:
+                    - img [ref=e82] [cursor=pointer]
+              - generic [ref=e92]:
+                - generic [ref=e93]:
+                  - img
+                  - generic [ref=e97]:
+                    - generic [ref=e98]: Database
+                    - generic [ref=e99]: Disconnected
+                - generic [ref=e100]:
+                  - img
+                  - generic [ref=e102]:
+                    - generic [ref=e103]: Monitor
+                    - generic [ref=e104]: Inactive
+                - generic [ref=e105]:
+                  - img
+                  - generic [ref=e115]:
+                    - generic [ref=e116]: AI Engine
+                    - generic [ref=e117]: 0 suggestions
+                - generic [ref=e118]:
+                  - img
+                  - generic [ref=e120]:
+                    - generic [ref=e121]: Backup
+                    - generic [ref=e122]: No session
+              - generic [ref=e124]:
+                - generic [ref=e125]: "Last update: Never"
+                - generic [ref=e126]:
+                  - img [ref=e127]
+                  - generic [ref=e129]: Static
+            - generic [ref=e132]:
+              - generic [ref=e133]:
+                - img [ref=e134]
+                - generic [ref=e136]: Static Mode
+              - generic [ref=e137]: Quiz running in static mode - limited features
+  - region "Notifications (F8)":
+    - list
+```
