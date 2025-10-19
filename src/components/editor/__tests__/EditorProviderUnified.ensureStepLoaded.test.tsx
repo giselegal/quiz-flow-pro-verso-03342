@@ -147,4 +147,33 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
             expect(spy).toHaveBeenCalledWith('step-19');
         });
     });
+
+    it('prioriza JSON normalizado para step-02 e inclui options-grid', async () => {
+        let actions: any;
+        let state: any;
+        const onReady = (ctx: any) => { actions = ctx.actions; state = ctx.state; };
+
+        // Mock do loadStepTemplateAsync para simular JSON normalizado público
+        const asyncSpy = vi.spyOn(loadStepTemplates, 'loadStepTemplateAsync').mockResolvedValue([
+            { id: 'q-header-02', type: 'quiz-question-header', order: 0, properties: {}, content: {} } as any,
+            { id: 'grid-02', type: 'options-grid', order: 1, properties: { options: [{ id: 'a', text: 'A' }, { id: 'b', text: 'B' }] }, content: {} } as any,
+        ]);
+
+        render(
+            <EditorProviderUnified>
+                <TestConsumer onReady={onReady} />
+            </EditorProviderUnified>
+        );
+
+        await actions.ensureStepLoaded('step-02');
+
+        await waitFor(() => {
+            const blocks = state.stepBlocks['step-02'];
+            expect(Array.isArray(blocks)).toBe(true);
+            expect(blocks.length).toBeGreaterThan(0);
+            const types = blocks.map((b: any) => String(b.type));
+            expect(types).toContain('options-grid');
+            expect(asyncSpy).toHaveBeenCalledWith('step-02');
+        });
+    });
 });
