@@ -112,7 +112,16 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
 
   // Provider opcional do Editor para seleção/persistência de blocos reais
   const editor = useEditor({ optional: true } as any);
-  const stepKey = useMemo(() => step?.id || '', [step?.id]);
+  // Normaliza a chave do step para o formato step-XX (zero à esquerda)
+  const stepKey = useMemo(() => {
+    const id = String(step?.id || '');
+    const m = id.match(/^step-(\d{1,2})$/);
+    if (m) {
+      const n = parseInt(m[1], 10);
+      if (!isNaN(n)) return `step-${String(n).padStart(2, '0')}`;
+    }
+    return id;
+  }, [step?.id]);
 
   // ✅ CORREÇÃO CRÍTICA: Memoizar estado do editor para evitar re-renders
   const editorState = useMemo(() => ({
