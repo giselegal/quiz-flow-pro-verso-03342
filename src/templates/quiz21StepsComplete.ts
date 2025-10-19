@@ -11,13 +11,11 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-18T18:49:27.983Z
+ * Gerado em: 2025-10-19T20:19:33.460Z
  * Versão: 3.0.0
  */
 
 import { Block } from '../types/editor';
-import { unifiedCache } from '@/utils/UnifiedTemplateCache';
-import { templateKey } from '@/utils/cacheKeys';
 
 // 🔧 PERFORMANCE E CACHE OTIMIZADO
 const TEMPLATE_CACHE = new Map<string, any>();
@@ -25,21 +23,13 @@ const FUNNEL_TEMPLATE_CACHE = new Map<string, any>();
 
 // 🚀 FUNÇÃO DE CARREGAMENTO OTIMIZADO PARA PERFORMANCE
 export function getStepTemplate(stepId: string): any {
-  // Primeiro, tentar cache unificado
-  const unifiedKey = templateKey(stepId);
-  const unified = unifiedCache.get(unifiedKey);
-  if (unified) return unified;
   if (TEMPLATE_CACHE.has(stepId)) {
-    const v = TEMPLATE_CACHE.get(stepId);
-    // propagar para unificado
-  unifiedCache.set(unifiedKey, v);
-    return v;
+    return TEMPLATE_CACHE.get(stepId);
   }
 
   const template = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
   if (template) {
     TEMPLATE_CACHE.set(stepId, template);
-  unifiedCache.set(unifiedKey, template);
     return template;
   }
 

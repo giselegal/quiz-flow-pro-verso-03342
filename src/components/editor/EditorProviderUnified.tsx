@@ -23,7 +23,7 @@ import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
-import { loadStepTemplate, loadStepTemplateAsync, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
+import { loadStepTemplate, loadStepTemplateAsync, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
@@ -565,7 +565,6 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
             // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
             setState(prev => {
-                console.log('hasModularTemplate:', hasModularTemplate(normalizedKey));
                 console.log('hasStaticBlocksJSON:', hasStaticBlocksJSON(normalizedKey));
                 console.log('existingBlocks:', prev.stepBlocks[normalizedKey]?.length || 0);
                 console.log('loadingStepsRef:', Array.from(loadingStepsRef.current));
@@ -804,8 +803,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         // Carregar todos os steps do template
         Object.entries(template.steps).forEach(([stepKey, stepConfig]) => {
             try {
-                // ✅ PRIORIDADE: Templates JSON modulares (steps 12, 19, 20)
-                if (hasModularTemplate(stepKey)) {
+                // ✅ PRIORIDADE: Templates JSON estáticos (steps 12, 13, 19, 20)
+                if (hasStaticBlocksJSON(stepKey)) {
                     const modularBlocks = loadStepTemplate(stepKey);
                     newStepBlocks[stepKey] = modularBlocks;
                     newStepSources[stepKey] = 'modular-json';
