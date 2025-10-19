@@ -17,12 +17,8 @@ test.describe('Editor - Options Grid e Salvar', () => {
   // Selecionar a etapa de pergunta (step-02)
   await page.getByText('step-02', { exact: true }).first().click();
 
-  // Encontrar o primeiro bloco de opções (aceita 'quiz-options' ou 'options-grid') visível no canvas
-  const optionsGrid = page.locator('[data-block-type="quiz-options"], [data-block-type="options-grid"]').first();
-  await expect(optionsGrid).toBeVisible({ timeout: 15000 });
-
-    // Dentro do grid, pegar a primeira opção clicável
-    const firstOption = optionsGrid.locator('[data-testid^="grid-option-"]').first();
+  // Dentro do canvas, pegar a primeira opção clicável do grid
+  const firstOption = page.locator('[data-testid^="grid-option-"]').first();
     await expect(firstOption).toBeVisible({ timeout: 10000 });
 
     // Clicar para selecionar e verificar o atributo data-selected

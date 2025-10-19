@@ -2244,6 +2244,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 onClick={(e) => { e.preventDefault(); onToggle(opt.id, multi, max); }}
                                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(opt.id, multi, max); } }}
                                 className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
+                                data-testid={`grid-option-${opt.id}`}
+                                data-selected={active ? 'true' : 'false'}
                             >
                                 {showImages && opt.image && (
                                     <img
