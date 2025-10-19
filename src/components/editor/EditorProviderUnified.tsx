@@ -26,7 +26,7 @@ import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/template
 import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
-import { masterTemplateKey, stepBlocksKey, masterBlocksKey } from '@/utils/cacheKeys';
+import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -36,7 +36,7 @@ export interface EditorState {
     /** Blocos organizados por step */
     stepBlocks: Record<string, Block[]>;
     /** Origem dos blocos por step (diagnóstico) */
-    stepSources?: Record<string, 'modular-json' | 'master-hydrated' | 'ts-template'>;
+    stepSources?: Record<string, 'modular-json' | 'individual-json' | 'master-hydrated' | 'ts-template'>;
     /** Step atual selecionado */
     currentStep: number;
     /** Bloco selecionado para edição */
@@ -575,7 +575,43 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     return prev; // ✅ NO UPDATE
                 }
 
-                // ✅ NOVO: se conseguimos masterBlocks (JSON público hidratado), usar
+                // ✅ NOVO: Priorizar JSON individual de etapa se existir (public/templates/step-XX.json)
+                try {
+                    const stepNum = normalizedKey.replace('step-', '');
+                    const individualUrl = `/templates/step-${stepNum}.json`;
+                    const individualCached = unifiedCache.get<Block[]>(templateKey(`individual:${normalizedKey}`));
+                    if (Array.isArray(individualCached) && individualCached.length > 0) {
+                        console.log('📝 Aplicando blocos do JSON individual (cache):', individualUrl);
+                        console.groupEnd();
+                        return {
+                            ...prev,
+                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: individualCached },
+                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'individual-json' }
+                        };
+                    }
+                    // Nota: fetch síncrono não é possível aqui; master será usado e, em paralelo, tentamos hidratar individual
+                    fetch(individualUrl)
+                        .then(res => res.ok ? res.json() : null)
+                        .then(json => {
+                            if (!json || !Array.isArray(json.blocks)) return;
+                            const blocks = (json.blocks as any[]).map((b, idx) => ({
+                                id: b.id || `block-${idx}`,
+                                type: (b.type || 'text-inline') as any,
+                                order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
+                                properties: b.properties || b.props || {},
+                                content: b.content || {}
+                            })) as Block[];
+                            unifiedCache.set(templateKey(`individual:${normalizedKey}`), blocks);
+                            setState(p => ({
+                                ...p,
+                                stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
+                                stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'individual-json' }
+                            }));
+                        })
+                        .catch(() => { });
+                } catch { }
+
+                // ✅ Se conseguimos masterBlocks (JSON público hidratado), usar
                 if (masterBlocks && masterBlocks.length > 0) {
                     console.log('📝 Aplicando blocos do master JSON hidratado');
                     try { unifiedCache.set(stepBlocksKey(normalizedKey), masterBlocks); } catch { }
