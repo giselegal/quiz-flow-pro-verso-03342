@@ -16,7 +16,7 @@
       "content": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
-        "showProgress": true,
+        "showProgress": false,
         "progressValue": 0
       }
     },
@@ -40,7 +40,7 @@
       "type": "image-display-inline",
       "position": 2,
       "properties": {
-        "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
+        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
         "alt": "Descubra seu estilo predominante",
         "maxWidth": "300px",
         "objectFit": "contain",
@@ -72,30 +72,16 @@
       }
     },
     {
-      "id": "block-privacy-notice",
-      "type": "text-inline",
-      "position": 5,
-      "content": {
-        "text": "Seu nome é necessário para personalizar sua experiência."
-      },
-      "properties": {
-        "textAlign": "center",
-        "fontSize": "text-xs",
-        "className": "text-gray-500 pt-1"
-      }
-    },
-    {
       "id": "block-footer-copyright",
       "type": "text-inline",
-      "position": 6,
+      "position": 5,
       "content": {
         "text": "© 2025 Gisele Galvão - Todos os direitos reservados"
       },
       "properties": {
         "textAlign": "center",
         "fontSize": "text-xs",
-        "className": "text-gray-500",
-        "marginTop": "pt-6"
+        "className": "text-gray-500 pt-6"
       }
     }
   ]
