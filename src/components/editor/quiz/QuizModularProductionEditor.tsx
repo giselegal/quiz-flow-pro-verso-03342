@@ -92,7 +92,7 @@ import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEdita
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
-import { safeGetTemplateBlocks, blocksToBlockComponents } from '@/utils/templateConverter';
+import { blocksToBlockComponents } from '@/utils/templateConverter';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import type { StepType } from '@/types/quiz-schema';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
@@ -118,6 +118,7 @@ import type { QuizFunnelSchema } from '@/types/quiz-schema';
 import { StorageService } from '@/services/core/StorageService';
 import { EditorCacheService } from '@/services/EditorCacheService';
 import { UnifiedQuizStepAdapter } from '@/services/editor/UnifiedQuizStepAdapter';
+import { templateLoader } from '@/services/TemplateLoader';
 import { SCHEMAS, migrateProps } from '@/schemas';
 import { normalizeByType } from '@/utils/normalizeByType';
 import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
