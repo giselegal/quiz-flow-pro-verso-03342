@@ -131,6 +131,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   onUpdateSessionData,
   sessionData = {},
   onStepComplete,
+  properties: incomingProperties,
 }) => {
   // Fallbacks: permitir injeção via block.properties (quando vem do QuizRenderer em preview)
   const injectedOnNext = (block?.properties as any)?.onNext as undefined | (() => void);
@@ -156,6 +157,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Evitar autoavanço duplicado
   const autoAdvanceScheduledRef = React.useRef(false);
   const { schedule, cancel } = useOptimizedScheduler();
+
+  // Mesclar propriedades vindas via props.properties (prioridade) com block.properties
+  const combinedProps: any = {
+    ...(block?.properties as any || {}),
+    ...(incomingProperties as any || {}),
+  };
 
   const {
     question: questionProp,
@@ -198,7 +205,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     // 🎯 PROPRIEDADES LEGADAS
     className: blockClassName,
     showQuestionTitle = true,
-  } = (block?.properties as any) || {};
+  } = combinedProps;
 
   // Callback externo (produção/quiz) para propagar seleção ao host
   const externalOnOptionSelect = (block?.properties as any)?.onOptionSelect as
