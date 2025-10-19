@@ -526,7 +526,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             // ✅ PRIORIDADE 0 (AGUARDADA): JSON normalizado (public/templates/normalized) ou modular estático
             try {
                 const stepNum0 = Number(normalizedKey.replace('step-', ''));
-                const isNormalizedRange0 = (stepNum0 >= 2 && stepNum0 <= 11) || (stepNum0 >= 13 && stepNum0 <= 18) || stepNum0 === 19;
+                // Removido step 19 do intervalo normalizado para priorizar JSON estático modular
+                const isNormalizedRange0 = (stepNum0 >= 2 && stepNum0 <= 11) || (stepNum0 >= 13 && stepNum0 <= 18);
                 // Tentar cache do normalizado primeiro
                 if (isNormalizedRange0) {
                     const normalizedCache0 = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
@@ -650,7 +651,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 // Evitar 404s desnecessários: não buscar individual quando a etapa faz parte do intervalo "normalizado"
                 try {
                     const stepNumInt = Number(normalizedKey.replace('step-', ''));
-                    const isNormalizedRange = (stepNumInt >= 2 && stepNumInt <= 11) || (stepNumInt >= 13 && stepNumInt <= 18) || stepNumInt === 19;
+                    const isNormalizedRange = (stepNumInt >= 2 && stepNumInt <= 11) || (stepNumInt >= 13 && stepNumInt <= 18);
                     if (!isNormalizedRange) {
                         const stepNum = normalizedKey.replace('step-', '');
                         const individualUrl = `/templates/step-${stepNum}.json`;

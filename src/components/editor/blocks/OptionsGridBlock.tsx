@@ -207,16 +207,19 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   // Fallbacks a partir de content (compatibilidade com template)
   const question = (questionProp ?? (block as any)?.content?.question) as string | undefined;
-  // Resolver opções com fallback robusto: se properties.options existir porém vazio, usar content.options
-  const propOptions = (block?.properties as any)?.options as Option[] | undefined;
+  // Resolver opções com prioridade: props.properties (vindo das props do componente) → block.properties → block.content → fallback
+  const incomingPropsOptions = (optionsProp || []) as Option[];
+  const blockPropOptions = (block?.properties as any)?.options as Option[] | undefined;
   const contentOptions = (block as any)?.content?.options as Option[] | undefined;
   let options = (
-    (Array.isArray(propOptions) && propOptions.length > 0)
-      ? propOptions
-      : (Array.isArray(contentOptions) && contentOptions.length > 0)
-        ? contentOptions
-        : optionsProp
-  ) as Option[];
+    (Array.isArray(incomingPropsOptions) && incomingPropsOptions.length > 0)
+      ? incomingPropsOptions
+      : (Array.isArray(blockPropOptions) && blockPropOptions.length > 0)
+        ? blockPropOptions
+        : (Array.isArray(contentOptions) && contentOptions.length > 0)
+          ? contentOptions
+          : ([] as Option[])
+  );
 
   // Logs de diagnóstico em desenvolvimento
   if (import.meta?.env?.DEV) {
@@ -226,7 +229,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       if (Number.isFinite(stepNum) && stepNum <= 3 && block?.type === 'options-grid') {
         console.log('🔎 OptionsGridBlock: resolução de opções', {
           stepNum,
-          fromProperties: Array.isArray(propOptions) ? propOptions.length : 'n/a',
+          fromProperties: Array.isArray(incomingPropsOptions) ? incomingPropsOptions.length : 'n/a',
           fromContent: Array.isArray(contentOptions) ? contentOptions.length : 'n/a',
           finalCount: Array.isArray(options) ? options.length : 0,
           question: question || (block as any)?.content?.question,
@@ -842,7 +845,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             };
 
           // 🎯 Hover do ModularQuestionStep
-          const hoverStyles: React.CSSProperties = { 
+          const hoverStyles: React.CSSProperties = {
             borderColor: '#deac6d',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
           };

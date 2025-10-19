@@ -142,7 +142,8 @@ export async function loadStepTemplateAsync(stepId: string): Promise<Block[]> {
   if (cached) return cached;
 
   const stepNum = parseInt(stepId.replace('step-', ''), 10);
-  const isNormalizedRange = (stepNum >= 2 && stepNum <= 11) || (stepNum >= 13 && stepNum <= 18) || stepNum === 19;
+  // Removido step 19 do intervalo normalizado para priorizar JSON estático modular
+  const isNormalizedRange = (stepNum >= 2 && stepNum <= 11) || (stepNum >= 13 && stepNum <= 18);
 
   // Tentar JSON normalizado público (await)
   if (isNormalizedRange && typeof window !== 'undefined') {
