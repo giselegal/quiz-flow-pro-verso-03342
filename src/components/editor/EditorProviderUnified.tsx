@@ -619,39 +619,44 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 }
 
                 // ✅ PRIORIDADE 2: JSON individual de etapa se existir (public/templates/step-XX.json)
+                // Evitar 404s desnecessários: não buscar individual quando a etapa faz parte do intervalo "normalizado"
                 try {
-                    const stepNum = normalizedKey.replace('step-', '');
-                    const individualUrl = `/templates/step-${stepNum}.json`;
-                    const individualCached = unifiedCache.get<Block[]>(templateKey(`individual:${normalizedKey}`));
-                    if (Array.isArray(individualCached) && individualCached.length > 0) {
-                        console.log('📝 Aplicando blocos do JSON individual (cache):', individualUrl);
-                        console.groupEnd();
-                        return {
-                            ...prev,
-                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: individualCached },
-                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'individual-json' as any }
-                        };
+                    const stepNumInt = Number(normalizedKey.replace('step-', ''));
+                    const isNormalizedRange = (stepNumInt >= 2 && stepNumInt <= 11) || (stepNumInt >= 13 && stepNumInt <= 18) || stepNumInt === 19;
+                    if (!isNormalizedRange) {
+                        const stepNum = normalizedKey.replace('step-', '');
+                        const individualUrl = `/templates/step-${stepNum}.json`;
+                        const individualCached = unifiedCache.get<Block[]>(templateKey(`individual:${normalizedKey}`));
+                        if (Array.isArray(individualCached) && individualCached.length > 0) {
+                            console.log('📝 Aplicando blocos do JSON individual (cache):', individualUrl);
+                            console.groupEnd();
+                            return {
+                                ...prev,
+                                stepBlocks: { ...prev.stepBlocks, [normalizedKey]: individualCached },
+                                stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'individual-json' as any }
+                            };
+                        }
+                        // Nota: fetch síncrono não é possível aqui; master será usado e, em paralelo, tentamos hidratar individual
+                        fetch(individualUrl)
+                            .then(res => res.ok ? res.json() : null)
+                            .then(json => {
+                                if (!json || !Array.isArray(json.blocks)) return;
+                                const blocks = (json.blocks as any[]).map((b, idx) => ({
+                                    id: b.id || `block-${idx}`,
+                                    type: (b.type || 'text-inline') as any,
+                                    order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
+                                    properties: b.properties || b.props || {},
+                                    content: b.content || {}
+                                })) as Block[];
+                                unifiedCache.set(templateKey(`individual:${normalizedKey}`), blocks);
+                                setState(p => ({
+                                    ...p,
+                                    stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
+                                    stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'individual-json' as any }
+                                }));
+                            })
+                            .catch(() => { });
                     }
-                    // Nota: fetch síncrono não é possível aqui; master será usado e, em paralelo, tentamos hidratar individual
-                    fetch(individualUrl)
-                        .then(res => res.ok ? res.json() : null)
-                        .then(json => {
-                            if (!json || !Array.isArray(json.blocks)) return;
-                            const blocks = (json.blocks as any[]).map((b, idx) => ({
-                                id: b.id || `block-${idx}`,
-                                type: (b.type || 'text-inline') as any,
-                                order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
-                                properties: b.properties || b.props || {},
-                                content: b.content || {}
-                            })) as Block[];
-                            unifiedCache.set(templateKey(`individual:${normalizedKey}`), blocks);
-                            setState(p => ({
-                                ...p,
-                                stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
-                                stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'individual-json' as any }
-                            }));
-                        })
-                        .catch(() => { });
                 } catch { }
 
                 // ✅ Se conseguimos masterBlocks (JSON público hidratado), usar

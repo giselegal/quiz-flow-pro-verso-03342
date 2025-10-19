@@ -215,7 +215,17 @@ export default function ModularQuestionStep({
     const topLevelBlocks: Block[] = React.useMemo(() => {
         if (!hasRealBlocks) return [];
         const all = (effectiveBlocks as Block[]);
-        // Preferir blocos de topo; se todos tiverem parentId (layout aninhado), usar todos como fallback
+        // Conjunto de tipos relevantes para perguntas (inclui options-grid e navegação)
+        const relevantTypes = new Set([
+            'question-progress', 'question-number', 'question-text', 'question-instructions',
+            'options-grid', 'quiz-options', 'question-navigation', 'quiz-navigation', 'button-inline'
+        ]);
+        // 1) Tente extrair diretamente blocos relevantes dentre TODOS (inclui filhos)
+        const relevant = all.filter(b => relevantTypes.has(String((b as any).type || '').toLowerCase()));
+        if (relevant.length > 0) {
+            return relevant.sort((a, b) => (a.order || 0) - (b.order || 0));
+        }
+        // 2) Caso contrário, use a estratégia anterior: top-level ou todos
         const topOnly = all.filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
         const list = topOnly.length > 0 ? topOnly : all;
         return list.sort((a, b) => (a.order || 0) - (b.order || 0));
