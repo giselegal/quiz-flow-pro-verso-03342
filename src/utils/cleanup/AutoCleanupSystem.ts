@@ -425,8 +425,8 @@ export const stopAutoCleanup = (): void => {
 if (typeof window !== 'undefined') {
   startAutoCleanup();
 
-  // Cleanup ao sair da página
-  window.addEventListener('beforeunload', () => {
+  // Cleanup ao sair da página (pagehide para evitar depreciação de unload)
+  window.addEventListener('pagehide', () => {
     const cleaned = cleanupManager.cleanupAll();
     console.info(`🧹 Page unload cleanup: ${cleaned} resources cleaned`);
   });

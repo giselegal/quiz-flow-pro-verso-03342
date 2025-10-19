@@ -358,7 +358,7 @@ if (typeof window !== 'undefined') {
 
     // Report em dev mode
     if (import.meta.env.DEV) {
-        window.addEventListener('beforeunload', () => {
+        window.addEventListener('pagehide', () => {
             const report = imageOptimizer.getPerformanceReport();
             console.log('📊 Image Optimization Report:', report);
         });
