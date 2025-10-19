@@ -11,6 +11,7 @@ import { UnifiedStepRenderer } from './UnifiedStepRenderer';
 import { smartMigration } from '@/utils/stepDataMigration';
 import BlockRow from './BlockRow';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { Badge } from '@/components/ui/badge';
 
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
@@ -125,6 +126,12 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         return (editor?.state?.stepBlocks?.[key] || migratedStep.blocks || []) as any[];
     }, [editor?.state?.stepBlocks, migratedStep]);
 
+    // Fonte de dados do step (diagnóstico)
+    const stepSource = useMemo(() => {
+        const key = migratedStep?.id || '';
+        return (editor?.state?.stepSources?.[key] || '').toString();
+    }, [editor?.state?.stepSources, migratedStep?.id]);
+
     // ✅ NOVO: Zona droppable ao final do canvas para aceitar novos componentes
     const { setNodeRef: setDropZoneRef, isOver } = useDroppable({
         id: 'canvas-end'
@@ -198,6 +205,12 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                 <div className="px-3 py-2">
                                     <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={migratedStep.id} />
                                 </div>
+                                {migratedStep?.id && stepSource && (
+                                    <div className="px-3 pb-2 flex items-center gap-2 text-xs text-muted-foreground">
+                                        <span>Fonte:</span>
+                                        <Badge variant="outline">{stepSource}</Badge>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Se BlockRow for fornecido, usar caminho de renderização virtualizado simples */}

@@ -17,7 +17,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 }) => {
   // ES7+ Destructuring com default values e optional chaining
   const {
-    content: rawContent = 'Texto exemplo',
+    content: propsContent,
     fontSize = 'medium',
     fontWeight = 'normal',
     fontFamily = 'inherit',
@@ -40,11 +40,23 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Normalizar content para string (pode vir como objeto com .text)
   const content = useMemo(() => {
-    if (typeof rawContent === 'string') return rawContent;
-    if (typeof rawContent === 'object' && rawContent?.text) return rawContent.text;
-    if (typeof rawContent === 'object' && rawContent?.content) return rawContent.content;
-    return String(rawContent || 'Texto exemplo');
-  }, [rawContent]);
+    // 1) properties.content
+    if (typeof propsContent === 'string') return propsContent;
+    if (typeof propsContent === 'object' && propsContent?.text) return propsContent.text;
+    if (typeof propsContent === 'object' && propsContent?.content) return propsContent.content;
+
+    // 2) block.content?.text | block.content?.content
+    const c: any = (block as any)?.content;
+    if (c && typeof c === 'object') {
+      if (typeof c.text === 'string' && c.text) return c.text;
+      if (typeof c.content === 'string' && c.content) return c.content;
+    }
+
+    // 3) block.content string direta
+    if (typeof c === 'string' && c) return c;
+
+    return 'Texto exemplo';
+  }, [propsContent, block]);
 
   // ES7+ Object property shorthand e computed property names
   const fontSizeClasses = {

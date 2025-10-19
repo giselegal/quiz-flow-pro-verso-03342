@@ -431,7 +431,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         // ✅ Calcular resultado real (edição e produção) a partir das respostas atuais
         const answers = getPreviewAnswers();
         const { primaryStyleId, secondaryStyleIds, scores } = computeResult({ answers });
-        const typedScores: QuizScores = {
+        const hasAnyScore = !!scores && Object.values(scores as any).some((v: any) => Number(v) > 0);
+        const typedScores: QuizScores = hasAnyScore ? {
           natural: (scores as any).natural || 0,
           classico: (scores as any).classico || 0,
           contemporaneo: (scores as any).contemporaneo || 0,
@@ -440,6 +441,16 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
           sexy: (scores as any).sexy || 0,
           dramatico: (scores as any).dramatico || 0,
           criativo: (scores as any).criativo || 0,
+        } : {
+          // 🎯 MOCK APENAS NO EDITOR: visualizar layout completo do step 20
+          natural: 34,
+          classico: 22,
+          contemporaneo: 18,
+          elegante: 16,
+          romantico: 6,
+          sexy: 2,
+          dramatico: 1,
+          criativo: 1,
         };
 
         // ✅ MODULAR para EDIÇÃO e PRODUÇÃO (Step 20)
@@ -450,8 +461,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
             isEditable={isEditMode}
             userProfile={{
               userName: sessionData.userName || 'Visitante',
-              resultStyle: primaryStyleId || sessionData.resultStyle || 'natural',
-              secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : (sessionData.secondaryStyles || []),
+              resultStyle: (primaryStyleId || sessionData.resultStyle || (isEditMode ? 'natural' : '')) || 'natural',
+              secondaryStyles: secondaryStyleIds?.length ? secondaryStyleIds : (sessionData.secondaryStyles || (isEditMode ? ['classico', 'contemporaneo'] : [])),
               scores: Object.entries(typedScores).map(([name, score]) => ({ name, score: Number(score) })),
             }}
             selectedBlockId={selectedBlockId || undefined}

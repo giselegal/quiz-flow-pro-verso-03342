@@ -48,7 +48,7 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
       type: block.type || 'text',
       content: block.content || {},
       properties: block.properties || block.props || {},
-      order: block.order ?? index,
+      order: (block.order != null ? block.order : (block.position != null ? block.position : index)),
       parentId: block.parentId || null
     }));
   }
