@@ -15,13 +15,13 @@ export function notify(message: string, level: NotifyLevel = 'info', title?: str
 
   // Notificação local via toast
   try {
-    toast({
+    const toastOptions: any = {
       title: title || (level === 'success' ? 'Sucesso' : level === 'error' ? 'Erro' : level === 'warning' ? 'Aviso' : 'Informação'),
       description,
       // Shadcn: usar variant quando disponível
-      // @ts-expect-error: variant pode não estar tipado em todos os setups
       variant: level === 'error' ? 'destructive' : level === 'warning' ? 'warning' : undefined,
-    } as any);
+    };
+    toast(toastOptions);
   } catch {
     // Fallback final: console
     try {

@@ -33,21 +33,33 @@ function replaceWindowAlert() {
         try { originalAlert?.(text); } catch { /* noop */ }
       }
     };
-    // @ts-expect-error: override intencional para evitar depreciação em iframes
-    window.alert = safe;
+    (window as any).alert = safe;
   } catch { /* noop */ }
 }
 
 function patchUnloadListeners() {
   try {
     const originalAdd = window.addEventListener.bind(window);
-    // @ts-expect-error: sobrescrever assinatura com wrapper compatível
-    window.addEventListener = (type: any, listener: any, options?: any) => {
+    const originalRemove = window.removeEventListener.bind(window);
+    let warnedOnce = false;
+
+    (window as any).addEventListener = (type: any, listener: any, options?: any) => {
       if (type === 'unload') {
-        try { console.warn('⚠️ Redirecionando listener de "unload" para "pagehide"'); } catch {}
+        if (!warnedOnce) {
+          try { console.warn('⚠️ Redirecionando listener de "unload" para "pagehide"'); } catch {}
+          warnedOnce = true;
+        }
         return originalAdd('pagehide', listener as any, options as any);
       }
       return originalAdd(type, listener as any, options as any);
+    };
+
+    // Redireciona remoção para manter consistência
+    (window as any).removeEventListener = (type: any, listener: any, options?: any) => {
+      if (type === 'unload') {
+        return originalRemove('pagehide', listener as any, options as any);
+      }
+      return originalRemove(type, listener as any, options as any);
     };
   } catch { /* noop */ }
 }
@@ -56,9 +68,14 @@ export function installDeprecationGuards() {
   // Aplicar sempre em dev e hosts de preview; opcional em produção
   const shouldInstall = import.meta.env.DEV || isPreviewHost();
   try {
+    // Evita múltiplas instalações (HMR)
+    if (typeof window !== 'undefined' && (window as any).__DEPRECATION_GUARDS_INSTALLED__) return;
     replaceWindowAlert();
     if (shouldInstall) {
       patchUnloadListeners();
+    }
+    if (typeof window !== 'undefined') {
+      (window as any).__DEPRECATION_GUARDS_INSTALLED__ = true;
     }
   } catch { /* noop */ }
 }
