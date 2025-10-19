@@ -251,6 +251,7 @@ export default function ModularStrategicQuestionStep({
                                                 onAnswerChange?.(last);
                                             },
                                             onAnswerChange,
+                                            requiredSelections: 1,
                                             canProceed,
                                             onNext: () => { if (typeof currentStepReal === 'number') emitNavigate(currentStepReal + 1); },
                                             onPrev: () => { if (typeof currentStepReal === 'number') emitNavigate(currentStepReal - 1); },
