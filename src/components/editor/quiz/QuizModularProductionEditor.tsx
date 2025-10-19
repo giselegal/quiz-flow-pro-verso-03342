@@ -2525,7 +2525,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     panelWidths={panelWidths}
                     Resizer={Resizer as any}
                     navOverlay={navOpen && (
-                        <div className="fixed inset-0 z-50 flex">
+                        <div className="fixed inset-0 z-50 flex" data-testid="nav-overlay">
                             <div className="absolute inset-0 bg-black/40" onClick={() => setNavOpen(false)} />
                             <div className="relative ml-auto h-full w-[420px] bg-white shadow-xl border-l flex flex-col">
                                 <div className="p-4 border-b flex items-center justify-between">
@@ -2581,7 +2581,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 </div>
                                 <div className="p-3 border-t flex gap-2">
                                     <Button size="sm" variant="outline" onClick={() => { setNavOpen(false); }}>Fechar</Button>
-                                    <Button size="sm" onClick={handleSave} disabled={isSaving}>Salvar Alterações</Button>
+                                    <Button size="sm" data-testid="overlay-save-button" onClick={handleSave} disabled={isSaving}>Salvar Alterações</Button>
                                 </div>
                             </div>
                         </div>
@@ -2611,7 +2611,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     {isDirty && <Badge variant="outline">Não salvo</Badge>}
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Button variant="outline" size="sm" onClick={() => setNavOpen(true)}>Navegação</Button>
+                                    <Button variant="outline" size="sm" data-testid="nav-open-button" onClick={() => setNavOpen(true)}>Navegação</Button>
                                     <Button variant="outline" size="sm" onClick={() => {
                                         const previewUrl = `/preview?slug=quiz-estilo${funnelId ? `&funnel=${funnelId}` : ''}`;
                                         window.open(previewUrl, '_blank');

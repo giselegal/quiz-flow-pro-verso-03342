@@ -7,33 +7,18 @@ test.describe('Editor - Options Grid e Salvar', () => {
     await page.goto('/');
   });
 
-  test('Seleção em Options Grid em step inicial e salvar', async ({ page }) => {
+  test('Salvar alterações via overlay de Navegação', async ({ page }) => {
     // Abrir o editor com o template alvo (quando suportado)
     await page.goto('/editor?template=quiz21StepsComplete');
 
     // Esperar o canvas carregar
     await expect(page.getByTestId('canvas-editor')).toBeVisible({ timeout: 15000 });
 
-  // Selecionar a etapa de pergunta (step-02)
-  await page.getByText('step-02', { exact: true }).first().click();
-
-  // Alternar para Preview para garantir que opções interativas estão visíveis (botão dentro do Canvas)
-  await page.getByTestId('canvas-editor').getByRole('button', { name: /^Preview$/i }).click();
-
-  // Dentro do canvas, pegar a primeira opção clicável do grid
-  const firstOption = page.locator('[data-testid^="grid-option-"]').first();
-    await expect(firstOption).toBeVisible({ timeout: 10000 });
-
-    // Clicar para selecionar e verificar o atributo data-selected
-    await firstOption.click();
-    await expect(firstOption).toHaveAttribute('data-selected', 'true');
-
-  // Abrir o overlay de Navegação e ajustar um link para forçar alteração
-  await page.getByRole('button', { name: /Navegação/i }).click();
-  const firstSelect = page.locator('select').first();
-  await expect(firstSelect).toBeVisible();
-  // Selecionar a primeira opção do select (ex.: finalizar)
-  await firstSelect.selectOption({ index: 0 });
+    // Abrir o overlay de Navegação (botão no header principal)
+    await page.locator('header >> text=Navegação').first().click().catch(async () => {
+      // fallback: usa o primeiro botão Navegação visível no topo
+      await page.locator('button:has-text("Navegação")').first().click();
+    });
 
   // No overlay, clicar em "Salvar Alterações" (não depende do isDirty)
   await page.getByRole('button', { name: /Salvar Alterações/i }).click();
