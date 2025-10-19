@@ -294,11 +294,31 @@ export default function ModularQuestionStep({
             return <div ref={setNodeRef} className={cn('h-4 -my-1 transition-all border-2 border-dashed rounded', isOver ? 'bg-blue-100 border-blue-400' : 'bg-gray-50 border-gray-300 opacity-60 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400')} />;
         };
 
+        // Fallback: se nenhum bloco options-grid/quix-options for encontrado, injetar um bloco sintético com base em safeData
+        const hasOptionsGridBlock = topLevelBlocks.some(b => ['options-grid', 'quiz-options'].includes(String((b as any).type || '').toLowerCase()));
+        const renderBlocks: Block[] = hasOptionsGridBlock ? topLevelBlocks : [
+            ...topLevelBlocks,
+            {
+                id: `${stepId}-synthetic-options` as any,
+                type: 'options-grid' as any,
+                order: (topLevelBlocks[topLevelBlocks.length - 1]?.order || 0) + 1,
+                properties: {
+                    options: safeData.options,
+                    columns: hasImages ? 2 : 1,
+                    multipleSelection: safeData.requiredSelections > 1,
+                    maxSelections: safeData.requiredSelections,
+                    requiredSelections: safeData.requiredSelections,
+                    showImages: hasImages
+                },
+                content: {}
+            } as any
+        ];
+
         return (
             <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={topLevelBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                        {topLevelBlocks.map((block, index) => (
+                    <SortableContext items={renderBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+                        {renderBlocks.map((block, index) => (
                             <React.Fragment key={block.id}>
                                 <DropZoneBefore blockId={block.id} insertIndex={index} />
                                 <SortableItem id={block.id}>
