@@ -3,6 +3,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { notify } from '@/utils/notify';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Webhook, Zap, CheckCircle, AlertTriangle, TestTube } from 'lucide-react';
@@ -50,10 +51,10 @@ export default function WebhooksConfigTab({ webhooks, onUpdate, disabled = false
             console.log(`🧪 Testando webhook ${type}: ${url}`);
             // Aqui você implementaria o teste real do webhook
             // Por enquanto, apenas simula o teste
-            alert(`Teste de webhook enviado para: ${url}\n\nVerifique seus logs para confirmar o recebimento.`);
+            notify(`Teste de webhook enviado para: ${url}`, 'success', 'Webhook');
         } catch (error) {
             console.error('❌ Erro no teste do webhook:', error);
-            alert('Erro ao testar webhook. Verifique a URL e tente novamente.');
+            notify('Erro ao testar webhook. Verifique a URL e tente novamente.', 'error', 'Webhook');
         }
     };
 
@@ -166,12 +167,12 @@ export default function WebhooksConfigTab({ webhooks, onUpdate, disabled = false
                 )}
 
                 {/* Informações sobre Payload */}
-                {webhooks.enabled && (
-                    <div className="border-t pt-4 space-y-3">
-                        <h4 className="font-medium text-sm">Estrutura do Payload</h4>
-                        <div className="bg-muted p-3 rounded-lg">
-                            <pre className="text-xs overflow-auto">
-                                {`{
+                notify(`Teste de webhook enviado para: ${url}`, 'success', 'Webhook');
+                <div className="border-t pt-4 space-y-3">
+                    <h4 className="font-medium text-sm">Estrutura do Payload</h4>
+                    notify('Erro ao testar webhook. Verifique a URL e tente novamente.', 'error', 'Webhook');
+                    <pre className="text-xs overflow-auto">
+                        {`{
   "event": "leadCapture",
   "timestamp": "2024-01-15T10:30:00Z",
   "funnelId": "quiz-example",
@@ -188,50 +189,50 @@ export default function WebhooksConfigTab({ webhooks, onUpdate, disabled = false
     "utm_campaign": "campanha_teste"
   }
 }`}
-                            </pre>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                            Todos os webhooks enviarão dados no formato JSON via POST com Content-Type: application/json
-                        </p>
-                    </div>
+                    </pre>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                    Todos os webhooks enviarão dados no formato JSON via POST com Content-Type: application/json
+                </p>
+            </div>
                 )}
 
-                {/* Status Summary */}
-                {webhooks.enabled && (
-                    <div className="border-t pt-4 space-y-3">
-                        <h4 className="font-medium text-sm">Status dos Webhooks</h4>
-                        <div className="grid grid-cols-1 gap-2">
-                            {webhookFields.map((field) => {
-                                const url = webhooks[field.key as keyof FunnelWebhooksConfig] as string;
-                                const status = getWebhookStatus(url);
+            {/* Status Summary */}
+            {webhooks.enabled && (
+                <div className="border-t pt-4 space-y-3">
+                    <h4 className="font-medium text-sm">Status dos Webhooks</h4>
+                    <div className="grid grid-cols-1 gap-2">
+                        {webhookFields.map((field) => {
+                            const url = webhooks[field.key as keyof FunnelWebhooksConfig] as string;
+                            const status = getWebhookStatus(url);
 
-                                return (
-                                    <div key={field.key} className="flex items-center justify-between p-2 bg-muted rounded text-sm">
-                                        <span>{field.label}</span>
-                                        <Badge variant={status.status === 'valid' ? 'default' : 'secondary'}>
-                                            {status.status === 'valid' ? 'Configurado' : 'Não configurado'}
-                                        </Badge>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                            return (
+                                <div key={field.key} className="flex items-center justify-between p-2 bg-muted rounded text-sm">
+                                    <span>{field.label}</span>
+                                    <Badge variant={status.status === 'valid' ? 'default' : 'secondary'}>
+                                        {status.status === 'valid' ? 'Configurado' : 'Não configurado'}
+                                    </Badge>
+                                </div>
+                            );
+                        })}
                     </div>
-                )}
+                </div>
+            )}
 
-                {/* Configurações de Segurança */}
-                {webhooks.enabled && (
-                    <div className="border-t pt-4 space-y-3">
-                        <h4 className="font-medium text-sm">Segurança e Boas Práticas</h4>
-                        <div className="space-y-2 text-xs text-muted-foreground">
-                            <p>• Use sempre HTTPS para URLs de webhook</p>
-                            <p>• Configure timeouts apropriados em seu endpoint (recomendado: 10 segundos)</p>
-                            <p>• Implemente validação de origem usando IPs ou tokens</p>
-                            <p>• Retorne status HTTP 200 para confirmar recebimento</p>
-                            <p>• Implemente retry logic para falhas temporárias</p>
-                        </div>
+            {/* Configurações de Segurança */}
+            {webhooks.enabled && (
+                <div className="border-t pt-4 space-y-3">
+                    <h4 className="font-medium text-sm">Segurança e Boas Práticas</h4>
+                    <div className="space-y-2 text-xs text-muted-foreground">
+                        <p>• Use sempre HTTPS para URLs de webhook</p>
+                        <p>• Configure timeouts apropriados em seu endpoint (recomendado: 10 segundos)</p>
+                        <p>• Implemente validação de origem usando IPs ou tokens</p>
+                        <p>• Retorne status HTTP 200 para confirmar recebimento</p>
+                        <p>• Implemente retry logic para falhas temporárias</p>
                     </div>
-                )}
-            </CardContent>
-        </Card>
+                </div>
+            )}
+        </CardContent>
+        </Card >
     );
 }

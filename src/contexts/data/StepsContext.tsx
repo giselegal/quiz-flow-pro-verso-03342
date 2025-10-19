@@ -287,7 +287,10 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const deleteStep = useCallback(
     (stepId: string) => {
       if (steps.length <= 1) {
-        alert('Não é possível excluir a última etapa');
+        try {
+          // import dinâmico sem await para evitar tornar a função assíncrona
+          import('@/utils/notify').then(mod => mod.notify('Não é possível excluir a última etapa', 'warning', 'Ação bloqueada')).catch(() => { });
+        } catch { }
         return;
       }
 

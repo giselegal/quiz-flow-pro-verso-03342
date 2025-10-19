@@ -437,7 +437,7 @@ export function measurePerformance(context?: string) {
 // ===== CLEANUP ON WINDOW UNLOAD =====
 
 if (typeof window !== 'undefined') {
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener('pagehide', () => {
         logger.destroy();
     });
 }
