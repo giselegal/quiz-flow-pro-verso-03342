@@ -64,7 +64,7 @@ class StructuredLogger {
 
   private setupUnloadHandler() {
     if (typeof window !== 'undefined') {
-      window.addEventListener('beforeunload', () => {
+      window.addEventListener('pagehide', () => {
         this.flush(true);
       });
     }

@@ -71,8 +71,8 @@ class BusinessMetrics {
       }
     });
 
-    // Track before unload
-    window.addEventListener('beforeunload', () => {
+      // Track page hide
+      window.addEventListener('pagehide', () => {
       this.trackInteraction('session_end', 'window', {
         sessionDuration: Date.now() - this.sessionStart
       });
