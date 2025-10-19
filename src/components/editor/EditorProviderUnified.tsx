@@ -533,7 +533,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 // ✅ PRIORIDADE 0: JSON normalizado por etapa (public/templates/normalized/step-XX.json)
                 try {
                     const stepNum = Number(normalizedKey.replace('step-', ''));
-                    const isNormalizedRange = (stepNum >= 2 && stepNum <= 11) || (stepNum >= 13 && stepNum <= 18);
+                    const isNormalizedRange = (stepNum >= 2 && stepNum <= 11) || (stepNum >= 13 && stepNum <= 18) || stepNum === 19;
                     if (isNormalizedRange) {
                         const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
                         if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {

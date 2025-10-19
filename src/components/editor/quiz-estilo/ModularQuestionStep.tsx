@@ -214,7 +214,10 @@ export default function ModularQuestionStep({
     const hasRealBlocks = Array.isArray(effectiveBlocks) && effectiveBlocks.length > 0;
     const topLevelBlocks: Block[] = React.useMemo(() => {
         if (!hasRealBlocks) return [];
-        const list = (effectiveBlocks as Block[]).filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
+        const all = (effectiveBlocks as Block[]);
+        // Preferir blocos de topo; se todos tiverem parentId (layout aninhado), usar todos como fallback
+        const topOnly = all.filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
+        const list = topOnly.length > 0 ? topOnly : all;
         return list.sort((a, b) => (a.order || 0) - (b.order || 0));
     }, [effectiveBlocks, hasRealBlocks]);
     const DEFAULT_ORDER = ['question-number', 'question-text', 'question-instructions', 'question-options', 'question-button'];
