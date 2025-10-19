@@ -129,11 +129,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         case 'quiz-question-header':
         case 'question-header':
             return <QuizQuestionHeaderBlock block={block} {...rest} />;
-        case 'quiz-intro-header':
-            return <QuizIntroHeaderBlock block={block} {...rest} />;
         case 'text-inline':
             return <TextInlineBlock block={block} {...rest} />;
-        case 'image-display-inline':
         case 'image-inline':
         case 'image':
             return <ImageDisplayBlock block={block} {...rest} />;
