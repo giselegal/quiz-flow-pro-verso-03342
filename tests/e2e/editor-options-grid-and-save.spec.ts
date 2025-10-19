@@ -14,8 +14,8 @@ test.describe('Editor - Options Grid e Salvar', () => {
     // Esperar o canvas carregar
     await expect(page.getByTestId('canvas-editor')).toBeVisible({ timeout: 15000 });
 
-    // Encontrar o primeiro bloco de options-grid visível no canvas
-    const optionsGrid = page.locator('[data-block-type="options-grid"]').first();
+  // Encontrar o primeiro bloco de opções (aceita 'quiz-options' ou 'options-grid') visível no canvas
+  const optionsGrid = page.locator('[data-block-type="quiz-options"], [data-block-type="options-grid"]').first();
     await expect(optionsGrid).toBeVisible({ timeout: 10000 });
 
     // Dentro do grid, pegar a primeira opção clicável

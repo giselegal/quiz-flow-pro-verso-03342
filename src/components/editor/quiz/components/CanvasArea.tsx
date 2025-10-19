@@ -136,7 +136,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     const { setNodeRef: setDropZoneRef, isOver } = useDroppable({
         id: 'canvas-end'
     }); return (
-        <div className="flex-1 bg-gray-100 flex flex-col overflow-hidden">
+        <div className="flex-1 bg-gray-100 flex flex-col overflow-hidden" data-testid="canvas-editor">
             {/* 🎯 CANVAS HEADER - Controles de modo e device */}
             <div className="px-4 py-2 bg-white border-b flex items-center justify-between">
                 <div className="flex items-center gap-2">
