@@ -32,11 +32,16 @@ const TextInlineBlock: React.FC<TextInlineBlockProps> = ({ block, isSelected, is
     const result = useResultOptional();
     const contentText = result ? result.interpolateText(contentTextRaw) : contentTextRaw;
     const size: string = props.size || 'h2';
-    const align: 'left' | 'center' | 'right' | 'justify' = (props.textAlign || props.align || 'center') as any;
+    // Normaliza textAlign aceitando 'center' ou 'text-center'
+    const alignRaw: string = (props.textAlign || props.align || 'center') as any;
+    const align: 'left' | 'center' | 'right' | 'justify' = (String(alignRaw).startsWith('text-') ? String(alignRaw).replace('text-', '') : String(alignRaw)) as any;
     const color: string = props.color || '#432818';
+    const fontFamily: string | undefined = typeof (props as any).fontFamily === 'string' ? (props as any).fontFamily : undefined;
+    const fontSizeClass: string | undefined = typeof (props as any).fontSize === 'string' ? (props as any).fontSize : undefined;
+    const extraClassName: string = typeof (props as any).className === 'string' ? (props as any).className : '';
 
     // Mapear size para classes tailwind simples
-    const sizeClass = size === 'h1' ? 'text-3xl md:text-4xl' : size === 'h2' ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl';
+    const sizeClass = fontSizeClass || (size === 'h1' ? 'text-3xl md:text-4xl' : size === 'h2' ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl');
 
     return (
         <SelectableBlock
@@ -50,8 +55,8 @@ const TextInlineBlock: React.FC<TextInlineBlockProps> = ({ block, isSelected, is
         >
             <div className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto">
                 <div
-                    className={`${sizeClass} font-semibold text-${align}`}
-                    style={{ color, lineHeight: 1.2 }}
+                    className={`${sizeClass} font-semibold text-${align} ${extraClassName}`}
+                    style={{ color, lineHeight: 1.2, ...(fontFamily ? { fontFamily } : {}) }}
                 >
                     <span dangerouslySetInnerHTML={{ __html: contentText }} />
                 </div>

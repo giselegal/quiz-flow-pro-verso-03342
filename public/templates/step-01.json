@@ -10,36 +10,60 @@
   },
   "blocks": [
     {
-      "id": "block-intro-hero",
+      "id": "block-intro-header",
       "type": "quiz-intro-header",
       "position": 0,
       "content": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
-        "title": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você.</span>",
-        "subtitle": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
-        "imageAlt": "Descubra seu estilo predominante",
-        "description": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
         "showProgress": false,
         "progressValue": 0
+      }
+    },
+    {
+      "id": "block-intro-title",
+      "type": "text-inline",
+      "position": 1,
+      "content": {
+        "text": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
       },
-      "style": {
-        "backgroundColor": "#FAF9F7",
-        "textColor": "#432818",
-        "padding": 24
+      "properties": {
+        "textAlign": "center",
+        "fontSize": "text-2xl sm:text-3xl md:text-4xl",
+        "fontWeight": "font-normal",
+        "className": "text-[#432818]",
+        "fontFamily": "\"Playfair Display\", serif"
+      }
+    },
+    {
+      "id": "block-intro-image",
+      "type": "image-display-inline",
+      "position": 2,
+      "properties": {
+        "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
+        "alt": "Descubra seu estilo predominante",
+        "maxWidth": "300px",
+        "objectFit": "contain",
+        "rounded": true
+      }
+    },
+    {
+      "id": "block-intro-description",
+      "type": "text-inline",
+      "position": 3,
+      "content": {
+        "text": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança."
       },
-      "animation": {
-        "type": "fade",
-        "duration": 500,
-        "delay": 0,
-        "easing": "ease-out"
+      "properties": {
+        "textAlign": "center",
+        "fontSize": "text-sm md:text-base",
+        "className": "text-gray-700"
       }
     },
     {
       "id": "block-intro-form",
       "type": "intro-form",
-      "position": 1,
+      "position": 4,
       "properties": {
         "label": "Antes de começarmos, como posso te chamar?",
         "placeholder": "Digite seu primeiro nome aqui...",
@@ -50,7 +74,7 @@
     {
       "id": "block-footer-description",
       "type": "text-inline",
-      "position": 2,
+      "position": 5,
       "content": {
         "text": "Um quiz personalizado que vai revelar qual estilo te representa e como valorizar sua essência através das roupas."
       },

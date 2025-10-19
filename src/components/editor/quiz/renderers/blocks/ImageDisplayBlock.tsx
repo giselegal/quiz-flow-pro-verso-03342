@@ -11,7 +11,8 @@ const ImageDisplayBlock: React.FC<ImageDisplayBlockProps> = ({ block, isSelected
     const props = block.properties || {};
     const src: string = props.src || props.url || block.content?.url || '';
     const alt: string = props.alt || block.content?.alt || 'Imagem';
-    const maxWidth: number = Number(props.maxWidth || 300);
+    const maxWidthRaw: any = props.maxWidth || 300;
+    const maxWidth: string = typeof maxWidthRaw === 'string' ? maxWidthRaw : `${Number(maxWidthRaw)}px`;
     const aspectRatio: string = String(props.aspectRatio || '1.47');
 
     return (
@@ -26,7 +27,7 @@ const ImageDisplayBlock: React.FC<ImageDisplayBlockProps> = ({ block, isSelected
         >
             <div className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto mt-6">
                 <div className="w-full mx-auto flex justify-center">
-                    <div className="overflow-hidden rounded-lg shadow-sm" style={{ aspectRatio, width: '100%', maxWidth: `${maxWidth}px` }}>
+                    <div className="overflow-hidden rounded-lg shadow-sm" style={{ aspectRatio, width: '100%', maxWidth }}>
                         {src ? (
                             <img src={src} alt={alt} className="w-full h-full object-contain" />
                         ) : (

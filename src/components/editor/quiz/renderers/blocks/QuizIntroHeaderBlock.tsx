@@ -44,7 +44,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({ block, isSe
             onOpenProperties={() => onOpenProperties?.(block.id)}
             isDraggable={true}
         >
-            <header className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 py-8 mx-auto space-y-6">
+            <header className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 py-8 mx-auto space-y-8">
                 <div className="flex flex-col items-center space-y-2">
                     <div className="relative">
                         <img
@@ -63,15 +63,15 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({ block, isSe
                     <div className="text-center space-y-3">
                         {titleInterp && (
                             <h1
-                                className="text-2xl md:text-3xl font-bold leading-snug"
-                                style={{ color: '#432818' }}
+                                className="text-2xl sm:text-3xl md:text-4xl leading-tight"
+                                style={{ color: '#432818', fontFamily: '"Playfair Display", serif', fontWeight: 400 }}
                                 dangerouslySetInnerHTML={{ __html: titleInterp }}
                             />
                         )}
                         {subtitleInterp && (
                             <div
                                 className="text-base md:text-lg"
-                                style={{ color: '#432818' }}
+                                style={{ color: '#432818', fontFamily: '"Playfair Display", serif' }}
                                 dangerouslySetInnerHTML={{ __html: subtitleInterp }}
                             />
                         )}
@@ -86,7 +86,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({ block, isSe
                         <img
                             src={imageUrl}
                             alt={imageAlt}
-                            className="object-cover w-full max-w-lg h-auto rounded-xl shadow"
+                            className="object-contain w-full max-w-[300px] h-auto rounded-lg"
                         />
                     </div>
                 )}
