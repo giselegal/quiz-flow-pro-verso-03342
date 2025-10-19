@@ -98,15 +98,20 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
 
     // ✅ STEP 01 - BLOCOS ATÔMICOS DE INTRO (100% Modulares)
     'intro-logo': IntroLogoBlock,
-    'intro-logo-header': IntroLogoHeaderBlock, // Logo + linha decorativa
+    'intro-logo-header': IntroLogoHeaderBlock,
+    'intro-form': IntroFormBlock,
+    'image-display-inline': ImageDisplayInlineBlockAtomic,
+    'footer-copyright': FooterCopyrightBlock,
     'intro-title': IntroTitleBlock,
     'intro-image': IntroImageBlock,
     'intro-description': IntroDescriptionBlock,
-    'intro-form': IntroFormBlock,
-    'footer-copyright': FooterCopyrightBlock,
-    'image-display-inline': ImageDisplayInlineBlockAtomic, // Imagem inline com estilo específico
 
-    // ✅ STEPS 02-11 - PERGUNTAS DO QUIZ
+    // ✅ STEPS 02-11 - PERGUNTAS DO QUIZ (NOVOS BLOCOS MODULARES)
+    'question-progress': lazy(() => import('@/components/editor/blocks/atomic/QuestionProgressBlock')),
+    'question-number': lazy(() => import('@/components/editor/blocks/atomic/QuestionNumberBlock')),
+    'question-text': lazy(() => import('@/components/editor/blocks/atomic/QuestionTextBlock')),
+    'question-instructions': lazy(() => import('@/components/editor/blocks/atomic/QuestionInstructionsBlock')),
+    'question-navigation': lazy(() => import('@/components/editor/blocks/atomic/QuestionNavigationBlock')),
     'quiz-start-page-inline': QuizIntroHeaderBlock,
     'quiz-personal-info-inline': FormInputBlock,
     'quiz-question-inline': TextInlineBlock,

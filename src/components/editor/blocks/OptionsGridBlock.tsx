@@ -462,6 +462,13 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       ? 'flex items-center'
       : 'flex flex-col';
 
+  // 🎯 Cores e estilos do ModularQuestionStep
+  const cardBorderNormal = 'border-2 border-gray-200';
+  const cardBorderSelected = 'border-[#5b4135]';
+  const cardBgSelected = 'bg-gradient-to-br from-white to-[#f8f5f0]';
+  const cardHover = 'hover:border-[#deac6d] hover:shadow-md';
+  const checkmarkBg = 'bg-[#deac6d]';
+
   const gridColsClass = (() => {
     // 🎯 REGRA AUTOMATICA: 1 coluna para texto-only, 2 colunas para imagem+texto
     const hasImages = showImages && options.some((opt: any) =>
@@ -820,50 +827,25 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             ? previewSelections.includes(opt.id)
             : (selectedOptions || []).includes(opt.id);
 
-          // Estilos dinâmicos por seleção
-          const selectedStyles: React.CSSProperties = (() => {
-            switch (selectionStyle) {
-              case 'background':
-                return isSelectedOption
-                  ? {
-                    backgroundColor: '#FEF3C7', // amber-100
-                    borderColor: '#F59E0B', // amber-500
-                    borderWidth: '1px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                  }
-                  : { backgroundColor: 'white', borderColor: '#E5E7EB' };
-              case 'shadow':
-                return isSelectedOption
-                  ? {
-                    boxShadow: `0 0 0 1px #F59E0B, 0 4px 12px rgba(245, 158, 11, 0.25)`,
-                    borderColor: '#F59E0B',
-                    borderWidth: '1px',
-                    backgroundColor: '#FFFBEB', // amber-50
-                  }
-                  : { borderColor: '#E5E7EB' };
-              case 'glow':
-                return isSelectedOption
-                  ? {
-                    borderColor: '#F59E0B',
-                    borderWidth: '1px',
-                    boxShadow: `0 0 0 1px rgba(245, 158, 11, 0.3), 0 0 20px rgba(245, 158, 11, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1)`,
-                    backgroundColor: 'rgba(255, 251, 235, 0.8)', // amber-50 com transparência
-                  }
-                  : { borderColor: '#E5E7EB' };
-              default:
-                // border - estilo padrão com borda fina dourada
-                return isSelectedOption
-                  ? {
-                    borderColor: '#F59E0B',
-                    borderWidth: '1px',
-                    boxShadow: `0 0 0 1px rgba(245, 158, 11, 0.2), 0 2px 8px rgba(245, 158, 11, 0.15)`,
-                    backgroundColor: '#FFFBEB' // amber-50
-                  }
-                  : { borderColor: '#E5E7EB' };
+          // 🎯 Estilos do ModularQuestionStep
+          const selectedStyles: React.CSSProperties = isSelectedOption
+            ? {
+              borderColor: '#5b4135',
+              borderWidth: '2px',
+              background: 'linear-gradient(to bottom right, white, #f8f5f0)',
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+              transform: 'translateY(-4px)',
             }
-          })();
+            : {
+              borderColor: '#e5e7eb',
+              borderWidth: '2px',
+            };
 
-          const hoverStyles: React.CSSProperties = { boxShadow: `0 6px 14px ${hoverColor}33` };
+          // 🎯 Hover do ModularQuestionStep
+          const hoverStyles: React.CSSProperties = { 
+            borderColor: '#deac6d',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          };
 
           return (
             <div
@@ -879,8 +861,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                   handleOptionSelect(opt.id);
                 }
               }}
-              className={`rounded-lg border p-4 transition-all duration-200 cursor-pointer ${isSelectedOption ? '' : 'border-neutral-200 bg-white'
-                } ${cardLayoutClass}`}
+              className={`rounded-lg p-4 transition-all duration-200 cursor-pointer bg-white ${cardLayoutClass}`}
               onClick={(e) => {
                 console.log('🖱️ Option clicked!', {
                   optionId: opt.id,
@@ -975,6 +956,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                 >
                   {opt.text}
                 </p>
+              )}
+              {/* 🎯 Checkmark circular dourado quando selecionado */}
+              {isSelectedOption && (
+                <div className="mt-2 w-6 h-6 rounded-full flex items-center justify-center mx-auto" style={{ backgroundColor: '#deac6d' }}>
+                  <span className="text-white text-xs font-bold">✓</span>
+                </div>
               )}
             </div>
           );

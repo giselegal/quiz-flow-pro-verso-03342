@@ -25,6 +25,11 @@ import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHea
 import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
 import FooterCopyrightBlock from '@/components/editor/blocks/atomic/FooterCopyrightBlock';
 import ImageDisplayInlineBlockNew from '@/components/editor/blocks/inline/ImageDisplayInlineBlock';
+import QuestionProgressBlock from '@/components/editor/blocks/atomic/QuestionProgressBlock';
+import QuestionNumberBlock from '@/components/editor/blocks/atomic/QuestionNumberBlock';
+import QuestionTextBlock from '@/components/editor/blocks/atomic/QuestionTextBlock';
+import QuestionInstructionsBlock from '@/components/editor/blocks/atomic/QuestionInstructionsBlock';
+import QuestionNavigationBlock from '@/components/editor/blocks/atomic/QuestionNavigationBlock';
 
 export interface BlockRendererProps {
     block: Block;
@@ -96,6 +101,17 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         case 'footer-copyright':
             // Novo bloco de footer com copyright
             return <FooterCopyrightBlock block={block} {...rest} />;
+        // ===== QUESTIONS (Steps 02-11) - NOVOS BLOCOS MODULARES =====
+        case 'question-progress':
+            return <QuestionProgressBlock block={block} {...rest} />;
+        case 'question-number':
+            return <QuestionNumberBlock block={block} {...rest} />;
+        case 'question-text':
+            return <QuestionTextBlock block={block} {...rest} />;
+        case 'question-instructions':
+            return <QuestionInstructionsBlock block={block} {...rest} contextData={rest.contextData} />;
+        case 'question-navigation':
+            return <QuestionNavigationBlock block={block} {...rest} contextData={rest.contextData} />;
         // ===== QUESTIONS (Steps 02-18) =====
         case 'question-title':
             // Template v3: question-title section → heading

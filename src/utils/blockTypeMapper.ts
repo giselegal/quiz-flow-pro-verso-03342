@@ -12,6 +12,13 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
     'intro-hero': 'intro-logo-header',    // ✅ CORRIGIDO: apenas logo + linha decorativa (não mais quiz-intro-header)
     'welcome-form': 'intro-form',  // ✅ Mapear para componente correto do registro
 
+    // ✅ Question blocks (Steps 2-11)
+    'question-progress': 'question-progress',
+    'question-number': 'question-number',
+    'question-text': 'question-text',
+    'question-instructions': 'question-instructions',
+    'question-navigation': 'question-navigation',
+
     // Question blocks
     'question-hero': 'quiz-question-header',
     'question-title': 'heading-inline', // Título separado da questão (novo section v3)
