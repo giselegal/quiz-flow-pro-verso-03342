@@ -19,7 +19,6 @@ import DecorativeBarInlineBlock from '@/components/editor/blocks/DecorativeBarIn
 const QuizLogoBlock = lazy(() => import('@/components/editor/blocks/QuizLogoBlock'));
 const QuizProgressBlock = lazy(() => import('@/components/editor/blocks/QuizProgressBlock'));
 const QuizBackButtonBlock = lazy(() => import('@/components/editor/blocks/QuizBackButtonBlock'));
-const ImageDisplayInlineBlock = lazy(() => import('@/components/editor/blocks/ImageDisplayInlineBlock'));
 const QuizQuestionHeaderBlock = lazy(() => import('@/components/editor/blocks/QuizQuestionHeaderBlock'));
 import QuizTransitionLoaderBlock from '@/components/editor/blocks/QuizTransitionLoaderBlock';
 const QuizResultHeaderBlock = lazy(() => import('@/components/editor/blocks/QuizResultHeaderBlock'));
@@ -59,10 +58,13 @@ import TransitionMessageBlock from '@/components/editor/blocks/atomic/Transition
 
 // Imports estáticos dos blocos atômicos de intro (Step 1)
 import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
+import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHeaderBlock';
 import IntroTitleBlock from '@/components/editor/blocks/atomic/IntroTitleBlock';
 import IntroImageBlock from '@/components/editor/blocks/atomic/IntroImageBlock';
 import IntroDescriptionBlock from '@/components/editor/blocks/atomic/IntroDescriptionBlock';
 import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
+import FooterCopyrightBlock from '@/components/editor/blocks/atomic/FooterCopyrightBlock';
+import ImageDisplayInlineBlockAtomic from '@/components/editor/blocks/inline/ImageDisplayInlineBlock';
 
 // 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
 export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
@@ -78,11 +80,10 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'quiz-transition-loader': QuizTransitionLoaderBlock,
     'quiz-result-header': QuizResultHeaderBlock,
     'quiz-offer-hero': QuizOfferHeroBlock,
-    'image-display-inline': ImageDisplayInlineBlock,
 
     // ✅ STEP 01 - COMPONENTES BÁSICOS
     // Preferir versões estáticas para tipos críticos usados no template
-    'quiz-intro-header': QuizIntroHeaderBlock,
+    'quiz-intro-header': IntroLogoHeaderBlock, // Usar versão simples apenas logo + linha
     'decorative-bar': DecorativeBarInlineBlock,
     'decorative-bar-inline': DecorativeBarInlineBlock,
     text: TextInlineBlock,
@@ -97,10 +98,13 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
 
     // ✅ STEP 01 - BLOCOS ATÔMICOS DE INTRO (100% Modulares)
     'intro-logo': IntroLogoBlock,
+    'intro-logo-header': IntroLogoHeaderBlock, // Logo + linha decorativa
     'intro-title': IntroTitleBlock,
     'intro-image': IntroImageBlock,
     'intro-description': IntroDescriptionBlock,
     'intro-form': IntroFormBlock,
+    'footer-copyright': FooterCopyrightBlock,
+    'image-display-inline': ImageDisplayInlineBlockAtomic, // Imagem inline com estilo específico
 
     // ✅ STEPS 02-11 - PERGUNTAS DO QUIZ
     'quiz-start-page-inline': QuizIntroHeaderBlock,

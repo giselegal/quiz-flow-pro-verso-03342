@@ -9,7 +9,7 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
     // ====== V3 SECTIONS → BLOCK TYPES (MAPEAMENTO COMPLETO) ======
     // Intro blocks - mapear para componentes completos usados no editor/preview
     // Gargalo #1: corrigir mapeamentos para blocos atômicos reais
-    'intro-hero': 'quiz-intro-header',    // ✅ Corrigido: componente que consome título/subtítulo/descrição
+    'intro-hero': 'intro-logo-header',    // ✅ CORRIGIDO: apenas logo + linha decorativa (não mais quiz-intro-header)
     'welcome-form': 'intro-form',  // ✅ Mapear para componente correto do registro
 
     // Question blocks

@@ -21,6 +21,10 @@ import QuizOfferHeroBlock from '@/components/editor/blocks/QuizOfferHeroBlock';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 // Blocos atômicos específicos usados no Step 01
 import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
+import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHeaderBlock';
+import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
+import FooterCopyrightBlock from '@/components/editor/blocks/atomic/FooterCopyrightBlock';
+import ImageDisplayInlineBlockNew from '@/components/editor/blocks/inline/ImageDisplayInlineBlock';
 
 export interface BlockRendererProps {
     block: Block;
@@ -60,8 +64,11 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
     switch (String(block.type)) {
         // ===== INTRO (Step 01) =====
         case 'intro-hero':
+        case 'intro-logo-header':
+            // Template v3: intro-hero → intro-logo-header (apenas logo + linha)
+            return <IntroLogoHeaderBlock block={block} {...rest} />;
         case 'quiz-intro-header':
-            // Template v3: intro-hero → quiz-intro-header (header completo)
+            // Mantém para compatibilidade com outros steps
             return <QuizIntroHeaderBlock block={block} {...rest} />;
         case 'welcome-form':
             // Template v3: welcome-form section → input com botão
@@ -81,8 +88,14 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 </SelectableBlock>
             );
         case 'intro-form':
-            // Alias direto para o bloco de input de formulário
-            return <FormInputBlock block={block} {...rest} />;
+            // Novo bloco atômico de formulário com visual completo
+            return <IntroFormBlock block={block} {...rest} />;
+        case 'image-display-inline':
+            // Novo bloco de imagem inline com estilo específico
+            return <ImageDisplayInlineBlockNew block={block} {...rest} />;
+        case 'footer-copyright':
+            // Novo bloco de footer com copyright
+            return <FooterCopyrightBlock block={block} {...rest} />;
         // ===== QUESTIONS (Steps 02-18) =====
         case 'question-title':
             // Template v3: question-title section → heading
