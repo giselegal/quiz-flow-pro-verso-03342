@@ -96,6 +96,20 @@
         "textAlign": "center",
         "opacity": 0.7
       }
+    },
+    {
+      "id": "block-footer-copyright",
+      "type": "text-inline",
+      "position": 7,
+      "content": {
+        "text": "© 2025 Gisele Galvão - Todos os direitos reservados"
+      },
+      "properties": {
+        "textAlign": "center",
+        "fontSize": "text-xs",
+        "className": "text-gray-500",
+        "marginTop": "pt-6"
+      }
     }
   ]
 }
