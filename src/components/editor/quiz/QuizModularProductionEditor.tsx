@@ -92,7 +92,7 @@ import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEdita
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
-import { blocksToBlockComponents } from '@/utils/templateConverter';
+import { blocksToBlockComponents, convertTemplateToBlocks } from '@/utils/templateConverter';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import type { StepType } from '@/types/quiz-schema';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
@@ -119,6 +119,16 @@ import { StorageService } from '@/services/core/StorageService';
 import { EditorCacheService } from '@/services/EditorCacheService';
 import { UnifiedQuizStepAdapter } from '@/services/editor/UnifiedQuizStepAdapter';
 import { templateLoader } from '@/services/TemplateLoader';
+
+const getCanonicalBlocksSync = (stepId: string, funnelId?: string) => {
+    const result = templateLoader.getTemplateSync(stepId, { funnelId });
+    return result?.blocks ?? [];
+};
+
+const getCanonicalBlocks = async (stepId: string, funnelId?: string) => {
+    const result = await templateLoader.getTemplate(stepId, { funnelId });
+    return result.blocks;
+};
 import { SCHEMAS, migrateProps } from '@/schemas';
 import { normalizeByType } from '@/utils/normalizeByType';
 import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
@@ -590,29 +600,28 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     } catch (e) {
                         console.warn('🔄 Falha ao carregar funnel, usando template quiz21StepsComplete como fallback', e);
 
-                        // Forçar carregamento do template como fallback
-                        const initial: EditorEditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
+                        // Forçar carregamento do template como fallback (carrega todos os steps em paralelo)
+                        const stepIds = Array.from({ length: 21 }).map((_, idx) => `step-${(idx + 1).toString().padStart(2, '0')}`);
+                        const blocksPerStep = await Promise.all(stepIds.map(stepId => getCanonicalBlocks(stepId, funnelParam)));
+
+                        const getStepType = (index: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer' => {
+                            if (index === 0) return 'intro';
+                            if (index >= 1 && index <= 10) return 'question';
+                            if (index === 11) return 'transition';
+                            if (index >= 12 && index <= 17) return 'strategic-question';
+                            if (index === 18) return 'transition-result';
+                            if (index === 19) return 'result';
+                            return 'offer';
+                        };
+
+                        const initial: EditorEditableQuizStep[] = stepIds.map((stepId, idx) => {
                             const stepNumber = idx + 1;
-                            const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
-                            const blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam);
-
-                            // Determinar tipo de step baseado no índice (mesmo padrão usado abaixo)
-                            const getStepType = (index: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer' => {
-                                if (index === 0) return 'intro';
-                                if (index >= 1 && index <= 10) return 'question';
-                                if (index === 11) return 'transition';
-                                if (index >= 12 && index <= 17) return 'strategic-question';
-                                if (index === 18) return 'transition-result';
-                                if (index === 19) return 'result';
-                                return 'offer'; // index === 20
-                            };
-
                             return {
                                 id: stepId,
                                 type: getStepType(idx),
                                 order: stepNumber,
-                                blocks,
-                                nextStep: stepNumber < 21 ? `step-${(stepNumber + 1).toString().padStart(2, '0')}` : undefined
+                                blocks: blocksPerStep[idx],
+                                nextStep: stepNumber < 21 ? stepIds[idx + 1] : undefined,
                             };
                         });
 
@@ -658,7 +667,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         // Hidratar sections com QUIZ_STEPS (titulos, perguntas, opções, CTA...)
                                         const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
                                         // Converter sections → BlockComponent[] usando o mapeador central
-                                        const blocks = safeGetTemplateBlocks(stepId, { [stepId]: { sections } }) || [];
+                                        const blocks = convertTemplateToBlocks({ sections }) || [];
 
                                         return {
                                             id: stepId,
@@ -849,7 +858,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 }
                                 default: {
                                     // fallback genérico preservando blocks antigos se existirem
-                                    const legacyBlocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                                    const legacyBlocks = await getCanonicalBlocks(stepId, funnelParam);
                                     return legacyBlocks;
                                 }
                             }
@@ -872,11 +881,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         if (quizStep) {
                                             blocks = await buildEnrichedBlocksForStep(stepId, quizStep);
                                         } else {
-                                            blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                                            blocks = await getCanonicalBlocks(stepId, funnelParam);
                                         }
                                     } catch (e) {
                                         console.warn('⚠️ Falha ao construir blocks enriquecidos para', stepId, e);
-                                        blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                                        blocks = await getCanonicalBlocks(stepId, funnelParam);
                                     }
                                     return {
                                         id: stepId,
