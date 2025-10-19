@@ -530,6 +530,41 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.log('existingBlocks:', prev.stepBlocks[normalizedKey]?.length || 0);
                 console.log('loadingStepsRef:', Array.from(loadingStepsRef.current));
 
+                // ✅ PRIORIDADE 0: JSON normalizado por etapa (public/templates/normalized/step-XX.json)
+                try {
+                    const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
+                    if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {
+                        console.log('📝 Aplicando blocos do JSON normalizado (cache):', `/templates/normalized/${normalizedKey}.json`);
+                        console.groupEnd();
+                        return {
+                            ...prev,
+                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: normalizedCache },
+                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'normalized-json' as any }
+                        };
+                    }
+                    // Disparar fetch assíncrono do normalizado (não bloqueia aplicação do master/TS)
+                    const normalizedUrl = `/templates/normalized/${normalizedKey}.json`;
+                    fetch(normalizedUrl)
+                        .then(res => res.ok ? res.json() : null)
+                        .then(json => {
+                            if (!json || !Array.isArray(json.blocks)) return;
+                            const blocks = (json.blocks as any[]).map((b, idx) => ({
+                                id: b.id || `block-${idx}`,
+                                type: (b.type || 'text-inline') as any,
+                                order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
+                                properties: b.properties || b.props || {},
+                                content: b.content || {}
+                            })) as Block[];
+                            unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
+                            setState(p => ({
+                                ...p,
+                                stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
+                                stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'normalized-json' as any }
+                            }));
+                        })
+                        .catch(() => { /* silent */ });
+                } catch { }
+
                 // ✅ PRIORIDADE 1: Templates JSON modulares (steps 12, 19, 20)
                 if (hasModularTemplate(normalizedKey)) {
                     const existingBlocks = prev.stepBlocks[normalizedKey] || [];
@@ -575,7 +610,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     return prev; // ✅ NO UPDATE
                 }
 
-                // ✅ NOVO: Priorizar JSON individual de etapa se existir (public/templates/step-XX.json)
+                // ✅ PRIORIDADE 2: JSON individual de etapa se existir (public/templates/step-XX.json)
                 try {
                     const stepNum = normalizedKey.replace('step-', '');
                     const individualUrl = `/templates/step-${stepNum}.json`;
@@ -586,7 +621,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         return {
                             ...prev,
                             stepBlocks: { ...prev.stepBlocks, [normalizedKey]: individualCached },
-                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'individual-json' }
+                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'individual-json' as any }
                         };
                     }
                     // Nota: fetch síncrono não é possível aqui; master será usado e, em paralelo, tentamos hidratar individual
@@ -605,7 +640,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                             setState(p => ({
                                 ...p,
                                 stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
-                                stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'individual-json' }
+                                stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'individual-json' as any }
                             }));
                         })
                         .catch(() => { });
