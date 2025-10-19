@@ -87,7 +87,7 @@ class PerformanceManager {
       this.cleanup();
     };
 
-    window.addEventListener('beforeunload', cleanup);
+  window.addEventListener('pagehide', cleanup);
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         this.partialCleanup();

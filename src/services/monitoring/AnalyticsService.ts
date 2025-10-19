@@ -339,8 +339,8 @@ if (typeof window !== 'undefined') {
     analyticsService.trackError(new Error(String(event.reason)), 'unhandled_promise');
   });
 
-  // Rastrear fim da sessão
-  window.addEventListener('beforeunload', () => {
+  // Rastrear fim da sessão (pagehide para evitar depreciação de unload)
+  window.addEventListener('pagehide', () => {
     analyticsService.trackSessionEnd();
   });
 }

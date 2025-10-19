@@ -155,7 +155,7 @@ export class LoggerFactory {
      */
     private static setupCleanupHandlers(logger: LoggerService): void {
         // Flush logs before page unload
-        window.addEventListener('beforeunload', () => {
+            window.addEventListener('pagehide', () => {
             logger.flush().catch(console.warn);
         });
 
