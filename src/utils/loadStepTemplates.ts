@@ -114,7 +114,9 @@ export function loadAllModularTemplates(): Record<string, Block[]> {
  * Estes steps têm arrays de blocos direto no JSON, sem conversão
  */
 export function hasStaticBlocksJSON(stepId: string): boolean {
-  return ['step-12', 'step-19', 'step-20'].includes(stepId);
+  // Inclui 12, 13, 19 e 20 quando disponíveis como JSON estático importado
+  // step-13 foi adicionado para alinhar com os imports e permitir fallback estático
+  return ['step-12', 'step-13', 'step-19', 'step-20'].includes(stepId);
 }
 
 /**

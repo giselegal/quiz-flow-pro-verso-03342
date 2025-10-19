@@ -66,6 +66,7 @@ import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import QuizProductionPreview from './QuizProductionPreview';
 import QuizAppConnected from '@/components/quiz/QuizAppConnected';
 import { useToast } from '@/hooks/use-toast';
+import { useUnifiedCRUDOptional } from '@/contexts';
 import { replacePlaceholders } from '@/utils/placeholderParser';
 import { useLiveScoring } from '@/hooks/useLiveScoring';
 import { HistoryManager } from '@/utils/historyManager';
@@ -2279,6 +2280,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Salvar
     const [saveNotice, setSaveNotice] = useState<{ type: 'warning' | 'info'; message: string } | null>(null);
+    const crud = useUnifiedCRUDOptional();
     const handleSave = useCallback(async () => {
         setIsSaving(true);
         try {
@@ -2315,7 +2317,46 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 settings: (unifiedConfig as any)?.settings,
             };
 
-            const savedId = await quizEditorBridge.saveDraft(funnel);
+            // Tentar salvar via CRUD unificado quando disponível
+            let savedId = funnelId;
+            if (crud && crud.saveFunnel) {
+                try {
+                    const pagesData = (adjusted ? filledSteps : steps).map(s => ({
+                        id: s.id,
+                        type: s.type,
+                        blocks: s.blocks,
+                        metadata: { order: s.order, nextStep: s.nextStep }
+                    }));
+
+                    const target = crud.currentFunnel ? {
+                        ...crud.currentFunnel,
+                        pages: pagesData,
+                        updatedAt: new Date()
+                    } : {
+                        id: funnelId || 'new-draft',
+                        name: 'Quiz Estilo Pessoal - Modular',
+                        description: 'Rascunho gerado pelo Editor Modular',
+                        context: (crud as any)?.funnelContext ?? 'EDITOR',
+                        userId: 'anonymous',
+                        settings: { runtime: (unifiedConfig as any)?.runtime, results: (unifiedConfig as any)?.results, ui: (unifiedConfig as any)?.ui, settings: (unifiedConfig as any)?.settings },
+                        pages: pagesData,
+                        isPublished: false,
+                        version: 1,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    } as any;
+
+                    await crud.saveFunnel(target);
+                    savedId = target.id;
+                } catch (e) {
+                    console.warn('⚠️ Falha no save via CRUD, usando bridge como fallback:', e);
+                }
+            }
+
+            if (!savedId || savedId === 'new-draft') {
+                savedId = await quizEditorBridge.saveDraft(funnel);
+            }
+
             setFunnelId(savedId);
             setIsDirty(false);
 
@@ -2341,7 +2382,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } finally {
             setIsSaving(false);
         }
-    }, [steps, funnelId, toast]);
+    }, [steps, funnelId, toast, crud, unifiedConfig]);
 
     // Exportar JSON simples (será refinado depois com metadados)
     const handleExport = useCallback(() => {
