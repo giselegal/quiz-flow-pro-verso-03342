@@ -1,0 +1,103 @@
+{
+  "id": "step-06",
+  "type": "question",
+  "templateVersion": "3.0",
+  "blocks": [
+    {
+      "id": "progress-06",
+      "type": "question-progress",
+      "order": 0,
+      "properties": {
+        "stepNumber": 6,
+        "totalSteps": 21
+      }
+    },
+    {
+      "id": "number-06",
+      "type": "question-number",
+      "order": 1,
+      "properties": {
+        "questionNumber": "Pergunta 5"
+      }
+    },
+    {
+      "id": "text-06",
+      "type": "question-text",
+      "order": 2,
+      "properties": {
+        "questionText": "QUAL SUA BOLSA IDEAL?"
+      }
+    },
+    {
+      "id": "instructions-06",
+      "type": "question-instructions",
+      "order": 3,
+      "properties": {
+        "requiredSelections": 1
+      }
+    },
+    {
+      "id": "options-06",
+      "type": "options-grid",
+      "order": 4,
+      "properties": {
+        "questionId": "step-06",
+        "requiredSelections": 1,
+        "multipleSelection": false,
+        "showImages": true,
+        "columns": 2,
+        "options": [
+          {
+            "id": "natural",
+            "text": "Bolsa saco de lona",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735318/21_hlcfkp.webp"
+          },
+          {
+            "id": "classico",
+            "text": "Bolsa estruturada preta de couro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735320/22_ukkqc8.webp"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Bolsa grande casual com textura",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735320/23_jktbhh.webp"
+          },
+          {
+            "id": "elegante",
+            "text": "Bolsa pequena bege de couro estruturado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735321/24_pbkhwz.webp"
+          },
+          {
+            "id": "romantico",
+            "text": "Bolsa delicada com alça fina rosa",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735322/25_sybxla.webp"
+          },
+          {
+            "id": "sexy",
+            "text": "Bolsa pequena preta estruturada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735322/26_e8vqvl.webp"
+          },
+          {
+            "id": "dramatico",
+            "text": "Bolsa média preta com alça de corrente",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735323/27_qd3owy.webp"
+          },
+          {
+            "id": "criativo",
+            "text": "Bolsa vintage com estampa diferente",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735323/28_e4gtja.webp"
+          }
+        ]
+      }
+    },
+    {
+      "id": "navigation-06",
+      "type": "question-navigation",
+      "order": 5,
+      "properties": {}
+    }
+  ],
+  "meta": {
+    "order": 6
+  }
+}

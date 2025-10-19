@@ -1,0 +1,103 @@
+{
+  "id": "step-10",
+  "type": "question",
+  "templateVersion": "3.0",
+  "blocks": [
+    {
+      "id": "progress-10",
+      "type": "question-progress",
+      "order": 0,
+      "properties": {
+        "stepNumber": 10,
+        "totalSteps": 21
+      }
+    },
+    {
+      "id": "number-10",
+      "type": "question-number",
+      "order": 1,
+      "properties": {
+        "questionNumber": "Pergunta 9"
+      }
+    },
+    {
+      "id": "text-10",
+      "type": "question-text",
+      "order": 2,
+      "properties": {
+        "questionText": "QUAL VESTIDO MAIS TE REPRESENTA?"
+      }
+    },
+    {
+      "id": "instructions-10",
+      "type": "question-instructions",
+      "order": 3,
+      "properties": {
+        "requiredSelections": 1
+      }
+    },
+    {
+      "id": "options-10",
+      "type": "options-grid",
+      "order": 4,
+      "properties": {
+        "questionId": "step-10",
+        "requiredSelections": 1,
+        "multipleSelection": false,
+        "showImages": true,
+        "columns": 2,
+        "options": [
+          {
+            "id": "natural",
+            "text": "Vestido fluido longo bege",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735413/1_uiksbl.webp"
+          },
+          {
+            "id": "classico",
+            "text": "Vestido tubinho preto clássico",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735414/2_r0jvgc.webp"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Vestido reto minimalista",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735414/3_ynmogp.webp"
+          },
+          {
+            "id": "elegante",
+            "text": "Vestido midi bege estruturado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735415/4_dkxjyc.webp"
+          },
+          {
+            "id": "romantico",
+            "text": "Vestido rosa com babados",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735415/5_kpvxhq.webp"
+          },
+          {
+            "id": "sexy",
+            "text": "Vestido preto justo com fenda",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735416/6_x4qb3b.webp"
+          },
+          {
+            "id": "dramatico",
+            "text": "Vestido preto estruturado ombro a ombro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735416/7_jnaxbz.webp"
+          },
+          {
+            "id": "criativo",
+            "text": "Vestido estampado único",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/8_wstqdi.webp"
+          }
+        ]
+      }
+    },
+    {
+      "id": "navigation-10",
+      "type": "question-navigation",
+      "order": 5,
+      "properties": {}
+    }
+  ],
+  "meta": {
+    "order": 10
+  }
+}

@@ -4,33 +4,101 @@
   "templateVersion": "3.0",
   "blocks": [
     {
-      "type": "question-block",
-      "config": {
-        "questionNumber": 1,
+      "id": "progress-02",
+      "type": "question-progress",
+      "order": 0,
+      "properties": {
+        "stepNumber": 2,
+        "totalSteps": 21,
+        "barColor": "#deac6d",
+        "backgroundColor": "#e5e7eb",
+        "showPercentage": true
+      }
+    },
+    {
+      "id": "number-02",
+      "type": "question-number",
+      "order": 1,
+      "properties": {
+        "questionNumber": "Pergunta 1",
+        "fontSize": "text-xl md:text-2xl",
+        "fontWeight": "font-bold",
+        "textColor": "#432818",
+        "textAlign": "center",
+        "marginBottom": "mb-4"
+      }
+    },
+    {
+      "id": "text-02",
+      "type": "question-text",
+      "order": 2,
+      "properties": {
         "questionText": "Q1 - Roupa Favorita",
+        "fontSize": "text-xl md:text-2xl",
+        "fontWeight": "font-bold",
+        "textColor": "#deac6d",
+        "fontFamily": "\"Playfair Display\", serif",
+        "textAlign": "center",
+        "marginBottom": "mb-4"
+      }
+    },
+    {
+      "id": "instructions-02",
+      "type": "question-instructions",
+      "order": 3,
+      "properties": {
         "requiredSelections": 1,
+        "fontSize": "text-sm",
+        "textColor": "text-gray-600",
+        "textAlign": "center",
+        "marginBottom": "mb-8",
+        "showCounter": true
+      }
+    },
+    {
+      "id": "options-02",
+      "type": "options-grid",
+      "order": 4,
+      "properties": {
+        "questionId": "step-02",
+        "requiredSelections": 1,
+        "multipleSelection": false,
+        "showImages": true,
+        "responsiveColumns": true,
         "options": [
           {
             "id": "2a",
             "text": "Vestidos fluidos e confortáveis",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp"
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp"
           },
           {
             "id": "2b",
             "text": "Blazers estruturados e calças alfaiataria",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp"
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp"
           },
           {
             "id": "2c",
             "text": "Peças modernas com toque minimalista",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp"
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp"
           },
           {
             "id": "2d",
             "text": "Vestidos sofisticados e acessórios marcantes",
-            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"
           }
         ]
+      }
+    },
+    {
+      "id": "navigation-02",
+      "type": "question-navigation",
+      "order": 5,
+      "properties": {
+        "buttonTextEnabled": "Avançando...",
+        "buttonTextDisabled": "Próxima",
+        "enabledColor": "#deac6d",
+        "disabledColor": "#e6ddd4",
+        "disabledTextColor": "#8a7663"
       }
     }
   ],
