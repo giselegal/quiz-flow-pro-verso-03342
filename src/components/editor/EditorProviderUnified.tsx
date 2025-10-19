@@ -713,15 +713,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 // Converter BlockComponent[] para Block[]
                 const blocks = blockComponentsToBlocks(blockComponents);
 
-                // Filtrar blocos deprecated
-                const validBlocks = blocks.filter(block => {
-                    if (block.type === 'quiz-intro-header' as any) {
-                        console.warn(`🗑️ Filtered deprecated block: quiz-intro-header from ${stepKey}`);
-                        return false;
-                    }
-                    return true;
-                });
-
+                // Aceitar blocos conforme conversão; manter 'quiz-intro-header' para Step 01
+                const validBlocks = blocks;
                 newStepBlocks[stepKey] = validBlocks;
                 newStepSources[stepKey] = 'ts-template';
                 totalBlocks += validBlocks.length;
