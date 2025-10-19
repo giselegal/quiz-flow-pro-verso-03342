@@ -11,7 +11,24 @@ interface TextInlineBlockProps extends BlockRendererCommonProps {
 
 const TextInlineBlock: React.FC<TextInlineBlockProps> = ({ block, isSelected, isEditable, onSelect, onOpenProperties }) => {
     const props = block.properties || {};
-    const contentTextRaw: string = props.content || (block as any).content?.text || '';
+    // Resolver conteúdo de múltiplas fontes para compatibilidade com v3/legacy/modular
+    const resolveContent = (): string => {
+        const propsContent = (props as any)?.content;
+        if (typeof propsContent === 'string' && propsContent) return propsContent;
+        if (propsContent && typeof propsContent === 'object') {
+            if (typeof propsContent.text === 'string' && propsContent.text) return propsContent.text;
+            if (typeof propsContent.content === 'string' && propsContent.content) return propsContent.content;
+        }
+
+        const c: any = (block as any).content;
+        if (c && typeof c === 'object') {
+            if (typeof c.text === 'string' && c.text) return c.text;
+            if (typeof c.content === 'string' && c.content) return c.content;
+        }
+        if (typeof c === 'string' && c) return c;
+        return '';
+    };
+    const contentTextRaw: string = resolveContent();
     const result = useResultOptional();
     const contentText = result ? result.interpolateText(contentTextRaw) : contentTextRaw;
     const size: string = props.size || 'h2';
