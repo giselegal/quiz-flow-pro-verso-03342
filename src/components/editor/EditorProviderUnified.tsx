@@ -538,6 +538,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
                         if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {
                             console.log('📝 Aplicando blocos do JSON normalizado (cache):', `/templates/normalized/${normalizedKey}.json`);
+                            // Garantir que o cache unificado por step também reflita o normalizado
+                            try { unifiedCache.set(stepBlocksKey(normalizedKey), normalizedCache); } catch { /* noop */ }
                             console.groupEnd();
                             return {
                                 ...prev,
@@ -559,6 +561,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                                     content: b.content || {}
                                 })) as Block[];
                                 unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
+                                // Sincronizar também no cache unificado por step para evitar preferir master em loads futuros
+                                try { unifiedCache.set(stepBlocksKey(normalizedKey), blocks); } catch { /* noop */ }
                                 setState(p => ({
                                     ...p,
                                     stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
