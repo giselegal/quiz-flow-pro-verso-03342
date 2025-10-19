@@ -144,6 +144,23 @@ export function initializeSchemaRegistry(): void {
   registerSchema('question-title', () => 
     import('./blocks/question-blocks').then(m => m.questionTitleSchema)
   );
+  // Atomic question blocks usados no editor/canvas
+  // Enquanto os schemas específicos não tem arquivo próprio, referenciar por question-blocks
+  registerSchema('question-progress', () => 
+    import('./blocks/question-blocks').then(m => m.questionHeroSchema)
+  );
+  registerSchema('question-number', () => 
+    import('./blocks/question-blocks').then(m => m.questionTitleSchema)
+  );
+  registerSchema('question-text', () => 
+    import('./blocks/question-blocks').then(m => m.questionTitleSchema)
+  );
+  registerSchema('question-instructions', () => 
+    import('./blocks/options-grid').then(m => m.optionsGridSchema)
+  );
+  registerSchema('question-navigation', () => 
+    import('./blocks/button').then(m => m.buttonSchema)
+  );
 
   // NEW: Transition blocks
   registerSchema('transition-subtitle', () => 

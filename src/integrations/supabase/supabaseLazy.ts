@@ -19,15 +19,25 @@ function hasEnv(): boolean {
 function buildMock() {
     const ok = { data: null, error: null } as any;
     const chain = () => ({
-        select: async () => ok,
-        upsert: async () => ok,
-        insert: async () => ok,
-        update: async () => ok,
-        delete: async () => ok,
-        eq: () => chain(),
-        order: () => chain(),
+        // Métodos de construção de query — retornam o próprio builder para encadeamento
+        select: (_cols?: any, _opts?: any) => chain(),
+        upsert: (_data?: any, _opts?: any) => chain(),
+        insert: (_data?: any, _opts?: any) => chain(),
+        update: (_data?: any, _opts?: any) => chain(),
+        delete: (_opts?: any) => chain(),
+        eq: (_col?: any, _val?: any) => chain(),
+        in: (_col?: any, _vals?: any[]) => chain(),
+        like: (_col?: any, _pattern?: string) => chain(),
+        ilike: (_col?: any, _pattern?: string) => chain(),
+        order: (_col?: any, _opts?: any) => chain(),
+        limit: (_n?: number) => chain(),
+        range: (_from?: number, _to?: number) => chain(),
+        // Métodos terminais — retornam Promises simuladas
         single: async () => ok,
-        maybeSingle: async () => ok
+        maybeSingle: async () => ok,
+        then: (resolve: any) => Promise.resolve(ok).then(resolve),
+        catch: (reject: any) => Promise.resolve(ok).catch(reject),
+        finally: (cb: any) => Promise.resolve(ok).finally(cb),
     });
 
     const subscription = { unsubscribe: () => { /* noop */ } };
