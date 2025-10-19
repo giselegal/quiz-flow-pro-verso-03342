@@ -22,11 +22,12 @@ import { useUnifiedCRUD } from '@/contexts';
 import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
-import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
 import { loadStepTemplate, loadStepTemplateAsync, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
+import { templateLoader, type TemplateLoaderResult } from '@/services/TemplateLoader';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -512,7 +513,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                             sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections)
                         };
                         // Converter via util existente usando template mínimo
-                        const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
+                        const blockComponents = convertTemplateToBlocks(hydrated) ?? [];
                         masterBlocks = blockComponentsToBlocks(blockComponents);
                         unifiedCache.set(masterBlocksKey(normalizedKey), masterBlocks);
                         unifiedCache.set(stepBlocksKey(normalizedKey), masterBlocks);
@@ -563,6 +564,13 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     }
                 }
             } catch { /* noop */ }
+
+            let canonicalTemplateResult: TemplateLoaderResult | null = null;
+            try {
+                canonicalTemplateResult = await templateLoader.getTemplate(normalizedKey, { funnelId });
+            } catch (err) {
+                console.warn('⚠️ Falha ao carregar TemplateLoader para', normalizedKey, err);
+            }
 
             // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
             setState(prev => {
@@ -707,10 +715,12 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 }
 
                 // Fallback: Carregar template padrão TS (sections → blocks)
-                const template = QUIZ_STYLE_21_STEPS_TEMPLATE;
-                console.log('📝 Carregando template padrão (sections → blocks)');
-                const blockComponents = safeGetTemplateBlocks(normalizedKey, template);
-                const convertedBlocks = blockComponentsToBlocks(blockComponents);
+                const canonicalSource = canonicalTemplateResult?.source || 'static';
+                console.log(`📝 Carregando template canônico (${canonicalSource})`);
+                const canonicalComponents = canonicalTemplateResult?.blocks
+                    ?? convertTemplateToBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE[normalizedKey])
+                    ?? [];
+                const convertedBlocks = blockComponentsToBlocks(canonicalComponents);
                 try { unifiedCache.set(stepBlocksKey(normalizedKey), convertedBlocks); } catch { }
                 console.groupEnd();
                 return {
@@ -791,7 +801,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
         const template = QUIZ_STYLE_21_STEPS_TEMPLATE;
 
-        if (!template || !template.steps) {
+        if (!template) {
             console.error('❌ Template inválido');
             return;
         }
@@ -802,7 +812,12 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         let conversionErrors = 0;
 
         // Carregar todos os steps do template
-        Object.entries(template.steps).forEach(([stepKey, stepConfig]) => {
+        const templateEntries = template.steps ? Object.entries(template.steps) : Object.entries(template);
+
+        templateEntries.forEach(([stepKey, stepConfig]) => {
+            if (!stepKey.startsWith('step-')) {
+                return;
+            }
             try {
                 // ✅ PRIORIDADE: Templates JSON estáticos (steps 12, 13, 19, 20)
                 if (hasStaticBlocksJSON(stepKey)) {
@@ -815,16 +830,24 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 }
 
                 // Carregar templates padrão para outros steps
-                const blockComponents = safeGetTemplateBlocks(stepKey, template);
+                const canonicalResult = templateLoader.getTemplateSync(stepKey) ?? null;
+                const canonicalSource = canonicalResult?.source || 'static';
+                if (canonicalResult?.blocks?.length) {
+                    console.log(`📦 TemplateLoader retornou ${canonicalResult.blocks.length} blocos para ${stepKey} (${canonicalSource})`);
+                }
+                const canonicalComponents = canonicalResult?.blocks
+                    ?? convertTemplateToBlocks(stepConfig)
+                    ?? convertTemplateToBlocks(template[stepKey])
+                    ?? [];
 
                 // Validar conversão
-                if (blockComponents.length === 0 && stepConfig) {
+                if (canonicalComponents.length === 0 && stepConfig) {
                     console.warn(`⚠️ No blocks converted for ${stepKey}`, stepConfig);
                     conversionErrors++;
                 }
 
                 // Converter BlockComponent[] para Block[]
-                const blocks = blockComponentsToBlocks(blockComponents);
+                const blocks = blockComponentsToBlocks(canonicalComponents);
 
                 // Aceitar blocos conforme conversão; manter 'quiz-intro-header' para Step 01
                 const validBlocks = blocks;
