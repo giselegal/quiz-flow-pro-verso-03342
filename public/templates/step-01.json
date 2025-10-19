@@ -30,7 +30,7 @@
     },
     {
       "id": "block-intro-title",
-      "type": "intro-title",
+      "type": "text-inline",
       "position": 2,
       "content": {
         "text": "[#B89B7A]**Chega**[/#B89B7A] de um guarda-roupa lotado e da sensação de que [#B89B7A]**nada combina com você**[/#B89B7A]."
@@ -43,7 +43,7 @@
     },
     {
       "id": "block-intro-image",
-      "type": "intro-image",
+      "type": "image-display-inline",
       "position": 3,
       "properties": {
         "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
@@ -54,7 +54,7 @@
     },
     {
       "id": "block-intro-description",
-      "type": "intro-description",
+      "type": "text-inline",
       "position": 4,
       "content": {
         "text": "Descubra seu **ESTILO PREDOMINANTE** em apenas alguns minutos!"
@@ -77,7 +77,7 @@
     },
     {
       "id": "block-footer-description",
-      "type": "intro-description",
+      "type": "text-inline",
       "position": 6,
       "content": {
         "text": "Um quiz personalizado que vai revelar qual estilo te representa e como valorizar sua essência através das roupas."
