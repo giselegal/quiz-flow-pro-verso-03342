@@ -36,7 +36,7 @@ export interface EditorState {
     /** Blocos organizados por step */
     stepBlocks: Record<string, Block[]>;
     /** Origem dos blocos por step (diagnóstico) */
-    stepSources?: Record<string, 'modular-json' | 'individual-json' | 'master-hydrated' | 'ts-template'>;
+    stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'master-hydrated' | 'ts-template'>;
     /** Step atual selecionado */
     currentStep: number;
     /** Bloco selecionado para edição */
@@ -530,39 +530,43 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.log('existingBlocks:', prev.stepBlocks[normalizedKey]?.length || 0);
                 console.log('loadingStepsRef:', Array.from(loadingStepsRef.current));
 
-                // ✅ PRIORIDADE 0: JSON normalizado por etapa (public/templates/normalized/step-XX.json)
+                // ✅ PRIORIDADE 0: JSON normalizado por etapa (public/templates/normalized/step-XX.json) — apenas para steps 02–11
                 try {
-                    const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
-                    if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {
-                        console.log('📝 Aplicando blocos do JSON normalizado (cache):', `/templates/normalized/${normalizedKey}.json`);
-                        console.groupEnd();
-                        return {
-                            ...prev,
-                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: normalizedCache },
-                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'normalized-json' as any }
-                        };
+                    const stepNum = Number(normalizedKey.replace('step-', ''));
+                    const isNormalizedRange = stepNum >= 2 && stepNum <= 11;
+                    if (isNormalizedRange) {
+                        const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
+                        if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {
+                            console.log('📝 Aplicando blocos do JSON normalizado (cache):', `/templates/normalized/${normalizedKey}.json`);
+                            console.groupEnd();
+                            return {
+                                ...prev,
+                                stepBlocks: { ...prev.stepBlocks, [normalizedKey]: normalizedCache },
+                                stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'normalized-json' }
+                            };
+                        }
+                        // Disparar fetch assíncrono do normalizado (não bloqueia aplicação do master/TS)
+                        const normalizedUrl = `/templates/normalized/${normalizedKey}.json`;
+                        fetch(normalizedUrl)
+                            .then(res => res.ok ? res.json() : null)
+                            .then(json => {
+                                if (!json || !Array.isArray(json.blocks)) return;
+                                const blocks = (json.blocks as any[]).map((b, idx) => ({
+                                    id: b.id || `block-${idx}`,
+                                    type: (b.type || 'text-inline') as any,
+                                    order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
+                                    properties: b.properties || b.props || {},
+                                    content: b.content || {}
+                                })) as Block[];
+                                unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
+                                setState(p => ({
+                                    ...p,
+                                    stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
+                                    stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'normalized-json' }
+                                }));
+                            })
+                            .catch(() => { /* silent */ });
                     }
-                    // Disparar fetch assíncrono do normalizado (não bloqueia aplicação do master/TS)
-                    const normalizedUrl = `/templates/normalized/${normalizedKey}.json`;
-                    fetch(normalizedUrl)
-                        .then(res => res.ok ? res.json() : null)
-                        .then(json => {
-                            if (!json || !Array.isArray(json.blocks)) return;
-                            const blocks = (json.blocks as any[]).map((b, idx) => ({
-                                id: b.id || `block-${idx}`,
-                                type: (b.type || 'text-inline') as any,
-                                order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
-                                properties: b.properties || b.props || {},
-                                content: b.content || {}
-                            })) as Block[];
-                            unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
-                            setState(p => ({
-                                ...p,
-                                stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
-                                stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'normalized-json' as any }
-                            }));
-                        })
-                        .catch(() => { /* silent */ });
                 } catch { }
 
                 // ✅ PRIORIDADE 1: Templates JSON modulares (steps 12, 19, 20)
