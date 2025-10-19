@@ -2281,7 +2281,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Salvar
     const [saveNotice, setSaveNotice] = useState<{ type: 'warning' | 'info'; message: string } | null>(null);
     const crud = useUnifiedCRUDOptional();
-    const handleSave = useCallback(async () => {
+    const fahandleSave = useCallback(async () => {
         setIsSaving(true);
         try {
             const { steps: filledSteps, adjusted } = autoFillNextSteps(steps);
