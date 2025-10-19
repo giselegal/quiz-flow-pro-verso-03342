@@ -15,13 +15,10 @@ test.describe('Editor - Options Grid e Salvar', () => {
     await expect(page.getByTestId('canvas-editor')).toBeVisible({ timeout: 15000 });
 
     // Abrir o overlay de Navegação (botão no header principal)
-    await page.locator('header >> text=Navegação').first().click().catch(async () => {
-      // fallback: usa o primeiro botão Navegação visível no topo
-      await page.locator('button:has-text("Navegação")').first().click();
-    });
+    await page.getByTestId('nav-open-button').click();
 
   // No overlay, clicar em "Salvar Alterações" (não depende do isDirty)
-  await page.getByRole('button', { name: /Salvar Alterações/i }).click();
+  await page.getByTestId('overlay-save-button').click();
 
     // Verificar o toast de sucesso (título ou conteúdo)
     const toastSuccess = page.getByText(/Salvo com sucesso/i);
