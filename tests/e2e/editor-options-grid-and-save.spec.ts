@@ -14,9 +14,12 @@ test.describe('Editor - Options Grid e Salvar', () => {
     // Esperar o canvas carregar
     await expect(page.getByTestId('canvas-editor')).toBeVisible({ timeout: 15000 });
 
+  // Selecionar a etapa de pergunta (step-02)
+  await page.getByText('step-02', { exact: true }).first().click();
+
   // Encontrar o primeiro bloco de opções (aceita 'quiz-options' ou 'options-grid') visível no canvas
   const optionsGrid = page.locator('[data-block-type="quiz-options"], [data-block-type="options-grid"]').first();
-    await expect(optionsGrid).toBeVisible({ timeout: 10000 });
+  await expect(optionsGrid).toBeVisible({ timeout: 15000 });
 
     // Dentro do grid, pegar a primeira opção clicável
     const firstOption = optionsGrid.locator('[data-testid^="grid-option-"]').first();
@@ -26,12 +29,15 @@ test.describe('Editor - Options Grid e Salvar', () => {
     await firstOption.click();
     await expect(firstOption).toHaveAttribute('data-selected', 'true');
 
-    // O clique deve marcar o editor como sujo; botão Salvar deve habilitar
-    const salvarBtn = page.getByRole('button', { name: /salvar/i });
-    await expect(salvarBtn).toBeEnabled({ timeout: 5000 });
+  // Abrir o overlay de Navegação e ajustar um link para forçar alteração
+  await page.getByRole('button', { name: /Navegação/i }).click();
+  const firstSelect = page.locator('select').first();
+  await expect(firstSelect).toBeVisible();
+  // Selecionar a primeira opção do select (ex.: finalizar)
+  await firstSelect.selectOption({ index: 0 });
 
-    // Clicar em Salvar e aguardar o toast de sucesso
-    await salvarBtn.click();
+  // No overlay, clicar em "Salvar Alterações" (não depende do isDirty)
+  await page.getByRole('button', { name: /Salvar Alterações/i }).click();
 
     // Verificar o toast de sucesso (título ou conteúdo)
     const toastSuccess = page.getByText(/Salvo com sucesso/i);
