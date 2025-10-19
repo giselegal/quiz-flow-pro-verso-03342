@@ -33,7 +33,7 @@
       "type": "question-instructions",
       "order": 3,
       "properties": {
-        "requiredSelections": 1
+        "requiredSelections": 3
       }
     },
     {
@@ -42,8 +42,8 @@
       "order": 4,
       "properties": {
         "questionId": "step-08",
-        "requiredSelections": 1,
-        "multipleSelection": false,
+        "requiredSelections": 3,
+        "multipleSelection": true,
         "showImages": true,
         "columns": 2,
         "options": [
