@@ -523,6 +523,46 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.warn('⚠️ Erro ao preparar masterBlocks:', e);
             }
 
+            // ✅ PRIORIDADE 0 (AGUARDADA): JSON normalizado (public/templates/normalized) ou modular estático
+            try {
+                const stepNum0 = Number(normalizedKey.replace('step-', ''));
+                const isNormalizedRange0 = (stepNum0 >= 2 && stepNum0 <= 11) || (stepNum0 >= 13 && stepNum0 <= 18) || stepNum0 === 19;
+                // Tentar cache do normalizado primeiro
+                if (isNormalizedRange0) {
+                    const normalizedCache0 = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
+                    if (Array.isArray(normalizedCache0) && normalizedCache0.length > 0) {
+                        setState(prev => ({
+                            ...prev,
+                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: normalizedCache0 },
+                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'normalized-json' }
+                        }));
+                        return;
+                    }
+                    const normalizedBlocks0 = await loadStepTemplateAsync(normalizedKey);
+                    if (Array.isArray(normalizedBlocks0) && normalizedBlocks0.length > 0) {
+                        try { unifiedCache.set(templateKey(`normalized:${normalizedKey}`), normalizedBlocks0); } catch { /* noop */ }
+                        try { unifiedCache.set(stepBlocksKey(normalizedKey), normalizedBlocks0); } catch { /* noop */ }
+                        setState(prev => ({
+                            ...prev,
+                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: normalizedBlocks0 },
+                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'normalized-json' }
+                        }));
+                        return;
+                    }
+                } else if (hasStaticBlocksJSON(normalizedKey)) {
+                    const modularBlocks0 = loadStepTemplate(normalizedKey);
+                    if (Array.isArray(modularBlocks0) && modularBlocks0.length > 0) {
+                        try { unifiedCache.set(stepBlocksKey(normalizedKey), modularBlocks0); } catch { /* noop */ }
+                        setState(prev => ({
+                            ...prev,
+                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: modularBlocks0 },
+                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'modular-json' }
+                        }));
+                        return;
+                    }
+                }
+            } catch { /* noop */ }
+
             // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
             setState(prev => {
                 console.log('hasModularTemplate:', hasModularTemplate(normalizedKey));
@@ -573,36 +613,31 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     }
                 } catch { }
 
-                // ✅ PRIORIDADE 1: Templates JSON modulares/normalizados (2–13, 19, 20)
-                if (hasModularTemplate(normalizedKey)) {
+                // ✅ PRIORIDADE 1: Templates JSON estáticos modulares (12, 19, 20) — síncrono
+                if (hasStaticBlocksJSON(normalizedKey)) {
                     const existingBlocks = prev.stepBlocks[normalizedKey] || [];
-                    // Carregar assincronamente e aplicar depois
-                    (async () => {
-                        try {
-                            const modularBlocks = await loadStepTemplateAsync(normalizedKey);
-                            if (!Array.isArray(modularBlocks) || modularBlocks.length === 0) return;
-                            const existingAfter = ((): Block[] => {
-                                try { return (stateRef.current?.stepBlocks?.[normalizedKey] as Block[]) || []; } catch { return []; }
-                            })();
-                            const existingTypes = (existingAfter as Block[]).map(b => b.type).sort().join(',');
-                            const modularTypes = modularBlocks.map(b => b.type).sort().join(',');
-                            if ((existing as Block[]).length > 0 && existingTypes === modularTypes) {
-                                return; // já aplicado
-                            }
-                            unifiedCache.set(stepBlocksKey(normalizedKey), modularBlocks);
-                            setState(p => ({
-                                ...p,
-                                stepBlocks: { ...p.stepBlocks, [normalizedKey]: modularBlocks },
-                                stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'modular-json' }
-                            }));
-                        } catch (e) {
-                            console.warn('⚠️ Falha ao carregar template modular/normalizado:', normalizedKey, e);
-                        } finally {
-                            try { console.groupEnd(); } catch { /* noop */ }
+                    const modularBlocks = loadStepTemplate(normalizedKey);
+                    const existingTypes = existingBlocks.map(b => b.type).sort().join(',');
+                    const modularTypes = modularBlocks.map(b => b.type).sort().join(',');
+                    if (existingBlocks.length > 0 && existingTypes === modularTypes) {
+                        console.log('⏭️ Skip: blocos modulares já carregados');
+                        console.groupEnd();
+                        return prev; // ✅ NO UPDATE = NO LOOP
+                    }
+                    try { unifiedCache.set(stepBlocksKey(normalizedKey), modularBlocks); } catch { }
+                    console.log('📝 Carregando blocos modulares estáticos');
+                    console.groupEnd();
+                    return {
+                        ...prev,
+                        stepBlocks: {
+                            ...prev.stepBlocks,
+                            [normalizedKey]: modularBlocks
+                        },
+                        stepSources: {
+                            ...(prev.stepSources || {}),
+                            [normalizedKey]: 'modular-json'
                         }
-                    })();
-                    // Retornar estado atual; atualização ocorrerá via setState acima
-                    return prev;
+                    };
                 }
 
                 // Se já tem blocos não-modulares, manter
