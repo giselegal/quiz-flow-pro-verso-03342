@@ -3,11 +3,13 @@ import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDro
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
+import type { BlockComponent } from '@/components/editor/quiz/types';
 import type { Block } from '@/types/editor';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { cn } from '@/lib/utils';
-import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { templateLoader } from '@/services/TemplateLoader';
 
 interface ModularStrategicQuestionStepProps {
     data: any;
@@ -86,14 +88,40 @@ export default function ModularStrategicQuestionStep({
     const effectiveBlocks = React.useMemo(() => (Array.isArray(blocks) && blocks.length > 0) ? blocks : fallbackBlocks, [blocks, fallbackBlocks]);
     React.useEffect(() => {
         if (Array.isArray(blocks) && blocks.length > 0) return;
-        const m = String(data?.id || '').match(/step-\d{2}/);
-        const stepKey = m ? m[0] : 'step-13';
+        const match = String(data?.id || '').match(/step-\d{2}/);
+        const stepKey = match ? match[0] : 'step-13';
+        const funnelId = data?.funnelId || data?.funnel_id || undefined;
+        let disposed = false;
+
+        const applyBlocks = (components: BlockComponent[] | undefined | null) => {
+            if (disposed || !components || components.length === 0) return;
+            const asBlocks = blockComponentsToBlocks(components);
+            if (asBlocks.length > 0) {
+                setFallbackBlocks(asBlocks);
+            }
+        };
+
         try {
-            const comps = safeGetTemplateBlocks(stepKey, QUIZ_STYLE_21_STEPS_TEMPLATE);
-            const asBlocks = blockComponentsToBlocks(comps);
-            if (asBlocks.length) setFallbackBlocks(asBlocks as any);
-        } catch { }
-    }, [data?.id, blocks]);
+            const sync = templateLoader.getTemplateSync(stepKey, { funnelId });
+            if (sync?.blocks?.length) {
+                applyBlocks(sync.blocks);
+            } else {
+                const staticComponents = convertTemplateToBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey]);
+                applyBlocks(staticComponents);
+            }
+        } catch { /* noop */ }
+
+        templateLoader.getTemplate(stepKey, { funnelId }).then(result => {
+            applyBlocks(result.blocks);
+        }).catch(() => {
+            const staticComponents = convertTemplateToBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey]);
+            applyBlocks(staticComponents);
+        });
+
+        return () => {
+            disposed = true;
+        };
+    }, [data?.id, blocks, data?.funnelId, data?.funnel_id]);
 
     // Suporte a blocos reais (Block[])
     const hasRealBlocks = Array.isArray(effectiveBlocks) && effectiveBlocks.length > 0;
