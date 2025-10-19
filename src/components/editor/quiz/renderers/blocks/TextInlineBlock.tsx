@@ -30,7 +30,9 @@ const TextInlineBlock: React.FC<TextInlineBlockProps> = ({ block, isSelected, is
     };
     const contentTextRaw: string = resolveContent();
     const result = useResultOptional();
-    const contentText = result ? result.interpolateText(contentTextRaw) : contentTextRaw;
+    // Primeiro interpolamos com ResultContext (ex.: {username}) e depois tokens utilitários como {currentYear}
+    const interpolated = result ? result.interpolateText(contentTextRaw) : contentTextRaw;
+    const contentText = typeof interpolated === 'string' ? interpolated.replace(/\{currentYear\}/g, String(new Date().getFullYear())) : interpolated;
     const size: string = props.size || 'h2';
     // Normaliza textAlign aceitando 'center' ou 'text-center'
     const alignRaw: string = (props.textAlign || props.align || 'center') as any;
@@ -38,6 +40,7 @@ const TextInlineBlock: React.FC<TextInlineBlockProps> = ({ block, isSelected, is
     const color: string = props.color || '#432818';
     const fontFamily: string | undefined = typeof (props as any).fontFamily === 'string' ? (props as any).fontFamily : undefined;
     const fontSizeClass: string | undefined = typeof (props as any).fontSize === 'string' ? (props as any).fontSize : undefined;
+    const fontWeightClass: string | undefined = typeof (props as any).fontWeight === 'string' ? (props as any).fontWeight : undefined;
     const extraClassName: string = typeof (props as any).className === 'string' ? (props as any).className : '';
 
     // Mapear size para classes tailwind simples
@@ -55,7 +58,7 @@ const TextInlineBlock: React.FC<TextInlineBlockProps> = ({ block, isSelected, is
         >
             <div className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto">
                 <div
-                    className={`${sizeClass} font-semibold text-${align} ${extraClassName}`}
+                    className={`${sizeClass} ${fontWeightClass || 'font-semibold'} text-${align} ${extraClassName}`}
                     style={{ color, lineHeight: 1.2, ...(fontFamily ? { fontFamily } : {}) }}
                 >
                     <span dangerouslySetInnerHTML={{ __html: contentText }} />

@@ -15,6 +15,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({ block, isSelected, isEd
     const placeholderRaw = props.placeholder || content.namePlaceholder || 'Digite seu primeiro nome aqui...';
     const buttonTextRaw = props.buttonText || content.submitText || 'Continuar';
     const onNameSubmit: ((name: string) => void) | undefined = contextData?.onNameSubmit;
+    const privacyNoticeRaw: string | undefined = (props as any).privacyNotice || content.privacyNotice;
 
     const result = useResultOptional();
     const label = result ? result.interpolateText(labelRaw) : labelRaw;
@@ -60,6 +61,9 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({ block, isSelected, isEd
                     >
                         {buttonText}
                     </button>
+                    {privacyNoticeRaw && (
+                        <p className="text-xs text-center text-gray-500 pt-1">{privacyNoticeRaw}</p>
+                    )}
                 </form>
             </div>
         </SelectableBlock>

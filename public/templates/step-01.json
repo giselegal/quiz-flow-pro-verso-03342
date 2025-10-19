@@ -68,7 +68,8 @@
         "label": "Antes de começarmos, como posso te chamar?",
         "placeholder": "Digite seu primeiro nome aqui...",
         "buttonText": "Quero Descobrir meu Estilo Agora!",
-        "buttonVariant": "primary"
+        "buttonVariant": "primary",
+        "privacyNotice": "Seu nome é necessário para personalizar sua experiência."
       }
     },
     {
@@ -76,7 +77,7 @@
       "type": "text-inline",
       "position": 5,
       "content": {
-        "text": "© 2025 Gisele Galvão - Todos os direitos reservados"
+        "text": "© {currentYear} Gisele Galvão - Todos os direitos reservados"
       },
       "properties": {
         "textAlign": "center",
