@@ -1,0 +1,528 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - button "Voltar" [ref=e9] [cursor=pointer]:
+            - img [ref=e10] [cursor=pointer]
+            - text: Voltar
+          - img "Logo Gisele Galvão" [ref=e12]
+          - generic [ref=e13]: Não salvo
+        - generic [ref=e14]:
+          - button "Navegação" [ref=e15] [cursor=pointer]
+          - button "Preview Produção" [ref=e16] [cursor=pointer]:
+            - img [ref=e17] [cursor=pointer]
+            - text: Preview Produção
+          - button "Exportar" [ref=e20] [cursor=pointer]
+          - button "Salvar" [ref=e21] [cursor=pointer]:
+            - img [ref=e22] [cursor=pointer]
+            - text: Salvar
+          - generic [ref=e26]:
+            - button "⮪ Undo" [disabled]
+            - button "Redo ⮫" [disabled]
+          - generic [ref=e28]:
+            - button "Canvas" [ref=e29] [cursor=pointer]
+            - button "Preview" [ref=e30] [cursor=pointer]
+          - button "Publicar" [ref=e31] [cursor=pointer]:
+            - img [ref=e32] [cursor=pointer]
+            - text: Publicar
+      - generic [ref=e35]:
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - heading "Etapas" [level=2] [ref=e39]
+            - paragraph [ref=e40]: 21 etapas (virtualizado)
+          - list [ref=e42]:
+            - listitem [ref=e43]:
+              - generic [ref=e44]:
+                - generic [ref=e45] [cursor=pointer]:
+                  - generic [ref=e47] [cursor=pointer]: "1"
+                  - generic [ref=e49] [cursor=pointer]:
+                    - generic [ref=e50] [cursor=pointer]: intro
+                    - generic [ref=e51] [cursor=pointer]: 6 blocos
+                - generic [ref=e52]:
+                  - button "↑" [disabled]
+                  - button "↓" [ref=e53] [cursor=pointer]
+                  - button "✕" [ref=e54] [cursor=pointer]
+            - listitem [ref=e55]:
+              - generic [ref=e56]:
+                - generic [ref=e57] [cursor=pointer]:
+                  - generic [ref=e59] [cursor=pointer]: "2"
+                  - generic [ref=e61] [cursor=pointer]:
+                    - generic [ref=e62] [cursor=pointer]: question
+                    - generic [ref=e63] [cursor=pointer]: 6 blocos
+                - generic [ref=e64]:
+                  - button "↑" [ref=e65] [cursor=pointer]
+                  - button "↓" [ref=e66] [cursor=pointer]
+                  - button "✕" [ref=e67] [cursor=pointer]
+            - listitem [ref=e68]:
+              - generic [ref=e69]:
+                - generic [ref=e70] [cursor=pointer]:
+                  - generic [ref=e72] [cursor=pointer]: "3"
+                  - generic [ref=e74] [cursor=pointer]:
+                    - generic [ref=e75] [cursor=pointer]: question
+                    - generic [ref=e76] [cursor=pointer]: 4 blocos
+                - generic [ref=e77]:
+                  - button "↑" [ref=e78] [cursor=pointer]
+                  - button "↓" [ref=e79] [cursor=pointer]
+                  - button "✕" [ref=e80] [cursor=pointer]
+            - listitem [ref=e81]:
+              - generic [ref=e82]:
+                - generic [ref=e83] [cursor=pointer]:
+                  - generic [ref=e85] [cursor=pointer]: "4"
+                  - generic [ref=e87] [cursor=pointer]:
+                    - generic [ref=e88] [cursor=pointer]: question
+                    - generic [ref=e89] [cursor=pointer]: 4 blocos
+                - generic [ref=e90]:
+                  - button "↑" [ref=e91] [cursor=pointer]
+                  - button "↓" [ref=e92] [cursor=pointer]
+                  - button "✕" [ref=e93] [cursor=pointer]
+            - listitem [ref=e94]:
+              - generic [ref=e95]:
+                - generic [ref=e96] [cursor=pointer]:
+                  - generic [ref=e98] [cursor=pointer]: "5"
+                  - generic [ref=e100] [cursor=pointer]:
+                    - generic [ref=e101] [cursor=pointer]: question
+                    - generic [ref=e102] [cursor=pointer]: 4 blocos
+                - generic [ref=e103]:
+                  - button "↑" [ref=e104] [cursor=pointer]
+                  - button "↓" [ref=e105] [cursor=pointer]
+                  - button "✕" [ref=e106] [cursor=pointer]
+            - listitem [ref=e107]:
+              - generic [ref=e108]:
+                - generic [ref=e109] [cursor=pointer]:
+                  - generic [ref=e111] [cursor=pointer]: "6"
+                  - generic [ref=e113] [cursor=pointer]:
+                    - generic [ref=e114] [cursor=pointer]: question
+                    - generic [ref=e115] [cursor=pointer]: 4 blocos
+                - generic [ref=e116]:
+                  - button "↑" [ref=e117] [cursor=pointer]
+                  - button "↓" [ref=e118] [cursor=pointer]
+                  - button "✕" [ref=e119] [cursor=pointer]
+            - listitem [ref=e120]:
+              - generic [ref=e121]:
+                - generic [ref=e122] [cursor=pointer]:
+                  - generic [ref=e124] [cursor=pointer]: "7"
+                  - generic [ref=e126] [cursor=pointer]:
+                    - generic [ref=e127] [cursor=pointer]: question
+                    - generic [ref=e128] [cursor=pointer]: 4 blocos
+                - generic [ref=e129]:
+                  - button "↑" [ref=e130] [cursor=pointer]
+                  - button "↓" [ref=e131] [cursor=pointer]
+                  - button "✕" [ref=e132] [cursor=pointer]
+            - listitem [ref=e133]:
+              - generic [ref=e134]:
+                - generic [ref=e135] [cursor=pointer]:
+                  - generic [ref=e137] [cursor=pointer]: "8"
+                  - generic [ref=e139] [cursor=pointer]:
+                    - generic [ref=e140] [cursor=pointer]: question
+                    - generic [ref=e141] [cursor=pointer]: 4 blocos
+                - generic [ref=e142]:
+                  - button "↑" [ref=e143] [cursor=pointer]
+                  - button "↓" [ref=e144] [cursor=pointer]
+                  - button "✕" [ref=e145] [cursor=pointer]
+            - listitem [ref=e146]:
+              - generic [ref=e147]:
+                - generic [ref=e148] [cursor=pointer]:
+                  - generic [ref=e150] [cursor=pointer]: "9"
+                  - generic [ref=e152] [cursor=pointer]:
+                    - generic [ref=e153] [cursor=pointer]: question
+                    - generic [ref=e154] [cursor=pointer]: 4 blocos
+                - generic [ref=e155]:
+                  - button "↑" [ref=e156] [cursor=pointer]
+                  - button "↓" [ref=e157] [cursor=pointer]
+                  - button "✕" [ref=e158] [cursor=pointer]
+          - button "+ Adicionar etapa" [ref=e161] [cursor=pointer]
+        - generic [ref=e165]:
+          - tablist [ref=e167]:
+            - tab "Componentes" [selected] [ref=e168] [cursor=pointer]:
+              - img
+              - text: Componentes
+            - tab "Builder" [ref=e172] [cursor=pointer]:
+              - img
+              - text: Builder
+          - tabpanel "Componentes" [ref=e175]:
+            - paragraph [ref=e177]: Arraste para o canvas
+            - generic [ref=e181]:
+              - generic [ref=e182]:
+                - heading "Layout" [level=3] [ref=e183]
+                - generic [ref=e184]:
+                  - button "Container" [ref=e185] [cursor=pointer]:
+                    - img [ref=e186] [cursor=pointer]
+                    - generic [ref=e188] [cursor=pointer]: Container
+                  - button "Seção" [ref=e189] [cursor=pointer]:
+                    - img [ref=e190] [cursor=pointer]
+                    - generic [ref=e192] [cursor=pointer]: Seção
+              - generic [ref=e193]:
+                - heading "Conteúdo" [level=3] [ref=e194]
+                - generic [ref=e195]:
+                  - button "Imagem Display" [ref=e196] [cursor=pointer]:
+                    - img [ref=e197] [cursor=pointer]
+                    - generic [ref=e199] [cursor=pointer]: Imagem Display
+                  - button "Título (H1-H6)" [ref=e200] [cursor=pointer]:
+                    - img [ref=e201] [cursor=pointer]
+                    - generic [ref=e203] [cursor=pointer]: Título (H1-H6)
+                  - button "Texto" [ref=e204] [cursor=pointer]:
+                    - img [ref=e205] [cursor=pointer]
+                    - generic [ref=e207] [cursor=pointer]: Texto
+                  - button "Imagem" [ref=e208] [cursor=pointer]:
+                    - img [ref=e209] [cursor=pointer]
+                    - generic [ref=e211] [cursor=pointer]: Imagem
+              - generic [ref=e212]:
+                - heading "Visual" [level=3] [ref=e213]
+                - generic [ref=e214]:
+                  - button "Barra Decorativa" [ref=e215] [cursor=pointer]:
+                    - img [ref=e216] [cursor=pointer]
+                    - generic [ref=e220] [cursor=pointer]: Barra Decorativa
+                  - button "Gradiente Animado" [ref=e221] [cursor=pointer]:
+                    - img [ref=e222] [cursor=pointer]
+                    - generic [ref=e226] [cursor=pointer]: Gradiente Animado
+              - generic [ref=e227]:
+                - heading "Quiz" [level=3] [ref=e228]
+                - generic [ref=e229]:
+                  - button "Logo do Quiz" [ref=e230] [cursor=pointer]:
+                    - img [ref=e231] [cursor=pointer]
+                    - generic [ref=e232] [cursor=pointer]: Logo do Quiz
+                  - button "Barra de Progresso" [ref=e233] [cursor=pointer]:
+                    - img [ref=e234] [cursor=pointer]
+                    - generic [ref=e235] [cursor=pointer]: Barra de Progresso
+                  - button "Botão Voltar" [ref=e236] [cursor=pointer]:
+                    - img [ref=e237] [cursor=pointer]
+                    - generic [ref=e238] [cursor=pointer]: Botão Voltar
+                  - button "Cabeçalho de Pergunta" [ref=e239] [cursor=pointer]:
+                    - img [ref=e240] [cursor=pointer]
+                    - generic [ref=e241] [cursor=pointer]: Cabeçalho de Pergunta
+                  - button "Loader de Transição" [ref=e242] [cursor=pointer]:
+                    - img [ref=e243] [cursor=pointer]
+                    - generic [ref=e244] [cursor=pointer]: Loader de Transição
+                  - button "Cabeçalho de Resultado" [ref=e245] [cursor=pointer]:
+                    - img [ref=e246] [cursor=pointer]
+                    - generic [ref=e247] [cursor=pointer]: Cabeçalho de Resultado
+                  - button "Hero de Oferta" [ref=e248] [cursor=pointer]:
+                    - img [ref=e249] [cursor=pointer]
+                    - generic [ref=e250] [cursor=pointer]: Hero de Oferta
+                  - button "Header do Quiz" [ref=e251] [cursor=pointer]:
+                    - img [ref=e252] [cursor=pointer]
+                    - generic [ref=e253] [cursor=pointer]: Header do Quiz
+                  - button "Grid de Opções" [ref=e254] [cursor=pointer]:
+                    - img [ref=e255] [cursor=pointer]
+                    - generic [ref=e256] [cursor=pointer]: Grid de Opções
+                  - button "Hero de Pergunta" [ref=e257] [cursor=pointer]:
+                    - img [ref=e258] [cursor=pointer]
+                    - generic [ref=e259] [cursor=pointer]: Hero de Pergunta
+                  - button "Pergunta Estratégica" [ref=e260] [cursor=pointer]:
+                    - img [ref=e261] [cursor=pointer]
+                    - generic [ref=e262] [cursor=pointer]: Pergunta Estratégica
+                  - button "Hero de Transição" [ref=e263] [cursor=pointer]:
+                    - img [ref=e264] [cursor=pointer]
+                    - generic [ref=e265] [cursor=pointer]: Hero de Transição
+                  - button "Barra de Progresso" [ref=e266] [cursor=pointer]:
+                    - img [ref=e267] [cursor=pointer]
+                    - generic [ref=e268] [cursor=pointer]: Barra de Progresso
+                  - button "Animação de Loading" [ref=e269] [cursor=pointer]:
+                    - img [ref=e270] [cursor=pointer]
+                    - generic [ref=e271] [cursor=pointer]: Animação de Loading
+              - generic [ref=e272]:
+                - heading "Formulários" [level=3] [ref=e273]
+                - generic [ref=e274]:
+                  - button "Campo de Texto" [ref=e275] [cursor=pointer]:
+                    - img [ref=e276] [cursor=pointer]
+                    - generic [ref=e278] [cursor=pointer]: Campo de Texto
+                  - button "Formulário de Lead" [ref=e279] [cursor=pointer]:
+                    - img [ref=e280] [cursor=pointer]
+                    - generic [ref=e282] [cursor=pointer]: Formulário de Lead
+                  - button "Formulário Conectado" [ref=e283] [cursor=pointer]:
+                    - img [ref=e284] [cursor=pointer]
+                    - generic [ref=e286] [cursor=pointer]: Formulário Conectado
+              - generic [ref=e287]:
+                - heading "Ações" [level=3] [ref=e288]
+                - generic [ref=e289]:
+                  - button "Botão" [ref=e290] [cursor=pointer]:
+                    - img [ref=e291] [cursor=pointer]
+                    - generic [ref=e294] [cursor=pointer]: Botão
+                  - button "Aviso Legal" [ref=e295] [cursor=pointer]:
+                    - img [ref=e296] [cursor=pointer]
+                    - generic [ref=e299] [cursor=pointer]: Aviso Legal
+              - generic [ref=e300]:
+                - heading "Resultado" [level=3] [ref=e301]
+                - generic [ref=e302]:
+                  - button "Card de Resultado" [ref=e303] [cursor=pointer]:
+                    - img [ref=e304] [cursor=pointer]
+                    - generic [ref=e307] [cursor=pointer]: Card de Resultado
+                  - button "Header de Resultado" [ref=e308] [cursor=pointer]:
+                    - img [ref=e309] [cursor=pointer]
+                    - generic [ref=e312] [cursor=pointer]: Header de Resultado
+                  - button "Card de Estilo" [ref=e313] [cursor=pointer]:
+                    - img [ref=e314] [cursor=pointer]
+                    - generic [ref=e317] [cursor=pointer]: Card de Estilo
+                  - button "Grid de Estilos" [ref=e318] [cursor=pointer]:
+                    - img [ref=e319] [cursor=pointer]
+                    - generic [ref=e322] [cursor=pointer]: Grid de Estilos
+                  - 'button "Resultado: Cabeçalho" [ref=e323] [cursor=pointer]':
+                    - img [ref=e324] [cursor=pointer]
+                    - generic [ref=e327] [cursor=pointer]: "Resultado: Cabeçalho"
+                  - 'button "Resultado: Estilo Principal" [ref=e328] [cursor=pointer]':
+                    - img [ref=e329] [cursor=pointer]
+                    - generic [ref=e332] [cursor=pointer]: "Resultado: Estilo Principal"
+                  - 'button "Resultado: Card de Estilo" [ref=e333] [cursor=pointer]':
+                    - img [ref=e334] [cursor=pointer]
+                    - generic [ref=e337] [cursor=pointer]: "Resultado: Card de Estilo"
+                  - 'button "Resultado: Imagem" [ref=e338] [cursor=pointer]':
+                    - img [ref=e339] [cursor=pointer]
+                    - generic [ref=e342] [cursor=pointer]: "Resultado: Imagem"
+                  - 'button "Resultado: Descrição" [ref=e343] [cursor=pointer]':
+                    - img [ref=e344] [cursor=pointer]
+                    - generic [ref=e347] [cursor=pointer]: "Resultado: Descrição"
+                  - 'button "Resultado: Características" [ref=e348] [cursor=pointer]':
+                    - img [ref=e349] [cursor=pointer]
+                    - generic [ref=e352] [cursor=pointer]: "Resultado: Características"
+                  - 'button "Resultado: Call to Action" [ref=e353] [cursor=pointer]':
+                    - img [ref=e354] [cursor=pointer]
+                    - generic [ref=e357] [cursor=pointer]: "Resultado: Call to Action"
+                  - 'button "Resultado: CTA Principal" [ref=e358] [cursor=pointer]':
+                    - img [ref=e359] [cursor=pointer]
+                    - generic [ref=e362] [cursor=pointer]: "Resultado: CTA Principal"
+                  - 'button "Resultado: CTA Secundário" [ref=e363] [cursor=pointer]':
+                    - img [ref=e364] [cursor=pointer]
+                    - generic [ref=e367] [cursor=pointer]: "Resultado: CTA Secundário"
+                  - 'button "Resultado: Estilos Secundários" [ref=e368] [cursor=pointer]':
+                    - img [ref=e369] [cursor=pointer]
+                    - generic [ref=e372] [cursor=pointer]: "Resultado: Estilos Secundários"
+                  - 'button "Resultado: Compartilhar" [ref=e373] [cursor=pointer]':
+                    - img [ref=e374] [cursor=pointer]
+                    - generic [ref=e377] [cursor=pointer]: "Resultado: Compartilhar"
+                  - 'button "Step20: Header" [ref=e378] [cursor=pointer]':
+                    - img [ref=e379] [cursor=pointer]
+                    - generic [ref=e382] [cursor=pointer]: "Step20: Header"
+                  - 'button "Step20: Revelação de Estilo" [ref=e383] [cursor=pointer]':
+                    - img [ref=e384] [cursor=pointer]
+                    - generic [ref=e387] [cursor=pointer]: "Step20: Revelação de Estilo"
+                  - 'button "Step20: Saudação" [ref=e388] [cursor=pointer]':
+                    - img [ref=e389] [cursor=pointer]
+                    - generic [ref=e392] [cursor=pointer]: "Step20: Saudação"
+                  - 'button "Step20: Compatibilidade" [ref=e393] [cursor=pointer]':
+                    - img [ref=e394] [cursor=pointer]
+                    - generic [ref=e397] [cursor=pointer]: "Step20: Compatibilidade"
+                  - 'button "Step20: Estilos Secundários" [ref=e398] [cursor=pointer]':
+                    - img [ref=e399] [cursor=pointer]
+                    - generic [ref=e402] [cursor=pointer]: "Step20: Estilos Secundários"
+                  - 'button "Step20: Oferta Personalizada" [ref=e403] [cursor=pointer]':
+                    - img [ref=e404] [cursor=pointer]
+                    - generic [ref=e407] [cursor=pointer]: "Step20: Oferta Personalizada"
+                  - 'button "Step20: Template Completo" [ref=e408] [cursor=pointer]':
+                    - img [ref=e409] [cursor=pointer]
+                    - generic [ref=e412] [cursor=pointer]: "Step20: Template Completo"
+              - generic [ref=e413]:
+                - heading "Oferta" [level=3] [ref=e414]
+                - generic [ref=e415]:
+                  - button "Hero de Oferta" [ref=e416] [cursor=pointer]:
+                    - img [ref=e417] [cursor=pointer]
+                    - generic [ref=e420] [cursor=pointer]: Hero de Oferta
+                  - button "Sales Hero" [ref=e421] [cursor=pointer]:
+                    - img [ref=e422] [cursor=pointer]
+                    - generic [ref=e425] [cursor=pointer]: Sales Hero
+                  - button "Timer de Urgência" [ref=e426] [cursor=pointer]:
+                    - img [ref=e427] [cursor=pointer]
+                    - generic [ref=e430] [cursor=pointer]: Timer de Urgência
+                  - button "Antes e Depois" [ref=e431] [cursor=pointer]:
+                    - img [ref=e432] [cursor=pointer]
+                    - generic [ref=e435] [cursor=pointer]: Antes e Depois
+                  - button "Ancoragem de Valor" [ref=e436] [cursor=pointer]:
+                    - img [ref=e437] [cursor=pointer]
+                    - generic [ref=e440] [cursor=pointer]: Ancoragem de Valor
+                  - button "Seção de Bônus" [ref=e441] [cursor=pointer]:
+                    - img [ref=e442] [cursor=pointer]
+                    - generic [ref=e445] [cursor=pointer]: Seção de Bônus
+                  - button "Grade de Depoimentos" [ref=e446] [cursor=pointer]:
+                    - img [ref=e447] [cursor=pointer]
+                    - generic [ref=e450] [cursor=pointer]: Grade de Depoimentos
+                  - button "Depoimento Individual" [ref=e451] [cursor=pointer]:
+                    - img [ref=e452] [cursor=pointer]
+                    - generic [ref=e455] [cursor=pointer]: Depoimento Individual
+                  - button "Carrossel de Depoimentos" [ref=e456] [cursor=pointer]:
+                    - img [ref=e457] [cursor=pointer]
+                    - generic [ref=e460] [cursor=pointer]: Carrossel de Depoimentos
+                  - button "Garantia" [ref=e461] [cursor=pointer]:
+                    - img [ref=e462] [cursor=pointer]
+                    - generic [ref=e465] [cursor=pointer]: Garantia
+                  - button "Compra Segura" [ref=e466] [cursor=pointer]:
+                    - img [ref=e467] [cursor=pointer]
+                    - generic [ref=e470] [cursor=pointer]: Compra Segura
+                  - button "Lista de Benefícios" [ref=e471] [cursor=pointer]:
+                    - img [ref=e472] [cursor=pointer]
+                    - generic [ref=e475] [cursor=pointer]: Lista de Benefícios
+                  - button "Seção da Mentora" [ref=e476] [cursor=pointer]:
+                    - img [ref=e477] [cursor=pointer]
+                    - generic [ref=e480] [cursor=pointer]: Seção da Mentora
+              - generic [ref=e481]:
+                - heading "Navegação" [level=3] [ref=e482]
+                - button "Navegação do Quiz" [ref=e484] [cursor=pointer]:
+                  - img [ref=e485] [cursor=pointer]
+                  - generic [ref=e487] [cursor=pointer]: Navegação do Quiz
+              - generic [ref=e488]:
+                - heading "IA" [level=3] [ref=e489]
+                - button "Gerador de IA Fashion" [ref=e491] [cursor=pointer]:
+                  - img [ref=e492] [cursor=pointer]
+                  - generic [ref=e495] [cursor=pointer]: Gerador de IA Fashion
+              - generic [ref=e496]:
+                - heading "Avançado" [level=3] [ref=e497]
+                - button "Template Wrapper" [ref=e499] [cursor=pointer]:
+                  - img [ref=e500] [cursor=pointer]
+                  - generic [ref=e503] [cursor=pointer]: Template Wrapper
+          - tabpanel "Builder"
+        - generic:
+          - generic [ref=e505]:
+            - button "Editor" [ref=e506] [cursor=pointer]:
+              - img [ref=e507] [cursor=pointer]
+              - text: Editor
+            - button "Preview" [ref=e509] [cursor=pointer]:
+              - img [ref=e510] [cursor=pointer]
+              - text: Preview
+          - text: // 🎯 EDIT MODE - Renderização modular com componentes especializados (ou caminho legacy/virtualizado)
+          - generic [ref=e514]:
+            - generic:
+              - generic [ref=e515]:
+                - generic:
+                  - img "Logo" [ref=e517]
+                  - generic [ref=e521]: 5%
+              - generic [ref=e522]:
+                - generic [ref=e523]: "Fonte:"
+                - generic [ref=e524]: individual-json
+            - generic:
+              - generic [ref=e526]: + Soltar antes
+              - button [ref=e527]:
+                - img [ref=e529]
+                - banner [ref=e541]:
+                  - img "Logo Gisele Galvão - Consultoria de Estilo" [ref=e544]
+                - generic [ref=e546]:
+                  - button [ref=e547] [cursor=pointer]:
+                    - img
+                  - button [ref=e550] [cursor=pointer]:
+                    - img
+              - generic [ref=e554]: + Soltar antes
+              - 'button "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>." [ref=e555]':
+                - img [ref=e557]
+                - paragraph [ref=e566]: "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
+                - generic [ref=e567]:
+                  - button [ref=e568] [cursor=pointer]:
+                    - img
+                  - button [ref=e571] [cursor=pointer]:
+                    - img
+              - generic [ref=e575]: + Soltar antes
+              - button "Descubra seu estilo predominante" [ref=e576]:
+                - img [ref=e578]
+                - generic [ref=e586]:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img "Descubra seu estilo predominante"
+                - generic [ref=e587]:
+                  - button [ref=e588] [cursor=pointer]:
+                    - img
+                  - button [ref=e591] [cursor=pointer]:
+                    - img
+              - generic [ref=e595]: + Soltar antes
+              - button "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança." [ref=e596]:
+                - img [ref=e598]
+                - paragraph [ref=e607]: Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.
+                - generic [ref=e608]:
+                  - button [ref=e609] [cursor=pointer]:
+                    - img
+                  - button [ref=e612] [cursor=pointer]:
+                    - img
+              - generic [ref=e616]: + Soltar antes
+              - button "Antes de começarmos, como posso te chamar? Quero Descobrir meu Estilo Agora! Seu nome é necessário para personalizar sua experiência." [ref=e617]:
+                - img [ref=e619]
+                - generic [ref=e632]:
+                  - generic [ref=e633]:
+                    - generic [ref=e634]: Antes de começarmos, como posso te chamar?
+                    - textbox "Antes de começarmos, como posso te chamar?" [ref=e635]
+                  - button "Quero Descobrir meu Estilo Agora!" [disabled] [ref=e636]
+                  - paragraph [ref=e637]: Seu nome é necessário para personalizar sua experiência.
+                - generic [ref=e638]:
+                  - button [ref=e639] [cursor=pointer]:
+                    - img
+                  - button [ref=e642] [cursor=pointer]:
+                    - img
+              - generic [ref=e646]: + Soltar antes
+              - button "© Gisele Galvão - Todos os direitos reservados" [ref=e647]:
+                - img [ref=e649]
+                - paragraph [ref=e658]: © Gisele Galvão - Todos os direitos reservados
+                - generic [ref=e659]:
+                  - button [ref=e660] [cursor=pointer]:
+                    - img
+                  - button [ref=e663] [cursor=pointer]:
+                    - img
+            - generic [ref=e666]:
+              - generic:
+                - img [ref=e667]
+                - paragraph [ref=e668]: Arraste componentes aqui
+                - paragraph [ref=e669]: Componentes serão adicionados ao final
+        - generic [ref=e672]:
+          - generic [ref=e673]:
+            - generic [ref=e674]:
+              - heading "Painéis" [level=2] [ref=e675]
+              - paragraph [ref=e676]: Configuração de blocos e tema
+            - generic [ref=e677]:
+              - button "Colar" [disabled]
+          - generic [ref=e678]:
+            - tablist [ref=e679]:
+              - tab "Propriedades" [selected] [ref=e680] [cursor=pointer]
+              - tab "Runtime" [ref=e681] [cursor=pointer]
+              - tab "Resultados" [ref=e682] [cursor=pointer]
+              - tab "Funil" [ref=e683] [cursor=pointer]
+              - tab "Tema" [ref=e684] [cursor=pointer]
+            - tabpanel "Propriedades" [ref=e685]:
+              - generic [ref=e689]:
+                - heading "Cabeçalho Fixo" [level=3] [ref=e690]
+                - generic [ref=e691]:
+                  - generic [ref=e692]:
+                    - checkbox "Exibir Logo" [checked] [ref=e693]
+                    - text: Exibir Logo
+                  - generic [ref=e694]:
+                    - generic [ref=e695]: Logo URL
+                    - textbox [ref=e696]: https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png
+                  - generic [ref=e697]:
+                    - generic [ref=e698]: Largura Logo
+                    - textbox [ref=e699]: 140px
+                  - generic [ref=e700]:
+                    - generic [ref=e701]: Título
+                    - textbox [ref=e702]
+                  - generic [ref=e703]:
+                    - generic [ref=e704]: Alinhamento
+                    - combobox [ref=e705]:
+                      - option "Esquerda" [selected]
+                      - option "Centro"
+                      - option "Direita"
+                  - generic [ref=e706]:
+                    - checkbox "Exibir Barra de Progresso" [checked] [ref=e707]
+                    - text: Exibir Barra de Progresso
+                  - generic [ref=e708]:
+                    - checkbox "Cálculo Automático" [checked] [ref=e709]
+                    - text: Cálculo Automático
+                  - generic [ref=e710]:
+                    - generic [ref=e711]: Espessura da Barra
+                    - textbox [ref=e712]: 4px
+                  - generic [ref=e713]:
+                    - generic [ref=e714]: Cor Barra
+                    - textbox [ref=e715]: "#ccaa6a"
+                  - generic [ref=e716]:
+                    - generic [ref=e717]: Cor Fundo
+                    - textbox [ref=e718]: "#e5e7eb"
+                - paragraph [ref=e719]: O cabeçalho se aplica a todas as etapas (exceto resultado e oferta). Desative logo ou barra conforme necessário.
+                - generic [ref=e720]:
+                  - generic [ref=e721]:
+                    - heading "Propriedades da Etapa" [level=3] [ref=e722]
+                    - generic [ref=e723]: "tipo: intro"
+                  - generic [ref=e724]:
+                    - textbox [ref=e725]: "{}"
+                    - button "Aplicar Props → Blocks" [ref=e727] [cursor=pointer]
+    - status [ref=e729]
+  - region "Notifications (F8)":
+    - list
+```
