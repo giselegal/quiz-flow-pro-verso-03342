@@ -1,4 +1,5 @@
 import React from 'react';
+import { notify } from '@/utils/notify';
 import {
     Edit,
     Copy,
@@ -9,7 +10,7 @@ import {
     MoreVertical,
     Eye,
     BarChart3,
-    
+
     Users,
     TrendingUp
 } from 'lucide-react';
@@ -241,7 +242,7 @@ const MeusFunisPage: React.FC = () => {
                 status: 'draft'
             };
             setFunisData(prev => [novoFunil, ...prev]);
-            alert('Funil duplicado com sucesso!');
+            notify('Funil duplicado com sucesso!', 'success', 'Duplicado');
         }
     };
 
@@ -249,7 +250,7 @@ const MeusFunisPage: React.FC = () => {
         console.log(`Excluindo funil: ${funilId}`);
         if (confirm('Tem certeza que deseja excluir este funil?')) {
             setFunisData(prev => prev.filter(f => f.id !== funilId));
-            alert('Funil excluído com sucesso!');
+            notify('Funil excluído com sucesso!', 'success', 'Excluído');
         }
     };
 
@@ -263,7 +264,7 @@ const MeusFunisPage: React.FC = () => {
                     : f
             )
         );
-        alert(`Status alterado para ${newStatus === 'active' ? 'Ativo' : 'Pausado'}`);
+        notify(`Status alterado para ${newStatus === 'active' ? 'Ativo' : 'Pausado'}`, 'info', 'Status atualizado');
     };
 
     const formatDate = (dateString: string) => {

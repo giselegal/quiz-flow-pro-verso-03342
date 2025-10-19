@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { notify } from '@/utils/notify';
 import { useLocation } from 'wouter';
 
 /**
@@ -34,7 +35,7 @@ export const useNavigationSafe = () => {
           console.log('✅ [NavigationSafe] Fallback bem-sucedido');
         } catch (fallbackError) {
           console.error('❌ [NavigationSafe] Erro no fallback:', fallbackError);
-          alert(`Erro na navegação para ${path}. Por favor, recarregue a página.`);
+          notify(`Erro na navegação para ${path}. Por favor, recarregue a página.`, 'error', 'Navegação falhou');
         }
       }
     },
