@@ -530,10 +530,10 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.log('existingBlocks:', prev.stepBlocks[normalizedKey]?.length || 0);
                 console.log('loadingStepsRef:', Array.from(loadingStepsRef.current));
 
-                // ✅ PRIORIDADE 0: JSON normalizado por etapa (public/templates/normalized/step-XX.json) — apenas para steps 02–11
+                // ✅ PRIORIDADE 0: JSON normalizado por etapa (public/templates/normalized/step-XX.json)
                 try {
                     const stepNum = Number(normalizedKey.replace('step-', ''));
-                    const isNormalizedRange = stepNum >= 2 && stepNum <= 11;
+                    const isNormalizedRange = (stepNum >= 2 && stepNum <= 11) || (stepNum >= 13 && stepNum <= 18);
                     if (isNormalizedRange) {
                         const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
                         if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {

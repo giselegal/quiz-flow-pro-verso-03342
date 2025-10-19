@@ -194,7 +194,13 @@ export default function ModularStrategicQuestionStep({
                                         onSelect={onBlockSelect}
                                         onOpenProperties={onOpenProperties}
                                         contextData={{
+                                            // Compat: Grid de opções usa answers[]
                                             currentAnswer,
+                                            currentAnswers: currentAnswer ? [currentAnswer] : [],
+                                            onAnswersChange: (answers: string[]) => {
+                                                const last = answers[answers.length - 1] || '';
+                                                onAnswerChange?.(last);
+                                            },
                                             onAnswerChange,
                                             canProceed,
                                             onNext: () => { if (typeof currentStepReal === 'number') emitNavigate(currentStepReal + 1); },

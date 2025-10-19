@@ -1,0 +1,69 @@
+{
+  "id": "step-15",
+  "type": "strategic-question",
+  "templateVersion": "3.0",
+  "blocks": [
+    {
+      "id": "number-15",
+      "type": "question-number",
+      "order": 0,
+      "properties": {
+        "questionNumber": "3 de 6",
+        "fontSize": "text-xl md:text-2xl",
+        "fontWeight": "font-bold",
+        "textColor": "#432818",
+        "textAlign": "center",
+        "marginBottom": "mb-4"
+      }
+    },
+    {
+      "id": "text-15",
+      "type": "question-text",
+      "order": 1,
+      "properties": {
+        "questionText": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
+        "fontSize": "text-xl md:text-2xl",
+        "fontWeight": "font-bold",
+        "textColor": "#deac6d",
+        "fontFamily": "\"Playfair Display\", serif",
+        "textAlign": "center",
+        "marginBottom": "mb-6"
+      }
+    },
+    {
+      "id": "options-15",
+      "type": "options-grid",
+      "order": 2,
+      "properties": {
+        "questionId": "step-15",
+        "requiredSelections": 1,
+        "multipleSelection": false,
+        "showImages": false,
+        "responsiveColumns": true,
+        "columns": 1,
+        "options": [
+          { "id": "quase-todos-dias", "text": "Quase todos os dias — é sempre uma indecisão" },
+          { "id": "compromissos-importantes", "text": "Sempre que tenho um compromisso importante" },
+          { "id": "as-vezes-limitada", "text": "Às vezes, mas me sinto limitada nas escolhas" },
+          { "id": "raramente-segura", "text": "Raramente — já me sinto segura ao me vestir" }
+        ]
+      }
+    },
+    {
+      "id": "navigation-15",
+      "type": "question-navigation",
+      "order": 3,
+      "properties": {
+        "buttonTextEnabled": "Próxima",
+        "buttonTextDisabled": "Selecione uma opção",
+        "enabledColor": "#deac6d",
+        "disabledColor": "#e6ddd4",
+        "disabledTextColor": "#8a7663"
+      }
+    }
+  ],
+  "meta": {
+    "order": 15,
+    "originalType": "strategic-question"
+  }
+}
