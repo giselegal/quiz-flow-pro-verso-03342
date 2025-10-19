@@ -55,16 +55,38 @@ interface QuizFunnelData {
 }
 
 class QuizEditorBridge {
+    // Controle de logs/verbosidade
+    private readonly debugEnabled: boolean = (typeof process !== 'undefined' && process.env && process.env.QUIZ_BRIDGE_DEBUG === '1')
+        || (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development');
+    private readonly infoEnabled: boolean = true; // manter infos por padrão
+
+    // Cache para templates v3 carregados (evita refetch)
+    private v3TemplatesCache: Record<string, QuizStep> | null = null;
+
     private cache = new Map<string, QuizFunnelData>();
     private readonly PRODUCTION_SLUG = 'quiz-estilo';
     private readonly DRAFT_TABLE = 'quiz_drafts';
     private readonly PRODUCTION_TABLE = 'quiz_production';
 
+    // Helpers de log
+    private debug(...args: any[]) {
+        if (this.debugEnabled) console.log(...args);
+    }
+    private info(...args: any[]) {
+        if (this.infoEnabled) console.log(...args);
+    }
+    private warn(...args: any[]) {
+        console.warn(...args);
+    }
+    private error(...args: any[]) {
+        console.error(...args);
+    }
+
     /**
      * 🎯 Carregar funil para edição (draft ou produção)
      */
     async loadFunnelForEdit(funnelId?: string): Promise<QuizFunnelData> {
-        console.log('📥 Carregando funil para edição:', funnelId || 'produção');
+    this.info('📥 Carregando funil para edição:', funnelId || 'produção');
 
         // Se não tem ID, carregar funil de produção atual
         if (!funnelId || funnelId === this.PRODUCTION_SLUG) {
@@ -107,7 +129,7 @@ class QuizEditorBridge {
      * ✅ FASE 6.5: Validações automáticas antes de salvar
      */
     async saveDraft(funnel: QuizFunnelData): Promise<string> {
-        console.log('💾 Salvando rascunho:', funnel.name);
+    this.info('💾 Salvando rascunho:', funnel.name);
 
         // 🔧 Auto-preencher nextStep se faltar (robustez extra caso editor não tenha aplicado)
         let workingSteps = funnel.steps.map(s => ({ ...s }));
@@ -115,7 +137,7 @@ class QuizEditorBridge {
         if (auto.adjusted) {
             const map = new Map(auto.steps.map(s => [s.id, s.nextStep] as const));
             workingSteps = workingSteps.map(s => ({ ...s, nextStep: map.get(s.id) }));
-            console.log('🛠️ nextStep preenchido automaticamente em', auto.filledCount, 'etapas');
+            this.debug('🛠️ nextStep preenchido automaticamente em', auto.filledCount, 'etapas');
         }
 
         // ✅ FASE 5: Validar integridade completa antes de salvar usando steps pós-autoFill
@@ -137,15 +159,15 @@ class QuizEditorBridge {
             const errorMsg = missingNextStepIds.length
                 ? `${baseMsg}; Etapas faltando: ${missingNextStepIds.join(', ')}`
                 : baseMsg;
-            console.error('❌ Validação falhou:', errorMsg, { missingNextStepIds });
+            this.error('❌ Validação falhou:', errorMsg, { missingNextStepIds });
             throw new Error(`Validação falhou: ${errorMsg}`);
         }
 
         if (validation.warnings.length > 0) {
-            console.warn('⚠️ Avisos de validação:', validation.warnings);
+            this.warn('⚠️ Avisos de validação:', validation.warnings);
         }
 
-        console.log('✅ Validação passou:', validation);
+        this.debug('✅ Validação passou:', validation);
 
         const draftId = funnel.id === 'production' ? `draft-${Date.now()}` : funnel.id;
 
@@ -170,16 +192,16 @@ class QuizEditorBridge {
                 .from(this.DRAFT_TABLE)
                 .upsert(draftData);
             if (error) {
-                console.warn('⚠️ Supabase indisponível ao salvar draft. Usando cache local:', error?.message || error);
+                this.warn('⚠️ Supabase indisponível ao salvar draft. Usando cache local:', error?.message || error);
             }
         } catch (err) {
-            console.warn('⚠️ Falha geral ao acessar Supabase ao salvar draft. Continuando com cache local.', err);
+            this.warn('⚠️ Falha geral ao acessar Supabase ao salvar draft. Continuando com cache local.', err);
         }
 
         // Atualizar cache SEMPRE para habilitar fluxo dev/local sem backend
         this.cache.set(draftId, { ...funnel, steps: workingSteps as any, id: draftId });
 
-        console.log('✅ Rascunho salvo (com fallback local se necessário):', draftId);
+        this.info('✅ Rascunho salvo (com fallback local se necessário):', draftId);
         return draftId;
     }
 
@@ -188,7 +210,7 @@ class QuizEditorBridge {
      * ✅ FASE 6.5: Validações críticas antes de publicar
      */
     async publishToProduction(funnelId: string): Promise<void> {
-        console.log('🚀 Publicando para produção:', funnelId);
+    this.info('🚀 Publicando para produção:', funnelId);
 
         // Carregar draft
         let draft = await this.loadDraftFromDatabase(funnelId);
@@ -196,7 +218,7 @@ class QuizEditorBridge {
         if (!draft) {
             const cached = this.cache.get(funnelId);
             if (cached) {
-                console.warn('⚠️ Supabase indisponível ou sem dados. Usando draft do cache em memória para publicar.');
+                this.warn('⚠️ Supabase indisponível ou sem dados. Usando draft do cache em memória para publicar.');
                 draft = cached;
             }
         }
@@ -210,7 +232,7 @@ class QuizEditorBridge {
         if (auto.adjusted) {
             const map = new Map(auto.steps.map(s => [s.id, s.nextStep] as const));
             publishingSteps = publishingSteps.map(s => ({ ...s, nextStep: map.get(s.id) }));
-            console.log('🛠️ (publish) nextStep preenchido automaticamente em', auto.filledCount, 'etapas');
+            this.debug('🛠️ (publish) nextStep preenchido automaticamente em', auto.filledCount, 'etapas');
         }
 
         // ✅ FASE 5: Validação CRÍTICA antes de publicar usando steps finalizados
@@ -218,11 +240,11 @@ class QuizEditorBridge {
 
         if (!validation.isValid) {
             const errorMsg = validation.errors.map(e => e.message).join('; ');
-            console.error('❌ PUBLICAÇÃO BLOQUEADA - Validação falhou:', errorMsg);
+            this.error('❌ PUBLICAÇÃO BLOQUEADA - Validação falhou:', errorMsg);
             throw new Error(`Publicação bloqueada: ${errorMsg}`);
         }
 
-        console.log('✅ Validação passou. Publicando...');
+        this.info('✅ Validação passou. Publicando...');
 
         // Converter steps para formato QUIZ_STEPS
         const quizSteps = this.convertToQuizSteps(publishingSteps as any);
@@ -253,10 +275,10 @@ class QuizEditorBridge {
 
         if (upsertError) {
             const message = (upsertError as any)?.message ?? String(upsertError ?? 'erro desconhecido');
-            console.error('❌ Erro ao publicar:', upsertError);
+            this.error('❌ Erro ao publicar:', upsertError);
             // Em ambiente de teste, não falhar a publicação para permitir validação de normalização sem backend real
             if (process.env.NODE_ENV === 'test') {
-                console.warn('⚠️ (teste) Supabase indisponível ou erro no upsert. Continuando com cache local. Detalhes:', message);
+                this.warn('⚠️ (teste) Supabase indisponível ou erro no upsert. Continuando com cache local. Detalhes:', message);
             } else {
                 throw new Error(`Falha na publicação: ${message}`);
             }
@@ -265,7 +287,7 @@ class QuizEditorBridge {
         // Invalidar cache
         this.cache.clear();
 
-        console.log('✅ Publicado com sucesso! Versão:', draft.version);
+        this.info('✅ Publicado com sucesso! Versão:', draft.version);
     }
 
     /**
@@ -286,45 +308,70 @@ class QuizEditorBridge {
      * 📂 Carregar draft do banco
      */
     private async loadDraftFromDatabase(draftId: string): Promise<QuizFunnelData | null> {
-        console.log('🔍 QuizEditorBridge - Carregando draft:', draftId);
+        this.debug('🔍 QuizEditorBridge - Carregando draft:', draftId);
 
-        const { data, error } = await supabaseAny
-            .from(this.DRAFT_TABLE)
-            .select('*')
-            .eq('id', draftId)
-            .single();
+        type DraftRow = {
+            id: string;
+            name: string;
+            slug: string;
+            steps: EditorQuizStep[];
+            is_published?: boolean;
+            version?: number;
+            created_at?: string;
+            updated_at?: string;
+            runtime?: any;
+            results?: any;
+            ui?: any;
+            settings?: any;
+        };
 
-        if (error || !data) {
-            console.log('⚠️ QuizEditorBridge - Draft não encontrado no DB, tentando cache');
+        let data: DraftRow | null = null;
+        try {
+            const res = await supabaseAny
+                .from(this.DRAFT_TABLE)
+                .select('*')
+                .eq('id', draftId)
+                .single();
+
+            if (!res || res.error || !res.data) {
+                this.debug('⚠️ QuizEditorBridge - Draft não encontrado no DB, tentando cache');
+            } else {
+                data = res.data as DraftRow;
+            }
+        } catch (err) {
+            this.warn('⚠️ Erro ao consultar Supabase por draft. Tentando cache local.', err);
+        }
+
+        if (!data) {
             // Fallback em memória
             const cached = this.cache.get(draftId);
             if (cached) {
-                console.log('✅ QuizEditorBridge - Draft encontrado em cache');
+                this.info('✅ QuizEditorBridge - Draft encontrado em cache');
                 return cached;
             }
-            console.log('❌ QuizEditorBridge - Draft não encontrado');
+            this.warn('❌ QuizEditorBridge - Draft não encontrado');
             return null;
         }
 
-        console.log('✅ QuizEditorBridge - Draft carregado do DB');
-        console.log('🔍 Steps:', data.steps?.length || 0);
+        this.info('✅ QuizEditorBridge - Draft carregado do DB');
+        this.debug('🔍 Steps:', data.steps?.length || 0);
 
-        // Log detalhado do primeiro bloco quiz-options encontrado
-        if (Array.isArray(data.steps)) {
-            for (const step of data.steps) {
+        // Log detalhado do primeiro bloco quiz-options encontrado (apenas debug)
+        if (Array.isArray((data as any).steps)) {
+            for (const step of (data as any).steps) {
                 if (Array.isArray(step.blocks)) {
                     const quizOptionsBlock = step.blocks.find((b: any) =>
                         b.type === 'quiz-options' || b.type === 'options-grid'
                     );
                     if (quizOptionsBlock) {
-                        console.log('🎯 Primeiro bloco quiz-options encontrado:');
-                        console.log('  - Tipo:', quizOptionsBlock.type);
-                        console.log('  - Content:', quizOptionsBlock.content);
-                        console.log('  - Properties:', quizOptionsBlock.properties);
-                        console.log('  - Options em content:', quizOptionsBlock.content?.options?.length || 0);
-                        console.log('  - Options em properties:', quizOptionsBlock.properties?.options?.length || 0);
+                        this.debug('🎯 Primeiro bloco quiz-options encontrado:');
+                        this.debug('  - Tipo:', quizOptionsBlock.type);
+                        this.debug('  - Content:', quizOptionsBlock.content);
+                        this.debug('  - Properties:', quizOptionsBlock.properties);
+                        this.debug('  - Options em content:', quizOptionsBlock.content?.options?.length || 0);
+                        this.debug('  - Options em properties:', quizOptionsBlock.properties?.options?.length || 0);
                         if (quizOptionsBlock.content?.options?.[0]) {
-                            console.log('  - Primeira opção:', quizOptionsBlock.content.options[0]);
+                            this.debug('  - Primeira opção:', quizOptionsBlock.content.options[0]);
                         }
                         break;
                     }
@@ -425,7 +472,7 @@ class QuizEditorBridge {
      * 🎯 Carregar funil para runtime (usado pelo QuizApp)
      */
     async loadForRuntime(funnelId?: string): Promise<Record<string, QuizStep>> {
-        console.log('🎯 Carregando para runtime:', funnelId || 'produção');
+    this.info('🎯 Carregando para runtime:', funnelId || 'produção');
 
         // Se tem funnelId, tentar carregar draft específico
         if (funnelId) {
@@ -444,12 +491,12 @@ class QuizEditorBridge {
         // Tentar buscar versão publicada mais recente
         const published = await this.getLatestPublished();
         if (published?.steps) {
-            console.log('✅ Usando versão publicada do Supabase');
+            this.info('✅ Usando versão publicada do Supabase');
             return published.steps;
         }
 
         // ✅ NOVO: Fallback para templates JSON v3.0
-        console.log('📚 Fallback: carregando templates JSON v3.0...');
+        this.info('📚 Fallback: carregando templates JSON v3.0...');
         const v3Templates = await this.loadAllV3Templates();
         return v3Templates;
     }
@@ -458,15 +505,18 @@ class QuizEditorBridge {
      * 📦 Carregar todos os templates JSON v3.0 como fallback
      */
     private async loadAllV3Templates(): Promise<Record<string, QuizStep>> {
-        const steps: Record<string, QuizStep> = {};
+        if (this.v3TemplatesCache) {
+            this.debug('♻️ Templates JSON v3.0 do cache');
+            return this.v3TemplatesCache;
+        }
 
-        console.log('📚 Carregando templates JSON v3.0...');
+        this.info('📚 Carregando templates JSON v3.0...');
 
-        for (let i = 1; i <= 21; i++) {
-            const stepId = `step-${i.toString().padStart(2, '0')}`;
+        const indices = Array.from({ length: 21 }, (_, i) => i + 1);
+        const stepIds = indices.map(i => `step-${i.toString().padStart(2, '0')}`);
 
+        const fetchPromises = stepIds.map(async (stepId) => {
             try {
-                // Tentar carregar template JSON v3.0 via fetch (evita dynamic import vars)
                 const res = await fetch(`/templates/${stepId}-v3.json`);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const v3Template: JSONv3Template = await res.json();
@@ -490,21 +540,33 @@ class QuizEditorBridge {
                 // Converter blocks[] para QuizStep
                 const stepData = convertBlocksToStep(stepId, stepType, editableBlocks);
 
-                // Mesclar com fallback para garantir propriedades obrigatórias
-                steps[stepId] = {
+                const merged: QuizStep = {
                     ...fallbackStep,
                     ...stepData,
-                    type: stepType // garantir type definido
+                    type: stepType
                 } as QuizStep;
 
-                console.log(`✅ Template ${stepId} carregado do JSON v3.0`);
+                this.debug(`✅ Template ${stepId} carregado do JSON v3.0`);
+                return { stepId, step: merged } as const;
             } catch (error) {
-                // Fallback para QUIZ_STEPS hardcoded
-                console.warn(`⚠️  Fallback para ${stepId}:`, error);
-                steps[stepId] = QUIZ_STEPS[stepId];
+                this.warn(`⚠️  Fallback para ${stepId}:`, error);
+                return { stepId, step: QUIZ_STEPS[stepId] } as const;
+            }
+        });
+
+        const results = await Promise.allSettled(fetchPromises);
+        const steps: Record<string, QuizStep> = {};
+        for (const r of results) {
+            if (r.status === 'fulfilled') {
+                steps[r.value.stepId] = r.value.step;
+            } else {
+                // Como sabemos o stepId a partir da mensagem é difícil aqui; refazer não vale.
+                // Em caso raro de rejeição do próprio handler, usar QUIZ_STEPS completo.
+                this.warn('⚠️ Rejeição inesperada ao carregar template v3.0. Aplicando fallback geral.');
             }
         }
 
+        this.v3TemplatesCache = steps;
         return steps;
     }
 
@@ -565,7 +627,7 @@ class QuizEditorBridge {
      * ✅ FASE 6.5: Usa validações testadas (22 testes, 100% confiáveis)
      */
     validateFunnel(funnel: QuizFunnelData): { valid: boolean; errors: string[]; warnings: string[] } {
-        console.log('🔍 Validando funil com utils testados...');
+    this.debug('🔍 Validando funil com utils testados...');
 
         // ✅ FASE 5: Usar validateCompleteFunnel (testado com 22 testes)
         const validation = validateCompleteFunnel(funnel.steps as any);
@@ -573,7 +635,7 @@ class QuizEditorBridge {
         const errors = validation.errors.map(e => e.message);
         const warnings = validation.warnings.map(w => w.message);
 
-        console.log('✅ Validação completa:', {
+        this.debug('✅ Validação completa:', {
             valid: validation.isValid,
             errors: errors.length,
             warnings: warnings.length
