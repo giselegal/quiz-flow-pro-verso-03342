@@ -19,6 +19,7 @@ import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
 import PricingInlineBlock from '@/components/editor/blocks/PricingInlineBlock';
 import QuizOfferHeroBlock from '@/components/editor/blocks/QuizOfferHeroBlock';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
+import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
 // Blocos atômicos específicos usados no Step 01
 import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
 import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHeaderBlock';
@@ -143,9 +144,53 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         case 'button':
             return <ButtonInlineBlock block={block} {...rest} />;
         case 'quiz-options':
-        case 'options-grid':
-            // Passar contextData para que o grid seja interativo (seleção + estado)
-            return <QuizOptionsBlock block={block} {...rest} contextData={rest.contextData} />;
+        case 'options-grid': {
+            // Unificar para o mesmo componente usado na coluna "Componentes": OptionsGridBlock
+            // Injetar seleção atual e callback de mudança a partir do contextData do step
+            const currentAnswers: string[] = (rest as any)?.contextData?.currentAnswers || [];
+            const onAnswersChange: ((answers: string[]) => void) | undefined = (rest as any)?.contextData?.onAnswersChange;
+            const maxSel = (block as any)?.properties?.maxSelections ?? (block as any)?.properties?.requiredSelections;
+
+            const toggleWithConstraints = (id: string) => {
+                if (!onAnswersChange) return;
+                const exists = currentAnswers.includes(id);
+                let next = exists ? currentAnswers.filter(a => a !== id) : [...currentAnswers, id];
+                if (!exists && typeof maxSel === 'number' && maxSel > 0 && next.length > maxSel) {
+                    // limitar ao máximo permitido (mantém últimas seleções)
+                    next = [...currentAnswers.slice(-(maxSel - 1)), id];
+                }
+                onAnswersChange(next);
+            };
+
+            const augmentedBlock = {
+                ...block,
+                properties: {
+                    ...((block as any).properties || {}),
+                    // refletir seleção atual no componente
+                    selectedOptions: currentAnswers,
+                    // callback externo chamado pelo OptionsGridBlock em cada clique
+                    onOptionSelect: (optionId: string) => toggleWithConstraints(optionId),
+                }
+            } as any;
+
+            return (
+                <SelectableBlock
+                    blockId={block.id}
+                    isSelected={!!rest.isSelected}
+                    isEditable={!!rest.isEditable}
+                    onSelect={() => rest.onSelect?.(block.id)}
+                    blockType="Opções da Pergunta"
+                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                    isDraggable={true}
+                >
+                    <OptionsGridBlock
+                        block={augmentedBlock}
+                        isPreviewMode={false}
+                        properties={(augmentedBlock as any).properties || {}}
+                    />
+                </SelectableBlock>
+            );
+        }
         case 'quiz-navigation':
         case 'navigation':
             return <QuizNavigationBlock block={block} {...rest} />;
