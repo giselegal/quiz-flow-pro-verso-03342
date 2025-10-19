@@ -2,6 +2,7 @@ import React from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { BlockRendererCommonProps } from './QuizIntroHeaderBlock';
+import { useResultOptional } from '@/contexts/ResultContext';
 
 interface QuizOptionsBlockProps extends BlockRendererCommonProps {
     block: Block;
@@ -13,6 +14,7 @@ const QuizOptionsBlock: React.FC<QuizOptionsBlockProps> = ({ block, isSelected, 
     const options: Array<{ id: string; text: string; imageUrl?: string; value?: string }> = props.options || content.options || [];
     const currentAnswers: string[] = contextData?.currentAnswers || [];
     const onAnswersChange: ((answers: string[]) => void) | undefined = contextData?.onAnswersChange;
+    const result = useResultOptional();
 
     const toggle = (id: string) => {
         if (!onAnswersChange) return;
@@ -45,7 +47,7 @@ const QuizOptionsBlock: React.FC<QuizOptionsBlockProps> = ({ block, isSelected, 
                         {opt.imageUrl && (
                             <img src={opt.imageUrl} alt={opt.text} className="w-full h-24 object-cover rounded" />
                         )}
-                        <span className="block mt-1">{opt.text}</span>
+                        <span className="block mt-1">{result ? result.interpolateText(opt.text) : opt.text}</span>
                     </button>
                 ))}
             </div>

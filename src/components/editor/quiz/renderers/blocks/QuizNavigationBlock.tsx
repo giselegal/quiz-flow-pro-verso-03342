@@ -2,6 +2,7 @@ import React from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { BlockRendererCommonProps } from './QuizIntroHeaderBlock';
+import { useResultOptional } from '@/contexts/ResultContext';
 
 interface QuizNavigationBlockProps extends BlockRendererCommonProps {
     block: Block;
@@ -9,9 +10,12 @@ interface QuizNavigationBlockProps extends BlockRendererCommonProps {
 
 const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({ block, isSelected, isEditable, onSelect, onOpenProperties, contextData }) => {
     const props = block.properties || {};
-    const nextText: string = props.nextText || 'Próxima';
-    const prevText: string = props.prevText || 'Voltar';
+    const nextTextRaw: string = props.nextText || 'Próxima';
+    const prevTextRaw: string = props.prevText || 'Voltar';
     const canProceed: boolean = Boolean(contextData?.canProceed ?? true);
+    const result = useResultOptional();
+    const nextText = result ? result.interpolateText(nextTextRaw) : nextTextRaw;
+    const prevText = result ? result.interpolateText(prevTextRaw) : prevTextRaw;
 
     const onNext = () => {
         contextData?.onNext?.();

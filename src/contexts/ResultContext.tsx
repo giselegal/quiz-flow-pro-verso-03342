@@ -2,6 +2,7 @@ import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 import { useResultCalculations, ResultCalculations } from '@/hooks/useResultCalculations';
 import { styleConfigGisele } from '@/data/styles';
 import type { QuizScores } from '@/hooks/useQuizState';
+import { interpolate as interpolateUtil, interpolateDeep } from '@/utils/interpolate';
 
 /**
  * 🎯 RESULT CONTEXT
@@ -44,6 +45,9 @@ export interface ResultContextValue {
     // Nomes dos estilos secundários
     secondaryStyleNames: string;
 
+    // Detalhes dos dois estilos complementares (se existirem)
+    complementaryStyles?: Array<StyleConfig & { id: string }>; // até 2
+
     // Handlers
     handleCTAClick: (customUrl?: string) => void;
 
@@ -63,6 +67,9 @@ export interface ResultContextValue {
             rating: number;
         }>;
     };
+
+    // Interpolação de textos (placeholders)
+    interpolateText: (template: string) => string;
 }
 
 const ResultContext = createContext<ResultContextValue | null>(null);
@@ -101,10 +108,19 @@ export const ResultProvider: React.FC<ResultProviderProps> = ({
 
     // Nomes dos estilos secundários
     const secondaryStyleNames = useMemo(() => {
-        return userProfile.secondaryStyles
+        return (userProfile.secondaryStyles || [])
             .map(styleId => styleConfigGisele[styleId]?.name)
             .filter(Boolean)
             .join(' e ');
+    }, [userProfile.secondaryStyles]);
+
+    // Até 2 estilos complementares detalhados
+    const complementaryStyles = useMemo(() => {
+        const ids = Array.isArray(userProfile.secondaryStyles) ? userProfile.secondaryStyles.slice(0, 2) : [];
+        return ids
+            .map((id) => ({ id, cfg: styleConfigGisele[id] }))
+            .filter(({ cfg }) => !!cfg)
+            .map(({ id, cfg }) => ({ ...(cfg as StyleConfig), id }));
     }, [userProfile.secondaryStyles]);
 
     // Handler do CTA (lógica de analytics e navegação)
@@ -165,8 +181,33 @@ export const ResultProvider: React.FC<ResultProviderProps> = ({
         scores,
         styleConfig,
         secondaryStyleNames,
+        complementaryStyles,
         handleCTAClick,
-        offerData
+        offerData,
+        interpolateText: (template: string) => {
+            const comp1 = complementaryStyles?.[0];
+            const comp2 = complementaryStyles?.[1];
+            const ctx = {
+                username: userProfile.userName,
+                style: styleConfig?.name,
+                user: { name: userProfile.userName },
+                result: { styleName: styleConfig?.name },
+                // Complementares em diferentes formas de acesso aos tokens
+                comp1: comp1 ? { ...comp1, styleName: comp1.name } : undefined,
+                comp2: comp2 ? { ...comp2, styleName: comp2.name } : undefined,
+                complementary: complementaryStyles?.map(s => ({ ...s, styleName: s.name })) || [],
+                // Aliases simples
+                comp1Name: comp1?.name,
+                comp2Name: comp2?.name,
+                comp1Description: comp1?.description,
+                comp2Description: comp2?.description,
+                comp1Image: comp1?.imageUrl,
+                comp2Image: comp2?.imageUrl,
+                calculations,
+                styleConfig
+            };
+            return interpolateUtil(template, ctx);
+        }
     };
 
     return (
@@ -187,4 +228,11 @@ export const useResult = (): ResultContextValue => {
     }
 
     return context;
+};
+
+/**
+ * Hook opcional: retorna null quando não estiver dentro de um ResultProvider
+ */
+export const useResultOptional = (): ResultContextValue | null => {
+    return useContext(ResultContext);
 };

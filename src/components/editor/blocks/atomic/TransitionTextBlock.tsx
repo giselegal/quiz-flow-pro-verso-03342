@@ -1,15 +1,18 @@
 import React from 'react';
 import { AtomicBlockProps } from '@/types/blockProps';
+import { useResultOptional } from '@/contexts/ResultContext';
 
 export default function TransitionTextBlock({
   block,
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const text = block.content?.text || '';
+  const textRaw = block.content?.text || '';
   const fontSize = block.content?.fontSize || 'lg';
   const color = block.content?.color || '#8F7A6A';
   const textAlign = block.content?.textAlign || 'center';
+  const result = useResultOptional();
+  const text = result ? result.interpolateText(textRaw) : textRaw;
 
   const fontSizeClasses: Record<string, string> = {
     'sm': 'text-sm',

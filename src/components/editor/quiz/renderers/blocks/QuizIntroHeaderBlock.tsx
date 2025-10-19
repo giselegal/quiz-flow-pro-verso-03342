@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
+import { useResultOptional } from '@/contexts/ResultContext';
 
 export interface BlockRendererCommonProps {
     isSelected?: boolean;
@@ -27,6 +28,12 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({ block, isSe
     const showProgress: boolean = Boolean(content.showProgress ?? (props as any).showProgress);
     const progressValue: number = Number(content.progressValue ?? (props as any).progressValue ?? 0);
 
+    // Interpolação de textos com contexto de resultado (ex: {username})
+    const result = useResultOptional();
+    const titleInterp = title ? (result ? result.interpolateText(title) : title) : undefined;
+    const subtitleInterp = subtitle ? (result ? result.interpolateText(subtitle) : subtitle) : undefined;
+    const descriptionInterp = description ? (result ? result.interpolateText(description) : description) : undefined;
+
     return (
         <SelectableBlock
             blockId={block.id}
@@ -52,24 +59,24 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({ block, isSe
                     </div>
                 </div>
 
-                {(title || subtitle || description) && (
+                {(titleInterp || subtitleInterp || descriptionInterp) && (
                     <div className="text-center space-y-3">
-                        {title && (
+                        {titleInterp && (
                             <h1
                                 className="text-2xl md:text-3xl font-bold leading-snug"
                                 style={{ color: '#432818' }}
-                                dangerouslySetInnerHTML={{ __html: title }}
+                                dangerouslySetInnerHTML={{ __html: titleInterp }}
                             />
                         )}
-                        {subtitle && (
+                        {subtitleInterp && (
                             <div
                                 className="text-base md:text-lg"
                                 style={{ color: '#432818' }}
-                                dangerouslySetInnerHTML={{ __html: subtitle }}
+                                dangerouslySetInnerHTML={{ __html: subtitleInterp }}
                             />
                         )}
-                        {description && (
-                            <p className="text-sm md:text-base text-gray-700">{description}</p>
+                        {descriptionInterp && (
+                            <p className="text-sm md:text-base text-gray-700">{descriptionInterp}</p>
                         )}
                     </div>
                 )}

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
+import { useResultOptional } from '@/contexts/ResultContext';
 
 import type { BlockRendererCommonProps } from './QuizIntroHeaderBlock';
 
@@ -10,7 +11,9 @@ interface TextInlineBlockProps extends BlockRendererCommonProps {
 
 const TextInlineBlock: React.FC<TextInlineBlockProps> = ({ block, isSelected, isEditable, onSelect, onOpenProperties }) => {
     const props = block.properties || {};
-    const contentText: string = props.content || (block as any).content?.text || '';
+    const contentTextRaw: string = props.content || (block as any).content?.text || '';
+    const result = useResultOptional();
+    const contentText = result ? result.interpolateText(contentTextRaw) : contentTextRaw;
     const size: string = props.size || 'h2';
     const align: 'left' | 'center' | 'right' | 'justify' = (props.textAlign || props.align || 'center') as any;
     const color: string = props.color || '#432818';

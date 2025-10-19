@@ -2,6 +2,7 @@ import React from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { BlockRendererCommonProps } from './QuizIntroHeaderBlock';
+import { useResultOptional } from '@/contexts/ResultContext';
 
 interface FormInputBlockProps extends BlockRendererCommonProps {
     block: Block;
@@ -10,10 +11,15 @@ interface FormInputBlockProps extends BlockRendererCommonProps {
 const FormInputBlock: React.FC<FormInputBlockProps> = ({ block, isSelected, isEditable, onSelect, onOpenProperties, contextData }) => {
     const props = block.properties || {};
     const content = (block as any).content || {};
-    const label = props.label || content.nameLabel || content.questionText || 'Como posso te chamar?';
-    const placeholder = props.placeholder || content.namePlaceholder || 'Digite seu primeiro nome aqui...';
-    const buttonText = props.buttonText || content.submitText || 'Continuar';
+    const labelRaw = props.label || content.nameLabel || content.questionText || 'Como posso te chamar?';
+    const placeholderRaw = props.placeholder || content.namePlaceholder || 'Digite seu primeiro nome aqui...';
+    const buttonTextRaw = props.buttonText || content.submitText || 'Continuar';
     const onNameSubmit: ((name: string) => void) | undefined = contextData?.onNameSubmit;
+
+    const result = useResultOptional();
+    const label = result ? result.interpolateText(labelRaw) : labelRaw;
+    const placeholder = result ? result.interpolateText(placeholderRaw) : placeholderRaw;
+    const buttonText = result ? result.interpolateText(buttonTextRaw) : buttonTextRaw;
 
     const inputRef = React.useRef<HTMLInputElement | null>(null);
 

@@ -2,6 +2,7 @@ import React from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { BlockRendererCommonProps } from './QuizIntroHeaderBlock';
+import { useResultOptional } from '@/contexts/ResultContext';
 
 interface ButtonInlineBlockProps extends BlockRendererCommonProps {
     block: Block;
@@ -11,6 +12,8 @@ const ButtonInlineBlock: React.FC<ButtonInlineBlockProps> = ({ block, isSelected
     const props = block.properties || {};
     const text: string = props.text || block.content?.buttonText || 'Clique aqui';
     const onClick: (() => void) | undefined = contextData?.onClick;
+    const result = useResultOptional();
+    const label = result ? result.interpolateText(text) : text;
 
     return (
         <SelectableBlock
@@ -28,7 +31,7 @@ const ButtonInlineBlock: React.FC<ButtonInlineBlockProps> = ({ block, isSelected
                     className="w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 bg-[#B89B7A] text-white hover:bg-[#A1835D] hover:shadow-lg"
                     onClick={onClick}
                 >
-                    {text}
+                    {label}
                 </button>
             </div>
         </SelectableBlock>

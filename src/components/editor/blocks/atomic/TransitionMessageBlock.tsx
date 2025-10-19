@@ -1,5 +1,6 @@
 import React from 'react';
 import { AtomicBlockProps } from '@/types/blockProps';
+import { useResultOptional } from '@/contexts/ResultContext';
 
 export default function TransitionMessageBlock({
   block,
@@ -7,10 +8,12 @@ export default function TransitionMessageBlock({
   onClick
 }: AtomicBlockProps) {
   const emoji = block.content?.emoji || '✨';
-  const message = block.content?.text || '';
+  const messageRaw = block.content?.text || '';
   const backgroundColor = block.content?.backgroundColor || '#F5EDE4';
   const textColor = block.content?.textColor || '#5b4135';
   const borderRadius = block.content?.borderRadius || '12px';
+  const result = useResultOptional();
+  const message = result ? result.interpolateText(messageRaw) : messageRaw;
 
   return (
     <div

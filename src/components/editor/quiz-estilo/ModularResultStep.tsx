@@ -13,6 +13,8 @@ import { DndContext, closestCenter, useSensors, useSensor, PointerSensor, DragEn
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+import { useResultOptional } from '@/contexts/ResultContext';
+import { interpolateDeep } from '@/utils/interpolate';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { Block } from '@/types/editor';
 
@@ -105,6 +107,7 @@ export default function ModularResultStep({
     editor: editorProp
 }: ModularResultStepProps) {
     const editorContext = useEditor({ optional: true });
+    const resultCtx = useResultOptional();
     const editor = editorProp || editorContext;
     const computedId = data?.id as string | undefined;
     const isStandardStepId = typeof computedId === 'string' && /^step-\d{1,2}$/.test(computedId);
@@ -137,8 +140,22 @@ export default function ModularResultStep({
 
     // Injetar dados dinâmicos nos blocos
     const blocks = useMemo(() => {
-        return sourceBlocks.map((block: Block) => injectDynamicData(block, userProfile));
-    }, [sourceBlocks, userProfile]);
+        const injected = sourceBlocks.map((block: Block) => injectDynamicData(block, userProfile));
+        if (!resultCtx) return injected;
+        const ctx = {
+            username: resultCtx.userProfile.userName,
+            style: resultCtx.styleConfig?.name,
+            user: { name: resultCtx.userProfile.userName },
+            result: { styleName: resultCtx.styleConfig?.name },
+            calculations: resultCtx.calculations,
+            styleConfig: resultCtx.styleConfig
+        };
+        return injected.map((b: Block) => ({
+            ...b,
+            content: interpolateDeep(b.content, ctx),
+            properties: interpolateDeep(b.properties, ctx)
+        }));
+    }, [sourceBlocks, userProfile, resultCtx]);
 
     // ✅ FASE 1.5: Auto-load se blocos estão vazios (CORREÇÃO CRÍTICA)
     React.useEffect(() => {

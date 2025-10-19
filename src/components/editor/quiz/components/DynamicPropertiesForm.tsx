@@ -106,8 +106,10 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
             return (
                 <Input
                     {...common}
+                    type={(prop as any).inputType || 'text'}
                     value={value}
                     onChange={e => onChange({ [prop.key]: e.target.value })}
+                    {...(((prop as any).pattern && typeof (prop as any).pattern === 'string') ? { pattern: (prop as any).pattern } : {})}
                 />
             );
         }
@@ -115,7 +117,7 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
         if (prop.type === 'number') {
             return (
                 <Input
-                    type="number"
+                    type={(prop as any).inputType === 'number' ? 'number' : 'number'}
                     {...common}
                     value={value}
                     min={prop.min}
@@ -173,6 +175,16 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
 
         if (prop.type === 'options-list') {
             const arr = Array.isArray(value) ? value : [];
+            // Se existir um itemSchema no prop, usar AdvancedArrayEditor genérico
+            if ((prop as any).itemSchema && (prop as any).itemSchema.fields) {
+                return (
+                    <AdvancedArrayEditor
+                        value={arr}
+                        onChange={(newValue) => onChange({ [prop.key]: newValue })}
+                        itemSchema={(prop as any).itemSchema}
+                    />
+                );
+            }
             if (type === 'options-grid' && prop.key === 'options') {
                 return (
                     <AdvancedArrayEditor

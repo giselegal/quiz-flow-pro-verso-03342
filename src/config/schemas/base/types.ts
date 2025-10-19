@@ -55,6 +55,11 @@ export interface BlockFieldSchema<T = any> {
   // Validação
   required?: boolean;
   validate?: FieldValidator<T>;
+  /**
+   * Padrão de validação (regex em string) para validação básica no client.
+   * Ex.: URL, token, pixel ID etc.
+   */
+  pattern?: string;
   
   // Visibilidade condicional
   when?: FieldCondition;
@@ -72,6 +77,30 @@ export interface BlockFieldSchema<T = any> {
   // UI hints
   rows?: number; // para textarea
   disabled?: boolean;
+  /**
+   * Sugestão de tipo de input no formulário
+   */
+  inputType?: 'text' | 'password' | 'email' | 'url' | 'number';
+  /**
+   * Dica semântica de formato esperado (não força um tipo novo)
+   */
+  format?: 'url' | 'token' | 'pixel' | 'utm' | 'event' | 'webhook';
+  /**
+   * Indica que o campo é secreto e deve ser escondido (password)
+   */
+  secret?: boolean;
+
+  /**
+   * Para campos do tipo lista/array: descreve o shape de cada item para edição avançada.
+   * Usado pelo AdvancedArrayEditor.
+   */
+  itemSchema?: {
+    fields: Array<{
+      key: string;
+      label: string;
+      type: 'text' | 'number' | 'color' | 'image';
+    }>;
+  };
 }
 
 /**

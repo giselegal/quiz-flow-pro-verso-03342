@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
+import { useResultOptional } from '@/contexts/ResultContext';
 
 export interface BlockRendererCommonProps {
     isSelected?: boolean;
@@ -19,8 +20,10 @@ const QuizQuestionHeaderBlock: React.FC<QuizQuestionHeaderRendererProps> = ({ bl
     const content = (block as any).content || {};
     const questionNumber: number = Number(props.questionNumber ?? content.currentQuestion ?? 1);
     const totalQuestions: number = Number(props.totalQuestions ?? content.totalQuestions ?? 21);
-    const questionText: string = String(props.questionText ?? content.questionText ?? 'Qual é a sua preferência?');
+    const questionTextRaw: string = String(props.questionText ?? content.questionText ?? 'Qual é a sua preferência?');
     const showProgress: boolean = Boolean(props.showProgress ?? content.showProgress ?? true);
+    const result = useResultOptional();
+    const questionText = result ? result.interpolateText(questionTextRaw) : questionTextRaw;
 
     return (
         <SelectableBlock

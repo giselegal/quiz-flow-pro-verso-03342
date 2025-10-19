@@ -197,6 +197,17 @@ export function initializeSchemaRegistry(): void {
   registerSchema('offer.core', () => import('./blocks/button').then(m => m.buttonSchema));
   registerSchema('conversion', () => import('./blocks/button').then(m => m.buttonSchema));
 
+  // NEW: Integration schemas
+  registerSchema('tracking-config', () => import('./blocks/integrations').then(m => m.trackingConfigSchema));
+  registerSchema('webhook-config', () => import('./blocks/integrations').then(m => m.webhookConfigSchema));
+  registerSchema('utm-defaults', () => import('./blocks/integrations').then(m => m.utmDefaultsSchema));
+  registerSchema('events-map', () => import('./blocks/events-map').then(m => m.eventsMapSchema));
+
+  // NEW: Result configuration schemas
+  registerSchema('result-categories-config', () => import('./blocks/step20-results-config').then(m => m.resultCategoriesConfigSchema));
+  registerSchema('result-variables', () => import('./blocks/step20-results-config').then(m => m.resultVariablesSchema));
+  registerSchema('result-messages', () => import('./blocks/step20-results-config').then(m => m.resultMessagesSchema));
+
   // TODO: Adicionar mais schemas conforme criados
   // registerSchema('text', () => import('./blocks/text').then(m => m.textSchema));
   // registerSchema('divider', () => import('./blocks/divider').then(m => m.dividerSchema));

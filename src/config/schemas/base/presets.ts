@@ -351,3 +351,94 @@ export const buttonFields = (group = 'content'): BlockFieldSchema[] => [
   buttonTextField(group),
   buttonUrlField(group),
 ];
+
+/**
+ * ==========================================================================
+ * PRESETS DE INTEGRAÇÃO / TRACKING
+ * ==========================================================================
+ */
+
+export const urlField = (key: string, label: string, group = 'integration'): BlockFieldSchema<string> => ({
+  key,
+  label,
+  type: 'string',
+  group,
+  inputType: 'url',
+  format: 'url',
+  placeholder: 'https://exemplo.com',
+  pattern: '^(https?:\\/\\/).+' // começa com http(s)://
+});
+
+export const tokenField = (key: string, label: string, group = 'integration'): BlockFieldSchema<string> => ({
+  key,
+  label,
+  type: 'string',
+  group,
+  inputType: 'password',
+  format: 'token',
+  secret: true,
+  placeholder: 'xxxx-xxxx-xxxx'
+});
+
+export const pixelIdField = (key: string, label: string, group = 'integration'): BlockFieldSchema<string> => ({
+  key,
+  label,
+  type: 'string',
+  group,
+  format: 'pixel',
+  placeholder: 'ex.: 123456789012345' // Facebook Pixel ID
+});
+
+export const utmSourceField = (group = 'integration'): BlockFieldSchema<string> => ({
+  key: 'utm_source',
+  label: 'UTM Source',
+  type: 'string',
+  group,
+  format: 'utm',
+});
+
+export const utmMediumField = (group = 'integration'): BlockFieldSchema<string> => ({
+  key: 'utm_medium',
+  label: 'UTM Medium',
+  type: 'string',
+  group,
+  format: 'utm',
+});
+
+export const utmCampaignField = (group = 'integration'): BlockFieldSchema<string> => ({
+  key: 'utm_campaign',
+  label: 'UTM Campaign',
+  type: 'string',
+  group,
+  format: 'utm',
+});
+
+export const eventNameField = (key = 'eventName', label = 'Nome do Evento', group = 'integration'): BlockFieldSchema<string> => ({
+  key,
+  label,
+  type: 'string',
+  group,
+  format: 'event',
+  placeholder: 'ex.: LeadCaptured'
+});
+
+export const webhookUrlField = (key = 'webhookUrl', label = 'Webhook URL', group = 'integration'): BlockFieldSchema<string> => ({
+  key,
+  label,
+  type: 'string',
+  group,
+  inputType: 'url',
+  format: 'webhook',
+  placeholder: 'https://api.hotmart.com/...',
+  pattern: '^(https?:\\/\\/).+'
+});
+
+export const webhookSecretField = (key = 'webhookSecret', label = 'Webhook Secret', group = 'integration'): BlockFieldSchema<string> => ({
+  key,
+  label,
+  type: 'string',
+  group,
+  inputType: 'password',
+  format: 'token',
+  secret: true,
+});
