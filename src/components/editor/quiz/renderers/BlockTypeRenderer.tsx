@@ -178,6 +178,18 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 }
             } as any;
 
+            if (import.meta?.env?.DEV) {
+                try {
+                    const opts = (augmentedBlock as any)?.properties?.options || [];
+                    console.log('🔎 [BlockTypeRenderer] options-grid', {
+                        blockId: block.id,
+                        optionsCount: Array.isArray(opts) ? opts.length : 0,
+                        hasOnAnswersChange: !!onAnswersChange,
+                        currentAnswers,
+                    });
+                } catch { /* noop */ }
+            }
+
             return (
                 <SelectableBlock
                     blockId={block.id}

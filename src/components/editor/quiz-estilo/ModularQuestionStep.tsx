@@ -223,11 +223,27 @@ export default function ModularQuestionStep({
         // 1) Tente extrair diretamente blocos relevantes dentre TODOS (inclui filhos)
         const relevant = all.filter(b => relevantTypes.has(String((b as any).type || '').toLowerCase()));
         if (relevant.length > 0) {
+            if (import.meta?.env?.DEV) {
+                try {
+                    console.log('🔎 [ModularQuestionStep] Relevant blocks', {
+                        count: relevant.length,
+                        types: relevant.map(r => String((r as any).type || '').toLowerCase())
+                    });
+                } catch { /* noop */ }
+            }
             return relevant.sort((a, b) => (a.order || 0) - (b.order || 0));
         }
         // 2) Caso contrário, use a estratégia anterior: top-level ou todos
         const topOnly = all.filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
         const list = topOnly.length > 0 ? topOnly : all;
+        if (import.meta?.env?.DEV) {
+            try {
+                console.log('🔎 [ModularQuestionStep] Top-level/all blocks used', {
+                    count: list.length,
+                    types: list.map(r => String((r as any).type || '').toLowerCase())
+                });
+            } catch { /* noop */ }
+        }
         return list.sort((a, b) => (a.order || 0) - (b.order || 0));
     }, [effectiveBlocks, hasRealBlocks]);
     const DEFAULT_ORDER = ['question-number', 'question-text', 'question-instructions', 'question-options', 'question-button'];
@@ -313,6 +329,16 @@ export default function ModularQuestionStep({
                 content: {}
             } as any
         ];
+
+        if (import.meta?.env?.DEV) {
+            try {
+                console.log('🔎 [ModularQuestionStep] Render blocks', {
+                    injectedSynthetic: !hasOptionsGridBlock,
+                    count: renderBlocks.length,
+                    types: renderBlocks.map(r => String((r as any).type || '').toLowerCase())
+                });
+            } catch { /* noop */ }
+        }
 
         return (
             <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
