@@ -63,7 +63,7 @@ export default function ModularQuestionStep({
     // Estado local para feedback de validação (fallback UI)
     const [validationMessage, setValidationMessage] = React.useState<string | null>(null);
 
-    const hasImages = safeData.options[0]?.image;
+    const hasImages = !!(safeData.options[0]?.image || safeData.options[0]?.imageUrl);
     const gridClass = hasImages ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1';
 
     const handleOptionClick = (optionId: string) => {
