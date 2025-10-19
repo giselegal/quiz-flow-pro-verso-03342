@@ -357,6 +357,7 @@ export default function ModularQuestionStep({
                                         contextData={{
                                             currentAnswers,
                                             onAnswersChange,
+                                            requiredSelections: safeData.requiredSelections,
                                             canProceed,
                                             onNext: () => navigateWithLogic(),
                                             onPrev: () => {

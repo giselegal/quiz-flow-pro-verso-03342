@@ -216,7 +216,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       case 'question-instructions': {
         // Tentativas comuns para instruções; fallback no header
         return (
-          findBlockIdByTypes(['text-inline', 'paragraph', 'quiz-question-header'])
+          findBlockIdByTypes(['question-instructions', 'text-inline', 'paragraph', 'quiz-question-header'])
           || undefined
         );
       }
@@ -226,7 +226,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
       case 'question-button': {
         // Navegação do quiz (botões próximo/anterior)
-        return findBlockIdByTypes(['quiz-navigation', 'button']);
+        return findBlockIdByTypes(['quiz-navigation', 'question-navigation', 'button']);
       }
 
       // RESULT (ex.: step-20)
@@ -408,7 +408,9 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         return (
           <ModularStrategicQuestionStep
             data={stepData as any}
-            blocks={(step as any)?.blocks || editorState.stepBlocks[stepKey] || []}
+            blocks={(editorState.stepBlocks[stepKey] && editorState.stepBlocks[stepKey].length > 0)
+              ? editorState.stepBlocks[stepKey]
+              : ((step as any)?.blocks || [])}
             isEditable={isEditMode}
             currentAnswer={sessionData[`answer_${step.id}`] || ''}
             onAnswerChange={(answer: string) => {

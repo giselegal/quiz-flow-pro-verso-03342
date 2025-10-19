@@ -99,7 +99,36 @@ export default function ModularStrategicQuestionStep({
     const hasRealBlocks = Array.isArray(effectiveBlocks) && effectiveBlocks.length > 0;
     const topLevelBlocks: Block[] = React.useMemo(() => {
         if (!hasRealBlocks) return [];
-        const list = (effectiveBlocks as Block[]).filter(b => !(b as any).parentId);
+        const all = (effectiveBlocks as Block[]);
+        // Conjunto de tipos relevantes para pergunta estratégica
+        const relevantTypes = new Set([
+            'question-progress', 'question-number', 'question-text', 'question-instructions',
+            'options-grid', 'quiz-options', 'question-navigation', 'quiz-navigation', 'button-inline'
+        ]);
+        // 1) Extrair blocos relevantes em qualquer profundidade
+        const relevant = all.filter(b => relevantTypes.has(String((b as any).type || '').toLowerCase()));
+        if (relevant.length > 0) {
+            if (import.meta?.env?.DEV) {
+                try {
+                    console.log('🔎 [ModularStrategicQuestionStep] Relevant blocks', {
+                        count: relevant.length,
+                        types: relevant.map(r => String((r as any).type || '').toLowerCase())
+                    });
+                } catch { /* noop */ }
+            }
+            return relevant.sort((a, b) => (a.order || 0) - (b.order || 0));
+        }
+        // 2) Fallback: apenas top-level ou todos
+        const topOnly = all.filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
+        const list = topOnly.length > 0 ? topOnly : all;
+        if (import.meta?.env?.DEV) {
+            try {
+                console.log('🔎 [ModularStrategicQuestionStep] Top-level/all blocks used', {
+                    count: list.length,
+                    types: list.map(r => String((r as any).type || '').toLowerCase())
+                });
+            } catch { /* noop */ }
+        }
         return list.sort((a, b) => (a.order || 0) - (b.order || 0));
     }, [effectiveBlocks, hasRealBlocks]);
 
@@ -179,11 +208,31 @@ export default function ModularStrategicQuestionStep({
 
         const canProceed = Boolean(currentAnswer);
 
+        // Fallback: se nenhum bloco options-grid/quix-options for encontrado, injetar um bloco sintético
+        const hasOptionsGridBlock = topLevelBlocks.some(b => ['options-grid', 'quiz-options'].includes(String((b as any).type || '').toLowerCase()));
+        const renderBlocks: Block[] = hasOptionsGridBlock ? topLevelBlocks : [
+            ...topLevelBlocks,
+            {
+                id: `${stepId}-synthetic-options` as any,
+                type: 'options-grid' as any,
+                order: (topLevelBlocks[topLevelBlocks.length - 1]?.order || 0) + 1,
+                properties: {
+                    options: safeData.options,
+                    columns: 1,
+                    multipleSelection: false,
+                    maxSelections: 1,
+                    requiredSelections: 1,
+                    showImages: false
+                },
+                content: {}
+            } as any
+        ];
+
         return (
             <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={topLevelBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                        {topLevelBlocks.map((block, index) => (
+                    <SortableContext items={renderBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+                        {renderBlocks.map((block, index) => (
                             <React.Fragment key={block.id}>
                                 <DropZoneBefore blockId={block.id} insertIndex={index} />
                                 <SortableItem id={block.id}>
