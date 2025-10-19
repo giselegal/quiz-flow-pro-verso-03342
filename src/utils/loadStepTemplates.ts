@@ -8,6 +8,7 @@
  */
 
 import { Block } from '@/types/editor';
+import hydrateBlocksWithQuizSteps from '@/utils/hydrators/hydrateBlocksWithQuizSteps';
 import { templateCache } from '@/utils/TemplateCache';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { templateKey } from '@/utils/cacheKeys';
@@ -152,7 +153,9 @@ export async function loadStepTemplateAsync(stepId: string): Promise<Block[]> {
       const resp = await fetch(url, { cache: 'force-cache' as RequestCache });
       if (resp.ok) {
         const json = await resp.json();
-        const blocks = convertTemplateBlocksToBlocks((json?.blocks || []) as any);
+        let blocks = convertTemplateBlocksToBlocks((json?.blocks || []) as any);
+        // 🔒 Garantir que dados (texto/opções) venham de QUIZ_STEPS
+        try { blocks = hydrateBlocksWithQuizSteps(stepId, blocks); } catch { /* noop */ }
         unifiedCache.set(cacheKey, blocks);
         return blocks;
       }
@@ -170,7 +173,9 @@ export async function loadStepTemplateAsync(stepId: string): Promise<Block[]> {
   };
   const template = templates[stepId];
   if (!template) return [];
-  const blocks = convertTemplateBlocksToBlocks(template.blocks);
+  let blocks = convertTemplateBlocksToBlocks(template.blocks);
+  // Para steps question/strategic-question (ex.: step-13 em diante), hidratar também
+  try { blocks = hydrateBlocksWithQuizSteps(stepId, blocks); } catch { /* noop */ }
   unifiedCache.set(cacheKey, blocks);
   return blocks;
 }

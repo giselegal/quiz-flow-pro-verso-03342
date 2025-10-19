@@ -23,6 +23,7 @@ import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
 import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
+import hydrateBlocksWithQuizSteps from '@/utils/hydrators/hydrateBlocksWithQuizSteps';
 import { loadStepTemplate, loadStepTemplateAsync, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
@@ -601,13 +602,14 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                             .then(res => res.ok ? res.json() : null)
                             .then(json => {
                                 if (!json || !Array.isArray(json.blocks)) return;
-                                const blocks = (json.blocks as any[]).map((b, idx) => ({
+                                let blocks = (json.blocks as any[]).map((b, idx) => ({
                                     id: b.id || `block-${idx}`,
                                     type: (b.type || 'text-inline') as any,
                                     order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
                                     properties: b.properties || b.props || {},
                                     content: b.content || {}
                                 })) as Block[];
+                                try { blocks = hydrateBlocksWithQuizSteps(normalizedKey, blocks); } catch { /* noop */ }
                                 unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
                                 // Sincronizar também no cache unificado por step para evitar preferir master em loads futuros
                                 try { unifiedCache.set(stepBlocksKey(normalizedKey), blocks); } catch { /* noop */ }
