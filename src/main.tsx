@@ -13,6 +13,8 @@ import { cleanupConsoleWarnings } from './utils/development';
 import { initializeWebSocketOptimization } from './utils/websocket-optimizer';
 // 📊 RUDDERSTACK: Otimizador para resolver problemas de analytics
 import { initializeRudderStackOptimization } from './utils/rudderstack-optimizer';
+// 🛡️ Deprecation guards: evitar alert cross-origin e listeners de unload
+import { installDeprecationGuards } from './utils/deprecationGuards';
 // 🛡️ DEVELOPMENT: Bloquear conexões Lovable em desenvolvimento
 import './utils/blockLovableInDev';
 // 🎯 PERFORMANCE: Controle de debug do canvas para melhor performance
@@ -137,8 +139,8 @@ if (typeof window !== 'undefined') {
       }
     } catch { }
 
-    // Cleanup: restaurar interceptores no unload para evitar vazamento entre HMR/navegações
-    window.addEventListener('beforeunload', () => {
+    // Cleanup: restaurar interceptores no pagehide para evitar depreciação de unload
+    window.addEventListener('pagehide', () => {
       try { (window as any).fetch = originalFetch; } catch { }
     });
   }
@@ -175,6 +177,8 @@ if (typeof window !== 'undefined') {
 // O serviço é inicializado automaticamente na importação
 
 console.log('🔧 DEBUG: Criando root do React...');
+// Instalar guards de depreciação (alert/unload)
+try { installDeprecationGuards(); } catch { }
 createRoot(document.getElementById('root')!).render(
   <ClientLayout>
     <App />

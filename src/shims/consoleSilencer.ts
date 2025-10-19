@@ -28,8 +28,8 @@ if (isProd && !debugEnabled && typeof window !== 'undefined') {
             return originalWarn(...args);
         } as any;
 
-        // Restaura no unload para evitar vazamentos em HMR/preview
-        window.addEventListener('beforeunload', () => {
+            // Restaura no pagehide para evitar depreciação de unload em HMR/preview
+            window.addEventListener('pagehide', () => {
             try {
                 console.log = original.log;
                 console.info = original.info;
