@@ -17,6 +17,9 @@ test.describe('Editor - Options Grid e Salvar', () => {
   // Selecionar a etapa de pergunta (step-02)
   await page.getByText('step-02', { exact: true }).first().click();
 
+  // Alternar para Preview para garantir que opções interativas estão visíveis (botão dentro do Canvas)
+  await page.getByTestId('canvas-editor').getByRole('button', { name: /^Preview$/i }).click();
+
   // Dentro do canvas, pegar a primeira opção clicável do grid
   const firstOption = page.locator('[data-testid^="grid-option-"]').first();
     await expect(firstOption).toBeVisible({ timeout: 10000 });
