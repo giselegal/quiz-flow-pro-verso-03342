@@ -702,14 +702,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       let newSelections: string[];
       if (multipleSelection) {
-        let currentSelections = selectedOptions || [];
-        try {
-          const questionId = (block?.properties as any)?.questionId || block?.id;
-          const persisted = (StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {})[String(questionId)] || [];
-          if (Array.isArray(persisted) && persisted.length > 0) {
-            currentSelections = Array.from(new Set([...(currentSelections || []), ...persisted]));
-          }
-        } catch { /* noop */ }
+        // No modo editor, basear-se apenas em selectedOptions das props para comportamento previsível
+        const currentSelections = selectedOptions || [];
         console.log('📊 Current selections in editor:', currentSelections);
 
         if (currentSelections.includes(optionId)) {
