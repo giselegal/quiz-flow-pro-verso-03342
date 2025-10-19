@@ -427,6 +427,13 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   }, [block?.id, (block?.properties as any)?.questionId]);
 
+  // Após primeira persistência nesta instância, permitimos mesclar seleções persistidas em cliques subsequentes
+  const allowPersistedMergeRef = React.useRef(false);
+  const persistSelectionsAndFlag = React.useCallback((selections: string[]) => {
+    persistSelections(selections);
+    allowPersistedMergeRef.current = true;
+  }, [persistSelections]);
+
   React.useEffect(() => {
     // Initialize from session data in preview mode
     if (isPreviewMode && sessionDataObj) {
@@ -702,8 +709,17 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       let newSelections: string[];
       if (multipleSelection) {
-        // No modo editor, basear-se apenas em selectedOptions das props para comportamento previsível
-        const currentSelections = selectedOptions || [];
+        // Baseia-se em selectedOptions, com mescla opcional de persistidos após a primeira interação
+        let currentSelections = selectedOptions || [];
+        if (allowPersistedMergeRef.current) {
+          try {
+            const questionId = (block?.properties as any)?.questionId || block?.id;
+            const persisted = (StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {})[String(questionId)] || [];
+            if (Array.isArray(persisted) && persisted.length > 0) {
+              currentSelections = Array.from(new Set([...(currentSelections || []), ...persisted]));
+            }
+          } catch { /* noop */ }
+        }
         console.log('📊 Current selections in editor:', currentSelections);
 
         if (currentSelections.includes(optionId)) {
@@ -728,7 +744,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
 
       // Persistir seleções também fora do preview (produção/editor)
-      persistSelections(newSelections);
+      persistSelectionsAndFlag(newSelections);
 
       // Propagar para host (ex.: produção usando mesmo componente via registry)
       externalOnOptionSelect?.(optionId);
