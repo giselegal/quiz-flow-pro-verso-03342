@@ -385,12 +385,24 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     };
   };
 
-  // ⚡ Carregar configuração da etapa atual
+  // Montado/desmontado para evitar setState após unmount em testes e cancelar timeouts
+  const isMountedRef = React.useRef(true);
   React.useEffect(() => {
-    const currentStep = (window as any)?.__quizCurrentStep ?? currentStepFromEditor ?? 1;
+    return () => {
+      isMountedRef.current = false;
+      try { cancel('options-grid-editor-auto-advance'); } catch { /* noop */ }
+      try { cancel('options-grid-preview-auto-advance'); } catch { /* noop */ }
+    };
+  }, [cancel]);
+
+  // ⚡ Carregar configuração da etapa atual (protegendo window)
+  React.useEffect(() => {
+    const w: any = typeof window !== 'undefined' ? window : undefined;
+    const currentStep = (w?.__quizCurrentStep) ?? currentStepFromEditor ?? 1;
 
     if (typeof currentStep === 'number' && currentStep >= 1) {
       getStepBehavior(currentStep).then(config => {
+        if (!isMountedRef.current) return;
         setStepBehaviorConfig(config);
       });
     }
@@ -515,12 +527,14 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   })();
 
-  // ⚡ Carregar configuração da etapa atual
+  // ⚡ Carregar configuração da etapa atual (duplicado por segurança, protegido)
   React.useEffect(() => {
-    const currentStep = (window as any)?.__quizCurrentStep ?? currentStepFromEditor ?? 1;
+    const w: any = typeof window !== 'undefined' ? window : undefined;
+    const currentStep = (w?.__quizCurrentStep) ?? currentStepFromEditor ?? 1;
 
     if (typeof currentStep === 'number' && currentStep >= 1) {
       getStepBehavior(currentStep).then(config => {
+        if (!isMountedRef.current) return;
         setStepBehaviorConfig(config);
       });
     }
@@ -688,7 +702,14 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       let newSelections: string[];
       if (multipleSelection) {
-        const currentSelections = selectedOptions || [];
+        let currentSelections = selectedOptions || [];
+        try {
+          const questionId = (block?.properties as any)?.questionId || block?.id;
+          const persisted = (StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {})[String(questionId)] || [];
+          if (Array.isArray(persisted) && persisted.length > 0) {
+            currentSelections = Array.from(new Set([...(currentSelections || []), ...persisted]));
+          }
+        } catch { /* noop */ }
         console.log('📊 Current selections in editor:', currentSelections);
 
         if (currentSelections.includes(optionId)) {
