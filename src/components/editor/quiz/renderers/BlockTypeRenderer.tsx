@@ -148,13 +148,23 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
             // Usar OptionsGridInlineBlock e fazer a ponte de seleção via onPropertyChange → onAnswersChange
             const currentAnswers: string[] = (rest as any)?.contextData?.currentAnswers || [];
             const onAnswersChange: ((answers: string[]) => void) | undefined = (rest as any)?.contextData?.onAnswersChange;
-            const maxSel = (block as any)?.properties?.maxSelections ?? (block as any)?.properties?.requiredSelections;
+            const props: any = (block as any)?.properties || {};
+            const isSingle = props.multipleSelection === false || props.maxSelections === 1 || props.requiredSelections === 1;
+            // Derivar min/max caso não venham no JSON
+            const derivedMinSel = typeof props.minSelections === 'number'
+                ? props.minSelections
+                : (typeof props.requiredSelections === 'number' ? props.requiredSelections : (isSingle ? 1 : 1));
+            const derivedMaxSel = typeof props.maxSelections === 'number'
+                ? props.maxSelections
+                : (isSingle ? 1 : (Array.isArray(props.options) ? props.options.length : 99));
 
             const augmentedBlock = {
                 ...block,
                 properties: {
-                    ...((block as any).properties || {}),
+                    ...props,
                     selectedOptions: currentAnswers,
+                    minSelections: derivedMinSel,
+                    maxSelections: derivedMaxSel,
                 }
             } as any;
 
@@ -163,8 +173,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                     if (!onAnswersChange) return;
                     // Aplicar limite de seleção, se configurado
                     let next = value;
-                    if (typeof maxSel === 'number' && maxSel > 0 && next.length > maxSel) {
-                        next = value.slice(-maxSel);
+                    if (typeof augmentedBlock.properties.maxSelections === 'number' && augmentedBlock.properties.maxSelections > 0 && next.length > augmentedBlock.properties.maxSelections) {
+                        next = value.slice(-augmentedBlock.properties.maxSelections);
                     }
                     onAnswersChange(next);
                 }
