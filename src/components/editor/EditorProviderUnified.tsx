@@ -23,7 +23,7 @@ import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
-import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
+import { loadStepTemplate, loadStepTemplateAsync, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
@@ -573,42 +573,36 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     }
                 } catch { }
 
-                // ✅ PRIORIDADE 1: Templates JSON modulares (steps 12, 19, 20)
+                // ✅ PRIORIDADE 1: Templates JSON modulares/normalizados (2–13, 19, 20)
                 if (hasModularTemplate(normalizedKey)) {
                     const existingBlocks = prev.stepBlocks[normalizedKey] || [];
-                    const modularBlocks = loadStepTemplate(normalizedKey);
-
-                    console.log('✅ Loaded modular blocks:', {
-                        count: modularBlocks.length,
-                        types: modularBlocks.map(b => b.type)
-                    });
-
-                    // Se já tem blocos modulares com mesma estrutura, não recarregar
-                    const existingTypes = existingBlocks.map(b => b.type).sort().join(',');
-                    const modularTypes = modularBlocks.map(b => b.type).sort().join(',');
-
-                    if (existingBlocks.length > 0 && existingTypes === modularTypes) {
-                        console.log('⏭️ Skip: blocos modulares já carregados');
-                        console.groupEnd();
-                        return prev; // ✅ NO UPDATE = NO LOOP
-                    }
-
-                    // Carregar/substituir com blocos modulares
-                    // Persistir no cache unificado
-                    try { unifiedCache.set(stepBlocksKey(normalizedKey), modularBlocks); } catch { }
-                    console.log('📝 Carregando blocos modulares');
-                    console.groupEnd();
-                    return {
-                        ...prev,
-                        stepBlocks: {
-                            ...prev.stepBlocks,
-                            [normalizedKey]: modularBlocks
-                        },
-                        stepSources: {
-                            ...(prev.stepSources || {}),
-                            [normalizedKey]: 'modular-json'
+                    // Carregar assincronamente e aplicar depois
+                    (async () => {
+                        try {
+                            const modularBlocks = await loadStepTemplateAsync(normalizedKey);
+                            if (!Array.isArray(modularBlocks) || modularBlocks.length === 0) return;
+                            const existingAfter = ((): Block[] => {
+                                try { return (stateRef.current?.stepBlocks?.[normalizedKey] as Block[]) || []; } catch { return []; }
+                            })();
+                            const existingTypes = (existingAfter as Block[]).map(b => b.type).sort().join(',');
+                            const modularTypes = modularBlocks.map(b => b.type).sort().join(',');
+                            if ((existing as Block[]).length > 0 && existingTypes === modularTypes) {
+                                return; // já aplicado
+                            }
+                            unifiedCache.set(stepBlocksKey(normalizedKey), modularBlocks);
+                            setState(p => ({
+                                ...p,
+                                stepBlocks: { ...p.stepBlocks, [normalizedKey]: modularBlocks },
+                                stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'modular-json' }
+                            }));
+                        } catch (e) {
+                            console.warn('⚠️ Falha ao carregar template modular/normalizado:', normalizedKey, e);
+                        } finally {
+                            try { console.groupEnd(); } catch { /* noop */ }
                         }
-                    };
+                    })();
+                    // Retornar estado atual; atualização ocorrerá via setState acima
+                    return prev;
                 }
 
                 // Se já tem blocos não-modulares, manter

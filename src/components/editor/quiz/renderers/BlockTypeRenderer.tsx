@@ -19,7 +19,7 @@ import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
 import PricingInlineBlock from '@/components/editor/blocks/PricingInlineBlock';
 import QuizOfferHeroBlock from '@/components/editor/blocks/QuizOfferHeroBlock';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
-import OptionsGridInlineBlock from '@/components/blocks/inline/OptionsGridInlineBlock';
+import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
 // Blocos atômicos específicos usados no Step 01
 import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
 import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHeaderBlock';
@@ -145,18 +145,27 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
             return <ButtonInlineBlock block={block} {...rest} />;
         case 'quiz-options':
         case 'options-grid': {
-            // Usar OptionsGridInlineBlock e fazer a ponte de seleção via onPropertyChange → onAnswersChange
+            // Usar OptionsGridBlock (componente do editor) e fazer a ponte de seleção via onOptionSelect → onAnswersChange
             const currentAnswers: string[] = (rest as any)?.contextData?.currentAnswers || [];
             const onAnswersChange: ((answers: string[]) => void) | undefined = (rest as any)?.contextData?.onAnswersChange;
             const props: any = (block as any)?.properties || {};
             const isSingle = props.multipleSelection === false || props.maxSelections === 1 || props.requiredSelections === 1;
-            // Derivar min/max caso não venham no JSON
             const derivedMinSel = typeof props.minSelections === 'number'
                 ? props.minSelections
                 : (typeof props.requiredSelections === 'number' ? props.requiredSelections : (isSingle ? 1 : 1));
             const derivedMaxSel = typeof props.maxSelections === 'number'
                 ? props.maxSelections
                 : (isSingle ? 1 : (Array.isArray(props.options) ? props.options.length : 99));
+
+            const toggleWithConstraints = (id: string) => {
+                if (!onAnswersChange) return;
+                const exists = currentAnswers.includes(id);
+                let next = exists ? currentAnswers.filter(a => a !== id) : [...currentAnswers, id];
+                if (!exists && typeof derivedMaxSel === 'number' && derivedMaxSel > 0 && next.length > derivedMaxSel) {
+                    next = [...currentAnswers.slice(-(derivedMaxSel - 1)), id];
+                }
+                onAnswersChange(next);
+            };
 
             const augmentedBlock = {
                 ...block,
@@ -165,20 +174,9 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                     selectedOptions: currentAnswers,
                     minSelections: derivedMinSel,
                     maxSelections: derivedMaxSel,
+                    onOptionSelect: (optionId: string) => toggleWithConstraints(optionId),
                 }
             } as any;
-
-            const handlePropertyChange = (key: any, value: any) => {
-                if (key === 'selectedOptions' && Array.isArray(value)) {
-                    if (!onAnswersChange) return;
-                    // Aplicar limite de seleção, se configurado
-                    let next = value;
-                    if (typeof augmentedBlock.properties.maxSelections === 'number' && augmentedBlock.properties.maxSelections > 0 && next.length > augmentedBlock.properties.maxSelections) {
-                        next = value.slice(-augmentedBlock.properties.maxSelections);
-                    }
-                    onAnswersChange(next);
-                }
-            };
 
             return (
                 <SelectableBlock
@@ -190,9 +188,11 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                     onOpenProperties={() => rest.onOpenProperties?.(block.id)}
                     isDraggable={true}
                 >
-                    <OptionsGridInlineBlock
+                    <OptionsGridBlock
                         block={augmentedBlock as any}
-                        onPropertyChange={handlePropertyChange}
+                        isPreviewMode={false}
+                        properties={(augmentedBlock as any).properties || {}}
+                        onClick={() => rest.onSelect?.(block.id)}
                     />
                 </SelectableBlock>
             );
