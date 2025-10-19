@@ -20,8 +20,8 @@ test.describe('Editor - Options Grid e Salvar', () => {
   // No overlay, clicar em "Salvar Alterações" (não depende do isDirty)
   await page.getByTestId('overlay-save-button').click();
 
-    // Verificar o toast de sucesso (título ou conteúdo)
-    const toastSuccess = page.getByText(/Salvo com sucesso/i);
-    await expect(toastSuccess).toBeVisible({ timeout: 10000 });
+  // Verificar o toast de sucesso (título exato na notificação)
+  const toastTitle = page.locator('div:has-text("✅ Salvo com sucesso")').first();
+  await expect(toastTitle).toBeVisible({ timeout: 10000 });
   });
 });
