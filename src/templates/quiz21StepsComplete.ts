@@ -11,13 +11,11 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-18T18:49:27.983Z
+ * Gerado em: 2025-10-20T12:52:33.196Z
  * Versão: 3.0.0
  */
 
 import { Block } from '../types/editor';
-import { unifiedCache } from '@/utils/UnifiedTemplateCache';
-import { templateKey } from '@/utils/cacheKeys';
 
 // 🔧 PERFORMANCE E CACHE OTIMIZADO
 const TEMPLATE_CACHE = new Map<string, any>();
@@ -25,21 +23,13 @@ const FUNNEL_TEMPLATE_CACHE = new Map<string, any>();
 
 // 🚀 FUNÇÃO DE CARREGAMENTO OTIMIZADO PARA PERFORMANCE
 export function getStepTemplate(stepId: string): any {
-  // Primeiro, tentar cache unificado
-  const unifiedKey = templateKey(stepId);
-  const unified = unifiedCache.get(unifiedKey);
-  if (unified) return unified;
   if (TEMPLATE_CACHE.has(stepId)) {
-    const v = TEMPLATE_CACHE.get(stepId);
-    // propagar para unificado
-  unifiedCache.set(unifiedKey, v);
-    return v;
+    return TEMPLATE_CACHE.get(stepId);
   }
 
   const template = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId];
   if (template) {
     TEMPLATE_CACHE.set(stepId, template);
-  unifiedCache.set(unifiedKey, template);
     return template;
   }
 
@@ -346,7 +336,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-02",
         "content": {
           "options": [
@@ -402,6 +392,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "2a",
+              "text": "Vestidos fluidos e confortáveis",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "2a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "2b",
+              "text": "Blazers estruturados e calças alfaiataria",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "2b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "2c",
+              "text": "Peças modernas com toque minimalista",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "2c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "2d",
+              "text": "Vestidos sofisticados e acessórios marcantes",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "2d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -577,7 +612,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-03",
         "content": {
           "options": [
@@ -633,6 +668,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "3a",
+              "text": "Opção A para Q2",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "3a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "3b",
+              "text": "Opção B para Q2",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "3b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "3c",
+              "text": "Opção C para Q2",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "3c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "3d",
+              "text": "Opção D para Q2",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "3d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -806,7 +886,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-04",
         "content": {
           "options": [
@@ -862,6 +942,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "4a",
+              "text": "Opção A para Q3",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "4a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "4b",
+              "text": "Opção B para Q3",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "4b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "4c",
+              "text": "Opção C para Q3",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "4c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "4d",
+              "text": "Opção D para Q3",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "4d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -1035,7 +1160,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-05",
         "content": {
           "options": [
@@ -1091,6 +1216,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "5a",
+              "text": "Opção A para Q4",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "5a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "5b",
+              "text": "Opção B para Q4",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "5b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "5c",
+              "text": "Opção C para Q4",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "5c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "5d",
+              "text": "Opção D para Q4",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "5d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -1264,7 +1434,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-06",
         "content": {
           "options": [
@@ -1320,6 +1490,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "6a",
+              "text": "Opção A para Q5",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "6a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "6b",
+              "text": "Opção B para Q5",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "6b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "6c",
+              "text": "Opção C para Q5",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "6c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "6d",
+              "text": "Opção D para Q5",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "6d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -1493,7 +1708,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-07",
         "content": {
           "options": [
@@ -1549,6 +1764,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "7a",
+              "text": "Opção A para Q6",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "7a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "7b",
+              "text": "Opção B para Q6",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "7b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "7c",
+              "text": "Opção C para Q6",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "7c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "7d",
+              "text": "Opção D para Q6",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "7d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -1722,7 +1982,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-08",
         "content": {
           "options": [
@@ -1778,6 +2038,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "8a",
+              "text": "Opção A para Q7",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "8a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "8b",
+              "text": "Opção B para Q7",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "8b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "8c",
+              "text": "Opção C para Q7",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "8c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "8d",
+              "text": "Opção D para Q7",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "8d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -1951,7 +2256,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-09",
         "content": {
           "options": [
@@ -2007,6 +2312,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "9a",
+              "text": "Opção A para Q8",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "9a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "9b",
+              "text": "Opção B para Q8",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "9b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "9c",
+              "text": "Opção C para Q8",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "9c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "9d",
+              "text": "Opção D para Q8",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "9d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -2180,7 +2530,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-10",
         "content": {
           "options": [
@@ -2236,6 +2586,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "10a",
+              "text": "Opção A para Q9",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "10a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "10b",
+              "text": "Opção B para Q9",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "10b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "10c",
+              "text": "Opção C para Q9",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "10c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "10d",
+              "text": "Opção D para Q9",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "10d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -2409,7 +2804,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-11",
         "content": {
           "options": [
@@ -2465,6 +2860,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "11a",
+              "text": "Opção A para Q10",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "11a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "11b",
+              "text": "Opção B para Q10",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "11b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "11c",
+              "text": "Opção C para Q10",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "11c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "11d",
+              "text": "Opção D para Q10",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "11d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -2761,7 +3201,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-13",
         "content": {
           "options": [
@@ -2817,6 +3257,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "13a",
+              "text": "Opção A para Q11",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "13a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "13b",
+              "text": "Opção B para Q11",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "13b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "13c",
+              "text": "Opção C para Q11",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "13c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "13d",
+              "text": "Opção D para Q11",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "13d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -2996,7 +3481,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-14",
         "content": {
           "options": [
@@ -3052,6 +3537,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "14a",
+              "text": "Opção A para Q12",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "14a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "14b",
+              "text": "Opção B para Q12",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "14b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "14c",
+              "text": "Opção C para Q12",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "14c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "14d",
+              "text": "Opção D para Q12",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "14d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -3231,7 +3761,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-15",
         "content": {
           "options": [
@@ -3287,6 +3817,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "15a",
+              "text": "Opção A para Q13",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "15a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "15b",
+              "text": "Opção B para Q13",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "15b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "15c",
+              "text": "Opção C para Q13",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "15c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "15d",
+              "text": "Opção D para Q13",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "15d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -3466,7 +4041,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-16",
         "content": {
           "options": [
@@ -3522,6 +4097,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "16a",
+              "text": "Opção A para Q14",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "16a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "16b",
+              "text": "Opção B para Q14",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "16b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "16c",
+              "text": "Opção C para Q14",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "16c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "16d",
+              "text": "Opção D para Q14",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "16d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -3701,7 +4321,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-17",
         "content": {
           "options": [
@@ -3757,6 +4377,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "17a",
+              "text": "Opção A para Q15",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "17a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "17b",
+              "text": "Opção B para Q15",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "17b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "17c",
+              "text": "Opção C para Q15",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "17c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "17d",
+              "text": "Opção D para Q15",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "17d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
@@ -3936,7 +4601,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options-grid",
+        "type": "options grid",
         "id": "options-grid-18",
         "content": {
           "options": [
@@ -3992,6 +4657,51 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "duration": 300,
           "delay": 100,
           "easing": "ease-out"
+        },
+        "properties": {
+          "options": [
+            {
+              "id": "18a",
+              "text": "Opção A para Q16",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+              "value": "18a",
+              "category": "Natural",
+              "points": 1
+            },
+            {
+              "id": "18b",
+              "text": "Opção B para Q16",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              "value": "18b",
+              "category": "Clássico",
+              "points": 2
+            },
+            {
+              "id": "18c",
+              "text": "Opção C para Q16",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+              "value": "18c",
+              "category": "Contemporâneo",
+              "points": 2
+            },
+            {
+              "id": "18d",
+              "text": "Opção D para Q16",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              "value": "18d",
+              "category": "Elegante",
+              "points": 3
+            }
+          ],
+          "columns": 2,
+          "multipleSelection": true,
+          "minSelections": 3,
+          "maxSelections": 3,
+          "showImages": true,
+          "imageSize": 256,
+          "autoAdvance": true,
+          "autoAdvanceDelay": 1500,
+          "validationMessage": "Selecione 3 opções para continuar"
         }
       },
       {
