@@ -158,40 +158,19 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
                 <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
                     <div className={`max-w-6xl mx-auto px-4 ${useSharedHeader ? 'pt-4 pb-8' : 'py-8'}`}>
                         <UnifiedStepRenderer
-                            stepId={currentStepId}
-                            mode="production"
-                            stepProps={currentStepData}
-                            quizState={unifiedQuizState}
-                            onStepUpdate={(stepId, updates) => {
-                                // Processar atualizações específicas por tipo
-                                if (updates.userName) {
-                                    setUserName(updates.userName);
-                                }
-                                if (updates[state.currentStep]) {
-                                    // Atualizar respostas
-                                    const answers = updates[state.currentStep];
-                                    if (Array.isArray(answers)) {
-                                        addAnswer(state.currentStep, answers);
-                                    }
-                                }
-                                if (currentStepData.questionText && updates[state.currentStep]) {
-                                    // Strategic question
-                                    addStrategicAnswer(currentStepData.questionText, updates[state.currentStep]);
+                            step={{ id: currentStepId, blocks: (currentStepData as any).blocks || [], ...currentStepData }}
+                            mode="preview"
+                            sessionData={{
+                                userName: unifiedQuizState.userName,
+                                ...Object.fromEntries(Object.entries(unifiedQuizState.answers).map(([k, v]) => [`answers_${k}`, v]))
+                            }}
+                            onUpdateSessionData={(key, value) => {
+                                if (key === 'userName' && typeof value === 'string') setUserName(value);
+                                if (key.startsWith('answers_')) {
+                                    const sid = key.replace('answers_', '');
+                                    if (Array.isArray(value)) addAnswer(sid, value);
                                 }
                             }}
-                            onNext={() => {
-                                // Auto-advance lógica já implementada nos adapters
-                                nextStep();
-                            }}
-                            onNameSubmit={(name: string) => {
-                                setUserName(name);
-                                nextStep();
-                            }}
-                            onPrevious={() => {
-                                // Implementar navegação para trás se necessário
-                                console.log('Navegar para step anterior');
-                            }}
-                            className="unified-production-step"
                         />
                     </div>
                 </div>
