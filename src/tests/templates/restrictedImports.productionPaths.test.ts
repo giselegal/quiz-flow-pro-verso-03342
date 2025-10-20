@@ -54,16 +54,7 @@ describe('Restricted imports em caminhos de produção', () => {
         }
       }
     }
-    // Permitir explicitamente alguns barrels neutros temporários e casos especiais controlados
-    const allowedPatterns = [
-      /src\/components\/quiz\/QuizAppConnected\.tsx$/,
-      /editor\/unified/,
-      /src\/components\/core\/renderers\/index\.ts/,
-      /src\/components\/quiz-modular\/index\.ts/,
-      // Barrel neutro para módulos ainda hospedados sob editor/*
-      /src\/components\/core\/modules\/index\.ts/,
-    ];
-    const filtered = offenders.filter(o => !allowedPatterns.some(p => p.test(o.file) || p.test(o.line)));
-    expect(filtered, `Imports proibidos:\n${filtered.map(o => `${o.file}: ${o.line}`).join('\n')}`).toHaveLength(0);
+    // Nenhuma exceção: todos os arquivos de produção devem estar livres de imports editor/*
+    expect(offenders, `Imports proibidos:\n${offenders.map(o => `${o.file}: ${o.line}`).join('\n')}`).toHaveLength(0);
   });
 });
