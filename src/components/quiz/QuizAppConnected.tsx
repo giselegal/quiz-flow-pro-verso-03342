@@ -24,7 +24,6 @@ const EditorProviderUnifiedLazy = React.lazy(() => import('@/components/editor-b
 import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
 import { getEffectiveRequiredSelections } from '@/lib/quiz/requiredSelections';
-import { loadNormalizedStep } from '@/lib/normalizedLoader';
 // Importar componentes modulares a partir do módulo compartilhado
 import {
     ModularIntroStep as IntroStep,
@@ -148,12 +147,19 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         setNormalizedDebug(debug === '1' || debug === 'true');
     }, [editorMode, previewMode]);
 
-    // Carregar normalized se solicitado e disponível
+    // Carregar normalized se (e somente se) gate estiver habilitado explicitamente
     useEffect(() => {
         let cancelled = false;
         async function load() {
-            // Em preview ou editor, não carregar normalized para evitar qualquer fetch
-            if (previewMode || editorMode) { setNormalizedStep(null); return; }
+            // Gate: ativado somente via flag de diagnóstico
+            const envGate = (import.meta as any)?.env?.VITE_RUNTIME_DEBUG_NORMALIZED;
+            const isGateEnabled = (envGate === '1' || envGate === 'true') || normalizedDebug === true;
+
+            // Em preview/editor, nunca carrega. Se gate não estiver ativo, não carrega.
+            if (previewMode || editorMode || !isGateEnabled) {
+                setNormalizedStep(null);
+                return;
+            }
             if (rendererMode === 'legacy') { setNormalizedStep(null); return; }
             // Normalizar ID: aceitar 'step-1', '1', '01', etc.
             const raw = state.currentStep || '';
@@ -163,6 +169,8 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             // Steps piloto expandido (01-05)
             if (!/^step-0[0-5]$/.test(paddedId)) { setNormalizedStep(null); return; }
             try {
+                // Import dinâmico para evitar inclusão do loader no bundle por padrão
+                const { loadNormalizedStep } = await import('@/lib/normalizedLoader');
                 const data = await loadNormalizedStep(paddedId);
                 if (!cancelled) setNormalizedStep(data);
             } catch (e) {
@@ -172,7 +180,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         }
         load();
         return () => { cancelled = true; };
-    }, [state.currentStep, rendererMode, previewMode, editorMode]);
+    }, [state.currentStep, rendererMode, previewMode, editorMode, normalizedDebug]);
 
     // ========================= SINCRONIZAR ETAPA ATIVA NO MODO EDITOR/PREVIEW =========================
     // Quando usado dentro do editor ou preview, alinhar a etapa atual com a selecionada no Canvas

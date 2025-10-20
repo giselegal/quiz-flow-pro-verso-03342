@@ -15,7 +15,8 @@
 
 import React, { memo, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Block } from '@/types/editor';
-import ScalableQuizRenderer from '@/components/core/ScalableQuizRenderer';
+// Import lazy/gated para evitar incluir o sistema escalável no bundle por padrão
+const ScalableQuizRendererLazy = React.lazy(() => import('@/components/core/ScalableQuizRenderer').then(m => ({ default: m.default })));
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { useStepSelection } from '@/hooks/useStepSelection';
 
@@ -118,13 +119,15 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   const renderPreviewMode = useCallback(() => (
     <div className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate">
       <div className="h-full w-full overflow-y-auto relative z-0">
-        <ScalableQuizRenderer
-          funnelId="quiz21StepsComplete"
-          mode="preview"
-          debugMode={true}
-          className="preview-mode-canvas w-full h-full"
-          onStepChange={handleStepChange}
-        />
+        <React.Suspense fallback={<div className="p-4 text-xs text-stone-500">Carregando preview escalável…</div>}>
+          <ScalableQuizRendererLazy
+            funnelId="quiz21StepsComplete"
+            mode="preview"
+            debugMode={true}
+            className="preview-mode-canvas w-full h-full"
+            onStepChange={handleStepChange}
+          />
+        </React.Suspense>
       </div>
     </div>
   ), [handleStepChange]);
@@ -207,7 +210,7 @@ const arePropsEqual = (
     // Comparar propriedades visuais críticas apenas
     const prevProps_block = prevBlock.properties || {};
     const nextProps_block = nextBlock.properties || {};
-    
+
     const criticalProps = ['text', 'content', 'backgroundColor', 'visible'];
     for (const prop of criticalProps) {
       if (prevProps_block[prop] !== nextProps_block[prop]) {
