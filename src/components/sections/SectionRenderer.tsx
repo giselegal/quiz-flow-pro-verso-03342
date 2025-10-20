@@ -39,6 +39,8 @@ const WelcomeFormSection = React.lazy(() => import('./intro').then(m => ({ defau
 // Question sections (novos)
 const QuestionHeroSection = React.lazy(() => import('./questions').then(m => ({ default: m.QuestionHeroSection })));
 const OptionsGridSection = React.lazy(() => import('./questions').then(m => ({ default: m.OptionsGridSection })));
+// Question title (novo)
+const QuestionTitleSection = React.lazy(() => import('./questions/QuestionTitleSection').then(m => ({ default: m.QuestionTitleSection })));
 
 // Transition sections (novos)
 const TransitionHeroSection = React.lazy(() => import('./transitions').then(m => ({ default: m.TransitionHeroSection })));
@@ -99,6 +101,7 @@ const SECTION_COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
 
     // Question sections (novos)
     'question-hero': QuestionHeroSection,
+    'question-title': QuestionTitleSection,
     'options-grid': OptionsGridSection,
 
     // Transition sections (novos)
@@ -373,7 +376,8 @@ export const SectionsContainer: React.FC<{
         // Filtrar apenas sections habilitadas e ordenar
         const activeSections = React.useMemo(() => {
             return sections
-                .filter(section => section.enabled)
+                // Tratar undefined como habilitado; só excluir quando enabled === false
+                .filter(section => section.enabled !== false)
                 .sort((a, b) => a.order - b.order);
         }, [sections]);
 
