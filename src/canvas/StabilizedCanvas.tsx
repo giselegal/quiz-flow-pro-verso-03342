@@ -30,6 +30,7 @@ interface StabilizedCanvasProps {
   isPreviewMode: boolean;
   onStepChange?: (step: number) => void;
   className?: string;
+  funnelId?: string; // Permite selecionar o funil a ser pré-visualizado
 }
 
 /**
@@ -44,7 +45,8 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   onDeleteBlock,
   isPreviewMode = false, // Default
   onStepChange,
-  className = ''
+  className = '',
+  funnelId = 'quiz-estilo-21-steps'
 }) => {
   // 🔒 REFS ESTÁVEIS - Evitam re-criação desnecessária
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -121,7 +123,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
       <div className="h-full w-full overflow-y-auto relative z-0">
         <React.Suspense fallback={<div className="p-4 text-xs text-stone-500">Carregando preview escalável…</div>}>
           <ScalableQuizRendererLazy
-            funnelId="quiz21StepsComplete"
+            funnelId={funnelId}
             mode="preview"
             debugMode={true}
             className="preview-mode-canvas w-full h-full"
