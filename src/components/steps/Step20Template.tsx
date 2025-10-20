@@ -297,7 +297,6 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
                 properties: block.properties || {}
               } as any}
               isPreviewing
-              mode="production"
             />
           </div>
         ))}
