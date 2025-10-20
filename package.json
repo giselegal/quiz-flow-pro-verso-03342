@@ -30,13 +30,13 @@
     "format:check": "prettier --check .",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
-  "type-check": "tsc --noEmit -p tsconfig.typecheck.json",
+    "type-check": "tsc --noEmit -p tsconfig.typecheck.json",
     "format:editor": "prettier --write \"src/components/editor/**/*.{ts,tsx}\"",
     "format:context": "prettier --write \"src/context/**/*.{ts,tsx}\"",
     "format:hooks": "prettier --write \"src/hooks/**/*.{ts,tsx}\"",
     "convert:templates": "tsx scripts/convert-quiz-steps-to-json.ts",
     "validate:templates": "tsx scripts/validate-templates.ts",
-  "templates:update-master": "tsx scripts/update-master-from-quizSteps.ts",
+    "templates:update-master": "tsx scripts/update-master-from-quizSteps.ts",
     "templates:all": "npm run convert:templates && npm run validate:templates",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -78,7 +78,7 @@
     "test:run:core": "cross-env NODE_OPTIONS=\"--max-old-space-size=1536 --expose-gc\" vitest run src/utils src/services src/hooks src/store",
     "test:run:ui": "cross-env NODE_OPTIONS=\"--max-old-space-size=1536 --expose-gc\" vitest run src/components src/pages src/routes",
     "test:run:editor": "cross-env NODE_OPTIONS=\"--max-old-space-size=1536 --expose-gc\" vitest run src/components/editor",
-  "test:run:steps": "cross-env NODE_OPTIONS=\"--max-old-space-size=1536 --expose-gc\" vitest run src/tests/unit/result/computeResult.test.ts",
+    "test:run:steps": "cross-env NODE_OPTIONS=\"--max-old-space-size=1536 --expose-gc\" vitest run src/tests/unit/result/computeResult.test.ts",
     "test:run:core2": "cross-env NODE_OPTIONS=\"--max-old-space-size=1536 --expose-gc\" vitest run src/core src/diagnostic",
     "test:run:misc:a": "cross-env NODE_OPTIONS=\"--max-old-space-size=2560 --expose-gc\" vitest run src/test",
     "test:run:misc:b": "cross-env NODE_OPTIONS=\"--max-old-space-size=1536 --expose-gc\" vitest run src/__tests__",
@@ -101,7 +101,7 @@
     "smoke:step1:persist": "node scripts/smoke-step1-persist.mjs",
     "smoke:e2e:3x": "node scripts/smoke-e2e-3x.mjs",
     "smoke:full-flow": "node scripts/smoke-full-flow.mjs",
-    "simulate:dcc": "node scripts/simulate-dcc.mjs"
+    "simulate:dcc": "node scripts/simulate-dcc.mjs""check:editor": "node scripts/quick-check-editor.mjs"
   },
   "smoke": {
     "step20": "node scripts/smoke-step20.mjs"
