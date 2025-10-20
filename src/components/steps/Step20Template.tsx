@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { getBestUserName } from '@/core/user/name';
 import { getStyleConfig } from '@/config/styleConfig';
 import { ResultDisplay } from '@/components/ui/ResultDisplay';
-import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+import { UniversalBlockRenderer } from '@/components/core/renderers';
 // 🎯 FASE 1: Usar apenas o motor principal e cache
 import { quizResultsService } from '@/services/quizResultsService';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
