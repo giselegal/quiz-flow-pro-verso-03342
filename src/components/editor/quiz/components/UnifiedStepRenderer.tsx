@@ -13,31 +13,15 @@ import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizScores } from '@/hooks/useQuizState';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
-import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 
 // ✅ COMPONENTES MODULARES - Usados em EDIÇÃO e PRODUÇÃO
 // Import estático para evitar falhas de fetch de chunks
-// Para reduzir risco de erros de chunks e permitir isolar problemas em dev,
-// carregamos alguns componentes modularizados de forma lazy apenas em produção.
-// Intro/Result/Offer costumam ser estáveis e permanecem estáticos.
 import ModularIntroStep from '@/components/editor/quiz-estilo/ModularIntroStep';
+import ModularQuestionStep from '@/components/editor/quiz-estilo/ModularQuestionStep';
+import ModularStrategicQuestionStep from '@/components/editor/quiz-estilo/ModularStrategicQuestionStep';
+import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
 import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
 import ModularOfferStep from '@/components/editor/quiz-estilo/ModularOfferStep';
-
-const isProd = typeof import.meta !== 'undefined' && !!(import.meta as any).env?.PROD;
-
-// Lazy em produção (carrega somente quando necessário)
-const LazyModularQuestionStep = isProd
-  ? lazy(() => import('@/components/editor/quiz-estilo/ModularQuestionStep'))
-  : (null as unknown as React.ComponentType<any>);
-
-const LazyModularStrategicQuestionStep = isProd
-  ? lazy(() => import('@/components/editor/quiz-estilo/ModularStrategicQuestionStep'))
-  : (null as unknown as React.ComponentType<any>);
-
-const LazyModularTransitionStep = isProd
-  ? lazy(() => import('@/components/editor/quiz-estilo/ModularTransitionStep'))
-  : (null as unknown as React.ComponentType<any>);
 
 // ⚠️ LEGADOS - Removidos, agora usamos componentes modulares em produção também
 // const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
@@ -56,40 +40,6 @@ const StepLoadingFallback = () => (
     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
   </div>
 );
-
-// Fallbacks mínimos para desenvolvimento quando componentes modulares ficam lazy apenas em produção
-const ModularQuestionStepFallback: React.FC<any> = ({ data, blocks, isEditable }) => {
-  const list = Array.isArray(blocks) ? blocks : [];
-  return (
-    <div className="p-4">
-      {list.map((block: any) => (
-        <UniversalBlockRenderer key={String(block?.id || Math.random())} block={block} mode={isEditable ? 'editor' : 'preview'} />
-      ))}
-    </div>
-  );
-};
-
-const ModularStrategicQuestionStepFallback: React.FC<any> = ({ data, blocks, isEditable }) => {
-  const list = Array.isArray(blocks) ? blocks : [];
-  return (
-    <div className="p-4">
-      {list.map((block: any) => (
-        <UniversalBlockRenderer key={String(block?.id || Math.random())} block={block} mode={isEditable ? 'editor' : 'preview'} />
-      ))}
-    </div>
-  );
-};
-
-const ModularTransitionStepFallback: React.FC<any> = ({ data, blocks, isEditable }) => {
-  const list = Array.isArray(blocks) ? blocks : [];
-  return (
-    <div className="p-4">
-      {list.map((block: any) => (
-        <UniversalBlockRenderer key={String(block?.id || Math.random())} block={block} mode={isEditable ? 'editor' : 'preview'} />
-      ))}
-    </div>
-  );
-};
 
 export interface UnifiedStepRendererProps {
   step: EditableQuizStep;
@@ -266,7 +216,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       case 'question-instructions': {
         // Tentativas comuns para instruções; fallback no header
         return (
-          findBlockIdByTypes(['question-instructions', 'text-inline', 'paragraph', 'quiz-question-header'])
+          findBlockIdByTypes(['text-inline', 'paragraph', 'quiz-question-header'])
           || undefined
         );
       }
@@ -276,7 +226,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
       case 'question-button': {
         // Navegação do quiz (botões próximo/anterior)
-        return findBlockIdByTypes(['quiz-navigation', 'question-navigation', 'button']);
+        return findBlockIdByTypes(['quiz-navigation', 'button']);
       }
 
       // RESULT (ex.: step-20)
@@ -432,45 +382,13 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
 
       case 'question': {
-        // ✅ CORREÇÃO CRÍTICA: Validar e injetar options antes de passar para ModularQuestionStep
-        const rawBlocks = (editorState.stepBlocks[stepKey] && editorState.stepBlocks[stepKey].length > 0)
-          ? editorState.stepBlocks[stepKey]
-          : ((step as any)?.blocks || []);
-
-        // Validar se options-grid tem options
-        const validatedBlocks = rawBlocks.map((block: any) => {
-          const blockType = String(block.type || '').toLowerCase();
-          if (blockType === 'options-grid' || blockType === 'quiz-options') {
-            const hasOptions = (block.properties?.options?.length > 0) ||
-              (block.content?.options?.length > 0);
-
-            if (!hasOptions && stepData.options && Array.isArray(stepData.options) && stepData.options.length > 0) {
-              console.log(`🔧 [UnifiedStepRenderer] Injecting ${stepData.options.length} options into ${block.type}`);
-              return {
-                ...block,
-                properties: {
-                  ...block.properties,
-                  options: stepData.options,
-                  requiredSelections: stepData.requiredSelections || 1,
-                  multipleSelection: (stepData.requiredSelections || 1) > 1
-                }
-              };
-            }
-          }
-          return block;
-        });
-
-        console.log(`🔍 [UnifiedStepRenderer] Passing ${validatedBlocks.length} blocks to ModularQuestionStep`, {
-          stepKey,
-          hasOptionsGrid: validatedBlocks.some((b: any) => ['options-grid', 'quiz-options'].includes(String(b.type || '').toLowerCase())),
-          optionsCount: validatedBlocks.find((b: any) => ['options-grid', 'quiz-options'].includes(String(b.type || '').toLowerCase()))?.properties?.options?.length || 0
-        });
-
-        const QuestionImpl: any = isProd ? LazyModularQuestionStep : ModularQuestionStepFallback;
+        // ✅ MODULAR para EDIÇÃO e PRODUÇÃO
         return (
-          <QuestionImpl
+          <ModularQuestionStep
             data={stepData as any}
-            blocks={validatedBlocks}
+            blocks={(editorState.stepBlocks[stepKey] && editorState.stepBlocks[stepKey].length > 0)
+              ? editorState.stepBlocks[stepKey]
+              : ((step as any)?.blocks || [])}
             isEditable={isEditMode}
             currentAnswers={sessionData[`answers_${step.id}`] || []}
             onAnswersChange={(answers: string[]) => {
@@ -486,37 +404,11 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
 
       case 'strategic-question': {
-        // ✅ CORREÇÃO: Validar e injetar options para strategic questions também
-        const rawBlocks = (editorState.stepBlocks[stepKey] && editorState.stepBlocks[stepKey].length > 0)
-          ? editorState.stepBlocks[stepKey]
-          : ((step as any)?.blocks || []);
-
-        const validatedBlocks = rawBlocks.map((block: any) => {
-          const blockType = String(block.type || '').toLowerCase();
-          if (blockType === 'options-grid' || blockType === 'quiz-options') {
-            const hasOptions = (block.properties?.options?.length > 0) ||
-              (block.content?.options?.length > 0);
-
-            if (!hasOptions && stepData.options && Array.isArray(stepData.options) && stepData.options.length > 0) {
-              return {
-                ...block,
-                properties: {
-                  ...block.properties,
-                  options: stepData.options,
-                  requiredSelections: 1,
-                  multipleSelection: false
-                }
-              };
-            }
-          }
-          return block;
-        });
-
-        const StrategicImpl: any = isProd ? LazyModularStrategicQuestionStep : ModularStrategicQuestionStepFallback;
+        // ✅ MODULAR para EDIÇÃO e PRODUÇÃO
         return (
-          <StrategicImpl
+          <ModularStrategicQuestionStep
             data={stepData as any}
-            blocks={validatedBlocks}
+            blocks={(step as any)?.blocks || editorState.stepBlocks[stepKey] || []}
             isEditable={isEditMode}
             currentAnswer={sessionData[`answer_${step.id}`] || ''}
             onAnswerChange={(answer: string) => {
@@ -534,9 +426,8 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       case 'transition':
       case 'transition-result': {
         // ✅ MODULAR para EDIÇÃO e PRODUÇÃO (Steps 12, 19)
-        const TransitionImpl: any = isProd ? LazyModularTransitionStep : ModularTransitionStepFallback;
         return (
-          <TransitionImpl
+          <ModularTransitionStep
             data={{ ...stepData, type: step.type } as any}
             blocks={(step as any)?.blocks || editorState.stepBlocks[stepKey] || []}
             isEditable={isEditMode}

@@ -66,7 +66,6 @@ import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import QuizProductionPreview from './QuizProductionPreview';
 import QuizAppConnected from '@/components/quiz/QuizAppConnected';
 import { useToast } from '@/hooks/use-toast';
-import { useUnifiedCRUDOptional } from '@/contexts';
 import { replacePlaceholders } from '@/utils/placeholderParser';
 import { useLiveScoring } from '@/hooks/useLiveScoring';
 import { HistoryManager } from '@/utils/historyManager';
@@ -92,7 +91,7 @@ import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEdita
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
-import { blocksToBlockComponents, convertTemplateToBlocks } from '@/utils/templateConverter';
+import { safeGetTemplateBlocks, blocksToBlockComponents } from '@/utils/templateConverter';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import type { StepType } from '@/types/quiz-schema';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
@@ -118,17 +117,6 @@ import type { QuizFunnelSchema } from '@/types/quiz-schema';
 import { StorageService } from '@/services/core/StorageService';
 import { EditorCacheService } from '@/services/EditorCacheService';
 import { UnifiedQuizStepAdapter } from '@/services/editor/UnifiedQuizStepAdapter';
-import { templateLoader } from '@/services/TemplateLoader';
-
-const getCanonicalBlocksSync = (stepId: string, funnelId?: string) => {
-    const result = templateLoader.getTemplateSync(stepId, { funnelId });
-    return result?.blocks ?? [];
-};
-
-const getCanonicalBlocks = async (stepId: string, funnelId?: string) => {
-    const result = await templateLoader.getTemplate(stepId, { funnelId });
-    return result.blocks;
-};
 import { SCHEMAS, migrateProps } from '@/schemas';
 import { normalizeByType } from '@/utils/normalizeByType';
 import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
@@ -499,13 +487,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     });
     useEffect(() => { try { StorageService.safeSetJSON('quiz_editor_header_config_v1', headerConfig); } catch {/* ignore */ } }, [headerConfig]);
 
-    // Em ambiente de teste, marcar como dirty para habilitar ações de salvar sem edições manuais complexas
-    useEffect(() => {
-        if (process.env.NODE_ENV === 'test') {
-            setIsDirty(true);
-        }
-    }, []);
-
     // Componente de cabeçalho fixo
     const FixedProgressHeader: React.FC<{ config: any; steps: EditableQuizStep[]; currentStepId: string }> = ({ config, steps, currentStepId }) => {
         if (!config.showLogo && !config.progressEnabled) return null;
@@ -600,28 +581,29 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     } catch (e) {
                         console.warn('🔄 Falha ao carregar funnel, usando template quiz21StepsComplete como fallback', e);
 
-                        // Forçar carregamento do template como fallback (carrega todos os steps em paralelo)
-                        const stepIds = Array.from({ length: 21 }).map((_, idx) => `step-${(idx + 1).toString().padStart(2, '0')}`);
-                        const blocksPerStep = await Promise.all(stepIds.map(stepId => getCanonicalBlocks(stepId, funnelParam)));
-
-                        const getStepType = (index: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer' => {
-                            if (index === 0) return 'intro';
-                            if (index >= 1 && index <= 10) return 'question';
-                            if (index === 11) return 'transition';
-                            if (index >= 12 && index <= 17) return 'strategic-question';
-                            if (index === 18) return 'transition-result';
-                            if (index === 19) return 'result';
-                            return 'offer';
-                        };
-
-                        const initial: EditorEditableQuizStep[] = stepIds.map((stepId, idx) => {
+                        // Forçar carregamento do template como fallback
+                        const initial: EditorEditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
                             const stepNumber = idx + 1;
+                            const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
+                            const blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam);
+
+                            // Determinar tipo de step baseado no índice (mesmo padrão usado abaixo)
+                            const getStepType = (index: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer' => {
+                                if (index === 0) return 'intro';
+                                if (index >= 1 && index <= 10) return 'question';
+                                if (index === 11) return 'transition';
+                                if (index >= 12 && index <= 17) return 'strategic-question';
+                                if (index === 18) return 'transition-result';
+                                if (index === 19) return 'result';
+                                return 'offer'; // index === 20
+                            };
+
                             return {
                                 id: stepId,
                                 type: getStepType(idx),
                                 order: stepNumber,
-                                blocks: blocksPerStep[idx],
-                                nextStep: stepNumber < 21 ? stepIds[idx + 1] : undefined,
+                                blocks,
+                                nextStep: stepNumber < 21 ? `step-${(stepNumber + 1).toString().padStart(2, '0')}` : undefined
                             };
                         });
 
@@ -667,7 +649,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         // Hidratar sections com QUIZ_STEPS (titulos, perguntas, opções, CTA...)
                                         const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
                                         // Converter sections → BlockComponent[] usando o mapeador central
-                                        const blocks = convertTemplateToBlocks({ sections }) || [];
+                                        const blocks = safeGetTemplateBlocks(stepId, { [stepId]: { sections } }) || [];
 
                                         return {
                                             id: stepId,
@@ -858,7 +840,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 }
                                 default: {
                                     // fallback genérico preservando blocks antigos se existirem
-                                    const legacyBlocks = await getCanonicalBlocks(stepId, funnelParam);
+                                    const legacyBlocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
                                     return legacyBlocks;
                                 }
                             }
@@ -881,11 +863,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         if (quizStep) {
                                             blocks = await buildEnrichedBlocksForStep(stepId, quizStep);
                                         } else {
-                                            blocks = await getCanonicalBlocks(stepId, funnelParam);
+                                            blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
                                         }
                                     } catch (e) {
                                         console.warn('⚠️ Falha ao construir blocks enriquecidos para', stepId, e);
-                                        blocks = await getCanonicalBlocks(stepId, funnelParam);
+                                        blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
                                     }
                                     return {
                                         id: stepId,
@@ -2254,8 +2236,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 onClick={(e) => { e.preventDefault(); onToggle(opt.id, multi, max); }}
                                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(opt.id, multi, max); } }}
                                 className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
-                                data-testid={`grid-option-${opt.id}`}
-                                data-selected={active ? 'true' : 'false'}
                             >
                                 {showImages && opt.image && (
                                     <img
@@ -2299,7 +2279,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Salvar
     const [saveNotice, setSaveNotice] = useState<{ type: 'warning' | 'info'; message: string } | null>(null);
-    const crud = useUnifiedCRUDOptional();
     const handleSave = useCallback(async () => {
         setIsSaving(true);
         try {
@@ -2336,46 +2315,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 settings: (unifiedConfig as any)?.settings,
             };
 
-            // Tentar salvar via CRUD unificado quando disponível
-            let savedId = funnelId;
-            if (crud && crud.saveFunnel) {
-                try {
-                    const pagesData = (adjusted ? filledSteps : steps).map(s => ({
-                        id: s.id,
-                        type: s.type,
-                        blocks: s.blocks,
-                        metadata: { order: s.order, nextStep: s.nextStep }
-                    }));
-
-                    const target = crud.currentFunnel ? {
-                        ...crud.currentFunnel,
-                        pages: pagesData,
-                        updatedAt: new Date()
-                    } : {
-                        id: funnelId || 'new-draft',
-                        name: 'Quiz Estilo Pessoal - Modular',
-                        description: 'Rascunho gerado pelo Editor Modular',
-                        context: (crud as any)?.funnelContext ?? 'EDITOR',
-                        userId: 'anonymous',
-                        settings: { runtime: (unifiedConfig as any)?.runtime, results: (unifiedConfig as any)?.results, ui: (unifiedConfig as any)?.ui, settings: (unifiedConfig as any)?.settings },
-                        pages: pagesData,
-                        isPublished: false,
-                        version: 1,
-                        createdAt: new Date(),
-                        updatedAt: new Date()
-                    } as any;
-
-                    await crud.saveFunnel(target);
-                    savedId = target.id;
-                } catch (e) {
-                    console.warn('⚠️ Falha no save via CRUD, usando bridge como fallback:', e);
-                }
-            }
-
-            if (!savedId || savedId === 'new-draft') {
-                savedId = await quizEditorBridge.saveDraft(funnel);
-            }
-
+            const savedId = await quizEditorBridge.saveDraft(funnel);
             setFunnelId(savedId);
             setIsDirty(false);
 
@@ -2401,7 +2341,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } finally {
             setIsSaving(false);
         }
-    }, [steps, funnelId, toast, crud, unifiedConfig]);
+    }, [steps, funnelId, toast]);
 
     // Exportar JSON simples (será refinado depois com metadados)
     const handleExport = useCallback(() => {
@@ -2535,7 +2475,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     panelWidths={panelWidths}
                     Resizer={Resizer as any}
                     navOverlay={navOpen && (
-                        <div className="fixed inset-0 z-50 flex" data-testid="nav-overlay">
+                        <div className="fixed inset-0 z-50 flex">
                             <div className="absolute inset-0 bg-black/40" onClick={() => setNavOpen(false)} />
                             <div className="relative ml-auto h-full w-[420px] bg-white shadow-xl border-l flex flex-col">
                                 <div className="p-4 border-b flex items-center justify-between">
@@ -2591,7 +2531,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 </div>
                                 <div className="p-3 border-t flex gap-2">
                                     <Button size="sm" variant="outline" onClick={() => { setNavOpen(false); }}>Fechar</Button>
-                                    <Button size="sm" data-testid="overlay-save-button" onClick={handleSave} disabled={isSaving}>Salvar Alterações</Button>
+                                    <Button size="sm" onClick={handleSave} disabled={isSaving}>Salvar Alterações</Button>
                                 </div>
                             </div>
                         </div>
@@ -2621,7 +2561,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     {isDirty && <Badge variant="outline">Não salvo</Badge>}
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Button variant="outline" size="sm" data-testid="nav-open-button" onClick={() => setNavOpen(true)}>Navegação</Button>
+                                    <Button variant="outline" size="sm" onClick={() => setNavOpen(true)}>Navegação</Button>
                                     <Button variant="outline" size="sm" onClick={() => {
                                         const previewUrl = `/preview?slug=quiz-estilo${funnelId ? `&funnel=${funnelId}` : ''}`;
                                         window.open(previewUrl, '_blank');
@@ -2630,7 +2570,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         Preview Produção
                                     </Button>
                                     <Button variant="outline" size="sm" onClick={handleExport}>Exportar</Button>
-                                    <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving || (!isDirty && process.env.NODE_ENV !== 'test')}>{isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}Salvar</Button>
+                                    <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving || !isDirty}>{isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}Salvar</Button>
                                     <div className="flex items-center gap-1">
                                         <Button variant="ghost" size="sm" disabled={!canUndo} onClick={handleUndo} className="text-xs px-2">⮪ Undo</Button>
                                         <Button variant="ghost" size="sm" disabled={!canRedo} onClick={handleRedo} className="text-xs px-2">Redo ⮫</Button>

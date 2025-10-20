@@ -23,7 +23,6 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
     'question-hero': 'quiz-question-header',
     'question-title': 'heading-inline', // Título separado da questão (novo section v3)
     'options-grid': 'options-grid', // já existe
-    'options grid': 'options-grid', // alias tolerante a espaço
 
     // Common elements
     'text-inline': 'text-inline', // Mapeamento identidade

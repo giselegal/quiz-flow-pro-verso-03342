@@ -6,7 +6,6 @@ import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/utils/placeholder';
-import { QUIZ_STEPS } from '@/data/quiz/QUIZ_STEPS';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import HybridTemplateService from '@/services/HybridTemplateService'; // ✅ USAR SISTEMA HÍBRIDO
 
@@ -132,7 +131,6 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   onUpdateSessionData,
   sessionData = {},
   onStepComplete,
-  properties: incomingProperties,
 }) => {
   // Fallbacks: permitir injeção via block.properties (quando vem do QuizRenderer em preview)
   const injectedOnNext = (block?.properties as any)?.onNext as undefined | (() => void);
@@ -158,12 +156,6 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Evitar autoavanço duplicado
   const autoAdvanceScheduledRef = React.useRef(false);
   const { schedule, cancel } = useOptimizedScheduler();
-
-  // Mesclar propriedades vindas via props.properties (prioridade) com block.properties
-  const combinedProps: any = {
-    ...(block?.properties as any || {}),
-    ...(incomingProperties as any || {}),
-  };
 
   const {
     question: questionProp,
@@ -206,7 +198,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     // 🎯 PROPRIEDADES LEGADAS
     className: blockClassName,
     showQuestionTitle = true,
-  } = combinedProps;
+  } = (block?.properties as any) || {};
 
   // Callback externo (produção/quiz) para propagar seleção ao host
   const externalOnOptionSelect = (block?.properties as any)?.onOptionSelect as
@@ -215,19 +207,16 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   // Fallbacks a partir de content (compatibilidade com template)
   const question = (questionProp ?? (block as any)?.content?.question) as string | undefined;
-  // Resolver opções com prioridade: props.properties (vindo das props do componente) → block.properties → block.content → fallback
-  const incomingPropsOptions = (optionsProp || []) as Option[];
-  const blockPropOptions = (block?.properties as any)?.options as Option[] | undefined;
+  // Resolver opções com fallback robusto: se properties.options existir porém vazio, usar content.options
+  const propOptions = (block?.properties as any)?.options as Option[] | undefined;
   const contentOptions = (block as any)?.content?.options as Option[] | undefined;
   let options = (
-    (Array.isArray(incomingPropsOptions) && incomingPropsOptions.length > 0)
-      ? incomingPropsOptions
-      : (Array.isArray(blockPropOptions) && blockPropOptions.length > 0)
-        ? blockPropOptions
-        : (Array.isArray(contentOptions) && contentOptions.length > 0)
-          ? contentOptions
-          : ([] as Option[])
-  );
+    (Array.isArray(propOptions) && propOptions.length > 0)
+      ? propOptions
+      : (Array.isArray(contentOptions) && contentOptions.length > 0)
+        ? contentOptions
+        : optionsProp
+  ) as Option[];
 
   // Logs de diagnóstico em desenvolvimento
   if (import.meta?.env?.DEV) {
@@ -237,7 +226,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       if (Number.isFinite(stepNum) && stepNum <= 3 && block?.type === 'options-grid') {
         console.log('🔎 OptionsGridBlock: resolução de opções', {
           stepNum,
-          fromProperties: Array.isArray(incomingPropsOptions) ? incomingPropsOptions.length : 'n/a',
+          fromProperties: Array.isArray(propOptions) ? propOptions.length : 'n/a',
           fromContent: Array.isArray(contentOptions) ? contentOptions.length : 'n/a',
           finalCount: Array.isArray(options) ? options.length : 0,
           question: question || (block as any)?.content?.question,
@@ -386,24 +375,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     };
   };
 
-  // Montado/desmontado para evitar setState após unmount em testes e cancelar timeouts
-  const isMountedRef = React.useRef(true);
+  // ⚡ Carregar configuração da etapa atual
   React.useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-      try { cancel('options-grid-editor-auto-advance'); } catch { /* noop */ }
-      try { cancel('options-grid-preview-auto-advance'); } catch { /* noop */ }
-    };
-  }, [cancel]);
-
-  // ⚡ Carregar configuração da etapa atual (protegendo window)
-  React.useEffect(() => {
-    const w: any = typeof window !== 'undefined' ? window : undefined;
-    const currentStep = (w?.__quizCurrentStep) ?? currentStepFromEditor ?? 1;
+    const currentStep = (window as any)?.__quizCurrentStep ?? currentStepFromEditor ?? 1;
 
     if (typeof currentStep === 'number' && currentStep >= 1) {
       getStepBehavior(currentStep).then(config => {
-        if (!isMountedRef.current) return;
         setStepBehaviorConfig(config);
       });
     }
@@ -427,13 +404,6 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       // silencioso
     }
   }, [block?.id, (block?.properties as any)?.questionId]);
-
-  // Após primeira persistência nesta instância, permitimos mesclar seleções persistidas em cliques subsequentes
-  const allowPersistedMergeRef = React.useRef(false);
-  const persistSelectionsAndFlag = React.useCallback((selections: string[]) => {
-    persistSelections(selections);
-    allowPersistedMergeRef.current = true;
-  }, [persistSelections]);
 
   React.useEffect(() => {
     // Initialize from session data in preview mode
@@ -535,14 +505,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   })();
 
-  // ⚡ Carregar configuração da etapa atual (duplicado por segurança, protegido)
+  // ⚡ Carregar configuração da etapa atual
   React.useEffect(() => {
-    const w: any = typeof window !== 'undefined' ? window : undefined;
-    const currentStep = (w?.__quizCurrentStep) ?? currentStepFromEditor ?? 1;
+    const currentStep = (window as any)?.__quizCurrentStep ?? currentStepFromEditor ?? 1;
 
     if (typeof currentStep === 'number' && currentStep >= 1) {
       getStepBehavior(currentStep).then(config => {
-        if (!isMountedRef.current) return;
         setStepBehaviorConfig(config);
       });
     }
@@ -710,17 +678,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       let newSelections: string[];
       if (multipleSelection) {
-        // Baseia-se em selectedOptions, com mescla opcional de persistidos após a primeira interação
-        let currentSelections = selectedOptions || [];
-        if (allowPersistedMergeRef.current) {
-          try {
-            const questionId = (block?.properties as any)?.questionId || block?.id;
-            const persisted = (StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {})[String(questionId)] || [];
-            if (Array.isArray(persisted) && persisted.length > 0) {
-              currentSelections = Array.from(new Set([...(currentSelections || []), ...persisted]));
-            }
-          } catch { /* noop */ }
-        }
+        const currentSelections = selectedOptions || [];
         console.log('📊 Current selections in editor:', currentSelections);
 
         if (currentSelections.includes(optionId)) {
@@ -745,7 +703,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
 
       // Persistir seleções também fora do preview (produção/editor)
-      persistSelectionsAndFlag(newSelections);
+      persistSelections(newSelections);
 
       // Propagar para host (ex.: produção usando mesmo componente via registry)
       externalOnOptionSelect?.(optionId);
@@ -884,7 +842,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             };
 
           // 🎯 Hover do ModularQuestionStep
-          const hoverStyles: React.CSSProperties = {
+          const hoverStyles: React.CSSProperties = { 
             borderColor: '#deac6d',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
           };

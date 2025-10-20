@@ -63,8 +63,8 @@ const LazyStepComponents = {
     'step-17': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
     'step-18': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
 
-    // Estratégica final (19) – alinhado ao ProductionStepsRegistry
-    'step-19': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.StrategicQuestionStepAdapter }))),
+    // Transição resultado (19)
+    'step-19': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.TransitionStepAdapter }))),
 
     // Resultado (20)
     'step-20': lazy(() => import('@/components/step-registry/ProductionStepsRegistry').then(m => ({ default: m.ResultStepAdapter }))),
@@ -469,8 +469,8 @@ const getComponentFileForStep = (stepId: string): string => {
     if (stepId === 'step-12') return 'TransitionStep';
     // 13–18 = Estratégicas
     if (/(step-1[3-8])/.test(stepId)) return 'StrategicQuestionStep';
-    // 19 = Estratégica final
-    if (stepId === 'step-19') return 'StrategicQuestionStep';
+    // 19 = Transição resultado
+    if (stepId === 'step-19') return 'TransitionStep';
     // 20 = Resultado
     if (stepId === 'step-20') return 'ResultStep';
     // 21 = Oferta

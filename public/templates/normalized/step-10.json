@@ -33,7 +33,7 @@
       "type": "question-instructions",
       "order": 3,
       "properties": {
-        "requiredSelections": 3
+        "requiredSelections": 1
       }
     },
     {
@@ -42,19 +42,51 @@
       "order": 4,
       "properties": {
         "questionId": "step-10",
-        "requiredSelections": 3,
-        "multipleSelection": true,
+        "requiredSelections": 1,
+        "multipleSelection": false,
         "showImages": true,
         "columns": 2,
         "options": [
-          { "id": "natural", "text": "Pequenos e discretos, às vezes nem uso", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.png" },
-          { "id": "classico", "text": "Brincos pequenos e discretos. Corrente fininha", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.png" },
-          { "id": "contemporaneo", "text": "Acessórios que elevem meu look com um toque moderno", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.png" },
-          { "id": "elegante", "text": "Acessórios sofisticados, joias ou semijoias", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.png" },
-          { "id": "romantico", "text": "Peças delicadas e com um toque feminino", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.png" },
-          { "id": "sexy", "text": "Brincos longos, colares que valorizem minha beleza", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.png" },
-          { "id": "dramatico", "text": "Acessórios pesados, que causem um impacto", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.png" },
-          { "id": "criativo", "text": "Acessórios diferentes, grandes e marcantes", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.png" }
+          {
+            "id": "natural",
+            "text": "Vestido fluido longo bege",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735413/1_uiksbl.webp"
+          },
+          {
+            "id": "classico",
+            "text": "Vestido tubinho preto clássico",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735414/2_r0jvgc.webp"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Vestido reto minimalista",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735414/3_ynmogp.webp"
+          },
+          {
+            "id": "elegante",
+            "text": "Vestido midi bege estruturado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735415/4_dkxjyc.webp"
+          },
+          {
+            "id": "romantico",
+            "text": "Vestido rosa com babados",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735415/5_kpvxhq.webp"
+          },
+          {
+            "id": "sexy",
+            "text": "Vestido preto justo com fenda",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735416/6_x4qb3b.webp"
+          },
+          {
+            "id": "dramatico",
+            "text": "Vestido preto estruturado ombro a ombro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735416/7_jnaxbz.webp"
+          },
+          {
+            "id": "criativo",
+            "text": "Vestido estampado único",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/8_wstqdi.webp"
+          }
         ]
       }
     },

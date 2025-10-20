@@ -3,15 +3,13 @@ import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDro
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
-import type { BlockComponent } from '@/components/editor/quiz/types';
 import type { Block } from '@/types/editor';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { cn } from '@/lib/utils';
-import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
+import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { Question } from '@/core/domains/quiz/entities/Question';
 import { Answer } from '@/core/domains/quiz/entities/Answer';
-import { templateLoader } from '@/services/TemplateLoader';
 
 interface ModularQuestionStepProps {
     data: any;
@@ -86,8 +84,7 @@ export default function ModularQuestionStep({
         ? `Selecione ${safeData.requiredSelections} opções`
         : 'Selecione uma opção';
 
-    // Extrai somente dígitos do rótulo da pergunta (ex.: "Pergunta 2" → 2)
-    const stepNumber = parseInt((data.questionNumber?.replace(/\D/g, '') || '1'), 10);
+    const stepNumber = parseInt(data.questionNumber?.replace(/\\D/g, '') || '1');
     const progress = Math.round((stepNumber / 21) * 100);
     // Passo atual real do quiz (parse do id ex.: "step-02") para navegação global
     const currentStepReal = React.useMemo(() => {
@@ -200,66 +197,26 @@ export default function ModularQuestionStep({
     // ===== DnD - Reordenação dos blocos (sem o progress) =====
     const stepId = data?.id || 'step-question';
 
-    // ✅ CORREÇÃO CRÍTICA: Remover carregamento duplicado de fallbackBlocks
-    // Agora os blocos vêm APENAS via props, validados no UnifiedStepRenderer
-    const hasRealBlocks = Array.isArray(blocks) && blocks.length > 0;
+    // Fallback: carregar blocos do template v3 quando props.blocks vier vazio
+    const [fallbackBlocks, setFallbackBlocks] = React.useState<Block[]>([]);
+    const effectiveBlocks = React.useMemo(() => (Array.isArray(blocks) && blocks.length > 0) ? blocks : fallbackBlocks, [blocks, fallbackBlocks]);
+    React.useEffect(() => {
+        if (Array.isArray(blocks) && blocks.length > 0) return;
+        const m = String(data?.id || '').match(/step-\d{2}/);
+        const stepKey = m ? m[0] : 'step-02';
+        try {
+            const comps = safeGetTemplateBlocks(stepKey, QUIZ_STYLE_21_STEPS_TEMPLATE);
+            const asBlocks = blockComponentsToBlocks(comps);
+            if (asBlocks.length) setFallbackBlocks(asBlocks as any);
+        } catch { }
+    }, [data?.id, blocks]);
 
-    if (import.meta?.env?.DEV) {
-        console.log('🔎 [ModularQuestionStep] Rendering with blocks', {
-            stepId,
-            blocksCount: blocks?.length || 0,
-            hasRealBlocks,
-            blockTypes: blocks?.map((b: any) => b.type)
-        });
-    }
+    const hasRealBlocks = Array.isArray(effectiveBlocks) && effectiveBlocks.length > 0;
     const topLevelBlocks: Block[] = React.useMemo(() => {
         if (!hasRealBlocks) return [];
-        const all = (blocks as Block[]);
-        // Conjunto de tipos relevantes para perguntas (inclui options-grid e navegação)
-        const relevantTypes = new Set([
-            'question-progress',
-            'question-number',
-            'question-text',
-            'question-title',
-            'heading-inline',
-            'text-inline',
-            'question-hero',
-            'quiz-question-header',
-            'question-instructions',
-            'options-grid',
-            'quiz-options',
-            'question-navigation',
-            'quiz-navigation',
-            'navigation',
-            'button-inline',
-            'ctabutton'
-        ]);
-        // 1) Tente extrair diretamente blocos relevantes dentre TODOS (inclui filhos)
-        const relevant = all.filter(b => relevantTypes.has(String((b as any).type || '').toLowerCase()));
-        if (relevant.length > 0) {
-            if (import.meta?.env?.DEV) {
-                try {
-                    console.log('🔎 [ModularQuestionStep] Relevant blocks', {
-                        count: relevant.length,
-                        types: relevant.map(r => String((r as any).type || '').toLowerCase())
-                    });
-                } catch { /* noop */ }
-            }
-            return relevant.sort((a, b) => (a.order || 0) - (b.order || 0));
-        }
-        // 2) Caso contrário, use a estratégia anterior: top-level ou todos
-        const topOnly = all.filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
-        const list = topOnly.length > 0 ? topOnly : all;
-        if (import.meta?.env?.DEV) {
-            try {
-                console.log('🔎 [ModularQuestionStep] Top-level/all blocks used', {
-                    count: list.length,
-                    types: list.map(r => String((r as any).type || '').toLowerCase())
-                });
-            } catch { /* noop */ }
-        }
+        const list = (effectiveBlocks as Block[]).filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
         return list.sort((a, b) => (a.order || 0) - (b.order || 0));
-    }, [blocks, hasRealBlocks]);
+    }, [effectiveBlocks, hasRealBlocks]);
     const DEFAULT_ORDER = ['question-number', 'question-text', 'question-instructions', 'question-options', 'question-button'];
     const initialOrder: string[] = (data?.metadata?.blockOrder && Array.isArray(data.metadata.blockOrder))
         ? data.metadata.blockOrder
@@ -324,41 +281,11 @@ export default function ModularQuestionStep({
             return <div ref={setNodeRef} className={cn('h-4 -my-1 transition-all border-2 border-dashed rounded', isOver ? 'bg-blue-100 border-blue-400' : 'bg-gray-50 border-gray-300 opacity-60 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400')} />;
         };
 
-        // Fallback: se nenhum bloco options-grid/quix-options for encontrado, injetar um bloco sintético com base em safeData
-        const hasOptionsGridBlock = topLevelBlocks.some(b => ['options-grid', 'quiz-options'].includes(String((b as any).type || '').toLowerCase()));
-        const renderBlocks: Block[] = hasOptionsGridBlock ? topLevelBlocks : [
-            ...topLevelBlocks,
-            {
-                id: `${stepId}-synthetic-options` as any,
-                type: 'options-grid' as any,
-                order: (topLevelBlocks[topLevelBlocks.length - 1]?.order || 0) + 1,
-                properties: {
-                    options: safeData.options,
-                    columns: hasImages ? 2 : 1,
-                    multipleSelection: safeData.requiredSelections > 1,
-                    maxSelections: safeData.requiredSelections,
-                    requiredSelections: safeData.requiredSelections,
-                    showImages: hasImages
-                },
-                content: {}
-            } as any
-        ];
-
-        if (import.meta?.env?.DEV) {
-            try {
-                console.log('🔎 [ModularQuestionStep] Render blocks', {
-                    injectedSynthetic: !hasOptionsGridBlock,
-                    count: renderBlocks.length,
-                    types: renderBlocks.map(r => String((r as any).type || '').toLowerCase())
-                });
-            } catch { /* noop */ }
-        }
-
         return (
             <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={renderBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                        {renderBlocks.map((block, index) => (
+                    <SortableContext items={topLevelBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+                        {topLevelBlocks.map((block, index) => (
                             <React.Fragment key={block.id}>
                                 <DropZoneBefore blockId={block.id} insertIndex={index} />
                                 <SortableItem id={block.id}>
@@ -371,7 +298,6 @@ export default function ModularQuestionStep({
                                         contextData={{
                                             currentAnswers,
                                             onAnswersChange,
-                                            requiredSelections: safeData.requiredSelections,
                                             canProceed,
                                             onNext: () => navigateWithLogic(),
                                             onPrev: () => {

@@ -3,13 +3,11 @@ import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDro
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
-import type { BlockComponent } from '@/components/editor/quiz/types';
 import type { Block } from '@/types/editor';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { cn } from '@/lib/utils';
-import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
+import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { templateLoader } from '@/services/TemplateLoader';
 
 interface ModularStrategicQuestionStepProps {
     data: any;
@@ -88,75 +86,20 @@ export default function ModularStrategicQuestionStep({
     const effectiveBlocks = React.useMemo(() => (Array.isArray(blocks) && blocks.length > 0) ? blocks : fallbackBlocks, [blocks, fallbackBlocks]);
     React.useEffect(() => {
         if (Array.isArray(blocks) && blocks.length > 0) return;
-        const match = String(data?.id || '').match(/step-\d{2}/);
-        const stepKey = match ? match[0] : 'step-13';
-        const funnelId = data?.funnelId || data?.funnel_id || undefined;
-        let disposed = false;
-
-        const applyBlocks = (components: BlockComponent[] | undefined | null) => {
-            if (disposed || !components || components.length === 0) return;
-            const asBlocks = blockComponentsToBlocks(components);
-            if (asBlocks.length > 0) {
-                setFallbackBlocks(asBlocks);
-            }
-        };
-
+        const m = String(data?.id || '').match(/step-\d{2}/);
+        const stepKey = m ? m[0] : 'step-13';
         try {
-            const sync = templateLoader.getTemplateSync(stepKey, { funnelId });
-            if (sync?.blocks?.length) {
-                applyBlocks(sync.blocks);
-            } else {
-                const staticComponents = convertTemplateToBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey]);
-                applyBlocks(staticComponents);
-            }
-        } catch { /* noop */ }
-
-        templateLoader.getTemplate(stepKey, { funnelId }).then(result => {
-            applyBlocks(result.blocks);
-        }).catch(() => {
-            const staticComponents = convertTemplateToBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey]);
-            applyBlocks(staticComponents);
-        });
-
-        return () => {
-            disposed = true;
-        };
-    }, [data?.id, blocks, data?.funnelId, data?.funnel_id]);
+            const comps = safeGetTemplateBlocks(stepKey, QUIZ_STYLE_21_STEPS_TEMPLATE);
+            const asBlocks = blockComponentsToBlocks(comps);
+            if (asBlocks.length) setFallbackBlocks(asBlocks as any);
+        } catch { }
+    }, [data?.id, blocks]);
 
     // Suporte a blocos reais (Block[])
     const hasRealBlocks = Array.isArray(effectiveBlocks) && effectiveBlocks.length > 0;
     const topLevelBlocks: Block[] = React.useMemo(() => {
         if (!hasRealBlocks) return [];
-        const all = (effectiveBlocks as Block[]);
-        // Conjunto de tipos relevantes para pergunta estratégica
-        const relevantTypes = new Set([
-            'question-progress', 'question-number', 'question-text', 'question-instructions',
-            'options-grid', 'quiz-options', 'question-navigation', 'quiz-navigation', 'button-inline'
-        ]);
-        // 1) Extrair blocos relevantes em qualquer profundidade
-        const relevant = all.filter(b => relevantTypes.has(String((b as any).type || '').toLowerCase()));
-        if (relevant.length > 0) {
-            if (import.meta?.env?.DEV) {
-                try {
-                    console.log('🔎 [ModularStrategicQuestionStep] Relevant blocks', {
-                        count: relevant.length,
-                        types: relevant.map(r => String((r as any).type || '').toLowerCase())
-                    });
-                } catch { /* noop */ }
-            }
-            return relevant.sort((a, b) => (a.order || 0) - (b.order || 0));
-        }
-        // 2) Fallback: apenas top-level ou todos
-        const topOnly = all.filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
-        const list = topOnly.length > 0 ? topOnly : all;
-        if (import.meta?.env?.DEV) {
-            try {
-                console.log('🔎 [ModularStrategicQuestionStep] Top-level/all blocks used', {
-                    count: list.length,
-                    types: list.map(r => String((r as any).type || '').toLowerCase())
-                });
-            } catch { /* noop */ }
-        }
+        const list = (effectiveBlocks as Block[]).filter(b => !(b as any).parentId);
         return list.sort((a, b) => (a.order || 0) - (b.order || 0));
     }, [effectiveBlocks, hasRealBlocks]);
 
@@ -236,31 +179,11 @@ export default function ModularStrategicQuestionStep({
 
         const canProceed = Boolean(currentAnswer);
 
-        // Fallback: se nenhum bloco options-grid/quix-options for encontrado, injetar um bloco sintético
-        const hasOptionsGridBlock = topLevelBlocks.some(b => ['options-grid', 'quiz-options'].includes(String((b as any).type || '').toLowerCase()));
-        const renderBlocks: Block[] = hasOptionsGridBlock ? topLevelBlocks : [
-            ...topLevelBlocks,
-            {
-                id: `${stepId}-synthetic-options` as any,
-                type: 'options-grid' as any,
-                order: (topLevelBlocks[topLevelBlocks.length - 1]?.order || 0) + 1,
-                properties: {
-                    options: safeData.options,
-                    columns: 1,
-                    multipleSelection: false,
-                    maxSelections: 1,
-                    requiredSelections: 1,
-                    showImages: false
-                },
-                content: {}
-            } as any
-        ];
-
         return (
             <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={renderBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                        {renderBlocks.map((block, index) => (
+                    <SortableContext items={topLevelBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+                        {topLevelBlocks.map((block, index) => (
                             <React.Fragment key={block.id}>
                                 <DropZoneBefore blockId={block.id} insertIndex={index} />
                                 <SortableItem id={block.id}>
@@ -271,15 +194,8 @@ export default function ModularStrategicQuestionStep({
                                         onSelect={onBlockSelect}
                                         onOpenProperties={onOpenProperties}
                                         contextData={{
-                                            // Compat: Grid de opções usa answers[]
                                             currentAnswer,
-                                            currentAnswers: currentAnswer ? [currentAnswer] : [],
-                                            onAnswersChange: (answers: string[]) => {
-                                                const last = answers[answers.length - 1] || '';
-                                                onAnswerChange?.(last);
-                                            },
                                             onAnswerChange,
-                                            requiredSelections: 1,
                                             canProceed,
                                             onNext: () => { if (typeof currentStepReal === 'number') emitNavigate(currentStepReal + 1); },
                                             onPrev: () => { if (typeof currentStepReal === 'number') emitNavigate(currentStepReal - 1); },

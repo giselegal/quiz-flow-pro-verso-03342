@@ -22,14 +22,11 @@ import { useUnifiedCRUD } from '@/contexts';
 import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { arrayMove } from '@dnd-kit/sortable';
-import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
-import hydrateBlocksWithQuizSteps from '@/utils/hydrators/hydrateBlocksWithQuizSteps';
-import { loadStepTemplate, loadStepTemplateAsync, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
+import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
-import { templateLoader, type TemplateLoaderResult } from '@/services/TemplateLoader';
-import { MasterTemplateService } from '@/services/MasterTemplateService';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -466,14 +463,47 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.warn('⚠️ Erro ao ler unifiedCache (step blocks):', e);
             }
 
-            // 🔄 Tentar pré-carregar master JSON usando MasterTemplateService (FASE 2)
-            // ✅ SINGLETON - elimina carregamento duplicado
+            // 🔄 Tentar pré-carregar master JSON público uma vez (usa unifiedCache)
+            // ✅ RETRY COM EXPONENTIAL BACKOFF - Fix para falhas de rede
             let masterBlocks: Block[] | null = null;
             try {
                 if (typeof window !== 'undefined' && window.location) {
-                    const master = await MasterTemplateService.getMasterTemplate();
-                    masterTemplateRef.current = master;
-                    
+                    if (!masterTemplateRef.current) {
+                        const cachedMaster = unifiedCache.get(masterTemplateKey());
+                        if (cachedMaster) {
+                            masterTemplateRef.current = cachedMaster;
+                        } else {
+                            // ✅ RETRY LOGIC: 3 tentativas com backoff exponencial
+                            let lastError: any = null;
+                            for (let attempt = 0; attempt < 3; attempt++) {
+                                try {
+                                    const resp = await fetch('/templates/quiz21-complete.json', {
+                                        cache: 'force-cache' // Use browser cache when available
+                                    });
+                                    if (resp.ok) {
+                                        masterTemplateRef.current = await resp.json();
+                                        unifiedCache.set(masterTemplateKey(), masterTemplateRef.current);
+                                        console.log(`✅ Master JSON carregado (tentativa ${attempt + 1})`);
+                                        break;
+                                    } else {
+                                        lastError = new Error(`HTTP ${resp.status}`);
+                                        console.warn(`⚠️ Tentativa ${attempt + 1}/3 falhou:`, resp.status);
+                                    }
+                                } catch (err) {
+                                    lastError = err;
+                                    console.warn(`⚠️ Tentativa ${attempt + 1}/3 erro de rede:`, err);
+                                }
+                                // Exponential backoff: 200ms, 400ms, 800ms
+                                if (attempt < 2) {
+                                    await new Promise(resolve => setTimeout(resolve, 200 * Math.pow(2, attempt)));
+                                }
+                            }
+                            if (!masterTemplateRef.current) {
+                                console.error('❌ Falha ao carregar master JSON após 3 tentativas:', lastError);
+                            }
+                        }
+                    }
+                    const master = masterTemplateRef.current;
                     const stepConfig = master?.steps?.[normalizedKey];
                     if (stepConfig) {
                         // Hidratar sections com quizSteps antes da conversão
@@ -482,75 +512,28 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                             sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections)
                         };
                         // Converter via util existente usando template mínimo
-                        const blockComponents = convertTemplateToBlocks(hydrated) ?? [];
+                        const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
                         masterBlocks = blockComponentsToBlocks(blockComponents);
                         unifiedCache.set(masterBlocksKey(normalizedKey), masterBlocks);
                         unifiedCache.set(stepBlocksKey(normalizedKey), masterBlocks);
-                        console.log(`📦 Master JSON → ${normalizedKey}: ${masterBlocks.length} blocos (via MasterTemplateService)`);
+                        console.log(`📦 Master JSON → ${normalizedKey}: ${masterBlocks.length} blocos`);
                     }
                 }
             } catch (e) {
-                console.warn('⚠️ Erro ao preparar masterBlocks via MasterTemplateService:', e);
-            }
-
-            // ✅ PRIORIDADE 0 (AGUARDADA): JSON normalizado (public/templates/normalized) ou modular estático
-            try {
-                const stepNum0 = Number(normalizedKey.replace('step-', ''));
-                // Removido step 19 do intervalo normalizado para priorizar JSON estático modular
-                const isNormalizedRange0 = (stepNum0 >= 2 && stepNum0 <= 11) || (stepNum0 >= 13 && stepNum0 <= 18);
-                // Tentar cache do normalizado primeiro
-                if (isNormalizedRange0) {
-                    const normalizedCache0 = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
-                    if (Array.isArray(normalizedCache0) && normalizedCache0.length > 0) {
-                        setState(prev => ({
-                            ...prev,
-                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: normalizedCache0 },
-                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'normalized-json' }
-                        }));
-                        return;
-                    }
-                    const normalizedBlocks0 = await loadStepTemplateAsync(normalizedKey);
-                    if (Array.isArray(normalizedBlocks0) && normalizedBlocks0.length > 0) {
-                        try { unifiedCache.set(templateKey(`normalized:${normalizedKey}`), normalizedBlocks0); } catch { /* noop */ }
-                        try { unifiedCache.set(stepBlocksKey(normalizedKey), normalizedBlocks0); } catch { /* noop */ }
-                        setState(prev => ({
-                            ...prev,
-                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: normalizedBlocks0 },
-                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'normalized-json' }
-                        }));
-                        return;
-                    }
-                } else if (hasStaticBlocksJSON(normalizedKey)) {
-                    const modularBlocks0 = loadStepTemplate(normalizedKey);
-                    if (Array.isArray(modularBlocks0) && modularBlocks0.length > 0) {
-                        try { unifiedCache.set(stepBlocksKey(normalizedKey), modularBlocks0); } catch { /* noop */ }
-                        setState(prev => ({
-                            ...prev,
-                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: modularBlocks0 },
-                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'modular-json' }
-                        }));
-                        return;
-                    }
-                }
-            } catch { /* noop */ }
-
-            let canonicalTemplateResult: TemplateLoaderResult | null = null;
-            try {
-                canonicalTemplateResult = await templateLoader.getTemplate(normalizedKey, { funnelId });
-            } catch (err) {
-                console.warn('⚠️ Falha ao carregar TemplateLoader para', normalizedKey, err);
+                console.warn('⚠️ Erro ao preparar masterBlocks:', e);
             }
 
             // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
             setState(prev => {
+                console.log('hasModularTemplate:', hasModularTemplate(normalizedKey));
                 console.log('hasStaticBlocksJSON:', hasStaticBlocksJSON(normalizedKey));
                 console.log('existingBlocks:', prev.stepBlocks[normalizedKey]?.length || 0);
                 console.log('loadingStepsRef:', Array.from(loadingStepsRef.current));
 
-                // ✅ PRIORIDADE 0: JSON normalizado por etapa (public/templates/normalized/step-XX.json)
+                // ✅ PRIORIDADE 0: JSON normalizado por etapa (public/templates/normalized/step-XX.json) — apenas para steps 02–11
                 try {
                     const stepNum = Number(normalizedKey.replace('step-', ''));
-                    const isNormalizedRange = (stepNum >= 2 && stepNum <= 11) || (stepNum >= 13 && stepNum <= 18) || stepNum === 19;
+                    const isNormalizedRange = stepNum >= 2 && stepNum <= 11;
                     if (isNormalizedRange) {
                         const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
                         if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {
@@ -570,14 +553,13 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                             .then(res => res.ok ? res.json() : null)
                             .then(json => {
                                 if (!json || !Array.isArray(json.blocks)) return;
-                                let blocks = (json.blocks as any[]).map((b, idx) => ({
+                                const blocks = (json.blocks as any[]).map((b, idx) => ({
                                     id: b.id || `block-${idx}`,
                                     type: (b.type || 'text-inline') as any,
                                     order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
                                     properties: b.properties || b.props || {},
                                     content: b.content || {}
                                 })) as Block[];
-                                try { blocks = hydrateBlocksWithQuizSteps(normalizedKey, blocks); } catch { /* noop */ }
                                 unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
                                 // Sincronizar também no cache unificado por step para evitar preferir master em loads futuros
                                 try { unifiedCache.set(stepBlocksKey(normalizedKey), blocks); } catch { /* noop */ }
@@ -591,19 +573,30 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     }
                 } catch { }
 
-                // ✅ PRIORIDADE 1: Templates JSON estáticos modulares (12, 19, 20) — síncrono
-                if (hasStaticBlocksJSON(normalizedKey)) {
+                // ✅ PRIORIDADE 1: Templates JSON modulares (steps 12, 19, 20)
+                if (hasModularTemplate(normalizedKey)) {
                     const existingBlocks = prev.stepBlocks[normalizedKey] || [];
                     const modularBlocks = loadStepTemplate(normalizedKey);
+
+                    console.log('✅ Loaded modular blocks:', {
+                        count: modularBlocks.length,
+                        types: modularBlocks.map(b => b.type)
+                    });
+
+                    // Se já tem blocos modulares com mesma estrutura, não recarregar
                     const existingTypes = existingBlocks.map(b => b.type).sort().join(',');
                     const modularTypes = modularBlocks.map(b => b.type).sort().join(',');
+
                     if (existingBlocks.length > 0 && existingTypes === modularTypes) {
                         console.log('⏭️ Skip: blocos modulares já carregados');
                         console.groupEnd();
                         return prev; // ✅ NO UPDATE = NO LOOP
                     }
+
+                    // Carregar/substituir com blocos modulares
+                    // Persistir no cache unificado
                     try { unifiedCache.set(stepBlocksKey(normalizedKey), modularBlocks); } catch { }
-                    console.log('📝 Carregando blocos modulares estáticos');
+                    console.log('📝 Carregando blocos modulares');
                     console.groupEnd();
                     return {
                         ...prev,
@@ -626,44 +619,39 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 }
 
                 // ✅ PRIORIDADE 2: JSON individual de etapa se existir (public/templates/step-XX.json)
-                // Evitar 404s desnecessários: não buscar individual quando a etapa faz parte do intervalo "normalizado"
                 try {
-                    const stepNumInt = Number(normalizedKey.replace('step-', ''));
-                    const isNormalizedRange = (stepNumInt >= 2 && stepNumInt <= 11) || (stepNumInt >= 13 && stepNumInt <= 18);
-                    if (!isNormalizedRange) {
-                        const stepNum = normalizedKey.replace('step-', '');
-                        const individualUrl = `/templates/step-${stepNum}.json`;
-                        const individualCached = unifiedCache.get<Block[]>(templateKey(`individual:${normalizedKey}`));
-                        if (Array.isArray(individualCached) && individualCached.length > 0) {
-                            console.log('📝 Aplicando blocos do JSON individual (cache):', individualUrl);
-                            console.groupEnd();
-                            return {
-                                ...prev,
-                                stepBlocks: { ...prev.stepBlocks, [normalizedKey]: individualCached },
-                                stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'individual-json' as any }
-                            };
-                        }
-                        // Nota: fetch síncrono não é possível aqui; master será usado e, em paralelo, tentamos hidratar individual
-                        fetch(individualUrl)
-                            .then(res => res.ok ? res.json() : null)
-                            .then(json => {
-                                if (!json || !Array.isArray(json.blocks)) return;
-                                const blocks = (json.blocks as any[]).map((b, idx) => ({
-                                    id: b.id || `block-${idx}`,
-                                    type: (b.type || 'text-inline') as any,
-                                    order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
-                                    properties: b.properties || b.props || {},
-                                    content: b.content || {}
-                                })) as Block[];
-                                unifiedCache.set(templateKey(`individual:${normalizedKey}`), blocks);
-                                setState(p => ({
-                                    ...p,
-                                    stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
-                                    stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'individual-json' as any }
-                                }));
-                            })
-                            .catch(() => { });
+                    const stepNum = normalizedKey.replace('step-', '');
+                    const individualUrl = `/templates/step-${stepNum}.json`;
+                    const individualCached = unifiedCache.get<Block[]>(templateKey(`individual:${normalizedKey}`));
+                    if (Array.isArray(individualCached) && individualCached.length > 0) {
+                        console.log('📝 Aplicando blocos do JSON individual (cache):', individualUrl);
+                        console.groupEnd();
+                        return {
+                            ...prev,
+                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: individualCached },
+                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'individual-json' as any }
+                        };
                     }
+                    // Nota: fetch síncrono não é possível aqui; master será usado e, em paralelo, tentamos hidratar individual
+                    fetch(individualUrl)
+                        .then(res => res.ok ? res.json() : null)
+                        .then(json => {
+                            if (!json || !Array.isArray(json.blocks)) return;
+                            const blocks = (json.blocks as any[]).map((b, idx) => ({
+                                id: b.id || `block-${idx}`,
+                                type: (b.type || 'text-inline') as any,
+                                order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
+                                properties: b.properties || b.props || {},
+                                content: b.content || {}
+                            })) as Block[];
+                            unifiedCache.set(templateKey(`individual:${normalizedKey}`), blocks);
+                            setState(p => ({
+                                ...p,
+                                stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
+                                stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'individual-json' as any }
+                            }));
+                        })
+                        .catch(() => { });
                 } catch { }
 
                 // ✅ Se conseguimos masterBlocks (JSON público hidratado), usar
@@ -685,12 +673,10 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 }
 
                 // Fallback: Carregar template padrão TS (sections → blocks)
-                const canonicalSource = canonicalTemplateResult?.source || 'static';
-                console.log(`📝 Carregando template canônico (${canonicalSource})`);
-                const canonicalComponents = canonicalTemplateResult?.blocks
-                    ?? convertTemplateToBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE[normalizedKey])
-                    ?? [];
-                const convertedBlocks = blockComponentsToBlocks(canonicalComponents);
+                const template = QUIZ_STYLE_21_STEPS_TEMPLATE;
+                console.log('📝 Carregando template padrão (sections → blocks)');
+                const blockComponents = safeGetTemplateBlocks(normalizedKey, template);
+                const convertedBlocks = blockComponentsToBlocks(blockComponents);
                 try { unifiedCache.set(stepBlocksKey(normalizedKey), convertedBlocks); } catch { }
                 console.groupEnd();
                 return {
@@ -771,7 +757,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
         const template = QUIZ_STYLE_21_STEPS_TEMPLATE;
 
-        if (!template) {
+        if (!template || !template.steps) {
             console.error('❌ Template inválido');
             return;
         }
@@ -782,15 +768,10 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         let conversionErrors = 0;
 
         // Carregar todos os steps do template
-        const templateEntries = template.steps ? Object.entries(template.steps) : Object.entries(template);
-
-        templateEntries.forEach(([stepKey, stepConfig]) => {
-            if (!stepKey.startsWith('step-')) {
-                return;
-            }
+        Object.entries(template.steps).forEach(([stepKey, stepConfig]) => {
             try {
-                // ✅ PRIORIDADE: Templates JSON estáticos (steps 12, 13, 19, 20)
-                if (hasStaticBlocksJSON(stepKey)) {
+                // ✅ PRIORIDADE: Templates JSON modulares (steps 12, 19, 20)
+                if (hasModularTemplate(stepKey)) {
                     const modularBlocks = loadStepTemplate(stepKey);
                     newStepBlocks[stepKey] = modularBlocks;
                     newStepSources[stepKey] = 'modular-json';
@@ -800,24 +781,16 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 }
 
                 // Carregar templates padrão para outros steps
-                const canonicalResult = templateLoader.getTemplateSync(stepKey) ?? null;
-                const canonicalSource = canonicalResult?.source || 'static';
-                if (canonicalResult?.blocks?.length) {
-                    console.log(`📦 TemplateLoader retornou ${canonicalResult.blocks.length} blocos para ${stepKey} (${canonicalSource})`);
-                }
-                const canonicalComponents = canonicalResult?.blocks
-                    ?? convertTemplateToBlocks(stepConfig)
-                    ?? convertTemplateToBlocks(template[stepKey])
-                    ?? [];
+                const blockComponents = safeGetTemplateBlocks(stepKey, template);
 
                 // Validar conversão
-                if (canonicalComponents.length === 0 && stepConfig) {
+                if (blockComponents.length === 0 && stepConfig) {
                     console.warn(`⚠️ No blocks converted for ${stepKey}`, stepConfig);
                     conversionErrors++;
                 }
 
                 // Converter BlockComponent[] para Block[]
-                const blocks = blockComponentsToBlocks(canonicalComponents);
+                const blocks = blockComponentsToBlocks(blockComponents);
 
                 // Aceitar blocos conforme conversão; manter 'quiz-intro-header' para Step 01
                 const validBlocks = blocks;

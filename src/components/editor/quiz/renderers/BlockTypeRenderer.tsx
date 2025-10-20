@@ -19,7 +19,6 @@ import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
 import PricingInlineBlock from '@/components/editor/blocks/PricingInlineBlock';
 import QuizOfferHeroBlock from '@/components/editor/blocks/QuizOfferHeroBlock';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
-import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
 // Blocos atômicos específicos usados no Step 01
 import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
 import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHeaderBlock';
@@ -129,8 +128,11 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         case 'quiz-question-header':
         case 'question-header':
             return <QuizQuestionHeaderBlock block={block} {...rest} />;
+        case 'quiz-intro-header':
+            return <QuizIntroHeaderBlock block={block} {...rest} />;
         case 'text-inline':
             return <TextInlineBlock block={block} {...rest} />;
+        case 'image-display-inline':
         case 'image-inline':
         case 'image':
             return <ImageDisplayBlock block={block} {...rest} />;
@@ -141,71 +143,9 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         case 'button':
             return <ButtonInlineBlock block={block} {...rest} />;
         case 'quiz-options':
-        case 'options-grid': {
-            // Usar OptionsGridBlock (componente do editor) e fazer a ponte de seleção via onOptionSelect → onAnswersChange
-            const currentAnswers: string[] = (rest as any)?.contextData?.currentAnswers || [];
-            const onAnswersChange: ((answers: string[]) => void) | undefined = (rest as any)?.contextData?.onAnswersChange;
-            const props: any = (block as any)?.properties || {};
-            const isSingle = props.multipleSelection === false || props.maxSelections === 1 || props.requiredSelections === 1;
-            const derivedMinSel = typeof props.minSelections === 'number'
-                ? props.minSelections
-                : (typeof props.requiredSelections === 'number' ? props.requiredSelections : (isSingle ? 1 : 1));
-            const derivedMaxSel = typeof props.maxSelections === 'number'
-                ? props.maxSelections
-                : (isSingle ? 1 : (Array.isArray(props.options) ? props.options.length : 99));
-
-            const toggleWithConstraints = (id: string) => {
-                if (!onAnswersChange) return;
-                const exists = currentAnswers.includes(id);
-                let next = exists ? currentAnswers.filter(a => a !== id) : [...currentAnswers, id];
-                if (!exists && typeof derivedMaxSel === 'number' && derivedMaxSel > 0 && next.length > derivedMaxSel) {
-                    next = [...currentAnswers.slice(-(derivedMaxSel - 1)), id];
-                }
-                onAnswersChange(next);
-            };
-
-            const augmentedBlock = {
-                ...block,
-                properties: {
-                    ...props,
-                    selectedOptions: currentAnswers,
-                    minSelections: derivedMinSel,
-                    maxSelections: derivedMaxSel,
-                    onOptionSelect: (optionId: string) => toggleWithConstraints(optionId),
-                }
-            } as any;
-
-            if (import.meta?.env?.DEV) {
-                try {
-                    const opts = (augmentedBlock as any)?.properties?.options || [];
-                    console.log('🔎 [BlockTypeRenderer] options-grid', {
-                        blockId: block.id,
-                        optionsCount: Array.isArray(opts) ? opts.length : 0,
-                        hasOnAnswersChange: !!onAnswersChange,
-                        currentAnswers,
-                    });
-                } catch { /* noop */ }
-            }
-
-            return (
-                <SelectableBlock
-                    blockId={block.id}
-                    isSelected={!!rest.isSelected}
-                    isEditable={!!rest.isEditable}
-                    onSelect={() => rest.onSelect?.(block.id)}
-                    blockType="Opções da Pergunta"
-                    onOpenProperties={() => rest.onOpenProperties?.(block.id)}
-                    isDraggable={true}
-                >
-                    <OptionsGridBlock
-                        block={augmentedBlock as any}
-                        isPreviewMode={false}
-                        properties={(augmentedBlock as any).properties || {}}
-                        onClick={() => rest.onSelect?.(block.id)}
-                    />
-                </SelectableBlock>
-            );
-        }
+        case 'options-grid':
+            // Passar contextData para que o grid seja interativo (seleção + estado)
+            return <QuizOptionsBlock block={block} {...rest} contextData={rest.contextData} />;
         case 'quiz-navigation':
         case 'navigation':
             return <QuizNavigationBlock block={block} {...rest} />;

@@ -3,13 +3,11 @@ import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDro
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
-import type { BlockComponent } from '@/components/editor/quiz/types';
 import type { Block } from '@/types/editor';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { cn } from '@/lib/utils';
-import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
+import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { templateLoader } from '@/services/TemplateLoader';
 
 interface ModularIntroStepProps {
     data?: any; // legacy fallback
@@ -64,42 +62,19 @@ export default function ModularIntroStep({
     const effectiveBlocks = React.useMemo(() => (Array.isArray(blocks) && blocks.length > 0) ? blocks : fallbackBlocks, [blocks, fallbackBlocks]);
 
     React.useEffect(() => {
+        // Se já temos blocos via props, não precisa carregar
         if (Array.isArray(blocks) && blocks.length > 0) return;
-
-        const match = String(data?.id || '').match(/step-\d{2}/);
-        const stepKey = match ? match[0] : 'step-01';
-        const funnelId = data?.funnelId || data?.funnel_id || undefined;
-        let disposed = false;
-
-        const applyBlocks = (components: BlockComponent[] | undefined | null) => {
-            if (disposed || !components || components.length === 0) return;
-            const asBlocks = blockComponentsToBlocks(components);
-            if (asBlocks.length > 0) {
-                setFallbackBlocks(asBlocks);
-            }
-        };
-
+        // Tentar extrair step key canônica (ex.: step-01)
+        const m = String(data?.id || '').match(/step-\d{2}/);
+        const stepKey = m ? m[0] : 'step-01';
         try {
-            const syncResult = templateLoader.getTemplateSync(stepKey, { funnelId });
-            if (syncResult?.blocks?.length) {
-                applyBlocks(syncResult.blocks);
-            } else {
-                const staticComponents = convertTemplateToBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey]);
-                applyBlocks(staticComponents);
-            }
-        } catch { /* noop */ }
-
-        templateLoader.getTemplate(stepKey, { funnelId }).then(result => {
-            applyBlocks(result.blocks);
-        }).catch(() => {
-            const staticComponents = convertTemplateToBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey]);
-            applyBlocks(staticComponents);
-        });
-
-        return () => {
-            disposed = true;
-        };
-    }, [data?.id, blocks, data?.funnelId, data?.funnel_id]);
+            const comps = safeGetTemplateBlocks(stepKey, QUIZ_STYLE_21_STEPS_TEMPLATE);
+            const asBlocks = blockComponentsToBlocks(comps);
+            if (asBlocks.length) setFallbackBlocks(asBlocks as any);
+        } catch (e) {
+            // noop
+        }
+    }, [data?.id, blocks]);
 
     // NOVO: Se recebemos Block[], renderizamos iterativamente com DnD
     const hasRealBlocks = Array.isArray(effectiveBlocks) && effectiveBlocks.length > 0;

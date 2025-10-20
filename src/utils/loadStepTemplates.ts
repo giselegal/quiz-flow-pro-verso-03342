@@ -8,7 +8,6 @@
  */
 
 import { Block } from '@/types/editor';
-import hydrateBlocksWithQuizSteps from '@/utils/hydrators/hydrateBlocksWithQuizSteps';
 import { templateCache } from '@/utils/TemplateCache';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { templateKey } from '@/utils/cacheKeys';
@@ -115,9 +114,7 @@ export function loadAllModularTemplates(): Record<string, Block[]> {
  * Estes steps têm arrays de blocos direto no JSON, sem conversão
  */
 export function hasStaticBlocksJSON(stepId: string): boolean {
-  // Inclui 12, 13, 19 e 20 quando disponíveis como JSON estático importado
-  // step-13 foi adicionado para alinhar com os imports e permitir fallback estático
-  return ['step-12', 'step-13', 'step-19', 'step-20'].includes(stepId);
+  return ['step-12', 'step-19', 'step-20'].includes(stepId);
 }
 
 /**
@@ -125,59 +122,9 @@ export function hasStaticBlocksJSON(stepId: string): boolean {
  * MANTIDO para backward compatibility
  */
 export function hasModularTemplate(stepId: string): boolean {
-  // ✅ Steps com JSON modular/normalizado específico
-  // Inclui: 2–13, 19, 20 (12, 13, 19, 20 com JSON estático; 2–11 normalizados em public)
-  const m = stepId.match(/^step-(\d{1,2})$/);
-  const n = m ? parseInt(m[1], 10) : NaN;
-  if (!Number.isFinite(n)) return false;
-  return (n >= 2 && n <= 13) || n === 19 || n === 20;
-}
-
-/**
- * Versão assíncrona com suporte a JSONs normalizados (public/templates/normalized)
- * Mantém a função síncrona loadStepTemplate para compatibilidade com chamadas existentes.
- */
-export async function loadStepTemplateAsync(stepId: string): Promise<Block[]> {
-  const cacheKey = templateKey(stepId);
-  const cached = unifiedCache.get<Block[]>(cacheKey);
-  if (cached) return cached;
-
-  const stepNum = parseInt(stepId.replace('step-', ''), 10);
-  // Removido step 19 do intervalo normalizado para priorizar JSON estático modular
-  const isNormalizedRange = (stepNum >= 2 && stepNum <= 11) || (stepNum >= 13 && stepNum <= 18);
-
-  // Tentar JSON normalizado público (await)
-  if (isNormalizedRange && typeof window !== 'undefined') {
-    try {
-      const url = `/templates/normalized/${stepId}.json`;
-      const resp = await fetch(url, { cache: 'force-cache' as RequestCache });
-      if (resp.ok) {
-        const json = await resp.json();
-        let blocks = convertTemplateBlocksToBlocks((json?.blocks || []) as any);
-        // 🔒 Garantir que dados (texto/opções) venham de QUIZ_STEPS
-        try { blocks = hydrateBlocksWithQuizSteps(stepId, blocks); } catch { /* noop */ }
-        unifiedCache.set(cacheKey, blocks);
-        return blocks;
-      }
-    } catch (e) {
-      console.warn(`⚠️ Falha ao carregar JSON normalizado (${stepId})`, e);
-    }
-  }
-
-  // Fallback: JSON estático importado (12, 13, 19, 20)
-  const templates: Record<string, StepTemplate> = {
-    'step-12': step12Template as StepTemplate,
-    'step-13': step13Template as StepTemplate,
-    'step-19': step19Template as StepTemplate,
-    'step-20': step20Template as StepTemplate,
-  };
-  const template = templates[stepId];
-  if (!template) return [];
-  let blocks = convertTemplateBlocksToBlocks(template.blocks);
-  // Para steps question/strategic-question (ex.: step-13 em diante), hidratar também
-  try { blocks = hydrateBlocksWithQuizSteps(stepId, blocks); } catch { /* noop */ }
-  unifiedCache.set(cacheKey, blocks);
-  return blocks;
+  // ✅ Apenas steps com JSON modular específico (12, 13, 19, 20)
+  // Steps 1-11, 14-18, 21 usam Master JSON ou TypeScript fallback
+  return ['step-12', 'step-13', 'step-19', 'step-20'].includes(stepId);
 }
 
 /**
