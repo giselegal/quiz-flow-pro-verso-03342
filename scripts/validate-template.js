@@ -102,6 +102,8 @@ console.log(`\n${BLUE}═══ COMPONENTES CRÍTICOS ═══${RESET}`);
 const criticalComponents = [
     'quiz-intro-header',
     'form-container',
+    // aceitar ambos, mas preferir 'options grid'
+    'options grid',
     'options-grid',
     'result-header-inline',
     'secondary-styles',

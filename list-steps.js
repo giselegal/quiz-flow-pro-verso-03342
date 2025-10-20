@@ -33,7 +33,7 @@ Object.entries(categories).forEach(([category, stepList]) => {
 });
 
 console.log('\n\n╔══════════════════════════════════════════════════════════╗');
-console.log('║         🎯 STEPS COM OPTIONS-GRID (Quiz Steps)         ║');
+console.log('║         🎯 STEPS COM "OPTIONS GRID" (Quiz Steps)       ║');
 console.log('╚══════════════════════════════════════════════════════════╝\n');
 
 const stepsWithOptions = [
@@ -42,7 +42,7 @@ const stepsWithOptions = [
     'step-13', 'step-14', 'step-15', 'step-16', 'step-17', 'step-18'
 ];
 
-console.log('📦 Steps que TÊM options-grid (com imageUrl, points, category):');
+console.log('📦 Steps que TÊM "options grid" (com imageUrl, points, category):');
 stepsWithOptions.forEach(stepId => {
     console.log(`   ✓ ${stepId} → http://localhost:5173/quiz-editor/modular?template=quiz21StepsComplete (navegar até ${stepId})`);
 });
@@ -56,7 +56,7 @@ console.log('   http://localhost:5173/quiz-editor/modular?template=quiz21StepsCo
 
 console.log('2. Use o navegador de steps (coluna esquerda ou topo) para ir até a step desejada\n');
 
-console.log('3. Clique no bloco "options-grid" (se existir na step)\n');
+console.log('3. Clique no bloco "options grid" (se existir na step)\n');
 
 console.log('4. Veja o Painel de Propriedades (coluna direita)\n');
 

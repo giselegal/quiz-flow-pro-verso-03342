@@ -104,6 +104,7 @@ class AnalisadorQuiz {
         this.validarFormulario(bloco, etapa);
         break;
       case 'options-grid':
+      case 'options grid':
         this.validarOpcoes(bloco, etapa);
         break;
       case 'result-header-inline':

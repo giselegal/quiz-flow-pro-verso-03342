@@ -58,7 +58,11 @@ async function testarEstruturaSupabase() {
 
             funnel.steps?.forEach((step: any, stepIdx: number) => {
                 step.blocks?.forEach((block: any, blockIdx: number) => {
-                    if (block.type === 'quiz-options' || block.type === 'options-grid') {
+                    if (
+                        block.type === 'quiz-options' ||
+                        block.type === 'options-grid' ||
+                        block.type === 'options grid'
+                    ) {
                         foundCount++;
                         console.log(`\n🎯 Bloco ${foundCount} (Step ${stepIdx + 1}, Block ${blockIdx + 1}):`);
                         console.log('   Tipo:', block.type);

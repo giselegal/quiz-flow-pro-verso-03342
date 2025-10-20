@@ -24,6 +24,10 @@ function saveMaster(master: Master) {
 
 function findSection(stepObj: any, type: string) {
   const arr = Array.isArray(stepObj?.sections) ? stepObj.sections : [];
+  // aceitar ambos padrões para o grid
+  if (type === 'options-grid') {
+    return arr.find((s: any) => s?.type === 'options grid' || s?.type === 'options-grid');
+  }
   return arr.find((s: any) => s?.type === type);
 }
 
