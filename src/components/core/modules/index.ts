@@ -1,6 +1,5 @@
 /**
- * Core barrel para módulos modulares consumidos no runtime.
- * Temporariamente reexporta de editor/modules até migração completa para um namespace neutro.
+ * Core barrel para módulos modulares consumidos no runtime (neutro).
  */
 
-export { ModularResultHeaderBlock } from '@/components/editor/modules';
+export { ModularResultHeaderBlock } from './ModularResultHeaderBlock';
