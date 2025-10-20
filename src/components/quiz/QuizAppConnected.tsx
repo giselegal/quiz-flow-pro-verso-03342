@@ -23,12 +23,14 @@ import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
 import { getEffectiveRequiredSelections } from '@/lib/quiz/requiredSelections';
 import { loadNormalizedStep } from '@/lib/normalizedLoader';
-// Importar componentes modulares mais recentes
-import IntroStep from '@/components/editor/quiz-estilo/ModularIntroStep';
-import QuestionStep from '@/components/editor/quiz-estilo/ModularQuestionStep';
-import StrategicQuestionStep from '@/components/editor/quiz-estilo/ModularStrategicQuestionStep';
-import TransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
-import ResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
+// Importar componentes modulares a partir do módulo compartilhado
+import {
+    ModularIntroStep as IntroStep,
+    ModularQuestionStep as QuestionStep,
+    ModularStrategicQuestionStep as StrategicQuestionStep,
+    ModularTransitionStep as TransitionStep,
+    ModularResultStep as ResultStep
+} from '@/components/quiz-modular';
 
 interface QuizAppConnectedProps {
     funnelId?: string;
@@ -653,8 +655,6 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                     <ResultStep
                         data={currentStepData as any}
                         userProfile={state.userProfile as any}
-                        // Tentativa de incluir pontuações se existirem (fallback silencioso)
-                        scores={(state as any).scores}
                     />
                 );
             default:

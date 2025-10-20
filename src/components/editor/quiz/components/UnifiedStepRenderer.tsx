@@ -15,13 +15,15 @@ import type { QuizScores } from '@/hooks/useQuizState';
 import { useGlobalUI } from '@/hooks/core/useGlobalState';
 
 // ✅ COMPONENTES MODULARES - Usados em EDIÇÃO e PRODUÇÃO
-// Import estático para evitar falhas de fetch de chunks
-import ModularIntroStep from '@/components/editor/quiz-estilo/ModularIntroStep';
-import ModularQuestionStep from '@/components/editor/quiz-estilo/ModularQuestionStep';
-import ModularStrategicQuestionStep from '@/components/editor/quiz-estilo/ModularStrategicQuestionStep';
-import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
-import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
-import ModularOfferStep from '@/components/editor/quiz-estilo/ModularOfferStep';
+// Import estático via módulo compartilhado para unificar editor/produção
+import {
+  ModularIntroStep,
+  ModularQuestionStep,
+  ModularStrategicQuestionStep,
+  ModularTransitionStep,
+  ModularResultStep,
+  ModularOfferStep,
+} from '@/components/quiz-modular';
 
 // ⚠️ LEGADOS - Removidos, agora usamos componentes modulares em produção também
 // const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
