@@ -78,7 +78,7 @@
     },
     {
       "id": "step12-options-grid",
-      "type": "options-grid",
+      "type": "options grid",
       "position": 3,
       "properties": {
         "options": [

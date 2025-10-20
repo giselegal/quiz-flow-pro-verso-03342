@@ -38,7 +38,7 @@
     },
     {
       "id": "options-09",
-      "type": "options-grid",
+      "type": "options grid",
       "order": 4,
       "properties": {
         "questionId": "step-09",

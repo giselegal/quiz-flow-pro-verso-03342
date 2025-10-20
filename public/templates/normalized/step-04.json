@@ -38,7 +38,7 @@
     },
     {
       "id": "options-04",
-      "type": "options-grid",
+      "type": "options grid",
       "order": 4,
       "properties": {
         "questionId": "step-04",
@@ -48,14 +48,46 @@
         "showImages": true,
         "columns": 2,
         "options": [
-          { "id": "natural", "text": "Visual leve, despojado e natural", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp" },
-          { "id": "classico", "text": "Visual clássico e tradicional", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp" },
-          { "id": "contemporaneo", "text": "Visual casual com toque atual", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp" },
-          { "id": "elegante", "text": "Visual refinado e imponente", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp" },
-          { "id": "romantico", "text": "Visual romântico, feminino e delicado", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp" },
-          { "id": "sexy", "text": "Visual sensual, com saia justa e decote", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp" },
-          { "id": "dramatico", "text": "Visual marcante e urbano (jeans + jaqueta)", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp" },
-          { "id": "criativo", "text": "Visual criativo, colorido e ousado", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp" }
+          {
+            "id": "natural",
+            "text": "Visual leve, despojado e natural",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp"
+          },
+          {
+            "id": "classico",
+            "text": "Visual clássico e tradicional",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Visual casual com toque atual",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp"
+          },
+          {
+            "id": "elegante",
+            "text": "Visual refinado e imponente",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp"
+          },
+          {
+            "id": "romantico",
+            "text": "Visual romântico, feminino e delicado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp"
+          },
+          {
+            "id": "sexy",
+            "text": "Visual sensual, com saia justa e decote",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp"
+          },
+          {
+            "id": "dramatico",
+            "text": "Visual marcante e urbano (jeans + jaqueta)",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp"
+          },
+          {
+            "id": "criativo",
+            "text": "Visual criativo, colorido e ousado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp"
+          }
         ]
       }
     },

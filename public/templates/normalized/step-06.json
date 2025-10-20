@@ -38,7 +38,7 @@
     },
     {
       "id": "options-06",
-      "type": "options-grid",
+      "type": "options grid",
       "order": 4,
       "properties": {
         "questionId": "step-06",
@@ -47,14 +47,46 @@
         "showImages": true,
         "columns": 2,
         "options": [
-          { "id": "natural", "text": "Estampas clean, com poucas informações", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp" },
-          { "id": "classico", "text": "Estampas clássicas e atemporais", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp" },
-          { "id": "contemporaneo", "text": "Atemporais, mas que tenham uma pegada atual e moderna", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp" },
-          { "id": "elegante", "text": "Estampas clássicas e atemporais, mas sofisticadas", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp" },
-          { "id": "romantico", "text": "Estampas florais e/ou delicadas como bolinhas, borboletas e corações", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp" },
-          { "id": "sexy", "text": "Estampas de animal print, como onça, zebra e cobra", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp" },
-          { "id": "dramatico", "text": "Estampas geométricas, abstratas e exageradas como grandes poás", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp" },
-          { "id": "criativo", "text": "Estampas diferentes do usual, como africanas, xadrez grandes", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp" }
+          {
+            "id": "natural",
+            "text": "Estampas clean, com poucas informações",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp"
+          },
+          {
+            "id": "classico",
+            "text": "Estampas clássicas e atemporais",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Atemporais, mas que tenham uma pegada atual e moderna",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp"
+          },
+          {
+            "id": "elegante",
+            "text": "Estampas clássicas e atemporais, mas sofisticadas",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp"
+          },
+          {
+            "id": "romantico",
+            "text": "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp"
+          },
+          {
+            "id": "sexy",
+            "text": "Estampas de animal print, como onça, zebra e cobra",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp"
+          },
+          {
+            "id": "dramatico",
+            "text": "Estampas geométricas, abstratas e exageradas como grandes poás",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp"
+          },
+          {
+            "id": "criativo",
+            "text": "Estampas diferentes do usual, como africanas, xadrez grandes",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp"
+          }
         ]
       }
     },
