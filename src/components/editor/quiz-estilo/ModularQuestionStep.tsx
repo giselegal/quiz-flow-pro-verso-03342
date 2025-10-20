@@ -86,7 +86,8 @@ export default function ModularQuestionStep({
         ? `Selecione ${safeData.requiredSelections} opções`
         : 'Selecione uma opção';
 
-    const stepNumber = parseInt(data.questionNumber?.replace(/\\D/g, '') || '1');
+    // Extrai somente dígitos do rótulo da pergunta (ex.: "Pergunta 2" → 2)
+    const stepNumber = parseInt((data.questionNumber?.replace(/\D/g, '') || '1'), 10);
     const progress = Math.round((stepNumber / 21) * 100);
     // Passo atual real do quiz (parse do id ex.: "step-02") para navegação global
     const currentStepReal = React.useMemo(() => {
@@ -229,7 +230,9 @@ export default function ModularQuestionStep({
             'quiz-options',
             'question-navigation',
             'quiz-navigation',
-            'button-inline'
+            'navigation',
+            'button-inline',
+            'CTAButton'
         ]);
         // 1) Tente extrair diretamente blocos relevantes dentre TODOS (inclui filhos)
         const relevant = all.filter(b => relevantTypes.has(String((b as any).type || '').toLowerCase()));
