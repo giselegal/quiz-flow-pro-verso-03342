@@ -150,8 +150,8 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     useEffect(() => {
         let cancelled = false;
         async function load() {
-            // Em preview, não carregar normalized para evitar qualquer fetch
-            if (previewMode) { setNormalizedStep(null); return; }
+            // Em preview ou editor, não carregar normalized para evitar qualquer fetch
+            if (previewMode || editorMode) { setNormalizedStep(null); return; }
             if (rendererMode === 'legacy') { setNormalizedStep(null); return; }
             // Normalizar ID: aceitar 'step-1', '1', '01', etc.
             const raw = state.currentStep || '';
@@ -170,7 +170,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         }
         load();
         return () => { cancelled = true; };
-    }, [state.currentStep, rendererMode, previewMode]);
+    }, [state.currentStep, rendererMode, previewMode, editorMode]);
 
     // ========================= SINCRONIZAR ETAPA ATIVA NO MODO EDITOR/PREVIEW =========================
     // Quando usado dentro do editor ou preview, alinhar a etapa atual com a selecionada no Canvas
