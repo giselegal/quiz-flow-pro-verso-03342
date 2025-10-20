@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { cn } from '@/lib/utils';
-import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import type { Block } from '@/types/editor';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
+import StabilizedCanvas from '@/canvas/StabilizedCanvas';
 
-const LazyScalableQuizRenderer = React.lazy(() =>
-  import('@/components/core/ScalableQuizRenderer').then(mod => ({ default: mod.default }))
-);
+// Removido LazyScalableQuizRenderer: StabilizedCanvas já encapsula preview com lazy interno
 
 export interface CanvasAreaProps {
   className?: string;
@@ -19,7 +17,7 @@ export interface CanvasAreaProps {
   selectedBlockId: string | null;
   actions: any;
   isDragging: boolean;
-  funnelId?: string; // Adicionar funnelId dinâmico
+  funnelId?: string; // funnelId dinâmico
 }
 
 const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -32,10 +30,16 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   selectedBlockId,
   actions,
   isDragging,
-  funnelId = 'quiz21StepsComplete' // Fallback temporário até sistema ser totalmente dinâmico
+  funnelId = 'quiz-estilo-21-steps' // Fallback alinhado ao runtime
 }) => {
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
+
+  // Derivar bloco selecionado
+  const selectedBlock: Block | null = useMemo(() => {
+    if (!Array.isArray(currentStepData) || !selectedBlockId) return null;
+    return (currentStepData as Block[]).find(b => (b as any).id === selectedBlockId) || null;
+  }, [currentStepData, selectedBlockId]);
 
   return (
     <div
@@ -58,32 +62,20 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
         previewDevice === 'desktop' && 'max-w-5xl',
         previewDevice === 'xl' && 'max-w-6xl'
       )}>
-        {mode === 'preview' ? (
-          <LazyBoundary fallback={<div className="py-12 text-center text-sm text-muted-foreground">Carregando preview...</div>}>
-            <LazyScalableQuizRenderer
-              funnelId={funnelId}
-              mode="preview"
-              debugMode={true}
-              className="w-full canvas-area-preview"
-              onStepChange={(step, data) => {
-                actions.setCurrentStep(step);
-                console.log('📍 Canvas area step change:', step, data);
-              }}
-            />
-          </LazyBoundary>
-        ) : (
-          <CanvasDropZone
-            blocks={currentStepData}
-            selectedBlockId={selectedBlockId}
-            onSelectBlock={actions.setSelectedBlockId}
-            onUpdateBlock={(id: string, updates: any) => actions.updateBlock(`step-${safeCurrentStep}`, id, updates)}
-            onDeleteBlock={(id: string) => actions.removeBlock(`step-${safeCurrentStep}`, id)}
-            onDeselectBlocks={() => actions.setSelectedBlockId(null)}
-            className="w-full"
-            isPreviewing={mode !== 'edit'}
-            scopeId={safeCurrentStep}
-          />
-        )}
+        <StabilizedCanvas
+          className="w-full"
+          blocks={currentStepData as Block[]}
+          selectedBlock={selectedBlock}
+          currentStep={safeCurrentStep}
+          onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
+          onUpdateBlock={(blockId: string, updates: Partial<Block>) => actions.updateBlock(`step-${safeCurrentStep}`, blockId, updates)}
+          onDeleteBlock={(blockId: string) => actions.removeBlock(`step-${safeCurrentStep}`, blockId)}
+          isPreviewMode={mode === 'preview'}
+          onStepChange={(step: number) => {
+            actions.setCurrentStep(step);
+          }}
+          funnelId={funnelId}
+        />
       </div>
     </div>
   );
