@@ -5,7 +5,8 @@ import { BlockPropertiesAPI } from '@/api/internal/BlockPropertiesAPI';
 import { masterTemplateService } from '@/services/templates/MasterTemplateService';
 import { QuizStepRouter } from '@/components/router/QuizStepRouter';
 import SpecializedStepAdapter from '@/components/adapters/SpecializedStepAdapter';
-import { getTemplateInfo } from '@/utils/funnelNormalizer';
+// Removido import estático de funnelNormalizer para evitar inclusão no bundle por padrão.
+// O carregamento será dinâmico e condicionado por uma flag (gate) de debug/diagnóstico.
 
 interface ScalableQuizRendererProps {
     funnelId: string;
@@ -54,9 +55,24 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 setIsLoading(true);
                 setError(null);
 
-                // 1. ✅ NOVO: Normalizar funnelId e obter info do template
-                const tpl = await getTemplateInfo(funnelId);
-                setTemplateInfo(tpl);
+                // Gate: só carrega a camada "normalized" quando em modo preview (editor)
+                // ou quando a flag de debug estiver ativada (env/query). Mantém runtime "limpo" por padrão.
+                const envGate = (import.meta as any)?.env?.VITE_RUNTIME_DEBUG_NORMALIZED;
+                const queryGate = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('normalizedDebug') : null;
+                const isGateEnabled = envGate === '1' || envGate === 'true' || queryGate === '1' || queryGate === 'true';
+
+                let tpl: any = null;
+                if (isGateEnabled) {
+                    // Import dinâmico para não incluir normalizador no bundle padrão
+                    const mod = await import('@/utils/funnelNormalizer');
+                    const getTemplateInfo = (mod as any).getTemplateInfo as (fid: string) => Promise<any>;
+                    tpl = await getTemplateInfo(funnelId);
+                    setTemplateInfo(tpl);
+                } else {
+                    // Gate fechado: mantém mínimos para evitar sobrecarga no runtime
+                    tpl = { totalSteps: 1 };
+                    setTemplateInfo(null);
+                }
 
                 if (!tpl || typeof tpl !== 'object') {
                     console.warn('⚠️ Template info retornou estrutura inesperada, usando fallback mínimo');
@@ -99,7 +115,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
         };
 
         initializeFunnel();
-    }, [funnelId]);
+    }, [funnelId, mode]);
 
     // Carrega dados do step atual
     useEffect(() => {

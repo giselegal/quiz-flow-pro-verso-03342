@@ -15,7 +15,18 @@ export async function loadNormalizedStep(stepId: string): Promise<UnifiedStep | 
     // Safety guard: se a flag não estiver ativa, retorna null sem fetch.
     try {
         const gate = (import.meta as any)?.env?.VITE_RUNTIME_DEBUG_NORMALIZED;
-        if (!(gate === '1' || gate === 'true')) {
+        let queryGate = false;
+        try {
+            if (typeof window !== 'undefined') {
+                const sp = new URLSearchParams(window.location.search);
+                const q1 = sp.get('normalizedDebug');
+                const q2 = sp.get('debugNormalized');
+                queryGate = (q1 === '1' || q1 === 'true' || q2 === '1' || q2 === 'true');
+            }
+        } catch {
+            // ignore query parsing errors
+        }
+        if (!((gate === '1' || gate === 'true') || queryGate)) {
             return null;
         }
     } catch {
