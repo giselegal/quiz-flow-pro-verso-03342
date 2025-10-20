@@ -618,10 +618,11 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     return prev; // ✅ NO UPDATE
                 }
 
-                // ✅ PRIORIDADE 2: JSON individual de etapa se existir (public/templates/step-XX.json)
+                // ✅ PRIORIDADE 2: JSON individual de etapa se existir (public/templates/step-XX-v3.json)
                 try {
                     const stepNum = normalizedKey.replace('step-', '');
-                    const individualUrl = `/templates/step-${stepNum}.json`;
+                    // Preferir arquivos v3 públicos existentes para evitar 404
+                    const individualUrl = `/templates/step-${stepNum}-v3.json`;
                     const individualCached = unifiedCache.get<Block[]>(templateKey(`individual:${normalizedKey}`));
                     if (Array.isArray(individualCached) && individualCached.length > 0) {
                         console.log('📝 Aplicando blocos do JSON individual (cache):', individualUrl);

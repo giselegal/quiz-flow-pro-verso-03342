@@ -1,4 +1,4 @@
-import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+import { UniversalBlockRenderer } from '@/components/core/renderers';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';

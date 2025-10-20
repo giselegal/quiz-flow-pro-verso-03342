@@ -11,7 +11,7 @@
  * import BlockRenderer from '@/components/core/BlockRenderer';
  * 
  * // DEPOIS:
- * import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+ * import { UniversalBlockRenderer } from '@/components/core/renderers';
  * ```
  * 
  * Motivo da deprecação:
