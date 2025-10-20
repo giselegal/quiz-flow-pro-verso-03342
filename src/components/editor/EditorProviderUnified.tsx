@@ -29,6 +29,7 @@ import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQ
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
 import { templateLoader, type TemplateLoaderResult } from '@/services/TemplateLoader';
+import { MasterTemplateService } from '@/services/MasterTemplateService';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -465,47 +466,14 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.warn('⚠️ Erro ao ler unifiedCache (step blocks):', e);
             }
 
-            // 🔄 Tentar pré-carregar master JSON público uma vez (usa unifiedCache)
-            // ✅ RETRY COM EXPONENTIAL BACKOFF - Fix para falhas de rede
+            // 🔄 Tentar pré-carregar master JSON usando MasterTemplateService (FASE 2)
+            // ✅ SINGLETON - elimina carregamento duplicado
             let masterBlocks: Block[] | null = null;
             try {
                 if (typeof window !== 'undefined' && window.location) {
-                    if (!masterTemplateRef.current) {
-                        const cachedMaster = unifiedCache.get(masterTemplateKey());
-                        if (cachedMaster) {
-                            masterTemplateRef.current = cachedMaster;
-                        } else {
-                            // ✅ RETRY LOGIC: 3 tentativas com backoff exponencial
-                            let lastError: any = null;
-                            for (let attempt = 0; attempt < 3; attempt++) {
-                                try {
-                                    const resp = await fetch('/templates/quiz21-complete.json', {
-                                        cache: 'force-cache' // Use browser cache when available
-                                    });
-                                    if (resp.ok) {
-                                        masterTemplateRef.current = await resp.json();
-                                        unifiedCache.set(masterTemplateKey(), masterTemplateRef.current);
-                                        console.log(`✅ Master JSON carregado (tentativa ${attempt + 1})`);
-                                        break;
-                                    } else {
-                                        lastError = new Error(`HTTP ${resp.status}`);
-                                        console.warn(`⚠️ Tentativa ${attempt + 1}/3 falhou:`, resp.status);
-                                    }
-                                } catch (err) {
-                                    lastError = err;
-                                    console.warn(`⚠️ Tentativa ${attempt + 1}/3 erro de rede:`, err);
-                                }
-                                // Exponential backoff: 200ms, 400ms, 800ms
-                                if (attempt < 2) {
-                                    await new Promise(resolve => setTimeout(resolve, 200 * Math.pow(2, attempt)));
-                                }
-                            }
-                            if (!masterTemplateRef.current) {
-                                console.error('❌ Falha ao carregar master JSON após 3 tentativas:', lastError);
-                            }
-                        }
-                    }
-                    const master = masterTemplateRef.current;
+                    const master = await MasterTemplateService.getMasterTemplate();
+                    masterTemplateRef.current = master;
+                    
                     const stepConfig = master?.steps?.[normalizedKey];
                     if (stepConfig) {
                         // Hidratar sections com quizSteps antes da conversão
@@ -518,11 +486,11 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         masterBlocks = blockComponentsToBlocks(blockComponents);
                         unifiedCache.set(masterBlocksKey(normalizedKey), masterBlocks);
                         unifiedCache.set(stepBlocksKey(normalizedKey), masterBlocks);
-                        console.log(`📦 Master JSON → ${normalizedKey}: ${masterBlocks.length} blocos`);
+                        console.log(`📦 Master JSON → ${normalizedKey}: ${masterBlocks.length} blocos (via MasterTemplateService)`);
                     }
                 }
             } catch (e) {
-                console.warn('⚠️ Erro ao preparar masterBlocks:', e);
+                console.warn('⚠️ Erro ao preparar masterBlocks via MasterTemplateService:', e);
             }
 
             // ✅ PRIORIDADE 0 (AGUARDADA): JSON normalizado (public/templates/normalized) ou modular estático

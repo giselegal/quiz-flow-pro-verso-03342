@@ -65,6 +65,9 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
         } catch {/* noop */ }
       }
 
+      // ✅ FASE 3: Garantir preservação de options e validações
+      const hasOptions = section.content?.options && Array.isArray(section.content.options);
+      
       return {
         id: section.id || `block-${index}`,
         type: mappedType,
@@ -73,9 +76,18 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
           ...section.style,
           ...section.animation,
           ...(section.properties || {}),
-          _originalType: originalType
+          _originalType: originalType,
+          // ✅ CRITICAL: Preservar options em properties para OptionsGridBlock
+          ...(hasOptions && {
+            options: section.content.options,
+            requiredSelections: section.content.requiredSelections || section.content.minSelections || 1,
+            maxSelections: section.content.maxSelections || 1,
+            multipleSelection: (section.content.requiredSelections || section.content.minSelections || 1) > 1,
+            autoAdvance: section.content.autoAdvance || false,
+            autoAdvanceDelay: section.content.autoAdvanceDelay || 1500
+          })
         },
-        // Gargalo #3: respeitar position do JSON quando presente
+        // Respeitar position do JSON quando presente
         order: (section.position != null ? section.position : index),
         parentId: null
       };

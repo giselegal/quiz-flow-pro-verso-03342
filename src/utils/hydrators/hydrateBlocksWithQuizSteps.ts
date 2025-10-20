@@ -1,16 +1,16 @@
-import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
-import type { Block } from '@/types/editor';
+import { Block } from '@/types/editor';
+import { QUIZ_STEPS, type QuizStepData } from '@/data/quiz/QUIZ_STEPS';
 
 /**
  * Hidrata um array de blocks normalizados (v3) com dados canônicos do QUIZ_STEPS.
  * Garante que textos de pergunta, contadores e opções venham de quizSteps.ts.
  */
 export function hydrateBlocksWithQuizSteps(stepId: string, blocks: Block[] = []): Block[] {
-  const step: QuizStep | undefined = (QUIZ_STEPS as any)[stepId];
+  const step: QuizStepData | undefined = (QUIZ_STEPS as any)[stepId];
   if (!step || !Array.isArray(blocks) || blocks.length === 0) return blocks;
 
   const req = step.requiredSelections;
-  const isStrategic = step.type === 'strategic-question';
+  const isStrategic = false; // QuizStepData não tem type, assumindo false
 
   const mapOption = (opt: any, idx: number) => ({
     id: opt?.id ?? `opt-${idx + 1}`,
@@ -30,16 +30,16 @@ export function hydrateBlocksWithQuizSteps(stepId: string, blocks: Block[] = [])
     const blockType = String(b.type || '').toLowerCase();
     
     if (blockType === 'question-number') {
-      if (step.questionNumber) {
-        (cloned as any).properties.questionNumber = step.questionNumber;
+      if (step.stepNumber) {
+        (cloned as any).properties.questionNumber = step.stepNumber;
       }
     } else if (blockType === 'question-text') {
-      const qt = step.questionText || (step.type === 'intro' ? step.title : undefined);
+      const qt = step.question;
       if (qt) {
         (cloned as any).properties.questionText = qt;
       }
     } else if (blockType === 'question-instructions') {
-      const effectiveReq = req ?? (isStrategic ? 1 : undefined);
+      const effectiveReq = req ?? 1;
       if (typeof effectiveReq === 'number') {
         (cloned as any).properties.requiredSelections = effectiveReq;
       }
@@ -48,12 +48,10 @@ export function hydrateBlocksWithQuizSteps(stepId: string, blocks: Block[] = [])
         if (options.length > 0) {
           (cloned as any).properties.options = options;
         }
-        const effectiveReq = req ?? (isStrategic ? 1 : undefined);
+        const effectiveReq = req ?? 1;
         if (typeof effectiveReq === 'number') {
           (cloned as any).properties.requiredSelections = effectiveReq;
           (cloned as any).properties.multipleSelection = effectiveReq > 1;
-          // Em perguntas estratégicas forçar single selection
-          if (isStrategic) (cloned as any).properties.multipleSelection = false;
         }
         // Assegurar questionId consistente
       if (!(cloned as any).properties.questionId) {

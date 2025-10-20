@@ -6,6 +6,7 @@ import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/utils/placeholder';
+import { QUIZ_STEPS } from '@/data/quiz/QUIZ_STEPS';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import HybridTemplateService from '@/services/HybridTemplateService'; // ✅ USAR SISTEMA HÍBRIDO
 
