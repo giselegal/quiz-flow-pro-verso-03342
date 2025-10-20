@@ -89,7 +89,7 @@ import { useBlocks } from './hooks/useBlocks';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEditableQuizStep, ComponentLibraryItem } from './types';
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
+import { getQuiz21StepsTemplate, getPersonalizedStepTemplate } from '@/templates/imports';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
 import { safeGetTemplateBlocks, blocksToBlockComponents } from '@/utils/templateConverter';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
@@ -585,7 +585,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         const initial: EditorEditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
                             const stepNumber = idx + 1;
                             const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
-                            const blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam);
+                            const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
+                            const blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam);
 
                             // Determinar tipo de step baseado no índice (mesmo padrão usado abaixo)
                             const getStepType = (index: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer' => {
@@ -840,7 +841,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 }
                                 default: {
                                     // fallback genérico preservando blocks antigos se existirem
-                                    const legacyBlocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                                    const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
+                                    const legacyBlocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam) || [];
                                     return legacyBlocks;
                                 }
                             }
@@ -863,11 +865,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         if (quizStep) {
                                             blocks = await buildEnrichedBlocksForStep(stepId, quizStep);
                                         } else {
-                                            blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                                            const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
+                                            blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam) || [];
                                         }
                                     } catch (e) {
                                         console.warn('⚠️ Falha ao construir blocks enriquecidos para', stepId, e);
-                                        blocks = safeGetTemplateBlocks(stepId, QUIZ_STYLE_21_STEPS_TEMPLATE, funnelParam) || [];
+                                        const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
+                                        blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam) || [];
                                     }
                                     return {
                                         id: stepId,

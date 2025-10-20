@@ -92,6 +92,10 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
  */
 export function safeGetTemplateBlocks(stepId: string, template: any, funnelId?: string): BlockComponent[] {
   try {
+    // Verificar e registrar fonte do template (para diagnóstico)
+    const source = template._source || 'unknown';
+    console.log(`🧪 [safeGetTemplateBlocks] Template fonte: ${source} para ${stepId}`);
+    
     const stepTemplate = template[stepId];
 
     if (!stepTemplate) {
@@ -103,7 +107,11 @@ export function safeGetTemplateBlocks(stepId: string, template: any, funnelId?: 
     if (stepTemplate?.sections && Array.isArray(stepTemplate.sections)) {
       console.log(`✅ Template v3.0 detectado para ${stepId}, convertendo ${stepTemplate.sections.length} sections`);
       const blocks = convertTemplateToBlocks(stepTemplate);
-      console.log(`✅ Convertidos ${blocks.length} blocos para ${stepId}`);
+      // Preservar metadados de origem no primeiro bloco (para diagnóstico)
+      if (blocks.length > 0 && source) {
+        (blocks[0] as any)._templateSource = source;
+      }
+      console.log(`✅ Convertidos ${blocks.length} blocos para ${stepId} (fonte: ${source})`);
       return blocks;
     }
 
@@ -111,7 +119,11 @@ export function safeGetTemplateBlocks(stepId: string, template: any, funnelId?: 
     if (Array.isArray(stepTemplate)) {
       console.log(`✅ Template legacy (array) detectado para ${stepId}, ${stepTemplate.length} blocks`);
       const blocks = convertTemplateToBlocks(stepTemplate);
-      console.log(`✅ Convertidos ${blocks.length} blocos para ${stepId}`);
+      // Preservar metadados de origem no primeiro bloco (para diagnóstico)
+      if (blocks.length > 0 && source) {
+        (blocks[0] as any)._templateSource = source;
+      }
+      console.log(`✅ Convertidos ${blocks.length} blocos para ${stepId} (fonte: ${source})`);
       return blocks;
     }
 

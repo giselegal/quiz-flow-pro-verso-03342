@@ -11,6 +11,10 @@ import { Block } from '@/types/editor';
 import { templateCache } from '@/utils/TemplateCache';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { templateKey } from '@/utils/cacheKeys';
+import { getQuiz21StepsTemplate } from '@/templates/imports';
+
+// Nota: Mantendo imports legados como referência, mas não utilizando no runtime
+// Para compatibilidade histórica apenas
 import step12Template from '@/data/modularSteps/step-12.json';
 import step13Template from '@/data/modularSteps/step-13.json';
 import step19Template from '@/data/modularSteps/step-19.json';
@@ -65,6 +69,30 @@ export function loadStepTemplate(stepId: string): Block[] {
     }
   }
 
+  // 1. Primeiro tenta obter do template canônico (TS)
+  const canonicalTemplate = getQuiz21StepsTemplate();
+  if (canonicalTemplate && canonicalTemplate[stepId]) {
+    console.log(`✅ [loadStepTemplate] Usando fonte canônica (TS) para ${stepId}`);
+    const sections = canonicalTemplate[stepId].sections || [];
+    
+    // Converter seções para o formato de blocos esperado
+    const blocks = sections.map((section: any, index: number) => ({
+      id: section.id || `${stepId}-block-${index}`,
+      type: section.type,
+      order: section.position || index,
+      properties: section.properties || section.style || {},
+      content: section.content || {},
+    }));
+
+    // Salvar no cache
+    templateCache.set(cacheKey, blocks);
+    unifiedCache.set(cacheKey, blocks);
+    
+    return blocks;
+  }
+  
+  // 2. Fallback para templates legados (apenas compatibilidade histórica)
+  console.warn(`⚠️ [loadStepTemplate] Fonte canônica não encontrou ${stepId}, usando fallback (deprecado)`);
   const templates: Record<string, StepTemplate> = {
     'step-12': step12Template as StepTemplate,
     'step-13': step13Template as StepTemplate,
