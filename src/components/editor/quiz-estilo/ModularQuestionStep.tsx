@@ -232,7 +232,7 @@ export default function ModularQuestionStep({
             'quiz-navigation',
             'navigation',
             'button-inline',
-            'CTAButton'
+            'ctabutton'
         ]);
         // 1) Tente extrair diretamente blocos relevantes dentre TODOS (inclui filhos)
         const relevant = all.filter(b => relevantTypes.has(String((b as any).type || '').toLowerCase()));

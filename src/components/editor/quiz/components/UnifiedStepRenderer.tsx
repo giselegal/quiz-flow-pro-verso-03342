@@ -16,12 +16,27 @@ import { useGlobalUI } from '@/hooks/core/useGlobalState';
 
 // ✅ COMPONENTES MODULARES - Usados em EDIÇÃO e PRODUÇÃO
 // Import estático para evitar falhas de fetch de chunks
+// Para reduzir risco de erros de chunks e permitir isolar problemas em dev,
+// carregamos alguns componentes modularizados de forma lazy apenas em produção.
+// Intro/Result/Offer costumam ser estáveis e permanecem estáticos.
 import ModularIntroStep from '@/components/editor/quiz-estilo/ModularIntroStep';
-import ModularQuestionStep from '@/components/editor/quiz-estilo/ModularQuestionStep';
-import ModularStrategicQuestionStep from '@/components/editor/quiz-estilo/ModularStrategicQuestionStep';
-import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
 import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
 import ModularOfferStep from '@/components/editor/quiz-estilo/ModularOfferStep';
+
+const isProd = typeof import.meta !== 'undefined' && !!(import.meta as any).env?.PROD;
+
+// Lazy em produção (carrega somente quando necessário)
+const LazyModularQuestionStep = isProd
+  ? lazy(() => import('@/components/editor/quiz-estilo/ModularQuestionStep'))
+  : (null as unknown as React.ComponentType<any>);
+
+const LazyModularStrategicQuestionStep = isProd
+  ? lazy(() => import('@/components/editor/quiz-estilo/ModularStrategicQuestionStep'))
+  : (null as unknown as React.ComponentType<any>);
+
+const LazyModularTransitionStep = isProd
+  ? lazy(() => import('@/components/editor/quiz-estilo/ModularTransitionStep'))
+  : (null as unknown as React.ComponentType<any>);
 
 // ⚠️ LEGADOS - Removidos, agora usamos componentes modulares em produção também
 // const IntroStep = lazy(() => import('@/components/quiz/IntroStep'));
@@ -386,14 +401,14 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         const rawBlocks = (editorState.stepBlocks[stepKey] && editorState.stepBlocks[stepKey].length > 0)
           ? editorState.stepBlocks[stepKey]
           : ((step as any)?.blocks || []);
-        
+
         // Validar se options-grid tem options
         const validatedBlocks = rawBlocks.map((block: any) => {
           const blockType = String(block.type || '').toLowerCase();
           if (blockType === 'options-grid' || blockType === 'quiz-options') {
-            const hasOptions = (block.properties?.options?.length > 0) || 
-                              (block.content?.options?.length > 0);
-            
+            const hasOptions = (block.properties?.options?.length > 0) ||
+              (block.content?.options?.length > 0);
+
             if (!hasOptions && stepData.options && Array.isArray(stepData.options) && stepData.options.length > 0) {
               console.log(`🔧 [UnifiedStepRenderer] Injecting ${stepData.options.length} options into ${block.type}`);
               return {
@@ -409,13 +424,13 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
           }
           return block;
         });
-        
+
         console.log(`🔍 [UnifiedStepRenderer] Passing ${validatedBlocks.length} blocks to ModularQuestionStep`, {
           stepKey,
           hasOptionsGrid: validatedBlocks.some((b: any) => ['options-grid', 'quiz-options'].includes(String(b.type || '').toLowerCase())),
           optionsCount: validatedBlocks.find((b: any) => ['options-grid', 'quiz-options'].includes(String(b.type || '').toLowerCase()))?.properties?.options?.length || 0
         });
-        
+
         return (
           <ModularQuestionStep
             data={stepData as any}
@@ -439,13 +454,13 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
         const rawBlocks = (editorState.stepBlocks[stepKey] && editorState.stepBlocks[stepKey].length > 0)
           ? editorState.stepBlocks[stepKey]
           : ((step as any)?.blocks || []);
-        
+
         const validatedBlocks = rawBlocks.map((block: any) => {
           const blockType = String(block.type || '').toLowerCase();
           if (blockType === 'options-grid' || blockType === 'quiz-options') {
-            const hasOptions = (block.properties?.options?.length > 0) || 
-                              (block.content?.options?.length > 0);
-            
+            const hasOptions = (block.properties?.options?.length > 0) ||
+              (block.content?.options?.length > 0);
+
             if (!hasOptions && stepData.options && Array.isArray(stepData.options) && stepData.options.length > 0) {
               return {
                 ...block,
@@ -460,7 +475,7 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
           }
           return block;
         });
-        
+
         return (
           <ModularStrategicQuestionStep
             data={stepData as any}
