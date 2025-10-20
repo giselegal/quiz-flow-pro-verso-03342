@@ -82,13 +82,34 @@
             "textColor": "#432818",
             "padding": 24
           },
-          "animation": {
-            "type": "fade",
-            "duration": 500,
-            "delay": 0,
-            "easing": "ease-out"
+              "animation": {
+                "type": "fade",
+                "duration": 500,
+                "delay": 0,
+                "easing": "ease-out"
+              }
+            }
+          ],
+          "validation": {
+            "required": ["selectedOptions"],
+            "rules": {
+              "selectedOptions": {
+                "minItems": 3,
+                "maxItems": 3,
+                "errorMessage": "Selecione exatamente 3 opções"
+              }
+            }
+          },
+          "behavior": {
+            "autoAdvance": true
+          },
+          "type": "intro",
+          "redirectPath": "/quiz-estilo/step-01",
+          "navigation": {
+            "nextStep": "step-02"
           }
-        {
+        },
+        "step-02": {
           "templateVersion": "3.0",
           "templateId": "quiz-estilo-21-steps",
           "name": "Quiz de Estilo Pessoal - 21 Etapas",
@@ -665,9 +686,41 @@
               "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
               "sections": [
                 { "type": "question-title", "id": "step-21-title", "content": { "text": "Oferta personalizada" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
-                { "type": "options grid", "id": "step-21-options", "content": { "options": [
-                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
-                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                        "autoAdvanceSteps": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+                        "manualAdvanceSteps": [12,19,20,21],
+                        "autoAdvanceDelay": 1000
+                      },
+                      "validation": {
+                        "rules": {
+                          "step-01": { "type": "input", "required": true, "minLength": 2 },
+                          "step-02-11": { "type": "selection", "required": true, "requiredSelections": 3 },
+                          "step-13-18": { "type": "selection", "required": true, "requiredSelections": 1 }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "validation": {
+                  "required": ["selectedOptions"],
+                  "rules": {
+                    "selectedOptions": {
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "errorMessage": "Selecione exatamente 3 opções"
+                    }
+                  }
+                },
+                "behavior": {
+                  "autoAdvance": true
+                },
+                "type": "intro",
+                "redirectPath": "/quiz-estilo/step-01",
+                "navigation": {
+                  "nextStep": "step-02"
+                }
+              },
+              "step-02": {
+                "templateVersion": "3.0",
                   { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
                   { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
                   { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
