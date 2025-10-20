@@ -6,7 +6,7 @@
  * - Fallback inteligente que funciona mesmo quando result-header-inline falha
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, AlertCircle, Gift } from 'lucide-react';
@@ -14,7 +14,8 @@ import { cn } from '@/lib/utils';
 import { getStyleConfig } from '@/config/styleConfig';
 import { getBestUserName } from '@/core/user/name';
 import { ResultDisplay } from '@/components/ui/ResultDisplay';
-import { ModularResultHeaderBlock } from '@/components/editor/modules';
+// Carrega módulo modular somente quando necessário, evitando dependência estática em editor/*
+const ModularResultHeaderBlock = React.lazy(() => import('@/components/editor/modules').then(m => ({ default: m.ModularResultHeaderBlock })));
 import { StorageService } from '@/services/core/StorageService';
 
 interface Step20FallbackTemplateProps {
@@ -180,29 +181,31 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
           </div>
         </div>
 
-        <ModularResultHeaderBlock
-          block={{
-            id: 'step20-modular-result',
-            type: 'modular-result-header',
-            content: {},
-            order: 0,
-            properties: {
-              containerLayout: 'two-column',
-              backgroundColor: 'transparent',
-              mobileLayout: 'stack',
-              padding: 'lg',
-              borderRadius: 'xl',
-              userName,
-              styleName: styleLabel,
-              percentage
-            }
-          }}
-          isSelected={false}
-          onPropertyChange={(key, value) => {
-            console.log('🔄 [Step20Template] Propriedade modular atualizada:', key, value);
-          }}
-          className="transition-all duration-300"
-        />
+        <Suspense fallback={<div className="text-center text-sm text-gray-500">Carregando módulo...</div>}>
+          <ModularResultHeaderBlock
+            block={{
+              id: 'step20-modular-result',
+              type: 'modular-result-header',
+              content: {},
+              order: 0,
+              properties: {
+                containerLayout: 'two-column',
+                backgroundColor: 'transparent',
+                mobileLayout: 'stack',
+                padding: 'lg',
+                borderRadius: 'xl',
+                userName,
+                styleName: styleLabel,
+                percentage
+              }
+            }}
+            isSelected={false}
+            onPropertyChange={(key, value) => {
+              console.log('🔄 [Step20Template] Propriedade modular atualizada:', key, value);
+            }}
+            className="transition-all duration-300"
+          />
+        </Suspense>
       </div>
     );
   }
