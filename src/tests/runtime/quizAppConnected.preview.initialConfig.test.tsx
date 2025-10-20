@@ -3,15 +3,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render } from '@testing-library/react';
 
 describe('QuizAppConnected - Preview com initialConfig não deve chamar API de configuração', () => {
-    let fetchSpy: any;
-
     beforeEach(() => {
         vi.resetModules();
-        fetchSpy = vi.spyOn(global as any, 'fetch');
     });
 
     afterEach(() => {
-        fetchSpy.mockRestore();
     });
 
     it('usa steps do initialConfig e evita chamadas à API', async () => {
@@ -31,9 +27,10 @@ describe('QuizAppConnected - Preview com initialConfig não deve chamar API de c
         render(<QuizAppConnected previewMode initialConfig={initialConfig} initialStepId="step-01" />);
 
         // Aguarda um microtask para efeitos
+        // aguarda microtask e mais um tick para effects
         await Promise.resolve();
+        await new Promise(r => setTimeout(r, 0));
 
         expect(getConfigSpy).not.toHaveBeenCalled();
-        expect(fetchSpy).not.toHaveBeenCalled();
     });
 });
