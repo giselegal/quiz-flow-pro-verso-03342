@@ -1,33 +1,65 @@
-# 🏗️ ARQUITETURA DO PROJETO
+# 🏗️ ARQUITETURA DO PROJETO (Estado Atual)
 
 ## Visão Geral
-Arquitetura consolidada após Sprint 3 com provider unificado, hooks otimizados e performance <3s LCP.
+Arquitetura consolidada com provider unificado do Editor, renderização modular compartilhada entre Editor/Runtime e fontes canônicas de template. O foco é manter preview e produção alinhados, evitando fetches desnecessários em preview.
 
-## Estrutura de Camadas
+## Camadas
 ```
-UI Components → Hooks → UnifiedAppProvider → Services → Data Layer
+UI (Modular Steps) → Renderers (UnifiedStepRenderer) → Providers/Hooks (EditorProviderUnified, useQuizState, useComponentConfiguration) → Services (Template/Config) → Data Layer (Supabase/Cache)
 ```
 
-## Provider Principal: UnifiedAppProvider
-- Estado centralizado (editor, funnel, UI, validation)
-- Actions memoizadas
-- Seletores otimizados
+## Provider Principal: EditorProviderUnified
+- Arquivo: `src/components/editor/EditorProviderUnified.tsx`
+- Hook de acesso: `useEditor()` (alias: `useOptimizedEditor`), e versão opcional `useEditor({ optional: true })`
+- Estado exposto (resumo):
+	- `stepBlocks: Record<string, Block[]>`
+	- `currentStep: number`
+	- `selectedBlockId: string | null`
+	- `stepValidation: Record<number, boolean>`
+	- `isLoading: boolean`
+	- `databaseMode: 'local' | 'supabase'`
+- Ações chave:
+	- Navegação/seleção: `setCurrentStep(step)`, `setSelectedBlockId(id)`
+	- Blocos: `addBlock(stepKey, block)`, `addBlockAtIndex(stepKey, block, index)`, `removeBlock(stepKey, id)`, `reorderBlocks(stepKey, from, to)`, `updateBlock(stepKey, id, updates)`
+	- Carregamento de etapa: `ensureStepLoaded(step)`
+	- Template padrão: `loadDefaultTemplate()`
+	- Histórico: `undo()`, `redo()`, `canUndo`, `canRedo`
+	- Import/Export: `exportJSON()`, `importJSON(json)`
 
-## Hooks Otimizados
-- `useOptimizedQuizFlow` - Navegação entre steps
-- `useOptimizedBlockOperations` - Operações com blocos
-- `useUnifiedApp` - Acesso ao estado global
+Observação: `ensureStepLoaded(step)` é o contrato para garantir que uma etapa esteja carregada e pronta no canvas/preview.
 
-## Performance
-- LCP: 2800ms (meta <3000ms) ✅
-- Code splitting com lazy loading
-- Memoização estratégica
-- Virtual scrolling para listas
+## Renderização Modular Compartilhada
+- Módulo compartilhado: `src/components/quiz-modular/index.ts`
+- Componentes reexportados (usados tanto no Editor quanto na Produção):
+	- `ModularIntroStep`, `ModularQuestionStep`, `ModularStrategicQuestionStep`, `ModularTransitionStep`, `ModularResultStep`, `ModularOfferStep`
+- Renderização unificada: `UnifiedStepRenderer` (orquestração de passos e adaptação de props)
 
-## Métricas
-- 0 arquivos @ts-nocheck ✅
-- 1 provider unificado (antes 5+) ✅
-- Bundle: 1.5MB (antes 2.5MB) ✅
-- 10 re-renders/min (antes 50) ✅
+## App de Produção/Preview
+- Arquivo: `src/components/quiz/QuizAppConnected.tsx`
+- Aceita `initialConfig` e `previewMode` para operar offline no preview
+- Em preview/editor, prioriza `initialConfig` (ou Registry) e evita chamadas de API de configuração
+- Sincroniza etapa ativa via `initialStepId` quando embutido no Editor
 
-Ver documentação completa em PROVIDERS.md, HOOKS.md e PERFORMANCE.md
+## Configurações de Componentes (sem fetch no Preview)
+- Hook: `src/hooks/useComponentConfiguration.ts`
+- Comportamento:
+	- Cache primeiro (`configurationCache`)
+	- Modo preview: quando `editorMode=true`, carrega `defaultProperties` da definição e NÃO chama `getConfiguration()` (nem `fetch`)
+	- Produção: consulta armazenamento real (Supabase) via `ConfigurationAPI`
+
+## Fonte Canônica de Template
+- Arquivo: `src/templates/imports.ts`
+- Garantias testadas em: `src/tests/templates/canonicalSource.test.ts`
+- Serviços usam `HybridTemplateService` com `_source = 'ts'`
+
+## Performance (meta e práticas)
+- Evitar fetch em preview (testado automaticamente)
+- Code splitting e memoização nos steps modulares
+- Cache por camada (Templates/Config)
+
+## Métricas e Qualidade
+- Nenhum `@ts-nocheck` novo
+- Provider de Editor unificado em uso
+- Testes: cobertura para fonte canônica e preview sem fetch
+
+Para detalhes operacionais, ver também: UNIFIED_QUIZ_ARCHITECTURE.md.
