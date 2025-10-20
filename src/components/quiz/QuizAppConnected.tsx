@@ -279,7 +279,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         funnelId,
         realTimeSync: true,
         autoSave: editorMode,
-        editorMode // 🎨 Modo editor: carregamento instantâneo
+        editorMode: editorMode || previewMode // 🎨 Em preview, usar caminho offline (sem fetch)
     });
 
     // ============================================================================
