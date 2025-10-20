@@ -30,6 +30,8 @@ export { useQuizState } from './useQuizState';
 export { useQuizNavigation } from './useQuizNavigation';
 export { useQuizValidation } from './useQuizValidation';
 export { useQuizAnalytics } from './useQuizAnalytics';
+export { useQuizUserProgress } from './useQuizUserProgress';
+export { useUnifiedQuizNavigation } from './useUnifiedQuizNavigation';
 
 // 🚧 DEPRECATED: Legacy editor hooks (use useUnifiedEditor instead)
 // Consolidation em andamento; exports não utilizados foram removidos
@@ -79,10 +81,10 @@ export { useUtmParameters } from './useUtmParameters';
 
 // 📊 Updated statistics (after consolidation)
 export const HOOKS_STATS = {
-  total: 25, // Reduced from 48 through consolidation
+  total: 27, // Increased from 25 with two new unified hooks
   byCategory: {
     core: 1, // useUnifiedEditor (replaces 8 editor hooks)
-    quiz: 12, // Streamlined quiz hooks
+    quiz: 14, // Streamlined quiz hooks with new unified progress and navigation
     performance: 2, // Unified performance system
     utility: 8, // Essential utilities only
     responsive: 2,

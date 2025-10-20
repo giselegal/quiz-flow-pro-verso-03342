@@ -7,7 +7,7 @@ import type { Block } from '@/types/editor';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { cn } from '@/lib/utils';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { getQuiz21StepsTemplate } from '@/templates/imports';
 
 interface ModularIntroStepProps {
     data?: any; // legacy fallback
@@ -68,7 +68,7 @@ export default function ModularIntroStep({
         const m = String(data?.id || '').match(/step-\d{2}/);
         const stepKey = m ? m[0] : 'step-01';
         try {
-            const comps = safeGetTemplateBlocks(stepKey, QUIZ_STYLE_21_STEPS_TEMPLATE);
+            const comps = safeGetTemplateBlocks(stepKey, getQuiz21StepsTemplate());
             const asBlocks = blockComponentsToBlocks(comps);
             if (asBlocks.length) setFallbackBlocks(asBlocks as any);
         } catch (e) {

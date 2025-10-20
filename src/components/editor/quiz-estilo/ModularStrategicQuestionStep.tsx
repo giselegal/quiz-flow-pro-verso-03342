@@ -7,7 +7,7 @@ import type { Block } from '@/types/editor';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { cn } from '@/lib/utils';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { getQuiz21StepsTemplate } from '@/templates/imports';
 
 interface ModularStrategicQuestionStepProps {
     data: any;
@@ -89,7 +89,9 @@ export default function ModularStrategicQuestionStep({
         const m = String(data?.id || '').match(/step-\d{2}/);
         const stepKey = m ? m[0] : 'step-13';
         try {
-            const comps = safeGetTemplateBlocks(stepKey, QUIZ_STYLE_21_STEPS_TEMPLATE);
+            // Usar o método canônico para obter o template
+            const template = getQuiz21StepsTemplate();
+            const comps = safeGetTemplateBlocks(stepKey, template);
             const asBlocks = blockComponentsToBlocks(comps);
             if (asBlocks.length) setFallbackBlocks(asBlocks as any);
         } catch { }

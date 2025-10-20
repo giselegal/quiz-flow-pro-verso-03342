@@ -6,8 +6,8 @@ import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/utils/placeholder';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import HybridTemplateService from '@/services/HybridTemplateService'; // ✅ USAR SISTEMA HÍBRIDO
+import { getQuiz21StepsTemplate } from '@/templates/imports';
+import { useStepConfig } from '@/hooks/useStepConfig'; // ✅ USAR HOOK DE CONFIGURAÇÃO
 
 interface Option {
   id: string;
@@ -245,7 +245,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       Number.isFinite(stepNum) && stepNum >= 1
     ) {
       const key = `step-${stepNum}`;
-      const canonicalStep = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[key] || [];
+      const canonicalTemplate = getQuiz21StepsTemplate();
+      const canonicalStep = (canonicalTemplate as any)[key] || [];
       const canonicalGrid = canonicalStep.find((b: any) => (b?.type || '').toLowerCase() === 'options-grid');
       const canonicalOptions = canonicalGrid?.content?.options;
       if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
@@ -270,7 +271,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       if (runtimeStep != null && Number.isFinite(Number(runtimeStep)) && Number(runtimeStep) >= 1) {
         const key = `step-${runtimeStep}`;
-        const canonicalStep = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[key] || [];
+        const canonicalTemplate = getQuiz21StepsTemplate();
+        const canonicalStep = (canonicalTemplate as any)[key] || [];
         const canonicalGrid = canonicalStep.find((b: any) => (b?.type || '').toLowerCase() === 'options-grid');
         const canonicalOptions = canonicalGrid?.content?.options;
         if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
@@ -307,32 +309,102 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   }, [isPreviewMode, multipleSelection, previewSelections, selectedOptions, block?.id, currentStepFromEditor]);
 
-  // 🎯 CONFIGURAÇÃO HÍBRIDA POR ETAPA (JSON + OVERRIDE + FALLBACK)
+  // 🎯 CONFIGURAÇÃO DE STEP USANDO O HOOK
+  const { config: stepConfig, isLoading: stepConfigLoading } = useStepConfig({
+    funnelId: 'quiz21steps', // Usando o ID padrão
+    stepNumber: currentStepFromEditor || 1 // Usar 1 como fallback se for null
+  });
+
+  // 🎯 CONFIGURAÇÃO HÍBRIDA POR ETAPA (Agora usando o hook)
   const getStepBehavior = React.useCallback(async (stepNumber: number) => {
     try {
-      const stepConfig = await HybridTemplateService.getStepConfig(stepNumber);
+      // Verificar se temos a configuração do step atual pelo hook
+      if (stepConfig && stepConfig.metadata.stepNumber === stepNumber) {
+        console.log(`✅ OptionsGridBlock: Usando configuração do hook para step ${stepNumber}`, stepConfig);
 
-      console.log(`✅ OptionsGridBlock: Configuração híbrida para step ${stepNumber}:`, {
-        source: 'HybridTemplateService',
-        autoAdvance: stepConfig.behavior.autoAdvance,
-        autoAdvanceDelay: stepConfig.behavior.autoAdvanceDelay,
-        requiredSelections: stepConfig.validation.requiredSelections,
-      });
+        return {
+          requiresValidInput: stepConfig.validation.type === 'input' && stepConfig.validation.required,
+          requiresValidSelection: stepConfig.validation.type === 'selection' && stepConfig.validation.required,
+          requiredSelections: stepConfig.validation.requiredSelections || 1,
+          maxSelections: stepConfig.validation.maxSelections || 1,
+          autoAdvance: stepConfig.behavior.autoAdvance,
+          autoAdvanceDelay: stepConfig.behavior.autoAdvanceDelay || 1000,
+          validationMessage: stepConfig.validation.message,
+          allowBack: stepConfig.behavior.allowBack,
+          showProgress: stepConfig.behavior.showProgress
+        };
+      }
+
+      // Se o hook não tiver a config para este step específico ou não carregou ainda,
+      // usar o template canônico diretamente
+      const template = getQuiz21StepsTemplate();
+      const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
+      const stepTemplate = (template as any)[stepId];
+
+      // Se não tiver o step no template, retornar fallback
+      if (!stepTemplate) {
+        console.warn(`⚠️ OptionsGridBlock: Step ${stepId} não encontrado no template`);
+        return getHardcodedStepBehavior(stepNumber);
+      }
+
+      // Determinar o tipo de step baseado no índice
+      const getStepType = (index: number) => {
+        if (index === 1) return 'intro';
+        if (index >= 2 && index <= 11) return 'question';
+        if (index === 12) return 'transition';
+        if (index >= 13 && index <= 18) return 'strategic-question';
+        if (index === 19) return 'transition-result';
+        if (index === 20) return 'result';
+        return 'offer'; // index === 21
+      };
+
+      // Encontrar grids de opções para determinar validação
+      const optionsGrid = stepTemplate.find((block: any) =>
+        block.type === 'options-grid' ||
+        block.type.includes('options')
+      );
+
+      // Construir configuração manual
+      const tempConfig = {
+        metadata: {
+          type: getStepType(stepNumber) as any,
+          stepNumber
+        },
+        behavior: {
+          autoAdvance: stepNumber >= 2 && stepNumber <= 11, // Etapas 2-11 têm auto-avanço
+          autoAdvanceDelay: 1500,
+          showProgress: true,
+          allowBack: stepNumber > 1 // Não permitir voltar na primeira etapa
+        },
+        validation: {
+          type: optionsGrid ? 'selection' : 'none',
+          required: Boolean(optionsGrid),
+          requiredSelections: optionsGrid?.properties?.requiredSelections || 1,
+          minSelections: optionsGrid?.properties?.minSelections || 1,
+          maxSelections: optionsGrid?.properties?.maxSelections || 1,
+          message: 'Por favor, complete esta etapa para continuar'
+        }
+      };
+
+      console.log(`🔄 OptionsGridBlock: Configuração extraída do template para step ${stepNumber}:`, tempConfig);
 
       return {
-        requiresValidInput: stepConfig.validation.type === 'input' && stepConfig.validation.required,
-        requiresValidSelection: stepConfig.validation.type === 'selection' && stepConfig.validation.required,
-        autoAdvance: stepConfig.behavior.autoAdvance,
-        autoAdvanceDelay: stepConfig.behavior.autoAdvanceDelay || 1000,
-        validationMessage: stepConfig.validation.message,
+        requiresValidInput: tempConfig.validation.type === 'input' && tempConfig.validation.required,
+        requiresValidSelection: tempConfig.validation.type === 'selection' && tempConfig.validation.required,
+        requiredSelections: tempConfig.validation.requiredSelections || 1,
+        maxSelections: tempConfig.validation.maxSelections || 1,
+        autoAdvance: tempConfig.behavior.autoAdvance,
+        autoAdvanceDelay: tempConfig.behavior.autoAdvanceDelay || 1000,
+        validationMessage: tempConfig.validation.message,
+        allowBack: tempConfig.behavior.allowBack,
+        showProgress: tempConfig.behavior.showProgress
       };
     } catch (error) {
       console.error(`❌ OptionsGridBlock: Erro ao carregar configuração para step ${stepNumber}:`, error);
-
       // Fallback para regras hardcoded
       return getHardcodedStepBehavior(stepNumber);
     }
-  }, []);
+  }, [stepConfig]);
 
   // 🔄 Fallback com regras hardcoded para garantir funcionamento
   const getHardcodedStepBehavior = (stepNumber: number) => {
@@ -842,7 +914,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             };
 
           // 🎯 Hover do ModularQuestionStep
-          const hoverStyles: React.CSSProperties = { 
+          const hoverStyles: React.CSSProperties = {
             borderColor: '#deac6d',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
           };

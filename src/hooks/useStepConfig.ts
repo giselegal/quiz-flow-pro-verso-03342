@@ -6,9 +6,41 @@
 
 import { useState, useEffect } from 'react';
 import { masterTemplateService } from '@/services/templates/MasterTemplateService';
+import { getQuiz21StepsTemplate } from '@/templates/imports';
 
-// TODO: Migrar para MasterTemplateService quando interface estiver pronta
-type ScalableStepConfig = any;
+// Interface para configuração de step (adaptada do HybridTemplateService)
+interface StepConfig {
+    metadata: {
+        type: 'intro' | 'question' | 'strategic-question' | 'transition' | 'result' | 'offer';
+        stepNumber: number;
+    };
+    behavior: {
+        autoAdvance: boolean;
+        autoAdvanceDelay: number;
+        showProgress: boolean;
+        allowBack: boolean;
+    };
+    validation: {
+        type: 'input' | 'selection' | 'none';
+        required: boolean;
+        requiredSelections?: number;
+        minSelections?: number;
+        maxSelections?: number;
+        message: string;
+        // Propriedades adicionais para validação de input
+        minLength?: number;
+        maxLength?: number;
+        pattern?: string;
+    };
+    ui: {
+        theme: string;
+    };
+    analytics: {
+        trackEvents: boolean;
+        eventName?: string;
+        customProperties?: Record<string, any>;
+    };
+}
 
 export interface UseStepConfigOptions {
     funnelId: string;
@@ -25,7 +57,7 @@ export const useStepConfig = ({
     onStepValid,
     onAutoAdvance
 }: UseStepConfigOptions) => {
-    const [config, setConfig] = useState<ScalableStepConfig | null>(null);
+    const [config, setConfig] = useState<StepConfig | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isValid, setIsValid] = useState(false);
     const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
@@ -38,8 +70,66 @@ export const useStepConfig = ({
         const loadConfig = async () => {
             try {
                 setIsLoading(true);
-                // TODO: Implementar getStepConfig no masterTemplateService
-                const stepConfig = null; // await masterTemplateService.getStepConfig(funnelId, stepNumber);
+                
+                // Obter template canônico
+                const template = getQuiz21StepsTemplate();
+                const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
+                const stepTemplate = (template as any)[stepId];
+                
+                // Se não tiver o step no template, retornar null
+                if (!stepTemplate) {
+                    if (mounted) {
+                        setConfig(null);
+                        console.warn(`⚠️ useStepConfig: Step ${stepId} não encontrado no template`);
+                    }
+                    return;
+                }
+                
+                // Determinar o tipo de step baseado no índice
+                const getStepType = (index: number) => {
+                    if (index === 1) return 'intro';
+                    if (index >= 2 && index <= 11) return 'question';
+                    if (index === 12) return 'transition';
+                    if (index >= 13 && index <= 18) return 'strategic-question';
+                    if (index === 19) return 'transition-result';
+                    if (index === 20) return 'result';
+                    return 'offer'; // index === 21
+                };
+                
+                // Encontrar grids de opções para determinar validação
+                const optionsGrid = stepTemplate.find((block: any) => 
+                    block.type === 'options-grid' || 
+                    block.type.includes('options')
+                );
+                
+                // Construir configuração do step
+                const stepConfig: StepConfig = {
+                    metadata: {
+                        type: getStepType(stepNumber) as any,
+                        stepNumber
+                    },
+                    behavior: {
+                        autoAdvance: stepNumber >= 2 && stepNumber <= 11, // Etapas 2-11 têm auto-avanço
+                        autoAdvanceDelay: 1500,
+                        showProgress: true,
+                        allowBack: stepNumber > 1 // Não permitir voltar na primeira etapa
+                    },
+                    validation: {
+                        type: optionsGrid ? 'selection' : 'none',
+                        required: Boolean(optionsGrid),
+                        requiredSelections: optionsGrid?.properties?.requiredSelections || 1,
+                        minSelections: optionsGrid?.properties?.minSelections || 1,
+                        maxSelections: optionsGrid?.properties?.maxSelections || 1,
+                        message: 'Por favor, complete esta etapa para continuar'
+                    },
+                    ui: {
+                        theme: 'default'
+                    },
+                    analytics: {
+                        trackEvents: true,
+                        eventName: `step_${stepNumber}_view`,
+                    }
+                };
 
                 if (mounted) {
                     setConfig(stepConfig);
@@ -172,7 +262,7 @@ export const useStepConfig = ({
         setIsValid(false);
     };
 
-    const saveOverride = async (changes: Partial<ScalableStepConfig>) => {
+    const saveOverride = async (changes: Partial<StepConfig>) => {
         // TODO: Implementar saveStepOverride no masterTemplateService
         console.warn('saveOverride: Funcionalidade temporariamente desabilitada');
         // await masterTemplateService.saveStepOverride(funnelId, stepNumber, changes);
