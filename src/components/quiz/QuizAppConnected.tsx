@@ -14,10 +14,12 @@ import { useComponentConfiguration } from '../../hooks/useComponentConfiguration
 
 
 // Sistema unificado de renderização (Fase 3)
-import { UnifiedStepRenderer, registerProductionSteps } from '@/components/editor/unified';
+import { UnifiedStepRenderer, registerProductionSteps } from '@/components/core/unified';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, useBlockRegistry, useBlockRegistryOptional } from '@/runtime/quiz/blocks/BlockRegistry';
 import sanitizeHtml from '@/utils/sanitizeHtml';
-import { EditorProviderUnified, useEditorOptional as useUnifiedEditorOptional } from '@/components/editor/EditorProviderUnified';
+import React, { Suspense } from 'react';
+// Import lazy para evitar import estático de editor/* no runtime de produção
+const EditorProviderUnifiedLazy = React.lazy(() => import('@/components/editor-bridge/EditorProviderUnified').then(m => ({ default: m.EditorProviderUnified })));
 
 import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
@@ -791,21 +793,20 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                             <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
                                 <div className="max-w-6xl mx-auto px-4 py-8">
                                     <UnifiedStepRenderer
-                                        stepId={currentStepId}
-                                        mode="production"
-                                        stepProps={unifiedStepProps}
-                                        quizState={unifiedQuizState}
-                                        onStepUpdate={handleStepUpdate}
-                                        onNext={handleNext}
-                                        onNameSubmit={(name: string) => {
-                                            setUserName(name);
-                                            nextStep();
+                                        step={{ id: currentStepId, blocks: (currentStepData as any).blocks || [], ...unifiedStepProps }}
+                                        mode="preview"
+                                        sessionData={{
+                                            userName: unifiedQuizState.userName,
+                                            // mapear respostas do formato antigo para chaves answers_step-XX
+                                            ...Object.fromEntries(Object.entries(unifiedQuizState.answers).map(([k, v]) => [`answers_${k}`, v]))
                                         }}
-                                        onPrevious={() => {
-                                            // (Opcional) implementar voltar no futuro
-                                            console.log('Navegar para step anterior (não implementado)');
+                                        onUpdateSessionData={(key, value) => {
+                                            if (key === 'userName' && typeof value === 'string') setUserName(value);
+                                            if (key.startsWith('answers_')) {
+                                                const sid = key.replace('answers_', '');
+                                                if (Array.isArray(value)) addAnswer(sid, value);
+                                            }
                                         }}
-                                        className="unified-production-step"
                                     />
                                 </div>
                             </div>
@@ -837,13 +838,14 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         </BlockRegistryProvider>
     );
 
-    // Permitir edição inline: envolver com EditorProviderUnified quando editorMode=true e não houver um já presente
-    const maybeEditorContext = useUnifiedEditorOptional?.();
-    if (editorMode && !maybeEditorContext) {
+    // Permitir edição inline: envolver com EditorProviderUnified quando editorMode=true (lazy, sem import estático)
+    if (editorMode) {
         return (
-            <EditorProviderUnified>
-                {WithBlocks}
-            </EditorProviderUnified>
+            <Suspense fallback={WithBlocks}>
+                <EditorProviderUnifiedLazy>
+                    {WithBlocks}
+                </EditorProviderUnifiedLazy>
+            </Suspense>
         );
     }
 

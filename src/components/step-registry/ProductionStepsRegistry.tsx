@@ -1,3 +1,4 @@
+
 /**
  * 🎯 ADAPTADORES DE PRODUÇÃO PARA STEPREGISTRY - FASE 3
  * 

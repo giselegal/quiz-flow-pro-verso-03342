@@ -1,9 +1,7 @@
-// Módulo compartilhado para componentes modulares do quiz (produção e editor)
-// Reexporta os componentes modularizados atualmente localizados em editor/quiz-estilo
-
-export { default as ModularIntroStep } from '@/components/editor/quiz-estilo/ModularIntroStep';
-export { default as ModularQuestionStep } from '@/components/editor/quiz-estilo/ModularQuestionStep';
-export { default as ModularStrategicQuestionStep } from '@/components/editor/quiz-estilo/ModularStrategicQuestionStep';
-export { default as ModularTransitionStep } from '@/components/editor/quiz-estilo/ModularTransitionStep';
-export { default as ModularResultStep } from '@/components/editor/quiz-estilo/ModularResultStep';
-export { default as ModularOfferStep } from '@/components/editor/quiz-estilo/ModularOfferStep';
+// Módulo compartilhado (neutro) reexportando wrappers que fazem lazy-load dos módulos do editor
+export { ModularIntroStep } from '@/components/core/quiz-modular';
+export { ModularQuestionStep } from '@/components/core/quiz-modular';
+export { ModularStrategicQuestionStep } from '@/components/core/quiz-modular';
+export { ModularTransitionStep } from '@/components/core/quiz-modular';
+export { ModularResultStep } from '@/components/core/quiz-modular';
+export { ModularOfferStep } from '@/components/core/quiz-modular';
