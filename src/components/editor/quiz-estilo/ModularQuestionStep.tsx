@@ -202,7 +202,7 @@ export default function ModularQuestionStep({
     // ✅ CORREÇÃO CRÍTICA: Remover carregamento duplicado de fallbackBlocks
     // Agora os blocos vêm APENAS via props, validados no UnifiedStepRenderer
     const hasRealBlocks = Array.isArray(blocks) && blocks.length > 0;
-    
+
     if (import.meta?.env?.DEV) {
         console.log('🔎 [ModularQuestionStep] Rendering with blocks', {
             stepId,
@@ -216,8 +216,20 @@ export default function ModularQuestionStep({
         const all = (blocks as Block[]);
         // Conjunto de tipos relevantes para perguntas (inclui options-grid e navegação)
         const relevantTypes = new Set([
-            'question-progress', 'question-number', 'question-text', 'question-instructions',
-            'options-grid', 'quiz-options', 'question-navigation', 'quiz-navigation', 'button-inline'
+            'question-progress',
+            'question-number',
+            'question-text',
+            'question-title',
+            'heading-inline',
+            'text-inline',
+            'question-hero',
+            'quiz-question-header',
+            'question-instructions',
+            'options-grid',
+            'quiz-options',
+            'question-navigation',
+            'quiz-navigation',
+            'button-inline'
         ]);
         // 1) Tente extrair diretamente blocos relevantes dentre TODOS (inclui filhos)
         const relevant = all.filter(b => relevantTypes.has(String((b as any).type || '').toLowerCase()));
