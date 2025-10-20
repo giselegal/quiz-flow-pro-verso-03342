@@ -382,13 +382,44 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
 
       case 'question': {
-        // ✅ MODULAR para EDIÇÃO e PRODUÇÃO
+        // ✅ CORREÇÃO CRÍTICA: Validar e injetar options antes de passar para ModularQuestionStep
+        const rawBlocks = (editorState.stepBlocks[stepKey] && editorState.stepBlocks[stepKey].length > 0)
+          ? editorState.stepBlocks[stepKey]
+          : ((step as any)?.blocks || []);
+        
+        // Validar se options-grid tem options
+        const validatedBlocks = rawBlocks.map((block: any) => {
+          const blockType = String(block.type || '').toLowerCase();
+          if (blockType === 'options-grid' || blockType === 'quiz-options') {
+            const hasOptions = (block.properties?.options?.length > 0) || 
+                              (block.content?.options?.length > 0);
+            
+            if (!hasOptions && stepData.options && Array.isArray(stepData.options) && stepData.options.length > 0) {
+              console.log(`🔧 [UnifiedStepRenderer] Injecting ${stepData.options.length} options into ${block.type}`);
+              return {
+                ...block,
+                properties: {
+                  ...block.properties,
+                  options: stepData.options,
+                  requiredSelections: stepData.requiredSelections || 1,
+                  multipleSelection: (stepData.requiredSelections || 1) > 1
+                }
+              };
+            }
+          }
+          return block;
+        });
+        
+        console.log(`🔍 [UnifiedStepRenderer] Passing ${validatedBlocks.length} blocks to ModularQuestionStep`, {
+          stepKey,
+          hasOptionsGrid: validatedBlocks.some((b: any) => ['options-grid', 'quiz-options'].includes(String(b.type || '').toLowerCase())),
+          optionsCount: validatedBlocks.find((b: any) => ['options-grid', 'quiz-options'].includes(String(b.type || '').toLowerCase()))?.properties?.options?.length || 0
+        });
+        
         return (
           <ModularQuestionStep
             data={stepData as any}
-            blocks={(editorState.stepBlocks[stepKey] && editorState.stepBlocks[stepKey].length > 0)
-              ? editorState.stepBlocks[stepKey]
-              : ((step as any)?.blocks || [])}
+            blocks={validatedBlocks}
             isEditable={isEditMode}
             currentAnswers={sessionData[`answers_${step.id}`] || []}
             onAnswersChange={(answers: string[]) => {
@@ -404,13 +435,36 @@ const UnifiedStepRendererComponent: React.FC<UnifiedStepRendererProps> = ({
       }
 
       case 'strategic-question': {
-        // ✅ MODULAR para EDIÇÃO e PRODUÇÃO
+        // ✅ CORREÇÃO: Validar e injetar options para strategic questions também
+        const rawBlocks = (editorState.stepBlocks[stepKey] && editorState.stepBlocks[stepKey].length > 0)
+          ? editorState.stepBlocks[stepKey]
+          : ((step as any)?.blocks || []);
+        
+        const validatedBlocks = rawBlocks.map((block: any) => {
+          const blockType = String(block.type || '').toLowerCase();
+          if (blockType === 'options-grid' || blockType === 'quiz-options') {
+            const hasOptions = (block.properties?.options?.length > 0) || 
+                              (block.content?.options?.length > 0);
+            
+            if (!hasOptions && stepData.options && Array.isArray(stepData.options) && stepData.options.length > 0) {
+              return {
+                ...block,
+                properties: {
+                  ...block.properties,
+                  options: stepData.options,
+                  requiredSelections: 1,
+                  multipleSelection: false
+                }
+              };
+            }
+          }
+          return block;
+        });
+        
         return (
           <ModularStrategicQuestionStep
             data={stepData as any}
-            blocks={(editorState.stepBlocks[stepKey] && editorState.stepBlocks[stepKey].length > 0)
-              ? editorState.stepBlocks[stepKey]
-              : ((step as any)?.blocks || [])}
+            blocks={validatedBlocks}
             isEditable={isEditMode}
             currentAnswer={sessionData[`answer_${step.id}`] || ''}
             onAnswerChange={(answer: string) => {

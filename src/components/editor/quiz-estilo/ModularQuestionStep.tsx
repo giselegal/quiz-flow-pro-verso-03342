@@ -199,50 +199,21 @@ export default function ModularQuestionStep({
     // ===== DnD - Reordenação dos blocos (sem o progress) =====
     const stepId = data?.id || 'step-question';
 
-    // Fallback: carregar blocos do template v3 quando props.blocks vier vazio
-    const [fallbackBlocks, setFallbackBlocks] = React.useState<Block[]>([]);
-    const effectiveBlocks = React.useMemo(() => (Array.isArray(blocks) && blocks.length > 0) ? blocks : fallbackBlocks, [blocks, fallbackBlocks]);
-    React.useEffect(() => {
-        if (Array.isArray(blocks) && blocks.length > 0) return;
-        const match = String(data?.id || '').match(/step-\d{2}/);
-        const stepKey = match ? match[0] : 'step-02';
-        const funnelId = data?.funnelId || data?.funnel_id || undefined;
-        let disposed = false;
-
-        const applyBlocks = (components: BlockComponent[] | undefined | null) => {
-            if (disposed || !components || components.length === 0) return;
-            const asBlocks = blockComponentsToBlocks(components);
-            if (asBlocks.length > 0) {
-                setFallbackBlocks(asBlocks);
-            }
-        };
-
-        try {
-            const sync = templateLoader.getTemplateSync(stepKey, { funnelId });
-            if (sync?.blocks?.length) {
-                applyBlocks(sync.blocks);
-            } else {
-                const staticComponents = convertTemplateToBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey]);
-                applyBlocks(staticComponents);
-            }
-        } catch { /* noop */ }
-
-        templateLoader.getTemplate(stepKey, { funnelId }).then(result => {
-            applyBlocks(result.blocks);
-        }).catch(() => {
-            const staticComponents = convertTemplateToBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE[stepKey]);
-            applyBlocks(staticComponents);
+    // ✅ CORREÇÃO CRÍTICA: Remover carregamento duplicado de fallbackBlocks
+    // Agora os blocos vêm APENAS via props, validados no UnifiedStepRenderer
+    const hasRealBlocks = Array.isArray(blocks) && blocks.length > 0;
+    
+    if (import.meta?.env?.DEV) {
+        console.log('🔎 [ModularQuestionStep] Rendering with blocks', {
+            stepId,
+            blocksCount: blocks?.length || 0,
+            hasRealBlocks,
+            blockTypes: blocks?.map((b: any) => b.type)
         });
-
-        return () => {
-            disposed = true;
-        };
-    }, [data?.id, blocks, data?.funnelId, data?.funnel_id]);
-
-    const hasRealBlocks = Array.isArray(effectiveBlocks) && effectiveBlocks.length > 0;
+    }
     const topLevelBlocks: Block[] = React.useMemo(() => {
         if (!hasRealBlocks) return [];
-        const all = (effectiveBlocks as Block[]);
+        const all = (blocks as Block[]);
         // Conjunto de tipos relevantes para perguntas (inclui options-grid e navegação)
         const relevantTypes = new Set([
             'question-progress', 'question-number', 'question-text', 'question-instructions',
@@ -273,7 +244,7 @@ export default function ModularQuestionStep({
             } catch { /* noop */ }
         }
         return list.sort((a, b) => (a.order || 0) - (b.order || 0));
-    }, [effectiveBlocks, hasRealBlocks]);
+    }, [blocks, hasRealBlocks]);
     const DEFAULT_ORDER = ['question-number', 'question-text', 'question-instructions', 'question-options', 'question-button'];
     const initialOrder: string[] = (data?.metadata?.blockOrder && Array.isArray(data.metadata.blockOrder))
         ? data.metadata.blockOrder

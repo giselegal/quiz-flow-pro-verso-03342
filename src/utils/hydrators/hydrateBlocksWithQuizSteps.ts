@@ -27,28 +27,23 @@ export function hydrateBlocksWithQuizSteps(stepId: string, blocks: Block[] = [])
       properties: { ...p },
     } as Block;
 
-    switch (b.type) {
-      case 'question-number': {
-        if (step.questionNumber) {
-          (cloned as any).properties.questionNumber = step.questionNumber;
-        }
-        break;
+    const blockType = String(b.type || '').toLowerCase();
+    
+    if (blockType === 'question-number') {
+      if (step.questionNumber) {
+        (cloned as any).properties.questionNumber = step.questionNumber;
       }
-      case 'question-text': {
-        const qt = step.questionText || (step.type === 'intro' ? step.title : undefined);
-        if (qt) {
-          (cloned as any).properties.questionText = qt;
-        }
-        break;
+    } else if (blockType === 'question-text') {
+      const qt = step.questionText || (step.type === 'intro' ? step.title : undefined);
+      if (qt) {
+        (cloned as any).properties.questionText = qt;
       }
-      case 'question-instructions': {
-        const effectiveReq = req ?? (isStrategic ? 1 : undefined);
-        if (typeof effectiveReq === 'number') {
-          (cloned as any).properties.requiredSelections = effectiveReq;
-        }
-        break;
+    } else if (blockType === 'question-instructions') {
+      const effectiveReq = req ?? (isStrategic ? 1 : undefined);
+      if (typeof effectiveReq === 'number') {
+        (cloned as any).properties.requiredSelections = effectiveReq;
       }
-      case 'options-grid': {
+    } else if (blockType === 'options-grid' || blockType === 'quiz-options') {
         const options = Array.isArray(step.options) ? step.options.map(mapOption) : [];
         if (options.length > 0) {
           (cloned as any).properties.options = options;
@@ -61,22 +56,18 @@ export function hydrateBlocksWithQuizSteps(stepId: string, blocks: Block[] = [])
           if (isStrategic) (cloned as any).properties.multipleSelection = false;
         }
         // Assegurar questionId consistente
-        if (!(cloned as any).properties.questionId) {
-          (cloned as any).properties.questionId = stepId;
-        }
-        break;
+      if (!(cloned as any).properties.questionId) {
+        (cloned as any).properties.questionId = stepId;
       }
-      case 'question-progress': {
-        // Se desejar, podemos deduzir o stepNumber a partir do ID para robustez
-        const match = stepId.match(/step-(\d+)/);
-        const num = match ? parseInt(match[1], 10) : undefined;
-        if (num && (cloned as any).properties && (cloned as any).properties.stepNumber == null) {
-          (cloned as any).properties.stepNumber = num;
-        }
-        break;
+      
+      console.log(`🔧 Hydrated options-grid with ${options.length} options for ${stepId}`);
+    } else if (blockType === 'question-progress') {
+      // Se desejar, podemos deduzir o stepNumber a partir do ID para robustez
+      const match = stepId.match(/step-(\d+)/);
+      const num = match ? parseInt(match[1], 10) : undefined;
+      if (num && (cloned as any).properties && (cloned as any).properties.stepNumber == null) {
+        (cloned as any).properties.stepNumber = num;
       }
-      default:
-        break;
     }
 
     return cloned;
