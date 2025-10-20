@@ -13,7 +13,7 @@
  * ✅ Performance otimizada
  */
 
-import React, { memo, useMemo, useCallback, useRef, useEffect } from 'react';
+import React, { memo, useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { Block } from '@/types/editor';
 // Import lazy/gated para evitar incluir o sistema escalável no bundle por padrão
 const ScalableQuizRendererLazy = React.lazy(() => import('@/components/core/ScalableQuizRenderer').then(m => ({ default: m.default })));
@@ -61,6 +61,36 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
     blocksCount: blocks.length,
     selectedBlockId: selectedBlock?.id
   });
+  // Resolver funnelId de forma flexível: prop tem prioridade, depois query (?funnelId ou ?funnel)
+  const effectiveFunnelId = useMemo(() => {
+    if (funnelId) return funnelId;
+    try {
+      const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const q1 = sp?.get('funnelId');
+      const q2 = sp?.get('funnel');
+      return q1 || q2 || 'quiz-estilo-21-steps';
+    } catch {
+      return 'quiz-estilo-21-steps';
+    }
+  }, [funnelId]);
+
+  // Gate normalizado: refletir estado (env/query)
+  const normalizedGateEnabled = useMemo(() => {
+    try {
+      const envGate = (import.meta as any)?.env?.VITE_RUNTIME_DEBUG_NORMALIZED;
+      const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const q1 = sp?.get('normalizedDebug');
+      const q2 = sp?.get('debugNormalized');
+      const queryGate = (q1 === '1' || q1 === 'true' || q2 === '1' || q2 === 'true');
+      return envGate === '1' || envGate === 'true' || queryGate;
+    } catch {
+      return false;
+    }
+  }, []);
+
+  // Track do step atual do preview (via onStepChange)
+  const [previewStep, setPreviewStep] = useState<number | null>(null);
+
 
   // 🎯 STABLE HOOKS - Sempre chamados, nunca condicionais
   const stepSelection = useStepSelection({
@@ -104,6 +134,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
 
   const handleStepChange = useCallback((step: number, data?: any) => {
     console.log('📍 StabilizedCanvas: Step change:', step, data);
+    setPreviewStep(step);
     if (onStepChange && step !== currentStep) {
       onStepChange(step);
     }
@@ -121,9 +152,19 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   const renderPreviewMode = useCallback(() => (
     <div className="flex-1 min-h-0 bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate">
       <div className="h-full w-full overflow-y-auto relative z-0">
+        {/* Overlay de debug do preview */}
+        <div className="absolute top-2 left-2 z-10 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-md px-2 py-1 shadow text-[10px] text-gray-700 flex items-center gap-2">
+          <span className="font-mono">funnel:</span>
+          <span className="font-semibold">{effectiveFunnelId}</span>
+          <span className="mx-1">•</span>
+          <span className="font-mono">step:</span>
+          <span className="font-semibold">{previewStep ?? '-'}</span>
+          <span className="mx-1">•</span>
+          <span className={`font-mono ${normalizedGateEnabled ? 'text-emerald-600' : 'text-gray-400'}`}>normalized:{normalizedGateEnabled ? 'on' : 'off'}</span>
+        </div>
         <React.Suspense fallback={<div className="p-4 text-xs text-stone-500">Carregando preview escalável…</div>}>
           <ScalableQuizRendererLazy
-            funnelId={funnelId}
+            funnelId={effectiveFunnelId}
             mode="preview"
             debugMode={true}
             className="preview-mode-canvas w-full h-full"
@@ -132,7 +173,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
         </React.Suspense>
       </div>
     </div>
-  ), [handleStepChange]);
+  ), [effectiveFunnelId, handleStepChange, previewStep, normalizedGateEnabled]);
 
   // 🛠️ EDIT MODE RENDERER
   const renderEditMode = useCallback(() => (
@@ -181,7 +222,8 @@ const arePropsEqual = (
   if (
     prevProps.currentStep !== nextProps.currentStep ||
     prevProps.isPreviewMode !== nextProps.isPreviewMode ||
-    prevProps.className !== nextProps.className
+    prevProps.className !== nextProps.className ||
+    prevProps.funnelId !== nextProps.funnelId
   ) {
     return false;
   }
