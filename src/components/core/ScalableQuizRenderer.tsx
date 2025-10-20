@@ -58,8 +58,16 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 // Gate: só carrega a camada "normalized" quando em modo preview (editor)
                 // ou quando a flag de debug estiver ativada (env/query). Mantém runtime "limpo" por padrão.
                 const envGate = (import.meta as any)?.env?.VITE_RUNTIME_DEBUG_NORMALIZED;
-                const queryGate = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('normalizedDebug') : null;
-                const isGateEnabled = envGate === '1' || envGate === 'true' || queryGate === '1' || queryGate === 'true';
+                let isGateEnabled = false;
+                try {
+                    const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+                    const q1 = sp?.get('normalizedDebug');
+                    const q2 = sp?.get('debugNormalized');
+                    const queryGate = (q1 === '1' || q1 === 'true' || q2 === '1' || q2 === 'true');
+                    isGateEnabled = (envGate === '1' || envGate === 'true' || queryGate);
+                } catch {
+                    isGateEnabled = (envGate === '1' || envGate === 'true');
+                }
 
                 let tpl: any = null;
                 if (isGateEnabled) {
