@@ -180,6 +180,20 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         }
     }, [actions, currentStepKey, selectedBlockId]);
 
+    // Resolver funnelId do editor (se disponível) ou da URL
+    const resolvedFunnelId = useMemo(() => {
+        const fromState = (state as any)?.funnelId || (state as any)?.currentFunnelId;
+        if (fromState) return fromState;
+        try {
+            const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+            const q1 = sp?.get('funnelId');
+            const q2 = sp?.get('funnel');
+            return q1 || q2 || 'quiz-estilo-21-steps';
+        } catch {
+            return 'quiz-estilo-21-steps';
+        }
+    }, [state]);
+
     return (
         <>
             <StepDndProvider
@@ -248,6 +262,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                         selectedBlockId={selectedBlockId}
                                         actions={actions as any}
                                         isDragging={isDragging}
+                                        funnelId={resolvedFunnelId}
                                     />
                                 </LazyBoundary>
                             </div>
@@ -297,6 +312,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                                     selectedBlockId={selectedBlockId}
                                     actions={actions as any}
                                     isDragging={isDragging}
+                                    funnelId={resolvedFunnelId}
                                 />
                             </LazyBoundary>
                         </div>
