@@ -45,7 +45,7 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
   if (Array.isArray(template)) {
     return template.map((block, index) => ({
       id: block.id || `block-${index}`,
-      type: block.type || 'text',
+      type: mapBlockType(block.type || 'text'),
       content: block.content || {},
       properties: block.properties || block.props || {},
       order: (block.order != null ? block.order : (block.position != null ? block.position : index)),

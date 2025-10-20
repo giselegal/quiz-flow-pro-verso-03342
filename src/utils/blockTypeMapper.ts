@@ -6,6 +6,9 @@
  */
 
 export const BLOCK_TYPE_MAP: Record<string, string> = {
+    // Aliases de nomenclatura com/sem hífen
+    'options grid': 'options-grid',
+
     // ====== V3 SECTIONS → BLOCK TYPES (MAPEAMENTO COMPLETO) ======
     // Intro blocks - mapear para componentes completos usados no editor/preview
     // Gargalo #1: corrigir mapeamentos para blocos atômicos reais
