@@ -89,7 +89,7 @@ import { useBlocks } from './hooks/useBlocks';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEditableQuizStep, ComponentLibraryItem } from './types';
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
-import { getQuiz21StepsTemplate, getPersonalizedStepTemplate } from '@/templates/imports';
+import { getQuiz21StepsTemplate } from '@/templates/imports';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
 import { safeGetTemplateBlocks, blocksToBlockComponents } from '@/utils/templateConverter';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
@@ -2930,7 +2930,16 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
             <div className="flex-1 overflow-auto">
                 <BlockRegistryProvider definitions={EXTENDED_BLOCK_DEFINITIONS}>
                     {/* 🎯 previewMode: Sincroniza com Canvas + usa comportamento de produção */}
-                    <QuizAppConnected funnelId={funnelId} previewMode initialStepId={selectedStepId} />
+                    <QuizAppConnected
+                        funnelId={funnelId}
+                        previewMode
+                        initialStepId={selectedStepId}
+                        initialConfig={{
+                            steps: steps,
+                            global: {},
+                            scoring: {}
+                        }}
+                    />
                 </BlockRegistryProvider>
             </div>
             <div className="px-2 py-1 border-t bg-slate-50 text-[10px] text-slate-500 flex items-center justify-between">

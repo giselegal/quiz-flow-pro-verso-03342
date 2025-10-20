@@ -23,27 +23,29 @@ import { useEffect, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
 import { getEffectiveRequiredSelections } from '@/lib/quiz/requiredSelections';
 import { loadNormalizedStep } from '@/lib/normalizedLoader';
-// Importar componentes legados usados no modo legacy
-import IntroStep from '@/components/quiz/IntroStep';
-import QuestionStep from '@/components/quiz/QuestionStep';
-import StrategicQuestionStep from '@/components/quiz/StrategicQuestionStep';
-import TransitionStep from '@/components/quiz/TransitionStep';
-import ResultStep from '@/components/quiz/ResultStep';
+// Importar componentes modulares mais recentes
+import IntroStep from '@/components/editor/quiz-estilo/ModularIntroStep';
+import QuestionStep from '@/components/editor/quiz-estilo/ModularQuestionStep';
+import StrategicQuestionStep from '@/components/editor/quiz-estilo/ModularStrategicQuestionStep';
+import TransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
+import ResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
 
 interface QuizAppConnectedProps {
     funnelId?: string;
     editorMode?: boolean; // Permite visualização no /editor (LEGACY - usar previewMode)
     previewMode?: boolean; // 🆕 Preview sincronizado mas com comportamento de produção
     initialStepId?: string; // Etapa inicial/ativa quando em modo editor/preview
+    initialConfig?: any; // Configuração inicial quando em modo preview
 }
 
-export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false, previewMode = false, initialStepId }: QuizAppConnectedProps) {
+export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false, previewMode = false, initialStepId, initialConfig }: QuizAppConnectedProps) {
     // 🐛 DEBUG CRÍTICO: Log de props recebidas
     console.log(`🎯 QuizAppConnected RENDERIZADO`, {
         funnelId,
         editorMode,
         previewMode,
         initialStepId,
+        hasInitialConfig: !!initialConfig,
         timestamp: new Date().toISOString()
     });
 
@@ -53,15 +55,31 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     }, []);
     // Overrides de steps vindos do editor (quando provider estiver presente)
     let externalSteps: Record<string, any> | undefined;
-    const registry = useOptionalQuizRuntimeRegistry();
-    if (registry && registry.steps && Object.keys(registry.steps).length) {
-        externalSteps = registry.steps;
-        console.log(`🔗 Registry detectado com ${Object.keys(externalSteps).length} steps:`, {
-            stepIds: Object.keys(externalSteps),
-            firstStepSample: externalSteps[Object.keys(externalSteps)[0]]
+
+    // Nova lógica: usar initialConfig se fornecido (prioridade mais alta)
+    if (initialConfig && initialConfig.steps && initialConfig.steps.length) {
+        // Converter do formato do editor para o formato esperado pelo runtime
+        externalSteps = {};
+        initialConfig.steps.forEach((step: any) => {
+            externalSteps![step.id] = {
+                ...step,
+                type: step.type || 'question',
+                blocks: step.blocks || []
+            };
         });
+        console.log(`🔄 Usando initialConfig com ${initialConfig.steps.length} steps`);
     } else {
-        console.log(`⚠️ Registry vazio ou ausente - usando fallback`);
+        // Fallback para registry se initialConfig não estiver presente
+        const registry = useOptionalQuizRuntimeRegistry();
+        if (registry && registry.steps && Object.keys(registry.steps).length) {
+            externalSteps = registry.steps;
+            console.log(`🔗 Registry detectado com ${Object.keys(externalSteps).length} steps:`, {
+                stepIds: Object.keys(externalSteps),
+                firstStepSample: externalSteps[Object.keys(externalSteps)[0]]
+            });
+        } else {
+            console.log(`⚠️ Registry vazio ou ausente - usando fallback`);
+        }
     }
 
     // ============================================================================
