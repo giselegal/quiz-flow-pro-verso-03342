@@ -1,10 +1,10 @@
 /**
  * 🎯 HYBRID TEMPLATE SERVICE - FONTE DE VERDADE UNIFICADA
  * 
- * Hierarquia de prioridade:
- * 1. Override JSON específico (step-XX-template.json)
- * 2. Master JSON (quiz21-complete.json)
- * 3. TypeScript fallback (quiz21StepsComplete.ts)
+ * Hierarquia de prioridade (ATUALIZADA - CANÔNICA):
+ * 1. TypeScript gerado a partir dos JSONs v3 (quiz21StepsComplete.ts)
+ *    - Fonte única no runtime do editor
+ * 2. Overrides/masters/normalized APENAS para export/diagnóstico (fora do runtime)
  */
 
 export interface StepBehaviorConfig {
@@ -53,8 +53,8 @@ export interface MasterTemplate {
 }
 
 class HybridTemplateService {
-    private static masterTemplate: MasterTemplate | null = null;
-    private static overrideCache = new Map<string, any>();
+    private static masterTemplate: MasterTemplate | null = null; // descontinuado no runtime
+    private static overrideCache = new Map<string, any>(); // descontinuado no runtime
 
     /**
      * � MÉTODO PRINCIPAL: getTemplate
@@ -62,33 +62,35 @@ class HybridTemplateService {
      */
     static async getTemplate(templateId: string): Promise<any | null> {
         try {
-            // 1. Carregar master template se necessário
-            if (!this.masterTemplate) {
-                await this.loadMasterTemplate();
-            }
-
-            // 2. Verificar se é um template específico
+            // 1. Fonte canônica: TypeScript gerado
             if (templateId === 'quiz21StepsComplete') {
-                // Fallback para template TypeScript
                 try {
                     // Usar import centralizado para evitar warning do Vite
                     const { getQuiz21StepsTemplate } = await import('@/templates/imports');
                     const QUIZ_STYLE_21_STEPS_TEMPLATE = getQuiz21StepsTemplate();
+                    // Anotar origem canônica
+                    (QUIZ_STYLE_21_STEPS_TEMPLATE as any)._source = 'ts';
+                    console.log('✅ [HybridTemplateService] Fonte canônica carregada: quiz21StepsComplete.ts (_source=ts)');
                     return QUIZ_STYLE_21_STEPS_TEMPLATE;
                 } catch (error) {
                     console.error('❌ Erro ao carregar quiz21StepsComplete:', error);
                 }
             }
-
-            // 3. Tentar carregar do master template
-            if (this.masterTemplate && this.masterTemplate.steps && this.masterTemplate.steps[templateId]) {
-                return this.masterTemplate.steps[templateId];
-            }
-
-            // 4. Tentar carregar override específico
-            const override = await this.loadStepOverride(templateId);
-            if (override) {
-                return override;
+            // 2. Demais IDs de step individuais: também resolvidos via TS canônico
+            try {
+                const { getQuiz21StepsTemplate } = await import('@/templates/imports');
+                const QUIZ_STYLE_21_STEPS_TEMPLATE = getQuiz21StepsTemplate();
+                const normalizedId = this.normalizeStepId(templateId);
+                const step = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[normalizedId];
+                if (step) {
+                    // Garantir marcação de origem por step
+                    if (typeof step === 'object' && step !== null) {
+                        step._source = 'ts';
+                    }
+                    return step;
+                }
+            } catch (e) {
+                console.warn('⚠️ [HybridTemplateService] Falha ao resolver step via TS:', templateId, e);
             }
 
             console.warn(`⚠️ Template não encontrado: ${templateId}`);
@@ -107,46 +109,51 @@ class HybridTemplateService {
         try {
             const stepId = `step-${stepNumber}`;
 
-            // 1. Tentar carregar override específico
-            const override = await this.loadStepOverride(stepId);
+            // 1. Carregar a fonte canônica (TS) e montar config básica
+            const { getQuiz21StepsTemplate } = await import('@/templates/imports');
+            const QUIZ_STYLE_21_STEPS_TEMPLATE = getQuiz21StepsTemplate();
+            const normalizedId = this.normalizeStepId(stepId);
+            const tsStep = (QUIZ_STYLE_21_STEPS_TEMPLATE as any)[normalizedId] || {};
 
-            // 2. Carregar master template se necessário
-            if (!this.masterTemplate) {
-                await this.loadMasterTemplate();
+            // 2. Aplicar regras globais baseadas no número da etapa
+            const globalRules = this.getGlobalRules(stepNumber);
+            // 3. Montar config final: TS canônico + regras globais
+            // 2.1 Alinhar questionNumber/totalQuestions para progresso consistente
+            const totalQuestions = 16; // 10 (2-11) + 6 (13-18)
+            let questionNumber: number | undefined = undefined;
+            if (stepNumber >= 2 && stepNumber <= 11) {
+                questionNumber = stepNumber - 1; // 1..10
+            } else if (stepNumber >= 13 && stepNumber <= 18) {
+                questionNumber = 10 + (stepNumber - 12); // 11..16
             }
 
-            // 3. Obter configuração base do master
-            const masterStep = this.masterTemplate?.steps[stepId];
-
-            // 4. Aplicar regras globais baseadas no número da etapa
-            const globalRules = this.getGlobalRules(stepNumber);
-
-            // 5. Mergear tudo: global < master < override
             const finalConfig: StepTemplate = {
                 metadata: {
                     name: `Step ${stepNumber}`,
                     description: `Etapa ${stepNumber}`,
                     type: this.inferStepType(stepNumber),
                     category: 'quiz',
-                    ...masterStep?.metadata,
-                    ...override?.metadata,
+                    ...(tsStep?.metadata || {}),
+                    ...(questionNumber ? { questionNumber, totalQuestions } : {}),
                 },
                 behavior: {
                     ...globalRules.behavior,
-                    ...masterStep?.behavior,
-                    ...override?.behavior,
+                    ...(tsStep?.behavior || {}),
                 },
                 validation: {
                     ...globalRules.validation,
-                    ...masterStep?.validation,
-                    ...override?.validation,
+                    ...(tsStep?.validation || {}),
                 },
-                blocks: override?.blocks || masterStep?.blocks || [],
+                blocks: tsStep?.blocks || tsStep?.sections || [],
             };
 
+            // 4. Marcar origem
+            (finalConfig as any)._source = 'ts';
+            console.log(`✅ [HybridTemplateService] Step ${stepNumber} carregado da fonte canônica (_source=ts)`);
+
             console.log(`✅ HybridTemplateService: Step ${stepNumber} configurado`, {
-                hasOverride: !!override,
-                hasMaster: !!masterStep,
+                hasOverride: false,
+                hasMaster: false,
                 autoAdvance: finalConfig.behavior.autoAdvance,
                 requiredSelections: finalConfig.validation.requiredSelections,
             });
@@ -163,67 +170,9 @@ class HybridTemplateService {
      * Carrega arquivo master JSON consolidado (v3.0)
      */
     private static async loadMasterTemplate(): Promise<void> {
-        try {
-            console.log('🔄 Carregando master JSON v3.0...');
-
-            const response = await fetch('/templates/quiz21-complete.json');
-
-            if (response.ok) {
-                const data = await response.json();
-
-                // Validar estrutura v3.0 completa
-                const isValid = this.validateMasterTemplate(data);
-
-                if (isValid) {
-                    this.masterTemplate = data;
-                    console.log('✅ Master JSON v3.0 carregado com sucesso:', {
-                        version: data.templateVersion,
-                        steps: Object.keys(data.steps || {}).length,
-                        consolidated: data.metadata?.consolidated,
-                        size: `${(JSON.stringify(data).length / 1024).toFixed(2)} KB`
-                    });
-                    return;
-                } else {
-                    console.warn('⚠️ Master JSON inválido, usando fallback TypeScript');
-                }
-            } else {
-                console.warn(`⚠️ Erro ${response.status} ao carregar master JSON`);
-            }
-        } catch (error) {
-            console.warn('⚠️ Erro ao carregar master JSON:', error);
-        }
-
-        // Fallback para TypeScript se JSON falhar ou for inválido
-        console.log('📦 Usando fallback TypeScript...');
-        try {
-            const { getQuiz21StepsTemplate } = await import('@/templates/imports');
-            const tsTemplate = getQuiz21StepsTemplate();
-
-            this.masterTemplate = {
-                templateVersion: "3.0",
-                templateId: "quiz21StepsComplete",
-                metadata: {
-                    source: "typescript-fallback",
-                    loadedAt: new Date().toISOString()
-                },
-                steps: tsTemplate,
-                globalConfig: {
-                    navigation: {
-                        autoAdvanceSteps: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18],
-                        manualAdvanceSteps: [12, 19, 20, 21],
-                        autoAdvanceDelay: 1000
-                    },
-                    validation: {
-                        rules: {}
-                    }
-                }
-            };
-
-            console.log('✅ TypeScript fallback carregado');
-        } catch (fallbackError) {
-            console.error('❌ ERRO CRÍTICO: Falha no fallback TypeScript:', fallbackError);
-            throw new Error('Não foi possível carregar nenhum template');
-        }
+        // Descontinuado no runtime do editor: não faz fetch do master JSON
+        console.log('ℹ️ [HybridTemplateService] loadMasterTemplate descontinuado no runtime (usando apenas TS canônico).');
+        this.masterTemplate = null;
     }
 
     /**
@@ -274,45 +223,9 @@ class HybridTemplateService {
     /**
      * Carrega override específico de uma etapa
      */
-    private static async loadStepOverride(stepId: string): Promise<any | null> {
-        try {
-            // Verificar cache primeiro
-            if (this.overrideCache.has(stepId)) {
-                return this.overrideCache.get(stepId);
-            }
-
-            // Normalizar stepId para formato correto (step-01, step-02, etc.)
-            const normalizedStepId = this.normalizeStepId(stepId);
-            const templatePath = `/templates/${normalizedStepId}-v3.json`;
-
-            console.log(`🔍 HybridTemplateService: Tentando carregar template: ${templatePath}`);
-
-            const response = await fetch(templatePath);
-            if (response.ok) {
-                const override = await response.json();
-                this.overrideCache.set(stepId, override);
-                console.log(`✅ Override carregado para ${stepId}`);
-                return override;
-            }
-
-            // Se 404, usar template padrão ao invés de falhar
-            if (response.status === 404) {
-                console.log(`⚠️ Template ${templatePath} não encontrado (404), usando template padrão`);
-                const defaultTemplate = this.createDefaultTemplate(normalizedStepId);
-                this.overrideCache.set(stepId, defaultTemplate);
-                return defaultTemplate;
-            }
-
-            console.warn(`⚠️ Erro ${response.status} ao carregar template ${templatePath}`);
-            return null;
-        } catch (error) {
-            console.warn(`⚠️ Falha ao carregar override para ${stepId}:`, error);
-            // Em caso de erro de rede, usar template padrão
-            const normalizedStepId = this.normalizeStepId(stepId);
-            const defaultTemplate = this.createDefaultTemplate(normalizedStepId);
-            this.overrideCache.set(stepId, defaultTemplate);
-            return defaultTemplate;
-        }
+    private static async loadStepOverride(_stepId: string): Promise<any | null> {
+        // Descontinuado no runtime do editor: overrides não são aplicados
+        return null;
     }
 
     /**

@@ -613,7 +613,10 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     console.log('� Template legacy:', initialTemplate.name);
     console.log('🎯 Steps carregadas:', initialTemplate.defaultSteps.length);
 
-    return initialTemplate.defaultSteps;
+    // Marcar origem das steps carregadas
+    const marked = (initialTemplate.defaultSteps || []).map((s: any) => ({ ...s, _source: 'ts' }));
+    console.log('🧭 FunnelsContext: origem das steps inicializadas = ts');
+    return marked;
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -860,11 +863,21 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     [currentFunnelId]
   );
 
+  // Wrap do setSteps para sempre marcar _source
+  const setStepsWithSource: React.Dispatch<React.SetStateAction<LegacyFunnelStep[]>> = (updater) => {
+    setSteps((prev) => {
+      const next = typeof updater === 'function' ? (updater as any)(prev) : updater;
+      const marked = (next || []).map((s: any) => ({ ...s, _source: s?._source || 'ts' }));
+      console.log('🧭 FunnelsContext: setSteps chamado. Origem marcada como ts para', marked.length, 'steps');
+      return marked;
+    });
+  };
+
   const contextValue: FunnelsContextType = {
     currentFunnelId,
     setCurrentFunnelId,
     steps,
-    setSteps,
+    setSteps: setStepsWithSource,
     getTemplate,
     getTemplateBlocks,
     updateFunnelStep,
