@@ -88,402 +88,1925 @@
             "delay": 0,
             "easing": "ease-out"
           }
-        },
         {
-          "type": "welcome-form",
-          "id": "intro-form-01",
-          "content": {
-            "questionText": "Como posso te chamar?",
-            "nameLabel": "Seu primeiro nome",
-            "namePlaceholder": "Digite seu primeiro nome aqui...",
-            "submitText": "Quero Descobrir meu Estilo Agora!",
-            "loadingText": "Preparando seu quiz personalizado...",
-            "successText": "Perfeito! Vamos descobrir seu estilo!",
-            "showNameField": true,
-            "showEmailField": false,
-            "requiredFields": "name",
-            "validationMessage": "Por favor, digite seu nome para continuar"
+          "templateVersion": "3.0",
+          "templateId": "quiz-estilo-21-steps",
+          "name": "Quiz de Estilo Pessoal - 21 Etapas",
+          "description": "Template completo v3.0 com todas as etapas e estrutura modular compatível com Lovable.",
+          "metadata": {
+            "createdAt": "2025-10-20T00:00:00Z",
+            "updatedAt": "2025-10-20T08:00:00Z",
+            "author": "Gisele Galvão - Branding & Imagem Pessoal",
+            "version": "3.0.1",
+            "consolidated": true,
+            "source": "quizSteps + json completo 21 etapas.txt"
           },
-          "style": {
-            "backgroundColor": "transparent",
-            "padding": 16
+          "steps": {
+            "step-01": {
+              "templateVersion": "3.0",
+              "metadata": {
+                "id": "step-01",
+                "name": "Etapa step-01 - Intro",
+                "description": "Etapa step-01 do Quiz de Estilo (intro)",
+                "category": "intro",
+                "createdAt": "2025-10-20T00:00:00Z",
+                "updatedAt": "2025-10-20T00:00:00Z",
+                "author": "Quiz Flow Builder",
+                "version": "3.0.1"
+              },
+              "theme": {
+                "colors": {
+                  "primary": "#B89B7A",
+                  "secondary": "#432818",
+                  "background": "#FAF9F7",
+                  "text": "#1F2937",
+                  "border": "#E5E7EB"
+                },
+                "fonts": {
+                  "heading": "Playfair Display, serif",
+                  "body": "Inter, sans-serif"
+                }
+              },
+              "sections": [
+                {
+                  "type": "question-title",
+                  "id": "step-01-title",
+                  "content": { "text": "Bem-vinda ao Quiz de Estilo!" },
+                  "style": { "backgroundColor": "transparent", "padding": 16 },
+                  "animation": { "type": "fade", "duration": 300 }
+                },
+                {
+                  "type": "options grid",
+                  "id": "step-01-options",
+                  "content": {
+                    "options": [
+                      { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                      { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                      { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                      { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                      { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                      { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                      { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                      { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                    ],
+                    "columns": 2,
+                    "multipleSelection": true,
+                    "minSelections": 3,
+                    "maxSelections": 3,
+                    "showImages": true
+                  }
+                }
+              ],
+              "validation": {
+                "required": ["selectedOptions"],
+                "rules": {
+                  "selectedOptions": {
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "errorMessage": "Selecione exatamente 3 opções"
+                  }
+                }
+              },
+              "behavior": { "autoAdvance": true },
+              "type": "intro",
+              "redirectPath": "/quiz-estilo/step-01",
+              "navigation": { "nextStep": "step-02" }
+            },
+            "step-02": {
+              "templateVersion": "3.0",
+              "metadata": {
+                "id": "step-02",
+                "name": "Etapa step-02 - Question",
+                "description": "Etapa step-02 do Quiz de Estilo (question)",
+                "category": "question",
+                "createdAt": "2025-10-20T00:00:00Z",
+                "updatedAt": "2025-10-20T00:00:00Z",
+                "author": "Quiz Flow Builder",
+                "version": "3.0.1"
+              },
+              "theme": {
+                "colors": {
+                  "primary": "#B89B7A",
+                  "secondary": "#432818",
+                  "background": "#FAF9F7",
+                  "text": "#1F2937",
+                  "border": "#E5E7EB"
+                },
+                "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+              },
+              "sections": [
+                {
+                  "type": "question-title",
+                  "id": "step-02-title",
+                  "content": { "text": "Pergunta 1 de 10" },
+                  "style": { "backgroundColor": "transparent", "padding": 16 },
+                  "animation": { "type": "fade", "duration": 300 }
+                },
+                {
+                  "type": "options grid",
+                  "id": "step-02-options",
+                  "content": {
+                    "options": [
+                      { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                      { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                      { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                      { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                      { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                      { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                      { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                      { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                    ],
+                    "columns": 2,
+                    "multipleSelection": true,
+                    "minSelections": 3,
+                    "maxSelections": 3,
+                    "showImages": true
+                  }
+                }
+              ],
+              "validation": {
+                "required": ["selectedOptions"],
+                "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+              },
+              "behavior": { "autoAdvance": true },
+              "type": "question",
+              "redirectPath": "/quiz-estilo/step-02",
+              "navigation": { "nextStep": "step-03" }
+            },
+            "step-03": {
+              "templateVersion": "3.0",
+              "metadata": {
+                "id": "step-03",
+                "name": "Etapa step-03 - Question",
+                "description": "Etapa step-03 do Quiz de Estilo (question)",
+                "category": "question",
+                "createdAt": "2025-10-20T00:00:00Z",
+                "updatedAt": "2025-10-20T00:00:00Z",
+                "author": "Quiz Flow Builder",
+                "version": "3.0.1"
+              },
+              "theme": {
+                "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" },
+                "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+              },
+              "sections": [
+                { "type": "question-title", "id": "step-03-title", "content": { "text": "Pergunta 2 de 10" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-03-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "question",
+              "redirectPath": "/quiz-estilo/step-03",
+              "navigation": { "nextStep": "step-04" }
+            },
+            "step-04": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-04", "name": "Etapa step-04 - Question", "description": "Etapa step-04 do Quiz de Estilo (question)", "category": "question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-04-title", "content": { "text": "Pergunta 3 de 10" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-04-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "question",
+              "redirectPath": "/quiz-estilo/step-04",
+              "navigation": { "nextStep": "step-05" }
+            },
+            "step-05": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-05", "name": "Etapa step-05 - Question", "description": "Etapa step-05 do Quiz de Estilo (question)", "category": "question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-05-title", "content": { "text": "Pergunta 4 de 10" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-05-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "question",
+              "redirectPath": "/quiz-estilo/step-05",
+              "navigation": { "nextStep": "step-06" }
+            },
+            "step-06": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-06", "name": "Etapa step-06 - Question", "description": "Etapa step-06 do Quiz de Estilo (question)", "category": "question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-06-title", "content": { "text": "Pergunta 5 de 10" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-06-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "question",
+              "redirectPath": "/quiz-estilo/step-06",
+              "navigation": { "nextStep": "step-07" }
+            },
+            "step-07": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-07", "name": "Etapa step-07 - Question", "description": "Etapa step-07 do Quiz de Estilo (question)", "category": "question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-07-title", "content": { "text": "Pergunta 6 de 10" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-07-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "question",
+              "redirectPath": "/quiz-estilo/step-07",
+              "navigation": { "nextStep": "step-08" }
+            },
+            "step-08": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-08", "name": "Etapa step-08 - Question", "description": "Etapa step-08 do Quiz de Estilo (question)", "category": "question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-08-title", "content": { "text": "Pergunta 7 de 10" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-08-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "question",
+              "redirectPath": "/quiz-estilo/step-08",
+              "navigation": { "nextStep": "step-09" }
+            },
+            "step-09": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-09", "name": "Etapa step-09 - Question", "description": "Etapa step-09 do Quiz de Estilo (question)", "category": "question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-09-title", "content": { "text": "Pergunta 8 de 10" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-09-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "question",
+              "redirectPath": "/quiz-estilo/step-09",
+              "navigation": { "nextStep": "step-10" }
+            },
+            "step-10": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-10", "name": "Etapa step-10 - Question", "description": "Etapa step-10 do Quiz de Estilo (question)", "category": "question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-10-title", "content": { "text": "Pergunta 9 de 10" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-10-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "question",
+              "redirectPath": "/quiz-estilo/step-10",
+              "navigation": { "nextStep": "step-11" }
+            },
+            "step-11": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-11", "name": "Etapa step-11 - Question", "description": "Etapa step-11 do Quiz de Estilo (question)", "category": "question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-11-title", "content": { "text": "Pergunta 10 de 10" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-11-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "question",
+              "redirectPath": "/quiz-estilo/step-11",
+              "navigation": { "nextStep": "step-12" }
+            },
+            "step-12": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-12", "name": "Etapa step-12 - Transition", "description": "Etapa step-12 do Quiz de Estilo (transition)", "category": "transition", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-12-title", "content": { "text": "Transição para as perguntas estratégicas" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-12-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "transition",
+              "redirectPath": "/quiz-estilo/step-12",
+              "navigation": { "nextStep": "step-13" }
+            },
+            "step-13": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-13", "name": "Etapa step-13 - Strategic-Question", "description": "Etapa step-13 do Quiz de Estilo (strategic-question)", "category": "strategic-question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-13-title", "content": { "text": "Pergunta estratégica 1" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-13-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "strategic-question",
+              "redirectPath": "/quiz-estilo/step-13",
+              "navigation": { "nextStep": "step-14" }
+            },
+            "step-14": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-14", "name": "Etapa step-14 - Strategic-Question", "description": "Etapa step-14 do Quiz de Estilo (strategic-question)", "category": "strategic-question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-14-title", "content": { "text": "Pergunta estratégica 2" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-14-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "strategic-question",
+              "redirectPath": "/quiz-estilo/step-14",
+              "navigation": { "nextStep": "step-15" }
+            },
+            "step-15": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-15", "name": "Etapa step-15 - Strategic-Question", "description": "Etapa step-15 do Quiz de Estilo (strategic-question)", "category": "strategic-question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-15-title", "content": { "text": "Pergunta estratégica 3" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-15-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "strategic-question",
+              "redirectPath": "/quiz-estilo/step-15",
+              "navigation": { "nextStep": "step-16" }
+            },
+            "step-16": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-16", "name": "Etapa step-16 - Strategic-Question", "description": "Etapa step-16 do Quiz de Estilo (strategic-question)", "category": "strategic-question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-16-title", "content": { "text": "Pergunta estratégica 4" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-16-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "strategic-question",
+              "redirectPath": "/quiz-estilo/step-16",
+              "navigation": { "nextStep": "step-17" }
+            },
+            "step-17": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-17", "name": "Etapa step-17 - Strategic-Question", "description": "Etapa step-17 do Quiz de Estilo (strategic-question)", "category": "strategic-question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-17-title", "content": { "text": "Pergunta estratégica 5" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-17-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "strategic-question",
+              "redirectPath": "/quiz-estilo/step-17",
+              "navigation": { "nextStep": "step-18" }
+            },
+            "step-18": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-18", "name": "Etapa step-18 - Strategic-Question", "description": "Etapa step-18 do Quiz de Estilo (strategic-question)", "category": "strategic-question", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-18-title", "content": { "text": "Pergunta estratégica 6" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-18-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "strategic-question",
+              "redirectPath": "/quiz-estilo/step-18",
+              "navigation": { "nextStep": "step-19" }
+            },
+            "step-19": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-19", "name": "Etapa step-19 - Transition-Result", "description": "Etapa step-19 do Quiz de Estilo (transition-result)", "category": "transition-result", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-19-title", "content": { "text": "Transição para o resultado final" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-19-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "transition-result",
+              "redirectPath": "/quiz-estilo/step-19",
+              "navigation": { "nextStep": "step-20" }
+            },
+            "step-20": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-20", "name": "Etapa step-20 - Result", "description": "Etapa step-20 do Quiz de Estilo (result)", "category": "result", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-20-title", "content": { "text": "Resultado final do seu estilo!" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-20-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "result",
+              "redirectPath": "/quiz-estilo/step-20",
+              "navigation": { "nextStep": "step-21" }
+            },
+            "step-21": {
+              "templateVersion": "3.0",
+              "metadata": { "id": "step-21", "name": "Etapa step-21 - Offer", "description": "Etapa step-21 do Quiz de Estilo (offer)", "category": "offer", "createdAt": "2025-10-20T00:00:00Z", "updatedAt": "2025-10-20T00:00:00Z", "author": "Quiz Flow Builder", "version": "3.0.1" },
+              "theme": { "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937", "border": "#E5E7EB" }, "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" } },
+              "sections": [
+                { "type": "question-title", "id": "step-21-title", "content": { "text": "Oferta personalizada" }, "style": { "backgroundColor": "transparent", "padding": 16 }, "animation": { "type": "fade", "duration": 300 } },
+                { "type": "options grid", "id": "step-21-options", "content": { "options": [
+                  { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                  { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                  { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                  { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                  { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                  { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                  { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                  { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                ], "columns": 2, "multipleSelection": true, "minSelections": 3, "maxSelections": 3, "showImages": true } }
+              ],
+              "validation": { "required": ["selectedOptions"], "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } } },
+              "behavior": { "autoAdvance": true },
+              "type": "offer",
+              "redirectPath": "/quiz-estilo/step-21",
+              "navigation": { "nextStep": null }
+            }
           },
-          "animation": {
-            "type": "slideUp",
-            "duration": 400,
-            "delay": 200,
-            "easing": "ease-out"
-          }
-        }
-      ],
-      "validation": {
-        "required": [
-          "userName"
-        ],
-        "rules": {
-          "userName": {
-            "minLength": 2,
-            "maxLength": 50,
-            "pattern": "^[a-zA-ZÀ-ÿ\\s]+$",
-            "errorMessage": "Por favor, digite um nome válido (apenas letras)"
-          }
-        }
-      },
-      "behavior": {},
-      "type": "intro",
-      "title": "Introdução - Bem-vindo ao Quiz de Estilo",
-      "redirectPath": "/quiz-estilo/step-01",
-      "navigation": {
-        "nextStep": "step-02"
-      }
-    },
-    "step-02": {
-      "templateVersion": "3.0",
-      "metadata": {
-        "id": "step-02-question-v3",
-        "name": "Q1 - Roupa Favorita",
-        "description": "Primeira questão sobre preferências de estilo de roupa",
-        "category": "quiz-question",
-        "tags": [
-          "quiz",
-          "style",
-          "question",
-          "roupa",
-          "preferencias"
-        ],
-        "questionNumber": 1,
-        "totalQuestions": 13,
-        "createdAt": "2025-01-13T00:00:00.000Z",
-        "updatedAt": "2025-01-13T00:00:00.000Z",
-        "author": "Quiz Flow Pro",
-        "version": "3.0.0"
-      },
-      "theme": {
-        "colors": {
-          "primary": "#B89B7A",
-          "primaryHover": "#A68B6A",
-          "primaryLight": "#F3E8D3",
-          "secondary": "#432818",
-          "background": "#FAF9F7",
-          "text": "#1F2937",
-          "border": "#E5E7EB",
-          "selected": "#B89B7A",
-          "hover": "#F3E8D3"
-        },
-        "fonts": {
-          "heading": "Playfair Display, serif",
-          "body": "Inter, sans-serif"
-        },
-        "spacing": {
-          "sm": 8,
-          "md": 16,
-          "lg": 24,
-          "xl": 32
-        },
-        "borderRadius": {
-          "sm": 4,
-          "md": 8,
-          "lg": 12,
-          "xl": 16
-        }
-      },
-      "sections": [
-        {
-          "type": "question-title",
-          "id": "step-02-question-title",
-          "content": {
-            "text": "QUAL O SEU TIPO DE ROUPA FAVORITA?"
-          },
-          "style": {},
-          "animation": {
-            "type": "fade",
-            "duration": 300,
-            "delay": 0,
-            "easing": "ease-out"
-          }
-        },
-        {
-          "type": "question-hero",
-          "id": "question-hero-02",
-          "content": {
-            "questionNumber": "1 de 10",
-            "questionText": "QUAL O SEU TIPO DE ROUPA FAVORITA?",
-            "currentQuestion": 1,
-            "totalQuestions": 13,
-            "progressValue": 10,
-            "showProgress": true,
-            "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
-          },
-          "style": {
-            "backgroundColor": "transparent",
-            "padding": 16
-          },
-          "animation": {
-            "type": "fade",
-            "duration": 300,
-            "delay": 0,
-            "easing": "ease-out"
-          }
-        },
-        {
-          "type": "options grid",
-          "id": "options-grid-02",
-          "content": {
-            "options": [
+          "settings": { "autoAdvance": true, "showProgress": true, "progressType": "bar", "allowBack": false },
+          "globalConfig": {
+            "navigation": {
+              "autoAdvanceSteps": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
               {
-                "id": "natural",
-                "text": "Conforto, leveza e praticidade no vestir",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "natural"
-              },
-              {
-                "id": "classico",
-                "text": "Discrição, caimento clássico e sobriedade",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "classico"
-              },
-              {
-                "id": "contemporaneo",
-                "text": "Praticidade com um toque de estilo atual",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "contemporaneo"
-              },
-              {
-                "id": "elegante",
-                "text": "Elegância refinada, moderna e sem exageros",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "elegante"
-              },
-              {
-                "id": "romantico",
-                "text": "Delicadeza em tecidos suaves e fluidos",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
-                "value": "romantico"
-              },
-              {
-                "id": "sexy",
-                "text": "Sensualidade com destaque para o corpo",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
-                "value": "sexy"
-              },
-              {
-                "id": "dramatico",
-                "text": "Impacto visual com peças estruturadas e assimétricas",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
-                "value": "dramatico"
-              },
-              {
-                "id": "criativo",
-                "text": "Mix criativo com formas ousadas e originais",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
-                "value": "criativo"
+                "templateVersion": "3.0",
+                "templateId": "quiz-estilo-21-steps",
+                "name": "Quiz de Estilo Pessoal - 21 Etapas",
+                "description": "Template completo v3.0 com todas as etapas e estrutura modular compatível com Lovable.",
+                "metadata": {
+                  "createdAt": "2025-10-20T00:00:00Z",
+                  "updatedAt": "2025-10-20T08:00:00Z",
+                  "author": "Gisele Galvão - Branding & Imagem Pessoal",
+                  "version": "3.0.1",
+                  "consolidated": true,
+                  "source": "quizSteps + json completo 21 etapas.txt"
+                },
+                "steps": {
+                  "step-01": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-01",
+                      "name": "Etapa step-01 - Intro",
+                      "description": "Etapa step-01 do Quiz de Estilo (intro)",
+                      "category": "intro",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": {
+                        "heading": "Playfair Display, serif",
+                        "body": "Inter, sans-serif"
+                      }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-01-title",
+                        "content": { "text": "Bem-vinda ao Quiz de Estilo!" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-01-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "intro",
+                    "redirectPath": "/quiz-estilo/step-01",
+                    "navigation": { "nextStep": "step-02" }
+                  },
+                  "step-02": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-02",
+                      "name": "Etapa step-02 - Question",
+                      "description": "Etapa step-02 do Quiz de Estilo (question)",
+                      "category": "question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-02-title",
+                        "content": { "text": "Pergunta 1 de 10" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-02-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "question",
+                    "redirectPath": "/quiz-estilo/step-02",
+                    "navigation": { "nextStep": "step-03" }
+                  },
+                  "step-03": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-03",
+                      "name": "Etapa step-03 - Question",
+                      "description": "Etapa step-03 do Quiz de Estilo (question)",
+                      "category": "question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-03-title",
+                        "content": { "text": "Pergunta 2 de 10" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-03-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "question",
+                    "redirectPath": "/quiz-estilo/step-03",
+                    "navigation": { "nextStep": "step-04" }
+                  },
+                  "step-04": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-04",
+                      "name": "Etapa step-04 - Question",
+                      "description": "Etapa step-04 do Quiz de Estilo (question)",
+                      "category": "question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-04-title",
+                        "content": { "text": "Pergunta 3 de 10" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-04-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "question",
+                    "redirectPath": "/quiz-estilo/step-04",
+                    "navigation": { "nextStep": "step-05" }
+                  },
+                  "step-05": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-05",
+                      "name": "Etapa step-05 - Question",
+                      "description": "Etapa step-05 do Quiz de Estilo (question)",
+                      "category": "question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-05-title",
+                        "content": { "text": "Pergunta 4 de 10" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-05-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "question",
+                    "redirectPath": "/quiz-estilo/step-05",
+                    "navigation": { "nextStep": "step-06" }
+                  },
+                  "step-06": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-06",
+                      "name": "Etapa step-06 - Question",
+                      "description": "Etapa step-06 do Quiz de Estilo (question)",
+                      "category": "question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-06-title",
+                        "content": { "text": "Pergunta 5 de 10" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-06-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "question",
+                    "redirectPath": "/quiz-estilo/step-06",
+                    "navigation": { "nextStep": "step-07" }
+                  },
+                  "step-07": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-07",
+                      "name": "Etapa step-07 - Question",
+                      "description": "Etapa step-07 do Quiz de Estilo (question)",
+                      "category": "question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-07-title",
+                        "content": { "text": "Pergunta 6 de 10" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-07-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "question",
+                    "redirectPath": "/quiz-estilo/step-07",
+                    "navigation": { "nextStep": "step-08" }
+                  },
+                  "step-08": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-08",
+                      "name": "Etapa step-08 - Question",
+                      "description": "Etapa step-08 do Quiz de Estilo (question)",
+                      "category": "question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-08-title",
+                        "content": { "text": "Pergunta 7 de 10" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-08-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "question",
+                    "redirectPath": "/quiz-estilo/step-08",
+                    "navigation": { "nextStep": "step-09" }
+                  },
+                  "step-09": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-09",
+                      "name": "Etapa step-09 - Question",
+                      "description": "Etapa step-09 do Quiz de Estilo (question)",
+                      "category": "question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-09-title",
+                        "content": { "text": "Pergunta 8 de 10" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-09-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "question",
+                    "redirectPath": "/quiz-estilo/step-09",
+                    "navigation": { "nextStep": "step-10" }
+                  },
+                  "step-10": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-10",
+                      "name": "Etapa step-10 - Question",
+                      "description": "Etapa step-10 do Quiz de Estilo (question)",
+                      "category": "question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-10-title",
+                        "content": { "text": "Pergunta 9 de 10" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-10-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "question",
+                    "redirectPath": "/quiz-estilo/step-10",
+                    "navigation": { "nextStep": "step-11" }
+                  },
+                  "step-11": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-11",
+                      "name": "Etapa step-11 - Question",
+                      "description": "Etapa step-11 do Quiz de Estilo (question)",
+                      "category": "question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-11-title",
+                        "content": { "text": "Pergunta 10 de 10" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-11-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "question",
+                    "redirectPath": "/quiz-estilo/step-11",
+                    "navigation": { "nextStep": "step-12" }
+                  },
+                  "step-12": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-12",
+                      "name": "Etapa step-12 - Transition",
+                      "description": "Etapa step-12 do Quiz de Estilo (transition)",
+                      "category": "transition",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-12-title",
+                        "content": { "text": "Transição para as perguntas estratégicas" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-12-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "transition",
+                    "redirectPath": "/quiz-estilo/step-12",
+                    "navigation": { "nextStep": "step-13" }
+                  },
+                  "step-13": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-13",
+                      "name": "Etapa step-13 - Strategic-Question",
+                      "description": "Etapa step-13 do Quiz de Estilo (strategic-question)",
+                      "category": "strategic-question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-13-title",
+                        "content": { "text": "Pergunta estratégica 1" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-13-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "strategic-question",
+                    "redirectPath": "/quiz-estilo/step-13",
+                    "navigation": { "nextStep": "step-14" }
+                  },
+                  "step-14": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-14",
+                      "name": "Etapa step-14 - Strategic-Question",
+                      "description": "Etapa step-14 do Quiz de Estilo (strategic-question)",
+                      "category": "strategic-question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-14-title",
+                        "content": { "text": "Pergunta estratégica 2" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-14-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "strategic-question",
+                    "redirectPath": "/quiz-estilo/step-14",
+                    "navigation": { "nextStep": "step-15" }
+                  },
+                  "step-15": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-15",
+                      "name": "Etapa step-15 - Strategic-Question",
+                      "description": "Etapa step-15 do Quiz de Estilo (strategic-question)",
+                      "category": "strategic-question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-15-title",
+                        "content": { "text": "Pergunta estratégica 3" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-15-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "strategic-question",
+                    "redirectPath": "/quiz-estilo/step-15",
+                    "navigation": { "nextStep": "step-16" }
+                  },
+                  "step-16": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-16",
+                      "name": "Etapa step-16 - Strategic-Question",
+                      "description": "Etapa step-16 do Quiz de Estilo (strategic-question)",
+                      "category": "strategic-question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-16-title",
+                        "content": { "text": "Pergunta estratégica 4" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-16-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "strategic-question",
+                    "redirectPath": "/quiz-estilo/step-16",
+                    "navigation": { "nextStep": "step-17" }
+                  },
+                  "step-17": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-17",
+                      "name": "Etapa step-17 - Strategic-Question",
+                      "description": "Etapa step-17 do Quiz de Estilo (strategic-question)",
+                      "category": "strategic-question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-17-title",
+                        "content": { "text": "Pergunta estratégica 5" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-17-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "strategic-question",
+                    "redirectPath": "/quiz-estilo/step-17",
+                    "navigation": { "nextStep": "step-18" }
+                  },
+                  "step-18": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-18",
+                      "name": "Etapa step-18 - Strategic-Question",
+                      "description": "Etapa step-18 do Quiz de Estilo (strategic-question)",
+                      "category": "strategic-question",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-18-title",
+                        "content": { "text": "Pergunta estratégica 6" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-18-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "strategic-question",
+                    "redirectPath": "/quiz-estilo/step-18",
+                    "navigation": { "nextStep": "step-19" }
+                  },
+                  "step-19": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-19",
+                      "name": "Etapa step-19 - Transition-Result",
+                      "description": "Etapa step-19 do Quiz de Estilo (transition-result)",
+                      "category": "transition-result",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-19-title",
+                        "content": { "text": "Transição para o resultado final" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-19-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "transition-result",
+                    "redirectPath": "/quiz-estilo/step-19",
+                    "navigation": { "nextStep": "step-20" }
+                  },
+                  "step-20": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-20",
+                      "name": "Etapa step-20 - Result",
+                      "description": "Etapa step-20 do Quiz de Estilo (result)",
+                      "category": "result",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-20-title",
+                        "content": { "text": "Resultado final do seu estilo!" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-20-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "result",
+                    "redirectPath": "/quiz-estilo/step-20",
+                    "navigation": { "nextStep": "step-21" }
+                  },
+                  "step-21": {
+                    "templateVersion": "3.0",
+                    "metadata": {
+                      "id": "step-21",
+                      "name": "Etapa step-21 - Offer",
+                      "description": "Etapa step-21 do Quiz de Estilo (offer)",
+                      "category": "offer",
+                      "createdAt": "2025-10-20T00:00:00Z",
+                      "updatedAt": "2025-10-20T00:00:00Z",
+                      "author": "Quiz Flow Builder",
+                      "version": "3.0.1"
+                    },
+                    "theme": {
+                      "colors": {
+                        "primary": "#B89B7A",
+                        "secondary": "#432818",
+                        "background": "#FAF9F7",
+                        "text": "#1F2937",
+                        "border": "#E5E7EB"
+                      },
+                      "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+                    },
+                    "sections": [
+                      {
+                        "type": "question-title",
+                        "id": "step-21-title",
+                        "content": { "text": "Oferta personalizada" },
+                        "style": { "backgroundColor": "transparent", "padding": 16 },
+                        "animation": { "type": "fade", "duration": 300 }
+                      },
+                      {
+                        "type": "options grid",
+                        "id": "step-21-options",
+                        "content": {
+                          "options": [
+                            { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+                            { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+                            { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+                            { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" },
+                            { "id": "romantico", "text": "Romântico", "image": "/quiz-assets/romantico.webp" },
+                            { "id": "sexy", "text": "Sexy", "image": "/quiz-assets/sexy.webp" },
+                            { "id": "dramatico", "text": "Dramático", "image": "/quiz-assets/dramatico.webp" },
+                            { "id": "criativo", "text": "Criativo", "image": "/quiz-assets/criativo.webp" }
+                          ],
+                          "columns": 2,
+                          "multipleSelection": true,
+                          "minSelections": 3,
+                          "maxSelections": 3,
+                          "showImages": true
+                        }
+                      }
+                    ],
+                    "validation": {
+                      "required": ["selectedOptions"],
+                      "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+                    },
+                    "behavior": { "autoAdvance": true },
+                    "type": "offer",
+                    "redirectPath": "/quiz-estilo/step-21",
+                    "navigation": { "nextStep": null }
+                  }
+                },
+                "settings": {
+                  "autoAdvance": true,
+                  "showProgress": true,
+                  "progressType": "bar",
+                  "allowBack": false
+                },
+                "globalConfig": {
+                  "navigation": {
+                    "autoAdvanceSteps": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+                    "manualAdvanceSteps": [12,19,20,21],
+                    "autoAdvanceDelay": 1000
+                  },
+                  "validation": {
+                    "rules": {
+                      "step-01": { "type": "input", "required": true, "minLength": 2 },
+                      "step-02-11": { "type": "selection", "required": true, "requiredSelections": 3 },
+                      "step-13-18": { "type": "selection", "required": true, "requiredSelections": 1 }
+                    }
+                  }
+                }
               }
-            ],
-            "columns": 2,
-            "multipleSelection": true,
-            "minSelections": 3,
-            "maxSelections": 3,
-            "showImages": true,
-            "imageSize": 256,
-            "autoAdvance": true,
-            "autoAdvanceDelay": 1500,
-            "validationMessage": "Selecione 3 opções para continuar",
-            "requiredSelections": 3
-          },
-          "style": {
-            "backgroundColor": "transparent",
-            "padding": 16
-          },
-          "animation": {
-            "type": "slideUp",
-            "duration": 300,
-            "delay": 100,
-            "easing": "ease-out"
-          },
-          "properties": {
-            "options": [
-              {
-                "id": "natural",
-                "text": "Conforto, leveza e praticidade no vestir",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                "value": "natural"
-              },
-              {
-                "id": "classico",
-                "text": "Discrição, caimento clássico e sobriedade",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                "value": "classico"
-              },
-              {
-                "id": "contemporaneo",
-                "text": "Praticidade com um toque de estilo atual",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                "value": "contemporaneo"
-              },
-              {
-                "id": "elegante",
-                "text": "Elegância refinada, moderna e sem exageros",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                "value": "elegante"
-              },
-              {
-                "id": "romantico",
-                "text": "Delicadeza em tecidos suaves e fluidos",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
-                "value": "romantico"
-              },
-              {
-                "id": "sexy",
-                "text": "Sensualidade com destaque para o corpo",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
-                "value": "sexy"
-              },
-              {
-                "id": "dramatico",
-                "text": "Impacto visual com peças estruturadas e assimétricas",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
-                "value": "dramatico"
-              },
-              {
-                "id": "criativo",
-                "text": "Mix criativo com formas ousadas e originais",
-                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
-                "value": "criativo"
-              }
-            ],
-            "columns": 2,
-            "multipleSelection": true,
-            "minSelections": 3,
-            "maxSelections": 3,
-            "showImages": true,
-            "imageSize": 256,
-            "autoAdvance": true,
-            "autoAdvanceDelay": 1500,
-            "validationMessage": "Selecione 3 opções para continuar",
-            "requiredSelections": 3
-          }
-        },
-        {
-          "type": "CTAButton",
-          "id": "step-02-cta-next",
-          "content": {
-            "label": "Avançar",
-            "href": "#next",
-            "variant": "primary",
-            "size": "large"
-          },
-          "style": {},
-          "animation": {
-            "type": "fade",
-            "duration": 300,
-            "delay": 0,
-            "easing": "ease-out"
-          }
-        }
-      ],
-      "validation": {
-        "required": [
-          "selectedOptions"
-        ],
-        "rules": {
-          "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Por favor, selecione exatamente 3 opções"
-          }
-        }
-      },
-      "behavior": {},
-      "type": "question",
-      "title": "Q1 - Roupa Favorita",
-      "redirectPath": "/quiz-estilo/step-02",
-      "navigation": {
-        "nextStep": "step-03"
-      }
-    },
-    "step-03": {
-      "templateVersion": "3.0",
-      "metadata": {
-        "id": "step-03-question-v3",
-        "name": "Q2 - Nome pessoal",
-        "description": "Questão 2 sobre preferências de estilo",
-        "category": "quiz-question",
-        "tags": [
-          "quiz",
-          "style",
-          "question"
-        ],
-        "questionNumber": 2,
-        "totalQuestions": 13,
-        "createdAt": "2025-10-13T00:32:31.714Z",
-        "updatedAt": "2025-10-13T00:32:31.714Z",
-        "author": "Quiz Flow Pro",
-        "version": "3.0.0"
-      },
-      "theme": {
-        "colors": {
-          "primary": "#B89B7A",
-          "primaryHover": "#A68B6A",
-          "primaryLight": "#F3E8D3",
-          "secondary": "#432818",
-          "background": "#FAF9F7",
-          "text": "#1F2937",
-          "border": "#E5E7EB",
-          "selected": "#B89B7A",
-          "hover": "#F3E8D3"
-        },
-        "fonts": {
-          "heading": "Playfair Display, serif",
-          "body": "Inter, sans-serif"
-        },
-        "spacing": {
-          "sm": 8,
-          "md": 16,
-          "lg": 24,
-          "xl": 32
-        },
-        "borderRadius": {
-          "sm": 4,
-          "md": 8,
-          "lg": 12,
-          "xl": 16
-        }
-      },
-      "sections": [
-        {
-          "type": "question-title",
-          "id": "step-03-question-title",
-          "content": {
-            "text": "RESUMA A SUA PERSONALIDADE:"
-          },
-          "style": {},
-          "animation": {
-            "type": "fade",
-            "duration": 300,
-            "delay": 0,
-            "easing": "ease-out"
-          }
-        },
-        {
-          "type": "question-hero",
-          "id": "question-hero-03",
-          "content": {
-            "questionNumber": "2 de 10",
-            "questionText": "RESUMA A SUA PERSONALIDADE:",
-            "currentQuestion": 2,
-            "totalQuestions": 13,
-            "progressValue": 14,
-            "showProgress": true,
-            "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
-          },
-          "style": {
-            "backgroundColor": "transparent",
-            "padding": 16
-          },
-          "animation": {
-            "type": "fade",
             "duration": 300,
             "delay": 0,
             "easing": "ease-out"
