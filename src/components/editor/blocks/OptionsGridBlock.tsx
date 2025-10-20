@@ -359,10 +359,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       // usar o template canônico diretamente
       const template = getQuiz21StepsTemplate();
       const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
-      const stepTemplate = (template as any)[stepId];
+      const rawStep = (template as any)[stepId];
 
       // Se não tiver o step no template, retornar fallback
-      if (!stepTemplate) {
+      if (!rawStep) {
         console.warn(`⚠️ OptionsGridBlock: Step ${stepId} não encontrado no template`);
         return getHardcodedStepBehavior(stepNumber);
       }
@@ -378,11 +378,20 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         return 'offer'; // index === 21
       };
 
+      // Normalizar componentes do step (array direto, blocks, ou sections)
+      const components: any[] = Array.isArray(rawStep)
+        ? rawStep
+        : Array.isArray((rawStep as any)?.blocks)
+          ? (rawStep as any).blocks
+          : Array.isArray((rawStep as any)?.sections)
+            ? (rawStep as any).sections
+            : [];
+
       // Encontrar grids de opções para determinar validação
-      const optionsGrid = stepTemplate.find((block: any) =>
-        block.type === 'options-grid' ||
-        block.type.includes('options')
-      );
+      const optionsGrid = components.find((b: any) => {
+        const t = String(b?.type || '').toLowerCase();
+        return t === 'options-grid' || t === 'options grid' || t.includes('options');
+      });
 
       // Construir configuração manual
       const tempConfig = {
@@ -399,9 +408,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         validation: {
           type: optionsGrid ? 'selection' : 'none',
           required: Boolean(optionsGrid),
-          requiredSelections: optionsGrid?.properties?.requiredSelections || 1,
-          minSelections: optionsGrid?.properties?.minSelections || 1,
-          maxSelections: optionsGrid?.properties?.maxSelections || 1,
+          requiredSelections: (optionsGrid?.properties?.requiredSelections ?? optionsGrid?.content?.requiredSelections ?? 1),
+          minSelections: (optionsGrid?.properties?.minSelections ?? optionsGrid?.content?.minSelections ?? 1),
+          maxSelections: (optionsGrid?.properties?.maxSelections ?? optionsGrid?.content?.maxSelections ?? 1),
           message: 'Por favor, complete esta etapa para continuar'
         }
       };

@@ -521,7 +521,6 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
                 }}
                 isSelected={isSelected}
                 isPreviewing={mode === 'production' || mode === 'preview'}
-                mode={mode}
                 onClick={() => {
                   // Mantém seleção ao clicar no próprio componente
                   if (isSelectable && block.id && onBlockClick) {
