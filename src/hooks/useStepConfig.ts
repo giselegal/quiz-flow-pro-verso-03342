@@ -11,7 +11,7 @@ import { getQuiz21StepsTemplate } from '@/templates/imports';
 // Interface para configuração de step (adaptada do HybridTemplateService)
 interface StepConfig {
     metadata: {
-        type: 'intro' | 'question' | 'strategic-question' | 'transition' | 'result' | 'offer';
+        type: 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer';
         stepNumber: number;
     };
     behavior: {
@@ -71,11 +71,11 @@ export const useStepConfig = ({
             try {
                 setIsLoading(true);
                 
-                // Obter template canônico
+                // Obter template canônico (v3: objeto com sections/blocks)
                 const template = getQuiz21StepsTemplate();
                 const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
                 const stepTemplate = (template as any)[stepId];
-                
+
                 // Se não tiver o step no template, retornar null
                 if (!stepTemplate) {
                     if (mounted) {
@@ -84,7 +84,16 @@ export const useStepConfig = ({
                     }
                     return;
                 }
-                
+
+                // Extrair lista de componentes do step (suporta arrays diretos, blocks ou sections)
+                const components: any[] = Array.isArray(stepTemplate)
+                    ? stepTemplate
+                    : Array.isArray(stepTemplate?.blocks)
+                        ? stepTemplate.blocks
+                        : Array.isArray(stepTemplate?.sections)
+                            ? stepTemplate.sections
+                            : [];
+
                 // Determinar o tipo de step baseado no índice
                 const getStepType = (index: number) => {
                     if (index === 1) return 'intro';
@@ -97,10 +106,27 @@ export const useStepConfig = ({
                 };
                 
                 // Encontrar grids de opções para determinar validação
-                const optionsGrid = stepTemplate.find((block: any) => 
-                    block.type === 'options-grid' || 
-                    block.type.includes('options')
-                );
+                const optionsGrid = components.find((block: any) => {
+                    const t = String(block?.type || '').toLowerCase();
+                    return t === 'options-grid' || t === 'options grid' || t.includes('options');
+                });
+
+                // Extrair propriedades de validação a partir do grid
+                const requiredSelections =
+                    optionsGrid?.properties?.requiredSelections ??
+                    optionsGrid?.minSelections ??
+                    optionsGrid?.properties?.minSelections ??
+                    1;
+
+                const minSelections =
+                    optionsGrid?.properties?.minSelections ??
+                    optionsGrid?.minSelections ??
+                    1;
+
+                const maxSelections =
+                    optionsGrid?.properties?.maxSelections ??
+                    optionsGrid?.maxSelections ??
+                    1;
                 
                 // Construir configuração do step
                 const stepConfig: StepConfig = {
@@ -117,9 +143,9 @@ export const useStepConfig = ({
                     validation: {
                         type: optionsGrid ? 'selection' : 'none',
                         required: Boolean(optionsGrid),
-                        requiredSelections: optionsGrid?.properties?.requiredSelections || 1,
-                        minSelections: optionsGrid?.properties?.minSelections || 1,
-                        maxSelections: optionsGrid?.properties?.maxSelections || 1,
+                        requiredSelections,
+                        minSelections,
+                        maxSelections,
                         message: 'Por favor, complete esta etapa para continuar'
                     },
                     ui: {

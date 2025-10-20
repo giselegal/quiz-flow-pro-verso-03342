@@ -244,10 +244,20 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       block?.type === 'options-grid' && (!options || options.length === 0) &&
       Number.isFinite(stepNum) && stepNum >= 1
     ) {
-      const key = `step-${stepNum}`;
+      const key = `step-${String(stepNum).padStart(2, '0')}`;
       const canonicalTemplate = getQuiz21StepsTemplate();
-      const canonicalStep = (canonicalTemplate as any)[key] || [];
-      const canonicalGrid = canonicalStep.find((b: any) => (b?.type || '').toLowerCase() === 'options-grid');
+      const rawStep = (canonicalTemplate as any)[key] || [];
+      const components: any[] = Array.isArray(rawStep)
+        ? rawStep
+        : Array.isArray(rawStep?.blocks)
+          ? rawStep.blocks
+          : Array.isArray(rawStep?.sections)
+            ? rawStep.sections
+            : [];
+      const canonicalGrid = components.find((b: any) => {
+        const t = String(b?.type || '').toLowerCase();
+        return t === 'options-grid' || t === 'options grid' || t.includes('options');
+      });
       const canonicalOptions = canonicalGrid?.content?.options;
       if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
         options = canonicalOptions as Option[];
@@ -270,10 +280,20 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
 
       if (runtimeStep != null && Number.isFinite(Number(runtimeStep)) && Number(runtimeStep) >= 1) {
-        const key = `step-${runtimeStep}`;
+        const key = `step-${String(runtimeStep).padStart(2, '0')}`;
         const canonicalTemplate = getQuiz21StepsTemplate();
-        const canonicalStep = (canonicalTemplate as any)[key] || [];
-        const canonicalGrid = canonicalStep.find((b: any) => (b?.type || '').toLowerCase() === 'options-grid');
+        const rawStep = (canonicalTemplate as any)[key] || [];
+        const components: any[] = Array.isArray(rawStep)
+          ? rawStep
+          : Array.isArray(rawStep?.blocks)
+            ? rawStep.blocks
+            : Array.isArray(rawStep?.sections)
+              ? rawStep.sections
+              : [];
+        const canonicalGrid = components.find((b: any) => {
+          const t = String(b?.type || '').toLowerCase();
+          return t === 'options-grid' || t === 'options grid' || t.includes('options');
+        });
         const canonicalOptions = canonicalGrid?.content?.options;
         if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
           options = canonicalOptions as Option[];
