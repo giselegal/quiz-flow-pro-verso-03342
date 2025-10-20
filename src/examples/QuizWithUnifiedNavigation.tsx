@@ -13,15 +13,18 @@ export const QuizWithUnifiedNavigation: React.FC = () => {
     const totalSteps = 5;
 
     // Configuração de regras de navegação condicional
+    type AnswerOption = { id: string; value: string; points?: number };
+    type StepAnswer = { stepId: number; selectedOptions: AnswerOption[]; inputValue?: string; questionId: string };
+
     const navigationRules = [
         {
             stepId: 1, // Se estiver no passo 1
-            condition: (answers) => {
-                const stepAnswer = answers.find(a => a.stepId === 1);
+            condition: (answers: StepAnswer[]) => {
+                const stepAnswer = answers.find((a: StepAnswer) => a.stepId === 1);
                 if (!stepAnswer) return false;
 
                 // Se selecionou a opção "opção-3", vai direto para o passo 4
-                return stepAnswer.selectedOptions.some(opt => opt.id === 'opcao-3');
+                return stepAnswer.selectedOptions.some((opt: AnswerOption) => opt.id === 'opcao-3');
             },
             targetStepId: 4 // Pula para o passo 4
         }
@@ -87,7 +90,7 @@ export const QuizWithUnifiedNavigation: React.FC = () => {
     }, [currentStepIndex, inputValue, answers, setStepValidity]);
 
     // Opções fictícias para demonstração
-    const getStepOptions = (stepIndex) => {
+    const getStepOptions = (stepIndex: number): AnswerOption[] => {
         switch (stepIndex) {
             case 1:
                 return [
@@ -107,7 +110,7 @@ export const QuizWithUnifiedNavigation: React.FC = () => {
     };
 
     // Registrar uma seleção
-    const handleOptionSelect = (option) => {
+    const handleOptionSelect = (option: AnswerOption) => {
         recordAnswer(currentStepIndex, {
             questionId: `pergunta-${currentStepIndex}`,
             selectedOptions: [option],
@@ -115,8 +118,8 @@ export const QuizWithUnifiedNavigation: React.FC = () => {
     };
 
     // Registrar valor de input
-    const handleInputChange = (e) => {
-        const value = e.target.value;
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = (e.target as HTMLInputElement).value;
         setInputValue(value);
 
         recordAnswer(currentStepIndex, {

@@ -76,7 +76,7 @@ const UniversalQuizStep: React.FC<UniversalQuizStepProps> = ({
                 <div className="max-w-2xl w-full">
                     {/* Título */}
                     <h1 className="text-3xl font-bold text-center mb-6">
-                        {data.title || config.metadata.name}
+                        {data.title || (config as any)?.metadata?.name || `Step ${stepNumber}`}
                     </h1>
 
                     {/* Descrição */}
@@ -112,7 +112,7 @@ const UniversalQuizStep: React.FC<UniversalQuizStepProps> = ({
                         <div className="mb-6">
                             {/* Layout baseado na configuração */}
                             <div className={`
-                                ${config.ui?.layout === 'grid' ? 'grid grid-cols-2 gap-4' : 'space-y-3'}
+                                ${(config as any)?.ui?.layout === 'grid' ? 'grid grid-cols-2 gap-4' : 'space-y-3'}
                             `}>
                                 {data.options.map((option: any, index: number) => {
                                     const isSelected = selectedOptions.some(item => item.id === option.id);
