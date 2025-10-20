@@ -14,8 +14,8 @@ import { cn } from '@/lib/utils';
 import { getStyleConfig } from '@/config/styleConfig';
 import { getBestUserName } from '@/core/user/name';
 import { ResultDisplay } from '@/components/ui/ResultDisplay';
-// Carrega módulo modular somente quando necessário, evitando dependência estática em editor/*
-const ModularResultHeaderBlock = React.lazy(() => import('@/components/editor/modules').then(m => ({ default: m.ModularResultHeaderBlock })));
+// Carrega módulo modular via barrel neutro, evitando dependência estática em editor/*
+const ModularResultHeaderBlock = React.lazy(() => import('@/components/core/modules').then(m => ({ default: m.ModularResultHeaderBlock })));
 import { StorageService } from '@/services/core/StorageService';
 
 interface Step20FallbackTemplateProps {
