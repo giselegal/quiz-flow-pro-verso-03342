@@ -37,41 +37,33 @@ function migrateFile(file) {
   }
 
   let changed = false;
-  const visitBlocks = (blocks) => {
-    if (!Array.isArray(blocks)) return;
-    for (const b of blocks) {
-      if (!b || typeof b !== 'object') continue;
-      if (b.type === 'options-grid') {
-        b.type = 'options grid';
+  const visitAny = (node) => {
+    if (Array.isArray(node)) {
+      for (const item of node) visitAny(item);
+      return;
+    }
+    if (!node || typeof node !== 'object') return;
+    // Atualizar o próprio nó se for um bloco de opções
+    if (typeof node.type === 'string' && (node.type === 'options-grid' || node.type === 'options grid')) {
+      if (node.type === 'options-grid') {
+        node.type = 'options grid';
         changed = true;
       }
-      if (b.type === 'options grid') {
-        const props = b.properties || (b.properties = {});
-        const images = hasImages(props);
-        const desired = images ? 2 : 1;
-        if (props.columns !== desired) {
-          props.columns = desired;
-          changed = true;
-        }
+      const props = (node.properties = node.properties || node.content || {});
+      const images = hasImages(props);
+      const desired = images ? 2 : 1;
+      if (props.columns !== desired) {
+        props.columns = desired;
+        changed = true;
       }
+    }
+    // Recursão em todas as propriedades
+    for (const key of Object.keys(node)) {
+      visitAny(node[key]);
     }
   };
 
-  if (Array.isArray(json.blocks)) visitBlocks(json.blocks);
-  // Alguns arquivos armazenam várias etapas num array/objeto complexo
-  if (!changed) {
-    // tentar caminhos comuns
-    for (const k of Object.keys(json)) {
-      const v = json[k];
-      if (Array.isArray(v)) {
-        for (const item of v) {
-          if (item && Array.isArray(item.blocks)) visitBlocks(item.blocks);
-        }
-      } else if (v && typeof v === 'object' && Array.isArray(v.blocks)) {
-        visitBlocks(v.blocks);
-      }
-    }
-  }
+  visitAny(json);
 
   if (changed) {
     try {

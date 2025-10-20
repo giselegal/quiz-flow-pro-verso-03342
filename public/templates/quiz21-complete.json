@@ -227,7 +227,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-02",
           "content": {
             "options": [
@@ -300,6 +300,68 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "natural",
+                "text": "Conforto, leveza e praticidade no vestir",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+                "value": "natural"
+              },
+              {
+                "id": "classico",
+                "text": "Discrição, caimento clássico e sobriedade",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+                "value": "classico"
+              },
+              {
+                "id": "contemporaneo",
+                "text": "Praticidade com um toque de estilo atual",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+                "value": "contemporaneo"
+              },
+              {
+                "id": "elegante",
+                "text": "Elegância refinada, moderna e sem exageros",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+                "value": "elegante"
+              },
+              {
+                "id": "romantico",
+                "text": "Delicadeza em tecidos suaves e fluidos",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+                "value": "romantico"
+              },
+              {
+                "id": "sexy",
+                "text": "Sensualidade com destaque para o corpo",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+                "value": "sexy"
+              },
+              {
+                "id": "dramatico",
+                "text": "Impacto visual com peças estruturadas e assimétricas",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+                "value": "dramatico"
+              },
+              {
+                "id": "criativo",
+                "text": "Mix criativo com formas ousadas e originais",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+                "value": "criativo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar",
+            "requiredSelections": 3
           }
         },
         {
@@ -428,7 +490,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-03",
           "content": {
             "options": [
@@ -493,6 +555,60 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "natural",
+                "text": "Informal, espontânea, alegre, essencialista",
+                "value": "natural"
+              },
+              {
+                "id": "classico",
+                "text": "Conservadora, séria, organizada",
+                "value": "classico"
+              },
+              {
+                "id": "contemporaneo",
+                "text": "Informada, ativa, prática",
+                "value": "contemporaneo"
+              },
+              {
+                "id": "elegante",
+                "text": "Exigente, sofisticada, seletiva",
+                "value": "elegante"
+              },
+              {
+                "id": "romantico",
+                "text": "Feminina, meiga, delicada, sensível",
+                "value": "romantico"
+              },
+              {
+                "id": "sexy",
+                "text": "Glamorosa, vaidosa, sensual",
+                "value": "sexy"
+              },
+              {
+                "id": "dramatico",
+                "text": "Cosmopolita, moderna e audaciosa",
+                "value": "dramatico"
+              },
+              {
+                "id": "criativo",
+                "text": "Exótica, aventureira, livre",
+                "value": "criativo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar",
+            "requiredSelections": 3
           }
         },
         {
@@ -621,7 +737,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-04",
           "content": {
             "options": [
@@ -694,6 +810,68 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "natural",
+                "text": "Visual leve, despojado e natural",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+                "value": "natural"
+              },
+              {
+                "id": "classico",
+                "text": "Visual clássico e tradicional",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+                "value": "classico"
+              },
+              {
+                "id": "contemporaneo",
+                "text": "Visual casual com toque atual",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+                "value": "contemporaneo"
+              },
+              {
+                "id": "elegante",
+                "text": "Visual refinado e imponente",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+                "value": "elegante"
+              },
+              {
+                "id": "romantico",
+                "text": "Visual romântico, feminino e delicado",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+                "value": "romantico"
+              },
+              {
+                "id": "sexy",
+                "text": "Visual sensual, com saia justa e decote",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+                "value": "sexy"
+              },
+              {
+                "id": "dramatico",
+                "text": "Visual marcante e urbano (jeans + jaqueta)",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+                "value": "dramatico"
+              },
+              {
+                "id": "criativo",
+                "text": "Visual criativo, colorido e ousado",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+                "value": "criativo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar",
+            "requiredSelections": 3
           }
         },
         {
@@ -822,7 +1000,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-05",
           "content": {
             "options": [
@@ -887,6 +1065,60 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "natural",
+                "text": "Poucos detalhes, básico e prático",
+                "value": "natural"
+              },
+              {
+                "id": "classico",
+                "text": "Bem discretos e sutis, clean e clássico",
+                "value": "classico"
+              },
+              {
+                "id": "contemporaneo",
+                "text": "Básico, mas com um toque de estilo",
+                "value": "contemporaneo"
+              },
+              {
+                "id": "elegante",
+                "text": "Detalhes refinados, chic e que deem status",
+                "value": "elegante"
+              },
+              {
+                "id": "romantico",
+                "text": "Detalhes delicados, laços, babados",
+                "value": "romantico"
+              },
+              {
+                "id": "sexy",
+                "text": "Roupas que valorizem meu corpo: couro, zíper, fendas",
+                "value": "sexy"
+              },
+              {
+                "id": "dramatico",
+                "text": "Detalhes marcantes, firmeza e peso",
+                "value": "dramatico"
+              },
+              {
+                "id": "criativo",
+                "text": "Detalhes diferentes do convencional, produções ousadas",
+                "value": "criativo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar",
+            "requiredSelections": 3
           }
         },
         {
@@ -1015,7 +1247,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-06",
           "content": {
             "options": [
@@ -1088,6 +1320,68 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "natural",
+                "text": "Estampas clean, com poucas informações",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
+                "value": "natural"
+              },
+              {
+                "id": "classico",
+                "text": "Estampas clássicas e atemporais",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
+                "value": "classico"
+              },
+              {
+                "id": "contemporaneo",
+                "text": "Atemporais, mas que tenham uma pegada atual e moderna",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
+                "value": "contemporaneo"
+              },
+              {
+                "id": "elegante",
+                "text": "Estampas clássicas e atemporais, mas sofisticadas",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
+                "value": "elegante"
+              },
+              {
+                "id": "romantico",
+                "text": "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
+                "value": "romantico"
+              },
+              {
+                "id": "sexy",
+                "text": "Estampas de animal print, como onça, zebra e cobra",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
+                "value": "sexy"
+              },
+              {
+                "id": "dramatico",
+                "text": "Estampas geométricas, abstratas e exageradas como grandes poás",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
+                "value": "dramatico"
+              },
+              {
+                "id": "criativo",
+                "text": "Estampas diferentes do usual, como africanas, xadrez grandes",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
+                "value": "criativo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar",
+            "requiredSelections": 3
           }
         },
         {
@@ -1216,7 +1510,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-07",
           "content": {
             "options": [
@@ -1289,6 +1583,68 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "natural",
+                "text": "Cardigã bege confortável e casual",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
+                "value": "natural"
+              },
+              {
+                "id": "classico",
+                "text": "Blazer verde estruturado",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp",
+                "value": "classico"
+              },
+              {
+                "id": "contemporaneo",
+                "text": "Trench coat bege tradicional",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp",
+                "value": "contemporaneo"
+              },
+              {
+                "id": "elegante",
+                "text": "Blazer branco refinado",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp",
+                "value": "elegante"
+              },
+              {
+                "id": "romantico",
+                "text": "Casaco pink vibrante e moderno",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp",
+                "value": "romantico"
+              },
+              {
+                "id": "sexy",
+                "text": "Jaqueta vinho de couro estilosa",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
+                "value": "sexy"
+              },
+              {
+                "id": "dramatico",
+                "text": "Jaqueta preta estilo rocker",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
+                "value": "dramatico"
+              },
+              {
+                "id": "criativo",
+                "text": "Casaco estampado criativo e colorido",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
+                "value": "criativo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar",
+            "requiredSelections": 3
           }
         },
         {
@@ -1417,7 +1773,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-08",
           "content": {
             "options": [
@@ -1490,6 +1846,68 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "natural",
+                "text": "Calça fluida acetinada bege",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
+                "value": "natural"
+              },
+              {
+                "id": "classico",
+                "text": "Calça de alfaiataria cinza",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
+                "value": "classico"
+              },
+              {
+                "id": "contemporaneo",
+                "text": "Jeans reto e básico",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
+                "value": "contemporaneo"
+              },
+              {
+                "id": "elegante",
+                "text": "Calça reta bege de tecido",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
+                "value": "elegante"
+              },
+              {
+                "id": "romantico",
+                "text": "Calça ampla rosa alfaiatada",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
+                "value": "romantico"
+              },
+              {
+                "id": "sexy",
+                "text": "Legging preta de couro",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
+                "value": "sexy"
+              },
+              {
+                "id": "dramatico",
+                "text": "Calça reta preta de couro",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
+                "value": "dramatico"
+              },
+              {
+                "id": "criativo",
+                "text": "Calça estampada floral leve e ampla",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
+                "value": "criativo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar",
+            "requiredSelections": 3
           }
         },
         {
@@ -1618,7 +2036,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-09",
           "content": {
             "options": [
@@ -1691,6 +2109,68 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "natural",
+                "text": "Tênis nude casual e confortável",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
+                "value": "natural"
+              },
+              {
+                "id": "classico",
+                "text": "Scarpin nude de salto baixo",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
+                "value": "classico"
+              },
+              {
+                "id": "contemporaneo",
+                "text": "Sandália dourada com salto bloco",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
+                "value": "contemporaneo"
+              },
+              {
+                "id": "elegante",
+                "text": "Scarpin nude salto alto e fino",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
+                "value": "elegante"
+              },
+              {
+                "id": "romantico",
+                "text": "Sandália anabela off white",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
+                "value": "romantico"
+              },
+              {
+                "id": "sexy",
+                "text": "Sandália rosa de tiras finas",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
+                "value": "sexy"
+              },
+              {
+                "id": "dramatico",
+                "text": "Scarpin preto moderno com vinil transparente",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
+                "value": "dramatico"
+              },
+              {
+                "id": "criativo",
+                "text": "Scarpin colorido estampado",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
+                "value": "criativo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar",
+            "requiredSelections": 3
           }
         },
         {
@@ -1819,7 +2299,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-10",
           "content": {
             "options": [
@@ -1892,6 +2372,68 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "natural",
+                "text": "Pequenos e discretos, às vezes nem uso",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.png",
+                "value": "natural"
+              },
+              {
+                "id": "classico",
+                "text": "Brincos pequenos e discretos. Corrente fininha",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.png",
+                "value": "classico"
+              },
+              {
+                "id": "contemporaneo",
+                "text": "Acessórios que elevem meu look com um toque moderno",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.png",
+                "value": "contemporaneo"
+              },
+              {
+                "id": "elegante",
+                "text": "Acessórios sofisticados, joias ou semijoias",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.png",
+                "value": "elegante"
+              },
+              {
+                "id": "romantico",
+                "text": "Peças delicadas e com um toque feminino",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.png",
+                "value": "romantico"
+              },
+              {
+                "id": "sexy",
+                "text": "Brincos longos, colares que valorizem minha beleza",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.png",
+                "value": "sexy"
+              },
+              {
+                "id": "dramatico",
+                "text": "Acessórios pesados, que causem um impacto",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.png",
+                "value": "dramatico"
+              },
+              {
+                "id": "criativo",
+                "text": "Acessórios diferentes, grandes e marcantes",
+                "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.png",
+                "value": "criativo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar",
+            "requiredSelections": 3
           }
         },
         {
@@ -2020,7 +2562,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-11",
           "content": {
             "options": [
@@ -2085,6 +2627,60 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "natural",
+                "text": "São fáceis de cuidar",
+                "value": "natural"
+              },
+              {
+                "id": "classico",
+                "text": "São de excelente qualidade",
+                "value": "classico"
+              },
+              {
+                "id": "contemporaneo",
+                "text": "São fáceis de cuidar e modernos",
+                "value": "contemporaneo"
+              },
+              {
+                "id": "elegante",
+                "text": "São sofisticados",
+                "value": "elegante"
+              },
+              {
+                "id": "romantico",
+                "text": "São delicados",
+                "value": "romantico"
+              },
+              {
+                "id": "sexy",
+                "text": "São perfeitos ao meu corpo",
+                "value": "sexy"
+              },
+              {
+                "id": "dramatico",
+                "text": "São diferentes, e trazem um efeito para minha roupa",
+                "value": "dramatico"
+              },
+              {
+                "id": "criativo",
+                "text": "São exclusivos, criam identidade no look",
+                "value": "criativo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar",
+            "requiredSelections": 3
           }
         },
         {
@@ -2322,7 +2918,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-13",
           "content": {
             "options": [
@@ -2366,6 +2962,39 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "desconectada",
+                "text": "Me sinto desconectada da mulher que sou hoje",
+                "value": "desconectada"
+              },
+              {
+                "id": "duvidas",
+                "text": "Tenho dúvidas sobre o que realmente me valoriza",
+                "value": "duvidas"
+              },
+              {
+                "id": "as-vezes-acerto",
+                "text": "Às vezes acerto, às vezes erro",
+                "value": "as-vezes-acerto"
+              },
+              {
+                "id": "segura-evoluir",
+                "text": "Me sinto segura, mas sei que posso evoluir",
+                "value": "segura-evoluir"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar"
           }
         },
         {
@@ -2495,7 +3124,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-14",
           "content": {
             "options": [
@@ -2539,6 +3168,39 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "combinar-pecas",
+                "text": "Tenho peças, mas não sei como combiná-las",
+                "value": "combinar-pecas"
+              },
+              {
+                "id": "comprar-impulso",
+                "text": "Compro por impulso e me arrependo depois",
+                "value": "comprar-impulso"
+              },
+              {
+                "id": "imagem-nao-reflete",
+                "text": "Minha imagem não reflete quem eu sou",
+                "value": "imagem-nao-reflete"
+              },
+              {
+                "id": "perco-tempo",
+                "text": "Perco tempo e acabo usando sempre os mesmos looks",
+                "value": "perco-tempo"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar"
           }
         },
         {
@@ -2668,7 +3330,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-15",
           "content": {
             "options": [
@@ -2712,6 +3374,39 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "quase-todos-dias",
+                "text": "Quase todos os dias — é sempre uma indecisão",
+                "value": "quase-todos-dias"
+              },
+              {
+                "id": "compromissos-importantes",
+                "text": "Sempre que tenho um compromisso importante",
+                "value": "compromissos-importantes"
+              },
+              {
+                "id": "as-vezes-limitada",
+                "text": "Às vezes, mas me sinto limitada nas escolhas",
+                "value": "as-vezes-limitada"
+              },
+              {
+                "id": "raramente-segura",
+                "text": "Raramente — já me sinto segura ao me vestir",
+                "value": "raramente-segura"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar"
           }
         },
         {
@@ -2841,7 +3536,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-16",
           "content": {
             "options": [
@@ -2885,6 +3580,39 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "sim-quero",
+                "text": "Sim! Se existisse algo assim, eu quero",
+                "value": "sim-quero"
+              },
+              {
+                "id": "sim-momento-certo",
+                "text": "Sim, mas teria que ser no momento certo",
+                "value": "sim-momento-certo"
+              },
+              {
+                "id": "tenho-duvidas",
+                "text": "Tenho dúvidas se funcionaria pra mim",
+                "value": "tenho-duvidas"
+              },
+              {
+                "id": "nao-prefiro-continuar",
+                "text": "Não, prefiro continuar como estou",
+                "value": "nao-prefiro-continuar"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar"
           }
         },
         {
@@ -3014,7 +3742,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-17",
           "content": {
             "options": [
@@ -3058,6 +3786,39 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "sim-vale-muito",
+                "text": "Sim! Por esse resultado, vale muito",
+                "value": "sim-vale-muito"
+              },
+              {
+                "id": "sim-se-certeza",
+                "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
+                "value": "sim-se-certeza"
+              },
+              {
+                "id": "talvez-depende",
+                "text": "Talvez — depende do que está incluso",
+                "value": "talvez-depende"
+              },
+              {
+                "id": "nao-nao-pronta",
+                "text": "Não, ainda não estou pronta para investir",
+                "value": "nao-nao-pronta"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar"
           }
         },
         {
@@ -3187,7 +3948,7 @@
           }
         },
         {
-          "type": "options-grid",
+          "type": "options grid",
           "id": "options-grid-18",
           "content": {
             "options": [
@@ -3231,6 +3992,39 @@
             "duration": 300,
             "delay": 100,
             "easing": "ease-out"
+          },
+          "properties": {
+            "options": [
+              {
+                "id": "montar-looks-facilidade",
+                "text": "Montar looks com mais facilidade e confiança",
+                "value": "montar-looks-facilidade"
+              },
+              {
+                "id": "usar-que-tenho",
+                "text": "Usar o que já tenho e me sentir estilosa",
+                "value": "usar-que-tenho"
+              },
+              {
+                "id": "comprar-consciencia",
+                "text": "Comprar com mais consciência e sem culpa",
+                "value": "comprar-consciencia"
+              },
+              {
+                "id": "ser-admirada",
+                "text": "Ser admirada pela imagem que transmito",
+                "value": "ser-admirada"
+              }
+            ],
+            "columns": 2,
+            "multipleSelection": false,
+            "minSelections": 1,
+            "maxSelections": 1,
+            "showImages": true,
+            "imageSize": 256,
+            "autoAdvance": true,
+            "autoAdvanceDelay": 1500,
+            "validationMessage": "Selecione 3 opções para continuar"
           }
         },
         {

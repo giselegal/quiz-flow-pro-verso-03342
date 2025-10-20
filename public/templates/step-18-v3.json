@@ -90,7 +90,7 @@
       }
     },
     {
-      "type": "options-grid",
+      "type": "options grid",
       "id": "options-grid-18",
       "content": {
         "options": [
@@ -146,6 +146,51 @@
         "duration": 300,
         "delay": 100,
         "easing": "ease-out"
+      },
+      "properties": {
+        "options": [
+          {
+            "id": "18a",
+            "text": "Opção A para Q16",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+            "value": "18a",
+            "category": "Natural",
+            "points": 1
+          },
+          {
+            "id": "18b",
+            "text": "Opção B para Q16",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+            "value": "18b",
+            "category": "Clássico",
+            "points": 2
+          },
+          {
+            "id": "18c",
+            "text": "Opção C para Q16",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+            "value": "18c",
+            "category": "Contemporâneo",
+            "points": 2
+          },
+          {
+            "id": "18d",
+            "text": "Opção D para Q16",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+            "value": "18d",
+            "category": "Elegante",
+            "points": 3
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar"
       }
     },
     {
