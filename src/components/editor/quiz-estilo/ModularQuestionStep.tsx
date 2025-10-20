@@ -205,12 +205,14 @@ export default function ModularQuestionStep({
         const m = String(data?.id || '').match(/step-\d{2}/);
         const stepKey = m ? m[0] : 'step-02';
         try {
-            // Usar método canônico para obter o template
+            // Usar getQuiz21StepsTemplate() em vez de importar diretamente
             const template = getQuiz21StepsTemplate();
             const comps = safeGetTemplateBlocks(stepKey, template);
             const asBlocks = blockComponentsToBlocks(comps);
             if (asBlocks.length) setFallbackBlocks(asBlocks as any);
-        } catch { }
+        } catch (error) {
+            console.error(`❌ Erro ao carregar fallback blocks para ${stepKey}:`, error);
+        }
     }, [data?.id, blocks]);
 
     const hasRealBlocks = Array.isArray(effectiveBlocks) && effectiveBlocks.length > 0;

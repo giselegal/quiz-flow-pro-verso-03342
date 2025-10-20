@@ -89,12 +89,14 @@ export default function ModularStrategicQuestionStep({
         const m = String(data?.id || '').match(/step-\d{2}/);
         const stepKey = m ? m[0] : 'step-13';
         try {
-            // Usar o método canônico para obter o template
+            // Usar getQuiz21StepsTemplate() em vez de importar diretamente
             const template = getQuiz21StepsTemplate();
             const comps = safeGetTemplateBlocks(stepKey, template);
             const asBlocks = blockComponentsToBlocks(comps);
             if (asBlocks.length) setFallbackBlocks(asBlocks as any);
-        } catch { }
+        } catch (error) {
+            console.error(`❌ Erro ao carregar fallback blocks para ${stepKey}:`, error);
+        }
     }, [data?.id, blocks]);
 
     // Suporte a blocos reais (Block[])
