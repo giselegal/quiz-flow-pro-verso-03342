@@ -78,6 +78,12 @@ const ensureArray = (val: any): any[] => {
   return [];
 };
 
+// Helper seguro para find
+const safeFind = <T,>(list: unknown, predicate: (item: T) => boolean): T | undefined => {
+  if (Array.isArray(list)) return (list as T[]).find(predicate);
+  return undefined;
+};
+
 // NOTE: getMarginClass function available if needed for margin calculations
 /*
 const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' | 'right'): string => {
@@ -261,7 +267,18 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           : Array.isArray((rawStep as any)?.sections)
             ? (rawStep as any).sections
             : ensureArray((rawStep as any)?.blocks) || ensureArray((rawStep as any)?.sections) || [];
-      const canonicalGrid = (Array.isArray(components) ? components : []).find((b: any) => {
+      if (import.meta?.env?.DEV) {
+        console.log('🔎 OptionsGridBlock:getStepBehavior components shape', {
+          // stepNumber is available conceptually; logged via surrounding scope
+          rawType: typeof rawStep,
+          hasBlocks: !!(rawStep as any)?.blocks,
+          hasSections: !!(rawStep as any)?.sections,
+          isArray: Array.isArray(components),
+          length: Array.isArray(components) ? components.length : 0,
+          sample: Array.isArray(components) ? components.slice(0, 2) : undefined,
+        });
+      }
+      const canonicalGrid = safeFind<any>(components, (b: any) => {
         const t = String(b?.type || '').toLowerCase();
         return t === 'options-grid' || t === 'options grid' || t.includes('options');
       });
@@ -301,7 +318,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             : Array.isArray((rawStep as any)?.sections)
               ? (rawStep as any).sections
               : ensureArray((rawStep as any)?.blocks) || ensureArray((rawStep as any)?.sections) || [];
-        const canonicalGrid = (Array.isArray(components) ? components : []).find((b: any) => {
+        const canonicalGrid = safeFind<any>(components, (b: any) => {
           const t = String(b?.type || '').toLowerCase();
           return t === 'options-grid' || t === 'options grid' || t.includes('options');
         });
@@ -403,7 +420,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             : ensureArray((rawStep as any)?.blocks) || ensureArray((rawStep as any)?.sections) || [];
 
       // Encontrar grids de opções para determinar validação
-      const optionsGrid = (Array.isArray(components) ? components : []).find((b: any) => {
+      const optionsGrid = safeFind<any>(components, (b: any) => {
         const t = String(b?.type || '').toLowerCase();
         return t === 'options-grid' || t === 'options grid' || t.includes('options');
       });
