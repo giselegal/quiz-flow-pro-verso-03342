@@ -31,8 +31,8 @@ describe('QuizAppConnected - Preview não deve baixar normalized JSON', () => {
         await new Promise(r => setTimeout(r, 0));
 
         // Garantir que nenhum fetch para normalized foi feito
-        const calls = fetchSpy.mock.calls.map((c: any[]) => c[0] as string);
-        const normalizedCalls = calls.filter((u) => typeof u === 'string' && u.includes('/templates/normalized/'));
+        const calls: Array<RequestInfo | URL> = fetchSpy.mock.calls.map((c: [RequestInfo | URL, RequestInit?]) => c[0]);
+        const normalizedCalls = calls.filter((url) => typeof url === 'string' && url.includes('/templates/normalized/'));
         expect(normalizedCalls.length).toBe(0);
     });
 });
