@@ -9,10 +9,11 @@ interface QuizOptionsBlockProps extends BlockRendererCommonProps {
 }
 
 const QuizOptionsBlock: React.FC<QuizOptionsBlockProps> = ({ block, isSelected, isEditable, onSelect, onOpenProperties, contextData }) => {
-    const props = block.properties || {};
-    const content = (block as any).content || {};
-    const options: Array<{ id: string; text: string; imageUrl?: string; value?: string }> = props.options || content.options || [];
-    const currentAnswers: string[] = contextData?.currentAnswers || [];
+    const ensureArray = <T,>(val: unknown): T[] => Array.isArray(val) ? (val as T[]) : [];
+    const props = block?.properties || {};
+    const content = (block as any)?.content || {};
+    const options = ensureArray<{ id: string; text: string; imageUrl?: string; value?: string }>(props.options || content.options);
+    const currentAnswers = ensureArray<string>(contextData?.currentAnswers);
     const onAnswersChange: ((answers: string[]) => void) | undefined = contextData?.onAnswersChange;
     const result = useResultOptional();
 
