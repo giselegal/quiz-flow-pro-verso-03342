@@ -53,7 +53,7 @@
       "type": "question-title",
       "id": "step-02-question-title",
       "content": {
-        "text": "Qual tipo de roupa você mais se identifica?"
+        "text": "QUAL O SEU TIPO DE ROUPA FAVORITA?"
       },
       "style": {
         "textAlign": "center",
@@ -70,10 +70,10 @@
       "type": "question-hero",
       "id": "question-hero-02",
       "content": {
-        "questionNumber": "Q1 - ROUPA FAVORITA",
-        "questionText": "Qual tipo de roupa você mais se identifica?",
+        "questionNumber": "1 de 10",
+        "questionText": "QUAL O SEU TIPO DE ROUPA FAVORITA?",
         "currentQuestion": 1,
-        "totalQuestions": 13,
+        "totalQuestions": 10,
         "progressValue": 10,
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
@@ -95,38 +95,14 @@
       "id": "options-grid-02",
       "content": {
         "options": [
-          {
-            "id": "2a",
-            "text": "Vestidos fluidos e confortáveis",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "2a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "2b",
-            "text": "Blazers estruturados e calças alfaiataria",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "2b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "2c",
-            "text": "Peças modernas com toque minimalista",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "2c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "2d",
-            "text": "Vestidos sofisticados e acessórios marcantes",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "2d",
-            "category": "Elegante",
-            "points": 3
-          }
+          { "id": "natural", "text": "Conforto, leveza e praticidade no vestir", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp", "value": "natural" },
+          { "id": "classico", "text": "Discrição, caimento clássico e sobriedade", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp", "value": "classico" },
+          { "id": "contemporaneo", "text": "Praticidade com um toque de estilo atual", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp", "value": "contemporaneo" },
+          { "id": "elegante", "text": "Elegância refinada, moderna e sem exageros", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp", "value": "elegante" },
+          { "id": "romantico", "text": "Delicadeza em tecidos suaves e fluidos", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp", "value": "romantico" },
+          { "id": "sexy", "text": "Sensualidade com destaque para o corpo", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp", "value": "sexy" },
+          { "id": "dramatico", "text": "Impacto visual com peças estruturadas e assimétricas", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp", "value": "dramatico" },
+          { "id": "criativo", "text": "Mix criativo com formas ousadas e originais", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp", "value": "criativo" }
         ],
         "columns": 2,
         "multipleSelection": true,
@@ -150,38 +126,14 @@
       },
       "properties": {
         "options": [
-          {
-            "id": "2a",
-            "text": "Vestidos fluidos e confortáveis",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "2a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "2b",
-            "text": "Blazers estruturados e calças alfaiataria",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "2b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "2c",
-            "text": "Peças modernas com toque minimalista",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "2c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "2d",
-            "text": "Vestidos sofisticados e acessórios marcantes",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "2d",
-            "category": "Elegante",
-            "points": 3
-          }
+          { "id": "natural", "text": "Conforto, leveza e praticidade no vestir", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp", "value": "natural" },
+          { "id": "classico", "text": "Discrição, caimento clássico e sobriedade", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp", "value": "classico" },
+          { "id": "contemporaneo", "text": "Praticidade com um toque de estilo atual", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp", "value": "contemporaneo" },
+          { "id": "elegante", "text": "Elegância refinada, moderna e sem exageros", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp", "value": "elegante" },
+          { "id": "romantico", "text": "Delicadeza em tecidos suaves e fluidos", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp", "value": "romantico" },
+          { "id": "sexy", "text": "Sensualidade com destaque para o corpo", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp", "value": "sexy" },
+          { "id": "dramatico", "text": "Impacto visual com peças estruturadas e assimétricas", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp", "value": "dramatico" },
+          { "id": "criativo", "text": "Mix criativo com formas ousadas e originais", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp", "value": "criativo" }
         ],
         "columns": 2,
         "multipleSelection": true,
@@ -253,25 +205,21 @@
       "Natural",
       "Clássico",
       "Contemporâneo",
-      "Elegante"
+      "Elegante",
+      "Romântico",
+      "Sexy",
+      "Dramático",
+      "Criativo"
     ],
     "options": {
-      "2a": {
-        "category": "Natural",
-        "points": 1
-      },
-      "2b": {
-        "category": "Clássico",
-        "points": 2
-      },
-      "2c": {
-        "category": "Contemporâneo",
-        "points": 2
-      },
-      "2d": {
-        "category": "Elegante",
-        "points": 3
-      }
+      "natural": { "category": "Natural", "points": 1 },
+      "classico": { "category": "Clássico", "points": 1 },
+      "contemporaneo": { "category": "Contemporâneo", "points": 1 },
+      "elegante": { "category": "Elegante", "points": 1 },
+      "romantico": { "category": "Romântico", "points": 1 },
+      "sexy": { "category": "Sexy", "points": 1 },
+      "dramatico": { "category": "Dramático", "points": 1 },
+      "criativo": { "category": "Criativo", "points": 1 }
     }
   }
 }
