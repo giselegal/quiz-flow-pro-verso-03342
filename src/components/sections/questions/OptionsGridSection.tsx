@@ -57,6 +57,16 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
     onAnalytics,
     ariaLabelledById,
 }) => {
+    // Helpers para robustez contra shapes não-array
+    const ensureArray = <T,>(val: unknown): T[] => {
+        if (Array.isArray(val)) return val as T[];
+        if (val && typeof val === 'object') return Object.values(val as Record<string, T>);
+        return [];
+    };
+    const safeFind = <T,>(list: unknown, predicate: (item: T) => boolean): T | undefined => {
+        return Array.isArray(list) ? (list as T[]).find(predicate) : undefined;
+    };
+
     const { isMobile, isTablet } = useResponsive();
     const [localSelected, setLocalSelected] = useState<string[]>(selectedOptions);
     const autoAdvanceTimeoutRef = useRef<number | null>(null);
@@ -73,6 +83,16 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
         autoAdvanceDelay = 1500,
         validationMessage = 'Selecione ao menos uma opção',
     } = content;
+
+    // Normalizar opções para evitar .map/.find em tipos inválidos
+    const optionsArray = ensureArray<QuizOption>(options);
+
+    if (import.meta?.env?.DEV && !Array.isArray(options)) {
+        console.warn('⚠️ OptionsGridSection: content.options não é um array. Shape recebido:', {
+            type: typeof options,
+            keys: options && typeof options === 'object' ? Object.keys(options as any) : undefined,
+        });
+    }
 
     // Sincronizar com prop externa
     useEffect(() => {
@@ -112,18 +132,19 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
         setLocalSelected(newSelection);
         onSelectionChange(newSelection);
 
+        const metaOpt = safeFind<QuizOption>(optionsArray, (o) => o.id === optionId);
         onAnalytics?.('option_selected', {
             sectionId: id,
             optionId,
             totalSelected: newSelection.length,
             isMultiple: multipleSelection,
             selectionMode: multipleSelection ? 'multiple' : 'single',
-            optionMeta: options.find(o => o.id === optionId) ? {
-                category: options.find(o => o.id === optionId)!.category,
-                points: options.find(o => o.id === optionId)!.points,
+            optionMeta: metaOpt ? {
+                category: metaOpt.category,
+                points: metaOpt.points,
             } : undefined,
         });
-    }, [autoAdvance, autoAdvanceDelay, id, maxSelections, multipleSelection, onAnalytics, onSelectionChange, options, localSelected]);
+    }, [autoAdvance, autoAdvanceDelay, id, maxSelections, multipleSelection, onAnalytics, onSelectionChange, optionsArray, localSelected]);
 
     const isOptionSelected = (optionId: string) => localSelected.includes(optionId);
 
@@ -187,7 +208,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
                 aria-labelledby={ariaLabelledById}
                 aria-label={ariaLabelledById ? undefined : 'Opções'}
             >
-                {options.map((option, index) => {
+                {optionsArray.map((option, index) => {
                     const isSelected = isOptionSelected(option.id);
                     const disableUnselectedDueToLimit = multipleSelection && !isSelected && localSelected.length >= maxSelections;
 
