@@ -90,7 +90,7 @@
       }
     },
     {
-      "type": "options grid",
+      "type": "options-grid",
       "id": "options-grid-15",
       "content": {
         "options": [
@@ -128,14 +128,14 @@
           }
         ],
         "columns": 2,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
         "showImages": true,
         "imageSize": 256,
-        "autoAdvance": true,
-        "autoAdvanceDelay": 1500,
-        "validationMessage": "Selecione 3 opções para continuar"
+        "autoAdvance": false,
+        "autoAdvanceDelay": 0,
+        "validationMessage": "Selecione 1 opção para continuar"
       },
       "style": {
         "backgroundColor": "transparent",
@@ -183,14 +183,14 @@
           }
         ],
         "columns": 2,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
         "showImages": true,
         "imageSize": 256,
-        "autoAdvance": true,
-        "autoAdvanceDelay": 1500,
-        "validationMessage": "Selecione 3 opções para continuar"
+        "autoAdvance": false,
+        "autoAdvanceDelay": 0,
+        "validationMessage": "Selecione 1 opção para continuar"
       }
     },
     {
@@ -220,9 +220,9 @@
     ],
     "rules": {
       "selectedOptions": {
-        "minItems": 3,
-        "maxItems": 3,
-        "errorMessage": "Por favor, selecione exatamente 3 opções"
+        "minItems": 1,
+        "maxItems": 1,
+        "errorMessage": "Por favor, selecione 1 opção"
       }
     }
   },
@@ -231,8 +231,8 @@
     "prevStep": "step-14",
     "allowBack": true,
     "requiresUserInput": true,
-    "autoAdvance": true,
-    "autoAdvanceDelay": 1500
+    "autoAdvance": false,
+    "autoAdvanceDelay": 0
   },
   "analytics": {
     "events": [

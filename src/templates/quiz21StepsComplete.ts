@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-21T19:18:12.326Z
+ * Gerado em: 2025-10-21T20:08:40.889Z
  * Versão: 3.0.0
  */
 
@@ -3994,7 +3994,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "questionNumber": 11,
       "totalQuestions": 13,
       "createdAt": "2025-10-13T00:33:47.492Z",
-      "updatedAt": "2025-10-13T00:33:47.492Z",
+      "updatedAt": "2025-10-21T00:00:00.000Z",
       "author": "Quiz Flow Pro",
       "version": "3.0.0"
     },
@@ -4032,7 +4032,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "type": "question-title",
         "id": "step-13-question-title",
         "content": {
-          "text": "Qual é o seu principal objetivo com seu guarda-roupa?"
+          "text": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
         },
         "style": {
           "textAlign": "center",
@@ -4050,7 +4050,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "question-hero-13",
         "content": {
           "questionNumber": "Q11 - OBJETIVOS",
-          "questionText": "Qual é o seu principal objetivo com seu guarda-roupa?",
+          "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
           "currentQuestion": 11,
           "totalQuestions": 13,
           "progressValue": 57,
@@ -4070,52 +4070,36 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options grid",
+        "type": "options-grid",
         "id": "options-grid-13",
         "content": {
           "options": [
             {
-              "id": "13a",
-              "text": "Opção A para Q11",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "13a",
-              "category": "Natural",
-              "points": 1
+              "id": "desconectada",
+              "text": "Me sinto desconectada da mulher que sou hoje"
             },
             {
-              "id": "13b",
-              "text": "Opção B para Q11",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "13b",
-              "category": "Clássico",
-              "points": 2
+              "id": "duvidas",
+              "text": "Tenho dúvidas sobre o que realmente me valoriza"
             },
             {
-              "id": "13c",
-              "text": "Opção C para Q11",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "13c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "as-vezes-acerto",
+              "text": "Às vezes acerto, às vezes erro"
             },
             {
-              "id": "13d",
-              "text": "Opção D para Q11",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "13d",
-              "category": "Elegante",
-              "points": 3
+              "id": "segura-evoluir",
+              "text": "Me sinto segura, mas sei que posso evoluir"
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
-          "showImages": true,
-          "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
+          "showImages": false,
+          "imageSize": 0,
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         },
         "style": {
           "backgroundColor": "transparent",
@@ -4130,47 +4114,31 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "properties": {
           "options": [
             {
-              "id": "13a",
-              "text": "Opção A para Q11",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "13a",
-              "category": "Natural",
-              "points": 1
+              "id": "desconectada",
+              "text": "Me sinto desconectada da mulher que sou hoje"
             },
             {
-              "id": "13b",
-              "text": "Opção B para Q11",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "13b",
-              "category": "Clássico",
-              "points": 2
+              "id": "duvidas",
+              "text": "Tenho dúvidas sobre o que realmente me valoriza"
             },
             {
-              "id": "13c",
-              "text": "Opção C para Q11",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "13c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "as-vezes-acerto",
+              "text": "Às vezes acerto, às vezes erro"
             },
             {
-              "id": "13d",
-              "text": "Opção D para Q11",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "13d",
-              "category": "Elegante",
-              "points": 3
+              "id": "segura-evoluir",
+              "text": "Me sinto segura, mas sei que posso evoluir"
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
-          "showImages": true,
-          "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
+          "showImages": false,
+          "imageSize": 0,
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         }
       },
       {
@@ -4200,9 +4168,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       ],
       "rules": {
         "selectedOptions": {
-          "minItems": 3,
-          "maxItems": 3,
-          "errorMessage": "Por favor, selecione exatamente 3 opções"
+          "minItems": 1,
+          "maxItems": 1,
+          "errorMessage": "Por favor, selecione 1 opção"
         }
       }
     },
@@ -4211,8 +4179,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "prevStep": "step-12",
       "allowBack": true,
       "requiresUserInput": true,
-      "autoAdvance": true,
-      "autoAdvanceDelay": 1500
+      "autoAdvance": false,
+      "autoAdvanceDelay": 0
     },
     "analytics": {
       "events": [
@@ -4223,33 +4191,6 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "completion"
       ],
       "trackingId": "step-13-strategic-v3"
-    },
-    "scoring": {
-      "method": "points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante"
-      ],
-      "options": {
-        "13a": {
-          "category": "Natural",
-          "points": 1
-        },
-        "13b": {
-          "category": "Clássico",
-          "points": 2
-        },
-        "13c": {
-          "category": "Contemporâneo",
-          "points": 2
-        },
-        "13d": {
-          "category": "Elegante",
-          "points": 3
-        }
-      }
     },
     "strategic": {
       "isStrategic": true,
@@ -4312,7 +4253,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "type": "question-title",
         "id": "step-14-question-title",
         "content": {
-          "text": "Qual é o seu maior desafio ao se vestir?"
+          "text": "O que mais te desafia na hora de se vestir?"
         },
         "style": {
           "textAlign": "center",
@@ -4330,7 +4271,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "question-hero-14",
         "content": {
           "questionNumber": "Q12 - DESAFIOS",
-          "questionText": "Qual é o seu maior desafio ao se vestir?",
+          "questionText": "O que mais te desafia na hora de se vestir?",
           "currentQuestion": 12,
           "totalQuestions": 13,
           "progressValue": 62,
@@ -4350,52 +4291,36 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options grid",
+        "type": "options-grid",
         "id": "options-grid-14",
         "content": {
           "options": [
             {
-              "id": "14a",
-              "text": "Opção A para Q12",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "14a",
-              "category": "Natural",
-              "points": 1
+              "id": "combinar-pecas",
+              "text": "Tenho peças, mas não sei como combiná-las"
             },
             {
-              "id": "14b",
-              "text": "Opção B para Q12",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "14b",
-              "category": "Clássico",
-              "points": 2
+              "id": "comprar-impulso",
+              "text": "Compro por impulso e me arrependo depois"
             },
             {
-              "id": "14c",
-              "text": "Opção C para Q12",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "14c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "imagem-nao-reflete",
+              "text": "Minha imagem não reflete quem eu sou"
             },
             {
-              "id": "14d",
-              "text": "Opção D para Q12",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "14d",
-              "category": "Elegante",
-              "points": 3
+              "id": "perco-tempo",
+              "text": "Perco tempo e acabo usando sempre os mesmos looks"
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
-          "showImages": true,
-          "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
+          "showImages": false,
+          "imageSize": 0,
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         },
         "style": {
           "backgroundColor": "transparent",
@@ -4410,47 +4335,31 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "properties": {
           "options": [
             {
-              "id": "14a",
-              "text": "Opção A para Q12",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "14a",
-              "category": "Natural",
-              "points": 1
+              "id": "combinar-pecas",
+              "text": "Tenho peças, mas não sei como combiná-las"
             },
             {
-              "id": "14b",
-              "text": "Opção B para Q12",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "14b",
-              "category": "Clássico",
-              "points": 2
+              "id": "comprar-impulso",
+              "text": "Compro por impulso e me arrependo depois"
             },
             {
-              "id": "14c",
-              "text": "Opção C para Q12",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "14c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "imagem-nao-reflete",
+              "text": "Minha imagem não reflete quem eu sou"
             },
             {
-              "id": "14d",
-              "text": "Opção D para Q12",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "14d",
-              "category": "Elegante",
-              "points": 3
+              "id": "perco-tempo",
+              "text": "Perco tempo e acabo usando sempre os mesmos looks"
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
-          "showImages": true,
-          "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
+          "showImages": false,
+          "imageSize": 0,
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         }
       },
       {
@@ -4480,9 +4389,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       ],
       "rules": {
         "selectedOptions": {
-          "minItems": 3,
-          "maxItems": 3,
-          "errorMessage": "Por favor, selecione exatamente 3 opções"
+          "minItems": 1,
+          "maxItems": 1,
+          "errorMessage": "Por favor, selecione 1 opção"
         }
       }
     },
@@ -4491,8 +4400,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "prevStep": "step-13",
       "allowBack": true,
       "requiresUserInput": true,
-      "autoAdvance": true,
-      "autoAdvanceDelay": 1500
+      "autoAdvance": false,
+      "autoAdvanceDelay": 0
     },
     "analytics": {
       "events": [
@@ -4630,7 +4539,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options grid",
+        "type": "options-grid",
         "id": "options-grid-15",
         "content": {
           "options": [
@@ -4668,14 +4577,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
           "showImages": true,
           "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         },
         "style": {
           "backgroundColor": "transparent",
@@ -4723,14 +4632,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
           "showImages": true,
           "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         }
       },
       {
@@ -4760,9 +4669,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       ],
       "rules": {
         "selectedOptions": {
-          "minItems": 3,
-          "maxItems": 3,
-          "errorMessage": "Por favor, selecione exatamente 3 opções"
+          "minItems": 1,
+          "maxItems": 1,
+          "errorMessage": "Por favor, selecione 1 opção"
         }
       }
     },
@@ -4771,8 +4680,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "prevStep": "step-14",
       "allowBack": true,
       "requiresUserInput": true,
-      "autoAdvance": true,
-      "autoAdvanceDelay": 1500
+      "autoAdvance": false,
+      "autoAdvanceDelay": 0
     },
     "analytics": {
       "events": [
@@ -4910,7 +4819,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options grid",
+        "type": "options-grid",
         "id": "options-grid-16",
         "content": {
           "options": [
@@ -4948,14 +4857,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
           "showImages": true,
           "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         },
         "style": {
           "backgroundColor": "transparent",
@@ -5003,14 +4912,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
           "showImages": true,
           "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         }
       },
       {
@@ -5040,9 +4949,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       ],
       "rules": {
         "selectedOptions": {
-          "minItems": 3,
-          "maxItems": 3,
-          "errorMessage": "Por favor, selecione exatamente 3 opções"
+          "minItems": 1,
+          "maxItems": 1,
+          "errorMessage": "Por favor, selecione 1 opção"
         }
       }
     },
@@ -5051,8 +4960,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "prevStep": "step-15",
       "allowBack": true,
       "requiresUserInput": true,
-      "autoAdvance": true,
-      "autoAdvanceDelay": 1500
+      "autoAdvance": false,
+      "autoAdvanceDelay": 0
     },
     "analytics": {
       "events": [
@@ -5190,7 +5099,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options grid",
+        "type": "options-grid",
         "id": "options-grid-17",
         "content": {
           "options": [
@@ -5228,14 +5137,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
           "showImages": true,
           "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         },
         "style": {
           "backgroundColor": "transparent",
@@ -5283,14 +5192,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
           "showImages": true,
           "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         }
       },
       {
@@ -5320,9 +5229,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       ],
       "rules": {
         "selectedOptions": {
-          "minItems": 3,
-          "maxItems": 3,
-          "errorMessage": "Por favor, selecione exatamente 3 opções"
+          "minItems": 1,
+          "maxItems": 1,
+          "errorMessage": "Por favor, selecione 1 opção"
         }
       }
     },
@@ -5331,8 +5240,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "prevStep": "step-16",
       "allowBack": true,
       "requiresUserInput": true,
-      "autoAdvance": true,
-      "autoAdvanceDelay": 1500
+      "autoAdvance": false,
+      "autoAdvanceDelay": 0
     },
     "analytics": {
       "events": [
@@ -5470,7 +5379,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "options grid",
+        "type": "options-grid",
         "id": "options-grid-18",
         "content": {
           "options": [
@@ -5508,14 +5417,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
           "showImages": true,
           "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         },
         "style": {
           "backgroundColor": "transparent",
@@ -5563,14 +5472,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
             }
           ],
           "columns": 2,
-          "multipleSelection": true,
-          "minSelections": 3,
-          "maxSelections": 3,
+          "multipleSelection": false,
+          "minSelections": 1,
+          "maxSelections": 1,
           "showImages": true,
           "imageSize": 256,
-          "autoAdvance": true,
-          "autoAdvanceDelay": 1500,
-          "validationMessage": "Selecione 3 opções para continuar"
+          "autoAdvance": false,
+          "autoAdvanceDelay": 0,
+          "validationMessage": "Selecione 1 opção para continuar"
         }
       },
       {
@@ -5600,9 +5509,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       ],
       "rules": {
         "selectedOptions": {
-          "minItems": 3,
-          "maxItems": 3,
-          "errorMessage": "Por favor, selecione exatamente 3 opções"
+          "minItems": 1,
+          "maxItems": 1,
+          "errorMessage": "Por favor, selecione 1 opção"
         }
       }
     },
@@ -5611,8 +5520,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "prevStep": "step-17",
       "allowBack": true,
       "requiresUserInput": true,
-      "autoAdvance": true,
-      "autoAdvanceDelay": 1500
+      "autoAdvance": false,
+      "autoAdvanceDelay": 0
     },
     "analytics": {
       "events": [
