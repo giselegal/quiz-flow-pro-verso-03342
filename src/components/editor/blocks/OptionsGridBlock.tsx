@@ -372,7 +372,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     try {
       // Atalho seguro: Step 1 é introdução e não depende de grid de opções
       // Evita qualquer análise de template que possa falhar em ambientes minificados
-      if (stepNumber === 1) {
+      if (Number(stepNumber) === 1) {
         return getHardcodedStepBehavior(1);
       }
 
