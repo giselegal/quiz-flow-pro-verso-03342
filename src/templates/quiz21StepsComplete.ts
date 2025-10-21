@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-21T22:03:29.739Z
+ * Gerado em: 2025-10-21T22:09:51.271Z
  * Versão: 3.0.0
  */
 
@@ -5118,7 +5118,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "type": "question-text",
         "id": "q17-text",
         "content": {
-          "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
+          "text": "Você acredita que ter um passo a passo para alinhar seu estilo à sua essência pode acelerar sua transformação?"
         },
         "style": {
           "textAlign": "center",
@@ -5154,24 +5154,24 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "content": {
           "options": [
             {
-              "id": "sim-vale-muito",
-              "text": "Sim! Por esse resultado, vale muito",
-              "value": "sim-vale-muito"
+              "id": "sim-totalmente",
+              "text": "Sim! Sozinha é mais difícil manter consistência",
+              "value": "sim-totalmente"
             },
             {
-              "id": "sim-se-certeza",
-              "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
-              "value": "sim-se-certeza"
+              "id": "sim-ajudaria",
+              "text": "Sim, ter um método claro ajudaria muito",
+              "value": "sim-ajudaria"
             },
             {
-              "id": "talvez-depende",
-              "text": "Talvez — depende do que está incluso",
-              "value": "talvez-depende"
+              "id": "talvez",
+              "text": "Talvez — se for algo prático e fácil de aplicar",
+              "value": "talvez"
             },
             {
-              "id": "nao-nao-pronta",
-              "text": "Não, ainda não estou pronta para investir",
-              "value": "nao-nao-pronta"
+              "id": "nao-pronta",
+              "text": "Ainda não sei se estou pronta pra isso",
+              "value": "nao-pronta"
             }
           ],
           "columns": 1,
@@ -5197,24 +5197,24 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "properties": {
           "options": [
             {
-              "id": "sim-vale-muito",
-              "text": "Sim! Por esse resultado, vale muito",
-              "value": "sim-vale-muito"
+              "id": "sim-totalmente",
+              "text": "Sim! Sozinha é mais difícil manter consistência",
+              "value": "sim-totalmente"
             },
             {
-              "id": "sim-se-certeza",
-              "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
-              "value": "sim-se-certeza"
+              "id": "sim-ajudaria",
+              "text": "Sim, ter um método claro ajudaria muito",
+              "value": "sim-ajudaria"
             },
             {
-              "id": "talvez-depende",
-              "text": "Talvez — depende do que está incluso",
-              "value": "talvez-depende"
+              "id": "talvez",
+              "text": "Talvez — se for algo prático e fácil de aplicar",
+              "value": "talvez"
             },
             {
-              "id": "nao-nao-pronta",
-              "text": "Não, ainda não estou pronta para investir",
-              "value": "nao-nao-pronta"
+              "id": "nao-pronta",
+              "text": "Ainda não sei se estou pronta pra isso",
+              "value": "nao-pronta"
             }
           ],
           "columns": 1,
@@ -5380,7 +5380,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "type": "question-text",
         "id": "q18-text",
         "content": {
-          "text": "Qual desses resultados você mais gostaria de alcançar?"
+          "text": "Se você tivesse o acompanhamento certo, qual dessas mudanças mais te faria sentir realizada?"
         },
         "style": {
           "textAlign": "center",
@@ -5416,24 +5416,24 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "content": {
           "options": [
             {
-              "id": "montar-looks-facilidade",
-              "text": "Montar looks com mais facilidade e confiança",
-              "value": "montar-looks-facilidade"
+              "id": "seguranca-expressao",
+              "text": "Ter segurança para expressar quem eu sou através da minha imagem",
+              "value": "seguranca-expressao"
             },
             {
-              "id": "usar-que-tenho",
-              "text": "Usar o que já tenho e me sentir estilosa",
-              "value": "usar-que-tenho"
+              "id": "confianca-presenca",
+              "text": "Me sentir confiante e com presença em qualquer ambiente",
+              "value": "confianca-presenca"
             },
             {
-              "id": "comprar-consciencia",
-              "text": "Comprar com mais consciência e sem culpa",
-              "value": "comprar-consciencia"
+              "id": "clareza-estilo",
+              "text": "Ter clareza sobre meu estilo e como usá-lo no dia a dia",
+              "value": "clareza-estilo"
             },
             {
-              "id": "ser-admirada",
-              "text": "Ser admirada pela imagem que transmito",
-              "value": "ser-admirada"
+              "id": "guarda-roupa-intencional",
+              "text": "Construir um guarda-roupa intencional que comunique minha essência",
+              "value": "guarda-roupa-intencional"
             }
           ],
           "columns": 1,
@@ -5459,24 +5459,24 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "properties": {
           "options": [
             {
-              "id": "montar-looks-facilidade",
-              "text": "Montar looks com mais facilidade e confiança",
-              "value": "montar-looks-facilidade"
+              "id": "seguranca-expressao",
+              "text": "Ter segurança para expressar quem eu sou através da minha imagem",
+              "value": "seguranca-expressao"
             },
             {
-              "id": "usar-que-tenho",
-              "text": "Usar o que já tenho e me sentir estilosa",
-              "value": "usar-que-tenho"
+              "id": "confianca-presenca",
+              "text": "Me sentir confiante e com presença em qualquer ambiente",
+              "value": "confianca-presenca"
             },
             {
-              "id": "comprar-consciencia",
-              "text": "Comprar com mais consciência e sem culpa",
-              "value": "comprar-consciencia"
+              "id": "clareza-estilo",
+              "text": "Ter clareza sobre meu estilo e como usá-lo no dia a dia",
+              "value": "clareza-estilo"
             },
             {
-              "id": "ser-admirada",
-              "text": "Ser admirada pela imagem que transmito",
-              "value": "ser-admirada"
+              "id": "guarda-roupa-intencional",
+              "text": "Construir um guarda-roupa intencional que comunique minha essência",
+              "value": "guarda-roupa-intencional"
             }
           ],
           "columns": 1,
@@ -5598,14 +5598,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "type": "transition-hero",
         "id": "transition-hero-19",
         "content": {
-          "title": "Calculando seu estilo predominante...",
-          "subtitle": "Preparando seu resultado personalizado",
-          "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
-          "autoAdvanceDelay": 3000
+          "title": "Você chegou até aqui — e isso já diz muito sobre você.",
+          "subtitle": null,
+          "message": null,
+          "autoAdvanceDelay": 0
         },
         "style": {
-          "backgroundColor": "#FAF9F7",
-          "textColor": "#432818",
+          "backgroundColor": "#fffaf7",
+          "textColor": "#3a3a3a",
           "padding": 32
         },
         "animation": {
@@ -5617,13 +5617,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       },
       {
         "type": "text-inline",
-        "id": "step-19-transition-text",
+        "id": "step-19-paragraph-1",
         "content": {
-          "text": "Página de transição antes da exibição do resultado final"
+          "text": "Poucas mulheres se permitem parar e olhar para si com tanta intenção. E o que vem agora é mais do que um simples resultado — é o início de uma nova forma de se enxergar."
         },
         "style": {
           "textAlign": "center",
-          "marginTop": 8
+          "marginTop": 8,
+          "color": "#3a3a3a"
         },
         "animation": {
           "type": "fade",
@@ -5633,22 +5634,61 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "CTAButton",
-        "id": "step-19-transition-cta",
+        "type": "text-inline",
+        "id": "step-19-paragraph-2",
         "content": {
-          "label": "Continuar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "medium"
+          "text": "Seu Estilo Predominante vai revelar muito sobre como você comunica sua essência ao mundo. Mas o mais importante é o que você vai fazer com essa descoberta."
         },
         "style": {
           "textAlign": "center",
-          "marginTop": 12
+          "marginTop": 8,
+          "color": "#3a3a3a"
         },
         "animation": {
           "type": "fade",
           "duration": 250,
-          "delay": 50,
+          "delay": 20,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "text-inline",
+        "id": "step-19-paragraph-3",
+        "content": {
+          "text": "Em seguida, você vai conhecer um caminho completo para aplicar o seu estilo na prática — com leveza, estratégia e propósito. Um método criado para transformar não só o seu guarda-roupa, mas também a forma como você se apresenta e se sente todos os dias."
+        },
+        "style": {
+          "textAlign": "center",
+          "marginTop": 8,
+          "color": "#3a3a3a"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 40,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "CTAButton",
+        "id": "step-19-cta-show-result",
+        "content": {
+          "label": "Ver meu resultado agora",
+          "href": "#next",
+          "variant": "primary",
+          "size": "large"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginTop": 16,
+          "backgroundColor": "#B89B7A",
+          "color": "#FFFFFF",
+          "hoverColor": "#a08968"
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 250,
+          "delay": 60,
           "easing": "ease-out"
         }
       }
@@ -5657,9 +5697,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "nextStep": "step-20",
       "prevStep": "step-18",
       "allowBack": false,
-      "requiresUserInput": false,
-      "autoAdvance": true,
-      "autoAdvanceDelay": 3000
+      "requiresUserInput": true,
+      "autoAdvance": false,
+      "autoAdvanceDelay": 0
     },
     "analytics": {
       "events": [

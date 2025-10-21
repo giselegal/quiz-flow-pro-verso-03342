@@ -46,14 +46,14 @@
       "type": "transition-hero",
       "id": "transition-hero-19",
       "content": {
-        "title": "Calculando seu estilo predominante...",
-        "subtitle": "Preparando seu resultado personalizado",
-        "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
-        "autoAdvanceDelay": 3000
+        "title": "Você chegou até aqui — e isso já diz muito sobre você.",
+        "subtitle": null,
+        "message": null,
+        "autoAdvanceDelay": 0
       },
       "style": {
-        "backgroundColor": "#FAF9F7",
-        "textColor": "#432818",
+        "backgroundColor": "#fffaf7",
+        "textColor": "#3a3a3a",
         "padding": 32
       },
       "animation": {
@@ -65,13 +65,14 @@
     },
     {
       "type": "text-inline",
-      "id": "step-19-transition-text",
+      "id": "step-19-paragraph-1",
       "content": {
-        "text": "Página de transição antes da exibição do resultado final"
+        "text": "Poucas mulheres se permitem parar e olhar para si com tanta intenção. E o que vem agora é mais do que um simples resultado — é o início de uma nova forma de se enxergar."
       },
       "style": {
         "textAlign": "center",
-        "marginTop": 8
+        "marginTop": 8,
+        "color": "#3a3a3a"
       },
       "animation": {
         "type": "fade",
@@ -81,22 +82,61 @@
       }
     },
     {
-      "type": "CTAButton",
-      "id": "step-19-transition-cta",
+      "type": "text-inline",
+      "id": "step-19-paragraph-2",
       "content": {
-        "label": "Continuar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "medium"
+        "text": "Seu Estilo Predominante vai revelar muito sobre como você comunica sua essência ao mundo. Mas o mais importante é o que você vai fazer com essa descoberta."
       },
       "style": {
         "textAlign": "center",
-        "marginTop": 12
+        "marginTop": 8,
+        "color": "#3a3a3a"
       },
       "animation": {
         "type": "fade",
         "duration": 250,
-        "delay": 50,
+        "delay": 20,
+        "easing": "ease-out"
+      }
+    },
+    {
+      "type": "text-inline",
+      "id": "step-19-paragraph-3",
+      "content": {
+        "text": "Em seguida, você vai conhecer um caminho completo para aplicar o seu estilo na prática — com leveza, estratégia e propósito. Um método criado para transformar não só o seu guarda-roupa, mas também a forma como você se apresenta e se sente todos os dias."
+      },
+      "style": {
+        "textAlign": "center",
+        "marginTop": 8,
+        "color": "#3a3a3a"
+      },
+      "animation": {
+        "type": "fade",
+        "duration": 250,
+        "delay": 40,
+        "easing": "ease-out"
+      }
+    },
+    {
+      "type": "CTAButton",
+      "id": "step-19-cta-show-result",
+      "content": {
+        "label": "Ver meu resultado agora",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {
+        "textAlign": "center",
+        "marginTop": 16,
+        "backgroundColor": "#B89B7A",
+        "color": "#FFFFFF",
+        "hoverColor": "#a08968"
+      },
+      "animation": {
+        "type": "fade",
+        "duration": 250,
+        "delay": 60,
         "easing": "ease-out"
       }
     }
@@ -105,9 +145,9 @@
     "nextStep": "step-20",
     "prevStep": "step-18",
     "allowBack": false,
-    "requiresUserInput": false,
-    "autoAdvance": true,
-    "autoAdvanceDelay": 3000
+    "requiresUserInput": true,
+    "autoAdvance": false,
+    "autoAdvanceDelay": 0
   },
   "analytics": {
     "events": [
