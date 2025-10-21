@@ -73,8 +73,9 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         // ===== INTRO (Step 01) =====
         case 'intro-hero':
         case 'intro-logo-header':
-            // Template v3: intro-hero → intro-logo-header (apenas logo + linha)
-            return <IntroLogoHeaderBlock block={block} {...rest} />;
+            // Padronização: usar o header completo para consistência visual
+            // Mantemos o componente dedicado para cenários específicos via feature flag futura
+            return <QuizIntroHeaderBlock block={block} {...rest} />;
         case 'quiz-intro-header':
             // Mantém para compatibilidade com outros steps
             return <QuizIntroHeaderBlock block={block} {...rest} />;

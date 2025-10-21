@@ -370,6 +370,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // 🎯 CONFIGURAÇÃO HÍBRIDA POR ETAPA (Agora usando o hook)
   const getStepBehavior = React.useCallback(async (stepNumber: number) => {
     try {
+      // Atalho seguro: Step 1 é introdução e não depende de grid de opções
+      // Evita qualquer análise de template que possa falhar em ambientes minificados
+      if (stepNumber === 1) {
+        return getHardcodedStepBehavior(1);
+      }
+
       // Verificar se temos a configuração do step atual pelo hook
       if (stepConfig && stepConfig.metadata.stepNumber === stepNumber) {
         console.log(`✅ OptionsGridBlock: Usando configuração do hook para step ${stepNumber}`, stepConfig);
@@ -411,13 +417,16 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       };
 
       // Normalizar componentes do step (array direto, blocks, ou sections)
-      const components: any[] = Array.isArray(rawStep)
+      const componentsRaw = Array.isArray(rawStep)
         ? rawStep
         : Array.isArray((rawStep as any)?.blocks)
           ? (rawStep as any).blocks
           : Array.isArray((rawStep as any)?.sections)
             ? (rawStep as any).sections
-            : ensureArray((rawStep as any)?.blocks) || ensureArray((rawStep as any)?.sections) || [];
+            : null;
+      const components: any[] = Array.isArray(componentsRaw)
+        ? componentsRaw
+        : ensureArray((rawStep as any)?.blocks).concat(ensureArray((rawStep as any)?.sections));
 
       // Encontrar grids de opções para determinar validação
       const optionsGrid = safeFind<any>(components, (b: any) => {
@@ -462,6 +471,19 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       };
     } catch (error) {
       console.error(`❌ OptionsGridBlock: Erro ao carregar configuração para step ${stepNumber}:`, error);
+      try {
+        // Log detalhado para depuração sem quebrar execução
+        const template = getQuiz21StepsTemplate();
+        const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
+        const rawStep = (template as any)[stepId];
+        console.debug('🧪 Debug getStepBehavior fallback context', {
+          stepId,
+          hasRawStep: !!rawStep,
+          rawType: typeof rawStep,
+          blocksType: typeof (rawStep as any)?.blocks,
+          sectionsType: typeof (rawStep as any)?.sections,
+        });
+      } catch { /* noop */ }
       // Fallback para regras hardcoded
       return getHardcodedStepBehavior(stepNumber);
     }
