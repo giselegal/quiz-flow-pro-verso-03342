@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import StabilizedCanvas from '@/canvas/StabilizedCanvas';
-import { UnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
+import PreviewModeRenderer from '@/components/editor/renderers/PreviewModeRenderer';
 
 // Removido LazyScalableQuizRenderer: StabilizedCanvas já encapsula preview com lazy interno
 
@@ -65,9 +65,8 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
       )}>
         {mode === 'preview' ? (
           <div className="w-full">
-            <UnifiedStepRenderer
+            <PreviewModeRenderer
               step={{ id: `step-${safeCurrentStep}`, blocks: currentStepData as any[] } as any}
-              mode="preview"
               sessionData={{}}
               onUpdateSessionData={() => { /* noop para preview simples no layout */ }}
             />
