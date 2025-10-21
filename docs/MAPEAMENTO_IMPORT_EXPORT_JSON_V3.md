@@ -6,7 +6,7 @@ Este guia resume, de ponta a ponta, como o editor importa e exporta templates JS
 
 - Fonte canônica atual: Template TS normalizado (quiz21StepsComplete) exposto por `getQuiz21StepsTemplate()`.
 - Preferência por Registry: quando um step está registrado no `TemplateRegistry` com o id `step-XX`, ele tem prioridade sobre o TS para esse step específico (via `getStepTemplate()` adicionado em `src/templates/imports.ts`).
-- Import JSON v3 → Blocks: `BlocksToJSONv3Adapter.jsonv3ToBlocks()`.
+- Import JSON v3 → Blocks: `BlocksToJSONv3Adapter.jsonv3ToBlocks()` (validação Zod aplicada no bridge/adaptador).
 - Export Blocks → JSON v3: `BlocksToJSONv3Adapter.blocksToJSONv3()`.
 - Upload/Download no editor: `ImportTemplateButton` e `QuizEditorBridge.exportToJSONv3()`/`importFromJSONv3()`.
 
@@ -76,10 +76,10 @@ Mapeamentos de tipo (exemplos):
   - `options-grid` → `options-grid`
 
 Tipos atômicos do questionário (v3) usados nos templates recentes e suportados pelo Editor:
-- `question-progress`, `question-number`, `question-text`, `question-instructions`, `options-grid` (ou `options grid`, ver abaixo), `question-navigation`.
+- `question-progress`, `question-number`, `question-text`, `question-instructions`, `options-grid` (canônico), `question-navigation`.
 
 Normalização de tipos:
-- `src/utils/blockNormalization.ts` padroniza aliases como `options-grid` → `options grid` para evitar falhas por variação de grafia.
+- `src/utils/blockNormalization.ts` padroniza aliases como `options grid` → `options-grid` (canônico) para evitar falhas por variação de grafia.
 
 ## Pontos de integração 🔌
 
@@ -120,13 +120,14 @@ async function overrideStep02FromJson() {
 
 2) A partir daí, `loadTemplate('step-02')` e fluxo de runtime usarão o step do Registry (source = `registry`).
 
-Observação: se o seu adapter espera `sections` em vez de `blocks`, registre no formato adequado (a maioria dos paths atuais aceita `blocks`).
+Observação: se o seu adapter espera `sections` em vez de `blocks`, registre no formato adequado (a maioria dos paths atuais aceita `blocks`). Entradas HTML (ex.: `content.titleHtml`) passam por sanitização básica.
 
 ## Contratos mínimos ✅
 
 - Import (JSON v3 → Editor):
   - Input: JSON v3 válido com `sections[]`.
   - Output: `Block[]` renderizáveis pelo EnhancedBlockRegistry.
+  - O JSON é validado por Zod (`JSONv3TemplateSchema`) no `QuizEditorBridge`/adaptador.
   - Erros comuns: `type` desconhecido em `sections[]` → ver mapeamentos e normalização.
 
 - Export (Editor → JSON v3):
