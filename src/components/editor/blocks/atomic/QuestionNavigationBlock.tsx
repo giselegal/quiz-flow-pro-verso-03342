@@ -24,11 +24,15 @@ export default function QuestionNavigationBlock({
 }: QuestionNavigationBlockProps) {
   const canProceed = contextData?.canProceed || false;
   const onNext = contextData?.onNext;
-  
-  const buttonTextEnabled = block.properties?.buttonTextEnabled || 'Avançando...';
-  const buttonTextDisabled = block.properties?.buttonTextDisabled || 'Próxima';
+
+  // Preferir rótulos do conteúdo do JSON v3 quando disponíveis
+  const contentNextLabel = (block as any)?.content?.nextLabel as string | undefined;
+  const contentBackLabel = (block as any)?.content?.backLabel as string | undefined;
+
+  const buttonTextEnabled = block.properties?.buttonTextEnabled || contentNextLabel || 'Avançar';
+  const buttonTextDisabled = block.properties?.buttonTextDisabled || contentNextLabel || 'Próxima';
   const buttonText = canProceed ? buttonTextEnabled : buttonTextDisabled;
-  
+
   const enabledColor = block.properties?.enabledColor || '#deac6d';
   const disabledColor = block.properties?.disabledColor || '#e6ddd4';
   const disabledTextColor = block.properties?.disabledTextColor || '#8a7663';
@@ -53,11 +57,10 @@ export default function QuestionNavigationBlock({
       <button
         disabled={!canProceed || isEditable}
         onClick={handleClick}
-        className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${
-          canProceed 
-            ? 'text-white animate-pulse' 
+        className={`font-bold py-3 px-6 rounded-full shadow-md transition-all ${canProceed
+            ? 'text-white animate-pulse'
             : 'opacity-50 cursor-not-allowed'
-        }`}
+          }`}
         style={{
           backgroundColor: canProceed ? enabledColor : disabledColor,
           color: canProceed ? 'white' : disabledTextColor
