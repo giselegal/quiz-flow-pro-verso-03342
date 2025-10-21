@@ -7,6 +7,7 @@
 
 // Import estático do template principal
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from './quiz21StepsComplete';
+import { TemplateRegistry } from '@/services/TemplateRegistry';
 import { normalizeTemplateBlocks } from '@/utils/blockNormalization';
 
 // Export centralizado para uso em imports dinâmicos (fonte canônica)
@@ -35,3 +36,21 @@ export const loadTemplate = async (templateId: string) => {
 
 // Export do template para compatibilidade
 export { QUIZ_STYLE_21_STEPS_TEMPLATE };
+
+// 🚀 Registrar todos os steps no TemplateRegistry em tempo de build/import
+try {
+  const registry = TemplateRegistry.getInstance();
+  const entries = Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE);
+  for (const [key, template] of entries) {
+    if (key.startsWith('step-')) {
+      registry.register(key, template as any);
+    }
+  }
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`✅ TemplateRegistry registrado com ${entries.length} entradas`);
+  }
+} catch (err) {
+  // Falha silenciosa no registro para não quebrar SSR/tests
+}
+
+export { TemplateRegistry };
