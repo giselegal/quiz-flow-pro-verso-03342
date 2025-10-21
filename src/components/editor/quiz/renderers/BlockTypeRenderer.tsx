@@ -23,6 +23,9 @@ import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
 import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHeaderBlock';
 import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
+import IntroTitleBlock from '@/components/editor/blocks/atomic/IntroTitleBlock';
+import IntroImageBlock from '@/components/editor/blocks/atomic/IntroImageBlock';
+import IntroDescriptionBlock from '@/components/editor/blocks/atomic/IntroDescriptionBlock';
 import FooterCopyrightBlock from '@/components/editor/blocks/atomic/FooterCopyrightBlock';
 import ImageDisplayInlineBlockNew from '@/components/editor/blocks/inline/ImageDisplayInlineBlock';
 import QuestionProgressBlock from '@/components/editor/blocks/atomic/QuestionProgressBlock';
@@ -95,6 +98,15 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         case 'intro-form':
             // Novo bloco atômico de formulário com visual completo
             return <IntroFormBlock block={block} {...rest} />;
+        case 'intro-title':
+            // Novo bloco atômico de título (com suporte a content.titleHtml/title)
+            return <IntroTitleBlock block={block as any} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />;
+        case 'intro-image':
+            // Novo bloco atômico de imagem (suporta content.imageUrl)
+            return <IntroImageBlock block={block as any} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />;
+        case 'intro-description':
+            // Novo bloco atômico de descrição (suporta HTML em content.text)
+            return <IntroDescriptionBlock block={block as any} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />;
         case 'image-display-inline':
             // Novo bloco de imagem inline com estilo específico
             return <ImageDisplayInlineBlockNew block={block} {...rest} />;
