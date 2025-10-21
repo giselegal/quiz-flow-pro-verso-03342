@@ -107,9 +107,10 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
 
     const findBlockIdByTypes = useCallback((types: string[]): string | undefined => {
         try {
-            const blocks: any[] = (editorState.stepBlocks as any)[stepKey] || [];
+            const raw = (editorState.stepBlocks as any)[stepKey];
+            const blocks: any[] = Array.isArray(raw) ? raw : [];
             const lowerTypes = types.map(t => t.toLowerCase());
-            const found = blocks.find(b => lowerTypes.includes(String(b.type || '').toLowerCase()));
+            const found = blocks.find?.(b => lowerTypes.includes(String(b.type || '').toLowerCase()));
             return found?.id;
         } catch {
             return undefined;
