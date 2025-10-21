@@ -86,13 +86,16 @@ export const useStepConfig = ({
                 }
 
                 // Extrair lista de componentes do step (suporta arrays diretos, blocks ou sections)
-                const components: any[] = Array.isArray(stepTemplate)
-                    ? stepTemplate
-                    : Array.isArray(stepTemplate?.blocks)
-                        ? stepTemplate.blocks
-                        : Array.isArray(stepTemplate?.sections)
-                            ? stepTemplate.sections
-                            : [];
+                const normalizeToArray = (val: any): any[] => (Array.isArray(val) ? val : []);
+                let components: any[] = [];
+                if (Array.isArray(stepTemplate)) {
+                    components = stepTemplate;
+                } else if (stepTemplate && typeof stepTemplate === 'object') {
+                    // v3 templates usam sections; alguns templates podem ter blocks
+                    const sections = normalizeToArray((stepTemplate as any).sections);
+                    const blocks = normalizeToArray((stepTemplate as any).blocks);
+                    components = sections.length > 0 ? sections : blocks;
+                }
 
                 // Determinar o tipo de step baseado no índice
                 const getStepType = (index: number) => {
@@ -106,7 +109,7 @@ export const useStepConfig = ({
                 };
                 
                 // Encontrar grids de opções para determinar validação
-                const optionsGrid = components.find((block: any) => {
+                const optionsGrid = (Array.isArray(components) ? components : []).find((block: any) => {
                     const t = String(block?.type || '').toLowerCase();
                     return t === 'options-grid' || t === 'options grid' || t.includes('options');
                 });

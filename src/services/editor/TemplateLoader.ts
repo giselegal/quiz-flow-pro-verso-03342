@@ -15,11 +15,12 @@
 
 import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { safeGetTemplateBlocks, blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
 import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
+import { TemplateRegistry } from '@/services/TemplateRegistry';
 
 export type TemplateSource = 
   | 'normalized-json' 
@@ -55,28 +56,56 @@ export class TemplateLoader {
     try {
       console.group(`🔍 [TemplateLoader] ${normalizedKey}`);
 
-      // Estratégia 1: Cache unificado
+  // Estratégia 1: Cache unificado
       const cached = this.loadFromCache(normalizedKey);
       if (cached) return cached;
 
-      // Estratégia 2: Master JSON público
+  // Estratégia 2: TemplateRegistry (fonte canônica em memória)
+  const fromRegistry = this.loadFromRegistry(normalizedKey);
+  if (fromRegistry) return fromRegistry;
+
+  // Estratégia 3: Master JSON público
       const fromMaster = await this.loadFromMasterJSON(normalizedKey);
       if (fromMaster) return fromMaster;
 
-      // Estratégia 3: JSON normalizado (gates 02-11)
+  // Estratégia 4: JSON normalizado (gates 02-11)
       const normalized = await this.loadNormalized(normalizedKey);
       if (normalized) return normalized;
 
-      // Estratégia 4: Templates modulares
+  // Estratégia 5: Templates modulares
       const modular = this.loadModular(normalizedKey);
       if (modular) return modular;
 
-      // Estratégia 5: TypeScript template (fallback)
+  // Estratégia 6: TypeScript template (fallback)
       return this.loadFromTypescript(normalizedKey);
 
     } finally {
       this.loadingSteps.delete(normalizedKey);
       console.groupEnd();
+    }
+  }
+
+  /**
+   * Estratégia 2: Carregar do TemplateRegistry (single source of truth)
+   */
+  private loadFromRegistry(normalizedKey: string): LoadedTemplate | null {
+    try {
+      const registry = TemplateRegistry.getInstance();
+      if (!registry.has(normalizedKey)) return null;
+
+      const stepTemplate = registry.get(normalizedKey);
+      if (!stepTemplate) return null;
+
+      // Converter template v3 (sections) para Block[]
+      const blockComponents = convertTemplateToBlocks(stepTemplate);
+      const blocks = blockComponentsToBlocks(blockComponents);
+
+      unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
+      console.log(`📦 Registry → ${normalizedKey}: ${blocks.length} blocos`);
+      return { blocks, source: 'ts-template' };
+    } catch (e) {
+      console.warn('⚠️ Erro ao carregar do TemplateRegistry:', e);
+      return null;
     }
   }
 

@@ -81,7 +81,7 @@ const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' 
   const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
-  if (numValue < 0) {
+          {(Array.isArray(options) ? options : []).map((opt: any) => {
     const absValue = Math.abs(numValue);
     if (absValue <= 4) return `-${prefix}-1`;
     if (absValue <= 8) return `-${prefix}-2`;
@@ -103,7 +103,7 @@ const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' 
   if (numValue <= 16) return `${prefix}-4`;
   if (numValue <= 20) return `${prefix}-5`;
   if (numValue <= 24) return `${prefix}-6`;
-  if (numValue <= 28) return `${prefix}-7`;
+          const option = (Array.isArray(options) ? options : []).find((opt: any) => opt.id === id);
   if (numValue <= 32) return `${prefix}-8`;
   if (numValue <= 36) return `${prefix}-9`;
   if (numValue <= 40) return `${prefix}-10`;
@@ -249,16 +249,20 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       const rawStep = (canonicalTemplate as any)[key] || [];
       const components: any[] = Array.isArray(rawStep)
         ? rawStep
-        : Array.isArray(rawStep?.blocks)
-          ? rawStep.blocks
-          : Array.isArray(rawStep?.sections)
-            ? rawStep.sections
+        : Array.isArray((rawStep as any)?.blocks)
+          ? (rawStep as any).blocks
+          : Array.isArray((rawStep as any)?.sections)
+            ? (rawStep as any).sections
             : [];
-      const canonicalGrid = components.find((b: any) => {
+      const canonicalGrid = (Array.isArray(components) ? components : []).find((b: any) => {
         const t = String(b?.type || '').toLowerCase();
         return t === 'options-grid' || t === 'options grid' || t.includes('options');
       });
-      const canonicalOptions = canonicalGrid?.content?.options;
+      const canonicalOptions = Array.isArray(canonicalGrid?.content?.options)
+        ? canonicalGrid?.content?.options
+        : Array.isArray(canonicalGrid?.properties?.options)
+          ? canonicalGrid?.properties?.options
+          : undefined;
       if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
         options = canonicalOptions as Option[];
       }
@@ -285,16 +289,20 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         const rawStep = (canonicalTemplate as any)[key] || [];
         const components: any[] = Array.isArray(rawStep)
           ? rawStep
-          : Array.isArray(rawStep?.blocks)
-            ? rawStep.blocks
-            : Array.isArray(rawStep?.sections)
-              ? rawStep.sections
+          : Array.isArray((rawStep as any)?.blocks)
+            ? (rawStep as any).blocks
+            : Array.isArray((rawStep as any)?.sections)
+              ? (rawStep as any).sections
               : [];
-        const canonicalGrid = components.find((b: any) => {
+        const canonicalGrid = (Array.isArray(components) ? components : []).find((b: any) => {
           const t = String(b?.type || '').toLowerCase();
           return t === 'options-grid' || t === 'options grid' || t.includes('options');
         });
-        const canonicalOptions = canonicalGrid?.content?.options;
+        const canonicalOptions = Array.isArray(canonicalGrid?.content?.options)
+          ? canonicalGrid?.content?.options
+          : Array.isArray(canonicalGrid?.properties?.options)
+            ? canonicalGrid?.properties?.options
+            : undefined;
         if (Array.isArray(canonicalOptions) && canonicalOptions.length > 0) {
           options = canonicalOptions as Option[];
         }
@@ -572,7 +580,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   const gridColsClass = (() => {
     // 🎯 REGRA AUTOMATICA: 1 coluna para texto-only, 2 colunas para imagem+texto
-    const hasImages = showImages && options.some((opt: any) =>
+    const hasImages = showImages && Array.isArray(options) && options.some((opt: any) =>
       opt.imageUrl || opt.image || opt.icon
     );
 
