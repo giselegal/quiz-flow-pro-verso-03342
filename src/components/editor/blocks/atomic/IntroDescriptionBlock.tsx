@@ -6,7 +6,7 @@ export default function IntroDescriptionBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const content = block.content?.text || block.properties?.content || '';
+  const content = (block as any)?.content?.text || block.properties?.content || '';
   const fontSize = block.properties?.fontSize || 'text-base';
   const textAlign = block.properties?.textAlign || 'text-center';
   const opacity = block.properties?.opacity || 1;
@@ -22,13 +22,20 @@ export default function IntroDescriptionBlock({
     });
   };
 
+  // Se vier HTML (por exemplo com strong customizado), usar dangerouslySetInnerHTML
+  const hasHtml = typeof content === 'string' && /<\/?\w+/.test(content);
+
   return (
     <p
       className={`${fontSize} ${textAlign} mb-4 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
       style={{ opacity }}
       onClick={onClick}
     >
-      {parseMarkdown(content)}
+      {hasHtml ? (
+        <span dangerouslySetInnerHTML={{ __html: content }} />
+      ) : (
+        parseMarkdown(content)
+      )}
     </p>
   );
 }

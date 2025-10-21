@@ -119,8 +119,9 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
     // Helper: busca por predicado customizado
     const findBlockId = useCallback((predicate: (b: any) => boolean): string | undefined => {
         try {
-            const blocks: any[] = (editorState.stepBlocks as any)[stepKey] || [];
-            const found = blocks.find(predicate);
+            const raw = (editorState.stepBlocks as any)[stepKey];
+            const blocks: any[] = Array.isArray(raw) ? raw : [];
+            const found = blocks.find?.(predicate);
             return found?.id;
         } catch {
             return undefined;

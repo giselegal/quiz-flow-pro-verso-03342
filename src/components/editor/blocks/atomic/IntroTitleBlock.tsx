@@ -6,7 +6,12 @@ export default function IntroTitleBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const content = block.content?.text || block.properties?.content || 'Título do Quiz';
+  // Suporta JSON v3: content.titleHtml | content.title, além de formas legadas
+  const titleHtml: string | undefined = (block as any)?.content?.titleHtml;
+  const titleText: string = (block as any)?.content?.title
+    || (block as any)?.content?.text
+    || (block as any)?.properties?.content
+    || 'Título do Quiz';
   const fontSize = block.properties?.fontSize || 'text-2xl';
   const fontWeight = block.properties?.fontWeight || 'font-bold';
   const textAlign = block.properties?.textAlign || 'text-center';
@@ -14,8 +19,13 @@ export default function IntroTitleBlock({
 
   // Parse custom color tags [#color]**text**[/#color]
   const renderContent = () => {
-    if (!content.includes('[#')) {
-      return content;
+    // Se vier HTML explícito no JSON v3
+    if (typeof titleHtml === 'string' && titleHtml.trim().length > 0) {
+      return <span dangerouslySetInnerHTML={{ __html: titleHtml }} />;
+    }
+
+    if (!titleText.includes('[#')) {
+      return titleText;
     }
 
     const parts = [];
@@ -23,9 +33,9 @@ export default function IntroTitleBlock({
     let lastIndex = 0;
     let match;
 
-    while ((match = regex.exec(content)) !== null) {
+    while ((match = regex.exec(titleText)) !== null) {
       if (match.index > lastIndex) {
-        parts.push(content.substring(lastIndex, match.index));
+        parts.push(titleText.substring(lastIndex, match.index));
       }
       parts.push(
         <span key={match.index} style={{ color: `#${match[1]}` }} className="font-bold">
@@ -35,8 +45,8 @@ export default function IntroTitleBlock({
       lastIndex = regex.lastIndex;
     }
 
-    if (lastIndex < content.length) {
-      parts.push(content.substring(lastIndex));
+    if (lastIndex < titleText.length) {
+      parts.push(titleText.substring(lastIndex));
     }
 
     return parts;

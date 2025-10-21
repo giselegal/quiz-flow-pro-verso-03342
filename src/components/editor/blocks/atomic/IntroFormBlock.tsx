@@ -21,10 +21,18 @@ export default function IntroFormBlock({
 }: IntroFormBlockProps) {
   const [inputValue, setInputValue] = useState('');
 
-  const label = block.properties?.label || 'Antes de começarmos, como posso te chamar?';
-  const placeholder = block.properties?.placeholder || 'Digite seu primeiro nome aqui...';
-  const buttonText = block.properties?.buttonText || 'Quero Descobrir meu Estilo Agora!';
-  const privacyNotice = block.properties?.privacyNotice;
+  // Compatibilidade JSON v3 (section.content) + legado (properties)
+  const label = (block as any)?.content?.formQuestion
+    || block.properties?.label
+    || 'Antes de começarmos, como posso te chamar?';
+  const placeholder = (block as any)?.content?.namePlaceholder
+    || block.properties?.placeholder
+    || 'Digite seu primeiro nome aqui...';
+  const buttonText = (block as any)?.content?.submitText
+    || block.properties?.buttonText
+    || 'Quero Descobrir meu Estilo Agora!';
+  const helperText = (block as any)?.content?.helperText as string | undefined;
+  const privacyNotice = (block as any)?.content?.privacyNotice || block.properties?.privacyNotice;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,8 +91,10 @@ export default function IntroFormBlock({
           >
             {buttonText}
           </button>
-          {privacyNotice && (
-            <p className="text-xs text-center text-gray-500 pt-1">{privacyNotice}</p>
+          {(helperText || privacyNotice) && (
+            <p className="text-xs text-center text-gray-500 pt-1">
+              {helperText || privacyNotice}
+            </p>
           )}
         </form>
       </div>

@@ -6,9 +6,10 @@ export default function IntroImageBlock({
   isSelected,
   onClick
 }: AtomicBlockProps) {
-  const src = block.properties?.src || block.content?.src || '';
-  const alt = block.properties?.alt || block.content?.alt || 'Imagem';
-  const maxWidth = block.properties?.maxWidth || '500px';
+  // Compatibilidade JSON v3: content.imageUrl, imageAlt, width/height
+  const src = (block as any)?.content?.imageUrl || block.properties?.src || (block as any)?.content?.src || '';
+  const alt = (block as any)?.content?.imageAlt || block.properties?.alt || (block as any)?.content?.alt || 'Imagem';
+  const maxWidth = (block as any)?.content?.maxWidth || block.properties?.maxWidth || '500px';
   const rounded = block.properties?.rounded !== false;
 
   if (!src) return null;
