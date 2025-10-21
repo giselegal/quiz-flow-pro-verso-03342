@@ -109,7 +109,7 @@
         "minSelections": 3,
         "maxSelections": 3,
         "showImages": true,
-        "imageSize": 256,
+        "imageSize": 600,
         "autoAdvance": true,
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar"
