@@ -32,6 +32,7 @@ import {
 
 // ✅ FASE 7: Adaptador bidirecional Blocks ↔ JSON v3.0
 import { BlocksToJSONv3Adapter, type JSONv3Template } from '@/adapters/BlocksToJSONv3Adapter';
+import { parseJSONv3 } from '@/types/jsonv3.schema';
 
 interface EditorQuizStep extends QuizStep {
     id: string;
@@ -469,7 +470,8 @@ class QuizEditorBridge {
                 // Tentar carregar template JSON v3.0 via fetch (evita dynamic import vars)
                 const res = await fetch(`/templates/${stepId}-v3.json`);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const v3Template: JSONv3Template = await res.json();
+                const raw = await res.json();
+                const v3Template: JSONv3Template = parseJSONv3(raw);
 
                 // Converter sections[] para blocks[]
                 const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(v3Template);
@@ -628,7 +630,9 @@ class QuizEditorBridge {
         console.log('📥 Importando template JSON v3.0:', json.metadata.id);
 
         // Converter JSON v3.0 → Blocks
-        const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(json);
+    // Validar antes de converter
+    const validated = parseJSONv3(json);
+    const blocks = BlocksToJSONv3Adapter.jsonv3ToBlocks(validated);
 
         // Inferir tipo do step do category ou do ID
         const categoryMap: Record<string, QuizStep['type']> = {

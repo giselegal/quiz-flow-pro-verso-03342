@@ -17,11 +17,28 @@ export default function IntroTitleBlock({
   const textAlign = block.properties?.textAlign || 'text-center';
   const color = block.properties?.color;
 
+  // Sanitização simples: remover scripts/eventos perigosos antes do dangerouslySetInnerHTML
+  const sanitizeHtml = (html: string) => {
+    try {
+      // Remove tags script/style e on* handlers básicos
+      return html
+        .replace(/<\/(script|style)>/gi, '')
+        .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, '')
+        .replace(/ on[a-z]+="[^"]*"/gi, '')
+        .replace(/ on[a-z]+='[^']*'/gi, '')
+        .replace(/javascript:/gi, '')
+        .replace(/data:text\/html/gi, '');
+    } catch {
+      return '';
+    }
+  };
+
   // Parse custom color tags [#color]**text**[/#color]
   const renderContent = () => {
     // Se vier HTML explícito no JSON v3
     if (typeof titleHtml === 'string' && titleHtml.trim().length > 0) {
-      return <span dangerouslySetInnerHTML={{ __html: titleHtml }} />;
+      const safe = sanitizeHtml(titleHtml);
+      return <span dangerouslySetInnerHTML={{ __html: safe }} />;
     }
 
     if (!titleText.includes('[#')) {

@@ -154,7 +154,6 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
             return <ButtonInlineBlock block={block} {...rest} />;
         case 'quiz-options':
         case 'options-grid':
-        case 'options grid':
             // Passar contextData para que o grid seja interativo (seleção + estado)
             return <QuizOptionsBlock block={block} {...rest} contextData={rest.contextData} />;
         case 'quiz-navigation':

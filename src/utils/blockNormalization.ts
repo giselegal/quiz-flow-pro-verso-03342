@@ -7,12 +7,9 @@
 export function normalizeBlockType(type: string): string {
   if (!type) return type;
   const t = String(type).trim().toLowerCase();
-  switch (t) {
-    case 'options-grid':
-      return 'options grid';
-    default:
-      return type;
-  }
+  // Mapear aliases para o canônico com hífen
+  if (t === 'options grid') return 'options-grid';
+  return t;
 }
 
 export function normalizeTemplateBlocks(template: any): any {

@@ -18,19 +18,45 @@ export const getQuiz21StepsTemplate = () => {
   return normalized as any;
 };
 
+/**
+ * Obtém o template de um step específico preferindo o TemplateRegistry.
+ * Caso não exista no registry, cai para o template TS normalizado.
+ */
+export const getStepTemplate = (stepId: string) => {
+  const stepKey = stepId.match(/^step-(\d{1,2})$/)
+    ? `step-${String(parseInt(stepId.replace('step-', ''), 10)).padStart(2, '0')}`
+    : stepId;
+
+  const registry = TemplateRegistry.getInstance();
+  const fromRegistry = registry.get(stepKey);
+  if (fromRegistry) {
+    return { step: fromRegistry, source: 'registry' as const };
+  }
+
+  const template = getQuiz21StepsTemplate() as any;
+  return { step: template?.[stepKey], source: 'ts' as const };
+};
+
 // Função para carregar template de forma consistente
 export const loadTemplate = async (templateId: string) => {
-  // Fonte canônica única: TypeScript gerado a partir dos JSONs v3
+  // Normaliza ID recebido (aceita step-2 ou step-02)
   const stepNumber = templateId.replace(/^step-/, '').padStart(2, '0');
   const stepId = `step-${stepNumber}`;
 
-  console.log(`📦 [loadTemplate] Fonte canônica (TS) para ${templateId}`);
-  const template = normalizeTemplateBlocks(QUIZ_STYLE_21_STEPS_TEMPLATE) as any;
-  template._source = 'ts';
+  // Template completo (fonte TS normalizada)
+  const template = getQuiz21StepsTemplate() as any;
+
+  // Step específico preferindo Registry (permite overrides futuros por JSON)
+  const { step, source: stepSource } = getStepTemplate(stepId);
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`📦 [loadTemplate] step=${stepId} • source=${stepSource}`);
+  }
+
   return {
     template,
-    source: 'ts',
-    step: template[stepId]
+    source: 'ts' as const,
+    step,
   };
 };
 
@@ -41,18 +67,20 @@ export { QUIZ_STYLE_21_STEPS_TEMPLATE };
 try {
   const registry = TemplateRegistry.getInstance();
   const entries = Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE);
+  let registered = 0;
   for (const [key, template] of entries) {
     if (key.startsWith('step-')) {
       // normaliza id para step-XX
       const match = key.match(/^step-(\d{1,2})$/);
       const normalizedKey = match ? `step-${parseInt(match[1], 10).toString().padStart(2, '0')}` : key;
-      // normaliza tipos (options-grid -> options grid)
+  // normaliza tipos (aliases → canônico 'options-grid')
       const normalizedTemplate = normalizeTemplateBlocks({ [normalizedKey]: template } as any)[normalizedKey];
       registry.register(normalizedKey, normalizedTemplate as any);
+      registered++;
     }
   }
   if (process.env.NODE_ENV === 'development') {
-    console.log(`✅ TemplateRegistry registrado com ${entries.length} entradas`);
+    console.log(`✅ TemplateRegistry registrado: ${registered} steps`);
   }
 } catch (err) {
   // Falha silenciosa no registro para não quebrar SSR/tests

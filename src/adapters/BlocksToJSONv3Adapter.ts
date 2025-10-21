@@ -7,6 +7,8 @@
 
 import { Block } from '@/types/editor';
 import { QuizStep } from '@/data/quizSteps';
+import { JSONv3TemplateSchema } from '@/types/jsonv3.schema';
+import { normalizeBlockType } from '@/utils/blockNormalization';
 
 // ============================================================================
 // TIPOS JSON v3.0
@@ -131,7 +133,13 @@ export class BlocksToJSONv3Adapter {
      * 🔄 JSON v3.0 → Blocks
      */
     static jsonv3ToBlocks(json: JSONv3Template): Block[] {
-        return json.sections.map((section, index) => this.sectionToBlock(section, index));
+        // Validar superficialmente; se já veio validado, parse não altera
+        try { JSONv3TemplateSchema.parse(json); } catch (e) { console.warn('⚠️ JSON v3 inválido recebido em jsonv3ToBlocks:', e); }
+        return json.sections.map((section, index) => {
+            const block = this.sectionToBlock(section, index);
+            // Normalizar tipo canônico
+            return { ...block, type: normalizeBlockType(block.type as any) as any };
+        });
     }
 
     /**

@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-21T03:13:36.002Z
+ * Gerado em: 2025-10-21T04:31:03.712Z
  * Versão: 3.0.0
  */
 
@@ -364,10 +364,48 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
-        "type": "question-title",
-        "id": "step-02-question-title",
+        "type": "question-progress",
+        "id": "q2-progress",
         "content": {
-          "text": "Qual tipo de roupa você mais se identifica?"
+          "currentQuestion": 1,
+          "totalQuestions": 10,
+          "progressValue": 10,
+          "showProgress": true
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 8
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-number",
+        "id": "q2-number",
+        "content": {
+          "text": "1 de 10",
+          "questionNumber": "1 de 10"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 4
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 20,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-text",
+        "id": "q2-text",
+        "content": {
+          "text": "QUAL O SEU TIPO DE ROUPA FAVORITA?"
         },
         "style": {
           "textAlign": "center",
@@ -375,71 +413,80 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         },
         "animation": {
           "type": "fade",
-          "duration": 250,
-          "delay": 0,
+          "duration": 240,
+          "delay": 40,
           "easing": "ease-out"
         }
       },
       {
-        "type": "question-hero",
-        "id": "question-hero-02",
+        "type": "question-instructions",
+        "id": "q2-instructions",
         "content": {
-          "questionNumber": "Q1 - ROUPA FAVORITA",
-          "questionText": "Qual tipo de roupa você mais se identifica?",
-          "currentQuestion": 1,
-          "totalQuestions": 13,
-          "progressValue": 10,
-          "showProgress": true,
-          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-          "logoAlt": "Logo Gisele Galvão"
+          "text": "Selecione exatamente 3 opções para continuar"
         },
         "style": {
-          "backgroundColor": "transparent",
-          "padding": 16
+          "textAlign": "center",
+          "marginBottom": 12
         },
         "animation": {
           "type": "fade",
-          "duration": 300,
-          "delay": 0,
+          "duration": 240,
+          "delay": 60,
           "easing": "ease-out"
         }
       },
       {
-        "type": "options grid",
+        "type": "options-grid",
         "id": "options-grid-02",
         "content": {
           "options": [
             {
-              "id": "2a",
-              "text": "Vestidos fluidos e confortáveis",
+              "id": "natural",
+              "text": "Conforto, leveza e praticidade no vestir",
               "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "2a",
-              "category": "Natural",
-              "points": 1
+              "value": "natural"
             },
             {
-              "id": "2b",
-              "text": "Blazers estruturados e calças alfaiataria",
+              "id": "classico",
+              "text": "Discrição, caimento clássico e sobriedade",
               "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "2b",
-              "category": "Clássico",
-              "points": 2
+              "value": "classico"
             },
             {
-              "id": "2c",
-              "text": "Peças modernas com toque minimalista",
+              "id": "contemporaneo",
+              "text": "Praticidade com um toque de estilo atual",
               "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "2c",
-              "category": "Contemporâneo",
-              "points": 2
+              "value": "contemporaneo"
             },
             {
-              "id": "2d",
-              "text": "Vestidos sofisticados e acessórios marcantes",
+              "id": "elegante",
+              "text": "Elegância refinada, moderna e sem exageros",
               "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "2d",
-              "category": "Elegante",
-              "points": 3
+              "value": "elegante"
+            },
+            {
+              "id": "romantico",
+              "text": "Delicadeza em tecidos suaves e fluidos",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+              "value": "romantico"
+            },
+            {
+              "id": "sexy",
+              "text": "Sensualidade com destaque para o corpo",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+              "value": "sexy"
+            },
+            {
+              "id": "dramatico",
+              "text": "Impacto visual com peças estruturadas e assimétricas",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+              "value": "dramatico"
+            },
+            {
+              "id": "criativo",
+              "text": "Mix criativo com formas ousadas e originais",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+              "value": "criativo"
             }
           ],
           "columns": 2,
@@ -459,42 +506,58 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "slideUp",
           "duration": 300,
-          "delay": 100,
+          "delay": 80,
           "easing": "ease-out"
         },
         "properties": {
           "options": [
             {
-              "id": "2a",
-              "text": "Vestidos fluidos e confortáveis",
+              "id": "natural",
+              "text": "Conforto, leveza e praticidade no vestir",
               "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "2a",
-              "category": "Natural",
-              "points": 1
+              "value": "natural"
             },
             {
-              "id": "2b",
-              "text": "Blazers estruturados e calças alfaiataria",
+              "id": "classico",
+              "text": "Discrição, caimento clássico e sobriedade",
               "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "2b",
-              "category": "Clássico",
-              "points": 2
+              "value": "classico"
             },
             {
-              "id": "2c",
-              "text": "Peças modernas com toque minimalista",
+              "id": "contemporaneo",
+              "text": "Praticidade com um toque de estilo atual",
               "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "2c",
-              "category": "Contemporâneo",
-              "points": 2
+              "value": "contemporaneo"
             },
             {
-              "id": "2d",
-              "text": "Vestidos sofisticados e acessórios marcantes",
+              "id": "elegante",
+              "text": "Elegância refinada, moderna e sem exageros",
               "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "2d",
-              "category": "Elegante",
-              "points": 3
+              "value": "elegante"
+            },
+            {
+              "id": "romantico",
+              "text": "Delicadeza em tecidos suaves e fluidos",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+              "value": "romantico"
+            },
+            {
+              "id": "sexy",
+              "text": "Sensualidade com destaque para o corpo",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+              "value": "sexy"
+            },
+            {
+              "id": "dramatico",
+              "text": "Impacto visual com peças estruturadas e assimétricas",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+              "value": "dramatico"
+            },
+            {
+              "id": "criativo",
+              "text": "Mix criativo com formas ousadas e originais",
+              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+              "value": "criativo"
             }
           ],
           "columns": 2,
@@ -509,13 +572,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "CTAButton",
-        "id": "step-02-cta-next",
+        "type": "question-navigation",
+        "id": "q2-navigation",
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar"
+        },
+        "properties": {
+          "showBack": true,
+          "enableWhenValid": true
         },
         "style": {
           "marginTop": 16,
@@ -524,7 +589,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "fade",
           "duration": 250,
-          "delay": 50,
+          "delay": 100,
           "easing": "ease-out"
         }
       }
@@ -567,24 +632,44 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "Natural",
         "Clássico",
         "Contemporâneo",
-        "Elegante"
+        "Elegante",
+        "Romântico",
+        "Sexy",
+        "Dramático",
+        "Criativo"
       ],
       "options": {
-        "2a": {
+        "natural": {
           "category": "Natural",
           "points": 1
         },
-        "2b": {
+        "classico": {
           "category": "Clássico",
-          "points": 2
+          "points": 1
         },
-        "2c": {
+        "contemporaneo": {
           "category": "Contemporâneo",
-          "points": 2
+          "points": 1
         },
-        "2d": {
+        "elegante": {
           "category": "Elegante",
-          "points": 3
+          "points": 1
+        },
+        "romantico": {
+          "category": "Romântico",
+          "points": 1
+        },
+        "sexy": {
+          "category": "Sexy",
+          "points": 1
+        },
+        "dramatico": {
+          "category": "Dramático",
+          "points": 1
+        },
+        "criativo": {
+          "category": "Criativo",
+          "points": 1
         }
       }
     }
@@ -640,10 +725,48 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
-        "type": "question-title",
-        "id": "step-03-question-title",
+        "type": "question-progress",
+        "id": "q3-progress",
         "content": {
-          "text": "Como você prefere que as pessoas te chamem no dia a dia?"
+          "currentQuestion": 2,
+          "totalQuestions": 10,
+          "progressValue": 20,
+          "showProgress": true
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 8
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-number",
+        "id": "q3-number",
+        "content": {
+          "text": "2 de 10",
+          "questionNumber": "2 de 10"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 4
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 20,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-text",
+        "id": "q3-text",
+        "content": {
+          "text": "RESUMA A SUA PERSONALIDADE:"
         },
         "style": {
           "textAlign": "center",
@@ -651,78 +774,79 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         },
         "animation": {
           "type": "fade",
-          "duration": 250,
-          "delay": 0,
+          "duration": 240,
+          "delay": 40,
           "easing": "ease-out"
         }
       },
       {
-        "type": "question-hero",
-        "id": "question-hero-03",
+        "type": "question-instructions",
+        "id": "q3-instructions",
         "content": {
-          "questionNumber": "Q2 - NOME PESSOAL",
-          "questionText": "Como você prefere que as pessoas te chamem no dia a dia?",
-          "currentQuestion": 2,
-          "totalQuestions": 13,
-          "progressValue": 14,
-          "showProgress": true,
-          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-          "logoAlt": "Logo Gisele Galvão"
+          "text": "Selecione exatamente 3 opções para continuar"
         },
         "style": {
-          "backgroundColor": "transparent",
-          "padding": 16
+          "textAlign": "center",
+          "marginBottom": 12
         },
         "animation": {
           "type": "fade",
-          "duration": 300,
-          "delay": 0,
+          "duration": 240,
+          "delay": 60,
           "easing": "ease-out"
         }
       },
       {
-        "type": "options grid",
+        "type": "options-grid",
         "id": "options-grid-03",
         "content": {
           "options": [
             {
-              "id": "3a",
-              "text": "Opção A para Q2",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "3a",
-              "category": "Natural",
-              "points": 1
+              "id": "natural",
+              "text": "Informal, espontânea, alegre, essencialista",
+              "value": "natural"
             },
             {
-              "id": "3b",
-              "text": "Opção B para Q2",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "3b",
-              "category": "Clássico",
-              "points": 2
+              "id": "classico",
+              "text": "Conservadora, séria, organizada",
+              "value": "classico"
             },
             {
-              "id": "3c",
-              "text": "Opção C para Q2",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "3c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "contemporaneo",
+              "text": "Informada, ativa, prática",
+              "value": "contemporaneo"
             },
             {
-              "id": "3d",
-              "text": "Opção D para Q2",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "3d",
-              "category": "Elegante",
-              "points": 3
+              "id": "elegante",
+              "text": "Exigente, sofisticada, seletiva",
+              "value": "elegante"
+            },
+            {
+              "id": "romantico",
+              "text": "Feminina, meiga, delicada, sensível",
+              "value": "romantico"
+            },
+            {
+              "id": "sexy",
+              "text": "Glamorosa, vaidosa, sensual",
+              "value": "sexy"
+            },
+            {
+              "id": "dramatico",
+              "text": "Cosmopolita, moderna e audaciosa",
+              "value": "dramatico"
+            },
+            {
+              "id": "criativo",
+              "text": "Exótica, aventureira, livre",
+              "value": "criativo"
             }
           ],
           "columns": 2,
           "multipleSelection": true,
           "minSelections": 3,
           "maxSelections": 3,
-          "showImages": true,
+          "showImages": false,
           "imageSize": 256,
           "autoAdvance": true,
           "autoAdvanceDelay": 1500,
@@ -735,49 +859,57 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "slideUp",
           "duration": 300,
-          "delay": 100,
+          "delay": 80,
           "easing": "ease-out"
         },
         "properties": {
           "options": [
             {
-              "id": "3a",
-              "text": "Opção A para Q2",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "3a",
-              "category": "Natural",
-              "points": 1
+              "id": "natural",
+              "text": "Informal, espontânea, alegre, essencialista",
+              "value": "natural"
             },
             {
-              "id": "3b",
-              "text": "Opção B para Q2",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "3b",
-              "category": "Clássico",
-              "points": 2
+              "id": "classico",
+              "text": "Conservadora, séria, organizada",
+              "value": "classico"
             },
             {
-              "id": "3c",
-              "text": "Opção C para Q2",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "3c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "contemporaneo",
+              "text": "Informada, ativa, prática",
+              "value": "contemporaneo"
             },
             {
-              "id": "3d",
-              "text": "Opção D para Q2",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "3d",
-              "category": "Elegante",
-              "points": 3
+              "id": "elegante",
+              "text": "Exigente, sofisticada, seletiva",
+              "value": "elegante"
+            },
+            {
+              "id": "romantico",
+              "text": "Feminina, meiga, delicada, sensível",
+              "value": "romantico"
+            },
+            {
+              "id": "sexy",
+              "text": "Glamorosa, vaidosa, sensual",
+              "value": "sexy"
+            },
+            {
+              "id": "dramatico",
+              "text": "Cosmopolita, moderna e audaciosa",
+              "value": "dramatico"
+            },
+            {
+              "id": "criativo",
+              "text": "Exótica, aventureira, livre",
+              "value": "criativo"
             }
           ],
           "columns": 2,
           "multipleSelection": true,
           "minSelections": 3,
           "maxSelections": 3,
-          "showImages": true,
+          "showImages": false,
           "imageSize": 256,
           "autoAdvance": true,
           "autoAdvanceDelay": 1500,
@@ -785,13 +917,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "CTAButton",
-        "id": "step-03-cta-next",
+        "type": "question-navigation",
+        "id": "q3-navigation",
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar"
+        },
+        "properties": {
+          "showBack": true,
+          "enableWhenValid": true
         },
         "style": {
           "marginTop": 16,
@@ -800,7 +934,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "fade",
           "duration": 250,
-          "delay": 50,
+          "delay": 100,
           "easing": "ease-out"
         }
       }
@@ -841,24 +975,44 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "Natural",
         "Clássico",
         "Contemporâneo",
-        "Elegante"
+        "Elegante",
+        "Romântico",
+        "Sexy",
+        "Dramático",
+        "Criativo"
       ],
       "options": {
-        "3a": {
+        "natural": {
           "category": "Natural",
           "points": 1
         },
-        "3b": {
+        "classico": {
           "category": "Clássico",
-          "points": 2
+          "points": 1
         },
-        "3c": {
+        "contemporaneo": {
           "category": "Contemporâneo",
-          "points": 2
+          "points": 1
         },
-        "3d": {
+        "elegante": {
           "category": "Elegante",
-          "points": 3
+          "points": 1
+        },
+        "romantico": {
+          "category": "Romântico",
+          "points": 1
+        },
+        "sexy": {
+          "category": "Sexy",
+          "points": 1
+        },
+        "dramatico": {
+          "category": "Dramático",
+          "points": 1
+        },
+        "criativo": {
+          "category": "Criativo",
+          "points": 1
         }
       }
     }
