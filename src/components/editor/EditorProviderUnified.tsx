@@ -523,6 +523,39 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.warn('⚠️ Erro ao preparar masterBlocks:', e);
             }
 
+            // ✅ NOVO: Carregamento normalizado com gate (evita flash) — steps 02–11
+            let normalizedFromLoader: Block[] | null = null;
+            try {
+                const stepNum = Number(normalizedKey.replace('step-', ''));
+                const isNormalizedRange = stepNum >= 2 && stepNum <= 11;
+                if (isNormalizedRange) {
+                    // 1) Cache normalizado (se existir) — aplicação imediata
+                    const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
+                    if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {
+                        normalizedFromLoader = normalizedCache;
+                    } else {
+                        // 2) Loader com gate (env/query) — só carrega quando flag estiver ativa
+                        const mod = await import('@/lib/normalizedLoader');
+                        const data = await mod.loadNormalizedStep(normalizedKey as any);
+                        if (data && Array.isArray((data as any).blocks)) {
+                            const mapped = (data as any).blocks.map((b: any, idx: number) => ({
+                                id: b.id || `block-${idx}`,
+                                type: (b.type || 'text-inline') as any,
+                                order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
+                                properties: b.properties || b.props || {},
+                                content: b.content || {}
+                            })) as Block[];
+                            normalizedFromLoader = mapped;
+                            // Persistir em caches para chamadas futuras
+                            try {
+                                unifiedCache.set(templateKey(`normalized:${normalizedKey}`), mapped);
+                                unifiedCache.set(stepBlocksKey(normalizedKey), mapped);
+                            } catch { /* noop */ }
+                        }
+                    }
+                }
+            } catch { /* noop */ }
+
             // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
             setState(prev => {
                 console.log('hasModularTemplate:', hasModularTemplate(normalizedKey));
@@ -530,48 +563,16 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 console.log('existingBlocks:', prev.stepBlocks[normalizedKey]?.length || 0);
                 console.log('loadingStepsRef:', Array.from(loadingStepsRef.current));
 
-                // ✅ PRIORIDADE 0: JSON normalizado por etapa (public/templates/normalized/step-XX.json) — apenas para steps 02–11
-                try {
-                    const stepNum = Number(normalizedKey.replace('step-', ''));
-                    const isNormalizedRange = stepNum >= 2 && stepNum <= 11;
-                    if (isNormalizedRange) {
-                        const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
-                        if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {
-                            console.log('📝 Aplicando blocos do JSON normalizado (cache):', `/templates/normalized/${normalizedKey}.json`);
-                            // Garantir que o cache unificado por step também reflita o normalizado
-                            try { unifiedCache.set(stepBlocksKey(normalizedKey), normalizedCache); } catch { /* noop */ }
-                            console.groupEnd();
-                            return {
-                                ...prev,
-                                stepBlocks: { ...prev.stepBlocks, [normalizedKey]: normalizedCache },
-                                stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'normalized-json' }
-                            };
-                        }
-                        // Disparar fetch assíncrono do normalizado (não bloqueia aplicação do master/TS)
-                        const normalizedUrl = `/templates/normalized/${normalizedKey}.json`;
-                        fetch(normalizedUrl)
-                            .then(res => res.ok ? res.json() : null)
-                            .then(json => {
-                                if (!json || !Array.isArray(json.blocks)) return;
-                                const blocks = (json.blocks as any[]).map((b, idx) => ({
-                                    id: b.id || `block-${idx}`,
-                                    type: (b.type || 'text-inline') as any,
-                                    order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
-                                    properties: b.properties || b.props || {},
-                                    content: b.content || {}
-                                })) as Block[];
-                                unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
-                                // Sincronizar também no cache unificado por step para evitar preferir master em loads futuros
-                                try { unifiedCache.set(stepBlocksKey(normalizedKey), blocks); } catch { /* noop */ }
-                                setState(p => ({
-                                    ...p,
-                                    stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
-                                    stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'normalized-json' }
-                                }));
-                            })
-                            .catch(() => { /* silent */ });
-                    }
-                } catch { }
+                // ✅ PRIORIDADE 0: JSON normalizado (somente quando gate estiver ativo) — sem fetch assíncrono para evitar flash
+                if (Array.isArray(normalizedFromLoader) && normalizedFromLoader.length > 0) {
+                    console.log('📝 Aplicando blocos do JSON normalizado (gate-enabled)');
+                    console.groupEnd();
+                    return {
+                        ...prev,
+                        stepBlocks: { ...prev.stepBlocks, [normalizedKey]: normalizedFromLoader },
+                        stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'normalized-json' }
+                    };
+                }
 
                 // ✅ PRIORIDADE 1: Templates JSON modulares (steps 12, 19, 20)
                 if (hasModularTemplate(normalizedKey)) {
