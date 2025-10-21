@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-21T22:09:51.271Z
+ * Gerado em: 2025-10-21T22:19:08.011Z
  * Versão: 3.0.0
  */
 
@@ -3906,7 +3906,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "id": "transition-hero-12",
         "content": {
           "title": "🕐 Enquanto calculamos o seu resultado...",
-          "autoAdvanceDelay": 3500
+          "autoAdvanceDelay": 0
         },
         "style": {
           "backgroundColor": "#FAF9F7",
@@ -3962,15 +3962,14 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "nextStep": "step-13",
       "prevStep": "step-11",
       "allowBack": false,
-      "requiresUserInput": false,
-      "autoAdvance": true,
-      "autoAdvanceDelay": 3500
+      "requiresUserInput": true,
+      "autoAdvance": false,
+      "autoAdvanceDelay": 0
     },
     "analytics": {
       "events": [
         "page_view",
-        "section_view",
-        "auto_advance"
+        "section_view"
       ],
       "trackingId": "step-12-transition-v3",
       "fbPixelId": null,
