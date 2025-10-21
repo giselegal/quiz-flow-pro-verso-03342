@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import StabilizedCanvas from '@/canvas/StabilizedCanvas';
+import { UnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 
 // Removido LazyScalableQuizRenderer: StabilizedCanvas já encapsula preview com lazy interno
 
@@ -62,20 +63,31 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
         previewDevice === 'desktop' && 'max-w-5xl',
         previewDevice === 'xl' && 'max-w-6xl'
       )}>
-        <StabilizedCanvas
-          className="w-full"
-          blocks={currentStepData as Block[]}
-          selectedBlock={selectedBlock}
-          currentStep={safeCurrentStep}
-          onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-          onUpdateBlock={(blockId: string, updates: Partial<Block>) => actions.updateBlock(`step-${safeCurrentStep}`, blockId, updates)}
-          onDeleteBlock={(blockId: string) => actions.removeBlock(`step-${safeCurrentStep}`, blockId)}
-          isPreviewMode={mode === 'preview'}
-          onStepChange={(step: number) => {
-            actions.setCurrentStep(step);
-          }}
-          funnelId={funnelId}
-        />
+        {mode === 'preview' ? (
+          <div className="w-full">
+            <UnifiedStepRenderer
+              step={{ id: `step-${safeCurrentStep}`, blocks: currentStepData as any[] } as any}
+              mode="preview"
+              sessionData={{}}
+              onUpdateSessionData={() => { /* noop para preview simples no layout */ }}
+            />
+          </div>
+        ) : (
+          <StabilizedCanvas
+            className="w-full"
+            blocks={currentStepData as Block[]}
+            selectedBlock={selectedBlock}
+            currentStep={safeCurrentStep}
+            onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
+            onUpdateBlock={(blockId: string, updates: Partial<Block>) => actions.updateBlock(`step-${safeCurrentStep}`, blockId, updates)}
+            onDeleteBlock={(blockId: string) => actions.removeBlock(`step-${safeCurrentStep}`, blockId)}
+            isPreviewMode={false}
+            onStepChange={(step: number) => {
+              actions.setCurrentStep(step);
+            }}
+            funnelId={funnelId}
+          />
+        )}
       </div>
     </div>
   );
