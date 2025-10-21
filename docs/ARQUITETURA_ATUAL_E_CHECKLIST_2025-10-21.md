@@ -41,6 +41,122 @@ Arquivos relevantes:
 - `src/utils/loadStepTemplates.ts`:
   - Para caminhos legados (12, 13, 19, 20), ainda oferece conversão `sections → blocks`, mas hoje a preferência é sempre via `imports.ts`/TS gerado.
 
+## FunnelsContext.tsx na estrutura (metadados e sessão do funil)
+
+- Local: `src/contexts/funnel/FunnelsContext.tsx`
+- Objetivo: disponibilizar metadados das etapas (nome, descrição, tipo, blocksCount) e utilitários de sessão para telas como o Editor e páginas administrativas.
+
+Principais responsabilidades:
+- Construção de `defaultSteps` a partir do template canônico v3 (`QUIZ_STYLE_21_STEPS_TEMPLATE`) e do índice `QUIZ_QUESTIONS_COMPLETE` para os templates:
+  - `quiz-estilo-completo`
+  - `quiz21StepsComplete`
+  - `template-optimized-21-steps-funnel`
+  - Suporte/alias: `funil-21-etapas` e mapeamentos legados via `LEGACY_TEMPLATE_MAPPING`.
+- Extração do texto da pergunta direto das seções v3 para evitar títulos genéricos:
+  - Helper `extractQuestionTextFromTemplateSections(sections)` procura em ordem: `question-text` → `question-hero.questionText`/`text` → `question-title`.
+  - Resultado usado como `description`/`questionText` nas etapas de pergunta, garantindo que a UI exiba o enunciado real da questão.
+- Inferência de tipo da etapa por conteúdo, não por número:
+  - `inferStepTypeFromTemplate(stepId, stepNumber, sections)` verifica tipos de blocos (ex.: `transition-*`, `result-*`, `options-grid`, `question-*`, `offer-*`, `form-input`).
+  - Tipos possíveis: `lead-collection`, `scored-question`, `strategic-question`, `transition`, `result`, `offer`.
+- Contagem de blocos por etapa: `blocksCount = sections.length` (fonte v3), usada para diagnósticos e UI.
+- Clonagem segura de blocos ao expor conteúdo de uma etapa:
+  - `getTemplateBlocks(templateId, stepId)` cria cópias profundas com `id` único por `funnelId` e metadados (`_metadata`) para rastreabilidade.
+
+Sessão e resolução de template:
+- Determina `currentFunnelId` preferindo a URL (`?funnel=`). Se houver apenas `?template=`, mantém `currentFunnelId` vazio para sessão ad-hoc e resolve internamente o template base.
+- Caso não haja parâmetro, tenta `localStorage` (`editor:funnelId`). Fallback silencioso para `funil-21-etapas` quando aplicável.
+- Bypass: em rotas `/template-engine/*`, o provider não inicializa o contexto legacy para evitar sobreposição com o motor modular.
+
+API exposta (contrato resumido):
+- `steps`: lista de etapas com `{ id, name, order, blocksCount, isActive, type, description }`.
+- `setSteps(updater)`: mantém `_source: 'ts'` para rastrear origem.
+- `getTemplate(templateId)`: retorna metadados compatíveis (fallback para templates suportados).
+- `getTemplateBlocks(templateId, stepId)`: retorna blocos clonados da etapa.
+- `updateFunnelStep(stepId, updates)`, `addStepBlock(stepId, blockData)`: utilitários de edição leve.
+- `saveFunnelToDatabase(funnelData)`: persiste no Supabase, incluindo `settings.context = 'MY_FUNNELS'`.
+- `currentFunnelId`, `setCurrentFunnelId`, `loading`, `error`.
+
+Integrações relevantes:
+- Páginas que usam `useFunnels()`: `src/pages/admin/MyFunnelsPage.tsx` e `MyFunnelsPage_contextual.tsx` navegam/instanciam com `template-optimized-21-steps-funnel`.
+- Editor/produção consomem `steps` para navegação/listagens, enquanto o conteúdo v3 é carregado via `src/templates/imports.ts`/TemplateRegistry.
+
+Atualização 21/10/2025:
+- Aplicado o extrator de texto de pergunta em todos os mapeamentos citados, eliminando títulos genéricos nas perguntas. O template otimizado também usa `generateStepDescription(...)` para compor a descrição final por tipo + enunciado.
+
+---
+
+## gargalos e fluxograma
+
+### Gargalos identificados (prioridade prática)
+
+1) Clonagem profunda e IDs não determinísticos em `getTemplateBlocks`
+- Onde: `src/contexts/funnel/FunnelsContext.tsx` → `getTemplateBlocks()`
+- O que ocorre: para cada chamada, há `JSON.parse(JSON.stringify(...))` e criação de `id` com `Date.now()` + `Math.random()` para cada bloco.
+- Efeito: gera objetos novos a cada render/consulta, aumenta custo de CPU/alocação e provoca re-renders desnecessários na UI (IDs instáveis).
+- Direção de correção: memoizar por `(templateId, funnelId, stepId)` e usar IDs determinísticos (ex.: `${funnelId}-${stepId}-${index}`) com cache em Map fraco.
+
+2) Inferência de tipo calculada mais de uma vez por etapa
+- Onde: mapeamento do template `template-optimized-21-steps-funnel` (e similares).
+- O que ocorre: `inferStepTypeFromTemplate(...)` é chamada duas vezes (para `type` e novamente dentro de `generateStepDescription`).
+- Efeito: custo duplicado por etapa (baixo, mas soma em 21 etapas e listas).
+- Direção: calcular uma vez por step e reutilizar.
+
+3) Duplicação de mapeamentos de steps em três entradas
+- Onde: `FUNNEL_TEMPLATES['quiz-estilo-completo' | 'quiz21StepsComplete' | 'template-optimized-21-steps-funnel']`.
+- O que ocorre: cada mapeamento reitera a mesma lógica base (sections → metadados), o que aumenta superfície de manutenção.
+- Efeito: risco de divergência futura e alterações repetidas.
+- Direção: extrair um util único para gerar `defaultSteps` a partir de `QUIZ_STYLE_21_STEPS_TEMPLATE` + `QUIZ_QUESTIONS_COMPLETE` e reutilizar.
+
+4) Logs e resolução de template em efeito com varreduras repetidas
+- Onde: `useEffect` do `FunnelsProvider` (debug/diagnóstico).
+- O que ocorre: muitos logs e leituras de `Object.keys(...)` a cada alteração de `currentFunnelId`.
+- Efeito: ruído e custo mínimo, mas constante em dev; neutro em prod se `debug=false`.
+- Direção: condicionar logs a um nível de debug mais granular e mover varreduras pesadas para caminhos de diagnóstico explícitos.
+
+5) Potencial desalinhamento entre chaves de step (padded vs não padded)
+- Onde: construção de `stepId` com `step-${stepNumber}` (sem padding) vs. chaves de seções v3.
+- Observação: atualmente está funcional, porém vale padronizar (`step-01` etc.) e/ou garantir normalização única para evitar casos de borda.
+
+### Fluxograma (visão de alto nível)
+
+```mermaid
+flowchart TD
+  A[UI/Route: Editor/Admin] --> B{URL Params}
+  B -->|?funnel=| C[Definir currentFunnelId]
+  B -->|?template=| D[Sessão ad-hoc\nresolver template base]
+  B -->|nenhum| E[localStorage: editor:funnelId]
+
+  C --> F[Selecionar Template em FUNNEL_TEMPLATES]
+  D --> F
+  E --> F
+
+  F --> G[Construir defaultSteps\n(sections v3 → metadados)]
+  G --> H[steps no contexto\n{id, name, type, description, blocksCount}]
+
+  H --> I[Admin/Editor lista etapas]
+  I --> J[Render Step]
+
+  J --> K{Carregar conteúdo}
+  K -->|TemplateRegistry/ imports.ts| L[Seções v3 → Renderer]
+  K -->|getTemplateBlocks (legacy)| M[Clonagem profunda + IDs]
+
+  L --> N[Universal Block Renderer]
+  M --> N
+  N --> O[UI + Navegação + Eventos]
+```
+
+### Sugestões de melhoria imediata
+
+- Cache determinístico em `getTemplateBlocks`:
+  - Map por `(templateId, funnelId, stepId)` com geração única e IDs estáveis.
+  - Evita re-renders e reduz GC.
+- DRY para geração de `defaultSteps`:
+  - Extrair um util (`buildDefaultStepsFromSections`) e reutilizar nos três mapeamentos.
+- Calcular `stepType` uma única vez por etapa:
+  - Guardar em variável e reaproveitar em `type` e `generateStepDescription`.
+- Reduzir logs e custo do efeito:
+  - Proteger blocos de diagnóstico atrás de `if (debug && verbose)` e remover leituras redundantes.
+
 ---
 
 ## renderização e arquitetura de steps

@@ -105,6 +105,85 @@ const inferStepTypeFromTemplate = (
   return 'custom';
 };
 
+// Extrai o texto da pergunta a partir das seções v3 do template
+const extractQuestionTextFromTemplateSections = (sections: any[]): string => {
+  if (!Array.isArray(sections)) return '';
+  // Preferência: question-text > question-hero.questionText > question-title
+  const qTextSection = sections.find((s: any) => s?.type === 'question-text' && s?.content?.text);
+  if (qTextSection) return String(qTextSection.content.text);
+
+  const heroSection = sections.find(
+    (s: any) => s?.type === 'question-hero' && (s?.content?.questionText || s?.content?.text)
+  );
+  if (heroSection) return String(heroSection.content.questionText || heroSection.content.text);
+
+  const titleSection = sections.find((s: any) => s?.type === 'question-title' && s?.content?.text);
+  if (titleSection) return String(titleSection.content.text);
+
+  return '';
+};
+
+// 🔧 Helper: construir defaultSteps a partir das seções v3 com opções de descrição
+const buildDefaultStepsFromSections = (
+  options?: { useGeneratedDescription?: boolean }
+) => {
+  const useGeneratedDescription = !!options?.useGeneratedDescription;
+
+  return Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
+    const stepNumber = parseInt(stepNum);
+    const stepId = `step-${stepNumber}`;
+    const templateSections = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+    const questionText = extractQuestionTextFromTemplateSections(templateSections) || 'Pergunta';
+    const stepType = inferStepTypeFromTemplate(stepId, stepNumber, templateSections || []);
+
+    return {
+      id: stepId,
+      name: `Etapa ${stepNumber}`,
+      order: stepNumber,
+      blocksCount: templateSections.length || 1,
+      isActive: true,
+      type: stepType,
+      description: useGeneratedDescription
+        ? generateStepDescription(stepType, stepNumber, questionText)
+        : questionText,
+    };
+  });
+};
+
+// 🧠 Cache de blocos determinístico por template/funnel/step
+const blocksCache = new Map<string, any[]>();
+
+const deepClone = <T,>(obj: T): T => JSON.parse(JSON.stringify(obj));
+
+const buildDeterministicBlocks = (
+  originalBlocks: any[],
+  funnelId: string,
+  templateId: string,
+  stepId: string
+) => {
+  const cloned = (originalBlocks || []).map((block: any, index: number) => {
+    const baseId = block?.id ? String(block.id) : `block-${index}`;
+    const uniqueId = `${funnelId || 'nofunnel'}-${stepId}-${index}-${baseId}`;
+    const content = deepClone(block?.content || {});
+    const properties = deepClone(block?.properties || {});
+
+    return {
+      ...deepClone(block),
+      id: uniqueId,
+      content,
+      properties,
+      _metadata: {
+        originalBlockId: block?.id,
+        funnelId,
+        templateId,
+        stepId,
+        // timestamp removido para estabilidade
+      }
+    };
+  });
+  return cloned;
+};
+
 /**
  * Gera descrição do step baseada no tipo inferido do template
  * Remove hardcoding de stepNumber === 20, etc.
@@ -179,29 +258,7 @@ const FUNNEL_TEMPLATES: Record<
   'quiz-estilo-completo': {
     name: 'Quiz de Estilo Completo (21 Etapas)',
     description: 'Quiz completo de estilo pessoal com 21 etapas configuradas',
-    defaultSteps: Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
-      const stepNumber = parseInt(stepNum);
-      const stepId = `step-${stepNumber}`;
-      const questionData =
-        QUIZ_QUESTIONS_COMPLETE[String(stepNumber) as keyof typeof QUIZ_QUESTIONS_COMPLETE];
-      const questionText = Array.isArray(questionData)
-        ? (questionData[0] || 'Pergunta')
-        : String(questionData || 'Pergunta');
-
-      return {
-        id: stepId,
-        name: `Etapa ${stepNumber}`,
-        order: stepNumber,
-        blocksCount: QUIZ_STYLE_21_STEPS_TEMPLATE[stepId]?.length || 1,
-        isActive: true,
-        type: inferStepTypeFromTemplate(
-          stepId,
-          stepNumber,
-          QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || []
-        ),
-        description: questionText,
-      };
-    }),
+    defaultSteps: buildDefaultStepsFromSections({ useGeneratedDescription: false }),
   },
   'quiz-estilo': {
     name: 'Quiz de Estilo',
@@ -305,29 +362,7 @@ const FUNNEL_TEMPLATES: Record<
   'quiz21StepsComplete': {
     name: 'Quiz de Estilo Pessoal (21 Etapas)',
     description: 'Template completo do quiz de estilo pessoal com 21 etapas, sistema de pontuação e resultados personalizados',
-    defaultSteps: Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
-      const stepNumber = parseInt(stepNum);
-      const stepId = `step-${stepNumber}`;
-      const questionData =
-        QUIZ_QUESTIONS_COMPLETE[String(stepNumber) as keyof typeof QUIZ_QUESTIONS_COMPLETE];
-      const questionText = Array.isArray(questionData)
-        ? (questionData[0] || 'Pergunta')
-        : String(questionData || 'Pergunta');
-
-      return {
-        id: stepId,
-        name: `Etapa ${stepNumber}`,
-        order: stepNumber,
-        blocksCount: QUIZ_STYLE_21_STEPS_TEMPLATE[stepId]?.length || 1,
-        isActive: true,
-        type: inferStepTypeFromTemplate(
-          stepId,
-          stepNumber,
-          QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || []
-        ),
-        description: questionText,
-      };
-    }),
+    defaultSteps: buildDefaultStepsFromSections({ useGeneratedDescription: false }),
   },
   'funil-21-etapas': {
     name: 'Quiz de Estilo Pessoal - 21 Etapas',
@@ -527,33 +562,7 @@ const FUNNEL_TEMPLATES: Record<
   'template-optimized-21-steps-funnel': {
     name: 'Funil Quiz 21 Etapas (Otimizado)',
     description: 'Template otimizado do funil de quiz com 21 etapas configuradas',
-    defaultSteps: Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
-      const stepNumber = parseInt(stepNum);
-      const stepId = `step-${stepNumber}`;
-      const questionData =
-        QUIZ_QUESTIONS_COMPLETE[String(stepNumber) as keyof typeof QUIZ_QUESTIONS_COMPLETE];
-      const questionText = Array.isArray(questionData)
-        ? (questionData[0] || 'Pergunta')
-        : String(questionData || 'Pergunta');
-
-      return {
-        id: stepId,
-        name: `Etapa ${stepNumber}`,
-        order: stepNumber,
-        blocksCount: QUIZ_STYLE_21_STEPS_TEMPLATE[stepId]?.length || 1,
-        isActive: true,
-        type: inferStepTypeFromTemplate(
-          stepId,
-          stepNumber,
-          QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || []
-        ),
-        description: generateStepDescription(
-          inferStepTypeFromTemplate(stepId, stepNumber, QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || []),
-          stepNumber,
-          questionText
-        ),
-      };
-    }),
+    defaultSteps: buildDefaultStepsFromSections({ useGeneratedDescription: true }),
   },
 };
 
@@ -663,33 +672,18 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
   // Função para obter blocos de um template específico
   const getTemplateBlocks = useCallback((templateId: string, stepId: string) => {
-    // 🛡️ FUNÇÃO HELPER: Clone profundo REAL dos blocos para evitar mutação compartilhada
-    const cloneBlocks = (blocks: any[], funnelId: string) => {
-      return blocks.map((block, index) => {
-        // Gerar ID único baseado no funnelId atual para garantir isolamento
-        const uniqueId = `${funnelId}-${stepId}-${block.id || `block-${index}`}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-        return {
-          ...JSON.parse(JSON.stringify(block)), // Clone profundo real
-          id: uniqueId,
-          content: JSON.parse(JSON.stringify(block.content || {})),
-          properties: JSON.parse(JSON.stringify(block.properties || {})),
-          // Marcar com metadados para tracking
-          _metadata: {
-            originalBlockId: block.id,
-            funnelId: currentFunnelId,
-            templateId,
-            stepId,
-            clonedAt: new Date().toISOString()
-          }
-        };
-      });
-    };
+    // Cache key por template/funnel/step
+    const cacheKey = `${templateId}::${currentFunnelId || 'nofunnel'}::${stepId}`;
+    const cached = blocksCache.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
 
     // Verifica se é o template optimized (que existe)
     if (templateId === 'template-optimized-21-steps-funnel' || templateId === 'optimized-21-steps-funnel') {
       const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
-      const clonedBlocks = cloneBlocks(originalBlocks, currentFunnelId);
+      const clonedBlocks = buildDeterministicBlocks(originalBlocks, currentFunnelId, templateId, stepId);
+      blocksCache.set(cacheKey, clonedBlocks);
       console.log(`🔄 [${currentFunnelId}] Template quiz-estilo-completo: ${clonedBlocks.length} blocos únicos para ${stepId}`);
       return clonedBlocks;
     }
@@ -698,7 +692,8 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     if (templateId === 'funil-21-etapas' || templateId === 'template-optimized-21-steps-funnel') {
       console.log(`🔄 [${currentFunnelId}] Carregando blocos para template funil-21-etapas, etapa ${stepId}`);
       const originalBlocks = QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
-      const clonedBlocks = cloneBlocks(originalBlocks, currentFunnelId);
+      const clonedBlocks = buildDeterministicBlocks(originalBlocks, currentFunnelId, templateId, stepId);
+      blocksCache.set(cacheKey, clonedBlocks);
       console.log(`📦 [${currentFunnelId}] Clonados ${clonedBlocks.length} blocos únicos para a etapa ${stepId}`);
       return clonedBlocks;
     }
@@ -713,6 +708,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
   // ✅ FASE 2: Debug visual melhorado + controle de re-renders
   useEffect(() => {
     const timestamp = new Date().toLocaleTimeString();
+    const verbose = false; // reduzir logs pesados por padrão
 
     // 🛡️ GUARD: Se provider ainda não tem funnelId definido, apenas log leve e aborta
     if (!currentFunnelId) {
@@ -723,12 +719,16 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     }
 
     const safeFunnelTemplates = FUNNEL_TEMPLATES || ({} as typeof FUNNEL_TEMPLATES);
-    const safeQuizTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE || {} as typeof QUIZ_STYLE_21_STEPS_TEMPLATE;
+    const safeQuizTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE || ({} as typeof QUIZ_STYLE_21_STEPS_TEMPLATE);
 
-    console.log(`🔍 [${timestamp}] FunnelsContext Debug Completo:`);
-    console.log(`📂 currentFunnelId:`, currentFunnelId);
-    try { console.log(`📊 FUNNEL_TEMPLATES keys:`, Object.keys(safeFunnelTemplates)); } catch { console.warn('⚠️ Não foi possível ler keys de FUNNEL_TEMPLATES'); }
-    try { console.log(`📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:`, Object.keys(safeQuizTemplate)); } catch { console.warn('⚠️ Não foi possível ler keys de QUIZ_STYLE_21_STEPS_TEMPLATE'); }
+    if (debug) {
+      console.log(`🔍 [${timestamp}] FunnelsContext Debug Completo:`);
+      console.log(`📂 currentFunnelId:`, currentFunnelId);
+      if (verbose) {
+        try { console.log(`📊 FUNNEL_TEMPLATES keys:`, Object.keys(safeFunnelTemplates)); } catch { console.warn('⚠️ Não foi possível ler keys de FUNNEL_TEMPLATES'); }
+        try { console.log(`📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:`, Object.keys(safeQuizTemplate)); } catch { console.warn('⚠️ Não foi possível ler keys de QUIZ_STYLE_21_STEPS_TEMPLATE'); }
+      }
+    }
     // Resolver ID base quando for sessão ad-hoc (ex.: funnel-quiz21StepsComplete-<timestamp>)
     let resolvedId = currentFunnelId;
     try {
@@ -747,26 +747,30 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       }
     } catch { /* ignore */ }
 
-    console.log(`🎯 Template existe?`, !!safeFunnelTemplates[resolvedId]);
+    if (debug) console.log(`🎯 Template existe?`, !!safeFunnelTemplates[resolvedId]);
 
     if (safeFunnelTemplates[resolvedId]) {
       const template = safeFunnelTemplates[resolvedId];
-      console.log(`✅ [${timestamp}] Template encontrado:`, template.name);
-      console.log(`📊 [${timestamp}] Steps no template:`, template.defaultSteps.length);
+      if (debug) {
+        console.log(`✅ [${timestamp}] Template encontrado:`, template.name);
+        console.log(`📊 [${timestamp}] Steps no template:`, template.defaultSteps.length);
+      }
 
       // ✅ FASE 3: Fallback robusto - só atualiza se realmente necessário
       if (steps.length === 0 || steps[0]?.id !== template.defaultSteps[0]?.id) {
         setSteps(template.defaultSteps);
-        console.log(`🔄 [${timestamp}] FunnelsContext: Atualizando template:`, resolvedId);
+        if (debug) console.log(`🔄 [${timestamp}] FunnelsContext: Atualizando template:`, resolvedId);
       } else {
-        console.log(`✅ [${timestamp}] FunnelsContext: Template já carregado:`, resolvedId);
+        if (debug) console.log(`✅ [${timestamp}] FunnelsContext: Template já carregado:`, resolvedId);
       }
 
-      console.log(`📊 [${timestamp}] Steps disponíveis:`, template.defaultSteps.length);
-      console.log(
-        `🎯 [${timestamp}] Dados das steps:`,
-        template.defaultSteps.map(s => `${s.id}: ${s.name}`)
-      );
+      if (verbose) {
+        console.log(`📊 [${timestamp}] Steps disponíveis:`, template.defaultSteps.length);
+        console.log(
+          `🎯 [${timestamp}] Dados das steps:`,
+          template.defaultSteps.map(s => `${s.id}: ${s.name}`)
+        );
+      }
     } else if (currentFunnelId) {
       // Se currentFunnelId é ad-hoc e não foi resolvido, preferir não logar erro ruidoso
       if (!(currentFunnelId.startsWith('funnel-'))) {
