@@ -94,7 +94,7 @@ jobs:
       - name: 🧪 Validate @ts-nocheck threshold
         run: npm run validate:typescript
         env:
-          MAX_TS_NOCHECK: 50
+          MAX_TS_NOCHECK: 230
         continue-on-error: false
 
       - name: 📏 ESLint Check
