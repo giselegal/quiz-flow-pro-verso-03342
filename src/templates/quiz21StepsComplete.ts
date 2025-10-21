@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-21T02:55:28.904Z
+ * Gerado em: 2025-10-21T02:59:00.686Z
  * Versão: 3.0.0
  */
 
@@ -172,7 +172,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "type": "intro-title",
         "id": "intro-title-01",
         "content": {
-          "titleHtml": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
+          "titleHtml": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>.",
+          "title": "Chega de um guarda-roupa lotado e da sensação de que nada combina com você."
         },
         "style": {
           "textColor": "#432818",
@@ -232,6 +233,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "namePlaceholder": "Digite seu primeiro nome aqui...",
           "submitText": "Quero Descobrir meu Estilo Agora!",
           "validationMessage": "Por favor, digite seu nome para continuar",
+          "helperText": "Seu nome é necessário para personalizar sua experiência.",
           "showNameField": true,
           "showEmailField": false,
           "requiredFields": "name"
