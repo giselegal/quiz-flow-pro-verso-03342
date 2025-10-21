@@ -54,13 +54,13 @@ export default function IntroFormBlock({
       isDraggable={true}
     >
       <div className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mx-auto mt-8">
-        <form 
-          className="w-full space-y-6" 
-          autoComplete="off" 
+        <form
+          className="w-full space-y-6"
+          autoComplete="off"
           onSubmit={handleSubmit}
         >
           <div className="w-full space-y-3">
-            <label 
+            <label
               htmlFor="user-name-input"
               className="block text-center text-sm font-medium uppercase tracking-wide"
               style={{ color: '#6B4F43' }}
