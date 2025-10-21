@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-21T02:38:06.106Z
+ * Gerado em: 2025-10-21T02:55:28.904Z
  * Versão: 3.0.0
  */
 
@@ -144,47 +144,97 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
-        "type": "intro-hero",
-        "id": "intro-hero-01",
+        "type": "quiz-intro-header",
+        "id": "intro-header-01",
         "content": {
-          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-          "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
-          "logoWidth": 96,
-          "logoHeight": 96,
-          "title": "<span style=\"color: #B89B7A\">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style=\"color: #B89B7A\">Você</span>.",
-          "subtitle": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
-          "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
-          "imageAlt": "Descubra seu estilo predominante",
-          "description": "Um quiz personalizado que vai revelar qual estilo te representa e como valorizar sua essência através das roupas.",
-          "showProgress": false,
-          "progressValue": 0
+          "logoUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+          "logoAlt": "Logo Gisele Galvão",
+          "logoWidth": 132,
+          "logoHeight": 55,
+          "showBar": true,
+          "barColor": "#B89B7A",
+          "barHeight": 3,
+          "barMaxWidth": 300
         },
         "style": {
           "backgroundColor": "#FAF9F7",
           "textColor": "#432818",
-          "padding": 24
+          "padding": 16
         },
         "animation": {
           "type": "fade",
-          "duration": 500,
+          "duration": 400,
           "delay": 0,
           "easing": "ease-out"
         }
       },
       {
-        "type": "welcome-form",
+        "type": "intro-title",
+        "id": "intro-title-01",
+        "content": {
+          "titleHtml": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
+        },
+        "style": {
+          "textColor": "#432818",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 400,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "intro-image",
+        "id": "intro-image-01",
+        "content": {
+          "imageUrl": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+          "imageAlt": "Descubra seu estilo predominante",
+          "width": 300,
+          "height": 204,
+          "objectFit": "contain",
+          "maxWidth": 300
+        },
+        "style": {
+          "padding": 16
+        },
+        "animation": {
+          "type": "slideUp",
+          "duration": 400,
+          "delay": 150,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "intro-description",
+        "id": "intro-description-01",
+        "content": {
+          "text": "Em poucos minutos, descubra seu <strong style=\"color:#B89B7A\">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua <strong style=\"color:#432818\">essência</strong>, com praticidade e <strong style=\"color:#432818\">confiança</strong>."
+        },
+        "style": {
+          "textColor": "#6B7280",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 400,
+          "delay": 180,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "intro-form",
         "id": "intro-form-01",
         "content": {
-          "questionText": "Antes de começarmos, como posso te chamar?",
+          "formQuestion": "Como posso te chamar?",
           "nameLabel": "Seu primeiro nome",
           "namePlaceholder": "Digite seu primeiro nome aqui...",
           "submitText": "Quero Descobrir meu Estilo Agora!",
-          "loadingText": "Preparando seu quiz personalizado...",
-          "successText": "Perfeito! Vamos descobrir seu estilo!",
+          "validationMessage": "Por favor, digite seu nome para continuar",
           "showNameField": true,
           "showEmailField": false,
-          "requiredFields": "name",
-          "validationMessage": "Por favor, digite seu nome para continuar"
+          "requiredFields": "name"
         },
         "style": {
           "backgroundColor": "transparent",
@@ -194,6 +244,23 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "type": "slideUp",
           "duration": 400,
           "delay": 200,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "footer-copyright",
+        "id": "intro-footer-01",
+        "content": {
+          "text": "© 2025 Gisele Galvão - Todos os direitos reservados"
+        },
+        "style": {
+          "textAlign": "center",
+          "padding": 16
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 300,
           "easing": "ease-out"
         }
       }
