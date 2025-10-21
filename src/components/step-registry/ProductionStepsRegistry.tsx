@@ -83,40 +83,63 @@ const IntroStepAdapter: React.FC<BaseStepProps> = (props) => {
 const QuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
     const {
         stepId,
-        stepNumber,
-        isActive,
         isEditable,
-        onNext,
-        onPrevious,
         onSave,
         data = {},
         quizState,
         ...otherProps
     } = props as any;
 
-    // Usar os campos reais vindos de quizSteps (questionText, questionNumber, requiredSelections)
-    const requiredSelections = Number(data.requiredSelections) || 1;
-    const adaptedProps = {
-        data: {
-            id: stepId,
-            type: 'question' as const,
-            questionText: data.questionText,
-            questionNumber: data.questionNumber,
-            options: data.options || [],
-            requiredSelections,
-            ...data
-        },
-        currentAnswers: quizState?.answers?.[stepId] || quizState?.answers?.[stepId.replace('step-0', 'step-')] || [],
-        onAnswersChange: (answers: string[]) => {
-            onSave({ [stepId]: answers });
-            if (answers.length === requiredSelections) {
-                setTimeout(() => onNext(), 350);
-            }
-        },
-        ...otherProps
-    };
+    // Carregar blocos do template v3 para este step
+    const [templateBlocks, setTemplateBlocks] = React.useState<any[]>([]);
+    const [loading, setLoading] = React.useState(true);
 
-    return <OriginalQuestionStep {...adaptedProps} />;
+    React.useEffect(() => {
+        let mounted = true;
+        (async () => {
+            try {
+                const { loadTemplate: loadTemplateFunc } = await import('@/templates/imports');
+                const result = await loadTemplateFunc(stepId);
+                const templateData = result?.template || result;
+                const stepData = (templateData as any)?.[stepId];
+
+                let blocks: any[] = [];
+                if (stepData?.blocks && Array.isArray(stepData.blocks)) {
+                    blocks = stepData.blocks;
+                } else if (stepData?.sections && Array.isArray(stepData.sections)) {
+                    const { convertSectionsToBlocks } = await import('@/utils/sectionToBlockConverter');
+                    blocks = convertSectionsToBlocks(stepData.sections);
+                }
+
+                if (mounted) setTemplateBlocks(blocks);
+            } catch (error) {
+                console.error('❌ [QuestionStepAdapter] Erro ao carregar template:', error);
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        })();
+        return () => { mounted = false; };
+    }, [stepId]);
+
+    const currentAnswers: string[] = quizState?.answers?.[stepId]
+        || quizState?.answers?.[stepId.replace('step-0', 'step-')]
+        || [];
+
+    // Usar o renderer modular de perguntas (v3)
+    const { ModularQuestionStep } = require('@/components/quiz-modular');
+
+    return (
+        <ModularQuestionStep
+            data={{ id: stepId, ...data }}
+            blocks={templateBlocks as any}
+            isEditable={Boolean(isEditable)}
+            currentAnswers={currentAnswers}
+            onAnswersChange={(answers: string[]) => {
+                onSave({ [stepId]: answers });
+            }}
+            {...otherProps}
+        />
+    );
 };
 
 /**
@@ -126,51 +149,61 @@ const QuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
 const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
     const {
         stepId,
-        stepNumber,
-        isActive,
         isEditable,
-        onNext,
-        onPrevious,
         onSave,
         data = {},
         quizState,
         ...otherProps
     } = props as any;
 
-    // Priorizar questionText real vindo de QUIZ_STEPS (data.questionText)
-    const questionText = (data as any).questionText || (data as any).question || (data as any).title || 'Qual seu principal objetivo?';
-    const adaptedProps = {
-        data: {
-            id: stepId,
-            type: 'strategic-question' as const,
-            questionText,
-            options: data.options || [],
-            ...data
-        },
-        currentAnswer: quizState?.answers?.[stepId]?.[0] || quizState?.answers?.[stepId.replace('step-0', 'step-')]?.[0] || '',
-        onAnswerChange: (answerId: string) => {
-            onSave({ [stepId]: [answerId] });
-        },
-        ...otherProps
-    };
+    // Carregar blocos do template v3 para este step estratégico
+    const [templateBlocks, setTemplateBlocks] = React.useState<any[]>([]);
+    const [loading, setLoading] = React.useState(true);
 
-    // Wrapper para injetar botão de avanço manual após seleção
+    React.useEffect(() => {
+        let mounted = true;
+        (async () => {
+            try {
+                const { loadTemplate: loadTemplateFunc } = await import('@/templates/imports');
+                const result = await loadTemplateFunc(stepId);
+                const templateData = result?.template || result;
+                const stepData = (templateData as any)?.[stepId];
+
+                let blocks: any[] = [];
+                if (stepData?.blocks && Array.isArray(stepData.blocks)) {
+                    blocks = stepData.blocks;
+                } else if (stepData?.sections && Array.isArray(stepData.sections)) {
+                    const { convertSectionsToBlocks } = await import('@/utils/sectionToBlockConverter');
+                    blocks = convertSectionsToBlocks(stepData.sections);
+                }
+
+                if (mounted) setTemplateBlocks(blocks);
+            } catch (error) {
+                console.error('❌ [StrategicQuestionStepAdapter] Erro ao carregar template:', error);
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        })();
+        return () => { mounted = false; };
+    }, [stepId]);
+
+    const currentAnswer: string = quizState?.answers?.[stepId]?.[0]
+        || quizState?.answers?.[stepId.replace('step-0', 'step-')]?.[0]
+        || '';
+
+    const { ModularStrategicQuestionStep } = require('@/components/quiz-modular');
+
     return (
-        <div className="flex flex-col gap-6">
-            <OriginalStrategicQuestionStep {...adaptedProps} />
-            <div className="flex justify-center">
-                <button
-                    disabled={!quizState?.answers?.[stepId]}
-                    onClick={() => onNext()}
-                    className={`px-6 py-3 rounded-full font-semibold transition-all shadow-md ${quizState?.answers?.[stepId]
-                        ? 'bg-[#deac6d] text-white hover:brightness-105'
-                        : 'bg-[#e6ddd4] text-[#8a7663] cursor-not-allowed opacity-60'
-                        }`}
-                >
-                    Próxima
-                </button>
-            </div>
-        </div>
+        <ModularStrategicQuestionStep
+            data={{ id: stepId, ...data }}
+            blocks={templateBlocks as any}
+            isEditable={Boolean(isEditable)}
+            currentAnswer={currentAnswer}
+            onAnswerChange={(answerId: string) => {
+                onSave({ [stepId]: [answerId] });
+            }}
+            {...otherProps}
+        />
     );
 };
 
