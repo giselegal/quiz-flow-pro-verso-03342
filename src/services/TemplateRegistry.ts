@@ -21,6 +21,15 @@ export class TemplateRegistry {
     this.templates.set(id, Object.freeze(template));
   }
 
+  /**
+   * Registra (ou sobrescreve) um template para um step específico a partir de uma fonte externa (ex.: JSON override)
+   * Alias semântico para register(), mantido para clareza e futura telemetria.
+   */
+  registerOverride(id: string, template: StepTemplate): void {
+    // Poderíamos anexar metadados de origem aqui, se necessário: (template as any)._source = 'override-json'
+    this.register(id, template);
+  }
+
   get(id: string): StepTemplate | null {
     return this.templates.get(id) ?? null;
   }

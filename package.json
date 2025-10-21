@@ -4,6 +4,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+  "migrate:template-keys": "node scripts/migrate-templates-rename-keys.js",
     "migrate:options": "node scripts/migrate-options-blocks.mjs",
     "checklist": "node scripts/gerenciar-checklist.js",
     "verificar": "node scripts/verificador-21-etapas.mjs",
