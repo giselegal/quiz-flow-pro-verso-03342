@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { useQuizUserProgress } from '../useQuizUserProgress';
 import { useUnifiedQuizNavigation } from '../useUnifiedQuizNavigation';
 
@@ -211,4 +211,9 @@ describe('useUnifiedQuizNavigation', () => {
         // Deve pular para o passo 3 conforme a regra
         expect(result.current.currentStepIndex).toBe(3);
     });
+
+    // Tipagem explícita para SelectedOption
+    interface SelectedOption { id: string; value: string; points?: number; }
+    // Exemplo de uso tipado (ajustar conforme o teste real)
+    // a.selectedOptions.some((o: SelectedOption) => o.id === 'special')
 });
