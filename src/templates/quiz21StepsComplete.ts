@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-21T21:14:34.282Z
+ * Gerado em: 2025-10-21T21:56:18.573Z
  * Versão: 3.0.0
  */
 
@@ -4029,26 +4029,74 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
-        "type": "question-hero",
-        "id": "question-hero-13",
+        "type": "question-progress",
+        "id": "q13-progress",
         "content": {
-          "questionNumber": "Q11 - OBJETIVOS",
-          "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
-          "currentQuestion": 11,
-          "totalQuestions": 13,
-          "progressValue": 57,
-          "showProgress": true,
-          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-          "logoAlt": "Logo Gisele Galvão"
+          "currentQuestion": 1,
+          "totalQuestions": 6,
+          "progressValue": 16,
+          "showProgress": true
         },
         "style": {
           "backgroundColor": "transparent",
-          "padding": 16
+          "padding": 8
         },
         "animation": {
           "type": "fade",
-          "duration": 300,
+          "duration": 220,
           "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-number",
+        "id": "q13-number",
+        "content": {
+          "text": "1 de 6",
+          "questionNumber": "1 de 6"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 4
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 20,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-text",
+        "id": "q13-text",
+        "content": {
+          "text": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 240,
+          "delay": 40,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-instructions",
+        "id": "q13-instructions",
+        "content": {
+          "text": "Selecione 1 opção para continuar"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 12
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 240,
+          "delay": 60,
           "easing": "ease-out"
         }
       },
@@ -4059,27 +4107,31 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "options": [
             {
               "id": "desconectada",
-              "text": "Me sinto desconectada da mulher que sou hoje"
+              "text": "Me sinto desconectada da mulher que sou hoje",
+              "value": "desconectada"
             },
             {
               "id": "duvidas",
-              "text": "Tenho dúvidas sobre o que realmente me valoriza"
+              "text": "Tenho dúvidas sobre o que realmente me valoriza",
+              "value": "duvidas"
             },
             {
               "id": "as-vezes-acerto",
-              "text": "Às vezes acerto, às vezes erro"
+              "text": "Às vezes acerto, às vezes erro",
+              "value": "as-vezes-acerto"
             },
             {
               "id": "segura-evoluir",
-              "text": "Me sinto segura, mas sei que posso evoluir"
+              "text": "Me sinto segura, mas sei que posso evoluir",
+              "value": "segura-evoluir"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
           "showImages": false,
-          "imageSize": 0,
+          "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
           "validationMessage": "Selecione 1 opção para continuar"
@@ -4091,47 +4143,53 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "slideUp",
           "duration": 300,
-          "delay": 100,
+          "delay": 80,
           "easing": "ease-out"
         },
         "properties": {
           "options": [
             {
               "id": "desconectada",
-              "text": "Me sinto desconectada da mulher que sou hoje"
+              "text": "Me sinto desconectada da mulher que sou hoje",
+              "value": "desconectada"
             },
             {
               "id": "duvidas",
-              "text": "Tenho dúvidas sobre o que realmente me valoriza"
+              "text": "Tenho dúvidas sobre o que realmente me valoriza",
+              "value": "duvidas"
             },
             {
               "id": "as-vezes-acerto",
-              "text": "Às vezes acerto, às vezes erro"
+              "text": "Às vezes acerto, às vezes erro",
+              "value": "as-vezes-acerto"
             },
             {
               "id": "segura-evoluir",
-              "text": "Me sinto segura, mas sei que posso evoluir"
+              "text": "Me sinto segura, mas sei que posso evoluir",
+              "value": "segura-evoluir"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
           "showImages": false,
-          "imageSize": 0,
+          "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
           "validationMessage": "Selecione 1 opção para continuar"
         }
       },
       {
-        "type": "CTAButton",
-        "id": "step-13-cta-next",
+        "type": "question-navigation",
+        "id": "q13-navigation",
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar"
+        },
+        "properties": {
+          "showBack": true,
+          "enableWhenValid": true
         },
         "style": {
           "marginTop": 16,
@@ -4140,7 +4198,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "fade",
           "duration": 250,
-          "delay": 50,
+          "delay": 100,
           "easing": "ease-out"
         }
       }
@@ -4233,8 +4291,46 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
-        "type": "question-title",
-        "id": "step-14-question-title",
+        "type": "question-progress",
+        "id": "q14-progress",
+        "content": {
+          "currentQuestion": 2,
+          "totalQuestions": 6,
+          "progressValue": 33,
+          "showProgress": true
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 8
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-number",
+        "id": "q14-number",
+        "content": {
+          "text": "2 de 6",
+          "questionNumber": "2 de 6"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 4
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 20,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-text",
+        "id": "q14-text",
         "content": {
           "text": "O que mais te desafia na hora de se vestir?"
         },
@@ -4244,32 +4340,25 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         },
         "animation": {
           "type": "fade",
-          "duration": 250,
-          "delay": 0,
+          "duration": 240,
+          "delay": 40,
           "easing": "ease-out"
         }
       },
       {
-        "type": "question-hero",
-        "id": "question-hero-14",
+        "type": "question-instructions",
+        "id": "q14-instructions",
         "content": {
-          "questionNumber": "Q12 - DESAFIOS",
-          "questionText": "O que mais te desafia na hora de se vestir?",
-          "currentQuestion": 12,
-          "totalQuestions": 13,
-          "progressValue": 62,
-          "showProgress": true,
-          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-          "logoAlt": "Logo Gisele Galvão"
+          "text": "Selecione 1 opção para continuar"
         },
         "style": {
-          "backgroundColor": "transparent",
-          "padding": 16
+          "textAlign": "center",
+          "marginBottom": 12
         },
         "animation": {
           "type": "fade",
-          "duration": 300,
-          "delay": 0,
+          "duration": 240,
+          "delay": 60,
           "easing": "ease-out"
         }
       },
@@ -4280,27 +4369,31 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
           "options": [
             {
               "id": "combinar-pecas",
-              "text": "Tenho peças, mas não sei como combiná-las"
+              "text": "Tenho peças, mas não sei como combiná-las",
+              "value": "combinar-pecas"
             },
             {
               "id": "comprar-impulso",
-              "text": "Compro por impulso e me arrependo depois"
+              "text": "Compro por impulso e me arrependo depois",
+              "value": "comprar-impulso"
             },
             {
               "id": "imagem-nao-reflete",
-              "text": "Minha imagem não reflete quem eu sou"
+              "text": "Minha imagem não reflete quem eu sou",
+              "value": "imagem-nao-reflete"
             },
             {
               "id": "perco-tempo",
-              "text": "Perco tempo e acabo usando sempre os mesmos looks"
+              "text": "Perco tempo e acabo usando sempre os mesmos looks",
+              "value": "perco-tempo"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
           "showImages": false,
-          "imageSize": 0,
+          "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
           "validationMessage": "Selecione 1 opção para continuar"
@@ -4312,47 +4405,53 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "slideUp",
           "duration": 300,
-          "delay": 100,
+          "delay": 80,
           "easing": "ease-out"
         },
         "properties": {
           "options": [
             {
               "id": "combinar-pecas",
-              "text": "Tenho peças, mas não sei como combiná-las"
+              "text": "Tenho peças, mas não sei como combiná-las",
+              "value": "combinar-pecas"
             },
             {
               "id": "comprar-impulso",
-              "text": "Compro por impulso e me arrependo depois"
+              "text": "Compro por impulso e me arrependo depois",
+              "value": "comprar-impulso"
             },
             {
               "id": "imagem-nao-reflete",
-              "text": "Minha imagem não reflete quem eu sou"
+              "text": "Minha imagem não reflete quem eu sou",
+              "value": "imagem-nao-reflete"
             },
             {
               "id": "perco-tempo",
-              "text": "Perco tempo e acabo usando sempre os mesmos looks"
+              "text": "Perco tempo e acabo usando sempre os mesmos looks",
+              "value": "perco-tempo"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
           "showImages": false,
-          "imageSize": 0,
+          "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
           "validationMessage": "Selecione 1 opção para continuar"
         }
       },
       {
-        "type": "CTAButton",
-        "id": "step-14-cta-next",
+        "type": "question-navigation",
+        "id": "q14-navigation",
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar"
+        },
+        "properties": {
+          "showBack": true,
+          "enableWhenValid": true
         },
         "style": {
           "marginTop": 16,
@@ -4361,7 +4460,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "fade",
           "duration": 250,
-          "delay": 50,
+          "delay": 100,
           "easing": "ease-out"
         }
       }
@@ -4395,33 +4494,6 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "completion"
       ],
       "trackingId": "step-14-strategic-v3"
-    },
-    "scoring": {
-      "method": "points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante"
-      ],
-      "options": {
-        "14a": {
-          "category": "Natural",
-          "points": 1
-        },
-        "14b": {
-          "category": "Clássico",
-          "points": 2
-        },
-        "14c": {
-          "category": "Contemporâneo",
-          "points": 2
-        },
-        "14d": {
-          "category": "Elegante",
-          "points": 3
-        }
-      }
     },
     "strategic": {
       "isStrategic": true,
