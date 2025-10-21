@@ -43,7 +43,12 @@ try {
   const entries = Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE);
   for (const [key, template] of entries) {
     if (key.startsWith('step-')) {
-      registry.register(key, template as any);
+      // normaliza id para step-XX
+      const match = key.match(/^step-(\d{1,2})$/);
+      const normalizedKey = match ? `step-${parseInt(match[1], 10).toString().padStart(2, '0')}` : key;
+      // normaliza tipos (options-grid -> options grid)
+      const normalizedTemplate = normalizeTemplateBlocks({ [normalizedKey]: template } as any)[normalizedKey];
+      registry.register(normalizedKey, normalizedTemplate as any);
     }
   }
   if (process.env.NODE_ENV === 'development') {

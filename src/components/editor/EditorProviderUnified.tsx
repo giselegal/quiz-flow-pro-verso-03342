@@ -368,58 +368,29 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         }
     }, [state.currentStep, ensureStepLoaded]);
 
-    const loadDefaultTemplate = useCallback(() => {
-        console.log('🎨 Loading default template');
-
-        const template = QUIZ_STYLE_21_STEPS_TEMPLATE;
-
-        if (!template || !template.steps) {
-            console.error('❌ Template inválido');
-            return;
-        }
-
+    const loadDefaultTemplate = useCallback(async () => {
+        console.log('🎨 Loading default template via TemplateLoader/Registry');
         const newStepBlocks: Record<string, Block[]> = {};
         const newStepSources: Record<string, 'modular-json' | 'master-hydrated' | 'ts-template'> = {};
         let totalBlocks = 0;
-        let conversionErrors = 0;
 
-        // Carregar todos os steps do template
-        Object.entries(template.steps).forEach(([stepKey, stepConfig]) => {
+        // 21 etapas step-01..step-21
+        const keys = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
+        for (const stepKey of keys) {
             try {
-                // ✅ PRIORIDADE: Templates JSON modulares (steps 12, 19, 20)
-                if (hasModularTemplate(stepKey)) {
-                    const modularBlocks = loadStepTemplate(stepKey);
-                    newStepBlocks[stepKey] = modularBlocks;
-                    newStepSources[stepKey] = 'modular-json';
-                    totalBlocks += modularBlocks.length;
-                    console.log(`🎯 Loaded ${modularBlocks.length} modular blocks for ${stepKey}`);
-                    return;
-                }
-
-                // Carregar templates padrão para outros steps
-                const blockComponents = safeGetTemplateBlocks(stepKey, template);
-
-                // Validar conversão
-                if (blockComponents.length === 0 && stepConfig) {
-                    console.warn(`⚠️ No blocks converted for ${stepKey}`, stepConfig);
-                    conversionErrors++;
-                }
-
-                // Converter BlockComponent[] para Block[]
-                const blocks = blockComponentsToBlocks(blockComponents);
-
-                // Aceitar blocos conforme conversão; manter 'quiz-intro-header' para Step 01
-                const validBlocks = blocks;
-                newStepBlocks[stepKey] = validBlocks;
-                newStepSources[stepKey] = 'ts-template';
-                totalBlocks += validBlocks.length;
-                console.log(`📦 Loaded ${validBlocks.length} blocks for ${stepKey}`);
+                const { blocks, source } = await stateManager.ensureStepLoaded(stepKey, {
+                    ...state,
+                }) as any;
+                // ensureStepLoaded retorna Partial<EditorState>; mas usamos loader internamente
+                const ensured = await (stateManager as any).loader.loadStep(stepKey);
+                newStepBlocks[stepKey] = ensured.blocks;
+                newStepSources[stepKey] = ensured.source;
+                totalBlocks += ensured.blocks.length;
             } catch (error) {
-                console.error(`❌ Error converting ${stepKey}:`, error);
-                conversionErrors++;
+                console.error(`❌ Error loading ${stepKey}:`, error);
                 newStepBlocks[stepKey] = [];
             }
-        });
+        }
 
         setState({
             ...getInitialState(enableSupabase),
@@ -428,12 +399,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         });
 
         stateManager.clearHistory();
-        console.log(`✅ Template loaded: ${totalBlocks} blocos em ${Object.keys(newStepBlocks).length} steps`);
-
-        if (conversionErrors > 0) {
-            console.warn(`⚠️ ${conversionErrors} steps tiveram problemas na conversão`);
-        }
-    }, [stateManager, enableSupabase]);
+        console.log(`✅ Template loaded (Registry-first): ${totalBlocks} blocos em ${Object.keys(newStepBlocks).length} steps`);
+    }, [stateManager, enableSupabase, state]);
 
     // ============================================================================
     // DATA PERSISTENCE

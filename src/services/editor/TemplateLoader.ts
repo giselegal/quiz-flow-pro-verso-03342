@@ -21,6 +21,7 @@ import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQ
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
 import { TemplateRegistry } from '@/services/TemplateRegistry';
+import { TEMPLATE_SOURCES } from '@/config/templateSources';
 
 export type TemplateSource = 
   | 'normalized-json' 
@@ -64,17 +65,23 @@ export class TemplateLoader {
   const fromRegistry = this.loadFromRegistry(normalizedKey);
   if (fromRegistry) return fromRegistry;
 
-  // Estratégia 3: Master JSON público
-      const fromMaster = await this.loadFromMasterJSON(normalizedKey);
-      if (fromMaster) return fromMaster;
+      // Estratégia 3: Master JSON público (controlado por flag)
+      if (TEMPLATE_SOURCES.useMasterJSON) {
+        const fromMaster = await this.loadFromMasterJSON(normalizedKey);
+        if (fromMaster) return fromMaster;
+      }
 
-  // Estratégia 4: JSON normalizado (gates 02-11)
-      const normalized = await this.loadNormalized(normalizedKey);
-      if (normalized) return normalized;
+      // Estratégia 4: JSON normalizado (gates 02-11) - controlado por flag
+      if (TEMPLATE_SOURCES.useNormalizedJSON) {
+        const normalized = await this.loadNormalized(normalizedKey);
+        if (normalized) return normalized;
+      }
 
-  // Estratégia 5: Templates modulares
-      const modular = this.loadModular(normalizedKey);
-      if (modular) return modular;
+      // Estratégia 5: Templates modulares (controlado por flag)
+      if (TEMPLATE_SOURCES.useModularTemplates) {
+        const modular = this.loadModular(normalizedKey);
+        if (modular) return modular;
+      }
 
   // Estratégia 6: TypeScript template (fallback)
       return this.loadFromTypescript(normalizedKey);

@@ -71,6 +71,13 @@ interface OptionsGridBlockProps extends BlockComponentProps {
   };
 }
 
+// Helper robusto: garante um array a partir de arrays, objetos (Object.values) ou outros
+const ensureArray = (val: any): any[] => {
+  if (Array.isArray(val)) return val;
+  if (val && typeof val === 'object') return Object.values(val);
+  return [];
+};
+
 // NOTE: getMarginClass function available if needed for margin calculations
 /*
 const getMarginClass = (value: string | number, type: 'top' | 'bottom' | 'left' | 'right'): string => {
@@ -253,7 +260,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           ? (rawStep as any).blocks
           : Array.isArray((rawStep as any)?.sections)
             ? (rawStep as any).sections
-            : [];
+            : ensureArray((rawStep as any)?.blocks) || ensureArray((rawStep as any)?.sections) || [];
       const canonicalGrid = (Array.isArray(components) ? components : []).find((b: any) => {
         const t = String(b?.type || '').toLowerCase();
         return t === 'options-grid' || t === 'options grid' || t.includes('options');
@@ -293,7 +300,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             ? (rawStep as any).blocks
             : Array.isArray((rawStep as any)?.sections)
               ? (rawStep as any).sections
-              : [];
+              : ensureArray((rawStep as any)?.blocks) || ensureArray((rawStep as any)?.sections) || [];
         const canonicalGrid = (Array.isArray(components) ? components : []).find((b: any) => {
           const t = String(b?.type || '').toLowerCase();
           return t === 'options-grid' || t === 'options grid' || t.includes('options');
@@ -393,7 +400,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           ? (rawStep as any).blocks
           : Array.isArray((rawStep as any)?.sections)
             ? (rawStep as any).sections
-            : [];
+            : ensureArray((rawStep as any)?.blocks) || ensureArray((rawStep as any)?.sections) || [];
 
       // Encontrar grids de opções para determinar validação
       const optionsGrid = (Array.isArray(components) ? components : []).find((b: any) => {
