@@ -51,6 +51,8 @@ export const buttonSchema = templates
   .description('Botão clicável / Call-to-Action')
   .category('interactive')
   .icon('MousePointer')
+  // Grupo extra para experimentos A/B
+  .addGroup('ab', 'Teste A/B', { order: 5, collapsible: true, defaultExpanded: false })
   .addFields(
     buttonTextField('content'),
     buttonUrlField('content')
@@ -65,6 +67,33 @@ export const buttonSchema = templates
   .addFields(
     alignmentField('logic'),
     fullWidthField
+  )
+  // Campos de A/B testing (opt-in por bloco)
+  .addFields(
+    {
+      key: 'abExperimentKey',
+      label: 'Chave do Experimento',
+      type: 'string',
+      group: 'ab',
+      placeholder: 'ex.: cta-copy',
+      description: 'Identificador do experimento A/B. Deve corresponder a FUNNEL_CONFIG.abTests[].experimentKey.'
+    } as BlockFieldSchema<string>,
+    {
+      key: 'abTextA',
+      label: 'Texto Variante A',
+      type: 'string',
+      group: 'ab',
+      placeholder: 'Cópia alternativa A',
+      description: 'Texto exibido quando a variante A é atribuída.'
+    } as BlockFieldSchema<string>,
+    {
+      key: 'abTextB',
+      label: 'Texto Variante B',
+      type: 'string',
+      group: 'ab',
+      placeholder: 'Cópia alternativa B',
+      description: 'Texto exibido quando a variante B é atribuída.'
+    } as BlockFieldSchema<string>
   )
   .version('2.0.0')
   .build();
