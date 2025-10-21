@@ -1,0 +1,280 @@
+/**
+ * 📦 TEMPLATE LOADER SERVICE
+ * 
+ * Gerencia carregamento de templates com estratégias em cascata:
+ * 1. Cache unificado
+ * 2. Master JSON público
+ * 3. JSON normalizado
+ * 4. Templates modulares
+ * 5. TypeScript template (fallback)
+ * 
+ * Extraído do EditorProviderUnified para reduzir complexidade
+ * 
+ * @version 1.0.0
+ */
+
+import { Block } from '@/types/editor';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
+import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
+import { unifiedCache } from '@/utils/UnifiedTemplateCache';
+import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
+
+export type TemplateSource = 
+  | 'normalized-json' 
+  | 'modular-json' 
+  | 'individual-json' 
+  | 'master-hydrated' 
+  | 'ts-template';
+
+export interface LoadedTemplate {
+  blocks: Block[];
+  source: TemplateSource;
+}
+
+export class TemplateLoader {
+  private masterTemplateRef: any | null = null;
+  private loadingSteps = new Set<string>();
+
+  /**
+   * Carrega blocos para um step específico
+   * Usa estratégias em cascata com retry logic
+   */
+  async loadStep(step: number | string): Promise<LoadedTemplate> {
+    const normalizedKey = this.normalizeStepKey(step);
+
+    // Proteção contra carregamento duplicado
+    if (this.loadingSteps.has(normalizedKey)) {
+      console.log(`⏭️ Skip: ${normalizedKey} já está sendo carregado`);
+      throw new Error(`Step ${normalizedKey} already loading`);
+    }
+
+    this.loadingSteps.add(normalizedKey);
+
+    try {
+      console.group(`🔍 [TemplateLoader] ${normalizedKey}`);
+
+      // Estratégia 1: Cache unificado
+      const cached = this.loadFromCache(normalizedKey);
+      if (cached) return cached;
+
+      // Estratégia 2: Master JSON público
+      const fromMaster = await this.loadFromMasterJSON(normalizedKey);
+      if (fromMaster) return fromMaster;
+
+      // Estratégia 3: JSON normalizado (gates 02-11)
+      const normalized = await this.loadNormalized(normalizedKey);
+      if (normalized) return normalized;
+
+      // Estratégia 4: Templates modulares
+      const modular = this.loadModular(normalizedKey);
+      if (modular) return modular;
+
+      // Estratégia 5: TypeScript template (fallback)
+      return this.loadFromTypescript(normalizedKey);
+
+    } finally {
+      this.loadingSteps.delete(normalizedKey);
+      console.groupEnd();
+    }
+  }
+
+  /**
+   * Normaliza chave do step para formato step-XX
+   */
+  private normalizeStepKey(step: number | string): string {
+    const rawKey = typeof step === 'string' ? step : `step-${step}`;
+    const match = rawKey.match(/^step-(\d{1,2})$/);
+    return match ? `step-${parseInt(match[1], 10).toString().padStart(2, '0')}` : rawKey;
+  }
+
+  /**
+   * Estratégia 1: Carregar de cache unificado
+   */
+  private loadFromCache(normalizedKey: string): LoadedTemplate | null {
+    try {
+      const cachedStepBlocks = 
+        unifiedCache.get(stepBlocksKey(normalizedKey)) || 
+        unifiedCache.get(masterBlocksKey(normalizedKey));
+
+      if (Array.isArray(cachedStepBlocks) && cachedStepBlocks.length > 0) {
+        console.log(`📦 Cache hit: ${normalizedKey} → ${cachedStepBlocks.length} blocos`);
+        return {
+          blocks: cachedStepBlocks as Block[],
+          source: 'master-hydrated'
+        };
+      }
+    } catch (e) {
+      console.warn('⚠️ Erro ao ler cache:', e);
+    }
+    return null;
+  }
+
+  /**
+   * Estratégia 2: Carregar de Master JSON com retry
+   */
+  private async loadFromMasterJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
+    try {
+      if (typeof window === 'undefined' || !window.location) {
+        return null;
+      }
+
+      // Carregar master JSON uma vez
+      if (!this.masterTemplateRef) {
+        const cachedMaster = unifiedCache.get(masterTemplateKey());
+        if (cachedMaster) {
+          this.masterTemplateRef = cachedMaster;
+        } else {
+          // Retry com exponential backoff
+          let lastError: any = null;
+          for (let attempt = 0; attempt < 3; attempt++) {
+            try {
+              const resp = await fetch('/templates/quiz21-complete.json', {
+                cache: 'force-cache'
+              });
+              if (resp.ok) {
+                this.masterTemplateRef = await resp.json();
+                unifiedCache.set(masterTemplateKey(), this.masterTemplateRef);
+                console.log(`✅ Master JSON carregado (tentativa ${attempt + 1})`);
+                break;
+              } else {
+                lastError = new Error(`HTTP ${resp.status}`);
+                console.warn(`⚠️ Tentativa ${attempt + 1}/3 falhou:`, resp.status);
+              }
+            } catch (err) {
+              lastError = err;
+              console.warn(`⚠️ Tentativa ${attempt + 1}/3 erro de rede:`, err);
+            }
+            if (attempt < 2) {
+              await new Promise(resolve => setTimeout(resolve, 200 * Math.pow(2, attempt)));
+            }
+          }
+          if (!this.masterTemplateRef) {
+            console.error('❌ Falha ao carregar master JSON após 3 tentativas:', lastError);
+            return null;
+          }
+        }
+      }
+
+      const master = this.masterTemplateRef;
+      const stepConfig = master?.steps?.[normalizedKey];
+      if (stepConfig) {
+        const hydrated = {
+          ...stepConfig,
+          sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections)
+        };
+        const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
+        const blocks = blockComponentsToBlocks(blockComponents);
+        
+        unifiedCache.set(masterBlocksKey(normalizedKey), blocks);
+        unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
+        
+        console.log(`📦 Master JSON → ${normalizedKey}: ${blocks.length} blocos`);
+        return { blocks, source: 'master-hydrated' };
+      }
+    } catch (e) {
+      console.warn('⚠️ Erro ao carregar master JSON:', e);
+    }
+    return null;
+  }
+
+  /**
+   * Estratégia 3: Carregar JSON normalizado (steps 02-11)
+   */
+  private async loadNormalized(normalizedKey: string): Promise<LoadedTemplate | null> {
+    try {
+      const stepNum = Number(normalizedKey.replace('step-', ''));
+      const isNormalizedRange = stepNum >= 2 && stepNum <= 11;
+      
+      if (!isNormalizedRange) return null;
+
+      // Cache normalizado
+      const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
+      if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {
+        console.log(`📦 Normalized cache hit: ${normalizedKey}`);
+        return { blocks: normalizedCache, source: 'normalized-json' };
+      }
+
+      // Loader com gate
+      const mod = await import('@/lib/normalizedLoader');
+      const data = await mod.loadNormalizedStep(normalizedKey as any);
+      
+      if (data && Array.isArray((data as any).blocks)) {
+        const blocks = (data as any).blocks.map((b: any, idx: number) => ({
+          id: b.id || `block-${idx}`,
+          type: (b.type || 'text-inline') as any,
+          order: b.order ?? b.position ?? idx,
+          properties: b.properties || b.props || {},
+          content: b.content || {}
+        })) as Block[];
+        
+        unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
+        unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
+        
+        console.log(`📦 Normalized JSON → ${normalizedKey}: ${blocks.length} blocos`);
+        return { blocks, source: 'normalized-json' };
+      }
+    } catch (e) {
+      // Silent fail para gate disabled
+    }
+    return null;
+  }
+
+  /**
+   * Estratégia 4: Carregar templates modulares
+   */
+  private loadModular(normalizedKey: string): LoadedTemplate | null {
+    if (!hasModularTemplate(normalizedKey)) {
+      return null;
+    }
+
+    const blocks = loadStepTemplate(normalizedKey);
+    console.log(`📦 Modular template → ${normalizedKey}: ${blocks.length} blocos`);
+    
+    unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
+    return { blocks, source: 'modular-json' };
+  }
+
+  /**
+   * Estratégia 5: Carregar de TypeScript template (fallback)
+   */
+  private loadFromTypescript(normalizedKey: string): LoadedTemplate {
+    console.log(`📦 Fallback: TypeScript template → ${normalizedKey}`);
+    
+    const stepTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE[normalizedKey];
+    if (!stepTemplate) {
+      console.warn(`⚠️ Step ${normalizedKey} não encontrado no template TS`);
+      return { blocks: [], source: 'ts-template' };
+    }
+
+    const blockComponents = safeGetTemplateBlocks(normalizedKey, {
+      [normalizedKey]: stepTemplate
+    });
+    const blocks = blockComponentsToBlocks(blockComponents);
+    
+    unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
+    console.log(`📦 TS template → ${normalizedKey}: ${blocks.length} blocos`);
+    
+    return { blocks, source: 'ts-template' };
+  }
+
+  /**
+   * Pré-carrega múltiplos steps em paralelo
+   */
+  async preloadSteps(steps: (number | string)[]): Promise<void> {
+    await Promise.allSettled(
+      steps.map(step => this.loadStep(step))
+    );
+  }
+
+  /**
+   * Limpa estado interno
+   */
+  clear(): void {
+    this.masterTemplateRef = null;
+    this.loadingSteps.clear();
+  }
+}
+
+export default TemplateLoader;

@@ -17,16 +17,17 @@
  */
 
 import * as React from 'react';
-import { createContext, ReactNode, useCallback, useContext, useEffect, useState, useRef } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState, useRef, useMemo } from 'react';
 import { useUnifiedCRUD } from '@/contexts';
 import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { arrayMove } from '@dnd-kit/sortable';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
-import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
-import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
+import { loadStepTemplate, hasModularTemplate } from '@/utils/loadStepTemplates';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
-import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
+import { stepBlocksKey } from '@/utils/cacheKeys';
+import { EditorHistoryService } from '@/services/editor/HistoryService';
+import { TemplateLoader } from '@/services/editor/TemplateLoader';
+import EditorStateManager from '@/services/editor/EditorStateManager';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -87,71 +88,7 @@ export interface EditorContextValue {
 }
 
 // ============================================================================
-// SIMPLIFIED HISTORY SYSTEM
-// ============================================================================
-
-interface HistoryEntry {
-    state: EditorState;
-    timestamp: number;
-}
-
-class UnifiedHistory {
-    private history: HistoryEntry[] = [];
-    private currentIndex: number = -1;
-    private maxSize: number = 30;
-
-    push(state: EditorState) {
-        // Remove future history se estamos no meio
-        if (this.currentIndex < this.history.length - 1) {
-            this.history = this.history.slice(0, this.currentIndex + 1);
-        }
-
-        // Adiciona novo state (shallow clone para performance)
-        this.history.push({
-            state: { ...state, stepBlocks: { ...state.stepBlocks } },
-            timestamp: Date.now()
-        });
-
-        // Limita tamanho do histórico
-        if (this.history.length > this.maxSize) {
-            this.history.shift();
-        } else {
-            this.currentIndex++;
-        }
-    }
-
-    undo(): EditorState | null {
-        if (this.currentIndex > 0) {
-            this.currentIndex--;
-            return this.history[this.currentIndex].state;
-        }
-        return null;
-    }
-
-    redo(): EditorState | null {
-        if (this.currentIndex < this.history.length - 1) {
-            this.currentIndex++;
-            return this.history[this.currentIndex].state;
-        }
-        return null;
-    }
-
-    get canUndo(): boolean {
-        return this.currentIndex > 0;
-    }
-
-    get canRedo(): boolean {
-        return this.currentIndex < this.history.length - 1;
-    }
-
-    clear() {
-        this.history = [];
-        this.currentIndex = -1;
-    }
-}
-
-// ============================================================================
-// CONTEXT SETUP
+// CONTEXT SETUP (History moved to separate service)
 // ============================================================================
 
 const EditorContext = createContext<EditorContextValue | undefined>(undefined);
@@ -221,7 +158,9 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         ...initial
     }));
 
-    const [history] = useState(() => new UnifiedHistory());
+    // Services initialization (memoized)
+    const history = useMemo(() => new EditorHistoryService(), []);
+    const loader = useMemo(() => new TemplateLoader(), []);
     const [historyState, setHistoryState] = useState({ canUndo: false, canRedo: false });
 
     // Refs para debounce
@@ -269,38 +208,48 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     }, [funnelId, quizId, enableSupabase, storageKey]);
 
     // ============================================================================
-    // HISTORY MANAGEMENT
+    // HISTORY MANAGEMENT & STATE MANAGER
     // ============================================================================
 
-    const pushToHistory = useCallback((newState: EditorState) => {
-        history.push(newState);
-        setHistoryState({
-            canUndo: history.canUndo,
-            canRedo: history.canRedo
-        });
-    }, [history]);
+    // State manager (initialized after setState is available)
+    const stateManager = useMemo(() => {
+        const updateStateCallback = (updater: (prev: EditorState) => EditorState) => {
+            setState(prevState => {
+                const newState = updater(prevState);
+                setTimeout(() => {
+                    history.push(newState);
+                    setHistoryState({
+                        canUndo: history.canUndo,
+                        canRedo: history.canRedo
+                    });
+                }, 0);
+                return newState;
+            });
+        };
+        return new EditorStateManager(updateStateCallback, history, loader);
+    }, [history, loader]);
 
     const undo = useCallback(() => {
-        const previousState = history.undo();
+        const previousState = stateManager.undo();
         if (previousState) {
             setState(previousState);
             setHistoryState({
-                canUndo: history.canUndo,
-                canRedo: history.canRedo
+                canUndo: stateManager.canUndo,
+                canRedo: stateManager.canRedo
             });
         }
-    }, [history]);
+    }, [stateManager]);
 
     const redo = useCallback(() => {
-        const nextState = history.redo();
+        const nextState = stateManager.redo();
         if (nextState) {
             setState(nextState);
             setHistoryState({
-                canUndo: history.canUndo,
-                canRedo: history.canRedo
+                canUndo: stateManager.canUndo,
+                canRedo: stateManager.canRedo
             });
         }
-    }, [history]);
+    }, [stateManager]);
 
     // ============================================================================
     // BLOCK OPERATIONS
@@ -315,83 +264,25 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         return stepKey;
     }, []);
 
-    const updateStateWithHistory = useCallback((updater: (prev: EditorState) => EditorState) => {
-        setState(prevState => {
-            const newState = updater(prevState);
-            // Push to history after next tick
-            setTimeout(() => pushToHistory(newState), 0);
-            return newState;
-        });
-    }, [pushToHistory]);
-
     const addBlock = useCallback(async (stepKey: string, block: Block) => {
-        const key = normalizeStepKey(stepKey);
-        updateStateWithHistory(prev => ({
-            ...prev,
-            stepBlocks: {
-                ...prev.stepBlocks,
-                [key]: [...(prev.stepBlocks[key] || []), block]
-            }
-        }));
-    }, [updateStateWithHistory, normalizeStepKey]);
+        await stateManager.addBlock(normalizeStepKey(stepKey), block);
+    }, [stateManager, normalizeStepKey]);
 
     const addBlockAtIndex = useCallback(async (stepKey: string, block: Block, index: number) => {
-        const key = normalizeStepKey(stepKey);
-        updateStateWithHistory(prev => {
-            const blocks = [...(prev.stepBlocks[key] || [])];
-            blocks.splice(index, 0, block);
-            return {
-                ...prev,
-                stepBlocks: {
-                    ...prev.stepBlocks,
-                    [key]: blocks
-                }
-            };
-        });
-    }, [updateStateWithHistory, normalizeStepKey]);
+        await stateManager.addBlockAtIndex(normalizeStepKey(stepKey), block, index);
+    }, [stateManager, normalizeStepKey]);
 
     const removeBlock = useCallback(async (stepKey: string, blockId: string) => {
-        const key = normalizeStepKey(stepKey);
-        updateStateWithHistory(prev => ({
-            ...prev,
-            stepBlocks: {
-                ...prev.stepBlocks,
-                [key]: (prev.stepBlocks[key] || []).filter(block => block.id !== blockId)
-            },
-            selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId
-        }));
-    }, [updateStateWithHistory, normalizeStepKey]);
+        await stateManager.removeBlock(normalizeStepKey(stepKey), blockId);
+    }, [stateManager, normalizeStepKey]);
 
     const reorderBlocks = useCallback(async (stepKey: string, oldIndex: number, newIndex: number) => {
-        const key = normalizeStepKey(stepKey);
-        updateStateWithHistory(prev => {
-            const blocks = [...(prev.stepBlocks[key] || [])];
-            const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
-
-            return {
-                ...prev,
-                stepBlocks: {
-                    ...prev.stepBlocks,
-                    [key]: reorderedBlocks
-                }
-            };
-        });
-    }, [updateStateWithHistory, normalizeStepKey]);
+        await stateManager.reorderBlocks(normalizeStepKey(stepKey), oldIndex, newIndex);
+    }, [stateManager, normalizeStepKey]);
 
     const updateBlock = useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
-        const key = normalizeStepKey(stepKey);
-        updateStateWithHistory(prev => ({
-            ...prev,
-            stepBlocks: {
-                ...prev.stepBlocks,
-                [key]: (prev.stepBlocks[key] || []).map(block =>
-                    block.id === blockId
-                        ? { ...block, ...updates }
-                        : block
-                )
-            }
-        }));
-    }, [updateStateWithHistory, normalizeStepKey]);
+        await stateManager.updateBlock(normalizeStepKey(stepKey), blockId, updates);
+    }, [stateManager, normalizeStepKey]);
 
     // ============================================================================
     // NAVIGATION & STEP MANAGEMENT
@@ -412,293 +303,16 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         }));
     }, []);
 
-    // ✅ FASE 3: Proteção contra loops - rastrear steps sendo carregados
-    const loadingStepsRef = useRef<Set<string>>(new Set());
-
-    const masterTemplateRef = useRef<any | null>(null);
-
     const ensureStepLoaded = useCallback(async (step: number | string) => {
-        // Normaliza a chave do step para o formato step-XX (zero à esquerda para 1–9)
-        const rawKey = typeof step === 'string' ? step : `step-${step}`;
-        const match = rawKey.match(/^step-(\d{1,2})$/);
-        const normalizedKey = match ? `step-${parseInt(match[1], 10).toString().padStart(2, '0')}` : rawKey;
-
-        // ✅ FASE 3: Skip se já está carregando
-        if (loadingStepsRef.current.has(normalizedKey)) {
-            console.log(`⏭️ Skip: ${normalizedKey} já está sendo carregado`);
-            return;
-        }
-
-        loadingStepsRef.current.add(normalizedKey);
-
         try {
-            console.group(`🔍 [ensureStepLoaded] ${normalizedKey}`);
-
-            // 🔎 Tentativa 0: servir diretamente de cache unificado por step
-            try {
-                const cachedStepBlocks = unifiedCache.get(stepBlocksKey(normalizedKey)) || unifiedCache.get(masterBlocksKey(normalizedKey));
-                if (Array.isArray(cachedStepBlocks) && cachedStepBlocks.length > 0) {
-                    console.log(`📦 UnifiedCache hit (step): ${normalizedKey} → ${cachedStepBlocks.length} blocos`);
-                    setState(prev => {
-                        if ((prev.stepBlocks[normalizedKey]?.length || 0) > 0) {
-                            console.groupEnd();
-                            return prev;
-                        }
-                        console.groupEnd();
-                        return {
-                            ...prev,
-                            stepBlocks: {
-                                ...prev.stepBlocks,
-                                [normalizedKey]: cachedStepBlocks as Block[]
-                            },
-                            stepSources: {
-                                ...(prev.stepSources || {}),
-                                [normalizedKey]: 'master-hydrated'
-                            }
-                        };
-                    });
-                    return;
-                }
-            } catch (e) {
-                console.warn('⚠️ Erro ao ler unifiedCache (step blocks):', e);
+            const updates = await stateManager.ensureStepLoaded(step, state);
+            if (Object.keys(updates).length > 0) {
+                setState(prev => ({ ...prev, ...updates }));
             }
-
-            // 🔄 Tentar pré-carregar master JSON público uma vez (usa unifiedCache)
-            // ✅ RETRY COM EXPONENTIAL BACKOFF - Fix para falhas de rede
-            let masterBlocks: Block[] | null = null;
-            try {
-                if (typeof window !== 'undefined' && window.location) {
-                    if (!masterTemplateRef.current) {
-                        const cachedMaster = unifiedCache.get(masterTemplateKey());
-                        if (cachedMaster) {
-                            masterTemplateRef.current = cachedMaster;
-                        } else {
-                            // ✅ RETRY LOGIC: 3 tentativas com backoff exponencial
-                            let lastError: any = null;
-                            for (let attempt = 0; attempt < 3; attempt++) {
-                                try {
-                                    const resp = await fetch('/templates/quiz21-complete.json', {
-                                        cache: 'force-cache' // Use browser cache when available
-                                    });
-                                    if (resp.ok) {
-                                        masterTemplateRef.current = await resp.json();
-                                        unifiedCache.set(masterTemplateKey(), masterTemplateRef.current);
-                                        console.log(`✅ Master JSON carregado (tentativa ${attempt + 1})`);
-                                        break;
-                                    } else {
-                                        lastError = new Error(`HTTP ${resp.status}`);
-                                        console.warn(`⚠️ Tentativa ${attempt + 1}/3 falhou:`, resp.status);
-                                    }
-                                } catch (err) {
-                                    lastError = err;
-                                    console.warn(`⚠️ Tentativa ${attempt + 1}/3 erro de rede:`, err);
-                                }
-                                // Exponential backoff: 200ms, 400ms, 800ms
-                                if (attempt < 2) {
-                                    await new Promise(resolve => setTimeout(resolve, 200 * Math.pow(2, attempt)));
-                                }
-                            }
-                            if (!masterTemplateRef.current) {
-                                console.error('❌ Falha ao carregar master JSON após 3 tentativas:', lastError);
-                            }
-                        }
-                    }
-                    const master = masterTemplateRef.current;
-                    const stepConfig = master?.steps?.[normalizedKey];
-                    if (stepConfig) {
-                        // Hidratar sections com quizSteps antes da conversão
-                        const hydrated = {
-                            ...stepConfig,
-                            sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections)
-                        };
-                        // Converter via util existente usando template mínimo
-                        const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
-                        masterBlocks = blockComponentsToBlocks(blockComponents);
-                        unifiedCache.set(masterBlocksKey(normalizedKey), masterBlocks);
-                        unifiedCache.set(stepBlocksKey(normalizedKey), masterBlocks);
-                        console.log(`📦 Master JSON → ${normalizedKey}: ${masterBlocks.length} blocos`);
-                    }
-                }
-            } catch (e) {
-                console.warn('⚠️ Erro ao preparar masterBlocks:', e);
-            }
-
-            // ✅ NOVO: Carregamento normalizado com gate (evita flash) — steps 02–11
-            let normalizedFromLoader: Block[] | null = null;
-            try {
-                const stepNum = Number(normalizedKey.replace('step-', ''));
-                const isNormalizedRange = stepNum >= 2 && stepNum <= 11;
-                if (isNormalizedRange) {
-                    // 1) Cache normalizado (se existir) — aplicação imediata
-                    const normalizedCache = unifiedCache.get<Block[]>(templateKey(`normalized:${normalizedKey}`));
-                    if (Array.isArray(normalizedCache) && normalizedCache.length > 0) {
-                        normalizedFromLoader = normalizedCache;
-                    } else {
-                        // 2) Loader com gate (env/query) — só carrega quando flag estiver ativa
-                        const mod = await import('@/lib/normalizedLoader');
-                        const data = await mod.loadNormalizedStep(normalizedKey as any);
-                        if (data && Array.isArray((data as any).blocks)) {
-                            const mapped = (data as any).blocks.map((b: any, idx: number) => ({
-                                id: b.id || `block-${idx}`,
-                                type: (b.type || 'text-inline') as any,
-                                order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
-                                properties: b.properties || b.props || {},
-                                content: b.content || {}
-                            })) as Block[];
-                            normalizedFromLoader = mapped;
-                            // Persistir em caches para chamadas futuras
-                            try {
-                                unifiedCache.set(templateKey(`normalized:${normalizedKey}`), mapped);
-                                unifiedCache.set(stepBlocksKey(normalizedKey), mapped);
-                            } catch { /* noop */ }
-                        }
-                    }
-                }
-            } catch { /* noop */ }
-
-            // ✅ CORREÇÃO CRÍTICA: Usar functional setState para evitar stale closure
-            setState(prev => {
-                console.log('hasModularTemplate:', hasModularTemplate(normalizedKey));
-                console.log('hasStaticBlocksJSON:', hasStaticBlocksJSON(normalizedKey));
-                console.log('existingBlocks:', prev.stepBlocks[normalizedKey]?.length || 0);
-                console.log('loadingStepsRef:', Array.from(loadingStepsRef.current));
-
-                // ✅ PRIORIDADE 0: JSON normalizado (somente quando gate estiver ativo) — sem fetch assíncrono para evitar flash
-                if (Array.isArray(normalizedFromLoader) && normalizedFromLoader.length > 0) {
-                    console.log('📝 Aplicando blocos do JSON normalizado (gate-enabled)');
-                    console.groupEnd();
-                    return {
-                        ...prev,
-                        stepBlocks: { ...prev.stepBlocks, [normalizedKey]: normalizedFromLoader },
-                        stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'normalized-json' }
-                    };
-                }
-
-                // ✅ PRIORIDADE 1: Templates JSON modulares (steps 12, 19, 20)
-                if (hasModularTemplate(normalizedKey)) {
-                    const existingBlocks = prev.stepBlocks[normalizedKey] || [];
-                    const modularBlocks = loadStepTemplate(normalizedKey);
-
-                    console.log('✅ Loaded modular blocks:', {
-                        count: modularBlocks.length,
-                        types: modularBlocks.map(b => b.type)
-                    });
-
-                    // Se já tem blocos modulares com mesma estrutura, não recarregar
-                    const existingTypes = existingBlocks.map(b => b.type).sort().join(',');
-                    const modularTypes = modularBlocks.map(b => b.type).sort().join(',');
-
-                    if (existingBlocks.length > 0 && existingTypes === modularTypes) {
-                        console.log('⏭️ Skip: blocos modulares já carregados');
-                        console.groupEnd();
-                        return prev; // ✅ NO UPDATE = NO LOOP
-                    }
-
-                    // Carregar/substituir com blocos modulares
-                    // Persistir no cache unificado
-                    try { unifiedCache.set(stepBlocksKey(normalizedKey), modularBlocks); } catch { }
-                    console.log('📝 Carregando blocos modulares');
-                    console.groupEnd();
-                    return {
-                        ...prev,
-                        stepBlocks: {
-                            ...prev.stepBlocks,
-                            [normalizedKey]: modularBlocks
-                        },
-                        stepSources: {
-                            ...(prev.stepSources || {}),
-                            [normalizedKey]: 'modular-json'
-                        }
-                    };
-                }
-
-                // Se já tem blocos não-modulares, manter
-                if (prev.stepBlocks[normalizedKey]?.length > 0) {
-                    console.log('⏭️ Skip: blocos legacy já carregados');
-                    console.groupEnd();
-                    return prev; // ✅ NO UPDATE
-                }
-
-                // ✅ PRIORIDADE 2: JSON individual de etapa se existir (public/templates/step-XX-v3.json)
-                try {
-                    const stepNum = normalizedKey.replace('step-', '');
-                    // Preferir arquivos v3 públicos existentes para evitar 404
-                    const individualUrl = `/templates/step-${stepNum}-v3.json`;
-                    const individualCached = unifiedCache.get<Block[]>(templateKey(`individual:${normalizedKey}`));
-                    if (Array.isArray(individualCached) && individualCached.length > 0) {
-                        console.log('📝 Aplicando blocos do JSON individual (cache):', individualUrl);
-                        console.groupEnd();
-                        return {
-                            ...prev,
-                            stepBlocks: { ...prev.stepBlocks, [normalizedKey]: individualCached },
-                            stepSources: { ...(prev.stepSources || {}), [normalizedKey]: 'individual-json' as any }
-                        };
-                    }
-                    // Nota: fetch síncrono não é possível aqui; master será usado e, em paralelo, tentamos hidratar individual
-                    fetch(individualUrl)
-                        .then(res => res.ok ? res.json() : null)
-                        .then(json => {
-                            if (!json || !Array.isArray(json.blocks)) return;
-                            const blocks = (json.blocks as any[]).map((b, idx) => ({
-                                id: b.id || `block-${idx}`,
-                                type: (b.type || 'text-inline') as any,
-                                order: (b.order != null ? b.order : (b.position != null ? b.position : idx)),
-                                properties: b.properties || b.props || {},
-                                content: b.content || {}
-                            })) as Block[];
-                            unifiedCache.set(templateKey(`individual:${normalizedKey}`), blocks);
-                            setState(p => ({
-                                ...p,
-                                stepBlocks: { ...p.stepBlocks, [normalizedKey]: blocks },
-                                stepSources: { ...(p.stepSources || {}), [normalizedKey]: 'individual-json' as any }
-                            }));
-                        })
-                        .catch(() => { });
-                } catch { }
-
-                // ✅ Se conseguimos masterBlocks (JSON público hidratado), usar
-                if (masterBlocks && masterBlocks.length > 0) {
-                    console.log('📝 Aplicando blocos do master JSON hidratado');
-                    try { unifiedCache.set(stepBlocksKey(normalizedKey), masterBlocks); } catch { }
-                    console.groupEnd();
-                    return {
-                        ...prev,
-                        stepBlocks: {
-                            ...prev.stepBlocks,
-                            [normalizedKey]: masterBlocks
-                        },
-                        stepSources: {
-                            ...(prev.stepSources || {}),
-                            [normalizedKey]: 'master-hydrated'
-                        }
-                    };
-                }
-
-                // Fallback: Carregar template padrão TS (sections → blocks)
-                const template = QUIZ_STYLE_21_STEPS_TEMPLATE;
-                console.log('📝 Carregando template padrão (sections → blocks)');
-                const blockComponents = safeGetTemplateBlocks(normalizedKey, template);
-                const convertedBlocks = blockComponentsToBlocks(blockComponents);
-                try { unifiedCache.set(stepBlocksKey(normalizedKey), convertedBlocks); } catch { }
-                console.groupEnd();
-                return {
-                    ...prev,
-                    stepBlocks: {
-                        ...prev.stepBlocks,
-                        [normalizedKey]: convertedBlocks
-                    },
-                    stepSources: {
-                        ...(prev.stepSources || {}),
-                        [normalizedKey]: 'ts-template'
-                    }
-                };
-            });
-        } finally {
-            // ✅ FASE 1: Evitar loops e travamentos — remover da lista de carregamento e fechar grupos de log
-            try { console.groupEnd(); } catch { /* noop */ }
-            loadingStepsRef.current.delete(normalizedKey);
+        } catch (error) {
+            console.error('❌ Erro ao carregar step:', error);
         }
-    }, []); // ✅ EMPTY DEPS AGORA É SEGURO com functional setState
+    }, [stateManager, state]);
 
     // ✅ FASE 2 + FASE 4: Carregar blocos antecipadamente quando step muda
     const autoLoadedRef = useRef<Set<string>>(new Set());
@@ -807,19 +421,19 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             }
         });
 
-        updateStateWithHistory(() => ({
+        setState({
             ...getInitialState(enableSupabase),
             stepBlocks: newStepBlocks,
             stepSources: newStepSources
-        }));
+        });
 
-        history.clear();
+        stateManager.clearHistory();
         console.log(`✅ Template loaded: ${totalBlocks} blocos em ${Object.keys(newStepBlocks).length} steps`);
 
         if (conversionErrors > 0) {
             console.warn(`⚠️ ${conversionErrors} steps tiveram problemas na conversão`);
         }
-    }, [updateStateWithHistory, history, enableSupabase]);
+    }, [stateManager, enableSupabase]);
 
     // ============================================================================
     // DATA PERSISTENCE
@@ -922,17 +536,17 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         try {
             const data = JSON.parse(json);
             if (data.state) {
-                updateStateWithHistory(() => ({
+                setState({
                     ...getInitialState(enableSupabase),
                     ...data.state
-                }));
-                history.clear();
+                });
+                stateManager.clearHistory();
                 console.log('✅ JSON importado com sucesso');
             }
         } catch (error) {
             console.error('❌ Erro ao importar JSON:', error);
         }
-    }, [updateStateWithHistory, history, enableSupabase]);
+    }, [stateManager, enableSupabase]);
 
     // ============================================================================
     // AUTO-SAVE EFFECT
@@ -979,8 +593,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             // History
             undo,
             redo,
-            canUndo: historyState.canUndo,
-            canRedo: historyState.canRedo,
+            canUndo: stateManager.canUndo,
+            canRedo: stateManager.canRedo,
 
             // Data management
             exportJSON,
