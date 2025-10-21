@@ -12,6 +12,7 @@ import { useQuizRulesConfig } from '@/hooks/useQuizRulesConfig';
 import { useUnifiedQuizState } from '@/hooks/useUnifiedQuizState';
 import { FUNNEL_CONFIG } from '@/config/funnel/config';
 import { appendUTMParams } from '@/utils/url';
+import { assignVariant } from '@/utils/ab';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
@@ -91,6 +92,10 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
   const {
     text = 'Clique aqui',
+    // A/B opcional de cópia (opt-in por bloco)
+    abExperimentKey = '',
+    abTextA = '',
+    abTextB = '',
     variant = 'primary',
     size = 'medium',
     icon = 'none',
@@ -141,6 +146,29 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     getButtonActivationRule
   } = useQuizRulesConfig();
   const { getCurrentStep } = useUnifiedQuizState();
+  // 🎯 Atribuição A/B (opcional)
+  const [abVariant, setAbVariant] = useState<'A' | 'B' | null>(null);
+  useEffect(() => {
+    try {
+      const key = (abExperimentKey || 'cta-copy').trim();
+      // Procurar experimento no FUNNEL_CONFIG
+      const ab = FUNNEL_CONFIG?.abTests?.find?.(e => e.experimentKey === key);
+      if (!ab) { setAbVariant(null); return; }
+      const assigned = assignVariant(ab.experimentKey, ab.variants as any, ab.forceVariant) as 'A' | 'B' | string;
+      setAbVariant((assigned === 'A' || assigned === 'B') ? assigned : 'A');
+    } catch {
+      setAbVariant(null);
+    }
+  }, [abExperimentKey]);
+
+  // Label final considerando A/B (não quebra comportamento padrão)
+  const displayText = useMemo(() => {
+    if (!abVariant) return text;
+    if (abVariant === 'B' && abTextB) return abTextB;
+    if (abVariant === 'A' && abTextA) return abTextA;
+    return text;
+  }, [abVariant, text, abTextA, abTextB]);
+
 
   // Obter etapa atual
   const currentStep = getCurrentStep();
@@ -691,7 +719,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         <span className="flex-1 text-center truncate relative z-10 font-medium">
           {loading
             ? 'Carregando...'
-            : (isButtonDisabled && showDisabledState && disabledText ? disabledText : text) ||
+            : (isButtonDisabled && showDisabledState && disabledText ? disabledText : displayText) ||
             'Clique aqui'}
         </span>
 

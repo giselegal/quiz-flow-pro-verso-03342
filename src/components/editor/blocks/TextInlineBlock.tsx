@@ -1,6 +1,8 @@
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { interpolate } from '@/utils/interpolate';
+import { StorageService } from '@/services/core/StorageService';
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -18,6 +20,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   // ES7+ Destructuring com default values e optional chaining
   const {
     content: propsContent,
+    enableInterpolation = false,
     fontSize = 'medium',
     fontWeight = 'normal',
     fontFamily = 'inherit',
@@ -157,13 +160,27 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   // ES7+ useMemo para otimização de performance
-  const personalizedContent = useMemo(() => {
-    // ES7+ Optional chaining e nullish coalescing
+  const [personalizedContent, setPersonalizedContent] = useState<string>('');
+
+  // Atualiza conteúdo interpolado sob demanda (opt-in)
+  useEffect(() => {
+    let base = content ?? '';
     if (useUsername && usernamePattern) {
-      return content?.replace?.(usernamePattern, 'Usuário') ?? content ?? '';
+      base = base?.replace?.(usernamePattern, 'Usuário') ?? base ?? '';
     }
-    return content ?? '';
-  }, [content, useUsername, usernamePattern]);
+    if (!enableInterpolation) {
+      setPersonalizedContent(base);
+      return;
+    }
+    try {
+      // Contexto mínimo: userName vindo do StorageService
+      const userName = StorageService.safeGetString('userName') || 'Usuário';
+      const ctx = { userName, user: { name: userName } } as Record<string, any>;
+      setPersonalizedContent(interpolate(base, ctx));
+    } catch {
+      setPersonalizedContent(base);
+    }
+  }, [content, useUsername, usernamePattern, enableInterpolation]);
 
   // 🎯 Sistema de múltiplas cores e formatação no mesmo texto
   // Formato: [cor]texto em cor[/cor] ou [cor]**texto negrito**[/cor]
