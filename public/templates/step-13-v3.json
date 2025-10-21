@@ -25,20 +25,24 @@
       "selected": "#B89B7A",
       "hover": "#F3E8D3"
     },
-    "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" },
-    "spacing": { "sm": 8, "md": 16, "lg": 24, "xl": 32 },
-    "borderRadius": { "sm": 4, "md": 8, "lg": 12, "xl": 16 }
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    },
+    "spacing": {
+      "sm": 8,
+      "md": 16,
+      "lg": 24,
+      "xl": 32
+    },
+    "borderRadius": {
+      "sm": 4,
+      "md": 8,
+      "lg": 12,
+      "xl": 16
+    }
   },
   "sections": [
-    {
-      "type": "question-title",
-      "id": "step-13-question-title",
-      "content": {
-        "text": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
-      },
-      "style": { "textAlign": "center", "marginBottom": 12 },
-      "animation": { "type": "fade", "duration": 250, "delay": 0, "easing": "ease-out" }
-    },
     {
       "type": "question-hero",
       "id": "question-hero-13",
@@ -52,8 +56,16 @@
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
       },
-      "style": { "backgroundColor": "transparent", "padding": 16 },
-      "animation": { "type": "fade", "duration": 300, "delay": 0, "easing": "ease-out" }
+      "style": {
+        "backgroundColor": "transparent",
+        "padding": 16
+      },
+      "animation": {
+        "type": "fade",
+        "duration": 300,
+        "delay": 0,
+        "easing": "ease-out"
+      }
     },
     {
       "type": "options-grid",
@@ -75,8 +87,16 @@
         "autoAdvanceDelay": 0,
         "validationMessage": "Selecione 1 opção para continuar"
       },
-      "style": { "backgroundColor": "transparent", "padding": 16 },
-      "animation": { "type": "slideUp", "duration": 300, "delay": 100, "easing": "ease-out" },
+      "style": {
+        "backgroundColor": "transparent",
+        "padding": 16
+      },
+      "animation": {
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out"
+      },
       "properties": {
         "options": [
           { "id": "desconectada", "text": "Me sinto desconectada da mulher que sou hoje" },
@@ -98,14 +118,33 @@
     {
       "type": "CTAButton",
       "id": "step-13-cta-next",
-      "content": { "label": "Avançar", "href": "#next", "variant": "primary", "size": "large" },
-      "style": { "marginTop": 16, "textAlign": "center" },
-      "animation": { "type": "fade", "duration": 250, "delay": 50, "easing": "ease-out" }
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {
+        "marginTop": 16,
+        "textAlign": "center"
+      },
+      "animation": {
+        "type": "fade",
+        "duration": 250,
+        "delay": 50,
+        "easing": "ease-out"
+      }
     }
   ],
   "validation": {
     "required": ["selectedOptions"],
-    "rules": { "selectedOptions": { "minItems": 1, "maxItems": 1, "errorMessage": "Por favor, selecione 1 opção" } }
+    "rules": {
+      "selectedOptions": {
+        "minItems": 1,
+        "maxItems": 1,
+        "errorMessage": "Por favor, selecione 1 opção"
+      }
+    }
   },
   "navigation": {
     "nextStep": "step-14",
@@ -119,5 +158,9 @@
     "events": ["page_view", "section_view", "option_selected", "validation_error", "completion"],
     "trackingId": "step-13-strategic-v3"
   },
-  "strategic": { "isStrategic": true, "weight": 1.5, "impactsOffer": false }
+  "strategic": {
+    "isStrategic": true,
+    "weight": 1.5,
+    "impactsOffer": false
+  }
 }
