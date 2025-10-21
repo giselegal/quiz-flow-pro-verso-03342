@@ -165,7 +165,7 @@
             "value": "criativo"
           }
         ],
-        "columns": 2,
+        "columns": 1,
         "multipleSelection": true,
         "minSelections": 3,
         "maxSelections": 3,
