@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-21T20:08:40.889Z
+ * Gerado em: 2025-10-21T21:14:34.282Z
  * Versão: 3.0.0
  */
 
@@ -4028,23 +4028,6 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       }
     },
     "sections": [
-      {
-        "type": "question-title",
-        "id": "step-13-question-title",
-        "content": {
-          "text": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
-        },
-        "style": {
-          "textAlign": "center",
-          "marginBottom": 12
-        },
-        "animation": {
-          "type": "fade",
-          "duration": 250,
-          "delay": 0,
-          "easing": "ease-out"
-        }
-      },
       {
         "type": "question-hero",
         "id": "question-hero-13",
