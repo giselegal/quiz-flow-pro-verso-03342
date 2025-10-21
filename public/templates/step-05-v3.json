@@ -173,25 +173,21 @@
       "Natural",
       "Clássico",
       "Contemporâneo",
-      "Elegante"
+      "Elegante",
+      "Romântico",
+      "Sexy",
+      "Dramático",
+      "Criativo"
     ],
     "options": {
-      "5a": {
-        "category": "Natural",
-        "points": 1
-      },
-      "5b": {
-        "category": "Clássico",
-        "points": 2
-      },
-      "5c": {
-        "category": "Contemporâneo",
-        "points": 2
-      },
-      "5d": {
-        "category": "Elegante",
-        "points": 3
-      }
+      "natural": { "category": "Natural", "points": 1 },
+      "classico": { "category": "Clássico", "points": 1 },
+      "contemporaneo": { "category": "Contemporâneo", "points": 1 },
+      "elegante": { "category": "Elegante", "points": 1 },
+      "romantico": { "category": "Romântico", "points": 1 },
+      "sexy": { "category": "Sexy", "points": 1 },
+      "dramatico": { "category": "Dramático", "points": 1 },
+      "criativo": { "category": "Criativo", "points": 1 }
     }
   }
 }

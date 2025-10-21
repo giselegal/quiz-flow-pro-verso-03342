@@ -48,83 +48,28 @@
   },
   "sections": [
     {
-      "type": "question-title",
-      "id": "step-06-question-title",
-      "content": {
-        "text": "Quais cores mais aparecem no seu guarda-roupa?"
-      },
-      "style": {
-        "textAlign": "center",
-        "marginBottom": 12
-      },
-      "animation": {
-        "type": "fade",
-        "duration": 250,
-        "delay": 0,
-        "easing": "ease-out"
-      }
+      "type": "question-progress",
+      "id": "q6-progress",
+      "content": { "currentQuestion": 5, "totalQuestions": 10, "progressValue": 50, "showProgress": true },
+      "style": { "backgroundColor": "transparent", "padding": 8 },
+      "animation": { "type": "fade", "duration": 220, "delay": 0, "easing": "ease-out" }
     },
+    { "type": "question-number", "id": "q6-number", "content": { "text": "5 de 10", "questionNumber": "5 de 10" }, "style": { "textAlign": "center", "marginBottom": 4 }, "animation": { "type": "fade", "duration": 220, "delay": 20, "easing": "ease-out" } },
+    { "type": "question-text", "id": "q6-text", "content": { "text": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?" }, "style": { "textAlign": "center", "marginBottom": 12 }, "animation": { "type": "fade", "duration": 240, "delay": 40, "easing": "ease-out" } },
+    { "type": "question-instructions", "id": "q6-instructions", "content": { "text": "Selecione exatamente 3 opções para continuar" }, "style": { "textAlign": "center", "marginBottom": 12 }, "animation": { "type": "fade", "duration": 240, "delay": 60, "easing": "ease-out" } },
     {
-      "type": "question-hero",
-      "id": "question-hero-06",
-      "content": {
-        "questionNumber": "Q5 - CORES FAVORITAS",
-        "questionText": "Quais cores mais aparecem no seu guarda-roupa?",
-        "currentQuestion": 5,
-        "totalQuestions": 13,
-        "progressValue": 29,
-        "showProgress": true,
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão"
-      },
-      "style": {
-        "backgroundColor": "transparent",
-        "padding": 16
-      },
-      "animation": {
-        "type": "fade",
-        "duration": 300,
-        "delay": 0,
-        "easing": "ease-out"
-      }
-    },
-    {
-      "type": "options grid",
+      "type": "options-grid",
       "id": "options-grid-06",
       "content": {
         "options": [
-          {
-            "id": "6a",
-            "text": "Opção A para Q5",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "6a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "6b",
-            "text": "Opção B para Q5",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "6b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "6c",
-            "text": "Opção C para Q5",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "6c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "6d",
-            "text": "Opção D para Q5",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "6d",
-            "category": "Elegante",
-            "points": 3
-          }
+          { "id": "natural", "text": "Estampas clean, com poucas informações", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp", "value": "natural" },
+          { "id": "classico", "text": "Estampas clássicas e atemporais", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp", "value": "classico" },
+          { "id": "contemporaneo", "text": "Atemporais, mas que tenham uma pegada atual e moderna", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp", "value": "contemporaneo" },
+          { "id": "elegante", "text": "Estampas clássicas e atemporais, mas sofisticadas", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp", "value": "elegante" },
+          { "id": "romantico", "text": "Estampas florais e/ou delicadas como bolinhas, borboletas e corações", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp", "value": "romantico" },
+          { "id": "sexy", "text": "Estampas de animal print, como onça, zebra e cobra", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp", "value": "sexy" },
+          { "id": "dramatico", "text": "Estampas geométricas, abstratas e exageradas como grandes poás", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp", "value": "dramatico" },
+          { "id": "criativo", "text": "Estampas diferentes do usual, como africanas, xadrez grandes", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp", "value": "criativo" }
         ],
         "columns": 2,
         "multipleSelection": true,
@@ -136,50 +81,18 @@
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar"
       },
-      "style": {
-        "backgroundColor": "transparent",
-        "padding": 16
-      },
-      "animation": {
-        "type": "slideUp",
-        "duration": 300,
-        "delay": 100,
-        "easing": "ease-out"
-      },
+      "style": { "backgroundColor": "transparent", "padding": 16 },
+      "animation": { "type": "slideUp", "duration": 300, "delay": 80, "easing": "ease-out" },
       "properties": {
         "options": [
-          {
-            "id": "6a",
-            "text": "Opção A para Q5",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "6a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "6b",
-            "text": "Opção B para Q5",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "6b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "6c",
-            "text": "Opção C para Q5",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "6c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "6d",
-            "text": "Opção D para Q5",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "6d",
-            "category": "Elegante",
-            "points": 3
-          }
+          { "id": "natural", "text": "Estampas clean, com poucas informações", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp", "value": "natural" },
+          { "id": "classico", "text": "Estampas clássicas e atemporais", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp", "value": "classico" },
+          { "id": "contemporaneo", "text": "Atemporais, mas que tenham uma pegada atual e moderna", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp", "value": "contemporaneo" },
+          { "id": "elegante", "text": "Estampas clássicas e atemporais, mas sofisticadas", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp", "value": "elegante" },
+          { "id": "romantico", "text": "Estampas florais e/ou delicadas como bolinhas, borboletas e corações", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp", "value": "romantico" },
+          { "id": "sexy", "text": "Estampas de animal print, como onça, zebra e cobra", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp", "value": "sexy" },
+          { "id": "dramatico", "text": "Estampas geométricas, abstratas e exageradas como grandes poás", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp", "value": "dramatico" },
+          { "id": "criativo", "text": "Estampas diferentes do usual, como africanas, xadrez grandes", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp", "value": "criativo" }
         ],
         "columns": 2,
         "multipleSelection": true,
@@ -192,26 +105,7 @@
         "validationMessage": "Selecione 3 opções para continuar"
       }
     },
-    {
-      "type": "CTAButton",
-      "id": "step-06-cta-next",
-      "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
-      },
-      "style": {
-        "marginTop": 16,
-        "textAlign": "center"
-      },
-      "animation": {
-        "type": "fade",
-        "duration": 250,
-        "delay": 50,
-        "easing": "ease-out"
-      }
-    }
+    { "type": "question-navigation", "id": "q6-navigation", "content": { "backLabel": "Voltar", "nextLabel": "Avançar" }, "properties": { "showBack": true, "enableWhenValid": true }, "style": { "marginTop": 16, "textAlign": "center" }, "animation": { "type": "fade", "duration": 250, "delay": 100, "easing": "ease-out" } }
   ],
   "validation": {
     "required": [
@@ -249,25 +143,21 @@
       "Natural",
       "Clássico",
       "Contemporâneo",
-      "Elegante"
+      "Elegante",
+      "Romântico",
+      "Sexy",
+      "Dramático",
+      "Criativo"
     ],
     "options": {
-      "6a": {
-        "category": "Natural",
-        "points": 1
-      },
-      "6b": {
-        "category": "Clássico",
-        "points": 2
-      },
-      "6c": {
-        "category": "Contemporâneo",
-        "points": 2
-      },
-      "6d": {
-        "category": "Elegante",
-        "points": 3
-      }
+      "natural": { "category": "Natural", "points": 1 },
+      "classico": { "category": "Clássico", "points": 1 },
+      "contemporaneo": { "category": "Contemporâneo", "points": 1 },
+      "elegante": { "category": "Elegante", "points": 1 },
+      "romantico": { "category": "Romântico", "points": 1 },
+      "sexy": { "category": "Sexy", "points": 1 },
+      "dramatico": { "category": "Dramático", "points": 1 },
+      "criativo": { "category": "Criativo", "points": 1 }
     }
   }
 }
