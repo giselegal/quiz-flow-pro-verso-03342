@@ -24,13 +24,23 @@ async function preloadAllTemplates(): Promise<void> {
           return response.json().then(template => {
             // Converter template para formato compatível
             if (template.sections && Array.isArray(template.sections)) {
-              const blocks = template.sections.map((section: any, index: number) => ({
-                id: section.id || `section-${index}`,
-                type: section.type,
-                properties: section.props || {},
-                content: {},
-                position: section.order || index
-              }));
+              const { normalizeBlockType } = require('@/utils/blockNormalization');
+              const blocks = template.sections.map((section: any, index: number) => {
+                const normalizedType = normalizeBlockType(section?.type);
+                // Aceitar content, properties ou props (alias) vindos do JSON v3
+                const properties = (section?.properties
+                  || section?.props
+                  || section?.content
+                  || {}) as Record<string, any>;
+
+                return {
+                  id: section.id || `section-${index}`,
+                  type: normalizedType,
+                  properties,
+                  content: {},
+                  position: section.order || index,
+                };
+              });
               TEMPLATE_CACHE.set(stepNumber, blocks);
               console.log(`✅ Template ${stepNumber} pré-carregado: ${blocks.length} blocos`);
             } else if (template.blocks && Array.isArray(template.blocks)) {
@@ -93,13 +103,21 @@ function ensureTemplateLoaded(stepNumber: number): any[] {
     if (xhr.status === 200) {
       const template = JSON.parse(xhr.responseText);
       if (template.sections && Array.isArray(template.sections)) {
-        const blocks = template.sections.map((section: any, index: number) => ({
-          id: section.id || `section-${index}`,
-          type: section.type,
-          properties: section.props || {},
-          content: {},
-          position: section.order || index
-        }));
+        const { normalizeBlockType } = require('@/utils/blockNormalization');
+        const blocks = template.sections.map((section: any, index: number) => {
+          const normalizedType = normalizeBlockType(section?.type);
+          const properties = (section?.properties
+            || section?.props
+            || section?.content
+            || {}) as Record<string, any>;
+          return {
+            id: section.id || `section-${index}`,
+            type: normalizedType,
+            properties,
+            content: {},
+            position: section.order || index,
+          };
+        });
         
         // Cachear para uso futuro
         TEMPLATE_CACHE.set(stepNumber, blocks);

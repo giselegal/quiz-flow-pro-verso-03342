@@ -4,7 +4,11 @@ import { z } from 'zod';
 export const JSONv3SectionSchema = z.object({
   type: z.string().min(1),
   id: z.string().min(1),
-  content: z.record(z.any()).default({}),
+  // Conteúdo canônico v3
+  content: z.record(z.any()).optional().default({}),
+  // Alias/variações comuns encontradas no projeto
+  properties: z.record(z.any()).optional().default({}),
+  props: z.record(z.any()).optional(),
   style: z.record(z.any()).optional(),
   animation: z.record(z.any()).optional(),
 });
@@ -45,6 +49,59 @@ export const JSONv3TemplateSchema = z.object({
     events: z.array(z.string()).optional(),
     trackingId: z.string().optional(),
   }).optional(),
+  // Campos adicionais para SEO/URLs/AB Test/Tracking (opcionais e retrocompatíveis)
+  seo: z
+    .object({
+      title: z.string().optional(),
+      description: z.string().optional(),
+      keywords: z.array(z.string()).optional(),
+      canonicalUrl: z.string().url().optional(),
+      robots: z.string().optional(),
+      openGraph: z.record(z.any()).optional(),
+      twitter: z.record(z.any()).optional(),
+    })
+    .optional(),
+  urls: z
+    .object({
+      base: z.string().url().optional(),
+      salesPage: z.string().url().optional(),
+      privacyPolicy: z.string().url().optional(),
+      termsOfService: z.string().url().optional(),
+    })
+    .optional(),
+  abTest: z
+    .object({
+      active: z.boolean().default(false).optional(),
+      variant: z.enum(['A', 'B']).optional(),
+      variants: z.record(z.any()).optional(),
+      allocation: z
+        .object({ A: z.number().min(0).max(100), B: z.number().min(0).max(100) })
+        .optional(),
+    })
+    .optional(),
+  tracking: z
+    .object({
+      facebookPixelId: z.string().optional(),
+      googleTagId: z.string().optional(),
+      utm: z
+        .object({
+          source: z.string().optional(),
+          medium: z.string().optional(),
+          campaign: z.string().optional(),
+          term: z.string().optional(),
+          content: z.string().optional(),
+        })
+        .optional(),
+      events: z.record(z.any()).optional(),
+    })
+    .optional(),
+  scoring: z
+    .object({
+      method: z.enum(['points', 'weights']).optional(),
+      categories: z.array(z.string()).optional(),
+      options: z.record(z.object({ category: z.string(), points: z.number().optional() })).optional(),
+    })
+    .optional(),
 });
 
 export type JSONv3TemplateParsed = z.infer<typeof JSONv3TemplateSchema>;

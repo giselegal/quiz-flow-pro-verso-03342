@@ -213,6 +213,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     showQuestionTitle = true,
   } = (block?.properties as any) || {};
 
+  // ✅ Compatibilidade de propriedades com schema/editor (aliases)
+  // - gap (schema) ↔ gridGap (componente)
+  // - multipleSelect (schema) ↔ multipleSelection (componente)
+  const gridGapCompat: number = (block?.properties as any)?.gridGap ?? (block?.properties as any)?.gap ?? gridGap;
+  const multipleSelectionCompat: boolean = (block?.properties as any)?.multipleSelection ?? (block?.properties as any)?.multipleSelect ?? multipleSelection;
+
   // Callback externo (produção/quiz) para propagar seleção ao host
   const externalOnOptionSelect = (block?.properties as any)?.onOptionSelect as
     | ((optionId: string) => void)
@@ -355,14 +361,14 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     if (import.meta?.env?.DEV) {
       console.log('🔧 OptionsGridBlock: Debug info', {
         isPreviewMode,
-        multipleSelection,
+        multipleSelection: multipleSelectionCompat,
         optionsCount: options?.length || 0,
         selectedOptions: isPreviewMode ? previewSelections : selectedOptions,
         blockId: block?.id,
         currentStep: (window as any)?.__quizCurrentStep ?? currentStepFromEditor
       });
     }
-  }, [isPreviewMode, multipleSelection, previewSelections, selectedOptions, block?.id, currentStepFromEditor]);
+  }, [isPreviewMode, multipleSelectionCompat, previewSelections, selectedOptions, block?.id, currentStepFromEditor]);
 
   // 🎯 CONFIGURAÇÃO DE STEP USANDO O HOOK
   const { config: stepConfig, isLoading: stepConfigLoading } = useStepConfig({
@@ -676,7 +682,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     console.log('🔍 OptionsGridBlock: handleOptionSelect called', {
       optionId,
       isPreviewMode,
-      multipleSelection,
+      multipleSelection: multipleSelectionCompat,
       currentPreviewSelections: previewSelections,
       currentSelectedOptions: selectedOptions,
       allowDeselection,
@@ -687,7 +693,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       // Preview mode: Handle selection with real behavior
       let newSelections: string[];
 
-      if (multipleSelection) {
+      if (multipleSelectionCompat) {
         if (previewSelections.includes(optionId)) {
           // Deselect if already selected
           if (allowDeselection) {
@@ -942,7 +948,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     if (isPreviewMode) {
       return previewSelections;
     }
-    return multipleSelection ? (selectedOptions || []) : (selectedOption ? [selectedOption] : []);
+    return multipleSelectionCompat ? (selectedOptions || []) : (selectedOption ? [selectedOption] : []);
   };
   */
 
@@ -969,7 +975,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       <div
         className={`${layout === 'list' ? 'flex flex-col' : `grid w-full ${gridColsClass}`} ${blockClassName || ''
           }`}
-        style={{ gap: `${gridGap}px` }}
+        style={{ gap: `${gridGapCompat}px` }}
       >
         {optionsArray.map((opt: any) => {
           // contentType suporta: 'text-and-image' | 'image-only' | 'text-only'
@@ -1024,7 +1030,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                   event: e,
                   currentTarget: e.currentTarget,
                   isPreviewMode,
-                  multipleSelection,
+                  multipleSelection: multipleSelectionCompat,
                   timestamp: Date.now()
                 });
 

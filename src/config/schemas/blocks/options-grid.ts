@@ -31,9 +31,9 @@ const requiredSelectionsField: BlockFieldSchema<number> = {
   description: 'Número mínimo de opções que devem ser selecionadas',
 };
 
-// Campo de seleções múltiplas
-const multipleSelectField: BlockFieldSchema<boolean> = {
-  key: 'multipleSelect',
+// Campo de seleções múltiplas (alinhado ao componente)
+const multipleSelectionField: BlockFieldSchema<boolean> = {
+  key: 'multipleSelection',
   label: 'Seleção Múltipla',
   type: 'boolean',
   group: 'logic',
@@ -53,9 +53,9 @@ const gridColumnsField: BlockFieldSchema<number> = {
   description: 'Número de colunas no layout de grid',
 };
 
-// Campo de espaçamento entre itens
-const gapField: BlockFieldSchema<number> = {
-  key: 'gap',
+// Campo de espaçamento entre itens (alinhado ao componente)
+const gridGapField: BlockFieldSchema<number> = {
+  key: 'gridGap',
   label: 'Espaçamento',
   type: 'number',
   group: 'layout',
@@ -64,6 +64,91 @@ const gapField: BlockFieldSchema<number> = {
   step: 4,
   default: 16,
   description: 'Espaçamento entre as opções em pixels',
+};
+
+// Campos de imagem/visual
+const showImagesField: BlockFieldSchema<boolean> = {
+  key: 'showImages',
+  label: 'Mostrar imagens',
+  type: 'boolean',
+  group: 'content',
+  default: true,
+  description: 'Exibir imagens nas opções (se disponíveis)'
+};
+
+const imageSizeField: BlockFieldSchema<string> = {
+  key: 'imageSize',
+  label: 'Tamanho da imagem',
+  type: 'enum',
+  group: 'layout',
+  enumValues: ['small', 'medium', 'large', 'custom'],
+  default: 'medium',
+  description: 'Tamanho padrão das imagens'
+};
+
+const imageWidthField: BlockFieldSchema<number> = {
+  key: 'imageWidth',
+  label: 'Largura (custom)',
+  type: 'number',
+  group: 'layout',
+  min: 16,
+  max: 1024,
+  step: 4,
+  description: 'Largura da imagem quando imageSize = custom',
+  when: (values) => values.imageSize === 'custom'
+};
+
+const imageHeightField: BlockFieldSchema<number> = {
+  key: 'imageHeight',
+  label: 'Altura (custom)',
+  type: 'number',
+  group: 'layout',
+  min: 16,
+  max: 1024,
+  step: 4,
+  description: 'Altura da imagem quando imageSize = custom',
+  when: (values) => values.imageSize === 'custom'
+};
+
+const imagePositionField: BlockFieldSchema<string> = {
+  key: 'imagePosition',
+  label: 'Posição da imagem',
+  type: 'enum',
+  group: 'layout',
+  enumValues: ['top', 'left', 'right', 'bottom'],
+  default: 'top',
+  description: 'Posicionamento da imagem em relação ao texto'
+};
+
+const imageLayoutField: BlockFieldSchema<string> = {
+  key: 'imageLayout',
+  label: 'Layout da imagem',
+  type: 'enum',
+  group: 'layout',
+  enumValues: ['vertical', 'horizontal'],
+  default: 'vertical',
+  description: 'Organização do cartão (vertical/horizontal)'
+};
+
+// Campos de validação/seleção adicionais
+const maxSelectionsField: BlockFieldSchema<number> = {
+  key: 'maxSelections',
+  label: 'Seleções Máximas',
+  type: 'number',
+  group: 'logic',
+  min: 1,
+  max: 12,
+  default: 1,
+  description: 'Número máximo de opções que podem ser selecionadas'
+};
+
+const allowDeselectionField: BlockFieldSchema<boolean> = {
+  key: 'allowDeselection',
+  label: 'Permitir desselecionar',
+  type: 'boolean',
+  group: 'logic',
+  default: true,
+  description: 'Permitir remover uma opção já selecionada'
 };
 
 export const optionsGridSchema = createSchema('options-grid', 'Grid de Opções')
@@ -76,15 +161,23 @@ export const optionsGridSchema = createSchema('options-grid', 'Grid de Opções'
   .addFields(
     titleField('content'),
     descriptionField('content'),
-    optionsField
+    optionsField,
+    showImagesField
   )
   .addFields(
     requiredSelectionsField,
-    multipleSelectField
+    maxSelectionsField,
+    multipleSelectionField,
+    allowDeselectionField
   )
   .addFields(
     gridColumnsField,
-    gapField
+    gridGapField,
+    imageSizeField,
+    imageWidthField,
+    imageHeightField,
+    imagePositionField,
+    imageLayoutField
   )
-  .version('2.0.0')
+  .version('2.2.0')
   .build();
