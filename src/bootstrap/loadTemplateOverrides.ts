@@ -6,6 +6,7 @@
  * Servidos a partir de public/ em Vite.
  */
 import { TemplateRegistry } from '@/services/TemplateRegistry';
+import { JSONv3TemplateSchema } from '@/types/jsonv3.schema';
 
 const DEFAULT_INDEX_PATH = '/templates/index.json';
 
@@ -47,7 +48,20 @@ export async function loadTemplateOverrides(): Promise<void> {
           console.warn('[TemplateOverrides] template missing id/stepId:', url);
           continue;
         }
-        // Validação suave: exigir array de options quando apropriado
+        // 1) Validação suave com Zod (JSON v3) quando parecer um template completo
+        //    Mantemos fail-soft: em caso de erro, apenas logamos e seguimos para registrar override mesmo assim.
+        try {
+          if (tmpl && typeof tmpl === 'object' && (tmpl.sections || tmpl.metadata || tmpl.navigation)) {
+            const result = JSONv3TemplateSchema.safeParse(tmpl);
+            if (!result.success) {
+              console.warn('[TemplateOverrides] JSONv3 validation failed for', stepId, result.error.issues);
+            }
+          }
+        } catch (zerr) {
+          console.warn('[TemplateOverrides] JSONv3 validation threw error for', stepId, zerr);
+        }
+
+        // 2) Validação leve para estruturas comuns de blocos
         if (tmpl.options && !Array.isArray(tmpl.options)) {
           console.warn('[TemplateOverrides] template missing valid options array:', url);
           continue;

@@ -10,6 +10,8 @@ import { StorageService } from '@/services/core/StorageService';
 import { useGlobalEventManager } from '@/hooks/useGlobalEventManager';
 import { useQuizRulesConfig } from '@/hooks/useQuizRulesConfig';
 import { useUnifiedQuizState } from '@/hooks/useUnifiedQuizState';
+import { FUNNEL_CONFIG } from '@/config/funnel/config';
+import { appendUTMParams } from '@/utils/url';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
@@ -589,10 +591,20 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
           }
 
           if (true) {
-            // Handle URL navigation
-            if (action === 'url' && (href || url)) {
-              const targetUrl = url || href;
-              window.open(targetUrl, target);
+            // Handle URL navigation (com fallback para FUNNEL_CONFIG.ctas e UTM defaults)
+            if (action === 'url') {
+              // Definir destino prioritário: url > href > CTA global primária
+              let targetUrl = (url || href || FUNNEL_CONFIG?.ctas?.primary?.url || '').trim();
+              if (!targetUrl) return; // nada a fazer
+
+              try {
+                // Aplicar UTM defaults do FUNNEL_CONFIG se existirem
+                const withUtm = appendUTMParams(targetUrl, FUNNEL_CONFIG?.analytics?.utmDefaults || {});
+                window.open(withUtm, target);
+              } catch {
+                // fallback simples se URL inválida
+                window.open(targetUrl, target);
+              }
               return;
             }
 

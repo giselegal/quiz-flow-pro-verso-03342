@@ -1,6 +1,7 @@
 import QuizApp from '@/components/quiz/QuizApp';
 import { Helmet } from 'react-helmet-async';
 import '@/styles/globals.css';
+import { FUNNEL_CONFIG } from '@/config/funnel/config';
 
 /**
  * 🎯 QUIZ ESTILO PESSOAL - GISELE GALVÃO
@@ -43,18 +44,24 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
     }
     return (
         <div className="quiz-estilo-page">
-            {/* Meta tags para SEO */}
+            {/* Meta tags para SEO (centralizadas via FUNNEL_CONFIG) */}
             <Helmet>
-                <title>Descubra Seu Estilo Pessoal - Quiz Completo | Gisele Galvão</title>
-                <meta
-                    name="description"
-                    content="Descubra seu estilo pessoal único com nosso quiz completo. Natural, Clássico, Contemporâneo, Elegante, Romântico, Sexy, Dramático ou Criativo? Faça o teste agora!"
-                />
-                <meta name="keywords" content="estilo pessoal, moda, consultoria de imagem, Gisele Galvão, quiz de estilo" />
-                <meta property="og:title" content="Descubra Seu Estilo Pessoal - Quiz Completo" />
-                <meta property="og:description" content="Quiz completo para descobrir seu estilo pessoal único. Receba dicas personalizadas e ofertas exclusivas." />
-                <meta property="og:type" content="website" />
+                <title>{FUNNEL_CONFIG?.seo?.title || 'Descubra Seu Estilo Pessoal - Quiz Completo | Gisele Galvão'}</title>
+                {FUNNEL_CONFIG?.seo?.description && (
+                    <meta name="description" content={FUNNEL_CONFIG.seo.description} />
+                )}
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
+                {/* Open Graph */}
+                {FUNNEL_CONFIG?.seo?.title && (
+                    <meta property="og:title" content={FUNNEL_CONFIG.seo.title} />
+                )}
+                {FUNNEL_CONFIG?.seo?.description && (
+                    <meta property="og:description" content={FUNNEL_CONFIG.seo.description} />
+                )}
+                {FUNNEL_CONFIG?.seo?.ogImage && (
+                    <meta property="og:image" content={FUNNEL_CONFIG.seo.ogImage} />
+                )}
+                <meta property="og:type" content="website" />
             </Helmet>
 
             {/* Componente principal do quiz */}
