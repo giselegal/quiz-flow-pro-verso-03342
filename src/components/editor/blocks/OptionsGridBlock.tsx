@@ -396,7 +396,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             : [];
 
       // Encontrar grids de opções para determinar validação
-      const optionsGrid = components.find((b: any) => {
+      const optionsGrid = (Array.isArray(components) ? components : []).find((b: any) => {
         const t = String(b?.type || '').toLowerCase();
         return t === 'options-grid' || t === 'options grid' || t.includes('options');
       });
@@ -707,7 +707,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
         // Save individual option details for analytics
         const selectedOptionDetails = newSelections.map(id => {
-          const option = options.find((opt: any) => opt.id === id);
+          const option = (Array.isArray(options) ? options : []).find((opt: any) => opt.id === id);
           return {
             id,
             text: option?.text,
@@ -730,7 +730,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       // Calculate option details for completion events
       const selectedOptionDetails = newSelections.map(id => {
-        const option = options.find((opt: any) => opt.id === id);
+        const option = (Array.isArray(options) ? options : []).find((opt: any) => opt.id === id);
         return {
           id,
           text: option?.text,
