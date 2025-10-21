@@ -162,12 +162,15 @@ describe('useUnifiedQuizNavigation', () => {
     });
 
     test('deve respeitar regras de navegação condicional', () => {
+        interface SelectedOption { id: string; value: string; points?: number; }
+        interface RecordedAnswer { stepId: number; questionId: string; selectedOptions: SelectedOption[]; }
+
         const rules = [
             {
                 stepId: 1,
-                condition: (answers: any[]) => {
-                    return answers.some(a =>
-                        a.stepId === 1 && a.selectedOptions.some(o => o.id === 'special')
+                condition: (answers: RecordedAnswer[]) => {
+                    return answers.some((a: RecordedAnswer) =>
+                        a.stepId === 1 && a.selectedOptions.some((opt: SelectedOption) => opt.id === 'special')
                     );
                 },
                 targetStepId: 3,
@@ -212,8 +215,5 @@ describe('useUnifiedQuizNavigation', () => {
         expect(result.current.currentStepIndex).toBe(3);
     });
 
-    // Tipagem explícita para SelectedOption
-    interface SelectedOption { id: string; value: string; points?: number; }
-    // Exemplo de uso tipado (ajustar conforme o teste real)
-    // a.selectedOptions.some((o: SelectedOption) => o.id === 'special')
+    // Tipagem coberta no escopo do teste acima
 });
