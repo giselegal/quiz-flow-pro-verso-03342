@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useQuizUserProgress } from '../useQuizUserProgress';
 import { useUnifiedQuizNavigation } from '../useUnifiedQuizNavigation';
@@ -26,14 +27,14 @@ Object.defineProperty(window, 'localStorage', {
 describe('useQuizUserProgress', () => {
     beforeEach(() => {
         localStorageMock.clear();
-        jest.useFakeTimers();
+        vi.useFakeTimers();
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
-    test('deve inicializar com valores padrão', () => {
+    it('deve inicializar com valores padrão', () => {
         const { result } = renderHook(() => useQuizUserProgress({
             funnelId: 'test-funnel',
         }));
@@ -46,7 +47,7 @@ describe('useQuizUserProgress', () => {
         }));
     });
 
-    test('deve registrar resposta corretamente', () => {
+    it('deve registrar resposta corretamente', () => {
         const { result } = renderHook(() => useQuizUserProgress({
             funnelId: 'test-funnel',
         }));
@@ -62,7 +63,7 @@ describe('useQuizUserProgress', () => {
         expect(result.current.totalPoints).toBe(10);
     });
 
-    test('deve substituir resposta existente para o mesmo step', () => {
+    it('deve substituir resposta existente para o mesmo step', () => {
         const { result } = renderHook(() => useQuizUserProgress({
             funnelId: 'test-funnel',
         }));
@@ -85,7 +86,7 @@ describe('useQuizUserProgress', () => {
         expect(result.current.totalPoints).toBe(20);
     });
 
-    test('deve persistir dados no localStorage', () => {
+    it('deve persistir dados no localStorage', () => {
         const { result } = renderHook(() => useQuizUserProgress({
             funnelId: 'test-funnel',
             persistToLocalStorage: true,
@@ -108,7 +109,7 @@ describe('useQuizUserProgress', () => {
 });
 
 describe('useUnifiedQuizNavigation', () => {
-    test('deve inicializar com valores corretos', () => {
+    it('deve inicializar com valores corretos', () => {
         const { result } = renderHook(() => useUnifiedQuizNavigation({
             funnelId: 'test-funnel',
             totalSteps: 5,
@@ -121,8 +122,8 @@ describe('useUnifiedQuizNavigation', () => {
         expect(result.current.completionPercentage).toBe(20); // 1/5 = 20%
     });
 
-    test('deve navegar para o próximo passo', () => {
-        const onStepChangeMock = jest.fn();
+    it('deve navegar para o próximo passo', () => {
+        const onStepChangeMock = vi.fn();
 
         const { result } = renderHook(() => useUnifiedQuizNavigation({
             funnelId: 'test-funnel',
@@ -143,8 +144,8 @@ describe('useUnifiedQuizNavigation', () => {
         expect(onStepChangeMock).toHaveBeenCalledWith(1);
     });
 
-    test('deve voltar para o passo anterior', () => {
-        const onStepChangeMock = jest.fn();
+    it('deve voltar para o passo anterior', () => {
+        const onStepChangeMock = vi.fn();
 
         const { result } = renderHook(() => useUnifiedQuizNavigation({
             funnelId: 'test-funnel',
@@ -161,7 +162,7 @@ describe('useUnifiedQuizNavigation', () => {
         expect(onStepChangeMock).toHaveBeenCalledWith(1);
     });
 
-    test('deve respeitar regras de navegação condicional', () => {
+    it('deve respeitar regras de navegação condicional', () => {
         interface SelectedOption { id: string; value: string; points?: number; }
         interface RecordedAnswer { stepId: number; questionId: string; selectedOptions: SelectedOption[]; }
 
