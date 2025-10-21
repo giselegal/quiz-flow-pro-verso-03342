@@ -97,6 +97,11 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     backButtonPosition = 'left',
   } = (block?.properties as HeaderProperties) || {};
 
+  // Detectar contexto do Canvas do Editor: se o bloco está recebendo handlers de edição
+  // (onPropertyChange/onClick), consideramos que está no editor e desabilitamos sticky.
+  const isEditorCanvas = typeof _onPropertyChange === 'function' || typeof _onClick === 'function';
+  const isStickyEffective = Boolean(isSticky) && !isEditorCanvas;
+
   // Conteúdo textual (suporta HTML no título/subtítulo)
   const title = (block as any)?.content?.title || (block as any)?.properties?.title || '';
   const subtitle = (block as any)?.content?.subtitle || (block as any)?.properties?.subtitle || '';
@@ -151,7 +156,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     <div
       className={cn(
         'relative w-full p-6',
-        isSticky ? 'sticky top-0 z-50' : '',
+        isStickyEffective ? 'sticky top-0 z-50' : '',
         enableAnimation ? 'transition-colors' : '',
         customCssClass,
         className
