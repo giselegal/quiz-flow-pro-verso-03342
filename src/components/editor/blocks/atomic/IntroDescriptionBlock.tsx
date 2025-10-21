@@ -1,5 +1,6 @@
 import React from 'react';
 import { AtomicBlockProps } from '@/types/blockProps';
+import { sanitizeHtml } from '@/utils/sanitizeHtml';
 
 export default function IntroDescriptionBlock({
   block,
@@ -22,7 +23,7 @@ export default function IntroDescriptionBlock({
     });
   };
 
-  // Se vier HTML (por exemplo com strong customizado), usar dangerouslySetInnerHTML
+  // Se vier HTML (por exemplo com strong customizado), usar dangerouslySetInnerHTML (com sanitização)
   const hasHtml = typeof content === 'string' && /<\/?\w+/.test(content);
 
   return (
@@ -32,7 +33,7 @@ export default function IntroDescriptionBlock({
       onClick={onClick}
     >
       {hasHtml ? (
-        <span dangerouslySetInnerHTML={{ __html: content }} />
+        <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }} />
       ) : (
         parseMarkdown(content)
       )}

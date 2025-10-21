@@ -2,6 +2,7 @@ import React from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import { useResultOptional } from '@/contexts/ResultContext';
+import { sanitizeHtml } from '@/utils/sanitizeHtml';
 
 import type { BlockRendererCommonProps } from './QuizIntroHeaderBlock';
 
@@ -61,7 +62,7 @@ const TextInlineBlock: React.FC<TextInlineBlockProps> = ({ block, isSelected, is
                     className={`${sizeClass} ${fontWeightClass || 'font-semibold'} text-${align} ${extraClassName}`}
                     style={{ color, lineHeight: 1.2, ...(fontFamily ? { fontFamily } : {}) }}
                 >
-                    <span dangerouslySetInnerHTML={{ __html: contentText }} />
+                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(String(contentText || '')) }} />
                 </div>
             </div>
         </SelectableBlock>

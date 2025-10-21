@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useMemo } from 'react';
+import { sanitizeHtml } from '@/utils/sanitizeHtml';
 import { z } from 'zod';
 
 // Definição de um bloco modular de conteúdo do quiz (ex: Headline Resultado, Oferta CTA, Urgência, Depoimento etc.)
@@ -202,8 +203,8 @@ export const HeroBlock = defineBlock({
             {config.logoUrl && (
                 <img src={config.logoUrl} alt={config.logoAlt || 'Logo'} className="mx-auto h-16 w-auto object-contain" />
             )}
-            {config.titleHtml && <h1 className="text-2xl md:text-3xl font-serif leading-snug" dangerouslySetInnerHTML={{ __html: config.titleHtml }} />}
-            {config.subtitleHtml && <p className="text-sm opacity-80" dangerouslySetInnerHTML={{ __html: config.subtitleHtml }} />}
+            {config.titleHtml && <h1 className="text-2xl md:text-3xl font-serif leading-snug" dangerouslySetInnerHTML={{ __html: sanitizeHtml(config.titleHtml) }} />}
+            {config.subtitleHtml && <p className="text-sm opacity-80" dangerouslySetInnerHTML={{ __html: sanitizeHtml(config.subtitleHtml) }} />}
             {config.imageUrl && (
                 <div className="mx-auto max-w-xs">
                     <img src={config.imageUrl} alt={config.imageAlt || 'Imagem'} className="rounded-lg shadow-sm w-full h-auto object-cover" />

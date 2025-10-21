@@ -2,6 +2,7 @@ import React from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import { useResultOptional } from '@/contexts/ResultContext';
+import { sanitizeHtml } from '@/utils/sanitizeHtml';
 
 export interface BlockRendererCommonProps {
     isSelected?: boolean;
@@ -65,14 +66,14 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({ block, isSe
                             <h1
                                 className="text-2xl sm:text-3xl md:text-4xl leading-tight"
                                 style={{ color: '#432818', fontFamily: '"Playfair Display", serif', fontWeight: 400 }}
-                                dangerouslySetInnerHTML={{ __html: titleInterp }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(titleInterp) }}
                             />
                         )}
                         {subtitleInterp && (
                             <div
                                 className="text-base md:text-lg"
                                 style={{ color: '#432818', fontFamily: '"Playfair Display", serif' }}
-                                dangerouslySetInnerHTML={{ __html: subtitleInterp }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(subtitleInterp) }}
                             />
                         )}
                         {descriptionInterp && (
