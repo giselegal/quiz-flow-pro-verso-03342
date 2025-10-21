@@ -231,6 +231,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         : optionsProp
   ) as Option[];
 
+  // Sempre trabalhar com um array normalizado para evitar .map/.find em tipos inválidos
+  const optionsArray: Option[] = ensureArray(options) as Option[];
+
   // Logs de diagnóstico em desenvolvimento
   if (import.meta?.env?.DEV) {
     try {
@@ -530,15 +533,23 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     };
   };
 
-  // ⚡ Carregar configuração da etapa atual
+  // ⚡ Carregar configuração da etapa atual (com short-circuit para Step 1)
   React.useEffect(() => {
-    const currentStep = (window as any)?.__quizCurrentStep ?? currentStepFromEditor ?? 1;
+    // Normaliza o número da etapa a partir de possíveis fontes (window/editor)
+    const rawStep = (window as any)?.__quizCurrentStep ?? currentStepFromEditor ?? 1;
+    const currentStep = Number(rawStep);
 
-    if (typeof currentStep === 'number' && currentStep >= 1) {
-      getStepBehavior(currentStep).then(config => {
-        setStepBehaviorConfig(config);
-      });
+    if (!Number.isFinite(currentStep) || currentStep < 1) return;
+
+    // Evitar qualquer caminho complexo no step 1 (introdução)
+    if (currentStep === 1) {
+      setStepBehaviorConfig(getHardcodedStepBehavior(1));
+      return;
     }
+
+    getStepBehavior(currentStep).then(config => {
+      setStepBehaviorConfig(config);
+    });
   }, [currentStepFromEditor, getStepBehavior]);
 
   // Persistência unificada das seleções (compatível com validação centralizada)
@@ -626,9 +637,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   const gridColsClass = (() => {
     // 🎯 REGRA AUTOMATICA: 1 coluna para texto-only, 2 colunas para imagem+texto
-    const hasImages = showImages && Array.isArray(options) && options.some((opt: any) =>
-      opt.imageUrl || opt.image || opt.icon
-    );
+    const hasImages = showImages && optionsArray.some((opt: any) => opt.imageUrl || (opt as any).image || (opt as any).icon);
 
     if (!hasImages) {
       // Apenas texto: sempre 1 coluna
@@ -660,16 +669,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   })();
 
-  // ⚡ Carregar configuração da etapa atual
-  React.useEffect(() => {
-    const currentStep = (window as any)?.__quizCurrentStep ?? currentStepFromEditor ?? 1;
-
-    if (typeof currentStep === 'number' && currentStep >= 1) {
-      getStepBehavior(currentStep).then(config => {
-        setStepBehaviorConfig(config);
-      });
-    }
-  }, [currentStepFromEditor, getStepBehavior]);
+  // ⚡ Carregar configuração da etapa atual (efeito único; duplicata removida)
+  // Mantemos somente o efeito acima com short-circuit para o step 1
 
   const handleOptionSelect = (optionId: string) => {
     console.log('🔍 OptionsGridBlock: handleOptionSelect called', {
@@ -753,7 +754,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
         // Save individual option details for analytics
         const selectedOptionDetails = newSelections.map(id => {
-          const option = (Array.isArray(options) ? options : []).find((opt: any) => opt.id === id);
+          const option = optionsArray.find((opt: any) => opt.id === id);
           return {
             id,
             text: option?.text,
@@ -776,7 +777,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       // Calculate option details for completion events
       const selectedOptionDetails = newSelections.map(id => {
-        const option = (Array.isArray(options) ? options : []).find((opt: any) => opt.id === id);
+        const option = optionsArray.find((opt: any) => opt.id === id);
         return {
           id,
           text: option?.text,
@@ -955,7 +956,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       data-block-type={block.type}
     >
       {/* Aviso em dev quando não há opções resolvidas */}
-      {import.meta?.env?.DEV && (!options || options.length === 0) && (
+      {import.meta?.env?.DEV && (optionsArray.length === 0) && (
         <div className="mb-4 p-3 rounded border border-yellow-300 bg-yellow-50 text-yellow-800">
           Nenhuma opção encontrada para este bloco. Em dev, usamos fallback canônico por etapa, mas nada foi resolvido.
         </div>
@@ -970,7 +971,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           }`}
         style={{ gap: `${gridGap}px` }}
       >
-        {(options || []).map((opt: any) => {
+        {optionsArray.map((opt: any) => {
           // contentType suporta: 'text-and-image' | 'image-only' | 'text-only'
           const ct = (block?.properties as any)?.contentType as string | undefined;
           const showImageEffective =
