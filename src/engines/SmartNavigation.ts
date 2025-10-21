@@ -389,29 +389,62 @@ class SmartNavigation {
       };
     }
 
-    if (isScoringPhase(step)) {
-      // Etapas 2-11: validar 3 seleções
-      const selections = quizData.selections[`step-${step}`] || [];
-      return {
-        isValid: selections.length === 3,
-        message: selections.length === 3 
-          ? 'Seleções válidas' 
-          : `Selecione 3 opções (${selections.length}/3)`,
-        requiredSelections: 3,
-        currentSelections: selections.length,
-      };
-    }
+    // Usar configuração do template (v3) para determinar regras de seleção
+    const templateConfig = this.stepConfigs.get(step);
+    const selections = quizData.selections[`step-${step}`] || [];
 
-    if (isStrategicPhase(step)) {
-      // Etapas 13-18: validar 1 seleção
-      const selections = quizData.selections[`step-${step}`] || [];
+    // Fallback seguro para tipo de etapa
+    const isSelectionPhase = templateConfig?.validation?.type === 'selection'
+      || isScoringPhase(step)
+      || isStrategicPhase(step);
+
+    if (isSelectionPhase) {
+      // 1) Preferir regras vindas do HybridTemplateService
+      let required = templateConfig?.validation?.requiredSelections;
+      let maxSel = templateConfig?.validation?.maxSelections;
+      let baseMessage = templateConfig?.validation?.message || '';
+
+      // 2) Fallback: inspecionar blocos para options-grid (minSelections/maxSelections)
+      if (!required || !maxSel) {
+        try {
+          const blocks = templateConfig?.blocks || [];
+          const og = Array.isArray(blocks)
+            ? blocks.find((b: any) => (b?.type === 'options-grid' || b?.type === 'options grid'))
+            : null;
+          const contentMin = og?.content?.minSelections ?? og?.properties?.minSelections;
+          const contentMax = og?.content?.maxSelections ?? og?.properties?.maxSelections;
+          required = required ?? contentMin ?? (isStrategicPhase(step) ? 1 : 3);
+          maxSel = maxSel ?? contentMax ?? required;
+          // Mensagem prioritária do bloco, se existir
+          baseMessage = baseMessage || og?.content?.validationMessage || og?.properties?.validationMessage || '';
+        } catch {
+          // ignore
+        }
+      }
+
+      // 3) Defaults por fase (mantém comportamento atual quando nada informado)
+      if (!required) required = isStrategicPhase(step) ? 1 : 3;
+      if (!maxSel) maxSel = required;
+
+      const count = selections.length;
+      const isValid = count >= required && count <= maxSel;
+
+      // Mensagem amigável com contador dinâmico
+      const singular = required === 1;
+      const defaultPrompt = singular
+        ? `Selecione 1 opção (${count}/1)`
+        : `Selecione ${required} opções (${count}/${required})`;
+
+      // Se o template forneceu mensagem base, anexar contador para clareza
+      const message = isValid
+        ? (singular ? 'Seleção válida' : 'Seleções válidas')
+        : (baseMessage ? `${baseMessage} (${count}/${required})` : defaultPrompt);
+
       return {
-        isValid: selections.length === 1,
-        message: selections.length === 1 
-          ? 'Seleção válida' 
-          : `Selecione 1 opção (${selections.length}/1)`,
-        requiredSelections: 1,
-        currentSelections: selections.length,
+        isValid,
+        message,
+        requiredSelections: required,
+        currentSelections: count,
       };
     }
 
