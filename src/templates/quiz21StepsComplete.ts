@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-21T21:56:18.573Z
+ * Gerado em: 2025-10-21T22:03:29.739Z
  * Versão: 3.0.0
  */
 
@@ -4553,10 +4553,48 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
-        "type": "question-title",
-        "id": "step-15-question-title",
+        "type": "question-progress",
+        "id": "q15-progress",
         "content": {
-          "text": "O que você prioriza ao escolher uma roupa?"
+          "currentQuestion": 3,
+          "totalQuestions": 6,
+          "progressValue": 50,
+          "showProgress": true
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 8
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-number",
+        "id": "q15-number",
+        "content": {
+          "text": "3 de 6",
+          "questionNumber": "3 de 6"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 4
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 20,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-text",
+        "id": "q15-text",
+        "content": {
+          "text": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
         },
         "style": {
           "textAlign": "center",
@@ -4564,32 +4602,25 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         },
         "animation": {
           "type": "fade",
-          "duration": 250,
-          "delay": 0,
+          "duration": 240,
+          "delay": 40,
           "easing": "ease-out"
         }
       },
       {
-        "type": "question-hero",
-        "id": "question-hero-15",
+        "type": "question-instructions",
+        "id": "q15-instructions",
         "content": {
-          "questionNumber": "Q13 - PRIORIDADES",
-          "questionText": "O que você prioriza ao escolher uma roupa?",
-          "currentQuestion": 13,
-          "totalQuestions": 13,
-          "progressValue": 67,
-          "showProgress": true,
-          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-          "logoAlt": "Logo Gisele Galvão"
+          "text": "Selecione 1 opção para continuar"
         },
         "style": {
-          "backgroundColor": "transparent",
-          "padding": 16
+          "textAlign": "center",
+          "marginBottom": 12
         },
         "animation": {
           "type": "fade",
-          "duration": 300,
-          "delay": 0,
+          "duration": 240,
+          "delay": 60,
           "easing": "ease-out"
         }
       },
@@ -4599,43 +4630,31 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "content": {
           "options": [
             {
-              "id": "15a",
-              "text": "Opção A para Q13",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "15a",
-              "category": "Natural",
-              "points": 1
+              "id": "quase-todos-dias",
+              "text": "Quase todos os dias — é sempre uma indecisão",
+              "value": "quase-todos-dias"
             },
             {
-              "id": "15b",
-              "text": "Opção B para Q13",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "15b",
-              "category": "Clássico",
-              "points": 2
+              "id": "compromissos-importantes",
+              "text": "Sempre que tenho um compromisso importante",
+              "value": "compromissos-importantes"
             },
             {
-              "id": "15c",
-              "text": "Opção C para Q13",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "15c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "as-vezes-limitada",
+              "text": "Às vezes, mas me sinto limitada nas escolhas",
+              "value": "as-vezes-limitada"
             },
             {
-              "id": "15d",
-              "text": "Opção D para Q13",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "15d",
-              "category": "Elegante",
-              "points": 3
+              "id": "raramente-segura",
+              "text": "Raramente — já me sinto segura ao me vestir",
+              "value": "raramente-segura"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
-          "showImages": true,
+          "showImages": false,
           "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
@@ -4648,49 +4667,37 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "slideUp",
           "duration": 300,
-          "delay": 100,
+          "delay": 80,
           "easing": "ease-out"
         },
         "properties": {
           "options": [
             {
-              "id": "15a",
-              "text": "Opção A para Q13",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "15a",
-              "category": "Natural",
-              "points": 1
+              "id": "quase-todos-dias",
+              "text": "Quase todos os dias — é sempre uma indecisão",
+              "value": "quase-todos-dias"
             },
             {
-              "id": "15b",
-              "text": "Opção B para Q13",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "15b",
-              "category": "Clássico",
-              "points": 2
+              "id": "compromissos-importantes",
+              "text": "Sempre que tenho um compromisso importante",
+              "value": "compromissos-importantes"
             },
             {
-              "id": "15c",
-              "text": "Opção C para Q13",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "15c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "as-vezes-limitada",
+              "text": "Às vezes, mas me sinto limitada nas escolhas",
+              "value": "as-vezes-limitada"
             },
             {
-              "id": "15d",
-              "text": "Opção D para Q13",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "15d",
-              "category": "Elegante",
-              "points": 3
+              "id": "raramente-segura",
+              "text": "Raramente — já me sinto segura ao me vestir",
+              "value": "raramente-segura"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
-          "showImages": true,
+          "showImages": false,
           "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
@@ -4698,13 +4705,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "CTAButton",
-        "id": "step-15-cta-next",
+        "type": "question-navigation",
+        "id": "q15-navigation",
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar"
+        },
+        "properties": {
+          "showBack": true,
+          "enableWhenValid": true
         },
         "style": {
           "marginTop": 16,
@@ -4713,7 +4722,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "fade",
           "duration": 250,
-          "delay": 50,
+          "delay": 100,
           "easing": "ease-out"
         }
       }
@@ -4747,33 +4756,6 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "completion"
       ],
       "trackingId": "step-15-strategic-v3"
-    },
-    "scoring": {
-      "method": "points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante"
-      ],
-      "options": {
-        "15a": {
-          "category": "Natural",
-          "points": 1
-        },
-        "15b": {
-          "category": "Clássico",
-          "points": 2
-        },
-        "15c": {
-          "category": "Contemporâneo",
-          "points": 2
-        },
-        "15d": {
-          "category": "Elegante",
-          "points": 3
-        }
-      }
     },
     "strategic": {
       "isStrategic": true,
@@ -4833,10 +4815,48 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
-        "type": "question-title",
-        "id": "step-16-question-title",
+        "type": "question-progress",
+        "id": "q16-progress",
         "content": {
-          "text": "Onde você prefere investir mais?"
+          "currentQuestion": 4,
+          "totalQuestions": 6,
+          "progressValue": 66,
+          "showProgress": true
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 8
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-number",
+        "id": "q16-number",
+        "content": {
+          "text": "4 de 6",
+          "questionNumber": "4 de 6"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 4
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 20,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-text",
+        "id": "q16-text",
+        "content": {
+          "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
         },
         "style": {
           "textAlign": "center",
@@ -4844,32 +4864,25 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         },
         "animation": {
           "type": "fade",
-          "duration": 250,
-          "delay": 0,
+          "duration": 240,
+          "delay": 40,
           "easing": "ease-out"
         }
       },
       {
-        "type": "question-hero",
-        "id": "question-hero-16",
+        "type": "question-instructions",
+        "id": "q16-instructions",
         "content": {
-          "questionNumber": "Q14 - INVESTIMENTO",
-          "questionText": "Onde você prefere investir mais?",
-          "currentQuestion": 14,
-          "totalQuestions": 13,
-          "progressValue": 71,
-          "showProgress": true,
-          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-          "logoAlt": "Logo Gisele Galvão"
+          "text": "Selecione 1 opção para continuar"
         },
         "style": {
-          "backgroundColor": "transparent",
-          "padding": 16
+          "textAlign": "center",
+          "marginBottom": 12
         },
         "animation": {
           "type": "fade",
-          "duration": 300,
-          "delay": 0,
+          "duration": 240,
+          "delay": 60,
           "easing": "ease-out"
         }
       },
@@ -4879,43 +4892,31 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "content": {
           "options": [
             {
-              "id": "16a",
-              "text": "Opção A para Q14",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "16a",
-              "category": "Natural",
-              "points": 1
+              "id": "sim-quero",
+              "text": "Sim! Se existisse algo assim, eu quero",
+              "value": "sim-quero"
             },
             {
-              "id": "16b",
-              "text": "Opção B para Q14",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "16b",
-              "category": "Clássico",
-              "points": 2
+              "id": "sim-momento-certo",
+              "text": "Sim, mas teria que ser no momento certo",
+              "value": "sim-momento-certo"
             },
             {
-              "id": "16c",
-              "text": "Opção C para Q14",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "16c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "tenho-duvidas",
+              "text": "Tenho dúvidas se funcionaria pra mim",
+              "value": "tenho-duvidas"
             },
             {
-              "id": "16d",
-              "text": "Opção D para Q14",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "16d",
-              "category": "Elegante",
-              "points": 3
+              "id": "nao-prefiro-continuar",
+              "text": "Não, prefiro continuar como estou",
+              "value": "nao-prefiro-continuar"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
-          "showImages": true,
+          "showImages": false,
           "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
@@ -4928,49 +4929,37 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "slideUp",
           "duration": 300,
-          "delay": 100,
+          "delay": 80,
           "easing": "ease-out"
         },
         "properties": {
           "options": [
             {
-              "id": "16a",
-              "text": "Opção A para Q14",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "16a",
-              "category": "Natural",
-              "points": 1
+              "id": "sim-quero",
+              "text": "Sim! Se existisse algo assim, eu quero",
+              "value": "sim-quero"
             },
             {
-              "id": "16b",
-              "text": "Opção B para Q14",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "16b",
-              "category": "Clássico",
-              "points": 2
+              "id": "sim-momento-certo",
+              "text": "Sim, mas teria que ser no momento certo",
+              "value": "sim-momento-certo"
             },
             {
-              "id": "16c",
-              "text": "Opção C para Q14",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "16c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "tenho-duvidas",
+              "text": "Tenho dúvidas se funcionaria pra mim",
+              "value": "tenho-duvidas"
             },
             {
-              "id": "16d",
-              "text": "Opção D para Q14",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "16d",
-              "category": "Elegante",
-              "points": 3
+              "id": "nao-prefiro-continuar",
+              "text": "Não, prefiro continuar como estou",
+              "value": "nao-prefiro-continuar"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
-          "showImages": true,
+          "showImages": false,
           "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
@@ -4978,13 +4967,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "CTAButton",
-        "id": "step-16-cta-next",
+        "type": "question-navigation",
+        "id": "q16-navigation",
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar"
+        },
+        "properties": {
+          "showBack": true,
+          "enableWhenValid": true
         },
         "style": {
           "marginTop": 16,
@@ -4993,7 +4984,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "fade",
           "duration": 250,
-          "delay": 50,
+          "delay": 100,
           "easing": "ease-out"
         }
       }
@@ -5027,33 +5018,6 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "completion"
       ],
       "trackingId": "step-16-strategic-v3"
-    },
-    "scoring": {
-      "method": "points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante"
-      ],
-      "options": {
-        "16a": {
-          "category": "Natural",
-          "points": 1
-        },
-        "16b": {
-          "category": "Clássico",
-          "points": 2
-        },
-        "16c": {
-          "category": "Contemporâneo",
-          "points": 2
-        },
-        "16d": {
-          "category": "Elegante",
-          "points": 3
-        }
-      }
     },
     "strategic": {
       "isStrategic": true,
@@ -5113,10 +5077,48 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
-        "type": "question-title",
-        "id": "step-17-question-title",
+        "type": "question-progress",
+        "id": "q17-progress",
         "content": {
-          "text": "O que você mais gostaria de mudar?"
+          "currentQuestion": 5,
+          "totalQuestions": 6,
+          "progressValue": 83,
+          "showProgress": true
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 8
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-number",
+        "id": "q17-number",
+        "content": {
+          "text": "5 de 6",
+          "questionNumber": "5 de 6"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 4
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 20,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-text",
+        "id": "q17-text",
+        "content": {
+          "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
         },
         "style": {
           "textAlign": "center",
@@ -5124,32 +5126,25 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         },
         "animation": {
           "type": "fade",
-          "duration": 250,
-          "delay": 0,
+          "duration": 240,
+          "delay": 40,
           "easing": "ease-out"
         }
       },
       {
-        "type": "question-hero",
-        "id": "question-hero-17",
+        "type": "question-instructions",
+        "id": "q17-instructions",
         "content": {
-          "questionNumber": "Q15 - TRANSFORMAÇÃO",
-          "questionText": "O que você mais gostaria de mudar?",
-          "currentQuestion": 15,
-          "totalQuestions": 13,
-          "progressValue": 76,
-          "showProgress": true,
-          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-          "logoAlt": "Logo Gisele Galvão"
+          "text": "Selecione 1 opção para continuar"
         },
         "style": {
-          "backgroundColor": "transparent",
-          "padding": 16
+          "textAlign": "center",
+          "marginBottom": 12
         },
         "animation": {
           "type": "fade",
-          "duration": 300,
-          "delay": 0,
+          "duration": 240,
+          "delay": 60,
           "easing": "ease-out"
         }
       },
@@ -5159,43 +5154,31 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "content": {
           "options": [
             {
-              "id": "17a",
-              "text": "Opção A para Q15",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "17a",
-              "category": "Natural",
-              "points": 1
+              "id": "sim-vale-muito",
+              "text": "Sim! Por esse resultado, vale muito",
+              "value": "sim-vale-muito"
             },
             {
-              "id": "17b",
-              "text": "Opção B para Q15",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "17b",
-              "category": "Clássico",
-              "points": 2
+              "id": "sim-se-certeza",
+              "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
+              "value": "sim-se-certeza"
             },
             {
-              "id": "17c",
-              "text": "Opção C para Q15",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "17c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "talvez-depende",
+              "text": "Talvez — depende do que está incluso",
+              "value": "talvez-depende"
             },
             {
-              "id": "17d",
-              "text": "Opção D para Q15",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "17d",
-              "category": "Elegante",
-              "points": 3
+              "id": "nao-nao-pronta",
+              "text": "Não, ainda não estou pronta para investir",
+              "value": "nao-nao-pronta"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
-          "showImages": true,
+          "showImages": false,
           "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
@@ -5208,49 +5191,37 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "slideUp",
           "duration": 300,
-          "delay": 100,
+          "delay": 80,
           "easing": "ease-out"
         },
         "properties": {
           "options": [
             {
-              "id": "17a",
-              "text": "Opção A para Q15",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "17a",
-              "category": "Natural",
-              "points": 1
+              "id": "sim-vale-muito",
+              "text": "Sim! Por esse resultado, vale muito",
+              "value": "sim-vale-muito"
             },
             {
-              "id": "17b",
-              "text": "Opção B para Q15",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "17b",
-              "category": "Clássico",
-              "points": 2
+              "id": "sim-se-certeza",
+              "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
+              "value": "sim-se-certeza"
             },
             {
-              "id": "17c",
-              "text": "Opção C para Q15",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "17c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "talvez-depende",
+              "text": "Talvez — depende do que está incluso",
+              "value": "talvez-depende"
             },
             {
-              "id": "17d",
-              "text": "Opção D para Q15",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "17d",
-              "category": "Elegante",
-              "points": 3
+              "id": "nao-nao-pronta",
+              "text": "Não, ainda não estou pronta para investir",
+              "value": "nao-nao-pronta"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
-          "showImages": true,
+          "showImages": false,
           "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
@@ -5258,13 +5229,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "CTAButton",
-        "id": "step-17-cta-next",
+        "type": "question-navigation",
+        "id": "q17-navigation",
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar"
+        },
+        "properties": {
+          "showBack": true,
+          "enableWhenValid": true
         },
         "style": {
           "marginTop": 16,
@@ -5273,7 +5246,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "fade",
           "duration": 250,
-          "delay": 50,
+          "delay": 100,
           "easing": "ease-out"
         }
       }
@@ -5307,33 +5280,6 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "completion"
       ],
       "trackingId": "step-17-strategic-v3"
-    },
-    "scoring": {
-      "method": "points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante"
-      ],
-      "options": {
-        "17a": {
-          "category": "Natural",
-          "points": 1
-        },
-        "17b": {
-          "category": "Clássico",
-          "points": 2
-        },
-        "17c": {
-          "category": "Contemporâneo",
-          "points": 2
-        },
-        "17d": {
-          "category": "Elegante",
-          "points": 3
-        }
-      }
     },
     "strategic": {
       "isStrategic": true,
@@ -5393,10 +5339,48 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
     },
     "sections": [
       {
-        "type": "question-title",
-        "id": "step-18-question-title",
+        "type": "question-progress",
+        "id": "q18-progress",
         "content": {
-          "text": "Qual resultado você mais gostaria de alcançar?"
+          "currentQuestion": 6,
+          "totalQuestions": 6,
+          "progressValue": 100,
+          "showProgress": true
+        },
+        "style": {
+          "backgroundColor": "transparent",
+          "padding": 8
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-number",
+        "id": "q18-number",
+        "content": {
+          "text": "6 de 6",
+          "questionNumber": "6 de 6"
+        },
+        "style": {
+          "textAlign": "center",
+          "marginBottom": 4
+        },
+        "animation": {
+          "type": "fade",
+          "duration": 220,
+          "delay": 20,
+          "easing": "ease-out"
+        }
+      },
+      {
+        "type": "question-text",
+        "id": "q18-text",
+        "content": {
+          "text": "Qual desses resultados você mais gostaria de alcançar?"
         },
         "style": {
           "textAlign": "center",
@@ -5404,32 +5388,25 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         },
         "animation": {
           "type": "fade",
-          "duration": 250,
-          "delay": 0,
+          "duration": 240,
+          "delay": 40,
           "easing": "ease-out"
         }
       },
       {
-        "type": "question-hero",
-        "id": "question-hero-18",
+        "type": "question-instructions",
+        "id": "q18-instructions",
         "content": {
-          "questionNumber": "Q16 - RESULTADO",
-          "questionText": "Qual resultado você mais gostaria de alcançar?",
-          "currentQuestion": 16,
-          "totalQuestions": 13,
-          "progressValue": 81,
-          "showProgress": true,
-          "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-          "logoAlt": "Logo Gisele Galvão"
+          "text": "Selecione 1 opção para continuar"
         },
         "style": {
-          "backgroundColor": "transparent",
-          "padding": 16
+          "textAlign": "center",
+          "marginBottom": 12
         },
         "animation": {
           "type": "fade",
-          "duration": 300,
-          "delay": 0,
+          "duration": 240,
+          "delay": 60,
           "easing": "ease-out"
         }
       },
@@ -5439,43 +5416,31 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "content": {
           "options": [
             {
-              "id": "18a",
-              "text": "Opção A para Q16",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "18a",
-              "category": "Natural",
-              "points": 1
+              "id": "montar-looks-facilidade",
+              "text": "Montar looks com mais facilidade e confiança",
+              "value": "montar-looks-facilidade"
             },
             {
-              "id": "18b",
-              "text": "Opção B para Q16",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "18b",
-              "category": "Clássico",
-              "points": 2
+              "id": "usar-que-tenho",
+              "text": "Usar o que já tenho e me sentir estilosa",
+              "value": "usar-que-tenho"
             },
             {
-              "id": "18c",
-              "text": "Opção C para Q16",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "18c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "comprar-consciencia",
+              "text": "Comprar com mais consciência e sem culpa",
+              "value": "comprar-consciencia"
             },
             {
-              "id": "18d",
-              "text": "Opção D para Q16",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "18d",
-              "category": "Elegante",
-              "points": 3
+              "id": "ser-admirada",
+              "text": "Ser admirada pela imagem que transmito",
+              "value": "ser-admirada"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
-          "showImages": true,
+          "showImages": false,
           "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
@@ -5488,49 +5453,37 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "slideUp",
           "duration": 300,
-          "delay": 100,
+          "delay": 80,
           "easing": "ease-out"
         },
         "properties": {
           "options": [
             {
-              "id": "18a",
-              "text": "Opção A para Q16",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-              "value": "18a",
-              "category": "Natural",
-              "points": 1
+              "id": "montar-looks-facilidade",
+              "text": "Montar looks com mais facilidade e confiança",
+              "value": "montar-looks-facilidade"
             },
             {
-              "id": "18b",
-              "text": "Opção B para Q16",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-              "value": "18b",
-              "category": "Clássico",
-              "points": 2
+              "id": "usar-que-tenho",
+              "text": "Usar o que já tenho e me sentir estilosa",
+              "value": "usar-que-tenho"
             },
             {
-              "id": "18c",
-              "text": "Opção C para Q16",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-              "value": "18c",
-              "category": "Contemporâneo",
-              "points": 2
+              "id": "comprar-consciencia",
+              "text": "Comprar com mais consciência e sem culpa",
+              "value": "comprar-consciencia"
             },
             {
-              "id": "18d",
-              "text": "Opção D para Q16",
-              "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-              "value": "18d",
-              "category": "Elegante",
-              "points": 3
+              "id": "ser-admirada",
+              "text": "Ser admirada pela imagem que transmito",
+              "value": "ser-admirada"
             }
           ],
-          "columns": 2,
+          "columns": 1,
           "multipleSelection": false,
           "minSelections": 1,
           "maxSelections": 1,
-          "showImages": true,
+          "showImages": false,
           "imageSize": 256,
           "autoAdvance": false,
           "autoAdvanceDelay": 0,
@@ -5538,13 +5491,15 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         }
       },
       {
-        "type": "CTAButton",
-        "id": "step-18-cta-next",
+        "type": "question-navigation",
+        "id": "q18-navigation",
         "content": {
-          "label": "Avançar",
-          "href": "#next",
-          "variant": "primary",
-          "size": "large"
+          "backLabel": "Voltar",
+          "nextLabel": "Avançar"
+        },
+        "properties": {
+          "showBack": true,
+          "enableWhenValid": true
         },
         "style": {
           "marginTop": 16,
@@ -5553,7 +5508,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "animation": {
           "type": "fade",
           "duration": 250,
-          "delay": 50,
+          "delay": 100,
           "easing": "ease-out"
         }
       }
@@ -5587,33 +5542,6 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "completion"
       ],
       "trackingId": "step-18-strategic-v3"
-    },
-    "scoring": {
-      "method": "points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante"
-      ],
-      "options": {
-        "18a": {
-          "category": "Natural",
-          "points": 1
-        },
-        "18b": {
-          "category": "Clássico",
-          "points": 2
-        },
-        "18c": {
-          "category": "Contemporâneo",
-          "points": 2
-        },
-        "18d": {
-          "category": "Elegante",
-          "points": 3
-        }
-      }
     },
     "strategic": {
       "isStrategic": true,
