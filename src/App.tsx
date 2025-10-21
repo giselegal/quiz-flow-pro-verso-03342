@@ -34,6 +34,7 @@ import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
 import { serviceManager } from './services/core/UnifiedServiceManager';
 import { setupCriticalRoutes } from '@/config/criticalRoutes.config';
+import { loadTemplateOverrides } from '@/bootstrap/loadTemplateOverrides';
 // Remover LocalConfigProvider complexo - usando sistema JavaScript simples
 
 // 🚀 FASE 2: Unified Provider (substitui Consolidated)
@@ -97,6 +98,18 @@ function AppCore() {
 
         // 🚀 P2: Setup critical routes preload
         setupCriticalRoutes();
+
+        // 🔁 Carregar overrides JSON (quando habilitado por env)
+        try {
+            const enabled = (import.meta as any)?.env?.ENABLE_JSON_TEMPLATE_OVERRIDES || (typeof process !== 'undefined' && (process.env as any).ENABLE_JSON_TEMPLATE_OVERRIDES);
+            if (enabled) {
+                loadTemplateOverrides().catch(err => console.warn('⚠️ Overrides loader failed', err));
+            } else {
+                console.info('[TemplateOverrides] disabled by env');
+            }
+        } catch (err) {
+            console.warn('[TemplateOverrides] init error', err);
+        }
 
         // Initialize services with idle callback
         const initializeServices = () => {
