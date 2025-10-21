@@ -6,23 +6,31 @@
  */
 
 import { EditableQuizStep, BlockComponent } from '@/components/editor/quiz/types';
+import { normalizeBlockType } from '@/utils/blockNormalization';
+
+const ensureArray = <T,>(val: unknown): T[] => Array.isArray(val) ? (val as T[]) : [];
+const getType = (b: Partial<BlockComponent>): string => normalizeBlockType(String(b?.type || '').toLowerCase());
 
 /**
  * Extrai dados de perguntas de um bloco quiz-options
  */
 const extractQuestionData = (blocks: BlockComponent[]) => {
-  const quizOptionsBlock = blocks.find(b => b.type === 'quiz-options' || b.type === 'options-grid');
+  const list = ensureArray<BlockComponent>(blocks);
+  const quizOptionsBlock = list.find(b => {
+    const t = getType(b);
+    return t === 'options-grid' || String(b?.type || '').toLowerCase() === 'quiz-options';
+  });
   
   if (!quizOptionsBlock) return {};
 
-  const content = quizOptionsBlock.content || {};
-  const properties = quizOptionsBlock.properties || {};
+  const content = (quizOptionsBlock as any).content || {};
+  const properties = (quizOptionsBlock as any).properties || {};
 
   return {
     questionNumber: properties.questionNumber || content.questionNumber,
     questionText: content.question || properties.question,
     requiredSelections: properties.requiredSelections || content.requiredSelections || 1,
-    options: properties.options || content.options || [],
+    options: ensureArray<any>(properties.options || content.options),
   };
 };
 
@@ -30,12 +38,13 @@ const extractQuestionData = (blocks: BlockComponent[]) => {
  * Extrai dados de formulário de um bloco form-input
  */
 const extractFormData = (blocks: BlockComponent[]) => {
-  const formBlock = blocks.find(b => b.type === 'form-input');
+  const list = ensureArray<BlockComponent>(blocks);
+  const formBlock = list.find(b => getType(b) === 'form-input');
   
   if (!formBlock) return {};
 
-  const properties = formBlock.properties || {};
-  const content = formBlock.content || {};
+  const properties = (formBlock as any).properties || {};
+  const content = (formBlock as any).content || {};
 
   return {
     formQuestion: properties.label || content.label,
@@ -47,12 +56,16 @@ const extractFormData = (blocks: BlockComponent[]) => {
  * Extrai imagens de um bloco
  */
 const extractImage = (blocks: BlockComponent[]) => {
-  const imageBlock = blocks.find(b => b.type === 'image' || b.type === 'hero-image');
+  const list = ensureArray<BlockComponent>(blocks);
+  const imageBlock = list.find(b => {
+    const t = getType(b);
+    return t === 'image' || t === 'image-inline' || t === 'image-display-inline' || t === 'hero-image';
+  });
   
   if (!imageBlock) return {};
 
-  const properties = imageBlock.properties || {};
-  const content = imageBlock.content || {};
+  const properties = (imageBlock as any).properties || {};
+  const content = (imageBlock as any).content || {};
 
   return {
     image: properties.src || content.src || properties.imageUrl || content.imageUrl,
@@ -63,12 +76,16 @@ const extractImage = (blocks: BlockComponent[]) => {
  * Extrai texto/título de blocos de conteúdo
  */
 const extractText = (blocks: BlockComponent[]) => {
-  const textBlock = blocks.find(b => b.type === 'text' || b.type === 'heading');
+  const list = ensureArray<BlockComponent>(blocks);
+  const textBlock = list.find(b => {
+    const t = getType(b);
+    return t === 'text' || t === 'text-inline' || t === 'heading' || t === 'heading-inline';
+  });
   
   if (!textBlock) return {};
 
-  const properties = textBlock.properties || {};
-  const content = textBlock.content || {};
+  const properties = (textBlock as any).properties || {};
+  const content = (textBlock as any).content || {};
 
   return {
     title: properties.text || content.text || properties.title || content.title,
@@ -80,12 +97,16 @@ const extractText = (blocks: BlockComponent[]) => {
  * Extrai dados de botão
  */
 const extractButton = (blocks: BlockComponent[]) => {
-  const buttonBlock = blocks.find(b => b.type === 'button' || b.type === 'cta-button');
+  const list = ensureArray<BlockComponent>(blocks);
+  const buttonBlock = list.find(b => {
+    const t = getType(b);
+    return t === 'button' || t === 'button-inline' || t === 'cta-button';
+  });
   
   if (!buttonBlock) return {};
 
-  const properties = buttonBlock.properties || {};
-  const content = buttonBlock.content || {};
+  const properties = (buttonBlock as any).properties || {};
+  const content = (buttonBlock as any).content || {};
 
   return {
     buttonText: properties.text || content.text || properties.label || content.label,
@@ -97,7 +118,7 @@ const extractButton = (blocks: BlockComponent[]) => {
  * Consolidada todos os dados relevantes dos blocos em um objeto metadata estruturado
  */
 export const migrateBlocksToStepMetadata = (step: EditableQuizStep): EditableQuizStep => {
-  const blocks = (step as any).blocks || [];
+  const blocks = ensureArray<BlockComponent>((step as any)?.blocks);
 
   // Extrair dados de diferentes tipos de blocos
   const questionData = extractQuestionData(blocks);
@@ -134,7 +155,7 @@ export const migrateAllSteps = (steps: EditableQuizStep[]): EditableQuizStep[] =
  * Verifica se um step precisa de migração
  */
 export const needsMigration = (step: EditableQuizStep): boolean => {
-  const hasBlocks = (step as any).blocks && (step as any).blocks.length > 0;
+  const hasBlocks = Array.isArray((step as any)?.blocks) && (step as any).blocks.length > 0;
   const hasMetadata = step.metadata && Object.keys(step.metadata).length > 0;
   
   return hasBlocks && !hasMetadata;
