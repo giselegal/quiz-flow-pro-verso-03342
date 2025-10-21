@@ -1,11 +1,13 @@
-// @ts-nocheck
 import { InlineEditableText } from './InlineEditableText';
-import { Heading } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
+import React from 'react';
+
+type MarginType = 'top' | 'bottom' | 'left' | 'right';
+type MarginValue = string | number | undefined;
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
-  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
+const getMarginClass = (value: MarginValue, type: MarginType): string => {
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value ?? 0;
 
   if (isNaN(numValue) || numValue === 0) return '';
 
@@ -73,22 +75,23 @@ const HeaderBlock: React.FC<BlockComponentProps> = ({
     fontFamily = 'inherit',
   } = block?.properties || {};
 
-  const handlePropertyChange = (key: string, value: any) => {
+  const handlePropertyChange = (key: string, value: unknown) => {
     if (onPropertyChange) {
       onPropertyChange(key, value);
     }
   };
 
   // Safely handle style object
-  const styleObj = block.content?.style || {};
-  const safeStyle = typeof styleObj === 'object' && styleObj !== null ? styleObj : {};
+  const styleObj = (block as any)?.content?.style;
+  const safeStyle: Record<string, unknown> =
+    styleObj && typeof styleObj === 'object' ? (styleObj as Record<string, unknown>) : {};
 
-  const containerStyle = {
-    backgroundColor: (safeStyle as any).backgroundColor || backgroundColor || 'transparent',
-    padding: (safeStyle as any).padding || padding || '2rem 1rem',
-    margin: (safeStyle as any).margin || margin || '0',
-    textAlign: (safeStyle as any).textAlign || textAlign || 'center',
-  } as React.CSSProperties;
+  const containerStyle: React.CSSProperties = {
+    backgroundColor: (safeStyle.backgroundColor as string) ?? backgroundColor ?? 'transparent',
+    padding: (safeStyle.padding as string) ?? padding ?? '2rem 1rem',
+    margin: (safeStyle.margin as string) ?? margin ?? '0',
+    textAlign: (safeStyle.textAlign as React.CSSProperties['textAlign']) ?? textAlign ?? 'center',
+  };
 
   return (
     <div
@@ -120,10 +123,12 @@ const HeaderBlock: React.FC<BlockComponentProps> = ({
         <h1
           className="mb-4"
           style={{
-            fontSize: (safeStyle as any).fontSize || fontSize || '2.5rem',
-            fontWeight: (safeStyle as any).fontWeight || fontWeight || 'bold',
-            color: (safeStyle as any).color || color || '#1f2937',
-            fontFamily: (safeStyle as any).fontFamily || fontFamily || 'inherit',
+            fontSize: (safeStyle.fontSize as string) ?? fontSize ?? '2.5rem',
+            fontWeight: (safeStyle.fontWeight as React.CSSProperties['fontWeight']) ??
+              (fontWeight as React.CSSProperties['fontWeight']) ??
+              'bold',
+            color: (safeStyle.color as string) ?? color ?? '#1f2937',
+            fontFamily: (safeStyle.fontFamily as string) ?? fontFamily ?? 'inherit',
             margin: 0,
             lineHeight: 1.2,
           }}
@@ -140,10 +145,11 @@ const HeaderBlock: React.FC<BlockComponentProps> = ({
           <p
             className="text-lg"
             style={{
-              fontSize: (safeStyle as any).subtitleFontSize || '1.25rem',
-              color: (safeStyle as any).subtitleColor || '#6b7280',
-              fontWeight: (safeStyle as any).subtitleFontWeight || 'normal',
-              fontFamily: (safeStyle as any).fontFamily || fontFamily || 'inherit',
+              fontSize: (safeStyle.subtitleFontSize as string) ?? '1.25rem',
+              color: (safeStyle.subtitleColor as string) ?? '#6b7280',
+              fontWeight:
+                (safeStyle.subtitleFontWeight as React.CSSProperties['fontWeight']) ?? 'normal',
+              fontFamily: (safeStyle.fontFamily as string) ?? fontFamily ?? 'inherit',
               margin: 0,
             }}
           >

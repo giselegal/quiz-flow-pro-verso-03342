@@ -1,12 +1,15 @@
-// @ts-nocheck
 import { InlineEditableText } from './InlineEditableText';
 import { Button as UIButton } from '@/components/ui/button';
 import { MousePointer } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
+import React from 'react';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
-  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
+type MarginType = 'top' | 'bottom' | 'left' | 'right';
+type MarginValue = string | number | undefined;
+
+const getMarginClass = (value: MarginValue, type: MarginType): string => {
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value ?? 0;
 
   if (isNaN(numValue) || numValue === 0) return '';
 
@@ -73,7 +76,7 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
     boxShadow = 'none',
   } = block?.properties || {};
 
-  const handlePropertyChange = (key: string, value: any) => {
+  const handlePropertyChange = (key: string, value: unknown) => {
     if (onPropertyChange) {
       onPropertyChange(key, value);
     }
@@ -99,29 +102,32 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
   };
 
   // Safely handle style object
-  const styleObj = block.content?.style || {};
-  const safeStyle = typeof styleObj === 'object' && styleObj !== null ? styleObj : {};
+  const styleObj = (block as any)?.content?.style;
+  const safeStyle: Record<string, unknown> =
+    styleObj && typeof styleObj === 'object' ? (styleObj as Record<string, unknown>) : {};
 
-  const containerStyle = {
-    textAlign: (safeStyle as any).textAlign || textAlign || 'center',
-    margin: (safeStyle as any).margin || margin || '0',
-  } as React.CSSProperties;
+  const containerStyle: React.CSSProperties = {
+    textAlign: (safeStyle.textAlign as React.CSSProperties['textAlign']) ?? textAlign ?? 'center',
+    margin: (safeStyle.margin as string) ?? margin ?? '0',
+  };
 
-  const buttonStyle = {
-    backgroundColor: (safeStyle as any).backgroundColor || backgroundColor || '#3b82f6',
-    color: (safeStyle as any).color || color || '#ffffff',
-    padding: (safeStyle as any).padding || padding || '12px 24px',
-    fontSize: (safeStyle as any).fontSize || fontSize || '16px',
-    fontWeight: (safeStyle as any).fontWeight || fontWeight || '500',
-    borderRadius: (safeStyle as any).borderRadius || borderRadius || '6px',
-    boxShadow: (safeStyle as any).boxShadow || boxShadow || 'none',
-    width: (safeStyle as any).width || width || 'auto',
+  const buttonStyle: React.CSSProperties = {
+    backgroundColor: (safeStyle.backgroundColor as string) ?? backgroundColor ?? '#3b82f6',
+    color: (safeStyle.color as string) ?? color ?? '#ffffff',
+    padding: (safeStyle.padding as string) ?? padding ?? '12px 24px',
+    fontSize: (safeStyle.fontSize as string) ?? fontSize ?? '16px',
+    fontWeight: (safeStyle.fontWeight as React.CSSProperties['fontWeight']) ??
+      (fontWeight as React.CSSProperties['fontWeight']) ??
+      '500',
+    borderRadius: (safeStyle.borderRadius as string) ?? borderRadius ?? '6px',
+    boxShadow: (safeStyle.boxShadow as string) ?? boxShadow ?? 'none',
+    width: (safeStyle.width as string) ?? width ?? 'auto',
     border: 'none',
     cursor: 'pointer',
     display: 'inline-block',
     textDecoration: 'none',
     transition: 'all 0.2s ease',
-  } as React.CSSProperties;
+  };
 
   return (
     <div
@@ -135,7 +141,7 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
       data-block-id={block.id}
       data-block-type={block.type}
     >
-      <div style={{ textAlign: containerStyle.textAlign as any }}>
+      <div style={{ textAlign: containerStyle.textAlign }}>
         <UIButton style={buttonStyle} onClick={handleButtonClick} className="border-0">
           <MousePointer className="w-4 h-4 mr-2" />
           <InlineEditableText
