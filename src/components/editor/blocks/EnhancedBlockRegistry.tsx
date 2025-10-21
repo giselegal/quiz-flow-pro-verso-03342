@@ -40,6 +40,7 @@ import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
 const QuestionHeroSection = lazy(() => import('@/components/sections/questions').then(m => ({ default: m.QuestionHeroSection })));
 const TransitionHeroSection = lazy(() => import('@/components/sections/transitions').then(m => ({ default: m.TransitionHeroSection })));
 const OfferHeroSection = lazy(() => import('@/components/sections/offer').then(m => ({ default: m.OfferHeroSection })));
+const PricingSection = lazy(() => import('@/components/sections/offer').then(m => ({ default: m.PricingSection })));
 const StrategicQuestionBlock = lazy(() => import('@/components/editor/blocks/StrategicQuestionBlock'));
 
 // Componentes legados (runtime otimizado - auto-contidos e performáticos)
@@ -195,6 +196,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
 
     // ✅ STEP 21 - OFERTA
     'offer-hero': OfferHeroSection, // ✅ NOVO - Section para offer-hero
+    'pricing': PricingSection, // ✅ NOVO - Seção de preços/tabela de oferta
     'urgency-timer-inline': lazy(() => import('@/components/editor/blocks/UrgencyTimerInlineBlock')),
     'before-after-inline': lazy(() => import('@/components/editor/blocks/BeforeAfterInlineBlock')),
     bonus: lazy(() => import('@/components/editor/blocks/BonusBlock')),
@@ -404,18 +406,9 @@ export const AVAILABLE_COMPONENTS = [
         category: 'quiz',
         description: 'Animação de loading entre steps',
     },
-    {
-        type: 'quiz-result-header',
-        label: 'Cabeçalho de Resultado',
-        category: 'quiz',
-        description: 'Exibição do resultado do quiz',
-    },
-    {
-        type: 'quiz-offer-hero',
-        label: 'Hero de Oferta',
-        category: 'quiz',
-        description: 'Seção hero para página de oferta',
-    },
+    // Removidos da coluna para evitar duplicação com versões mais completas atômicas/sections
+    // { type: 'quiz-result-header', label: 'Cabeçalho de Resultado', category: 'quiz', description: 'Exibição do resultado do quiz' },
+    // { type: 'quiz-offer-hero', label: 'Hero de Oferta', category: 'quiz', description: 'Seção hero para página de oferta' },
     {
         type: 'image-display-inline',
         label: 'Imagem Display',
@@ -447,12 +440,19 @@ export const AVAILABLE_COMPONENTS = [
     // 🎯 COMPONENTES DE QUIZ (Interação)
     // ============================================================================
     { type: 'quiz-intro-header', label: 'Header do Quiz', category: 'quiz', description: 'Cabeçalho com logo e título do quiz' },
+    // Novos blocos atômicos de Pergunta (Steps 02–11)
+    { type: 'question-progress', label: 'Pergunta: Progresso', category: 'quiz', description: 'Indicador de progresso da pergunta' },
+    { type: 'question-number', label: 'Pergunta: Número', category: 'quiz', description: 'Exibe o número da pergunta atual' },
+    { type: 'question-text', label: 'Pergunta: Texto', category: 'quiz', description: 'Texto principal da pergunta' },
+    { type: 'question-instructions', label: 'Pergunta: Instruções', category: 'quiz', description: 'Instruções adicionais para a pergunta' },
+    { type: 'question-navigation', label: 'Pergunta: Navegação', category: 'quiz', description: 'Botões de Anterior/Próximo/Confirmar' },
     { type: 'options-grid', label: 'Grid de Opções', category: 'quiz', description: 'Grade de opções selecionáveis com imagens' },
     { type: 'question-hero', label: 'Hero de Pergunta', category: 'quiz', description: 'Seção hero para perguntas do quiz' },
     { type: 'strategic-question', label: 'Pergunta Estratégica', category: 'quiz', description: 'Pergunta com design especial' },
     { type: 'transition-hero', label: 'Hero de Transição', category: 'quiz', description: 'Tela de transição entre etapas' },
-    { type: 'progress-bar', label: 'Barra de Progresso', category: 'quiz', description: 'Indicador visual de progresso' },
-    { type: 'loading-animation', label: 'Animação de Loading', category: 'quiz', description: 'Loader animado' },
+    // Removidos em favor de variantes mais completas já presentes (quiz-progress-bar e quiz-transition-loader)
+    // { type: 'progress-bar', label: 'Barra de Progresso', category: 'quiz', description: 'Indicador visual de progresso' },
+    // { type: 'loading-animation', label: 'Animação de Loading', category: 'quiz', description: 'Loader animado' },
 
     // ============================================================================
     // 📋 COMPONENTES DE FORMULÁRIO (Input & Forms)
@@ -491,7 +491,8 @@ export const AVAILABLE_COMPONENTS = [
     { type: 'result-image', label: 'Resultado: Imagem', category: 'result', description: 'Imagem ilustrativa do resultado' },
     { type: 'result-description', label: 'Resultado: Descrição', category: 'result', description: 'Texto descritivo do estilo' },
     { type: 'result-characteristics', label: 'Resultado: Características', category: 'result', description: 'Lista de características do estilo' },
-    { type: 'result-cta', label: 'Resultado: Call to Action', category: 'result', description: 'Botão de ação principal' },
+    // Removido em favor de primário/secundário mais explícitos
+    // { type: 'result-cta', label: 'Resultado: Call to Action', category: 'result', description: 'Botão de ação principal' },
     { type: 'result-cta-primary', label: 'Resultado: CTA Principal', category: 'result', description: 'Botão de ação principal destacado' },
     { type: 'result-cta-secondary', label: 'Resultado: CTA Secundário', category: 'result', description: 'Botão de ação secundário' },
     { type: 'result-secondary-styles', label: 'Resultado: Estilos Secundários', category: 'result', description: 'Lista de estilos compatíveis' },
@@ -510,6 +511,7 @@ export const AVAILABLE_COMPONENTS = [
     // 💰 COMPONENTES DE OFERTA/VENDAS (Step 21)
     // ============================================================================
     { type: 'offer-hero', label: 'Hero de Oferta', category: 'offer', description: 'Seção hero da página de oferta' },
+    { type: 'pricing', label: 'Tabela de Preços', category: 'offer', description: 'Seção de preços com desconto e parcelamento' },
     { type: 'sales-hero', label: 'Sales Hero', category: 'offer', description: 'Hero de vendas com proposta de valor' },
     { type: 'urgency-timer-inline', label: 'Timer de Urgência', category: 'offer', description: 'Contador regressivo' },
     { type: 'before-after-inline', label: 'Antes e Depois', category: 'offer', description: 'Comparação antes/depois' },

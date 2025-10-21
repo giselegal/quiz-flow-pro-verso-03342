@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { sanitizeHtml } from '@/utils/sanitizeHtml';
 import {
     Gift,
     Sparkles,
@@ -206,7 +207,7 @@ export function OfferMap({
                             <Icon className="h-12 w-12 mx-auto mb-4 text-[#B89B7A]" />
                             <h2
                                 className="text-2xl font-bold text-[#5b4135]"
-                                dangerouslySetInnerHTML={{ __html: replaceUserName(offer.title) }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(replaceUserName(offer.title)) }}
                             />
                         </div>
 
@@ -406,7 +407,7 @@ export function OfferMap({
                                     <div className="text-xs font-semibold text-blue-700 mb-2">Preview Rápido:</div>
                                     <div className="space-y-2">
                                         <p className="text-sm font-bold" dangerouslySetInnerHTML={{
-                                            __html: replaceUserName(offer.title)
+                                            __html: sanitizeHtml(replaceUserName(offer.title))
                                         }} />
                                         <p className="text-xs text-gray-700">{offer.description.substring(0, 100)}...</p>
                                         <Button size="sm" variant="secondary" className="w-full text-xs">
