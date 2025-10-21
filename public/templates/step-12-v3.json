@@ -45,10 +45,8 @@
       "type": "transition-hero",
       "id": "transition-hero-12",
       "content": {
-        "title": "Analisando suas respostas...",
-        "subtitle": "Estamos montando seu perfil de estilo personalizado",
-        "message": "Continue para descobrir ainda mais sobre seu estilo único!",
-        "autoAdvanceDelay": 3000
+        "title": "🕐 Enquanto calculamos o seu resultado...",
+        "autoAdvanceDelay": 3500
       },
       "style": {
         "backgroundColor": "#FAF9F7",
@@ -66,7 +64,7 @@
       "type": "text-inline",
       "id": "step-12-transition-text",
       "content": {
-        "text": "Página de transição no meio do quiz com mensagem motivacional"
+        "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
       },
       "style": {
         "textAlign": "center",
@@ -106,7 +104,7 @@
     "allowBack": false,
     "requiresUserInput": false,
     "autoAdvance": true,
-    "autoAdvanceDelay": 3000
+    "autoAdvanceDelay": 3500
   },
   "analytics": {
     "events": [

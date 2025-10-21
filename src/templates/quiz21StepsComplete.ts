@@ -11,7 +11,7 @@
  * 2. Execute: npm run generate:templates
  * 3. Commit ambos: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-21T18:49:02.322Z
+ * Gerado em: 2025-10-21T19:18:12.326Z
  * Versão: 3.0.0
  */
 
@@ -3905,10 +3905,8 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "type": "transition-hero",
         "id": "transition-hero-12",
         "content": {
-          "title": "Analisando suas respostas...",
-          "subtitle": "Estamos montando seu perfil de estilo personalizado",
-          "message": "Continue para descobrir ainda mais sobre seu estilo único!",
-          "autoAdvanceDelay": 3000
+          "title": "🕐 Enquanto calculamos o seu resultado...",
+          "autoAdvanceDelay": 3500
         },
         "style": {
           "backgroundColor": "#FAF9F7",
@@ -3926,7 +3924,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
         "type": "text-inline",
         "id": "step-12-transition-text",
         "content": {
-          "text": "Página de transição no meio do quiz com mensagem motivacional"
+          "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
         },
         "style": {
           "textAlign": "center",
@@ -3966,7 +3964,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, any> = IS_TEST ? MINIM
       "allowBack": false,
       "requiresUserInput": false,
       "autoAdvance": true,
-      "autoAdvanceDelay": 3000
+      "autoAdvanceDelay": 3500
     },
     "analytics": {
       "events": [
