@@ -48,171 +48,51 @@
     }
   },
   "sections": [
-    {
-      "type": "question-title",
-      "id": "step-17-question-title",
-      "content": {
-        "text": "O que você mais gostaria de mudar?"
-      },
-      "style": {
-        "textAlign": "center",
-        "marginBottom": 12
-      },
-      "animation": {
-        "type": "fade",
-        "duration": 250,
-        "delay": 0,
-        "easing": "ease-out"
-      }
-    },
-    {
-      "type": "question-hero",
-      "id": "question-hero-17",
-      "content": {
-        "questionNumber": "Q15 - TRANSFORMAÇÃO",
-        "questionText": "O que você mais gostaria de mudar?",
-        "currentQuestion": 15,
-        "totalQuestions": 13,
-        "progressValue": 76,
-        "showProgress": true,
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão"
-      },
-      "style": {
-        "backgroundColor": "transparent",
-        "padding": 16
-      },
-      "animation": {
-        "type": "fade",
-        "duration": 300,
-        "delay": 0,
-        "easing": "ease-out"
-      }
-    },
+    { "type": "question-progress", "id": "q17-progress", "content": { "currentQuestion": 5, "totalQuestions": 6, "progressValue": 83, "showProgress": true }, "style": { "backgroundColor": "transparent", "padding": 8 }, "animation": { "type": "fade", "duration": 220, "delay": 0, "easing": "ease-out" } },
+    { "type": "question-number", "id": "q17-number", "content": { "text": "5 de 6", "questionNumber": "5 de 6" }, "style": { "textAlign": "center", "marginBottom": 4 }, "animation": { "type": "fade", "duration": 220, "delay": 20, "easing": "ease-out" } },
+    { "type": "question-text", "id": "q17-text", "content": { "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?" }, "style": { "textAlign": "center", "marginBottom": 12 }, "animation": { "type": "fade", "duration": 240, "delay": 40, "easing": "ease-out" } },
+    { "type": "question-instructions", "id": "q17-instructions", "content": { "text": "Selecione 1 opção para continuar" }, "style": { "textAlign": "center", "marginBottom": 12 }, "animation": { "type": "fade", "duration": 240, "delay": 60, "easing": "ease-out" } },
     {
       "type": "options-grid",
       "id": "options-grid-17",
       "content": {
         "options": [
-          {
-            "id": "17a",
-            "text": "Opção A para Q15",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "17a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "17b",
-            "text": "Opção B para Q15",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "17b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "17c",
-            "text": "Opção C para Q15",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "17c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "17d",
-            "text": "Opção D para Q15",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "17d",
-            "category": "Elegante",
-            "points": 3
-          }
+          { "id": "sim-vale-muito", "text": "Sim! Por esse resultado, vale muito", "value": "sim-vale-muito" },
+          { "id": "sim-se-certeza", "text": "Sim, mas só se eu tiver certeza de que funciona pra mim", "value": "sim-se-certeza" },
+          { "id": "talvez-depende", "text": "Talvez — depende do que está incluso", "value": "talvez-depende" },
+          { "id": "nao-nao-pronta", "text": "Não, ainda não estou pronta para investir", "value": "nao-nao-pronta" }
         ],
-        "columns": 2,
+        "columns": 1,
         "multipleSelection": false,
         "minSelections": 1,
         "maxSelections": 1,
-        "showImages": true,
+        "showImages": false,
         "imageSize": 256,
         "autoAdvance": false,
         "autoAdvanceDelay": 0,
         "validationMessage": "Selecione 1 opção para continuar"
       },
-      "style": {
-        "backgroundColor": "transparent",
-        "padding": 16
-      },
-      "animation": {
-        "type": "slideUp",
-        "duration": 300,
-        "delay": 100,
-        "easing": "ease-out"
-      },
+      "style": { "backgroundColor": "transparent", "padding": 16 },
+      "animation": { "type": "slideUp", "duration": 300, "delay": 80, "easing": "ease-out" },
       "properties": {
         "options": [
-          {
-            "id": "17a",
-            "text": "Opção A para Q15",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "17a",
-            "category": "Natural",
-            "points": 1
-          },
-          {
-            "id": "17b",
-            "text": "Opção B para Q15",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "17b",
-            "category": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "17c",
-            "text": "Opção C para Q15",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "17c",
-            "category": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "17d",
-            "text": "Opção D para Q15",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "17d",
-            "category": "Elegante",
-            "points": 3
-          }
+          { "id": "sim-vale-muito", "text": "Sim! Por esse resultado, vale muito", "value": "sim-vale-muito" },
+          { "id": "sim-se-certeza", "text": "Sim, mas só se eu tiver certeza de que funciona pra mim", "value": "sim-se-certeza" },
+          { "id": "talvez-depende", "text": "Talvez — depende do que está incluso", "value": "talvez-depende" },
+          { "id": "nao-nao-pronta", "text": "Não, ainda não estou pronta para investir", "value": "nao-nao-pronta" }
         ],
-        "columns": 2,
+        "columns": 1,
         "multipleSelection": false,
         "minSelections": 1,
         "maxSelections": 1,
-        "showImages": true,
+        "showImages": false,
         "imageSize": 256,
         "autoAdvance": false,
         "autoAdvanceDelay": 0,
         "validationMessage": "Selecione 1 opção para continuar"
       }
     },
-    {
-      "type": "CTAButton",
-      "id": "step-17-cta-next",
-      "content": {
-        "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
-      },
-      "style": {
-        "marginTop": 16,
-        "textAlign": "center"
-      },
-      "animation": {
-        "type": "fade",
-        "duration": 250,
-        "delay": 50,
-        "easing": "ease-out"
-      }
-    }
+    { "type": "question-navigation", "id": "q17-navigation", "content": { "backLabel": "Voltar", "nextLabel": "Avançar" }, "properties": { "showBack": true, "enableWhenValid": true }, "style": { "marginTop": 16, "textAlign": "center" }, "animation": { "type": "fade", "duration": 250, "delay": 100, "easing": "ease-out" } }
   ],
   "validation": {
     "required": [
@@ -243,33 +123,6 @@
       "completion"
     ],
     "trackingId": "step-17-strategic-v3"
-  },
-  "scoring": {
-    "method": "points",
-    "categories": [
-      "Natural",
-      "Clássico",
-      "Contemporâneo",
-      "Elegante"
-    ],
-    "options": {
-      "17a": {
-        "category": "Natural",
-        "points": 1
-      },
-      "17b": {
-        "category": "Clássico",
-        "points": 2
-      },
-      "17c": {
-        "category": "Contemporâneo",
-        "points": 2
-      },
-      "17d": {
-        "category": "Elegante",
-        "points": 3
-      }
-    }
   },
   "strategic": {
     "isStrategic": true,
