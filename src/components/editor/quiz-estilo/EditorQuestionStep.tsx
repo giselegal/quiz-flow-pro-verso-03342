@@ -25,7 +25,8 @@ export default function EditorQuestionStep({
     // Dados seguros com fallbacks
     const safeData = {
         questionNumber: data.questionNumber || 'Pergunta 1',
-        questionText: data.questionText || 'Qual é a sua preferência?',
+        // Aceita aliases comuns vindos de diferentes fontes
+        questionText: data.questionText || data.question || data.title || data?.content?.text || 'Qual é a sua preferência?',
         requiredSelections: data.requiredSelections || 1,
         options: data.options || [
             { id: 'opt1', text: 'Opção 1', image: undefined },

@@ -20,7 +20,10 @@ const QuizQuestionHeaderBlock: React.FC<QuizQuestionHeaderRendererProps> = ({ bl
     const content = (block as any).content || {};
     const questionNumber: number = Number(props.questionNumber ?? content.currentQuestion ?? 1);
     const totalQuestions: number = Number(props.totalQuestions ?? content.totalQuestions ?? 21);
-    const questionTextRaw: string = String(props.questionText ?? content.questionText ?? 'Qual é a sua preferência?');
+    // Aceita aliases: properties.questionText, content.questionText e content.text
+    const questionTextRaw: string = String(
+        props.questionText ?? content.questionText ?? content.text ?? 'Qual é a sua preferência?'
+    );
     const showProgress: boolean = Boolean(props.showProgress ?? content.showProgress ?? true);
     const result = useResultOptional();
     const questionText = result ? result.interpolateText(questionTextRaw) : questionTextRaw;

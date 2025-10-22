@@ -17,10 +17,12 @@ export default function QuestionTextBlock({
   onSelect,
   onOpenProperties
 }: QuestionTextBlockProps) {
-  const questionText = block.content?.questionText || 
-                      block.properties?.questionText || 
-                      'Qual é a sua preferência?';
-  
+  // Aceita aliases comuns: content.questionText, content.text, properties.questionText
+  const questionText = block.content?.questionText ||
+    (block as any).content?.text ||
+    block.properties?.questionText ||
+    'Qual é a sua preferência?';
+
   const fontSize = block.properties?.fontSize || 'text-xl md:text-2xl';
   const fontWeight = block.properties?.fontWeight || 'font-bold';
   const textColor = block.properties?.textColor || '#deac6d';
