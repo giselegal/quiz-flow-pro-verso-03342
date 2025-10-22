@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils';
 import { ImageUploadField } from './ImageUploadField';
 import { SchemaAPI } from '@/config/schemas';
 import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import AdvancedArrayEditor from './AdvancedArrayEditor';
 
 export interface DynamicPropertiesFormProps {
@@ -24,6 +26,7 @@ function filterActive(props: BasePropertySchema[], values: Record<string, any>) 
 
 export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ type, values, onChange }) => {
     const [modernSchema, setModernSchema] = useState<any | null>(null);
+    const [query, setQuery] = useState('');
     const legacySchema = getBlockSchema(type);
 
     useEffect(() => {
@@ -43,7 +46,13 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
     // Agrupamento de propriedades por grupos definidos no schema (com fallback)
     const groups = useMemo(() => {
         if (!schema) return [] as Array<{ id: string; label: string; description?: string; order?: number; properties: BasePropertySchema[] }>;
-        const allProps: BasePropertySchema[] = filterActive(schema.properties as BasePropertySchema[], values);
+        const allProps: BasePropertySchema[] = filterActive(schema.properties as BasePropertySchema[], values)
+            .filter((p) => {
+                if (!query) return true;
+                const q = query.toLowerCase();
+                const txt = `${p.label || ''} ${p.key || ''}`.toLowerCase();
+                return txt.includes(q);
+            });
 
         // Quando há groups definidos no schema, respeitar a ordem/descrição
         if (schema.groups && Array.isArray(schema.groups) && schema.groups.length > 0) {
@@ -67,7 +76,7 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
             dynamicMap.get(gid)!.properties.push(p);
         });
         return Array.from(dynamicMap.values());
-    }, [schema, values]);
+    }, [schema, values, query]);
     const renderField = (prop: BasePropertySchema) => {
         const value = values[prop.key] ?? prop.default ?? '';
         const common = { id: prop.key, name: prop.key } as const;
@@ -176,14 +185,16 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
         }
 
         if (prop.type === 'boolean') {
+            const checked = Boolean(value);
             return (
-                <input
-                    type="checkbox"
-                    {...common}
-                    checked={Boolean(value)}
-                    onChange={e => onChange({ [prop.key]: e.target.checked })}
-                    className="rounded border-gray-300"
-                />
+                <div className="flex items-center justify-between rounded-md border bg-card px-3 py-2">
+                    <span className="text-[11px] text-muted-foreground">{prop.description || 'Ativar'}</span>
+                    <Switch
+                        {...(common as any)}
+                        checked={checked}
+                        onCheckedChange={(v) => onChange({ [prop.key]: v })}
+                    />
+                </div>
             );
         }
 
@@ -262,32 +273,74 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
     };
 
     return (
-        <div className="space-y-6">
-            {groups.map(group => (
-                <div key={group.id}>
-                    <div className="mb-2">
-                        <h4 className="text-xs font-semibold uppercase text-slate-600 tracking-wide">{group.label}</h4>
-                        {group.description && (
-                            <p className="text-[10px] text-muted-foreground leading-snug">{group.description}</p>
-                        )}
-                    </div>
-                    <div className="space-y-4">
-                        {group.properties.map((prop: BasePropertySchema) => {
-                            const error = prop.validate ? prop.validate(values[prop.key], values) : null;
-                            return (
-                                <div key={prop.key} className={cn('space-y-1', error && 'animate-pulse')}>
-                                    <Label htmlFor={prop.key} className="text-[11px] font-medium flex items-center gap-1">
-                                        {prop.label}
-                                        {prop.required && <span className="text-red-500">*</span>}
-                                    </Label>
-                                    {renderField(prop)}
-                                    {error && <p className="text-[10px] text-red-500">{error}</p>}
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            ))}
+        <div className="space-y-3">
+            {/* Busca rápida */}
+            <div className="sticky top-0 z-10 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-md border px-2 py-1.5">
+                <Input
+                    placeholder="Buscar configuração…"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="h-8 text-xs"
+                />
+            </div>
+
+            <Accordion type="multiple" defaultValue={groups.length ? [groups[0].id] : []} className="space-y-2">
+                {groups.filter(g => g.properties.length > 0).map(group => (
+                    <AccordionItem key={group.id} value={group.id} className="rounded-md border bg-card">
+                        <AccordionTrigger className="px-3 py-2 text-[12px]">
+                            <div className="flex flex-col items-start">
+                                <span className="font-semibold uppercase tracking-wide text-slate-600">{group.label}</span>
+                                {group.description && (
+                                    <span className="text-[10px] text-muted-foreground normal-case font-normal">{group.description}</span>
+                                )}
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-3 pb-3">
+                            <div className="space-y-3">
+                                {group.properties.map((prop: BasePropertySchema) => {
+                                    const error = prop.validate ? prop.validate(values[prop.key], values) : null;
+                                    const showHelper = !!prop.description;
+                                    const isRange = (prop as any).type === 'range';
+                                    return (
+                                        <div key={prop.key} className={cn('rounded-md border bg-background px-3 py-2', error && 'ring-1 ring-red-400')} data-field-key={prop.key}>
+                                            <div className={cn('flex items-center', isRange ? 'justify-between' : 'justify-start')}>
+                                                <Label htmlFor={prop.key} className="text-[11px] font-medium">
+                                                    {prop.label}{prop.required && <span className="text-red-500">*</span>}
+                                                </Label>
+                                                {isRange && typeof values[prop.key] === 'number' && (
+                                                    <span className="ml-2 text-[11px] text-muted-foreground">{values[prop.key]}</span>
+                                                )}
+                                            </div>
+                                            <div className="mt-2">
+                                                {isRange ? (
+                                                    <div className="flex items-center gap-3">
+                                                        {renderField(prop)}
+                                                        <Input
+                                                            type="number"
+                                                            className="w-20 h-8 text-xs"
+                                                            value={values[prop.key] ?? prop.default ?? ''}
+                                                            min={(prop as any).min}
+                                                            max={(prop as any).max}
+                                                            step={(prop as any).step || 1}
+                                                            onChange={(e) => onChange({ [prop.key]: e.target.value === '' ? undefined : Number(e.target.value) })}
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    renderField(prop)
+                                                )}
+                                            </div>
+                                            {showHelper && (
+                                                <p className="mt-1 text-[10px] text-muted-foreground">{prop.description}</p>
+                                            )}
+                                            {error && <p className="mt-1 text-[10px] text-red-500">{error}</p>}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+            </Accordion>
         </div>
     );
 };
