@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
-import { getBlockSchema } from '@/components/editor/quiz/schema/blockSchema';
+import { describe, it, expect, beforeAll } from 'vitest';
+import { initializeSchemaRegistry, SchemaAPI } from '@/config/schemas';
 
 // Verifica cobertura mínima de schemas para blocos atômicos do resultado
-// Usa o fallback do editor (blockSchema.ts); a UI moderna usa SchemaAPI quando disponível
+// Agora garantidos via SchemaAPI (registry dinâmico), não mais pelo fallback legacy
 
-describe('Atomic Result Blocks - schema coverage (fallback editor schema)', () => {
+describe('Atomic Result Blocks - schema coverage (SchemaAPI)', () => {
   const types = [
     'result-header',
     'result-description',
@@ -19,11 +19,22 @@ describe('Atomic Result Blocks - schema coverage (fallback editor schema)', () =
     'result-share',
   ];
 
-  for (const t of types) {
-    it(`getBlockSchema(${t}) deve existir`, () => {
-      const schema = getBlockSchema(t);
+  beforeAll(() => {
+    initializeSchemaRegistry();
+  });
+
+  it('tipos registrados na SchemaAPI', () => {
+    for (const t of types) {
+      expect(SchemaAPI.has(t), `Schema não registrado: ${t}`).toBe(true);
+    }
+  });
+
+  it('carrega schemas com propriedades', async () => {
+    for (const t of types) {
+      const schema = await SchemaAPI.get(t);
       expect(schema, `Schema ausente para ${t}`).toBeTruthy();
-      expect(schema?.properties?.length, `Schema ${t} sem propriedades`).toBeGreaterThan(0);
-    });
-  }
+      expect(Array.isArray(schema!.properties), `Schema ${t} sem properties`).toBe(true);
+      expect(schema!.properties!.length, `Schema ${t} sem propriedades`).toBeGreaterThan(0);
+    }
+  });
 });

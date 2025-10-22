@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { PropertiesPanel } from '@/components/editor/quiz/components/PropertiesPanel';
 import ResultHeaderBlock from '@/components/editor/blocks/atomic/ResultHeaderBlock';
@@ -12,6 +12,12 @@ import ResultMainBlock from '@/components/editor/blocks/atomic/ResultMainBlock';
 import ResultCharacteristicsBlock from '@/components/editor/blocks/atomic/ResultCharacteristicsBlock';
 import ResultSecondaryStylesBlock from '@/components/editor/blocks/atomic/ResultSecondaryStylesBlock';
 import ResultShareBlock from '@/components/editor/blocks/atomic/ResultShareBlock';
+import { initializeSchemaRegistry } from '@/config/schemas';
+
+beforeAll(() => {
+    // Garante que os schemas result-* estejam registrados para o Properties Panel
+    initializeSchemaRegistry();
+});
 
 function WrapperHeaderTest() {
     const [block, setBlock] = React.useState<any>({
