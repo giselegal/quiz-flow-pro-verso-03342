@@ -406,7 +406,7 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
                 id: 'b6',
                 type: 'result-style',
                 order: 5,
-                properties: { },
+                properties: {},
                 content: { color: '#00aaee' },
             });
             const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;
