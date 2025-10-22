@@ -76,9 +76,8 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
             prop.key === 'src' ||
             prop.key.toLowerCase().includes('image') ||
             prop.key.toLowerCase().includes('logo') ||
-            // Campos cujo label indique imagem/URL e sejam strings
-            ((prop.label?.toLowerCase().includes('imagem') || prop.label?.toLowerCase().includes('url')) &&
-                prop.type === 'string') ||
+            // Campo cujo label indique explicitamente imagem (não qualquer URL genérica)
+            (!!prop.label && /imagem|image/i.test(prop.label)) ||
             // Caso especial: chave 'url' com label indicando imagem
             (prop.key.toLowerCase() === 'url' && !!prop.label && /imagem|image/i.test(prop.label));
 
