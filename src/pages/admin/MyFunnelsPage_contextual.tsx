@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { UnifiedStorageService } from '@/services/ServiceAliases';
+import { funnelLocalStore } from '@/services/funnelLocalStore';
 import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon } from 'lucide-react';
 import React from 'react';
 import { Input } from '@/components/ui/input';
@@ -160,7 +161,7 @@ const MyFunnelsPage: React.FC = () => {
 
     const createAndOpen21 = async () => {
         try {
-        // Date available for use if needed
+            // Date available for use if needed
             const templateId = 'template-optimized-21-steps-funnel';
             const newId = `${templateId}-${Date.now()}`;
             const name = 'Funil Quiz 21 Etapas';
@@ -172,10 +173,10 @@ const MyFunnelsPage: React.FC = () => {
                 isPublished: false,
                 version: 1,
                 settings: {
-                  steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
-                  metadata: {
-                    collectUserName: true
-                  }
+                    steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
+                    metadata: {
+                        collectUserName: true
+                    }
                 },
                 pages: []
             };

@@ -19,6 +19,7 @@ import { getTemplateInfo } from '@/utils/funnelNormalizer';
 import { HybridTemplateService } from '@/services/ServiceAliases';
 import { funnelApiClient, NormalizedFunnel } from '@/services/funnelApiClient';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import { AIEnhancedHybridTemplateService } from '@/services/AIEnhancedHybridTemplateService';
 
 // 🚨 DEPRECATION WARNING (somente quando o provider LEGADO é montado)
 // Movido para dentro do componente para evitar warning ao apenas importar o módulo

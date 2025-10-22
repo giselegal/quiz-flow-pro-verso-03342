@@ -7,6 +7,7 @@ import { useLocation } from 'wouter';
 import { getUnifiedTemplates } from '@/config/unifiedTemplatesRegistry';
 import { cloneFunnelTemplate } from '@/utils/cloneFunnel';
 import { UnifiedStorageService } from '@/services/ServiceAliases';
+import { funnelLocalStore } from '@/services/funnelLocalStore';
 import EditorLayout from '@/components/layout/EditorLayout';
 
 const EditorTemplatesPage: React.FC = () => {
@@ -110,105 +111,105 @@ const EditorTemplatesPage: React.FC = () => {
           </div>
         </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {templates.map((template) => (
-          <Card
-            key={template.id}
-            className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${selectedTemplate === template.id
-              ? 'ring-2 ring-[#B89B7A] shadow-lg'
-              : 'hover:shadow-md'
-              }`}
-            onClick={() => setSelectedTemplate(template.id)}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="text-lg font-semibold text-[#432818] mb-1">
-                    {template.name}
-                  </CardTitle>
-                  <p className="text-sm text-[#8F7A6A] line-clamp-2">
-                    {template.description || 'Modelo de funil profissional'}
-                  </p>
-                </div>
-                <Badge
-                  variant={template.isOfficial ? "default" : "secondary"}
-                  className="ml-2"
-                >
-                  {template.isOfficial ? 'Oficial' : 'Personalizado'}
-                </Badge>
-              </div>
-            </CardHeader>
-
-            <CardContent className="pt-0">
-              {/* Preview thumbnail */}
-              <div className="aspect-video bg-gradient-to-br from-[#F6F3EF] to-[#EEEBE1] rounded-lg mb-4 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-[#B89B7A] rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Sparkles className="w-6 h-6 text-white" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {templates.map((template) => (
+            <Card
+              key={template.id}
+              className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${selectedTemplate === template.id
+                ? 'ring-2 ring-[#B89B7A] shadow-lg'
+                : 'hover:shadow-md'
+                }`}
+              onClick={() => setSelectedTemplate(template.id)}
+            >
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="text-lg font-semibold text-[#432818] mb-1">
+                      {template.name}
+                    </CardTitle>
+                    <p className="text-sm text-[#8F7A6A] line-clamp-2">
+                      {template.description || 'Modelo de funil profissional'}
+                    </p>
                   </div>
-                  <p className="text-xs text-[#8F7A6A]">
-                    {template.stepCount || 21} etapas
-                  </p>
+                  <Badge
+                    variant={template.isOfficial ? "default" : "secondary"}
+                    className="ml-2"
+                  >
+                    {template.isOfficial ? 'Oficial' : 'Personalizado'}
+                  </Badge>
                 </div>
-              </div>
+              </CardHeader>
 
-              {/* Metadados */}
-              <div className="flex items-center justify-between text-xs text-[#8F7A6A] mb-4">
-                <span>Categoria: {template.category || 'Geral'}</span>
-                <span>{template.usageCount || 0} usos</span>
-              </div>
+              <CardContent className="pt-0">
+                {/* Preview thumbnail */}
+                <div className="aspect-video bg-gradient-to-br from-[#F6F3EF] to-[#EEEBE1] rounded-lg mb-4 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-[#B89B7A] rounded-full flex items-center justify-center mx-auto mb-2">
+                      <Sparkles className="w-6 h-6 text-white" />
+                    </div>
+                    <p className="text-xs text-[#8F7A6A]">
+                      {template.stepCount || 21} etapas
+                    </p>
+                  </div>
+                </div>
 
-              {/* Ações */}
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSelectTemplate(template.id);
-                  }}
-                  className="flex-1 bg-[#B89B7A] hover:bg-[#A08966] text-white"
-                >
-                  <Play className="w-4 h-4 mr-1" />
-                  Usar Template
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePreviewTemplate(template.id);
-                  }}
-                >
-                  <Eye className="w-4 h-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                {/* Metadados */}
+                <div className="flex items-center justify-between text-xs text-[#8F7A6A] mb-4">
+                  <span>Categoria: {template.category || 'Geral'}</span>
+                  <span>{template.usageCount || 0} usos</span>
+                </div>
 
-      {templates.length === 0 && (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 bg-[#F6F3EF] rounded-full flex items-center justify-center mx-auto mb-4">
-            <Sparkles className="w-8 h-8 text-[#B89B7A]" />
-          </div>
-          <h3 className="text-lg font-semibold text-[#432818] mb-2">
-            Nenhum template encontrado
-          </h3>
-          <p className="text-[#8F7A6A] mb-4">
-            Não há templates disponíveis no momento.
-          </p>
-      <Button
-        onClick={() => {
-          const emptyFunnelId = `funnel-empty-${Date.now()}`;
-          setLocation(`/editor/${emptyFunnelId}`);
-        }}
-        className="bg-[#B89B7A] hover:bg-[#A08966] text-white"
-      >
-        Criar Funil do Zero
-      </Button>
+                {/* Ações */}
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectTemplate(template.id);
+                    }}
+                    className="flex-1 bg-[#B89B7A] hover:bg-[#A08966] text-white"
+                  >
+                    <Play className="w-4 h-4 mr-1" />
+                    Usar Template
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePreviewTemplate(template.id);
+                    }}
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      )}
+
+        {templates.length === 0 && (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-[#F6F3EF] rounded-full flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-8 h-8 text-[#B89B7A]" />
+            </div>
+            <h3 className="text-lg font-semibold text-[#432818] mb-2">
+              Nenhum template encontrado
+            </h3>
+            <p className="text-[#8F7A6A] mb-4">
+              Não há templates disponíveis no momento.
+            </p>
+            <Button
+              onClick={() => {
+                const emptyFunnelId = `funnel-empty-${Date.now()}`;
+                setLocation(`/editor/${emptyFunnelId}`);
+              }}
+              className="bg-[#B89B7A] hover:bg-[#A08966] text-white"
+            >
+              Criar Funil do Zero
+            </Button>
+          </div>
+        )}
       </div>
     </EditorLayout>
   );

@@ -169,6 +169,27 @@ app.get('/api/quizzes/:id', (req, res) => {
   res.json({ id: req.params.id, title: 'Mock Quiz' });
 });
 
+// Minimal Funnels endpoints for FE compatibility
+const funnelsStore = new Map<string, any>();
+app.get('/api/funnels', (_req, res) => {
+  res.json(Array.from(funnelsStore.values()));
+});
+app.get('/api/funnels/:id', (req, res) => {
+  const id = req.params.id;
+  let funnel = funnelsStore.get(id);
+  if (!funnel) {
+    funnel = {
+      id,
+      name: `Funnel ${id}`,
+      steps: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    funnelsStore.set(id, funnel);
+  }
+  res.json(funnel);
+});
+
 // Templates (novo Template Engine)
 app.use('/api/templates', templatesRouter);
 // Components CRUD (in-memory por enquanto)

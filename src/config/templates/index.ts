@@ -316,3 +316,5 @@ export const QUIZ21_EDITOR_CONFIG = {
 };
 
 export default AVAILABLE_TEMPLATES;
+// Compat: alguns módulos ainda importam UnifiedTemplateService
+export { TemplateService as UnifiedTemplateService };

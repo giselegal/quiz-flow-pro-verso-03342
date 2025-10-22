@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 
 // Templates reais disponíveis
-import { AVAILABLE_TEMPLATES, UnifiedTemplateService, type TemplateConfig } from '@/config/templates';
+import { AVAILABLE_TEMPLATES, TemplateService, type TemplateConfig } from '@/config/templates';
 
 interface FunnelModel {
   id: string;

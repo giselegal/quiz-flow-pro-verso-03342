@@ -5,7 +5,7 @@
  * Permite importação simplificada e controle de dependências
  */
 
-import { UnifiedTemplateService, templateService } from './TemplateService';
+import { TemplateService, templateService } from './TemplateService';
 import { ComponentsService, componentsService } from './ComponentsService';
 import { PersistenceService, persistenceService } from './PersistenceService';
 import { SettingsService, settingsService } from './SettingsService';

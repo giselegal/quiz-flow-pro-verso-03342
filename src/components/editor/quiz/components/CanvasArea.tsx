@@ -79,8 +79,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         const roots = rawBlocks.filter((b: any) => !('parentId' in b) || !b.parentId);
         return roots.sort((a: any, b: any) => (a?.order ?? 0) - (b?.order ?? 0));
     }, [rawBlocks]);
-    // 🚨 TEMPORARIAMENTE DESABILITADO - Causing "invisible steps" issue
-    const virtualizationEnabled = false; // (rawBlocks?.length || 0) >= 60 && (activeId == null);
+    // ✅ Virtualização habilitada automaticamente quando houver muitos blocos raiz e não estiver em drag
+    const virtualizationEnabled = (rawBlocks?.length || 0) >= 60 && (activeId == null);
     const {
         visible: vVisible,
         topSpacer: vTopSpacer,

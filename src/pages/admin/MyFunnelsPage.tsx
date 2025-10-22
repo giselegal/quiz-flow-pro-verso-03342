@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { UnifiedStorageService } from '@/services/ServiceAliases';
 import { Edit, Eye, Globe2, Plus, Upload, Link as LinkIcon } from 'lucide-react';
 import React from 'react';
+import { funnelLocalStore } from '@/services/funnelLocalStore';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';

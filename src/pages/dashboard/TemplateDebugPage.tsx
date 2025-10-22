@@ -1,5 +1,5 @@
 import React from 'react';
-import { AVAILABLE_TEMPLATES, UnifiedTemplateService } from '../../config/templates';
+import { AVAILABLE_TEMPLATES, TemplateService } from '../../config/templates';
 
 const TemplateDebugPage: React.FC = () => {
     console.log('🔍 AVAILABLE_TEMPLATES:', AVAILABLE_TEMPLATES);

@@ -723,16 +723,16 @@ export class FunnelUnifiedService {
      */
     private async validateFunnelData(funnel: UnifiedFunnelData): Promise<void> {
         // MIGRATED: Usar novo serviço de validação
-        const validation = await migratedFunnelValidationService.validateFunnelAccess(funnel.id, funnel.userId);
+    const validation = await funnelValidationService.validateFunnelAccess(funnel.id, funnel.userId);
 
         if (!validation.isValid) {
             const error = createValidationError(
                 'SCHEMA_VALIDATION_FAILED',
-                `Funil inválido: ${validation.error?.message || 'Erro desconhecido'}`,
+                `Funil inválido: ${validation.error || 'Erro desconhecido'}`,
                 {
                     funnelId: funnel.id,
                     userId: funnel.userId,
-                    additionalData: { validationDetails: validation.validationDetails }
+                    additionalData: { errorType: validation.errorType }
                 }
             );
             errorManager.handleError(error);
