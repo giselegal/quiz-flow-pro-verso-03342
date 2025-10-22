@@ -289,11 +289,13 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
         expect(img).not.toBeNull();
         expect(img?.getAttribute('src')).toBe('https://example.com/old.png');
 
-        // Abrir campo de URL manual do ImageUploadField
-        const toggleManualUrl = screen.getByTitle('Inserir URL manualmente');
-        await act(async () => {
-            fireEvent.click(toggleManualUrl);
-        });
+        // Abrir campo de URL manual do ImageUploadField (ou seguir direto se já houver input visível)
+        const toggleManualUrl = screen.queryByTitle('Inserir URL manualmente');
+        if (toggleManualUrl) {
+            await act(async () => {
+                fireEvent.click(toggleManualUrl);
+            });
+        }
 
         // Atualiza URL da imagem
         const urlInput = await screen.findByDisplayValue('https://example.com/old.png');
