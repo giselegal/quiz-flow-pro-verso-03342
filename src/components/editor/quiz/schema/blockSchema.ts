@@ -449,6 +449,28 @@ export const blockSchemaMap: Record<string, any> = {
     ],
   },
 
+  'result-progress-bars': {
+    type: 'result-progress-bars',
+    label: 'Barras de Progresso (Estilos)',
+    icon: 'bar-chart-2',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: {
+      title: 'Compatibilidade com estilos:',
+      showTop3: true,
+      barColor: 'hsl(var(--primary))',
+      marginBottom: '8'
+    },
+    propertySchema: [
+      { key: 'title', type: 'string', label: 'Título', required: false, default: 'Compatibilidade com estilos:' },
+      { key: 'showTop3', type: 'boolean', label: 'Exibir apenas Top 3', required: false, default: true },
+      { key: 'barColor', type: 'color', label: 'Cor das Barras', required: false, default: 'hsl(var(--primary))' },
+      { key: 'marginBottom', type: 'string', label: 'Margem Inferior', required: false, default: '8' },
+    ],
+  },
+
   'result-main': {
     type: 'result-main',
     label: 'Estilo Principal de Resultado',

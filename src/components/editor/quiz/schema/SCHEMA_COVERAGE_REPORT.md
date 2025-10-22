@@ -31,6 +31,10 @@ Adicionados nesta atualização:
 - quiz-offer-cta-inline ✅
 - testimonials ✅ (suporta lista simples de textos; versão avançada futura)
 - result-header-inline ✅
+- result-header ✅
+- result-description ✅
+- result-image ✅
+- result-cta (genérico) ✅
 - style-card-inline ✅
 - secondary-styles ✅ (lista simples; suporta strings)
 - urgency-timer-inline ✅
