@@ -8,6 +8,10 @@ import ResultCTABlock from '@/components/editor/blocks/atomic/ResultCTABlock';
 import ResultImageBlock from '@/components/editor/blocks/atomic/ResultImageBlock';
 import ResultProgressBarsBlock from '@/components/editor/blocks/ResultProgressBarsBlock';
 import ResultStyleBlock from '@/components/editor/blocks/atomic/ResultStyleBlock';
+import ResultMainBlock from '@/components/editor/blocks/atomic/ResultMainBlock';
+import ResultCharacteristicsBlock from '@/components/editor/blocks/atomic/ResultCharacteristicsBlock';
+import ResultSecondaryStylesBlock from '@/components/editor/blocks/atomic/ResultSecondaryStylesBlock';
+import ResultShareBlock from '@/components/editor/blocks/atomic/ResultShareBlock';
 
 function WrapperHeaderTest() {
     const [block, setBlock] = React.useState<any>({
@@ -467,5 +471,306 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
 
         const bars = screen.getByTestId('preview-style').querySelectorAll('div[style*="background-color:"]');
         expect(Array.from(bars).some((el) => (el as HTMLElement).style.backgroundColor === '#ff00ff')).toBe(true);
+    });
+
+    it('edita styleName no result-main e reflete no preview', async () => {
+        function WrapperResultMainTest() {
+            const [block, setBlock] = React.useState<any>({
+                id: 'b7',
+                type: 'result-main',
+                order: 6,
+                properties: {},
+                content: { userName: 'Você', styleName: 'Estilo Dominante', percentage: '85%', backgroundColor: '#F5EDE4', textColor: '#5b4135', accentColor: '#B89B7A', showCelebration: true },
+            });
+            const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;
+
+            return (
+                <div>
+                    <PropertiesPanel
+                        selectedStep={step}
+                        selectedBlock={block}
+                        headerConfig={{ showLogo: false, progressEnabled: false }}
+                        onHeaderConfigChange={() => { }}
+                        clipboard={null}
+                        canPaste={false}
+                        onPaste={() => { }}
+                        multiSelectedIds={[]}
+                        onDuplicateInline={() => { }}
+                        onPrepareDuplicateToAnother={() => { }}
+                        onCopyMultiple={() => { }}
+                        onRemoveMultiple={() => { }}
+                        onRemoveBlock={() => { }}
+                        onSaveAsSnippet={() => { }}
+                        snippets={[]}
+                        snippetFilter={''}
+                        onSnippetFilterChange={() => { }}
+                        onSnippetInsert={() => { }}
+                        onSnippetRename={() => { }}
+                        onSnippetDelete={() => { }}
+                        onRefreshSnippets={() => { }}
+                        onBlockPatch={(patch) => {
+                            // Mapear campos do schema de properties para content lido pelo componente
+                            const mapped: any = { ...patch };
+                            if (patch.styleName !== undefined) mapped.styleName = patch.styleName;
+                            if (patch.backgroundColor !== undefined) mapped.backgroundColor = patch.backgroundColor;
+                            setBlock((prev: any) => ({ ...prev, content: { ...prev.content, ...mapped } }));
+                        }}
+                        isOfferStep={false}
+                        OfferMapComponent={() => null as any}
+                        onOfferMapUpdate={() => { }}
+                        ThemeEditorPanel={({ onApply }: any) => (<button onClick={() => onApply({})}>apply</button>)}
+                        onApplyTheme={() => { }}
+                    />
+
+                    <div data-testid="preview-main">
+                        <ResultMainBlock block={block} isSelected={false} onClick={() => { }} />
+                    </div>
+                </div>
+            );
+        }
+
+        render(<WrapperResultMainTest />);
+
+        // Atualiza o nome do estilo
+        const styleNameInput = await screen.findByDisplayValue('Estilo Dominante');
+        await act(async () => {
+            fireEvent.change(styleNameInput, { target: { value: 'Estilo Premium' } });
+        });
+        expect(screen.getByTestId('preview-main')).toHaveTextContent('Estilo Premium');
+    });
+
+    it('adiciona característica em result-characteristics e reflete no preview', async () => {
+        function WrapperResultCharacteristicsTest() {
+            const [block, setBlock] = React.useState<any>({
+                id: 'b8',
+                type: 'result-characteristics',
+                order: 7,
+                properties: { title: 'Características', items: [] },
+                content: { items: ['Confortável', 'Versátil'] },
+            });
+            const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;
+
+            return (
+                <div>
+                    <PropertiesPanel
+                        selectedStep={step}
+                        selectedBlock={block}
+                        headerConfig={{ showLogo: false, progressEnabled: false }}
+                        onHeaderConfigChange={() => { }}
+                        clipboard={null}
+                        canPaste={false}
+                        onPaste={() => { }}
+                        multiSelectedIds={[]}
+                        onDuplicateInline={() => { }}
+                        onPrepareDuplicateToAnother={() => { }}
+                        onCopyMultiple={() => { }}
+                        onRemoveMultiple={() => { }}
+                        onRemoveBlock={() => { }}
+                        onSaveAsSnippet={() => { }}
+                        snippets={[]}
+                        snippetFilter={''}
+                        onSnippetFilterChange={() => { }}
+                        onSnippetInsert={() => { }}
+                        onSnippetRename={() => { }}
+                        onSnippetDelete={() => { }}
+                        onRefreshSnippets={() => { }}
+                        onBlockPatch={(patch) => {
+                            if (Array.isArray(patch.items)) {
+                                setBlock((prev: any) => ({ ...prev, content: { ...prev.content, items: patch.items } }));
+                                return;
+                            }
+                            setBlock((prev: any) => ({ ...prev, properties: { ...prev.properties, ...patch } }));
+                        }}
+                        isOfferStep={false}
+                        OfferMapComponent={() => null as any}
+                        onOfferMapUpdate={() => { }}
+                        ThemeEditorPanel={({ onApply }: any) => (<button onClick={() => onApply({})}>apply</button>)}
+                        onApplyTheme={() => { }}
+                    />
+
+                    <div data-testid="preview-characteristics">
+                        <ResultCharacteristicsBlock block={block} isSelected={false} onClick={() => { }} />
+                    </div>
+                </div>
+            );
+        }
+
+        render(<WrapperResultCharacteristicsTest />);
+        // Preview inicial com 2 itens
+        expect(screen.getByTestId('preview-characteristics')).toHaveTextContent('Confortável');
+        expect(screen.getByTestId('preview-characteristics')).toHaveTextContent('Versátil');
+
+        // Adiciona item e edita texto
+        const addButton = await screen.findByText(/Adicionar item/i);
+        await act(async () => { fireEvent.click(addButton); });
+        const inputs = screen.getAllByPlaceholderText('Item');
+        const last = inputs[inputs.length - 1];
+        await act(async () => {
+            fireEvent.change(last, { target: { value: 'Elegante' } });
+        });
+
+        // Preview deve conter o novo item
+        expect(screen.getByTestId('preview-characteristics')).toHaveTextContent('Elegante');
+    });
+
+    it('adiciona estilo em result-secondary-styles e reflete no preview', async () => {
+        function WrapperSecondaryStylesTest() {
+            const [block, setBlock] = React.useState<any>({
+                id: 'b9',
+                type: 'result-secondary-styles',
+                order: 8,
+                properties: { title: 'Outros Estilos', styles: [] },
+                content: {
+                    styles: [
+                        { name: 'Clássico', percentage: '40%' },
+                        { name: 'Romântico', percentage: '35%' },
+                    ], backgroundColor: '#FFFFFF', borderColor: '#E5D5C3'
+                },
+            });
+            const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;
+
+            return (
+                <div>
+                    <PropertiesPanel
+                        selectedStep={step}
+                        selectedBlock={block}
+                        headerConfig={{ showLogo: false, progressEnabled: false }}
+                        onHeaderConfigChange={() => { }}
+                        clipboard={null}
+                        canPaste={false}
+                        onPaste={() => { }}
+                        multiSelectedIds={[]}
+                        onDuplicateInline={() => { }}
+                        onPrepareDuplicateToAnother={() => { }}
+                        onCopyMultiple={() => { }}
+                        onRemoveMultiple={() => { }}
+                        onRemoveBlock={() => { }}
+                        onSaveAsSnippet={() => { }}
+                        snippets={[]}
+                        snippetFilter={''}
+                        onSnippetFilterChange={() => { }}
+                        onSnippetInsert={() => { }}
+                        onSnippetRename={() => { }}
+                        onSnippetDelete={() => { }}
+                        onRefreshSnippets={() => { }}
+                        onBlockPatch={(patch) => {
+                            // Transformar options-list do editor (array de {text}) -> content.styles esperado { name, percentage }
+                            if (Array.isArray((patch as any).styles)) {
+                                const mapped = (patch as any).styles.map((it: any) => ({ name: it.text || String(it), percentage: '50%' }));
+                                setBlock((prev: any) => ({ ...prev, content: { ...prev.content, styles: mapped } }));
+                                return;
+                            }
+                            setBlock((prev: any) => ({ ...prev, properties: { ...prev.properties, ...patch } }));
+                        }}
+                        isOfferStep={false}
+                        OfferMapComponent={() => null as any}
+                        onOfferMapUpdate={() => { }}
+                        ThemeEditorPanel={({ onApply }: any) => (<button onClick={() => onApply({})}>apply</button>)}
+                        onApplyTheme={() => { }}
+                    />
+
+                    <div data-testid="preview-secondary-styles">
+                        <ResultSecondaryStylesBlock block={block} isSelected={false} onClick={() => { }} />
+                    </div>
+                </div>
+            );
+        }
+
+        render(<WrapperSecondaryStylesTest />);
+        // Confirmar itens iniciais
+        expect(screen.getByTestId('preview-secondary-styles')).toHaveTextContent('Clássico');
+        expect(screen.getByTestId('preview-secondary-styles')).toHaveTextContent('Romântico');
+
+        // Adicionar novo estilo via options-list
+        const addButton = await screen.findByText(/Adicionar item/i);
+        await act(async () => { fireEvent.click(addButton); });
+        const inputs = screen.getAllByPlaceholderText('Item');
+        const last = inputs[inputs.length - 1];
+        await act(async () => {
+            fireEvent.change(last, { target: { value: 'Criativo' } });
+        });
+
+        expect(screen.getByTestId('preview-secondary-styles')).toHaveTextContent('Criativo');
+    });
+
+    it('edita título e plataformas em result-share e reflete no preview', async () => {
+        function WrapperResultShareTest() {
+            const [block, setBlock] = React.useState<any>({
+                id: 'b10',
+                type: 'result-share',
+                order: 9,
+                properties: { title: 'Compartilhe seu resultado', platforms: ['facebook', 'twitter'], message: 'Confira!' },
+                content: { title: 'Compartilhe seu resultado', platforms: ['facebook', 'twitter'], message: 'Confira!' },
+            });
+            const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;
+
+            return (
+                <div>
+                    <PropertiesPanel
+                        selectedStep={step}
+                        selectedBlock={block}
+                        headerConfig={{ showLogo: false, progressEnabled: false }}
+                        onHeaderConfigChange={() => { }}
+                        clipboard={null}
+                        canPaste={false}
+                        onPaste={() => { }}
+                        multiSelectedIds={[]}
+                        onDuplicateInline={() => { }}
+                        onPrepareDuplicateToAnother={() => { }}
+                        onCopyMultiple={() => { }}
+                        onRemoveMultiple={() => { }}
+                        onRemoveBlock={() => { }}
+                        onSaveAsSnippet={() => { }}
+                        snippets={[]}
+                        snippetFilter={''}
+                        onSnippetFilterChange={() => { }}
+                        onSnippetInsert={() => { }}
+                        onSnippetRename={() => { }}
+                        onSnippetDelete={() => { }}
+                        onRefreshSnippets={() => { }}
+                        onBlockPatch={(patch) => {
+                            const nextContent: any = { ...block.content };
+                            if (typeof (patch as any).title === 'string') nextContent.title = (patch as any).title;
+                            if (typeof (patch as any).message === 'string') nextContent.message = (patch as any).message;
+                            if (Array.isArray((patch as any).platforms)) {
+                                // options-list simples devolve [{text}], converter para array de strings
+                                nextContent.platforms = (patch as any).platforms.map((it: any) => it.text || String(it)).filter(Boolean);
+                            }
+                            setBlock((prev: any) => ({ ...prev, content: nextContent, properties: { ...prev.properties, ...patch } }));
+                        }}
+                        isOfferStep={false}
+                        OfferMapComponent={() => null as any}
+                        onOfferMapUpdate={() => { }}
+                        ThemeEditorPanel={({ onApply }: any) => (<button onClick={() => onApply({})}>apply</button>)}
+                        onApplyTheme={() => { }}
+                    />
+
+                    <div data-testid="preview-share">
+                        <ResultShareBlock block={block} isSelected={false} onClick={() => { }} />
+                    </div>
+                </div>
+            );
+        }
+
+        render(<WrapperResultShareTest />);
+
+        // Atualiza título
+        const titleInput = await screen.findByDisplayValue('Compartilhe seu resultado');
+        await act(async () => {
+            fireEvent.change(titleInput, { target: { value: 'Compartilhe com seus amigos' } });
+        });
+        expect(screen.getByTestId('preview-share')).toHaveTextContent('Compartilhe com seus amigos');
+
+        // Adiciona plataforma via options-list
+        const addButton = await screen.findAllByText(/Adicionar item/i);
+        await act(async () => { fireEvent.click(addButton[addButton.length - 1]); });
+        const inputs = screen.getAllByPlaceholderText('Item');
+        const last = inputs[inputs.length - 1];
+        await act(async () => {
+            fireEvent.change(last, { target: { value: 'whatsapp' } });
+        });
+
+        // Preview deve conter o botão "WhatsApp"
+        expect(screen.getByTestId('preview-share')).toHaveTextContent('WhatsApp');
     });
 });
