@@ -78,6 +78,7 @@ import { sanitizeInlineHtml, looksLikeHtml } from '@/utils/sanitizeInlineHtml';
 import { convertBlocksToStep as convertBlocksToStepUtil } from '@/utils/quizConversionUtils';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { buildNavigationMap, formatNavigationReport } from '@/utils/funnelNavigation';
+import { SchemaAPI } from '@/config/schemas';
 import { QuizRuntimeRegistryProvider, useQuizRuntimeRegistry } from '@/runtime/quiz/QuizRuntimeRegistry';
 import { BlockRegistryProvider, DEFAULT_BLOCK_DEFINITIONS, EXTENDED_BLOCK_DEFINITIONS } from '@/runtime/quiz/blocks/BlockRegistry';
 import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
@@ -2705,51 +2706,71 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 if (!selectedBlock || !selectedStep) return;
                                 const contentObj = selectedBlock.content && typeof selectedBlock.content === 'object' ? selectedBlock.content : {};
                                 const contentKeys = new Set(Object.keys(contentObj));
-                                const propPatch: Record<string, any> = {};
-                                const contentPatch: Record<string, any> = {};
 
-                                // 1) Split básico por chaves de content vs properties (top-level)
-                                Object.entries(patch).forEach(([k, v]) => {
-                                    if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v;
-                                });
-
-                                // 2) Tratamento especial: pricing (conteúdo aninhado em content.pricing)
-                                if (selectedBlock.type === 'pricing') {
-                                    const pricingKeys = ['originalPrice', 'salePrice', 'currency', 'installmentsCount', 'installmentsValue', 'features'] as const;
-                                    const hasPricingFields = Object.keys(patch).some(k => (pricingKeys as readonly string[]).includes(k));
-                                    if (hasPricingFields) {
-                                        const currentPricing = (selectedBlock.content?.pricing || {}) as any;
-                                        const nextPricing = { ...currentPricing } as any;
-                                        if ('originalPrice' in patch) nextPricing.originalPrice = patch.originalPrice;
-                                        if ('salePrice' in patch) nextPricing.salePrice = patch.salePrice;
-                                        if ('currency' in patch) nextPricing.currency = patch.currency;
-                                        if ('features' in patch) {
-                                            nextPricing.features = Array.isArray(patch.features) ? patch.features : currentPricing.features || [];
+                                // Vamos usar o SchemaAPI (quando disponível) para determinar quais campos pertencem ao grupo 'content'.
+                                // Isso evita erro ao criar um novo campo de content que ainda não exista em selectedBlock.content.
+                                (async () => {
+                                    let contentFieldSet: Set<string> | null = null;
+                                    try {
+                                        const modern = await SchemaAPI.get(selectedBlock.type as any);
+                                        if (modern && Array.isArray(modern.properties)) {
+                                            contentFieldSet = new Set(
+                                                (modern.properties as any[])
+                                                    .filter((p: any) => (p.group || 'content') === 'content')
+                                                    .map((p: any) => p.key)
+                                            );
                                         }
-                                        // installments é objeto { count, value }
-                                        const curInstall = currentPricing.installments || {};
-                                        const nextInstall = { ...curInstall } as any;
-                                        if ('installmentsCount' in patch) nextInstall.count = patch.installmentsCount;
-                                        if ('installmentsValue' in patch) nextInstall.value = patch.installmentsValue;
-                                        if (Object.keys(nextInstall).length > 0) nextPricing.installments = nextInstall;
-
-                                        // Adiciona ao contentPatch consolidado
-                                        contentPatch.pricing = nextPricing;
-
-                                        // Evitar que esses campos caiam em propPatch por engano
-                                        pricingKeys.forEach(k => { delete propPatch[k]; delete (contentPatch as any)[k]; });
+                                    } catch {
+                                        contentFieldSet = null;
                                     }
-                                }
 
-                                // 3) Tratamento especial: quiz-options / options-grid
-                                // As opções pertencem ao content, mesmo que content.options ainda não exista
-                                if ((selectedBlock.type === 'quiz-options' || selectedBlock.type === 'options-grid') && 'options' in patch) {
-                                    contentPatch.options = patch.options;
-                                    delete (propPatch as any).options;
-                                }
+                                    const propPatch: Record<string, any> = {};
+                                    const contentPatch: Record<string, any> = {};
 
-                                if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
-                                if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
+                                    // 1) Split por schema (grupo content) quando disponível; fallback: presença em content atual
+                                    Object.entries(patch).forEach(([k, v]) => {
+                                        const shouldGoToContent = (contentFieldSet ? contentFieldSet.has(k) : contentKeys.has(k));
+                                        if (shouldGoToContent) contentPatch[k] = v; else propPatch[k] = v;
+                                    });
+
+                                    // 2) Tratamento especial: pricing (conteúdo aninhado em content.pricing)
+                                    if (selectedBlock.type === 'pricing') {
+                                        const pricingKeys = ['originalPrice', 'salePrice', 'currency', 'installmentsCount', 'installmentsValue', 'features'] as const;
+                                        const hasPricingFields = Object.keys(patch).some(k => (pricingKeys as readonly string[]).includes(k));
+                                        if (hasPricingFields) {
+                                            const currentPricing = (selectedBlock.content?.pricing || {}) as any;
+                                            const nextPricing = { ...currentPricing } as any;
+                                            if ('originalPrice' in patch) nextPricing.originalPrice = patch.originalPrice;
+                                            if ('salePrice' in patch) nextPricing.salePrice = patch.salePrice;
+                                            if ('currency' in patch) nextPricing.currency = patch.currency;
+                                            if ('features' in patch) {
+                                                nextPricing.features = Array.isArray(patch.features) ? patch.features : currentPricing.features || [];
+                                            }
+                                            // installments é objeto { count, value }
+                                            const curInstall = currentPricing.installments || {};
+                                            const nextInstall = { ...curInstall } as any;
+                                            if ('installmentsCount' in patch) nextInstall.count = patch.installmentsCount;
+                                            if ('installmentsValue' in patch) nextInstall.value = patch.installmentsValue;
+                                            if (Object.keys(nextInstall).length > 0) nextPricing.installments = nextInstall;
+
+                                            // Adiciona ao contentPatch consolidado
+                                            contentPatch.pricing = nextPricing;
+
+                                            // Evitar que esses campos caiam em propPatch por engano
+                                            pricingKeys.forEach(k => { delete propPatch[k]; delete (contentPatch as any)[k]; });
+                                        }
+                                    }
+
+                                    // 3) Tratamento especial: quiz-options / options-grid
+                                    // As opções pertencem ao content, mesmo que content.options ainda não exista
+                                    if ((selectedBlock.type === 'quiz-options' || selectedBlock.type === 'options-grid') && 'options' in patch) {
+                                        contentPatch.options = patch.options;
+                                        delete (propPatch as any).options;
+                                    }
+
+                                    if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
+                                    if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
+                                })();
                             }}
                             isOfferStep={!!(selectedStep && selectedStep.type === 'offer')}
                             OfferMapComponent={OfferMap as any}
