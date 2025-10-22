@@ -1749,12 +1749,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 if (typeof imageMaxSize === 'number') {
                     return { w: undefined, h: imageMaxSize };
                 }
-                // Presets tradicionais
+                // Presets tradicionais (ajustados para tamanhos maiores no preview)
                 switch (imageSize) {
-                    case 'small': return { w: undefined, h: 80 };
-                    case 'large': return { w: undefined, h: 160 };
-                    case 'medium':
-                    default: return { w: undefined, h: 96 };
+                    case 'small': return { w: undefined, h: 120 };
+                    case 'medium': return { w: undefined, h: 180 };
+                    case 'large': return { w: undefined, h: 240 };
+                    default: return { w: undefined, h: 180 };
                 }
             };
             const dims = computeImageDims();
