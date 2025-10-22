@@ -144,6 +144,18 @@ export function initializeSchemaRegistry(): void {
   registerSchema('question-title', () => 
     import('./blocks/question-blocks').then(m => m.questionTitleSchema)
   );
+  registerSchema('question-text', () => 
+    import('./blocks/question-blocks').then(m => m.questionTextSchema)
+  );
+  registerSchema('question-number', () => 
+    import('./blocks/question-blocks').then(m => m.questionNumberSchema)
+  );
+  registerSchema('question-progress', () => 
+    import('./blocks/question-blocks').then(m => m.questionProgressSchema)
+  );
+  registerSchema('question-instructions', () => 
+    import('./blocks/question-blocks').then(m => m.questionInstructionsSchema)
+  );
 
   // NEW: Transition blocks
   registerSchema('transition-subtitle', () => 
@@ -186,6 +198,7 @@ export function initializeSchemaRegistry(): void {
   registerSchema('form-input', () => import('./blocks/form-and-navigation').then(m => m.formInputSchema));
   registerSchema('quiz-navigation', () => import('./blocks/form-and-navigation').then(m => m.quizNavigationSchema));
   registerSchema('navigation', () => import('./blocks/form-and-navigation').then(m => m.quizNavigationSchema));
+  registerSchema('question-navigation', () => import('./blocks/form-and-navigation').then(m => m.questionNavigationSchema));
   registerSchema('image-display-inline', () => import('./blocks/image').then(m => m.imageSchema));
   registerSchema('image-inline', () => import('./blocks/image').then(m => m.imageSchema));
   registerSchema('button-inline', () => import('./blocks/button').then(m => m.buttonSchema));
