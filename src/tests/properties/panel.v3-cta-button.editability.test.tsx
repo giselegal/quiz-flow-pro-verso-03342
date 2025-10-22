@@ -34,7 +34,9 @@ describe('Properties Panel - CTAButton (v3) editability', () => {
     it('renderiza campos do CTAButton e emite patch ao editar', async () => {
         const type = 'CTAButton';
         const schema = await SchemaAPI.get(type);
-        expect(schema, 'Schema CTAButton não encontrado').toBeTruthy();
+        if (!schema) {
+            throw new Error('Schema CTAButton não encontrado');
+        }
 
         const values: Record<string, any> = {};
         CTA_KEYS.forEach((k) => { values[k] = undefined; });

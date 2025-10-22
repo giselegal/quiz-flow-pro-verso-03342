@@ -9,7 +9,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { jsonTemplateService, UnifiedTemplateService } from '@/services/JsonTemplateService';
+import jsonTemplateService, { JsonTemplateService } from '@/services/JsonTemplateService';
 import {
     isJsonBlockType,
     isQuizBlockType,
