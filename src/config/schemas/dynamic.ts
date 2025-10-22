@@ -215,6 +215,17 @@ export function initializeSchemaRegistry(): void {
   registerSchema('offer.core', () => import('./blocks/button').then(m => m.buttonSchema));
   registerSchema('conversion', () => import('./blocks/button').then(m => m.buttonSchema));
 
+  // JSON v3 Section types (registrados com schemas mínimos)
+  registerSchema('HeroSection', () => import('./blocks/sections-v3').then(m => m.heroSectionSchema));
+  registerSchema('StyleProfileSection', () => import('./blocks/sections-v3').then(m => m.styleProfileSectionSchema));
+  registerSchema('ResultCalculationSection', () => import('./blocks/sections-v3').then(m => m.resultCalculationSectionSchema));
+  registerSchema('MethodStepsSection', () => import('./blocks/sections-v3').then(m => m.methodStepsSectionSchema));
+  registerSchema('BonusSection', () => import('./blocks/sections-v3').then(m => m.bonusSectionSchema));
+  registerSchema('SocialProofSection', () => import('./blocks/sections-v3').then(m => m.socialProofSectionSchema));
+  registerSchema('OfferSection', () => import('./blocks/sections-v3').then(m => m.offerSectionSchema));
+  registerSchema('GuaranteeSection', () => import('./blocks/sections-v3').then(m => m.guaranteeSectionSchema));
+  registerSchema('TransformationSection', () => import('./blocks/sections-v3').then(m => m.transformationSectionSchema));
+
   // NEW: Integration schemas
   registerSchema('tracking-config', () => import('./blocks/integrations').then(m => m.trackingConfigSchema));
   registerSchema('webhook-config', () => import('./blocks/integrations').then(m => m.webhookConfigSchema));
