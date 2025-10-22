@@ -15,6 +15,9 @@ export default defineConfig({
         globals: true,
         css: true,
         include: [
+            // Suíte de propriedades (schemas e cobertura de props)
+            'src/config/__tests__/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+            // Mantém compatibilidade com eventuais testes auxiliares em src/test
             'src/test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'
         ],
         exclude: [

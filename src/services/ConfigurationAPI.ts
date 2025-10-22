@@ -71,9 +71,12 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                 return stored.properties;
             }
 
-            // Retornar configuração padrão se não encontrar
+            // Retornar e cachear configuração padrão se não encontrar
             const defaultConfig = await this.getDefaultConfiguration(componentId);
             console.log(`⚙️ Using default configuration: ${componentId}`, defaultConfig);
+            // Cachear defaults também para otimizar chamadas subsequentes
+            this.cache.set(cacheKey, defaultConfig);
+            setTimeout(() => this.cache.delete(cacheKey), this.cacheTimeout);
             return defaultConfig;
 
         } catch (error) {
