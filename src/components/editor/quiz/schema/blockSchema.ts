@@ -353,6 +353,102 @@ export const blockSchemaMap: Record<string, any> = {
   // BLOCOS ATÔMICOS DE RESULTADO (Step 20)
   // =====================================================================
 
+  'result-header': {
+    type: 'result-header',
+    label: 'Cabeçalho do Resultado',
+    icon: 'header',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    // Component lê content.text (título) e properties.title como fallback
+    // Aqui expomos ambos para máxima compatibilidade
+    defaultData: {
+      text: 'Seu Estilo Predominante é:',
+      subtitle: 'Baseado nas suas respostas',
+      emoji: '🎉',
+      titleColor: '#5b4135',
+      subtitleColor: '#8F7A6A',
+      textAlign: 'center'
+    },
+    propertySchema: [
+      { key: 'text', type: 'string', label: 'Título', required: true, default: 'Seu Estilo Predominante é:' },
+      { key: 'subtitle', type: 'string', label: 'Subtítulo', required: false, default: 'Baseado nas suas respostas' },
+      { key: 'emoji', type: 'string', label: 'Emoji', required: false, default: '🎉' },
+      { key: 'titleColor', type: 'color', label: 'Cor do Título', required: false, default: '#5b4135' },
+      { key: 'subtitleColor', type: 'color', label: 'Cor do Subtítulo', required: false, default: '#8F7A6A' },
+      { key: 'textAlign', type: 'select', label: 'Alinhamento', required: false, default: 'center', enumValues: ['left', 'center', 'right'] },
+    ],
+  },
+
+  'result-description': {
+    type: 'result-description',
+    label: 'Descrição do Resultado',
+    icon: 'align-left',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: {
+      text: 'Descrição do seu estilo principal',
+      fontSize: 'base',
+      color: '#5b4135',
+      textAlign: 'left'
+    },
+    propertySchema: [
+      { key: 'text', type: 'string', label: 'Texto', required: true, default: 'Descrição do seu estilo principal' },
+      { key: 'fontSize', type: 'select', label: 'Tamanho da Fonte', required: false, default: 'base', enumValues: ['sm', 'base', 'lg'] },
+      { key: 'color', type: 'color', label: 'Cor do Texto', required: false, default: '#5b4135' },
+      { key: 'textAlign', type: 'select', label: 'Alinhamento', required: false, default: 'left', enumValues: ['left', 'center', 'right'] },
+    ],
+  },
+
+  'result-image': {
+    type: 'result-image',
+    label: 'Imagem do Resultado',
+    icon: 'image',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    // O componente aceita content.imageUrl/src ou properties.url; daremos suporte a url e alt
+    defaultData: {
+      url: '',
+      alt: 'Imagem do resultado',
+      borderRadius: '12px',
+      maxHeight: '400px'
+    },
+    propertySchema: [
+      { key: 'url', type: 'string', label: 'URL da Imagem', required: false, default: '' },
+      { key: 'alt', type: 'string', label: 'Texto Alternativo', required: false, default: 'Imagem do resultado' },
+      { key: 'borderRadius', type: 'string', label: 'Arredondamento', required: false, default: '12px' },
+      { key: 'maxHeight', type: 'string', label: 'Altura Máxima', required: false, default: '400px' },
+    ],
+  },
+
+  // Mantido para compatibilidade com templates que usam um CTA genérico
+  'result-cta': {
+    type: 'result-cta',
+    label: 'CTA de Resultado (Genérico)',
+    icon: 'mouse-pointer',
+    category: 'result',
+    version: '1.0.0',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultData: {
+      text: 'Ver Recomendações',
+      backgroundColor: '#B89B7A',
+      textColor: '#FFFFFF',
+      size: 'lg'
+    },
+    propertySchema: [
+      { key: 'text', type: 'string', label: 'Texto do Botão', required: true, default: 'Ver Recomendações' },
+      { key: 'backgroundColor', type: 'color', label: 'Cor de Fundo', required: false, default: '#B89B7A' },
+      { key: 'textColor', type: 'color', label: 'Cor do Texto', required: false, default: '#FFFFFF' },
+      { key: 'size', type: 'select', label: 'Tamanho', required: false, default: 'lg', enumValues: ['sm', 'md', 'lg', 'xl'] },
+    ],
+  },
+
   'result-main': {
     type: 'result-main',
     label: 'Estilo Principal de Resultado',
