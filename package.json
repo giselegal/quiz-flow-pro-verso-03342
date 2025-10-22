@@ -107,6 +107,7 @@
     "smoke:full-flow": "node scripts/smoke-full-flow.mjs",
     "simulate:dcc": "node scripts/simulate-dcc.mjs",
     "audit:sources": "tsx scripts/audit/compare-sources.ts",
+    "audit:v3-props": "tsx scripts/audit/v3-sections-props-audit.ts",
     "validate:typescript": "bash scripts/validar-typescript.sh"
   },
   "smoke": {

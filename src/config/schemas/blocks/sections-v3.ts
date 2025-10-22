@@ -53,6 +53,8 @@ export const styleProfileSectionSchema = templates
   .addField({ key: 'styleImageFallbackEnabled', label: 'Imagem: Fallback habilitado', type: 'boolean', group: 'style', default: true })
   // Intro text
   .addField({ key: 'showIntroText', label: 'Mostrar texto introdutório', type: 'boolean', group: 'content', default: true })
+  // Alias: alguns templates usam introText.enabled (flatten: introTextEnabled)
+  .addField({ key: 'introTextEnabled', label: 'Intro: Habilitado (alias)', type: 'boolean', group: 'content' })
   .addField({ key: 'introTextText', label: 'Intro: Texto', type: 'string', group: 'content' })
   .addField({ key: 'introTextStyle', label: 'Intro: Estilo', type: 'string', group: 'style', placeholder: 'italic' })
   .addField({ key: 'introTextBackground', label: 'Intro: Background', type: 'string', group: 'style', placeholder: 'primary/5' })
@@ -110,6 +112,35 @@ export const resultCalculationSectionSchema = templates
   .addField({ key: 'scoreMapping', label: 'Mapeamento de Pontuações', type: 'json', group: 'content', description: 'Tabela de faixas por estilo (romantico, classico, ...)' })
   .addField({ key: 'resultLogic', label: 'Lógica de Resultado', type: 'json', group: 'content', description: 'winnerSelection, tieBreaker, minThreshold' })
   .addField({ key: 'leadCapture', label: 'Captura de Lead', type: 'json', group: 'content', description: 'Configuração do formulário embutido' })
+  // Aliases (flatten) usados por alguns templates para facilitar edição
+  // resultLogic.*
+  .addField({ key: 'resultLogicWinnerSelection', label: 'Lógica: Seleção do vencedor (alias)', type: 'string', group: 'content', placeholder: 'highest | threshold' })
+  .addField({ key: 'resultLogicTieBreaker', label: 'Lógica: Critério de desempate (alias)', type: 'string', group: 'content', placeholder: 'first | random' })
+  .addField({ key: 'resultLogicMinThreshold', label: 'Lógica: Limiar mínimo (alias)', type: 'number', group: 'content' })
+  // leadCapture.*
+  .addField({ key: 'leadCaptureType', label: 'Lead: Tipo (alias)', type: 'string', group: 'content', placeholder: 'inline-form | modal' })
+  .addField({ key: 'leadCaptureId', label: 'Lead: ID (alias)', type: 'string', group: 'content' })
+  .addField({ key: 'leadCapturePosition', label: 'Lead: Posição (alias)', type: 'string', group: 'content', placeholder: 'after | before' })
+  .addField({ key: 'leadCapturePropertiesSubmitText', label: 'Lead: Texto do botão (alias)', type: 'string', group: 'content' })
+  .addField({ key: 'leadCapturePropertiesContainerWidth', label: 'Lead: Largura do container (alias)', type: 'string', group: 'layout', placeholder: '100% | 32rem' })
+  .addField({ key: 'leadCapturePropertiesSpacing', label: 'Lead: Espaçamento (alias)', type: 'string', group: 'layout' })
+  .addField({ key: 'leadCapturePropertiesFields', label: 'Lead: Campos (alias)', type: 'json', group: 'content', description: 'Lista de campos do formulário' })
+  // scoreMapping.<estilo>.* (romantico|classico|moderno|criativo|dramatico)
+  .addField({ key: 'scoreMappingRomanticoMin', label: 'Romântico: Mín (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'scoreMappingRomanticoMax', label: 'Romântico: Máx (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'scoreMappingRomanticoLabel', label: 'Romântico: Rótulo (alias)', type: 'string', group: 'content' })
+  .addField({ key: 'scoreMappingClassicoMin', label: 'Clássico: Mín (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'scoreMappingClassicoMax', label: 'Clássico: Máx (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'scoreMappingClassicoLabel', label: 'Clássico: Rótulo (alias)', type: 'string', group: 'content' })
+  .addField({ key: 'scoreMappingModernoMin', label: 'Moderno: Mín (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'scoreMappingModernoMax', label: 'Moderno: Máx (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'scoreMappingModernoLabel', label: 'Moderno: Rótulo (alias)', type: 'string', group: 'content' })
+  .addField({ key: 'scoreMappingCriativoMin', label: 'Criativo: Mín (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'scoreMappingCriativoMax', label: 'Criativo: Máx (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'scoreMappingCriativoLabel', label: 'Criativo: Rótulo (alias)', type: 'string', group: 'content' })
+  .addField({ key: 'scoreMappingDramaticoMin', label: 'Dramático: Mín (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'scoreMappingDramaticoMax', label: 'Dramático: Máx (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'scoreMappingDramaticoLabel', label: 'Dramático: Rótulo (alias)', type: 'string', group: 'content' })
   .version('1.0.0')
   .build();
 
@@ -229,6 +260,12 @@ export const offerSectionSchema = templates
   .addField({ key: 'discountLabel', label: 'Desconto: rótulo', type: 'string', group: 'content', placeholder: '78% de desconto' })
   .addField({ key: 'discountStyle', label: 'Desconto: estilo', type: 'string', group: 'style', placeholder: 'badge' })
   .addField({ key: 'discountColor', label: 'Desconto: cor', type: 'string', group: 'style', placeholder: 'success' })
+  // Aliases para pricing.discount.* (flatten como pricingDiscount*)
+  .addField({ key: 'pricingDiscountShow', label: 'Preço: Desconto • mostrar (alias)', type: 'boolean', group: 'content' })
+  .addField({ key: 'pricingDiscountPercentage', label: 'Preço: Desconto • % (alias)', type: 'number', group: 'content' })
+  .addField({ key: 'pricingDiscountLabel', label: 'Preço: Desconto • rótulo (alias)', type: 'string', group: 'content' })
+  .addField({ key: 'pricingDiscountStyle', label: 'Preço: Desconto • estilo (alias)', type: 'string', group: 'style' })
+  .addField({ key: 'pricingDiscountColor', label: 'Preço: Desconto • cor (alias)', type: 'string', group: 'style' })
   // Includes
   .addField({ key: 'includesTitle', label: 'Inclui: título', type: 'string', group: 'content', placeholder: 'O que você recebe' })
   .addField({
