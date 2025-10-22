@@ -1747,6 +1747,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         <img src={img} alt={label} className="w-full h-24 object-cover rounded mb-2" />
                                     )}
                                     <div className="text-sm font-medium">{label}</div>
+                                    {(opt.category || typeof opt.points === 'number') && (
+                                        <div className="mt-1 text-[10px] text-slate-500 flex gap-2">
+                                            {opt.category && <span>Cat: {opt.category}</span>}
+                                            {typeof opt.points === 'number' && <span>Pontos: {opt.points}</span>}
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })}
@@ -2257,6 +2263,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     />
                                 )}
                                 <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
+                                {(opt.category || typeof opt.points === 'number') && (
+                                    <div className="mt-1 text-[10px] text-slate-500 flex gap-2">
+                                        {opt.category && <span>Cat: {opt.category}</span>}
+                                        {typeof opt.points === 'number' && <span>Pontos: {opt.points}</span>}
+                                    </div>
+                                )}
                             </div>
                         );
                     })}

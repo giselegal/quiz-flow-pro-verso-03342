@@ -17,6 +17,15 @@ const optionsField: BlockFieldSchema = {
   required: true,
   description: 'Lista de opções do quiz. Cada opção pode ter texto, imagem, pontos e categoria.',
   default: [],
+  // Define explicitamente o schema dos itens para o editor avançado de arrays
+  itemSchema: {
+    fields: [
+      { key: 'text', label: 'Texto', type: 'text' },
+      { key: 'imageUrl', label: 'Imagem (URL)', type: 'text' },
+      { key: 'points', label: 'Pontos', type: 'number' },
+      { key: 'category', label: 'Categoria', type: 'text' },
+    ]
+  }
 };
 
 // Campo de seleções requeridas
