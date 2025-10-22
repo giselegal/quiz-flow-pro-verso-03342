@@ -36,7 +36,7 @@ export const TemplateFunnelService = UnifiedCRUDService;
 // ============================================================================
 
 import { UnifiedTemplateService } from './UnifiedTemplateService';
-import { HybridTemplateService } from './HybridTemplateService';
+import HybridTemplateServiceClass from './HybridTemplateService';
 
 /** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
 export const TemplateService = UnifiedTemplateService;
@@ -44,8 +44,8 @@ export const TemplateService = UnifiedTemplateService;
 /** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
 export const JsonTemplateService = UnifiedTemplateService;
 
-/** @deprecated Use HybridTemplateService para templates AI-enhanced */
-export const AIEnhancedHybridTemplateService = HybridTemplateService;
+/** @deprecated Use HybridTemplateService (default import) para templates AI-enhanced */
+export const AIEnhancedHybridTemplateService = HybridTemplateServiceClass;
 
 /** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
 export const TemplateEditorService = UnifiedTemplateService;
@@ -55,6 +55,9 @@ export const TemplateRuntimeService = UnifiedTemplateService;
 
 /** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
 export const customTemplateService = UnifiedTemplateService;
+
+// Re-export default para compatibilidade
+export { default as HybridTemplateService } from './HybridTemplateService';
 
 // ============================================================================
 // STORAGE SERVICES - 6 serviços → 1 canônico
@@ -78,17 +81,19 @@ export const migratedFunnelLocalStore = UnifiedStorageService;
 // QUIZ SERVICES - 8 serviços → 2 canônicos
 // ============================================================================
 
-import { Quiz21CompleteService } from './Quiz21CompleteService';
+// Quiz21CompleteService é dados, não serviço
+import { QUIZ_21_COMPLETE_DATA } from './Quiz21CompleteService';
 import { quizDataService } from './quizDataService';
 
-/** @deprecated Use Quiz21CompleteService - Alias mantido para compatibilidade */
-export const quizService = Quiz21CompleteService;
-
-/** @deprecated Use Quiz21CompleteService - Alias mantido para compatibilidade */
-export const quizBuilderService = Quiz21CompleteService;
+/** @deprecated Use QUIZ_21_COMPLETE_DATA diretamente */
+export const Quiz21CompleteData = QUIZ_21_COMPLETE_DATA;
 
 /** @deprecated Use quizDataService para operações de dados */
 export const quizSupabaseService = quizDataService;
+
+// Re-exports para compatibilidade
+export { QUIZ_21_COMPLETE_DATA } from './Quiz21CompleteService';
+export { quizDataService } from './quizDataService';
 
 // ============================================================================
 // ANALYTICS SERVICES - 5 serviços → 1 canônico

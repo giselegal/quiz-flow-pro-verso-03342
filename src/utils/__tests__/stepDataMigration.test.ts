@@ -39,7 +39,6 @@ describe('stepDataMigration', () => {
   it('não quebra com blocks não-array ou valores inválidos', () => {
     const invalidStep = {
       id: 's2', type: 'question', order: 1,
-      // @ts-expect-error intencional: simulando corrupção
       blocks: null,
     } as unknown as EditableQuizStep;
 

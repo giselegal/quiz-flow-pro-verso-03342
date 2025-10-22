@@ -94,7 +94,7 @@ export const withDeprecatedComponent = <P extends object>(
 ): React.ComponentType<P> => {
   return (props: P) => {
     deprecationWarning(options);
-    return <Component {...props} />;
+    return React.createElement(Component, props);
   };
 };
 
