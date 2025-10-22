@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { ConfigurationAPI } from '@/services/ConfigurationAPI';
+import { ConfigurationService } from '@/services/ServiceAliases';
 import { DynamicMasterJSONGenerator } from '@/services/DynamicMasterJSONGenerator';
 import { QUIZ_COMPONENTS_DEFINITIONS } from '@/types/componentConfiguration';
 

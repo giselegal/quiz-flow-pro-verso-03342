@@ -87,16 +87,15 @@ export const migratedFunnelLocalStore = UnifiedStorageService;
 // Quiz21CompleteService é dados, não serviço
 import { QUIZ_21_COMPLETE_DATA } from './Quiz21CompleteService';
 import { quizDataService } from './quizDataService';
+import { quizSupabaseService as _quizSupabaseService } from './quizSupabaseService';
 
 /** @deprecated Use QUIZ_21_COMPLETE_DATA diretamente */
 export const Quiz21CompleteData = QUIZ_21_COMPLETE_DATA;
 
-/** @deprecated Use quizDataService para operações de dados */
-export const quizSupabaseService = quizDataService;
-
-// Re-exports para compatibilidade
+// Re-exports canônicos
 export { QUIZ_21_COMPLETE_DATA } from './Quiz21CompleteService';
 export { quizDataService } from './quizDataService';
+export const quizSupabaseService = _quizSupabaseService;
 
 // ============================================================================
 // ANALYTICS SERVICES - 5 serviços → 1 canônico
