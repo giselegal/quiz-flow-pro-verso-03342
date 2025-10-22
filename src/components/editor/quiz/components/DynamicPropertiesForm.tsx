@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { ImageUploadField } from './ImageUploadField';
 import { SchemaAPI } from '@/config/schemas';
 import { Slider } from '@/components/ui/slider';
+import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import AdvancedArrayEditor from './AdvancedArrayEditor';
@@ -141,6 +142,27 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
         }
 
         if (prop.type === 'range') {
+            // UX especial: columns do options-grid como controle segmentado (1-4)
+            if (type === 'options-grid' && prop.key === 'columns') {
+                const current = Number(value ?? prop.default ?? 2);
+                return (
+                    <div className="flex items-center gap-2">
+                        {[1, 2, 3, 4].map((n) => (
+                            <Button
+                                key={n}
+                                type="button"
+                                size="sm"
+                                variant={current === n ? 'default' : 'outline'}
+                                className="h-8 w-8 p-0"
+                                onClick={() => onChange({ [prop.key]: n })}
+                                aria-pressed={current === n}
+                            >
+                                {n}
+                            </Button>
+                        ))}
+                    </div>
+                );
+            }
             const min = typeof prop.min === 'number' ? prop.min : 0;
             const max = typeof prop.max === 'number' ? prop.max : 100;
             const step = typeof prop.step === 'number' ? prop.step : 1;
@@ -199,6 +221,30 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
         }
 
         if (prop.type === 'select' || prop.type === 'enum') {
+            // UX especial: imageSize do options-grid como segmentado
+            if (type === 'options-grid' && prop.key === 'imageSize') {
+                const opts = (prop.enumValues || (prop as any).options || []) as string[];
+                const order = ['small', 'medium', 'large', 'custom'];
+                const values = order.filter(v => opts.includes(v));
+                const current = String(value ?? prop.default ?? values[0]);
+                return (
+                    <div className="flex items-center gap-2 flex-wrap">
+                        {values.map((v) => (
+                            <Button
+                                key={v}
+                                type="button"
+                                size="sm"
+                                variant={current === v ? 'default' : 'outline'}
+                                className="h-8 px-3 capitalize"
+                                onClick={() => onChange({ [prop.key]: v })}
+                                aria-pressed={current === v}
+                            >
+                                {v}
+                            </Button>
+                        ))}
+                    </div>
+                );
+            }
             return (
                 <select
                     {...common}
@@ -214,7 +260,7 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
         }
 
         if (prop.type === 'options-list') {
-            const arr = Array.isArray(value) ? value : [];
+            const arr = Array.isArray(value) ? value : (value && typeof value === 'object' ? Object.values(value as any) : []);
             // Se existir um itemSchema no prop, usar AdvancedArrayEditor genérico
             if ((prop as any).itemSchema && (prop as any).itemSchema.fields) {
                 return (

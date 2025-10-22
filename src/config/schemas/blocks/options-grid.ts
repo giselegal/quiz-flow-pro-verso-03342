@@ -127,8 +127,8 @@ const imageMaxSizeField: BlockFieldSchema<number> = {
   type: 'range',
   group: 'layout',
   min: 40,
-  max: 240,
-  step: 4,
+  max: 480,
+  step: 8,
   default: 96,
   description: 'Ajuste rápido do tamanho visual das imagens',
   when: (values) => values.showImages !== false && values.imageSize !== 'custom'
