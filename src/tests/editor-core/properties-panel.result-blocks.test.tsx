@@ -121,8 +121,8 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
     it('edita título do result-header e reflete no preview', async () => {
         render(<WrapperHeaderTest />);
 
-        // Campo do título tem label "Título" (key: title)
-        const input = await screen.findByLabelText('Título');
+        // Busca pelo valor inicial do campo (fallback do schema do editor)
+        const input = await screen.findByDisplayValue(/Seu Estilo Predominante é:/);
         expect(input).toBeInTheDocument();
 
         await act(async () => {
@@ -136,8 +136,8 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
     it('edita texto do result-description e reflete no preview', async () => {
         render(<WrapperDescriptionTest />);
 
-        // Campo do texto tem label "Texto" (key: text)
-        const textarea = await screen.findByLabelText('Texto');
+        // Busca pelo valor inicial do campo de texto (conteúdo inicial)
+        const textarea = await screen.findByDisplayValue('Descrição do seu estilo principal');
         expect(textarea).toBeInTheDocument();
 
         await act(async () => {
