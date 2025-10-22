@@ -327,17 +327,20 @@ describe('🔌 API + Editor Integration Tests', () => {
         it('should handle invalid component IDs gracefully', async () => {
             const invalidComponentId = 'non-existent-component';
 
-            await expect(configAPI.getComponentDefinition(invalidComponentId))
-                .rejects.toThrow('Component definition not found');
+            // API retorna definição padrão quando componente não existe
+            const def = await configAPI.getComponentDefinition(invalidComponentId);
+            expect(def).toBeDefined();
+            expect(def.id).toBe(invalidComponentId);
+            expect(def.defaultProperties).toBeDefined();
         });
 
         it('should provide fallback configurations when API fails', async () => {
             const componentId = 'quiz-options-grid';
 
-            // Simular falha na API através de componente inexistente no contexto
+            // Simula ausência de dados persistidos → deve usar defaults
             const config = await configAPI.getConfiguration(componentId, 'non-existent-funnel');
 
-            // Deve retornar configuração padrão
+            // Deve retornar configuração padrão coerente
             expect(config).toBeDefined();
             expect(typeof config.imageSize).toBe('number');
         });

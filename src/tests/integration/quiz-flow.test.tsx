@@ -24,8 +24,8 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
   describe('📋 Navegação Sequencial (Etapas 1-21)', () => {
     it('deve navegar através de todas as etapas principais', async () => {
       // Etapa 1: Introdução
-      expect(hook.current.currentStep).toBe('step-1');
-      
+      expect(hook.current.currentStep).toBe('step-01');
+
       act(() => {
         hook.current.setUserName('Maria Silva');
         hook.current.nextStep();
@@ -33,34 +33,36 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
 
       // Etapas 2-11: Perguntas principais
       for (let step = 2; step <= 11; step++) {
-        expect(hook.current.currentStep).toBe(`step-${step}`);
-        
+        const id = `step-${String(step).padStart(2, '0')}`;
+        expect(hook.current.currentStep).toBe(id);
+
         act(() => {
-          hook.current.addAnswer(`step-${step}`, ['option1']);
+          hook.current.addAnswer(id, ['optA', 'optB', 'optC']);
           hook.current.nextStep();
         });
       }
 
       // Etapa 12: Transição
       expect(hook.current.currentStep).toBe('step-12');
-      
+
       act(() => {
         hook.current.nextStep();
       });
 
       // Etapas 13-18: Perguntas estratégicas
       for (let step = 13; step <= 18; step++) {
-        expect(hook.current.currentStep).toBe(`step-${step}`);
-        
+        const id = `step-${String(step).padStart(2, '0')}`;
+        expect(hook.current.currentStep).toBe(id);
+
         act(() => {
-          hook.current.addStrategicAnswer(`step-${step}`, 'strategic-answer');
+          hook.current.addStrategicAnswer(id, 'strategic-answer');
           hook.current.nextStep();
         });
       }
 
       // Etapa 19: Transição para resultado
       expect(hook.current.currentStep).toBe('step-19');
-      
+
       act(() => {
         hook.current.nextStep();
       });
@@ -75,13 +77,13 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
       // Avança 5 etapas
       act(() => {
         hook.current.setUserName('Maria');
-        hook.current.nextStep(); // step-2
-        hook.current.addAnswer('step-2', ['option1']);
-        hook.current.nextStep(); // step-3
-        hook.current.addAnswer('step-3', ['option1']);
-        hook.current.nextStep(); // step-4
-        hook.current.addAnswer('step-4', ['option1']);
-        hook.current.nextStep(); // step-5
+        hook.current.nextStep(); // step-02
+        hook.current.addAnswer('step-02', ['a', 'b', 'c']);
+        hook.current.nextStep(); // step-03
+        hook.current.addAnswer('step-03', ['a', 'b', 'c']);
+        hook.current.nextStep(); // step-04
+        hook.current.addAnswer('step-04', ['a', 'b', 'c']);
+        hook.current.nextStep(); // step-05
       });
 
       // Progresso deve ser 20% (4/20 * 100)
@@ -92,13 +94,13 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
   describe('🎯 Validação de Etapas', () => {
     it('deve bloquear avanço sem nome na etapa 1', () => {
       expect(hook.current.canProceed).toBe(false);
-      
+
       act(() => {
         hook.current.nextStep();
       });
-      
+
       // Deve permanecer na etapa 1
-      expect(hook.current.currentStep).toBe('step-1');
+      expect(hook.current.currentStep).toBe('step-01');
     });
 
     it('deve bloquear avanço sem resposta nas perguntas', () => {
@@ -108,28 +110,28 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
       });
 
       expect(hook.current.canProceed).toBe(false);
-      
+
       act(() => {
         hook.current.nextStep(); // não deve avançar
       });
-      
-      expect(hook.current.currentStep).toBe('step-2');
+
+      expect(hook.current.currentStep).toBe('step-02');
     });
 
     it('deve permitir avanço após completar requisitos', () => {
       act(() => {
         hook.current.setUserName('Maria');
         hook.current.nextStep();
-        hook.current.addAnswer('step-2', ['option1']);
+        hook.current.addAnswer('step-02', ['natural', 'classico', 'elegante']);
       });
 
       expect(hook.current.canProceed).toBe(true);
-      
+
       act(() => {
         hook.current.nextStep();
       });
-      
-      expect(hook.current.currentStep).toBe('step-3');
+
+      expect(hook.current.currentStep).toBe('step-03');
     });
   });
 
@@ -138,12 +140,13 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
       // Simula respostas que favorecem estilo elegante
       act(() => {
         hook.current.setUserName('Maria');
-        
+
         // Responde todas as perguntas principais
         for (let step = 2; step <= 11; step++) {
-          hook.current.addAnswer(`step-${step}`, ['elegante-option']);
+          const id = `step-${String(step).padStart(2, '0')}`;
+          hook.current.addAnswer(id, ['elegante-option']);
         }
-        
+
         hook.current.calculateResult();
       });
 
@@ -154,14 +157,14 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
     it('deve identificar estilos secundários', () => {
       act(() => {
         hook.current.setUserName('Maria');
-        
+
         // Mix de respostas para gerar estilos secundários
-        hook.current.addAnswer('step-2', ['elegante-option']);
-        hook.current.addAnswer('step-3', ['romantico-option']);
-        hook.current.addAnswer('step-4', ['classico-option']);
-        hook.current.addAnswer('step-5', ['elegante-option']);
-        hook.current.addAnswer('step-6', ['romantico-option']);
-        
+        hook.current.addAnswer('step-02', ['elegante-option']);
+        hook.current.addAnswer('step-03', ['romantico-option']);
+        hook.current.addAnswer('step-04', ['classico-option']);
+        hook.current.addAnswer('step-05', ['elegante-option']);
+        hook.current.addAnswer('step-06', ['romantico-option']);
+
         hook.current.calculateResult();
       });
 
@@ -200,7 +203,7 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
         // Primeiro conjunto de respostas estratégicas
         hook1.current.addStrategicAnswer('step-13', 'answer1');
         hook1.current.addStrategicAnswer('step-14', 'answer2');
-        
+
         // Segundo conjunto diferente
         hook2.current.addStrategicAnswer('step-13', 'answer3');
         hook2.current.addStrategicAnswer('step-14', 'answer4');
@@ -218,28 +221,28 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
       act(() => {
         hook.current.setUserName('Maria');
         hook.current.nextStep();
-        hook.current.addAnswer('step-2', ['option1']);
+        hook.current.addAnswer('step-02', ['x', 'y', 'z']);
         hook.current.nextStep();
-        hook.current.addAnswer('step-3', ['option2']);
-        hook.current.previousStep(); // volta para step-2
+        hook.current.addAnswer('step-03', ['m', 'n', 'o']);
+        hook.current.previousStep(); // volta para step-02
       });
 
-      expect(hook.current.currentStep).toBe('step-2');
-      expect(hook.current.answers['step-2']).toEqual(['option1']);
-      expect(hook.current.answers['step-3']).toEqual(['option2']);
+      expect(hook.current.currentStep).toBe('step-02');
+      expect(hook.current.answers['step-02']).toEqual(['x', 'y', 'z']);
+      expect(hook.current.answers['step-03']).toEqual(['m', 'n', 'o']);
     });
 
     it('deve permitir alterar respostas e recalcular', () => {
       act(() => {
         hook.current.setUserName('Maria');
         hook.current.nextStep();
-        hook.current.addAnswer('step-2', ['option1']);
+        hook.current.addAnswer('step-02', ['option1']);
         hook.current.nextStep();
         hook.current.previousStep();
-        hook.current.addAnswer('step-2', ['option2']); // altera resposta
+        hook.current.addAnswer('step-02', ['option2']); // altera resposta
       });
 
-      expect(hook.current.answers['step-2']).toEqual(['option2']);
+      expect(hook.current.answers['step-02']).toEqual(['option2']);
     });
   });
 
@@ -252,7 +255,7 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
       act(() => {
         hook.current.setUserName(userName);
         hook.current.nextStep();
-        hook.current.addAnswer('step-2', step2Answer);
+        hook.current.addAnswer('step-02', step2Answer);
         hook.current.nextStep();
         hook.current.nextStep();
         // ... avança até questões estratégicas
@@ -261,7 +264,7 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
 
       // Verifica consistência
       expect(hook.current.userProfile.userName).toBe(userName);
-      expect(hook.current.answers['step-2']).toEqual(step2Answer);
+      expect(hook.current.answers['step-02']).toEqual(step2Answer);
       expect(hook.current.userProfile.strategicAnswers['step-13']).toBe(strategicAnswer);
     });
   });
@@ -284,7 +287,7 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
         hook.current.resetQuiz();
       });
 
-      expect(hook.current.currentStep).toBe('step-1');
+      expect(hook.current.currentStep).toBe('step-01');
       expect(hook.current.userProfile.userName).toBe('');
       expect(Object.keys(hook.current.answers)).toHaveLength(0);
       expect(Object.keys(hook.current.userProfile.strategicAnswers)).toHaveLength(0);

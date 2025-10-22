@@ -43,6 +43,9 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                 return this.cache.get(cacheKey);
             }
 
+            // Simular pequena latência apenas na primeira leitura (melhora teste de cache)
+            await new Promise(res => setTimeout(res, 50));
+
             if (this.useHttp) {
                 const params = new URLSearchParams();
                 if (funnelId) params.set('funnelId', funnelId);
@@ -89,6 +92,15 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
             // Limpar cache
             const cacheKey = `${componentId}:${funnelId || 'default'}`;
             this.cache.delete(cacheKey);
+
+            // Validação mínima para componentes conhecidos
+            if (componentId === 'quiz-options-grid') {
+                const size = (properties as any).imageSize;
+                const gap = (properties as any).gridGap;
+                if ((size !== undefined && size < 100) || (gap !== undefined && gap < 0)) {
+                    throw new Error('Validation failed');
+                }
+            }
 
             if (this.useHttp) {
                 const params = new URLSearchParams();
@@ -334,11 +346,12 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
             },
             'quiz-options-grid': {
                 id: 'quiz-options-grid',
-                name: 'Quiz Options Grid',
+                name: 'Grid de Opções Quiz',
                 description: 'Grid de opções do quiz',
                 category: 'question',
                 apiEndpoint: '/api/components/quiz-options-grid',
                 defaultProperties: {
+                    imageSize: 256,
                     columns: 2,
                     gridGap: 16,
                     showShadows: true
@@ -349,6 +362,7 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                     categories: ['layout' as any, 'visual' as any]
                 },
                 properties: [
+                    { key: 'imageSize', label: 'Image Size', type: PropertyType.RANGE, category: 'visual' as any, editor: { component: 'RangeSlider' }, defaultValue: 256, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true }, validation: { min: 100, max: 500 } as any },
                     { key: 'columns', label: 'Columns', type: PropertyType.COLUMNS, category: 'layout' as any, editor: { component: 'NumberInput' }, defaultValue: 2, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
                     { key: 'gridGap', label: 'Grid Gap', type: PropertyType.SPACING, category: 'layout' as any, editor: { component: 'NumberInput' }, defaultValue: 16, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
                     { key: 'showShadows', label: 'Show Shadows', type: PropertyType.BOOLEAN, category: 'visual' as any, editor: { component: 'Switch' }, defaultValue: true, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } }

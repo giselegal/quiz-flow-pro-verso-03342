@@ -18,12 +18,14 @@ const SmokeHarness: React.FC = () => {
     useEffect(() => { setSteps(OVERRIDE_STEPS as any); }, [setSteps]);
 
     useEffect(() => {
-        // Avança automaticamente quando override carregado na primeira etapa
-        if (!advanced && quiz.currentStep === 'step-1' && steps['step-1']) {
+        // Avança automaticamente quando override estiver carregado
+        if (!advanced && steps['step-1']) {
+            // garantir que a intro esteja "completa"
+            quiz.setUserName?.('Teste');
             quiz.nextStep();
             setAdvanced(true);
         }
-    }, [advanced, quiz.currentStep, steps, quiz]);
+    }, [advanced, steps, quiz]);
 
     return <div data-testid="smoke-step" data-step={quiz.currentStep}></div>;
 };
@@ -39,7 +41,7 @@ describe('QuizRuntimeRegistry + useQuizState integration', () => {
         // Deve eventualmente avançar para step-2 via nextStep do override
         await waitFor(() => {
             const el = screen.getByTestId('smoke-step');
-            expect(el.getAttribute('data-step')).toBe('step-2');
+            expect(el.getAttribute('data-step')).toBe('step-02');
         });
     });
 });
