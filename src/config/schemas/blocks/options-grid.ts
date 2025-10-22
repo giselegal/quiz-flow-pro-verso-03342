@@ -54,10 +54,11 @@ const multipleSelectionField: BlockFieldSchema<boolean> = {
 const gridColumnsField: BlockFieldSchema<number> = {
   key: 'columns',
   label: 'Colunas do Grid',
-  type: 'number',
+  type: 'range',
   group: 'layout',
   min: 1,
   max: 4,
+  step: 1,
   default: 2,
   description: 'Número de colunas no layout de grid',
 };
@@ -66,7 +67,7 @@ const gridColumnsField: BlockFieldSchema<number> = {
 const gridGapField: BlockFieldSchema<number> = {
   key: 'gridGap',
   label: 'Espaçamento',
-  type: 'number',
+  type: 'range',
   group: 'layout',
   min: 0,
   max: 50,
@@ -98,7 +99,7 @@ const imageSizeField: BlockFieldSchema<string> = {
 const imageWidthField: BlockFieldSchema<number> = {
   key: 'imageWidth',
   label: 'Largura (custom)',
-  type: 'number',
+  type: 'range',
   group: 'layout',
   min: 16,
   max: 1024,
@@ -110,13 +111,27 @@ const imageWidthField: BlockFieldSchema<number> = {
 const imageHeightField: BlockFieldSchema<number> = {
   key: 'imageHeight',
   label: 'Altura (custom)',
-  type: 'number',
+  type: 'range',
   group: 'layout',
   min: 16,
   max: 1024,
   step: 4,
   description: 'Altura da imagem quando imageSize = custom',
   when: (values) => values.imageSize === 'custom'
+};
+
+// Slider rápido para tamanho da imagem (quando não estiver em modo custom)
+const imageMaxSizeField: BlockFieldSchema<number> = {
+  key: 'imageMaxSize',
+  label: 'Tamanho da Imagem (px)',
+  type: 'range',
+  group: 'layout',
+  min: 40,
+  max: 240,
+  step: 4,
+  default: 96,
+  description: 'Ajuste rápido do tamanho visual das imagens',
+  when: (values) => values.showImages !== false && values.imageSize !== 'custom'
 };
 
 const imagePositionField: BlockFieldSchema<string> = {
@@ -188,6 +203,7 @@ export const optionsGridSchema = createSchema('options-grid', 'Grid de Opções'
     gridColumnsField,
     gridGapField,
     imageSizeField,
+    imageMaxSizeField,
     imageWidthField,
     imageHeightField,
     imagePositionField,

@@ -2,7 +2,7 @@
 // Esta primeira versão define um contrato tipado para propriedades de blocos
 // permitindo geração automática de forms, validação e defaults.
 
-export type BlockPrimitiveType = 'string' | 'number' | 'boolean' | 'select' | 'color' | 'enum' | 'richtext' | 'options-list';
+export type BlockPrimitiveType = 'string' | 'number' | 'range' | 'boolean' | 'select' | 'color' | 'enum' | 'richtext' | 'options-list';
 
 export interface BasePropertySchema<T = any> {
     key: string;               // nome interno

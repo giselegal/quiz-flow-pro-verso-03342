@@ -1734,15 +1734,22 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const imageSize = properties?.imageSize || 'medium';
             const imageWidth = properties?.imageWidth;
             const imageHeight = properties?.imageHeight;
+            const imageMaxSize = typeof properties?.imageMaxSize === 'number' ? properties.imageMaxSize : undefined;
             const imageLayout = properties?.imageLayout || 'vertical'; // 'vertical' | 'horizontal'
             const imagePosition = properties?.imagePosition || 'top'; // 'top' | 'left' | 'right' | 'bottom'
             const borderRadius = properties?.borderRadius ?? 8;
             const showShadows = properties?.showShadows ?? false;
 
             const computeImageDims = () => {
+                // Prioridade: modo custom usa width/height específicos
                 if (imageSize === 'custom' && (imageWidth || imageHeight)) {
                     return { w: imageWidth || undefined, h: imageHeight || undefined };
                 }
+                // Slider rápido: se definido, sobrepõe os presets de tamanho
+                if (typeof imageMaxSize === 'number') {
+                    return { w: undefined, h: imageMaxSize };
+                }
+                // Presets tradicionais
                 switch (imageSize) {
                     case 'small': return { w: undefined, h: 80 };
                     case 'large': return { w: undefined, h: 160 };

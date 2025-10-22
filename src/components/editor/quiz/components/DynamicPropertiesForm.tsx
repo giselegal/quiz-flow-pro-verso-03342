@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { ImageUploadField } from './ImageUploadField';
 import { SchemaAPI } from '@/config/schemas';
+import { Slider } from '@/components/ui/slider';
 import AdvancedArrayEditor from './AdvancedArrayEditor';
 
 export interface DynamicPropertiesFormProps {
@@ -127,6 +128,32 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
                     step={prop.step || 1}
                     onChange={e => onChange({ [prop.key]: e.target.value === '' ? undefined : Number(e.target.value) })}
                 />
+            );
+        }
+
+        if (prop.type === 'range') {
+            const min = typeof prop.min === 'number' ? prop.min : 0;
+            const max = typeof prop.max === 'number' ? prop.max : 100;
+            const step = typeof prop.step === 'number' ? prop.step : 1;
+            const current = typeof value === 'number' ? value : (typeof prop.default === 'number' ? (prop.default as number) : min);
+            return (
+                <div className="space-y-1">
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                        <span>{min}</span>
+                        <span className="font-medium text-slate-700">{current}</span>
+                        <span>{max}</span>
+                    </div>
+                    <Slider
+                        min={min}
+                        max={max}
+                        step={step}
+                        value={[current]}
+                        onValueChange={(vals) => {
+                            const v = Array.isArray(vals) ? vals[0] : current;
+                            onChange({ [prop.key]: v });
+                        }}
+                    />
+                </div>
             );
         }
 

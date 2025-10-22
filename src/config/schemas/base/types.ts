@@ -30,6 +30,7 @@ export type FieldType =
   | 'string'
   | 'richtext'
   | 'number'
+  | 'range'
   | 'boolean'
   | 'color'
   | 'select'
