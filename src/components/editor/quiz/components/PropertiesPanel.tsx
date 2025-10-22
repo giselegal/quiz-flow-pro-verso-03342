@@ -203,11 +203,28 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                     🧪 DEBUG: Mostrar JSON do Bloco
                                 </button>
 
-                                <DynamicPropertiesForm
-                                    type={selectedBlock.type}
-                                    values={{ ...selectedBlock.properties, ...selectedBlock.content }}
-                                    onChange={(patch) => onBlockPatch(patch)}
-                                />
+                                {(() => {
+                                    const baseValues = { ...selectedBlock.properties, ...selectedBlock.content } as any;
+                                    // Flatten especial para 'pricing': refletir valores atuais de content.pricing no formulário
+                                    if (selectedBlock.type === 'pricing') {
+                                        const p = (selectedBlock.content as any)?.pricing || {};
+                                        if (p) {
+                                            baseValues.originalPrice = p.originalPrice ?? baseValues.originalPrice;
+                                            baseValues.salePrice = p.salePrice ?? baseValues.salePrice;
+                                            baseValues.currency = p.currency ?? baseValues.currency;
+                                            baseValues.installmentsCount = p.installments?.count ?? baseValues.installmentsCount;
+                                            baseValues.installmentsValue = p.installments?.value ?? baseValues.installmentsValue;
+                                            baseValues.features = p.features ?? baseValues.features;
+                                        }
+                                    }
+                                    return (
+                                        <DynamicPropertiesForm
+                                            type={selectedBlock.type}
+                                            values={baseValues}
+                                            onChange={(patch) => onBlockPatch(patch)}
+                                        />
+                                    );
+                                })()}
                                 <div className="pt-2 border-t space-y-2">
                                     <Button variant="outline" size="sm" className="w-full" onClick={onDuplicateInline}><Copy className="w-4 h-4 mr-2" />Duplicar</Button>
                                     <Button variant="secondary" size="sm" className="w-full" onClick={onPrepareDuplicateToAnother}><ArrowRightCircle className="w-4 h-4 mr-2" />Duplicar em…</Button>

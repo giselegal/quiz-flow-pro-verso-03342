@@ -204,7 +204,12 @@ export function initializeSchemaRegistry(): void {
   registerSchema('button-inline', () => import('./blocks/button').then(m => m.buttonSchema));
   registerSchema('CTAButton', () => import('./blocks/button').then(m => m.buttonSchema));
   registerSchema('quiz-options', () => import('./blocks/options-grid').then(m => m.optionsGridSchema));
-  registerSchema('quiz-intro-header', () => import('./blocks/intro-blocks').then(m => m.introHeroSchema));
+  // Header compacto do quiz (logo + barra)
+  registerSchema('quiz-intro-header', () => import('./blocks/intro-blocks').then(m => m.quizIntroHeaderSchema));
+  // Footer simples
+  registerSchema('footer-copyright', () => import('./blocks/intro-blocks').then(m => m.footerCopyrightSchema));
+  // Pricing section
+  registerSchema('pricing', () => import('./blocks/offer-blocks').then(m => m.pricingSchema));
   registerSchema('quiz-offer-hero', () => import('./blocks/offer-blocks').then(m => m.offerHeroSchema));
   registerSchema('offer.urgency', () => import('./blocks/urgency-timer-inline').then(m => m.urgencyTimerInlineSchema));
   registerSchema('offer.core', () => import('./blocks/button').then(m => m.buttonSchema));

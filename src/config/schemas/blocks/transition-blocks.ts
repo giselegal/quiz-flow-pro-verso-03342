@@ -37,5 +37,7 @@ export const transitionHeroSchema = templates
   .addField(titleField('content'))
   .addField(subtitleField('content'))
   .addFields(...imageFields('content'))
+  // Comportamento opcional: avanço automático após delay (ms)
+  .addField({ key: 'autoAdvanceDelay', label: 'Delay para avançar (ms)', type: 'number', group: 'logic', default: 0, min: 0, max: 30000 })
   .version('2.0.0')
   .build();

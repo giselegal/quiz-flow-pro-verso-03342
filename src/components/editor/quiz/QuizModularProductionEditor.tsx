@@ -2693,9 +2693,40 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 const contentKeys = new Set(Object.keys(contentObj));
                                 const propPatch: Record<string, any> = {};
                                 const contentPatch: Record<string, any> = {};
+
+                                // 1) Split básico por chaves de content vs properties (top-level)
                                 Object.entries(patch).forEach(([k, v]) => {
                                     if (contentKeys.has(k)) contentPatch[k] = v; else propPatch[k] = v;
                                 });
+
+                                // 2) Tratamento especial: pricing (conteúdo aninhado em content.pricing)
+                                if (selectedBlock.type === 'pricing') {
+                                    const pricingKeys = ['originalPrice', 'salePrice', 'currency', 'installmentsCount', 'installmentsValue', 'features'] as const;
+                                    const hasPricingFields = Object.keys(patch).some(k => (pricingKeys as readonly string[]).includes(k));
+                                    if (hasPricingFields) {
+                                        const currentPricing = (selectedBlock.content?.pricing || {}) as any;
+                                        const nextPricing = { ...currentPricing } as any;
+                                        if ('originalPrice' in patch) nextPricing.originalPrice = patch.originalPrice;
+                                        if ('salePrice' in patch) nextPricing.salePrice = patch.salePrice;
+                                        if ('currency' in patch) nextPricing.currency = patch.currency;
+                                        if ('features' in patch) {
+                                            nextPricing.features = Array.isArray(patch.features) ? patch.features : currentPricing.features || [];
+                                        }
+                                        // installments é objeto { count, value }
+                                        const curInstall = currentPricing.installments || {};
+                                        const nextInstall = { ...curInstall } as any;
+                                        if ('installmentsCount' in patch) nextInstall.count = patch.installmentsCount;
+                                        if ('installmentsValue' in patch) nextInstall.value = patch.installmentsValue;
+                                        if (Object.keys(nextInstall).length > 0) nextPricing.installments = nextInstall;
+
+                                        // Adiciona ao contentPatch consolidado
+                                        contentPatch.pricing = nextPricing;
+
+                                        // Evitar que esses campos caiam em propPatch por engano
+                                        pricingKeys.forEach(k => { delete propPatch[k]; delete (contentPatch as any)[k]; });
+                                    }
+                                }
+
                                 if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
                                 if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
                             }}
