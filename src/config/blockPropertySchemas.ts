@@ -111,6 +111,18 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text' },
       { key: 'subtitle', label: 'Subtítulo', type: 'text' },
       { key: 'alignment', label: 'Alinhamento', type: 'text' },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', options: [
+        { label: 'Pequeno', value: 'sm' },
+        { label: 'Normal', value: 'base' },
+        { label: 'Grande', value: 'lg' },
+        { label: 'Extra', value: 'xl' }
+      ], defaultValue: 'base', description: 'Controle de tamanho tipográfico do título/subtítulo' },
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [
+        { label: 'Fino', value: 'light' },
+        { label: 'Normal', value: 'normal' },
+        { label: 'Médio', value: 'medium' },
+        { label: 'Negrito', value: 'bold' }
+      ], defaultValue: 'normal', description: 'Espessura da fonte utilizada no cabeçalho' },
       { key: 'type', label: 'Tipo', type: 'text' },
       // Propriedades de container e layout
       { key: 'containerWidth', label: 'Largura do Container', type: 'text' },
@@ -320,11 +332,19 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
   'form-input': {
     label: 'Campo de Formulário',
     fields: [
-      { key: 'inputType', label: 'Tipo de Input', type: 'text' },
+      { key: 'inputType', label: 'Tipo de Input (legacy)', type: 'text', description: 'Compatibilidade: tipo anterior do input' },
+      { key: 'type', label: 'Tipo', type: 'select', group: 'content', defaultValue: 'text', options: [
+        { label: 'Texto', value: 'text' },
+        { label: 'Email', value: 'email' },
+        { label: 'Telefone', value: 'tel' },
+        { label: 'Número', value: 'number' },
+        { label: 'Senha', value: 'password' }
+      ], description: 'Tipo do campo de formulário (HTML input type) utilizado na renderização' },
       { key: 'placeholder', label: 'Placeholder', type: 'text' },
       { key: 'label', label: 'Label', type: 'text' },
       { key: 'required', label: 'Obrigatório', type: 'boolean' },
-      { key: 'name', label: 'Nome Campo', type: 'text' },
+      { key: 'name', label: 'Nome Campo', type: 'text', required: true, defaultValue: 'name', description: 'Nome do campo do formulário (atributo name) utilizado em submissões' },
+      { key: 'variableName', label: 'Nome da Variável', type: 'text', group: 'content', defaultValue: 'name', description: 'Chave/variável usada para armazenar o valor no estado do quiz' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
       { key: 'borderColor', label: 'Cor da Borda', type: 'color' },
       { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
@@ -867,17 +887,6 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         description: 'Quantas seleções são necessárias para prosseguir'
       },
       {
-        key: 'requiredSelections',
-        label: 'Seleções Obrigatórias',
-        type: 'range',
-        min: 0,
-        max: 10,
-        step: 1,
-        group: 'behavior',
-        defaultValue: 1,
-        description: 'Quantas seleções são necessárias para prosseguir'
-      },
-      {
         key: 'allowDeselection',
         label: 'Permitir Desmarcar',
         type: 'boolean',
@@ -1136,6 +1145,90 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
   // ==========================
   // RESULT/OFFER (Step 20)
   // ==========================
+  'result-calculation': {
+    label: 'Cálculo de Resultado',
+    fields: [
+      {
+        key: 'calculationMethod',
+        label: 'Método de Cálculo',
+        type: 'select',
+        group: 'scoring',
+        defaultValue: 'points',
+        options: [
+          { label: 'Pontos', value: 'points' },
+          { label: 'Categorias', value: 'categories' },
+          { label: 'Pesos', value: 'weights' },
+        ],
+        description: 'Estratégia de cálculo do resultado final do quiz'
+      },
+      {
+        key: 'calculationMode',
+        label: 'Modo de Cálculo (legacy)',
+        type: 'select',
+        group: 'scoring',
+        options: [
+          { label: 'Pontos', value: 'points' },
+          { label: 'Categorias', value: 'categories' },
+          { label: 'Pesos', value: 'weights' },
+        ],
+        description: 'Compatibilidade: chave anterior para método de cálculo'
+      },
+      {
+        key: 'categoryThresholds',
+        label: 'Limiares por Categoria (JSON)',
+        type: 'json',
+        group: 'scoring',
+        defaultValue: {},
+        description: 'Mapa de categoria -> limiares/intervalos para mapeamento de resultado'
+      },
+      {
+        key: 'scoreMapping',
+        label: 'Mapeamento de Pontuação (JSON)',
+        type: 'json',
+        group: 'scoring',
+        defaultValue: {},
+        description: 'Configuração de pesos/pontos por opção, step ou grupo'
+      },
+      {
+        key: 'weightMap',
+        label: 'Pesos por Opção/Grupo (legacy)',
+        type: 'json',
+        group: 'scoring',
+        description: 'Compatibilidade: chave antiga equivalente a scoreMapping'
+      },
+      {
+        key: 'resultLogic',
+        label: 'Lógica de Resultado (JSON)',
+        type: 'json',
+        group: 'scoring',
+        defaultValue: {},
+        description: 'Regras para traduzir pontuação/categoria em resultado textual/visual'
+      },
+      {
+        key: 'resultMapping',
+        label: 'Mapeamento Resultado (legacy)',
+        type: 'json',
+        group: 'scoring',
+        description: 'Compatibilidade: chave antiga equivalente a resultLogic'
+      },
+      {
+        key: 'leadCapture',
+        label: 'Capturar Lead na Etapa',
+        type: 'boolean',
+        group: 'behavior',
+        defaultValue: false,
+        description: 'Se habilitado, aciona captura de contato junto ao cálculo do resultado'
+      },
+      {
+        key: 'debug',
+        label: 'Exibir Diagnóstico',
+        type: 'boolean',
+        group: 'advanced',
+        defaultValue: false,
+        description: 'Mostra detalhes do cálculo durante o desenvolvimento'
+      }
+    ]
+  },
   'urgency-timer-inline': {
     label: 'Timer de Urgência',
     fields: [
@@ -1737,8 +1830,21 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'showProgressBar', label: 'Mostrar Barra de Progresso', type: 'boolean', group: 'content', defaultValue: true },
       { key: 'showStepNumber', label: 'Mostrar Número do Step', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'backButtonText', label: 'Texto Botão Voltar', type: 'text', group: 'content', defaultValue: 'Voltar' },
+      { key: 'backButtonText', label: 'Texto Botão Voltar (legacy)', type: 'text', group: 'content', defaultValue: 'Voltar', description: 'Compatibilidade: chave antiga de texto voltar' },
       { key: 'nextButtonText', label: 'Texto Botão Avançar', type: 'text', group: 'content', defaultValue: 'Próximo' },
+      { key: 'backText', label: 'Texto Voltar', type: 'text', group: 'content', defaultValue: 'Voltar', description: 'Texto exibido no botão Voltar' },
+      { key: 'disabledText', label: 'Texto Desabilitado', type: 'text', group: 'content', defaultValue: 'Complete para avançar', description: 'Mensagem quando o botão Próximo está desabilitado' },
+      { key: 'showBack', label: 'Mostrar Botão Voltar', type: 'boolean', group: 'behavior', defaultValue: true, description: 'Exibe ou oculta o botão de voltar' },
+      { key: 'disableNextUntilComplete', label: 'Desabilitar Próximo até Completar', type: 'boolean', group: 'behavior', defaultValue: false, description: 'Impede avançar enquanto o step não estiver válido' },
+      { key: 'position', label: 'Posição', type: 'select', group: 'layout', defaultValue: 'bottom', options: [
+        { label: 'Topo', value: 'top' },
+        { label: 'Base', value: 'bottom' }
+      ], description: 'Onde a navegação aparece no step' },
+      { key: 'spacing', label: 'Espaçamento', type: 'select', group: 'layout', defaultValue: 'md', options: [
+        { label: 'Pequeno', value: 'sm' },
+        { label: 'Médio', value: 'md' },
+        { label: 'Grande', value: 'lg' }
+      ], description: 'Espaçamento externo da área de navegação' },
       { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
     ]
   },
@@ -2165,7 +2271,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     label: 'Loader de Transição',
     fields: [
       { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#deac6d' },
-      { key: 'dots', label: 'Número de Pontos', type: 'number', group: 'config', defaultValue: 3, min: 2, max: 5 },
+      { key: 'dots', label: 'Número de Pontos', type: 'number', group: 'behavior', defaultValue: 3, min: 2, max: 5, description: 'Quantidade de pontos exibidos na animação' },
       { key: 'size', label: 'Tamanho', type: 'text', group: 'style', defaultValue: '12px' }
     ]
   },
@@ -2197,7 +2303,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
   'transition-progress': {
     label: 'Progress de Transição',
     fields: [
-      { key: 'dots', label: 'Número de Pontos', type: 'number', group: 'config', defaultValue: 3, min: 2, max: 5 },
+      { key: 'dots', label: 'Número de Pontos', type: 'number', group: 'behavior', defaultValue: 3, min: 2, max: 5, description: 'Quantidade de pontos do indicador de progresso' },
       { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#deac6d' }
     ]
   },
@@ -2357,7 +2463,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Gerador de Looks com IA' },
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
       { key: 'buttonText', label: 'Texto do Botão', type: 'text', group: 'content', defaultValue: 'Gerar Look com IA' },
-      { key: 'apiEndpoint', label: 'Endpoint da API', type: 'text', group: 'config', description: 'URL do endpoint de IA' },
+      { key: 'apiEndpoint', label: 'Endpoint da API', type: 'text', group: 'content', description: 'URL do endpoint de IA' },
       { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
     ]
   },

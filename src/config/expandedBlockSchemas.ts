@@ -26,7 +26,7 @@ const UNIVERSAL_STYLING_PROPERTIES = [
 
 const UNIVERSAL_TRANSFORM_PROPERTIES = [
   { key: 'scale', label: 'Escala (%)', type: 'range' as FieldType, min: 10, max: 300, step: 1, group: 'transform', defaultValue: 100 },
-  { key: 'scaleOrigin', label: 'Origem da Escala', type: 'select' as FieldType, group: 'transform', 
+  { key: 'scaleOrigin', label: 'Origem da Escala', type: 'select' as FieldType, group: 'transform', description: 'Ponto de origem usado para transformar/escala do componente',
     options: [
       { label: 'Centro', value: 'center' },
       { label: 'Topo Centro', value: 'top center' },
@@ -58,13 +58,27 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'progressValue', label: 'Valor do Progresso', type: 'range', min: 0, max: 100, group: 'behavior', defaultValue: 0 },
       { key: 'progressMax', label: 'Máximo do Progresso', type: 'range', min: 1, max: 21, group: 'behavior', defaultValue: 21 },
       { key: 'showBackButton', label: 'Mostrar Voltar', type: 'boolean', group: 'behavior', defaultValue: false },
-      { key: 'alignment', label: 'Alinhamento', type: 'select', group: 'style',
+      { key: 'alignment', label: 'Alinhamento', type: 'select', group: 'style', description: 'Alinhamento do conteúdo do cabeçalho',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
           { label: 'Direita', value: 'right' },
         ]
       },
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: 'base',
+        options: [
+          { label: 'Pequeno', value: 'sm' },
+          { label: 'Normal', value: 'base' },
+          { label: 'Grande', value: 'lg' },
+          { label: 'Extra', value: 'xl' }
+        ], description: 'Controle de tamanho tipográfico do título/subtítulo' },
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', defaultValue: 'normal',
+        options: [
+          { label: 'Fino', value: 'light' },
+          { label: 'Normal', value: 'normal' },
+          { label: 'Médio', value: 'medium' },
+          { label: 'Negrito', value: 'bold' }
+        ], description: 'Espessura da fonte utilizada no cabeçalho' },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
       ...UNIVERSAL_TRANSFORM_PROPERTIES,
@@ -87,15 +101,16 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: '1 Coluna', value: 1 },
           { label: '2 Colunas', value: 2 },
           { label: '3 Colunas', value: 3 },
-        ]
+        ], description: 'Quantidade de colunas usadas para renderizar as opções'
       },
       { key: 'multipleSelection', label: 'Seleção Múltipla', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'maxSelections', label: 'Máximo de Seleções', type: 'range', min: 1, max: 10, group: 'behavior', defaultValue: 3 },
       { key: 'minSelections', label: 'Mínimo de Seleções', type: 'range', min: 0, max: 5, group: 'behavior', defaultValue: 1 },
+      { key: 'requiredSelections', label: 'Seleções Obrigatórias', type: 'range', min: 0, max: 10, group: 'behavior', defaultValue: 1, description: 'Número de seleções necessárias para prosseguir' },
       { key: 'autoAdvanceOnComplete', label: 'Auto-Avanço', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'autoAdvanceDelay', label: 'Delay Auto-Avanço (ms)', type: 'range', min: 500, max: 5000, step: 250, group: 'behavior', defaultValue: 1500 },
       { key: 'showImages', label: 'Exibir Imagens', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'imageSize', label: 'Tamanho das Imagens', type: 'select', group: 'style',
+      { key: 'imageSize', label: 'Tamanho das Imagens', type: 'select', group: 'style', description: 'Tamanho padrão a ser aplicado às imagens das opções',
         options: [
           { label: 'Pequeno', value: 'small' },
           { label: 'Médio', value: 'medium' },
@@ -105,6 +120,15 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'gridGap', label: 'Espaçamento da Grade', type: 'range', min: 4, max: 48, step: 4, group: 'layout', defaultValue: 16 },
       { key: 'selectedColor', label: 'Cor de Seleção', type: 'color', group: 'style', defaultValue: '#B89B7A' },
       { key: 'hoverColor', label: 'Cor de Hover', type: 'color', group: 'style', defaultValue: '#D4C2A8' },
+      // Sistema de pontuação
+      { key: 'enableScoring', label: 'Ativar Sistema de Pontuação', type: 'boolean', group: 'scoring', defaultValue: true, description: 'Habilita cálculo de pontuação/categorias para as opções' },
+      { key: 'scoringType', label: 'Tipo de Pontuação', type: 'select', group: 'scoring', defaultValue: 'points',
+        options: [
+          { label: 'Pontos Numéricos', value: 'points' },
+          { label: 'Categorias', value: 'categories' },
+          { label: 'Pesos', value: 'weights' },
+        ], description: 'Estratégia utilizada para computar o resultado desta questão' },
+      { key: 'scoreValues', label: 'Pontuação por Opção (JSON)', type: 'json', group: 'scoring', description: 'Configuração avançada de pontuação personalizada por opção' },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
       ...UNIVERSAL_TRANSFORM_PROPERTIES,
@@ -140,7 +164,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
     label: 'Texto Inline',
     fields: [
       { key: 'content', label: 'Conteúdo do Texto', type: 'textarea', group: 'content', defaultValue: 'Digite seu texto aqui' },
-      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: 'text-base',
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: 'text-base', description: 'Escala tipográfica aplicada ao texto',
         options: [
           { label: 'Pequeno', value: 'text-sm' },
           { label: 'Normal', value: 'text-base' },
@@ -150,7 +174,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: '3X Grande', value: 'text-3xl' },
         ]
       },
-      { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', defaultValue: 'font-normal',
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', defaultValue: 'font-normal', description: 'Espessura (peso) da fonte',
         options: [
           { label: 'Normal', value: 'font-normal' },
           { label: 'Médio', value: 'font-medium' },
@@ -158,7 +182,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Negrito', value: 'font-bold' },
         ]
       },
-      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', defaultValue: 'left',
+      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', defaultValue: 'left', description: 'Alinhamento horizontal do texto',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
@@ -167,7 +191,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
         ]
       },
       { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-      { key: 'lineHeight', label: 'Altura da Linha', type: 'select', group: 'style',
+      { key: 'lineHeight', label: 'Altura da Linha', type: 'select', group: 'style', description: 'Altura da linha aplicada ao texto',
         options: [
           { label: 'Compacto', value: 'leading-tight' },
           { label: 'Normal', value: 'leading-normal' },
@@ -184,7 +208,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
     label: 'Título Inline',
     fields: [
       { key: 'content', label: 'Texto do Título', type: 'text', group: 'content', defaultValue: 'Seu Título Aqui' },
-      { key: 'level', label: 'Nível do Título', type: 'select', group: 'content', defaultValue: 'h2',
+      { key: 'level', label: 'Nível do Título', type: 'select', group: 'content', defaultValue: 'h2', description: 'Tag semântica do título (h1-h6)',
         options: [
           { label: 'H1 - Principal', value: 'h1' },
           { label: 'H2 - Seção', value: 'h2' },
@@ -194,7 +218,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'H6 - Mínimo', value: 'h6' },
         ]
       },
-      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: 'text-2xl',
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: 'text-2xl', description: 'Escala tipográfica aplicada ao título',
         options: [
           { label: 'Grande', value: 'text-lg' },
           { label: 'XL', value: 'text-xl' },
@@ -205,7 +229,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: '6XL', value: 'text-6xl' },
         ]
       },
-      { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', defaultValue: 'font-bold',
+      { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', defaultValue: 'font-bold', description: 'Espessura (peso) da fonte',
         options: [
           { label: 'Normal', value: 'font-normal' },
           { label: 'Médio', value: 'font-medium' },
@@ -214,7 +238,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Extra Negrito', value: 'font-extrabold' },
         ]
       },
-      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', defaultValue: 'center',
+      { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', defaultValue: 'center', description: 'Alinhamento horizontal do título',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
@@ -239,7 +263,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'alt', label: 'Texto Alternativo', type: 'text', group: 'content', defaultValue: 'Imagem' },
       { key: 'width', label: 'Largura', type: 'range', min: 50, max: 800, group: 'layout', defaultValue: 400 },
       { key: 'height', label: 'Altura', type: 'range', min: 50, max: 600, group: 'layout', defaultValue: 300 },
-      { key: 'objectFit', label: 'Ajuste da Imagem', type: 'select', group: 'style', defaultValue: 'cover',
+      { key: 'objectFit', label: 'Ajuste da Imagem', type: 'select', group: 'style', defaultValue: 'cover', description: 'Como a imagem se ajusta à caixa (cover/contain/...)',
         options: [
           { label: 'Cobrir', value: 'cover' },
           { label: 'Conter', value: 'contain' },
@@ -247,7 +271,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Nenhum', value: 'none' },
         ]
       },
-      { key: 'containerPosition', label: 'Posição do Container', type: 'select', group: 'layout', defaultValue: 'center',
+      { key: 'containerPosition', label: 'Posição do Container', type: 'select', group: 'layout', defaultValue: 'center', description: 'Posicionamento da imagem dentro do container',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
@@ -256,7 +280,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       },
       { key: 'borderWidth', label: 'Largura da Borda', type: 'range', min: 0, max: 10, group: 'style', defaultValue: 0 },
       { key: 'borderColor', label: 'Cor da Borda', type: 'color', group: 'style', defaultValue: '#E5E7EB' },
-      { key: 'shadow', label: 'Sombra', type: 'select', group: 'style',
+      { key: 'shadow', label: 'Sombra', type: 'select', group: 'style', description: 'Nível de sombra aplicado ao elemento',
         options: [
           { label: 'Nenhuma', value: 'shadow-none' },
           { label: 'Pequena', value: 'shadow-sm' },
@@ -280,7 +304,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'showCaption', label: 'Mostrar Legenda', type: 'boolean', group: 'behavior', defaultValue: false },
       { key: 'width', label: 'Largura', type: 'range', min: 100, max: 1200, group: 'layout', defaultValue: 600 },
       { key: 'height', label: 'Altura', type: 'range', min: 100, max: 800, group: 'layout', defaultValue: 400 },
-      { key: 'aspectRatio', label: 'Proporção', type: 'select', group: 'layout',
+      { key: 'aspectRatio', label: 'Proporção', type: 'select', group: 'layout', description: 'Proporção fixa aplicada ao container da imagem',
         options: [
           { label: 'Quadrado (1:1)', value: 'aspect-square' },
           { label: 'Video (16:9)', value: 'aspect-video' },
@@ -304,7 +328,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'text', label: 'Texto do Botão', type: 'text', group: 'content', defaultValue: 'Clique aqui' },
       { key: 'url', label: 'URL/Link', type: 'text', group: 'content', defaultValue: '#' },
-      { key: 'variant', label: 'Variação', type: 'select', group: 'style', defaultValue: 'primary',
+      { key: 'variant', label: 'Variação', type: 'select', group: 'style', defaultValue: 'primary', description: 'Estilo visual aplicado ao botão',
         options: [
           { label: 'Primário', value: 'primary' },
           { label: 'Secundário', value: 'secondary' },
@@ -313,7 +337,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Destrutivo', value: 'destructive' },
         ]
       },
-      { key: 'size', label: 'Tamanho', type: 'select', group: 'style', defaultValue: 'default',
+      { key: 'size', label: 'Tamanho', type: 'select', group: 'style', defaultValue: 'default', description: 'Tamanho do botão',
         options: [
           { label: 'Pequeno', value: 'sm' },
           { label: 'Padrão', value: 'default' },
@@ -354,8 +378,17 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Número', value: 'number' },
           { label: 'Senha', value: 'password' },
           { label: 'URL', value: 'url' },
-        ]
+        ], description: 'Tipo de input para coleta (compatível com atributos HTML padrão)'
       },
+      { key: 'type', label: 'Tipo', type: 'select', group: 'content', defaultValue: 'text',
+        options: [
+          { label: 'Texto', value: 'text' },
+          { label: 'Email', value: 'email' },
+          { label: 'Telefone', value: 'tel' },
+          { label: 'Número', value: 'number' },
+          { label: 'Senha', value: 'password' }
+        ], description: 'Tipo (HTML) utilizado na renderização do input' },
+      { key: 'variableName', label: 'Nome da Variável', type: 'text', group: 'content', defaultValue: 'name', description: 'Chave usada para armazenar o valor no estado' },
       { key: 'required', label: 'Obrigatório', type: 'boolean', group: 'behavior', defaultValue: false },
       { key: 'disabled', label: 'Desabilitado', type: 'boolean', group: 'behavior', defaultValue: false },
       { key: 'maxLength', label: 'Tamanho Máximo', type: 'range', min: 1, max: 500, group: 'behavior' },
@@ -413,7 +446,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'borderColor', label: 'Cor da Borda', type: 'color', group: 'style', defaultValue: '#E5E7EB' },
       { key: 'borderRadius', label: 'Arredondamento da Borda', type: 'range', min: 0, max: 24, group: 'style', defaultValue: 8 },
       { key: 'showShadow', label: 'Mostrar Sombra', type: 'boolean', group: 'style', defaultValue: true },
-      { key: 'shadowIntensity', label: 'Intensidade da Sombra', type: 'select', group: 'style',
+      { key: 'shadowIntensity', label: 'Intensidade da Sombra', type: 'select', group: 'style', description: 'Nível de sombra aplicado ao container do formulário',
         options: [
           { label: 'Sutil', value: 'shadow-sm' },
           { label: 'Normal', value: 'shadow' },
@@ -421,7 +454,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Grande', value: 'shadow-lg' },
         ]
       },
-      { key: 'maxWidth', label: 'Largura Máxima', type: 'select', group: 'layout',
+      { key: 'maxWidth', label: 'Largura Máxima', type: 'select', group: 'layout', description: 'Largura máxima aplicada ao container (classes utilitárias)',
         options: [
           { label: 'Pequeno', value: 'max-w-sm' },
           { label: 'Médio', value: 'max-w-md' },
@@ -444,6 +477,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
     label: 'Cabeçalho de Resultado',
     fields: [
       { key: 'title', label: 'Título do Resultado', type: 'text', group: 'content', defaultValue: 'Seu estilo ideal é:' },
+      { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content', description: 'Texto auxiliar exibido abaixo do título' },
       { key: 'resultName', label: 'Nome do Resultado', type: 'text', group: 'content', defaultValue: 'Estilo Clássico' },
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content', defaultValue: 'Você tem preferências por looks elegantes e atemporais' },
       { key: 'confidence', label: 'Nível de Confiança (%)', type: 'range', min: 0, max: 100, group: 'content', defaultValue: 95 },
@@ -453,6 +487,11 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'badgeColor', label: 'Cor do Badge', type: 'color', group: 'style', defaultValue: '#10B981' },
       { key: 'resultImage', label: 'Imagem do Resultado', type: 'text', group: 'content' },
       { key: 'showResultImage', label: 'Mostrar Imagem', type: 'boolean', group: 'behavior', defaultValue: true },
+      { key: 'alignment', label: 'Alinhamento', type: 'select', group: 'layout', defaultValue: 'center', options: [
+        { label: 'Esquerda', value: 'left' },
+        { label: 'Centro', value: 'center' },
+        { label: 'Direita', value: 'right' }
+      ], description: 'Alinhamento do conteúdo do cabeçalho' },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
       ...UNIVERSAL_TRANSFORM_PROPERTIES,
@@ -470,7 +509,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'buttonText', label: 'Texto do Botão', type: 'text', group: 'content', defaultValue: 'Ver mais detalhes' },
       { key: 'link', label: 'Link do Botão', type: 'text', group: 'content', defaultValue: '#' },
       { key: 'showButton', label: 'Mostrar Botão', type: 'boolean', group: 'behavior', defaultValue: true },
-      { key: 'cardStyle', label: 'Estilo do Card', type: 'select', group: 'style', defaultValue: 'elevated',
+      { key: 'cardStyle', label: 'Estilo do Card', type: 'select', group: 'style', defaultValue: 'elevated', description: 'Variação visual do card',
         options: [
           { label: 'Elevado', value: 'elevated' },
           { label: 'Com Borda', value: 'bordered' },
@@ -478,7 +517,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Gradiente', value: 'gradient' },
         ]
       },
-      { key: 'imagePosition', label: 'Posição da Imagem', type: 'select', group: 'layout', defaultValue: 'top',
+      { key: 'imagePosition', label: 'Posição da Imagem', type: 'select', group: 'layout', defaultValue: 'top', description: 'Posição relativa da imagem no card',
         options: [
           { label: 'Topo', value: 'top' },
           { label: 'Esquerda', value: 'left' },
@@ -503,7 +542,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { title: 'Estilo 2', description: 'Descrição do estilo 2', imageUrl: '', link: '#' },
         ]
       },
-      { key: 'columns', label: 'Número de Colunas', type: 'select', group: 'layout', defaultValue: 2,
+      { key: 'columns', label: 'Número de Colunas', type: 'select', group: 'layout', defaultValue: 2, description: 'Quantidade de colunas da grade',
         options: [
           { label: '1 Coluna', value: 1 },
           { label: '2 Colunas', value: 2 },
@@ -515,7 +554,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'cardRadius', label: 'Arredondamento dos Cards', type: 'range', min: 0, max: 24, group: 'style', defaultValue: 12 },
       { key: 'uniformHeight', label: 'Altura Uniforme', type: 'boolean', group: 'layout', defaultValue: true },
-      { key: 'hoverEffect', label: 'Efeito de Hover', type: 'select', group: 'style', defaultValue: 'lift',
+      { key: 'hoverEffect', label: 'Efeito de Hover', type: 'select', group: 'style', defaultValue: 'lift', description: 'Efeito visual aplicado ao passar o mouse',
         options: [
           { label: 'Elevar', value: 'lift' },
           { label: 'Escalar', value: 'scale' },
@@ -535,7 +574,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
   'decorative-bar-inline': {
     label: 'Barra Decorativa',
     fields: [
-      { key: 'width', label: 'Largura', type: 'select', group: 'layout', defaultValue: 'w-full',
+      { key: 'width', label: 'Largura', type: 'select', group: 'layout', defaultValue: 'w-full', description: 'Largura do elemento decorativo',
         options: [
           { label: '25%', value: 'w-1/4' },
           { label: '50%', value: 'w-1/2' },
@@ -550,7 +589,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'gradientEnd', label: 'Cor Final (Gradiente)', type: 'color', group: 'style' },
       { key: 'isGradient', label: 'Usar Gradiente', type: 'boolean', group: 'style', defaultValue: false },
       { key: 'borderRadius', label: 'Arredondamento', type: 'range', min: 0, max: 20, group: 'style', defaultValue: 2 },
-      { key: 'position', label: 'Posição', type: 'select', group: 'layout', defaultValue: 'center',
+      { key: 'position', label: 'Posição', type: 'select', group: 'layout', defaultValue: 'center', description: 'Alinhamento horizontal do elemento',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
@@ -631,8 +670,10 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
     label: 'Timer de Urgência',
     fields: [
       { key: 'endTime', label: 'Data/Hora Final', type: 'text', group: 'content', required: true, defaultValue: '2024-12-31T23:59:59' },
+      { key: 'initialMinutes', label: 'Minutos Iniciais', type: 'number', group: 'content', defaultValue: 15, description: 'Tempo inicial para contagem regressiva (minutos)' },
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Oferta por tempo limitado!' },
       { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content', defaultValue: 'Garanta seu desconto agora' },
+      { key: 'urgencyMessage', label: 'Mensagem de Urgência', type: 'text', group: 'content', defaultValue: 'Restam apenas alguns minutos!', description: 'Mensagem de urgência exibida junto ao timer' },
       { key: 'showDays', label: 'Mostrar Dias', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'showHours', label: 'Mostrar Horas', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'showMinutes', label: 'Mostrar Minutos', type: 'boolean', group: 'behavior', defaultValue: true },
@@ -666,6 +707,8 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título da Seção', type: 'text', group: 'content', defaultValue: 'Transformação Garantida' },
       { key: 'beforeTitle', label: 'Título do "Antes"', type: 'text', group: 'content', defaultValue: 'Antes' },
       { key: 'afterTitle', label: 'Título do "Depois"', type: 'text', group: 'content', defaultValue: 'Depois' },
+      { key: 'beforeLabel', label: 'Rótulo Antes', type: 'text', group: 'content', defaultValue: 'ANTES', description: 'Texto curto exibido como rótulo da imagem Antes' },
+      { key: 'afterLabel', label: 'Rótulo Depois', type: 'text', group: 'content', defaultValue: 'DEPOIS', description: 'Texto curto exibido como rótulo da imagem Depois' },
       { key: 'beforeImage', label: 'Imagem "Antes"', type: 'text', group: 'content' },
       { key: 'afterImage', label: 'Imagem "Depois"', type: 'text', group: 'content' },
       { key: 'beforeDescription', label: 'Descrição "Antes"', type: 'textarea', group: 'content' },
@@ -677,6 +720,10 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Slider', value: 'slider' },
         ]
       },
+      { key: 'layoutStyle', label: 'Estilo de Layout', type: 'select', group: 'layout', defaultValue: 'side-by-side', options: [
+        { label: 'Lado a Lado', value: 'side-by-side' },
+        { label: 'Com Troca (Toggle)', value: 'toggle' }
+      ], description: 'Modo de exibição do comparativo' },
       { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'showDescriptions', label: 'Mostrar Descrições', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'imageAspectRatio', label: 'Proporção da Imagem', type: 'select', group: 'layout',
@@ -737,6 +784,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'discountedPrice', label: 'Preço com Desconto', type: 'text', group: 'content', defaultValue: 'R$ 297' },
       { key: 'savings', label: 'Economia', type: 'text', group: 'content', defaultValue: 'R$ 700' },
       { key: 'savingsPercentage', label: 'Porcentagem de Desconto', type: 'text', group: 'content', defaultValue: '70%' },
+      { key: 'showPricing', label: 'Mostrar Preço', type: 'boolean', group: 'content', defaultValue: true, description: 'Exibe/oculta os elementos de preço' },
       { key: 'showOriginalPrice', label: 'Mostrar Preço Original', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'showSavings', label: 'Mostrar Economia', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'showPercentage', label: 'Mostrar Porcentagem', type: 'boolean', group: 'behavior', defaultValue: true },
@@ -752,7 +800,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Badge', value: 'badge' },
           { label: 'Tachado', value: 'strikethrough' },
           { label: 'Cor Diferente', value: 'color' },
-        ]
+        ], description: 'Como destacar visualmente o preço/valor' 
       },
       { key: 'accentColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#DC2626' },
       { key: 'discountColor', label: 'Cor do Desconto', type: 'color', group: 'style', defaultValue: '#10B981' },
@@ -803,6 +851,11 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título/Cargo', type: 'text', group: 'content', defaultValue: 'Consultora de Estilo' },
       { key: 'photo', label: 'Foto da Mentora', type: 'text', group: 'content' },
       { key: 'bio', label: 'Biografia', type: 'textarea', group: 'content', defaultValue: 'Especialista em consultoria de estilo com mais de 10 anos de experiência' },
+      // Aliases esperados pelos testes
+      { key: 'mentorName', label: 'Nome', type: 'text', group: 'content', defaultValue: 'Gisele Galvão', description: 'Alias compatível para nome da mentora' },
+      { key: 'mentorTitle', label: 'Título', type: 'text', group: 'content', defaultValue: 'Consultora de Imagem e Estilo, Personal Branding', description: 'Alias compatível para título/cargo' },
+      { key: 'mentorImage', label: 'URL da Imagem', type: 'text', group: 'content', description: 'Alias compatível para foto da mentora' },
+      { key: 'mentorBio', label: 'Bio', type: 'textarea', group: 'content', description: 'Alias compatível para biografia' },
       { key: 'credentials', label: 'Credenciais', type: 'options-list', group: 'content',
         defaultValue: [
           { text: '+500 clientes atendidas' },
@@ -958,6 +1011,8 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'showStepNumbers', label: 'Mostrar Números das Etapas', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'previousText', label: 'Texto do Botão Anterior', type: 'text', group: 'content', defaultValue: 'Anterior' },
       { key: 'nextText', label: 'Texto do Botão Próximo', type: 'text', group: 'content', defaultValue: 'Próximo' },
+      { key: 'backText', label: 'Texto Voltar', type: 'text', group: 'content', defaultValue: 'Voltar', description: 'Texto exibido no botão Voltar' },
+      { key: 'disabledText', label: 'Texto Desabilitado', type: 'text', group: 'content', defaultValue: 'Complete para avançar', description: 'Mensagem quando o botão Próximo está desabilitado' },
       { key: 'finishText', label: 'Texto do Botão Finalizar', type: 'text', group: 'content', defaultValue: 'Finalizar' },
       { key: 'currentStep', label: 'Etapa Atual', type: 'range', min: 1, max: 21, group: 'content', defaultValue: 1 },
       { key: 'totalSteps', label: 'Total de Etapas', type: 'range', min: 1, max: 21, group: 'content', defaultValue: 21 },
@@ -985,6 +1040,17 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Personalizado', value: 'custom' },
         ]
       },
+      { key: 'showBack', label: 'Mostrar Botão Voltar', type: 'boolean', group: 'behavior', defaultValue: true, description: 'Exibe ou oculta o botão de voltar' },
+      { key: 'disableNextUntilComplete', label: 'Desabilitar Próximo até Completar', type: 'boolean', group: 'behavior', defaultValue: false, description: 'Impede avançar enquanto o step não estiver válido' },
+      { key: 'position', label: 'Posição', type: 'select', group: 'layout', defaultValue: 'bottom', options: [
+        { label: 'Topo', value: 'top' },
+        { label: 'Base', value: 'bottom' }
+      ], description: 'Onde a navegação aparece no step' },
+      { key: 'spacing', label: 'Espaçamento', type: 'select', group: 'layout', defaultValue: 'md', options: [
+        { label: 'Pequeno', value: 'sm' },
+        { label: 'Médio', value: 'md' },
+        { label: 'Grande', value: 'lg' }
+      ], description: 'Espaçamento externo da área de navegação' },
       { key: 'enableKeyboard', label: 'Navegação por Teclado', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'autoSave', label: 'Auto-salvar Progresso', type: 'boolean', group: 'behavior', defaultValue: true },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
@@ -1058,7 +1124,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'content', label: 'Conteúdo', type: 'textarea', group: 'content', defaultValue: 'Digite seu texto' },
       { key: 'text', label: 'Texto', type: 'textarea', group: 'content', defaultValue: 'Texto descritivo...' },
       { key: 'html', label: 'HTML', type: 'textarea', group: 'content', defaultValue: '<p>Texto com formatação</p>' },
-      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: 'base',
+      { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: 'base', description: 'Escala tipográfica para o texto',
         options: [
           { label: 'Pequeno', value: 'sm' },
           { label: 'Normal', value: 'base' },
@@ -1067,7 +1133,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
         ]
       },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#334155' },
-      { key: 'lineHeight', label: 'Altura da Linha', type: 'text', group: 'style', defaultValue: '1.6' },
+  { key: 'lineHeight', label: 'Altura da Linha', type: 'text', group: 'style', defaultValue: '1.6' },
       { key: 'marginBottom', label: 'Margem Inferior', type: 'range', min: 0, max: 100, group: 'layout', defaultValue: 16 },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -1422,6 +1488,24 @@ export const completeBlockSchemas: Record<string, BlockSchema> = {
   ...blockPropertySchemas,
   ...expandedBlockSchemas,
 };
+
+// Preenche descrições padrão para campos complexos sem descrição explícita
+Object.values(completeBlockSchemas).forEach((schema) => {
+  schema.fields = schema.fields.map((field) => {
+    if (!field.description) {
+      if (field.type === 'select') {
+        return { ...field, description: 'Selecione uma opção adequada para este campo' };
+      }
+      if (field.type === 'options-list') {
+        return { ...field, description: 'Lista de itens configuráveis; adicione, remova ou reordene conforme necessário' };
+      }
+      if (field.type === 'json') {
+        return { ...field, description: 'Configuração avançada em JSON; use com cautela' };
+      }
+    }
+    return field;
+  });
+});
 
 // Generate dynamic schemas for any missing blocks from ENHANCED_BLOCK_REGISTRY
 export function generateFallbackSchema(blockType: string): BlockSchema {

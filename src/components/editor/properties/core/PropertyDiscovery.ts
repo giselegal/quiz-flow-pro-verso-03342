@@ -9,8 +9,7 @@ import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
 import { mapComponentType } from './ComponentTypeMapping';
 import { MODULAR_COMPONENTS } from '@/config/modularComponents';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { blockPropertySchemas } from '@/config/blockPropertySchemas';
-import { completeBlockSchemas as completeSchemas, generateFallbackSchema } from '@/config/expandedBlockSchemas';
+import { propertySchemas, getPropertySchema as getBlockPropertySchema } from '@/config/propertySchemas';
 import type { Block } from '@/types/editor';
 
 export interface DiscoveredProperty {
@@ -404,7 +403,7 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
   }
 
   // PRIORIDADE 2: Usar schemas completos (merged) quando disponíveis
-  const mergedSchema = (completeSchemas as any)[blockType];
+  const mergedSchema = (propertySchemas as any)[blockType];
   if (mergedSchema) {
     console.log('✅ Using completeBlockSchemas for:', blockType);
     const schema = mergedSchema;
@@ -427,32 +426,9 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
     return [...getUniversalPropertiesForBlock(currentBlock), ...schemaProperties];
   }
 
-  // PRIORIDADE 3: Usar schemas específicos do blockPropertySchemas (legado)
-  if (blockPropertySchemas[blockType]) {
-    console.log('✅ Using blockPropertySchemas (fallback) for:', blockType);
-    const schema = blockPropertySchemas[blockType];
-    const schemaProperties = schema.fields.map((field: any) => createProperty(
-      field.key,
-      currentBlock?.properties?.[field.key] || currentBlock?.content?.[field.key] || field.defaultValue,
-      mapFieldTypeToPropertyType(field.type),
-      field.label,
-      mapGroupToCategory(field.group),
-      {
-        description: field.description,
-        options: field.options,
-        min: field.min,
-        max: field.max,
-        step: field.step,
-        required: field.required,
-      }
-    ));
-
-    return [...getUniversalPropertiesForBlock(currentBlock), ...schemaProperties];
-  }
-
-  // PRIORIDADE 4: Gerar schema dinâmico de fallback e mapear
+  // PRIORIDADE 3: Gerar schema dinâmico de fallback e mapear
   console.log('🧩 Generating fallback schema for:', blockType);
-  const dynamicSchema = generateFallbackSchema(blockType);
+  const dynamicSchema = getBlockPropertySchema(blockType);
   if (dynamicSchema && dynamicSchema.fields?.length) {
     const fallbackProps = dynamicSchema.fields.map((field: any) => createProperty(
       field.key,
@@ -749,11 +725,11 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
     case 'options-grid':
       console.log('✅ getPropertiesForComponentType: Found options-grid case, using full schema');
       // Use the complete schema from blockPropertySchemas for options-grid
-      const optionsGridSchema = blockPropertySchemas['options-grid'];
+  const optionsGridSchema = (propertySchemas as any)['options-grid'];
       console.log('📋 optionsGridSchema:', optionsGridSchema);
       if (optionsGridSchema && optionsGridSchema.fields) {
         console.log('🔢 Total fields in schema:', optionsGridSchema.fields.length);
-        const propertiesFromSchema: DiscoveredProperty[] = optionsGridSchema.fields.map(field => {
+  const propertiesFromSchema: DiscoveredProperty[] = optionsGridSchema.fields.map((field: any) => {
           // Map field types to PropertyType enum
           let propertyType: PropertyType;
           switch (field.type) {
