@@ -2729,6 +2729,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     }
                                 }
 
+                                // 3) Tratamento especial: quiz-options / options-grid
+                                // As opções pertencem ao content, mesmo que content.options ainda não exista
+                                if ((selectedBlock.type === 'quiz-options' || selectedBlock.type === 'options-grid') && 'options' in patch) {
+                                    contentPatch.options = patch.options;
+                                    delete (propPatch as any).options;
+                                }
+
                                 if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
                                 if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
                             }}
