@@ -85,10 +85,30 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps & { properties
     // Compat: permitir override por properties (novo painel) mantendo compat com v3 content
     const showImages = (properties?.showImages ?? content.showImages) !== false;
     const columns = Math.max(1, Math.min(4, Number(properties?.columns ?? content.columns ?? 2)));
-    // imageSize no v3 é number (maxHeight). No novo painel, usamos properties.imageMaxSize (range rápido)
+    // Compat: v3 usava content.imageSize como número (maxHeight). Novo painel usa presets/string + imageMaxSize + custom w/h
+    const propImageSize = (properties?.imageSize as any) as ('small' | 'medium' | 'large' | 'custom' | undefined);
+    const imageWidth = typeof (properties as any)?.imageWidth === 'number' ? (properties as any).imageWidth : undefined;
+    const imageHeight = typeof (properties as any)?.imageHeight === 'number' ? (properties as any).imageHeight : undefined;
     const imageMaxSize: number | undefined = typeof properties?.imageMaxSize === 'number'
         ? properties!.imageMaxSize
         : (typeof (content as any).imageSize === 'number' ? (content as any).imageSize : undefined);
+
+    const computeMaxHeight = (): number | undefined => {
+        // Modo custom (prioridade)
+        if (propImageSize === 'custom' && (imageWidth || imageHeight)) {
+            return imageHeight ?? imageWidth; // se só houver largura, usa como aprox.
+        }
+        // Slider rápido tem precedência sobre presets
+        if (typeof imageMaxSize === 'number') return imageMaxSize;
+        // Presets alinhados ao preview do editor
+        switch (propImageSize) {
+            case 'small': return 120;
+            case 'large': return 240;
+            case 'medium':
+            default: return 180;
+        }
+    };
+    const resolvedMaxHeight = computeMaxHeight();
 
     // Normalizar opções para evitar .map/.find em tipos inválidos
     const optionsArray = ensureArray<QuizOption>(options);
@@ -165,7 +185,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps & { properties
     const gridStyles: React.CSSProperties = useMemo(() => ({
         display: 'grid',
         gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
-        gap: DesignTokens.spacing.md,
+        gap: typeof (properties as any)?.gridGap === 'number' ? (properties as any).gridGap : DesignTokens.spacing.md,
         width: '100%',
     }), [gridColumns]);
 
@@ -289,7 +309,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps & { properties
                                         style={{
                                             width: '100%',
                                             height: 'auto',
-                                            maxHeight: imageMaxSize ?? 256,
+                                            maxHeight: resolvedMaxHeight ?? 256,
                                             objectFit: 'cover',
                                             borderRadius: DesignTokens.borderRadius.md,
                                             marginBottom: DesignTokens.spacing.sm,
