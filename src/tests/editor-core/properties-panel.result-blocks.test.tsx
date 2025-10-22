@@ -4,6 +4,7 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import { PropertiesPanel } from '@/components/editor/quiz/components/PropertiesPanel';
 import ResultHeaderBlock from '@/components/editor/blocks/atomic/ResultHeaderBlock';
 import ResultDescriptionBlock from '@/components/editor/blocks/atomic/ResultDescriptionBlock';
+import ResultCTABlock from '@/components/editor/blocks/atomic/ResultCTABlock';
 
 function WrapperHeaderTest() {
     const [block, setBlock] = React.useState<any>({
@@ -146,5 +147,72 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
 
         // Preview deve conter a nova descrição
         expect(screen.getByTestId('preview')).toHaveTextContent('Nova descrição detalhada');
+    });
+
+    it('edita texto do botão no result-cta e reflete no preview', async () => {
+        function WrapperCTATest() {
+            const [block, setBlock] = React.useState<any>({
+                id: 'b3',
+                type: 'result-cta',
+                order: 2,
+                properties: { text: 'Ver Recomendações', backgroundColor: '#B89B7A', textColor: '#FFFFFF', size: 'lg' },
+                content: {},
+            });
+            const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;
+
+            return (
+                <div>
+                    <PropertiesPanel
+                        selectedStep={step}
+                        selectedBlock={block}
+                        headerConfig={{ showLogo: false, progressEnabled: false }}
+                        onHeaderConfigChange={() => { }}
+                        clipboard={null}
+                        canPaste={false}
+                        onPaste={() => { }}
+                        multiSelectedIds={[]}
+                        onDuplicateInline={() => { }}
+                        onPrepareDuplicateToAnother={() => { }}
+                        onCopyMultiple={() => { }}
+                        onRemoveMultiple={() => { }}
+                        onRemoveBlock={() => { }}
+                        onSaveAsSnippet={() => { }}
+                        snippets={[]}
+                        snippetFilter={''}
+                        onSnippetFilterChange={() => { }}
+                        onSnippetInsert={() => { }}
+                        onSnippetRename={() => { }}
+                        onSnippetDelete={() => { }}
+                        onRefreshSnippets={() => { }}
+                        onBlockPatch={(patch) => {
+                            // result-cta lê properties.text
+                            setBlock((prev: any) => ({ ...prev, properties: { ...prev.properties, ...patch } }));
+                        }}
+                        isOfferStep={false}
+                        OfferMapComponent={() => null as any}
+                        onOfferMapUpdate={() => { }}
+                        ThemeEditorPanel={({ onApply }: any) => (<button onClick={() => onApply({})}>apply</button>)}
+                        onApplyTheme={() => { }}
+                    />
+
+                    <div data-testid="preview-cta">
+                        <ResultCTABlock block={block} isSelected={false} onClick={() => { }} />
+                    </div>
+                </div>
+            );
+        }
+
+        render(<WrapperCTATest />);
+
+        // Campo inicial com texto do botão
+        const input = await screen.findByDisplayValue('Ver Recomendações');
+        expect(input).toBeInTheDocument();
+
+        await act(async () => {
+            fireEvent.change(input, { target: { value: 'Ir para Oferta' } });
+        });
+
+        // Preview deve refletir o texto do botão
+        expect(screen.getByTestId('preview-cta')).toHaveTextContent('Ir para Oferta');
     });
 });
