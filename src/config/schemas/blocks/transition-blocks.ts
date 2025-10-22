@@ -36,6 +36,8 @@ export const transitionHeroSchema = templates
   .icon('Image')
   .addField(titleField('content'))
   .addField(subtitleField('content'))
+  // Compatibilidade com JSON v3
+  .addField({ key: 'message', label: 'Mensagem', type: 'string', group: 'content', placeholder: 'Mensagem de transição' })
   .addFields(...imageFields('content'))
   // Comportamento opcional: avanço automático após delay (ms)
   .addField({ key: 'autoAdvanceDelay', label: 'Delay para avançar (ms)', type: 'number', group: 'logic', default: 0, min: 0, max: 30000 })

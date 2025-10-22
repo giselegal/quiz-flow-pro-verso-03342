@@ -13,6 +13,8 @@ export const introTitleSchema = templates
   .full('intro-title', 'Intro • Título')
   .category('intro')
   .icon('Type')
+  // Compatibilidade com JSON v3
+  .addField({ key: 'titleHtml', label: 'Título (HTML)', type: 'string', group: 'content', placeholder: '<strong>Descubra</strong> seu estilo' })
   .addField(titleField('content'))
   .addField(subtitleField('content'))
   .version('2.0.0')
@@ -23,6 +25,11 @@ export const introImageSchema = templates
   .category('intro')
   .icon('Image')
   .addFields(...imageFields('content'))
+  // Compatibilidade com JSON v3 (dimensões no content)
+  .addField({ key: 'width', label: 'Largura (px)', type: 'number', group: 'content', min: 0, max: 2000 })
+  .addField({ key: 'height', label: 'Altura (px)', type: 'number', group: 'content', min: 0, max: 2000 })
+  .addField({ key: 'objectFit', label: 'Object Fit', type: 'select', group: 'content', enumValues: ['contain','cover','fill','none','scale-down'], default: 'contain' })
+  .addField({ key: 'maxWidth', label: 'Largura Máxima (px)', type: 'number', group: 'content', min: 0, max: 2000 })
   .version('2.0.0')
   .build();
 
@@ -30,6 +37,8 @@ export const introDescriptionSchema = templates
   .full('intro-description', 'Intro • Descrição')
   .category('intro')
   .icon('AlignLeft')
+  // Compatibilidade com JSON v3
+  .addField({ key: 'text', label: 'Texto', type: 'string', group: 'content', placeholder: 'Descrição breve...' })
   .addField(descriptionField('content'))
   .version('2.0.0')
   .build();
@@ -52,6 +61,7 @@ export const introFormSchema = templates
   // Campos expandidos para cobrir JSON v3
   .addField({ key: 'formQuestion', label: 'Pergunta do Formulário', type: 'string', group: 'content', placeholder: 'Como posso te chamar?' })
   .addField({ key: 'nameLabel', label: 'Label do Nome', type: 'string', group: 'content', placeholder: 'Seu primeiro nome' })
+  .addField({ key: 'namePlaceholder', label: 'Placeholder do Nome', type: 'string', group: 'content', placeholder: 'Digite seu primeiro nome...' })
   .addField(placeholderField('content'))
   .addField({ key: 'submitText', label: 'Texto do Botão', type: 'string', group: 'content', placeholder: 'Quero Descobrir meu Estilo Agora!' })
   .addField({ key: 'validationMessage', label: 'Mensagem de Validação', type: 'string', group: 'content', placeholder: 'Por favor, digite seu nome para continuar' })

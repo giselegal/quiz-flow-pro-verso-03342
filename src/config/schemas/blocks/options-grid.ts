@@ -171,7 +171,12 @@ export const optionsGridSchema = createSchema('options-grid', 'Grid de Opções'
     titleField('content'),
     descriptionField('content'),
     optionsField,
-    showImagesField
+    showImagesField,
+    // Compatibilidade com JSON v3 (campos no content)
+    { key: 'minSelections', label: 'Mínimo de Seleções', type: 'number', group: 'content', min: 0, max: 12, default: 1 },
+    { key: 'autoAdvance', label: 'Avanço Automático', type: 'boolean', group: 'content', default: false },
+    { key: 'autoAdvanceDelay', label: 'Delay do Avanço (ms)', type: 'number', group: 'content', min: 0, max: 60000, default: 0 },
+    { key: 'validationMessage', label: 'Mensagem de Validação', type: 'string', group: 'content', placeholder: 'Selecione N opções para continuar' }
   )
   .addFields(
     requiredSelectionsField,

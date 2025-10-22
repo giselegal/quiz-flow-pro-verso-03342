@@ -5,6 +5,10 @@ export const offerHeroSchema = templates
   .full('offer-hero', 'Hero de Oferta')
   .category('offer')
   .icon('Megaphone')
+  // Compatibilidade com JSON v3
+  .addField({ key: 'title', label: 'Título', type: 'string', group: 'content', placeholder: 'Título da oferta' })
+  .addField({ key: 'description', label: 'Descrição', type: 'richtext', group: 'content', placeholder: 'Descrição da oferta' })
+  .addField({ key: 'urgencyMessage', label: 'Mensagem de Urgência', type: 'string', group: 'content', placeholder: 'Oferta por tempo limitado!' })
   .addField(headlineField('content'))
   .addField(subtitleField('content'))
   .addFields(...buttonFields('content'))
@@ -64,6 +68,8 @@ export const pricingSchema = templates
   .full('pricing', 'Oferta • Pricing')
   .category('offer')
   .icon('DollarSign')
+  // JSON v3 usa content.pricing (objeto aninhado)
+  .addField({ key: 'pricing', label: 'Pricing (JSON v3)', type: 'object', group: 'content', description: 'Objeto de preços (original/sale/installments)' })
   // Conteúdo textual
   .addField({ key: 'title', label: 'Título', type: 'string', group: 'content', placeholder: 'Oferta Especial' })
   .addField({ key: 'subtitle', label: 'Subtítulo', type: 'string', group: 'content', placeholder: 'Aproveite por tempo limitado' })

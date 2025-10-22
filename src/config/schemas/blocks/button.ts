@@ -59,6 +59,11 @@ export const buttonSchema = templates
     buttonTextField('content'),
     buttonUrlField('content')
   )
+  // Compatibilidade com JSON v3 (CTAButton usa label/href)
+  .addFields(
+    { key: 'label', label: 'Label (alias)', type: 'string', group: 'content', placeholder: 'Texto do botão' },
+    { key: 'href', label: 'Href (alias)', type: 'string', group: 'content', placeholder: 'https://...' }
+  )
   .addFields(
     variantField,
     sizeField,
