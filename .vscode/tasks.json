@@ -4,7 +4,10 @@
 		{
 			"label": "Executar servidor de desenvolvimento",
 			"type": "shell",
-			"command": "cd /workspaces/quiz-flow-pro-verso && npm run dev",
+			"command": "npm run dev",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
 			"group": "build",
 			"isBackground": true,
 			"problemMatcher": []
