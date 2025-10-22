@@ -265,6 +265,8 @@ describe('🔌 API + Editor Integration Tests', () => {
 
         it('should cache API responses effectively', async () => {
             const componentId = 'quiz-options-grid';
+            // Garantir estado frio para medir corretamente a primeira chamada
+            configAPI.clearCache();
             const startTime = Date.now();
 
             // Primeira chamada (deve buscar da API)
