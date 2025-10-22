@@ -226,6 +226,20 @@ export function initializeSchemaRegistry(): void {
   registerSchema('result-variables', () => import('./blocks/step20-results-config').then(m => m.resultVariablesSchema));
   registerSchema('result-messages', () => import('./blocks/step20-results-config').then(m => m.resultMessagesSchema));
 
+  // NEW: Atomic result blocks (SchemaAPI unificado)
+  registerSchema('result-header', () => import('./blocks/result-blocks').then(m => m.resultHeaderSchema));
+  registerSchema('result-description', () => import('./blocks/result-blocks').then(m => m.resultDescriptionSchema));
+  registerSchema('result-image', () => import('./blocks/result-blocks').then(m => m.resultImageSchema));
+  registerSchema('result-cta', () => import('./blocks/result-blocks').then(m => m.resultCtaSchema));
+  registerSchema('result-progress-bars', () => import('./blocks/result-blocks').then(m => m.resultProgressBarsSchema));
+  registerSchema('result-main', () => import('./blocks/result-blocks').then(m => m.resultMainSchema));
+  registerSchema('result-style', () => import('./blocks/result-blocks').then(m => m.resultStyleSchema));
+  registerSchema('result-characteristics', () => import('./blocks/result-blocks').then(m => m.resultCharacteristicsSchema));
+  registerSchema('result-secondary-styles', () => import('./blocks/result-blocks').then(m => m.resultSecondaryStylesSchema));
+  registerSchema('result-cta-primary', () => import('./blocks/result-blocks').then(m => m.resultCtaPrimarySchema));
+  registerSchema('result-cta-secondary', () => import('./blocks/result-blocks').then(m => m.resultCtaSecondarySchema));
+  registerSchema('result-share', () => import('./blocks/result-blocks').then(m => m.resultShareSchema));
+
   // TODO: Adicionar mais schemas conforme criados
   // registerSchema('text', () => import('./blocks/text').then(m => m.textSchema));
   // registerSchema('divider', () => import('./blocks/divider').then(m => m.dividerSchema));
