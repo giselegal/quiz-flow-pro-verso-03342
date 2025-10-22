@@ -7,6 +7,7 @@ import ResultDescriptionBlock from '@/components/editor/blocks/atomic/ResultDesc
 import ResultCTABlock from '@/components/editor/blocks/atomic/ResultCTABlock';
 import ResultImageBlock from '@/components/editor/blocks/atomic/ResultImageBlock';
 import ResultProgressBarsBlock from '@/components/editor/blocks/ResultProgressBarsBlock';
+import ResultStyleBlock from '@/components/editor/blocks/atomic/ResultStyleBlock';
 
 function WrapperHeaderTest() {
     const [block, setBlock] = React.useState<any>({
@@ -397,5 +398,74 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
         // Verifica que as barras refletem a nova cor
         bars = screen.getByTestId('preview-bars').querySelectorAll('div[style*="background-color:"]');
         expect(Array.from(bars).some((el) => (el as HTMLElement).style.backgroundColor === '#ff0000')).toBe(true);
+    });
+
+    it('altera cor em result-style e reflete nas barras de progresso', async () => {
+        function WrapperResultStyleTest() {
+            const [block, setBlock] = React.useState<any>({
+                id: 'b6',
+                type: 'result-style',
+                order: 5,
+                properties: { },
+                content: { color: '#00aaee' },
+            });
+            const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;
+
+            return (
+                <div>
+                    <PropertiesPanel
+                        selectedStep={step}
+                        selectedBlock={block}
+                        headerConfig={{ showLogo: false, progressEnabled: false }}
+                        onHeaderConfigChange={() => { }}
+                        clipboard={null}
+                        canPaste={false}
+                        onPaste={() => { }}
+                        multiSelectedIds={[]}
+                        onDuplicateInline={() => { }}
+                        onPrepareDuplicateToAnother={() => { }}
+                        onCopyMultiple={() => { }}
+                        onRemoveMultiple={() => { }}
+                        onRemoveBlock={() => { }}
+                        onSaveAsSnippet={() => { }}
+                        snippets={[]}
+                        snippetFilter={''}
+                        onSnippetFilterChange={() => { }}
+                        onSnippetInsert={() => { }}
+                        onSnippetRename={() => { }}
+                        onSnippetDelete={() => { }}
+                        onRefreshSnippets={() => { }}
+                        onBlockPatch={(patch) => {
+                            // Mapear campo de schema 'color' para content.color do bloco
+                            if (typeof patch.color === 'string') {
+                                setBlock((prev: any) => ({ ...prev, content: { ...prev.content, color: patch.color } }));
+                                return;
+                            }
+                            setBlock((prev: any) => ({ ...prev, content: { ...prev.content, ...patch } }));
+                        }}
+                        isOfferStep={false}
+                        OfferMapComponent={() => null as any}
+                        onOfferMapUpdate={() => { }}
+                        ThemeEditorPanel={({ onApply }: any) => (<button onClick={() => onApply({})}>apply</button>)}
+                        onApplyTheme={() => { }}
+                    />
+
+                    <div data-testid="preview-style">
+                        <ResultStyleBlock block={block} isSelected={false} onClick={() => { }} />
+                    </div>
+                </div>
+            );
+        }
+
+        render(<WrapperResultStyleTest />);
+
+        // Muda a cor e valida nas barras internas
+        const colorInput = await screen.findByDisplayValue('#00aaee');
+        await act(async () => {
+            fireEvent.change(colorInput, { target: { value: '#ff00ff' } });
+        });
+
+        const bars = screen.getByTestId('preview-style').querySelectorAll('div[style*="background-color:"]');
+        expect(Array.from(bars).some((el) => (el as HTMLElement).style.backgroundColor === '#ff00ff')).toBe(true);
     });
 });
