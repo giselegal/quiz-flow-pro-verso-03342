@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 🎯 SISTEMA DE IDs SEMÂNTICOS - IMPLEMENTAÇÃO COMPLETA
  *
