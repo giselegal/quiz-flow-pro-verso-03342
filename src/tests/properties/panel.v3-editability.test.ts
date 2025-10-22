@@ -1,2 +1,8 @@
-// Arquivo migrado para .tsx; esta versão é deixada vazia para evitar erro de JSX em .ts
-export {};
+// Arquivo migrado para .tsx; mantendo um teste placeholder para evitar falhas de suíte vazia.
+import { describe, it, expect } from 'vitest';
+
+describe('[placeholder] v3 editability (migrated to .tsx)', () => {
+	it('no-op placeholder', () => {
+		expect(true).toBe(true);
+	});
+});
