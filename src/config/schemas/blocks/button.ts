@@ -32,7 +32,8 @@ const sizeField: BlockFieldSchema<string> = {
   label: 'Tamanho',
   type: 'select',
   group: 'style',
-  enumValues: ['sm', 'md', 'lg'],
+  // Inclui aliases usados no JSON v3 (large, xlarge)
+  enumValues: ['sm', 'md', 'lg', 'large', 'xlarge'],
   default: 'md',
 };
 
@@ -53,6 +54,8 @@ export const buttonSchema = templates
   .icon('MousePointer')
   // Adiciona grupo de layout (necessário para campos com group: 'layout')
   .addGroup('layout', 'Layout', { order: 3 })
+  // Grupo opcional para analytics
+  .addGroup('analytics', 'Analytics', { order: 4, collapsible: true, defaultExpanded: false })
   // Grupo extra para experimentos A/B
   .addGroup('ab', 'Teste A/B', { order: 5, collapsible: true, defaultExpanded: false })
   .addFields(
@@ -63,6 +66,30 @@ export const buttonSchema = templates
   .addFields(
     { key: 'label', label: 'Label (alias)', type: 'string', group: 'content', placeholder: 'Texto do botão' },
     { key: 'href', label: 'Href (alias)', type: 'string', group: 'content', placeholder: 'https://...' }
+  )
+  // Compatibilidade extra com CTAButton do JSON v3 (props.*)
+  .addFields(
+    { key: 'icon', label: 'Ícone', type: 'string', group: 'content', placeholder: 'ShoppingCart | emoji' } as BlockFieldSchema<string>,
+    { key: 'iconAnimation', label: 'Animação do ícone', type: 'string', group: 'style', placeholder: 'bounce-on-hover | pulse' } as BlockFieldSchema<string>,
+    // Alias para v3 "style" (mantém variant intacto, mas permite salvar o campo vindo do template)
+    { key: 'style', label: 'Estilo (v3 alias)', type: 'string', group: 'style', placeholder: 'primary | gradient' } as BlockFieldSchema<string>,
+    // Cores em gradiente (v3: props.colors.from/to)
+    { key: 'colorsFrom', label: 'Cores: de (from)', type: 'string', group: 'style', placeholder: 'primary' } as BlockFieldSchema<string>,
+    { key: 'colorsTo', label: 'Cores: para (to)', type: 'string', group: 'style', placeholder: 'accent' } as BlockFieldSchema<string>,
+    // Largura total no mobile (v3)
+    { key: 'fullWidthMobile', label: 'Largura total (mobile)', type: 'boolean', group: 'layout', default: false } as BlockFieldSchema<boolean>,
+    // Posição contextual no fluxo (v3)
+    { key: 'position', label: 'Posição (contexto)', type: 'string', group: 'layout', placeholder: 'after-questions | after_offer | after_guarantee' } as BlockFieldSchema<string>,
+    // Transição opcional (v3)
+    { key: 'showTransition', label: 'Mostrar transição', type: 'boolean', group: 'content', default: false } as BlockFieldSchema<boolean>,
+    { key: 'transitionTitle', label: 'Transição: título', type: 'string', group: 'content' } as BlockFieldSchema<string>,
+    { key: 'transitionSubtitle', label: 'Transição: subtítulo', type: 'string', group: 'content' } as BlockFieldSchema<string>,
+    { key: 'transitionBackground', label: 'Transição: background', type: 'string', group: 'style', placeholder: 'gradient primary/10 to accent/10' } as BlockFieldSchema<string>,
+    { key: 'transitionBorder', label: 'Transição: borda', type: 'string', group: 'style', placeholder: 'primary/20' } as BlockFieldSchema<string>,
+    // Analytics (v3)
+    { key: 'analyticsEventName', label: 'Analytics: eventName', type: 'string', group: 'analytics', placeholder: 'cta_primary_click' } as BlockFieldSchema<string>,
+    { key: 'analyticsCategory', label: 'Analytics: category', type: 'string', group: 'analytics', placeholder: 'conversion' } as BlockFieldSchema<string>,
+    { key: 'analyticsLabel', label: 'Analytics: label', type: 'string', group: 'analytics', placeholder: 'after_offer' } as BlockFieldSchema<string>
   )
   .addFields(
     variantField,
