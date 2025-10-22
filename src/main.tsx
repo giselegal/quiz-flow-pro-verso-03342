@@ -22,7 +22,7 @@ import './utils/canvasPerformanceControl';
 // ✨ MODULAR STEPS: Sistema modular de steps - auto-registro dos componentes
 import './components/steps';
 // 🏗️ SCHEMA SYSTEM: Inicializa o sistema modular de schemas com lazy loading
-import { initializeSchemaRegistry } from './config/schemas';
+import { initializeSchemaRegistry, SchemaAPI } from './config/schemas';
 // 🤖 AI: IA do funil auto-ativada via utils
 // import { activateFunnelAI } from './utils/funnelAIActivator'; // Removido - não utilizado
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
@@ -30,6 +30,24 @@ import { initializeSchemaRegistry } from './config/schemas';
 // 🏗️ Inicializar sistema de schemas
 initializeSchemaRegistry();
 console.log('✅ Schema system initialized');
+
+// Pré-carregar schemas críticos para evitar fallback legacy em blocos de resultado
+try {
+  SchemaAPI.preload(
+    'result-header',
+    'result-description',
+    'result-image',
+    'result-cta',
+    'result-progress-bars',
+    'result-main',
+    'result-style',
+    'result-characteristics',
+    'result-secondary-styles',
+    'result-cta-primary',
+    'result-cta-secondary',
+    'result-share',
+  );
+} catch { /* ignore preload errors in dev */ }
 
 // 🧹 DEVELOPMENT: Ativa limpeza de avisos apenas em desenvolvimento
 if (import.meta.env.DEV) {
