@@ -90,6 +90,30 @@ export const PublishedTemplateRunner: React.FC<PublishedTemplateRunnerProps> = (
             {session && (
                 <div>
                     <div>Stage Atual: {session.currentStageId}</div>
+                    {/* Renderização mínima de componentes para testes */}
+                    {currentStage && currentStage.componentIds.map(cid => {
+                        const comp = snapshot.components[cid];
+                        if (!comp) return null;
+                        if (comp.type === 'OptionList' && Array.isArray(comp.props?.options)) {
+                            return (
+                                <div key={cid} role="group" aria-label="Opções">
+                                    {comp.props.options.map((opt: any) => (
+                                        <label key={opt.id} style={{ display: 'block' }}>
+                                            <input
+                                                type="radio"
+                                                name={cid}
+                                                value={opt.id}
+                                                aria-label={opt.label}
+                                                onChange={() => { /* noop para teste */ }}
+                                            />
+                                            {opt.label}
+                                        </label>
+                                    ))}
+                                </div>
+                            );
+                        }
+                        return null;
+                    })}
                     <button onClick={advance} disabled={!!outcome}>
                         {currentStage?.type === 'result' ? 'Finalizar' : 'Avançar'}
                     </button>

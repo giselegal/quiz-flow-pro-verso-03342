@@ -14,7 +14,7 @@ import { supabase } from '@/integrations/supabase/customClient';
 import { indexedDBService } from './storage/IndexedDBService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 // MIGRATED: Using new validation service
-import { migratedFunnelValidationService } from '@/services/migratedFunnelValidationService';
+import { funnelValidationService } from '@/services/ServiceAliases';
 import { errorManager, createValidationError } from '@/utils/errorHandling';
 import { deepClone } from '@/utils/cloneFunnel';
 

@@ -10,7 +10,7 @@ import { useRoute } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TemplateService } from '@/config/templates';
+import { UnifiedTemplateService } from '@/services/ServiceAliases';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 
 const TemplatePreviewPage: React.FC = () => {

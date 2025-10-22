@@ -6,6 +6,9 @@ import { expect, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
 import React from 'react';
+// Stub de IndexedDB para testes que carregam serviços de storage/imagens
+// Nota: reutiliza o mock mais completo já presente no repositório
+import '../__tests__/setup/indexeddb.mock';
 
 // Mock global de next-themes para evitar dependências de DOM complexas nos testes
 vi.mock('next-themes', () => {

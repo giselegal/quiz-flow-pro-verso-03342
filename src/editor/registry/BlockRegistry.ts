@@ -101,7 +101,8 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             content: {
                 label: 'Como posso te chamar?',
                 placeholder: 'Digite seu nome...',
-                type: 'text'
+                type: 'text',
+                name: 'name'
             },
             properties: {
                 required: true,

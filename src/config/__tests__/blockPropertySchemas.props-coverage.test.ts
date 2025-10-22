@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { blockPropertySchemas, type BlockSchema } from '@/config/blockPropertySchemas';
-import { completeBlockSchemas } from '@/config/expandedBlockSchemas';
+import { propertySchemas } from '@/config/propertySchemas';
 import { BLOCK_DEFINITIONS } from '@/editor/registry/BlockRegistry';
 import type { BlockDefinition } from '@/editor/registry/BlockRegistry';
 
@@ -21,7 +21,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         location: 'content';
       }> = [];
       
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       
       BLOCK_DEFINITIONS.forEach((blockDef: BlockDefinition) => {
         const schema = allSchemas[blockDef.type];
@@ -63,7 +63,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         location: 'properties';
       }> = [];
       
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       
       // Lista de propriedades universais que podem não estar no schema individual
       const universalProps = [
@@ -115,7 +115,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
 
   describe('📊 Análise de Cobertura por Componente', () => {
     it('deve gerar relatório detalhado de cobertura', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const coverageReport: Array<{
         blockType: string;
         category: string;
@@ -210,7 +210,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         'navigation'
       ];
       
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const invalidGroups: Array<{ schema: string; field: string; group: string }> = [];
       
       Object.entries(allSchemas).forEach(([schemaType, schema]) => {
@@ -239,7 +239,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
     });
 
     it('schemas complexos devem ter pelo menos 2 grupos', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const complexComponents = [
         'options-grid',
         'lead-form',
@@ -271,7 +271,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
 
   describe('📝 Validação de Descrições', () => {
     it('campos importantes devem ter descrição', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const importantFieldTypes = ['json', 'options-list', 'select'];
       const missingDescriptions: Array<{ schema: string; field: string; type: string }> = [];
       
@@ -305,7 +305,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
 
   describe('🔄 Validação de DefaultValues', () => {
     it('campos importantes devem ter defaultValue', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const fieldsNeedingDefaults = ['boolean', 'range', 'select', 'number'];
       const missingDefaults: Array<{ schema: string; field: string; type: string }> = [];
       
@@ -345,7 +345,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
 
   describe('🎯 Validação de Required Fields', () => {
     it('campos marcados como required devem existir nos defaultProps', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const issues: Array<{ schema: string; field: string }> = [];
       
       BLOCK_DEFINITIONS.forEach((blockDef: BlockDefinition) => {

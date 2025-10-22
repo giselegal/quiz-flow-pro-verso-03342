@@ -97,26 +97,35 @@ import { UnifiedStorageService } from '@/services/UnifiedStorageService';
 
 ### 4. Quiz Services (8 → 2)
 
+Nota: `Quiz21CompleteService` provê dados/estruturas do quiz (não é um serviço de I/O). Os serviços canônicos são:
+
 **Canônicos**:
-- `Quiz21CompleteService` (lógica de quiz)
-- `quizDataService` (operações de dados)
+- `quizSupabaseService` (persistência no Supabase, sessões, respostas, resultados, eventos)
+- `quizDataService` (tracking local/client-side, pixel events, utilidades)
 
 ```typescript
 // ❌ ANTES
 import { quizService } from '@/services/quizService';
 import { quizBuilderService } from '@/services/quizBuilderService';
 
-// ✅ AGORA
-import { Quiz21CompleteService } from '@/services/Quiz21CompleteService';
+// ✅ AGORA (via barrel ou direto)
+import { quizSupabaseService, quizDataService } from '@/services/ServiceAliases';
+// ou
+import { quizSupabaseService } from '@/services/quizSupabaseService';
+import { quizDataService } from '@/services/quizDataService';
+
+// Dados (não serviço de I/O)
+import { QUIZ_21_COMPLETE_DATA } from '@/services/Quiz21CompleteService';
 ```
 
 **Arquivos removíveis**:
 - `src/services/quizService.ts`
 - `src/services/quizBuilderService.ts`
-- `src/services/quizSupabaseService.ts`
 - `src/services/QuizEditorBridge.ts`
 - `src/services/UnifiedQuizBridge.ts`
 - `src/services/quizDataAdapter.ts`
+
+> Importante: `src/services/quizSupabaseService.ts` é canônico e permanece.
 
 ### 5. Analytics Services (5 → 1)
 
@@ -258,6 +267,12 @@ npm run migrate:services
    - [ ] Migração completa
    - [ ] Remover todos os aliases
    - [ ] Arquivar serviços legacy
+
+## 📝 Changelog
+
+### 2025-10-22
+- Corrigida a seção de Quiz para refletir canônicos reais: `quizSupabaseService` (Supabase) e `quizDataService` (local), mantendo `QUIZ_21_COMPLETE_DATA` como fonte de dados.
+- Ajustado status: este repositório já exporta ambos via `ServiceAliases.ts` e migrou imports críticos.
 
 ## 📚 Recursos
 

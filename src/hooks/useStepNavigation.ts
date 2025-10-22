@@ -1,6 +1,6 @@
 import { toast } from '@/components/ui/use-toast';
 import { useQuizFlow } from '@/contexts';
-import { quizSupabaseService } from '@/services/quizSupabaseService';
+import { quizSupabaseService } from '@/services/ServiceAliases';
 import { templateService } from '@/services/templateService';
 import { useCallback, useEffect, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';

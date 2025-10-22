@@ -1,4 +1,4 @@
-import { quizSupabaseService } from '@/services/quizSupabaseService';
+import { quizSupabaseService } from '@/services/ServiceAliases';
 import { StorageService } from '@/services/core/StorageService';
 
 const isBrowser = typeof window !== 'undefined';

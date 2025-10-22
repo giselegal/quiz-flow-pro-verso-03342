@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { blockPropertySchemas, type BlockSchema } from '@/config/blockPropertySchemas';
-import { completeBlockSchemas } from '@/config/expandedBlockSchemas';
+import { propertySchemas } from '@/config/propertySchemas';
 import { BLOCK_DEFINITIONS } from '@/editor/registry/BlockRegistry';
 import type { BlockDefinition } from '@/editor/registry/BlockRegistry';
 
@@ -20,7 +20,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
       BLOCK_DEFINITIONS.forEach((blockDef: BlockDefinition) => {
         const hasSchema =
           blockPropertySchemas[blockDef.type] ||
-          completeBlockSchemas[blockDef.type];
+          propertySchemas[blockDef.type];
 
         if (!hasSchema) {
           missingSchemas.push(blockDef.type);
@@ -36,7 +36,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('📋 Validação de Campos Obrigatórios', () => {
     it('todos os schemas devem ter label e fields', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const invalidSchemas: string[] = [];
 
       Object.entries(allSchemas).forEach(([type, schema]: [string, BlockSchema]) => {
@@ -52,7 +52,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
     });
 
     it('todos os fields devem ter key, label e type', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const invalidFields: Array<{ schema: string; field: any }> = [];
 
       Object.entries(allSchemas).forEach(([schemaType, schema]: [string, BlockSchema]) => {
@@ -96,7 +96,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'style-card-inline'
       ];
 
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const missingStyleProps: Array<{ type: string; missing: string[] }> = [];
 
       visualComponents.forEach(componentType => {
@@ -136,7 +136,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'decorative-bar-inline'
       ];
 
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const missingTransform: string[] = [];
 
       mainComponents.forEach(componentType => {
@@ -162,7 +162,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('📝 Validação de Schemas de Formulário', () => {
     it('form-input deve ter campos de formulário', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const formInputSchema = allSchemas['form-input'];
 
       expect(formInputSchema, 'Schema form-input não encontrado').toBeDefined();
@@ -187,7 +187,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
     });
 
     it('lead-form deve ter configurações completas', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const leadFormSchema = allSchemas['lead-form'];
 
       expect(leadFormSchema, 'Schema lead-form não encontrado').toBeDefined();
@@ -215,7 +215,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('🎮 Validação de Options Grid', () => {
     it('options-grid deve ter configuração completa de múltiplas seleções', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const optionsGridSchema = allSchemas['options-grid'];
 
       expect(optionsGridSchema, 'Schema options-grid não encontrado').toBeDefined();
@@ -244,7 +244,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
     });
 
     it('options-grid deve ter sistema de pontuação configurável', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const optionsGridSchema = allSchemas['options-grid'];
 
       const fieldKeys = optionsGridSchema!.fields.map((f: any) => f.key);
@@ -267,7 +267,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('🏆 Validação de Componentes de Resultado', () => {
     it('result-header-inline deve ter campos de personalização', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const resultHeaderSchema = allSchemas['result-header-inline'];
 
       expect(resultHeaderSchema, 'Schema result-header-inline não encontrado').toBeDefined();
@@ -291,7 +291,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
     });
 
     it('style-card-inline deve ter propriedades de card completas', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const styleCardSchema = allSchemas['style-card-inline'];
 
       expect(styleCardSchema, 'Schema style-card-inline não encontrado').toBeDefined();
@@ -318,7 +318,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('⏰ Validação de Componentes de Urgência', () => {
     it('urgency-timer-inline deve ter configuração de timer', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const urgencyTimerSchema = allSchemas['urgency-timer-inline'];
 
       expect(urgencyTimerSchema, 'Schema urgency-timer-inline não encontrado').toBeDefined();
@@ -345,7 +345,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('💰 Validação de Componentes de Oferta', () => {
     it('value-anchoring deve ter campos de preço', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const valueAnchoringSchema = allSchemas['value-anchoring'];
 
       expect(valueAnchoringSchema, 'Schema value-anchoring não encontrado').toBeDefined();
@@ -367,7 +367,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
     });
 
     it('before-after-inline deve ter configuração de comparação', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const beforeAfterSchema = allSchemas['before-after-inline'];
 
       expect(beforeAfterSchema, 'Schema before-after-inline não encontrado').toBeDefined();
@@ -394,7 +394,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('👤 Validação de Componentes Sociais', () => {
     it('mentor-section-inline deve ter informações completas', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const mentorSchema = allSchemas['mentor-section-inline'];
 
       expect(mentorSchema, 'Schema mentor-section-inline não encontrado').toBeDefined();
@@ -418,7 +418,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
     });
 
     it('testimonial-card-inline deve ter configuração de depoimento', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const testimonialSchema = allSchemas['testimonial-card-inline'];
 
       expect(testimonialSchema, 'Schema testimonial-card-inline não encontrado').toBeDefined();
@@ -443,7 +443,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('🔗 Validação de Botões e CTAs', () => {
     it('button-inline deve ter configuração completa de validação', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const buttonSchema = allSchemas['button-inline'];
 
       expect(buttonSchema, 'Schema button-inline não encontrado').toBeDefined();
@@ -473,7 +473,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('📊 Estatísticas de Cobertura', () => {
     it('deve gerar relatório de cobertura completo', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const totalSchemas = Object.keys(allSchemas).length;
       const totalBlockDefinitions = BLOCK_DEFINITIONS.length;
 
@@ -512,7 +512,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'json'
       ];
 
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const invalidFields: Array<{ schema: string; field: string; type: string }> = [];
 
       Object.entries(allSchemas).forEach(([schemaType, schema]) => {
@@ -536,7 +536,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('📐 Validação de Ranges', () => {
     it('campos do tipo range devem ter min, max e step', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const invalidRanges: Array<{ schema: string; field: string; missing: string[] }> = [];
 
       Object.entries(allSchemas).forEach(([schemaType, schema]) => {
@@ -566,7 +566,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
   describe('🎛️ Validação de Selects', () => {
     it('campos do tipo select devem ter options', () => {
-      const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...completeBlockSchemas };
+  const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
       const invalidSelects: Array<{ schema: string; field: string }> = [];
 
       Object.entries(allSchemas).forEach(([schemaType, schema]) => {

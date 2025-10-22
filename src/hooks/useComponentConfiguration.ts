@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ConfigurationAPI } from '@/services/ConfigurationAPI';
+import { ConfigurationAPI } from '@/services/ServiceAliases';
 import type { ComponentDefinition } from '@/types/componentConfiguration';
 import { configurationCache } from '@/utils/ConfigurationCache';
 
@@ -81,7 +81,7 @@ export function useComponentConfiguration(
     // REFS
     // ============================================================================
 
-    const apiRef = useRef<ConfigurationAPI>(ConfigurationAPI.getInstance());
+    const apiRef = useRef(ConfigurationAPI.getInstance());
     const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const unsavedChangesRef = useRef<Record<string, any>>({});
     const definitionLoadedRef = useRef<boolean>(false);

@@ -6,7 +6,7 @@ import { Play, Eye, Sparkles } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { getUnifiedTemplates } from '@/config/unifiedTemplatesRegistry';
 import { cloneFunnelTemplate } from '@/utils/cloneFunnel';
-import { funnelLocalStore } from '@/services/funnelLocalStore';
+import { UnifiedStorageService } from '@/services/ServiceAliases';
 import EditorLayout from '@/components/layout/EditorLayout';
 
 const EditorTemplatesPage: React.FC = () => {
