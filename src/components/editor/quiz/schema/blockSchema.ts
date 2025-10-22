@@ -361,10 +361,11 @@ export const blockSchemaMap: Record<string, any> = {
     version: '1.0.0',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    // Component lê content.text (título) e properties.title como fallback
-    // Aqui expomos ambos para máxima compatibilidade
+    // Component lê content.text (título) e properties.title como fallback.
+    // Expor "title" (properties) como campo principal garante compatibilidade
+    // com blocos gerados pelo conversor de sections.
     defaultData: {
-      text: 'Seu Estilo Predominante é:',
+      title: 'Seu Estilo Predominante é:',
       subtitle: 'Baseado nas suas respostas',
       emoji: '🎉',
       titleColor: '#5b4135',
@@ -372,7 +373,7 @@ export const blockSchemaMap: Record<string, any> = {
       textAlign: 'center'
     },
     propertySchema: [
-      { key: 'text', type: 'string', label: 'Título', required: true, default: 'Seu Estilo Predominante é:' },
+      { key: 'title', type: 'string', label: 'Título', required: true, default: 'Seu Estilo Predominante é:' },
       { key: 'subtitle', type: 'string', label: 'Subtítulo', required: false, default: 'Baseado nas suas respostas' },
       { key: 'emoji', type: 'string', label: 'Emoji', required: false, default: '🎉' },
       { key: 'titleColor', type: 'color', label: 'Cor do Título', required: false, default: '#5b4135' },
