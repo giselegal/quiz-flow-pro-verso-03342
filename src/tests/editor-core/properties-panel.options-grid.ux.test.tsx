@@ -79,10 +79,14 @@ describe('PropertiesPanel UX (options-grid)', () => {
     it('colunas: controle segmentado 1-4 atualiza properties.columns', async () => {
         render(<PanelWrapper />);
 
-        // Procura por botões numerados 1..4; clica no 4
-        const fourButtons = (await screen.findAllByRole('button', { name: '4' })) as HTMLButtonElement[];
-        // Selecionar o que está no contexto do painel (evita conflitos com outras UIs)
-        const btn4 = fourButtons[0];
+        // Abrir grupo "Layout"
+        const layoutTrigger = await screen.findByText(/Layout/i);
+        await act(async () => { fireEvent.click(layoutTrigger); });
+
+        // Dentro do campo "Colunas do Grid", clicar em "4"
+        const label = await screen.findByText(/Colunas do Grid/i);
+        const field = label.closest('[data-field-key="columns"]') as HTMLElement;
+        const btn4 = within(field).getByRole('button', { name: '4' });
         await act(async () => { fireEvent.click(btn4); });
 
         const propsState = screen.getByTestId('props-state').textContent || '{}';
@@ -93,12 +97,16 @@ describe('PropertiesPanel UX (options-grid)', () => {
     it('imageSize: controle segmentado muda preset e exibe campos custom quando selecionado', async () => {
         render(<PanelWrapper />);
 
-        // Seleciona "custom" no controle segmentado
-        const customButtons = await screen.findAllByRole('button', { name: /custom/i });
-        await act(async () => { fireEvent.click(customButtons[0]); });
+        // Abrir grupo "Layout"
+        const layoutTrigger = await screen.findByText(/Layout/i);
+        await act(async () => { fireEvent.click(layoutTrigger); });
+
+        // Selecionar "custom" no campo Tamanho da imagem
+        const sizeField = (await screen.findByTestId('props-state')) && (document.querySelector('[data-field-key="imageSize"]') as HTMLElement);
+        const customBtn = within(sizeField).getByRole('button', { name: /custom/i });
+        await act(async () => { fireEvent.click(customBtn); });
 
         // Deve aparecer os campos de largura/altura (custom)
-        // Validamos pela presença do label (renderizado pelo DynamicPropertiesForm)
         const largura = await screen.findByText(/Largura \(custom\)/i);
         const altura = await screen.findByText(/Altura \(custom\)/i);
         expect(largura).toBeTruthy();
@@ -116,12 +124,21 @@ describe('PropertiesPanel UX (options-grid)', () => {
         };
         render(<PanelWrapper content={{ options: objOptions }} />);
 
-        const textInput = await screen.findByDisplayValue('ObjText');
+        // Abrir grupo "Conteúdo" (garantia)
+        const contentTrigger = await screen.findByText(/Conteúdo/i);
+        await act(async () => { fireEvent.click(contentTrigger); });
+
+        // Encontrar o primeiro cartão e seus campos
+        const allTextboxes = await screen.findAllByRole('textbox');
+        const textInput = allTextboxes.find((el) => (el as HTMLInputElement).value === 'ObjText') as HTMLInputElement;
+        expect(textInput).toBeTruthy();
         const card = textInput.closest('.p-4') as HTMLElement;
         const scoped = within(card);
-        const urlInput = scoped.getAllByRole('textbox')[1] as HTMLInputElement;
+        const inputs = scoped.getAllByRole('textbox') as HTMLInputElement[];
+        // Estrutura: [Texto, Imagem(URL), Categoria] + um spinbutton para Pontos
+        const urlInput = inputs[1];
         const numberInput = scoped.getByRole('spinbutton') as HTMLInputElement;
-        const categoryInput = scoped.getAllByRole('textbox')[2] as HTMLInputElement;
+        const categoryInput = inputs[2];
 
         expect(urlInput.value).toBe('https://x/img.png');
         expect(numberInput.value).toBe('9');
