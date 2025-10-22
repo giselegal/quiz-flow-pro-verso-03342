@@ -37,6 +37,9 @@ export const TemplateFunnelService = UnifiedCRUDService;
 
 import { UnifiedTemplateService } from './UnifiedTemplateService';
 import HybridTemplateServiceClass from './HybridTemplateService';
+// Exportar canônicos diretamente para facilitar migração por barrel
+export { UnifiedTemplateService } from './UnifiedTemplateService';
+export { default as HybridTemplateService } from './HybridTemplateService';
 
 /** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
 export const TemplateService = UnifiedTemplateService;
@@ -56,14 +59,14 @@ export const TemplateRuntimeService = UnifiedTemplateService;
 /** @deprecated Use UnifiedTemplateService - Alias mantido para compatibilidade */
 export const customTemplateService = UnifiedTemplateService;
 
-// Re-export default para compatibilidade
-export { default as HybridTemplateService } from './HybridTemplateService';
+// Re-export já feito acima
 
 // ============================================================================
 // STORAGE SERVICES - 6 serviços → 1 canônico
 // ============================================================================
 
 import { UnifiedStorageService } from './UnifiedStorageService';
+export { UnifiedStorageService } from './UnifiedStorageService';
 
 /** @deprecated Use UnifiedStorageService - Alias mantido para compatibilidade */
 export const FunnelStorageAdapter = UnifiedStorageService;
@@ -100,6 +103,7 @@ export { quizDataService } from './quizDataService';
 // ============================================================================
 
 import { AnalyticsService } from './AnalyticsService';
+export { AnalyticsService } from './AnalyticsService';
 
 /** @deprecated Use AnalyticsService - Arquivo deprecated removível */
 export { AnalyticsService as compatibleAnalytics };
@@ -115,6 +119,7 @@ export const realTimeAnalytics = AnalyticsService;
 // ============================================================================
 
 import { funnelValidationService } from './funnelValidationService';
+export { funnelValidationService } from './funnelValidationService';
 
 /** @deprecated Use funnelValidationService - Alias mantido para compatibilidade */
 export const migratedFunnelValidationService = funnelValidationService;
@@ -130,6 +135,7 @@ export const AlignmentValidator = funnelValidationService;
 // ============================================================================
 
 import { ConfigurationService } from './ConfigurationService';
+export { ConfigurationService } from './ConfigurationService';
 
 /** @deprecated Use ConfigurationService - Alias mantido para compatibilidade */
 export const ConfigurationAPI = ConfigurationService;
