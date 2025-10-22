@@ -6,6 +6,7 @@ import ResultHeaderBlock from '@/components/editor/blocks/atomic/ResultHeaderBlo
 import ResultDescriptionBlock from '@/components/editor/blocks/atomic/ResultDescriptionBlock';
 import ResultCTABlock from '@/components/editor/blocks/atomic/ResultCTABlock';
 import ResultImageBlock from '@/components/editor/blocks/atomic/ResultImageBlock';
+import ResultProgressBarsBlock from '@/components/editor/blocks/ResultProgressBarsBlock';
 
 function WrapperHeaderTest() {
     const [block, setBlock] = React.useState<any>({
@@ -303,5 +304,98 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
         expect(img).not.toBeNull();
         expect(img?.getAttribute('src')).toBe('https://example.com/image.png');
         expect(img?.getAttribute('alt')).toBe('Foto de resultado');
+    });
+
+    it('edita título, showTop3 e cor das barras no result-progress-bars', async () => {
+        function WrapperProgressBarsTest() {
+            const [block, setBlock] = React.useState<any>({
+                id: 'b5',
+                type: 'result-progress-bars',
+                order: 4,
+                properties: { title: 'Compatibilidade com estilos:', showTop3: true, barColor: '#00ff00', marginBottom: '8' },
+                content: {
+                    scores: [
+                        { name: 'A', score: 80 },
+                        { name: 'B', score: 70 },
+                        { name: 'C', score: 60 },
+                        { name: 'D', score: 50 },
+                        { name: 'E', score: 40 },
+                    ]
+                },
+            });
+            const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;
+
+            return (
+                <div>
+                    <PropertiesPanel
+                        selectedStep={step}
+                        selectedBlock={block}
+                        headerConfig={{ showLogo: false, progressEnabled: false }}
+                        onHeaderConfigChange={() => { }}
+                        clipboard={null}
+                        canPaste={false}
+                        onPaste={() => { }}
+                        multiSelectedIds={[]}
+                        onDuplicateInline={() => { }}
+                        onPrepareDuplicateToAnother={() => { }}
+                        onCopyMultiple={() => { }}
+                        onRemoveMultiple={() => { }}
+                        onRemoveBlock={() => { }}
+                        onSaveAsSnippet={() => { }}
+                        snippets={[]}
+                        snippetFilter={''}
+                        onSnippetFilterChange={() => { }}
+                        onSnippetInsert={() => { }}
+                        onSnippetRename={() => { }}
+                        onSnippetDelete={() => { }}
+                        onRefreshSnippets={() => { }}
+                        onBlockPatch={(patch) => {
+                            // result-progress-bars lê de properties
+                            setBlock((prev: any) => ({ ...prev, properties: { ...prev.properties, ...patch } }));
+                        }}
+                        isOfferStep={false}
+                        OfferMapComponent={() => null as any}
+                        onOfferMapUpdate={() => { }}
+                        ThemeEditorPanel={({ onApply }: any) => (<button onClick={() => onApply({})}>apply</button>)}
+                        onApplyTheme={() => { }}
+                    />
+
+                    <div data-testid="preview-bars">
+                        <ResultProgressBarsBlock properties={block.properties} content={block.content} />
+                    </div>
+                </div>
+            );
+        }
+
+        render(<WrapperProgressBarsTest />);
+
+        // Verifica título inicial
+        expect(screen.getByTestId('preview-bars')).toHaveTextContent('Compatibilidade com estilos:');
+
+        // Atualiza título
+        const titleInput = await screen.findByDisplayValue('Compatibilidade com estilos:');
+        await act(async () => {
+            fireEvent.change(titleInput, { target: { value: 'Compatibilidade Top 5' } });
+        });
+        expect(screen.getByTestId('preview-bars')).toHaveTextContent('Compatibilidade Top 5');
+
+        // Alterna showTop3 para false (deve mostrar 5 barras)
+        const checkbox = screen.getByLabelText(/Exibir apenas Top 3|Top 3/i);
+        await act(async () => {
+            fireEvent.click(checkbox);
+        });
+        // Conta as barras internas (div que tem width:% e backgroundColor)
+        let bars = screen.getByTestId('preview-bars').querySelectorAll('div[style*="width:"]');
+        expect(bars.length).toBeGreaterThanOrEqual(5);
+
+        // Atualiza cor das barras
+        const colorInput = screen.getByDisplayValue('#00ff00');
+        await act(async () => {
+            fireEvent.change(colorInput, { target: { value: '#ff0000' } });
+        });
+
+        // Verifica que as barras refletem a nova cor
+        bars = screen.getByTestId('preview-bars').querySelectorAll('div[style*="background-color:"]');
+        expect(Array.from(bars).some((el) => (el as HTMLElement).style.backgroundColor === '#ff0000')).toBe(true);
     });
 });
