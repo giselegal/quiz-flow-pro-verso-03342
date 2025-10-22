@@ -81,7 +81,26 @@ describe('Sections v3 - Cobertura de props (flatten 1:1)', () => {
 
       // Mapeamentos específicos onde o schema usa aliases diferentes dos originais do template
       const alias = (k: string): string => {
-        return k; // por padrão, usamos o flatten direto
+        // Mapeamentos específicos por tipo
+        if (type === 'ResultCalculationSection') {
+          if (k.startsWith('scoreMapping')) return 'scoreMapping';
+          if (k.startsWith('resultLogic')) return 'resultLogic';
+          if (k.startsWith('leadCapture')) return 'leadCapture';
+        }
+        if (type === 'StyleProfileSection') {
+          if (k === 'introTextEnabled') return 'showIntroText';
+        }
+        if (type === 'OfferSection') {
+          if (k === 'pricingDiscountShow') return 'discountShow';
+          if (k === 'pricingDiscountPercentage') return 'discountPercentage';
+          if (k === 'pricingDiscountLabel') return 'discountLabel';
+          if (k === 'pricingDiscountStyle') return 'discountStyle';
+          if (k === 'pricingDiscountColor') return 'discountColor';
+        }
+        if (type === 'SocialProofSection') {
+          if (k === 'cardStyleShowStars') return 'cardStyleShowStars'; // já mapeado
+        }
+        return k; // fallback: flatten direto
       };
 
       for (const k of keys) {

@@ -44,10 +44,13 @@ describe('Properties Panel v3 - Sections complexas (sanity)', () => {
 
             const ctrl = (document.querySelector(`[name="${first.key}"]`) || document.querySelector(`#${CSS.escape(first.key)}`)) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
             if (ctrl) {
-                if (ctrl.tagName === 'SELECT') {
-                    fireEvent.change(ctrl, { target: { value: (first.enumValues?.[0] || '') as string } });
+                const isCheckbox = (ctrl as HTMLInputElement).type === 'checkbox' || first.type === 'boolean';
+                if (ctrl.tagName === 'SELECT' || first.type === 'select' || first.type === 'enum') {
+                    fireEvent.change(ctrl as HTMLSelectElement, { target: { value: (first.enumValues?.[0] || '') as string } });
+                } else if (isCheckbox) {
+                    fireEvent.click(ctrl as HTMLInputElement);
                 } else {
-                    fireEvent.change(ctrl, { target: { value: 'X' } });
+                    fireEvent.change(ctrl as HTMLInputElement, { target: { value: 'X' } });
                 }
                 expect(lastPatch, `${type}: não emitiu patch ao editar ${first.key}`).toBeTruthy();
             }

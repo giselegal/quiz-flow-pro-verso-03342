@@ -106,6 +106,10 @@ export const resultCalculationSectionSchema = templates
   // Campos essenciais (sanity)
   .addField({ key: 'calculationMethod', label: 'Método de cálculo', type: 'string', group: 'content', placeholder: 'weighted_sum' })
   .addField({ key: 'minThreshold', label: 'Limiar mínimo', type: 'number', group: 'content', default: 0 })
+  // Objetos complexos tratados como JSON para edição avançada
+  .addField({ key: 'scoreMapping', label: 'Mapeamento de Pontuações', type: 'json', group: 'content', description: 'Tabela de faixas por estilo (romantico, classico, ...)' })
+  .addField({ key: 'resultLogic', label: 'Lógica de Resultado', type: 'json', group: 'content', description: 'winnerSelection, tieBreaker, minThreshold' })
+  .addField({ key: 'leadCapture', label: 'Captura de Lead', type: 'json', group: 'content', description: 'Configuração do formulário embutido' })
   .version('1.0.0')
   .build();
 
@@ -198,6 +202,7 @@ export const socialProofSectionSchema = templates
   })
   .addField({ key: 'cardStyleBackground', label: 'Card: Fundo', type: 'string', group: 'style', placeholder: 'primary/5' })
   .addField({ key: 'cardStylePadding', label: 'Card: Padding', type: 'string', group: 'layout', placeholder: '1.5rem' })
+  .addField({ key: 'cardStyleShowStars', label: 'Card: Mostrar estrelas', type: 'boolean', group: 'style', default: true })
   .addField({ key: 'cardStyleStarColor', label: 'Card: Cor das estrelas', type: 'string', group: 'style', placeholder: 'primary' })
   .addField(paddingField('layout'))
   .addField(backgroundColorField('style'))

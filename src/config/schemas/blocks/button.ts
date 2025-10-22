@@ -67,6 +67,11 @@ export const buttonSchema = templates
     { key: 'label', label: 'Label (alias)', type: 'string', group: 'content', placeholder: 'Texto do botão' },
     { key: 'href', label: 'Href (alias)', type: 'string', group: 'content', placeholder: 'https://...' }
   )
+  // Aliases adicionais usados em diversos templates (text/url)
+  .addFields(
+    { key: 'text', label: 'Texto (alias v3)', type: 'string', group: 'content', placeholder: 'Clique aqui' } as BlockFieldSchema<string>,
+    { key: 'url', label: 'URL (alias v3)', type: 'string', group: 'content', placeholder: 'https://exemplo.com' } as BlockFieldSchema<string>
+  )
   // Compatibilidade extra com CTAButton do JSON v3 (props.*)
   .addFields(
     { key: 'icon', label: 'Ícone', type: 'string', group: 'content', placeholder: 'ShoppingCart | emoji' } as BlockFieldSchema<string>,
