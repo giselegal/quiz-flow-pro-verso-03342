@@ -5,8 +5,8 @@
  * /editor → API → /quiz-estilo
  */
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { ConfigurationService } from '@/services/ServiceAliases';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { ConfigurationAPI } from '@/services/ServiceAliases';
 import { DynamicMasterJSONGenerator } from '@/services/DynamicMasterJSONGenerator';
 import { QUIZ_COMPONENTS_DEFINITIONS } from '@/types/componentConfiguration';
 

@@ -5,7 +5,7 @@
  * substituindo arquivos estáticos por configurações dinâmicas
  */
 
-import { ConfigurationService } from '@/services/ServiceAliases';
+import { ConfigurationAPI } from '@/services/ServiceAliases';
 import { QUIZ_COMPONENTS_DEFINITIONS } from '@/types/componentConfiguration';
 
 // ============================================================================

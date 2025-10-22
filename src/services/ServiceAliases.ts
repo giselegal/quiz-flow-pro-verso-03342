@@ -136,8 +136,8 @@ export const AlignmentValidator = funnelValidationService;
 import { ConfigurationService } from './ConfigurationService';
 export { ConfigurationService } from './ConfigurationService';
 
-/** @deprecated Use ConfigurationService - Alias mantido para compatibilidade */
-export const ConfigurationAPI = ConfigurationService;
+// Expor a API de configuração compatível (mantida enquanto os testes/consumidores dependem desta interface)
+export { ConfigurationAPI } from './ConfigurationAPI';
 
 /** @deprecated Use ConfigurationService - Alias mantido para compatibilidade */
 export const canvasConfigurationService = ConfigurationService;
