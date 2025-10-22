@@ -271,7 +271,6 @@ export const guaranteeSectionSchema = templates
   .addField({ key: 'layout', label: 'Layout', type: 'string', group: 'layout', placeholder: 'centered' })
   .addField({ key: 'iconSize', label: 'Tamanho do ícone', type: 'string', group: 'style', placeholder: '3xl' })
   .addField(paddingField('layout'))
-  .addField(backgroundColorField('style'))
   .addField(textColorField('style'))
   .version('1.0.0')
   .build();
