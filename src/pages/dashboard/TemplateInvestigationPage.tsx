@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { AVAILABLE_TEMPLATES, TemplateService } from '../../config/templates';
+import { AVAILABLE_TEMPLATES, UnifiedTemplateService } from '../../config/templates';
 
 // Verificar hooks e serviços relacionados
 import useMyTemplates from '../../hooks/useMyTemplates';

@@ -4,7 +4,7 @@
  * Script para ativar e configurar a IA do funil automaticamente
  */
 
-import { AIEnhancedHybridTemplateService } from '../services/AIEnhancedHybridTemplateService';
+import { HybridTemplateService } from '@/services/ServiceAliases';
 
 /**
  * 🎯 Configurações otimizadas da IA do funil

@@ -6,7 +6,7 @@ import { Badge } from '../../components/ui/badge';
 import { Input } from '../../components/ui/input';
 
 // Importação dos templates reais
-import { AVAILABLE_TEMPLATES, TemplateService, TemplateConfig } from '../../config/templates';
+import { AVAILABLE_TEMPLATES, UnifiedTemplateService, TemplateConfig } from '../../config/templates';
 
 const templatesFunis: TemplateConfig[] = AVAILABLE_TEMPLATES;
 
