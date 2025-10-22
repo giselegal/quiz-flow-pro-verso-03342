@@ -2195,7 +2195,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         advanceStep: (nextStepId: string) => void;
     }
     const QuizOptionsPreview: React.FC<QuizOptionsPreviewProps> = ({ blockId, options, properties, selectedStep, selections, onToggle, advanceStep }) => {
-        const multi = properties?.multiSelect ?? false;
+        // Suportar tanto a chave legacy 'multiSelect' quanto a nova 'multipleSelection'
+        const multi = (properties?.multiSelect ?? properties?.multipleSelection) ?? false;
         const required = properties?.requiredSelections || (multi ? 1 : 1);
         const max = properties?.maxSelections || required;
         const showImages = properties?.showImages !== false;
@@ -2204,7 +2205,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const nextButtonText = properties?.nextButtonText || 'Avançar';
         // Auto-avanço: respeita flag global e local (properties.autoAdvance)
         const autoAdvance = (properties?.autoAdvance !== false) && previewRuntimeFlags.enableAutoAdvance && !!(selectedStep && selectedStep.type === 'question');
-        const hasImages = showImages && options.some(o => !!o.image);
+        const hasImages = showImages && options.some(o => !!(o.image || o.imageUrl));
         // Layout automático: se auto e tem imagens usar 3col, se >4 opções sem imagem usar 2col, senão 1col
         const layout = properties?.layout || 'auto';
         let gridClass = 'quiz-options-1col';
@@ -2232,6 +2233,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 <div className={cn('quiz-options', gridClass)}>
                     {options.map(opt => {
                         const active = selections.includes(opt.id);
+                        const img = opt.image || opt.imageUrl;
                         return (
                             <div
                                 key={opt.id}
@@ -2241,9 +2243,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(opt.id, multi, max); } }}
                                 className={cn('quiz-option transition-all', active && 'quiz-option-selected', !active && 'cursor-pointer')}
                             >
-                                {showImages && opt.image && (
+                                {showImages && img && (
                                     <img
-                                        src={opt.image}
+                                        src={img}
                                         alt={opt.text || 'Opção'}
                                         className="mb-2 rounded"
                                         style={{
