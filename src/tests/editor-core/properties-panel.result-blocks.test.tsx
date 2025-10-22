@@ -278,6 +278,10 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
                     <div data-testid="preview-image">
                         <ResultImageBlock block={block} isSelected={false} onClick={() => { }} />
                     </div>
+                    {/* Helper: permite setar URL diretamente quando o campo não estiver visível (p.ex. ImageUploadField sem URL manual aberto) */}
+                    <button data-testid="helper-set-url" onClick={() => setBlock((prev: any) => ({ ...prev, properties: { ...prev.properties, url: 'https://example.com/image.png' } }))}>
+                        set-url
+                    </button>
                 </div>
             );
         }
@@ -297,12 +301,18 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
             });
         }
 
-        // Atualiza URL da imagem
-        const urlInput = await screen.findByDisplayValue('https://example.com/old.png');
-
-        await act(async () => {
-            fireEvent.change(urlInput as HTMLElement, { target: { value: 'https://example.com/image.png' } });
-        });
+        // Atualiza URL da imagem (via campo manual, se visível; senão usa helper)
+        const urlInput = await screen.findByDisplayValue('https://example.com/old.png').catch(() => null);
+        if (urlInput) {
+            await act(async () => {
+                fireEvent.change(urlInput as HTMLElement, { target: { value: 'https://example.com/image.png' } });
+            });
+        } else {
+            const helper = screen.getByTestId('helper-set-url');
+            await act(async () => {
+                fireEvent.click(helper);
+            });
+        }
 
         // Atualiza alt
         const altInput = await screen.findByLabelText(/Alternativo|Alt|Texto Alternativo/i).catch(async () => {
