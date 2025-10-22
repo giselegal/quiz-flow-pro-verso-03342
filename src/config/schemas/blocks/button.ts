@@ -51,6 +51,8 @@ export const buttonSchema = templates
   .description('Botão clicável / Call-to-Action')
   .category('interactive')
   .icon('MousePointer')
+  // Adiciona grupo de layout (necessário para campos com group: 'layout')
+  .addGroup('layout', 'Layout', { order: 3 })
   // Grupo extra para experimentos A/B
   .addGroup('ab', 'Teste A/B', { order: 5, collapsible: true, defaultExpanded: false })
   .addFields(
