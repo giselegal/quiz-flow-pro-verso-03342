@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, beforeAll } from 'vitest';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, within } from '@testing-library/react';
 import { PropertiesPanel } from '@/components/editor/quiz/components/PropertiesPanel';
 import { initializeSchemaRegistry } from '@/config/schemas';
 
@@ -160,18 +160,19 @@ describe('PropertiesPanel → edição de options reflete no preview e content',
     it('options-grid: edita imageUrl/points/category e reflete no preview + content.options', async () => {
         render(<OptionsGridWrapper />);
 
-        const imageInputs = await screen.findAllByLabelText('Imagem (URL)');
-        const pointsInputs = await screen.findAllByLabelText('Pontos');
-        const categoryInputs = await screen.findAllByLabelText('Categoria');
+        // Localizar o card da primeira opção pelo valor inicial do campo de texto ("A")
+        const firstTextInput = await screen.findByDisplayValue('A');
+        const firstCard = firstTextInput.closest('.p-4'); // Card usa className="p-4"
+        expect(firstCard).toBeTruthy();
+        const scoped = within(firstCard as HTMLElement);
 
-        expect(imageInputs.length).toBeGreaterThan(0);
-        expect(pointsInputs.length).toBeGreaterThan(0);
-        expect(categoryInputs.length).toBeGreaterThan(0);
-
+        const textboxes = scoped.getAllByRole('textbox');
+        const numberInput = scoped.getByRole('spinbutton');
+        // Ordem dos campos: text (0), imageUrl (1), category (2)
         await act(async () => {
-            fireEvent.change(imageInputs[0], { target: { value: 'https://example.com/img.jpg' } });
-            fireEvent.change(pointsInputs[0], { target: { value: '42' } });
-            fireEvent.change(categoryInputs[0], { target: { value: 'Z' } });
+            fireEvent.change(textboxes[1], { target: { value: 'https://example.com/img.jpg' } });
+            fireEvent.change(numberInput, { target: { value: '42' } });
+            fireEvent.change(textboxes[2], { target: { value: 'Z' } });
         });
 
         // Preview
@@ -191,14 +192,18 @@ describe('PropertiesPanel → edição de options reflete no preview e content',
     it('quiz-options: edita imageUrl/points/category e reflete no preview + content.options', async () => {
         render(<QuizOptionsWrapper />);
 
-        const imageInputs = await screen.findAllByLabelText('Imagem (URL)');
-        const pointsInputs = await screen.findAllByLabelText('Pontos');
-        const categoryInputs = await screen.findAllByLabelText('Categoria');
-
+        const valueOnes = await screen.findAllByDisplayValue('1');
+        const firstTextInput = valueOnes.find((el) => (el as HTMLInputElement).getAttribute('type') === 'text') as HTMLElement;
+        expect(firstTextInput).toBeTruthy();
+        const firstCard = firstTextInput.closest('.p-4');
+        expect(firstCard).toBeTruthy();
+        const scoped = within(firstCard as HTMLElement);
+        const textboxes = scoped.getAllByRole('textbox');
+        const numberInput = scoped.getByRole('spinbutton');
         await act(async () => {
-            fireEvent.change(imageInputs[0], { target: { value: 'https://example.com/pic.png' } });
-            fireEvent.change(pointsInputs[0], { target: { value: '7' } });
-            fireEvent.change(categoryInputs[0], { target: { value: 'A' } });
+            fireEvent.change(textboxes[1], { target: { value: 'https://example.com/pic.png' } });
+            fireEvent.change(numberInput, { target: { value: '7' } });
+            fireEvent.change(textboxes[2], { target: { value: 'A' } });
         });
 
         const img = await screen.findByAltText('preview-qo');
