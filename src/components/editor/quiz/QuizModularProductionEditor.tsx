@@ -1728,7 +1728,30 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // Options Grid (grade de opções similar a quiz-options mas com layout grid específico)
         if (type === 'options-grid') {
             const options = Array.isArray(content.options) ? content.options : [];
-            const cols = properties?.columns || 2;
+            const cols = Math.max(1, Math.min(4, Number(properties?.columns || 2)));
+            const gapPx = typeof properties?.gridGap === 'number' ? properties.gridGap : 12;
+            const showImages = properties?.showImages !== false;
+            const imageSize = properties?.imageSize || 'medium';
+            const imageWidth = properties?.imageWidth;
+            const imageHeight = properties?.imageHeight;
+            const imageLayout = properties?.imageLayout || 'vertical'; // 'vertical' | 'horizontal'
+            const imagePosition = properties?.imagePosition || 'top'; // 'top' | 'left' | 'right' | 'bottom'
+            const borderRadius = properties?.borderRadius ?? 8;
+            const showShadows = properties?.showShadows ?? false;
+
+            const computeImageDims = () => {
+                if (imageSize === 'custom' && (imageWidth || imageHeight)) {
+                    return { w: imageWidth || undefined, h: imageHeight || undefined };
+                }
+                switch (imageSize) {
+                    case 'small': return { w: undefined, h: 80 };
+                    case 'large': return { w: undefined, h: 160 };
+                    case 'medium':
+                    default: return { w: undefined, h: 96 };
+                }
+            };
+            const dims = computeImageDims();
+
             node = (
                 <div className="space-y-2">
                     {properties?.question && (
@@ -1738,20 +1761,51 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 : properties.question}
                         </div>
                     )}
-                    <div className={cn('grid gap-3', cols === 2 ? 'grid-cols-2' : cols === 3 ? 'grid-cols-3' : 'grid-cols-1')}>
+                    <div
+                        className={cn('grid', cols === 1 ? 'grid-cols-1' : cols === 2 ? 'grid-cols-2' : cols === 3 ? 'grid-cols-3' : 'grid-cols-4')}
+                        style={{ gap: `${gapPx}px` }}
+                    >
                         {options.map((opt: any, idx: number) => {
                             const img = opt.image || opt.imageUrl;
                             const label = opt.label || opt.text || `Opção ${idx + 1}`;
-                            return (
-                                <div key={opt.id || idx} className="border rounded-lg p-3 bg-white hover:border-blue-400 transition-colors cursor-pointer">
-                                    {img && (
-                                        <img src={img} alt={label} className="w-full h-24 object-cover rounded mb-2" />
+                            const pts = typeof opt.points === 'number' ? opt.points : (typeof opt.score === 'number' ? opt.score : undefined);
+
+                            const CardContent = (
+                                <>
+                                    {showImages && img && (
+                                        <img
+                                            src={img}
+                                            alt={label}
+                                            className="object-cover rounded"
+                                            style={{ width: dims.w ? `${dims.w}px` : '100%', height: dims.h ? `${dims.h}px` : 'auto' }}
+                                        />
                                     )}
                                     <div className="text-sm font-medium">{label}</div>
-                                    {(opt.category || typeof opt.points === 'number') && (
+                                    {(opt.category || typeof pts === 'number') && (
                                         <div className="mt-1 text-[10px] text-slate-500 flex gap-2">
                                             {opt.category && <span>Cat: {opt.category}</span>}
-                                            {typeof opt.points === 'number' && <span>Pontos: {opt.points}</span>}
+                                            {typeof pts === 'number' && <span>Pontos: {pts}</span>}
+                                        </div>
+                                    )}
+                                </>
+                            );
+
+                            return (
+                                <div
+                                    key={opt.id || idx}
+                                    className={cn('p-3 bg-white transition-colors cursor-pointer border hover:border-blue-400')}
+                                    style={{
+                                        borderRadius,
+                                        boxShadow: showShadows ? '0 4px 10px rgba(0,0,0,0.08)' : 'none',
+                                    }}
+                                >
+                                    {imageLayout === 'horizontal' ? (
+                                        <div className={cn('flex items-center gap-3', imagePosition === 'right' && 'flex-row-reverse')}>
+                                            {CardContent}
+                                        </div>
+                                    ) : (
+                                        <div className={cn('flex flex-col gap-2', imagePosition === 'bottom' && 'flex-col-reverse')}>
+                                            {CardContent}
                                         </div>
                                     )}
                                 </div>
@@ -2241,6 +2295,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     {options.map(opt => {
                         const active = selections.includes(opt.id);
                         const img = opt.image || opt.imageUrl;
+                        const pts = typeof opt.points === 'number' ? opt.points : (typeof (opt as any)?.score === 'number' ? (opt as any).score : undefined);
                         return (
                             <div
                                 key={opt.id}
@@ -2263,11 +2318,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         }}
                                     />
                                 )}
-                                <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || 'Opção'}</p>
-                                {(opt.category || typeof opt.points === 'number') && (
+                                <p className="quiz-option-text text-xs font-medium leading-snug">{opt.text || (opt as any).label || 'Opção'}</p>
+                                {(opt.category || typeof pts === 'number') && (
                                     <div className="mt-1 text-[10px] text-slate-500 flex gap-2">
                                         {opt.category && <span>Cat: {opt.category}</span>}
-                                        {typeof opt.points === 'number' && <span>Pontos: {opt.points}</span>}
+                                        {typeof pts === 'number' && <span>Pontos: {pts}</span>}
                                     </div>
                                 )}
                             </div>

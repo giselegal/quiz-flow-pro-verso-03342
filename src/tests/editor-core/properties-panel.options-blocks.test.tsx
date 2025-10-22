@@ -217,4 +217,64 @@ describe('PropertiesPanel → edição de options reflete no preview e content',
         expect(parsed.points).toBe(7);
         expect(parsed.category).toBe('A');
     });
+
+    it('options-grid: carrega valores via aliases (label/image/score) nos campos', async () => {
+        const AliasWrapper: React.FC = () => {
+            const [block] = React.useState<any>({
+                id: 'b-alias-grid',
+                type: 'options-grid',
+                order: 0,
+                properties: { columns: 2, showImages: true },
+                content: {
+                    options: [
+                        { id: 'o1', label: 'AliasText', image: 'https://img/1.png', score: 5, category: 'K' },
+                    ],
+                },
+            });
+            const step = { id: 'sAlias', type: 'question', order: 1, blocks: [block] } as any;
+            return (
+                <PropertiesPanel
+                    selectedStep={step}
+                    selectedBlock={block}
+                    headerConfig={{ showLogo: false, progressEnabled: false }}
+                    onHeaderConfigChange={() => { }}
+                    clipboard={null}
+                    canPaste={false}
+                    onPaste={() => { }}
+                    multiSelectedIds={[]}
+                    onDuplicateInline={() => { }}
+                    onPrepareDuplicateToAnother={() => { }}
+                    onCopyMultiple={() => { }}
+                    onRemoveMultiple={() => { }}
+                    onRemoveBlock={() => { }}
+                    onSaveAsSnippet={() => { }}
+                    snippets={[]}
+                    snippetFilter={''}
+                    onSnippetFilterChange={() => { }}
+                    onSnippetInsert={() => { }}
+                    onSnippetRename={() => { }}
+                    onSnippetDelete={() => { }}
+                    onRefreshSnippets={() => { }}
+                    onBlockPatch={() => { }}
+                    isOfferStep={false}
+                    OfferMapComponent={() => null as any}
+                    onOfferMapUpdate={() => { }}
+                    ThemeEditorPanel={({ onApply }: any) => (<button onClick={() => onApply({})}>apply</button>)}
+                    onApplyTheme={() => { }}
+                />
+            );
+        };
+
+        render(<AliasWrapper />);
+        const textInput = await screen.findByDisplayValue('AliasText');
+        expect(textInput).toBeTruthy();
+        const card = textInput.closest('.p-4') as HTMLElement;
+        const scoped = within(card);
+        const urlInput = scoped.getAllByRole('textbox')[1] as HTMLInputElement;
+        const numberInput = scoped.getByRole('spinbutton') as HTMLInputElement;
+        const categoryInput = scoped.getAllByRole('textbox')[2] as HTMLInputElement;
+        expect(urlInput.value).toBe('https://img/1.png');
+        expect(numberInput.value).toBe('5');
+        expect(categoryInput.value).toBe('K');
+    });
 });

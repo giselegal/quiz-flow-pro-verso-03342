@@ -33,8 +33,40 @@ export const AdvancedArrayEditor: React.FC<AdvancedArrayEditorProps> = ({ value 
 
     const updateItem = (idx: number, key: string, v: any) => {
         const next = [...(value || [])];
-        next[idx] = { ...next[idx], [key]: v };
+        const current = { ...next[idx] };
+        // Sincronizar aliases canônicos ↔ legacy (text/label, imageUrl/image, points/score)
+        current[key] = v;
+        if (key === 'text') current['label'] = v;
+        if (key === 'label') current['text'] = v;
+        if (key === 'imageUrl') current['image'] = v;
+        if (key === 'image') current['imageUrl'] = v;
+        if (key === 'points') current['score'] = v;
+        if (key === 'score') current['points'] = v;
+        next[idx] = current;
         onChange(next);
+    };
+
+    // Helper para obter valor com fallback de aliases
+    const getFieldValue = (item: any, field: FieldDef) => {
+        const key = field.key;
+        const raw = item?.[key];
+        if (raw !== undefined && raw !== null && raw !== '') return raw;
+        switch (key) {
+            case 'text':
+                return item?.label ?? '';
+            case 'label':
+                return item?.text ?? '';
+            case 'imageUrl':
+                return item?.image ?? '';
+            case 'image':
+                return item?.imageUrl ?? '';
+            case 'points':
+                return typeof item?.score === 'number' ? item.score : '';
+            case 'score':
+                return typeof item?.points === 'number' ? item.points : '';
+            default:
+                return '';
+        }
     };
 
     return (
@@ -47,7 +79,7 @@ export const AdvancedArrayEditor: React.FC<AdvancedArrayEditorProps> = ({ value 
                                 <Label className="text-xs">{field.label}</Label>
                                 <Input
                                     type={field.type === 'number' ? 'number' : 'text'}
-                                    value={item[field.key] ?? ''}
+                                    value={getFieldValue(item, field)}
                                     onChange={(e) => updateItem(idx, field.key, field.type === 'number' ? Number(e.target.value || 0) : e.target.value)}
                                     className="text-sm"
                                 />
