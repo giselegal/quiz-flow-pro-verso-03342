@@ -46,7 +46,7 @@ export interface OptionsGridSectionProps extends BaseSectionProps {
     ariaLabelledById?: string;
 }
 
-export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
+export const OptionsGridSection: React.FC<OptionsGridSectionProps & { properties?: Record<string, any> }> = ({
     id,
     content,
     selectedOptions = [],
@@ -56,6 +56,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
     animation,
     onAnalytics,
     ariaLabelledById,
+    properties,
 }) => {
     // Helpers para robustez contra shapes não-array
     const ensureArray = <T,>(val: unknown): T[] => {
@@ -73,16 +74,21 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
 
     const {
         options,
-        columns = 2,
         multipleSelection = false,
         minSelections = 1,
         maxSelections = 1,
-        showImages = true,
-        imageSize = 256,
         autoAdvance = false,
         autoAdvanceDelay = 1500,
         validationMessage = 'Selecione ao menos uma opção',
     } = content;
+
+    // Compat: permitir override por properties (novo painel) mantendo compat com v3 content
+    const showImages = (properties?.showImages ?? content.showImages) !== false;
+    const columns = Math.max(1, Math.min(4, Number(properties?.columns ?? content.columns ?? 2)));
+    // imageSize no v3 é number (maxHeight). No novo painel, usamos properties.imageMaxSize (range rápido)
+    const imageMaxSize: number | undefined = typeof properties?.imageMaxSize === 'number'
+        ? properties!.imageMaxSize
+        : (typeof (content as any).imageSize === 'number' ? (content as any).imageSize : undefined);
 
     // Normalizar opções para evitar .map/.find em tipos inválidos
     const optionsArray = ensureArray<QuizOption>(options);
@@ -283,7 +289,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps> = ({
                                         style={{
                                             width: '100%',
                                             height: 'auto',
-                                            maxHeight: imageSize,
+                                            maxHeight: imageMaxSize ?? 256,
                                             objectFit: 'cover',
                                             borderRadius: DesignTokens.borderRadius.md,
                                             marginBottom: DesignTokens.spacing.sm,
