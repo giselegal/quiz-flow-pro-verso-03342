@@ -5,6 +5,7 @@ import { PropertiesPanel } from '@/components/editor/quiz/components/PropertiesP
 import ResultHeaderBlock from '@/components/editor/blocks/atomic/ResultHeaderBlock';
 import ResultDescriptionBlock from '@/components/editor/blocks/atomic/ResultDescriptionBlock';
 import ResultCTABlock from '@/components/editor/blocks/atomic/ResultCTABlock';
+import ResultImageBlock from '@/components/editor/blocks/atomic/ResultImageBlock';
 
 function WrapperHeaderTest() {
     const [block, setBlock] = React.useState<any>({
@@ -214,5 +215,93 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
 
         // Preview deve refletir o texto do botão
         expect(screen.getByTestId('preview-cta')).toHaveTextContent('Ir para Oferta');
+    });
+
+    it('edita URL e alt do result-image e reflete no preview', async () => {
+        function WrapperImageTest() {
+            const [block, setBlock] = React.useState<any>({
+                id: 'b4',
+                type: 'result-image',
+                order: 3,
+                properties: { url: 'https://example.com/old.png', alt: 'Imagem do resultado', borderRadius: '12px', maxHeight: '400px' },
+                content: {},
+            });
+            const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;
+
+            return (
+                <div>
+                    <PropertiesPanel
+                        selectedStep={step}
+                        selectedBlock={block}
+                        headerConfig={{ showLogo: false, progressEnabled: false }}
+                        onHeaderConfigChange={() => { }}
+                        clipboard={null}
+                        canPaste={false}
+                        onPaste={() => { }}
+                        multiSelectedIds={[]}
+                        onDuplicateInline={() => { }}
+                        onPrepareDuplicateToAnother={() => { }}
+                        onCopyMultiple={() => { }}
+                        onRemoveMultiple={() => { }}
+                        onRemoveBlock={() => { }}
+                        onSaveAsSnippet={() => { }}
+                        snippets={[]}
+                        snippetFilter={''}
+                        onSnippetFilterChange={() => { }}
+                        onSnippetInsert={() => { }}
+                        onSnippetRename={() => { }}
+                        onSnippetDelete={() => { }}
+                        onRefreshSnippets={() => { }}
+                        onBlockPatch={(patch) => {
+                            // result-image lê properties.url e properties.alt
+                            setBlock((prev: any) => ({ ...prev, properties: { ...prev.properties, ...patch } }));
+                        }}
+                        isOfferStep={false}
+                        OfferMapComponent={() => null as any}
+                        onOfferMapUpdate={() => { }}
+                        ThemeEditorPanel={({ onApply }: any) => (<button onClick={() => onApply({})}>apply</button>)}
+                        onApplyTheme={() => { }}
+                    />
+
+                    <div data-testid="preview-image">
+                        <ResultImageBlock block={block} isSelected={false} onClick={() => { }} />
+                    </div>
+                </div>
+            );
+        }
+
+        render(<WrapperImageTest />);
+
+        // Inicialmente já deve renderizar a imagem antiga
+        let img = screen.getByTestId('preview-image').querySelector('img');
+        expect(img).not.toBeNull();
+        expect(img?.getAttribute('src')).toBe('https://example.com/old.png');
+
+        // Abrir campo de URL manual do ImageUploadField
+        const toggleManualUrl = screen.getByTitle('Inserir URL manualmente');
+        await act(async () => {
+            fireEvent.click(toggleManualUrl);
+        });
+
+        // Atualiza URL da imagem
+        const urlInput = await screen.findByDisplayValue('https://example.com/old.png');
+
+        await act(async () => {
+            fireEvent.change(urlInput as HTMLElement, { target: { value: 'https://example.com/image.png' } });
+        });
+
+        // Atualiza alt
+        const altInput = await screen.findByLabelText(/Alternativo|Alt|Texto Alternativo/i).catch(async () => {
+            return await screen.findByDisplayValue('Imagem do resultado');
+        });
+        await act(async () => {
+            fireEvent.change(altInput as HTMLElement, { target: { value: 'Foto de resultado' } });
+        });
+
+        // Deve renderizar <img> no preview com src e alt atualizados
+        img = screen.getByTestId('preview-image').querySelector('img');
+        expect(img).not.toBeNull();
+        expect(img?.getAttribute('src')).toBe('https://example.com/image.png');
+        expect(img?.getAttribute('alt')).toBe('Foto de resultado');
     });
 });
