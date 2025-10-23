@@ -32,11 +32,13 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
-        // Garantir que React seja resolvido corretamente
-        'react': path.resolve(__dirname, './node_modules/react'),
-        'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+        // CRÍTICO: Garantir que React seja sempre resolvido do mesmo lugar
+        'react': path.resolve(__dirname, './node_modules/react/index.js'),
+        'react-dom': path.resolve(__dirname, './node_modules/react-dom/index.js'),
+        'react/jsx-runtime': path.resolve(__dirname, './node_modules/react/jsx-runtime.js'),
+        'react/jsx-dev-runtime': path.resolve(__dirname, './node_modules/react/jsx-dev-runtime.js'),
       },
-      dedupe: ['react', 'react-dom'],
+      dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
     },
     server: {
       host: '0.0.0.0',
@@ -259,11 +261,16 @@ export default defineConfig(({ mode }) => {
       esbuildOptions: {
         target: 'es2020',
         loader: { '.js': 'jsx' },
+        define: {
+          // Garantir que React seja definido globalmente
+          'process.env.NODE_ENV': '"development"'
+        }
       },
       force: false, // Não forçar rebuild em dev
     },
     define: {
       global: 'globalThis',
+      'process.env.NODE_ENV': JSON.stringify(mode),
       'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
       'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(env.VITE_SUPABASE_PUBLISHABLE_KEY),
       'import.meta.env.VITE_SUPABASE_PROJECT_ID': JSON.stringify(env.VITE_SUPABASE_PROJECT_ID),
