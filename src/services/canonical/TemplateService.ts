@@ -215,8 +215,9 @@ export class TemplateService extends BaseCanonicalService {
         return this.createError(new Error(`Invalid template: ${validation.errors.join(', ')}`));
       }
 
-      // Salvar no cache L1/L2
-      await this.registry.setStep(template.id, template.blocks);
+      // Salvar no cache (UnifiedTemplateRegistry não tem setStep, apenas cache)
+      // Usar CacheService diretamente
+      cacheService.templates.set(template.id, template.blocks);
       
       this.log(`Template saved: ${template.id}`);
       return this.createResult(undefined);
@@ -259,7 +260,7 @@ export class TemplateService extends BaseCanonicalService {
     try {
       // Invalidar todos os caches
       cacheService.templates.invalidate(id);
-      this.registry.invalidateStep(id);
+      await this.registry.invalidate(id);
       
       this.log(`Template deleted: ${id}`);
       return this.createResult(undefined);
@@ -372,7 +373,7 @@ export class TemplateService extends BaseCanonicalService {
    */
   invalidateTemplate(id: string): void {
     cacheService.templates.invalidate(id);
-    this.registry.invalidateStep(id);
+    this.registry.invalidate(id);
     this.log(`Template invalidated: ${id}`);
   }
 
@@ -381,7 +382,8 @@ export class TemplateService extends BaseCanonicalService {
    */
   clearCache(): void {
     cacheService.clearStore('templates');
-    this.registry.clearCache();
+    // UnifiedTemplateRegistry tem clearL1()
+    this.registry.clearL1();
     this.log('Template cache cleared');
   }
 
@@ -569,11 +571,11 @@ export class TemplateService extends BaseCanonicalService {
     /**
      * Atualizar bloco existente
      */
-    update: (blockId: string, updates: Partial<Block>): ServiceResult<Block> => {
+    update: async (blockId: string, updates: Partial<Block>): Promise<ServiceResult<Block>> => {
       try {
-        const existingResult = this.blocks.get(blockId);
+        const existingResult = await this.blocks.get(blockId);
         if (!existingResult.success) {
-          return existingResult as ServiceResult<Block>;
+          return existingResult;
         }
 
         const updated: Block = {
