@@ -118,10 +118,12 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     }
 
     // 🎯 MIGRAÇÃO INTELIGENTE: Converter blocos para metadata se necessário
+    // Fallback: se nenhuma etapa estiver selecionada, usar a primeira etapa disponível
     const migratedStep = useMemo(() => {
-        if (!selectedStep) return null;
-        return smartMigration(selectedStep);
-    }, [selectedStep]);
+        const base = selectedStep || (Array.isArray(steps) && steps.length > 0 ? steps[0] : null);
+        if (!base) return null;
+        return smartMigration(base);
+    }, [selectedStep, steps]);
 
     console.log('🔍 CanvasArea - migratedStep:', migratedStep?.id, 'type:', migratedStep?.type);
 
