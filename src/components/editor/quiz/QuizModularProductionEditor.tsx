@@ -649,6 +649,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     } else if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
                         // 🎯 Novo caminho primário: usar JSON público consolidado (quiz21-complete.json) como master
                         console.log('🎯 Carregando template público consolidado (master) com hidratação:', templateId);
+                        setLoadStatus({ level: 'info', message: 'Carregando template master (quiz21-complete.json)...' });
                         const buildStepType = (idx: number): EditableQuizStep['type'] => {
                             if (idx === 0) return 'intro';
                             if (idx >= 1 && idx <= 10) return 'question';
@@ -723,6 +724,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                                         setIsLoading(false);
                                         loadedRef.current = true;
+                                        setLoadStatus({ level: 'success', message: `Master JSON carregado (${built.length} etapas)` });
                                         console.log('✅ Master JSON carregado e convertido com sucesso. Steps:', built.length);
                                     } else {
                                         console.info('ℹ️ [EDITOR] Ignorando carregamento master pois já carregamos steps.');
@@ -730,9 +732,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     return;
                                 } else {
                                     console.warn('⚠️ Falha ao carregar master JSON:', resp.status, resp.statusText);
+                                    setLoadStatus({ level: 'warning', message: `Falha ao carregar master (${resp.status} ${resp.statusText}). Aplicando fallback enriquecido...` });
                                 }
                             } catch (e) {
                                 console.warn('⚠️ Erro ao carregar/usar master JSON, caindo no fallback enriquecido:', e);
+                                setLoadStatus({ level: 'warning', message: 'Erro ao usar master. Aplicando fallback enriquecido...' });
                             }
                         })();
 
@@ -894,15 +898,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         // 🚀 ASYNC: Carregar steps de forma lazy e assíncrona
                         (async () => {
                             try {
-                                if (!loadedRef.current) {
-                                    setLoadStatus({ level: 'success', message: `Master JSON carregado (${built.length} etapas)` });
+                                if (loadedRef.current) {
                                     console.info('ℹ️ [EDITOR] Abortando fallback enriquecido: steps já carregados.');
                                     return;
-                                    console.warn('⚠️ Falha ao carregar master JSON:', resp.status, resp.statusText);
-                                    setLoadStatus({ level: 'warning', message: `Falha ao carregar master (${resp.status} ${resp.statusText}). Aplicando fallback enriquecido...` });
-                                    console.warn('⚠️ Erro ao carregar/usar master JSON, caindo no fallback enriquecido:', e);
-                                    setLoadStatus({ level: 'warning', message: 'Erro ao usar master. Aplicando fallback enriquecido...' });
-                                    const stepsMap = await loadAllQuizSteps();
                                 }
                                 console.time('⚡ Lazy load all steps');
                                 const stepsMap = await loadAllQuizSteps();
@@ -938,14 +936,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                                 if (!loadedRef.current) {
                                     setSteps(enriched);
-                                    setSteps(enriched);
                                     setSelectedStepIdUnified(enriched[0]?.id || '');
                                     setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                                     setIsLoading(false);
                                     setLoadStatus({ level: 'info', message: `Fallback enriquecido concluído (${enriched.length} etapas)` });
-                                    setLoadStatus({ level: 'error', message: 'Erro no fallback enriquecido. Veja o console para detalhes.' });
-                                    setLoadStatus({ level: 'error', message: 'Erro inesperado ao inicializar o editor.' });
-                                    setLoadStatus({ level: 'warning', message: 'Nenhum template/funnel informado. Editor em modo vazio.' });
                                     loadedRef.current = true;
                                     console.log('✅ Fallback enriquecido concluído! Total de steps:', enriched.length);
                                 } else {
@@ -953,6 +947,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 }
                             } catch (err) {
                                 console.error('❌ Erro ao carregar steps lazy:', err);
+                                setLoadStatus({ level: 'error', message: 'Erro no fallback enriquecido. Veja o console para detalhes.' });
                                 setIsLoading(false);
                             }
                         })();
