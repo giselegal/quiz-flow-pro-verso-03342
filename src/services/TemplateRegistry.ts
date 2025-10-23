@@ -41,4 +41,19 @@ export class TemplateRegistry {
   keys(): string[] {
     return Array.from(this.templates.keys());
   }
+
+  /**
+   * Limpa todos os templates registrados.
+   * Útil para testes e resets.
+   */
+  clear(): void {
+    this.templates.clear();
+  }
+
+  /**
+   * Retorna a quantidade de templates registrados.
+   */
+  size(): number {
+    return this.templates.size;
+  }
 }

@@ -11,13 +11,8 @@ describe('TemplateRegistry', () => {
   });
 
   afterEach(() => {
-    // Limpa os templates após cada teste
-    // Como é um singleton, precisamos limpar manualmente
-    const keys = registry.keys();
-    keys.forEach(key => {
-      // Não há método clear() público, então registramos null para limpar
-      // Ou podemos resetar a instância privada via reflexão
-    });
+    // Limpa os templates após cada teste para evitar vazamento de memória
+    registry.clear();
   });
 
   describe('Singleton Pattern', () => {
@@ -363,6 +358,37 @@ describe('TemplateRegistry', () => {
 
       registry.register('alternating', template3);
       expect(registry.get('alternating')).toBe(template3);
+    });
+  });
+
+  describe('Métodos Utilitários', () => {
+    it('clear() deve remover todos os templates', () => {
+      registry.register('test-1', { type: 'question' });
+      registry.register('test-2', { type: 'result' });
+      registry.register('test-3', { type: 'cta' });
+
+      expect(registry.size()).toBeGreaterThanOrEqual(3);
+
+      registry.clear();
+
+      expect(registry.size()).toBe(0);
+      expect(registry.has('test-1')).toBe(false);
+      expect(registry.has('test-2')).toBe(false);
+      expect(registry.has('test-3')).toBe(false);
+    });
+
+    it('size() deve retornar a quantidade correta de templates', () => {
+      registry.clear();
+      expect(registry.size()).toBe(0);
+
+      registry.register('test-1', { type: 'question' });
+      expect(registry.size()).toBe(1);
+
+      registry.register('test-2', { type: 'result' });
+      expect(registry.size()).toBe(2);
+
+      registry.register('test-1', { type: 'cta' }); // sobrescreve
+      expect(registry.size()).toBe(2);
     });
   });
 });
