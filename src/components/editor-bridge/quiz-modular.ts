@@ -1,4 +1,6 @@
-// Ponte para módulos modulares do editor - isolado do runtime de produção nos testes
+// 🔗 Editor-Bridge (quiz-modular)
+// Este arquivo expõe explicitamente todos os componentes modulares usados pelos wrappers lazy.
+// Motivo: evitar imports diretos de editor/* no runtime de produção e facilitar testes/mocks.
 export { default as ModularIntroStep } from '@/components/editor/quiz-estilo/ModularIntroStep';
 export { default as ModularQuestionStep } from '@/components/editor/quiz-estilo/ModularQuestionStep';
 export { default as ModularStrategicQuestionStep } from '@/components/editor/quiz-estilo/ModularStrategicQuestionStep';
