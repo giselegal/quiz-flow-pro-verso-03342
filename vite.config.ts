@@ -97,36 +97,20 @@ export default defineConfig(({ mode }) => {
           /^https:\/\/deno\.land\/.*/,
           /^https:\/\/esm\.sh\/.*/
         ],
+        // Garantir ordem correta de execução dos chunks
+        inlineDynamicImports: false,
+        preserveModules: false,
         output: {
-          // Garantir que React seja sempre carregado primeiro
-          chunkFileNames: (chunkInfo) => {
-            // Prefixar vendor-react para forçar carregamento primeiro
-            if (chunkInfo.name === 'vendor-react') {
-              return 'assets/00-vendor-react-[hash].js';
-            }
-            if (chunkInfo.name === 'vendor-router') {
-              return 'assets/01-vendor-router-[hash].js';
-            }
-            if (chunkInfo.name === 'vendor-ui') {
-              return 'assets/02-vendor-ui-[hash].js';
-            }
-            return 'assets/[name]-[hash].js';
-          },
+          // Nomes de arquivos para chunks
+          chunkFileNames: 'assets/[name]-[hash].js',
           // 🚀 FASE 2.3 - Manual Chunks para otimização de bundle
           manualChunks: (id) => {
-            // React core PRIMEIRO (base para todos os componentes)
-            if (id.includes('node_modules/react/') ||
-              id.includes('node_modules/react-dom/')) {
+            // React ecosystem - TUDO NO MESMO CHUNK para evitar problemas de inicialização
+            if (id.includes('node_modules/react') ||
+              id.includes('node_modules/scheduler') ||
+              id.includes('node_modules/wouter')) {
               return 'vendor-react';
-            }
-
-            // React Router/Wouter (depende do React)
-            if (id.includes('node_modules/react-router-dom/') ||
-              id.includes('node_modules/wouter/')) {
-              return 'vendor-router';
-            }
-
-            // UI libraries (Radix UI + Lucide) - DEPOIS do React
+            }            // UI libraries (Radix UI + Lucide) - DEPOIS do React
             if (id.includes('@radix-ui') ||
               id.includes('lucide-react') ||
               id.includes('class-variance-authority') ||
