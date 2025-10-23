@@ -18,6 +18,7 @@
 
 import * as React from 'react';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState, useRef, useMemo } from 'react';
+import { authService } from '@/services/canonical/AuthService';
 import { useUnifiedCRUD } from '@/contexts';
 import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
@@ -197,6 +198,42 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             };
         }
 
+        // 🔒 P2-3: Optimistic lock do funil ao abrir o editor
+        let releaseOnUnmount: (() => void) | undefined;
+        if (funnelId) {
+            try {
+                const userRes = authService.getCurrentUser();
+                let userId: string | undefined = userRes.success ? userRes.data?.id : undefined;
+                if (!userId && typeof window !== 'undefined') {
+                    const key = 'qfp_user_id';
+                    const existing = localStorage.getItem(key);
+                    if (existing) userId = existing;
+                    else {
+                        const generated = `anon-${Math.random().toString(36).slice(2, 8)}`;
+                        localStorage.setItem(key, generated);
+                        userId = generated;
+                    }
+                }
+
+                const res = authService.locks.lockFunnel(String(funnelId), userId || 'anonymous');
+                if (res.success && !res.data.ok) {
+                    console.warn('⚠️ Funil em edição por outro usuário:', res.data.lock);
+                }
+
+                // Registrar release no beforeunload
+                if (typeof window !== 'undefined') {
+                    const handler = () => { try { authService.locks.releaseLock(String(funnelId), userId || 'anonymous'); } catch { } };
+                    window.addEventListener('beforeunload', handler);
+                    releaseOnUnmount = () => {
+                        try { authService.locks.releaseLock(String(funnelId), userId || 'anonymous'); } catch { }
+                        window.removeEventListener('beforeunload', handler);
+                    };
+                }
+            } catch (e) {
+                console.error('❌ Lock otimista falhou:', e);
+            }
+        }
+
         return () => {
             if (typeof window !== 'undefined') {
                 (window as any).__UNIFIED_EDITOR_PROVIDER__ = {
@@ -204,6 +241,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     timestamp: new Date().toISOString()
                 };
             }
+            // 🔓 Liberar lock ao desmontar
+            if (releaseOnUnmount) releaseOnUnmount();
         };
     }, [funnelId, quizId, enableSupabase, storageKey]);
 
