@@ -3,15 +3,15 @@ import { useLocation } from 'wouter';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Sparkles, 
-  Target, 
-  Zap, 
-  BarChart3, 
-  Users, 
-  TrendingUp, 
-  CheckCircle, 
-  Star, 
+import {
+  Sparkles,
+  Target,
+  Zap,
+  BarChart3,
+  Users,
+  TrendingUp,
+  CheckCircle,
+  Star,
   ArrowRight
 } from 'lucide-react';
 import { useAuth } from '@/contexts';
@@ -19,7 +19,7 @@ import { useAuth } from '@/contexts';
 export const Home: React.FC = () => {
   console.log('🏠 Home component rendering...');
   console.log('🏠 Home: Mounting component');
-  
+
   const { user, logout } = useAuth();
   console.log('🏠 Home: useAuth called, user:', user ? 'authenticated' : 'not authenticated');
   const [, setLocation] = useLocation();
@@ -57,24 +57,24 @@ export const Home: React.FC = () => {
 
   // Stats data
   const stats = [
-    { 
-      number: '15K+', 
-      label: 'Quizzes Criados', 
-      icon: Target, 
+    {
+      number: '15K+',
+      label: 'Quizzes Criados',
+      icon: Target,
       color: 'text-blue-600',
       bg: 'bg-blue-50'
     },
-    { 
-      number: '94%', 
-      label: 'Taxa de Conversão', 
-      icon: TrendingUp, 
+    {
+      number: '94%',
+      label: 'Taxa de Conversão',
+      icon: TrendingUp,
       color: 'text-green-600',
       bg: 'bg-green-50'
     },
-    { 
-      number: '2min', 
-      label: 'Tempo de Configuração', 
-      icon: Zap, 
+    {
+      number: '2min',
+      label: 'Tempo de Configuração',
+      icon: Zap,
       color: 'text-purple-600',
       bg: 'bg-purple-50'
     }
@@ -152,13 +152,13 @@ export const Home: React.FC = () => {
               </span>
               <Badge variant="secondary" className="ml-2 text-xs">Pro</Badge>
             </div>
-            
+
             <nav className="hidden md:flex items-center space-x-8">
               <a href="#features" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Features</a>
               <a href="#testimonials" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Reviews</a>
               <a href="#pricing" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">Pricing</a>
             </nav>
-            
+
             <div className="flex items-center space-x-3">
               {user ? (
                 <div className="flex items-center space-x-3">
@@ -194,14 +194,14 @@ export const Home: React.FC = () => {
           {/* Background Elements */}
           <div className="absolute inset-0 bg-gradient-to-br from-brand-background via-brand-light to-brand-lightBlue/10"></div>
           <div className="absolute inset-0 bg-dot-pattern opacity-30"></div>
-          
+
           <div className="container mx-auto px-6 relative z-10">
             <div className="text-center max-w-5xl mx-auto">
               <Badge className="mb-8 bg-brand-light text-brand-brightBlue border-brand-lightBlue/30 hover:bg-brand-lightBlue/20 transition-colors px-4 py-2">
                 <Sparkles className="h-4 w-4 mr-2" />
                 Plataforma de Quizzes Interativos
               </Badge>
-              
+
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-slate-900 leading-tight tracking-tight">
                 Crie{' '}
                 <span className="bg-gradient-hero bg-clip-text text-transparent">
@@ -210,24 +210,24 @@ export const Home: React.FC = () => {
                 <br />
                 Que Convertem
               </h1>
-              
+
               <p className="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
                 Transforme visitantes em clientes com quizzes personalizados e interativos.
                 Design profissional, integração perfeita, resultados comprovados.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="bg-gradient-to-r from-brand-brightBlue to-brand-lightBlue hover:from-brand-brightBlue/90 hover:to-brand-lightBlue/90 text-white text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
                   onClick={() => navigate(user ? '/dashboard' : '/auth')}
                 >
                   <Zap className="h-5 w-5 mr-2" />
                   {user ? 'Ir para Dashboard' : 'Começar Teste Grátis'}
                 </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg" 
+                <Button
+                  variant="outline"
+                  size="lg"
                   className="text-lg px-10 py-4 border-2 border-slate-300 hover:bg-slate-50 rounded-xl transition-all"
                   onClick={() => navigate('/templates')}
                 >
@@ -266,7 +266,7 @@ export const Home: React.FC = () => {
                 Junte-se a milhares de empresas que transformaram seu engajamento de visitantes e taxas de conversão
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {stats.map((stat, index) => (
                 <Card key={index} className="text-center border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white">
