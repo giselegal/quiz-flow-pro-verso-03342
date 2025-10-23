@@ -76,22 +76,30 @@ describe('PropertiesPanel UX (question-hero)', () => {
         const contentTrigger = await screen.findByText(/Conteúdo|Content/i);
         await act(async () => { fireEvent.click(contentTrigger); });
 
-        // Editar título e subtítulo
-        const titulo = await screen.findByLabelText(/Título|title/i);
+        // Editar título e subtítulo pelos campos canônicos (title/subtitle)
+        const titleContainer = document.querySelector('[data-field-key="title"]') as HTMLElement;
+        const titulo = titleContainer.querySelector('input') as HTMLInputElement;
         await act(async () => { fireEvent.change(titulo, { target: { value: 'Pergunta 1 - Preferências' } }); });
 
-        const subtitulo = await screen.findByLabelText(/Subtítulo|subtitle/i);
+        const subtitleContainer = document.querySelector('[data-field-key="subtitle"]') as HTMLElement;
+        const subtitulo = subtitleContainer.querySelector('input') as HTMLInputElement;
         await act(async () => { fireEvent.change(subtitulo, { target: { value: 'Escolha o que mais combina com você' } }); });
 
         // Números
-        const numero = await screen.findByLabelText(/Número da Questão|questionNumber/i);
+        const numberContainer = document.querySelector('[data-field-key="questionNumber"]') as HTMLElement;
+        const numero = numberContainer.querySelector('input') as HTMLInputElement;
         await act(async () => { fireEvent.change(numero, { target: { value: '3' } }); });
 
-        const total = await screen.findByLabelText(/Total de Questões|totalQuestions/i);
+        const totalContainer = document.querySelector('[data-field-key="totalQuestions"]') as HTMLElement;
+        const total = totalContainer.querySelector('input') as HTMLInputElement;
         await act(async () => { fireEvent.change(total, { target: { value: '13' } }); });
 
         // showProgress
-        const showProgress = await screen.findByLabelText(/Mostrar Progresso|showProgress/i);
+        // Abrir grupo Layout para exibir o switch
+        const layoutTrigger = await screen.findByText(/Layout/i);
+        await act(async () => { fireEvent.click(layoutTrigger); });
+        const progressContainer = document.querySelector('[data-field-key="showProgress"]') as HTMLElement;
+        const showProgress = progressContainer.querySelector('[role="switch"]') as HTMLElement;
         await act(async () => { fireEvent.click(showProgress); });
 
         const propsState = screen.getByTestId('props-state').textContent || '{}';

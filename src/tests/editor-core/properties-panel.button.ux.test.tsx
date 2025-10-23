@@ -76,12 +76,14 @@ describe('PropertiesPanel UX (button)', () => {
         const contentTrigger = await screen.findByText(/Conteúdo/i);
         await act(async () => { fireEvent.click(contentTrigger); });
 
-        // Editar label (alias)
-        const labelInput = await screen.findByLabelText(/Label \(alias\)|Texto \(alias v3\)|Texto do botão|Texto/i);
-        await act(async () => { fireEvent.change(labelInput, { target: { value: 'Quero minha vaga' } }); });
+        // Editar texto do botão (campo canônico buttonText)
+        const buttonTextField = document.querySelector('[data-field-key="buttonText"]') as HTMLElement;
+        const textInput = within(buttonTextField).getByRole('textbox') as HTMLInputElement;
+        await act(async () => { fireEvent.change(textInput, { target: { value: 'Quero minha vaga' } }); });
 
-        // Editar href/url
-        const urlInput = await screen.findByLabelText(/Href \(alias\)|URL \(alias v3\)|URL|Link|Endereço/i);
+        // Editar URL do botão (campo canônico buttonUrl)
+        const buttonUrlField = document.querySelector('[data-field-key="buttonUrl"]') as HTMLElement;
+        const urlInput = within(buttonUrlField).getByRole('textbox') as HTMLInputElement;
         await act(async () => { fireEvent.change(urlInput, { target: { value: 'https://meuapp.com/pagar' } }); });
 
         // Abrir grupo Style
@@ -89,26 +91,29 @@ describe('PropertiesPanel UX (button)', () => {
         await act(async () => { fireEvent.click(styleTrigger); });
 
         // Trocar variant para outline
-        const variantSelect = screen.getByLabelText(/Variante/i) as HTMLSelectElement;
+        const variantContainer = document.querySelector('[data-field-key="variant"]') as HTMLElement;
+        const variantSelect = within(variantContainer).getByRole('combobox') as HTMLSelectElement;
         await act(async () => { fireEvent.change(variantSelect, { target: { value: 'outline' } }); });
 
         // Trocar size para lg
-        const sizeSelect = screen.getByLabelText(/Tamanho/i) as HTMLSelectElement;
+        const sizeContainer = document.querySelector('[data-field-key="size"]') as HTMLElement;
+        const sizeSelect = within(sizeContainer).getByRole('combobox') as HTMLSelectElement;
         await act(async () => { fireEvent.change(sizeSelect, { target: { value: 'lg' } }); });
 
         // Abrir grupo Layout e marcar fullWidth
         const layoutTrigger = await screen.findByText(/Layout/i);
         await act(async () => { fireEvent.click(layoutTrigger); });
 
-        const fullWidthSwitch = screen.getByLabelText(/Largura Total/i) as HTMLInputElement;
+        const fullWidthContainer = document.querySelector('[data-field-key="fullWidth"]') as HTMLElement;
+        const fullWidthSwitch = within(fullWidthContainer).getByRole('switch');
         await act(async () => { fireEvent.click(fullWidthSwitch); });
 
         const propsState = screen.getByTestId('props-state').textContent || '{}';
         const props = JSON.parse(propsState);
 
         // Verificações
-        expect(props.text === 'Quero minha vaga' || props.label === 'Quero minha vaga').toBeTruthy();
-        expect(props.url === 'https://meuapp.com/pagar' || props.href === 'https://meuapp.com/pagar').toBeTruthy();
+        expect(props.buttonText === 'Quero minha vaga' || props.text === 'Quero minha vaga' || props.label === 'Quero minha vaga').toBeTruthy();
+        expect(props.buttonUrl === 'https://meuapp.com/pagar' || props.url === 'https://meuapp.com/pagar' || props.href === 'https://meuapp.com/pagar').toBeTruthy();
         expect(props.variant).toBe('outline');
         expect(props.size === 'lg' || props.size === 'large').toBeTruthy();
         expect(props.fullWidth).toBe(true);
