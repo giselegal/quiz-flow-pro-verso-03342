@@ -1,3 +1,7 @@
+// 🛡️ CRITICAL: Importar React PRIMEIRO para garantir disponibilidade global
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import ClientLayout from './components/ClientLayout';

@@ -103,11 +103,14 @@ export default defineConfig(({ mode }) => {
           // 🚀 FASE 2.3 - Manual Chunks para otimização de bundle
           manualChunks: (id) => {
             // React ecosystem - TUDO NO MESMO CHUNK para evitar problemas de inicialização
+            // CRÍTICO: Incluir TODOS os módulos relacionados ao React no mesmo chunk
             if (id.includes('node_modules/react') ||
-              id.includes('node_modules/scheduler') ||
-              id.includes('node_modules/wouter')) {
+                id.includes('node_modules/scheduler') ||
+                id.includes('node_modules/wouter')) {
               return 'vendor-react';
-            }            // UI libraries (Radix UI + Lucide) - DEPOIS do React
+            }
+
+            // UI libraries (Radix UI + Lucide) - DEPOIS do React
             if (id.includes('@radix-ui') ||
               id.includes('lucide-react') ||
               id.includes('class-variance-authority') ||
