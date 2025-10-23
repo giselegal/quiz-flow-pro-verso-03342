@@ -100,34 +100,31 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🚀 FASE 2.3 - Manual Chunks para otimização de bundle
+          // 🚀 ESTRATÉGIA SIMPLIFICADA - Apenas vendors externos
+          // Evita problemas de dependências circulares entre chunks internos
           manualChunks: (id) => {
-            // React ecosystem + UI libs + Charts - TUDO NO MESMO CHUNK
-            // CRÍTICO: Todos esses dependem do React, então devem estar juntos
-            if (id.includes('node_modules/react') ||
-                id.includes('node_modules/scheduler') ||
-                id.includes('node_modules/wouter') ||
-                id.includes('@radix-ui') ||
-                id.includes('lucide-react') ||
-                id.includes('recharts')) {
-              return 'vendor-react';
-            }
-
-            // Utilities UI (não dependem diretamente do React.forwardRef)
-            if (id.includes('class-variance-authority') ||
-              id.includes('clsx') ||
-              id.includes('tailwind-merge')) {
-              return 'vendor-utils';
-            }
-
-            // Supabase (lazy loaded quando necessário)
-            if (id.includes('@supabase') || id.includes('supabase-js')) {
-              return 'vendor-supabase';
-            }
-
-            // Canonical services (sempre carregados, mas pequenos ~12KB)
-            if (id.includes('/src/services/canonical/')) {
-              return 'services-canonical';
+            // Tudo do node_modules em um chunk vendor
+            if (id.includes('node_modules')) {
+              // React ecosystem
+              if (id.includes('react') || 
+                  id.includes('scheduler') || 
+                  id.includes('wouter') ||
+                  id.includes('@radix-ui') ||
+                  id.includes('lucide-react') ||
+                  id.includes('recharts') ||
+                  id.includes('class-variance-authority') ||
+                  id.includes('clsx') ||
+                  id.includes('tailwind-merge')) {
+                return 'vendor';
+              }
+              
+              // Supabase separado (grande e lazy)
+              if (id.includes('@supabase') || id.includes('supabase-js')) {
+                return 'vendor-supabase';
+              }
+              
+              // Outros vendors
+              return 'vendor-libs';
             }
 
             // Editor (grande - 590KB, split em partes menores)
