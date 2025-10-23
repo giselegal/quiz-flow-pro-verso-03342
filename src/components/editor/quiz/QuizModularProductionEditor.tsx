@@ -38,7 +38,7 @@ import { Textarea } from '@/components/ui/textarea';
 import DynamicPropertiesForm from './components/DynamicPropertiesForm';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     Save,
     Upload,
@@ -1034,20 +1034,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         return { tieBreak: scoring.tieBreak, weights: scoring.weights } as any;
     }, [unifiedConfig]);
 
-    // Layout responsivo
-    const [activeTab, setActiveTab] = useState<'canvas' | 'preview'>('canvas');
-    const activeTabDebounceRef = useRef<number | null>(null);
-
-    // Handler com debounce para mudança de tab
-    const handleTabChange = useCallback((newTab: 'canvas' | 'preview') => {
-        if (activeTabDebounceRef.current) {
-            window.clearTimeout(activeTabDebounceRef.current);
-        }
-
-        activeTabDebounceRef.current = window.setTimeout(() => {
-            setActiveTab(newTab);
-        }, 50); // Pequeno debounce de 50ms para evitar cliques múltiplos rápidos
-    }, []);
+    // Layout responsivo (tabs legacy removidos)
 
     const [navOpen, setNavOpen] = useState(false);
     const navAnalysis = useMemo(() => buildNavigationMap(steps.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [steps]);
@@ -2554,11 +2541,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
     }, [funnelId, toast, steps]);
 
-    // Memoizar o nó do preview para evitar recriação a cada render
-    const previewNode = useMemo(() => {
-        const stepId = (editorCtx ? effectiveSelectedStepId : selectedStepId) || selectedStep?.id;
-        return <LivePreviewContainer funnelId={funnelId} steps={steps} selectedStepId={stepId} />;
-    }, [funnelId, steps, editorCtx, effectiveSelectedStepId, selectedStepId, selectedStep?.id]);
+    // previewNode legacy removido: usamos o painel oficial de preview
 
     // Gargalo #2/#3: Validar ordem de renderização via logs em DEV
     useEffect(() => {
