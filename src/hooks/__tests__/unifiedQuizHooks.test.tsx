@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useQuizUserProgress } from '../useQuizUserProgress';
 import { useUnifiedQuizNavigation } from '../useUnifiedQuizNavigation';
 
@@ -144,7 +144,7 @@ describe('useUnifiedQuizNavigation', () => {
         expect(onStepChangeMock).toHaveBeenCalledWith(1);
     });
 
-    it('deve voltar para o passo anterior', () => {
+    it('deve voltar para o passo anterior', async () => {
         const onStepChangeMock = vi.fn();
 
         const { result } = renderHook(() => useUnifiedQuizNavigation({
@@ -154,15 +154,18 @@ describe('useUnifiedQuizNavigation', () => {
             onStepChange: onStepChangeMock,
         }));
 
+        // Verificar que inicializou corretamente
+        expect(result.current.currentStepIndex).toBe(2);
+
+        // Navegar para trás
         act(() => {
             result.current.navigateToPreviousStep();
         });
 
+        // Deve voltar para 1 (sem histórico, só subtrai 1)
         expect(result.current.currentStepIndex).toBe(1);
         expect(onStepChangeMock).toHaveBeenCalledWith(1);
-    });
-
-    it('deve respeitar regras de navegação condicional', () => {
+    }); it('deve respeitar regras de navegação condicional', () => {
         interface SelectedOption { id: string; value: string; points?: number; }
         interface RecordedAnswer { stepId: number; questionId: string; selectedOptions: SelectedOption[]; }
 

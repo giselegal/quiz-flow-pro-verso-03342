@@ -51,6 +51,7 @@ export const useUnifiedQuizNavigation = ({
     calculateCompletionPercentage,
   } = useQuizUserProgress({
     funnelId,
+    initialStep,
     persistToLocalStorage: persistNavigation,
   });
 

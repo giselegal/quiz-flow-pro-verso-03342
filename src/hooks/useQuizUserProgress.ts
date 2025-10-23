@@ -37,6 +37,7 @@ export interface QuizProgress {
 export interface UseQuizUserProgressOptions {
   funnelId: string;
   userId?: string;
+  initialStep?: number;
   persistToLocalStorage?: boolean;
   syncWithBackend?: boolean;
   onProgressUpdate?: (progress: QuizProgress) => void;
@@ -45,6 +46,7 @@ export interface UseQuizUserProgressOptions {
 export const useQuizUserProgress = ({
   funnelId,
   userId,
+  initialStep = 0,
   persistToLocalStorage = true,
   syncWithBackend = false,
   onProgressUpdate,
@@ -68,7 +70,7 @@ export const useQuizUserProgress = ({
       funnelId,
       userId,
       answers: [],
-      currentStepIndex: 0,
+      currentStepIndex: initialStep,
       startedAt: Date.now(),
       lastUpdatedAt: Date.now(),
       totalPoints: 0,
