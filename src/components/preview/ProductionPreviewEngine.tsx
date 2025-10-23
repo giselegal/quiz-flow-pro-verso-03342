@@ -1,6 +1,7 @@
 import React from 'react';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
+import { getPreviewBlockKey } from '@/utils/keys/previewKeys';
 
 export interface ProductionPreviewEngineProps {
   blocks: Block[];
@@ -33,7 +34,7 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
       </p>
       <div className="mt-4 grid gap-4">
         {blocks.map((block, index) => (
-          <div key={block.id} className="p-3 bg-muted rounded border">
+          <div key={getPreviewBlockKey(block)} className="p-3 bg-muted rounded border">
             <div className="text-sm font-medium">Bloco {index + 1}: {block.type}</div>
             <div className="text-xs text-muted-foreground">{block.id}</div>
           </div>
