@@ -23,11 +23,11 @@ import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '
 import { TemplateRegistry } from '@/services/TemplateRegistry';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 
-export type TemplateSource = 
-  | 'normalized-json' 
-  | 'modular-json' 
-  | 'individual-json' 
-  | 'master-hydrated' 
+export type TemplateSource =
+  | 'normalized-json'
+  | 'modular-json'
+  | 'individual-json'
+  | 'master-hydrated'
   | 'ts-template';
 
 export interface LoadedTemplate {
@@ -38,6 +38,38 @@ export interface LoadedTemplate {
 export class TemplateLoader {
   private masterTemplateRef: any | null = null;
   private loadingSteps = new Set<string>();
+
+  /**
+   * Utilitário: executa uma função assíncrona com retry + backoff exponencial simples.
+   * Retorna null em caso de falha após todas as tentativas.
+   */
+  private async withRetry<T>(
+    label: string,
+    fn: () => Promise<T>,
+    attempts = 3,
+    initialDelayMs = 150
+  ): Promise<T | null> {
+    let lastErr: any = null;
+    const start = performance.now?.() ?? Date.now();
+    for (let i = 0; i < attempts; i++) {
+      try {
+        const res = await fn();
+        const end = performance.now?.() ?? Date.now();
+        console.log(`✅ ${label} ok (tentativa ${i + 1}/${attempts}, ${(end - start).toFixed(0)}ms)`);
+        return res;
+      } catch (err) {
+        lastErr = err;
+        console.warn(`⚠️ ${label} falhou (tentativa ${i + 1}/${attempts})`, err);
+        if (i < attempts - 1) {
+          const wait = initialDelayMs * Math.pow(2, i);
+          await new Promise(r => setTimeout(r, wait));
+        }
+      }
+    }
+    const end = performance.now?.() ?? Date.now();
+    console.error(`❌ ${label} esgotou tentativas (${attempts}) em ${(end - start).toFixed(0)}ms`, lastErr);
+    return null;
+  }
 
   /**
    * Carrega blocos para um step específico
@@ -57,13 +89,13 @@ export class TemplateLoader {
     try {
       console.group(`🔍 [TemplateLoader] ${normalizedKey}`);
 
-  // Estratégia 1: Cache unificado
+      // Estratégia 1: Cache unificado
       const cached = this.loadFromCache(normalizedKey);
       if (cached) return cached;
 
-  // Estratégia 2: TemplateRegistry (fonte canônica em memória)
-  const fromRegistry = this.loadFromRegistry(normalizedKey);
-  if (fromRegistry) return fromRegistry;
+      // Estratégia 2: TemplateRegistry (fonte canônica em memória)
+      const fromRegistry = this.loadFromRegistry(normalizedKey);
+      if (fromRegistry) return fromRegistry;
 
       // Estratégia 3: Master JSON público (controlado por flag)
       if (TEMPLATE_SOURCES.useMasterJSON) {
@@ -83,7 +115,7 @@ export class TemplateLoader {
         if (modular) return modular;
       }
 
-  // Estratégia 6: TypeScript template (fallback)
+      // Estratégia 6: TypeScript template (fallback)
       return this.loadFromTypescript(normalizedKey);
 
     } finally {
@@ -130,8 +162,8 @@ export class TemplateLoader {
    */
   private loadFromCache(normalizedKey: string): LoadedTemplate | null {
     try {
-      const cachedStepBlocks = 
-        unifiedCache.get(stepBlocksKey(normalizedKey)) || 
+      const cachedStepBlocks =
+        unifiedCache.get(stepBlocksKey(normalizedKey)) ||
         unifiedCache.get(masterBlocksKey(normalizedKey));
 
       if (Array.isArray(cachedStepBlocks) && cachedStepBlocks.length > 0) {
@@ -202,10 +234,10 @@ export class TemplateLoader {
         };
         const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
         const blocks = blockComponentsToBlocks(blockComponents);
-        
+
         unifiedCache.set(masterBlocksKey(normalizedKey), blocks);
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
-        
+
         console.log(`📦 Master JSON → ${normalizedKey}: ${blocks.length} blocos`);
         return { blocks, source: 'master-hydrated' };
       }
@@ -222,7 +254,7 @@ export class TemplateLoader {
     try {
       const stepNum = Number(normalizedKey.replace('step-', ''));
       const isNormalizedRange = stepNum >= 2 && stepNum <= 11;
-      
+
       if (!isNormalizedRange) return null;
 
       // Cache normalizado
@@ -232,10 +264,13 @@ export class TemplateLoader {
         return { blocks: normalizedCache, source: 'normalized-json' };
       }
 
-      // Loader com gate
-      const mod = await import('@/lib/normalizedLoader');
-      const data = await mod.loadNormalizedStep(normalizedKey as any);
-      
+      // Loader com gate + retry/telemetria
+      const mod = await this.withRetry('normalized:import', () => import('@/lib/normalizedLoader'));
+      if (!mod) return null;
+
+      const data = await this.withRetry('normalized:loadStep', () => mod.loadNormalizedStep(normalizedKey as any));
+      if (!data) return null;
+
       if (data && Array.isArray((data as any).blocks)) {
         const blocks = (data as any).blocks.map((b: any, idx: number) => ({
           id: b.id || `block-${idx}`,
@@ -244,15 +279,16 @@ export class TemplateLoader {
           properties: b.properties || b.props || {},
           content: b.content || {}
         })) as Block[];
-        
+
         unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
-        
+
         console.log(`📦 Normalized JSON → ${normalizedKey}: ${blocks.length} blocos`);
         return { blocks, source: 'normalized-json' };
       }
     } catch (e) {
       // Silent fail para gate disabled
+      console.warn('⚠️ loadNormalized falhou (gate desabilitado ou erro não crítico):', e);
     }
     return null;
   }
@@ -261,15 +297,20 @@ export class TemplateLoader {
    * Estratégia 4: Carregar templates modulares
    */
   private loadModular(normalizedKey: string): LoadedTemplate | null {
-    if (!hasModularTemplate(normalizedKey)) {
+    try {
+      if (!hasModularTemplate(normalizedKey)) {
+        return null;
+      }
+
+      const blocks = loadStepTemplate(normalizedKey);
+      console.log(`📦 Modular template → ${normalizedKey}: ${blocks.length} blocos`);
+
+      unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
+      return { blocks, source: 'modular-json' };
+    } catch (e) {
+      console.warn('⚠️ Erro ao carregar template modular:', normalizedKey, e);
       return null;
     }
-
-    const blocks = loadStepTemplate(normalizedKey);
-    console.log(`📦 Modular template → ${normalizedKey}: ${blocks.length} blocos`);
-    
-    unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
-    return { blocks, source: 'modular-json' };
   }
 
   /**
@@ -277,7 +318,7 @@ export class TemplateLoader {
    */
   private loadFromTypescript(normalizedKey: string): LoadedTemplate {
     console.log(`📦 Fallback: TypeScript template → ${normalizedKey}`);
-    
+
     const stepTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE[normalizedKey];
     if (!stepTemplate) {
       console.warn(`⚠️ Step ${normalizedKey} não encontrado no template TS`);
@@ -288,10 +329,10 @@ export class TemplateLoader {
       [normalizedKey]: stepTemplate
     });
     const blocks = blockComponentsToBlocks(blockComponents);
-    
+
     unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
     console.log(`📦 TS template → ${normalizedKey}: ${blocks.length} blocos`);
-    
+
     return { blocks, source: 'ts-template' };
   }
 
