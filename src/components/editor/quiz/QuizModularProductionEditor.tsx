@@ -2740,15 +2740,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     canvasPanel={(
                         <CanvasArea
                             enableInlinePreview
-                            activeTab={activeTab}
-                            onTabChange={(v) => handleTabChange(v as 'canvas' | 'preview')}
                             steps={steps}
                             selectedStep={selectedStep}
                             headerConfig={headerConfig}
                             liveScores={liveScores}
                             topStyle={topStyle || undefined}
-                            BlockRow={BlockRow}
-                            byBlock={byBlock}
+                            BlockRow={undefined as any}
+                            byBlock={{}}
                             selectedBlockId={effectiveSelectedBlockId}
                             isMultiSelected={isMultiSelected}
                             handleBlockClick={(e, block) => {
@@ -2772,7 +2770,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setTargetStepId={setTargetStepId}
                             setDuplicateModalOpen={setDuplicateModalOpen}
                             activeId={activeId}
-                            previewNode={previewNode}
                             FixedProgressHeader={FixedProgressHeader}
                             StyleResultCard={StyleResultCard}
                             OfferMap={OfferMap}
