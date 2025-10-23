@@ -100,19 +100,23 @@ export type AuthStateChangeCallback = (event: AuthChangeEvent, session: Session 
 
 export class AuthService extends BaseCanonicalService {
   private static instance: AuthService;
-  
+
   private currentUser: AuthUser | null = null;
   private currentSession: AuthSession | null = null;
   private profileCache: Map<string, UserProfile> = new Map();
   private permissionCache: Map<string, Permission[]> = new Map();
   private authListeners: Set<AuthStateChangeCallback> = new Set();
-  
+
   private readonly PROFILE_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
   private readonly PERMISSION_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
   private readonly SESSION_REFRESH_THRESHOLD = 5 * 60 * 1000; // Refresh 5 min before expiry
-  
+
   private sessionRefreshTimer?: NodeJS.Timeout;
   private authSubscription?: { unsubscribe: () => void };
+
+  // Optimistic editor locks (in-memory)
+  private locksMap: Map<string, { userId: string; expiresAt: number }> = new Map();
+  private readonly DEFAULT_LOCK_TTL = 30 * 60 * 1000; // 30 minutes
 
   private constructor() {
     super('AuthService', '1.0.0', { debug: false });
@@ -127,45 +131,48 @@ export class AuthService extends BaseCanonicalService {
 
   protected async onInitialize(): Promise<void> {
     this.log('Initializing AuthService...');
-    
+
     // Setup auth state listener
     this.setupAuthListener();
-    
+
     // Try to restore existing session
     await this.restoreSession();
-    
+
     // Setup session refresh timer
     this.setupSessionRefresh();
-    
+
     this.log('AuthService initialized successfully');
   }
 
   protected async onDispose(): Promise<void> {
     this.log('Disposing AuthService...');
-    
+
     // Clear timers
     if (this.sessionRefreshTimer) {
       clearInterval(this.sessionRefreshTimer);
     }
-    
+
     // Unsubscribe from auth changes
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
-    
+
     // Clear caches
     this.profileCache.clear();
     this.permissionCache.clear();
     this.authListeners.clear();
-    
+
     // Clear current state
     this.currentUser = null;
     this.currentSession = null;
+
+    // Clear locks
+    this.locksMap.clear();
   }
 
   async healthCheck(): Promise<boolean> {
     if (this.state !== 'ready') return false;
-    
+
     try {
       const { error } = await supabase.auth.getSession();
       return !error;
@@ -403,7 +410,7 @@ export class AuthService extends BaseCanonicalService {
       }
 
       const profile = this.mapDatabaseProfile(data);
-      
+
       // Cache profile
       this.profileCache.set(userId, profile);
       setTimeout(() => this.profileCache.delete(userId), this.PROFILE_CACHE_TTL);
@@ -451,7 +458,7 @@ export class AuthService extends BaseCanonicalService {
       }
 
       const profile = this.mapDatabaseProfile(data);
-      
+
       // Update cache
       this.profileCache.set(userId, profile);
 
@@ -519,12 +526,12 @@ export class AuthService extends BaseCanonicalService {
   ): Promise<ServiceResult<boolean>> {
     try {
       const permissions = await this.getUserPermissions(userId, resourceType, resourceId);
-      
+
       if (!permissions.success) {
         return permissions;
       }
 
-      const hasPermission = permissions.data!.some(p => 
+      const hasPermission = permissions.data!.some(p =>
         p.actions.includes(action) &&
         (!p.expiresAt || p.expiresAt.getTime() > Date.now())
       );
@@ -548,7 +555,7 @@ export class AuthService extends BaseCanonicalService {
   ): Promise<ServiceResult<Permission[]>> {
     try {
       const cacheKey = `${userId}:${resourceType}:${resourceId}`;
-      
+
       // Check cache
       const cached = this.permissionCache.get(cacheKey);
       if (cached) {
@@ -572,7 +579,7 @@ export class AuthService extends BaseCanonicalService {
 
       // Map to domain model
       const permissions = (data || []).map((p: any) => this.mapDatabasePermission(p));
-      
+
       // Cache permissions
       this.permissionCache.set(cacheKey, permissions);
       setTimeout(() => this.permissionCache.delete(cacheKey), this.PERMISSION_CACHE_TTL);
@@ -623,7 +630,7 @@ export class AuthService extends BaseCanonicalService {
       }
 
       const permission = this.mapDatabasePermission(data);
-      
+
       // Invalidate cache
       const cacheKey = `${userId}:${resourceType}:${resourceId}`;
       this.permissionCache.delete(cacheKey);
@@ -690,7 +697,7 @@ export class AuthService extends BaseCanonicalService {
    */
   onAuthStateChange(callback: AuthStateChangeCallback): () => void {
     this.authListeners.add(callback);
-    
+
     // Return unsubscribe function
     return () => {
       this.authListeners.delete(callback);
@@ -702,51 +709,121 @@ export class AuthService extends BaseCanonicalService {
   // ============================================================================
 
   readonly auth = {
-    signUp: (params: SignUpParams) => 
+    signUp: (params: SignUpParams) =>
       this.signUp(params),
-    
-    signIn: (params: SignInParams) => 
+
+    signIn: (params: SignInParams) =>
       this.signIn(params),
-    
-    signOut: () => 
+
+    signOut: () =>
       this.signOut(),
-    
-    getCurrentUser: () => 
+
+    getCurrentUser: () =>
       this.getCurrentUser(),
-    
-    getCurrentSession: () => 
+
+    getCurrentSession: () =>
       this.getCurrentSession(),
-    
-    isAuthenticated: () => 
+
+    isAuthenticated: () =>
       this.isAuthenticated(),
-    
-    refreshSession: () => 
+
+    refreshSession: () =>
       this.refreshSession()
   };
 
   readonly profile = {
-    get: (userId: string) => 
+    get: (userId: string) =>
       this.getUserProfile(userId),
-    
-    update: (userId: string, updates: UpdateProfileParams) => 
+
+    update: (userId: string, updates: UpdateProfileParams) =>
       this.updateUserProfile(userId, updates),
-    
-    uploadAvatar: (userId: string, file: File) => 
+
+    uploadAvatar: (userId: string, file: File) =>
       this.uploadAvatar(userId, file)
   };
 
   readonly permissions = {
-    has: (userId: string, resourceType: Permission['resourceType'], resourceId: string, action: PermissionAction) => 
+    has: (userId: string, resourceType: Permission['resourceType'], resourceId: string, action: PermissionAction) =>
       this.hasPermission(userId, resourceType, resourceId, action),
-    
-    get: (userId: string, resourceType: Permission['resourceType'], resourceId: string) => 
+
+    get: (userId: string, resourceType: Permission['resourceType'], resourceId: string) =>
       this.getUserPermissions(userId, resourceType, resourceId),
-    
-    grant: (userId: string, resourceType: Permission['resourceType'], resourceId: string, role: UserRole, grantedBy: string) => 
+
+    grant: (userId: string, resourceType: Permission['resourceType'], resourceId: string, role: UserRole, grantedBy: string) =>
       this.grantPermission(userId, resourceType, resourceId, role, grantedBy),
-    
-    revoke: (userId: string, resourceType: Permission['resourceType'], resourceId: string) => 
+
+    revoke: (userId: string, resourceType: Permission['resourceType'], resourceId: string) =>
       this.revokePermission(userId, resourceType, resourceId)
+  };
+
+  /**
+   * EDIT LOCKS (optimistic): lock/unlock funis para reduzir conflitos de edição
+   */
+  readonly locks = {
+    lockFunnel: (funnelId: string, userId: string, ttlMs: number = this.DEFAULT_LOCK_TTL): ServiceResult<{ ok: boolean; lock: { userId: string; expiresAt: number }; conflict?: { userId: string; expiresAt: number } }> => {
+      try {
+        const now = Date.now();
+        const existing = this.locksMap.get(funnelId);
+
+        // Expirar lock antigo, se necessário
+        if (existing && existing.expiresAt <= now) {
+          this.locksMap.delete(funnelId);
+        }
+
+        const current = this.locksMap.get(funnelId);
+        if (current && current.expiresAt > now && current.userId !== userId) {
+          return { success: true, data: { ok: false, lock: current, conflict: current } };
+        }
+
+        const newLock = { userId, expiresAt: now + (ttlMs || this.DEFAULT_LOCK_TTL) };
+        this.locksMap.set(funnelId, newLock);
+        return { success: true, data: { ok: true, lock: newLock } };
+      } catch (error) {
+        return { success: false, error: error instanceof Error ? error : new Error('Failed to lock funnel') };
+      }
+    },
+
+    getLock: (funnelId: string): ServiceResult<{ userId: string; expiresAt: number } | null> => {
+      try {
+        const now = Date.now();
+        const existing = this.locksMap.get(funnelId);
+        if (!existing) return { success: true, data: null };
+        if (existing.expiresAt <= now) {
+          this.locksMap.delete(funnelId);
+          return { success: true, data: null };
+        }
+        return { success: true, data: existing };
+      } catch (error) {
+        return { success: false, error: error instanceof Error ? error : new Error('Failed to get lock') };
+      }
+    },
+
+    releaseLock: (funnelId: string, userId: string): ServiceResult<boolean> => {
+      try {
+        const existing = this.locksMap.get(funnelId);
+        if (existing && existing.userId === userId) {
+          this.locksMap.delete(funnelId);
+          return { success: true, data: true };
+        }
+        return { success: true, data: false };
+      } catch (error) {
+        return { success: false, error: error instanceof Error ? error : new Error('Failed to release lock') };
+      }
+    },
+
+    renewLock: (funnelId: string, userId: string, ttlMs: number = this.DEFAULT_LOCK_TTL): ServiceResult<{ userId: string; expiresAt: number } | null> => {
+      try {
+        const existing = this.locksMap.get(funnelId);
+        if (existing && existing.userId === userId) {
+          const updated = { userId, expiresAt: Date.now() + (ttlMs || this.DEFAULT_LOCK_TTL) };
+          this.locksMap.set(funnelId, updated);
+          return { success: true, data: updated };
+        }
+        return { success: true, data: null };
+      } catch (error) {
+        return { success: false, error: error instanceof Error ? error : new Error('Failed to renew lock') };
+      }
+    }
   };
 
   // ============================================================================
@@ -786,11 +863,11 @@ export class AuthService extends BaseCanonicalService {
   private async restoreSession(): Promise<void> {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      
+
       if (session?.user) {
         this.currentUser = this.mapSupabaseUser(session.user);
         this.currentSession = this.mapSupabaseSession(session, this.currentUser);
-        
+
         if (this.options.debug) {
           this.log('Session restored:', this.currentUser.email);
         }
@@ -807,7 +884,7 @@ export class AuthService extends BaseCanonicalService {
       if (!this.currentSession) return;
 
       const timeUntilExpiry = this.currentSession.expiresAt - Date.now();
-      
+
       if (timeUntilExpiry < this.SESSION_REFRESH_THRESHOLD) {
         await this.refreshSession();
       }

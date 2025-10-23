@@ -19,6 +19,7 @@
 console.log('📦 QuizModularProductionEditor: Module loading...');
 
 import React, { useState, useCallback, useEffect, useMemo, Suspense, useRef } from 'react';
+import { authService } from '@/services/canonical/AuthService';
 import '@/styles/globals.css'; // garante estilos de produção (quiz-option*, quiz-options-*)
 import { useLocation } from 'wouter';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors, useDraggable } from '@dnd-kit/core';
@@ -2498,6 +2499,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setIsPublishing(true);
         try {
             await quizEditorBridge.publishToProduction(funnelId);
+
+            // 🔓 P2-3: liberar lock após publicar com sucesso
+            try {
+                const userRes = authService.getCurrentUser();
+                let userId: string | undefined = userRes.success ? userRes.data?.id : undefined;
+                if (!userId && typeof window !== 'undefined') {
+                    userId = localStorage.getItem('qfp_user_id') || 'anonymous';
+                }
+                authService.locks.releaseLock(String(funnelId), userId || 'anonymous');
+            } catch (e) {
+                console.warn('Falha ao liberar lock após publicar:', e);
+            }
 
             toast({
                 title: '🚀 Publicado!',

@@ -33,6 +33,7 @@
  */
 
 import { BaseCanonicalService, ServiceResult } from './types';
+import { authService } from './AuthService';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -161,7 +162,7 @@ export interface EditorServiceOptions {
  */
 export class EditorService extends BaseCanonicalService {
   private static instance: EditorService | null = null;
-  
+
   // Editor state
   private editorState: EditorState = {
     mode: 'edit',
@@ -172,29 +173,29 @@ export class EditorService extends BaseCanonicalService {
     lastSaved: null,
     collaborators: []
   };
-  
+
   // Blocks registry
   private blocks: Map<string, Block> = new Map();
-  
+
   // Global styles
   private globalStyles: Record<string, any> = {};
-  
+
   // Change listeners
   private changeListeners: Array<(event: EditorChangeEvent) => void> = [];
-  
+
   private readonly autoSaveOptions: AutoSaveOptions;
   private readonly enableCollaboration: boolean;
   private readonly maxBlocks: number;
   private readonly validateOnChange: boolean;
   private readonly persistState: boolean;
   private readonly storageKey: string;
-  
+
   private autoSaveTimer: number | null = null;
   private autoSaveDebounceTimer: number | null = null;
 
   private constructor(options: EditorServiceOptions = {}) {
     super('EditorService', '1.0.0');
-    
+
     this.autoSaveOptions = options.autoSave || {
       enabled: true,
       interval: 30000, // 30 seconds
@@ -216,23 +217,23 @@ export class EditorService extends BaseCanonicalService {
 
   protected async onInitialize(): Promise<void> {
     this.log('Initializing EditorService...');
-    
+
     // Load persisted state
     if (this.persistState) {
       this.loadState();
     }
-    
+
     // Start auto-save if enabled
     if (this.autoSaveOptions.enabled) {
       this.startAutoSave();
     }
-    
+
     this.log('EditorService initialized successfully');
   }
 
   protected async onDispose(): Promise<void> {
     this.log('Disposing EditorService...');
-    
+
     // Stop auto-save
     if (this.autoSaveTimer !== null) {
       clearInterval(this.autoSaveTimer);
@@ -242,16 +243,16 @@ export class EditorService extends BaseCanonicalService {
       clearTimeout(this.autoSaveDebounceTimer);
       this.autoSaveDebounceTimer = null;
     }
-    
+
     // Save state if modified
     if (this.editorState.isModified && this.persistState) {
       this.saveState();
     }
-    
+
     // Clear data
     this.blocks.clear();
     this.changeListeners = [];
-    
+
     this.log('EditorService disposed');
   }
 
@@ -272,6 +273,54 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       this.error('Health check error:', error);
       return false;
+    }
+  }
+
+  // ==========================================================================
+  // OPTIMISTIC LOCKING (via AuthService)
+  // ==========================================================================
+
+  acquireFunnelLock(funnelId: string, userId?: string, ttlMs?: number): ServiceResult<{ ok: boolean; lock: { userId: string; expiresAt: number }; conflict?: { userId: string; expiresAt: number } }> {
+    try {
+      const userRes = authService.getCurrentUser();
+      const resolvedUserId = userId || (userRes.success ? userRes.data?.id : undefined) || this.getFallbackUserId();
+      return authService.locks.lockFunnel(funnelId, resolvedUserId, ttlMs ?? undefined);
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error : new Error('Failed to acquire lock') };
+    }
+  }
+
+  releaseFunnelLock(funnelId: string, userId?: string): ServiceResult<boolean> {
+    try {
+      const userRes = authService.getCurrentUser();
+      const resolvedUserId = userId || (userRes.success ? userRes.data?.id : undefined) || this.getFallbackUserId();
+      return authService.locks.releaseLock(funnelId, resolvedUserId);
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error : new Error('Failed to release lock') };
+    }
+  }
+
+  attachBeforeUnloadRelease(funnelId: string, userId?: string): void {
+    if (typeof window === 'undefined') return;
+    const userRes = authService.getCurrentUser();
+    const resolvedUserId = userId || (userRes.success ? userRes.data?.id : undefined) || this.getFallbackUserId();
+    const handler = () => {
+      try { authService.locks.releaseLock(funnelId, resolvedUserId); } catch { }
+    };
+    window.addEventListener('beforeunload', handler);
+  }
+
+  private getFallbackUserId(): string {
+    if (typeof window === 'undefined') return 'anonymous';
+    try {
+      const key = 'qfp_user_id';
+      const existing = localStorage.getItem(key);
+      if (existing) return existing;
+      const generated = `anon-${Math.random().toString(36).slice(2, 8)}`;
+      localStorage.setItem(key, generated);
+      return generated;
+    } catch {
+      return 'anonymous';
     }
   }
 
@@ -686,7 +735,7 @@ export class EditorService extends BaseCanonicalService {
           };
         }
 
-        block.style = update.merge 
+        block.style = update.merge
           ? { ...block.style, ...update.properties }
           : update.properties;
 
@@ -743,10 +792,10 @@ export class EditorService extends BaseCanonicalService {
         };
       }
 
-      block.layout = { 
+      block.layout = {
         order: block.layout?.order ?? 0,
-        ...block.layout, 
-        ...update.layout 
+        ...block.layout,
+        ...update.layout
       };
       this.blocks.set(update.blockId, block);
       this.markModified();
@@ -802,7 +851,7 @@ export class EditorService extends BaseCanonicalService {
    */
   onChange(listener: (event: EditorChangeEvent) => void): () => void {
     this.changeListeners.push(listener);
-    
+
     // Return unsubscribe function
     return () => {
       const index = this.changeListeners.indexOf(listener);
@@ -900,7 +949,7 @@ export class EditorService extends BaseCanonicalService {
       const stored = localStorage.getItem(this.storageKey);
       if (stored) {
         const data = JSON.parse(stored);
-        
+
         // Restore blocks
         if (data.blocks) {
           this.blocks.clear();
