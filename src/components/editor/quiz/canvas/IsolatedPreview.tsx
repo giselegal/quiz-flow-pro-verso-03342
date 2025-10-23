@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { usePreviewDevice } from '@/contexts/editor/EditorModeContext';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { getPreviewBlockKey } from '@/utils/keys/previewKeys';
+import { usePreviewDataWorker } from '@/hooks/usePreviewDataWorker';
 
 export interface IsolatedPreviewProps {
   blocks: Block[];
@@ -102,6 +103,20 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
     return [...blocks].sort((a, b) => a.order - b.order);
   }, [blocks]);
 
+  // Processar metadados de blocos em background (lazy)
+  const { result: previewMeta, loading: previewMetaLoading } = usePreviewDataWorker(sortedBlocks as any);
+
+  useEffect(() => {
+    if (previewMeta) {
+      // Telemetria leve (desativável futuramente por flag)
+      console.debug('📊 PreviewDataWorker result:', {
+        metas: previewMeta.metas.slice(0, 3), // limitar log
+        total: previewMeta.metas.length,
+        processedAt: previewMeta.processedAt,
+      });
+    }
+  }, [previewMeta]);
+
   return (
     <div className={cn('isolated-preview h-full', className)}>
       <Suspense fallback={<PreviewSkeleton />}>
@@ -125,6 +140,10 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
                       sessionData={sessionData}
                     />
                   ))
+                )}
+                {/* Indicador discreto (apenas dev) */}
+                {previewMetaLoading && (
+                  <div className="text-[10px] text-muted-foreground px-2 py-1">processando dados do preview…</div>
                 )}
               </div>
             </PreviewContainer>
