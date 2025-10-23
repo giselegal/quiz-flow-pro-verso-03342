@@ -1,7 +1,7 @@
 /**
  * 🏗️ BUILD-TIME TEMPLATES EMBEDDED
  * 
- * Gerado automaticamente em: 2025-10-23T04:01:51.896Z
+ * Gerado automaticamente em: 2025-10-23T04:13:26.252Z
  * Total de steps: 21
  * Total de blocos: 124
  * 
@@ -11,10 +11,9 @@
 export interface Block {
   id: string;
   type: string;
-  order?: number;
-  position?: number; // Propriedade legada - será convertida para order no runtime
-  properties?: Record<string, any>;
-  content?: Record<string, any>;
+  order: number;
+  properties: Record<string, any>;
+  content: Record<string, any>;
   parentId?: string | null;
 }
 

@@ -29,7 +29,7 @@ export async function safeGetTemplateBlocksAsync(
   const blocks = await templateRegistry.getStep(stepId);
   
   // Converter Block[] → BlockComponent[] (última conversão)
-  return blocksToBlockComponents(blocks);
+  return blocksToBlockComponents(blocks as any as Block[]);
 }
 
 /**
