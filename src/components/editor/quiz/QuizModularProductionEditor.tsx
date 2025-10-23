@@ -116,7 +116,8 @@ import { DirtyBadge } from './components/DirtyBadge';
 import { computeResult } from '@/utils/result/computeResult';
 import type { QuizFunnelSchema } from '@/types/quiz-schema';
 import { StorageService } from '@/services/core/StorageService';
-import { EditorCacheService } from '@/services/EditorCacheService';
+// Consolidado: usar serviço unificado de cache em vez do alias deprecated
+import { cacheService as unifiedCacheService } from '@/services/UnifiedCacheService';
 import { UnifiedQuizStepAdapter } from '@/services/editor/UnifiedQuizStepAdapter';
 import { SCHEMAS, migrateProps } from '@/schemas';
 import { normalizeByType } from '@/utils/normalizeByType';
@@ -422,7 +423,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     console.log('✅ QuizModularProductionEditor: Component rendering', { initialFunnelId });
 
     // 🎯 FASE 5: Cache Service para otimização
-    const cacheService = useMemo(() => EditorCacheService.getInstance(), []);
+    // Cache unificado disponível para futuras otimizações locais do editor
+    const cache = useMemo(() => unifiedCacheService, []);
 
     // ======================
     // Larguras redimensionáveis dos painéis (persistidas)
