@@ -182,6 +182,7 @@
     "input-otp": "^1.4.2",
     "leva": "^0.10.0",
     "lovable-tagger": "^1.1.8",
+    "lru-cache": "^11.2.2",
     "lucide-react": "^0.453.0",
     "memorystore": "^1.6.7",
     "nanoid": "^5.1.5",
