@@ -10,6 +10,7 @@ import { StyleResult } from '@/types/quiz';
 import { useMemo } from 'react';
 import SortablePreviewBlockWrapper from './SortablePreviewBlockWrapper';
 import { ProductionPreviewEngine, type ProductionPreviewEngineProps } from './ProductionPreviewEngine';
+import { getPreviewBlockKey } from '@/utils/keys/previewKeys';
 
 // 🏗️ TIPOS
 
@@ -124,7 +125,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     >
       {blocks.map(block => (
         <SortablePreviewBlockWrapper
-          key={block.id}
+          key={getPreviewBlockKey(block)}
           block={block}
           isSelected={selectedBlockId === block.id}
           isPreviewing={isPreviewing || false}

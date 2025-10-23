@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import type { BlockData } from '@/types/blocks';
 import { Clock, Eye, Monitor, RefreshCw, Smartphone, Tablet, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
+import { getPreviewBlockKey } from '@/utils/keys/previewKeys';
 
 interface ResponsivePreviewProps {
   blocks?: BlockData[];
@@ -74,8 +75,8 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
       maxWidth: dimensions.maxWidth,
       minHeight: '400px',
       margin: '0 auto',
-  // Sem animações/transform no preview externo ao Canvas
-  transform: 'none',
+      // Sem animações/transform no preview externo ao Canvas
+      transform: 'none',
     };
   };
 
@@ -83,7 +84,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
     const frame = DEVICE_FRAMES[previewMode];
 
     return (
-  <div className={cn(frame.className)} style={getPreviewStyles()}>
+      <div className={cn(frame.className)} style={getPreviewStyles()}>
         {/* Device-specific decorations */}
         {previewMode === 'tablet' && (
           <>
@@ -112,8 +113,8 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
 
     return (
       <div
-        key={block.id}
-  className={cn('relative cursor-pointer group', isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2')}
+        key={getPreviewBlockKey(block as any)}
+        className={cn('relative cursor-pointer group', isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2')}
         onClick={() => onBlockSelect?.(block.id)}
       >
         {/* Preview do bloco */}

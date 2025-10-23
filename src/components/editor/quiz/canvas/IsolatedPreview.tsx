@@ -17,6 +17,7 @@ import { Block } from '@/types/editor';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePreviewDevice } from '@/contexts/editor/EditorModeContext';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { getPreviewBlockKey } from '@/utils/keys/previewKeys';
 
 export interface IsolatedPreviewProps {
   blocks: Block[];
@@ -41,7 +42,7 @@ const PreviewSkeleton: React.FC = () => (
  */
 const PreviewContainer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const previewDevice = usePreviewDevice();
-  
+
   const containerClasses = useMemo(() => {
     return cn(
       'preview-container bg-white overflow-auto transition-all duration-200',
@@ -52,7 +53,7 @@ const PreviewContainer: React.FC<{ children: React.ReactNode }> = ({ children })
       }
     );
   }, [previewDevice]);
-  
+
   return (
     <div className={containerClasses}>
       {children}
@@ -64,15 +65,15 @@ const PreviewContainer: React.FC<{ children: React.ReactNode }> = ({ children })
  * 🎯 ISOLATED PREVIEW COMPONENT
  * Preview isolado que funciona independente do editor
  */
-export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({ 
-  blocks, 
+export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
+  blocks,
   funnelId,
-  className 
+  className
 }) => {
   // 🎯 FASE 3: CONECTAR ao editor context
   const editorCtx = useEditor({ optional: true } as any);
   const selectedBlockId = editorCtx?.state?.selectedBlockId;
-  
+
   console.log('🔍 IsolatedPreview render:', {
     blocksCount: blocks.length,
     funnelId,
@@ -119,7 +120,7 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
                 ) : (
                   sortedBlocks.map((block) => (
                     <PreviewBlock
-                      key={block.id}
+                      key={getPreviewBlockKey(block)}
                       block={block}
                       sessionData={sessionData}
                     />
@@ -137,7 +138,7 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
 /**
  * Lazy-loaded version do IsolatedPreview
  */
-export const LazyIsolatedPreview = React.lazy(() => 
+export const LazyIsolatedPreview = React.lazy(() =>
   Promise.resolve({ default: IsolatedPreview })
 );
 
