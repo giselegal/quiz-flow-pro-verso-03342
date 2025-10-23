@@ -1,3 +1,12 @@
+// 🛡️ REACT: Garantir que React esteja disponível globalmente antes de qualquer componente
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+// @ts-ignore - Necessário para componentes que esperam React global
+if (typeof window !== 'undefined') {
+  (window as any).React = React;
+  (window as any).ReactDOM = ReactDOM;
+}
+
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import ClientLayout from './components/ClientLayout';

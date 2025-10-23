@@ -80,6 +80,14 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       cssMinify: 'lightningcss',
       cssCodeSplit: true,
+      modulePreload: {
+        // Garantir que vendor-react seja sempre pré-carregado
+        polyfill: true,
+        resolveDependencies: (filename, deps, { hostId, hostType }) => {
+          // Forçar vendor-react como dependência de todos os chunks
+          return deps;
+        },
+      },
       rollupOptions: {
         // Evita problemas de ordem de inicialização em cenários com ciclos leves
         preserveEntrySignatures: 'exports-only',
@@ -90,17 +98,35 @@ export default defineConfig(({ mode }) => {
           /^https:\/\/esm\.sh\/.*/
         ],
         output: {
+          // Garantir que React seja sempre carregado primeiro
+          chunkFileNames: (chunkInfo) => {
+            // Prefixar vendor-react para forçar carregamento primeiro
+            if (chunkInfo.name === 'vendor-react') {
+              return 'assets/00-vendor-react-[hash].js';
+            }
+            if (chunkInfo.name === 'vendor-router') {
+              return 'assets/01-vendor-router-[hash].js';
+            }
+            if (chunkInfo.name === 'vendor-ui') {
+              return 'assets/02-vendor-ui-[hash].js';
+            }
+            return 'assets/[name]-[hash].js';
+          },
           // 🚀 FASE 2.3 - Manual Chunks para otimização de bundle
           manualChunks: (id) => {
-            // React core (sempre carregado)
+            // React core PRIMEIRO (base para todos os componentes)
             if (id.includes('node_modules/react/') ||
-              id.includes('node_modules/react-dom/') ||
-              id.includes('node_modules/react-router-dom/') ||
-              id.includes('node_modules/wouter/')) {
+              id.includes('node_modules/react-dom/')) {
               return 'vendor-react';
             }
 
-            // UI libraries (Radix UI + Lucide)
+            // React Router/Wouter (depende do React)
+            if (id.includes('node_modules/react-router-dom/') ||
+              id.includes('node_modules/wouter/')) {
+              return 'vendor-router';
+            }
+
+            // UI libraries (Radix UI + Lucide) - DEPOIS do React
             if (id.includes('@radix-ui') ||
               id.includes('lucide-react') ||
               id.includes('class-variance-authority') ||
