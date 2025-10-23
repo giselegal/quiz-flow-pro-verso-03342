@@ -16,6 +16,7 @@ interface ModularQuestionStepProps {
     blocks?: Block[]; // NOVO: suportar blocos reais
     currentAnswers?: string[];
     onAnswersChange?: (answers: string[]) => void;
+    enableAutoAdvance?: boolean;
     onEdit?: (field: string, value: any) => void;
     isEditable?: boolean;
     selectedBlockId?: string;
@@ -40,6 +41,7 @@ export default function ModularQuestionStep({
     blocks = [],
     currentAnswers = [],
     onAnswersChange,
+    enableAutoAdvance = true,
     onEdit,
     isEditable = false,
     selectedBlockId,
@@ -105,6 +107,33 @@ export default function ModularQuestionStep({
             }));
         } catch { }
     };
+
+    // ✅ Auto-avanço no preview/editor: quando atingir o número exigido de seleções
+    const autoAdvanceTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    React.useEffect(() => {
+        // cancelar qualquer timer anterior ao mudar respostas
+        if (autoAdvanceTimerRef.current) {
+            clearTimeout(autoAdvanceTimerRef.current as any);
+            autoAdvanceTimerRef.current = null;
+        }
+        if (!enableAutoAdvance) return;
+        const required = Number(safeData.requiredSelections || 1);
+        const answersLen = Number(currentAnswers?.length || 0);
+        if (answersLen === required && typeof currentStepReal === 'number') {
+            // manter pequeno atraso para UX suave e evitar duplo-trigger com botão
+            autoAdvanceTimerRef.current = setTimeout(() => {
+                navigateWithLogic();
+                autoAdvanceTimerRef.current = null;
+            }, 300);
+        }
+        return () => {
+            if (autoAdvanceTimerRef.current) {
+                clearTimeout(autoAdvanceTimerRef.current as any);
+                autoAdvanceTimerRef.current = null;
+            }
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentAnswers, safeData.requiredSelections, enableAutoAdvance]);
 
     // ===== Integração: construir Question do domínio a partir dos dados do step =====
     const domainQuestion = React.useMemo(() => {

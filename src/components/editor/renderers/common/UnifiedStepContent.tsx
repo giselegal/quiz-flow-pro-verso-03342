@@ -335,6 +335,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                             : ((step as any)?.blocks || [])}
                         isEditable={isEditMode}
                         currentAnswers={(sessionData as any)[`answers_${step.id}`] || []}
+                        enableAutoAdvance={isEditMode ? !!autoAdvanceInEdit : true}
                         onAnswersChange={(answers: string[]) => {
                             if ((isEditMode && productionParityInEdit) || isPreviewMode) {
                                 onUpdateSessionData?.(`answers_${step.id}`, answers);
