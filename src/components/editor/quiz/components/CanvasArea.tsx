@@ -32,9 +32,9 @@ export interface CanvasAreaProps {
     headerConfig: any;
     liveScores: Record<string, number>;
     topStyle?: string;
-    BlockRow: React.ComponentType<any>;
+    BlockRow?: React.ComponentType<any>;
     byBlock: Record<string, any[]>;
-    selectedBlockId: string;
+    selectedBlockId?: string;
     isMultiSelected: (id: string) => boolean;
     /** Handler padronizado: (e, block) */
     handleBlockClick: (e: React.MouseEvent, block: BlockComponent) => void;
@@ -54,6 +54,11 @@ export interface CanvasAreaProps {
      * Padrão: true (compatibilidade)
      */
     enableInlinePreview?: boolean;
+    /**
+     * Opcional: callback para deletar ENTIRE step (não fornecido por padrão).
+     * Se existir, será usado no lugar da chamada incorreta de removeBlock(stepId, stepId).
+     */
+    deleteStep?: (stepId: string) => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -80,8 +85,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     StyleResultCard,
     OfferMap,
     enableInlinePreview = true,
+    deleteStep
 }) => {
     const [previewRestartKey, setPreviewRestartKey] = useState(0);
+
     // Compat: sempre calcular virtualização dos blocos raiz (sem parentId)
     const rawBlocks = Array.isArray(selectedStep?.blocks) ? (selectedStep!.blocks as any[]) : [];
     const rootBlocks = useMemo(() => {
@@ -89,6 +96,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         const roots = rawBlocks.filter((b: any) => !('parentId' in b) || !b.parentId);
         return roots.sort((a: any, b: any) => (a?.order ?? 0) - (b?.order ?? 0));
     }, [rawBlocks]);
+
     // ✅ Virtualização habilitada automaticamente quando houver muitos blocos raiz e não estiver em drag
     const virtualizationEnabled = (rawBlocks?.length || 0) >= 60 && (activeId == null);
     const {
@@ -99,6 +107,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     } = useVirtualBlocks({ blocks: rootBlocks, rowHeight: 140, overscan: 6, enabled: virtualizationEnabled });
 
     // 🎯 USAR EDITOR MODE CONTEXT ao invés de activeTab
+    // Unifica chamada ao hook para evitar miss-typing / chamadas duplicadas
     const {
         viewMode,
         setViewMode,
@@ -106,18 +115,18 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         isPreviewMode,
         previewSessionData,
         updatePreviewSessionData,
-        resetPreviewSession
+        resetPreviewSession,
+        previewDevice,
+        setPreviewDevice
     } = useEditorMode();
-    const { previewDevice, setPreviewDevice } = useEditorMode();
 
-    console.log('🔍 CanvasArea render - selectedStep:', selectedStep?.id, 'viewMode:', viewMode);
-
-    // 🚨 DEPRECATION WARNING para activeTab/onTabChange
-    if (activeTab !== undefined && process.env.NODE_ENV === 'development') {
-        console.warn(
-            '⚠️ DEPRECATION: activeTab/onTabChange estão deprecated.\n' +
-            'Use EditorModeContext (viewMode) ao invés.'
-        );
+    if (process.env.NODE_ENV === 'development') {
+        if (activeTab !== undefined) {
+            // eslint-disable-next-line no-console
+            console.warn('⚠️ DEPRECATION: activeTab/onTabChange estão deprecated. Use EditorModeContext (viewMode).');
+        }
+        // eslint-disable-next-line no-console
+        console.debug('CanvasArea render', { selectedStep: selectedStep?.id, viewMode });
     }
 
     // 🎯 MIGRAÇÃO INTELIGENTE: Converter blocos para metadata se necessário
@@ -127,8 +136,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         if (!base) return null;
         return smartMigration(base);
     }, [selectedStep, steps]);
-
-    console.log('🔍 CanvasArea - migratedStep:', migratedStep?.id, 'type:', migratedStep?.type);
 
     // 🔗 Integrar com EditorProvider: pegar blocos do estado para o step atual
     const editor = useEditor({ optional: true } as any);
@@ -147,7 +154,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     // ✅ NOVO: Zona droppable ao final do canvas para aceitar novos componentes
     const { setNodeRef: setDropZoneRef, isOver } = useDroppable({
         id: 'canvas-end'
-    }); return (
+    });
+
+    return (
         <div className="flex-1 bg-gray-100 flex flex-col overflow-hidden">
             {/* 🎯 CANVAS HEADER - Controles de modo e device */}
             <div className="px-4 py-2 bg-white border-b flex items-center justify-between">
@@ -202,7 +211,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                         >
                             <Monitor className="w-3 h-3" />
                         </Button>
-                        {/* 🔄 Resetar sessão do preview para facilitar novos testes */}
                         <div className="w-px h-6 bg-border mx-2" />
                         <Button
                             onClick={() => { resetPreviewSession?.(); setPreviewRestartKey((k) => k + 1); }}
@@ -250,17 +258,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                             key={block.id}
                                             block={block}
                                             allBlocks={rootBlocks}
-                                            // Defaults defensivos para compat com testes
-                                            byBlock={{}}
-                                            selectedBlockId={selectedBlockId || ''}
-                                            isMultiSelected={isMultiSelected || ((id: string) => false)}
-                                            handleBlockClick={handleBlockClick || ((e: any) => { })}
-                                            renderBlockPreview={renderBlockPreview || ((b: any) => null)}
-                                            removeBlock={removeBlock || (() => { })}
+                                            byBlock={byBlock}
+                                            selectedBlockId={selectedBlockId}
+                                            isMultiSelected={isMultiSelected}
+                                            handleBlockClick={handleBlockClick}
+                                            renderBlockPreview={renderBlockPreview}
+                                            removeBlock={removeBlock}
                                             stepId={migratedStep.id}
-                                            setBlockPendingDuplicate={setBlockPendingDuplicate || (() => { })}
-                                            setTargetStepId={setTargetStepId || (() => { })}
-                                            setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
+                                            setBlockPendingDuplicate={setBlockPendingDuplicate}
+                                            setTargetStepId={setTargetStepId}
+                                            setDuplicateModalOpen={setDuplicateModalOpen}
                                         />
                                     ))}
                                     {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
@@ -274,10 +281,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                             blocks: stepBlocks
                                         } as any}
                                         mode="edit"
-                                        isSelected={selectedBlockId === migratedStep.id}
-                                        onStepClick={(e, step) => handleBlockClick(e, step as any)}
-                                        onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
+                                        // isSelected refere-se à etapa selecionada, não ao bloco
+                                        isSelected={selectedStep?.id === migratedStep.id}
+                                        onStepClick={(e, step) => {
+                                            // note: UnifiedStepRenderer expects step-level click; adapt to block click when needed
+                                            handleBlockClick(e as any, step as any);
+                                        }}
+                                        // onDeleteStep: se existir deleteStep no props, use-o; senão não exponha ação
+                                        onDelete={deleteStep ? () => deleteStep(migratedStep.id) : undefined}
                                         onDuplicate={() => {
+                                            // duplicação de step: passa step para pending duplicate flow
                                             setBlockPendingDuplicate(migratedStep as any);
                                             setTargetStepId(migratedStep.id);
                                             setDuplicateModalOpen(true);
@@ -326,20 +339,24 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                     {Array.isArray(steps) && steps.length > 0 ? (
                         <Card className="border-0 shadow-none bg-transparent">
                             <CardContent>
-                                {/* Paridade de produção: usar contêiner modular com estado de runtime real */}
-                                <ModularPreviewContainer
-                                    key={previewRestartKey}
-                                    externalSteps={editorStepsToRuntimeMap(steps as any)}
-                                    editable={false}
-                                    showViewportControls={false}
-                                    viewport={previewDevice as any}
-                                    onSessionChange={(session) => {
-                                        try {
-                                            // Espelhar sessão no EditorModeContext para outras UIs do editor
-                                            Object.entries(session || {}).forEach(([k, v]) => updatePreviewSessionData?.(k, v));
-                                        } catch { /* noop */ }
-                                    }}
-                                />
+                                {/* Use previewNode if provided (allows parent to supply a custom preview), fallback to ModularPreviewContainer */}
+                                {previewNode ? (
+                                    <div>{previewNode}</div>
+                                ) : (
+                                    <ModularPreviewContainer
+                                        key={previewRestartKey}
+                                        externalSteps={editorStepsToRuntimeMap(steps as any)}
+                                        editable={false}
+                                        showViewportControls={false}
+                                        viewport={previewDevice as any}
+                                        onSessionChange={(session) => {
+                                            try {
+                                                // Espelhar sessão no EditorModeContext para outras UIs do editor
+                                                Object.entries(session || {}).forEach(([k, v]) => updatePreviewSessionData?.(k, v));
+                                            } catch { /* noop */ }
+                                        }}
+                                    />
+                                )}
                             </CardContent>
                         </Card>
                     ) : (
