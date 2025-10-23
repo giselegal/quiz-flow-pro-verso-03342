@@ -85,5 +85,3 @@ try {
 } catch (err) {
   // Falha silenciosa no registro para não quebrar SSR/tests
 }
-
-export { TemplateRegistry };
