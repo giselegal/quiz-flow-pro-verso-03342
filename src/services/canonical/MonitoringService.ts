@@ -80,6 +80,14 @@ export interface SystemMetrics {
   };
 }
 
+export interface TrackedEvent {
+  id: string;
+  name: string;
+  timestamp: Date;
+  payload?: Record<string, any>;
+  tags?: Record<string, string>;
+}
+
 export interface Alert {
   id: string;
   type: 'performance' | 'error' | 'health' | 'security';
@@ -102,12 +110,14 @@ export class MonitoringService extends BaseCanonicalService {
   private performanceMetrics: PerformanceMetric[] = [];
   private healthChecks: Map<string, HealthStatus> = new Map();
   private alertsList: Alert[] = [];
-  
+  private eventsList: TrackedEvent[] = [];
+
   private readonly MAX_ERRORS = 100;
   private readonly MAX_METRICS = 500;
   private readonly MAX_ALERTS = 50;
+  private readonly MAX_EVENTS = 500;
   private readonly HEALTH_CHECK_INTERVAL = 60000; // 1 minute
-  
+
   private healthCheckTimer?: NodeJS.Timeout;
 
   private constructor() {
@@ -123,17 +133,17 @@ export class MonitoringService extends BaseCanonicalService {
 
   protected async onInitialize(): Promise<void> {
     this.log('Initializing MonitoringService...');
-    
+
     try {
       // Setup browser error handler
       if (typeof window !== 'undefined') {
         this.setupGlobalErrorHandler();
         this.setupPerformanceMonitoring();
       }
-      
+
       // Start periodic health checks
       this.startHealthChecks();
-      
+
       this.log('MonitoringService initialized successfully');
     } catch (error) {
       this.error('Failed to initialize MonitoringService', error);
@@ -143,17 +153,18 @@ export class MonitoringService extends BaseCanonicalService {
 
   protected async onDispose(): Promise<void> {
     this.log('Disposing MonitoringService...');
-    
+
     // Stop health checks
     if (this.healthCheckTimer) {
       clearInterval(this.healthCheckTimer);
     }
-    
-      // Clear data
+
+    // Clear data
     this.errorReports = [];
     this.performanceMetrics = [];
     this.healthChecks.clear();
     this.alertsList = [];
+    this.eventsList = [];
   }
 
   async healthCheck(): Promise<boolean> {
@@ -317,6 +328,20 @@ export class MonitoringService extends BaseCanonicalService {
   }
 
   /**
+   * Lightweight metric tracking (convenience): defaults unit to 'count' and category to 'custom'
+   */
+  metric(name: string, value: number = 1, tags?: Record<string, string>): ServiceResult<PerformanceMetric> {
+    return this.trackMetric(name, value, 'count', 'custom', tags);
+  }
+
+  /**
+   * Convenience timer metric (duration in ms)
+   */
+  timing(name: string, durationMs: number, tags?: Record<string, string>): ServiceResult<PerformanceMetric> {
+    return this.trackMetric(name, durationMs, 'ms', 'runtime', tags);
+  }
+
+  /**
    * Get performance metrics
    */
   getMetrics(filters?: {
@@ -368,13 +393,13 @@ export class MonitoringService extends BaseCanonicalService {
       if (navigation) {
         // Load time
         this.trackMetric('page.loadTime', navigation.loadEventEnd - navigation.fetchStart, 'ms', 'load');
-        
+
         // DOM content loaded
         this.trackMetric('page.domContentLoaded', navigation.domContentLoadedEventEnd - navigation.fetchStart, 'ms', 'load');
-        
+
         // DNS lookup
         this.trackMetric('page.dnsLookup', navigation.domainLookupEnd - navigation.domainLookupStart, 'ms', 'network');
-        
+
         // TCP connection
         this.trackMetric('page.tcpConnection', navigation.connectEnd - navigation.connectStart, 'ms', 'network');
       }
@@ -513,7 +538,7 @@ export class MonitoringService extends BaseCanonicalService {
       // Error statistics
       const errorsByComponent: Record<string, number> = {};
       const errorsBySeverity: Record<string, number> = {};
-      
+
       this.errorReports.forEach(error => {
         if (error.component) {
           errorsByComponent[error.component] = (errorsByComponent[error.component] || 0) + 1;
@@ -615,6 +640,56 @@ export class MonitoringService extends BaseCanonicalService {
     }
   }
 
+  // ============================================================================
+  // EVENTS (LIGHTWEIGHT ANALYTICS)
+  // ============================================================================
+
+  /**
+   * Track custom event (lightweight)
+   */
+  trackEvent(name: string, payload?: Record<string, any>, tags?: Record<string, string>): ServiceResult<TrackedEvent> {
+    try {
+      const event: TrackedEvent = {
+        id: `event_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        name,
+        timestamp: new Date(),
+        payload,
+        tags
+      };
+
+      this.eventsList.push(event);
+      this.pruneEvents();
+
+      if (this.options.debug) {
+        this.log(`Event: ${name}`, payload || {});
+      }
+
+      return { success: true, data: event };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error : new Error('Failed to track event')
+      };
+    }
+  }
+
+  /**
+   * Get tracked events
+   */
+  getEvents(filters?: { name?: string; limit?: number }): ServiceResult<TrackedEvent[]> {
+    try {
+      let list = [...this.eventsList];
+      if (filters?.name) list = list.filter(e => e.name === filters.name);
+      if (filters?.limit) list = list.slice(-filters.limit);
+      return { success: true, data: list };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error : new Error('Failed to get events')
+      };
+    }
+  }
+
   /**
    * Acknowledge alert
    */
@@ -699,6 +774,12 @@ export class MonitoringService extends BaseCanonicalService {
     }
   }
 
+  private pruneEvents(): void {
+    if (this.eventsList.length > this.MAX_EVENTS) {
+      this.eventsList = this.eventsList.slice(-this.MAX_EVENTS);
+    }
+  }
+
   // ============================================================================
   // SPECIALIZED API
   // ============================================================================
@@ -717,6 +798,10 @@ export class MonitoringService extends BaseCanonicalService {
   readonly performance = {
     track: (name: string, value: number, unit: string, category?: PerformanceMetric['category'], tags?: Record<string, string>) =>
       this.trackMetric(name, value, unit, category, tags),
+    metric: (name: string, value: number = 1, tags?: Record<string, string>) =>
+      this.metric(name, value, tags),
+    timing: (name: string, durationMs: number, tags?: Record<string, string>) =>
+      this.timing(name, durationMs, tags),
     get: (filters?: Parameters<typeof this.getMetrics>[0]) =>
       this.getMetrics(filters),
     capturePage: () =>
@@ -730,6 +815,13 @@ export class MonitoringService extends BaseCanonicalService {
       this.getServiceHealth(serviceName),
     getAll: () =>
       this.getAllHealthStatuses()
+  };
+
+  readonly events = {
+    track: (name: string, payload?: Record<string, any>, tags?: Record<string, string>) =>
+      this.trackEvent(name, payload, tags),
+    get: (filters?: Parameters<typeof this.getEvents>[0]) =>
+      this.getEvents(filters)
   };
 
   readonly alerts = {
