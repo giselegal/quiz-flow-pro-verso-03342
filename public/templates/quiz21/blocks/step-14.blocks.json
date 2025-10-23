@@ -1,0 +1,96 @@
+{
+  "stepId": "step-14",
+  "blocks": [
+    {
+      "id": "step-14-question-title",
+      "type": "heading-inline",
+      "order": 0,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "_originalType": "question-title"
+      },
+      "content": {
+        "text": "O que mais te desafia na hora de se vestir?"
+      }
+    },
+    {
+      "id": "question-hero-14",
+      "type": "quiz-question-header",
+      "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "_originalType": "question-hero"
+      },
+      "content": {
+        "questionNumber": "Q12 - DESAFIOS",
+        "questionText": "O que mais te desafia na hora de se vestir?",
+        "currentQuestion": 12,
+        "totalQuestions": 13,
+        "progressValue": 62,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      }
+    },
+    {
+      "id": "options-grid-14",
+      "type": "options-grid",
+      "order": 2,
+      "properties": {
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "_originalType": "options grid"
+      },
+      "content": {
+        "options": [
+          {
+            "id": "combinar-pecas",
+            "text": "Tenho peças, mas não sei como combiná-las",
+            "value": "combinar-pecas"
+          },
+          {
+            "id": "comprar-impulso",
+            "text": "Compro por impulso e me arrependo depois",
+            "value": "comprar-impulso"
+          },
+          {
+            "id": "imagem-nao-reflete",
+            "text": "Minha imagem não reflete quem eu sou",
+            "value": "imagem-nao-reflete"
+          },
+          {
+            "id": "perco-tempo",
+            "text": "Perco tempo e acabo usando sempre os mesmos looks",
+            "value": "perco-tempo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      }
+    },
+    {
+      "id": "step-14-cta-next",
+      "type": "cta-inline",
+      "order": 3,
+      "properties": {
+        "_originalType": "CTAButton"
+      },
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      }
+    }
+  ]
+}

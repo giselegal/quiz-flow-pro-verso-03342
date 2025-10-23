@@ -1,0 +1,83 @@
+{
+  "stepId": "step-02",
+  "blocks": [
+    {
+      "id": "step-02-title",
+      "type": "heading-inline",
+      "order": 0,
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "fade",
+        "duration": 300,
+        "_originalType": "question-title"
+      },
+      "content": {
+        "text": "Pergunta 1 de 10"
+      }
+    },
+    {
+      "id": "step-02-options",
+      "type": "options-grid",
+      "order": 1,
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "_originalType": "options grid"
+      },
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Natural",
+            "image": "/quiz-assets/natural.webp"
+          },
+          {
+            "id": "classico",
+            "text": "Clássico",
+            "image": "/quiz-assets/classico.webp"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Contemporâneo",
+            "image": "/quiz-assets/contemporaneo.webp"
+          },
+          {
+            "id": "elegante",
+            "text": "Elegante",
+            "image": "/quiz-assets/elegante.webp"
+          },
+          {
+            "id": "romantico",
+            "text": "Romântico",
+            "image": "/quiz-assets/romantico.webp"
+          },
+          {
+            "id": "sexy",
+            "text": "Sexy",
+            "image": "/quiz-assets/sexy.webp"
+          },
+          {
+            "id": "dramatico",
+            "text": "Dramático",
+            "image": "/quiz-assets/dramatico.webp"
+          },
+          {
+            "id": "criativo",
+            "text": "Criativo",
+            "image": "/quiz-assets/criativo.webp"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true
+      }
+    }
+  ]
+}

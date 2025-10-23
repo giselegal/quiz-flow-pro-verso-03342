@@ -1,0 +1,126 @@
+{
+  "stepId": "step-08",
+  "blocks": [
+    {
+      "id": "step-08-question-title",
+      "type": "heading-inline",
+      "order": 0,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "_originalType": "question-title"
+      },
+      "content": {
+        "text": "QUAL SUA CALÇA FAVORITA?"
+      }
+    },
+    {
+      "id": "question-hero-08",
+      "type": "quiz-question-header",
+      "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "_originalType": "question-hero"
+      },
+      "content": {
+        "questionNumber": "7 de 10",
+        "questionText": "QUAL SUA CALÇA FAVORITA?",
+        "currentQuestion": 7,
+        "totalQuestions": 13,
+        "progressValue": 38,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      }
+    },
+    {
+      "id": "options-grid-08",
+      "type": "options-grid",
+      "order": 2,
+      "properties": {
+        "type": "slideUp",
+        "duration": 300,
+        "delay": 100,
+        "easing": "ease-out",
+        "_originalType": "options grid"
+      },
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Calça fluida acetinada bege",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Calça de alfaiataria cinza",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Jeans reto e básico",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Calça reta bege de tecido",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Calça ampla rosa alfaiatada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Legging preta de couro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Calça reta preta de couro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Calça estampada floral leve e ampla",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      }
+    },
+    {
+      "id": "step-08-cta-next",
+      "type": "cta-inline",
+      "order": 3,
+      "properties": {
+        "_originalType": "CTAButton"
+      },
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      }
+    }
+  ]
+}

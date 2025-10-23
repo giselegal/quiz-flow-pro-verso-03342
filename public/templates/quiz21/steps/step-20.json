@@ -1,0 +1,100 @@
+{
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-20-resultado-v3",
+    "name": "Página de Resultado - 5 Passos Vista-se de Você",
+    "description": "Página completa de resultado do quiz com oferta integrada",
+    "category": "quiz-result",
+    "tags": [
+      "quiz",
+      "style",
+      "result",
+      "offer",
+      "conversion"
+    ],
+    "createdAt": "2025-10-11T10:44:14.174Z",
+    "updatedAt": "2025-10-11T23:30:00.000Z",
+    "author": "Gisele Galvão - Branding & Imagem Pessoal"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#fffaf7",
+      "text": "#432818",
+      "accent": "#a08966",
+      "success": "#2d5f3f",
+      "warning": "#d97706"
+    },
+    "fonts": {
+      "heading": "Playfair Display",
+      "body": "Inter",
+      "fallback": "system-ui, -apple-system, sans-serif"
+    },
+    "spacing": {
+      "section": "3rem",
+      "block": "1.5rem"
+    },
+    "borderRadius": {
+      "small": "0.5rem",
+      "medium": "0.75rem",
+      "large": "1rem"
+    }
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "type": "HeroSection",
+      "enabled": true,
+      "order": 1,
+      "title": "Comemoração e Apresentação do Estilo",
+      "props": {
+        "showCelebration": true,
+        "celebrationEmoji": "🎉",
+        "greetingFormat": "Olá, {userName}!",
+        "titleFormat": "Seu Estilo Predominante é:",
+        "styleNameDisplay": "{styleName}"
+      }
+    },
+    {
+      "id": "style-profile",
+      "type": "StyleProfileSection",
+      "enabled": true,
+      "order": 2
+    },
+    {
+      "id": "cta-primary",
+      "type": "CTAButton",
+      "enabled": true,
+      "order": 3,
+      "props": {
+        "text": "Quero Dominar Meu Estilo em 5 Passos",
+        "ctaUrl": "https://pay.kiwify.com.br/DkYC1Aj",
+        "analytics": {
+          "eventName": "cta_primary_click",
+          "category": "conversion",
+          "label": "after_questions"
+        }
+      }
+    }
+  ],
+  "validation": {
+    "required": [
+      "userName",
+      "styleName",
+      "scores"
+    ],
+    "optional": [
+      "secondaryStyles",
+      "keywords",
+      "specialTips"
+    ]
+  },
+  "behavior": {},
+  "type": "result",
+  "title": "Página de Resultado - 5 Passos Vista-se de Você",
+  "redirectPath": "/quiz-estilo/step-20",
+  "navigation": {
+    "nextStep": "step-21"
+  }
+}

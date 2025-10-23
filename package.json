@@ -42,6 +42,7 @@
     "validate:templates": "tsx scripts/validate-templates.ts",
     "templates:update-master": "tsx scripts/update-master-from-quizSteps.ts",
     "templates:all": "npm run convert:templates && npm run validate:templates",
+    "templates:split-master": "tsx scripts/split-master-to-steps.ts",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",

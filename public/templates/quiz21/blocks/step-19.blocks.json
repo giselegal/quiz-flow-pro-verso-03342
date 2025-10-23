@@ -1,0 +1,50 @@
+{
+  "stepId": "step-19",
+  "blocks": [
+    {
+      "id": "transition-hero-19",
+      "type": "transition-hero",
+      "order": 0,
+      "properties": {
+        "backgroundColor": "#FAF9F7",
+        "textColor": "#432818",
+        "padding": 32,
+        "type": "scale",
+        "duration": 500,
+        "delay": 0,
+        "easing": "ease-out",
+        "_originalType": "transition-hero"
+      },
+      "content": {
+        "title": "Obrigada por compartilhar.",
+        "subtitle": "Preparando seu resultado personalizado",
+        "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
+        "autoAdvanceDelay": 3000
+      }
+    },
+    {
+      "id": "step-19-transition-text",
+      "type": "text-inline",
+      "order": 1,
+      "properties": {
+        "type": "fade",
+        "duration": 300,
+        "_originalType": "text-inline"
+      },
+      "content": {}
+    },
+    {
+      "id": "step-19-transition-cta",
+      "type": "cta-inline",
+      "order": 2,
+      "properties": {
+        "_originalType": "CTAButton"
+      },
+      "content": {
+        "label": "...",
+        "variant": "outline",
+        "size": "small"
+      }
+    }
+  ]
+}

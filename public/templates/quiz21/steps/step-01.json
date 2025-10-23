@@ -1,0 +1,97 @@
+{
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-01-intro-v3",
+    "name": "Introdução - Bem-vindo ao Quiz de Estilo",
+    "description": "Página inicial do quiz com apresentação e coleta do nome do usuário",
+    "category": "intro",
+    "tags": [
+      "quiz",
+      "style",
+      "intro",
+      "welcome",
+      "name-input"
+    ],
+    "createdAt": "2025-01-13T00:00:00.000Z",
+    "updatedAt": "2025-01-13T00:00:00.000Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    },
+    "spacing": {
+      "sm": 8,
+      "md": 16,
+      "lg": 24,
+      "xl": 32
+    },
+    "borderRadius": {
+      "sm": 4,
+      "md": 8,
+      "lg": 12,
+      "xl": 16
+    }
+  },
+  "sections": [
+    {
+      "type": "intro-hero",
+      "id": "intro-hero-01",
+      "content": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
+        "logoWidth": 96,
+        "logoHeight": 96,
+        "title": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você.</span>",
+        "subtitle": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
+        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
+        "imageAlt": "Descubra seu estilo predominante",
+        "description": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+        "showProgress": false,
+        "progressValue": 0
+      },
+      "style": {
+        "backgroundColor": "#FAF9F7",
+        "textColor": "#432818",
+        "padding": 24
+      },
+      "animation": {
+        "type": "fade",
+        "duration": 500,
+        "delay": 0,
+        "easing": "ease-out"
+      }
+    }
+  ],
+  "validation": {
+    "required": [
+      "selectedOptions"
+    ],
+    "rules": {
+      "selectedOptions": {
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Selecione exatamente 3 opções"
+      }
+    }
+  },
+  "behavior": {
+    "autoAdvance": true
+  },
+  "type": "intro",
+  "redirectPath": "/quiz-estilo/step-01",
+  "navigation": {
+    "nextStep": "step-02"
+  }
+}
