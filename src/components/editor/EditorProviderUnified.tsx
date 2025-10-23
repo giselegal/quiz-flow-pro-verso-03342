@@ -27,6 +27,7 @@ import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { stepBlocksKey } from '@/utils/cacheKeys';
 import { EditorHistoryService } from '@/services/editor/HistoryService';
 import { TemplateLoader } from '@/services/editor/TemplateLoader';
+import { TEMPLATE_SOURCES } from '@/config/templateSources';
 import EditorStateManager from '@/services/editor/EditorStateManager';
 
 // ============================================================================
@@ -206,6 +207,39 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             }
         };
     }, [funnelId, quizId, enableSupabase, storageKey]);
+
+    // 🔄 Carregamento automático de TODAS as etapas a partir do Master JSON (sem botão)
+    // - Respeita flag TEMPLATE_SOURCES.useMasterJSON
+    // - Carrega step-01..step-21 em background e atualiza stepBlocks/stepSources
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                if (!TEMPLATE_SOURCES.useMasterJSON) return;
+                // Conjunto de chaves padronizadas 01..21
+                const keys = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
+                // Carregar em paralelo usando o TemplateLoader (prioridade: master)
+                const results = await Promise.all(keys.map(k => loader.loadStep(k)));
+                if (cancelled) return;
+
+                setState(prev => {
+                    const mergedBlocks = { ...prev.stepBlocks } as Record<string, Block[]>;
+                    const mergedSources = { ...(prev.stepSources || {}) } as Record<string, any>;
+                    keys.forEach((k, idx) => {
+                        const res = results[idx];
+                        if (res && Array.isArray(res.blocks) && res.blocks.length > 0) {
+                            mergedBlocks[k] = res.blocks;
+                            mergedSources[k] = res.source;
+                        }
+                    });
+                    return { ...prev, stepBlocks: mergedBlocks, stepSources: mergedSources };
+                });
+            } catch (e) {
+                console.warn('⚠️ Auto-load master steps falhou (não bloqueante):', e);
+            }
+        })();
+        return () => { cancelled = true; };
+    }, [loader]);
 
     // ============================================================================
     // HISTORY MANAGEMENT & STATE MANAGER
