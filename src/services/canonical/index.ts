@@ -34,6 +34,10 @@ export * from './TemplateService';
 export * from './DataService';
 export * from './ValidationService';
 export * from './MonitoringService';
+export * from './NotificationService';
+export * from './AnalyticsService';
+export * from './AuthService';
+export * from './StorageService';
 
 // TODO: Exportar quando implementados
 // export { DataService, dataService } from './DataService';

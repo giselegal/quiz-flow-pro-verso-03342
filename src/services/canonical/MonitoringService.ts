@@ -588,7 +588,7 @@ export class MonitoringService extends BaseCanonicalService {
     limit?: number;
   }): ServiceResult<Alert[]> {
     try {
-      let filtered = [...this.alerts];
+      let filtered = [...this.alertsList];
 
       if (filters?.type) {
         filtered = filtered.filter(a => a.type === filters.type);
@@ -619,7 +619,7 @@ export class MonitoringService extends BaseCanonicalService {
    * Acknowledge alert
    */
   acknowledgeAlert(alertId: string, acknowledgedBy?: string): ServiceResult<void> {
-    const alert = this.alerts.find(a => a.id === alertId);
+    const alert = this.alertsList.find(a => a.id === alertId);
     if (alert) {
       alert.acknowledged = true;
       alert.acknowledgedBy = acknowledgedBy;
@@ -661,7 +661,7 @@ export class MonitoringService extends BaseCanonicalService {
   }
 
   private setupPerformanceMonitoring(): void {
-    if (window.performance && window.performance.getEntriesByType) {
+    if (window.performance) {
       // Capture initial page load metrics after window load
       window.addEventListener('load', () => {
         setTimeout(() => {
@@ -682,20 +682,20 @@ export class MonitoringService extends BaseCanonicalService {
   }
 
   private pruneErrors(): void {
-    if (this.errors.length > this.MAX_ERRORS) {
-      this.errors = this.errors.slice(-this.MAX_ERRORS);
+    if (this.errorReports.length > this.MAX_ERRORS) {
+      this.errorReports = this.errorReports.slice(-this.MAX_ERRORS);
     }
   }
 
   private pruneMetrics(): void {
-    if (this.metrics.length > this.MAX_METRICS) {
-      this.metrics = this.metrics.slice(-this.MAX_METRICS);
+    if (this.performanceMetrics.length > this.MAX_METRICS) {
+      this.performanceMetrics = this.performanceMetrics.slice(-this.MAX_METRICS);
     }
   }
 
   private pruneAlerts(): void {
-    if (this.alerts.length > this.MAX_ALERTS) {
-      this.alerts = this.alerts.slice(-this.MAX_ALERTS);
+    if (this.alertsList.length > this.MAX_ALERTS) {
+      this.alertsList = this.alertsList.slice(-this.MAX_ALERTS);
     }
   }
 
