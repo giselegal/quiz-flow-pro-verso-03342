@@ -3,9 +3,10 @@
 
 // ⚠️ NOTA: Migrado para sistema JSON (step-XX.json) - usa templates dinâmicos
 import { getStepTemplate as getJSONTemplate } from '@/config/templates/templates';
+import { cacheService } from '@/services/UnifiedCacheService';
 
-// 🔧 CACHE GLOBAL DE TEMPLATES
-const TEMPLATE_CACHE = new Map<number, any>();
+// 🔧 CACHE MIGRADO PARA UnifiedCacheService
+// @deprecated Inline TEMPLATE_CACHE substituído por cacheService.get('templates', key)
 
 // 🔧 FUNÇÃO PARA PRÉ-CARREGAR TODOS OS TEMPLATES
 async function preloadAllTemplates(): Promise<void> {
@@ -41,10 +42,10 @@ async function preloadAllTemplates(): Promise<void> {
                   position: section.order || index,
                 };
               });
-              TEMPLATE_CACHE.set(stepNumber, blocks);
+              cacheService.set('templates', `step-${stepNumber}`, blocks, 10 * 60 * 1000); // 10min cache
               console.log(`✅ Template ${stepNumber} pré-carregado: ${blocks.length} blocos`);
             } else if (template.blocks && Array.isArray(template.blocks)) {
-              TEMPLATE_CACHE.set(stepNumber, template.blocks);
+              cacheService.set('templates', `step-${stepNumber}`, template.blocks, 10 * 60 * 1000);
               console.log(`✅ Template ${stepNumber} pré-carregado: ${template.blocks.length} blocos`);
             }
           });
@@ -56,12 +57,13 @@ async function preloadAllTemplates(): Promise<void> {
   });
   
   await Promise.allSettled(promises);
-  console.log(`🎯 Pré-carregamento concluído: ${TEMPLATE_CACHE.size}/21 templates`);
+  const stats = cacheService.getStoreStats('templates');
+  console.log(`🎯 Pré-carregamento concluído: ${stats.size}/21 templates`);
 }
 
 // 🔧 FUNÇÃO SÍNCRONA QUE USA CACHE
 function getTemplateFromCache(stepNumber: number): any[] {
-  const cached = TEMPLATE_CACHE.get(stepNumber);
+  const cached = cacheService.get<any[]>('templates', `step-${stepNumber}`);
   if (cached && Array.isArray(cached)) {
     console.log(`💾 Template ${stepNumber} do cache: ${cached.length} blocos`);
     return cached;
@@ -76,10 +78,12 @@ let preloadingStarted = false;
 
 function ensureTemplateLoaded(stepNumber: number): any[] {
   // Se já tem no cache, retornar imediatamente
-  if (TEMPLATE_CACHE.has(stepNumber)) {
-    const cached = TEMPLATE_CACHE.get(stepNumber);
-    console.log(`⚡ Template ${stepNumber} do cache: ${cached.length} blocos`);
-    return cached;
+  if (cacheService.has('templates', `step-${stepNumber}`)) {
+    const cached = cacheService.get<any[]>('templates', `step-${stepNumber}`);
+    if (cached && Array.isArray(cached)) {
+      console.log(`⚡ Template ${stepNumber} do cache: ${cached.length} blocos`);
+      return cached;
+    }
   }
 
   // Se não está carregando ainda, iniciar agora
@@ -120,7 +124,7 @@ function ensureTemplateLoaded(stepNumber: number): any[] {
         });
         
         // Cachear para uso futuro
-        TEMPLATE_CACHE.set(stepNumber, blocks);
+        cacheService.set('templates', `step-${stepNumber}`, blocks, 10 * 60 * 1000);
         console.log(`💾 Template ${stepNumber} carregado síncrono e cacheado: ${blocks.length} blocos`);
         return blocks;
       }
