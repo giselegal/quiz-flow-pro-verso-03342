@@ -1,0 +1,1100 @@
+{
+  "total": 108,
+  "grouped": {
+    "Cache": [
+      {
+        "filename": "AICache.ts",
+        "size": 6132,
+        "categories": [
+          "Cache",
+          "AI"
+        ]
+      },
+      {
+        "filename": "CacheMigrationAdapters.ts",
+        "size": 4369,
+        "categories": [
+          "Cache",
+          "History"
+        ]
+      },
+      {
+        "filename": "EditorCacheService.ts",
+        "size": 2514,
+        "categories": [
+          "Cache",
+          "Editor"
+        ]
+      },
+      {
+        "filename": "TemplatesCacheService.ts",
+        "size": 12940,
+        "categories": [
+          "Template",
+          "Cache"
+        ]
+      },
+      {
+        "filename": "UnifiedCacheService.ts",
+        "size": 11178,
+        "categories": [
+          "Cache"
+        ]
+      }
+    ],
+    "AI": [
+      {
+        "filename": "AICache.ts",
+        "size": 6132,
+        "categories": [
+          "Cache",
+          "AI"
+        ]
+      },
+      {
+        "filename": "AIEnhancedHybridTemplateService.ts",
+        "size": 31974,
+        "categories": [
+          "Template",
+          "AI"
+        ]
+      },
+      {
+        "filename": "AdvancedPersonalizationEngine.ts",
+        "size": 12975,
+        "categories": [
+          "AI"
+        ]
+      },
+      {
+        "filename": "FashionImageAI.ts",
+        "size": 10626,
+        "categories": [
+          "AI"
+        ]
+      },
+      {
+        "filename": "FunnelAIAgent.ts",
+        "size": 18689,
+        "categories": [
+          "AI"
+        ]
+      },
+      {
+        "filename": "GitHubModelsAI.ts",
+        "size": 8294,
+        "categories": [
+          "AI"
+        ]
+      },
+      {
+        "filename": "templateThumbnailService.ts",
+        "size": 6831,
+        "categories": [
+          "Template",
+          "AI"
+        ]
+      }
+    ],
+    "Template": [
+      {
+        "filename": "AIEnhancedHybridTemplateService.ts",
+        "size": 31974,
+        "categories": [
+          "Template",
+          "AI"
+        ]
+      },
+      {
+        "filename": "DynamicMasterJSONGenerator.ts",
+        "size": 22299,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "HybridTemplateService.ts",
+        "size": 17305,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "JsonTemplateService.ts",
+        "size": 15359,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "TemplateEditorService.ts",
+        "size": 12983,
+        "categories": [
+          "Template",
+          "Editor"
+        ]
+      },
+      {
+        "filename": "TemplateFunnelService.ts",
+        "size": 5359,
+        "categories": [
+          "Template",
+          "Data"
+        ]
+      },
+      {
+        "filename": "TemplateRegistry.ts",
+        "size": 1391,
+        "categories": [
+          "Template",
+          "Component"
+        ]
+      },
+      {
+        "filename": "TemplateRuntimeService.ts",
+        "size": 0,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "TemplatesCacheService.ts",
+        "size": 12940,
+        "categories": [
+          "Template",
+          "Cache"
+        ]
+      },
+      {
+        "filename": "UnifiedBlockStorageService.ts",
+        "size": 10747,
+        "categories": [
+          "Template",
+          "Data"
+        ]
+      },
+      {
+        "filename": "UnifiedTemplateLoader.ts",
+        "size": 4378,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "UnifiedTemplateRegistry.ts",
+        "size": 12055,
+        "categories": [
+          "Template",
+          "Component"
+        ]
+      },
+      {
+        "filename": "UnifiedTemplateService.ts",
+        "size": 3632,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "customTemplateService.ts",
+        "size": 13150,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "initializeTemplates.ts",
+        "size": 5452,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "stepTemplateService.ts",
+        "size": 15754,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "templateLibraryService.ts",
+        "size": 3017,
+        "categories": [
+          "Template",
+          "Component"
+        ]
+      },
+      {
+        "filename": "templateService.refactored.ts",
+        "size": 9143,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "templateService.ts",
+        "size": 1829,
+        "categories": [
+          "Template"
+        ]
+      },
+      {
+        "filename": "templateThumbnailService.ts",
+        "size": 6831,
+        "categories": [
+          "Template",
+          "AI"
+        ]
+      }
+    ],
+    "Data": [
+      {
+        "filename": "AdvancedFunnelStorage.ts",
+        "size": 1711,
+        "categories": [
+          "Data",
+          "Storage"
+        ]
+      },
+      {
+        "filename": "EnhancedFunnelService.ts",
+        "size": 1941,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "EnhancedUnifiedDataService.ts",
+        "size": 6790,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "FunnelConfigPersistenceService.ts",
+        "size": 15873,
+        "categories": [
+          "Data",
+          "Config"
+        ]
+      },
+      {
+        "filename": "FunnelDataMigration.ts",
+        "size": 19872,
+        "categories": [
+          "Data",
+          "History"
+        ]
+      },
+      {
+        "filename": "FunnelStorageAdapter.ts",
+        "size": 14961,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "FunnelUnifiedService.ts",
+        "size": 45656,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "OptimizedImageStorage.ts",
+        "size": 19396,
+        "categories": [
+          "Data",
+          "Storage"
+        ]
+      },
+      {
+        "filename": "Quiz21CompleteService.ts",
+        "size": 18792,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "SupabaseConfigurationStorage.ts",
+        "size": 18552,
+        "categories": [
+          "Data",
+          "Storage",
+          "Config"
+        ]
+      },
+      {
+        "filename": "TemplateFunnelService.ts",
+        "size": 5359,
+        "categories": [
+          "Template",
+          "Data"
+        ]
+      },
+      {
+        "filename": "UnifiedBlockStorageService.ts",
+        "size": 10747,
+        "categories": [
+          "Template",
+          "Data"
+        ]
+      },
+      {
+        "filename": "UnifiedCRUDService.ts",
+        "size": 40763,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "UnifiedStorageService.ts",
+        "size": 20962,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "funnelComponentsService.ts",
+        "size": 6274,
+        "categories": [
+          "Data",
+          "Component"
+        ]
+      },
+      {
+        "filename": "funnelService.refactored.ts",
+        "size": 9856,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "funnelService.ts",
+        "size": 16994,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "funnelSettingsService.ts",
+        "size": 7144,
+        "categories": [
+          "Data",
+          "Config"
+        ]
+      },
+      {
+        "filename": "funnelValidationService.ts",
+        "size": 7978,
+        "categories": [
+          "Data",
+          "Validation"
+        ]
+      },
+      {
+        "filename": "migratedFunnelValidationService.ts",
+        "size": 16470,
+        "categories": [
+          "Data",
+          "Validation"
+        ]
+      },
+      {
+        "filename": "phase5DataSimulator.ts",
+        "size": 13118,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "quizBuilderService.ts",
+        "size": 5464,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "quizDataAdapter.ts",
+        "size": 1253,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "quizDataService.ts",
+        "size": 19802,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "quizResultsService.ts",
+        "size": 26981,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "quizService.ts",
+        "size": 12799,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "quizSupabaseService.ts",
+        "size": 15426,
+        "categories": [
+          "Data",
+          "Storage"
+        ]
+      },
+      {
+        "filename": "resultPageStorage.ts",
+        "size": 2221,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "resultService.ts",
+        "size": 1697,
+        "categories": [
+          "Data"
+        ]
+      },
+      {
+        "filename": "schemaDrivenFunnelService.ts",
+        "size": 12336,
+        "categories": [
+          "Data",
+          "Validation"
+        ]
+      },
+      {
+        "filename": "unified-persistence.ts",
+        "size": 12248,
+        "categories": [
+          "Data"
+        ]
+      }
+    ],
+    "Storage": [
+      {
+        "filename": "AdvancedFunnelStorage.ts",
+        "size": 1711,
+        "categories": [
+          "Data",
+          "Storage"
+        ]
+      },
+      {
+        "filename": "OptimizedImageStorage.ts",
+        "size": 19396,
+        "categories": [
+          "Data",
+          "Storage"
+        ]
+      },
+      {
+        "filename": "SupabaseConfigurationStorage.ts",
+        "size": 18552,
+        "categories": [
+          "Data",
+          "Storage",
+          "Config"
+        ]
+      },
+      {
+        "filename": "editorSupabaseService.ts",
+        "size": 7537,
+        "categories": [
+          "Storage",
+          "Editor"
+        ]
+      },
+      {
+        "filename": "mediaUploadService.ts",
+        "size": 12822,
+        "categories": [
+          "Storage"
+        ]
+      },
+      {
+        "filename": "quizSupabaseService.ts",
+        "size": 15426,
+        "categories": [
+          "Data",
+          "Storage"
+        ]
+      },
+      {
+        "filename": "supabaseIntegration.ts",
+        "size": 0,
+        "categories": [
+          "Storage"
+        ]
+      }
+    ],
+    "Config": [
+      {
+        "filename": "AlignmentValidator.ts",
+        "size": 1400,
+        "categories": [
+          "Config",
+          "Validation"
+        ]
+      },
+      {
+        "filename": "ConfigurationAPI.ts",
+        "size": 23200,
+        "categories": [
+          "Config",
+          "Integration"
+        ]
+      },
+      {
+        "filename": "ConfigurationService.ts",
+        "size": 13027,
+        "categories": [
+          "Config"
+        ]
+      },
+      {
+        "filename": "FunnelConfigGenerator.ts",
+        "size": 11829,
+        "categories": [
+          "Config"
+        ]
+      },
+      {
+        "filename": "FunnelConfigPersistenceService.ts",
+        "size": 15873,
+        "categories": [
+          "Data",
+          "Config"
+        ]
+      },
+      {
+        "filename": "SupabaseConfigurationStorage.ts",
+        "size": 18552,
+        "categories": [
+          "Data",
+          "Storage",
+          "Config"
+        ]
+      },
+      {
+        "filename": "canvasConfigurationService.ts",
+        "size": 1130,
+        "categories": [
+          "Config"
+        ]
+      },
+      {
+        "filename": "funnelSettingsService.ts",
+        "size": 7144,
+        "categories": [
+          "Data",
+          "Config"
+        ]
+      },
+      {
+        "filename": "pageConfigService.ts",
+        "size": 9405,
+        "categories": [
+          "Config"
+        ]
+      }
+    ],
+    "Validation": [
+      {
+        "filename": "AlignmentValidator.ts",
+        "size": 1400,
+        "categories": [
+          "Config",
+          "Validation"
+        ]
+      },
+      {
+        "filename": "funnelValidationService.ts",
+        "size": 7978,
+        "categories": [
+          "Data",
+          "Validation"
+        ]
+      },
+      {
+        "filename": "migratedFunnelValidationService.ts",
+        "size": 16470,
+        "categories": [
+          "Data",
+          "Validation"
+        ]
+      },
+      {
+        "filename": "pageStructureValidator.ts",
+        "size": 6054,
+        "categories": [
+          "Validation"
+        ]
+      },
+      {
+        "filename": "schemaDrivenFunnelService.ts",
+        "size": 12336,
+        "categories": [
+          "Data",
+          "Validation"
+        ]
+      }
+    ],
+    "Analytics": [
+      {
+        "filename": "AnalyticsService.ts",
+        "size": 10196,
+        "categories": [
+          "Analytics"
+        ]
+      },
+      {
+        "filename": "FacebookMetricsService.ts",
+        "size": 12155,
+        "categories": [
+          "Analytics"
+        ]
+      },
+      {
+        "filename": "analyticsEngine.ts",
+        "size": 38281,
+        "categories": [
+          "Analytics"
+        ]
+      },
+      {
+        "filename": "realTimeAnalytics.ts",
+        "size": 17434,
+        "categories": [
+          "Analytics"
+        ]
+      }
+    ],
+    "History": [
+      {
+        "filename": "CacheMigrationAdapters.ts",
+        "size": 4369,
+        "categories": [
+          "Cache",
+          "History"
+        ]
+      },
+      {
+        "filename": "FunnelDataMigration.ts",
+        "size": 19872,
+        "categories": [
+          "Data",
+          "History"
+        ]
+      },
+      {
+        "filename": "HistoryManager.ts",
+        "size": 15682,
+        "categories": [
+          "History"
+        ]
+      },
+      {
+        "filename": "ImageMigrationService.ts",
+        "size": 21169,
+        "categories": [
+          "History"
+        ]
+      },
+      {
+        "filename": "MigrationService.ts",
+        "size": 4323,
+        "categories": [
+          "History"
+        ]
+      },
+      {
+        "filename": "VersioningService.ts",
+        "size": 1517,
+        "categories": [
+          "History"
+        ]
+      },
+      {
+        "filename": "versioningService.ts",
+        "size": 19047,
+        "categories": [
+          "History"
+        ]
+      }
+    ],
+    "Editor": [
+      {
+        "filename": "CollaborationService.ts",
+        "size": 13066,
+        "categories": [
+          "Editor"
+        ]
+      },
+      {
+        "filename": "EditorCacheService.ts",
+        "size": 2514,
+        "categories": [
+          "Cache",
+          "Editor"
+        ]
+      },
+      {
+        "filename": "QuizEditorBridge.ts",
+        "size": 28530,
+        "categories": [
+          "Editor"
+        ]
+      },
+      {
+        "filename": "TemplateEditorService.ts",
+        "size": 12983,
+        "categories": [
+          "Template",
+          "Editor"
+        ]
+      },
+      {
+        "filename": "UnifiedQuizBridge.ts",
+        "size": 5284,
+        "categories": [
+          "Editor"
+        ]
+      },
+      {
+        "filename": "editorService.ts",
+        "size": 959,
+        "categories": [
+          "Editor"
+        ]
+      },
+      {
+        "filename": "editorSupabaseService.ts",
+        "size": 7537,
+        "categories": [
+          "Storage",
+          "Editor"
+        ]
+      }
+    ],
+    "Component": [
+      {
+        "filename": "ComponentsService.ts",
+        "size": 12106,
+        "categories": [
+          "Component"
+        ]
+      },
+      {
+        "filename": "FunnelTypesRegistry.ts",
+        "size": 12783,
+        "categories": [
+          "Component"
+        ]
+      },
+      {
+        "filename": "TemplateRegistry.ts",
+        "size": 1391,
+        "categories": [
+          "Template",
+          "Component"
+        ]
+      },
+      {
+        "filename": "UnifiedTemplateRegistry.ts",
+        "size": 12055,
+        "categories": [
+          "Template",
+          "Component"
+        ]
+      },
+      {
+        "filename": "componentLibrary.ts",
+        "size": 26055,
+        "categories": [
+          "Component"
+        ]
+      },
+      {
+        "filename": "funnelComponentsService.ts",
+        "size": 6274,
+        "categories": [
+          "Data",
+          "Component"
+        ]
+      },
+      {
+        "filename": "templateLibraryService.ts",
+        "size": 3017,
+        "categories": [
+          "Template",
+          "Component"
+        ]
+      }
+    ],
+    "Integration": [
+      {
+        "filename": "ConfigurationAPI.ts",
+        "size": 23200,
+        "categories": [
+          "Config",
+          "Integration"
+        ]
+      },
+      {
+        "filename": "EnterpriseIntegrations.ts",
+        "size": 13461,
+        "categories": [
+          "Integration"
+        ]
+      },
+      {
+        "filename": "WhatsAppBusinessAPI.ts",
+        "size": 9453,
+        "categories": [
+          "Integration"
+        ]
+      },
+      {
+        "filename": "WhatsAppCartRecoveryAgent.ts",
+        "size": 14338,
+        "categories": [
+          "Integration"
+        ]
+      },
+      {
+        "filename": "funnelApiClient.ts",
+        "size": 5277,
+        "categories": [
+          "Integration"
+        ]
+      },
+      {
+        "filename": "marketplaceEngine.ts",
+        "size": 21490,
+        "categories": [
+          "Integration"
+        ]
+      }
+    ],
+    "Monitoring": [
+      {
+        "filename": "MonitoringService.ts",
+        "size": 8376,
+        "categories": [
+          "Monitoring"
+        ]
+      },
+      {
+        "filename": "PerformanceMonitor.ts",
+        "size": 875,
+        "categories": [
+          "Monitoring"
+        ]
+      },
+      {
+        "filename": "performanceOptimizer.ts",
+        "size": 19861,
+        "categories": [
+          "Monitoring"
+        ]
+      }
+    ],
+    "Auth": [
+      {
+        "filename": "MultiTenantService.ts",
+        "size": 4626,
+        "categories": [
+          "Auth"
+        ]
+      },
+      {
+        "filename": "PermissionService.ts",
+        "size": 13671,
+        "categories": [
+          "Auth"
+        ]
+      },
+      {
+        "filename": "WhiteLabelPlatform.ts",
+        "size": 13170,
+        "categories": [
+          "Auth"
+        ]
+      },
+      {
+        "filename": "sessionService.ts",
+        "size": 3280,
+        "categories": [
+          "Auth"
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "filename": "NotificationService.ts",
+        "size": 12742,
+        "categories": [
+          "Notification"
+        ]
+      }
+    ],
+    "Uncategorized": [
+      {
+        "filename": "PropertyExtractionService.ts",
+        "size": 22781,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "ServiceAliases.ts",
+        "size": 8148,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "funnelLocalStore.ts",
+        "size": 940,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "funnelPublishing.ts",
+        "size": 5778,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "improvedFunnelSystem.ts",
+        "size": 19955,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "index.ts",
+        "size": 247,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "localPublishStore.ts",
+        "size": 0,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "migratedFunnelLocalStore.ts",
+        "size": 23950,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "pixelManager.ts",
+        "size": 3263,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "publishService.ts",
+        "size": 769,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "realFunnelIntegration.ts",
+        "size": 0,
+        "categories": [
+          "Uncategorized"
+        ]
+      },
+      {
+        "filename": "userResponseService.ts",
+        "size": 16124,
+        "categories": [
+          "Uncategorized"
+        ]
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "from": "Template",
+      "to": "TemplateService",
+      "count": 20
+    },
+    {
+      "from": "Data",
+      "to": "DataService",
+      "count": 31
+    },
+    {
+      "from": "Cache",
+      "to": "CacheService",
+      "count": 5
+    },
+    {
+      "from": "Analytics",
+      "to": "AnalyticsService",
+      "count": 4
+    },
+    {
+      "from": "Storage",
+      "to": "StorageService",
+      "count": 7
+    },
+    {
+      "from": "Auth",
+      "to": "AuthService",
+      "count": 4
+    },
+    {
+      "from": "Config",
+      "to": "ConfigService",
+      "count": 9
+    },
+    {
+      "from": "Validation",
+      "to": "ValidationService",
+      "count": 5
+    },
+    {
+      "from": "History",
+      "to": "HistoryService",
+      "count": 7
+    },
+    {
+      "from": "Monitoring",
+      "to": "MonitoringService",
+      "count": 3
+    },
+    {
+      "from": "Notification",
+      "to": "NotificationService",
+      "count": 1
+    },
+    {
+      "from": "Editor",
+      "to": "EditorService",
+      "count": 7
+    }
+  ]
+}
