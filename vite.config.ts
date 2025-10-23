@@ -13,7 +13,14 @@ export default defineConfig(({ mode }) => {
     base: '/',
     envPrefix: 'VITE_',
     plugins: [
-      react(),
+      react({
+        // Configuração explícita para evitar problemas com forwardRef
+        jsxRuntime: 'automatic',
+        jsxImportSource: 'react',
+        babel: {
+          plugins: [],
+        },
+      }),
       visualizer({
         open: false,
         filename: 'dist/stats.html',
@@ -25,6 +32,9 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+        // Garantir que React seja resolvido corretamente
+        'react': path.resolve(__dirname, './node_modules/react'),
+        'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
       },
       dedupe: ['react', 'react-dom'],
     },
@@ -83,144 +93,144 @@ export default defineConfig(({ mode }) => {
           // 🚀 FASE 2.3 - Manual Chunks para otimização de bundle
           manualChunks: (id) => {
             // React core (sempre carregado)
-            if (id.includes('node_modules/react/') || 
-                id.includes('node_modules/react-dom/') ||
-                id.includes('node_modules/react-router-dom/') ||
-                id.includes('node_modules/wouter/')) {
+            if (id.includes('node_modules/react/') ||
+              id.includes('node_modules/react-dom/') ||
+              id.includes('node_modules/react-router-dom/') ||
+              id.includes('node_modules/wouter/')) {
               return 'vendor-react';
             }
-            
+
             // UI libraries (Radix UI + Lucide)
-            if (id.includes('@radix-ui') || 
-                id.includes('lucide-react') ||
-                id.includes('class-variance-authority') ||
-                id.includes('clsx') ||
-                id.includes('tailwind-merge')) {
+            if (id.includes('@radix-ui') ||
+              id.includes('lucide-react') ||
+              id.includes('class-variance-authority') ||
+              id.includes('clsx') ||
+              id.includes('tailwind-merge')) {
               return 'vendor-ui';
             }
-            
+
             // Supabase (lazy loaded quando necessário)
             if (id.includes('@supabase') || id.includes('supabase-js')) {
               return 'vendor-supabase';
             }
-            
+
             // Charts library (apenas para analytics)
             if (id.includes('recharts')) {
               return 'vendor-charts';
             }
-            
+
             // Canonical services (sempre carregados, mas pequenos ~12KB)
             if (id.includes('/src/services/canonical/')) {
               return 'services-canonical';
             }
-            
+
             // Editor (grande - 590KB, split em partes menores)
             // Editor Core - main editor file
             if (id.includes('QuizModularProductionEditor.tsx')) {
               return 'chunk-editor-core';
             }
-            
+
             // Editor Components - auxiliary components
             if (id.includes('ModernUnifiedEditor') ||
-                id.includes('/src/components/editor/quiz/components/') ||
-                id.includes('DynamicPropertiesForm') ||
-                id.includes('ThemeEditorPanel')) {
+              id.includes('/src/components/editor/quiz/components/') ||
+              id.includes('DynamicPropertiesForm') ||
+              id.includes('ThemeEditorPanel')) {
               return 'chunk-editor-components';
             }
-            
+
             // Editor Renderers - preview renderers
             if (id.includes('/src/components/editor/renderers/') ||
-                id.includes('QuizProductionPreview') ||
-                id.includes('BlockTypeRenderer')) {
+              id.includes('QuizProductionPreview') ||
+              id.includes('BlockTypeRenderer')) {
               return 'chunk-editor-renderers';
             }
-            
+
             // Editor Hooks & Utils
             if (id.includes('/src/components/editor/quiz/hooks/') ||
-                id.includes('useValidation') ||
-                id.includes('usePanelWidths') ||
-                id.includes('useEditorHistory')) {
+              id.includes('useValidation') ||
+              id.includes('usePanelWidths') ||
+              id.includes('useEditorHistory')) {
               return 'chunk-editor-utils';
             }
-            
+
             // Analytics/Participants (80KB, pode ser split também)
             if (id.includes('ParticipantsPage')) {
               return 'chunk-analytics-participants';
             }
-            
+
             if (id.includes('EnhancedRealTimeDashboard') ||
-                id.includes('RealDataAnalyticsService')) {
+              id.includes('RealDataAnalyticsService')) {
               return 'chunk-analytics-dashboard';
             }
-            
+
             // Block Registry (604KB, split por categoria)
             // Registry Core
             if (id.includes('EnhancedBlockRegistry.tsx') ||
-                id.includes('HybridBlockRegistry') ||
-                id.includes('DynamicBlockRegistry')) {
+              id.includes('HybridBlockRegistry') ||
+              id.includes('DynamicBlockRegistry')) {
               return 'chunk-blocks-registry';
             }
-            
+
             // Blocks - Intro/Question (usados frequentemente)
             if (id.includes('/src/components/editor/blocks/atomic/Intro') ||
-                id.includes('/src/components/editor/blocks/atomic/Question') ||
-                id.includes('QuizIntroHeaderBlock') ||
-                id.includes('OptionsGridBlock')) {
+              id.includes('/src/components/editor/blocks/atomic/Question') ||
+              id.includes('QuizIntroHeaderBlock') ||
+              id.includes('OptionsGridBlock')) {
               return 'chunk-blocks-common';
             }
-            
+
             // Blocks - Result (lazy load)
             if (id.includes('/src/components/editor/blocks/atomic/Result') ||
-                id.includes('ResultHeaderBlock') ||
-                id.includes('ResultCTABlock')) {
+              id.includes('ResultHeaderBlock') ||
+              id.includes('ResultCTABlock')) {
               return 'chunk-blocks-result';
             }
-            
+
             // Blocks - Transition (lazy load)
             if (id.includes('/src/components/editor/blocks/atomic/Transition') ||
-                id.includes('QuizTransitionBlock')) {
+              id.includes('QuizTransitionBlock')) {
               return 'chunk-blocks-transition';
             }
-            
+
             // Blocks - Offer/Sales (lazy load - apenas ofertas)
             if (id.includes('QuizOfferHeroBlock') ||
-                id.includes('TestimonialsBlock') ||
-                id.includes('BonusBlock') ||
-                id.includes('GuaranteeBlock') ||
-                id.includes('BenefitsListBlock') ||
-                id.includes('ValueAnchoringBlock') ||
-                id.includes('SecurePurchaseBlock')) {
+              id.includes('TestimonialsBlock') ||
+              id.includes('BonusBlock') ||
+              id.includes('GuaranteeBlock') ||
+              id.includes('BenefitsListBlock') ||
+              id.includes('ValueAnchoringBlock') ||
+              id.includes('SecurePurchaseBlock')) {
               return 'chunk-blocks-offer';
             }
-            
+
             // Blocks - Inline (text, button, image - comuns)
             if (id.includes('InlineBlock.tsx') ||
-                id.includes('/src/components/editor/blocks/inline/')) {
+              id.includes('/src/components/editor/blocks/inline/')) {
               return 'chunk-blocks-inline';
             }
-            
+
             // Blocks - Modular (Step20, etc)
             if (id.includes('Step20ModularBlocks') ||
-                id.includes('ModularResultHeader')) {
+              id.includes('ModularResultHeader')) {
               return 'chunk-blocks-modular';
             }
-            
+
             // Templates (lazy loaded)
             if (id.includes('/src/templates/') ||
-                id.includes('quiz21StepsComplete') ||
-                id.includes('embedded.ts')) {
+              id.includes('quiz21StepsComplete') ||
+              id.includes('embedded.ts')) {
               return 'chunk-templates';
             }
-            
+
             // Admin pages (lazy loaded apenas admin)
             if (id.includes('/src/pages/admin/')) {
               return 'chunk-admin';
             }
-            
+
             // Quiz pages (lazy loaded quando necessário)
             if (id.includes('QuizIntegratedPage') ||
-                id.includes('QuizEstiloPessoalPage') ||
-                id.includes('QuizAIPage')) {
+              id.includes('QuizEstiloPessoalPage') ||
+              id.includes('QuizAIPage')) {
               return 'chunk-quiz';
             }
           }
