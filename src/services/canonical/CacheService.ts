@@ -43,6 +43,9 @@ export interface CacheSetOptions {
  */
 export class CacheService extends BaseCanonicalService {
   private static instance: CacheService;
+  // TTL padrão aplicado quando não for informado explicitamente
+  // Mantido curto o suficiente para testes; em produção, 5 minutos
+  private readonly defaultTtlMs: number = 5 * 60 * 1000;
 
   private constructor(options?: ServiceOptions) {
     super('CacheService', '1.0.0', options);
@@ -82,7 +85,17 @@ export class CacheService extends BaseCanonicalService {
   ): ServiceResult<void> {
     try {
       const store = options.store || 'generic';
-      unifiedCache.set(store, key, value, options.ttl);
+      // Não cachear valores nulos/undefined
+      if (value == null) {
+        return this.createResult(undefined as unknown as void);
+      }
+      // Não cachear arrays vazios
+      if (Array.isArray(value) && (value as any[]).length === 0) {
+        return this.createResult(undefined as unknown as void);
+      }
+
+      const ttlMs = typeof options.ttl === 'number' ? options.ttl : this.defaultTtlMs;
+      unifiedCache.set(store, key, value, ttlMs);
       return this.createResult(undefined);
     } catch (error) {
       this.error('set failed:', error);
@@ -137,6 +150,17 @@ export class CacheService extends BaseCanonicalService {
       this.error('delete failed:', error);
       return this.createError(error as Error);
     }
+  }
+
+  /**
+   * Invalidar entrada específica (alias para delete), com store opcional (default: generic)
+   * 
+   * @example
+   * cacheService.invalidate('user-123');
+   * cacheService.invalidate('step-01', 'templates');
+   */
+  invalidate(key: string, store: CacheStore = 'generic'): ServiceResult<boolean> {
+    return this.delete(key, store);
   }
 
   /**
