@@ -247,14 +247,36 @@ export class UnifiedCacheService {
   /**
    * Obter estatísticas de todos os stores
    */
-  getAllStats(): Record<CacheStore, CacheStats> {
-    const allStats: Partial<Record<CacheStore, CacheStats>> = {};
+  getAllStats(): { stores: Record<CacheStore, CacheStats>; total: { size: number; memoryUsage: number } } {
+    const stores = {} as Record<CacheStore, CacheStats>;
+    let totalSize = 0;
+    let totalMemory = 0;
     
     for (const store in this.stores) {
-      allStats[store as CacheStore] = this.getStoreStats(store as CacheStore);
+      const stats = this.getStoreStats(store as CacheStore);
+      stores[store as CacheStore] = stats;
+      totalSize += stats.size;
+      totalMemory += stats.memoryUsage;
     }
     
-    return allStats as Record<CacheStore, CacheStats>;
+    return {
+      stores,
+      total: { size: totalSize, memoryUsage: totalMemory }
+    };
+  }
+
+  /**
+   * Alias para getAllStats (compatibilidade)
+   */
+  getStats() {
+    return this.getAllStats();
+  }
+
+  /**
+   * Invalidar entrada específica (alias para delete)
+   */
+  invalidate(store: CacheStore, key: string): boolean {
+    return this.delete(store, key);
   }
 
   /**
@@ -274,11 +296,10 @@ export class UnifiedCacheService {
     console.group('📊 UnifiedCacheService Stats');
     
     const allStats = this.getAllStats();
-    let totalMemory = 0;
     let totalHitRate = 0;
     let storeCount = 0;
     
-    for (const [store, stats] of Object.entries(allStats)) {
+    for (const [store, stats] of Object.entries(allStats.stores)) {
       if (stats.size > 0 || stats.hits > 0 || stats.misses > 0) {
         console.log(`\n${store}:`);
         console.log(`  Size: ${stats.size}/${stats.max}`);
@@ -286,7 +307,6 @@ export class UnifiedCacheService {
         console.log(`  Hits: ${stats.hits} | Misses: ${stats.misses}`);
         console.log(`  Memory: ${(stats.memoryUsage / 1024).toFixed(1)} KB`);
         
-        totalMemory += stats.memoryUsage;
         totalHitRate += stats.hitRate;
         storeCount++;
       }
@@ -296,8 +316,9 @@ export class UnifiedCacheService {
     
     console.log(`\n📈 GLOBAL:`);
     console.log(`  Average Hit Rate: ${avgHitRate.toFixed(1)}%`);
-    console.log(`  Total Memory: ${(totalMemory / 1024).toFixed(1)} KB`);
-    console.log(`  Active Stores: ${storeCount}/${Object.keys(allStats).length}`);
+    console.log(`  Total Memory: ${(allStats.total.memoryUsage / 1024).toFixed(1)} KB`);
+    console.log(`  Total Entries: ${allStats.total.size}`);
+    console.log(`  Active Stores: ${storeCount}/${Object.keys(allStats.stores).length}`);
     
     console.groupEnd();
   }

@@ -1,113 +1,84 @@
 /**
- * 🚀 CACHE SIMPLES PARA CONFIGURAÇÕES DO EDITOR
+ * 🗄️ CONFIGURATION CACHE - DEPRECATED
  * 
- * Cache em memória para configurações de componentes
- * evitando múltiplas calls à API durante preview/edição
+ * @deprecated Use UnifiedCacheService instead
+ * @see /src/services/UnifiedCacheService.ts
+ * 
+ * Este arquivo será removido após migração completa (2 semanas)
+ * Atualmente redireciona para UnifiedCacheService
  */
+
+import { cacheService } from '@/services/UnifiedCacheService';
 
 interface CacheEntry<T> {
     data: T;
     timestamp: number;
-    ttl: number; // Time to live in milliseconds
+    ttl: number;
 }
 
 class ConfigurationCache {
-    private cache = new Map<string, CacheEntry<any>>();
     private readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutos
 
+    constructor() {
+        console.warn('⚠️ ConfigurationCache is deprecated. Use UnifiedCacheService instead.');
+    }
+
     /**
-     * Buscar item do cache
+     * @deprecated Use cacheService.get('configs', key)
      */
     get<T>(key: string): T | null {
-        const entry = this.cache.get(key);
-        
-        if (!entry) {
-            return null;
-        }
-
-        // Verificar se expirou
-        if (Date.now() - entry.timestamp > entry.ttl) {
-            this.cache.delete(key);
-            return null;
-        }
-
-        return entry.data as T;
+        return cacheService.get<T>('configs', key);
     }
 
     /**
-     * Armazenar item no cache
+     * @deprecated Use cacheService.set('configs', key, data, ttl)
      */
     set<T>(key: string, data: T, ttl?: number): void {
-        const entry: CacheEntry<T> = {
-            data,
-            timestamp: Date.now(),
-            ttl: ttl || this.DEFAULT_TTL
-        };
-
-        this.cache.set(key, entry);
+        cacheService.set('configs', key, data, ttl || this.DEFAULT_TTL);
     }
 
     /**
-     * Verificar se item existe no cache e é válido
+     * @deprecated Use cacheService.has('configs', key)
      */
     has(key: string): boolean {
-        return this.get(key) !== null;
+        return cacheService.has('configs', key);
     }
 
     /**
-     * Remover item do cache
+     * @deprecated Use cacheService.delete('configs', key)
      */
     delete(key: string): void {
-        this.cache.delete(key);
+        cacheService.delete('configs', key);
     }
 
     /**
-     * Limpar todo o cache
+     * @deprecated Use cacheService.clearStore('configs')
      */
     clear(): void {
-        this.cache.clear();
+        cacheService.clearStore('configs');
     }
 
     /**
-     * Remover itens expirados
+     * @deprecated Garbage collection agora é automático via LRU
      */
     cleanup(): void {
-        const now = Date.now();
-        
-        for (const [key, entry] of this.cache.entries()) {
-            if (now - entry.timestamp > entry.ttl) {
-                this.cache.delete(key);
-            }
-        }
+        console.warn('⚠️ cleanup() is deprecated. UnifiedCacheService uses automatic LRU eviction.');
     }
 
     /**
-     * Estatísticas do cache
+     * @deprecated Use cacheService.getStoreStats('configs')
      */
     getStats() {
+        const stats = cacheService.getStoreStats('configs');
         return {
-            size: this.cache.size,
-            keys: Array.from(this.cache.keys()),
-            memoryUsage: this.estimateMemoryUsage()
+            size: stats.size,
+            keys: [], // LRU não expõe keys diretamente
+            memoryUsage: `${(stats.memoryUsage / 1024).toFixed(1)} KB`
         };
-    }
-
-    private estimateMemoryUsage(): string {
-        const size = JSON.stringify(Array.from(this.cache.entries())).length;
-        if (size < 1024) return `${size} bytes`;
-        if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
-        return `${(size / (1024 * 1024)).toFixed(1)} MB`;
     }
 }
 
 // Singleton instance
 export const configurationCache = new ConfigurationCache();
-
-// Auto cleanup a cada 10 minutos
-if (typeof window !== 'undefined') {
-    setInterval(() => {
-        configurationCache.cleanup();
-    }, 10 * 60 * 1000);
-}
 
 export default configurationCache;

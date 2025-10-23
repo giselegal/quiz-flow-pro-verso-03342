@@ -1,9 +1,14 @@
 /**
- * 🗄️ EDITOR CACHE SERVICE - Fase 2 (P1)
+ * 🗄️ EDITOR CACHE SERVICE - DEPRECATED
  * 
- * Cache unificado para Canvas, Preview e Templates
- * Elimina divergências causadas por múltiplos caches desincronizados
+ * @deprecated Use UnifiedCacheService instead
+ * @see /src/services/UnifiedCacheService.ts
+ * 
+ * Este arquivo será removido após migração completa (2 semanas)
+ * Atualmente redireciona para UnifiedCacheService
  */
+
+import { cacheService } from './UnifiedCacheService';
 
 export interface CacheEntry<T> {
   data: T;
@@ -13,10 +18,11 @@ export interface CacheEntry<T> {
 
 export class EditorCacheService {
   private static instance: EditorCacheService;
-  private cache = new Map<string, CacheEntry<any>>();
   private readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutos
 
-  private constructor() {}
+  private constructor() {
+    console.warn('⚠️ EditorCacheService is deprecated. Use UnifiedCacheService instead.');
+  }
 
   static getInstance(): EditorCacheService {
     if (!EditorCacheService.instance) {
@@ -26,102 +32,63 @@ export class EditorCacheService {
   }
 
   /**
-   * Armazena valor no cache
+   * @deprecated Use cacheService.set('blocks', key, data, ttl)
    */
   set<T>(key: string, data: T, ttl: number = this.DEFAULT_TTL): void {
-    this.cache.set(key, {
-      data,
-      timestamp: Date.now(),
-      ttl
-    });
-
-    console.log(`📦 Cache SET: ${key}`, { dataType: typeof data, ttl });
+    cacheService.set('blocks', key, data, ttl);
   }
 
   /**
-   * Recupera valor do cache (null se expirado ou não existir)
+   * @deprecated Use cacheService.get('blocks', key)
    */
   get<T>(key: string): T | null {
-    const entry = this.cache.get(key);
-
-    if (!entry) {
-      console.log(`📦 Cache MISS: ${key}`);
-      return null;
-    }
-
-    const age = Date.now() - entry.timestamp;
-    if (age > entry.ttl) {
-      console.log(`📦 Cache EXPIRED: ${key} (age: ${age}ms, ttl: ${entry.ttl}ms)`);
-      this.cache.delete(key);
-      return null;
-    }
-
-    console.log(`📦 Cache HIT: ${key} (age: ${age}ms)`);
-    return entry.data as T;
+    return cacheService.get<T>('blocks', key);
   }
 
   /**
-   * Invalida cache por chave exata
+   * @deprecated Use cacheService.invalidate('blocks', key)
    */
   invalidate(key: string): void {
-    const existed = this.cache.delete(key);
-    console.log(`📦 Cache INVALIDATE: ${key} (existed: ${existed})`);
+    cacheService.invalidate('blocks', key);
   }
 
   /**
-   * Invalida cache por prefixo (ex: invalidar todos steps de um funnel)
+   * @deprecated Use cacheService.invalidateByPrefix('blocks', prefix)
    */
   invalidateByPrefix(prefix: string): void {
-    let count = 0;
-    for (const key of this.cache.keys()) {
-      if (key.startsWith(prefix)) {
-        this.cache.delete(key);
-        count++;
-      }
-    }
-    console.log(`📦 Cache INVALIDATE PREFIX: ${prefix} (${count} entries)`);
+    cacheService.invalidateByPrefix('blocks', prefix);
   }
 
   /**
-   * Limpa todo o cache
+   * @deprecated Use cacheService.clearStore('blocks')
    */
   clear(): void {
-    const size = this.cache.size;
-    this.cache.clear();
-    console.log(`📦 Cache CLEAR: ${size} entries removed`);
+    cacheService.clearStore('blocks');
   }
 
   /**
-   * Retorna estatísticas do cache
+   * @deprecated Use cacheService.getStats()
    */
   getStats(): { size: number; keys: string[] } {
+    const stats = cacheService.getStats();
     return {
-      size: this.cache.size,
-      keys: Array.from(this.cache.keys())
+      size: stats.stores.blocks.size,
+      keys: [] // LRU não expõe keys diretamente
     };
   }
 
   /**
-   * Remove entradas expiradas (garbage collection)
+   * @deprecated Garbage collection agora é automático via LRU
    */
   gc(): number {
-    const now = Date.now();
-    let removed = 0;
-
-    for (const [key, entry] of this.cache.entries()) {
-      if (now - entry.timestamp > entry.ttl) {
-        this.cache.delete(key);
-        removed++;
-      }
-    }
-
-    if (removed > 0) {
-      console.log(`📦 Cache GC: ${removed} expired entries removed`);
-    }
-
-    return removed;
+    console.warn('⚠️ gc() is deprecated. UnifiedCacheService uses automatic LRU eviction.');
+    return 0;
   }
 }
+
+// Exporta instância singleton para compatibilidade
+export const editorCacheService = EditorCacheService.getInstance();
+
 
 // Export singleton
 export const editorCache = EditorCacheService.getInstance();
