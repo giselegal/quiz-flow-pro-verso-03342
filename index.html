@@ -293,14 +293,15 @@
     document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         console.log('🔍 Sistema de Teste Canvas-Preview pronto!');
-        console.log('💻 Execute: testCanvasPreviewSync()');
-        console.log('🔄 Execute: startSyncDiagnostic()');
+        console.log('💻 Execute: testCanvasPreviewSync() no console se necessário');
+        console.log('🔄 Execute: startSyncDiagnostic() no console se necessário');
 
-        // Auto-teste se sistema de fallback estiver ativo
-        if (window.supabaseFallback) {
-          console.log('🚀 Auto-executando teste devido ao sistema de fallback...');
-          setTimeout(window.testCanvasPreviewSync, 1000);
-        }
+        // Auto-teste DESATIVADO - execute manualmente no console se necessário
+        // Esse teste só faz sentido na página do editor, não na home
+        // if (window.supabaseFallback) {
+        //   console.log('🚀 Auto-executando teste devido ao sistema de fallback...');
+        //   setTimeout(window.testCanvasPreviewSync, 1000);
+        // }
       }, 500);
     });
   </script>
