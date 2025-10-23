@@ -102,13 +102,14 @@ export default defineConfig(({ mode }) => {
           chunkFileNames: 'assets/[name]-[hash].js',
           // 🚀 FASE 2.3 - Manual Chunks para otimização de bundle
           manualChunks: (id) => {
-            // React ecosystem + UI libs - TUDO NO MESMO CHUNK para garantir disponibilidade
-            // CRÍTICO: Radix UI precisa do React disponível, então incluímos tudo junto
+            // React ecosystem + UI libs + Charts - TUDO NO MESMO CHUNK
+            // CRÍTICO: Todos esses dependem do React, então devem estar juntos
             if (id.includes('node_modules/react') ||
                 id.includes('node_modules/scheduler') ||
                 id.includes('node_modules/wouter') ||
                 id.includes('@radix-ui') ||
-                id.includes('lucide-react')) {
+                id.includes('lucide-react') ||
+                id.includes('recharts')) {
               return 'vendor-react';
             }
 
@@ -122,11 +123,6 @@ export default defineConfig(({ mode }) => {
             // Supabase (lazy loaded quando necessário)
             if (id.includes('@supabase') || id.includes('supabase-js')) {
               return 'vendor-supabase';
-            }
-
-            // Charts library (apenas para analytics)
-            if (id.includes('recharts')) {
-              return 'vendor-charts';
             }
 
             // Canonical services (sempre carregados, mas pequenos ~12KB)
