@@ -334,10 +334,11 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                             ? (editorState.stepBlocks as any)[stepKey]
                             : ((step as any)?.blocks || [])}
                         isEditable={isEditMode}
-                        currentAnswers={(sessionData as any)[`answers_${step.id}`] || []}
+                        currentAnswers={(sessionData as any)[`answers_${stepKey}`] || []}
+                        enableAutoAdvance={isEditMode ? !!autoAdvanceInEdit : true}
                         onAnswersChange={(answers: string[]) => {
                             if ((isEditMode && productionParityInEdit) || isPreviewMode) {
-                                onUpdateSessionData?.(`answers_${step.id}`, answers);
+                                onUpdateSessionData?.(`answers_${stepKey}`, answers);
                             }
                         }}
                         onEdit={handleEdit}
@@ -352,10 +353,10 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                         data={stepData as any}
                         blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
                         isEditable={isEditMode}
-                        currentAnswer={(sessionData as any)[`answer_${step.id}`] || ''}
+                        currentAnswer={(sessionData as any)[`answer_${stepKey}`] || ''}
                         onAnswerChange={(answer: string) => {
                             if ((isEditMode && productionParityInEdit) || isPreviewMode) {
-                                onUpdateSessionData?.(`answer_${step.id}`, answer);
+                                onUpdateSessionData?.(`answer_${stepKey}`, answer);
                             }
                         }}
                         onEdit={handleEdit}
