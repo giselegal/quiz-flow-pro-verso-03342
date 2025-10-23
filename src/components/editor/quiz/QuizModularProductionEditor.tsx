@@ -472,6 +472,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     } | null>(null);
     // Theme overrides carregados do localStorage e aplicados via EditorThemeProvider
     const [themeOverrides, setThemeOverrides] = useState<Partial<DesignTokens>>({});
+    // Status de carregamento do template/fonte (para debug visual)
+    const [loadStatus, setLoadStatus] = useState<null | { level: 'info' | 'warning' | 'error' | 'success'; message: string }>(null);
     // Configuração global de cabeçalho (logo + progresso) fixo
     const [headerConfig, setHeaderConfig] = useState(() => {
         try {
@@ -581,6 +583,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setFunnelId(draft.id || funnelParam);
                             const { runtime, results, ui, settings } = (draft as any);
                             setUnifiedConfig({ runtime, results, ui, settings });
+                            setLoadStatus({ level: 'success', message: `Rascunho carregado com ${validSteps.length} etapas` });
                             loadedRef.current = true;
                             console.info('✅ [EDITOR] Funnel carregado com sucesso', { steps: validSteps.length });
                             setIsLoading(false);
@@ -621,9 +624,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         });
 
                         console.log(`✅ Template fallback (TS) carregado: ${initial.length} steps, ${initial.reduce((sum, s) => sum + s.blocks.length, 0)} blocos totais`);
+                        setLoadStatus({ level: 'info', message: `Fallback TS aplicado (${initial.length} etapas)` });
                         if (!loadedRef.current) {
                             setSteps(initial);
                             setSelectedStepIdUnified(initial[0]?.id || '');
+                            console.log('🎯 Carregando template público consolidado (master) com hidratação:', templateId);
+                            setLoadStatus({ level: 'info', message: 'Carregando template master (quiz21-complete.json)...' });
                             loadedRef.current = true;
                             setIsLoading(false);
                         } else {
@@ -888,9 +894,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         // 🚀 ASYNC: Carregar steps de forma lazy e assíncrona
                         (async () => {
                             try {
-                                if (loadedRef.current) {
+                                if (!loadedRef.current) {
+                                    setLoadStatus({ level: 'success', message: `Master JSON carregado (${built.length} etapas)` });
                                     console.info('ℹ️ [EDITOR] Abortando fallback enriquecido: steps já carregados.');
                                     return;
+                                    console.warn('⚠️ Falha ao carregar master JSON:', resp.status, resp.statusText);
+                                    setLoadStatus({ level: 'warning', message: `Falha ao carregar master (${resp.status} ${resp.statusText}). Aplicando fallback enriquecido...` });
+                                    console.warn('⚠️ Erro ao carregar/usar master JSON, caindo no fallback enriquecido:', e);
+                                    setLoadStatus({ level: 'warning', message: 'Erro ao usar master. Aplicando fallback enriquecido...' });
+                                    const stepsMap = await loadAllQuizSteps();
                                 }
                                 console.time('⚡ Lazy load all steps');
                                 const stepsMap = await loadAllQuizSteps();
@@ -926,9 +938,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                                 if (!loadedRef.current) {
                                     setSteps(enriched);
+                                    setSteps(enriched);
                                     setSelectedStepIdUnified(enriched[0]?.id || '');
                                     setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                                     setIsLoading(false);
+                                    setLoadStatus({ level: 'info', message: `Fallback enriquecido concluído (${enriched.length} etapas)` });
+                                    setLoadStatus({ level: 'error', message: 'Erro no fallback enriquecido. Veja o console para detalhes.' });
+                                    setLoadStatus({ level: 'error', message: 'Erro inesperado ao inicializar o editor.' });
+                                    setLoadStatus({ level: 'warning', message: 'Nenhum template/funnel informado. Editor em modo vazio.' });
                                     loadedRef.current = true;
                                     console.log('✅ Fallback enriquecido concluído! Total de steps:', enriched.length);
                                 } else {
@@ -1705,6 +1722,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     {renderBlockPreview(child, all)}
                                 </div>
                             ))}
+                            {/* Banner de status de carregamento (debug) */}
+                            {loadStatus && (
+                                <div className={cn(
+                                    'px-6 py-2 border-b text-[12px]',
+                                    loadStatus.level === 'success' && 'bg-green-50 text-green-700 border-green-200',
+                                    loadStatus.level === 'warning' && 'bg-amber-50 text-amber-700 border-amber-200',
+                                    loadStatus.level === 'error' && 'bg-red-50 text-red-700 border-red-200',
+                                    loadStatus.level === 'info' && 'bg-blue-50 text-blue-700 border-blue-200'
+                                )}>
+                                    {loadStatus.message}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
