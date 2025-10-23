@@ -1,4 +1,4 @@
-import React, { Suspense, useMemo } from 'react';
+import React, { Suspense, useMemo, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -12,6 +12,8 @@ import { smartMigration } from '@/utils/stepDataMigration';
 import BlockRow from './BlockRow';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { Badge } from '@/components/ui/badge';
+import ModularPreviewContainer from '../ModularPreviewContainer';
+import { editorStepsToRuntimeMap } from '@/runtime/quiz/editorAdapter';
 
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
@@ -79,6 +81,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     OfferMap,
     enableInlinePreview = true,
 }) => {
+    const [previewRestartKey, setPreviewRestartKey] = useState(0);
     // Compat: sempre calcular virtualização dos blocos raiz (sem parentId)
     const rawBlocks = Array.isArray(selectedStep?.blocks) ? (selectedStep!.blocks as any[]) : [];
     const rootBlocks = useMemo(() => {
@@ -199,6 +202,15 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                         >
                             <Monitor className="w-3 h-3" />
                         </Button>
+                        {/* 🔄 Resetar sessão do preview para facilitar novos testes */}
+                        <div className="w-px h-6 bg-border mx-2" />
+                        <Button
+                            onClick={() => { resetPreviewSession?.(); setPreviewRestartKey((k) => k + 1); }}
+                            variant="outline"
+                            size="sm"
+                        >
+                            Reiniciar preview
+                        </Button>
                     </div>
                 )}
             </div>
@@ -304,50 +316,30 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 )}
             </div>
 
-            {/* 🎯 PREVIEW MODE - WYSIWYG Real: Mesmo componente do Edit, totalmente interativo */}
+            {/* 🎯 PREVIEW MODE - Fluxo completo com paridade de produção (auto-avance, regras) */}
             {enableInlinePreview && (
                 <div
                     className="flex-1 overflow-auto p-4"
                     style={{ display: isPreviewMode() ? 'block' : 'none' }}
                     data-testid="canvas-preview-mode"
                 >
-                    {migratedStep ? (
+                    {Array.isArray(steps) && steps.length > 0 ? (
                         <Card className="border-0 shadow-none bg-transparent">
                             <CardContent>
-                                <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
-                                    <div className="px-3 py-2">
-                                        <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={migratedStep.id} />
-                                    </div>
-                                </div>
-
-                                {/* Suporte ao modo legado controlado via props activeTab/onTabChange */}
-                                {typeof activeTab !== 'undefined' && (
-                                    <div className="mb-3 flex items-center gap-2">
-                                        <button data-testid="tab-trigger-canvas" onClick={() => onTabChange?.('canvas')}>Canvas</button>
-                                        <button data-testid="tab-trigger-preview" onClick={() => onTabChange?.('preview')}>Preview</button>
-                                    </div>
-                                )}
-
-                                {BlockRow ? (
-                                    // Em caminho legacy, previewNode só aparece quando activeTab === 'preview'
-                                    <>
-                                        {activeTab === 'preview' && previewNode}
-                                    </>
-                                ) : (
-                                    <>
-                                        {/* 🎯 WYSIWYG Real: Mesmo componente, totalmente interativo */}
-                                        {/* ✅ SUSPENSE REMOVIDO - lazy() components já têm Suspense interno */}
-                                        <UnifiedStepRenderer
-                                            step={{
-                                                ...migratedStep,
-                                                blocks: stepBlocks
-                                            } as any}
-                                            mode="preview"
-                                            sessionData={previewSessionData}
-                                            onUpdateSessionData={updatePreviewSessionData}
-                                        />
-                                    </>
-                                )}
+                                {/* Paridade de produção: usar contêiner modular com estado de runtime real */}
+                                <ModularPreviewContainer
+                                    key={previewRestartKey}
+                                    externalSteps={editorStepsToRuntimeMap(steps as any)}
+                                    editable={false}
+                                    showViewportControls={false}
+                                    viewport={previewDevice as any}
+                                    onSessionChange={(session) => {
+                                        try {
+                                            // Espelhar sessão no EditorModeContext para outras UIs do editor
+                                            Object.entries(session || {}).forEach(([k, v]) => updatePreviewSessionData?.(k, v));
+                                        } catch { /* noop */ }
+                                    }}
+                                />
                             </CardContent>
                         </Card>
                     ) : (
