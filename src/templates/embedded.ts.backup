@@ -1,7 +1,7 @@
 /**
  * 🏗️ BUILD-TIME TEMPLATES EMBEDDED
  * 
- * Gerado automaticamente em: 2025-10-23T04:45:35.597Z
+ * Gerado automaticamente em: 2025-10-23T04:34:04.239Z
  * Total de steps: 21
  * Total de blocos: 124
  * 
@@ -23,30 +23,27 @@ const embedded: Record<string, Block[]> = {
       "id": "block-intro-header",
       "type": "quiz-intro-header",
       "order": 0,
-      "properties": {},
       "content": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
         "showProgress": false,
         "progressValue": 0
-      },
-      "parentId": null
+      }
     },
     {
       "id": "block-intro-title",
       "type": "text-inline",
       "order": 1,
+      "content": {
+        "text": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
+      },
       "properties": {
         "textAlign": "center",
         "fontSize": "text-2xl sm:text-3xl md:text-4xl",
         "fontWeight": "font-normal",
         "className": "text-[#432818]",
         "fontFamily": "\"Playfair Display\", serif"
-      },
-      "content": {
-        "text": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
-      },
-      "parentId": null
+      }
     },
     {
       "id": "block-intro-image",
@@ -58,23 +55,20 @@ const embedded: Record<string, Block[]> = {
         "maxWidth": "300px",
         "objectFit": "contain",
         "rounded": true
-      },
-      "content": {},
-      "parentId": null
+      }
     },
     {
       "id": "block-intro-description",
       "type": "text-inline",
       "order": 3,
+      "content": {
+        "text": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança."
+      },
       "properties": {
         "textAlign": "center",
         "fontSize": "text-sm md:text-base",
         "className": "text-gray-700"
-      },
-      "content": {
-        "text": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança."
-      },
-      "parentId": null
+      }
     },
     {
       "id": "block-intro-form",
@@ -86,23 +80,20 @@ const embedded: Record<string, Block[]> = {
         "buttonText": "Quero Descobrir meu Estilo Agora!",
         "buttonVariant": "primary",
         "privacyNotice": "Seu nome é necessário para personalizar sua experiência."
-      },
-      "content": {},
-      "parentId": null
+      }
     },
     {
       "id": "block-footer-copyright",
       "type": "text-inline",
       "order": 5,
+      "content": {
+        "text": "© {currentYear} Gisele Galvão - Todos os direitos reservados"
+      },
       "properties": {
         "textAlign": "center",
         "fontSize": "text-xs",
         "className": "text-gray-500 pt-6"
-      },
-      "content": {
-        "text": "© {currentYear} Gisele Galvão - Todos os direitos reservados"
-      },
-      "parentId": null
+      }
     }
   ],
   "step-02": [
@@ -2865,7 +2856,7 @@ const embedded: Record<string, Block[]> = {
         "leadCapture": {
           "id": "step20-form",
           "type": "lead-form",
-          "position": 2,
+          "order": 2,
           "properties": {
             "fields": [
               "name",
@@ -2968,7 +2959,7 @@ const embedded: Record<string, Block[]> = {
         },
         "showGuideImage": true,
         "guideImage": {
-          "position": "below",
+          "order": "below",
           "aspectRatio": "4/5",
           "maxWidth": "28rem",
           "centered": true
@@ -2992,7 +2983,7 @@ const embedded: Record<string, Block[]> = {
         },
         "size": "large",
         "fullWidthMobile": true,
-        "position": "after-questions",
+        "order": "after-questions",
         "showTransition": true,
         "transition": {
           "title": "💡 Decodifique sua Imagem de Sucesso em 5 Passos",

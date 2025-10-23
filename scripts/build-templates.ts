@@ -53,11 +53,25 @@ function convertSectionsToBlocks(sections: any[], stepId: string): Block[] {
   return sections.map((section, index) => ({
     id: section.id || `${stepId}-block-${index}`,
     type: normalizeBlockType(section.type || 'text'),
-    order: section.order ?? index,
+    order: section.order ?? section.position ?? index, // Aceitar 'position' ou 'order'
     properties: section.properties || section.props || {},
     content: section.content || {},
     parentId: section.parentId || null
   }));
+}
+
+/**
+ * Normalizar bloco individual (garantir campos obrigatórios)
+ */
+function normalizeBlock(block: any, index: number, stepId: string): Block {
+  return {
+    id: block.id || `${stepId}-block-${index}`,
+    type: normalizeBlockType(block.type || 'text'),
+    order: block.order ?? block.position ?? index, // Aceitar 'position' ou 'order'
+    properties: block.properties || block.props || {},
+    content: block.content || {},
+    parentId: block.parentId || null
+  };
 }
 
 /**
@@ -70,8 +84,11 @@ function processTemplateFile(filePath: string, stepId: string): Block[] {
     
     // Formato Block[] direto
     if (template.blocks && Array.isArray(template.blocks)) {
-      console.log(`✅ ${stepId}: ${template.blocks.length} blocos (formato direto)`);
-      return template.blocks;
+      const normalized = template.blocks.map((block: any, index: number) => 
+        normalizeBlock(block, index, stepId)
+      );
+      console.log(`✅ ${stepId}: ${normalized.length} blocos (formato direto)`);
+      return normalized;
     }
     
     // Formato sections[] (v3)
