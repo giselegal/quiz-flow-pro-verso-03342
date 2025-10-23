@@ -93,15 +93,15 @@ export class TemplateLoader {
       const cached = this.loadFromCache(normalizedKey);
       if (cached) return cached;
 
-      // Estratégia 2: TemplateRegistry (fonte canônica em memória)
-      const fromRegistry = this.loadFromRegistry(normalizedKey);
-      if (fromRegistry) return fromRegistry;
-
-      // Estratégia 3: Master JSON público (controlado por flag)
+      // Estratégia 2: Master JSON público (controlado por flag) — prioridade para garantir paridade de produção
       if (TEMPLATE_SOURCES.useMasterJSON) {
         const fromMaster = await this.loadFromMasterJSON(normalizedKey);
         if (fromMaster) return fromMaster;
       }
+
+      // Estratégia 3: TemplateRegistry (fonte canônica em memória)
+      const fromRegistry = this.loadFromRegistry(normalizedKey);
+      if (fromRegistry) return fromRegistry;
 
       // Estratégia 4: JSON normalizado (gates 02-11) - controlado por flag
       if (TEMPLATE_SOURCES.useNormalizedJSON) {
@@ -233,7 +233,22 @@ export class TemplateLoader {
           sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections)
         };
         const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
-        const blocks = blockComponentsToBlocks(blockComponents);
+        let blocks = blockComponentsToBlocks(blockComponents);
+
+        // Preferência por overlays estáticos ricos para etapas conhecidas (12, 19, 20)
+        try {
+          const preferStatic = ['step-12', 'step-19', 'step-20'];
+          if (preferStatic.includes(normalizedKey)) {
+            // Se existir template modular/estático para a etapa, substituir pelos blocos estáticos
+            const staticBlocks = loadStepTemplate(normalizedKey);
+            if (Array.isArray(staticBlocks) && staticBlocks.length > 0) {
+              blocks = staticBlocks as Block[];
+              console.log(`✅ Overlay estático aplicado em ${normalizedKey} (usando JSON modular)`);
+            }
+          }
+        } catch (overlayErr) {
+          console.warn('⚠️ Falha ao aplicar overlay estático (opcional):', normalizedKey, overlayErr);
+        }
 
         unifiedCache.set(masterBlocksKey(normalizedKey), blocks);
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
