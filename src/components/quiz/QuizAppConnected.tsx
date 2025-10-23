@@ -182,10 +182,9 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         return () => { cancelled = true; };
     }, [state.currentStep, rendererMode, previewMode, editorMode, normalizedDebug]);
 
-    // ========================= SINCRONIZAR ETAPA ATIVA NO MODO EDITOR/PREVIEW =========================
+    // ✅ FASE 1.4: EVENT-DRIVEN sincronização (elimina polling)
     // Quando usado dentro do editor ou preview, alinhar a etapa atual com a selecionada no Canvas
     useEffect(() => {
-        // 🎯 NOVO: Sincroniza tanto em editorMode quanto em previewMode
         if ((!editorMode && !previewMode) || !initialStepId) return;
 
         // Normalizar ID recebido (aceita step-1 ou step-01)
@@ -195,12 +194,14 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         };
         const target = normalizeIncoming(initialStepId);
 
+        // ✅ Sync apenas se diferente (evita loops)
         if (state.currentStep !== target) {
-            console.log(`🔄 Sincronizando Preview: ${state.currentStep} → ${target}`);
+            console.log(`🔄 [Preview Sync] ${state.currentStep} → ${target}`);
             nextStep(target);
         }
-        // deps incluem apenas valores estáveis
-    }, [editorMode, previewMode, initialStepId, state.currentStep, nextStep]);
+
+        // ✅ DEPS MÍNIMAS: apenas valores que realmente devem triggerar sync
+    }, [initialStepId]); // Removido editorMode, previewMode, state.currentStep, nextStep
 
     // ========================= AUTO-AVANÇO QUANDO COMPLETAR RESPOSTAS =========================
     // Detecta quando usuário completa as seleções necessárias e avança automaticamente

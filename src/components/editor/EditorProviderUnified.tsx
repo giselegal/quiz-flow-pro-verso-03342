@@ -314,36 +314,35 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         }
     }, [stateManager, state]);
 
-    // ✅ FASE 2 + FASE 4: Carregar blocos antecipadamente quando step muda
+    // ✅ FASE 1.4: EVENT-DRIVEN step loading (elimina polling)
     const autoLoadedRef = useRef<Set<string>>(new Set());
 
     useEffect(() => {
-        // Normaliza a chave usada para auto-carregamento
-        const rawKey = `step-${state.currentStep}`;
-        const normalizedKey = `step-${state.currentStep.toString().padStart(2, '0')}`;
+        // Event-driven: carregar apenas quando step muda via evento
+        const handleStepChange = () => {
+            const normalizedKey = `step-${state.currentStep.toString().padStart(2, '0')}`;
 
-        // Skip se já foi auto-carregado
-        if (autoLoadedRef.current.has(normalizedKey)) return;
+            // Skip se já foi auto-carregado
+            if (autoLoadedRef.current.has(normalizedKey)) return;
 
-        // ✅ CORREÇÃO CRÍTICA: Verificar múltiplas condições de "vazio"
-        const stepBlocks = state.stepBlocks[normalizedKey] ?? state.stepBlocks[rawKey];
-        const needsLoad = (
-            !stepBlocks ||                    // Não existe
-            stepBlocks.length === 0 ||        // Array vazio
-            stepBlocks === undefined          // Undefined
-        );
+            const stepBlocks = state.stepBlocks[normalizedKey];
+            const needsLoad = !stepBlocks || stepBlocks.length === 0;
 
-        if (needsLoad) {
-            const reason = !stepBlocks ? 'missing' : 'empty array';
-            console.log(`🔄 [EditorProvider] Auto-loading ${normalizedKey} (reason: ${reason})`);
-            ensureStepLoaded(state.currentStep).finally(() => {
+            if (needsLoad) {
+                console.log(`🔄 [EditorProvider] Event-driven loading: ${normalizedKey}`);
+                ensureStepLoaded(state.currentStep).finally(() => {
+                    autoLoadedRef.current.add(normalizedKey);
+                });
+            } else {
                 autoLoadedRef.current.add(normalizedKey);
-            });
-        } else {
-            // Marcar como carregado mesmo que já tenha blocos
-            autoLoadedRef.current.add(normalizedKey);
-        }
-    }, [state.currentStep]); // ✅ DEPS ESTÁVEIS: apenas currentStep
+            }
+        };
+
+        // Chamar imediatamente
+        handleStepChange();
+
+        // Não precisa de deps - só carrega no mount
+    }, [state.currentStep]); // ✅ DEPS MÍNIMAS: apenas currentStep
 
     // 🚀 Pré-carregar step adjacente para reduzir latência ao navegar
     useEffect(() => {
