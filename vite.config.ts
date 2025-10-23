@@ -97,9 +97,6 @@ export default defineConfig(({ mode }) => {
           /^https:\/\/deno\.land\/.*/,
           /^https:\/\/esm\.sh\/.*/
         ],
-        // Garantir ordem correta de execução dos chunks
-        inlineDynamicImports: false,
-        preserveModules: false,
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
