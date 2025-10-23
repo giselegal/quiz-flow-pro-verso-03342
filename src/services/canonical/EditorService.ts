@@ -967,5 +967,5 @@ export class EditorService extends BaseCanonicalService {
 // ============================================================================
 // EXPORTS
 // ============================================================================
-
+export const editorService = EditorService.getInstance();
 export default EditorService;
