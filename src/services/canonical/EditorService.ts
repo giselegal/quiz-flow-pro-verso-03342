@@ -33,6 +33,7 @@
  */
 
 import { BaseCanonicalService, ServiceResult } from './types';
+import { Converter, UnifiedQuizStep } from './Converter';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -945,6 +946,21 @@ export class EditorService extends BaseCanonicalService {
         this.error('Error in change listener:', error);
       }
     });
+  }
+
+  // ==================== JSON v3 CONVERTER BRIDGE ====================
+  /**
+   * Importa um template JSON v3 e converte para UnifiedQuizStep
+   */
+  importFromJsonV3(json: any): UnifiedQuizStep {
+    return Converter.fromJsonV3(json);
+  }
+
+  /**
+   * Exporta UnifiedQuizStep para JSON v3
+   */
+  exportToJsonV3(step: UnifiedQuizStep): any {
+    return Converter.toJsonV3(step);
   }
 }
 
