@@ -87,6 +87,7 @@ import { usePanelWidths } from './hooks/usePanelWidths.tsx';
 import { useEditorHistory } from './hooks/useEditorHistory';
 import { useStepsBlocks } from './hooks/useStepsBlocks';
 import { useBlocks } from './hooks/useBlocks';
+import { StepHistoryService } from '@/services/canonical/StepHistoryService';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEditableQuizStep, ComponentLibraryItem } from './types';
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
@@ -122,6 +123,7 @@ import { UnifiedQuizStepAdapter } from '@/services/editor/UnifiedQuizStepAdapter
 import { SCHEMAS, migrateProps } from '@/schemas';
 import { normalizeByType } from '@/utils/normalizeByType';
 import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
+import { validateEditorFunnelSteps } from '@/services/canonical/EditorFunnelValidation';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -441,6 +443,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Editor unified provider (opcional durante migração)
     const editorCtx = useEditor({ optional: true } as any);
+
+    // Histórico leve por etapa (diff de step) – incremental (P0-4)
+    const stepHistoryRef = useRef(new StepHistoryService<any>());
 
     const stepIdFromNumber = useCallback((n: number) => `step-${String(n).padStart(2, '0')}`, []);
     const stepNumberFromId = useCallback((id: string) => {
@@ -1080,7 +1085,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setSteps: setSteps as any,
         pushHistory,
         setDirty: setIsDirty,
-        getSelectedStepId: () => effectiveSelectedStepId
+        getSelectedStepId: () => effectiveSelectedStepId,
+        onStepChanged: (stepId, prevStep, nextStep) => {
+            if (prevStep && nextStep) {
+                stepHistoryRef.current.pushStepChange(stepId, prevStep, nextStep);
+            }
+        }
     });
 
     const generateNextStepId = (existing: string[]) => {
@@ -1325,8 +1335,23 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         setActiveId(null); setHoverContainerId(null);
     };
 
-    const handleUndo = () => applyHistorySnapshot(undo());
-    const handleRedo = () => applyHistorySnapshot(redo());
+    const handleUndo = () => {
+        const applied = stepHistoryRef.current.undoApply((entry) => {
+            setSteps(prev => prev.map(st => st.id === entry.stepId ? (entry.prev as any) : st));
+        });
+        if (!applied) {
+            // fallback para snapshot global
+            applyHistorySnapshot(undo());
+        }
+    };
+    const handleRedo = () => {
+        const applied = stepHistoryRef.current.redoApply((entry) => {
+            setSteps(prev => prev.map(st => st.id === entry.stepId ? (entry.next as any) : st));
+        });
+        if (!applied) {
+            applyHistorySnapshot(redo());
+        }
+    };
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
@@ -2489,6 +2514,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             return;
         }
 
+        // Validação rápida antes de publicar (P0-5)
+        const { valid, issues } = validateEditorFunnelSteps(steps as any);
+        if (!valid) {
+            const errors = issues.filter(i => i.severity === 'error');
+            toast({
+                title: 'Falha na validação',
+                description: `${errors.length} problemas críticos encontrados. Revise a navegação/etapas.`,
+                variant: 'destructive'
+            });
+            setNavOpen(true);
+            return;
+        }
+
         const confirmed = window.confirm(
             '⚠️ Publicar para produção?\n\nIsso substituirá o funil /quiz-estilo atual.'
         );
@@ -2514,7 +2552,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } finally {
             setIsPublishing(false);
         }
-    }, [funnelId, toast]);
+    }, [funnelId, toast, steps]);
 
     // Memoizar o nó do preview para evitar recriação a cada render
     const previewNode = useMemo(() => {
@@ -2944,6 +2982,17 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = React.memo(({ 
         try { StorageService.safeSetString('editor_preview_mode', mode); } catch {/* ignore */ }
     }, [mode]);
 
+    // Fingerprint leve para sincronizar preview sem JSON.stringify pesado
+    const stepsFingerprint = React.useMemo(() => {
+        try {
+            return (debouncedSteps || [])
+                .map((s: any) => `${s.id}:${(s.blocks || []).length}`)
+                .join('|');
+        } catch {
+            return String((debouncedSteps || []).length);
+        }
+    }, [debouncedSteps]);
+
     return (
         <div className="flex flex-col h-full">
             <div className="flex-1 overflow-hidden">
@@ -2955,7 +3004,12 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = React.memo(({ 
                     />
                 ) : (
                     <QuizRuntimeRegistryProvider>
-                        <LiveRuntimePreview steps={debouncedSteps} funnelId={funnelId} selectedStepId={selectedStepId} />
+                        <LiveRuntimePreview
+                            steps={debouncedSteps}
+                            funnelId={funnelId}
+                            selectedStepId={selectedStepId}
+                            runtimeVersion={stepsFingerprint}
+                        />
                     </QuizRuntimeRegistryProvider>
                 )}
             </div>
@@ -2970,9 +3024,10 @@ interface LiveRuntimePreviewProps {
     steps: EditableQuizStep[];
     funnelId?: string;
     selectedStepId?: string;
+    runtimeVersion: string;
 }
 
-const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ steps, funnelId, selectedStepId }) => {
+const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ steps, funnelId, selectedStepId, runtimeVersion }) => {
     const { setSteps, version } = useQuizRuntimeRegistry();
 
     // ✅ FASE 3 (P2): Reduzir debounce
@@ -2999,26 +3054,23 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
     }, [steps]);
 
     // Refs para evitar loop infinito
-    const lastUpdateRef = React.useRef<string>('');
+    const lastVersionRef = React.useRef<string>('');
     const updateCountRef = React.useRef(0);
     const loopResetTimerRef = React.useRef<NodeJS.Timeout>();
 
-    // ✅ FASE 1 (P0) + FASE 2 (P1): Atualizar registry com timeout agressivo e reset de loop
+    // ✅ P0-3: Atualizar registry apenas quando a versão/fingerprint muda
     React.useEffect(() => {
         setSyncStatus('syncing');
 
-        // 🔧 CORREÇÃO: Comparar conteúdo completo, não apenas keys
-        const currentHash = JSON.stringify(runtimeMap);
-
         console.log(`🔍 [Update Check #${updateCountRef.current}]`, {
-            currentHash: currentHash.substring(0, 80) + '...',
-            lastHash: lastUpdateRef.current.substring(0, 80) + '...',
-            willUpdate: currentHash !== lastUpdateRef.current,
+            runtimeVersion,
+            lastVersion: lastVersionRef.current,
+            willUpdate: runtimeVersion !== lastVersionRef.current,
             stepsCount: Object.keys(runtimeMap).length
         });
 
-        // Só atualizar se realmente mudou
-        if (currentHash !== lastUpdateRef.current) {
+        // Só atualizar se realmente mudou a versão
+        if (runtimeVersion !== lastVersionRef.current) {
             updateCountRef.current++;
 
             // ✅ FASE 2 (P1): Ao invés de abortar, resetar contador após delay
@@ -3040,7 +3092,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
             }
 
             console.log(`✅ [Update #${updateCountRef.current}] Atualizando Live preview registry`);
-            lastUpdateRef.current = currentHash;
+            lastVersionRef.current = runtimeVersion;
             setSteps(runtimeMap);
             setRegistryReady(true);
             setSyncStatus('synced');
@@ -3049,7 +3101,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
             setRegistryReady(true);
             setSyncStatus('synced');
         }
-    }, [runtimeMap, setSteps]);
+    }, [runtimeMap, runtimeVersion, setSteps]);
     // ✅ FASE 1 (P0): Bloquear renderização até registry estar pronto
     if (!registryReady) {
         return (
