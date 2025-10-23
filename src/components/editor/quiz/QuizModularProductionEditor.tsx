@@ -664,7 +664,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                         (async () => {
                             try {
-                                const resp = await fetch('/templates/quiz21-complete.json');
+                                // Cache-buster para evitar SW/cache antigo atrapalhando o carregamento do master
+                                const resp = await fetch(`/templates/quiz21-complete.json?ts=${Date.now()}`);
                                 if (resp.ok) {
                                     const master = await resp.json();
                                     const stepIds = Array.from({ length: 21 }).map((_, i) => toStepId(i + 1));
@@ -957,6 +958,54 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch (err) {
             console.error('❌ Erro no useEffect:', err);
         }
+        // 🔒 Fallback de segurança: se após um curto período nenhum loader tiver concluído,
+        // aplicar template TS mínimo para evitar editor vazio. Evita bloqueio por SW/cache.
+        try {
+            const safety = setTimeout(() => {
+                if (!loadedRef.current) {
+                    try {
+                        const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
+                        const templateId = sp.get('template');
+                        const funnelParam = sp.get('funnel') || undefined;
+                        if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps' || !templateId) {
+                            const initial: EditorEditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
+                                const stepNumber = idx + 1;
+                                const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
+                                const quizTemplate = getQuiz21StepsTemplate();
+                                const blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam);
+                                const getStepType = (index: number): EditableQuizStep['type'] => {
+                                    if (index === 0) return 'intro';
+                                    if (index >= 1 && index <= 10) return 'question';
+                                    if (index === 11) return 'transition';
+                                    if (index >= 12 && index <= 17) return 'strategic-question';
+                                    if (index === 18) return 'transition-result';
+                                    if (index === 19) return 'result';
+                                    return 'offer';
+                                };
+                                return {
+                                    id: stepId,
+                                    type: getStepType(idx),
+                                    order: stepNumber,
+                                    blocks,
+                                    nextStep: stepNumber < 21 ? `step-${(stepNumber + 1).toString().padStart(2, '0')}` : undefined
+                                };
+                            });
+                            setSteps(initial);
+                            setSelectedStepIdUnified(initial[0]?.id || 'step-01');
+                            setIsLoading(false);
+                            loadedRef.current = true;
+                            setLoadStatus({ level: 'warning', message: 'Safety fallback (TS) aplicado automaticamente' });
+                            console.warn('🛟 Safety fallback (TS) aplicado para evitar editor vazio.');
+                        }
+                    } catch (e) {
+                        console.error('❌ Falha no safety fallback:', e);
+                        setIsLoading(false);
+                        setLoadStatus({ level: 'error', message: 'Falha crítica ao carregar template. Veja console.' });
+                    }
+                }
+            }, 2500);
+            return () => clearTimeout(safety);
+        } catch {/* noop */ }
         // Se não houver parâmetros de template ou funnel e ainda não carregamos steps,
         // finalize o loading para permitir que o fallback vazio seja exibido em /editor
         try {
