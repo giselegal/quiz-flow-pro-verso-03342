@@ -144,13 +144,14 @@ describe('useUnifiedQuizNavigation', () => {
         expect(onStepChangeMock).toHaveBeenCalledWith(1);
     });
 
-    it('deve voltar para o passo anterior', async () => {
+    it('deve voltar para o passo anterior', () => {
         const onStepChangeMock = vi.fn();
 
         const { result } = renderHook(() => useUnifiedQuizNavigation({
-            funnelId: 'test-funnel',
+            funnelId: 'test-funnel-nav',
             totalSteps: 5,
             initialStep: 2,
+            persistNavigation: false, // Desabilitar persistência para evitar interferência
             onStepChange: onStepChangeMock,
         }));
 
@@ -165,39 +166,30 @@ describe('useUnifiedQuizNavigation', () => {
         // Deve voltar para 1 (sem histórico, só subtrai 1)
         expect(result.current.currentStepIndex).toBe(1);
         expect(onStepChangeMock).toHaveBeenCalledWith(1);
-    }); it('deve respeitar regras de navegação condicional', () => {
-        interface SelectedOption { id: string; value: string; points?: number; }
-        interface RecordedAnswer { stepId: number; questionId: string; selectedOptions: SelectedOption[]; }
+    });
 
+    it('deve respeitar regras de navegação condicional', () => {
         const rules = [
             {
                 stepId: 1,
-                condition: (answers: RecordedAnswer[]) => {
-                    return answers.some((a: RecordedAnswer) =>
-                        a.stepId === 1 && a.selectedOptions.some((opt: SelectedOption) => opt.id === 'special')
+                condition: (answers: any[]) => {
+                    return answers.some((a: any) =>
+                        a.stepId === 1 && a.selectedOptions && a.selectedOptions.some((opt: any) => opt.id === 'special')
                     );
                 },
                 targetStepId: 3,
             },
         ];
 
-        const { result } = renderHook(() => {
-            const progressHook = useQuizUserProgress({
-                funnelId: 'test-funnel',
-            });
+        const { result } = renderHook(() => useUnifiedQuizNavigation({
+            funnelId: 'test-funnel',
+            totalSteps: 5,
+            initialStep: 1,
+            rules,
+        }));
 
-            const navigationHook = useUnifiedQuizNavigation({
-                funnelId: 'test-funnel',
-                totalSteps: 5,
-                initialStep: 1, // Começar no passo 1
-                rules,
-            });
-
-            return {
-                ...navigationHook,
-                recordAnswer: progressHook.recordAnswer,
-            };
-        });
+        // Verificar inicialização
+        expect(result.current.currentStepIndex).toBe(1);
 
         // Registrar resposta que ativa a regra condicional
         act(() => {
@@ -207,6 +199,7 @@ describe('useUnifiedQuizNavigation', () => {
             });
         });
 
+        // Marcar step como válido e navegar
         act(() => {
             result.current.setStepValidity(true);
         });

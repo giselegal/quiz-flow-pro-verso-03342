@@ -49,6 +49,7 @@ export const useUnifiedQuizNavigation = ({
     completeQuiz,
     hasAnsweredStep,
     calculateCompletionPercentage,
+    recordAnswer,
   } = useQuizUserProgress({
     funnelId,
     initialStep,
@@ -206,6 +207,7 @@ export const useUnifiedQuizNavigation = ({
     navigateToPreviousStep,
     navigateToStep,
     setStepValidity,
+    recordAnswer,
     
     // Helper
     totalSteps,
