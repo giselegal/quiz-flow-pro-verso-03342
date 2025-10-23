@@ -32,6 +32,7 @@ export * from './types';
 export * from './CacheService';
 export * from './TemplateService';
 export * from './DataService';
+export * from './ValidationService';
 
 // TODO: Exportar quando implementados
 // export { DataService, dataService } from './DataService';
