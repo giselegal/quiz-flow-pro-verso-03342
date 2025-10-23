@@ -27,9 +27,11 @@
 // Base types
 export * from './types';
 
-// Canonical Services
-export { CacheService, cacheService } from './CacheService';
-export { TemplateService, templateService } from './TemplateService';
+// Canonical Services - Unified API Layer
+export * from './types';
+export * from './CacheService';
+export * from './TemplateService';
+export * from './DataService';
 
 // TODO: Exportar quando implementados
 // export { DataService, dataService } from './DataService';
