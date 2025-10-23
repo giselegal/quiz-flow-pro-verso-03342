@@ -242,13 +242,15 @@ export default defineConfig(({ mode }) => {
         'react',
         'react-dom',
         'react/jsx-runtime',
-        'react-router-dom',
+        'react-dom/client',
+        'wouter',
         'recharts',
       ],
       esbuildOptions: {
         target: 'es2020',
         loader: { '.js': 'jsx' },
       },
+      force: false, // Não forçar rebuild em dev
     },
     define: {
       global: 'globalThis',
