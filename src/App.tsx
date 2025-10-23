@@ -32,6 +32,7 @@ import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
 import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
+import { PageLoadingFallback } from './components/LoadingSpinner';
 import { serviceManager } from './services/core/UnifiedServiceManager';
 import { setupCriticalRoutes } from '@/config/criticalRoutes.config';
 import { loadTemplateOverrides } from '@/bootstrap/loadTemplateOverrides';
@@ -147,10 +148,7 @@ function AppCore() {
 
                     <Router>
                         <Suspense fallback={
-                            <EnhancedLoadingFallback
-                                message="Carregando aplicação..."
-                                variant="detailed"
-                            />
+                            <PageLoadingFallback message="Carregando aplicação..." />
                         }>
                             <Switch>
                                 {/* 🏠 PÁGINA INICIAL */}
@@ -169,7 +167,7 @@ function AppCore() {
                                 <Route path="/editor-new">
                                     <EditorErrorBoundary>
                                         <div data-testid="quiz-editor-wysiwyg-page">
-                                            <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando editor experimental..." />}>
                                                 <QuizModularProductionEditor />
                                             </Suspense>
                                         </div>
@@ -180,7 +178,7 @@ function AppCore() {
                                     {(params) => (
                                         <EditorErrorBoundary>
                                             <div data-testid="quiz-editor-wysiwyg-funnel-page">
-                                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor experimental..." />}>
+                                                <Suspense fallback={<PageLoadingFallback message="Carregando editor experimental..." />}>
                                                     <QuizModularProductionEditor />
                                                 </Suspense>
                                             </div>
@@ -200,7 +198,7 @@ function AppCore() {
                                     {(params) => (
                                         <EditorErrorBoundary>
                                             <div data-testid="quiz-modular-production-editor-page-optimized-funnel">
-                                                <Suspense fallback={<EnhancedLoadingFallback message="Carregando editor..." />}>
+                                                <Suspense fallback={<PageLoadingFallback message="Carregando editor..." />}>
                                                     <EditorProviderUnified funnelId={params.funnelId} enableSupabase={true}>
                                                         <QuizModularProductionEditor />
                                                     </EditorProviderUnified>
@@ -216,16 +214,7 @@ function AppCore() {
                                         return (
                                             <EditorErrorBoundary>
                                                 <div data-testid="quiz-modular-production-editor-page-optimized">
-                                                    <Suspense fallback={
-                                                        <div className="flex items-center justify-center min-h-screen">
-                                                            <div className="text-center">
-                                                                <EnhancedLoadingFallback message="Carregando editor..." />
-                                                                <p className="text-xs text-muted-foreground mt-4">
-                                                                    Inicializando QuizModularProductionEditor...
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    }>
+                                                    <Suspense fallback={<PageLoadingFallback message="Carregando editor..." />}>
                                                         <EditorProviderUnified enableSupabase={true}>
                                                             <QuizModularProductionEditor />
                                                         </EditorProviderUnified>
@@ -341,43 +330,43 @@ function AppCore() {
 
                                 {/* 📊 PÁGINAS ADMINISTRATIVAS EXTRAS */}
                                 <Route path="/admin/analytics">
-                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Analytics..." />}>
+                                    <Suspense fallback={<PageLoadingFallback message="Carregando Analytics..." />}>
                                         <AdminAnalyticsPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/participants">
-                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Participantes..." />}>
+                                    <Suspense fallback={<PageLoadingFallback message="Carregando Participantes..." />}>
                                         <AdminParticipantsPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/templates">
-                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Templates..." />}>
+                                    <Suspense fallback={<PageLoadingFallback message="Carregando Templates..." />}>
                                         <AdminTemplatesPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/settings">
-                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Configurações..." />}>
+                                    <Suspense fallback={<PageLoadingFallback message="Carregando Configurações..." />}>
                                         <AdminSettingsPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/integrations">
-                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Integrações..." />}>
+                                    <Suspense fallback={<PageLoadingFallback message="Carregando Integrações..." />}>
                                         <AdminIntegrationsPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/ab-tests">
-                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Testes A/B..." />}>
+                                    <Suspense fallback={<PageLoadingFallback message="Carregando Testes A/B..." />}>
                                         <AdminABTestsPage />
                                     </Suspense>
                                 </Route>
 
                                 <Route path="/admin/creatives">
-                                    <Suspense fallback={<EnhancedLoadingFallback message="Carregando Criativos..." />}>
+                                    <Suspense fallback={<PageLoadingFallback message="Carregando Criativos..." />}>
                                         <AdminCreativesPage />
                                     </Suspense>
                                 </Route>

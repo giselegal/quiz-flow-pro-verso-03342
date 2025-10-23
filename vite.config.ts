@@ -79,7 +79,82 @@ export default defineConfig(({ mode }) => {
           /^https:\/\/deno\.land\/.*/,
           /^https:\/\/esm\.sh\/.*/
         ],
-        output: {},
+        output: {
+          // 🚀 FASE 2.3 - Manual Chunks para otimização de bundle
+          manualChunks: (id) => {
+            // React core (sempre carregado)
+            if (id.includes('node_modules/react/') || 
+                id.includes('node_modules/react-dom/') ||
+                id.includes('node_modules/react-router-dom/') ||
+                id.includes('node_modules/wouter/')) {
+              return 'vendor-react';
+            }
+            
+            // UI libraries (Radix UI + Lucide)
+            if (id.includes('@radix-ui') || 
+                id.includes('lucide-react') ||
+                id.includes('class-variance-authority') ||
+                id.includes('clsx') ||
+                id.includes('tailwind-merge')) {
+              return 'vendor-ui';
+            }
+            
+            // Supabase (lazy loaded quando necessário)
+            if (id.includes('@supabase') || id.includes('supabase-js')) {
+              return 'vendor-supabase';
+            }
+            
+            // Charts library (apenas para analytics)
+            if (id.includes('recharts')) {
+              return 'vendor-charts';
+            }
+            
+            // Canonical services (sempre carregados, mas pequenos ~12KB)
+            if (id.includes('/src/services/canonical/')) {
+              return 'services-canonical';
+            }
+            
+            // Editor (grande - 290KB, lazy loaded)
+            if (id.includes('QuizModularProductionEditor') ||
+                id.includes('ModernUnifiedEditor')) {
+              return 'chunk-editor';
+            }
+            
+            // Analytics/Participants (grande - 454KB, lazy loaded apenas admin)
+            if (id.includes('ParticipantsPage') ||
+                id.includes('ParticipantsTable') ||
+                id.includes('EnhancedRealTimeDashboard') ||
+                id.includes('RealDataAnalyticsService')) {
+              return 'chunk-analytics';
+            }
+            
+            // Block Registry (grande - 217KB, lazy loaded on demand)
+            if (id.includes('EnhancedBlockRegistry') ||
+                id.includes('/src/components/editor/blocks/') ||
+                id.includes('/src/config/registry/')) {
+              return 'chunk-blocks';
+            }
+            
+            // Templates (lazy loaded)
+            if (id.includes('/src/templates/') ||
+                id.includes('quiz21StepsComplete') ||
+                id.includes('embedded.ts')) {
+              return 'chunk-templates';
+            }
+            
+            // Admin pages (lazy loaded apenas admin)
+            if (id.includes('/src/pages/admin/')) {
+              return 'chunk-admin';
+            }
+            
+            // Quiz pages (lazy loaded quando necessário)
+            if (id.includes('QuizIntegratedPage') ||
+                id.includes('QuizEstiloPessoalPage') ||
+                id.includes('QuizAIPage')) {
+              return 'chunk-quiz';
+            }
+          }
+        },
       },
     },
     optimizeDeps: {
