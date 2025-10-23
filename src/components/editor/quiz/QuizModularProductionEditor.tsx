@@ -2697,10 +2697,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         <Button variant="ghost" size="sm" disabled={!canRedo} onClick={handleRedo} className="text-xs px-2">Redo ⮫</Button>
                                     </div>
                                     <div className="h-6 w-px bg-border" />
-                                    <div className="flex items-center gap-1" data-testid="preview-toggle">
-                                        <Button variant={activeTab === 'canvas' ? 'default' : 'outline'} size="sm" onClick={() => handleTabChange('canvas')}>Canvas</Button>
-                                        <Button variant={activeTab === 'preview' ? 'default' : 'outline'} size="sm" onClick={() => handleTabChange('preview')}>Preview</Button>
-                                    </div>
                                     <Button size="sm" onClick={handlePublish} disabled={isPublishing}>{isPublishing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}Publicar</Button>
                                 </div>
                             </div>
@@ -2743,6 +2739,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     )}
                     canvasPanel={(
                         <CanvasArea
+                            enableInlinePreview
                             activeTab={activeTab}
                             onTabChange={(v) => handleTabChange(v as 'canvas' | 'preview')}
                             steps={steps}

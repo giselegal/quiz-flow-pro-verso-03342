@@ -46,6 +46,12 @@ export interface CanvasAreaProps {
     FixedProgressHeader: React.ComponentType<{ config: any; steps: EditableQuizStep[]; currentStepId: string }>;
     StyleResultCard?: React.ComponentType<any>;
     OfferMap?: React.ComponentType<any>;
+    /**
+     * Controla a exibição do preview embutido no Canvas.
+     * Quando false, o Canvas funciona apenas em modo Editor e oculta o preview interno.
+     * Padrão: true (compatibilidade)
+     */
+    enableInlinePreview?: boolean;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -71,6 +77,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     FixedProgressHeader,
     StyleResultCard,
     OfferMap,
+    enableInlinePreview = true,
 }) => {
     // Compat: sempre calcular virtualização dos blocos raiz (sem parentId)
     const rawBlocks = Array.isArray(selectedStep?.blocks) ? (selectedStep!.blocks as any[]) : [];
@@ -149,19 +156,21 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                         <Edit3 className="w-4 h-4" />
                         Editor
                     </Button>
-                    <Button
-                        onClick={() => setViewMode('preview')}
-                        variant={isPreviewMode() ? 'default' : 'outline'}
-                        size="sm"
-                        className="gap-2"
-                    >
-                        <Eye className="w-4 h-4" />
-                        Preview
-                    </Button>
+                    {enableInlinePreview && (
+                        <Button
+                            onClick={() => setViewMode('preview')}
+                            variant={isPreviewMode() ? 'default' : 'outline'}
+                            size="sm"
+                            className="gap-2"
+                        >
+                            <Eye className="w-4 h-4" />
+                            Preview
+                        </Button>
+                    )}
                 </div>
 
                 {/* 🎯 DEVICE CONTROLS - Apenas em modo preview */}
-                {isPreviewMode() && (
+                {enableInlinePreview && isPreviewMode() && (
                     <div className="flex items-center gap-2">
                         <span className="text-xs text-muted-foreground mr-2">Device:</span>
                         <Button
@@ -192,10 +201,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                 )}
             </div>
 
-            // 🎯 EDIT MODE - Renderização modular com componentes especializados (ou caminho legacy/virtualizado)
+            {/* 🎯 EDIT MODE - Renderização modular com componentes especializados (ou caminho legacy/virtualizado) */}
             <div
                 className="flex-1 overflow-auto p-4"
-                style={{ display: isEditMode() ? 'block' : 'none' }}
+                style={{ display: (!enableInlinePreview || isEditMode()) ? 'block' : 'none' }}
                 data-testid="canvas-edit-mode"
             >
                 {migratedStep ? (
@@ -243,22 +252,24 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
                                 </div>
                             ) : (
-                                // 🎯 COMPONENTES MODULARES - Mantém arquitetura do template
-                                <UnifiedStepRenderer
-                                    step={{
-                                        ...migratedStep,
-                                        blocks: stepBlocks
-                                    } as any}
-                                    mode="edit"
-                                    isSelected={selectedBlockId === migratedStep.id}
-                                    onStepClick={(e, step) => handleBlockClick(e, step as any)}
-                                    onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
-                                    onDuplicate={() => {
-                                        setBlockPendingDuplicate(migratedStep as any);
-                                        setTargetStepId(migratedStep.id);
-                                        setDuplicateModalOpen(true);
-                                    }}
-                                />
+                                <>
+                                    {/* 🎯 COMPONENTES MODULARES - Mantém arquitetura do template */}
+                                    <UnifiedStepRenderer
+                                        step={{
+                                            ...migratedStep,
+                                            blocks: stepBlocks
+                                        } as any}
+                                        mode="edit"
+                                        isSelected={selectedBlockId === migratedStep.id}
+                                        onStepClick={(e, step) => handleBlockClick(e, step as any)}
+                                        onDelete={() => removeBlock(migratedStep.id, migratedStep.id)}
+                                        onDuplicate={() => {
+                                            setBlockPendingDuplicate(migratedStep as any);
+                                            setTargetStepId(migratedStep.id);
+                                            setDuplicateModalOpen(true);
+                                        }}
+                                    />
+                                </>
                             )}
 
                             {/* ✅ ZONA DROPPABLE - Aceita componentes arrastados da biblioteca */}
@@ -292,57 +303,61 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             </div>
 
             {/* 🎯 PREVIEW MODE - WYSIWYG Real: Mesmo componente do Edit, totalmente interativo */}
-            <div
-                className="flex-1 overflow-auto p-4"
-                style={{ display: isPreviewMode() ? 'block' : 'none' }}
-                data-testid="canvas-preview-mode"
-            >
-                {migratedStep ? (
-                    <Card className="border-0 shadow-none bg-transparent">
-                        <CardContent>
-                            <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
-                                <div className="px-3 py-2">
-                                    <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={migratedStep.id} />
+            {enableInlinePreview && (
+                <div
+                    className="flex-1 overflow-auto p-4"
+                    style={{ display: isPreviewMode() ? 'block' : 'none' }}
+                    data-testid="canvas-preview-mode"
+                >
+                    {migratedStep ? (
+                        <Card className="border-0 shadow-none bg-transparent">
+                            <CardContent>
+                                <div className="sticky top-0 z-20 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/80 border-b mb-4">
+                                    <div className="px-3 py-2">
+                                        <FixedProgressHeader config={headerConfig} steps={steps} currentStepId={migratedStep.id} />
+                                    </div>
                                 </div>
+
+                                {/* Suporte ao modo legado controlado via props activeTab/onTabChange */}
+                                {typeof activeTab !== 'undefined' && (
+                                    <div className="mb-3 flex items-center gap-2">
+                                        <button data-testid="tab-trigger-canvas" onClick={() => onTabChange?.('canvas')}>Canvas</button>
+                                        <button data-testid="tab-trigger-preview" onClick={() => onTabChange?.('preview')}>Preview</button>
+                                    </div>
+                                )}
+
+                                {BlockRow ? (
+                                    // Em caminho legacy, previewNode só aparece quando activeTab === 'preview'
+                                    <>
+                                        {activeTab === 'preview' && previewNode}
+                                    </>
+                                ) : (
+                                    <>
+                                        {/* 🎯 WYSIWYG Real: Mesmo componente, totalmente interativo */}
+                                        {/* ✅ SUSPENSE REMOVIDO - lazy() components já têm Suspense interno */}
+                                        <UnifiedStepRenderer
+                                            step={{
+                                                ...migratedStep,
+                                                blocks: stepBlocks
+                                            } as any}
+                                            mode="preview"
+                                            sessionData={previewSessionData}
+                                            onUpdateSessionData={updatePreviewSessionData}
+                                        />
+                                    </>
+                                )}
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <div className="flex items-center justify-center h-full">
+                            <div className="text-center text-muted-foreground">
+                                <p className="text-sm">Preview vazio</p>
+                                <p className="text-xs mt-1">Selecione uma etapa</p>
                             </div>
-
-                            {/* Suporte ao modo legado controlado via props activeTab/onTabChange */}
-                            {typeof activeTab !== 'undefined' && (
-                                <div className="mb-3 flex items-center gap-2">
-                                    <button data-testid="tab-trigger-canvas" onClick={() => onTabChange?.('canvas')}>Canvas</button>
-                                    <button data-testid="tab-trigger-preview" onClick={() => onTabChange?.('preview')}>Preview</button>
-                                </div>
-                            )}
-
-                            {BlockRow ? (
-                                // Em caminho legacy, previewNode só aparece quando activeTab === 'preview'
-                                <>
-                                    {activeTab === 'preview' && previewNode}
-                                </>
-                            ) : (
-                                // 🎯 WYSIWYG Real: Mesmo componente, totalmente interativo
-                                // ✅ SUSPENSE REMOVIDO - lazy() components já têm Suspense interno
-                                <UnifiedStepRenderer
-                                    step={{
-                                        ...migratedStep,
-                                        blocks: stepBlocks
-                                    } as any}
-                                    mode="preview"
-                                    sessionData={previewSessionData}
-                                    onUpdateSessionData={updatePreviewSessionData}
-                                />
-                            )}
-                        </CardContent>
-                    </Card>
-                ) : (
-                    <div className="flex items-center justify-center h-full">
-                        <div className="text-center text-muted-foreground">
-                            <p className="text-sm">Preview vazio</p>
-                            <p className="text-xs mt-1">Selecione uma etapa</p>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
