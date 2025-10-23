@@ -205,9 +205,11 @@ export class UnifiedTemplateRegistry {
       try {
         // Lazy load do módulo embedded (gerado em build time)
         const module = await import('@templates/embedded');
+        // Usar named export para evitar problemas de inicialização circular
+        const embeddedData = module.embedded || module.default || {};
         // Normalizar blocks: position → order se necessário
         const normalized: Record<string, Block[]> = {};
-        for (const [key, blocks] of Object.entries(module.default || {})) {
+        for (const [key, blocks] of Object.entries(embeddedData)) {
           normalized[key] = blocks.map((block: any) => ({
             id: block.id,
             type: block.type,

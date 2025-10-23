@@ -1,7 +1,7 @@
 /**
  * 🏗️ BUILD-TIME TEMPLATES EMBEDDED
  * 
- * Gerado automaticamente em: 2025-10-23T04:45:35.597Z
+ * Gerado automaticamente em: 2025-10-23T10:21:30.756Z
  * Total de steps: 21
  * Total de blocos: 124
  * 
@@ -3363,4 +3363,5 @@ const embedded: Record<string, Block[]> = {
   ]
 };
 
+export { embedded };
 export default embedded;

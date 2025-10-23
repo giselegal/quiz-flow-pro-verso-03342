@@ -168,6 +168,7 @@ export interface Block {
 
 const embedded: Record<string, Block[]> = ${JSON.stringify(embedded, null, 2)};
 
+export { embedded };
 export default embedded;
 `;
   
