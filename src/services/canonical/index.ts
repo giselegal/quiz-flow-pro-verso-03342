@@ -29,9 +29,9 @@ export * from './types';
 
 // Canonical Services
 export { CacheService, cacheService } from './CacheService';
+export { TemplateService, templateService } from './TemplateService';
 
 // TODO: Exportar quando implementados
-// export { TemplateService, templateService } from './TemplateService';
 // export { DataService, dataService } from './DataService';
 // export { AnalyticsService, analyticsService } from './AnalyticsService';
 // export { StorageService, storageService } from './StorageService';
