@@ -1,14 +1,19 @@
 import { describe, it, expect } from 'vitest';
 import { MonitoringService, monitoringService } from '../MonitoringService';
+import type { ServiceResult } from '@/services/canonical/types';
 
 describe('MonitoringService lightweight API', () => {
+  function assertSuccess<T>(res: ServiceResult<T>): asserts res is { success: true; data: T } {
+    expect(res.success).toBe(true);
+  }
+
   it('should track metric via convenience method', () => {
     const svc = MonitoringService.getInstance();
     const res = svc.metric('cache.hit', 1, { store: 'default' });
     expect(res.success).toBe(true);
 
     const metrics = svc.getMetrics({ name: 'cache.hit' });
-    expect(metrics.success).toBe(true);
+    assertSuccess(metrics);
     expect(metrics.data.length).toBeGreaterThan(0);
     const last = metrics.data[metrics.data.length - 1];
     expect(last.unit).toBe('count');
@@ -20,7 +25,7 @@ describe('MonitoringService lightweight API', () => {
     expect(res.success).toBe(true);
 
     const events = monitoringService.getEvents({ name: 'template.loaded' });
-    expect(events.success).toBe(true);
+    assertSuccess(events);
     expect(events.data.length).toBeGreaterThan(0);
     const last = events.data[events.data.length - 1];
     expect(last.name).toBe('template.loaded');

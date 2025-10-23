@@ -1,8 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import StorageService from '../StorageService';
+import type { ServiceResult } from '@/services/canonical/types';
 
 describe('StorageService debounced writes', () => {
   const svc = StorageService.getInstance();
+
+  function assertSuccess<T>(res: ServiceResult<T>): asserts res is { success: true; data: T } {
+    expect(res.success).toBe(true);
+  }
 
   beforeEach(() => {
     // Clear all and use fake timers
@@ -15,7 +20,7 @@ describe('StorageService debounced writes', () => {
     const waitMs = 200;
 
     const immediate = svc.browser.get<number>(key);
-    expect(immediate.success).toBe(true);
+    assertSuccess(immediate);
     expect(immediate.data).toBeNull();
 
     const setRes = svc.browser.setDebounced<number>(key, 42, { waitMs });
@@ -23,17 +28,19 @@ describe('StorageService debounced writes', () => {
 
     // Before time, value should not be present
     let read = svc.browser.get<number>(key);
-    expect(read.success).toBe(true);
+    assertSuccess(read);
     expect(read.data).toBeNull();
 
     // Advance just before threshold
     vi.advanceTimersByTime(waitMs - 1);
     read = svc.browser.get<number>(key);
+    assertSuccess(read);
     expect(read.data).toBeNull();
 
     // Cross threshold
     vi.advanceTimersByTime(1);
     read = svc.browser.get<number>(key);
+    assertSuccess(read);
     expect(read.data).toBe(42);
   });
 
@@ -48,16 +55,19 @@ describe('StorageService debounced writes', () => {
 
     // Still not persisted
     let read = svc.browser.get<number>(key);
+    assertSuccess(read);
     expect(read.data).toBeNull();
 
     // Advance to just before new timer
     vi.advanceTimersByTime(waitMs - 1);
     read = svc.browser.get<number>(key);
+    assertSuccess(read);
     expect(read.data).toBeNull();
 
     // Cross threshold and verify last value persisted
     vi.advanceTimersByTime(1);
     read = svc.browser.get<number>(key);
+    assertSuccess(read);
     expect(read.data).toBe(2);
   });
 
@@ -67,12 +77,14 @@ describe('StorageService debounced writes', () => {
 
     svc.browser.setDebounced<string>(key, 'A', { waitMs });
     let read = svc.browser.get<string>(key);
+    assertSuccess(read);
     expect(read.data).toBeNull();
 
     const flush = svc.browser.flushDebounced(key);
     expect(flush.success).toBe(true);
 
     read = svc.browser.get<string>(key);
+    assertSuccess(read);
     expect(read.data).toBe('A');
   });
 });
