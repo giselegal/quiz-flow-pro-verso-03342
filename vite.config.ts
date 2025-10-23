@@ -102,21 +102,21 @@ export default defineConfig(({ mode }) => {
           chunkFileNames: 'assets/[name]-[hash].js',
           // 🚀 FASE 2.3 - Manual Chunks para otimização de bundle
           manualChunks: (id) => {
-            // React ecosystem - TUDO NO MESMO CHUNK para evitar problemas de inicialização
-            // CRÍTICO: Incluir TODOS os módulos relacionados ao React no mesmo chunk
+            // React ecosystem + UI libs - TUDO NO MESMO CHUNK para garantir disponibilidade
+            // CRÍTICO: Radix UI precisa do React disponível, então incluímos tudo junto
             if (id.includes('node_modules/react') ||
                 id.includes('node_modules/scheduler') ||
-                id.includes('node_modules/wouter')) {
+                id.includes('node_modules/wouter') ||
+                id.includes('@radix-ui') ||
+                id.includes('lucide-react')) {
               return 'vendor-react';
             }
 
-            // UI libraries (Radix UI + Lucide) - DEPOIS do React
-            if (id.includes('@radix-ui') ||
-              id.includes('lucide-react') ||
-              id.includes('class-variance-authority') ||
+            // Utilities UI (não dependem diretamente do React.forwardRef)
+            if (id.includes('class-variance-authority') ||
               id.includes('clsx') ||
               id.includes('tailwind-merge')) {
-              return 'vendor-ui';
+              return 'vendor-utils';
             }
 
             // Supabase (lazy loaded quando necessário)
