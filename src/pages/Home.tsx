@@ -18,8 +18,10 @@ import { useAuth } from '@/contexts';
 
 export const Home: React.FC = () => {
   console.log('🏠 Home component rendering...');
+  console.log('🏠 Home: Mounting component');
   
   const { user, logout } = useAuth();
+  console.log('🏠 Home: useAuth called, user:', user ? 'authenticated' : 'not authenticated');
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(true);
 
