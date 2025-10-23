@@ -185,7 +185,7 @@ export interface StorageServiceOptions {
  */
 export class StorageService extends BaseCanonicalService {
   private static instance: StorageService | null = null;
-  
+
   private readonly defaultBucket: string;
   private readonly defaultCacheControl: string;
   private readonly enableImageOptimization: boolean;
@@ -195,17 +195,21 @@ export class StorageService extends BaseCanonicalService {
   private readonly browserStoragePrefix: string;
   private readonly indexedDBName: string;
   private readonly indexedDBVersion: number;
-  
+
+  // Debounced writes (per key)
+  private debouncedTimers: Map<string, ReturnType<typeof setTimeout>> = new Map();
+  private debouncedPayloads: Map<string, string> = new Map();
+
   // Cache for public URLs (path -> url)
   private urlCache: Map<string, { url: string; expiresAt: number }> = new Map();
   private readonly URL_CACHE_TTL = 3600000; // 1 hour
-  
+
   // IndexedDB instance
   private indexedDB: IDBDatabase | null = null;
 
   private constructor(options: StorageServiceOptions = {}) {
     super('StorageService', '1.0.0');
-    
+
     this.defaultBucket = options.defaultBucket || 'uploads';
     this.defaultCacheControl = options.defaultCacheControl || '3600';
     this.enableImageOptimization = options.enableImageOptimization ?? true;
@@ -231,27 +235,32 @@ export class StorageService extends BaseCanonicalService {
 
   protected async onInitialize(): Promise<void> {
     this.log('Initializing StorageService...');
-    
+
     // Initialize IndexedDB
     if (typeof window !== 'undefined' && window.indexedDB) {
       await this.initializeIndexedDB();
     }
-    
+
     this.log('StorageService initialized successfully');
   }
 
   protected async onDispose(): Promise<void> {
     this.log('Disposing StorageService...');
-    
+
+    // Flush pending debounced writes
+    try {
+      this.flushAllDebounced();
+    } catch { }
+
     // Clear caches
     this.urlCache.clear();
-    
+
     // Close IndexedDB
     if (this.indexedDB) {
       this.indexedDB.close();
       this.indexedDB = null;
     }
-    
+
     this.log('StorageService disposed');
   }
 
@@ -259,7 +268,7 @@ export class StorageService extends BaseCanonicalService {
     try {
       // Check Supabase Storage availability
       const { data, error } = await supabase.storage.listBuckets();
-      
+
       if (error) {
         this.error('Storage health check failed:', error.message);
         return false;
@@ -293,7 +302,7 @@ export class StorageService extends BaseCanonicalService {
   async uploadFile(params: UploadFileParams): Promise<ServiceResult<UploadResult>> {
     try {
       const bucket = params.bucket || this.defaultBucket;
-      
+
       // Validate file size
       const fileSize = params.file instanceof File ? params.file.size : params.file.size;
       if (fileSize > this.maxUploadSize) {
@@ -475,7 +484,7 @@ export class StorageService extends BaseCanonicalService {
       }
 
       const bucketName = bucket || this.defaultBucket;
-      
+
       const { data: { publicUrl } } = supabase.storage
         .from(bucketName)
         .getPublicUrl(path);
@@ -548,7 +557,7 @@ export class StorageService extends BaseCanonicalService {
 
       // Load image
       const img = await this.loadImage(file);
-      
+
       // Calculate new dimensions
       let { width, height } = img;
       const maxWidth = options.maxWidth || width;
@@ -568,7 +577,7 @@ export class StorageService extends BaseCanonicalService {
       canvas.width = width;
       canvas.height = height;
       const ctx = canvas.getContext('2d');
-      
+
       if (!ctx) {
         return {
           success: false,
@@ -636,7 +645,7 @@ export class StorageService extends BaseCanonicalService {
     try {
       // Optimize the image
       const optimizeResult = await this.optimizeImage(file, options);
-      
+
       if (!optimizeResult.success) {
         return optimizeResult;
       }
@@ -669,7 +678,7 @@ export class StorageService extends BaseCanonicalService {
    */
   setItem<T>(key: string, value: T, expiresIn?: number): ServiceResult<void> {
     try {
-      if (typeof window === 'undefined') {
+      if (typeof localStorage === 'undefined') {
         return {
           success: false,
           error: new Error('Browser storage not available'),
@@ -702,7 +711,7 @@ export class StorageService extends BaseCanonicalService {
    */
   getItem<T>(key: string): ServiceResult<T | null> {
     try {
-      if (typeof window === 'undefined') {
+      if (typeof localStorage === 'undefined') {
         return { success: true, data: null };
       }
 
@@ -737,7 +746,7 @@ export class StorageService extends BaseCanonicalService {
    */
   removeItem(key: string): ServiceResult<void> {
     try {
-      if (typeof window === 'undefined') {
+      if (typeof localStorage === 'undefined') {
         return { success: true, data: undefined };
       }
 
@@ -760,12 +769,12 @@ export class StorageService extends BaseCanonicalService {
    */
   clearAll(): ServiceResult<void> {
     try {
-      if (typeof window === 'undefined') {
+      if (typeof localStorage === 'undefined') {
         return { success: true, data: undefined };
       }
 
       const keysToRemove: string[] = [];
-      
+
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key && key.startsWith(this.browserStoragePrefix)) {
@@ -783,6 +792,109 @@ export class StorageService extends BaseCanonicalService {
       return {
         success: false,
         error: error instanceof Error ? error : new Error('Clear all failed'),
+      };
+    }
+  }
+
+  /**
+   * Debounced set item in browser storage
+   */
+  setItemDebounced<T>(key: string, value: T, options?: { waitMs?: number; expiresIn?: number }): ServiceResult<void> {
+    try {
+      if (typeof localStorage === 'undefined') {
+        return { success: true, data: undefined };
+      }
+
+      const waitMs = options?.waitMs ?? 300;
+      const prefixedKey = this.browserStoragePrefix + key;
+
+      const item: BrowserStorageItem<T> = {
+        key,
+        value,
+        createdAt: Date.now(),
+        expiresAt: options?.expiresIn ? Date.now() + options.expiresIn : undefined
+      };
+
+      const payload = JSON.stringify(item);
+      this.debouncedPayloads.set(prefixedKey, payload);
+
+      // Clear any existing timer
+      const existing = this.debouncedTimers.get(prefixedKey);
+      if (existing) clearTimeout(existing);
+
+      const timer = setTimeout(() => {
+        try {
+          const pending = this.debouncedPayloads.get(prefixedKey);
+          if (pending) {
+            localStorage.setItem(prefixedKey, pending);
+          }
+        } finally {
+          this.debouncedTimers.delete(prefixedKey);
+          this.debouncedPayloads.delete(prefixedKey);
+        }
+      }, waitMs);
+
+      this.debouncedTimers.set(prefixedKey, timer);
+      return { success: true, data: undefined };
+    } catch (error) {
+      this.error('Set item debounced error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error : new Error('Set item debounced failed')
+      };
+    }
+  }
+
+  /**
+   * Flush debounced write for a specific key
+   */
+  flushDebounced(key: string): ServiceResult<void> {
+    try {
+      if (typeof localStorage === 'undefined') {
+        return { success: true, data: undefined };
+      }
+      const prefixedKey = this.browserStoragePrefix + key;
+      const pending = this.debouncedPayloads.get(prefixedKey);
+      if (pending) {
+        localStorage.setItem(prefixedKey, pending);
+      }
+      const timer = this.debouncedTimers.get(prefixedKey);
+      if (timer) clearTimeout(timer);
+      this.debouncedTimers.delete(prefixedKey);
+      this.debouncedPayloads.delete(prefixedKey);
+      return { success: true, data: undefined };
+    } catch (error) {
+      this.error('Flush debounced error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error : new Error('Flush debounced failed')
+      };
+    }
+  }
+
+  /**
+   * Flush all debounced writes
+   */
+  flushAllDebounced(): ServiceResult<void> {
+    try {
+      if (typeof localStorage === 'undefined') {
+        return { success: true, data: undefined };
+      }
+      for (const [prefixedKey, payload] of this.debouncedPayloads.entries()) {
+        try {
+          localStorage.setItem(prefixedKey, payload);
+        } catch { }
+        const timer = this.debouncedTimers.get(prefixedKey);
+        if (timer) clearTimeout(timer);
+        this.debouncedTimers.delete(prefixedKey);
+        this.debouncedPayloads.delete(prefixedKey);
+      }
+      return { success: true, data: undefined };
+    } catch (error) {
+      this.error('Flush all debounced error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error : new Error('Flush all debounced failed')
       };
     }
   }
@@ -852,9 +964,12 @@ export class StorageService extends BaseCanonicalService {
    */
   readonly browser = {
     set: this.setItem.bind(this),
+    setDebounced: this.setItemDebounced.bind(this),
     get: this.getItem.bind(this),
     remove: this.removeItem.bind(this),
     clear: this.clearAll.bind(this),
+    flushDebounced: this.flushDebounced.bind(this),
+    flushAllDebounced: this.flushAllDebounced.bind(this),
     getQuota: this.getQuota.bind(this),
   };
 
@@ -871,7 +986,7 @@ export class StorageService extends BaseCanonicalService {
 
   private getCachedPublicUrl(path: string): string | null {
     const cached = this.urlCache.get(path);
-    
+
     if (!cached) {
       return null;
     }
