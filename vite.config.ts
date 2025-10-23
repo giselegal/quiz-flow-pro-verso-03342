@@ -100,35 +100,14 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🚀 ESTRATÉGIA SIMPLIFICADA - Apenas vendors externos
-          // Evita problemas de dependências circulares entre chunks internos
+          // 🚀 ESTRATÉGIA ULTRA-SIMPLIFICADA - Um único vendor chunk
+          // Resolve TODOS os problemas de dependências circulares
           manualChunks: (id) => {
-            // Tudo do node_modules em um chunk vendor
+            // TUDO do node_modules vai para um único chunk
             if (id.includes('node_modules')) {
-              // React ecosystem
-              if (id.includes('react') || 
-                  id.includes('scheduler') || 
-                  id.includes('wouter') ||
-                  id.includes('@radix-ui') ||
-                  id.includes('lucide-react') ||
-                  id.includes('recharts') ||
-                  id.includes('class-variance-authority') ||
-                  id.includes('clsx') ||
-                  id.includes('tailwind-merge')) {
-                return 'vendor';
-              }
-              
-              // Supabase separado (grande e lazy)
-              if (id.includes('@supabase') || id.includes('supabase-js')) {
-                return 'vendor-supabase';
-              }
-              
-              // Outros vendors
-              return 'vendor-libs';
+              return 'vendor';
             }
-            
-            // Deixar Vite gerenciar o code-splitting automaticamente
-            // para código interno (evita dependências circulares)
+            // Código interno: deixar Vite gerenciar automaticamente
           }
         },
       },
