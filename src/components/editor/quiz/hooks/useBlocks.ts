@@ -23,13 +23,15 @@ interface UseBlocksOptions<S extends StepWithBlocks<B>, B extends BlockLike> {
     pushHistory?: (next: S[]) => void;
     setDirty?: (dirty: boolean) => void;
     getSelectedStepId: () => string | undefined;
+    onStepChanged?: (stepId: string, prevStep: S | undefined, nextStep: S | undefined) => void;
 }
 
-export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ steps, setSteps, pushHistory, setDirty, getSelectedStepId }: UseBlocksOptions<S, B>) {
+export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ steps, setSteps, pushHistory, setDirty, getSelectedStepId, onStepChanged }: UseBlocksOptions<S, B>) {
     const findStep = useCallback((id: string) => steps.find(s => s.id === id), [steps]);
 
     const addBlock = useCallback((stepId: string, partial: Partial<B> & { type: string; parentId?: string | null }) => {
         setSteps(prev => {
+            const prevStep = prev.find(st => st.id === stepId) as S | undefined;
             const next = prev.map(st => {
                 if (st.id !== stepId) return st;
                 const siblings = st.blocks.filter(b => (b.parentId || null) === (partial.parentId || null));
@@ -43,7 +45,9 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
                 };
                 return { ...st, blocks: [...st.blocks, block] };
             }) as S[];
+            const nextStep = next.find(st => st.id === stepId) as S | undefined;
             pushHistory?.(next);
+            onStepChanged?.(stepId, prevStep, nextStep);
             setDirty?.(true);
             return next;
         });
@@ -51,11 +55,14 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
 
     const updateBlock = useCallback((stepId: string, blockId: string, patch: { properties?: any; content?: any }) => {
         setSteps(prev => {
+            const prevStep = prev.find(st => st.id === stepId) as S | undefined;
             const next = prev.map(st => {
                 if (st.id !== stepId) return st;
                 return { ...st, blocks: st.blocks.map(b => b.id === blockId ? { ...b, properties: { ...b.properties, ...patch.properties }, content: { ...b.content, ...patch.content } } as B : b) };
             }) as S[];
             pushHistory?.(next);
+            const nextStep = next.find(st => st.id === stepId) as S | undefined;
+            onStepChanged?.(stepId, prevStep, nextStep);
             setDirty?.(true);
             return next;
         });
@@ -63,6 +70,7 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
 
     const deleteBlock = useCallback((stepId: string, blockId: string) => {
         setSteps(prev => {
+            const prevStep = prev.find(st => st.id === stepId) as S | undefined;
             const next = prev.map(st => {
                 if (st.id !== stepId) return st;
                 const toRemove = new Set<string>();
@@ -86,6 +94,8 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
                 return { ...st, blocks: remaining };
             }) as S[];
             pushHistory?.(next);
+            const nextStep = next.find(st => st.id === stepId) as S | undefined;
+            onStepChanged?.(stepId, prevStep, nextStep);
             setDirty?.(true);
             return next;
         });
@@ -93,6 +103,7 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
 
     const reorderOrMove = useCallback((stepId: string, blockId: string, targetParentId: string | null, overBlockId: string | null) => {
         setSteps(prev => {
+            const prevStep = prev.find(st => st.id === stepId) as S | undefined;
             const next = prev.map(st => {
                 if (st.id !== stepId) return st;
                 const blocks = st.blocks.map(b => ({ ...b }));
@@ -131,6 +142,8 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
                 return changed ? { ...st, blocks } : st;
             }) as S[];
             pushHistory?.(next);
+            const nextStep = next.find(st => st.id === stepId) as S | undefined;
+            onStepChanged?.(stepId, prevStep, nextStep);
             setDirty?.(true);
             return next;
         });
@@ -138,8 +151,10 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
 
     const duplicateBlock = useCallback((sourceStepId: string, blockId: string, targetStepId?: string) => {
         setSteps(prev => {
+            const target = (targetStepId || sourceStepId);
+            const prevStep = prev.find(st => st.id === target) as S | undefined;
             const next = prev.map(st => {
-                if (st.id !== (targetStepId || sourceStepId)) return st;
+                if (st.id !== target) return st;
                 const sourceStep = prev.find(s => s.id === sourceStepId);
                 if (!sourceStep) return st;
                 const original = sourceStep.blocks.find(b => b.id === blockId);
@@ -149,6 +164,8 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
                 return { ...st, blocks: [...st.blocks, clone] };
             }) as S[];
             pushHistory?.(next);
+            const nextStep = next.find(st => st.id === target) as S | undefined;
+            onStepChanged?.(target, prevStep, nextStep);
             setDirty?.(true);
             return next;
         });
@@ -156,6 +173,7 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
 
     const insertSnippetBlocks = useCallback((stepId: string, snippetBlocks: B[]) => {
         setSteps(prev => {
+            const prevStep = prev.find(st => st.id === stepId) as S | undefined;
             const next = prev.map(st => {
                 if (st.id !== stepId) return st;
                 const baseLen = st.blocks.filter(b => !b.parentId).length;
@@ -166,6 +184,8 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
                 return { ...st, blocks: [...st.blocks, ...cloned] };
             }) as S[];
             pushHistory?.(next);
+            const nextStep = next.find(st => st.id === stepId) as S | undefined;
+            onStepChanged?.(stepId, prevStep, nextStep);
             setDirty?.(true);
             return next;
         });
