@@ -38,6 +38,9 @@ export * from './NotificationService';
 export * from './AnalyticsService';
 export * from './AuthService';
 export * from './StorageService';
+export * from './ConfigService';
+export * from './HistoryService';
+export * from './EditorService';
 
 // TODO: Exportar quando implementados
 // export { DataService, dataService } from './DataService';
