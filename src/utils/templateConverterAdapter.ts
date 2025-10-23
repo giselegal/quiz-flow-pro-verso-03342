@@ -78,7 +78,7 @@ export function blockComponentsToBlocks(components: BlockComponent[]): Block[] {
 export function blocksToBlockComponents(blocks: Block[]): BlockComponent[] {
   return blocks.map(block => ({
     id: block.id,
-    type: block.type,
+    type: block.type as BlockType,
     order: block.order,
     properties: block.properties || {},
     content: block.content || {},

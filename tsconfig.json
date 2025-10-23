@@ -29,6 +29,9 @@
       ],
       "@services-alias/*": [
         "./src/services/aliases/*"
+      ],
+      "@templates/*": [
+        "./src/templates/*"
       ]
     },
     "types": [

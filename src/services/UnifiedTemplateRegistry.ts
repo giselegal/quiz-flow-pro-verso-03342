@@ -205,7 +205,19 @@ export class UnifiedTemplateRegistry {
       try {
         // Lazy load do módulo embedded (gerado em build time)
         const module = await import('@templates/embedded');
-        this.l3Embedded = module.default;
+        // Normalizar blocks: position → order se necessário
+        const normalized: Record<string, Block[]> = {};
+        for (const [key, blocks] of Object.entries(module.default || {})) {
+          normalized[key] = blocks.map((block: any) => ({
+            id: block.id,
+            type: block.type,
+            order: block.order ?? block.position ?? 0,
+            properties: block.properties || {},
+            content: block.content || {},
+            parentId: block.parentId || null,
+          }));
+        }
+        this.l3Embedded = normalized;
         console.log('📦 L3 Embedded templates carregados');
       } catch (error) {
         console.warn('⚠️ L3 não disponível (executar build-time script):', error);
@@ -213,7 +225,7 @@ export class UnifiedTemplateRegistry {
       }
     }
     
-    return this.l3Embedded[stepId] || null;
+    return this.l3Embedded?.[stepId] || null;
   }
 
   /**

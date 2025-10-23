@@ -11,9 +11,10 @@
 export interface Block {
   id: string;
   type: string;
-  order: number;
-  properties: Record<string, any>;
-  content: Record<string, any>;
+  order?: number;
+  position?: number; // Propriedade legada - será convertida para order no runtime
+  properties?: Record<string, any>;
+  content?: Record<string, any>;
   parentId?: string | null;
 }
 
