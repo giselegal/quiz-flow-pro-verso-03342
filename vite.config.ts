@@ -114,25 +114,95 @@ export default defineConfig(({ mode }) => {
               return 'services-canonical';
             }
             
-            // Editor (grande - 290KB, lazy loaded)
-            if (id.includes('QuizModularProductionEditor') ||
-                id.includes('ModernUnifiedEditor')) {
-              return 'chunk-editor';
+            // Editor (grande - 590KB, split em partes menores)
+            // Editor Core - main editor file
+            if (id.includes('QuizModularProductionEditor.tsx')) {
+              return 'chunk-editor-core';
             }
             
-            // Analytics/Participants (grande - 454KB, lazy loaded apenas admin)
-            if (id.includes('ParticipantsPage') ||
-                id.includes('ParticipantsTable') ||
-                id.includes('EnhancedRealTimeDashboard') ||
+            // Editor Components - auxiliary components
+            if (id.includes('ModernUnifiedEditor') ||
+                id.includes('/src/components/editor/quiz/components/') ||
+                id.includes('DynamicPropertiesForm') ||
+                id.includes('ThemeEditorPanel')) {
+              return 'chunk-editor-components';
+            }
+            
+            // Editor Renderers - preview renderers
+            if (id.includes('/src/components/editor/renderers/') ||
+                id.includes('QuizProductionPreview') ||
+                id.includes('BlockTypeRenderer')) {
+              return 'chunk-editor-renderers';
+            }
+            
+            // Editor Hooks & Utils
+            if (id.includes('/src/components/editor/quiz/hooks/') ||
+                id.includes('useValidation') ||
+                id.includes('usePanelWidths') ||
+                id.includes('useEditorHistory')) {
+              return 'chunk-editor-utils';
+            }
+            
+            // Analytics/Participants (80KB, pode ser split também)
+            if (id.includes('ParticipantsPage')) {
+              return 'chunk-analytics-participants';
+            }
+            
+            if (id.includes('EnhancedRealTimeDashboard') ||
                 id.includes('RealDataAnalyticsService')) {
-              return 'chunk-analytics';
+              return 'chunk-analytics-dashboard';
             }
             
-            // Block Registry (grande - 217KB, lazy loaded on demand)
-            if (id.includes('EnhancedBlockRegistry') ||
-                id.includes('/src/components/editor/blocks/') ||
-                id.includes('/src/config/registry/')) {
-              return 'chunk-blocks';
+            // Block Registry (604KB, split por categoria)
+            // Registry Core
+            if (id.includes('EnhancedBlockRegistry.tsx') ||
+                id.includes('HybridBlockRegistry') ||
+                id.includes('DynamicBlockRegistry')) {
+              return 'chunk-blocks-registry';
+            }
+            
+            // Blocks - Intro/Question (usados frequentemente)
+            if (id.includes('/src/components/editor/blocks/atomic/Intro') ||
+                id.includes('/src/components/editor/blocks/atomic/Question') ||
+                id.includes('QuizIntroHeaderBlock') ||
+                id.includes('OptionsGridBlock')) {
+              return 'chunk-blocks-common';
+            }
+            
+            // Blocks - Result (lazy load)
+            if (id.includes('/src/components/editor/blocks/atomic/Result') ||
+                id.includes('ResultHeaderBlock') ||
+                id.includes('ResultCTABlock')) {
+              return 'chunk-blocks-result';
+            }
+            
+            // Blocks - Transition (lazy load)
+            if (id.includes('/src/components/editor/blocks/atomic/Transition') ||
+                id.includes('QuizTransitionBlock')) {
+              return 'chunk-blocks-transition';
+            }
+            
+            // Blocks - Offer/Sales (lazy load - apenas ofertas)
+            if (id.includes('QuizOfferHeroBlock') ||
+                id.includes('TestimonialsBlock') ||
+                id.includes('BonusBlock') ||
+                id.includes('GuaranteeBlock') ||
+                id.includes('BenefitsListBlock') ||
+                id.includes('ValueAnchoringBlock') ||
+                id.includes('SecurePurchaseBlock')) {
+              return 'chunk-blocks-offer';
+            }
+            
+            // Blocks - Inline (text, button, image - comuns)
+            if (id.includes('InlineBlock.tsx') ||
+                id.includes('/src/components/editor/blocks/inline/')) {
+              return 'chunk-blocks-inline';
+            }
+            
+            // Blocks - Modular (Step20, etc)
+            if (id.includes('Step20ModularBlocks') ||
+                id.includes('ModularResultHeader')) {
+              return 'chunk-blocks-modular';
             }
             
             // Templates (lazy loaded)
