@@ -472,8 +472,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     } | null>(null);
     // Theme overrides carregados do localStorage e aplicados via EditorThemeProvider
     const [themeOverrides, setThemeOverrides] = useState<Partial<DesignTokens>>({});
-    // Status de carregamento do template/fonte (para debug visual)
-    const [loadStatus, setLoadStatus] = useState<null | { level: 'info' | 'warning' | 'error' | 'success'; message: string }>(null);
     // Configuração global de cabeçalho (logo + progresso) fixo
     const [headerConfig, setHeaderConfig] = useState(() => {
         try {
@@ -556,8 +554,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch {/* ignore */ }
     }, []);
     const [isLoading, setIsLoading] = useState(true);
-    // Controla se já carregamos steps com sucesso a partir de alguma fonte (funnel/master/fallback)
-    const loadedRef = useRef(false);
     // Evita loop infinito de carregamento: finaliza o loading após mount
     useEffect(() => {
         // Carregamento inicial: se houver ?template=, construir steps default
@@ -583,9 +579,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             setFunnelId(draft.id || funnelParam);
                             const { runtime, results, ui, settings } = (draft as any);
                             setUnifiedConfig({ runtime, results, ui, settings });
-                            setLoadStatus({ level: 'success', message: `Rascunho carregado com ${validSteps.length} etapas` });
-                            loadedRef.current = true;
-                            console.info('✅ [EDITOR] Funnel carregado com sucesso', { steps: validSteps.length });
                             setIsLoading(false);
                             return; // sucesso – não continuar fallback
                         } else {
@@ -623,18 +616,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             };
                         });
 
-                        console.log(`✅ Template fallback (TS) carregado: ${initial.length} steps, ${initial.reduce((sum, s) => sum + s.blocks.length, 0)} blocos totais`);
-                        setLoadStatus({ level: 'info', message: `Fallback TS aplicado (${initial.length} etapas)` });
-                        if (!loadedRef.current) {
-                            setSteps(initial);
-                            setSelectedStepIdUnified(initial[0]?.id || '');
-                            console.log('🎯 Carregando template público consolidado (master) com hidratação:', templateId);
-                            setLoadStatus({ level: 'info', message: 'Carregando template master (quiz21-complete.json)...' });
-                            loadedRef.current = true;
-                            setIsLoading(false);
-                        } else {
-                            console.info('ℹ️ [EDITOR] Ignorando fallback (TS) pois já carregamos de outra fonte.');
-                        }
+                        console.log(`✅ Template fallback carregado: ${initial.length} steps, ${initial.reduce((sum, s) => sum + s.blocks.length, 0)} blocos totais`);
+                        setSteps(initial);
+                        setSelectedStepIdUnified(initial[0]?.id || '');
+                        setIsLoading(false);
                     }
                 })();
             }
@@ -649,7 +634,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     } else if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
                         // 🎯 Novo caminho primário: usar JSON público consolidado (quiz21-complete.json) como master
                         console.log('🎯 Carregando template público consolidado (master) com hidratação:', templateId);
-                        setLoadStatus({ level: 'info', message: 'Carregando template master (quiz21-complete.json)...' });
                         const buildStepType = (idx: number): EditableQuizStep['type'] => {
                             if (idx === 0) return 'intro';
                             if (idx >= 1 && idx <= 10) return 'question';
@@ -664,41 +648,26 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                         (async () => {
                             try {
-                                // Cache-buster para evitar SW/cache antigo atrapalhando o carregamento do master
-                                const resp = await fetch(`/templates/quiz21-complete.json?ts=${Date.now()}`);
+                                const resp = await fetch('/templates/quiz21-complete.json');
                                 if (resp.ok) {
                                     const master = await resp.json();
                                     const stepIds = Array.from({ length: 21 }).map((_, i) => toStepId(i + 1));
 
                                     const built: EditableQuizStep[] = stepIds.map((stepId, idx) => {
-                                        try {
-                                            const stepConf = master?.steps?.[stepId];
-                                            // Hidratar sections com QUIZ_STEPS (titulos, perguntas, opções, CTA...)
-                                            const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
-                                            // Converter sections → BlockComponent[] usando o mapeador central
-                                            const blocks = safeGetTemplateBlocks(stepId, { [stepId]: { sections } }) || [];
+                                        const stepConf = master?.steps?.[stepId];
+                                        // Hidratar sections com QUIZ_STEPS (titulos, perguntas, opções, CTA...)
+                                        const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
+                                        // Converter sections → BlockComponent[] usando o mapeador central
+                                        const blocks = safeGetTemplateBlocks(stepId, { [stepId]: { sections } }) || [];
 
-                                            return {
-                                                id: stepId,
-                                                type: (stepConf?.type as EditableQuizStep['type']) || buildStepType(idx),
-                                                order: idx + 1,
-                                                blocks,
-                                                nextStep: idx < 20 ? stepIds[idx + 1] : undefined,
-                                                metadata: stepConf?.metadata || {}
-                                            } as EditableQuizStep;
-                                        } catch (e) {
-                                            console.warn('⚠️ Falha ao construir step (master), aplicando fallback TS:', stepId, e);
-                                            // Fallback mínimo por step: usa template TS
-                                            const tsBlocks = safeGetTemplateBlocks(stepId, getQuiz21StepsTemplate(), funnelParam) || [];
-                                            return {
-                                                id: stepId,
-                                                type: buildStepType(idx),
-                                                order: idx + 1,
-                                                blocks: tsBlocks,
-                                                nextStep: idx < 20 ? stepIds[idx + 1] : undefined,
-                                                metadata: {}
-                                            } as EditableQuizStep;
-                                        }
+                                        return {
+                                            id: stepId,
+                                            type: (stepConf?.type as EditableQuizStep['type']) || buildStepType(idx),
+                                            order: idx + 1,
+                                            blocks,
+                                            nextStep: idx < 20 ? stepIds[idx + 1] : undefined,
+                                            metadata: stepConf?.metadata || {}
+                                        } as EditableQuizStep;
                                     });
 
                                     // Opcional: substituir steps 12/19/20 por JSON estático mais rico (se disponível)
@@ -719,25 +688,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         console.warn('⚠️ Falha ao aplicar substituição por JSON estático (12/19/20):', e);
                                     }
 
-                                    if (!loadedRef.current) {
-                                        setSteps(built);
-                                        setSelectedStepIdUnified(built[0]?.id || 'step-01');
-                                        setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                                        setIsLoading(false);
-                                        loadedRef.current = true;
-                                        setLoadStatus({ level: 'success', message: `Master JSON carregado (${built.length} etapas)` });
-                                        console.log('✅ Master JSON carregado e convertido com sucesso. Steps:', built.length);
-                                    } else {
-                                        console.info('ℹ️ [EDITOR] Ignorando carregamento master pois já carregamos steps.');
-                                    }
+                                    setSteps(built);
+                                    setSelectedStepIdUnified(built[0]?.id || 'step-01');
+                                    setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                    setIsLoading(false);
+                                    console.log('✅ Master JSON carregado e convertido com sucesso. Steps:', built.length);
                                     return;
                                 } else {
                                     console.warn('⚠️ Falha ao carregar master JSON:', resp.status, resp.statusText);
-                                    setLoadStatus({ level: 'warning', message: `Falha ao carregar master (${resp.status} ${resp.statusText}). Aplicando fallback enriquecido...` });
                                 }
                             } catch (e) {
                                 console.warn('⚠️ Erro ao carregar/usar master JSON, caindo no fallback enriquecido:', e);
-                                setLoadStatus({ level: 'warning', message: 'Erro ao usar master. Aplicando fallback enriquecido...' });
                             }
                         })();
 
@@ -899,10 +860,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         // 🚀 ASYNC: Carregar steps de forma lazy e assíncrona
                         (async () => {
                             try {
-                                if (loadedRef.current) {
-                                    console.info('ℹ️ [EDITOR] Abortando fallback enriquecido: steps já carregados.');
-                                    return;
-                                }
                                 console.time('⚡ Lazy load all steps');
                                 const stepsMap = await loadAllQuizSteps();
                                 console.timeEnd('⚡ Lazy load all steps');
@@ -935,20 +892,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     } as EditableQuizStep;
                                 }));
 
-                                if (!loadedRef.current) {
-                                    setSteps(enriched);
-                                    setSelectedStepIdUnified(enriched[0]?.id || '');
-                                    setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
-                                    setIsLoading(false);
-                                    setLoadStatus({ level: 'info', message: `Fallback enriquecido concluído (${enriched.length} etapas)` });
-                                    loadedRef.current = true;
-                                    console.log('✅ Fallback enriquecido concluído! Total de steps:', enriched.length);
-                                } else {
-                                    console.info('ℹ️ [EDITOR] Ignorando fallback enriquecido: steps já carregados.');
-                                }
+                                setSteps(enriched);
+                                setSelectedStepIdUnified(enriched[0]?.id || '');
+                                setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                setIsLoading(false);
+                                console.log('✅ Fallback enriquecido concluído! Total de steps:', enriched.length);
                             } catch (err) {
                                 console.error('❌ Erro ao carregar steps lazy:', err);
-                                setLoadStatus({ level: 'error', message: 'Erro no fallback enriquecido. Veja o console para detalhes.' });
                                 setIsLoading(false);
                             }
                         })();
@@ -958,54 +908,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch (err) {
             console.error('❌ Erro no useEffect:', err);
         }
-        // 🔒 Fallback de segurança: se após um curto período nenhum loader tiver concluído,
-        // aplicar template TS mínimo para evitar editor vazio. Evita bloqueio por SW/cache.
-        try {
-            const safety = setTimeout(() => {
-                if (!loadedRef.current) {
-                    try {
-                        const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
-                        const templateId = sp.get('template');
-                        const funnelParam = sp.get('funnel') || undefined;
-                        if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps' || !templateId) {
-                            const initial: EditorEditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
-                                const stepNumber = idx + 1;
-                                const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
-                                const quizTemplate = getQuiz21StepsTemplate();
-                                const blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam);
-                                const getStepType = (index: number): EditableQuizStep['type'] => {
-                                    if (index === 0) return 'intro';
-                                    if (index >= 1 && index <= 10) return 'question';
-                                    if (index === 11) return 'transition';
-                                    if (index >= 12 && index <= 17) return 'strategic-question';
-                                    if (index === 18) return 'transition-result';
-                                    if (index === 19) return 'result';
-                                    return 'offer';
-                                };
-                                return {
-                                    id: stepId,
-                                    type: getStepType(idx),
-                                    order: stepNumber,
-                                    blocks,
-                                    nextStep: stepNumber < 21 ? `step-${(stepNumber + 1).toString().padStart(2, '0')}` : undefined
-                                };
-                            });
-                            setSteps(initial);
-                            setSelectedStepIdUnified(initial[0]?.id || 'step-01');
-                            setIsLoading(false);
-                            loadedRef.current = true;
-                            setLoadStatus({ level: 'warning', message: 'Safety fallback (TS) aplicado automaticamente' });
-                            console.warn('🛟 Safety fallback (TS) aplicado para evitar editor vazio.');
-                        }
-                    } catch (e) {
-                        console.error('❌ Falha no safety fallback:', e);
-                        setIsLoading(false);
-                        setLoadStatus({ level: 'error', message: 'Falha crítica ao carregar template. Veja console.' });
-                    }
-                }
-            }, 2500);
-            return () => clearTimeout(safety);
-        } catch {/* noop */ }
         // Se não houver parâmetros de template ou funnel e ainda não carregamos steps,
         // finalize o loading para permitir que o fallback vazio seja exibido em /editor
         try {
@@ -1766,18 +1668,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     {renderBlockPreview(child, all)}
                                 </div>
                             ))}
-                            {/* Banner de status de carregamento (debug) */}
-                            {loadStatus && (
-                                <div className={cn(
-                                    'px-6 py-2 border-b text-[12px]',
-                                    loadStatus.level === 'success' && 'bg-green-50 text-green-700 border-green-200',
-                                    loadStatus.level === 'warning' && 'bg-amber-50 text-amber-700 border-amber-200',
-                                    loadStatus.level === 'error' && 'bg-red-50 text-red-700 border-red-200',
-                                    loadStatus.level === 'info' && 'bg-blue-50 text-blue-700 border-blue-200'
-                                )}>
-                                    {loadStatus.message}
-                                </div>
-                            )}
                         </div>
                     )}
                 </div>
