@@ -94,20 +94,23 @@ export class TemplateLoader {
       const cached = this.loadFromCache(normalizedKey);
       if (cached) return cached;
 
-      // Estratégia 2: TemplateRegistry (fonte canônica em memória)
-      const fromRegistry = this.loadFromRegistry(normalizedKey);
-      if (fromRegistry) return fromRegistry;
-
-      // Estratégia 3: Master JSON público (controlado por flag)
+      // Estratégia 2: Master JSON público (PRIORIDADE quando flag ativa!)
       console.log('🔍 Verificando flag useMasterJSON:', TEMPLATE_SOURCES.useMasterJSON);
       if (TEMPLATE_SOURCES.useMasterJSON) {
         console.log('✅ Flag useMasterJSON está TRUE - tentando carregar master JSON...');
         const fromMaster = await this.loadFromMasterJSON(normalizedKey);
-        if (fromMaster) return fromMaster;
-        console.warn('⚠️ loadFromMasterJSON retornou null');
+        if (fromMaster) {
+          console.log(`🎉 Master JSON SUCCESS: ${fromMaster.blocks.length} blocos, source: ${fromMaster.source}`);
+          return fromMaster;
+        }
+        console.warn('⚠️ loadFromMasterJSON retornou null - tentando outras fontes...');
       } else {
         console.warn('❌ Flag useMasterJSON está FALSE - pulando master JSON');
       }
+
+      // Estratégia 3: TemplateRegistry (fonte canônica em memória - FALLBACK)
+      const fromRegistry = this.loadFromRegistry(normalizedKey);
+      if (fromRegistry) return fromRegistry;
 
       // Estratégia 4: JSON normalizado (gates 02-11) - controlado por flag
       if (TEMPLATE_SOURCES.useNormalizedJSON) {
@@ -132,12 +135,15 @@ export class TemplateLoader {
   }
 
   /**
-   * Estratégia 2: Carregar do TemplateRegistry (single source of truth)
+   * Estratégia 3: Carregar do TemplateRegistry (single source of truth)
    */
   private loadFromRegistry(normalizedKey: string): LoadedTemplate | null {
     try {
       const registry = TemplateRegistry.getInstance();
-      if (!registry.has(normalizedKey)) return null;
+      if (!registry.has(normalizedKey)) {
+        console.warn(`⚠️ [TemplateRegistry] Template não encontrado: ${normalizedKey}`);
+        return null;
+      }
 
       const stepTemplate = registry.get(normalizedKey);
       if (!stepTemplate) return null;
@@ -148,7 +154,7 @@ export class TemplateLoader {
 
       unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
       console.log(`📦 Registry → ${normalizedKey}: ${blocks.length} blocos`);
-      return { blocks, source: 'ts-template' };
+      return { blocks, source: 'modular-json' }; // CORRIGIDO: era 'ts-template'
     } catch (e) {
       console.warn('⚠️ Erro ao carregar do TemplateRegistry:', e);
       return null;
