@@ -89,6 +89,7 @@ import { useStepsBlocks } from './hooks/useStepsBlocks';
 import { useBlocks } from './hooks/useBlocks';
 import { StepHistoryService } from '@/services/canonical/StepHistoryService';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
+import { useCanonicalEditor } from '@/hooks/useCanonicalEditor';
 import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEditableQuizStep, ComponentLibraryItem } from './types';
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
 import { getQuiz21StepsTemplate } from '@/templates/imports';
@@ -444,6 +445,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Editor unified provider (opcional durante migração)
     const editorCtx = useEditor({ optional: true } as any);
 
+    // 🎯 NOVO: Canonical Editor Integration
+    const canonicalEditor = useCanonicalEditor({
+        templateId: 'quiz21StepsComplete',
+        autoLoad: true,
+        autoSave: true
+    });
+
     // Histórico leve por etapa (diff de step) – incremental (P0-4)
     const stepHistoryRef = useRef(new StepHistoryService<any>());
 
@@ -546,6 +554,53 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         isStepDirty,
         getDirtyStepCount,
     } = useUnsavedChanges();
+
+    // 🎯 SINCRONIZAR: Canonical Editor → Estado Local
+    useEffect(() => {
+        if (canonicalEditor.state.blocks && canonicalEditor.state.blocks.length > 0) {
+            console.log('🔄 Sincronizando blocos do Canonical Editor:', canonicalEditor.state.blocks.length);
+
+            // Agrupar blocos por step (baseado em ID ou order)
+            const stepsMap = new Map<string, BlockComponent[]>();
+
+            canonicalEditor.state.blocks.forEach((block, index) => {
+                // Determinar step ID baseado no order ou índice
+                const stepNumber = Math.floor(index / 10) + 1; // ~10 blocos por step
+                const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
+
+                if (!stepsMap.has(stepId)) {
+                    stepsMap.set(stepId, []);
+                }
+
+                // Converter Block (canonical) para BlockComponent (editor)
+                const blockComponent: BlockComponent = {
+                    id: block.id,
+                    type: block.type as any,
+                    order: block.order,
+                    parentId: null,
+                    content: block.content,
+                    properties: block.properties || {}
+                };
+
+                stepsMap.get(stepId)!.push(blockComponent);
+            });
+
+            // Converter Map para steps array
+            const newSteps: EditableQuizStep[] = Array.from(stepsMap.entries()).map(([stepId, blocks], index) => ({
+                id: stepId,
+                type: index === 0 ? 'intro' : index < 11 ? 'question' : index === 11 ? 'transition' : index < 19 ? 'strategic-question' : index === 19 ? 'transition-result' : index === 20 ? 'result' : 'offer',
+                order: index + 1,
+                blocks,
+                nextStep: index < 20 ? `step-${String(index + 2).padStart(2, '0')}` : undefined
+            }));
+
+            setSteps(newSteps);
+            if (!selectedStepId && newSteps.length > 0) {
+                setSelectedStepId(newSteps[0].id);
+            }
+            console.log('✅ Steps sincronizados:', newSteps.length);
+        }
+    }, [canonicalEditor.state.blocks]);
 
     useEffect(() => {
         try {
