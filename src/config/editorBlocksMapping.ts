@@ -6,7 +6,7 @@
  */
 
 import { ComponentType } from 'react';
-import { getEnhancedBlockComponent as getEnhancedComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { getEnhancedBlockComponent as getEnhancedComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 
 // Import the new LeadFormBlock for direct mapping
 import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';

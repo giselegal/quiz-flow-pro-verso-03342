@@ -12,7 +12,7 @@
 import React, { memo, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { useLogger } from '@/utils/logger/SmartLogger';
 import { shallowEqual, MemoizationMetrics } from '@/utils/performance/memoization';
 

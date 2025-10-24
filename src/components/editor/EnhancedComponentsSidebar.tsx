@@ -1,4 +1,4 @@
-import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

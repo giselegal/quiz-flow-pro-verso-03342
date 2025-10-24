@@ -1,5 +1,5 @@
 import ConnectedTemplateWrapper from '@/components/quiz/ConnectedTemplateWrapper';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import type { BlockData } from '@/types/blocks';
 import { cn } from '@/lib/utils';
 import React from 'react';
