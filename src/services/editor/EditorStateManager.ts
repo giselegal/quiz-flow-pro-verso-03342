@@ -15,7 +15,7 @@ import { arrayMove } from '@dnd-kit/sortable';
 
 export interface EditorState {
   stepBlocks: Record<string, Block[]>;
-  stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'master-hydrated' | 'ts-template'>;
+  stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'ts-template'>;
   currentStep: number;
   selectedBlockId: string | null;
   stepValidation: Record<number, boolean>;

@@ -27,7 +27,6 @@ export type TemplateSource =
   | 'normalized-json'
   | 'modular-json'
   | 'individual-json'
-  | 'master-hydrated'
   | 'ts-template';
 
 export interface LoadedTemplate {
@@ -189,7 +188,7 @@ export class TemplateLoader {
         console.log(`📦 Cache hit: ${normalizedKey} → ${cachedStepBlocks.length} blocos`);
         return {
           blocks: cachedStepBlocks as Block[],
-          source: 'master-hydrated'
+          source: 'individual-json'
         };
       }
     } catch (e) {
@@ -257,8 +256,8 @@ export class TemplateLoader {
         unifiedCache.set(masterBlocksKey(normalizedKey), blocks);
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
 
-        console.log(`📦 Master JSON → ${normalizedKey}: ${blocks.length} blocos`);
-        return { blocks, source: 'master-hydrated' };
+  console.log(`📦 Master JSON → ${normalizedKey}: ${blocks.length} blocos`);
+  return { blocks, source: 'individual-json' };
       }
     } catch (e) {
       console.warn('⚠️ Erro ao carregar master JSON:', e);

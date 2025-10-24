@@ -39,7 +39,7 @@ export interface EditorState {
     /** Blocos organizados por step */
     stepBlocks: Record<string, Block[]>;
     /** Origem dos blocos por step (diagnóstico) */
-    stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'master-hydrated' | 'ts-template'>;
+    stepSources?: Record<string, 'normalized-json' | 'modular-json' | 'individual-json' | 'ts-template'>;
     /** Step atual selecionado */
     currentStep: number;
     /** Bloco selecionado para edição */
@@ -368,7 +368,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     setState(prev => ({
                         ...prev,
                         stepBlocks: { ...prev.stepBlocks, [normalizedNext]: cached as Block[] },
-                        stepSources: { ...(prev.stepSources || {}), [normalizedNext]: 'master-hydrated' }
+                        stepSources: { ...(prev.stepSources || {}), [normalizedNext]: 'individual-json' }
                     }));
                 }
             }, 500);
@@ -379,7 +379,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const loadDefaultTemplate = useCallback(async () => {
         console.log('🎨 Loading default template via TemplateLoader/Registry');
         const newStepBlocks: Record<string, Block[]> = {};
-        const newStepSources: Record<string, 'modular-json' | 'master-hydrated' | 'ts-template'> = {};
+        const newStepSources: Record<string, 'modular-json' | 'individual-json' | 'ts-template'> = {};
         let totalBlocks = 0;
 
         // 21 etapas step-01..step-21
