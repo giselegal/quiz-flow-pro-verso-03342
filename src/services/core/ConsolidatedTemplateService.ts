@@ -198,10 +198,17 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
         return this.convertJSONTemplate(jsonData, templateId);
       }
 
-      // Fallback: tentar sem o sufixo -v3
-      const fallbackResponse = await fetch(`/templates/${templateId}.json`);
-      if (fallbackResponse.ok) {
-        const jsonData = await fallbackResponse.json();
+      // Fallbacks: tentar sem o sufixo -v3, priorizando id normalizado (com padding)
+      // 1) normalized (ex.: step-01.json)
+      const fallbackNormalized = await fetch(`/templates/${normalizedId}.json`);
+      if (fallbackNormalized.ok) {
+        const jsonData = await fallbackNormalized.json();
+        return this.convertJSONTemplate(jsonData, templateId);
+      }
+      // 2) original (ex.: step-1.json)
+      const fallbackOriginal = await fetch(`/templates/${templateId}.json`);
+      if (fallbackOriginal.ok) {
+        const jsonData = await fallbackOriginal.json();
         return this.convertJSONTemplate(jsonData, templateId);
       }
 
