@@ -550,6 +550,13 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     <div
       id={CANVAS_ROOT_ID}
       ref={setNodeRef}
+      onClick={(e) => {
+        // 🔥 CRITICAL: Impedir seleção do container - apenas blocos individuais devem ser clicáveis
+        if (e.target === e.currentTarget) {
+          e.stopPropagation();
+          e.preventDefault();
+        }
+      }}
       className={cn(
         'min-h-[300px] transition-all duration-200 p-2 overflow-visible',
         'z-0',

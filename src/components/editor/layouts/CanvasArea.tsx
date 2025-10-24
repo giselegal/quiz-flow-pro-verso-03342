@@ -55,6 +55,13 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
       )}
       data-canvas-container
       ref={containerRef}
+      onClick={(e) => {
+        // 🔥 CRITICAL: Impedir seleção do container - apenas blocos devem ser selecionados
+        // Se o clique foi diretamente no container (não em blocos), não fazer nada
+        if (e.target === e.currentTarget || (e.target as HTMLElement).hasAttribute?.('data-canvas-container')) {
+          e.stopPropagation();
+        }
+      }}
     >
       <div className={cn(
         'w-full',

@@ -181,8 +181,22 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
       ref={canvasRef}
       key={canvasKey}
       className="flex-1 min-h-0 relative bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate"
+      onClick={(e) => {
+        // 🔥 CRITICAL: Impedir seleção do container principal
+        if (e.target === e.currentTarget) {
+          e.stopPropagation();
+        }
+      }}
     >
-      <div className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <div
+        className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+        onClick={(e) => {
+          // 🔥 CRITICAL: Impedir seleção do scroll container
+          if (e.target === e.currentTarget) {
+            e.stopPropagation();
+          }
+        }}
+      >
         <CanvasDropZone
           blocks={stabilizedBlocks}
           selectedBlockId={selectedBlockId}
