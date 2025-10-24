@@ -94,6 +94,7 @@ import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
 import { getQuiz21StepsTemplate } from '@/templates/imports';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
 import { safeGetTemplateBlocks, blocksToBlockComponents } from '@/utils/templateConverter';
+import { TemplateLoader } from '@/services/editor/TemplateLoader';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import type { StepType } from '@/types/quiz-schema';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
@@ -646,12 +647,50 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                         const toStepId = (n: number) => `step-${String(n).padStart(2, '0')}`;
 
+                        // 🚀 Caminho otimizado P0: usar TemplateLoader unificado (com cache + retries)
+                        let resolved = false;
                         (async () => {
+                            try {
+                                const loader = new TemplateLoader();
+                                const stepIds = Array.from({ length: 21 }).map((_, i) => toStepId(i + 1));
+
+                                // Preload paralelo das etapas para reduzir latência total
+                                await loader.preloadSteps(stepIds);
+
+                                const built: EditableQuizStep[] = await Promise.all(
+                                    stepIds.map(async (stepId, idx) => {
+                                        const { blocks } = await loader.loadStep(stepId);
+                                        return {
+                                            id: stepId,
+                                            type: buildStepType(idx),
+                                            order: idx + 1,
+                                            blocks: blocksToBlockComponents(blocks as any),
+                                            nextStep: idx < 20 ? stepIds[idx + 1] : undefined,
+                                            metadata: {}
+                                        } as EditableQuizStep;
+                                    })
+                                );
+
+                                setSteps(built);
+                                setSelectedStepIdUnified(built[0]?.id || 'step-01');
+                                setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
+                                setIsLoading(false);
+                                console.log('✅ TemplateLoader: steps carregados via fonte unificada');
+                                resolved = true; // Sinalizar para não seguir fallbacks abaixo
+                                return;
+                            } catch (e) {
+                                console.warn('⚠️ TemplateLoader falhou, mantendo estratégia master JSON + fallbacks:', e);
+                            }
+                        })();
+
+                        (async () => {
+                            if (resolved) return; // Se já resolveu pelo TemplateLoader, não fazer fetch do master
                             try {
                                 const resp = await fetch('/templates/quiz21-complete.json');
                                 if (resp.ok) {
                                     const master = await resp.json();
                                     const stepIds = Array.from({ length: 21 }).map((_, i) => toStepId(i + 1));
+                                    if (resolved) return; // Dupla verificação contra corrida
 
                                     const built: EditableQuizStep[] = stepIds.map((stepId, idx) => {
                                         const stepConf = master?.steps?.[stepId];
