@@ -21,12 +21,6 @@ export interface TemplateV3 {
     /** Versão do template */
     templateVersion: "3.0";
 
-    /**
-     * Alias legado para metadata.category
-     * Usado por testes/consumidores anteriores. Não deve ser persistido.
-     */
-    type?: string;
-
     /** Metadados do template */
     metadata: MetadataV3;
 

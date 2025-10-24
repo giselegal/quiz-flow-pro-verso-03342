@@ -4,7 +4,6 @@
 // ⚠️ NOTA: Migrado para sistema JSON (step-XX.json) - usa templates dinâmicos
 import { getStepTemplate as getJSONTemplate } from '@/config/templates/templates';
 import { cacheService } from '@/services/UnifiedCacheService';
-import { normalizeBlockType } from '@/utils/blockNormalization';
 
 // 🔧 CACHE MIGRADO PARA UnifiedCacheService
 // @deprecated Inline TEMPLATE_CACHE substituído por cacheService.get('templates', key)
@@ -26,6 +25,7 @@ async function preloadAllTemplates(): Promise<void> {
           return response.json().then(template => {
             // Converter template para formato compatível
             if (template.sections && Array.isArray(template.sections)) {
+              const { normalizeBlockType } = require('@/utils/blockNormalization');
               const blocks = template.sections.map((section: any, index: number) => {
                 const normalizedType = normalizeBlockType(section?.type);
                 // Aceitar content, properties ou props (alias) vindos do JSON v3
@@ -107,6 +107,7 @@ function ensureTemplateLoaded(stepNumber: number): any[] {
     if (xhr.status === 200) {
       const template = JSON.parse(xhr.responseText);
       if (template.sections && Array.isArray(template.sections)) {
+        const { normalizeBlockType } = require('@/utils/blockNormalization');
         const blocks = template.sections.map((section: any, index: number) => {
           const normalizedType = normalizeBlockType(section?.type);
           const properties = (section?.properties

@@ -40,8 +40,6 @@ export const JSONv3ThemeSchema = z.object({
 
 export const JSONv3TemplateSchema = z.object({
   templateVersion: z.string().min(1),
-  // Alias legado para compatibilidade com consumidores antigos
-  type: z.string().optional(),
   metadata: JSONv3MetadataSchema,
   theme: JSONv3ThemeSchema,
   sections: z.array(JSONv3SectionSchema).nonempty(),

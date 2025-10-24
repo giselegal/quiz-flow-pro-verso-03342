@@ -9,7 +9,6 @@ import { Block } from '@/types/editor';
 import { QuizStep } from '@/data/quizSteps';
 import { JSONv3TemplateSchema } from '@/types/jsonv3.schema';
 import { normalizeBlockType } from '@/utils/blockNormalization';
-// Nota: usamos require pontual em métodos específicos para evitar ciclos e divergências de tipos
 
 // ============================================================================
 // TIPOS JSON v3.0
@@ -285,7 +284,7 @@ export class BlocksToJSONv3Adapter {
      * 🔄 Conversão completa: QuizStep → JSON v3.0
      */
     static quizStepToJSONv3(step: QuizStep, stepId: string): JSONv3Template {
-        // Usar conversão existente QuizStep → Blocks (via require para evitar ciclos de build)
+        // Usar conversão existente QuizStep → Blocks
         const { convertStepToBlocks } = require('@/utils/quizConversionUtils');
         const blocks = convertStepToBlocks(step);
 
@@ -300,7 +299,7 @@ export class BlocksToJSONv3Adapter {
      * 🔄 Conversão completa: JSON v3.0 → QuizStep
      */
     static jsonv3ToQuizStep(json: JSONv3Template): QuizStep {
-        // Usar adaptador existente (via require para compatibilidade de tipos)
+        // Usar adaptador existente
         const { QuizStepAdapter } = require('@/adapters/QuizStepAdapter');
         return QuizStepAdapter.fromJSON(json);
     }

@@ -16,8 +16,8 @@
  * ❌ Múltiplas implementações espalhadas
  */
 
-import { EditorContextValue, useEditor as useUnifiedEditorHook } from '@/components/editor/EditorProviderUnified';
-import { useEditor as useAdapterEditorHook } from '@/components/editor/EditorProviderAdapter';
+import { useContext } from 'react';
+import { EditorContextValue } from '@/components/editor/EditorProviderUnified';
 
 // ============================================================================
 // UNIFIED EDITOR CONTEXT TYPE
@@ -57,48 +57,99 @@ export interface UnifiedEditorContext extends EditorContextValue {
  * Detecta automaticamente qual provider está ativo e retorna o contexto apropriado
  */
 const detectActiveEditorContext = (): UnifiedEditorContext | null => {
-    // 1) Provider Unificado (preferência)
-    const unified = useUnifiedEditorHook({ optional: true }) as EditorContextValue | undefined;
-    if (unified) {
-        return { ...unified, legacy: {} } as UnifiedEditorContext;
+    // 1. Tentar EditorProviderUnified (preferência)
+    try {
+        const unifiedContext = require('@/components/editor/EditorProviderUnified').useEditor?.();
+        if (unifiedContext) {
+            return {
+                ...unifiedContext,
+                legacy: {}
+            };
+        }
+    } catch (error) {
+        // Context not available, continue
     }
 
-    // 2) Adapter de compatibilidade (fallback leve)
-    const adapter = useAdapterEditorHook({ optional: true }) as any;
-    if (adapter) {
-        // Mapear forma mínima para EditorContextValue
-        const state = {
-            stepBlocks: adapter.state?.stepBlocks || {},
-            currentStep: adapter.state?.currentStep || 1,
-            selectedBlockId: adapter.selectedBlockId || null,
-            stepValidation: {},
-            isLoading: false,
-            databaseMode: 'local' as const,
-            isSupabaseEnabled: false
-        };
+    // 2. Tentar EditorProvider original (fallback)
+    try {
+        const originalContext = require('@/components/editor/EditorProvider').useEditor?.();
+        if (originalContext) {
+            return {
+                state: originalContext.state,
+                actions: originalContext.actions,
+                legacy: {
+                    rawState: originalContext.state,
+                    setState: originalContext.actions?.setState,
+                    storageReady: true
+                }
+            };
+        }
+    } catch (error) {
+        // Context not available, continue
+    }
 
-        const actions: EditorContextValue['actions'] = {
-            setCurrentStep: (_step: number) => { },
-            setSelectedBlockId: (_id: string | null) => { adapter.blockActions?.setSelectedBlockId?.(_id); },
-            setStepValid: (_step: number, _isValid: boolean) => { },
-            addBlock: async () => { },
-            addBlockAtIndex: async () => { },
-            removeBlock: async () => { },
-            reorderBlocks: async () => { },
-            updateBlock: async () => { },
-            ensureStepLoaded: async () => { },
-            loadDefaultTemplate: () => { },
-            undo: () => { },
-            redo: () => { },
-            canUndo: false,
-            canRedo: false,
-            exportJSON: () => '{}',
-            importJSON: () => { },
-            saveToSupabase: async () => { },
-            loadSupabaseComponents: async () => { }
-        };
+    // 3. Tentar EditorProviderMigrationAdapter (fallback)
+    try {
+        const migrationContext = require('@/components/editor/EditorProviderMigrationAdapter').useEditor?.();
+        if (migrationContext) {
+            return {
+                state: migrationContext.state,
+                actions: migrationContext.actions,
+                legacy: {
+                    funnelId: migrationContext.legacy?.funnelId,
+                    setFunnelId: migrationContext.legacy?.setFunnelId,
+                    isPreviewing: migrationContext.legacy?.isPreviewing,
+                    setIsPreviewing: migrationContext.legacy?.setIsPreviewing
+                }
+            };
+        }
+    } catch (error) {
+        // Context not available, continue
+    }
 
-        return { state, actions, legacy: {} } as UnifiedEditorContext;
+    // 4. Tentar EditorCore (fallback)
+    try {
+        const coreContext = require('@/components/editor/core/EditorCore').useEditorCore?.();
+        if (coreContext) {
+            return {
+                state: {
+                    stepBlocks: {},
+                    currentStep: 1,
+                    selectedBlockId: null,
+                    stepValidation: {},
+                    isLoading: false,
+                    databaseMode: 'supabase' as const,
+                    isSupabaseEnabled: true
+                },
+                actions: {
+                    setCurrentStep: () => { },
+                    setSelectedBlockId: () => { },
+                    setStepValid: () => { },
+                    addBlock: async () => { },
+                    addBlockAtIndex: async () => { },
+                    removeBlock: async () => { },
+                    reorderBlocks: async () => { },
+                    updateBlock: async () => { },
+                    ensureStepLoaded: async () => { },
+                    loadDefaultTemplate: () => { },
+                    undo: () => { },
+                    redo: () => { },
+                    canUndo: false,
+                    canRedo: false,
+                    exportJSON: () => '{}',
+                    importJSON: () => { },
+                    saveToSupabase: async () => { }
+                },
+                legacy: {
+                    core: coreContext.core,
+                    elements: coreContext.elements,
+                    selection: coreContext.selection,
+                    viewport: coreContext.viewport
+                }
+            };
+        }
+    } catch (error) {
+        // Context not available, continue
     }
 
     return null;

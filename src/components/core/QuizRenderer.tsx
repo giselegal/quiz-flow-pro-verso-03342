@@ -2,7 +2,6 @@ import { UniversalBlockRenderer } from '@/components/core/renderers';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { Block } from '@/types/editor';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
-import * as allTemplates from '@/templates/quiz21StepsComplete';
 import { cn } from '@/lib/utils';
 // Validação centralizada cobre regras por etapa
 import { useCentralizedStepValidation } from '@/hooks/useCentralizedStepValidation';
@@ -421,8 +420,9 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     // 🆕 V3.0: Se for step 20 em produção, tentar usar V3Renderer
     if (shouldUseV3Renderer) {
       try {
-        // Carregar template v3.0 do arquivo gerado (ESM)
-        const templateV3 = (allTemplates as any).QUIZ_STYLE_21_STEPS_TEMPLATE['step-20'] as TemplateV3;
+        // Carregar template v3.0 do arquivo gerado
+        const allTemplates = require('@/templates/quiz21StepsComplete');
+        const templateV3 = allTemplates.QUIZ_STYLE_21_STEPS_TEMPLATE['step-20'] as TemplateV3;
 
         if (templateV3 && templateV3.templateVersion === '3.0') {
           return (
