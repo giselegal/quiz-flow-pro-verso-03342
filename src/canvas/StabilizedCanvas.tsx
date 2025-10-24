@@ -19,6 +19,8 @@ import { Block } from '@/types/editor';
 const ScalableQuizRendererLazy = React.lazy(() => import('@/components/core/ScalableQuizRenderer').then(m => ({ default: m.default })));
 import CanvasDropZone from '@/components/editor/canvas/CanvasDropZone.simple';
 import { useStepSelection } from '@/hooks/useStepSelection';
+import { DndContext, DragEndEvent, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove } from '@dnd-kit/sortable';
 
 interface StabilizedCanvasProps {
   blocks: Block[];
@@ -29,6 +31,7 @@ interface StabilizedCanvasProps {
   onDeleteBlock: (blockId: string) => void;
   isPreviewMode: boolean;
   onStepChange?: (step: number) => void;
+  onReorderBlocks?: (step: number, oldIndex: number, newIndex: number) => void;
   className?: string;
   funnelId?: string; // Permite selecionar o funil a ser pré-visualizado
 }
@@ -45,6 +48,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   onDeleteBlock,
   isPreviewMode = false, // Default
   onStepChange,
+  onReorderBlocks,
   className = '',
   funnelId = 'quiz-estilo-21-steps'
 }) => {
@@ -52,6 +56,15 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   const canvasRef = useRef<HTMLDivElement>(null);
   const lastStepRef = useRef<number>(currentStep);
   const renderCountRef = useRef<number>(0);
+
+  // 🎯 DRAG & DROP - Configurar sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Evita ativação acidental ao clicar
+      },
+    })
+  );
 
   // 📊 DEBUG TRACKING
   renderCountRef.current++;
