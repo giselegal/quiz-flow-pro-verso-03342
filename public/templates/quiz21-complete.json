@@ -83,11 +83,20 @@
           }
         },
         {
-          "type": "button-inline",
-          "id": "start-button",
+          "type": "intro-form",
+          "id": "intro-form",
           "content": {
-            "buttonText": "Começar",
-            "buttonUrl": "#next"
+            "label": "Qual é o seu nome?",
+            "placeholder": "Digite seu nome aqui",
+            "buttonText": "Começar Agora",
+            "required": true
+          },
+          "style": {
+            "padding": 16
+          },
+          "animation": {
+            "type": "slideUp",
+            "duration": 300
           }
         }
       ],
@@ -138,6 +147,20 @@
         }
       },
       "sections": [
+        {
+          "type": "question-progress",
+          "id": "progress-bar-step-02",
+          "content": {
+            "stepNumber": 2,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
         {
           "type": "question-title",
           "id": "step-02-title",
@@ -264,6 +287,20 @@
         }
       },
       "sections": [
+        {
+          "type": "question-progress",
+          "id": "progress-bar-step-03",
+          "content": {
+            "stepNumber": 3,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
         {
           "type": "question-title",
           "id": "step-03-title",
@@ -422,6 +459,20 @@
         }
       },
       "sections": [
+        {
+          "type": "question-progress",
+          "id": "progress-bar-step-04",
+          "content": {
+            "stepNumber": 4,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
         {
           "type": "question-title",
           "id": "step-04-question-title",
@@ -597,6 +648,20 @@
       },
       "sections": [
         {
+          "type": "question-progress",
+          "id": "progress-bar-step-05",
+          "content": {
+            "stepNumber": 5,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
+        {
           "type": "question-title",
           "id": "step-05-question-title",
           "content": {
@@ -752,6 +817,20 @@
         }
       },
       "sections": [
+        {
+          "type": "question-progress",
+          "id": "progress-bar-step-06",
+          "content": {
+            "stepNumber": 6,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
         {
           "type": "question-title",
           "id": "step-06-question-title",
@@ -917,6 +996,20 @@
       },
       "sections": [
         {
+          "type": "question-progress",
+          "id": "progress-bar-step-07",
+          "content": {
+            "stepNumber": 7,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
+        {
           "type": "question-title",
           "id": "step-07-question-title",
           "content": {
@@ -1080,6 +1173,20 @@
         }
       },
       "sections": [
+        {
+          "type": "question-progress",
+          "id": "progress-bar-step-08",
+          "content": {
+            "stepNumber": 8,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
         {
           "type": "question-title",
           "id": "step-08-question-title",
@@ -1245,6 +1352,20 @@
       },
       "sections": [
         {
+          "type": "question-progress",
+          "id": "progress-bar-step-09",
+          "content": {
+            "stepNumber": 9,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
+        {
           "type": "question-title",
           "id": "step-09-question-title",
           "content": {
@@ -1409,6 +1530,20 @@
       },
       "sections": [
         {
+          "type": "question-progress",
+          "id": "progress-bar-step-10",
+          "content": {
+            "stepNumber": 10,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
+        {
           "type": "question-title",
           "id": "step-10-question-title",
           "content": {
@@ -1572,6 +1707,20 @@
         }
       },
       "sections": [
+        {
+          "type": "question-progress",
+          "id": "progress-bar-step-11",
+          "content": {
+            "stepNumber": 11,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
         {
           "type": "question-title",
           "id": "step-11-question-title",
@@ -1815,6 +1964,20 @@
       },
       "sections": [
         {
+          "type": "question-progress",
+          "id": "progress-bar-step-13",
+          "content": {
+            "stepNumber": 13,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
+        {
           "type": "question-title",
           "id": "step-13-question-title",
           "content": {
@@ -1948,6 +2111,20 @@
         }
       },
       "sections": [
+        {
+          "type": "question-progress",
+          "id": "progress-bar-step-14",
+          "content": {
+            "stepNumber": 14,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
         {
           "type": "question-title",
           "id": "step-14-question-title",
@@ -2083,6 +2260,20 @@
       },
       "sections": [
         {
+          "type": "question-progress",
+          "id": "progress-bar-step-15",
+          "content": {
+            "stepNumber": 15,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
+        {
           "type": "question-title",
           "id": "step-15-question-title",
           "content": {
@@ -2216,6 +2407,20 @@
         }
       },
       "sections": [
+        {
+          "type": "question-progress",
+          "id": "progress-bar-step-16",
+          "content": {
+            "stepNumber": 16,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
         {
           "type": "question-title",
           "id": "step-16-question-title",
@@ -2351,6 +2556,20 @@
       },
       "sections": [
         {
+          "type": "question-progress",
+          "id": "progress-bar-step-17",
+          "content": {
+            "stepNumber": 17,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
+        {
           "type": "question-title",
           "id": "step-17-question-title",
           "content": {
@@ -2484,6 +2703,20 @@
         }
       },
       "sections": [
+        {
+          "type": "question-progress",
+          "id": "progress-bar-step-18",
+          "content": {
+            "stepNumber": 18,
+            "totalSteps": 21,
+            "showPercentage": true,
+            "barColor": "#B89B7A",
+            "backgroundColor": "#e5e7eb"
+          },
+          "style": {
+            "padding": 8
+          }
+        },
         {
           "type": "question-title",
           "id": "step-18-question-title",
@@ -2835,27 +3068,34 @@
         },
         {
           "id": "button-cta-primary",
-          "type": "button-inline",
+          "type": "result-cta",
           "enabled": true,
           "order": 7,
-          "props": {
+          "content": {
             "text": "Quero Dominar Meu Estilo em 5 Passos",
             "url": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
             "variant": "primary",
             "size": "large",
-            "icon": "ShoppingCart",
-            "iconAnimation": "bounce-on-hover",
             "fullWidth": true,
-            "colors": {
-              "background": "#B89B7A",
-              "text": "#ffffff",
-              "hover": "#a08966"
-            },
-            "analytics": {
-              "eventName": "cta_primary_click",
-              "category": "conversion",
-              "label": "after_questions"
-            }
+            "backgroundColor": "#B89B7A",
+            "textColor": "#ffffff",
+            "hoverColor": "#a08966"
+          }
+        },
+        {
+          "id": "result-share",
+          "type": "result-share",
+          "enabled": true,
+          "order": 8,
+          "content": {
+            "title": "Compartilhe seu resultado",
+            "message": "Descubri meu estilo predominante! Faça o quiz e descubra o seu:",
+            "platforms": [
+              "facebook",
+              "twitter",
+              "whatsapp",
+              "linkedin"
+            ]
           }
         },
         {
@@ -2882,25 +3122,18 @@
         },
         {
           "id": "button-cta-final",
-          "type": "button-inline",
+          "type": "result-cta",
           "enabled": true,
           "order": 10,
-          "props": {
+          "content": {
             "text": "Garantir Minha Vaga Agora",
             "url": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
             "variant": "primary",
             "size": "large",
             "fullWidth": true,
-            "colors": {
-              "background": "#B89B7A",
-              "text": "#ffffff",
-              "hover": "#a08966"
-            },
-            "analytics": {
-              "eventName": "cta_final_click",
-              "category": "conversion",
-              "label": "after_method"
-            }
+            "backgroundColor": "#B89B7A",
+            "textColor": "#ffffff",
+            "hoverColor": "#a08966"
           }
         }
       ]
