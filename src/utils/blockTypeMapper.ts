@@ -35,9 +35,18 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
     'transition-hero': 'transition-hero', // já existe no registry
     'transition-content': 'text',
 
-    // Result blocks (Step 20 sections → componentes)
-    'HeroSection': 'result-header',
-    'StyleProfileSection': 'result-characteristics',
+    // Result blocks (Step 20 sections → componentes ATOMIC v3)
+    // ✅ Mapeamento atômico para ModularResultStep
+    'result-congrats': 'result-congrats',
+    'result-main': 'result-main',
+    'result-progress-bars': 'result-progress-bars',
+    'result-secondary-styles': 'result-secondary-styles',
+    'result-image': 'result-image',
+    'result-description': 'result-description',
+    
+    // Legacy sections (v2 format - mapeando para atomic v3)
+    'HeroSection': 'result-congrats',  // ✅ CORRIGIDO: usa bloco atômico
+    'StyleProfileSection': 'result-main',  // ✅ CORRIGIDO: usa bloco atômico
     'TransformationSection': 'benefits-list',
     'MethodStepsSection': 'benefits-list', // ou criar 'method-steps' dedicado
     'BonusSection': 'benefits-list',
@@ -46,8 +55,8 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
     'GuaranteeSection': 'guarantee',
 
     // Result blocks (legacy aliases)
-    'result-header': 'result-header', // já existe no registry
-    'result-content': 'text',
+    'result-header': 'result-congrats', // ✅ CORRIGIDO: redireciona para atomic
+    'result-content': 'result-main', // ✅ CORRIGIDO: redireciona para atomic
     'result-card': 'result-card', // container estilizado existente
 
     // Offer blocks
