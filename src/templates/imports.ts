@@ -68,20 +68,29 @@ try {
   const registry = TemplateRegistry.getInstance();
   const entries = Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE);
   let registered = 0;
+  const registeredKeys: string[] = [];
+  
   for (const [key, template] of entries) {
     if (key.startsWith('step-')) {
       // normaliza id para step-XX
       const match = key.match(/^step-(\d{1,2})$/);
       const normalizedKey = match ? `step-${parseInt(match[1], 10).toString().padStart(2, '0')}` : key;
-  // normaliza tipos (aliases → canônico 'options-grid')
+      
+      // Verificar se já existe
+      if (registry.has(normalizedKey)) {
+        console.warn(`⚠️  Step '${normalizedKey}' já está registrado. Sobrescrevendo...`);
+      }
+      
+      // normaliza tipos (aliases → canônico 'options-grid')
       const normalizedTemplate = normalizeTemplateBlocks({ [normalizedKey]: template } as any)[normalizedKey];
       registry.register(normalizedKey, normalizedTemplate as any);
+      registeredKeys.push(normalizedKey);
       registered++;
     }
   }
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`✅ TemplateRegistry registrado: ${registered} steps`);
-  }
+  
+  console.log(`✅ TemplateRegistry registrado: ${registered} steps`);
+  console.log(`📋 Steps registrados:`, registeredKeys.sort());
 } catch (err) {
-  // Falha silenciosa no registro para não quebrar SSR/tests
+  console.error('❌ Erro ao registrar templates no TemplateRegistry:', err);
 }
