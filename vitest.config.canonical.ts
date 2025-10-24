@@ -3,13 +3,25 @@ import path from 'path';
 
 export default defineConfig({
   test: {
-    environment: 'node',
+    environment: 'jsdom',
     include: [
-      'src/tests/templates/canonicalSource.test.ts'
+      // Fonte canônica de templates e shims
+      'src/tests/templates/canonicalSource.test.ts',
+      // Testes focados no layer canônico (façade + subservices)
+      'src/__tests__/canonical-**/*.test.ts',
+      'src/__tests__/canonical-*.test.ts',
+      'src/__tests__/data/**/*.test.ts',
+      'src/__tests__/monitoring/**/*.test.ts'
     ],
     reporters: ['default'],
     silent: true,
     maxConcurrency: 1,
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        singleThread: true
+      }
+    },
     coverage: {
       reporter: ['text'],
       reportsDirectory: './coverage/canonical'
@@ -17,7 +29,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(__dirname, './src'),
+      '@templates': path.resolve(__dirname, './src/templates')
     }
   }
 });

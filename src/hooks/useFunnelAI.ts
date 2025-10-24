@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
-import { HybridTemplateService } from '@/services/ServiceAliases';
+import { HybridTemplateService } from '@/services/aliases';
 import { activateFunnelAI, checkFunnelAIStatus } from '../utils/funnelAIActivator';
 import { AIEnhancedHybridTemplateService } from '@/services/AIEnhancedHybridTemplateService';
 

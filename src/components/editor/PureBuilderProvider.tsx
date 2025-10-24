@@ -16,7 +16,7 @@ import React, { createContext, useContext, useState, useCallback, useRef, useEff
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
 import { getTemplateInfo } from '@/utils/funnelNormalizer';
-import { HybridTemplateService } from '@/services/ServiceAliases';
+import { HybridTemplateService } from '@/services/aliases';
 import { funnelApiClient, NormalizedFunnel } from '@/services/funnelApiClient';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { AIEnhancedHybridTemplateService } from '@/services/AIEnhancedHybridTemplateService';

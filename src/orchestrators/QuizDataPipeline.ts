@@ -7,7 +7,7 @@
 
 import { Block } from '@/types/editor';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import HybridTemplateService from '@/services/HybridTemplateService';
+import { HybridTemplateService } from '@/services/aliases';
 
 export interface DataPipelineStage {
   name: string;

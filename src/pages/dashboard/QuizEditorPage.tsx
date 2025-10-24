@@ -25,8 +25,8 @@ import {
     Target
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import HybridTemplateService from '@/services/HybridTemplateService';
-import type { StepTemplate } from '@/services/HybridTemplateService';
+import { HybridTemplateService } from '@/services/aliases';
+import type { StepTemplate } from '@/services/aliases';
 
 // ============================================================================
 // INTERFACES
@@ -103,16 +103,16 @@ const QuizEditorDashboard: React.FC = () => {
             setGlobalConfig({
                 branding: {
                     primaryColor: '#e91e63',
-                    secondaryColor: '#f8bbd9', 
+                    secondaryColor: '#f8bbd9',
                     backgroundColor: '#ffffff',
                     logoUrl: '',
                     logoAlt: 'Logo'
                 },
-                navigation: { 
-                    autoAdvanceSteps: [], 
-                    manualAdvanceSteps: [], 
+                navigation: {
+                    autoAdvanceSteps: [],
+                    manualAdvanceSteps: [],
                     transitionSteps: [12, 19],
-                    autoAdvanceDelay: 3000 
+                    autoAdvanceDelay: 3000
                 },
                 scoring: {
                     categories: ['classic', 'creative', 'elegant'],
@@ -249,7 +249,7 @@ const QuizEditorDashboard: React.FC = () => {
 
     const updateMetadata = (field: string, value: string) => {
         if (!stepConfig?.metadata) return;
-        
+
         updateStepConfig({
             metadata: {
                 name: stepConfig.metadata.name,
@@ -263,7 +263,7 @@ const QuizEditorDashboard: React.FC = () => {
 
     const updateBehavior = (field: string, value: any) => {
         if (!stepConfig?.behavior) return;
-        
+
         updateStepConfig({
             behavior: {
                 autoAdvance: stepConfig.behavior.autoAdvance,
@@ -277,7 +277,7 @@ const QuizEditorDashboard: React.FC = () => {
 
     const updateValidation = (field: string, value: any) => {
         if (!stepConfig?.validation) return;
-        
+
         updateStepConfig({
             validation: {
                 type: stepConfig.validation.type,

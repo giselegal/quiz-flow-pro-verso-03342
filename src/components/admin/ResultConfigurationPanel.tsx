@@ -30,7 +30,7 @@ import {
     Award
 } from 'lucide-react';
 import { styleConfig } from '@/config/styleConfig';
-import HybridTemplateService from '@/services/HybridTemplateService';
+import { HybridTemplateService } from '@/services/aliases';
 
 interface ResultVariables {
     estilo: string;

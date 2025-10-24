@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TemplateManager } from '@/utils/TemplateManager';
-import { unifiedTemplateService } from '@/services/UnifiedTemplateService';
+import { unifiedTemplateService } from '@/services/aliases';
 
 // Testa cadeia de fallback: published (override) -> template real/biblioteca -> fallback gerado
 // Estratégia: mockar unifiedTemplateService.loadStepBlocks para simular ausência de published e template

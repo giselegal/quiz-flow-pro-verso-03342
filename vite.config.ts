@@ -32,6 +32,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+        '@templates': path.resolve(__dirname, './src/templates'),
         // CRÍTICO: Garantir que React seja sempre resolvido do mesmo lugar
         'react': path.resolve(__dirname, './node_modules/react'),
         'react-dom': path.resolve(__dirname, './node_modules/react-dom'),

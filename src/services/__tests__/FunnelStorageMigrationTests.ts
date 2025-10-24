@@ -6,7 +6,7 @@
 import { describe, it, beforeEach, expect } from 'vitest';
 import { advancedFunnelStorage } from '../AdvancedFunnelStorage';
 import { funnelDataMigration } from '../FunnelDataMigration';
-import { UnifiedStorageService } from '@/services/ServiceAliases';
+import { UnifiedStorageService } from '@/services/aliases';
 
 // Utilidades compartilhadas
 const createMockFunnelData = () => ({

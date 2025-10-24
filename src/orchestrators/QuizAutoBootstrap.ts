@@ -12,7 +12,7 @@
 import { quizOrchestrator } from './QuizOrchestrator';
 import { quizDataPipeline } from './QuizDataPipeline';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import HybridTemplateService from '@/services/HybridTemplateService';
+import { HybridTemplateService } from '@/services/aliases';
 import { styleCalculationEngine } from '@/engines/StyleCalculationEngine';
 
 export interface BootstrapConfig {

@@ -112,6 +112,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@templates': path.resolve(__dirname, './src/templates'),
       '@consolidated': path.resolve(__dirname, './src/consolidated'),
       '@optimization': path.resolve(__dirname, './src/optimization'),
       '@migration': path.resolve(__dirname, './src/migration'),

@@ -10,7 +10,8 @@
  */
 
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import HybridTemplateService, { StepTemplate } from '@/services/HybridTemplateService';
+import { HybridTemplateService } from '@/services/aliases';
+import type { StepTemplate } from '@/services/aliases';
 import { isScoringPhase, isStrategicPhase } from '@/lib/quiz/selectionRules';
 
 export interface NavigationState {

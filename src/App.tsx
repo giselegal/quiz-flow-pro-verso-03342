@@ -88,6 +88,7 @@ const AdminSettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
 const AdminIntegrationsPage = lazy(() => import('./pages/admin/IntegrationsPage'));
 const AdminABTestsPage = lazy(() => import('./pages/admin/ABTestPage'));
 const AdminCreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
+const CanonicalAdoptionDashboard = lazy(() => import('./pages/admin/CanonicalAdoptionDashboard'));
 
 
 
@@ -344,6 +345,13 @@ function AppCore() {
                                 <Route path="/admin/templates">
                                     <Suspense fallback={<PageLoadingFallback message="Carregando Templates..." />}>
                                         <AdminTemplatesPage />
+                                    </Suspense>
+                                </Route>
+
+                                {/* 📈 Adoção camada canônica (Dev) */}
+                                <Route path="/admin/canonical-adoption">
+                                    <Suspense fallback={<PageLoadingFallback message="Carregando Adoção Canônica..." />}>
+                                        <CanonicalAdoptionDashboard />
                                     </Suspense>
                                 </Route>
 

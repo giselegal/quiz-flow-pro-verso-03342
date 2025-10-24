@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ConfigurationAPI } from '@/services/ServiceAliases';
+import { ConfigurationAPI } from '@/services/aliases';
 import type { ComponentDefinition } from '@/types/componentConfiguration';
 import { configurationCache } from '@/utils/ConfigurationCache';
 

@@ -162,7 +162,7 @@ class TemplateDebugger {
     console.log('🧪 [TemplateDebugger] Iniciando teste rápido...');
 
     const testSteps = ['step-1', 'step-12', 'step-20', 'step-21'];
-    const { unifiedTemplateService } = await import('@/services/UnifiedTemplateService');
+  const { unifiedTemplateService } = await import('@/services/aliases');
 
     for (const stepId of testSteps) {
       const startTime = performance.now();

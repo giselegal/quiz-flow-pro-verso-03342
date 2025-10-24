@@ -1,22 +1,22 @@
 /**
- * 📋 UNIFIED TEMPLATE SERVICE - FASE 2
- * 
- * Serviço unificado que consolida TODAS as fontes de templates:
- * - public/templates/*.json
- * - src/templates/quiz21StepsComplete.ts
- * - Templates dinâmicos do Supabase
- * 
- * OBJETIVO: Fonte única de verdade para templates
+ * 📋 UNIFIED TEMPLATE SERVICE (LEGADO) — Wrapper deprecatado para TemplateService canônico
  */
 
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, getPersonalizedStepTemplate } from '@/templates/quiz21StepsComplete';
-import { convertSectionsToBlocks } from '@/utils/sectionToBlockConverter';
+import { templateService } from '@/services/canonical/TemplateService';
+import { CanonicalServicesMonitor } from '@/services/canonical/monitoring';
 
 export class UnifiedTemplateService {
   private static instance: UnifiedTemplateService;
-  private templateCache = new Map<string, any>();
+  private static warned = false;
 
   private constructor() {}
+
+  private static warnOnce() {
+    if (!this.warned) {
+      this.warned = true;
+      console.warn(`\n⚠️ DEPRECATED: UnifiedTemplateService está descontinuado.\nUse: import { templateService } from '@/services/canonical/TemplateService'\nSerá removido em: v2.0.0\n`);
+    }
+  }
 
   static getInstance(): UnifiedTemplateService {
     if (!this.instance) {
@@ -25,120 +25,69 @@ export class UnifiedTemplateService {
     return this.instance;
   }
 
-  /**
-   * Obtém template de step unificado
-   */
-  getStepTemplate(stepId: string, funnelId?: string): any {
-    const cacheKey = funnelId ? `${funnelId}:${stepId}` : stepId;
-    
-    // Check cache
-    if (this.templateCache.has(cacheKey)) {
-      return this.templateCache.get(cacheKey);
-    }
-
-    // Get from hardcoded template
-    const template = getPersonalizedStepTemplate(stepId, funnelId);
-    
-    if (template) {
-      this.templateCache.set(cacheKey, template);
-      return template;
-    }
-
-    console.warn(`⚠️ Template ${stepId} not found`);
-    return null;
-  }
-
-  /**
-   * Obtém todos os templates do quiz (21 steps)
-   */
-  getAllSteps(): Record<string, any> {
-    return QUIZ_STYLE_21_STEPS_TEMPLATE;
-  }
-
-  /**
-   * Alias: getTemplate
-   */
-  getTemplate(templateName: string): Record<string, any> | null {
-    if (templateName === 'quiz21StepsComplete') {
-      return this.getAllSteps();
-    }
-    return null;
-  }
-
-  /**
-   * Carrega blocos de um step específico
-   */
-  loadStepBlocks(stepId: string, funnelId?: string): any[] {
-    const template = this.getStepTemplate(stepId, funnelId);
-    
-    if (!template) {
-      return [];
-    }
-
-    // Se template já é um array de blocos (formato legacy)
-    if (Array.isArray(template)) {
-      return template;
-    }
-
-    // Se template tem propriedade blocks
-    if (template.blocks && Array.isArray(template.blocks)) {
-      return template.blocks;
-    }
-
-    // Se template tem propriedade sections (v3.0)
-    if (template.sections && Array.isArray(template.sections)) {
-      console.log(`🔄 Converting sections to blocks for ${stepId}`);
-      const blocks = convertSectionsToBlocks(template.sections);
-      console.log(`✅ Converted ${blocks.length} blocks from sections`);
-      return blocks;
-    }
-
+  getStepTemplate(stepId: string, _funnelId?: string): any {
+    UnifiedTemplateService.warnOnce();
+    CanonicalServicesMonitor.trackLegacyBridge('UnifiedTemplateService', 'getStepTemplate');
+    // Retorna bloco(s) do step
+    // Nota: templateService.getStep retorna ServiceResult<Block[]>; aqui retornamos diretamente o array de blocos
+    // Chamadores legados esperam qualquer[]
+    // Como getStep é assíncrono, simplificamos para versão sync retornando vazio e recomendamos migração.
+    console.warn('getStepTemplate é síncrono no legado; para dados reais, migre para templateService.getStep');
     return [];
   }
 
-  /**
-   * Publica um step (placeholder para compatibilidade)
-   */
-  publishStep(stepId: string, funnelId?: string): boolean {
-    console.log(`Publishing step: ${stepId}${funnelId ? ` for funnel ${funnelId}` : ''}`);
+  getAllSteps(): Record<string, any> {
+    UnifiedTemplateService.warnOnce();
+    CanonicalServicesMonitor.trackLegacyBridge('UnifiedTemplateService', 'getAllSteps');
+    console.warn('getAllSteps legado: utilize templateService.steps.list + getStep');
+    return {};
+  }
+
+  getTemplate(templateName: string): Record<string, any> | null {
+    UnifiedTemplateService.warnOnce();
+    CanonicalServicesMonitor.trackLegacyBridge('UnifiedTemplateService', 'getTemplate');
+    if (templateName === 'quiz21StepsComplete') {
+      console.warn('Use templateService.steps.list() e getStep()');
+      return {};
+    }
+    return null;
+  }
+
+  loadStepBlocks(stepId: string, _funnelId?: string): any[] {
+    UnifiedTemplateService.warnOnce();
+    CanonicalServicesMonitor.trackLegacyBridge('UnifiedTemplateService', 'loadStepBlocks');
+    console.warn('Use await templateService.getStep(stepId)');
+    return [];
+  }
+
+  publishStep(_stepId: string): boolean {
+    UnifiedTemplateService.warnOnce();
+    CanonicalServicesMonitor.trackLegacyBridge('UnifiedTemplateService', 'publishStep');
     return true;
   }
 
-  /**
-   * Despublica um step (placeholder para compatibilidade)
-   */
-  unpublishStep(stepId: string): boolean {
-    console.log(`Unpublishing step: ${stepId}`);
+  unpublishStep(_stepId: string): boolean {
+    UnifiedTemplateService.warnOnce();
+    CanonicalServicesMonitor.trackLegacyBridge('UnifiedTemplateService', 'unpublishStep');
     return true;
   }
 
-  /**
-   * Preload common steps
-   */
   preloadCommonSteps(): void {
-    // Preload first 3 steps
-    for (let i = 1; i <= 3; i++) {
-      const stepId = `step-${String(i).padStart(2, '0')}`;
-      this.getStepTemplate(stepId);
-    }
+    UnifiedTemplateService.warnOnce();
+    CanonicalServicesMonitor.trackLegacyBridge('UnifiedTemplateService', 'preloadCommonSteps');
   }
 
-  /**
-   * Invalida cache
-   */
   invalidateCache(stepId?: string): void {
-    if (stepId) {
-      this.templateCache.delete(stepId);
-    } else {
-      this.clearCache();
-    }
+    UnifiedTemplateService.warnOnce();
+    CanonicalServicesMonitor.trackLegacyBridge('UnifiedTemplateService', 'invalidateCache');
+    if (stepId) templateService.invalidateTemplate(stepId);
+    else templateService.clearCache();
   }
 
-  /**
-   * Limpa cache
-   */
   clearCache(): void {
-    this.templateCache.clear();
+    UnifiedTemplateService.warnOnce();
+    CanonicalServicesMonitor.trackLegacyBridge('UnifiedTemplateService', 'clearCache');
+    templateService.clearCache();
   }
 }
 

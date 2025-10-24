@@ -1,7 +1,7 @@
 import { ResultEngine } from './ResultEngine';
 import { StorageService } from './StorageService';
 import EVENTS from '@/core/constants/events';
-import { quizSupabaseService } from '@/services/ServiceAliases';
+import { quizSupabaseService } from '@/services/aliases';
 import { isUUID } from '@/core/utils/id';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { toCanonicalAny } from './adapters';

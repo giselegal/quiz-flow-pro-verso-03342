@@ -30,7 +30,7 @@ import {
     Zap,
     Shield
 } from 'lucide-react';
-import HybridTemplateService from '@/services/HybridTemplateService';
+import { HybridTemplateService } from '@/services/aliases';
 
 interface StepBehaviorConfig {
     stepNumber: number;

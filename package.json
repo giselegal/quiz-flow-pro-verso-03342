@@ -93,6 +93,8 @@
     "audit:data": "tsx scripts/audit/dataAudit.ts",
     "migrate:data": "tsx scripts/migration/dataMigration.ts",
     "migrate:dry-run": "tsx scripts/migration/dataMigration.ts --dry-run",
+  "migrate:canonical-imports": "tsx scripts/migration/find-legacy-imports.ts",
+  "migrate:canonical-imports:apply": "tsx scripts/migration/find-legacy-imports.ts --apply-alias",
     "audit:dupes": "node scripts/find-duplicates.mjs --md",
     "extract:questions": "tsx scripts/extract-questions.ts",
     "backfill:component-instances:dry": "tsx scripts/migration/backfillComponentInstances.ts --dry-run",

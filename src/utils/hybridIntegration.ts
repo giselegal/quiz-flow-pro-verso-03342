@@ -5,7 +5,7 @@
  * integrado com o sistema de editor principal.
  */
 
-import HybridTemplateService from '@/services/HybridTemplateService';
+import { HybridTemplateService } from '@/services/aliases';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 // Flag para controlar se o serviço já foi inicializado

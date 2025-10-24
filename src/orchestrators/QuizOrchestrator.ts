@@ -11,7 +11,8 @@
  */
 
 import { unifiedQuizStorage, UnifiedQuizData } from '@/services/core/UnifiedQuizStorage';
-import HybridTemplateService, { StepTemplate } from '@/services/HybridTemplateService';
+import { HybridTemplateService } from '@/services/aliases';
+import type { StepTemplate } from '@/services/aliases';
 import { ValidationResult } from '@/hooks/useStepValidation';
 import { isScoringPhase, isStrategicPhase } from '@/lib/quiz/selectionRules';
 import { Block } from '@/types/editor';

@@ -21,8 +21,8 @@ describe('Fonte canônica de templates', () => {
       throw new Error('fetch não deve ser chamado');
     });
 
-    const svc = await import('@/services/HybridTemplateService');
-    const tpl = await svc.default.getTemplate('quiz21StepsComplete');
+  const svc = await import('@/services/aliases');
+  const tpl = await svc.HybridTemplateService.getTemplate('quiz21StepsComplete');
     expect(tpl).toBeTruthy();
     expect((tpl as any)._source).toBe('ts');
 
@@ -30,8 +30,8 @@ describe('Fonte canônica de templates', () => {
   });
 
   it('HybridTemplateService.getStepConfig usa _source=ts', async () => {
-    const svc = await import('@/services/HybridTemplateService');
-    const cfg = await svc.default.getStepConfig(14);
+    const svc = await import('@/services/aliases');
+    const cfg = await svc.HybridTemplateService.getStepConfig(14);
     expect(cfg).toBeTruthy();
     expect((cfg as any)._source).toBe('ts');
   });

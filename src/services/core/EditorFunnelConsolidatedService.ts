@@ -13,7 +13,7 @@
  */
 
 import { supabaseApiClient } from './SupabaseApiClient';
-import { unifiedTemplateService } from '@/services/UnifiedTemplateService';
+import { unifiedTemplateService } from '@/services/aliases';
 
 // ============================================================================
 // TYPES

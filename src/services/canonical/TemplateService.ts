@@ -25,6 +25,7 @@
  */
 
 import { BaseCanonicalService, ServiceOptions, ServiceResult } from './types';
+import { CanonicalServicesMonitor } from './monitoring';
 import { cacheService } from './CacheService';
 import { UnifiedTemplateRegistry, Block } from '../UnifiedTemplateRegistry';
 
@@ -154,6 +155,7 @@ export class TemplateService extends BaseCanonicalService {
    */
   async getTemplate(id: string): Promise<ServiceResult<Template>> {
     try {
+      CanonicalServicesMonitor.trackUsage(this.name, 'getTemplate');
       // Tentar buscar como step primeiro
       const stepMatch = id.match(/step-?(\d+)/i);
       if (stepMatch) {
@@ -191,6 +193,7 @@ export class TemplateService extends BaseCanonicalService {
    */
   async getStep(stepId: string): Promise<ServiceResult<Block[]>> {
     try {
+      CanonicalServicesMonitor.trackUsage(this.name, 'getStep');
       const blocks = await this.registry.getStep(stepId);
       
       if (!blocks || blocks.length === 0) {

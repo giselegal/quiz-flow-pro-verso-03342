@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { ConfigurationAPI } from '@/services/ServiceAliases';
+import { ConfigurationAPI } from '@/services/aliases';
 import { DynamicMasterJSONGenerator } from '@/services/DynamicMasterJSONGenerator';
 import { QUIZ_COMPONENTS_DEFINITIONS } from '@/types/componentConfiguration';
 
