@@ -88,6 +88,7 @@ export class TemplateLoader {
 
     try {
       console.group(`🔍 [TemplateLoader] ${normalizedKey}`);
+      console.log('🎯 TEMPLATE_SOURCES:', TEMPLATE_SOURCES);
 
       // Estratégia 1: Cache unificado
       const cached = this.loadFromCache(normalizedKey);
@@ -98,9 +99,14 @@ export class TemplateLoader {
       if (fromRegistry) return fromRegistry;
 
       // Estratégia 3: Master JSON público (controlado por flag)
+      console.log('🔍 Verificando flag useMasterJSON:', TEMPLATE_SOURCES.useMasterJSON);
       if (TEMPLATE_SOURCES.useMasterJSON) {
+        console.log('✅ Flag useMasterJSON está TRUE - tentando carregar master JSON...');
         const fromMaster = await this.loadFromMasterJSON(normalizedKey);
         if (fromMaster) return fromMaster;
+        console.warn('⚠️ loadFromMasterJSON retornou null');
+      } else {
+        console.warn('❌ Flag useMasterJSON está FALSE - pulando master JSON');
       }
 
       // Estratégia 4: JSON normalizado (gates 02-11) - controlado por flag
@@ -116,6 +122,7 @@ export class TemplateLoader {
       }
 
       // Estratégia 6: TypeScript template (fallback)
+      console.warn('🔄 Caindo no fallback TypeScript template');
       return this.loadFromTypescript(normalizedKey);
 
     } finally {
@@ -184,27 +191,40 @@ export class TemplateLoader {
    */
   private async loadFromMasterJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
+      console.log('🔍 [loadFromMasterJSON] Iniciando...');
+      
       if (typeof window === 'undefined' || !window.location) {
+        console.warn('⚠️ [loadFromMasterJSON] window ou window.location não disponível');
         return null;
       }
 
       // Carregar master JSON uma vez
       if (!this.masterTemplateRef) {
+        console.log('🔍 [loadFromMasterJSON] Master JSON não está em memória, tentando carregar...');
+        
         const cachedMaster = unifiedCache.get(masterTemplateKey());
         if (cachedMaster) {
+          console.log('✅ [loadFromMasterJSON] Master JSON encontrado no cache');
           this.masterTemplateRef = cachedMaster;
         } else {
+          console.log('🔍 [loadFromMasterJSON] Fazendo fetch de /templates/quiz21-complete.json...');
+          
           // Retry com exponential backoff
           let lastError: any = null;
           for (let attempt = 0; attempt < 3; attempt++) {
             try {
+              console.log(`🔍 [loadFromMasterJSON] Tentativa ${attempt + 1}/3...`);
               const resp = await fetch('/templates/quiz21-complete.json', {
                 cache: 'force-cache'
               });
+              
+              console.log(`📊 [loadFromMasterJSON] Response status: ${resp.status}, ok: ${resp.ok}`);
+              
               if (resp.ok) {
                 this.masterTemplateRef = await resp.json();
                 unifiedCache.set(masterTemplateKey(), this.masterTemplateRef);
                 console.log(`✅ Master JSON carregado (tentativa ${attempt + 1})`);
+                console.log(`📊 Steps no master:`, Object.keys(this.masterTemplateRef?.steps || {}).length);
                 break;
               } else {
                 lastError = new Error(`HTTP ${resp.status}`);
@@ -223,14 +243,23 @@ export class TemplateLoader {
             return null;
           }
         }
+      } else {
+        console.log('✅ [loadFromMasterJSON] Master JSON já estava em memória');
       }
 
       const master = this.masterTemplateRef;
+      console.log('🔍 [loadFromMasterJSON] Procurando step:', normalizedKey);
+      console.log('🔍 [loadFromMasterJSON] Steps disponíveis:', Object.keys(master?.steps || {}));
+      
       const stepConfig = master?.steps?.[normalizedKey];
       if (!stepConfig) {
         console.warn(`⚠️ Master JSON carregado, mas step não encontrado: ${normalizedKey}`);
         return null;
       }
+      
+      console.log(`✅ [loadFromMasterJSON] Step ${normalizedKey} encontrado!`);
+      console.log(`📊 [loadFromMasterJSON] Sections no step:`, stepConfig.sections?.length || 0);
+      
       if (stepConfig) {
         const hydrated = {
           ...stepConfig,
@@ -246,6 +275,7 @@ export class TemplateLoader {
         return { blocks, source: 'master-hydrated' };
       }
     } catch (e) {
+      console.error('❌ [loadFromMasterJSON] Erro crítico:', e);
       console.warn('⚠️ Erro ao carregar master JSON:', e);
     }
     return null;

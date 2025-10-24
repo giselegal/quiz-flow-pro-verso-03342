@@ -29,4 +29,17 @@ export const TEMPLATE_SOURCES = {
   useModularTemplates: bool((import.meta as any)?.env?.VITE_USE_MODULAR_TEMPLATES, true),
 };
 
+// 🔍 DEBUG: Log das flags carregadas (apenas em DEV)
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
+  console.group('🔧 Template Sources Configuration');
+  console.log('Raw env VITE_USE_MASTER_JSON:', (import.meta as any)?.env?.VITE_USE_MASTER_JSON);
+  console.log('Raw env VITE_USE_MODULAR_TEMPLATES:', (import.meta as any)?.env?.VITE_USE_MODULAR_TEMPLATES);
+  console.log('Raw env VITE_USE_NORMALIZED_JSON:', (import.meta as any)?.env?.VITE_USE_NORMALIZED_JSON);
+  console.log('isTestEnv:', isTestEnv);
+  console.log('→ useMasterJSON:', TEMPLATE_SOURCES.useMasterJSON);
+  console.log('→ useNormalizedJSON:', TEMPLATE_SOURCES.useNormalizedJSON);
+  console.log('→ useModularTemplates:', TEMPLATE_SOURCES.useModularTemplates);
+  console.groupEnd();
+}
+
 export default TEMPLATE_SOURCES;
