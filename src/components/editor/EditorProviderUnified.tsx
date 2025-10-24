@@ -24,7 +24,7 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
 import { loadStepTemplate, hasModularTemplate } from '@/utils/loadStepTemplates';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
-import { stepBlocksKey } from '@/utils/cacheKeys';
+import { stepBlocksKey, masterBlocksKey, masterTemplateKey } from '@/utils/cacheKeys';
 import { EditorHistoryService } from '@/services/editor/HistoryService';
 import { TemplateLoader } from '@/services/editor/TemplateLoader';
 import EditorStateManager from '@/services/editor/EditorStateManager';
@@ -68,6 +68,8 @@ export interface EditorActions {
     // Step management
     ensureStepLoaded: (step: number | string) => Promise<void>;
     loadDefaultTemplate: () => void;
+    reloadStepFromJSON: (step?: number | string) => Promise<void>;
+    reloadAllStepsFromJSON: () => Promise<void>;
 
     // History
     undo: () => void;
@@ -208,7 +210,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     setTimeout(() => {
                         import('@/registry/UnifiedComponentRegistry')
                             .then(mod => mod.preloadCriticalComponents?.())
-                            .catch(() => {});
+                            .catch(() => { });
                     }, 100);
                 }
             }
@@ -330,6 +332,56 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             console.error('❌ Erro ao carregar step:', error);
         }
     }, [stateManager, state]);
+
+    // 🔄 Forçar recarregamento do step a partir dos JSONs públicos
+    const reloadStepFromJSON = useCallback(async (step?: number | string) => {
+        const s = step ?? state.currentStep;
+        const normalizedKey = typeof s === 'number'
+            ? `step-${s.toString().padStart(2, '0')}`
+            : (String(s).match(/^step-(\d{1,2})$/) ? `step-${parseInt(String(s).replace('step-', ''), 10).toString().padStart(2, '0')}` : String(s));
+
+        // Invalida caches relacionados
+        unifiedCache.delete(stepBlocksKey(normalizedKey));
+        unifiedCache.delete(masterBlocksKey(normalizedKey));
+
+        // Remove do estado local para forçar ensureStepLoaded a buscar novamente
+        setState(prev => {
+            const { [normalizedKey]: _removed, ...restBlocks } = prev.stepBlocks;
+            const { [normalizedKey]: _removedSrc, ...restSources } = (prev.stepSources || {}) as Record<string, any>;
+            return {
+                ...prev,
+                stepBlocks: restBlocks,
+                stepSources: restSources as any
+            } as EditorState;
+        });
+
+        // Carregar novamente
+        await ensureStepLoaded(normalizedKey);
+    }, [state.currentStep, ensureStepLoaded]);
+
+    // 🔄 Recarrega todos os steps 01–20 a partir dos JSONs públicos
+    const reloadAllStepsFromJSON = useCallback(async () => {
+        // Limpa caches globais relacionados ao master e steps
+        unifiedCache.delete(masterTemplateKey());
+        for (let i = 1; i <= 21; i++) {
+            const key = `step-${i.toString().padStart(2, '0')}`;
+            unifiedCache.delete(stepBlocksKey(key));
+            unifiedCache.delete(masterBlocksKey(key));
+        }
+
+        // Zera estado local
+        setState(prev => ({
+            ...prev,
+            stepBlocks: {},
+            stepSources: {},
+        }));
+
+        // Recarrega em sequência para evitar corridas
+        for (let i = 1; i <= 20; i++) {
+            const key = `step-${i.toString().padStart(2, '0')}`;
+            await ensureStepLoaded(key);
+        }
+    }, [ensureStepLoaded]);
 
     // ✅ FASE 1.4: EVENT-DRIVEN step loading (elimina polling)
     const autoLoadedRef = useRef<Set<string>>(new Set());
@@ -572,6 +624,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             // Step management
             ensureStepLoaded,
             loadDefaultTemplate,
+            reloadStepFromJSON,
+            reloadAllStepsFromJSON,
 
             // History
             undo,
