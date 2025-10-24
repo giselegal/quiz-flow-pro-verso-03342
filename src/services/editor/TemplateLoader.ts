@@ -90,9 +90,27 @@ export class TemplateLoader {
       console.group(`🔍 [TemplateLoader] ${normalizedKey}`);
       console.log('🎯 TEMPLATE_SOURCES:', TEMPLATE_SOURCES);
 
+      // Preferência explícita: quando ?template=quiz21StepsComplete estiver na URL do /editor,
+      // priorizamos os JSONs individuais gerados em public/templates/step-XX.json
+      let preferPublicStepJSON = false;
+      try {
+        if (typeof window !== 'undefined' && window.location?.search) {
+          const sp = new URLSearchParams(window.location.search);
+          preferPublicStepJSON = (sp.get('template') || '').toLowerCase() === 'quiz21stepscomplete';
+        }
+      } catch {
+        // ignore
+      }
+
       // Estratégia 1: Cache unificado
       const cached = this.loadFromCache(normalizedKey);
       if (cached) return cached;
+
+      // Preferência: tentar JSON individual público primeiro quando for fluxo de template
+      if (preferPublicStepJSON) {
+        const fromPublic = await this.loadFromPublicStepJSON(normalizedKey);
+        if (fromPublic) return fromPublic;
+      }
 
       // Estratégia 2: Master JSON público (PRIORIDADE quando flag ativa!)
       console.log('🔍 Verificando flag useMasterJSON:', TEMPLATE_SOURCES.useMasterJSON);
@@ -131,6 +149,59 @@ export class TemplateLoader {
     } finally {
       this.loadingSteps.delete(normalizedKey);
       console.groupEnd();
+    }
+  }
+
+  /**
+   * Estratégia: Carregar JSON individual público em public/templates/step-XX.json
+   * - Tenta sufixo -v3.json e depois .json
+   * - Converte para Block[] com mapeamentos e normalização de campos
+   */
+  private async loadFromPublicStepJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
+    try {
+      const base = `/templates/${normalizedKey}`;
+      const urls = [`${base}-v3.json`, `${base}.json`];
+      let data: any | null = null;
+
+      for (const url of urls) {
+        try {
+          const resp = await fetch(url, { cache: 'force-cache' });
+          if (resp.ok) {
+            data = await resp.json();
+            break;
+          }
+        } catch (e) {
+          // tenta próxima URL
+        }
+      }
+
+      if (!data) return null;
+
+      // Detectar e extrair blocos
+      const rawBlocks: any[] = Array.isArray(data?.blocks) ? data.blocks : [];
+      if (!rawBlocks.length) {
+        return null;
+      }
+
+      // Mapeamento mínimo de tipos para compatibilidade
+      const typeMap: Record<string, string> = {
+        CTAButton: 'cta-inline',
+      };
+
+      const blocks: Block[] = rawBlocks.map((b: any, idx: number) => ({
+        id: String(b.id || `${normalizedKey}-block-${idx}`),
+        type: (typeMap[b.type] || b.type || 'text-inline') as any,
+        order: (b.order ?? b.position ?? idx) as number,
+        properties: (b.properties || b.props || {}) as Record<string, any>,
+        content: (b.content || {}) as Record<string, any>
+      }));
+
+      unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
+      console.log(`📦 Public step JSON → ${normalizedKey}: ${blocks.length} blocos`);
+      return { blocks, source: 'individual-json' };
+    } catch (e) {
+      console.warn('⚠️ Erro ao carregar JSON público individual:', normalizedKey, e);
+      return null;
     }
   }
 
