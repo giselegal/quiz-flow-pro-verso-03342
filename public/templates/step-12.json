@@ -1,0 +1,73 @@
+{
+  "id": "step-12",
+  "type": "transition",
+  "title": "Transição Mid-Quiz",
+  "metadata": {
+    "name": "Transição Mid-Quiz",
+    "description": "Página de transição no meio do quiz com mensagem motivacional",
+    "category": "transition",
+    "version": "3.0"
+  },
+  "blocks": [
+    {
+      "id": "transition-hero-12",
+      "type": "transition-hero",
+      "position": 0,
+      "content": {
+        "title": "🕐 Enquanto calculamos o seu resultado...",
+        "subtitle": "Estamos montando seu perfil de estilo personalizado",
+        "message": "Continue para descobrir ainda mais sobre seu estilo único!",
+        "autoAdvanceDelay": 3500,
+        "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+      },
+      "properties": {
+        "backgroundColor": "#FAF9F7",
+        "textColor": "#432818",
+        "padding": 32,
+        "animation": {
+          "type": "scale",
+          "duration": 500,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-12-transition-text",
+      "type": "text-inline",
+      "position": 1,
+      "content": {
+        "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+      },
+      "properties": {
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "step-12-transition-cta",
+      "type": "CTAButton",
+      "position": 2,
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "medium"
+      }
+    }
+  ],
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  }
+}

@@ -177,8 +177,11 @@ class EditorFunnelConsolidatedService {
 
             // Get templates from UnifiedTemplateService
             try {
-                // Load some predefined templates from unified service
-                const templateIds = ['step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-21'];
+                // Load predefined templates from unified service (20 steps total)
+                const templateIds = [
+                    'step-1', 'step-2', 'step-3', 'step-4', 'step-5',
+                    'step-12', 'step-19', 'step-20'
+                ];
 
                 for (const templateId of templateIds) {
                     try {

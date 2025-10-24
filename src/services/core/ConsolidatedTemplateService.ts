@@ -183,12 +183,28 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    */
   private async loadFromJSON(templateId: string): Promise<FullTemplate | null> {
     try {
-      // Tentar carregar JSON específico
-      const response = await fetch(`/templates/${templateId}.json`);
+      // Normalizar o templateId para o formato com padding (step-01, step-02, etc.)
+      let normalizedId = templateId;
+      const stepMatch = templateId.match(/^step-(\d+)$/);
+      if (stepMatch) {
+        const stepNum = stepMatch[1].padStart(2, '0');
+        normalizedId = `step-${stepNum}`;
+      }
+
+      // Tentar carregar JSON com sufixo -v3
+      const response = await fetch(`/templates/${normalizedId}-v3.json`);
       if (response.ok) {
         const jsonData = await response.json();
         return this.convertJSONTemplate(jsonData, templateId);
       }
+
+      // Fallback: tentar sem o sufixo -v3
+      const fallbackResponse = await fetch(`/templates/${templateId}.json`);
+      if (fallbackResponse.ok) {
+        const jsonData = await fallbackResponse.json();
+        return this.convertJSONTemplate(jsonData, templateId);
+      }
+
       return null;
     } catch (error) {
       console.warn('JSON load failed:', error);

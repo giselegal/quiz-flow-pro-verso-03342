@@ -1,0 +1,121 @@
+{
+  "id": "step-02",
+  "type": "question",
+  "title": "Etapa step-02 - Question",
+  "metadata": {
+    "name": "Etapa step-02 - Question",
+    "description": "Etapa step-02 do Quiz de Estilo (question)",
+    "category": "question",
+    "version": "3.0"
+  },
+  "blocks": [
+    {
+      "id": "progress-bar-step-02",
+      "type": "question-progress",
+      "position": 0,
+      "content": {
+        "stepNumber": 2,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "properties": {
+        "padding": 8
+      }
+    },
+    {
+      "id": "step-02-title",
+      "type": "question-title",
+      "position": 1,
+      "content": {
+        "text": "Pergunta 1 de 10"
+      },
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "step-02-options",
+      "type": "options grid",
+      "position": 2,
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Natural",
+            "image": "/quiz-assets/natural.webp"
+          },
+          {
+            "id": "classico",
+            "text": "Clássico",
+            "image": "/quiz-assets/classico.webp"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Contemporâneo",
+            "image": "/quiz-assets/contemporaneo.webp"
+          },
+          {
+            "id": "elegante",
+            "text": "Elegante",
+            "image": "/quiz-assets/elegante.webp"
+          },
+          {
+            "id": "romantico",
+            "text": "Romântico",
+            "image": "/quiz-assets/romantico.webp"
+          },
+          {
+            "id": "sexy",
+            "text": "Sexy",
+            "image": "/quiz-assets/sexy.webp"
+          },
+          {
+            "id": "dramatico",
+            "text": "Dramático",
+            "image": "/quiz-assets/dramatico.webp"
+          },
+          {
+            "id": "criativo",
+            "text": "Criativo",
+            "image": "/quiz-assets/criativo.webp"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true
+      },
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    }
+  ],
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  }
+}

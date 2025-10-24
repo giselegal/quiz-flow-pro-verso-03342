@@ -1,89 +1,81 @@
 {
   "id": "step-01",
   "type": "intro",
-  "title": "Introdução",
+  "title": "Introdução - Bem-vindo ao Quiz de Estilo",
   "metadata": {
-    "name": "Step 01 - Introdução",
-    "description": "Passo inicial do quiz com captura de nome",
-    "category": "quiz-intro",
+    "name": "Introdução - Bem-vindo ao Quiz de Estilo",
+    "description": "Página inicial do quiz com apresentação e coleta do nome do usuário",
+    "category": "intro",
     "version": "3.0"
   },
   "blocks": [
     {
-      "id": "block-intro-header",
-      "type": "quiz-intro-header",
+      "id": "intro-title",
+      "type": "heading-inline",
       "position": 0,
       "content": {
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
-        "showProgress": false,
-        "progressValue": 0
+        "title": "Bem-vinda ao Quiz de Estilo"
+      },
+      "properties": {
+        "padding": 16,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
       }
     },
     {
-      "id": "block-intro-title",
+      "id": "intro-subtitle",
       "type": "text-inline",
       "position": 1,
       "content": {
-        "text": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
-      },
-      "properties": {
-        "textAlign": "center",
-        "fontSize": "text-2xl sm:text-3xl md:text-4xl",
-        "fontWeight": "font-normal",
-        "className": "text-[#432818]",
-        "fontFamily": "\"Playfair Display\", serif"
+        "text": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!"
       }
     },
     {
-      "id": "block-intro-image",
-      "type": "image-display-inline",
-      "position": 2,
-      "properties": {
-        "src": "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
-        "alt": "Descubra seu estilo predominante",
-        "maxWidth": "300px",
-        "objectFit": "contain",
-        "rounded": true
-      }
-    },
-    {
-      "id": "block-intro-description",
-      "type": "text-inline",
-      "position": 3,
-      "content": {
-        "text": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança."
-      },
-      "properties": {
-        "textAlign": "center",
-        "fontSize": "text-sm md:text-base",
-        "className": "text-gray-700"
-      }
-    },
-    {
-      "id": "block-intro-form",
+      "id": "intro-form",
       "type": "intro-form",
-      "position": 4,
-      "properties": {
-        "label": "Antes de começarmos, como posso te chamar?",
-        "placeholder": "Digite seu primeiro nome aqui...",
-        "buttonText": "Quero Descobrir meu Estilo Agora!",
-        "buttonVariant": "primary",
-        "privacyNotice": "Seu nome é necessário para personalizar sua experiência."
-      }
-    },
-    {
-      "id": "block-footer-copyright",
-      "type": "text-inline",
-      "position": 5,
+      "position": 2,
       "content": {
-        "text": "© {currentYear} Gisele Galvão - Todos os direitos reservados"
+        "label": "Qual é o seu nome?",
+        "placeholder": "Digite seu nome aqui",
+        "buttonText": "Começar Agora",
+        "required": true
       },
       "properties": {
-        "textAlign": "center",
-        "fontSize": "text-xs",
-        "className": "text-gray-500 pt-6"
+        "padding": 16,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300
+        }
       }
     }
-  ]
+  ],
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    },
+    "spacing": {
+      "sm": 8,
+      "md": 16,
+      "lg": 24,
+      "xl": 32
+    },
+    "borderRadius": {
+      "sm": 4,
+      "md": 8,
+      "lg": 12,
+      "xl": 16
+    }
+  }
 }

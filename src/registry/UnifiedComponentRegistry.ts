@@ -39,9 +39,24 @@ const componentCache = new Map<string, ComponentType<any>>();
 const preloadedComponents = new Set<string>();
 
 // 🚀 COMPONENTS CRÍTICOS - Preload imediato
+// Inclui componentes usados nas etapas 01, 02–19 (perguntas/transições) e 20 (resultado + oferta)
 const CRITICAL_COMPONENTS = [
+    // básicos
     'text', 'text-inline', 'button', 'button-inline', 'image', 'image-inline',
-    'quiz-intro-header', 'options-grid', 'form-input', 'container'
+    'form-input', 'container', 'options-grid', 'quiz-intro-header',
+
+    // títulos e heading
+    'heading', 'heading-inline',
+
+    // perguntas (02–19)
+    'question-progress', 'question-hero', 'quiz-question-header',
+    'question-number', 'question-text', 'question-instructions', 'question-navigation',
+
+    // transição (12 e 19)
+    'quiz-transition', 'transition-hero',
+
+    // resultado/oferta (20)
+    'result-cta', 'offer-hero', 'pricing', 'testimonials', 'guarantee', 'secure-purchase'
 ];
 
 // 📊 REGISTRY UNIFICADO - Consolidação dos 3 sistemas
@@ -60,6 +75,8 @@ export const UNIFIED_COMPONENT_REGISTRY: Record<string, ComponentType<any> | (()
     'legal-notice': LegalNoticeInlineBlock,
     'legal-notice-inline': LegalNoticeInlineBlock,
     'options-grid': OptionsGridBlock,
+    // Alias para CTA padronizado
+    'cta-inline': ButtonInlineBlock,
     // Container e aliases via lazy para evitar ciclo com BasicContainerBlock
     'container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
     'section': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
@@ -85,8 +102,17 @@ export const UNIFIED_COMPONENT_REGISTRY: Record<string, ComponentType<any> | (()
     'fashion-ai-generator': FashionAIGeneratorBlock,
 
     // 🔄 COMPONENTES LAZY - Para otimização de bundle
+    // Perguntas (02–19)
+    'question-progress': lazy(() => import('@/components/editor/blocks/atomic/QuestionProgressBlock')),
+    'question-number': lazy(() => import('@/components/editor/blocks/atomic/QuestionNumberBlock')),
+    'question-text': lazy(() => import('@/components/editor/blocks/atomic/QuestionTextBlock')),
+    'question-instructions': lazy(() => import('@/components/editor/blocks/atomic/QuestionInstructionsBlock')),
+    'question-navigation': lazy(() => import('@/components/editor/blocks/atomic/QuestionNavigationBlock')),
+    'quiz-question-header': lazy(() => import('@/components/editor/blocks/QuizQuestionHeaderBlock')),
+    'question-hero': lazy(() => import('@/components/sections/questions/QuestionHeroSection').then(m => ({ default: m.QuestionHeroSection }))),
     'hero': lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
     'quiz-transition': lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
+    'transition-hero': lazy(() => import('@/components/sections/transitions').then(m => ({ default: m.TransitionHeroSection }))),
     'loading-animation': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
     'loader-inline': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
     'quiz-style-question': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
@@ -126,6 +152,11 @@ export const UNIFIED_COMPONENT_REGISTRY: Record<string, ComponentType<any> | (()
     'testimonials-grid': lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
     'guarantee': lazy(() => import('@/components/editor/blocks/GuaranteeBlock')),
     'guarantee-badge': ImageInlineBlock,
+
+    // Oferta / Pricing / CTA de resultado (Step 20)
+    'offer-hero': lazy(() => import('@/components/editor/blocks/QuizOfferHeroBlock')),
+    'pricing': lazy(() => import('@/components/blocks/inline/QuizOfferPricingInlineBlock')),
+    'result-cta': lazy(() => import('@/components/editor/blocks/atomic/ResultCTABlock')),
 
     // ✅ FALLBACKS INTELIGENTES
     'form-*': FormInputBlock,
@@ -272,7 +303,7 @@ export const getRegistryStats = () => ({
 });
 
 // 🚀 Auto-preload críticos na inicialização - DESABILITADO TEMPORARIAMENTE
-if (typeof window !== 'undefined' && false) { // Desabilitado para evitar erros de undefined block
+if (typeof window !== 'undefined' && false) { // Mantido desabilitado para evitar side-effects; podemos ativar via chamada explícita
     // Preload após 100ms para não bloquear a inicialização
     setTimeout(() => {
         preloadCriticalComponents().catch(console.error);

@@ -1,0 +1,137 @@
+{
+  "id": "step-03",
+  "type": "question",
+  "title": "Etapa step-03 - Question",
+  "metadata": {
+    "name": "Etapa step-03 - Question",
+    "description": "Etapa step-03 do Quiz de Estilo (question) — Nome pessoal / entrada de texto",
+    "category": "question",
+    "version": "3.0"
+  },
+  "blocks": [
+    {
+      "id": "progress-bar-step-03",
+      "type": "question-progress",
+      "position": 0,
+      "content": {
+        "stepNumber": 3,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "properties": {
+        "padding": 8
+      }
+    },
+    {
+      "id": "step-03-title",
+      "type": "question-title",
+      "position": 1,
+      "content": {
+        "text": "Pergunta 2 de 10"
+      },
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-03",
+      "type": "options grid",
+      "position": 2,
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Informal, espontânea, alegre, essencialista",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Conservadora, séria, organizada",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Informada, ativa, prática",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Exigente, sofisticada, seletiva",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Feminina, meiga, delicada, sensível",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Glamorosa, vaidosa, sensual",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Cosmopolita, moderna e audaciosa",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Exótica, aventureira, livre",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "properties": {
+        "backgroundColor": "transparent",
+        "padding": 16,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-03-cta-next",
+      "type": "CTAButton",
+      "position": 3,
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      }
+    }
+  ],
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    }
+  }
+}
