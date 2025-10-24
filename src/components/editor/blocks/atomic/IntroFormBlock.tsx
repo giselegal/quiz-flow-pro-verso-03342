@@ -20,6 +20,7 @@ export default function IntroFormBlock({
   onNameSubmit
 }: IntroFormBlockProps) {
   const [inputValue, setInputValue] = useState('');
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   // Compatibilidade JSON v3 (section.content) + legado (properties)
   const label = (block as any)?.content?.formQuestion
@@ -34,11 +35,65 @@ export default function IntroFormBlock({
   const helperText = (block as any)?.content?.helperText as string | undefined;
   const privacyNotice = (block as any)?.content?.privacyNotice || block.properties?.privacyNotice;
 
+  // 🔥 TRACKING: Input focus
+  const handleInputFocus = () => {
+    if (!hasInteracted) {
+      setHasInteracted(true);
+      window.dispatchEvent(new CustomEvent('quiz-form-started', {
+        detail: {
+          blockId: block.id,
+          stepNumber: 1,
+          formType: 'intro-name',
+          timestamp: Date.now()
+        }
+      }));
+    }
+  };
+
+  // 🔥 TRACKING: Input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+
+    window.dispatchEvent(new CustomEvent('quiz-name-entered', {
+      detail: {
+        blockId: block.id,
+        nameLength: newValue.length,
+        hasSpaces: newValue.includes(' '),
+        timestamp: Date.now()
+      }
+    }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isEditable && inputValue.trim()) {
-      onNameSubmit?.(inputValue.trim());
-      console.log('Nome enviado:', inputValue.trim());
+      const trimmedName = inputValue.trim();
+
+      // 🔥 TRACKING: Form submitted
+      window.dispatchEvent(new CustomEvent('quiz-form-submitted', {
+        detail: {
+          blockId: block.id,
+          stepNumber: 1,
+          formType: 'intro-name',
+          nameLength: trimmedName.length,
+          hasSpaces: trimmedName.includes(' '),
+          timestamp: Date.now()
+        }
+      }));
+
+      // 🔥 TRACKING: Name collected (lead captured!)
+      window.dispatchEvent(new CustomEvent('quiz-name-collected', {
+        detail: {
+          blockId: block.id,
+          name: trimmedName, // Ou hash se quiser privacidade: btoa(trimmedName)
+          stepNumber: 1,
+          timestamp: Date.now()
+        }
+      }));
+
+      onNameSubmit?.(trimmedName);
+      console.log('Nome enviado:', trimmedName);
     }
   };
 
@@ -71,7 +126,8 @@ export default function IntroFormBlock({
               id="user-name-input"
               type="text"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={handleInputChange}
+              onFocus={handleInputFocus}
               placeholder={placeholder}
               required
               disabled={isEditable}

@@ -13,13 +13,37 @@ export default function ResultCTABlock({
   const backgroundColor = block.properties?.backgroundColor || '#B89B7A';
   const textColor = block.properties?.textColor || '#FFFFFF';
   const size = block.properties?.size || 'lg';
+  const url = block.content?.url || block.properties?.url || '#';
   const result = useResultOptional();
   const buttonText = result ? result.interpolateText(buttonTextRaw) : buttonTextRaw;
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    // 🔥 TRACKING: CTA clicked
+    window.dispatchEvent(new CustomEvent('quiz-cta-clicked', {
+      detail: {
+        blockId: block.id,
+        blockType: 'result-cta',
+        ctaType: 'secondary',
+        ctaText: buttonText,
+        url: url,
+        timestamp: Date.now()
+      }
+    }));
+
+    onClick?.();
+
+    // Navegar se tiver URL e não estiver em modo de edição
+    if (url && url !== '#' && !isSelected) {
+      window.open(url, '_blank');
+    }
+  };
 
   return (
     <div
       className={`mt-8 ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      onClick={handleClick}
     >
       <Button
         size={size as any}

@@ -261,16 +261,55 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
   const handleOptionSelect = (optionId: string) => {
     let newSelections: string[];
+    const wasSelected = selectedOptionIds.includes(optionId);
+
+    // 🔥 TRACKING: Click na opção
+    window.dispatchEvent(new CustomEvent('quiz-option-click', {
+      detail: {
+        optionId,
+        questionNumber,
+        timestamp: Date.now(),
+        wasSelected
+      }
+    }));
 
     if (multipleSelection) {
-      if (selectedOptionIds.includes(optionId)) {
+      if (wasSelected) {
         newSelections = selectedOptionIds.filter(id => id !== optionId);
+        // 🔥 TRACKING: Deseleção
+        window.dispatchEvent(new CustomEvent('quiz-option-deselected', {
+          detail: {
+            optionId,
+            questionNumber,
+            remainingSelections: newSelections.length,
+            timestamp: Date.now()
+          }
+        }));
       } else {
         newSelections = [...selectedOptionIds, optionId];
+        // 🔥 TRACKING: Seleção
+        window.dispatchEvent(new CustomEvent('quiz-option-selected', {
+          detail: {
+            optionId,
+            questionNumber,
+            totalSelections: newSelections.length,
+            isMultiple: true,
+            timestamp: Date.now()
+          }
+        }));
       }
     } else {
       newSelections = [optionId];
       setHasAnswered(true);
+      // 🔥 TRACKING: Seleção única
+      window.dispatchEvent(new CustomEvent('quiz-option-selected', {
+        detail: {
+          optionId,
+          questionNumber,
+          selectionMode: 'single',
+          timestamp: Date.now()
+        }
+      }));
     }
 
     setSelectedOptionIds(newSelections);
@@ -280,12 +319,42 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
     const newSelectedOptions = options.filter(option => newSelections.includes(option.id));
 
+    // 🔥 TRACKING: Validação
+    if (error) {
+      window.dispatchEvent(new CustomEvent('quiz-selection-error', {
+        detail: {
+          error,
+          questionNumber,
+          selectedCount: newSelections.length,
+          timestamp: Date.now()
+        }
+      }));
+    } else {
+      window.dispatchEvent(new CustomEvent('quiz-selection-validated', {
+        detail: {
+          questionNumber,
+          selectedOptions: newSelections,
+          totalSelected: newSelections.length,
+          timestamp: Date.now()
+        }
+      }));
+    }
+
     onSelectionChange?.(newSelectedOptions);
     onValidation?.(!error);
 
     // Auto-advance para seleção única
     if (!multipleSelection && autoAdvance && newSelections.length > 0) {
       setTimeout(() => {
+        // 🔥 TRACKING: Auto-advance
+        window.dispatchEvent(new CustomEvent('quiz-auto-advance', {
+          detail: {
+            questionNumber,
+            selectedOption: optionId,
+            delay: autoAdvanceDelay,
+            timestamp: Date.now()
+          }
+        }));
         onAnswer?.(newSelectedOptions);
         onNext?.();
       }, autoAdvanceDelay);
@@ -299,10 +368,33 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     if (error) {
       setValidationError(error);
       onError?.(error);
+      // 🔥 TRACKING: Erro de validação ao submeter
+      window.dispatchEvent(new CustomEvent('quiz-submit-error', {
+        detail: {
+          error,
+          questionNumber,
+          selectedCount: selectedOptionIds.length,
+          requiredMin: minSelections,
+          requiredMax: maxSelections,
+          timestamp: Date.now()
+        }
+      }));
       return;
     }
 
     setHasAnswered(true);
+
+    // 🔥 TRACKING: Resposta submetida com sucesso
+    window.dispatchEvent(new CustomEvent('quiz-answer-submitted', {
+      detail: {
+        questionNumber,
+        selectedOptions: selectedOptionIds,
+        totalSelected: selectedOptionIds.length,
+        multipleSelection,
+        timestamp: Date.now()
+      }
+    }));
+
     onAnswer?.(selectedOptions);
     onNext?.();
   };
@@ -444,10 +536,10 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           <div className="mb-8">
             <h2
               className={`text-2xl md:text-3xl font-bold text-[#432818] mb-4 ${alignment === 'center'
-                  ? 'text-center'
-                  : alignment === 'right'
-                    ? 'text-right'
-                    : 'text-left'
+                ? 'text-center'
+                : alignment === 'right'
+                  ? 'text-right'
+                  : 'text-left'
                 }`}
             >
               {question}

@@ -9,6 +9,31 @@ export default function TransitionLoaderBlock({
   const color = block.content?.color || '#5b4135';
   const size = block.content?.size || 'md';
 
+  // Track when transition loader is shown
+  React.useEffect(() => {
+    if (!isSelected) {
+      window.dispatchEvent(new CustomEvent('quiz-transition-shown', {
+        detail: {
+          blockId: block.id,
+          timestamp: Date.now()
+        }
+      }));
+
+      // Track when user completes viewing transition (assumed 2s minimum)
+      const timer = setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('quiz-transition-completed', {
+          detail: {
+            blockId: block.id,
+            duration: 2000,
+            timestamp: Date.now()
+          }
+        }));
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [block.id, isSelected]);
+
   const sizeClasses = {
     sm: 'w-2 h-2',
     md: 'w-3 h-3',

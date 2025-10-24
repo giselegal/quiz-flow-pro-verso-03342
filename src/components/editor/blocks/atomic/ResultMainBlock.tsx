@@ -40,6 +40,22 @@ export default function ResultMainBlock({
   const textColor = block.content?.textColor || '#5b4135';
   const accentColor = block.content?.accentColor || '#B89B7A';
 
+  // Track when result is viewed
+  React.useEffect(() => {
+    if (!isSelected && styleName && styleName !== 'Seu Estilo') {
+      window.dispatchEvent(new CustomEvent('quiz-result-viewed', {
+        detail: {
+          blockId: block.id,
+          userName,
+          styleName,
+          percentage,
+          hasContext: !!userProfile,
+          timestamp: Date.now()
+        }
+      }));
+    }
+  }, [block.id, isSelected, userName, styleName, percentage, userProfile]);
+
   return (
     <div
       className={`p-8 rounded-xl mb-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}

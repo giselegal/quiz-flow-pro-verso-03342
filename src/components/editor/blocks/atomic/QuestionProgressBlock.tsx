@@ -20,10 +20,32 @@ export default function QuestionProgressBlock({
   const stepNumber = block.properties?.stepNumber || 1;
   const totalSteps = block.properties?.totalSteps || 21;
   const progress = Math.round((stepNumber / totalSteps) * 100);
-  
+
   const barColor = block.properties?.barColor || '#deac6d';
   const backgroundColor = block.properties?.backgroundColor || '#e5e7eb';
   const showPercentage = block.properties?.showPercentage !== false;
+
+  // Track milestone progress
+  React.useEffect(() => {
+    if (!isEditable) {
+      // Track specific milestones: 25%, 50%, 75%, 100%
+      const milestones = [25, 50, 75, 100];
+      const milestone = milestones.find(m => progress >= m && progress < m + 5);
+
+      if (milestone) {
+        window.dispatchEvent(new CustomEvent('quiz-progress-milestone', {
+          detail: {
+            blockId: block.id,
+            stepNumber,
+            totalSteps,
+            progress,
+            milestone,
+            timestamp: Date.now()
+          }
+        }));
+      }
+    }
+  }, [progress, stepNumber, totalSteps, isEditable, block.id]);
 
   return (
     <SelectableBlock

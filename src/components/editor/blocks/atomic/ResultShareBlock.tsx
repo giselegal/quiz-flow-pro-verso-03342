@@ -13,23 +13,46 @@ export default function ResultShareBlock({
     const platforms = block.content?.platforms || ['facebook', 'twitter', 'whatsapp', 'linkedin'];
     const message = block.content?.message || 'Confira meu resultado!';
 
+    const handleShare = (platform: string) => {
+        // Dispatch share event
+        window.dispatchEvent(new CustomEvent('quiz-share-clicked', {
+            detail: {
+                blockId: block.id,
+                platform,
+                message,
+                url: window.location.href,
+                timestamp: Date.now()
+            }
+        }));
+
+        // Execute platform-specific share
+        const shareActions: Record<string, () => void> = {
+            facebook: () => {
+                const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(message)}`;
+                window.open(url, '_blank', 'width=600,height=400');
+            },
+            twitter: () => {
+                const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(window.location.href)}`;
+                window.open(url, '_blank', 'width=600,height=400');
+            },
+            whatsapp: () => {
+                const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message + ' ' + window.location.href)}`;
+                window.open(url, '_blank');
+            },
+            linkedin: () => {
+                const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
+                window.open(url, '_blank', 'width=600,height=400');
+            }
+        };
+
+        shareActions[platform]?.();
+    };
+
     const shareHandlers: Record<string, () => void> = {
-        facebook: () => {
-            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(message)}`;
-            window.open(url, '_blank', 'width=600,height=400');
-        },
-        twitter: () => {
-            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(window.location.href)}`;
-            window.open(url, '_blank', 'width=600,height=400');
-        },
-        whatsapp: () => {
-            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message + ' ' + window.location.href)}`;
-            window.open(url, '_blank');
-        },
-        linkedin: () => {
-            const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
-            window.open(url, '_blank', 'width=600,height=400');
-        }
+        facebook: () => handleShare('facebook'),
+        twitter: () => handleShare('twitter'),
+        whatsapp: () => handleShare('whatsapp'),
+        linkedin: () => handleShare('linkedin')
     };
 
     const platformIcons: Record<string, React.ReactNode> = {
