@@ -560,13 +560,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (canonicalEditor.state.blocks && canonicalEditor.state.blocks.length > 0) {
             console.log('🔄 Sincronizando blocos do Canonical Editor:', canonicalEditor.state.blocks.length);
 
-            // Agrupar blocos por step (baseado em ID ou order)
+            // Agrupar blocos por stepId (usando metadata.stepId dos blocos)
             const stepsMap = new Map<string, BlockComponent[]>();
 
-            canonicalEditor.state.blocks.forEach((block, index) => {
-                // Determinar step ID baseado no order ou índice
-                const stepNumber = Math.floor(index / 10) + 1; // ~10 blocos por step
-                const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
+            canonicalEditor.state.blocks.forEach((block) => {
+                // Usar o stepId do metadata do bloco (veio do generated-quiz-steps.json)
+                const stepId = block.metadata?.stepId || `step-${String(Math.floor(block.order / 5) + 1).padStart(2, '0')}`;
 
                 if (!stepsMap.has(stepId)) {
                     stepsMap.set(stepId, []);
@@ -585,24 +584,41 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 stepsMap.get(stepId)!.push(blockComponent);
             });
 
+            // Ordenar steps por ID (step-01, step-02, etc)
+            const sortedStepIds = Array.from(stepsMap.keys()).sort();
+
             // Converter Map para steps array
-            const newSteps: EditableQuizStep[] = Array.from(stepsMap.entries()).map(([stepId, blocks], index) => ({
-                id: stepId,
-                type: index === 0 ? 'intro' : index < 11 ? 'question' : index === 11 ? 'transition' : index < 19 ? 'strategic-question' : index === 19 ? 'transition-result' : index === 20 ? 'result' : 'offer',
-                order: index + 1,
-                blocks,
-                nextStep: index < 20 ? `step-${String(index + 2).padStart(2, '0')}` : undefined
-            }));
+            const newSteps: EditableQuizStep[] = sortedStepIds.map((stepId, index) => {
+                const blocks = stepsMap.get(stepId)!;
+                const stepNumber = parseInt(stepId.match(/\d+/)?.[0] || '0', 10);
+
+                // Determinar tipo baseado no stepNumber
+                const getStepType = (num: number): EditableQuizStep['type'] => {
+                    if (num === 1) return 'intro';
+                    if (num >= 2 && num <= 11) return 'question';
+                    if (num === 12) return 'transition';
+                    if (num >= 13 && num <= 18) return 'strategic-question';
+                    if (num === 19) return 'transition-result';
+                    if (num === 20) return 'result';
+                    return 'offer'; // num === 21
+                };
+
+                return {
+                    id: stepId,
+                    type: getStepType(stepNumber),
+                    order: stepNumber,
+                    blocks,
+                    nextStep: index < sortedStepIds.length - 1 ? sortedStepIds[index + 1] : undefined
+                };
+            });
 
             setSteps(newSteps);
             if (!selectedStepId && newSteps.length > 0) {
                 setSelectedStepId(newSteps[0].id);
             }
-            console.log('✅ Steps sincronizados:', newSteps.length);
+            console.log('✅ Steps sincronizados:', newSteps.length, 'steps com', canonicalEditor.state.blocks.length, 'blocos');
         }
-    }, [canonicalEditor.state.blocks]);
-
-    useEffect(() => {
+    }, [canonicalEditor.state.blocks]); useEffect(() => {
         try {
             const raw = StorageService.safeGetString('quiz_editor_theme_overrides_v1');
             if (raw) setThemeOverrides(JSON.parse(raw));
