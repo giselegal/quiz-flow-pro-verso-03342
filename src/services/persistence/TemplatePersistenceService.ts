@@ -3,6 +3,11 @@
  * 
  * Serviço responsável por persistir mudanças do canvas no quiz21-complete.json
  * 
+ * ⚠️ ATUALIZADO PARA USAR CANONICAL SERVICES
+ * - Usa EditorService canônico para operações de blocos
+ * - Usa TemplateService canônico para persistência
+ * - Integrado com sistema de auto-save do EditorService
+ * 
  * Funcionalidades:
  * - Salvar reordenação de blocos
  * - Salvar adição de novos blocos
@@ -12,6 +17,8 @@
  */
 
 import { Block } from '@/types/editor';
+import { EditorService } from '@/services/canonical/EditorService';
+import { TemplateService, Template } from '@/services/canonical/TemplateService';
 
 interface PersistenceOptions {
   autoSave?: boolean;
@@ -37,6 +44,8 @@ interface TemplateStructure {
 }
 
 class TemplatePersistenceService {
+  private editorService: EditorService;
+  private templateService: TemplateService;
   private autoSaveTimer?: NodeJS.Timeout;
   private pendingChanges: Map<string, any> = new Map();
   private options: PersistenceOptions;
@@ -48,13 +57,41 @@ class TemplatePersistenceService {
       ...options
     };
 
+    // Inicializar serviços canônicos
+    this.editorService = EditorService.getInstance({
+      autoSave: {
+        enabled: this.options.autoSave || false,
+        interval: this.options.autoSaveInterval || 30000,
+        debounce: 2000
+      },
+      persistState: true,
+      validateOnChange: true
+    });
+
+    this.templateService = TemplateService.getInstance();
+
+    // Escutar mudanças do EditorService
+    this.editorService.onChange((event) => {
+      if (event.type === 'block' && this.options.autoSave) {
+        this.handleBlockChange(event);
+      }
+    });
+
     if (this.options.autoSave) {
       this.startAutoSave();
     }
   }
 
   /**
-   * 💾 SALVAR TEMPLATE COMPLETO
+   * � HANDLE BLOCK CHANGE (chamado pelo EditorService)
+   */
+  private handleBlockChange(event: any): void {
+    console.log('🔄 [Persistence] Block change detected:', event);
+    this.pendingChanges.set(`change-${Date.now()}`, event);
+  }
+
+  /**
+   * �💾 SALVAR TEMPLATE COMPLETO
    */
   async saveTemplate(template: TemplateStructure): Promise<boolean> {
     try {
@@ -97,17 +134,32 @@ class TemplatePersistenceService {
   async saveBlockReorder(stepId: string, blocks: Block[]): Promise<boolean> {
     console.log(`🔄 [Persistence] Salvando reordenação do step ${stepId}`);
     
-    this.pendingChanges.set(`reorder-${stepId}`, {
-      type: 'reorder',
-      stepId,
-      blocks: blocks.map(b => ({ id: b.id, type: b.type }))
-    });
+    try {
+      // Usar EditorService para atualizar a ordem dos blocos
+      blocks.forEach((block, index) => {
+        const result = this.editorService.moveBlock(block.id, index);
+        if (!result.success) {
+          console.error(`Erro ao mover bloco ${block.id}:`, result.error);
+        }
+      });
 
-    if (this.options.autoSave) {
-      return true; // Auto-save cuidará disso
+      // Registrar mudança pendente para API backend
+      this.pendingChanges.set(`reorder-${stepId}`, {
+        type: 'reorder',
+        stepId,
+        blocks: blocks.map(b => ({ id: b.id, type: b.type }))
+      });
+
+      if (this.options.autoSave) {
+        return true; // Auto-save cuidará disso
+      }
+
+      return this.flushChanges();
+    } catch (error) {
+      console.error('❌ [Persistence] Erro ao salvar reordenação:', error);
+      this.options.onError?.(error as Error);
+      return false;
     }
-
-    return this.flushChanges();
   }
 
   /**
@@ -116,18 +168,44 @@ class TemplatePersistenceService {
   async saveBlockAdd(stepId: string, block: Block, position: number): Promise<boolean> {
     console.log(`➕ [Persistence] Salvando adição de bloco ao step ${stepId}`);
     
-    this.pendingChanges.set(`add-${stepId}-${block.id}`, {
-      type: 'add',
-      stepId,
-      block,
-      position
-    });
+    try {
+      // Usar EditorService para criar o bloco
+      const result = this.editorService.createBlock({
+        type: block.type,
+        content: (block as any).data || (block as any).content || {},
+        layout: {
+          order: position >= 0 ? position : 0,
+          parent: stepId
+        }
+      });
 
-    if (this.options.autoSave) {
-      return true;
+      if (!result.success) {
+        throw new Error(`Falha ao criar bloco: ${result.error?.message}`);
+      }
+
+      // Se position especificado, mover para posição correta
+      if (position >= 0 && result.data) {
+        this.editorService.moveBlock(result.data.id, position);
+      }
+
+      // Registrar mudança pendente para API backend
+      this.pendingChanges.set(`add-${stepId}-${block.id}`, {
+        type: 'add',
+        stepId,
+        block,
+        position
+      });
+
+      if (this.options.autoSave) {
+        return true;
+      }
+
+      return this.flushChanges();
+    } catch (error) {
+      console.error('❌ [Persistence] Erro ao salvar adição:', error);
+      this.options.onError?.(error as Error);
+      return false;
     }
-
-    return this.flushChanges();
   }
 
   /**
@@ -136,17 +214,31 @@ class TemplatePersistenceService {
   async saveBlockRemove(stepId: string, blockId: string): Promise<boolean> {
     console.log(`➖ [Persistence] Salvando remoção de bloco do step ${stepId}`);
     
-    this.pendingChanges.set(`remove-${stepId}-${blockId}`, {
-      type: 'remove',
-      stepId,
-      blockId
-    });
+    try {
+      // Usar EditorService para deletar o bloco
+      const result = this.editorService.deleteBlock(blockId);
+      
+      if (!result.success) {
+        throw new Error(`Falha ao deletar bloco: ${result.error?.message}`);
+      }
 
-    if (this.options.autoSave) {
-      return true;
+      // Registrar mudança pendente para API backend
+      this.pendingChanges.set(`remove-${stepId}-${blockId}`, {
+        type: 'remove',
+        stepId,
+        blockId
+      });
+
+      if (this.options.autoSave) {
+        return true;
+      }
+
+      return this.flushChanges();
+    } catch (error) {
+      console.error('❌ [Persistence] Erro ao salvar remoção:', error);
+      this.options.onError?.(error as Error);
+      return false;
     }
-
-    return this.flushChanges();
   }
 
   /**
@@ -155,18 +247,34 @@ class TemplatePersistenceService {
   async saveBlockUpdate(stepId: string, blockId: string, data: any): Promise<boolean> {
     console.log(`✏️ [Persistence] Salvando atualização de propriedades`);
     
-    this.pendingChanges.set(`update-${stepId}-${blockId}`, {
-      type: 'update',
-      stepId,
-      blockId,
-      data
-    });
+    try {
+      // Usar EditorService para atualizar o bloco
+      const result = this.editorService.updateBlock(blockId, {
+        content: data
+      });
 
-    if (this.options.autoSave) {
-      return true;
+      if (!result.success) {
+        throw new Error(`Falha ao atualizar bloco: ${result.error?.message}`);
+      }
+
+      // Registrar mudança pendente para API backend
+      this.pendingChanges.set(`update-${stepId}-${blockId}`, {
+        type: 'update',
+        stepId,
+        blockId,
+        data
+      });
+
+      if (this.options.autoSave) {
+        return true;
+      }
+
+      return this.flushChanges();
+    } catch (error) {
+      console.error('❌ [Persistence] Erro ao salvar atualização:', error);
+      this.options.onError?.(error as Error);
+      return false;
     }
-
-    return this.flushChanges();
   }
 
   /**
