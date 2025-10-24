@@ -9,7 +9,6 @@ import { seedTemplates } from './templates/seed';
 import { componentsRouter } from './templates/components.controller';
 import { quizStyleRouter } from './quiz-style/controller';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
 
 // Get __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -205,99 +204,6 @@ if (process.env.USE_QUIZ_STYLE_ADAPTER !== 'false') {
 
 // Seed inicial (executa apenas se não houver templates)
 seedTemplates();
-
-// ==================================================================================
-// NOCODE: Split do Master v3 em Steps/Blocks (endpoint administrativo)
-// ==================================================================================
-app.post('/api/templates/split-master', async (req, res) => {
-  try {
-    if (process.env.NODE_ENV === 'production') {
-      return res.status(501).json({ error: 'Não disponível em produção' });
-    }
-
-    const startedAt = Date.now();
-    // Resolvendo caminhos relativos ao projeto
-    const ROOT = path.resolve(process.cwd());
-    const MASTER_PATH = path.join(ROOT, 'public', 'templates', 'quiz21-complete.json');
-    const OUT_BASE = path.join(ROOT, 'public', 'templates', 'quiz21');
-    const OUT_STEPS = path.join(OUT_BASE, 'steps');
-    const OUT_BLOCKS = path.join(OUT_BASE, 'blocks');
-
-    const ensureDir = (dir: string) => { if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); };
-    const normalizeStepId = (id: string) => {
-      const m = String(id).match(/^(?:step-)?(\d{1,2})$/) || String(id).match(/^step-(\d{1,2})/);
-      if (m) return `step-${String(parseInt(m[1], 10)).padStart(2, '0')}`;
-      return id;
-    };
-
-    if (!fs.existsSync(MASTER_PATH)) {
-      return res.status(404).json({ error: 'Arquivo master não encontrado', path: MASTER_PATH });
-    }
-
-    const raw = fs.readFileSync(MASTER_PATH, 'utf-8');
-    const master = JSON.parse(raw);
-    const stepsObj = master?.steps || master;
-    const stepIds = Object.keys(stepsObj)
-      .filter(k => /^step-\d{1,2}$/.test(k))
-      .map(normalizeStepId)
-      .sort();
-
-    ensureDir(OUT_STEPS);
-    ensureDir(OUT_BLOCKS);
-
-    // Import dinâmico do conversor (TS via tsx em dev)
-    const converter = await import(path.resolve(process.cwd(), 'src/utils/templateConverter.ts'));
-    const safeGetTemplateBlocks = converter.safeGetTemplateBlocks as (id: string, tpl: any) => any[];
-    const blockComponentsToBlocks = converter.blockComponentsToBlocks as (components: any[]) => any[];
-
-    const index: Array<{ id: string; path: string; blocksPath: string; type?: string; name?: string }> = [];
-    let ok = 0; let fail = 0;
-    const details: Array<{ stepId: string; sections: number; blocks: number; error?: string }> = [];
-
-    for (const stepId of stepIds) {
-      try {
-        const step = stepsObj[stepId];
-
-        // 1) Gravar step bruto (v3)
-        const stepOutPath = path.join(OUT_STEPS, `${stepId}.json`);
-        fs.writeFileSync(stepOutPath, JSON.stringify(step, null, 2), 'utf-8');
-
-        // 2) Converter para blocos modulares (Block[])
-        const templateForConverter: any = { [stepId]: step };
-        (templateForConverter as any)._source = 'master-v3';
-        const blockComponents = safeGetTemplateBlocks(stepId, templateForConverter);
-        const blocks = blockComponentsToBlocks(blockComponents);
-        const blocksOut = { stepId, blocks };
-        const blocksOutPath = path.join(OUT_BLOCKS, `${stepId}.blocks.json`);
-        fs.writeFileSync(blocksOutPath, JSON.stringify(blocksOut, null, 2), 'utf-8');
-
-        index.push({
-          id: stepId,
-          path: `./steps/${stepId}.json`,
-          blocksPath: `./blocks/${stepId}.blocks.json`,
-          type: step?.type || step?.metadata?.category,
-          name: step?.metadata?.name || stepId,
-        });
-
-        ok++;
-        details.push({ stepId, sections: Array.isArray(step?.sections) ? step.sections.length : 0, blocks: blocks.length });
-      } catch (err: any) {
-        fail++;
-        details.push({ stepId, sections: 0, blocks: 0, error: String(err?.message || err) });
-      }
-    }
-
-    // 3) Gravar índice
-    const indexPath = path.join(OUT_BASE, 'index.json');
-    fs.writeFileSync(indexPath, JSON.stringify({ generatedAt: new Date().toISOString(), steps: index }, null, 2), 'utf-8');
-
-    const tookMs = Date.now() - startedAt;
-    return res.json({ ok: true, summary: { ok, fail, tookMs }, output: OUT_BASE, details });
-  } catch (e: any) {
-    console.error('❌ Erro no split-master endpoint:', e);
-    return res.status(500).json({ ok: false, error: String(e?.message || e) });
-  }
-});
 
 // Generic error handler
 app.use((err: any, req: any, res: any, next: any) => {

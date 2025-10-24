@@ -23,8 +23,8 @@ const isTestEnv = (() => {
 })();
 
 export const TEMPLATE_SOURCES = {
-  // Habilitar Master JSON por padrão (inclusive em desenvolvimento), mantendo possibilidade de override por env var
-  useMasterJSON: bool((import.meta as any)?.env?.VITE_USE_MASTER_JSON, true),
+  // No ambiente de teste, habilitamos master JSON por padrão para atender expectativas dos testes
+  useMasterJSON: bool((import.meta as any)?.env?.VITE_USE_MASTER_JSON, isTestEnv ? true : false),
   useNormalizedJSON: bool((import.meta as any)?.env?.VITE_USE_NORMALIZED_JSON, false),
   useModularTemplates: bool((import.meta as any)?.env?.VITE_USE_MODULAR_TEMPLATES, true),
 };

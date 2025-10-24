@@ -93,20 +93,15 @@ export class TemplateLoader {
       const cached = this.loadFromCache(normalizedKey);
       if (cached) return cached;
 
-      // Estratégia 2: Master JSON público (controlado por flag) — prioridade para garantir paridade de produção
-      // NOVO (prioridade maior): tentar primeiro o JSON de blocos por step, se existir
-      const fromStepBlocks = await this.loadFromStepBlocksJSON(normalizedKey);
-      if (fromStepBlocks) return fromStepBlocks;
+      // Estratégia 2: TemplateRegistry (fonte canônica em memória)
+      const fromRegistry = this.loadFromRegistry(normalizedKey);
+      if (fromRegistry) return fromRegistry;
 
-      // Em seguida, o Master JSON completo (com hidratação)
+      // Estratégia 3: Master JSON público (controlado por flag)
       if (TEMPLATE_SOURCES.useMasterJSON) {
         const fromMaster = await this.loadFromMasterJSON(normalizedKey);
         if (fromMaster) return fromMaster;
       }
-
-      // Estratégia 3: TemplateRegistry (fonte canônica em memória)
-      const fromRegistry = this.loadFromRegistry(normalizedKey);
-      if (fromRegistry) return fromRegistry;
 
       // Estratégia 4: JSON normalizado (gates 02-11) - controlado por flag
       if (TEMPLATE_SOURCES.useNormalizedJSON) {
@@ -126,48 +121,6 @@ export class TemplateLoader {
     } finally {
       this.loadingSteps.delete(normalizedKey);
       console.groupEnd();
-    }
-  }
-
-  /**
-   * Estratégia 2 (prioritária): Carregar JSON de blocos por step (public/templates/quiz21/blocks/step-XX.blocks.json)
-   */
-  private async loadFromStepBlocksJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
-    try {
-      if (typeof window === 'undefined' || !window.location) return null;
-
-      const url = `/templates/quiz21/blocks/${normalizedKey}.blocks.json`;
-      const res = await this.withRetry('step-blocks:fetch', async () => {
-        const r = await fetch(url, { cache: 'force-cache' });
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r;
-      });
-      if (!res) return null;
-
-      const data = await res.json();
-      let blocks = Array.isArray(data?.blocks) ? (data.blocks as Block[]) : [];
-      if (!blocks.length) return null;
-
-      // Preferência por overlays estáticos ricos para etapas conhecidas (12, 19, 20)
-      try {
-        const preferStatic = ['step-12', 'step-19', 'step-20'];
-        if (preferStatic.includes(normalizedKey) && hasModularTemplate(normalizedKey)) {
-          const staticBlocks = loadStepTemplate(normalizedKey);
-          if (Array.isArray(staticBlocks) && staticBlocks.length > 0) {
-            blocks = staticBlocks as Block[];
-            console.log(`✅ Overlay estático aplicado em ${normalizedKey} (substituiu Step Blocks JSON)`);
-          }
-        }
-      } catch (overlayErr) {
-        console.warn('⚠️ Falha ao aplicar overlay estático (opcional) em Step Blocks JSON:', normalizedKey, overlayErr);
-      }
-
-      unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
-      console.log(`📦 Step Blocks JSON → ${normalizedKey}: ${blocks.length} blocos`);
-      return { blocks, source: 'individual-json' };
-    } catch (e) {
-      // silencioso: se não existir o arquivo, apenas segue o fluxo de fallback
-      return null;
     }
   }
 
@@ -280,22 +233,7 @@ export class TemplateLoader {
           sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections)
         };
         const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
-        let blocks = blockComponentsToBlocks(blockComponents);
-
-        // Preferência por overlays estáticos ricos para etapas conhecidas (12, 19, 20)
-        try {
-          const preferStatic = ['step-12', 'step-19', 'step-20'];
-          if (preferStatic.includes(normalizedKey)) {
-            // Se existir template modular/estático para a etapa, substituir pelos blocos estáticos
-            const staticBlocks = loadStepTemplate(normalizedKey);
-            if (Array.isArray(staticBlocks) && staticBlocks.length > 0) {
-              blocks = staticBlocks as Block[];
-              console.log(`✅ Overlay estático aplicado em ${normalizedKey} (usando JSON modular)`);
-            }
-          }
-        } catch (overlayErr) {
-          console.warn('⚠️ Falha ao aplicar overlay estático (opcional):', normalizedKey, overlayErr);
-        }
+        const blocks = blockComponentsToBlocks(blockComponents);
 
         unifiedCache.set(masterBlocksKey(normalizedKey), blocks);
         unifiedCache.set(stepBlocksKey(normalizedKey), blocks);

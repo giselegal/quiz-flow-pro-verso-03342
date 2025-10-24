@@ -83,7 +83,6 @@ const MeusFunisPageReal: React.FC = () => {
     const [publishingDraftId, setPublishingDraftId] = useState<string | null>(null);
     const [confirmPublishId, setConfirmPublishId] = useState<string | null>(null);
     const { toast } = useToast();
-    const [isSplitting, setIsSplitting] = useState(false);
 
     // persistir highlight via query param
     useEffect(() => {
@@ -464,30 +463,6 @@ const MeusFunisPageReal: React.FC = () => {
         }
     };
 
-    // NOCODE: Disparar split do master v3 em steps/blocks via endpoint
-    const handleSplitMaster = async () => {
-        try {
-            setIsSplitting(true);
-            const resp = await fetch('/api/templates/split-master', { method: 'POST' });
-            const data = await resp.json().catch(() => ({}));
-            if (!resp.ok) {
-                throw new Error(data?.error || `Falha HTTP ${resp.status}`);
-            }
-            const ok = data?.summary?.ok ?? 0;
-            const fail = data?.summary?.fail ?? 0;
-            const took = data?.summary?.tookMs ? `${data.summary.tookMs}ms` : '';
-            toast({
-                title: 'Split concluído',
-                description: `${ok} etapas geradas, ${fail} falhas. ${took}`,
-            });
-        } catch (e: any) {
-            console.error('Erro no split master:', e);
-            toast({ title: 'Erro ao dividir Master', description: String(e?.message || e), variant: 'destructive' });
-        } finally {
-            setIsSplitting(false);
-        }
-    };
-
     return (
         <div className="p-6">
             {/* Header */}
@@ -502,14 +477,6 @@ const MeusFunisPageReal: React.FC = () => {
                         </p>
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="outline" onClick={handleSplitMaster} disabled={isSplitting} title="Gerar arquivos por etapa a partir do Master v3">
-                            {isSplitting ? (
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            ) : (
-                                <RefreshCw className="w-4 h-4 mr-2" />
-                            )}
-                            Regerar Steps/Blocks (Master)
-                        </Button>
                         <Button variant="outline" onClick={loadFunis}>
                             <RefreshCw className="w-4 h-4 mr-2" />
                             Atualizar
