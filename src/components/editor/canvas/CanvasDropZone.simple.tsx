@@ -546,19 +546,10 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     };
   }, [enableProgressiveEdit, editRenderCount, blocks.length]);
 
-  // Handler para cliques no canvas vazio (desselecionar blocos)
-  const handleCanvasClick = (e: React.MouseEvent) => {
-    // Só desseleciona se o clique foi diretamente no canvas (não em blocos)
-    if (e.target === e.currentTarget && onDeselectBlocks && !isPreviewing) {
-      onDeselectBlocks();
-    }
-  };
-
   return (
     <div
       id={CANVAS_ROOT_ID}
       ref={setNodeRef}
-      onClick={handleCanvasClick}
       className={cn(
         'min-h-[300px] transition-all duration-200 p-2 overflow-visible',
         'z-0',
