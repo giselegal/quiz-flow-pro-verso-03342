@@ -227,6 +227,10 @@ export class TemplateLoader {
 
       const master = this.masterTemplateRef;
       const stepConfig = master?.steps?.[normalizedKey];
+      if (!stepConfig) {
+        console.warn(`⚠️ Master JSON carregado, mas step não encontrado: ${normalizedKey}`);
+        return null;
+      }
       if (stepConfig) {
         const hydrated = {
           ...stepConfig,
