@@ -19,7 +19,7 @@ const __dirname = path.dirname(__filename);
 
 // Paths
 const MASTER_JSON_PATH = path.join(__dirname, '../public/templates/quiz21-complete.json');
-const OUTPUT_PATH = path.join(__dirname, '../src/data/generated-quiz-steps.json');
+const OUTPUT_PATH = path.join(__dirname, '../public/templates/generated-quiz-steps.json');
 
 console.log('🎯 Carregando quiz21-complete.json...');
 

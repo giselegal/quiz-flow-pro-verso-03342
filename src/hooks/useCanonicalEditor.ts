@@ -359,7 +359,7 @@ export function useCanonicalEditor(
       // 🎯 SPECIAL CASE: quiz21StepsComplete - load from generated file
       if (id === 'quiz21StepsComplete') {
         try {
-          const response = await fetch('/src/data/generated-quiz-steps.json');
+          const response = await fetch('/templates/generated-quiz-steps.json');
           if (response.ok) {
             const generatedData = await response.json();
             console.log('✅ Loading from generated file:', generatedData.totalBlocks, 'blocks');
