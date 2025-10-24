@@ -16,6 +16,9 @@ import React from 'react';
 import { BaseStepProps, StepComponent, StepConfig } from './StepTypes';
 import { stepRegistry } from './StepRegistry';
 import { normalizeStepId } from '@/utils/quizStepIds';
+import { ModularQuestionStep, ModularStrategicQuestionStep } from '@/components/quiz-modular';
+import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
+import { ResultProvider } from '@/contexts/ResultContext';
 
 // Import dos componentes de produção originais
 import OriginalIntroStep from '@/components/quiz/IntroStep';
@@ -126,7 +129,6 @@ const QuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
         || [];
 
     // Usar o renderer modular de perguntas (v3)
-    const { ModularQuestionStep } = require('@/components/quiz-modular');
 
     return (
         <ModularQuestionStep
@@ -191,7 +193,7 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
         || quizState?.answers?.[stepId.replace('step-0', 'step-')]?.[0]
         || '';
 
-    const { ModularStrategicQuestionStep } = require('@/components/quiz-modular');
+    // Usar o renderer modular de perguntas estratégicas (v3)
 
     return (
         <ModularStrategicQuestionStep
@@ -281,7 +283,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
     // Se template tem blocos, usar blocos atômicos
     if (template?.blocks && template.blocks.length > 0) {
         console.log('🎨 [TransitionStepAdapter] Rendering atomic blocks:', template.blocks.length);
-        const UniversalBlockRenderer = require('@/components/editor/blocks/UniversalBlockRenderer').default;
+        // Renderizador universal de blocos (ESM)
 
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-[#fffaf7]">
@@ -419,8 +421,7 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
 
     // Se template tem blocos, usar blocos atômicos
     if (template?.blocks && template.blocks.length > 0) {
-        const { ResultProvider } = require('@/contexts/ResultContext');
-        const UniversalBlockRenderer = require('@/components/editor/blocks/UniversalBlockRenderer').default;
+        // Provider de resultado e renderizador universal (ESM)
 
         return (
             <ResultProvider
