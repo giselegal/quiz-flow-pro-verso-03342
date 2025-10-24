@@ -132,9 +132,9 @@ const OfferMap = React.lazy(() => import('@/components/editor/quiz/components/Of
 // Tipos centrais importados de ./types (removidas definições locais duplicadas)
 
 // Import da biblioteca de componentes do registry
-import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/EnhancedBlockRegistry';
 // Import direto da função para evitar uso de require() no ambiente ESM do browser
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 
 /**
  * Mapeia categorias para ícones React
