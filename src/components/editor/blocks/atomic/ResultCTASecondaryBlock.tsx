@@ -14,6 +14,9 @@ export default function ResultCTASecondaryBlock({
     const size = block.content?.size || 'md';
 
     const handleClick = (e: React.MouseEvent) => {
+        // 🔥 CRITICAL: Impedir propagação para o container pai
+        e.stopPropagation();
+
         if (onClick) {
             onClick();
         }

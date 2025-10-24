@@ -17,7 +17,7 @@ export default function IntroImageBlock({
   return (
     <div
       className={`flex justify-center my-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >
       <img
         src={src}

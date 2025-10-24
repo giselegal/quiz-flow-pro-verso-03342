@@ -14,7 +14,7 @@ export default function TransitionProgressBlock({
   return (
     <div
       className={`w-full mb-6 ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >
       <div
         className="w-full rounded-full overflow-hidden"

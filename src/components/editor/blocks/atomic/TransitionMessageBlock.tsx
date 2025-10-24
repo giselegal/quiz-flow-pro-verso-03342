@@ -22,7 +22,7 @@ export default function TransitionMessageBlock({
         backgroundColor,
         borderRadius
       }}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >
       <div className="flex items-center gap-3">
         <span className="text-3xl">{emoji}</span>

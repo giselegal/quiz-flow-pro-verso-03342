@@ -73,7 +73,10 @@ export default function IntroTitleBlock({
     <h1
       className={`${fontSize} ${fontWeight} ${textAlign} mb-4 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
       style={color ? { color } : undefined}
-      onClick={onClick}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick?.();
+      }}
     >
       {renderContent()}
     </h1>

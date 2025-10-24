@@ -19,7 +19,7 @@ export default function ResultCTABlock({
   return (
     <div
       className={`mt-8 ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >
       <Button
         size={size as any}

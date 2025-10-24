@@ -17,7 +17,7 @@ export default function ResultCharacteristicsBlock({
   return (
     <div
       className={`mb-6 ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >
       <ul className="space-y-3">
         {characteristics.map((item: any, index: number) => {

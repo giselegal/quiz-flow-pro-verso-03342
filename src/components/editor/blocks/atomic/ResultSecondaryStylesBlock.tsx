@@ -16,7 +16,7 @@ export default function ResultSecondaryStylesBlock({
   return (
     <div
       className={`mb-6 ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >
       <h3 className="text-xl font-semibold mb-4" style={{ color: '#5b4135' }}>
         Outros estilos compatíveis:

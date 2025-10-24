@@ -30,7 +30,7 @@ export default function IntroDescriptionBlock({
     <p
       className={`${fontSize} ${textAlign} mb-4 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
       style={{ opacity }}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >
       {hasHtml ? (
         <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }} />

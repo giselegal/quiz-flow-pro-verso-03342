@@ -46,7 +46,10 @@ export default function QuestionNavigationBlock({
   const nextStepId = (block.properties as any)?.nextStepId as string | number | undefined;
   const prevStepId = (block.properties as any)?.prevStepId as string | number | undefined;
 
-  const handleClick = () => {
+  const handleClick = (e?: React.MouseEvent) => {
+    // 🔥 CRITICAL: Impedir propagação se for evento de click
+    if (e) e.stopPropagation();
+
     const allowed = enableWhenValid ? canProceed : true;
     if (isEditable || !allowed) return;
 
@@ -69,7 +72,10 @@ export default function QuestionNavigationBlock({
     }
   };
 
-  const handleBack = () => {
+  const handleBack = (e?: React.MouseEvent) => {
+    // 🔥 CRITICAL: Impedir propagação se for evento de click
+    if (e) e.stopPropagation();
+
     if (isEditable) return;
     // Dispara evento sem navegação (tracking)
     try {

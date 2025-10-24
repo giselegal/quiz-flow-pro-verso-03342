@@ -115,6 +115,8 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     if (!isInteractive && !onDragHandle) {
       e.preventDefault();
     }
+    // 🔥 CRITICAL: Impedir propagação para o container pai
+    e.stopPropagation();
     // Selecionar sempre (inclusive quando clicar em áreas não interativas)
     handleBlockSelection(String(block.id));
   }, [numericStep, block.id, scopeId, handleBlockSelection]);
@@ -123,6 +125,8 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
   const handleClick = (e: React.MouseEvent) => {
     // Ignorar cliques com modificadores ou se um drag explícito prevenir o default
     if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.defaultPrevented) return;
+    // 🔥 CRITICAL: Impedir propagação para o container pai
+    e.stopPropagation();
     try {
       const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
       if (g?.__DND_DEBUG) {

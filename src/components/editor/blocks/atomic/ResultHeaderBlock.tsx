@@ -21,7 +21,7 @@ export default function ResultHeaderBlock({
   return (
     <div
       className={`text-center mb-8 ${isSelected ? 'ring-2 ring-primary' : ''}`}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >
       <div className="text-5xl mb-4">{emoji}</div>
       <h1 className="text-4xl font-bold mb-2" style={{ color: titleColor }}>

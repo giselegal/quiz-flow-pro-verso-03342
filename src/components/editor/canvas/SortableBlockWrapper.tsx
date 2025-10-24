@@ -166,6 +166,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   const handlePointerDownCapture = (e: React.PointerEvent) => {
     // Só botão principal e sem modificadores
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    // 🔥 CRITICAL: Impedir propagação para o container pai
+    e.stopPropagation();
     handleBlockSelection(String(block.id));
   };
 

@@ -48,7 +48,7 @@ export default function ResultStyleBlock({
     return (
         <div
             className={`p-6 rounded-lg bg-gradient-to-br from-[#B89B7A]/10 to-[#a08966]/10 mb-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
-            onClick={onClick}
+            onClick={(e) => { e.stopPropagation(); onClick?.(); }}
         >
             {/* Imagem do estilo (se disponível e configurado) */}
             {showImage && imageUrl && (

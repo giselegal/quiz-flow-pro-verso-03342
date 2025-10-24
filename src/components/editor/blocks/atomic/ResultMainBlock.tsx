@@ -44,7 +44,7 @@ export default function ResultMainBlock({
     <div
       className={`p-8 rounded-xl mb-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
       style={{ backgroundColor }}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >
       {/* Celebração */}
       {showCelebration && (

@@ -35,7 +35,10 @@ export default function ResultCTAPrimaryBlock({
     const size = block.content?.size || 'lg';
     const trackAnalytics = block.content?.trackAnalytics !== false;
 
-    const handleClick = () => {
+    const handleClick = (e: React.MouseEvent) => {
+        // 🔥 CRITICAL: Impedir propagação para o container pai
+        e.stopPropagation();
+
         // Permitir seleção no editor
         if (onClick) {
             onClick();
