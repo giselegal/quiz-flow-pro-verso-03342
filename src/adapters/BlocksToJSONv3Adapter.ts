@@ -284,8 +284,9 @@ export class BlocksToJSONv3Adapter {
      * 🔄 Conversão completa: QuizStep → JSON v3.0
      */
     static quizStepToJSONv3(step: QuizStep, stepId: string): JSONv3Template {
-        // Usar conversão existente QuizStep → Blocks
-        const { convertStepToBlocks } = require('@/utils/quizConversionUtils');
+        // Usar conversão existente QuizStep → Blocks (ESM)
+        const blocks = convertStepToBlocks(step);
+        import { convertStepToBlocks } from '@/utils/quizConversionUtils';
         const blocks = convertStepToBlocks(step);
 
         // Converter Blocks → JSON v3.0
@@ -299,8 +300,9 @@ export class BlocksToJSONv3Adapter {
      * 🔄 Conversão completa: JSON v3.0 → QuizStep
      */
     static jsonv3ToQuizStep(json: JSONv3Template): QuizStep {
-        // Usar adaptador existente
-        const { QuizStepAdapter } = require('@/adapters/QuizStepAdapter');
+        // Usar adaptador existente (ESM)
+        return QuizStepAdapter.fromJSON(json);
+        import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
         return QuizStepAdapter.fromJSON(json);
     }
 

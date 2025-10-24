@@ -209,17 +209,17 @@ if (typeof window !== 'undefined') {
 /**
  * Hook React para usar event bus com cleanup automático
  */
+import React, { useEffect, useCallback } from 'react';
+
 export function useEditorEvent<K extends keyof EditorEvents>(
   eventName: K,
   handler: (detail: EditorEvents[K]) => void,
   deps: React.DependencyList = []
 ): void {
-  const { useEffect, useCallback } = require('react');
-  
   const stableHandler = useCallback((event: CustomEvent<EditorEvents[K]>) => {
     handler(event.detail);
   }, deps);
-  
+
   useEffect(() => {
     editorEventBus.on(eventName, stableHandler);
     return () => editorEventBus.off(eventName, stableHandler);

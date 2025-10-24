@@ -2,6 +2,7 @@ import caktoquizQuestions from '@/data/caktoquizQuestions';
 import { isScorableQuestion } from '@/core/constants/quiz';
 import { StyleResult, QuizQuestion, QuizResult, QuizAnswer } from '@/types/quiz';
 import { mapToStyleResult } from '@/utils/styleResultMapper';
+import { UnifiedCalculationEngine } from '@/utils/UnifiedCalculationEngine';
 import { useCallback, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import { useQuizRulesConfig } from './useQuizRulesConfig';
@@ -153,10 +154,7 @@ export const useQuizLogic = () => {
         StorageService.safeGetString('quizUserName') || '';
 
       try {
-        // Importar dinamicamente para evitar dependências circulares
-        const { UnifiedCalculationEngine } = require('@/utils/UnifiedCalculationEngine');
-
-        // Criar engine com configuração centralizada
+        // Criar engine com configuração centralizada (ESM)
         const engine = new UnifiedCalculationEngine(config || undefined);
 
         const engineResult = engine.calculateResults(answers, {
@@ -169,46 +167,26 @@ export const useQuizLogic = () => {
           debug: process.env.NODE_ENV === 'development'
         });
 
-        // Mapear resultado do engine para interface esperada pelo useQuizLogic
-        const primaryStyleData = engineResult.scores.find((s: any) => s.style === engineResult.primaryStyle);
-        const secondaryStylesData = engineResult.scores.filter((s: any) =>
-          engineResult.secondaryStyles.includes(s.style)
+        // Mapear resultado do engine (já retorna QuizResult compatível)
+        const primary = engineResult.primaryStyle;
+        const secondaries = engineResult.secondaryStyles || [];
+        const allStyles = [primary, ...secondaries].filter(Boolean) as any[];
+        const totalScore = allStyles.reduce((sum, s: any) => sum + (s.points || 0), 0);
+
+        const styleScores = Object.fromEntries(
+          allStyles.map((s: any) => [
+            (s.style || s.category || s.id || '').toString(),
+            s.points || 0
+          ])
         );
-        const totalScore = engineResult.scores.reduce((sum: number, s: any) => sum + (s.points || 0), 0);
 
         const mappedResult: QuizResult = {
-          id: `result-${Date.now()}`,
-          responses: {},
+          ...engineResult,
           score: totalScore,
-          maxScore: 100,
-          completedAt: new Date().toISOString(),
-          primaryStyle: mapToStyleResult({
-            category: engineResult.primaryStyle || 'natural',
-            score: primaryStyleData?.points || 0,
-            percentage: primaryStyleData?.percentage || 0,
-            style: (engineResult.primaryStyle || 'natural').toLowerCase(),
-            points: primaryStyleData?.points || 0,
-            rank: 1
-          }),
-          secondaryStyles: secondaryStylesData.map((styleData: any, index: number) =>
-            mapToStyleResult({
-              category: styleData.style,
-              score: styleData.points,
-              percentage: styleData.percentage,
-              style: styleData.style.toLowerCase(),
-              points: styleData.points,
-              rank: index + 2,
-            })
-          ),
-          totalQuestions: engineResult.totalQuestions,
-          styleScores: Object.fromEntries(
-            engineResult.scores.map((s: any) => [s.style, s.points])
-          ),
-          // Dados de compatibilidade
+          styleScores,
           predominantStyle: engineResult.primaryStyle,
           complementaryStyles: engineResult.secondaryStyles,
-          userData: engineResult.userData
-        };
+        } as QuizResult;
 
         console.log('✅ useQuizLogic: Resultado calculado via UnifiedCalculationEngine:', {
           primaryStyle: mappedResult.primaryStyle?.category || mappedResult.primaryStyle?.name,

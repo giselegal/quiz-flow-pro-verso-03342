@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * 🔧 STABLE ID GENERATOR
  * 
@@ -83,12 +84,4 @@ export function useStableId(key: string, prefix: string = 'id'): string {
     // Usar useMemo APENAS para memoizar, não para gerar
     const stableKey = React.useMemo(() => key, [key]);
     return generateStableId(stableKey, prefix);
-}
-
-// Importar React se disponível
-let React: any;
-try {
-    React = require('react');
-} catch {
-    // React não disponível, useStableId não funcionará
 }
