@@ -270,4 +270,95 @@ describe('PropertiesPanel - edição de blocos', () => {
             expect(afterRemove.length).toBe(1);
         });
     });
+
+    it('edita layout do options-grid: colunas e imageSize=custom com dimensões', async () => {
+        const initialBlock: BlockComponent = {
+            id: 'block-4',
+            type: 'options-grid',
+            order: 1,
+            properties: { columns: 2, imageSize: 'medium', imageMaxSize: 96 },
+            content: { options: [{ id: 'opt1', text: 'Item 1', imageUrl: '', points: 0, category: '' }] },
+        };
+
+        const { Wrapper } = setupPanel(initialBlock);
+        render(<Wrapper />);
+
+        // Abrir grupo Layout
+        const layoutTrigger = await screen.findByText('Layout');
+        fireEvent.click(layoutTrigger);
+
+        // Mudar colunas para 3 via controle segmentado
+        const columnsField = await screen.findByText('Colunas do Grid');
+        const columnsContainer = columnsField.closest('[data-field-key="columns"]') as HTMLElement;
+        expect(columnsContainer).toBeTruthy();
+        const btn3 = within(columnsContainer).getByRole('button', { name: '3' });
+        fireEvent.click(btn3);
+
+        // Deve refletir no input numérico ao lado
+        await waitFor(() => {
+            const numberInput = within(columnsContainer).getByDisplayValue('3');
+            expect(numberInput).toBeInTheDocument();
+        });
+
+        // Alterar imageSize para custom
+        const imageSizeField = await screen.findByText('Tamanho da imagem');
+        const imageSizeContainer = imageSizeField.closest('[data-field-key="imageSize"]') as HTMLElement;
+        expect(imageSizeContainer).toBeTruthy();
+        const customBtn = within(imageSizeContainer).getByRole('button', { name: 'custom' });
+        fireEvent.click(customBtn);
+
+        // Agora devem aparecer Largura (custom) e Altura (custom)
+        const widthLabel = await screen.findByText('Largura (custom)');
+        const widthContainer = widthLabel.closest('[data-field-key="imageWidth"]') as HTMLElement;
+        const heightLabel = await screen.findByText('Altura (custom)');
+        const heightContainer = heightLabel.closest('[data-field-key="imageHeight"]') as HTMLElement;
+        expect(widthContainer).toBeTruthy();
+        expect(heightContainer).toBeTruthy();
+
+        // Definir valores via inputs numéricos
+        const widthInput = within(widthContainer).getByRole('spinbutton') as HTMLInputElement;
+        const heightInput = within(heightContainer).getByRole('spinbutton') as HTMLInputElement;
+        fireEvent.change(widthInput, { target: { value: '320' } });
+        fireEvent.change(heightInput, { target: { value: '240' } });
+
+        await waitFor(() => {
+            expect(within(widthContainer).getByDisplayValue('320')).toBeInTheDocument();
+            expect(within(heightContainer).getByDisplayValue('240')).toBeInTheDocument();
+        });
+    });
+
+    it('toggle Mostrar imagens esconde controles dependentes', async () => {
+        const initialBlock: BlockComponent = {
+            id: 'block-5',
+            type: 'options-grid',
+            order: 1,
+            properties: { showImages: true, imageSize: 'medium', imageMaxSize: 96 },
+            content: { options: [{ id: 'opt1', text: 'Item 1', imageUrl: '', points: 0, category: '' }] },
+        };
+
+        const { Wrapper } = setupPanel(initialBlock);
+        render(<Wrapper />);
+
+        // Abrir grupos Conteúdo e Layout
+        const contentTrigger = await screen.findByText('Conteúdo');
+        fireEvent.click(contentTrigger);
+        const layoutTrigger = await screen.findByText('Layout');
+        fireEvent.click(layoutTrigger);
+
+        // Campo dependente presente inicialmente
+        const imageMaxSizeLabel = await screen.findByText('Tamanho da Imagem (px)');
+        expect(imageMaxSizeLabel).toBeInTheDocument();
+
+        // Toggle Mostrar imagens para false
+        const showImagesField = await screen.findByText('Mostrar imagens');
+        const showImagesContainer = showImagesField.closest('[data-field-key="showImages"]') as HTMLElement;
+        const switchEl = showImagesContainer.querySelector('[role="switch"], button, input') as HTMLElement;
+        expect(switchEl).toBeTruthy();
+        fireEvent.click(switchEl);
+
+        // Campo dependente deve sumir
+        await waitFor(() => {
+            expect(screen.queryByText('Tamanho da Imagem (px)')).not.toBeInTheDocument();
+        });
+    });
 });
