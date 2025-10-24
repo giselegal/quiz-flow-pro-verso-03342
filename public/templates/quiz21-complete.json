@@ -62,31 +62,29 @@
       },
       "sections": [
         {
-          "type": "intro-hero",
-          "id": "intro-hero-01",
+          "type": "heading-inline",
+          "id": "intro-title",
           "content": {
-            "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão - Consultoria de Estilo",
-            "logoWidth": 96,
-            "logoHeight": 96,
-            "title": "<span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">Chega</span> <span class=\"playfair-display\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700;\" class=\"playfair-display\">nada combina com você.</span>",
-            "subtitle": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.png",
-            "imageAlt": "Descubra seu estilo predominante",
-            "description": "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
-            "showProgress": false,
-            "progressValue": 0
+            "title": "Bem-vinda ao Quiz de Estilo"
           },
           "style": {
-            "backgroundColor": "#FAF9F7",
-            "textColor": "#432818",
-            "padding": 24
+            "padding": 16
           },
-          "animation": {
-            "type": "fade",
-            "duration": 500,
-            "delay": 0,
-            "easing": "ease-out"
+          "animation": { "type": "fade", "duration": 300 }
+        },
+        {
+          "type": "text-inline",
+          "id": "intro-subtitle",
+          "content": {
+            "text": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!"
+          }
+        },
+        {
+          "type": "button-inline",
+          "id": "start-button",
+          "content": {
+            "buttonText": "Começar",
+            "buttonUrl": "#next"
           }
         }
       ],

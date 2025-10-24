@@ -1,0 +1,99 @@
+{
+  "templateVersion": "3.0",
+  "templateId": "quiz21StepsComplete",
+  "name": "Quiz de Estilo Pessoal - 21 Etapas (V3 Editor Ready)",
+  "description": "Master JSON V3 com steps em sections para editor com blocos reordenáveis e inserção entre blocos",
+  "metadata": {
+    "createdAt": "2025-10-24T00:00:00.000Z",
+    "updatedAt": "2025-10-24T00:00:00.000Z",
+    "author": "Editor Generator",
+    "version": "3.0.0",
+    "_notes": "Este arquivo é um exemplo V3 pronto para o editor. Cada section vira um bloco reordenável. Para inserir no meio, adicione uma nova section com position adequada."
+  },
+  "steps": {
+    "step-01": {
+      "templateVersion": "3.0",
+      "metadata": {
+        "id": "step-01-intro-v3-min",
+        "name": "Introdução",
+        "category": "intro",
+        "version": "3.0.0"
+      },
+      "theme": {
+        "colors": { "primary": "#B89B7A", "secondary": "#432818", "background": "#FAF9F7", "text": "#1F2937" },
+        "fonts": { "heading": "Playfair Display, serif", "body": "Inter, sans-serif" }
+      },
+      "sections": [
+        { "type": "heading-inline", "id": "intro-title", "content": { "title": "Bem-vinda ao Quiz de Estilo" }, "style": { "padding": 16 }, "position": 0 },
+        { "type": "text-inline", "id": "intro-subtitle", "content": { "text": "Descubra seu estilo predominante em minutos." }, "position": 1 },
+        { "type": "button-inline", "id": "start-button", "content": { "buttonText": "Começar", "buttonUrl": "#next" }, "position": 2 }
+      ],
+      "navigation": { "nextStep": "step-02" }
+    },
+    "step-02": {
+      "templateVersion": "3.0",
+      "metadata": {
+        "id": "step-02-v3-min",
+        "name": "Pergunta 1",
+        "category": "question",
+        "version": "3.0.0"
+      },
+      "sections": [
+        {
+          "type": "question-title",
+          "id": "step-02-title",
+          "content": { "text": "Pergunta 1 de 10" },
+          "style": { "padding": 16 },
+          "position": 0
+        },
+        {
+          "type": "options grid",
+          "id": "step-02-options",
+          "content": {
+            "options": [
+              { "id": "natural", "text": "Natural", "image": "/quiz-assets/natural.webp" },
+              { "id": "classico", "text": "Clássico", "image": "/quiz-assets/classico.webp" },
+              { "id": "contemporaneo", "text": "Contemporâneo", "image": "/quiz-assets/contemporaneo.webp" },
+              { "id": "elegante", "text": "Elegante", "image": "/quiz-assets/elegante.webp" }
+            ],
+            "columns": 2,
+            "multipleSelection": true,
+            "minSelections": 3,
+            "maxSelections": 3,
+            "showImages": true
+          },
+          "style": { "padding": 16 },
+          "position": 1
+        },
+        {
+          "type": "button-inline",
+          "id": "step-02-cta",
+          "content": { "buttonText": "Continuar", "buttonUrl": "#next" },
+          "position": 2
+        }
+      ],
+      "validation": {
+        "required": ["selectedOptions"],
+        "rules": { "selectedOptions": { "minItems": 3, "maxItems": 3, "errorMessage": "Selecione exatamente 3 opções" } }
+      },
+      "behavior": { "autoAdvance": true },
+      "navigation": { "nextStep": "step-03" }
+    },
+    "step-03": {
+      "templateVersion": "3.0",
+      "metadata": { "id": "step-03-v3-min", "name": "Pergunta 2", "category": "question", "version": "3.0.0" },
+      "sections": [
+        { "type": "question-title", "id": "step-03-title", "content": { "text": "Pergunta 2 de 10" }, "position": 0 },
+        { "type": "text-inline", "id": "step-03-tip", "content": { "text": "Dica: pense no seu dia a dia." }, "position": 1 },
+        { "type": "options grid", "id": "step-03-options", "content": { "options": [
+          { "id": "jeans", "text": "Jeans" },
+          { "id": "alfaiataria", "text": "Alfaiataria" },
+          { "id": "vestidos", "text": "Vestidos" },
+          { "id": "athleisure", "text": "Athleisure" }
+        ], "columns": 2, "multipleSelection": true, "minSelections": 1, "maxSelections": 3 }, "position": 2 },
+        { "type": "button-inline", "id": "step-03-cta", "content": { "buttonText": "Próxima", "buttonUrl": "#next" }, "position": 3 }
+      ],
+      "navigation": { "nextStep": "step-04" }
+    }
+  }
+}
