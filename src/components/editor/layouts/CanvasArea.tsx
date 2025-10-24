@@ -87,6 +87,10 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
             onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
             onUpdateBlock={(blockId: string, updates: Partial<Block>) => actions.updateBlock(`step-${safeCurrentStep}`, blockId, updates)}
             onDeleteBlock={(blockId: string) => actions.removeBlock(`step-${safeCurrentStep}`, blockId)}
+            onReorderBlocks={(step: number, oldIndex: number, newIndex: number) => {
+              const stepKey = `step-${step}`;
+              actions.reorderBlocks(stepKey, oldIndex, newIndex);
+            }}
             isPreviewMode={false}
             onStepChange={(step: number) => {
               actions.setCurrentStep(step);

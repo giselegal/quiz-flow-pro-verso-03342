@@ -153,6 +153,58 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
     }
   }, [onStepChange, currentStep]);
 
+  // 🎯 DRAG & DROP - Handler de reordenação
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) {
+      console.log('🔄 Drag cancelled or same position');
+      return;
+    }
+
+    console.log('🎯 Drag ended:', { activeId: active.id, overId: over.id });
+
+    // Extrair IDs dos blocos (removendo prefixos de step)
+    const activeIdStr = String(active.id);
+    const overIdStr = String(over.id);
+
+    // Extrair o ID real do bloco (formato: step-X-blockId ou blockId)
+    const getBlockId = (id: string) => {
+      const parts = id.split('-');
+      // Se tem formato step-X-..., pegar última parte
+      if (parts.length > 2 && parts[0] === 'step') {
+        return parts.slice(2).join('-');
+      }
+      return id;
+    };
+
+    const activeBlockId = getBlockId(activeIdStr);
+    const overBlockId = getBlockId(overIdStr);
+
+    // Encontrar índices nos blocos estabilizados
+    const oldIndex = stabilizedBlocks.findIndex(b => b.id === activeBlockId);
+    const newIndex = stabilizedBlocks.findIndex(b => b.id === overBlockId);
+
+    console.log('🔍 Reorder indices:', {
+      activeBlockId,
+      overBlockId,
+      oldIndex,
+      newIndex,
+      totalBlocks: stabilizedBlocks.length
+    });
+
+    if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+      console.log(`✅ Reordering blocks: ${oldIndex} → ${newIndex}`);
+
+      // Chamar callback de reordenação se fornecido
+      if (onReorderBlocks) {
+        onReorderBlocks(currentStep, oldIndex, newIndex);
+      }
+    } else {
+      console.warn('⚠️ Invalid reorder indices:', { oldIndex, newIndex });
+    }
+  }, [stabilizedBlocks, currentStep, onReorderBlocks]);
+
   // ⚡ EFFECT PARA DETECÇÃO DE MUDANÇAS DE STEP
   useEffect(() => {
     if (lastStepRef.current !== currentStep) {
@@ -190,37 +242,45 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
 
   // 🛠️ EDIT MODE RENDERER
   const renderEditMode = useCallback(() => (
-    <div
-      ref={canvasRef}
-      key={canvasKey}
-      className="flex-1 min-h-0 relative bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate"
-      onClick={(e) => {
-        // 🔥 CRITICAL: Impedir seleção do container principal
-        if (e.target === e.currentTarget) {
-          e.stopPropagation();
-        }
-      }}
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
     >
       <div
-        className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+        ref={canvasRef}
+        key={canvasKey}
+        className="flex-1 min-h-0 relative bg-gradient-to-br from-[#FAF9F7] via-[#F5F2E9] to-[#EEEBE1] isolate"
         onClick={(e) => {
-          // 🔥 CRITICAL: Impedir seleção do scroll container
+          // 🔥 CRITICAL: Impedir seleção do container principal
           if (e.target === e.currentTarget) {
             e.stopPropagation();
           }
         }}
       >
-        <CanvasDropZone
-          blocks={stabilizedBlocks}
-          selectedBlockId={selectedBlockId}
-          onSelectBlock={handleBlockSelection}
-          onUpdateBlock={onUpdateBlock}
-          onDeleteBlock={onDeleteBlock}
-          scopeId={currentStep}
-        />
+        <div
+          className="h-full w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+          onClick={(e) => {
+            // 🔥 CRITICAL: Impedir seleção do scroll container
+            if (e.target === e.currentTarget) {
+              e.stopPropagation();
+            }
+          }}
+        >
+          <CanvasDropZone
+            blocks={stabilizedBlocks}
+            selectedBlockId={selectedBlockId}
+            onSelectBlock={handleBlockSelection}
+            onUpdateBlock={onUpdateBlock}
+            onDeleteBlock={onDeleteBlock}
+            scopeId={currentStep}
+          />
+        </div>
       </div>
-    </div>
+    </DndContext>
   ), [
+    sensors,
+    handleDragEnd,
     canvasKey,
     stabilizedBlocks,
     selectedBlockId,
