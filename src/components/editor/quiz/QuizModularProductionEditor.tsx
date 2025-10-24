@@ -125,6 +125,7 @@ import { SCHEMAS, migrateProps } from '@/schemas';
 import { normalizeByType } from '@/utils/normalizeByType';
 import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
 import { validateEditorFunnelSteps } from '@/services/canonical/EditorFunnelValidation';
+import { editorStepsToModularJson, modularJsonToEditorStepsSafe } from '@/lib/modular-json';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -2487,6 +2488,49 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         URL.revokeObjectURL(url);
     }, [steps]);
 
+    // Exportar JSON modular (contrato canônico)
+    const handleExportModular = useCallback(() => {
+        try {
+            const modular = editorStepsToModularJson(steps as any, { exportedAt: new Date().toISOString(), version: 1, source: 'editor' });
+            const data = JSON.stringify(modular, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'quiz-modular.json'; a.click();
+            URL.revokeObjectURL(url);
+            toast({ title: '✅ Exportado', description: 'quiz-modular.json gerado' });
+        } catch (e) {
+            toast({ title: 'Erro ao exportar', description: String(e), variant: 'destructive' });
+        }
+    }, [steps, toast]);
+
+    // Importar JSON modular e popular o editor
+    const handleImportModular = useCallback(() => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json';
+        input.onchange = async () => {
+            const file = input.files?.[0];
+            if (!file) return;
+            try {
+                const text = await file.text();
+                const json = JSON.parse(text);
+                const res = modularJsonToEditorStepsSafe(json);
+                if (!res.ok) {
+                    throw new Error(res.errors.join('\n'));
+                }
+                const editorSteps = res.steps as unknown as EditableQuizStep[];
+                setSteps(editorSteps);
+                if (editorSteps.length > 0) setSelectedStepIdUnified(editorSteps[0].id);
+                setIsDirty(true);
+                toast({ title: '✅ Importado', description: `${editorSteps.length} etapa(s) carregadas` });
+            } catch (e) {
+                toast({ title: 'Falha ao importar', description: String(e), variant: 'destructive' });
+            }
+        };
+        input.click();
+    }, [setSteps, setSelectedStepIdUnified, toast]);
+
     // Handler para quando um quiz é criado pelo Builder System
     const handleBuilderQuizCreated = useCallback((quizData: any) => {
         console.log('🎯 Quiz criado pelo Builder System:', quizData);
@@ -2713,6 +2757,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         Preview Produção
                                     </Button>
                                     <Button variant="outline" size="sm" onClick={handleExport}>Exportar</Button>
+                                    <Button variant="outline" size="sm" onClick={handleExportModular}>Exportar Modular</Button>
+                                    <Button variant="outline" size="sm" onClick={handleImportModular}>Importar Modular</Button>
                                     <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving || !isDirty}>{isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}Salvar</Button>
                                     <div className="flex items-center gap-1">
                                         <Button variant="ghost" size="sm" disabled={!canUndo} onClick={handleUndo} className="text-xs px-2">⮪ Undo</Button>
