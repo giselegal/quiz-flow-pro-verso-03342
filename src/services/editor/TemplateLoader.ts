@@ -40,6 +40,22 @@ export class TemplateLoader {
   private loadingSteps = new Set<string>();
 
   /**
+   * Lê uma flag booleana da querystring, com fallback para false.
+   */
+  private getQueryFlag(name: string): boolean {
+    try {
+      if (typeof window === 'undefined') return false;
+      const sp = new URLSearchParams(window.location.search);
+      const v = sp.get(name);
+      if (!v) return false;
+      const s = String(v).toLowerCase();
+      return s === '1' || s === 'true' || s === 'yes' || s === 'on';
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Utilitário: executa uma função assíncrona com retry + backoff exponencial simples.
    * Retorna null em caso de falha após todas as tentativas.
    */
@@ -97,20 +113,23 @@ export class TemplateLoader {
       const fromRegistry = this.loadFromRegistry(normalizedKey);
       if (fromRegistry) return fromRegistry;
 
-      // Estratégia 3: Master JSON público (controlado por flag)
-      if (TEMPLATE_SOURCES.useMasterJSON) {
+      // Estratégia 3: Master JSON público (controlado por flag OU query ?useMaster=1)
+      const useMasterGate = TEMPLATE_SOURCES.useMasterJSON || this.getQueryFlag('useMaster');
+      if (useMasterGate) {
         const fromMaster = await this.loadFromMasterJSON(normalizedKey);
         if (fromMaster) return fromMaster;
       }
 
-      // Estratégia 4: JSON normalizado (gates 02-11) - controlado por flag
-      if (TEMPLATE_SOURCES.useNormalizedJSON) {
+      // Estratégia 4: JSON normalizado (gates 02-11) - controlado por flag OU query ?useNormalized=1
+      const useNormalizedGate = TEMPLATE_SOURCES.useNormalizedJSON || this.getQueryFlag('useNormalized');
+      if (useNormalizedGate) {
         const normalized = await this.loadNormalized(normalizedKey);
         if (normalized) return normalized;
       }
 
-      // Estratégia 5: Templates modulares (controlado por flag)
-      if (TEMPLATE_SOURCES.useModularTemplates) {
+      // Estratégia 5: Templates modulares (controlado por flag OU query ?useModular=1)
+      const useModularGate = TEMPLATE_SOURCES.useModularTemplates || this.getQueryFlag('useModular');
+      if (useModularGate) {
         const modular = this.loadModular(normalizedKey);
         if (modular) return modular;
       }

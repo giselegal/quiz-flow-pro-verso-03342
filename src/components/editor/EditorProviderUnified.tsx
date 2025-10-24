@@ -207,6 +207,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         };
     }, [funnelId, quizId, enableSupabase, storageKey]);
 
+
+
     // ============================================================================
     // HISTORY MANAGEMENT & STATE MANAGER
     // ============================================================================
@@ -400,6 +402,25 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         stateManager.clearHistory();
         console.log(`✅ Template loaded (Registry-first): ${totalBlocks} blocos em ${Object.keys(newStepBlocks).length} steps`);
     }, [stateManager, enableSupabase, state]);
+
+    // 🚀 Auto-carregar template completo quando query ?template=quiz21StepsComplete
+    const autoLoadTriggeredRef = useRef(false);
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (autoLoadTriggeredRef.current) return;
+        try {
+            const sp = new URLSearchParams(window.location.search);
+            const tpl = sp.get('template');
+            if (tpl && tpl.toLowerCase() === 'quiz21stepscomplete'.toLowerCase()) {
+                autoLoadTriggeredRef.current = true;
+                console.log('🧩 Auto-loading template by query param:', tpl);
+                // Carrega todos os steps usando TemplateLoader com fallback para TS template
+                loadDefaultTemplate();
+            }
+        } catch {
+            // ignore query parsing errors
+        }
+    }, [loadDefaultTemplate]);
 
     // ============================================================================
     // DATA PERSISTENCE
