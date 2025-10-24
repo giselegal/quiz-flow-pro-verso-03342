@@ -132,6 +132,8 @@ const detectActiveEditorContext = (): UnifiedEditorContext | null => {
                     updateBlock: async () => { },
                     ensureStepLoaded: async () => { },
                     loadDefaultTemplate: () => { },
+                    reloadStepFromJSON: async () => { },
+                    reloadAllStepsFromJSON: async () => { },
                     undo: () => { },
                     redo: () => { },
                     canUndo: false,

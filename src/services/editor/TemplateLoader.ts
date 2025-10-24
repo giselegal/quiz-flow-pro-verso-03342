@@ -102,15 +102,16 @@ export class TemplateLoader {
         // ignore
       }
 
-      // Estratégia 1: Cache unificado
-      const cached = this.loadFromCache(normalizedKey);
-      if (cached) return cached;
-
-      // Preferência: tentar JSON individual público primeiro quando for fluxo de template
+      // Preferência: quando for fluxo de template via ?template=quiz21StepsComplete,
+      // tentamos os JSONs públicos PRIMEIRO (evita cache desatualizado em dev)
       if (preferPublicStepJSON) {
         const fromPublic = await this.loadFromPublicStepJSON(normalizedKey);
         if (fromPublic) return fromPublic;
       }
+
+      // Estratégia 1: Cache unificado (somente se não forçar público)
+      const cached = this.loadFromCache(normalizedKey);
+      if (cached) return cached;
 
       // Estratégia 2: Master JSON público (PRIORIDADE quando flag ativa!)
       console.log('🔍 Verificando flag useMasterJSON:', TEMPLATE_SOURCES.useMasterJSON);
@@ -165,7 +166,8 @@ export class TemplateLoader {
 
       for (const url of urls) {
         try {
-          const resp = await fetch(url, { cache: 'force-cache' });
+          const bust = (typeof window !== 'undefined' && import.meta.env?.DEV) ? `?ts=${Date.now()}` : '';
+          const resp = await fetch(url + bust, { cache: 'no-store' });
           if (resp.ok) {
             data = await resp.json();
             break;
@@ -269,7 +271,7 @@ export class TemplateLoader {
   private async loadFromMasterJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
       console.log('🔍 [loadFromMasterJSON] Iniciando...');
-      
+
       if (typeof window === 'undefined' || !window.location) {
         console.warn('⚠️ [loadFromMasterJSON] window ou window.location não disponível');
         return null;
@@ -278,14 +280,14 @@ export class TemplateLoader {
       // Carregar master JSON uma vez
       if (!this.masterTemplateRef) {
         console.log('🔍 [loadFromMasterJSON] Master JSON não está em memória, tentando carregar...');
-        
+
         const cachedMaster = unifiedCache.get(masterTemplateKey());
         if (cachedMaster) {
           console.log('✅ [loadFromMasterJSON] Master JSON encontrado no cache');
           this.masterTemplateRef = cachedMaster;
         } else {
           console.log('🔍 [loadFromMasterJSON] Fazendo fetch de /templates/quiz21-complete.json...');
-          
+
           // Retry com exponential backoff
           let lastError: any = null;
           for (let attempt = 0; attempt < 3; attempt++) {
@@ -294,9 +296,9 @@ export class TemplateLoader {
               const resp = await fetch('/templates/quiz21-complete.json', {
                 cache: 'force-cache'
               });
-              
+
               console.log(`📊 [loadFromMasterJSON] Response status: ${resp.status}, ok: ${resp.ok}`);
-              
+
               if (resp.ok) {
                 this.masterTemplateRef = await resp.json();
                 unifiedCache.set(masterTemplateKey(), this.masterTemplateRef);
@@ -327,16 +329,16 @@ export class TemplateLoader {
       const master = this.masterTemplateRef;
       console.log('🔍 [loadFromMasterJSON] Procurando step:', normalizedKey);
       console.log('🔍 [loadFromMasterJSON] Steps disponíveis:', Object.keys(master?.steps || {}));
-      
+
       const stepConfig = master?.steps?.[normalizedKey];
       if (!stepConfig) {
         console.warn(`⚠️ Master JSON carregado, mas step não encontrado: ${normalizedKey}`);
         return null;
       }
-      
+
       console.log(`✅ [loadFromMasterJSON] Step ${normalizedKey} encontrado!`);
       console.log(`📊 [loadFromMasterJSON] Sections no step:`, stepConfig.sections?.length || 0);
-      
+
       if (stepConfig) {
         const hydrated = {
           ...stepConfig,

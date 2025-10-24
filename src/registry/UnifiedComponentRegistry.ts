@@ -175,12 +175,13 @@ export const preloadCriticalComponents = async (): Promise<void> => {
 
         try {
             const component = UNIFIED_COMPONENT_REGISTRY[componentType];
-            if (component && typeof component === 'function' && !React.isValidElement(component)) {
-                const loader = component as () => Promise<{ default: ComponentType<any> }>;
-                const loadedComponent = await loader();
-                componentCache.set(componentType, loadedComponent.default);
+            // Não invoque componentes de função (causa erros por falta de props)
+            // A meta aqui é só aquecer o cache local com o mapping
+            if (component) {
+                componentCache.set(componentType, component as any);
                 preloadedComponents.add(componentType);
-                console.log(`✅ Preloaded: ${componentType}`);
+                // Nota: para componentes lazy, isso não força o download do chunk, mas evita lookups repetidos
+                console.log(`✅ Registry cached: ${componentType}`);
             }
         } catch (error) {
             console.warn(`⚠️ Failed to preload ${componentType}:`, error);
@@ -206,32 +207,10 @@ export const getUnifiedComponent = async (type: string): Promise<ComponentType<a
     // 2. Busca direta no registry
     const component = UNIFIED_COMPONENT_REGISTRY[type];
     if (component) {
-        if (typeof component === 'function' && !React.isValidElement(component)) {
-            // Check if it's a lazy loader (returns Promise)
-            try {
-                const result = (component as any)();
-                if (result && typeof result.then === 'function') {
-                    // It's a lazy component
-                    const loadedComponent = await result;
-                    componentCache.set(type, loadedComponent.default);
-                    console.log(`✅ Lazy loaded: ${type}`);
-                    return loadedComponent.default;
-                } else {
-                    // It's a regular React component
-                    componentCache.set(type, component as ComponentType<any>);
-                    console.log(`✅ Static component: ${type}`);
-                    return component as ComponentType<any>;
-                }
-            } catch (error) {
-                console.error(`❌ Failed to load component ${type}:`, error);
-                return null;
-            }
-        } else {
-            // Static component
-            componentCache.set(type, component as ComponentType<any>);
-            console.log(`✅ Static component: ${type}`);
-            return component as ComponentType<any>;
-        }
+        // Nunca invoque o componente aqui; apenas retorne a referência (estática ou lazy)
+        componentCache.set(type, component as any);
+        console.log(`✅ Component mapped: ${type}`);
+        return component as any;
     }
 
     // 3. Fallbacks inteligentes
