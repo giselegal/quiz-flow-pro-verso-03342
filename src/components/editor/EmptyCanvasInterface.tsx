@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Zap, Wand2 } from 'lucide-react';
-import { useCanonicalEditor } from '@/hooks/useCanonicalEditor';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { useNotification } from '@/components/ui/Notification';
 
 /**
@@ -19,20 +19,12 @@ export const EmptyCanvasInterface: React.FC<EmptyCanvasInterfaceProps> = ({
     onCreateFirstStep,
     className = ''
 }) => {
-    const { actions } = useCanonicalEditor({ autoLoad: false });
+    const { actions } = usePureBuilder();
     const { addNotification } = useNotification();
 
     const handleCreateFirstStep = async () => {
         try {
-            // Criar primeiro bloco de introdução
-            await actions.createBlock({
-                type: 'heading' as any,
-                order: 0,
-                content: {
-                    title: 'Bem-vindo ao Seu Quiz',
-                    subtitle: 'Comece sua jornada aqui'
-                }
-            });
+            await actions.createFirstStep();
             addNotification('✅ Primeira etapa criada! Comece editando seu funil.', 'success');
 
             // Callback opcional para componente pai

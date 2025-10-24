@@ -12,8 +12,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import { useGlobalEventManager } from '@/utils/OptimizedGlobalEventManager';
 import { HookOrderDebugger } from '@/tools/debug/HookOrderDebugger';
-// ✅ MIGRADO: Usar useCanonicalEditor ao invés de usePureBuilder
-import { useCanonicalEditor } from '@/hooks/useCanonicalEditor';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import EmptyCanvasInterface from '@/components/editor/EmptyCanvasInterface';
 
 // Componente de controles de navegação para aparecer no final dos blocos do editor
@@ -247,21 +246,21 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   scopeId,
   onDeselectBlocks,
 }) => {
-  // ✅ MIGRADO: Usar useCanonicalEditor para acessar blocos e estado
-  const { state: editorState } = useCanonicalEditor({ autoLoad: false });
+  // 🆕 CANVAS VAZIO: Acesso ao estado do PureBuilder para verificar totalSteps
+  const { state } = usePureBuilder();
 
-  // Calcular totalSteps com base nos blocos disponíveis
+  // Calcular totalSteps com base nas stepBlocks disponíveis
   const totalSteps = React.useMemo(() => {
-    // Extrair números de steps dos IDs dos blocos
-    const stepNumbers = editorState.blocks
-      .map(block => {
-        const match = block.id.match(/step-(\d+)/);
+    const stepKeys = Object.keys(state?.stepBlocks || {});
+    const stepNumbers = stepKeys
+      .map(key => {
+        const match = key.match(/step-(\d+)/);
         return match ? parseInt(match[1]) : 0;
       })
       .filter(num => num > 0);
 
-    return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 21; // Default 21 steps
-  }, [editorState.blocks]);
+    return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
+  }, [state?.stepBlocks]);
 
   // 🚀 OTIMIZAÇÃO: Condicionar useRenderCount apenas no desenvolvimento e quando debug estiver ativo
   if (process.env.NODE_ENV === 'development' && (window as any).__DND_DEBUG === true) {

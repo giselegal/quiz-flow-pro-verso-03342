@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHeadlessEditor } from './HeadlessEditorProvider';
-import { useCanonicalEditor } from '@/hooks/useCanonicalEditor';
+import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
 import { FunnelStep } from '../../types/quiz-schema';
 import type { Block } from '@/types/editor';
 
@@ -15,13 +15,15 @@ export const DynamicPropertiesPanel: React.FC = () => {
   const {
     state: builderState,
     actions: builderActions
-  } = useCanonicalEditor({ autoLoad: false });
+  } = usePureBuilder();
 
   const [activeTab, setActiveTab] = useState<PanelTab>('step');
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
-  // 🔧 INTEGRAÇÃO: Usar dados reais do Canonical Editor
-  const currentStepBlocks: Block[] = builderState.blocks || [];
+  // 🔧 INTEGRAÇÃO: Usar dados reais do PureBuilder
+  const currentStepKey = `step-${builderState.currentStep}`;
+  const stepBlocksMap = (builderState.stepBlocks || {}) as Record<string, Block[]>;
+  const currentStepBlocks: Block[] = stepBlocksMap[currentStepKey] || [];
   const selectedBlock = selectedBlockId ? currentStepBlocks.find((block: Block) => block.id === selectedBlockId) : null;
 
   // 🔄 SINCRONIZAÇÃO: Atualizar seleção baseada no estado do builder
@@ -114,16 +116,16 @@ export const DynamicPropertiesPanel: React.FC = () => {
             selectedBlockId={selectedBlockId}
             onBlockSelect={setSelectedBlockId}
             onBlockUpdate={async (blockId, updates) => {
-              await builderActions.updateBlock(blockId, updates);
+              await builderActions.updateBlock(currentStepKey, blockId, updates);
             }}
-            updateProperty={async (blockId, property, value) => {
-              await builderActions.updateBlock(blockId, { [property]: value });
+            updateProperty={(blockId, property, value) => {
+              builderActions.updateBlock(currentStepKey, blockId, { [property]: value });
             }}
-            addBlock={async (block) => {
-              await builderActions.createBlock(block);
+            addBlock={(block) => {
+              builderActions.addBlock(currentStepKey, block);
             }}
-            removeBlock={async (blockId) => {
-              await builderActions.deleteBlock(blockId);
+            removeBlock={(blockId) => {
+              builderActions.removeBlock(currentStepKey, blockId);
             }}
             selectBlock={setSelectedBlockId}
           />
