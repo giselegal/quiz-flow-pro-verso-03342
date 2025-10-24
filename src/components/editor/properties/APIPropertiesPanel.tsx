@@ -21,7 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { AlertCircle, RefreshCw, Check, X, Database } from 'lucide-react';
 
 import { useBlockProperties } from '@/hooks/useBlockProperties';
-import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
+import { useCanonicalEditor } from '@/hooks/useCanonicalEditor';
 import { useFunnels } from '@/providers/FunnelMasterProvider';
 import { type BlockPropertySchema } from '@/api/internal/BlockPropertiesAPI';
 
@@ -51,7 +51,7 @@ const FunnelDataDisplay: React.FC<{
     blockId: string;
     blockType: string;
 }> = memo(({ blockId, blockType }) => {
-    const builder = usePureBuilder();
+    const builder = useCanonicalEditor({ autoLoad: false });
     const funnelsContext = useFunnels();
 
     // 🛡️ DEFENSIVE GUARD: Verificar se builder está disponível  
@@ -61,7 +61,7 @@ const FunnelDataDisplay: React.FC<{
                 <div className="text-center">
                     <AlertCircle className="w-8 h-8 mx-auto mb-2" />
                     <p>Builder context não disponível</p>
-                    <p className="text-xs">Verifique se o componente está dentro de PureBuilderProvider</p>
+                    <p className="text-xs">Verifique se o componente está dentro de EditorProvider</p>
                 </div>
             </div>
         );
@@ -70,22 +70,18 @@ const FunnelDataDisplay: React.FC<{
     const funnelInfo = useMemo(() => {
         try {
             const stepState = builder?.state;
-            const currentStepKey = `step-${stepState.currentStep}`;
-            const stepBlocksMap = (stepState.stepBlocks || {}) as Record<string, any[]>;
-            const currentStepBlocks = stepBlocksMap[currentStepKey] || [];
+            const currentStepBlocks = stepState.blocks || [];
             const currentBlock = currentStepBlocks.find((b: any) => b.id === blockId);
-
-            // TODO: Implement template blocks loading
 
             return {
                 funnelId: funnelsContext?.currentFunnel?.id || 'local-funnel',
                 currentStep: stepState.currentStep,
-                totalSteps: Object.keys(stepState.stepBlocks).length || 21, // Dinâmico baseado nos dados reais
+                totalSteps: 21, // TODO: Calcular dinamicamente
                 blockIndex: currentStepBlocks.findIndex((b: any) => b.id === blockId) + 1,
                 totalBlocks: currentStepBlocks.length,
                 blockData: currentBlock,
                 templateBlocksCount: 0,
-                hasValidation: !!(stepState as any).stepValidation?.[stepState.currentStep],
+                hasValidation: false,
                 lastModified: new Date().toLocaleString('pt-BR'),
                 isSupabaseEnabled: false,
                 databaseMode: 'local',
