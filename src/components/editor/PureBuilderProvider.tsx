@@ -20,6 +20,7 @@ import { HybridTemplateService } from '@/services/aliases';
 import { funnelApiClient, NormalizedFunnel } from '@/services/funnelApiClient';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import { AIEnhancedHybridTemplateService } from '@/services/AIEnhancedHybridTemplateService';
+import { templatePersistence } from '@/services/persistence/TemplatePersistenceService';
 
 // 🚨 DEPRECATION WARNING (somente quando o provider LEGADO é montado)
 // Movido para dentro do componente para evitar warning ao apenas importar o módulo
@@ -696,6 +697,10 @@ export const PureBuilderProvider: React.FC<{
                     const stepBlocks = [...(prev.stepBlocks[stepKey] || [])];
                     const [movedBlock] = stepBlocks.splice(oldIndex, 1);
                     stepBlocks.splice(newIndex, 0, movedBlock);
+
+                    // 💾 Persistir mudança
+                    templatePersistence.saveBlockReorder(stepKey, stepBlocks).catch(console.error);
+
                     return {
                         ...prev,
                         stepBlocks: { ...prev.stepBlocks, [stepKey]: stepBlocks }
