@@ -28,6 +28,8 @@ import { stepBlocksKey } from '@/utils/cacheKeys';
 import { EditorHistoryService } from '@/services/editor/HistoryService';
 import { TemplateLoader } from '@/services/editor/TemplateLoader';
 import EditorStateManager from '@/services/editor/EditorStateManager';
+import type { TemplateSource } from '@/services/editor/TemplateLoader';
+import { modularJsonToEditorStepsSafe, editorStepsToModularJson } from '@/lib/modular-json';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -80,6 +82,11 @@ export interface EditorActions {
     importJSON: (json: string) => void;
     saveToSupabase?: () => Promise<void>;
     loadSupabaseComponents?: () => Promise<void>;
+
+    // Modular JSON (novo)
+    exportModularJson?: () => string;
+    importModularJson?: (json: string) => void;
+    loadModularPackageUrl?: (url: string) => Promise<void>;
 }
 
 export interface EditorContextValue {
@@ -410,6 +417,16 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         if (autoLoadTriggeredRef.current) return;
         try {
             const sp = new URLSearchParams(window.location.search);
+            // Se modularUrl estiver presente, priorizar pacote modular
+            const modularUrl = sp.get('modularUrl');
+            if (modularUrl) {
+                autoLoadTriggeredRef.current = true;
+                console.log('🧩 Auto-loading modular package by query param:', modularUrl);
+                (async () => {
+                    await loadModularPackageUrl(modularUrl);
+                })();
+                return;
+            }
             const tpl = sp.get('template');
             if (tpl && tpl.toLowerCase() === 'quiz21stepscomplete'.toLowerCase()) {
                 autoLoadTriggeredRef.current = true;
@@ -421,6 +438,48 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             // ignore query parsing errors
         }
     }, [loadDefaultTemplate]);
+
+    // Carregar pacote Modular JSON de uma URL pública
+    const loadModularPackageUrl = useCallback(async (url: string) => {
+        try {
+            setState(prev => ({ ...prev, isLoading: true }));
+            const resp = await fetch(url, { cache: 'no-store' });
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+            const parsed = modularJsonToEditorStepsSafe(data);
+            if (!parsed.ok) {
+                console.error('❌ Modular package inválido:', parsed.errors);
+                throw new Error(parsed.errors.join('\n'));
+            }
+            // Mapear steps para stepBlocks keyed por step.id
+            const stepsArray = parsed.steps as any[];
+            const stepBlocks: Record<string, Block[]> = {};
+            const stepSources: Record<string, TemplateSource> = {} as any;
+            for (const st of stepsArray) {
+                const key = st.id; // assume ids do tipo step-01, step-02
+                const blocks = (st.blocks || []).map((b: any, idx: number) => ({
+                    id: b.id,
+                    type: b.type,
+                    order: typeof b.order === 'number' ? b.order : idx,
+                    properties: b.properties || {},
+                    content: b.content || {}
+                })) as Block[];
+                stepBlocks[key] = blocks;
+                stepSources[key] = 'modular-json';
+            }
+            setState(prev => ({
+                ...prev,
+                stepBlocks,
+                stepSources,
+                isLoading: false
+            }));
+            stateManager.clearHistory();
+            console.log(`✅ Modular package carregado: ${Object.keys(stepBlocks).length} steps`);
+        } catch (e) {
+            console.error('❌ Falha ao carregar pacote modular:', e);
+            setState(prev => ({ ...prev, isLoading: false }));
+        }
+    }, [stateManager]);
 
     // ============================================================================
     // DATA PERSISTENCE
@@ -535,6 +594,54 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         }
     }, [stateManager, enableSupabase]);
 
+    // Exportar estado atual do editor como ModularQuiz JSON
+    const exportModularJson = useCallback(() => {
+        try {
+            // Construir array de steps em ordem
+            const entries = Object.entries(state.stepBlocks)
+                .map(([id, blocks]) => ({
+                    id,
+                    order: parseInt(id.replace('step-', ''), 10) || 0,
+                    type: (blocks[0]?.type ?? 'intro') as any, // fallback simples
+                    title: undefined,
+                    blocks
+                }))
+                .sort((a, b) => (a.order - b.order));
+            const modular = editorStepsToModularJson(entries as any[], { exportedAt: new Date().toISOString(), version: '1.0.0' });
+            return JSON.stringify(modular, null, 2);
+        } catch (e) {
+            console.error('❌ Erro ao exportar Modular JSON:', e);
+            return '{}';
+        }
+    }, [state.stepBlocks]);
+
+    // Importar ModularQuiz JSON (string)
+    const importModularJson = useCallback((json: string) => {
+        try {
+            const data = JSON.parse(json);
+            const res = modularJsonToEditorStepsSafe(data);
+            if (!res.ok) throw new Error(res.errors.join('\n'));
+            const stepBlocks: Record<string, Block[]> = {};
+            const stepSources: Record<string, TemplateSource> = {} as any;
+            res.steps.forEach((st: any) => {
+                const blocks = (st.blocks || []).map((b: any, idx: number) => ({
+                    id: b.id,
+                    type: b.type,
+                    order: typeof b.order === 'number' ? b.order : idx,
+                    properties: b.properties || {},
+                    content: b.content || {}
+                })) as Block[];
+                stepBlocks[st.id] = blocks;
+                stepSources[st.id] = 'modular-json';
+            });
+            setState(prev => ({ ...prev, stepBlocks, stepSources }));
+            stateManager.clearHistory();
+            console.log('✅ Modular JSON importado com sucesso');
+        } catch (e) {
+            console.error('❌ Erro ao importar Modular JSON:', e);
+        }
+    }, [stateManager]);
+
     // ============================================================================
     // AUTO-SAVE EFFECT
     // ============================================================================
@@ -586,6 +693,9 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             // Data management
             exportJSON,
             importJSON,
+            exportModularJson,
+            importModularJson,
+            loadModularPackageUrl,
             saveToSupabase: enableSupabase ? saveToSupabase : undefined,
             loadSupabaseComponents: enableSupabase ? loadSupabaseComponents : undefined
         }
