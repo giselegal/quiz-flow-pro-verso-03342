@@ -486,7 +486,9 @@ export const AVAILABLE_COMPONENTS = [
 
     // 🎨 Step 20 - Blocos Atômicos
     { type: 'result-header', label: 'Resultado: Cabeçalho', category: 'result', description: 'Cabeçalho da página de resultado' },
+    { type: 'result-congrats', label: 'Resultado: Congratulações', category: 'result', description: 'Mensagem de parabéns com emoji' },
     { type: 'result-main', label: 'Resultado: Estilo Principal', category: 'result', description: 'Card do estilo principal identificado' },
+    { type: 'result-progress-bars', label: 'Resultado: Barras de Compatibilidade', category: 'result', description: 'Barras de progresso dos estilos' },
     { type: 'result-style', label: 'Resultado: Card de Estilo', category: 'result', description: 'Card de estilo com barra de progresso' },
     { type: 'result-image', label: 'Resultado: Imagem', category: 'result', description: 'Imagem ilustrativa do resultado' },
     { type: 'result-description', label: 'Resultado: Descrição', category: 'result', description: 'Texto descritivo do estilo' },

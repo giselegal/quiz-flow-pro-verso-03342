@@ -199,12 +199,29 @@ export const resultHeaderBlockSchema = z.object({
   textColor: colorSchema.optional(),
 });
 
+export const resultCongratsBlockSchema = z.object({
+  text: z.string().min(1, 'Texto é obrigatório').default('Parabéns!'),
+  showUserName: z.boolean().optional().default(true),
+  userName: z.string().optional(),
+  fontSize: z.enum(['xl', '2xl', '3xl', '4xl']).optional().default('2xl'),
+  fontFamily: z.string().optional().default('Playfair Display'),
+  color: colorSchema.optional(),
+  textAlign: z.enum(['left', 'center', 'right']).optional().default('center'),
+  marginBottom: z.string().optional().default('4'),
+});
+
 export const resultMainBlockSchema = z.object({
   styleName: z.string().min(1, 'Nome do estilo é obrigatório'),
   description: z.string().optional(),
   showIcon: z.boolean().optional(),
   customImage: urlSchema.optional(),
   backgroundColor: colorSchema.optional(),
+  // Props adicionais usadas pelo componente
+  userName: z.string().optional(),
+  percentage: z.string().optional(),
+  showCelebration: z.boolean().optional().default(true),
+  textColor: colorSchema.optional(),
+  accentColor: colorSchema.optional(),
 });
 
 export const resultImageBlockSchema = z.object({
@@ -252,6 +269,20 @@ export const resultSecondaryStylesBlockSchema = z.object({
   showPercentages: z.boolean().optional(),
 });
 
+export const resultProgressBarsBlockSchema = z.object({
+  scores: z.array(z.object({
+    name: z.string().min(1, 'Nome do estilo é obrigatório'),
+    score: z.number().min(0, 'Score mínimo: 0').max(100, 'Score máximo: 100'),
+  })).min(1, 'Adicione pelo menos 1 estilo'),
+  showTop3: z.boolean().optional().default(true),
+  barColor: colorSchema.optional(),
+  title: z.string().optional().default('Compatibilidade com estilos:'),
+  marginBottom: z.string().optional().default('8'),
+  showPercentage: z.boolean().optional().default(true),
+  percentageFormat: z.string().optional().default('{percentage}%'),
+  animationDelay: z.number().min(0).max(1000).optional().default(200),
+});
+
 // =====================================================================
 // MAPEAMENTO DE SCHEMAS
 // =====================================================================
@@ -281,12 +312,14 @@ export const blockSchemas = {
 
   // Resultado (Step 20)
   'result-header': resultHeaderBlockSchema,
+  'result-congrats': resultCongratsBlockSchema,
   'result-main': resultMainBlockSchema,
   'result-image': resultImageBlockSchema,
   'result-description': resultDescriptionBlockSchema,
   'result-characteristics': resultCharacteristicsBlockSchema,
   'result-cta': resultCTABlockSchema,
   'result-secondary-styles': resultSecondaryStylesBlockSchema,
+  'result-progress-bars': resultProgressBarsBlockSchema,
 } as const;
 
 export type BlockType = keyof typeof blockSchemas;
@@ -312,12 +345,14 @@ export type TransitionMessageBlockData = z.infer<typeof transitionMessageBlockSc
 
 // Tipos de blocos de resultado
 export type ResultHeaderBlockData = z.infer<typeof resultHeaderBlockSchema>;
+export type ResultCongratsBlockData = z.infer<typeof resultCongratsBlockSchema>;
 export type ResultMainBlockData = z.infer<typeof resultMainBlockSchema>;
 export type ResultImageBlockData = z.infer<typeof resultImageBlockSchema>;
 export type ResultDescriptionBlockData = z.infer<typeof resultDescriptionBlockSchema>;
 export type ResultCharacteristicsBlockData = z.infer<typeof resultCharacteristicsBlockSchema>;
 export type ResultCTABlockData = z.infer<typeof resultCTABlockSchema>;
 export type ResultSecondaryStylesBlockData = z.infer<typeof resultSecondaryStylesBlockSchema>;
+export type ResultProgressBarsBlockData = z.infer<typeof resultProgressBarsBlockSchema>;
 
 // Helper para validar um bloco
 export function validateBlockData(blockType: BlockType, data: unknown) {
