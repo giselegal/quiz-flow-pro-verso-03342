@@ -456,7 +456,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
   async preloadCriticalTemplates(): Promise<void> {
     const criticalTemplates = [
       'quiz21StepsComplete',
-      'step-1', 'step-2', 'step-12', 'step-20', 'step-21'
+      'step-1', 'step-2', 'step-12', 'step-20'
     ];
 
     console.log('🚀 Preloading critical templates...');

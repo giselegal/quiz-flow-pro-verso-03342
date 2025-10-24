@@ -416,7 +416,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // 🚀 Pré-carregar step adjacente para reduzir latência ao navegar
     useEffect(() => {
         const next = state.currentStep + 1;
-        if (next <= 21) {
+        if (next <= 20) {
             const normalizedNext = `step-${next.toString().padStart(2, '0')}`;
             const t = setTimeout(() => {
                 // Evitar trabalho se já em cache local ou unificado
@@ -442,8 +442,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         const newStepSources: Record<string, 'modular-json' | 'master-hydrated' | 'ts-template'> = {};
         let totalBlocks = 0;
 
-        // 21 etapas step-01..step-21
-        const keys = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
+        // 20 etapas step-01..step-20
+        const keys = Array.from({ length: 20 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
         for (const stepKey of keys) {
             try {
                 const { blocks, source } = await stateManager.ensureStepLoaded(stepKey, {
@@ -647,6 +647,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         </EditorContext.Provider>
     );
 };
+
+// Nota: Helpers de dev não expostos aqui para evitar uso indevido de hooks fora de contexto
 
 // ============================================================================
 // EXPORTS & ALIASES
