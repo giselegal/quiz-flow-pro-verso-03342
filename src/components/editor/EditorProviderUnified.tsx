@@ -197,6 +197,23 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             };
         }
 
+        // 🔌 Quando o editor é aberto com ?template=quiz21StepsComplete,
+        // pré-carregar componentes críticos para evitar atrasos/404 de chunks.
+        try {
+            if (typeof window !== 'undefined' && window.location?.search) {
+                const sp = new URLSearchParams(window.location.search);
+                const isQuiz21Template = (sp.get('template') || '').toLowerCase() === 'quiz21stepscomplete';
+                if (isQuiz21Template) {
+                    // Import dinâmico para não pesar o bundle inicial
+                    setTimeout(() => {
+                        import('@/registry/UnifiedComponentRegistry')
+                            .then(mod => mod.preloadCriticalComponents?.())
+                            .catch(() => {});
+                    }, 100);
+                }
+            }
+        } catch { /* ignore */ }
+
         return () => {
             if (typeof window !== 'undefined') {
                 (window as any).__UNIFIED_EDITOR_PROVIDER__ = {
