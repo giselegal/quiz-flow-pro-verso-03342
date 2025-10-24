@@ -1,0 +1,3183 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2025-10-24T20:06:54.334Z",
+  "templateId": "quiz21StepsComplete",
+  "totalSteps": 21,
+  "totalBlocks": 99,
+  "blocks": [
+    {
+      "id": "intro-title",
+      "type": "heading-inline",
+      "content": {
+        "title": "Bem-vinda ao Quiz de Estilo"
+      },
+      "style": {
+        "padding": 16
+      },
+      "layout": {
+        "order": 0,
+        "parent": "step-01",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-01",
+        "stepNumber": 1,
+        "sectionIndex": 0,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "intro-subtitle",
+      "type": "text-inline",
+      "content": {
+        "text": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!"
+      },
+      "style": {},
+      "layout": {
+        "order": 1,
+        "parent": "step-01",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-01",
+        "stepNumber": 1,
+        "sectionIndex": 1
+      }
+    },
+    {
+      "id": "intro-form",
+      "type": "intro-form",
+      "content": {
+        "label": "Qual é o seu nome?",
+        "placeholder": "Digite seu nome aqui",
+        "buttonText": "Começar Agora",
+        "required": true
+      },
+      "style": {
+        "padding": 16
+      },
+      "layout": {
+        "order": 2,
+        "parent": "step-01",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-01",
+        "stepNumber": 1,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "progress-bar-step-02",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 2,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 3,
+        "parent": "step-02",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-02",
+        "stepNumber": 2,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-02-title",
+      "type": "question-title",
+      "content": {
+        "text": "Pergunta 1 de 10"
+      },
+      "style": {
+        "backgroundColor": "transparent",
+        "padding": 16
+      },
+      "layout": {
+        "order": 4,
+        "parent": "step-02",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-02",
+        "stepNumber": 2,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "step-02-options",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Natural",
+            "image": "/quiz-assets/natural.webp"
+          },
+          {
+            "id": "classico",
+            "text": "Clássico",
+            "image": "/quiz-assets/classico.webp"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Contemporâneo",
+            "image": "/quiz-assets/contemporaneo.webp"
+          },
+          {
+            "id": "elegante",
+            "text": "Elegante",
+            "image": "/quiz-assets/elegante.webp"
+          },
+          {
+            "id": "romantico",
+            "text": "Romântico",
+            "image": "/quiz-assets/romantico.webp"
+          },
+          {
+            "id": "sexy",
+            "text": "Sexy",
+            "image": "/quiz-assets/sexy.webp"
+          },
+          {
+            "id": "dramatico",
+            "text": "Dramático",
+            "image": "/quiz-assets/dramatico.webp"
+          },
+          {
+            "id": "criativo",
+            "text": "Criativo",
+            "image": "/quiz-assets/criativo.webp"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true
+      },
+      "style": {
+        "backgroundColor": "transparent",
+        "padding": 16
+      },
+      "layout": {
+        "order": 5,
+        "parent": "step-02",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-02",
+        "stepNumber": 2,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "progress-bar-step-03",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 3,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 6,
+        "parent": "step-03",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-03",
+        "stepNumber": 3,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-03-title",
+      "type": "question-title",
+      "content": {
+        "text": "Pergunta 2 de 10"
+      },
+      "style": {
+        "backgroundColor": "transparent",
+        "padding": 16
+      },
+      "layout": {
+        "order": 7,
+        "parent": "step-03",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-03",
+        "stepNumber": 3,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-03",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Informal, espontânea, alegre, essencialista",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Conservadora, séria, organizada",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Informada, ativa, prática",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Exigente, sofisticada, seletiva",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Feminina, meiga, delicada, sensível",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Glamorosa, vaidosa, sensual",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Cosmopolita, moderna e audaciosa",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Exótica, aventureira, livre",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "style": {
+        "backgroundColor": "transparent",
+        "padding": 16
+      },
+      "layout": {
+        "order": 8,
+        "parent": "step-03",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-03",
+        "stepNumber": 3,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-03-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 9,
+        "parent": "step-03",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-03",
+        "stepNumber": 3,
+        "sectionIndex": 3
+      }
+    },
+    {
+      "id": "progress-bar-step-04",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 4,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 10,
+        "parent": "step-04",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-04",
+        "stepNumber": 4,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-04-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?"
+      },
+      "style": {},
+      "layout": {
+        "order": 11,
+        "parent": "step-04",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-04",
+        "stepNumber": 4,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-04",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "3 de 10",
+        "questionText": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
+        "currentQuestion": 3,
+        "totalQuestions": 13,
+        "progressValue": 19,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {
+        "backgroundColor": "transparent",
+        "padding": 16
+      },
+      "layout": {
+        "order": 12,
+        "parent": "step-04",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-04",
+        "stepNumber": 4,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "options-grid-04",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Visual leve, despojado e natural",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Visual clássico e tradicional",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Visual casual com toque atual",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Visual refinado e imponente",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Visual romântico, feminino e delicado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Visual sensual, com saia justa e decote",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Visual marcante e urbano (jeans + jaqueta)",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Visual criativo, colorido e ousado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "style": {
+        "backgroundColor": "transparent",
+        "padding": 16
+      },
+      "layout": {
+        "order": 13,
+        "parent": "step-04",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-04",
+        "stepNumber": 4,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-04-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 14,
+        "parent": "step-04",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-04",
+        "stepNumber": 4,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-05",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 5,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 15,
+        "parent": "step-05",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-05",
+        "stepNumber": 5,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-05-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "QUAIS DETALHES VOCÊ GOSTA?"
+      },
+      "style": {},
+      "layout": {
+        "order": 16,
+        "parent": "step-05",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-05",
+        "stepNumber": 5,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-05",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "4 de 10",
+        "questionText": "QUAIS DETALHES VOCÊ GOSTA?",
+        "currentQuestion": 4,
+        "totalQuestions": 13,
+        "progressValue": 24,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 17,
+        "parent": "step-05",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-05",
+        "stepNumber": 5,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-05",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Poucos detalhes, básico e prático",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Bem discretos e sutis, clean e clássico",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Básico, mas com um toque de estilo",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Detalhes refinados, chic e que deem status",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Detalhes delicados, laços, babados",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Roupas que valorizem meu corpo: couro, zíper, fendas",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Detalhes marcantes, firmeza e peso",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Detalhes diferentes do convencional, produções ousadas",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "style": {},
+      "layout": {
+        "order": 18,
+        "parent": "step-05",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-05",
+        "stepNumber": 5,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-05-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 19,
+        "parent": "step-05",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-05",
+        "stepNumber": 5,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-06",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 6,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 20,
+        "parent": "step-06",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-06",
+        "stepNumber": 6,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-06-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?"
+      },
+      "style": {},
+      "layout": {
+        "order": 21,
+        "parent": "step-06",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-06",
+        "stepNumber": 6,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-06",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "5 de 10",
+        "questionText": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
+        "currentQuestion": 5,
+        "totalQuestions": 13,
+        "progressValue": 29,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 22,
+        "parent": "step-06",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-06",
+        "stepNumber": 6,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-06",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Estampas clean, com poucas informações",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Estampas clássicas e atemporais",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Atemporais, mas que tenham uma pegada atual e moderna",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Estampas clássicas e atemporais, mas sofisticadas",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Estampas de animal print, como onça, zebra e cobra",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Estampas geométricas, abstratas e exageradas como grandes poás",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Estampas diferentes do usual, como africanas, xadrez grandes",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "style": {},
+      "layout": {
+        "order": 23,
+        "parent": "step-06",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-06",
+        "stepNumber": 6,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-06-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 24,
+        "parent": "step-06",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-06",
+        "stepNumber": 6,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-07",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 7,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 25,
+        "parent": "step-07",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-07",
+        "stepNumber": 7,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-07-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "QUAL CASACO É SEU FAVORITO?"
+      },
+      "style": {},
+      "layout": {
+        "order": 26,
+        "parent": "step-07",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-07",
+        "stepNumber": 7,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-07",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "6 de 10",
+        "questionText": "QUAL CASACO É SEU FAVORITO?",
+        "currentQuestion": 6,
+        "totalQuestions": 13,
+        "progressValue": 33,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 27,
+        "parent": "step-07",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-07",
+        "stepNumber": 7,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-07",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Cardigã bege confortável e casual",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Blazer verde estruturado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Trench coat bege tradicional",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Blazer branco refinado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Casaco pink vibrante e moderno",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Jaqueta vinho de couro estilosa",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Jaqueta preta estilo rocker",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Casaco estampado criativo e colorido",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "style": {},
+      "layout": {
+        "order": 28,
+        "parent": "step-07",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-07",
+        "stepNumber": 7,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-07-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 29,
+        "parent": "step-07",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-07",
+        "stepNumber": 7,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-08",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 8,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 30,
+        "parent": "step-08",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-08",
+        "stepNumber": 8,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-08-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "QUAL SUA CALÇA FAVORITA?"
+      },
+      "style": {},
+      "layout": {
+        "order": 31,
+        "parent": "step-08",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-08",
+        "stepNumber": 8,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-08",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "7 de 10",
+        "questionText": "QUAL SUA CALÇA FAVORITA?",
+        "currentQuestion": 7,
+        "totalQuestions": 13,
+        "progressValue": 38,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 32,
+        "parent": "step-08",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-08",
+        "stepNumber": 8,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-08",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Calça fluida acetinada bege",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Calça de alfaiataria cinza",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Jeans reto e básico",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Calça reta bege de tecido",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Calça ampla rosa alfaiatada",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Legging preta de couro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Calça reta preta de couro",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Calça estampada floral leve e ampla",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "style": {},
+      "layout": {
+        "order": 33,
+        "parent": "step-08",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-08",
+        "stepNumber": 8,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-08-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 34,
+        "parent": "step-08",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-08",
+        "stepNumber": 8,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-09",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 9,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 35,
+        "parent": "step-09",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-09",
+        "stepNumber": 9,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-09-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?"
+      },
+      "style": {},
+      "layout": {
+        "order": 36,
+        "parent": "step-09",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-09",
+        "stepNumber": 9,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-09",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "8 de 10",
+        "questionText": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
+        "currentQuestion": 8,
+        "totalQuestions": 13,
+        "progressValue": 43,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 37,
+        "parent": "step-09",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-09",
+        "stepNumber": 9,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-09",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Tênis nude casual e confortável",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Scarpin nude de salto baixo",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Sandália dourada com salto bloco",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Scarpin nude salto alto e fino",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Sandália anabela off white",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Sandália rosa de tiras finas",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Scarpin preto moderno com vinil transparente",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Scarpin colorido estampado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "style": {},
+      "layout": {
+        "order": 38,
+        "parent": "step-09",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-09",
+        "stepNumber": 9,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-09-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 39,
+        "parent": "step-09",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-09",
+        "stepNumber": 9,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-10",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 10,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 40,
+        "parent": "step-10",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-10",
+        "stepNumber": 10,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-10-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?"
+      },
+      "style": {},
+      "layout": {
+        "order": 41,
+        "parent": "step-10",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-10",
+        "stepNumber": 10,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-10",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "9 de 10",
+        "questionText": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
+        "currentQuestion": 9,
+        "totalQuestions": 13,
+        "progressValue": 48,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 42,
+        "parent": "step-10",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-10",
+        "stepNumber": 10,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-10",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "Pequenos e discretos, às vezes nem uso",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.png",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "Brincos pequenos e discretos. Corrente fininha",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.png",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Acessórios que elevem meu look com um toque moderno",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.png",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "Acessórios sofisticados, joias ou semijoias",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.png",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "Peças delicadas e com um toque feminino",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.png",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "Brincos longos, colares que valorizem minha beleza",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.png",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "Acessórios pesados, que causem um impacto",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.png",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "Acessórios diferentes, grandes e marcantes",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.png",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "style": {},
+      "layout": {
+        "order": 43,
+        "parent": "step-10",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-10",
+        "stepNumber": 10,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-10-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 44,
+        "parent": "step-10",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-10",
+        "stepNumber": 10,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-11",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 11,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 45,
+        "parent": "step-11",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-11",
+        "stepNumber": 11,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-11-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES..."
+      },
+      "style": {},
+      "layout": {
+        "order": 46,
+        "parent": "step-11",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-11",
+        "stepNumber": 11,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-11",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "10 de 10",
+        "questionText": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
+        "currentQuestion": 10,
+        "totalQuestions": 13,
+        "progressValue": 52,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 47,
+        "parent": "step-11",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-11",
+        "stepNumber": 11,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-11",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "natural",
+            "text": "São fáceis de cuidar",
+            "value": "natural"
+          },
+          {
+            "id": "classico",
+            "text": "São de excelente qualidade",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "São fáceis de cuidar e modernos",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante",
+            "text": "São sofisticados",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico",
+            "text": "São delicados",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy",
+            "text": "São perfeitos ao meu corpo",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico",
+            "text": "São diferentes, e trazem um efeito para minha roupa",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo",
+            "text": "São exclusivos, criam identidade no look",
+            "value": "criativo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "requiredSelections": 3
+      },
+      "style": {},
+      "layout": {
+        "order": 48,
+        "parent": "step-11",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-11",
+        "stepNumber": 11,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-11-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Avançar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 49,
+        "parent": "step-11",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-11",
+        "stepNumber": 11,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "transition-hero-12",
+      "type": "transition-hero",
+      "content": {
+        "title": "🕐 Enquanto calculamos o seu resultado...",
+        "subtitle": "Estamos montando seu perfil de estilo personalizado",
+        "message": "Continue para descobrir ainda mais sobre seu estilo único!",
+        "autoAdvanceDelay": 3500,
+        "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+      },
+      "style": {
+        "backgroundColor": "#FAF9F7",
+        "textColor": "#432818",
+        "padding": 32
+      },
+      "layout": {
+        "order": 50,
+        "parent": "step-12",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-12",
+        "stepNumber": 12,
+        "sectionIndex": 0,
+        "animation": {
+          "type": "scale",
+          "duration": 500,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-12-transition-text",
+      "type": "text-inline",
+      "content": {
+        "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+      },
+      "style": {},
+      "layout": {
+        "order": 51,
+        "parent": "step-12",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-12",
+        "stepNumber": 12,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "step-12-transition-cta",
+      "type": "CTAButton",
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "medium"
+      },
+      "style": {},
+      "layout": {
+        "order": 52,
+        "parent": "step-12",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-12",
+        "stepNumber": 12,
+        "sectionIndex": 2
+      }
+    },
+    {
+      "id": "progress-bar-step-13",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 13,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 53,
+        "parent": "step-13",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-13",
+        "stepNumber": 13,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-13-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
+      },
+      "style": {},
+      "layout": {
+        "order": 54,
+        "parent": "step-13",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-13",
+        "stepNumber": 13,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-13",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "Q11 - OBJETIVOS",
+        "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
+        "currentQuestion": 11,
+        "totalQuestions": 13,
+        "progressValue": 57,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 55,
+        "parent": "step-13",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-13",
+        "stepNumber": 13,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-13",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "desconectada",
+            "text": "Me sinto desconectada da mulher que sou hoje",
+            "value": "desconectada"
+          },
+          {
+            "id": "duvidas",
+            "text": "Tenho dúvidas sobre o que realmente me valoriza",
+            "value": "duvidas"
+          },
+          {
+            "id": "as-vezes-acerto",
+            "text": "Às vezes acerto, às vezes erro",
+            "value": "as-vezes-acerto"
+          },
+          {
+            "id": "segura-evoluir",
+            "text": "Me sinto segura, mas sei que posso evoluir",
+            "value": "segura-evoluir"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      },
+      "style": {},
+      "layout": {
+        "order": 56,
+        "parent": "step-13",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-13",
+        "stepNumber": 13,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-13-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 57,
+        "parent": "step-13",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-13",
+        "stepNumber": 13,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-14",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 14,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 58,
+        "parent": "step-14",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-14",
+        "stepNumber": 14,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-14-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "O que mais te desafia na hora de se vestir?"
+      },
+      "style": {},
+      "layout": {
+        "order": 59,
+        "parent": "step-14",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-14",
+        "stepNumber": 14,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-14",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "Q12 - DESAFIOS",
+        "questionText": "O que mais te desafia na hora de se vestir?",
+        "currentQuestion": 12,
+        "totalQuestions": 13,
+        "progressValue": 62,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 60,
+        "parent": "step-14",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-14",
+        "stepNumber": 14,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-14",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "combinar-pecas",
+            "text": "Tenho peças, mas não sei como combiná-las",
+            "value": "combinar-pecas"
+          },
+          {
+            "id": "comprar-impulso",
+            "text": "Compro por impulso e me arrependo depois",
+            "value": "comprar-impulso"
+          },
+          {
+            "id": "imagem-nao-reflete",
+            "text": "Minha imagem não reflete quem eu sou",
+            "value": "imagem-nao-reflete"
+          },
+          {
+            "id": "perco-tempo",
+            "text": "Perco tempo e acabo usando sempre os mesmos looks",
+            "value": "perco-tempo"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      },
+      "style": {},
+      "layout": {
+        "order": 61,
+        "parent": "step-14",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-14",
+        "stepNumber": 14,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-14-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 62,
+        "parent": "step-14",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-14",
+        "stepNumber": 14,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-15",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 15,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 63,
+        "parent": "step-15",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-15",
+        "stepNumber": 15,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-15-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
+      },
+      "style": {},
+      "layout": {
+        "order": 64,
+        "parent": "step-15",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-15",
+        "stepNumber": 15,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-15",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "Q13 - PRIORIDADES",
+        "questionText": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
+        "currentQuestion": 13,
+        "totalQuestions": 13,
+        "progressValue": 67,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 65,
+        "parent": "step-15",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-15",
+        "stepNumber": 15,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-15",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "quase-todos-dias",
+            "text": "Quase todos os dias — é sempre uma indecisão",
+            "value": "quase-todos-dias"
+          },
+          {
+            "id": "compromissos-importantes",
+            "text": "Sempre que tenho um compromisso importante",
+            "value": "compromissos-importantes"
+          },
+          {
+            "id": "as-vezes-limitada",
+            "text": "Às vezes, mas me sinto limitada nas escolhas",
+            "value": "as-vezes-limitada"
+          },
+          {
+            "id": "raramente-segura",
+            "text": "Raramente — já me sinto segura ao me vestir",
+            "value": "raramente-segura"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      },
+      "style": {},
+      "layout": {
+        "order": 66,
+        "parent": "step-15",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-15",
+        "stepNumber": 15,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-15-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 67,
+        "parent": "step-15",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-15",
+        "stepNumber": 15,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-16",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 16,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 68,
+        "parent": "step-16",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-16",
+        "stepNumber": 16,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-16-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
+      },
+      "style": {},
+      "layout": {
+        "order": 69,
+        "parent": "step-16",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-16",
+        "stepNumber": 16,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-16",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "Q14 - INVESTIMENTO",
+        "questionText": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?",
+        "currentQuestion": 14,
+        "totalQuestions": 13,
+        "progressValue": 71,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 70,
+        "parent": "step-16",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-16",
+        "stepNumber": 16,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-16",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "sim-quero",
+            "text": "Sim! Se existisse algo assim, eu quero",
+            "value": "sim-quero"
+          },
+          {
+            "id": "sim-momento-certo",
+            "text": "Sim, mas teria que ser no momento certo",
+            "value": "sim-momento-certo"
+          },
+          {
+            "id": "tenho-duvidas",
+            "text": "Tenho dúvidas se funcionaria pra mim",
+            "value": "tenho-duvidas"
+          },
+          {
+            "id": "nao-prefiro-continuar",
+            "text": "Não, prefiro continuar como estou",
+            "value": "nao-prefiro-continuar"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      },
+      "style": {},
+      "layout": {
+        "order": 71,
+        "parent": "step-16",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-16",
+        "stepNumber": 16,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-16-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 72,
+        "parent": "step-16",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-16",
+        "stepNumber": 16,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-17",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 17,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 73,
+        "parent": "step-17",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-17",
+        "stepNumber": 17,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-17-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
+      },
+      "style": {},
+      "layout": {
+        "order": 74,
+        "parent": "step-17",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-17",
+        "stepNumber": 17,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-17",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "Q15 - TRANSFORMAÇÃO",
+        "questionText": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?",
+        "currentQuestion": 15,
+        "totalQuestions": 13,
+        "progressValue": 76,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 75,
+        "parent": "step-17",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-17",
+        "stepNumber": 17,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-17",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "sim-vale-muito",
+            "text": "Sim! Por esse resultado, vale muito",
+            "value": "sim-vale-muito"
+          },
+          {
+            "id": "sim-se-certeza",
+            "text": "Sim, mas só se eu tiver certeza de que funciona pra mim",
+            "value": "sim-se-certeza"
+          },
+          {
+            "id": "talvez-depende",
+            "text": "Talvez — depende do que está incluso",
+            "value": "talvez-depende"
+          },
+          {
+            "id": "nao-nao-pronta",
+            "text": "Não, ainda não estou pronta para investir",
+            "value": "nao-nao-pronta"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      },
+      "style": {},
+      "layout": {
+        "order": 76,
+        "parent": "step-17",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-17",
+        "stepNumber": 17,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-17-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 77,
+        "parent": "step-17",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-17",
+        "stepNumber": 17,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "progress-bar-step-18",
+      "type": "question-progress",
+      "content": {
+        "stepNumber": 18,
+        "totalSteps": 21,
+        "showPercentage": true,
+        "barColor": "#B89B7A",
+        "backgroundColor": "#e5e7eb"
+      },
+      "style": {
+        "padding": 8
+      },
+      "layout": {
+        "order": 78,
+        "parent": "step-18",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-18",
+        "stepNumber": 18,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "step-18-question-title",
+      "type": "question-title",
+      "content": {
+        "text": "Qual desses resultados você mais gostaria de alcançar?"
+      },
+      "style": {},
+      "layout": {
+        "order": 79,
+        "parent": "step-18",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-18",
+        "stepNumber": 18,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "question-hero-18",
+      "type": "question-hero",
+      "content": {
+        "questionNumber": "Q16 - RESULTADO",
+        "questionText": "Qual desses resultados você mais gostaria de alcançar?",
+        "currentQuestion": 16,
+        "totalQuestions": 13,
+        "progressValue": 81,
+        "showProgress": true,
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão"
+      },
+      "style": {},
+      "layout": {
+        "order": 80,
+        "parent": "step-18",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-18",
+        "stepNumber": 18,
+        "sectionIndex": 2,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "options-grid-18",
+      "type": "options grid",
+      "content": {
+        "options": [
+          {
+            "id": "montar-looks-facilidade",
+            "text": "Montar looks com mais facilidade e confiança",
+            "value": "montar-looks-facilidade"
+          },
+          {
+            "id": "usar-que-tenho",
+            "text": "Usar o que já tenho e me sentir estilosa",
+            "value": "usar-que-tenho"
+          },
+          {
+            "id": "comprar-consciencia",
+            "text": "Comprar com mais consciência e sem culpa",
+            "value": "comprar-consciencia"
+          },
+          {
+            "id": "ser-admirada",
+            "text": "Ser admirada pela imagem que transmito",
+            "value": "ser-admirada"
+          }
+        ],
+        "columns": 2,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500
+      },
+      "style": {},
+      "layout": {
+        "order": 81,
+        "parent": "step-18",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-18",
+        "stepNumber": 18,
+        "sectionIndex": 3,
+        "animation": {
+          "type": "slideUp",
+          "duration": 300,
+          "delay": 100,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-18-cta-next",
+      "type": "CTAButton",
+      "content": {
+        "label": "Continuar",
+        "href": "#next",
+        "variant": "primary",
+        "size": "large"
+      },
+      "style": {},
+      "layout": {
+        "order": 82,
+        "parent": "step-18",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-18",
+        "stepNumber": 18,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "transition-hero-19",
+      "type": "transition-hero",
+      "content": {
+        "title": "Obrigada por compartilhar.",
+        "subtitle": "Preparando seu resultado personalizado",
+        "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
+        "autoAdvanceDelay": 3000
+      },
+      "style": {
+        "backgroundColor": "#FAF9F7",
+        "textColor": "#432818",
+        "padding": 32
+      },
+      "layout": {
+        "order": 83,
+        "parent": "step-19",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-19",
+        "stepNumber": 19,
+        "sectionIndex": 0,
+        "animation": {
+          "type": "scale",
+          "duration": 500,
+          "delay": 0,
+          "easing": "ease-out"
+        }
+      }
+    },
+    {
+      "id": "step-19-transition-text",
+      "type": "text-inline",
+      "content": {},
+      "style": {},
+      "layout": {
+        "order": 84,
+        "parent": "step-19",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-19",
+        "stepNumber": 19,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "fade",
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "step-19-transition-cta",
+      "type": "CTAButton",
+      "content": {
+        "label": "...",
+        "variant": "outline",
+        "size": "small"
+      },
+      "style": {},
+      "layout": {
+        "order": 85,
+        "parent": "step-19",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-19",
+        "stepNumber": 19,
+        "sectionIndex": 2
+      }
+    },
+    {
+      "id": "result-congrats",
+      "type": "result-congrats",
+      "content": {},
+      "style": {},
+      "layout": {
+        "order": 86,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 0
+      }
+    },
+    {
+      "id": "result-main",
+      "type": "result-main",
+      "content": {},
+      "style": {},
+      "layout": {
+        "order": 87,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 1
+      }
+    },
+    {
+      "id": "result-progress-bars",
+      "type": "result-progress-bars",
+      "content": {},
+      "style": {},
+      "layout": {
+        "order": 88,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 2
+      }
+    },
+    {
+      "id": "result-secondary-styles",
+      "type": "result-secondary-styles",
+      "content": {},
+      "style": {},
+      "layout": {
+        "order": 89,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 3
+      }
+    },
+    {
+      "id": "result-image",
+      "type": "result-image",
+      "content": {},
+      "style": {},
+      "layout": {
+        "order": 90,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 4
+      }
+    },
+    {
+      "id": "result-description",
+      "type": "result-description",
+      "content": {},
+      "style": {},
+      "layout": {
+        "order": 91,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 5
+      }
+    },
+    {
+      "id": "button-cta-primary",
+      "type": "result-cta",
+      "content": {
+        "text": "Quero Dominar Meu Estilo em 5 Passos",
+        "url": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#ffffff",
+        "hoverColor": "#a08966"
+      },
+      "style": {},
+      "layout": {
+        "order": 92,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 6
+      }
+    },
+    {
+      "id": "result-share",
+      "type": "result-share",
+      "content": {
+        "title": "Compartilhe seu resultado",
+        "message": "Descubri meu estilo predominante! Faça o quiz e descubra o seu:",
+        "platforms": [
+          "facebook",
+          "twitter",
+          "whatsapp",
+          "linkedin"
+        ]
+      },
+      "style": {},
+      "layout": {
+        "order": 93,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 7
+      }
+    },
+    {
+      "id": "transformation-benefits",
+      "type": "text-inline",
+      "content": {},
+      "style": {},
+      "layout": {
+        "order": 94,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 8
+      }
+    },
+    {
+      "id": "method-steps",
+      "type": "text-inline",
+      "content": {},
+      "style": {},
+      "layout": {
+        "order": 95,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 9
+      }
+    },
+    {
+      "id": "button-cta-final",
+      "type": "result-cta",
+      "content": {
+        "text": "Garantir Minha Vaga Agora",
+        "url": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#ffffff",
+        "hoverColor": "#a08966"
+      },
+      "style": {},
+      "layout": {
+        "order": 96,
+        "parent": "step-20",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-20",
+        "stepNumber": 20,
+        "sectionIndex": 10
+      }
+    },
+    {
+      "id": "offer-hero-21",
+      "type": "offer-hero",
+      "content": {
+        "title": "{userName}, Transforme Seu Guarda-Roupa e Sua Confiança Hoje!",
+        "subtitle": "Oferta exclusiva para quem completou o quiz de estilo",
+        "description": "Descubra como valorizar seu estilo único e se sentir confiante em qualquer ocasião com o método exclusivo 5 Passos.",
+        "urgencyMessage": "Oferta por tempo limitado!"
+      },
+      "style": {},
+      "layout": {
+        "order": 97,
+        "parent": "step-21",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-21",
+        "stepNumber": 21,
+        "sectionIndex": 0,
+        "animation": {
+          "type": "scale",
+          "duration": 500
+        }
+      }
+    },
+    {
+      "id": "pricing-21",
+      "type": "pricing",
+      "content": {
+        "pricing": {
+          "originalPrice": 447,
+          "salePrice": 97,
+          "currency": "R$",
+          "installments": {
+            "count": 8,
+            "value": 14.11
+          }
+        },
+        "title": "Investimento que Transforma",
+        "ctaText": "Quero Transformar Meu Estilo Agora!",
+        "ctaUrl": "https://pay.kiwify.com.br/DkYC1Aj"
+      },
+      "style": {},
+      "layout": {
+        "order": 98,
+        "parent": "step-21",
+        "colspan": 1
+      },
+      "metadata": {
+        "stepId": "step-21",
+        "stepNumber": 21,
+        "sectionIndex": 1,
+        "animation": {
+          "type": "slideUp",
+          "duration": 500
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "source": "quiz21-complete.json",
+    "steps": [
+      {
+        "id": "step-01",
+        "order": 1,
+        "blockCount": 3
+      },
+      {
+        "id": "step-02",
+        "order": 2,
+        "blockCount": 3
+      },
+      {
+        "id": "step-03",
+        "order": 3,
+        "blockCount": 4
+      },
+      {
+        "id": "step-04",
+        "order": 4,
+        "blockCount": 5
+      },
+      {
+        "id": "step-05",
+        "order": 5,
+        "blockCount": 5
+      },
+      {
+        "id": "step-06",
+        "order": 6,
+        "blockCount": 5
+      },
+      {
+        "id": "step-07",
+        "order": 7,
+        "blockCount": 5
+      },
+      {
+        "id": "step-08",
+        "order": 8,
+        "blockCount": 5
+      },
+      {
+        "id": "step-09",
+        "order": 9,
+        "blockCount": 5
+      },
+      {
+        "id": "step-10",
+        "order": 10,
+        "blockCount": 5
+      },
+      {
+        "id": "step-11",
+        "order": 11,
+        "blockCount": 5
+      },
+      {
+        "id": "step-12",
+        "order": 12,
+        "blockCount": 3
+      },
+      {
+        "id": "step-13",
+        "order": 13,
+        "blockCount": 5
+      },
+      {
+        "id": "step-14",
+        "order": 14,
+        "blockCount": 5
+      },
+      {
+        "id": "step-15",
+        "order": 15,
+        "blockCount": 5
+      },
+      {
+        "id": "step-16",
+        "order": 16,
+        "blockCount": 5
+      },
+      {
+        "id": "step-17",
+        "order": 17,
+        "blockCount": 5
+      },
+      {
+        "id": "step-18",
+        "order": 18,
+        "blockCount": 5
+      },
+      {
+        "id": "step-19",
+        "order": 19,
+        "blockCount": 3
+      },
+      {
+        "id": "step-20",
+        "order": 20,
+        "blockCount": 11
+      },
+      {
+        "id": "step-21",
+        "order": 21,
+        "blockCount": 2
+      }
+    ]
+  }
+}

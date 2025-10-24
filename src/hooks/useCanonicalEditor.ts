@@ -356,6 +356,42 @@ export function useCanonicalEditor(
       setState(prev => ({ ...prev, isLoading: true, error: null }));
       console.log('📥 [useCanonicalEditor] Loading template:', id);
       
+      // 🎯 SPECIAL CASE: quiz21StepsComplete - load from generated file
+      if (id === 'quiz21StepsComplete') {
+        try {
+          const response = await fetch('/src/data/generated-quiz-steps.json');
+          if (response.ok) {
+            const generatedData = await response.json();
+            console.log('✅ Loading from generated file:', generatedData.totalBlocks, 'blocks');
+            
+            // Clear existing blocks
+            const existingBlocks = editorService.getAllBlocks();
+            if (existingBlocks.success && existingBlocks.data) {
+              for (const block of existingBlocks.data) {
+                editorService.deleteBlock(block.id);
+              }
+            }
+            
+            // Load generated blocks
+            for (const block of generatedData.blocks) {
+              editorService.createBlock(block);
+            }
+            
+            updateBlocks();
+            setState(prev => ({ 
+              ...prev, 
+              isLoading: false, 
+              isModified: false 
+            }));
+            console.log('✅ [useCanonicalEditor] Generated template loaded:', generatedData.totalBlocks, 'blocks');
+            return true;
+          }
+        } catch (e) {
+          console.warn('⚠️ Failed to load generated file, falling back to template service:', e);
+        }
+      }
+      
+      // Default: load from template service
       const result = await templateService.getTemplate(id);
       
       if (result.success && result.data) {
