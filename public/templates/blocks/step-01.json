@@ -1,0 +1,49 @@
+{
+    "templateVersion": "3.1",
+    "metadata": {
+        "id": "step-01",
+        "name": "Intro (Blocos)",
+        "description": "Etapa inicial com hero e formulário de nome",
+        "category": "intro",
+        "tags": [
+            "intro",
+            "form"
+        ]
+    },
+    "theme": {
+        "colors": {
+            "primary": "#B89B7A",
+            "secondary": "#432818",
+            "background": "#fffaf7",
+            "text": "#432818"
+        }
+    },
+    "blocks": [
+        {
+            "id": "hero-1",
+            "type": "hero-block",
+            "config": {
+                "titleHtml": "<strong>Bem-vinda!</strong>",
+                "subtitleHtml": "Descubra seu estilo e domine seu guarda-roupa",
+                "imageUrl": null
+            }
+        },
+        {
+            "id": "welcome-form-1",
+            "type": "welcome-form-block",
+            "config": {
+                "questionLabel": "Como posso te chamar?",
+                "placeholder": "Digite seu nome...",
+                "buttonText": "Começar",
+                "required": true
+            }
+        }
+    ],
+    "analytics": {
+        "events": [
+            "page_view",
+            "form_submit"
+        ],
+        "trackingId": "step-01-blocks"
+    }
+}

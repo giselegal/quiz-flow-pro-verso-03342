@@ -46,9 +46,11 @@ export const loadTemplate = async (templateId: string) => {
   // Template completo (fonte TS normalizada)
   const template = getQuiz21StepsTemplate() as any;
 
-  // Navegador: tentar aplicar override via JSON v3 (public/templates/step-XX-v3.json)
-  // Rodamos isso de forma best-effort, respeitando BASE_URL, deduplicando tentativas
-  // e evitando múltiplos fetches paralelos para o mesmo step.
+  // Navegador: tentar aplicar override via JSON de blocos (v3.1) ou v3 sections.
+  // Ordem de preferência:
+  // 1) /templates/blocks/step-XX.json (v3.1 blocos)
+  // 2) /templates/step-XX-v3.json (v3 sections)
+  // Rodamos isso de forma best-effort, com BASE_URL, dedupe e evitando fetches paralelos.
   if (typeof window !== 'undefined') {
     const w = window as any;
     w.__jsonV3Overrides = w.__jsonV3Overrides || new Set<string>(); // passos com override aplicado
@@ -56,7 +58,9 @@ export const loadTemplate = async (templateId: string) => {
     w.__jsonV3InFlight = w.__jsonV3InFlight || new Map<string, Promise<boolean>>(); // tentativas em andamento
 
     const base: string = (import.meta as any)?.env?.BASE_URL || '/';
-    const url = `${base.replace(/\/$/, '')}/templates/${stepId}-v3.json`;
+    const baseTrimmed = base.replace(/\/$/, '');
+    const urlBlocks = `${baseTrimmed}/templates/blocks/${stepId}.json`;
+    const urlV3 = `${baseTrimmed}/templates/${stepId}-v3.json`;
 
     const shouldAttempt = !w.__jsonV3Overrides.has(stepId) && !w.__jsonV3Attempts.has(stepId);
     if (shouldAttempt) {
@@ -66,14 +70,27 @@ export const loadTemplate = async (templateId: string) => {
           stepId,
           (async () => {
             try {
-              const resp = await fetch(url, { cache: 'no-store' });
+              // 1) tentar blocos v3.1
+              let resp = await fetch(urlBlocks, { cache: 'no-store' });
               if (resp.ok) {
                 const json = await resp.json();
                 const registry = TemplateRegistry.getInstance();
                 registry.registerOverride(stepId, json as any);
                 w.__jsonV3Overrides.add(stepId);
                 if (process.env.NODE_ENV === 'development') {
-                  console.log(`🧩 [imports] Override JSON v3 aplicado para ${stepId}`);
+                  console.log(`🧩 [imports] Override JSON v3.1 (blocks) aplicado para ${stepId}`);
+                }
+                return true;
+              }
+              // 2) tentar v3 sections
+              resp = await fetch(urlV3, { cache: 'no-store' });
+              if (resp.ok) {
+                const json = await resp.json();
+                const registry = TemplateRegistry.getInstance();
+                registry.registerOverride(stepId, json as any);
+                w.__jsonV3Overrides.add(stepId);
+                if (process.env.NODE_ENV === 'development') {
+                  console.log(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
                 }
                 return true;
               }
@@ -163,19 +180,32 @@ if (typeof window !== 'undefined') {
         await Promise.all(
           ids.map(async (id) => {
             if (w.__jsonV3Overrides.has(id) || w.__jsonV3Attempts.has(id)) return;
-            const url = `${baseTrimmed}/templates/${id}-v3.json`;
+            const urlBlocks = `${baseTrimmed}/templates/blocks/${id}.json`;
+            const urlV3 = `${baseTrimmed}/templates/${id}-v3.json`;
             if (!w.__jsonV3InFlight.has(id)) {
               w.__jsonV3InFlight.set(
                 id,
                 (async () => {
                   try {
-                    const resp = await fetch(url, { cache: 'no-store' });
+                    // 1) tentar blocos v3.1
+                    let resp = await fetch(urlBlocks, { cache: 'no-store' });
                     if (resp.ok) {
                       const json = await resp.json();
                       registry.registerOverride(id, json as any);
                       w.__jsonV3Overrides.add(id);
                       if (process.env.NODE_ENV === 'development') {
-                        console.log(`🧩 [imports] Override JSON v3 pré-carregado para ${id}`);
+                        console.log(`🧩 [imports] Override JSON v3.1 (blocks) pré-carregado para ${id}`);
+                      }
+                      return true;
+                    }
+                    // 2) tentar v3 sections
+                    resp = await fetch(urlV3, { cache: 'no-store' });
+                    if (resp.ok) {
+                      const json = await resp.json();
+                      registry.registerOverride(id, json as any);
+                      w.__jsonV3Overrides.add(id);
+                      if (process.env.NODE_ENV === 'development') {
+                        console.log(`🧩 [imports] Override JSON v3 (sections) pré-carregado para ${id}`);
                       }
                       return true;
                     }

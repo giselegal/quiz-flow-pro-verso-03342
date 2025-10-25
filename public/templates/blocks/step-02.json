@@ -1,0 +1,50 @@
+{
+    "templateVersion": "3.1",
+    "metadata": {
+        "id": "step-02",
+        "name": "Pergunta (Blocos)",
+        "description": "Pergunta de múltipla escolha com grid de opções",
+        "category": "question",
+        "tags": [
+            "question",
+            "options"
+        ]
+    },
+    "blocks": [
+        {
+            "id": "q-2",
+            "type": "question-block",
+            "config": {
+                "questionNumber": "Pergunta 1/20",
+                "questionText": "Qual combinação te representa mais?",
+                "requiredSelections": 1,
+                "options": [
+                    {
+                        "id": "romantico",
+                        "text": "Romântico"
+                    },
+                    {
+                        "id": "classico",
+                        "text": "Clássico"
+                    },
+                    {
+                        "id": "moderno",
+                        "text": "Moderno"
+                    },
+                    {
+                        "id": "criativo",
+                        "text": "Criativo"
+                    }
+                ]
+            }
+        }
+    ],
+    "analytics": {
+        "events": [
+            "page_view",
+            "option_selected",
+            "step_completed"
+        ],
+        "trackingId": "step-02-blocks"
+    }
+}

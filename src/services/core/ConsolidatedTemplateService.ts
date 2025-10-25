@@ -198,8 +198,16 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
         normalizedId = `step-${stepNum}`;
       }
 
-      // Tentar carregar JSON com sufixo -v3
-      const response = await fetch(`${baseTrimmed}/templates/${normalizedId}-v3.json`, { cache: 'no-store' });
+      // Ordem de preferência:
+      // 1) blocos v3.1 em /templates/blocks/step-XX.json
+      let response = await fetch(`${baseTrimmed}/templates/blocks/${normalizedId}.json`, { cache: 'no-store' });
+      if (response.ok) {
+        const jsonData = await response.json();
+        return this.convertJSONTemplate(jsonData, templateId);
+      }
+
+      // 2) v3 sections com sufixo -v3
+      response = await fetch(`${baseTrimmed}/templates/${normalizedId}-v3.json`, { cache: 'no-store' });
       if (response.ok) {
         const jsonData = await response.json();
         return this.convertJSONTemplate(jsonData, templateId);
