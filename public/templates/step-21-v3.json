@@ -1,0 +1,254 @@
+{
+    "templateVersion": "3.0",
+    "metadata": {
+        "id": "step-21-offer",
+        "name": "Página de Oferta • V3",
+        "description": "Etapa final de oferta com layout moderno",
+        "category": "offer",
+        "tags": [
+            "quiz",
+            "offer",
+            "checkout",
+            "conversion"
+        ],
+        "createdAt": "2025-10-25T00:00:00.000Z",
+        "updatedAt": "2025-10-25T00:00:00.000Z",
+        "author": "Gisele Galvão - Branding & Imagem Pessoal"
+    },
+    "theme": {
+        "colors": {
+            "primary": "#B89B7A",
+            "secondary": "#432818",
+            "background": "#fffaf7",
+            "text": "#432818",
+            "accent": "#a08966",
+            "success": "#2d5f3f",
+            "warning": "#d97706"
+        },
+        "fonts": {
+            "heading": "Playfair Display",
+            "body": "Inter",
+            "fallback": "system-ui, -apple-system, sans-serif"
+        },
+        "spacing": {
+            "section": "3rem",
+            "block": "1.5rem"
+        },
+        "borderRadius": {
+            "small": "0.5rem",
+            "medium": "0.75rem",
+            "large": "1rem"
+        }
+    },
+    "layout": {
+        "containerWidth": "full",
+        "maxWidth": "1280px",
+        "spacing": "comfortable",
+        "backgroundColor": "#fffaf7",
+        "responsive": true
+    },
+    "offer": {
+        "productName": "5 Passos – Vista-se de Você",
+        "mentor": "Gisele Galvão",
+        "mentorTitle": "Consultora de Imagem e Branding Pessoal",
+        "description": "Método completo para alinhar sua imagem com sua essência e construir um guarda-roupa estratégico.",
+        "pricing": {
+            "originalPrice": 447,
+            "salePrice": 97,
+            "currency": "BRL",
+            "installments": {
+                "count": 8,
+                "value": 14.11
+            },
+            "discount": {
+                "percentage": 78,
+                "label": "78% de desconto"
+            }
+        },
+        "links": {
+            "checkout": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+            "salesPage": null
+        },
+        "guarantee": {
+            "days": 7,
+            "description": "Se não fizer sentido pra você, o reembolso é simples e sem perguntas."
+        },
+        "features": {
+            "totalLessons": 31,
+            "accessType": "Acesso imediato",
+            "format": "Online"
+        }
+    },
+    "sections": [
+        {
+            "id": "offer-hero",
+            "type": "HeroSection",
+            "enabled": true,
+            "order": 0,
+            "title": "Oferta Especial",
+            "props": {
+                "showCelebration": true,
+                "celebrationEmoji": "✨",
+                "greetingFormat": "Pronta para o próximo passo?",
+                "titleFormat": "Domine seu Estilo em 5 Passos",
+                "styleNameDisplay": null,
+                "colors": {
+                    "greeting": "text",
+                    "greetingHighlight": "primary",
+                    "title": "secondary"
+                },
+                "spacing": {
+                    "padding": "2.5rem 1.5rem",
+                    "marginBottom": "2rem"
+                }
+            }
+        },
+        {
+            "id": "offer-main",
+            "type": "OfferSection",
+            "enabled": true,
+            "order": 1,
+            "title": "Oferta",
+            "props": {
+                "layout": "centered-card",
+                "maxWidth": "42rem",
+                "showUrgency": false,
+                "pricing": {
+                    "showOriginalPrice": true,
+                    "originalPrice": 447,
+                    "salePrice": 97,
+                    "installments": {
+                        "show": true,
+                        "count": 8,
+                        "value": 14.11
+                    },
+                    "discount": {
+                        "show": true,
+                        "percentage": 78,
+                        "label": "78% de desconto",
+                        "style": "badge",
+                        "color": "success"
+                    }
+                },
+                "includes": {
+                    "title": "Você recebe hoje",
+                    "items": [
+                        {
+                            "icon": "✅",
+                            "text": "31 aulas em vídeo",
+                            "highlight": false
+                        },
+                        {
+                            "icon": "✅",
+                            "text": "Método completo 5 Passos",
+                            "highlight": true
+                        },
+                        {
+                            "icon": "✅",
+                            "text": "Bônus exclusivos (PDFs + Planilha)",
+                            "highlight": false
+                        },
+                        {
+                            "icon": "✅",
+                            "text": "Garantia de 7 dias",
+                            "highlight": false
+                        }
+                    ]
+                },
+                "background": {
+                    "type": "gradient",
+                    "from": "primary/10",
+                    "to": "accent/5"
+                }
+            }
+        },
+        {
+            "id": "cta-primary",
+            "type": "CTAButton",
+            "enabled": true,
+            "order": 2,
+            "title": "CTA Principal",
+            "props": {
+                "text": "Quero começar agora",
+                "icon": "ShoppingCart",
+                "iconAnimation": "bounce-on-hover",
+                "style": "gradient",
+                "colors": {
+                    "from": "primary",
+                    "to": "accent"
+                },
+                "size": "xlarge",
+                "fullWidthMobile": true,
+                "analytics": {
+                    "eventName": "cta_primary_click",
+                    "category": "conversion",
+                    "label": "step21"
+                }
+            }
+        },
+        {
+            "id": "guarantee",
+            "type": "GuaranteeSection",
+            "enabled": true,
+            "order": 3,
+            "title": "Garantia",
+            "props": {
+                "days": 7,
+                "icon": "🕊️",
+                "title": "Satisfação Garantida",
+                "description": "Você tem 7 dias para experimentar. Se não fizer sentido, reembolso simples e sem perguntas.",
+                "badgeText": "Compra 100% Segura",
+                "background": {
+                    "type": "solid",
+                    "color": "primary/5"
+                },
+                "border": {
+                    "show": true,
+                    "color": "primary/20"
+                },
+                "layout": "centered",
+                "iconSize": "3xl"
+            }
+        },
+        {
+            "id": "cta-final",
+            "type": "CTAButton",
+            "enabled": true,
+            "order": 4,
+            "title": "CTA Final",
+            "props": {
+                "text": "Garantir minha vaga",
+                "icon": "ShoppingCart",
+                "iconAnimation": "bounce-on-hover",
+                "style": "gradient",
+                "colors": {
+                    "from": "primary",
+                    "to": "accent"
+                },
+                "size": "large",
+                "fullWidthMobile": true,
+                "analytics": {
+                    "eventName": "cta_final_click",
+                    "category": "conversion",
+                    "label": "step21"
+                }
+            }
+        }
+    ],
+    "validation": {
+        "required": [],
+        "minAnswers": 0,
+        "maxAnswers": 0,
+        "validationMessage": null
+    },
+    "analytics": {
+        "events": [
+            "page_view",
+            "section_viewed",
+            "offer_viewed",
+            "cta_primary_click",
+            "cta_final_click"
+        ],
+        "trackingId": "step-21-offer"
+    }
+}
