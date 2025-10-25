@@ -188,6 +188,8 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    */
   private async loadFromJSON(templateId: string): Promise<FullTemplate | null> {
     try {
+      const base: string = (import.meta as any)?.env?.BASE_URL || '/';
+      const baseTrimmed = base.replace(/\/$/, '');
       // Normalizar o templateId para o formato com padding (step-01, step-02, etc.)
       let normalizedId = templateId;
       const stepMatch = templateId.match(/^step-(\d+)$/);
@@ -197,7 +199,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       }
 
       // Tentar carregar JSON com sufixo -v3
-      const response = await fetch(`/templates/${normalizedId}-v3.json`);
+      const response = await fetch(`${baseTrimmed}/templates/${normalizedId}-v3.json`, { cache: 'no-store' });
       if (response.ok) {
         const jsonData = await response.json();
         return this.convertJSONTemplate(jsonData, templateId);
@@ -205,13 +207,13 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
 
       // Fallbacks: tentar sem o sufixo -v3, priorizando id normalizado (com padding)
       // 1) normalized (ex.: step-01.json)
-      const fallbackNormalized = await fetch(`/templates/${normalizedId}.json`);
+      const fallbackNormalized = await fetch(`${baseTrimmed}/templates/${normalizedId}.json`, { cache: 'no-store' });
       if (fallbackNormalized.ok) {
         const jsonData = await fallbackNormalized.json();
         return this.convertJSONTemplate(jsonData, templateId);
       }
       // 2) original (ex.: step-1.json)
-      const fallbackOriginal = await fetch(`/templates/${templateId}.json`);
+      const fallbackOriginal = await fetch(`${baseTrimmed}/templates/${templateId}.json`, { cache: 'no-store' });
       if (fallbackOriginal.ok) {
         const jsonData = await fallbackOriginal.json();
         return this.convertJSONTemplate(jsonData, templateId);
