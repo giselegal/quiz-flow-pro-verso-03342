@@ -164,8 +164,15 @@ export class TemplateLoader {
   private async loadFromPublicStepJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
       const base = `/templates/${normalizedKey}`;
-      // Prioridade: preferir arquivos v3 (sections) como fonte de verdade; fallback para canônico .json
-      const urls = [`${base}-v3.json`, `${base}.json`];
+      // Ordem de tentativa:
+      // 1) v3.1 blocks (public/templates/blocks/step-XX.json)
+      // 2) v3 sections (public/templates/step-XX-v3.json)
+      // 3) canônico (public/templates/step-XX.json)
+      const urls = [
+        `/templates/blocks/${normalizedKey}.json`,
+        `${base}-v3.json`,
+        `${base}.json`
+      ];
       let data: any | null = null;
 
       for (const url of urls) {
@@ -193,8 +200,9 @@ export class TemplateLoader {
         blocks = rawBlocks.map((b: any, idx: number) => ({
           id: String(b.id || `${normalizedKey}-block-${idx}`),
           type: (typeMap[b.type] || b.type || 'text-inline') as any,
-          order: (b.order ?? b.position ?? idx) as number,
-          properties: (b.properties || b.props || {}) as Record<string, any>,
+          order: (b.order ?? b.position ?? b.index ?? idx) as number,
+          // Suporte a múltiplas convenções: properties | props | config | options
+          properties: (b.properties || b.props || b.config || b.options || {}) as Record<string, any>,
           content: (b.content || {}) as Record<string, any>
         }));
       } else if (Array.isArray(data?.sections)) {

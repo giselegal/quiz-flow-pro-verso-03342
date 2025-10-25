@@ -1,0 +1,50 @@
+{
+    "templateVersion": "3.1",
+    "metadata": {
+        "id": "step-12",
+        "name": "Pergunta (Blocos)",
+        "description": "Pergunta de múltipla escolha com grid de opções",
+        "category": "question",
+        "tags": [
+            "question",
+            "options"
+        ]
+    },
+    "blocks": [
+        {
+            "id": "q-12",
+            "type": "question-block",
+            "config": {
+                "questionNumber": "Pergunta 11/20",
+                "questionText": "Qual combinação te atrai mais?",
+                "requiredSelections": 1,
+                "options": [
+                    {
+                        "id": "opt-a",
+                        "text": "Opção A"
+                    },
+                    {
+                        "id": "opt-b",
+                        "text": "Opção B"
+                    },
+                    {
+                        "id": "opt-c",
+                        "text": "Opção C"
+                    },
+                    {
+                        "id": "opt-d",
+                        "text": "Opção D"
+                    }
+                ]
+            }
+        }
+    ],
+    "analytics": {
+        "events": [
+            "page_view",
+            "option_selected",
+            "step_completed"
+        ],
+        "trackingId": "step-12-blocks"
+    }
+}
