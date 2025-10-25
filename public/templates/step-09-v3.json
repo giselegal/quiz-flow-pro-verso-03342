@@ -1,19 +1,19 @@
 {
     "templateVersion": "3.0",
     "metadata": {
-        "id": "step-05-question-v3",
-        "name": "Q4 - Ocasiões",
-        "description": "Questão 4 sobre preferências de estilo",
+        "id": "step-09-question-v3",
+        "name": "Q8 - Inspiração",
+        "description": "Questão 8 sobre preferências de estilo",
         "category": "quiz-question",
         "tags": [
             "quiz",
             "style",
             "question"
         ],
-        "questionNumber": 4,
+        "questionNumber": 8,
         "totalQuestions": 13,
-        "createdAt": "2025-10-13T00:32:31.721Z",
-        "updatedAt": "2025-10-13T00:32:31.721Z",
+        "createdAt": "2025-10-13T00:32:31.724Z",
+        "updatedAt": "2025-10-13T00:32:31.724Z",
         "author": "Quiz Flow Pro",
         "version": "3.0.0"
     },
@@ -49,11 +49,11 @@
     "sections": [
         {
             "type": "question-progress",
-            "id": "q5-progress",
+            "id": "q9-progress",
             "content": {
-                "currentQuestion": 4,
+                "currentQuestion": 8,
                 "totalQuestions": 10,
-                "progressValue": 40,
+                "progressValue": 80,
                 "showProgress": true
             },
             "style": {
@@ -69,10 +69,10 @@
         },
         {
             "type": "question-number",
-            "id": "q5-number",
+            "id": "q9-number",
             "content": {
-                "text": "4 de 10",
-                "questionNumber": "4 de 10"
+                "text": "8 de 10",
+                "questionNumber": "8 de 10"
             },
             "style": {
                 "textAlign": "center",
@@ -87,9 +87,9 @@
         },
         {
             "type": "question-text",
-            "id": "q5-text",
+            "id": "q9-text",
             "content": {
-                "text": "QUAIS DETALHES VOCÊ GOSTA?"
+                "text": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?"
             },
             "style": {
                 "textAlign": "center",
@@ -104,7 +104,7 @@
         },
         {
             "type": "question-instructions",
-            "id": "q5-instructions",
+            "id": "q9-instructions",
             "content": {
                 "text": "Selecione exatamente 3 opções para continuar"
             },
@@ -121,55 +121,63 @@
         },
         {
             "type": "options-grid",
-            "id": "options-grid-05",
+            "id": "options-grid-09",
             "content": {
                 "options": [
                     {
                         "id": "natural",
-                        "text": "Poucos detalhes, básico e prático",
+                        "text": "Tênis nude casual e confortável",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
                         "value": "natural"
                     },
                     {
                         "id": "classico",
-                        "text": "Bem discretos e sutis, clean e clássico",
+                        "text": "Scarpin nude de salto baixo",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
                         "value": "classico"
                     },
                     {
                         "id": "contemporaneo",
-                        "text": "Básico, mas com um toque de estilo",
+                        "text": "Sandália dourada com salto bloco",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
                         "value": "contemporaneo"
                     },
                     {
                         "id": "elegante",
-                        "text": "Detalhes refinados, chic e que deem status",
+                        "text": "Scarpin nude salto alto e fino",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
                         "value": "elegante"
                     },
                     {
                         "id": "romantico",
-                        "text": "Detalhes delicados, laços, babados",
+                        "text": "Sandália anabela off white",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
                         "value": "romantico"
                     },
                     {
                         "id": "sexy",
-                        "text": "Roupas que valorizem meu corpo: couro, zíper, fendas",
+                        "text": "Sandália rosa de tiras finas",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
                         "value": "sexy"
                     },
                     {
                         "id": "dramatico",
-                        "text": "Detalhes marcantes, firmeza e peso",
+                        "text": "Scarpin preto moderno com vinil transparente",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
                         "value": "dramatico"
                     },
                     {
                         "id": "criativo",
-                        "text": "Detalhes diferentes do convencional, produções ousadas",
+                        "text": "Scarpin colorido estampado",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
                         "value": "criativo"
                     }
                 ],
-                "columns": 1,
+                "columns": 2,
                 "multipleSelection": true,
                 "minSelections": 3,
                 "maxSelections": 3,
-                "showImages": false,
+                "showImages": true,
                 "imageSize": 256,
                 "autoAdvance": true,
                 "autoAdvanceDelay": 1500,
@@ -189,50 +197,58 @@
                 "options": [
                     {
                         "id": "natural",
-                        "text": "Poucos detalhes, básico e prático",
+                        "text": "Tênis nude casual e confortável",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
                         "value": "natural"
                     },
                     {
                         "id": "classico",
-                        "text": "Bem discretos e sutis, clean e clássico",
+                        "text": "Scarpin nude de salto baixo",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
                         "value": "classico"
                     },
                     {
                         "id": "contemporaneo",
-                        "text": "Básico, mas com um toque de estilo",
+                        "text": "Sandália dourada com salto bloco",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
                         "value": "contemporaneo"
                     },
                     {
                         "id": "elegante",
-                        "text": "Detalhes refinados, chic e que deem status",
+                        "text": "Scarpin nude salto alto e fino",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
                         "value": "elegante"
                     },
                     {
                         "id": "romantico",
-                        "text": "Detalhes delicados, laços, babados",
+                        "text": "Sandália anabela off white",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
                         "value": "romantico"
                     },
                     {
                         "id": "sexy",
-                        "text": "Roupas que valorizem meu corpo: couro, zíper, fendas",
+                        "text": "Sandália rosa de tiras finas",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
                         "value": "sexy"
                     },
                     {
                         "id": "dramatico",
-                        "text": "Detalhes marcantes, firmeza e peso",
+                        "text": "Scarpin preto moderno com vinil transparente",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
                         "value": "dramatico"
                     },
                     {
                         "id": "criativo",
-                        "text": "Detalhes diferentes do convencional, produções ousadas",
+                        "text": "Scarpin colorido estampado",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
                         "value": "criativo"
                     }
                 ],
-                "columns": 1,
+                "columns": 2,
                 "multipleSelection": true,
                 "minSelections": 3,
                 "maxSelections": 3,
-                "showImages": false,
+                "showImages": true,
                 "imageSize": 256,
                 "autoAdvance": true,
                 "autoAdvanceDelay": 1500,
@@ -241,7 +257,7 @@
         },
         {
             "type": "question-navigation",
-            "id": "q5-navigation",
+            "id": "q9-navigation",
             "content": {
                 "backLabel": "Voltar",
                 "nextLabel": "Avançar"
@@ -275,8 +291,8 @@
         }
     },
     "navigation": {
-        "nextStep": "step-06",
-        "prevStep": "step-04",
+        "nextStep": "step-10",
+        "prevStep": "step-08",
         "allowBack": true,
         "requiresUserInput": true,
         "autoAdvance": true,
@@ -290,7 +306,7 @@
             "validation_error",
             "completion"
         ],
-        "trackingId": "step-05-question-v3"
+        "trackingId": "step-09-question-v3"
     },
     "scoring": {
         "method": "points",

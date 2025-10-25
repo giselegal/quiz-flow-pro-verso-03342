@@ -1,19 +1,19 @@
 {
     "templateVersion": "3.0",
     "metadata": {
-        "id": "step-05-question-v3",
-        "name": "Q4 - Ocasiões",
-        "description": "Questão 4 sobre preferências de estilo",
+        "id": "step-07-question-v3",
+        "name": "Q6 - Acessórios",
+        "description": "Questão 6 sobre preferências de estilo",
         "category": "quiz-question",
         "tags": [
             "quiz",
             "style",
             "question"
         ],
-        "questionNumber": 4,
+        "questionNumber": 6,
         "totalQuestions": 13,
-        "createdAt": "2025-10-13T00:32:31.721Z",
-        "updatedAt": "2025-10-13T00:32:31.721Z",
+        "createdAt": "2025-10-13T00:32:31.723Z",
+        "updatedAt": "2025-10-13T00:32:31.723Z",
         "author": "Quiz Flow Pro",
         "version": "3.0.0"
     },
@@ -49,11 +49,11 @@
     "sections": [
         {
             "type": "question-progress",
-            "id": "q5-progress",
+            "id": "q7-progress",
             "content": {
-                "currentQuestion": 4,
+                "currentQuestion": 6,
                 "totalQuestions": 10,
-                "progressValue": 40,
+                "progressValue": 60,
                 "showProgress": true
             },
             "style": {
@@ -69,10 +69,10 @@
         },
         {
             "type": "question-number",
-            "id": "q5-number",
+            "id": "q7-number",
             "content": {
-                "text": "4 de 10",
-                "questionNumber": "4 de 10"
+                "text": "6 de 10",
+                "questionNumber": "6 de 10"
             },
             "style": {
                 "textAlign": "center",
@@ -87,9 +87,9 @@
         },
         {
             "type": "question-text",
-            "id": "q5-text",
+            "id": "q7-text",
             "content": {
-                "text": "QUAIS DETALHES VOCÊ GOSTA?"
+                "text": "QUAL CASACO É SEU FAVORITO?"
             },
             "style": {
                 "textAlign": "center",
@@ -104,7 +104,7 @@
         },
         {
             "type": "question-instructions",
-            "id": "q5-instructions",
+            "id": "q7-instructions",
             "content": {
                 "text": "Selecione exatamente 3 opções para continuar"
             },
@@ -121,55 +121,63 @@
         },
         {
             "type": "options-grid",
-            "id": "options-grid-05",
+            "id": "options-grid-07",
             "content": {
                 "options": [
                     {
                         "id": "natural",
-                        "text": "Poucos detalhes, básico e prático",
+                        "text": "Cardigã bege confortável e casual",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
                         "value": "natural"
                     },
                     {
                         "id": "classico",
-                        "text": "Bem discretos e sutis, clean e clássico",
+                        "text": "Blazer verde estruturado",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp",
                         "value": "classico"
                     },
                     {
                         "id": "contemporaneo",
-                        "text": "Básico, mas com um toque de estilo",
+                        "text": "Trench coat bege tradicional",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp",
                         "value": "contemporaneo"
                     },
                     {
                         "id": "elegante",
-                        "text": "Detalhes refinados, chic e que deem status",
+                        "text": "Blazer branco refinado",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp",
                         "value": "elegante"
                     },
                     {
                         "id": "romantico",
-                        "text": "Detalhes delicados, laços, babados",
+                        "text": "Casaco pink vibrante e moderno",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp",
                         "value": "romantico"
                     },
                     {
                         "id": "sexy",
-                        "text": "Roupas que valorizem meu corpo: couro, zíper, fendas",
+                        "text": "Jaqueta vinho de couro estilosa",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
                         "value": "sexy"
                     },
                     {
                         "id": "dramatico",
-                        "text": "Detalhes marcantes, firmeza e peso",
+                        "text": "Jaqueta preta estilo rocker",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
                         "value": "dramatico"
                     },
                     {
                         "id": "criativo",
-                        "text": "Detalhes diferentes do convencional, produções ousadas",
+                        "text": "Casaco estampado criativo e colorido",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
                         "value": "criativo"
                     }
                 ],
-                "columns": 1,
+                "columns": 2,
                 "multipleSelection": true,
                 "minSelections": 3,
                 "maxSelections": 3,
-                "showImages": false,
+                "showImages": true,
                 "imageSize": 256,
                 "autoAdvance": true,
                 "autoAdvanceDelay": 1500,
@@ -189,50 +197,58 @@
                 "options": [
                     {
                         "id": "natural",
-                        "text": "Poucos detalhes, básico e prático",
+                        "text": "Cardigã bege confortável e casual",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
                         "value": "natural"
                     },
                     {
                         "id": "classico",
-                        "text": "Bem discretos e sutis, clean e clássico",
+                        "text": "Blazer verde estruturado",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp",
                         "value": "classico"
                     },
                     {
                         "id": "contemporaneo",
-                        "text": "Básico, mas com um toque de estilo",
+                        "text": "Trench coat bege tradicional",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp",
                         "value": "contemporaneo"
                     },
                     {
                         "id": "elegante",
-                        "text": "Detalhes refinados, chic e que deem status",
+                        "text": "Blazer branco refinado",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp",
                         "value": "elegante"
                     },
                     {
                         "id": "romantico",
-                        "text": "Detalhes delicados, laços, babados",
+                        "text": "Casaco pink vibrante e moderno",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp",
                         "value": "romantico"
                     },
                     {
                         "id": "sexy",
-                        "text": "Roupas que valorizem meu corpo: couro, zíper, fendas",
+                        "text": "Jaqueta vinho de couro estilosa",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
                         "value": "sexy"
                     },
                     {
                         "id": "dramatico",
-                        "text": "Detalhes marcantes, firmeza e peso",
+                        "text": "Jaqueta preta estilo rocker",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
                         "value": "dramatico"
                     },
                     {
                         "id": "criativo",
-                        "text": "Detalhes diferentes do convencional, produções ousadas",
+                        "text": "Casaco estampado criativo e colorido",
+                        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
                         "value": "criativo"
                     }
                 ],
-                "columns": 1,
+                "columns": 2,
                 "multipleSelection": true,
                 "minSelections": 3,
                 "maxSelections": 3,
-                "showImages": false,
+                "showImages": true,
                 "imageSize": 256,
                 "autoAdvance": true,
                 "autoAdvanceDelay": 1500,
@@ -241,7 +257,7 @@
         },
         {
             "type": "question-navigation",
-            "id": "q5-navigation",
+            "id": "q7-navigation",
             "content": {
                 "backLabel": "Voltar",
                 "nextLabel": "Avançar"
@@ -275,8 +291,8 @@
         }
     },
     "navigation": {
-        "nextStep": "step-06",
-        "prevStep": "step-04",
+        "nextStep": "step-08",
+        "prevStep": "step-06",
         "allowBack": true,
         "requiresUserInput": true,
         "autoAdvance": true,
@@ -290,7 +306,7 @@
             "validation_error",
             "completion"
         ],
-        "trackingId": "step-05-question-v3"
+        "trackingId": "step-07-question-v3"
     },
     "scoring": {
         "method": "points",
