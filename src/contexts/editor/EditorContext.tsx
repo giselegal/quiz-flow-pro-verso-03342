@@ -21,6 +21,7 @@ import React, {
   useState,
   useRef,
 } from 'react';
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 // import { useTemplateValidation } from '../hooks/useTemplateValidation';
 
 // Função wrapper para carregar templates usando TemplateManager
@@ -419,7 +420,7 @@ export const EditorProvider: React.FC<{
     const configAny = config as (EditorConfig & { quizSettings?: { totalSteps?: number } }) | undefined;
     const fromQuizSettings = configAny?.quizSettings?.totalSteps;
     const fromConfig = (configAny as Record<string, any> | undefined)?.maxStages;
-    const total = typeof fromQuizSettings === 'number' ? fromQuizSettings : typeof fromConfig === 'number' ? fromConfig : 21;
+    const total = typeof fromQuizSettings === 'number' ? fromQuizSettings : typeof fromConfig === 'number' ? fromConfig : TOTAL_STEPS;
     return Math.max(1, Math.min(60, total));
   }, [config]);
 
@@ -504,7 +505,7 @@ export const EditorProvider: React.FC<{
 
             // Prefetch leve da próxima etapa para navegação suave
             const nextStep = stepNumber + 1;
-            if (nextStep <= 21) {
+            if (nextStep <= TOTAL_STEPS) {
               const nextKey = `${currentFunnelId}|${nextStep}`;
               if (!stepTemplateCacheRef.current.has(nextKey)) {
                 getStepTemplate(nextStep, currentFunnelId)
@@ -802,7 +803,7 @@ export const useEditor = (): EditorContextType => {
       connectionStatus: 'disconnected',
 
       // Stage management
-      stages: Array.from({ length: 21 }, (_, i) => ({
+      stages: Array.from({ length: TOTAL_STEPS }, (_, i) => ({
         id: `step-${i + 1}`,
         name: `Etapa ${i + 1}`,
         description: `Descrição da etapa ${i + 1}`,
@@ -832,7 +833,7 @@ export const useEditor = (): EditorContextType => {
       computed: {
         currentBlocks: [],
         selectedBlock: null,
-        stageCount: 21,
+        stageCount: TOTAL_STEPS,
         totalBlocks: 0,
       },
 
