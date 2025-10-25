@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { QuizStep } from '@/data/quizSteps';
 import { QUIZ_STEPS } from '@/data/quizSteps';
 import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 
 type StageTemplate = any;
 
@@ -140,7 +141,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
       setError(null);
 
       try {
-        const promises = Array.from({ length: 21 }, (_, i) => {
+        const promises = Array.from({ length: TOTAL_STEPS }, (_, i) => {
           const stepNumber = i + 1;
           return loadQuizEstiloTemplate(stepNumber)
             .then(step => [
@@ -158,7 +159,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
 
         const stepsMap = Object.fromEntries(validResults);
 
-        console.log(`✅ Templates carregados: ${Object.keys(stepsMap).length}/21`);
+        console.log(`✅ Templates carregados: ${Object.keys(stepsMap).length}/${TOTAL_STEPS}`);
 
         return stepsMap;
 
@@ -183,7 +184,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
     async (currentStep: number, count: number = 2) => {
       const promises = Array.from({ length: count }, (_, i) => {
         const nextStep = currentStep + i + 1;
-        if (nextStep <= 21) {
+        if (nextStep <= TOTAL_STEPS) {
           return loadQuizEstiloTemplate(nextStep).catch(() => null);
         }
         return Promise.resolve(null);
