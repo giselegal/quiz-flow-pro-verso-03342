@@ -19,7 +19,8 @@ export interface TransitionHeroContent {
 }
 
 export interface TransitionHeroSectionProps extends BaseSectionProps {
-    content?: TransitionHeroContent;
+    // Mantém compatibilidade com BaseSectionProps (content: Record<string, any>)
+    // O componente fará o cast/normalização em runtime
     onComplete?: () => void;
     onAnalytics?: (event: string, data?: any) => void;
 }
@@ -35,14 +36,11 @@ export const TransitionHeroSection: React.FC<TransitionHeroSectionProps> = ({
     const { isMobile } = useResponsive();
 
     // Fallback seguro para conteúdo ausente/mal formado
-    const safeContent: TransitionHeroContent = {
-        title: content?.title ?? 'Carregando...',
-        subtitle: content?.subtitle,
-        message: content?.message ?? 'Preparando a próxima etapa... ',
-        autoAdvanceDelay: content?.autoAdvanceDelay ?? 3000,
-    };
-
-    const { title, subtitle, message, autoAdvanceDelay = 3000 } = safeContent;
+    const c = (content ?? {}) as Partial<TransitionHeroContent>;
+    const title = c.title ?? 'Carregando...';
+    const subtitle = c.subtitle;
+    const message = c.message ?? 'Preparando a próxima etapa... ';
+    const autoAdvanceDelay = c.autoAdvanceDelay ?? 3000;
 
     useEffect(() => {
         onAnalytics?.('section_view', {
