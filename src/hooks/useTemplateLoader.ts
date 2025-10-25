@@ -77,20 +77,21 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         let jsonTemplate: any | null = null;
 
         try {
-          const jsonModuleCanonical = await import(
-            /* @vite-ignore */
-            `/templates/${stepId}.json`
-          );
-          jsonTemplate = (jsonModuleCanonical as any).default || jsonModuleCanonical;
-          console.log(`✅ Template ${stepId}.json carregado`);
-        } catch (errCanonical) {
-          console.warn(`⚠️ Falha ao carregar ${stepId}.json, tentando fallback -v3...`, errCanonical);
+          // Preferir v3 como fonte de verdade
           const jsonModuleV3 = await import(
             /* @vite-ignore */
             `/templates/${stepId}-v3.json`
           );
           jsonTemplate = (jsonModuleV3 as any).default || jsonModuleV3;
-          console.log(`✅ Template ${stepId}-v3.json carregado (fallback)`);
+          console.log(`✅ Template ${stepId}-v3.json carregado`);
+        } catch (errV3) {
+          console.warn(`⚠️ Falha ao carregar ${stepId}-v3.json, tentando canônico .json...`, errV3);
+          const jsonModuleCanonical = await import(
+            /* @vite-ignore */
+            `/templates/${stepId}.json`
+          );
+          jsonTemplate = (jsonModuleCanonical as any).default || jsonModuleCanonical;
+          console.log(`✅ Template ${stepId}.json carregado (fallback)`);
         }
 
         // 3. Adaptar para QuizStep

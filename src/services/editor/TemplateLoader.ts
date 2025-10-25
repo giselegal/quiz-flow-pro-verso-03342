@@ -161,8 +161,8 @@ export class TemplateLoader {
   private async loadFromPublicStepJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
       const base = `/templates/${normalizedKey}`;
-      // Prioridade atual: preferir arquivos canônicos step-XX.json; manter fallback para -v3.json
-      const urls = [`${base}.json`, `${base}-v3.json`];
+      // Prioridade: preferir arquivos v3 (sections) como fonte de verdade; fallback para canônico .json
+      const urls = [`${base}-v3.json`, `${base}.json`];
       let data: any | null = null;
 
       for (const url of urls) {
@@ -181,23 +181,35 @@ export class TemplateLoader {
       if (!data) return null;
 
       // Detectar e extrair blocos
+      let blocks: Block[] = [];
       const rawBlocks: any[] = Array.isArray(data?.blocks) ? data.blocks : [];
-      if (!rawBlocks.length) {
+
+      if (rawBlocks.length) {
+        // Caminho 1: JSON no formato blocks[]
+        const typeMap: Record<string, string> = { CTAButton: 'cta-inline' };
+        blocks = rawBlocks.map((b: any, idx: number) => ({
+          id: String(b.id || `${normalizedKey}-block-${idx}`),
+          type: (typeMap[b.type] || b.type || 'text-inline') as any,
+          order: (b.order ?? b.position ?? idx) as number,
+          properties: (b.properties || b.props || {}) as Record<string, any>,
+          content: (b.content || {}) as Record<string, any>
+        }));
+      } else if (Array.isArray(data?.sections)) {
+        // Caminho 2: JSON v3 no formato sections[] → converter para Block[]
+        try {
+          const hydrated = {
+            ...data,
+            sections: hydrateSectionsWithQuizSteps(normalizedKey, data.sections)
+          };
+          const blocksComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
+          blocks = blockComponentsToBlocks(blocksComponents);
+        } catch (e) {
+          console.warn('⚠️ Falha ao converter sections→blocks para', normalizedKey, e);
+          return null;
+        }
+      } else {
         return null;
       }
-
-      // Mapeamento mínimo de tipos para compatibilidade
-      const typeMap: Record<string, string> = {
-        CTAButton: 'cta-inline',
-      };
-
-      const blocks: Block[] = rawBlocks.map((b: any, idx: number) => ({
-        id: String(b.id || `${normalizedKey}-block-${idx}`),
-        type: (typeMap[b.type] || b.type || 'text-inline') as any,
-        order: (b.order ?? b.position ?? idx) as number,
-        properties: (b.properties || b.props || {}) as Record<string, any>,
-        content: (b.content || {}) as Record<string, any>
-      }));
 
       unifiedCache.set(stepBlocksKey(normalizedKey), blocks);
       console.log(`📦 Public step JSON → ${normalizedKey}: ${blocks.length} blocos`);
