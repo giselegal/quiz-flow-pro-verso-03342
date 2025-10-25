@@ -2,6 +2,24 @@
 
 Sistema interativo de criação e gerenciamento de quizzes com arquitetura consolidada de alta performance.
 
+## 🚨 ATENÇÃO: Análise de Gargalos e Plano de Refatoração Disponível
+
+**Uma análise completa de gargalos técnicos foi realizada em 24/10/2025.**
+
+📊 **Para revisar o status atual e plano de ação:**
+- **Executivos:** Leia [`RESUMO_VISUAL_DASHBOARD_EXECUTIVO.md`](./RESUMO_VISUAL_DASHBOARD_EXECUTIVO.md)
+- **Tech Leads:** Leia [`MAPEAMENTO_COMPLETO_GARGALOS_PONTOS_CEGOS.md`](./MAPEAMENTO_COMPLETO_GARGALOS_PONTOS_CEGOS.md)
+- **Desenvolvedores:** Leia [`PLANO_ACAO_SPRINT_1_QUICK_WINS.md`](./PLANO_ACAO_SPRINT_1_QUICK_WINS.md)
+- **Índice completo:** [`INDICE_ANALISE_GARGALOS.md`](./INDICE_ANALISE_GARGALOS.md)
+
+**Principais Descobertas:**
+- 315 arquivos de editor, 44 providers, 131 serviços
+- 0% cobertura de testes, sem monitoring
+- Plano de 12 semanas com ROI de 794%
+- Investimento: $74k | Economia: $588k/ano
+
+---
+
 ## 🏗️ Arquitetura Consolidada
 
 **Nova arquitetura otimizada (2024)** - Sistema completamente consolidado para máxima performance e manutenibilidade:
