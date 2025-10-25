@@ -235,12 +235,24 @@ export class UnifiedTemplateRegistry {
    */
   private async loadFromServer(stepId: string): Promise<Block[] | null> {
     try {
-      // Tentar JSON v3
-      const response = await fetch(`/templates/${stepId}.json`);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      
-      const template = await response.json();
-      
+      // Prioridade: tentar arquivos -v3.json primeiro, depois fallback para .json
+      const urls = [`/templates/${stepId}-v3.json`, `/templates/${stepId}.json`];
+      let template: any | null = null;
+
+      for (const url of urls) {
+        try {
+          const resp = await fetch(url);
+          if (resp.ok) {
+            template = await resp.json();
+            break;
+          }
+        } catch (e) {
+          // tenta próxima URL
+        }
+      }
+
+      if (!template) return null;
+
       // Converter para Block[] se necessário
       if (template.blocks && Array.isArray(template.blocks)) {
         return template.blocks as Block[];

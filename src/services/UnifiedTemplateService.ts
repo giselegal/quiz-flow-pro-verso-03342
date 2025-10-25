@@ -3,6 +3,7 @@
  */
 
 import { templateService } from '@/services/canonical/TemplateService';
+import type { Block } from '@/services/UnifiedTemplateRegistry';
 import { CanonicalServicesMonitor } from '@/services/canonical/monitoring';
 
 export class UnifiedTemplateService {
@@ -53,11 +54,23 @@ export class UnifiedTemplateService {
     return null;
   }
 
-  loadStepBlocks(stepId: string, _funnelId?: string): any[] {
+  async loadStepBlocks(stepId: string, _funnelId?: string): Promise<Block[]> {
     UnifiedTemplateService.warnOnce();
     CanonicalServicesMonitor.trackLegacyBridge('UnifiedTemplateService', 'loadStepBlocks');
-    console.warn('Use await templateService.getStep(stepId)');
-    return [];
+    try {
+      const result = await templateService.getStep(stepId);
+      if (!result.success) {
+        console.warn(`[UnifiedTemplateService] getStep falhou para ${stepId}:`, (result as any).error);
+        return [];
+      }
+      if (Array.isArray(result.data)) {
+        return result.data as Block[];
+      }
+      return [];
+    } catch (error) {
+      console.error(`[UnifiedTemplateService] Erro ao carregar step ${stepId}:`, error);
+      return [];
+    }
   }
 
   publishStep(_stepId: string): boolean {

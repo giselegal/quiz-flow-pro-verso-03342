@@ -13,7 +13,17 @@ export class TemplateManager {
   private static PUBLISH_PREFIX = 'quiz_published_blocks_';
 
   static async loadStepBlocks(stepId: string, funnelId?: string): Promise<Block[]> {
-    return await unifiedTemplateService.loadStepBlocks(stepId, funnelId);
+    const raw = await unifiedTemplateService.loadStepBlocks(stepId, funnelId);
+    // Normalizar tipo para o Block do editor (BlockType)
+    const normalized: Block[] = (raw || []).map((b: any, idx: number) => ({
+      id: String(b?.id ?? `${stepId}-block-${idx}`),
+      type: (b?.type as any),
+      order: (b?.order ?? idx) as number,
+      properties: (b?.properties ?? {}),
+      content: (b?.content ?? {}),
+      parentId: (b?.parentId ?? null)
+    }));
+    return normalized;
   }
 
   static publishStep(stepId: string, blocks: Block[]): void {
@@ -33,7 +43,16 @@ export class TemplateManager {
   static async reloadTemplate(stepId: string, funnelId?: string): Promise<Block[]> {
     const cacheKey = funnelId ? `${stepId}:${funnelId}` : stepId;
     unifiedTemplateService.invalidateCache(cacheKey);
-    return unifiedTemplateService.loadStepBlocks(stepId, funnelId);
+    const raw = await unifiedTemplateService.loadStepBlocks(stepId, funnelId);
+    const normalized: Block[] = (raw || []).map((b: any, idx: number) => ({
+      id: String(b?.id ?? `${stepId}-block-${idx}`),
+      type: (b?.type as any),
+      order: (b?.order ?? idx) as number,
+      properties: (b?.properties ?? {}),
+      content: (b?.content ?? {}),
+      parentId: (b?.parentId ?? null)
+    }));
+    return normalized;
   }
 
   static getAvailableTemplates(maxSteps: number = 21): string[] {
