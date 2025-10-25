@@ -4,6 +4,7 @@
 // ⚠️ NOTA: Migrado para sistema JSON (step-XX.json) - usa templates dinâmicos
 import { getStepTemplate as getJSONTemplate } from '@/config/templates/templates';
 import { cacheService } from '@/services/UnifiedCacheService';
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 
 // 🔧 CACHE MIGRADO PARA UnifiedCacheService
 // @deprecated Inline TEMPLATE_CACHE substituído por cacheService.get('templates', key)
@@ -11,15 +12,14 @@ import { cacheService } from '@/services/UnifiedCacheService';
 // 🔧 FUNÇÃO PARA PRÉ-CARREGAR TODOS OS TEMPLATES
 async function preloadAllTemplates(): Promise<void> {
   if (typeof window === 'undefined') return;
-  
+
   console.log('🚀 Pré-carregando todos os templates v3...');
-  
-  const { TOTAL_STEPS } = require('@/config/stepsConfig');
+
   const promises = Array.from({ length: TOTAL_STEPS }, (_, i) => {
     const stepNumber = i + 1;
     const stepId = stepNumber.toString().padStart(2, '0');
     const templatePath = `/templates/step-${stepId}-v3.json`;
-    
+
     return fetch(templatePath)
       .then(response => {
         if (response.ok) {
@@ -56,10 +56,10 @@ async function preloadAllTemplates(): Promise<void> {
         console.warn(`⚠️ Falha ao pré-carregar template ${stepNumber}:`, error);
       });
   });
-  
+
   await Promise.allSettled(promises);
   const stats = cacheService.getStoreStats('templates');
-  console.log(`🎯 Pré-carregamento concluído: ${stats.size}/${require('@/config/stepsConfig').TOTAL_STEPS} templates`);
+  console.log(`🎯 Pré-carregamento concluído: ${stats.size}/${TOTAL_STEPS} templates`);
 }
 
 // 🔧 FUNÇÃO SÍNCRONA QUE USA CACHE
@@ -69,7 +69,7 @@ function getTemplateFromCache(stepNumber: number): any[] {
     console.log(`💾 Template ${stepNumber} do cache: ${cached.length} blocos`);
     return cached;
   }
-  
+
   console.warn(`❌ Template ${stepNumber} não está no cache`);
   return [];
 }
@@ -100,7 +100,7 @@ function ensureTemplateLoaded(stepNumber: number): any[] {
 
   try {
     console.log(`🔄 Tentando carregar síncrono: ${templatePath}`);
-    
+
     const xhr = new XMLHttpRequest();
     xhr.open('GET', templatePath, false); // síncrono
     xhr.send();
@@ -123,7 +123,7 @@ function ensureTemplateLoaded(stepNumber: number): any[] {
             position: section.order || index,
           };
         });
-        
+
         // Cachear para uso futuro
         cacheService.set('templates', `step-${stepNumber}`, blocks, 10 * 60 * 1000);
         console.log(`💾 Template ${stepNumber} carregado síncrono e cacheado: ${blocks.length} blocos`);
@@ -159,7 +159,6 @@ export interface StepInfo {
 }
 
 // 🎯 MAPEAMENTO COMPLETO DAS 21 ETAPAS
-const { TOTAL_STEPS } = require('@/config/stepsConfig');
 const STEP_MAPPING: Record<
   number,
   {
@@ -216,15 +215,15 @@ class StepTemplateService {
     try {
       console.log(`🎯 [CORREÇÃO] Carregando template v3 SYNC para etapa ${stepNumber}...`);
       const syncTemplate = ensureTemplateLoaded(stepNumber);
-      
+
       if (syncTemplate && Array.isArray(syncTemplate) && syncTemplate.length > 0) {
         console.log(`✅ Template v3 SYNC carregado para etapa ${stepNumber}: ${syncTemplate.length} blocos`);
         console.log(`🧱 [DEBUG] Tipos de blocos:`, syncTemplate.map((b: any) => b.type));
         return syncTemplate;
       }
-      
+
       console.warn(`⚠️ Template v3 SYNC vazio para etapa ${stepNumber}, tentando async...`);
-      
+
       // Fallback async (não retorna imediatamente, mas popula cache)
       getJSONTemplate(stepNumber).then((asyncTemplate) => {
         if (asyncTemplate && asyncTemplate.blocks) {
@@ -233,7 +232,7 @@ class StepTemplateService {
       }).catch(err => {
         console.warn(`⚠️ Template async falhou para etapa ${stepNumber}:`, err);
       });
-      
+
     } catch (error) {
       console.error(`❌ Erro ao carregar template SYNC da etapa ${stepNumber}:`, error);
     }
