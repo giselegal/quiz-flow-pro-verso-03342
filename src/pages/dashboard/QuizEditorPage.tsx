@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -128,7 +129,7 @@ const QuizEditorDashboard: React.FC = () => {
 
             // Carregar todos os steps
             const steps: QuizStep[] = [];
-            for (let i = 1; i <= 21; i++) {
+            for (let i = 1; i <= TOTAL_STEPS; i++) {
                 const stepConfig = await HybridTemplateService.getStepConfig(i);
                 steps.push({
                     id: `step-${i}`,
@@ -435,8 +436,8 @@ const QuizEditorDashboard: React.FC = () => {
                                 <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => selectedStep < 21 && handleStepSelect(selectedStep + 1)}
-                                    disabled={selectedStep >= 21}
+                                    onClick={() => selectedStep < TOTAL_STEPS && handleStepSelect(selectedStep + 1)}
+                                    disabled={selectedStep >= TOTAL_STEPS}
                                 >
                                     <ArrowRight className="w-4 h-4" />
                                 </Button>

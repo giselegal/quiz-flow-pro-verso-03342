@@ -6,6 +6,7 @@
  */
 
 import { FunnelStep } from '@/types/quiz-schema';
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 
 export type TemplateSource = 'template' | 'saved' | 'file';
 
@@ -19,8 +20,8 @@ export interface LoadOptions {
  * Mapeamento de IDs de templates para arquivos JSON das etapas
  */
 const TEMPLATE_TO_STEPS_MAPPING: Record<string, number[]> = {
-    'quiz21StepsComplete': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
-    'com-que-roupa-eu-vou': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+    'quiz21StepsComplete': Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1),
+    'com-que-roupa-eu-vou': Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1),
     'personal-branding-quiz': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
     'lead-magnet-fashion': [1, 2, 3, 4, 5],
     'quiz-tipo-corpo': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -126,7 +127,7 @@ class EditorDataService {
                 },
                 blocks: jsonData.blocks || [],
                 navigation: {
-                    nextStep: stepNumber < 21 ? String(stepNumber + 1) : undefined,
+                    nextStep: stepNumber < TOTAL_STEPS ? String(stepNumber + 1) : undefined,
                     prevStep: stepNumber > 1 ? String(stepNumber - 1) : undefined,
                     conditions: [],
                     actions: []

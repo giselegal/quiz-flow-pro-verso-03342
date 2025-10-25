@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -70,7 +71,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
     const loadTemplates = async () => {
         try {
             // Tentar carregar templates JSON dos arquivos
-            const templatePromises = Array.from({ length: 21 }, (_, i) => {
+            const templatePromises = Array.from({ length: TOTAL_STEPS }, (_, i) => {
                 const stepNumber = String(i + 1).padStart(2, '0');
                 return fetch(`/templates/step-${stepNumber}-v3.json`)
                     .then(res => res.ok ? res.json() : null)
@@ -96,7 +97,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
         // Gerar templates básicos caso não existam
         const defaultTemplates: JsonTemplate[] = [];
 
-        for (let i = 1; i <= 21; i++) {
+        for (let i = 1; i <= TOTAL_STEPS; i++) {
             const stepNumber = String(i).padStart(2, '0');
             defaultTemplates.push({
                 templateVersion: '2.0',
