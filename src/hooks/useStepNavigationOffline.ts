@@ -1,3 +1,4 @@
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 import { useQuizFlow } from '@/contexts';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
@@ -25,8 +26,8 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
     isLoading: false,
     canGoNext: true,
     canGoPrevious: initialStep > 1,
-    progress: (initialStep / 21) * 100,
-    totalSteps: 21,
+    progress: (initialStep / TOTAL_STEPS) * 100,
+    totalSteps: TOTAL_STEPS,
   });
 
   // Mock da sessão offline
@@ -39,7 +40,7 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
   // Navegar para etapa específica
   const goToStep = useCallback(
     async (stepNumber: number) => {
-      if (stepNumber < 1 || stepNumber > 21) {
+      if (stepNumber < 1 || stepNumber > TOTAL_STEPS) {
         console.warn(`Etapa ${stepNumber} é inválida`);
         return;
       }
@@ -53,7 +54,7 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
 
   // Próxima etapa
   const goNext = useCallback(async () => {
-    if (currentStep >= (totalSteps || 21)) return;
+    if (currentStep >= (totalSteps || TOTAL_STEPS)) return;
     next();
   }, [currentStep, totalSteps, next]);
 
@@ -80,11 +81,11 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
     setState(prev => ({
       ...prev,
       currentStep,
-      totalSteps: totalSteps || 21,
+      totalSteps: totalSteps || TOTAL_STEPS,
       canGoNext:
-        (canProceed && currentStep < (totalSteps || 21)) || currentStep < (totalSteps || 21),
+        (canProceed && currentStep < (totalSteps || TOTAL_STEPS)) || currentStep < (totalSteps || TOTAL_STEPS),
       canGoPrevious: currentStep > 1,
-      progress: (currentStep / (totalSteps || 21)) * 100,
+      progress: (currentStep / (totalSteps || TOTAL_STEPS)) * 100,
     }));
   }, [currentStep, totalSteps, canProceed]);
 
@@ -109,7 +110,7 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
     completeQuiz,
 
     // Utilitários
-    isLastStep: currentStep === (totalSteps || 21),
+    isLastStep: currentStep === (totalSteps || TOTAL_STEPS),
     isFirstStep: currentStep === 1,
     getProgressText: () => `${currentStep} de ${totalSteps || state.totalSteps}`,
   };

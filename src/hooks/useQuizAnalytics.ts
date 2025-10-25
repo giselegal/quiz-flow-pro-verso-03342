@@ -216,7 +216,8 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
   // Update completion rate based on current progress
   useEffect(() => {
     const calculateCompletionRate = () => {
-      const totalSteps = 21;
+  const { TOTAL_STEPS } = await import('@/config/stepsConfig');
+  const totalSteps = TOTAL_STEPS;
       const completedSteps = Object.keys(analyticsData.stepTimings).length;
       return Math.round((completedSteps / totalSteps) * 100);
     };
