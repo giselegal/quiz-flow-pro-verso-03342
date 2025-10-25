@@ -303,6 +303,83 @@ export class TemplateLoader {
         } catch (_e) {
           // silencioso: sem bloqueio em caso de falha
         }
+
+        // Adaptadores de tipo para o Editor (quando só há 1 bloco por etapa e tipos não são reconhecidos pelo renderer modular)
+        try {
+          const stepNum = Number(normalizedKey.replace('step-', ''));
+
+          // 1) Intro (step-01): mapear hero-block/welcome-form-block para tipos do editor
+          if (stepNum === 1) {
+            const introBlocks: any[] = [];
+            const hero = blocks.find(b => String(b.type) === 'hero-block');
+            const form = blocks.find(b => String(b.type) === 'welcome-form-block');
+
+            if (hero) {
+              const p = hero.properties || {};
+              introBlocks.push({
+                id: `${normalizedKey}-intro-header`,
+                type: 'quiz-intro-header',
+                order: 0,
+                properties: { logoUrl: p.logoUrl, logoAlt: p.logoAlt },
+                content: {
+                  title: p.titleHtml || p.title,
+                  subtitle: p.subtitleHtml || p.subtitle,
+                  imageUrl: p.imageUrl,
+                  imageAlt: p.imageAlt
+                }
+              });
+            }
+            if (form) {
+              const p = form.properties || {};
+              introBlocks.push({
+                id: `${normalizedKey}-intro-form`,
+                type: 'intro-form',
+                order: introBlocks.length,
+                properties: { buttonText: p.buttonText, placeholder: p.placeholder },
+                content: { formQuestion: p.questionLabel, namePlaceholder: p.placeholder, submitText: p.buttonText }
+              });
+            }
+
+            if (introBlocks.length) {
+              blocks = introBlocks;
+            }
+          }
+
+          // 2) Perguntas (steps 02–18): expandir question-block único em blocos modulares esperados pelo editor
+          if (stepNum >= 2 && stepNum <= 18) {
+            const onlyQuestionBlock = blocks.length === 1 && String(blocks[0].type) === 'question-block';
+            if (onlyQuestionBlock) {
+              const qb = blocks[0];
+              const p = qb.properties || {};
+              const opts = Array.isArray(p.options) ? p.options : [];
+              const mapped = opts.map((o: any) => ({ id: String(o.id), text: String(o.text || o.label || o.id), imageUrl: o.imageUrl || o.image }));
+              blocks = [
+                { id: `${normalizedKey}-qnum`, type: 'question-number', order: 0, properties: { questionNumber: p.questionNumber }, content: {} },
+                { id: `${normalizedKey}-qtext`, type: 'question-text', order: 1, properties: { questionText: p.questionText }, content: { questionText: p.questionText } },
+                { id: `${normalizedKey}-qopts`, type: 'options-grid', order: 2, properties: { options: mapped }, content: { options: mapped } },
+                { id: `${normalizedKey}-qnav`, type: 'quiz-navigation', order: 3, properties: { enableWhenValid: true }, content: {} }
+              ] as any[];
+            }
+          }
+
+          // 3) Transição (step-19): mapear transition.next para tipos do editor
+          if (stepNum === 19) {
+            const trans = blocks.find(b => String(b.type) === 'transition.next');
+            if (trans) {
+              const p = trans.properties || {};
+              const title = p.title || p.message || '';
+              const paragraphs = Array.isArray(p.paragraphs) ? p.paragraphs : [];
+              const text = [title, ...paragraphs].filter(Boolean).join('\n\n');
+              const nextLabel = p.buttonLabel || 'Ver resultado';
+              blocks = [
+                { id: `${normalizedKey}-transition-hero`, type: 'transition-hero', order: 0, properties: {}, content: { title, message: text } },
+                { id: `${normalizedKey}-transition-cta`, type: 'CTAButton', order: 1, properties: {}, content: { label: nextLabel, href: '#next', variant: 'primary', size: 'large' } }
+              ] as any[];
+            }
+          }
+        } catch (e) {
+          console.warn('⚠️ Falha no adaptador de blocos para editor:', e);
+        }
       } else if (Array.isArray(data?.sections)) {
         // Caminho 2: JSON v3 no formato sections[] → converter para Block[]
         try {
