@@ -55,8 +55,8 @@
     "test:properties": "vitest --config vitest.config.ts",
     "test:properties:ui": "vitest --config vitest.config.ts --ui",
     "test:properties:run": "vitest --config vitest.config.ts run",
-  "test:coverage": "vitest run --coverage",
-  "test:ci": "cross-env NODE_OPTIONS='--max-old-space-size=4096' vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:ci": "cross-env NODE_OPTIONS='--max-old-space-size=4096' vitest run",
     "test:templates": "vitest --config vitest.config.ts run",
     "test:canonical": "vitest --config vitest.config.canonical.ts run",
     "test:watch": "vitest --watch",
@@ -112,7 +112,8 @@
     "simulate:dcc": "node scripts/simulate-dcc.mjs",
     "audit:sources": "tsx scripts/audit/compare-sources.ts",
     "audit:v3-props": "tsx scripts/audit/v3-sections-props-audit.ts",
-    "validate:typescript": "bash scripts/validar-typescript.sh"
+    "validate:typescript": "bash scripts/validar-typescript.sh",
+    "hydrate:blocks": "node tools/hydrate-blocks-from-v3.mjs"
   },
   "smoke": {
     "step20": "node scripts/smoke-step20.mjs"
