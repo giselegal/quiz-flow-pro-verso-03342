@@ -233,11 +233,72 @@ export class TemplateLoader {
               if (numberStr) cfg.questionNumber = numberStr;
               if (textStr) cfg.questionText = textStr;
               if (Array.isArray(opts) && opts.length) {
-                cfg.options = opts.map((o: any) => ({ id: String(o.id || o.value), text: String(o.text || o.label || o.value || '') }));
+                cfg.options = opts.map((o: any) => ({ id: String(o.id || o.value), text: String(o.text || o.label || o.value || ''), image: o.imageUrl || o.image }));
               }
               if (typeof minSel === 'number' && minSel > 0) cfg.requiredSelections = minSel;
               return { ...b, properties: cfg };
             });
+
+            // Hidratação adicional por step (hero/intro, oferta/resultado)
+            const stepNum = Number(normalizedKey.replace('step-', ''));
+
+            // step-01: hero-block e welcome-form-block
+            if (stepNum === 1) {
+              const header = secByType('quiz-intro-header');
+              const introTitle = secByType('intro-title');
+              const introDesc = secByType('intro-description');
+              const introImg = secByType('intro-image');
+              const introForm = secByType('intro-form');
+
+              blocks = blocks.map(b => {
+                const cfg = { ...(b.properties || {}) };
+                if (String(b.type) === 'hero-block') {
+                  if (introTitle?.content?.titleHtml) cfg.titleHtml = introTitle.content.titleHtml;
+                  if (introDesc?.content?.text) cfg.subtitleHtml = introDesc.content.text;
+                  if (introImg?.content?.imageUrl) cfg.imageUrl = introImg.content.imageUrl;
+                  if (introImg?.content?.imageAlt) cfg.imageAlt = introImg.content.imageAlt;
+                  if (header?.content?.logoUrl) cfg.logoUrl = header.content.logoUrl;
+                  if (header?.content?.logoAlt) cfg.logoAlt = header.content.logoAlt;
+                  return { ...b, properties: cfg };
+                }
+                if (String(b.type) === 'welcome-form-block') {
+                  if (introForm?.content?.formQuestion) cfg.questionLabel = introForm.content.formQuestion;
+                  if (introForm?.content?.namePlaceholder) cfg.placeholder = introForm.content.namePlaceholder;
+                  if (introForm?.content?.submitText) cfg.buttonText = introForm.content.submitText;
+                  return { ...b, properties: cfg };
+                }
+                return b;
+              });
+            }
+
+            // step-20 e 21: oferta e resultado
+            if (stepNum === 20 || stepNum === 21) {
+              const offer = v3?.offer || {};
+              const heroSection = sections.find((s: any) => s?.type === 'HeroSection');
+              const styleProfile = sections.find((s: any) => s?.type === 'StyleProfileSection');
+              const ctaPrimary = sections.find((s: any) => s?.id === 'cta-primary' && s?.type === 'CTAButton');
+              const ctaLabel = ctaPrimary?.props?.text || 'Quero começar agora';
+              const checkout = offer?.links?.checkout || offer?.checkout;
+              const offerTitle = offer?.productName || heroSection?.props?.titleFormat || 'Programa Especial';
+              const offerDesc = offer?.description || 'Método completo para dominar seu estilo.';
+
+              blocks = blocks.map(b => {
+                const cfg = { ...(b.properties || {}) };
+                if (String(b.type) === 'offer.core') {
+                  cfg.title = offerTitle;
+                  cfg.description = offerDesc;
+                  if (checkout) cfg.ctaUrl = checkout;
+                  if (ctaLabel) cfg.ctaLabel = ctaLabel;
+                  return { ...b, properties: cfg };
+                }
+                if (String(b.type) === 'result.secondaryList') {
+                  const titleFormat = styleProfile?.props?.progressBars?.titleFormat;
+                  if (titleFormat) cfg.title = titleFormat;
+                  return { ...b, properties: cfg };
+                }
+                return b;
+              });
+            }
           }
         } catch (_e) {
           // silencioso: sem bloqueio em caso de falha
