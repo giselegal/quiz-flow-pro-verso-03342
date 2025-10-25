@@ -1,0 +1,157 @@
+{
+  "templateVersion": "3.0",
+  "metadata": {
+    "id": "step-09-question-v3",
+    "name": "Q8 - Inspiração",
+    "description": "Questão 8 sobre preferências de estilo",
+    "category": "quiz-question",
+    "tags": [
+      "quiz",
+      "style",
+      "question"
+    ],
+    "questionNumber": 8,
+    "totalQuestions": 13,
+    "createdAt": "2025-10-13T00:32:31.724Z",
+    "updatedAt": "2025-10-13T00:32:31.724Z",
+    "author": "Quiz Flow Pro",
+    "version": "3.0.0"
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B89B7A",
+      "primaryHover": "#A68B6A",
+      "primaryLight": "#F3E8D3",
+      "secondary": "#432818",
+      "background": "#FAF9F7",
+      "text": "#1F2937",
+      "border": "#E5E7EB",
+      "selected": "#B89B7A",
+      "hover": "#F3E8D3"
+    },
+    "fonts": {
+      "heading": "Playfair Display, serif",
+      "body": "Inter, sans-serif"
+    },
+    "spacing": {
+      "sm": 8,
+      "md": 16,
+      "lg": 24,
+      "xl": 32
+    },
+    "borderRadius": {
+      "sm": 4,
+      "md": 8,
+      "lg": 12,
+      "xl": 16
+    }
+  },
+  "sections": [
+    { "type": "question-progress", "id": "q9-progress", "content": { "currentQuestion": 8, "totalQuestions": 10, "progressValue": 80, "showProgress": true }, "style": { "backgroundColor": "transparent", "padding": 8 }, "animation": { "type": "fade", "duration": 220, "delay": 0, "easing": "ease-out" } },
+    { "type": "question-number", "id": "q9-number", "content": { "text": "8 de 10", "questionNumber": "8 de 10" }, "style": { "textAlign": "center", "marginBottom": 4 }, "animation": { "type": "fade", "duration": 220, "delay": 20, "easing": "ease-out" } },
+    { "type": "question-text", "id": "q9-text", "content": { "text": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?" }, "style": { "textAlign": "center", "marginBottom": 12 }, "animation": { "type": "fade", "duration": 240, "delay": 40, "easing": "ease-out" } },
+    { "type": "question-instructions", "id": "q9-instructions", "content": { "text": "Selecione exatamente 3 opções para continuar" }, "style": { "textAlign": "center", "marginBottom": 12 }, "animation": { "type": "fade", "duration": 240, "delay": 60, "easing": "ease-out" } },
+    {
+      "type": "options-grid",
+      "id": "options-grid-09",
+      "content": {
+        "options": [
+          { "id": "natural", "text": "Tênis nude casual e confortável", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp", "value": "natural" },
+          { "id": "classico", "text": "Scarpin nude de salto baixo", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp", "value": "classico" },
+          { "id": "contemporaneo", "text": "Sandália dourada com salto bloco", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp", "value": "contemporaneo" },
+          { "id": "elegante", "text": "Scarpin nude salto alto e fino", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp", "value": "elegante" },
+          { "id": "romantico", "text": "Sandália anabela off white", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp", "value": "romantico" },
+          { "id": "sexy", "text": "Sandália rosa de tiras finas", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp", "value": "sexy" },
+          { "id": "dramatico", "text": "Scarpin preto moderno com vinil transparente", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp", "value": "dramatico" },
+          { "id": "criativo", "text": "Scarpin colorido estampado", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp", "value": "criativo" }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar"
+      },
+      "style": { "backgroundColor": "transparent", "padding": 16 },
+      "animation": { "type": "slideUp", "duration": 300, "delay": 80, "easing": "ease-out" },
+      "properties": {
+        "options": [
+          { "id": "natural", "text": "Tênis nude casual e confortável", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp", "value": "natural" },
+          { "id": "classico", "text": "Scarpin nude de salto baixo", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp", "value": "classico" },
+          { "id": "contemporaneo", "text": "Sandália dourada com salto bloco", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp", "value": "contemporaneo" },
+          { "id": "elegante", "text": "Scarpin nude salto alto e fino", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp", "value": "elegante" },
+          { "id": "romantico", "text": "Sandália anabela off white", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp", "value": "romantico" },
+          { "id": "sexy", "text": "Sandália rosa de tiras finas", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp", "value": "sexy" },
+          { "id": "dramatico", "text": "Scarpin preto moderno com vinil transparente", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp", "value": "dramatico" },
+          { "id": "criativo", "text": "Scarpin colorido estampado", "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp", "value": "criativo" }
+        ],
+        "columns": 2,
+        "multipleSelection": true,
+        "minSelections": 3,
+        "maxSelections": 3,
+        "showImages": true,
+        "imageSize": 256,
+        "autoAdvance": true,
+        "autoAdvanceDelay": 1500,
+        "validationMessage": "Selecione 3 opções para continuar"
+      }
+    },
+    { "type": "question-navigation", "id": "q9-navigation", "content": { "backLabel": "Voltar", "nextLabel": "Avançar" }, "properties": { "showBack": true, "enableWhenValid": true }, "style": { "marginTop": 16, "textAlign": "center" }, "animation": { "type": "fade", "duration": 250, "delay": 100, "easing": "ease-out" } }
+  ],
+  "validation": {
+    "required": [
+      "selectedOptions"
+    ],
+    "rules": {
+      "selectedOptions": {
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Por favor, selecione exatamente 3 opções"
+      }
+    }
+  },
+  "navigation": {
+    "nextStep": "step-10",
+    "prevStep": "step-08",
+    "allowBack": true,
+    "requiresUserInput": true,
+    "autoAdvance": true,
+    "autoAdvanceDelay": 1500
+  },
+  "analytics": {
+    "events": [
+      "page_view",
+      "section_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
+    "trackingId": "step-09-question-v3"
+  },
+  "scoring": {
+    "method": "points",
+    "categories": [
+      "Natural",
+      "Clássico",
+      "Contemporâneo",
+      "Elegante",
+      "Romântico",
+      "Sexy",
+      "Dramático",
+      "Criativo"
+    ],
+    "options": {
+      "natural": { "category": "Natural", "points": 1 },
+      "classico": { "category": "Clássico", "points": 1 },
+      "contemporaneo": { "category": "Contemporâneo", "points": 1 },
+      "elegante": { "category": "Elegante", "points": 1 },
+      "romantico": { "category": "Romântico", "points": 1 },
+      "sexy": { "category": "Sexy", "points": 1 },
+      "dramatico": { "category": "Dramático", "points": 1 },
+      "criativo": { "category": "Criativo", "points": 1 }
+    }
+  }
+}
