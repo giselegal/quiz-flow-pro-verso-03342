@@ -1,50 +1,73 @@
 {
-    "templateVersion": "3.1",
-    "metadata": {
-        "id": "step-13",
-        "name": "Pergunta (Blocos)",
-        "description": "Pergunta de múltipla escolha com grid de opções",
-        "category": "question",
-        "tags": [
-            "question",
-            "options"
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-13",
+    "name": "Pergunta (Blocos)",
+    "description": "Pergunta de múltipla escolha com grid de opções",
+    "category": "question",
+    "tags": [
+      "question",
+      "options"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "q-13",
+      "type": "question-block",
+      "config": {
+        "questionNumber": "1 de 6",
+        "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
+        "requiredSelections": 1,
+        "options": [
+          {
+            "id": "desconectada",
+            "text": "Me sinto desconectada da mulher que sou hoje"
+          },
+          {
+            "id": "duvidas",
+            "text": "Tenho dúvidas sobre o que realmente me valoriza"
+          },
+          {
+            "id": "as-vezes-acerto",
+            "text": "Às vezes acerto, às vezes erro"
+          },
+          {
+            "id": "segura-evoluir",
+            "text": "Me sinto segura, mas sei que posso evoluir"
+          }
         ]
-    },
-    "blocks": [
-        {
-            "id": "q-13",
-            "type": "question-block",
-            "config": {
-                "questionNumber": "Pergunta 12/20",
-                "questionText": "Qual dessas opções você escolheria?",
-                "requiredSelections": 1,
-                "options": [
-                    {
-                        "id": "opt-a",
-                        "text": "Opção A"
-                    },
-                    {
-                        "id": "opt-b",
-                        "text": "Opção B"
-                    },
-                    {
-                        "id": "opt-c",
-                        "text": "Opção C"
-                    },
-                    {
-                        "id": "opt-d",
-                        "text": "Opção D"
-                    }
-                ]
-            }
-        }
-    ],
-    "analytics": {
-        "events": [
-            "page_view",
-            "option_selected",
-            "step_completed"
-        ],
-        "trackingId": "step-13-blocks"
+      },
+      "properties": {
+        "questionNumber": "1 de 6",
+        "questionText": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
+        "requiredSelections": 1,
+        "options": [
+          {
+            "id": "desconectada",
+            "text": "Me sinto desconectada da mulher que sou hoje"
+          },
+          {
+            "id": "duvidas",
+            "text": "Tenho dúvidas sobre o que realmente me valoriza"
+          },
+          {
+            "id": "as-vezes-acerto",
+            "text": "Às vezes acerto, às vezes erro"
+          },
+          {
+            "id": "segura-evoluir",
+            "text": "Me sinto segura, mas sei que posso evoluir"
+          }
+        ]
+      }
     }
+  ],
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "step_completed"
+    ],
+    "trackingId": "step-13-blocks"
+  }
 }

@@ -1,50 +1,105 @@
 {
-    "templateVersion": "3.1",
-    "metadata": {
-        "id": "step-05",
-        "name": "Pergunta (Blocos)",
-        "description": "Pergunta de múltipla escolha com grid de opções",
-        "category": "question",
-        "tags": [
-            "question",
-            "options"
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-05",
+    "name": "Pergunta (Blocos)",
+    "description": "Pergunta de múltipla escolha com grid de opções",
+    "category": "question",
+    "tags": [
+      "question",
+      "options"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "q-05",
+      "type": "question-block",
+      "config": {
+        "questionNumber": "4 de 10",
+        "questionText": "QUAIS DETALHES VOCÊ GOSTA?",
+        "requiredSelections": 3,
+        "options": [
+          {
+            "id": "natural",
+            "text": "Poucos detalhes, básico e prático"
+          },
+          {
+            "id": "classico",
+            "text": "Bem discretos e sutis, clean e clássico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Básico, mas com um toque de estilo"
+          },
+          {
+            "id": "elegante",
+            "text": "Detalhes refinados, chic e que deem status"
+          },
+          {
+            "id": "romantico",
+            "text": "Detalhes delicados, laços, babados"
+          },
+          {
+            "id": "sexy",
+            "text": "Roupas que valorizem meu corpo: couro, zíper, fendas"
+          },
+          {
+            "id": "dramatico",
+            "text": "Detalhes marcantes, firmeza e peso"
+          },
+          {
+            "id": "criativo",
+            "text": "Detalhes diferentes do convencional, produções ousadas"
+          }
         ]
-    },
-    "blocks": [
-        {
-            "id": "q-05",
-            "type": "question-block",
-            "config": {
-                "questionNumber": "Pergunta 4/20",
-                "questionText": "Escolha a alternativa que te define:",
-                "requiredSelections": 1,
-                "options": [
-                    {
-                        "id": "opt-a",
-                        "text": "Opção A"
-                    },
-                    {
-                        "id": "opt-b",
-                        "text": "Opção B"
-                    },
-                    {
-                        "id": "opt-c",
-                        "text": "Opção C"
-                    },
-                    {
-                        "id": "opt-d",
-                        "text": "Opção D"
-                    }
-                ]
-            }
-        }
-    ],
-    "analytics": {
-        "events": [
-            "page_view",
-            "option_selected",
-            "step_completed"
-        ],
-        "trackingId": "step-05-blocks"
+      },
+      "properties": {
+        "questionNumber": "4 de 10",
+        "questionText": "QUAIS DETALHES VOCÊ GOSTA?",
+        "requiredSelections": 3,
+        "options": [
+          {
+            "id": "natural",
+            "text": "Poucos detalhes, básico e prático"
+          },
+          {
+            "id": "classico",
+            "text": "Bem discretos e sutis, clean e clássico"
+          },
+          {
+            "id": "contemporaneo",
+            "text": "Básico, mas com um toque de estilo"
+          },
+          {
+            "id": "elegante",
+            "text": "Detalhes refinados, chic e que deem status"
+          },
+          {
+            "id": "romantico",
+            "text": "Detalhes delicados, laços, babados"
+          },
+          {
+            "id": "sexy",
+            "text": "Roupas que valorizem meu corpo: couro, zíper, fendas"
+          },
+          {
+            "id": "dramatico",
+            "text": "Detalhes marcantes, firmeza e peso"
+          },
+          {
+            "id": "criativo",
+            "text": "Detalhes diferentes do convencional, produções ousadas"
+          }
+        ]
+      }
     }
+  ],
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "step_completed"
+    ],
+    "trackingId": "step-05-blocks"
+  }
 }

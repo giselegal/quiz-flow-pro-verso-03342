@@ -1,50 +1,57 @@
 {
-    "templateVersion": "3.1",
-    "metadata": {
-        "id": "step-21",
-        "name": "Oferta (Blocos)",
-        "description": "Página de oferta final",
-        "category": "offer",
-        "tags": [
-            "offer",
-            "checkout"
-        ]
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-21",
+    "name": "Oferta (Blocos)",
+    "description": "Página de oferta final",
+    "category": "offer",
+    "tags": [
+      "offer",
+      "checkout"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "offer-core-21",
+      "type": "offer.core",
+      "config": {
+        "title": "5 Passos – Vista-se de Você",
+        "description": "Método completo para alinhar sua imagem com sua essência e construir um guarda-roupa estratégico.",
+        "ctaLabel": "Quero começar agora",
+        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "accent": "#B89B7A"
+      },
+      "properties": {
+        "title": "5 Passos – Vista-se de Você",
+        "description": "Método completo para alinhar sua imagem com sua essência e construir um guarda-roupa estratégico.",
+        "ctaLabel": "Quero começar agora",
+        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "accent": "#B89B7A"
+      }
     },
-    "blocks": [
-        {
-            "id": "offer-core-21",
-            "type": "offer.core",
-            "config": {
-                "title": "Programa Completo – Vista-se de Você",
-                "description": "Aprofunde seu estilo e tenha um guarda-roupa que comunica sua essência todos os dias.",
-                "ctaLabel": "Quero Garantir Minha Vaga",
-                "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-                "accent": "#B89B7A"
-            }
-        },
-        {
-            "id": "offer-urg-21",
-            "type": "offer.urgency",
-            "config": {
-                "headline": "Condições especiais por tempo limitado:",
-                "deadlineISO": "2099-01-01T00:00:00.000Z"
-            }
-        },
-        {
-            "id": "offer-test-21",
-            "type": "offer.testimonial",
-            "config": {
-                "quote": "Encontrei meu estilo e economizei tempo e dinheiro!",
-                "author": "Aluna do programa"
-            }
-        }
-    ],
-    "analytics": {
-        "events": [
-            "page_view",
-            "offer_viewed",
-            "cta_primary_click"
-        ],
-        "trackingId": "step-21-blocks"
+    {
+      "id": "offer-urg-21",
+      "type": "offer.urgency",
+      "config": {
+        "headline": "Condições especiais por tempo limitado:",
+        "deadlineISO": "2099-01-01T00:00:00.000Z"
+      }
+    },
+    {
+      "id": "offer-test-21",
+      "type": "offer.testimonial",
+      "config": {
+        "quote": "Encontrei meu estilo e economizei tempo e dinheiro!",
+        "author": "Aluna do programa"
+      }
     }
+  ],
+  "analytics": {
+    "events": [
+      "page_view",
+      "offer_viewed",
+      "cta_primary_click"
+    ],
+    "trackingId": "step-21-blocks"
+  }
 }

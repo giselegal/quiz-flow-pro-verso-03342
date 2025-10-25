@@ -1,50 +1,73 @@
 {
-    "templateVersion": "3.1",
-    "metadata": {
-        "id": "step-18",
-        "name": "Pergunta (Blocos)",
-        "description": "Pergunta de múltipla escolha com grid de opções",
-        "category": "question",
-        "tags": [
-            "question",
-            "options"
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-18",
+    "name": "Pergunta (Blocos)",
+    "description": "Pergunta de múltipla escolha com grid de opções",
+    "category": "question",
+    "tags": [
+      "question",
+      "options"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "q-18",
+      "type": "question-block",
+      "config": {
+        "questionNumber": "6 de 6",
+        "questionText": "Se você tivesse o acompanhamento certo, qual dessas mudanças mais te faria sentir realizada?",
+        "requiredSelections": 1,
+        "options": [
+          {
+            "id": "seguranca-expressao",
+            "text": "Ter segurança para expressar quem eu sou através da minha imagem"
+          },
+          {
+            "id": "confianca-presenca",
+            "text": "Me sentir confiante e com presença em qualquer ambiente"
+          },
+          {
+            "id": "clareza-estilo",
+            "text": "Ter clareza sobre meu estilo e como usá-lo no dia a dia"
+          },
+          {
+            "id": "guarda-roupa-intencional",
+            "text": "Construir um guarda-roupa intencional que comunique minha essência"
+          }
         ]
-    },
-    "blocks": [
-        {
-            "id": "q-18",
-            "type": "question-block",
-            "config": {
-                "questionNumber": "Pergunta 17/20",
-                "questionText": "Qual destas opções te inspira?",
-                "requiredSelections": 1,
-                "options": [
-                    {
-                        "id": "opt-a",
-                        "text": "Opção A"
-                    },
-                    {
-                        "id": "opt-b",
-                        "text": "Opção B"
-                    },
-                    {
-                        "id": "opt-c",
-                        "text": "Opção C"
-                    },
-                    {
-                        "id": "opt-d",
-                        "text": "Opção D"
-                    }
-                ]
-            }
-        }
-    ],
-    "analytics": {
-        "events": [
-            "page_view",
-            "option_selected",
-            "step_completed"
-        ],
-        "trackingId": "step-18-blocks"
+      },
+      "properties": {
+        "questionNumber": "6 de 6",
+        "questionText": "Se você tivesse o acompanhamento certo, qual dessas mudanças mais te faria sentir realizada?",
+        "requiredSelections": 1,
+        "options": [
+          {
+            "id": "seguranca-expressao",
+            "text": "Ter segurança para expressar quem eu sou através da minha imagem"
+          },
+          {
+            "id": "confianca-presenca",
+            "text": "Me sentir confiante e com presença em qualquer ambiente"
+          },
+          {
+            "id": "clareza-estilo",
+            "text": "Ter clareza sobre meu estilo e como usá-lo no dia a dia"
+          },
+          {
+            "id": "guarda-roupa-intencional",
+            "text": "Construir um guarda-roupa intencional que comunique minha essência"
+          }
+        ]
+      }
     }
+  ],
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "step_completed"
+    ],
+    "trackingId": "step-18-blocks"
+  }
 }

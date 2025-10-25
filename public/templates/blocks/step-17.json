@@ -1,50 +1,73 @@
 {
-    "templateVersion": "3.1",
-    "metadata": {
-        "id": "step-17",
-        "name": "Pergunta (Blocos)",
-        "description": "Pergunta de múltipla escolha com grid de opções",
-        "category": "question",
-        "tags": [
-            "question",
-            "options"
+  "templateVersion": "3.1",
+  "metadata": {
+    "id": "step-17",
+    "name": "Pergunta (Blocos)",
+    "description": "Pergunta de múltipla escolha com grid de opções",
+    "category": "question",
+    "tags": [
+      "question",
+      "options"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "q-17",
+      "type": "question-block",
+      "config": {
+        "questionNumber": "5 de 6",
+        "questionText": "Você acredita que ter um passo a passo para alinhar seu estilo à sua essência pode acelerar sua transformação?",
+        "requiredSelections": 1,
+        "options": [
+          {
+            "id": "sim-totalmente",
+            "text": "Sim! Sozinha é mais difícil manter consistência"
+          },
+          {
+            "id": "sim-ajudaria",
+            "text": "Sim, ter um método claro ajudaria muito"
+          },
+          {
+            "id": "talvez",
+            "text": "Talvez — se for algo prático e fácil de aplicar"
+          },
+          {
+            "id": "nao-pronta",
+            "text": "Ainda não sei se estou pronta pra isso"
+          }
         ]
-    },
-    "blocks": [
-        {
-            "id": "q-17",
-            "type": "question-block",
-            "config": {
-                "questionNumber": "Pergunta 16/20",
-                "questionText": "Qual tendência você acompanha?",
-                "requiredSelections": 1,
-                "options": [
-                    {
-                        "id": "opt-a",
-                        "text": "Opção A"
-                    },
-                    {
-                        "id": "opt-b",
-                        "text": "Opção B"
-                    },
-                    {
-                        "id": "opt-c",
-                        "text": "Opção C"
-                    },
-                    {
-                        "id": "opt-d",
-                        "text": "Opção D"
-                    }
-                ]
-            }
-        }
-    ],
-    "analytics": {
-        "events": [
-            "page_view",
-            "option_selected",
-            "step_completed"
-        ],
-        "trackingId": "step-17-blocks"
+      },
+      "properties": {
+        "questionNumber": "5 de 6",
+        "questionText": "Você acredita que ter um passo a passo para alinhar seu estilo à sua essência pode acelerar sua transformação?",
+        "requiredSelections": 1,
+        "options": [
+          {
+            "id": "sim-totalmente",
+            "text": "Sim! Sozinha é mais difícil manter consistência"
+          },
+          {
+            "id": "sim-ajudaria",
+            "text": "Sim, ter um método claro ajudaria muito"
+          },
+          {
+            "id": "talvez",
+            "text": "Talvez — se for algo prático e fácil de aplicar"
+          },
+          {
+            "id": "nao-pronta",
+            "text": "Ainda não sei se estou pronta pra isso"
+          }
+        ]
+      }
     }
+  ],
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "step_completed"
+    ],
+    "trackingId": "step-17-blocks"
+  }
 }
