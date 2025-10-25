@@ -6,6 +6,7 @@
  */
 
 import { useCallback, useState, useEffect } from 'react';
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 import {
   QuizAnalyticsHook,
   AnalyticsEvent,
@@ -215,16 +216,11 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
 
   // Update completion rate based on current progress
   useEffect(() => {
-    const calculateCompletionRate = () => {
-      const { TOTAL_STEPS } = await import('@/config/stepsConfig');
-      const totalSteps = TOTAL_STEPS;
-      const completedSteps = Object.keys(analyticsData.stepTimings).length;
-      return Math.round((completedSteps / totalSteps) * 100);
-    };
-
+    const completedSteps = Object.keys(analyticsData.stepTimings).length;
+    const rate = Math.round((completedSteps / TOTAL_STEPS) * 100);
     setAnalyticsData(prev => ({
       ...prev,
-      completionRate: calculateCompletionRate(),
+      completionRate: rate,
     }));
   }, [analyticsData.stepTimings]);
 

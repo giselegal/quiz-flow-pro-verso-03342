@@ -14,7 +14,8 @@ async function preloadAllTemplates(): Promise<void> {
   
   console.log('🚀 Pré-carregando todos os templates v3...');
   
-  const promises = Array.from({ length: 21 }, (_, i) => {
+  const { TOTAL_STEPS } = require('@/config/stepsConfig');
+  const promises = Array.from({ length: TOTAL_STEPS }, (_, i) => {
     const stepNumber = i + 1;
     const stepId = stepNumber.toString().padStart(2, '0');
     const templatePath = `/templates/step-${stepId}-v3.json`;
@@ -58,7 +59,7 @@ async function preloadAllTemplates(): Promise<void> {
   
   await Promise.allSettled(promises);
   const stats = cacheService.getStoreStats('templates');
-  console.log(`🎯 Pré-carregamento concluído: ${stats.size}/21 templates`);
+  console.log(`🎯 Pré-carregamento concluído: ${stats.size}/${require('@/config/stepsConfig').TOTAL_STEPS} templates`);
 }
 
 // 🔧 FUNÇÃO SÍNCRONA QUE USA CACHE
@@ -158,6 +159,7 @@ export interface StepInfo {
 }
 
 // 🎯 MAPEAMENTO COMPLETO DAS 21 ETAPAS
+const { TOTAL_STEPS } = require('@/config/stepsConfig');
 const STEP_MAPPING: Record<
   number,
   {
@@ -193,7 +195,7 @@ const STEP_MAPPING: Record<
   18: { name: 'S6: Objetivos', type: 'strategic', description: 'O que deseja alcançar com novo estilo', getTemplate: () => [], multiSelect: 1 },
   19: { name: 'Transição Final', type: 'transition', description: 'Preparando resultado personalizado', getTemplate: () => [] },
   20: { name: 'Resultado', type: 'result', description: 'Página de resultado personalizada', getTemplate: () => [] },
-  21: { name: 'Oferta', type: 'offer', description: 'Apresentação da oferta final', getTemplate: () => [] },
+  // 21 removido do mapa ativo; oferta final pode ser tratada como transição/result fora do escopo de steps ativos
 };
 
 // 🔧 FUNÇÃO REMOVIDA: getJSONTemplateBlocks não é mais necessária
@@ -324,7 +326,7 @@ class StepTemplateService {
           logoAlt: 'Logo Gisele Galvão',
           logoWidth: 96,
           logoHeight: 96,
-          progressValue: Math.round((stepNumber / 21) * 100),
+          progressValue: Math.round((stepNumber / TOTAL_STEPS) * 100),
           progressMax: 100,
           showBackButton: stepNumber > 1,
         },
