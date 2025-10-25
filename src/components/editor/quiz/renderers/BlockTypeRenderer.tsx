@@ -2,14 +2,17 @@ import React from 'react';
 import SafeBoundary from '@/components/common/SafeBoundary';
 import type { Block } from '@/types/editor';
 import QuizIntroHeaderBlock from './blocks/QuizIntroHeaderBlock';
-import TextInlineBlock from './blocks/TextInlineBlock';
-import ImageDisplayBlock from './blocks/ImageDisplayBlock';
+// Versões atômicas
+import TextInlineAtomic from '@/components/editor/blocks/atomic/TextInlineBlock';
+import ImageInlineAtomic from '@/components/editor/blocks/atomic/ImageInlineBlock';
 // Preferir bloco atômico para grid de opções
 import OptionsGridAtomic from '@/components/editor/blocks/atomic/OptionsGridBlock';
-import ButtonInlineBlock from './blocks/ButtonInlineBlock';
-import FormInputBlock from './blocks/FormInputBlock';
+import CTAButtonAtomic from '@/components/editor/blocks/atomic/CTAButtonBlock';
+// Formulário de boas-vindas (atômico)
+import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
 import QuizQuestionHeaderBlock from './blocks/QuizQuestionHeaderBlock';
-import QuizNavigationBlock from './blocks/QuizNavigationBlock';
+// Navegação de perguntas (atômico)
+import QuestionNavigationBlock from '@/components/editor/blocks/atomic/QuestionNavigationBlock';
 // Blocos de oferta (editor) — importados do registro aprimorado
 import CTAInlineBlock from '@/components/editor/blocks/CTAInlineBlock';
 import ValueAnchoringBlock from '@/components/editor/blocks/ValueAnchoringBlock';
@@ -24,17 +27,19 @@ import { SelectableBlock } from '@/components/editor/SelectableBlock';
 // Blocos atômicos específicos usados no Step 01
 import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
 import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHeaderBlock';
-import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
+// (já importado acima)
 import IntroTitleBlock from '@/components/editor/blocks/atomic/IntroTitleBlock';
 import IntroImageBlock from '@/components/editor/blocks/atomic/IntroImageBlock';
 import IntroDescriptionBlock from '@/components/editor/blocks/atomic/IntroDescriptionBlock';
 import FooterCopyrightBlock from '@/components/editor/blocks/atomic/FooterCopyrightBlock';
-import ImageDisplayInlineBlockNew from '@/components/editor/blocks/inline/ImageDisplayInlineBlock';
+// Transição (atômicos)
+import TransitionTitleBlock from '@/components/editor/blocks/atomic/TransitionTitleBlock';
+import TransitionTextBlock from '@/components/editor/blocks/atomic/TransitionTextBlock';
 import QuestionProgressBlock from '@/components/editor/blocks/atomic/QuestionProgressBlock';
 import QuestionNumberBlock from '@/components/editor/blocks/atomic/QuestionNumberBlock';
 import QuestionTextBlock from '@/components/editor/blocks/atomic/QuestionTextBlock';
 import QuestionInstructionsBlock from '@/components/editor/blocks/atomic/QuestionInstructionsBlock';
-import QuestionNavigationBlock from '@/components/editor/blocks/atomic/QuestionNavigationBlock';
+// (já importado acima)
 
 export interface BlockRendererProps {
     block: Block;
@@ -82,8 +87,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 // Compatibilidade: mapear para atômico para manter padronização
                 return <IntroLogoHeaderBlock block={block} {...rest} />;
             case 'welcome-form':
-                // Template v3: welcome-form section → input com botão
-                return <FormInputBlock block={block} {...rest} />;
+                // Mapear seção v3 para bloco atômico do form
+                return <IntroFormBlock block={block} {...rest} />;
             case 'intro-logo':
                 return (
                     <SelectableBlock
@@ -111,8 +116,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 // Novo bloco atômico de descrição (suporta HTML em content.text)
                 return <IntroDescriptionBlock block={block as any} isSelected={rest.isSelected} onClick={() => rest.onSelect?.(block.id)} />;
             case 'image-display-inline':
-                // Novo bloco de imagem inline com estilo específico
-                return <ImageDisplayInlineBlockNew block={block} {...rest} />;
+                // Usar versão atômica de imagem
+                return <ImageInlineAtomic block={block} {...rest} />;
             case 'footer-copyright':
                 // Novo bloco de footer com copyright
                 return <FooterCopyrightBlock block={block} {...rest} />;
@@ -129,43 +134,46 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 return <QuestionNavigationBlock block={block} {...rest} contextData={rest.contextData} />;
             // ===== QUESTIONS (Steps 02-18) =====
             case 'question-title':
-                // Template v3: question-title section → heading
-                return <TextInlineBlock block={block} {...rest} />;
+                // Usar bloco atômico de texto
+                return <TextInlineAtomic block={block} {...rest} />;
             case 'question-hero':
                 // Template v3: question-hero section → header completo
                 return <QuizQuestionHeaderBlock block={block} {...rest} />;
             case 'CTAButton':
-                // Template v3: CTAButton usado em várias etapas
-                return <ButtonInlineBlock block={block} {...rest} />;
+                // Versão atômica do CTA
+                return <CTAButtonAtomic block={block} {...rest} />;
             // ===== HEADER/TÍTULO GENÉRICO =====
             case 'heading-inline':
-                return <TextInlineBlock block={block} {...rest} />;
+                return <TextInlineAtomic block={block} {...rest} />;
             case 'quiz-question-header':
             case 'question-header':
-                return <QuizQuestionHeaderBlock block={block} {...rest} />;
+                // Não há equivalente atômico dedicado para o header composto; fallback ao inline text atômico
+                return <TextInlineAtomic block={block} {...rest} />;
             case 'text-inline':
-                return <TextInlineBlock block={block} {...rest} />;
+                return <TextInlineAtomic block={block} {...rest} />;
             case 'image-inline':
             case 'image':
-                return <ImageDisplayBlock block={block} {...rest} />;
+            case 'image-display-inline':
+                return <ImageInlineAtomic block={block} {...rest} />;
             case 'form-input':
             case 'input-field':
-                return <FormInputBlock block={block} {...rest} />;
+                // Fallback: não há atômico genérico de input, manter IntroFormBlock quando aplicável
+                return <IntroFormBlock block={block} {...rest} />;
             case 'button-inline':
             case 'button':
-                return <ButtonInlineBlock block={block} {...rest} />;
+                return <CTAButtonAtomic block={block} {...rest} />;
             case 'quiz-options':
             case 'options-grid':
                 // Bloco atômico de grid de opções (usa contextData para seleção)
                 return <OptionsGridAtomic block={block} {...rest} contextData={rest.contextData} />;
             case 'quiz-navigation':
             case 'navigation':
-                return <QuizNavigationBlock block={block} {...rest} />;
+                return <QuestionNavigationBlock block={block} {...rest} contextData={rest.contextData} />;
             // ===== TRANSITION (Steps 12, 19) =====
-            case 'transition-hero':
-                // Template v3: transition-hero section → usar GenericBlock temporariamente
-                // TODO: criar TransitionHeroBlock dedicado ou lazy load TransitionHeroSection
-                return <GenericBlock block={block} {...rest} />;
+            case 'transition-title':
+                return <TransitionTitleBlock block={block as any} {...rest} />;
+            case 'transition-text':
+                return <TransitionTextBlock block={block as any} {...rest} />;
             // ===== RESULT (Step 20) =====
             case 'HeroSection':
                 // Step 20: Hero do resultado → usar GenericBlock temporariamente

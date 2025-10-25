@@ -388,7 +388,7 @@ export class TemplateLoader {
             }
           }
 
-          // 3) Transição (step-19): mapear transition.next para tipos do editor
+          // 3) Transição (step-19): mapear transition.next para BLOCOS ATÔMICOS do editor
           if (stepNum === 19) {
             const trans = blocks.find(b => String(b.type) === 'transition.next');
             if (trans) {
@@ -398,8 +398,9 @@ export class TemplateLoader {
               const text = [title, ...paragraphs].filter(Boolean).join('\n\n');
               const nextLabel = p.buttonLabel || 'Ver resultado';
               blocks = [
-                { id: `${normalizedKey}-transition-hero`, type: 'transition-hero', order: 0, properties: {}, content: { title, message: text } },
-                { id: `${normalizedKey}-transition-cta`, type: 'CTAButton', order: 1, properties: {}, content: { label: nextLabel, href: '#next', variant: 'primary', size: 'large' } }
+                { id: `${normalizedKey}-transition-title`, type: 'transition-title', order: 0, properties: {}, content: { text: title } },
+                { id: `${normalizedKey}-transition-text`, type: 'transition-text', order: 1, properties: {}, content: { text } },
+                { id: `${normalizedKey}-transition-cta`, type: 'CTAButton', order: 2, properties: {}, content: { label: nextLabel, href: '#next', variant: 'primary', size: 'large' } }
               ] as any[];
             }
           }
