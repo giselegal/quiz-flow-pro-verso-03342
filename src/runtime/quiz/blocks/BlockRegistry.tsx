@@ -321,10 +321,11 @@ export const TransitionNextBlock = defineBlock({
     schema: z.object({
         title: z.string().default('Quase lá!'),
         message: z.string().default('Pronta para ver seu resultado?'),
+        paragraphs: z.array(z.string()).default([]),
         buttonLabel: z.string().default('Ver resultado'),
         autoAdvanceMs: z.number().int().nonnegative().default(0)
     }),
-    defaultConfig: { title: 'Quase lá!', message: 'Pronta para ver seu resultado?', buttonLabel: 'Ver resultado', autoAdvanceMs: 0 },
+    defaultConfig: { title: 'Quase lá!', message: 'Pronta para ver seu resultado?', paragraphs: [], buttonLabel: 'Ver resultado', autoAdvanceMs: 0 },
     render: ({ config, state }) => {
         React.useEffect(() => {
             if ((config.autoAdvanceMs ?? 0) > 0 && state?.onComplete) {
@@ -342,6 +343,13 @@ export const TransitionNextBlock = defineBlock({
             <div className="text-center space-y-3">
                 {config.title && <h3 className="text-xl font-bold text-primary">{config.title}</h3>}
                 {config.message && <p className="text-sm opacity-80">{config.message}</p>}
+                {Array.isArray(config.paragraphs) && config.paragraphs.length > 0 && (
+                    <div className="space-y-2 max-w-2xl mx-auto">
+                        {config.paragraphs.map((p, i) => (
+                            <p key={i} className="text-sm opacity-80 leading-relaxed">{p}</p>
+                        ))}
+                    </div>
+                )}
                 <button
                     type="button"
                     onClick={onClick}

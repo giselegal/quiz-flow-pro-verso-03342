@@ -205,6 +205,43 @@ export class TemplateLoader {
           properties: (b.properties || b.props || b.config || b.options || {}) as Record<string, any>,
           content: (b.content || {}) as Record<string, any>
         }));
+
+        // Hidratar textos do v3 (sections) se disponível → aplica apenas para question-block
+        try {
+          const v3Url = `/templates/${normalizedKey}-v3.json`;
+          const bust = (typeof window !== 'undefined' && import.meta.env?.DEV) ? `?ts=${Date.now()}` : '';
+          const respV3 = await fetch(v3Url + bust, { cache: 'no-store' });
+          if (respV3.ok) {
+            const v3 = await respV3.json();
+            const sections = Array.isArray(v3?.sections) ? v3.sections : [];
+            const secByType = (t: string) => sections.find((s: any) => s?.type === t);
+            const qNumSec = secByType('question-number') || secByType('question-progress');
+            const qTextSec = secByType('question-text');
+            const gridSec = secByType('options-grid');
+            const numberStr = (qNumSec?.content?.questionNumber) || (
+              (qNumSec?.content?.currentQuestion && qNumSec?.content?.totalQuestions)
+                ? `${qNumSec.content.currentQuestion} de ${qNumSec.content.totalQuestions}`
+                : undefined
+            );
+            const textStr = qTextSec?.content?.text;
+            const opts = Array.isArray(gridSec?.content?.options) ? gridSec.content.options : [];
+            const minSel = gridSec?.content?.minSelections ?? undefined;
+
+            blocks = blocks.map(b => {
+              if (String(b.type) !== 'question-block') return b;
+              const cfg = { ...(b.properties || {}) };
+              if (numberStr) cfg.questionNumber = numberStr;
+              if (textStr) cfg.questionText = textStr;
+              if (Array.isArray(opts) && opts.length) {
+                cfg.options = opts.map((o: any) => ({ id: String(o.id || o.value), text: String(o.text || o.label || o.value || '') }));
+              }
+              if (typeof minSel === 'number' && minSel > 0) cfg.requiredSelections = minSel;
+              return { ...b, properties: cfg };
+            });
+          }
+        } catch (_e) {
+          // silencioso: sem bloqueio em caso de falha
+        }
       } else if (Array.isArray(data?.sections)) {
         // Caminho 2: JSON v3 no formato sections[] → converter para Block[]
         try {
