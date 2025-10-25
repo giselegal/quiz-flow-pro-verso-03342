@@ -15,6 +15,7 @@
 import React from 'react';
 import { BaseStepProps, StepComponent, StepConfig } from './StepTypes';
 import { stepRegistry } from './StepRegistry';
+import { printFullStepsDebug } from './StepDebug';
 import { normalizeStepId } from '@/utils/quizStepIds';
 
 // Import dos componentes de produção originais
@@ -639,7 +640,10 @@ export const registerProductionSteps = () => {
     console.log(`✅ ${PRODUCTION_STEPS.length} steps de produção registrados com sucesso!`);
 
     if (process.env.NODE_ENV === 'development') {
+        // Tabela tradicional
         stepRegistry.debug();
+        // Tabela completa (todas as peças)
+        printFullStepsDebug();
     }
 };
 
