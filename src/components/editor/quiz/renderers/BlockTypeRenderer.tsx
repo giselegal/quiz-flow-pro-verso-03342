@@ -4,7 +4,8 @@ import type { Block } from '@/types/editor';
 import QuizIntroHeaderBlock from './blocks/QuizIntroHeaderBlock';
 import TextInlineBlock from './blocks/TextInlineBlock';
 import ImageDisplayBlock from './blocks/ImageDisplayBlock';
-import QuizOptionsBlock from './blocks/QuizOptionsBlock';
+// Preferir bloco atômico para grid de opções
+import OptionsGridAtomic from '@/components/editor/blocks/atomic/OptionsGridBlock';
 import ButtonInlineBlock from './blocks/ButtonInlineBlock';
 import FormInputBlock from './blocks/FormInputBlock';
 import QuizQuestionHeaderBlock from './blocks/QuizQuestionHeaderBlock';
@@ -75,12 +76,11 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
             // ===== INTRO (Step 01) =====
             case 'intro-hero':
             case 'intro-logo-header':
-                // Padronização: usar o header completo para consistência visual
-                // Mantemos o componente dedicado para cenários específicos via feature flag futura
-                return <QuizIntroHeaderBlock block={block} {...rest} />;
+                // Preferir bloco atômico para cabeçalho (logo + linha decorativa)
+                return <IntroLogoHeaderBlock block={block} {...rest} />;
             case 'quiz-intro-header':
-                // Mantém para compatibilidade com outros steps
-                return <QuizIntroHeaderBlock block={block} {...rest} />;
+                // Compatibilidade: mapear para atômico para manter padronização
+                return <IntroLogoHeaderBlock block={block} {...rest} />;
             case 'welcome-form':
                 // Template v3: welcome-form section → input com botão
                 return <FormInputBlock block={block} {...rest} />;
@@ -156,8 +156,8 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 return <ButtonInlineBlock block={block} {...rest} />;
             case 'quiz-options':
             case 'options-grid':
-                // Passar contextData para que o grid seja interativo (seleção + estado)
-                return <QuizOptionsBlock block={block} {...rest} contextData={rest.contextData} />;
+                // Bloco atômico de grid de opções (usa contextData para seleção)
+                return <OptionsGridAtomic block={block} {...rest} contextData={rest.contextData} />;
             case 'quiz-navigation':
             case 'navigation':
                 return <QuizNavigationBlock block={block} {...rest} />;

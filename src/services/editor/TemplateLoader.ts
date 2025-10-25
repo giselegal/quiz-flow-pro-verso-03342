@@ -308,7 +308,7 @@ export class TemplateLoader {
         try {
           const stepNum = Number(normalizedKey.replace('step-', ''));
 
-          // 1) Intro (step-01): mapear hero-block/welcome-form-block para tipos do editor
+          // 1) Intro (step-01): mapear hero-block/welcome-form-block para blocos ATÔMICOS do editor
           if (stepNum === 1) {
             const introBlocks: any[] = [];
             const hero = blocks.find(b => String(b.type) === 'hero-block');
@@ -316,18 +316,44 @@ export class TemplateLoader {
 
             if (hero) {
               const p = hero.properties || {};
+              // Header com logo + linha
               introBlocks.push({
-                id: `${normalizedKey}-intro-header`,
-                type: 'quiz-intro-header',
+                id: `${normalizedKey}-intro-logo-header`,
+                type: 'intro-logo-header',
                 order: 0,
                 properties: { logoUrl: p.logoUrl, logoAlt: p.logoAlt },
-                content: {
-                  title: p.titleHtml || p.title,
-                  subtitle: p.subtitleHtml || p.subtitle,
-                  imageUrl: p.imageUrl,
-                  imageAlt: p.imageAlt
-                }
+                content: {}
               });
+              // Título
+              if (p.titleHtml || p.title) {
+                introBlocks.push({
+                  id: `${normalizedKey}-intro-title`,
+                  type: 'intro-title',
+                  order: introBlocks.length,
+                  properties: {},
+                  content: { titleHtml: p.titleHtml || p.title }
+                });
+              }
+              // Imagem
+              if (p.imageUrl) {
+                introBlocks.push({
+                  id: `${normalizedKey}-intro-image`,
+                  type: 'intro-image',
+                  order: introBlocks.length,
+                  properties: {},
+                  content: { imageUrl: p.imageUrl, imageAlt: p.imageAlt }
+                });
+              }
+              // Descrição/subtítulo
+              if (p.subtitleHtml || p.subtitle) {
+                introBlocks.push({
+                  id: `${normalizedKey}-intro-description`,
+                  type: 'intro-description',
+                  order: introBlocks.length,
+                  properties: {},
+                  content: { text: p.subtitleHtml || p.subtitle }
+                });
+              }
             }
             if (form) {
               const p = form.properties || {};
