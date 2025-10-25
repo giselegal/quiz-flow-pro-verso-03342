@@ -14,6 +14,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -56,7 +57,7 @@ const CURRENT_FUNNEL = {
     authorRole: 'Consultora de Imagem e Branding Pessoal',
     version: '3.0',
     status: 'published' as const,
-    totalSteps: 21,
+    totalSteps: TOTAL_STEPS,
     lastModified: new Date('2025-10-12'),
     url: '/quiz-estilo',
     editorUrl: '/editor?template=quiz-estilo-21-steps', // Editor com template de 21 etapas (carrega estrutura completa)
@@ -71,7 +72,7 @@ const CURRENT_FUNNEL = {
         offer: 1              // Etapa 21: Oferta
     },
     features: [
-        '21 etapas otimizadas',
+        `${TOTAL_STEPS} etapas otimizadas`,
         'Sistema de pontuação por estilo',
         'Resultado personalizado',
         'Oferta R$97 com 78% desconto',
@@ -439,7 +440,7 @@ const CurrentFunnelPage: React.FC = () => {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <GitBranch className="w-5 h-5" />
-                                Estrutura das 21 Etapas
+                                Estrutura das {CURRENT_FUNNEL.totalSteps} Etapas
                             </CardTitle>
                         </CardHeader>
                         <CardContent>

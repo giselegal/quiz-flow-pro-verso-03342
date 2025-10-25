@@ -6,6 +6,7 @@
  */
 
 import React, { Suspense } from 'react';
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 import { QuizErrorBoundary } from '@/components/RouteErrorBoundary';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
 import { UnifiedCRUDProvider } from '@/contexts';
@@ -32,7 +33,7 @@ export const QuizAIPage: React.FC<QuizAIPageProps> = () => {
                                     Quiz de Estilo com IA
                                 </h1>
                                 <p className="text-sm text-gray-600">
-                                    21 etapas + geração automática de looks personalizados
+                                    {TOTAL_STEPS} etapas + geração automática de looks personalizados
                                 </p>
                             </div>
                         </div>
@@ -98,7 +99,7 @@ export const QuizAIPage: React.FC<QuizAIPageProps> = () => {
                         <div className="flex items-center space-x-4">
                             <span>📊 QuizCalculationEngine v2.0</span>
                             <span>🤖 FashionImageAI v1.0</span>
-                            <span>🎨 21 etapas interativas</span>
+                            <span>🎨 {TOTAL_STEPS} etapas interativas</span>
                         </div>
                         <div className="flex items-center space-x-2">
                             <span>Status:</span>

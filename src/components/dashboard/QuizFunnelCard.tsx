@@ -12,13 +12,13 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Edit, 
-  Eye, 
-  Play, 
-  Settings, 
-  BarChart3, 
-  Users, 
+import {
+  Edit,
+  Eye,
+  Play,
+  Settings,
+  BarChart3,
+  Users,
   Clock,
   CheckCircle,
   AlertCircle,
@@ -172,7 +172,7 @@ export function QuizFunnelCard({
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
+            <div
               className="bg-blue-500 h-2 rounded-full transition-all duration-300"
               style={{ width: `${(completedSteps / totalSteps) * 100}%` }}
             />
@@ -212,7 +212,7 @@ export function QuizFunnelCard({
             </div>
             <div className="flex items-center">
               <Zap className="w-3 h-3 mr-1" />
-              <span>21 Etapas</span>
+              <span>{/* etapas dinâmicas se disponíveis */}Etapas</span>
             </div>
           </div>
           <div className="flex items-center">
@@ -231,7 +231,7 @@ export function QuizFunnelCard({
             <Edit className="w-4 h-4 mr-2" />
             {isLoading ? 'Abrindo...' : 'Editar'}
           </Button>
-          
+
           <Button
             onClick={handlePreview}
             variant="outline"
@@ -239,7 +239,7 @@ export function QuizFunnelCard({
           >
             <Eye className="w-4 h-4" />
           </Button>
-          
+
           <Button
             onClick={handleAnalytics}
             variant="outline"

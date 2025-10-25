@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import {
-  Target, Brain, Eye, Settings, BarChart3, 
+  Target, Brain, Eye, Settings, BarChart3,
   Shuffle, Play, Pause, RotateCcw, Save
 } from 'lucide-react';
 
@@ -77,17 +77,17 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
 
   // Atualizar step selecionado quando navegação muda
   useEffect(() => {
-    setState(prev => ({ 
-      ...prev, 
-      selectedStepNumber: currentStep 
+    setState(prev => ({
+      ...prev,
+      selectedStepNumber: currentStep
     }));
   }, [currentStep]);
 
   // Handlers
   const handleTabChange = useCallback((tab: string) => {
-    setState(prev => ({ 
-      ...prev, 
-      activeTab: tab as QuizEditorState['activeTab'] 
+    setState(prev => ({
+      ...prev,
+      activeTab: tab as QuizEditorState['activeTab']
     }));
   }, []);
 
@@ -97,17 +97,17 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   }, [goToStep]);
 
   const handlePreviewToggle = useCallback(() => {
-    setState(prev => ({ 
-      ...prev, 
-      isPreviewMode: !prev.isPreviewMode 
+    setState(prev => ({
+      ...prev,
+      isPreviewMode: !prev.isPreviewMode
     }));
     onPreview?.();
   }, [onPreview]);
 
   const handleRealExperienceToggle = useCallback(() => {
-    setState(prev => ({ 
-      ...prev, 
-      isRealExperience: !prev.isRealExperience 
+    setState(prev => ({
+      ...prev,
+      isRealExperience: !prev.isRealExperience
     }));
   }, []);
 
@@ -137,7 +137,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
             <div className="flex items-center gap-2">
               <Target className="w-6 h-6 text-primary" />
               <h2 className="text-xl font-bold">Quiz Editor</h2>
-              <Badge variant="secondary">21 Etapas</Badge>
+              <Badge variant="secondary">{totalSteps} Etapas</Badge>
             </div>
 
             {funnelId && (
@@ -220,8 +220,8 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
 
       {/* Conteúdo principal com tabs */}
       <div className="flex-1 flex">
-        <Tabs 
-          value={state.activeTab} 
+        <Tabs
+          value={state.activeTab}
           onValueChange={handleTabChange}
           className="w-full flex flex-col"
         >
@@ -254,16 +254,15 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                 {/* Lista de etapas */}
                 <div className="w-64 border-r border-border bg-muted/20 p-4 overflow-y-auto">
                   <h3 className="font-semibold mb-4">Etapas do Quiz</h3>
-                  
+
                   <div className="space-y-2">
                     {Array.from({ length: totalSteps }, (_, i) => i + 1).map(stepNum => (
-                      <Card 
+                      <Card
                         key={stepNum}
-                        className={`cursor-pointer transition-colors ${
-                          stepNum === currentStep 
-                            ? 'border-primary bg-primary/5' 
+                        className={`cursor-pointer transition-colors ${stepNum === currentStep
+                            ? 'border-primary bg-primary/5'
                             : 'hover:bg-muted/50'
-                        }`}
+                          }`}
                         onClick={() => handleStepSelect(stepNum)}
                       >
                         <CardContent className="p-3">
@@ -276,7 +275,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                                 {getCurrentStepType(stepNum)}
                               </div>
                             </div>
-                            
+
                             {stepNum === currentStep && (
                               <Badge variant="default" className="text-xs">
                                 Atual
@@ -315,7 +314,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
             </TabsContent>
 
             <TabsContent value="properties" className="h-full m-0">
-              <QuizPropertiesPanel 
+              <QuizPropertiesPanel
                 stepNumber={currentStep}
                 stepType={getCurrentStepType(currentStep)}
                 onStepChange={handleStepSelect}
