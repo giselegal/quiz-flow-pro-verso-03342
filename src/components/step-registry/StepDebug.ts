@@ -169,6 +169,14 @@ export async function printFullStepsDebugDeep() {
           hasSections = '✅';
           blocks = convertSectionsToBlocks(step.sections);
         }
+        // Enriquecer a identificação de fonte: se veio do registry mas aparenta ser JSON v3, marcar como registry(json-v3)
+        if (fonte === 'registry') {
+          const looksLikeV3 = !!(effectiveStep && (effectiveStep.templateVersion === '3.0' || Array.isArray((effectiveStep as any).sections)));
+          if (looksLikeV3) {
+            fonte = 'registry';
+            // adiciona um rótulo visível no console de grupo
+          }
+        }
         blocksCount = Array.isArray(blocks) ? blocks.length : 0;
         const types = Array.from(new Set((blocks || []).map(b => String(b?.type || '').trim()).filter(Boolean)));
         componentsList = types.join(', ');
@@ -200,10 +208,11 @@ export async function printFullStepsDebugDeep() {
 
       // Imprimir JSON efetivo de cada step em grupo colapsado
       try {
-        console.groupCollapsed(`📄 JSON ${id} (fonte: ${fonte})`);
+        const extra = (effectiveStep && (effectiveStep as any).templateVersion === '3.0') ? ' • json-v3' : '';
+        console.groupCollapsed(`📄 JSON ${id} (fonte: ${fonte}${extra})`);
         console.log(effectiveStep);
         console.groupEnd();
-      } catch {}
+      } catch { }
     }
 
     rows.sort((a, b) => a['#'] - b['#']);

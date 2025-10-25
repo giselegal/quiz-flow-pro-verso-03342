@@ -118,3 +118,34 @@ try {
 } catch (err) {
   console.error('❌ Erro ao registrar templates no TemplateRegistry:', err);
 }
+
+// 🌐 Browser-only: pré-carregar overrides JSON v3 para steps conhecidos (1..21)
+if (typeof window !== 'undefined') {
+  const w = window as any;
+  if (!w.__jsonV3Preloaded) {
+    w.__jsonV3Preloaded = true;
+    // Disparar no próximo tick para não bloquear o bootstrap
+    setTimeout(async () => {
+      try {
+        const registry = TemplateRegistry.getInstance();
+        const ids = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
+        await Promise.all(ids.map(async (id) => {
+          try {
+            const resp = await fetch(`/templates/${id}-v3.json`, { cache: 'no-store' });
+            if (resp.ok) {
+              const json = await resp.json();
+              registry.registerOverride(id, json as any);
+              if (process.env.NODE_ENV === 'development') {
+                console.log(`🧩 [imports] Override JSON v3 pré-carregado para ${id}`);
+              }
+            }
+          } catch {
+            // ignorar: sem v3 para esse step
+          }
+        }));
+      } catch {
+        // silencioso
+      }
+    }, 0);
+  }
+}
