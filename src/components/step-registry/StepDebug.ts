@@ -8,6 +8,8 @@
  */
 import { stepRegistry } from './StepRegistry';
 import { QUIZ_STEPS, type QuizStep } from '../../data/quizSteps';
+import { getStepTemplate } from '@/templates/imports';
+import { convertSectionsToBlocks } from '@/utils/sectionToBlockConverter';
 
 type Row = {
   '#': number;
@@ -104,4 +106,115 @@ export function printFullStepsDebug() {
 // Expor no navegador para facilitar reexecução
 if (typeof window !== 'undefined') {
   (window as any).printFullStepsDebug = printFullStepsDebug;
+}
+
+type DeepRow = Row & {
+  'Fonte do Template': 'registry' | 'ts' | '-';
+  'Tem Sections?': '✅' | '❌';
+  'Qtde de Blocos': number;
+  'Componentes (types)': string;
+  'Renderer (StepComponent)': string;
+};
+
+/**
+ * Versão completa: inclui origem do template, blocos e nomes dos componentes
+ * e imprime o JSON efetivo de cada step em grupos colapsados no console.
+ */
+export async function printFullStepsDebugDeep() {
+  try {
+    const ids = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
+
+    const rows: DeepRow[] = [];
+    for (const id of ids) {
+      const n = getStepNumber(id);
+      const reg = stepRegistry.get(id);
+      const quiz: QuizStep | undefined = QUIZ_STEPS[id as keyof typeof QUIZ_STEPS];
+
+      const tipo = quiz?.type ?? 'N/A';
+      const categoria = reg?.config?.metadata?.category ?? 'N/A';
+      const allowNext = reg?.config?.allowNavigation?.next ? '✅' : '❌';
+      const allowPrev = reg?.config?.allowNavigation?.previous ? '✅' : '❌';
+      const required = typeof quiz?.requiredSelections === 'number' ? quiz!.requiredSelections! : '-';
+      const auto = deriveAutoAdvance(quiz?.type, n) ? '✅' : '❌';
+      const next = quiz?.nextStep ?? '-';
+      const existsReg = reg ? '✅' : '❌';
+      const existsData = quiz ? '✅' : '❌';
+
+      let alerta: DeepRow['Alerta Tipo/Categoria'] = '-';
+      if (quiz && categoria !== 'N/A') {
+        const okStrategic = quiz.type === 'strategic-question' && categoria === 'strategic';
+        const okQuestion = quiz.type === 'question' && categoria === 'question';
+        const okIntro = quiz.type === 'intro' && categoria === 'intro';
+        const okTrans = (quiz.type === 'transition' && categoria === 'transition') || (quiz.type === 'transition-result' && categoria === 'transition');
+        const okResult = quiz.type === 'result' && categoria === 'result';
+        const okOffer = quiz.type === 'offer' && categoria === 'offer';
+        const aligned = okStrategic || okQuestion || okIntro || okTrans || okResult || okOffer;
+        if (!aligned) alerta = `⚠️ Tipo '${tipo}' × Categoria '${categoria}'`;
+      }
+
+      // Carregar template efetivo do step (preferindo registry)
+      let fonte: DeepRow['Fonte do Template'] = '-';
+      let hasSections: DeepRow['Tem Sections?'] = '❌';
+      let blocksCount = 0;
+      let componentsList = '';
+      let effectiveStep: any = null;
+      try {
+        const { step, source } = getStepTemplate(id);
+        fonte = source;
+        effectiveStep = step;
+        let blocks: any[] = [];
+        if (Array.isArray(step?.blocks)) {
+          blocks = step.blocks;
+        } else if (Array.isArray(step?.sections)) {
+          hasSections = '✅';
+          blocks = convertSectionsToBlocks(step.sections);
+        }
+        blocksCount = Array.isArray(blocks) ? blocks.length : 0;
+        const types = Array.from(new Set((blocks || []).map(b => String(b?.type || '').trim()).filter(Boolean)));
+        componentsList = types.join(', ');
+      } catch (e) {
+        // ignora erro por step
+      }
+
+      rows.push({
+        '#': n,
+        ID: id,
+        Nome: reg?.name ?? '-',
+        Tipo: tipo,
+        Categoria: categoria,
+        'Permite Próximo': allowNext,
+        'Permite Anterior': allowPrev,
+        'Validação Obrigatória': reg?.config?.validation?.required ? '✅' : '❌',
+        'Required Selections': required,
+        'Auto-Avanço (sugerido)': auto,
+        'Próxima Etapa': next,
+        'Existe no Registry': existsReg,
+        'Existe em QUIZ_STEPS': existsData,
+        'Alerta Tipo/Categoria': alerta,
+        'Fonte do Template': fonte,
+        'Tem Sections?': hasSections,
+        'Qtde de Blocos': blocksCount,
+        'Componentes (types)': componentsList,
+        'Renderer (StepComponent)': reg?.component ? (reg.component as any)?.name || 'anonymous' : 'N/A',
+      });
+
+      // Imprimir JSON efetivo de cada step em grupo colapsado
+      try {
+        console.groupCollapsed(`📄 JSON ${id} (fonte: ${fonte})`);
+        console.log(effectiveStep);
+        console.groupEnd();
+      } catch {}
+    }
+
+    rows.sort((a, b) => a['#'] - b['#']);
+    console.log('🧩 Debug Completo (Profundo) • StepRegistry × QUIZ_STEPS × Template');
+    console.table(rows);
+    console.log('💡 Dica: chame window.printFullStepsDebugDeep() para reimprimir esta versão completa.');
+  } catch (e) {
+    console.error('❌ Falha ao gerar debug profundo de etapas:', e);
+  }
+}
+
+if (typeof window !== 'undefined') {
+  (window as any).printFullStepsDebugDeep = printFullStepsDebugDeep;
 }

@@ -644,6 +644,13 @@ export const registerProductionSteps = () => {
         stepRegistry.debug();
         // Tabela completa (todas as peças)
         printFullStepsDebug();
+        // Tabela profunda com templates e blocos (async, pequeno atraso para estabilidade)
+        setTimeout(() => {
+            try {
+                // import dinâmico para evitar pesar o bootstrap
+                import('./StepDebug').then(m => m.printFullStepsDebugDeep?.());
+            } catch { }
+        }, 250);
     }
 };
 
