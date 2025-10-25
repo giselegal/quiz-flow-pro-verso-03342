@@ -27,6 +27,8 @@ export const TEMPLATE_SOURCES = {
   useMasterJSON: bool((import.meta as any)?.env?.VITE_USE_MASTER_JSON, isTestEnv ? true : false),
   useNormalizedJSON: bool((import.meta as any)?.env?.VITE_USE_NORMALIZED_JSON, false),
   useModularTemplates: bool((import.meta as any)?.env?.VITE_USE_MODULAR_TEMPLATES, true),
+  // Preferir carregar JSONs públicos individuais (inclui -v3.json) antes de outras fontes
+  preferPublicStepJSON: bool((import.meta as any)?.env?.VITE_PREFER_PUBLIC_STEP_JSON, true),
 };
 
 // 🔍 DEBUG: Log das flags carregadas (apenas em DEV)
@@ -39,6 +41,7 @@ if (typeof window !== 'undefined' && import.meta.env.DEV) {
   console.log('→ useMasterJSON:', TEMPLATE_SOURCES.useMasterJSON);
   console.log('→ useNormalizedJSON:', TEMPLATE_SOURCES.useNormalizedJSON);
   console.log('→ useModularTemplates:', TEMPLATE_SOURCES.useModularTemplates);
+  console.log('→ preferPublicStepJSON:', TEMPLATE_SOURCES.preferPublicStepJSON);
   console.groupEnd();
 }
 

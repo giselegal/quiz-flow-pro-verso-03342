@@ -92,11 +92,14 @@ export class TemplateLoader {
 
       // Preferência explícita: quando ?template=quiz21StepsComplete estiver na URL do /editor,
       // priorizamos os JSONs individuais gerados em public/templates/step-XX.json
-      let preferPublicStepJSON = false;
+      let preferPublicStepJSON = TEMPLATE_SOURCES.preferPublicStepJSON;
       try {
         if (typeof window !== 'undefined' && window.location?.search) {
           const sp = new URLSearchParams(window.location.search);
-          preferPublicStepJSON = (sp.get('template') || '').toLowerCase() === 'quiz21stepscomplete';
+          // URL param força preferência
+          if ((sp.get('template') || '').toLowerCase() === 'quiz21stepscomplete') {
+            preferPublicStepJSON = true;
+          }
         }
       } catch {
         // ignore
