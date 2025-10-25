@@ -1,3 +1,4 @@
+import { TOTAL_STEPS } from '@/config/stepsConfig';
 import { useQuizFlow } from '@/contexts';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
@@ -31,19 +32,19 @@ const usePreview = () => {
     return {
       isPreviewing: false,
       currentStep: 1,
-      totalSteps: 21,
+      totalSteps: TOTAL_STEPS,
       canGoNext: true,
       canGoPrevious: false,
       sessionData: {},
-      togglePreview: () => {},
-      startPreview: () => {},
-      stopPreview: () => {},
-      goToNextStep: () => {},
-      goToPreviousStep: () => {},
-      setCurrentStep: () => {},
-      navigateToStep: () => {},
-      updateSessionData: () => {},
-      resetSession: () => {},
+      togglePreview: () => { },
+      startPreview: () => { },
+      stopPreview: () => { },
+      goToNextStep: () => { },
+      goToPreviousStep: () => { },
+      setCurrentStep: () => { },
+      navigateToStep: () => { },
+      updateSessionData: () => { },
+      resetSession: () => { },
     };
   }
   return context;
@@ -57,7 +58,7 @@ interface PreviewProviderProps {
 
 const PreviewProvider: React.FC<PreviewProviderProps> = ({
   children,
-  totalSteps = 21,
+  totalSteps = TOTAL_STEPS,
   funnelId,
 }) => {
   const [isPreviewing, setIsPreviewing] = useState(false);
@@ -183,7 +184,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
     try {
       (window as any).__quizCurrentStep = currentStep;
       (window as any).__quizTotalSteps = effectiveTotal;
-    } catch {}
+    } catch { }
 
     const handleNavigateToStep = (event: CustomEvent) => {
       if (!isPreviewing) return;
