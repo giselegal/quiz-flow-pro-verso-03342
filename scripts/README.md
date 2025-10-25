@@ -1,60 +1,60 @@
-# Scripts do Projeto
+# Scripts e Arquivamento
 
-Este diretório contém scripts utilitários organizados por categoria.
+Este diretório concentra utilitários, verificadores e automações do projeto. Para reduzir ruído e evitar execuções acidentais, scripts pontuais/antigos foram movidos para `scripts/archive/` durante a limpeza.
 
-## 📁 Estrutura
+## Estrutura
 
-### `/analysis/` - Scripts de Análise
+- `scripts/` — scripts ativos e mantidos
+- `scripts/archive/` — scripts temporários, diagnósticos antigos, migrações já aplicadas, smoke-tests pontuais
 
-- **analyze-\*.cjs** - Scripts para análise de componentes e estrutura
-- **debug-\*.cjs** - Scripts de debugging e diagnóstico
-- **diagnostic-\*.js** - Scripts de diagnóstico do sistema
-- **find-\*.cjs/.js** - Scripts de busca e localização
-- **generate-\*.mjs** - Scripts de geração de relatórios
-- **investigate-\*.mjs/.cjs** - Scripts de investigação detalhada
+## O que foi movido para `archive/`
 
-### `/cleanup/` - Scripts de Limpeza
+Padrões arquivados (exemplos; confira o conteúdo do diretório para a lista completa):
 
-- **cleanup-\*.sh** - Scripts de limpeza geral
-- **extract-\*.sh** - Scripts de extração e organização
-- **fix-\*.cjs/.js/.sh** - Scripts de correção automática
+- `analise-*.{sh,js,mjs,cjs}`
+- `debug-*.{sh,js,mjs}`
+- `teste-*.{sh,js,mjs}` e `test-*.{sh,js,mjs}` (ad-hoc)
+- `verificar-*.{sh,js,mjs}` e `diagnostico-*.{sh,js,mjs}`
+- Migrações já executadas: `implementar-fase*.sh`, `migrate-*.{sh,js,mjs}`, `fix-*.sh`, `apply-*.sh`
+- Smoke-tests pontuais: `smoke-*.mjs`
 
-### `/git/` - Scripts Git
+- **`.sh`** - Shell scripts (necessitam chmod +x)
 
-- **git-\*.sh** - Scripts de automação Git
-- **merge-\*.sh** - Scripts de merge e rebase
+## Como executar scripts arquivados
 
-### `/testing/` - Scripts de Teste
-
-- **test-\*.cjs/.js/.ts** - Scripts de teste automatizados
-- **validate-\*.js/.cjs** - Scripts de validação
-- **verify-\*.mjs/.js** - Scripts de verificação
-
-## 🚀 Como Usar
+1) Entrar no diretório:
 
 ```bash
-# Executar script de análise
-node scripts/analysis/analyze-components.cjs
-
-# Executar limpeza
-chmod +x scripts/cleanup/cleanup-editors.sh
-./scripts/cleanup/cleanup-editors.sh
-
-# Scripts Git
-chmod +x scripts/git/git-quick-commands.sh
-./scripts/git/git-quick-commands.sh
-
-# Testes e validação
-node scripts/testing/test-components.cjs
+cd scripts/archive
 ```
 
-## 📋 Convenções
+2) Executar shell scripts (garanta permissão de execução):
 
-- **`.cjs`** - CommonJS modules
-- **`.mjs`** - ES modules
-- **`.js`** - JavaScript genérico
-- **`.ts`** - TypeScript
-- **`.sh`** - Shell scripts (necessitam chmod +x)
+```bash
+chmod +x ./meu-script.sh
+./meu-script.sh
+```
+
+3) Executar arquivos Node (mjs/js):
+
+```bash
+node ./meu-script.mjs
+```
+
+Observação: scripts arquivados não têm garantia de compatibilidade com o estado atual do código.
+
+## Boas práticas
+
+- Adicionar novos utilitários em `scripts/` com nomes claros e documentação de uso.
+- Ao concluir migrações/diagnósticos, mover para `scripts/archive/` se não houver reaproveitamento imediato.
+- Evitar scripts que dependam de caminhos temporários ou arquivos removidos.
+
+## Atualizações recentes
+
+- `package.json` atualizado para usar `vitest.config.ts` e `playwright.config.ts` nos scripts de teste (configs antigas removidas).
+- Scripts ad-hoc e migrações one-off foram arquivados em `scripts/archive/`.
+
+Se algum script arquivado precisar voltar ao fluxo ativo, mova-o para `scripts/` e valide seu funcionamento.
 
 ## 🔧 Dependências
 
