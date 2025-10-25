@@ -101,8 +101,8 @@ const QuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
             try {
                 const { loadTemplate: loadTemplateFunc } = await import('@/templates/imports');
                 const result = await loadTemplateFunc(stepId);
-                const templateData = result?.template || result;
-                const stepData = (templateData as any)?.[stepId];
+                // Preferir override de registry (result.step) quando disponível
+                const stepData = (result as any)?.step || (result as any)?.template?.[stepId];
 
                 let blocks: any[] = [];
                 if (stepData?.blocks && Array.isArray(stepData.blocks)) {
@@ -167,8 +167,8 @@ const StrategicQuestionStepAdapter: React.FC<BaseStepProps> = (props) => {
             try {
                 const { loadTemplate: loadTemplateFunc } = await import('@/templates/imports');
                 const result = await loadTemplateFunc(stepId);
-                const templateData = result?.template || result;
-                const stepData = (templateData as any)?.[stepId];
+                // Preferir override de registry (result.step) quando disponível
+                const stepData = (result as any)?.step || (result as any)?.template?.[stepId];
 
                 let blocks: any[] = [];
                 if (stepData?.blocks && Array.isArray(stepData.blocks)) {
@@ -238,10 +238,8 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
                 // Carregar template do step
                 const { loadTemplate: loadTemplateFunc } = await import('@/templates/imports');
                 const result = await loadTemplateFunc(stepId);
-                // loadTemplate retorna { template, source }
-                const templateData = result?.template || result;
-                // Buscar dados do step específico
-                const stepData = (templateData as any)?.[stepId];
+                // Preferir override de registry (result.step) quando disponível
+                const stepData = (result as any)?.step || (result as any)?.template?.[stepId];
 
                 console.log('📄 [TransitionStepAdapter] Raw template data:', {
                     stepId,
@@ -370,10 +368,8 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
                 // Carregar template do step 20
                 const { loadTemplate: loadTemplateFunc } = await import('@/templates/imports');
                 const result = await loadTemplateFunc(stepId);
-                // loadTemplate retorna { template, source }
-                const templateData = result?.template || result;
-                // Buscar dados do step específico
-                const stepData = (templateData as any)?.[stepId];
+                // Preferir override de registry (result.step) quando disponível
+                const stepData = (result as any)?.step || (result as any)?.template?.[stepId];
 
                 console.log('📄 [ResultStepAdapter] Raw template data:', {
                     stepId,

@@ -46,7 +46,31 @@ export const loadTemplate = async (templateId: string) => {
   // Template completo (fonte TS normalizada)
   const template = getQuiz21StepsTemplate() as any;
 
-  // Step específico preferindo Registry (permite overrides futuros por JSON)
+  // Navegador: tentar aplicar override via JSON v3 (public/templates/step-XX-v3.json)
+  // Rodamos isso de forma best-effort e apenas uma vez por step durante a sessão
+  if (typeof window !== 'undefined') {
+    const w = window as any;
+    w.__jsonV3Overrides = w.__jsonV3Overrides || new Set<string>();
+    if (!w.__jsonV3Overrides.has(stepId)) {
+      try {
+        const resp = await fetch(`/templates/${stepId}-v3.json`, { cache: 'no-store' });
+        if (resp.ok) {
+          const json = await resp.json();
+          const registry = TemplateRegistry.getInstance();
+          // Registrar override diretamente; consumidores convertem sections→blocks quando necessário
+          registry.registerOverride(stepId, json as any);
+          w.__jsonV3Overrides.add(stepId);
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`🧩 [imports] Override JSON v3 aplicado para ${stepId}`);
+          }
+        }
+      } catch (e) {
+        // Silencioso: fallback para TS permanece
+      }
+    }
+  }
+
+  // Step específico preferindo Registry (permite overrides por JSON)
   const { step, source: stepSource } = getStepTemplate(stepId);
 
   if (process.env.NODE_ENV === 'development') {
@@ -69,18 +93,18 @@ try {
   const entries = Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE);
   let registered = 0;
   const registeredKeys: string[] = [];
-  
+
   for (const [key, template] of entries) {
     if (key.startsWith('step-')) {
       // normaliza id para step-XX
       const match = key.match(/^step-(\d{1,2})$/);
       const normalizedKey = match ? `step-${parseInt(match[1], 10).toString().padStart(2, '0')}` : key;
-      
+
       // Verificar se já existe
       if (registry.has(normalizedKey)) {
         console.warn(`⚠️  Step '${normalizedKey}' já está registrado. Sobrescrevendo...`);
       }
-      
+
       // normaliza tipos (aliases → canônico 'options-grid')
       const normalizedTemplate = normalizeTemplateBlocks({ [normalizedKey]: template } as any)[normalizedKey];
       registry.register(normalizedKey, normalizedTemplate as any);
@@ -88,7 +112,7 @@ try {
       registered++;
     }
   }
-  
+
   console.log(`✅ TemplateRegistry registrado: ${registered} steps`);
   console.log(`📋 Steps registrados:`, registeredKeys.sort());
 } catch (err) {
