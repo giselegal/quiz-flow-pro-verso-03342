@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TemplateRegistry } from '../TemplateRegistry';
-import type { TemplateV3 } from '@/types/template-v3.types';
 
 describe('TemplateRegistry', () => {
   let registry: TemplateRegistry;
@@ -19,17 +18,17 @@ describe('TemplateRegistry', () => {
     it('deve retornar sempre a mesma instância', () => {
       const instance1 = TemplateRegistry.getInstance();
       const instance2 = TemplateRegistry.getInstance();
-      
+
       expect(instance1).toBe(instance2);
     });
 
     it('deve compartilhar dados entre múltiplas chamadas getInstance()', () => {
       const instance1 = TemplateRegistry.getInstance();
       const instance2 = TemplateRegistry.getInstance();
-      
+
       const template = { type: 'question', blocks: [] };
       instance1.register('test-step', template);
-      
+
       expect(instance2.has('test-step')).toBe(true);
       expect(instance2.get('test-step')).toBe(template);
     });
@@ -37,7 +36,7 @@ describe('TemplateRegistry', () => {
 
   describe('register()', () => {
     it('deve registrar um template com sucesso', () => {
-      const template: TemplateV3 = {
+      const template = {
         type: 'question',
         blocks: [
           {
@@ -79,10 +78,7 @@ describe('TemplateRegistry', () => {
     });
 
     it('deve aceitar diferentes tipos de templates (TemplateV3 ou any)', () => {
-      const templateV3: TemplateV3 = {
-        type: 'question',
-        blocks: []
-      };
+      const templateV3 = { type: 'question', blocks: [] };
 
       const customTemplate = {
         customField: 'value',
@@ -100,7 +96,7 @@ describe('TemplateRegistry', () => {
   describe('registerOverride()', () => {
     it('deve registrar um override com sucesso', () => {
       const template = { type: 'question', blocks: [] };
-      
+
       registry.registerOverride('override-step', template);
 
       expect(registry.has('override-step')).toBe(true);
@@ -119,7 +115,7 @@ describe('TemplateRegistry', () => {
 
     it('deve congelar templates registrados via override', () => {
       const template = { type: 'question', blocks: [] };
-      
+
       registry.registerOverride('frozen-override', template);
       const retrieved = registry.get('frozen-override');
 
@@ -260,7 +256,7 @@ describe('TemplateRegistry', () => {
       // Object.freeze é shallow, então arrays internos ainda são mutáveis
       // Este teste documenta o comportamento atual
       expect(Object.isFrozen(retrieved)).toBe(true);
-      
+
       // O objeto raiz está congelado
       expect(() => {
         retrieved.newProperty = 'value';
@@ -287,7 +283,7 @@ describe('TemplateRegistry', () => {
     });
 
     it('deve lidar com templates complexos', () => {
-      const complexTemplate: TemplateV3 = {
+      const complexTemplate = {
         type: 'question',
         blocks: [
           {
@@ -335,9 +331,9 @@ describe('TemplateRegistry', () => {
       }
 
       const keys = registry.keys();
-      
+
       expect(keys.length).toBeGreaterThanOrEqual(100);
-      
+
       for (let i = 0; i < 100; i++) {
         expect(registry.has(`step-${i}`)).toBe(true);
       }
