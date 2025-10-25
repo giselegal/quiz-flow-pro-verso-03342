@@ -313,11 +313,53 @@ export const QuestionBlock = defineBlock({
     }
 });
 
+// Bloco de transição para avançar ao próximo passo/resultado
+export const TransitionNextBlock = defineBlock({
+    id: 'transition.next',
+    label: 'Transição: Próximo Passo',
+    category: 'navegacao',
+    schema: z.object({
+        title: z.string().default('Quase lá!'),
+        message: z.string().default('Pronta para ver seu resultado?'),
+        buttonLabel: z.string().default('Ver resultado'),
+        autoAdvanceMs: z.number().int().nonnegative().default(0)
+    }),
+    defaultConfig: { title: 'Quase lá!', message: 'Pronta para ver seu resultado?', buttonLabel: 'Ver resultado', autoAdvanceMs: 0 },
+    render: ({ config, state }) => {
+        React.useEffect(() => {
+            if ((config.autoAdvanceMs ?? 0) > 0 && state?.onComplete) {
+                const t = setTimeout(() => state.onComplete(), config.autoAdvanceMs);
+                return () => clearTimeout(t);
+            }
+        }, [config?.autoAdvanceMs, state?.onComplete]);
+
+        const onClick = () => {
+            if (state?.onComplete) state.onComplete();
+            else if (state?.onNext) state.onNext();
+        };
+
+        return (
+            <div className="text-center space-y-3">
+                {config.title && <h3 className="text-xl font-bold text-primary">{config.title}</h3>}
+                {config.message && <p className="text-sm opacity-80">{config.message}</p>}
+                <button
+                    type="button"
+                    onClick={onClick}
+                    className="inline-flex items-center justify-center bg-primary text-white px-4 py-2 rounded shadow hover:opacity-90 text-sm"
+                >
+                    {config.buttonLabel}
+                </button>
+            </div>
+        );
+    }
+});
+
 export const DEFAULT_BLOCK_DEFINITIONS: BlockDefinition<any>[] = [
     // Normalized (novos)
     HeroBlock,
     WelcomeFormBlock,
     QuestionBlock,
+    TransitionNextBlock,
     // Existentes
     ResultHeadlineBlock,
     ResultSecondaryListBlock,

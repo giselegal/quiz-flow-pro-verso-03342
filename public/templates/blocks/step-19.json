@@ -1,31 +1,32 @@
 {
-  "templateVersion": "3.1",
-  "metadata": {
-    "id": "step-19",
-    "name": "Pergunta (Blocos)",
-    "description": "Pergunta final antes do resultado",
-    "category": "question",
-    "tags": ["question", "options"]
-  },
-  "blocks": [
-    {
-      "id": "q-19",
-      "type": "question-block",
-      "config": {
-        "questionNumber": "Pergunta 18/20",
-        "questionText": "Escolha a última alternativa para fechar seu perfil:",
-        "requiredSelections": 1,
-        "options": [
-          { "id": "opt-a", "text": "Opção A" },
-          { "id": "opt-b", "text": "Opção B" },
-          { "id": "opt-c", "text": "Opção C" },
-          { "id": "opt-d", "text": "Opção D" }
+    "templateVersion": "3.1",
+    "metadata": {
+        "id": "step-19",
+        "name": "Transição (Blocos)",
+        "description": "Tela de transição para avançar ao resultado",
+        "category": "transition",
+        "tags": [
+            "transition",
+            "navigation"
         ]
-      }
+    },
+    "blocks": [
+        {
+            "id": "trans-19",
+            "type": "transition.next",
+            "config": {
+                "title": "Pronta para o seu resultado?",
+                "message": "Clique no botão abaixo para ver sua análise personalizada.",
+                "buttonLabel": "Ver meu resultado",
+                "autoAdvanceMs": 0
+            }
+        }
+    ],
+    "analytics": {
+        "events": [
+            "page_view",
+            "step_completed"
+        ],
+        "trackingId": "step-19-transition"
     }
-  ],
-  "analytics": {
-    "events": ["page_view", "option_selected", "step_completed"],
-    "trackingId": "step-19-blocks"
-  }
 }
