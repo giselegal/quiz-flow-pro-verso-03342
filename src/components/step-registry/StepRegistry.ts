@@ -12,14 +12,32 @@ class StepRegistry {
     private initialized = false;
 
     /**
+     * Normaliza IDs de step para o formato canônico step-XX (com zero à esquerda)
+     * Aceita aliases como step-1 e converte para step-01.
+     */
+    private normalizeId(stepId: string): string {
+        try {
+            const match = String(stepId).match(/^step-(\d{1,2})$/i);
+            if (match) {
+                const n = parseInt(match[1], 10);
+                if (!isNaN(n)) {
+                    return `step-${String(n).padStart(2, '0')}`;
+                }
+            }
+        } catch {}
+        return stepId;
+    }
+
+    /**
      * Registrar um novo step no sistema
      */
     register(step: StepComponent): void {
-        if (this.steps.has(step.id)) {
+        const id = this.normalizeId(step.id);
+        if (this.steps.has(id)) {
             console.warn(`⚠️  Step '${step.id}' já está registrado. Sobrescrevendo...`);
         }
 
-        this.steps.set(step.id, step);
+        this.steps.set(id, { ...step, id });
 
         if (process.env.NODE_ENV === 'development') {
             console.log(`✅ Step registrado: ${step.id} - ${step.name}`);
@@ -30,7 +48,8 @@ class StepRegistry {
      * Obter um step específico
      */
     get(stepId: string): StepComponent | undefined {
-        const step = this.steps.get(stepId);
+        const id = this.normalizeId(stepId);
+        const step = this.steps.get(id);
 
         if (!step && process.env.NODE_ENV === 'development') {
             console.warn(`⚠️  Step '${stepId}' não encontrado no registro`);
@@ -64,7 +83,7 @@ class StepRegistry {
      * Verificar se um step existe
      */
     exists(stepId: string): boolean {
-        return this.steps.has(stepId);
+        return this.steps.has(this.normalizeId(stepId));
     }
 
     /**
@@ -78,7 +97,7 @@ class StepRegistry {
      * Obter próximo step na sequência
      */
     getNext(currentStepId: string): StepComponent | undefined {
-        const currentNumber = parseInt(currentStepId.replace('step-', ''));
+        const currentNumber = parseInt(this.normalizeId(currentStepId).replace('step-', ''));
         return this.getByNumber(currentNumber + 1);
     }
 
@@ -86,7 +105,7 @@ class StepRegistry {
      * Obter step anterior na sequência
      */
     getPrevious(currentStepId: string): StepComponent | undefined {
-        const currentNumber = parseInt(currentStepId.replace('step-', ''));
+        const currentNumber = parseInt(this.normalizeId(currentStepId).replace('step-', ''));
         if (currentNumber <= 1) return undefined;
         return this.getByNumber(currentNumber - 1);
     }

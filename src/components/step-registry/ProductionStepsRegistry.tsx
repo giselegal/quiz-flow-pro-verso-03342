@@ -632,19 +632,8 @@ export const registerProductionSteps = () => {
     console.log('🎯 Registrando steps de produção no StepRegistry...');
 
     PRODUCTION_STEPS.forEach(step => {
+        // Apenas registra IDs canônicos (step-XX); aliases serão aceitos via normalização no StepRegistry
         stepRegistry.register(step);
-        // Alias legacy (sem zero) para compatibilidade temporária
-        const legacyId = step.id.replace('step-0', 'step-');
-        if (legacyId !== step.id) {
-            try {
-                stepRegistry.register({ ...step, id: legacyId });
-                if (process.env.NODE_ENV === 'development') {
-                    console.log(`↪️ Alias registrado: ${legacyId} → ${step.id}`);
-                }
-            } catch (e) {
-                // Ignorar se já existir
-            }
-        }
     });
 
     console.log(`✅ ${PRODUCTION_STEPS.length} steps de produção registrados com sucesso!`);
