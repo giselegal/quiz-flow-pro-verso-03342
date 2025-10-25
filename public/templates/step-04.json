@@ -1,184 +1,147 @@
 {
   "id": "step-04",
-  "type": "quiz-question",
-  "title": "Q3 - Estilo pessoal",
+  "type": "question",
+  "title": "Pergunta 3 – Estilo Pessoal",
   "metadata": {
-    "name": "Q3 - Estilo pessoal",
-    "description": "Questão 3 sobre preferências de estilo",
+    "name": "Step 04 - Preferências de Estilo",
+    "description": "Etapa 4 do quiz: identifique o visual que mais representa seu estilo pessoal.",
     "category": "quiz-question",
     "version": "3.0"
   },
   "blocks": [
     {
-      "id": "progress-bar-step-04",
-      "type": "question-progress",
+      "id": "block-progress-bar-04",
+      "type": "quiz-progress-bar",
       "position": 0,
       "content": {
-        "stepNumber": 4,
-        "totalSteps": 21,
-        "showPercentage": true,
+        "progressValue": "{progressPercent}",
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
       },
       "properties": {
-        "padding": 8
+        "showPercentage": true,
+        "textAlign": "center"
       }
     },
     {
-      "id": "step-04-question-title",
-      "type": "question-title",
+      "id": "block-progress-text-04",
+      "type": "text-inline",
       "position": 1,
       "content": {
-        "text": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?"
+        "text": "Você concluiu <strong>{progressPercent}%</strong> do teste."
       },
       "properties": {
-        "animation": {
-          "type": "fade",
-          "duration": 300
-        }
+        "textAlign": "center",
+        "fontSize": "text-sm md:text-base",
+        "className": "text-gray-600 mb-2"
       }
     },
     {
-      "id": "question-hero-04",
-      "type": "question-hero",
+      "id": "block-question-title-04",
+      "type": "text-inline",
       "position": 2,
       "content": {
-        "questionNumber": "3 de 10",
-        "questionText": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
-        "currentQuestion": 3,
-        "totalQuestions": 13,
-        "progressValue": 19,
-        "showProgress": true,
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão"
+        "text": "Qual desses visuais você mais se identifica?"
       },
       "properties": {
-        "backgroundColor": "transparent",
-        "padding": 16,
-        "animation": {
-          "type": "fade",
-          "duration": 300,
-          "delay": 0,
-          "easing": "ease-out"
-        }
+        "fontFamily": "\"Playfair Display\", serif",
+        "fontWeight": "font-bold",
+        "fontSize": "text-2xl sm:text-3xl",
+        "textAlign": "center",
+        "className": "text-[#432818]"
       }
     },
     {
-      "id": "options-grid-04",
-      "type": "options grid",
+      "id": "block-options-grid-04",
+      "type": "quiz-options-grid",
       "position": 3,
-      "content": {
-        "options": [
-          {
-            "id": "natural",
-            "text": "Visual leve, despojado e natural",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-            "value": "natural"
-          },
-          {
-            "id": "classico",
-            "text": "Visual clássico e tradicional",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
-            "value": "classico"
-          },
-          {
-            "id": "contemporaneo",
-            "text": "Visual casual com toque atual",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
-            "value": "contemporaneo"
-          },
-          {
-            "id": "elegante",
-            "text": "Visual refinado e imponente",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
-            "value": "elegante"
-          },
-          {
-            "id": "romantico",
-            "text": "Visual romântico, feminino e delicado",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
-            "value": "romantico"
-          },
-          {
-            "id": "sexy",
-            "text": "Visual sensual, com saia justa e decote",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
-            "value": "sexy"
-          },
-          {
-            "id": "dramatico",
-            "text": "Visual marcante e urbano (jeans + jaqueta)",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
-            "value": "dramatico"
-          },
-          {
-            "id": "criativo",
-            "text": "Visual criativo, colorido e ousado",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
-            "value": "criativo"
-          }
-        ],
+      "properties": {
         "columns": 2,
         "multipleSelection": true,
         "minSelections": 3,
         "maxSelections": 3,
         "showImages": true,
-        "imageSize": 256,
-        "autoAdvance": true,
-        "autoAdvanceDelay": 1500,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "requiredSelections": 3
+        "imageSize": "medium",
+        "validationMessage": "Selecione 3 opções para continuar"
       },
-      "properties": {
-        "backgroundColor": "transparent",
-        "padding": 16,
-        "animation": {
-          "type": "slideUp",
-          "duration": 300,
-          "delay": 100,
-          "easing": "ease-out"
-        }
+      "content": {
+        "options": [
+          {
+            "id": "natural-03",
+            "text": "Visual leve, despojado e natural",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            "value": "natural"
+          },
+          {
+            "id": "classico-03",
+            "text": "Visual clássico e tradicional",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo-03",
+            "text": "Visual casual com toque atual",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante-03",
+            "text": "Visual refinado e imponente",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico-03",
+            "text": "Visual romântico, feminino e delicado",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy-03",
+            "text": "Visual sensual e marcante",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico-03",
+            "text": "Visual marcante e urbano",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo-03",
+            "text": "Visual criativo, colorido e ousado",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            "value": "criativo"
+          }
+        ]
       }
     },
     {
-      "id": "step-04-cta-next",
-      "type": "CTAButton",
+      "id": "block-next-button-04",
+      "type": "quiz-button",
       "position": 4,
+      "properties": {
+        "variant": "primary",
+        "size": "large",
+        "align": "center"
+      },
       "content": {
         "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "href": "#next"
       }
     }
   ],
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "primaryHover": "#A68B6A",
-      "primaryLight": "#F3E8D3",
-      "secondary": "#432818",
-      "background": "#FAF9F7",
-      "text": "#1F2937",
-      "border": "#E5E7EB",
-      "selected": "#B89B7A",
-      "hover": "#F3E8D3"
-    },
-    "fonts": {
-      "heading": "Playfair Display, serif",
-      "body": "Inter, sans-serif"
-    },
-    "spacing": {
-      "sm": 8,
-      "md": 16,
-      "lg": 24,
-      "xl": 32
-    },
-    "borderRadius": {
-      "sm": 4,
-      "md": 8,
-      "lg": 12,
-      "xl": 16
+  "validation": {
+    "rules": {
+      "selectedOptions": {
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Selecione exatamente 3 opções para continuar"
+      }
     }
+  },
+  "navigation": {
+    "nextStep": "step-05"
   }
 }

@@ -1,166 +1,147 @@
 {
   "id": "step-06",
-  "type": "quiz-question",
-  "title": "Q5 - Cores favoritas",
+  "type": "question",
+  "title": "Pergunta 5 – Escolhas de Look",
   "metadata": {
-    "name": "Q5 - Cores favoritas",
-    "description": "Questão 5 sobre preferências de estilo",
+    "name": "Step 06 - Pergunta 5 de Estilo",
+    "description": "Etapa 6 do quiz: identifique os looks que mais representam seu estilo e forma de expressão.",
     "category": "quiz-question",
     "version": "3.0"
   },
   "blocks": [
     {
-      "id": "progress-bar-step-06",
-      "type": "question-progress",
+      "id": "block-progress-bar-06",
+      "type": "quiz-progress-bar",
       "position": 0,
       "content": {
-        "stepNumber": 6,
-        "totalSteps": 21,
-        "showPercentage": true,
+        "progressValue": "{progressPercent}",
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
       },
       "properties": {
-        "padding": 8
+        "showPercentage": true,
+        "textAlign": "center"
       }
     },
     {
-      "id": "step-06-question-title",
-      "type": "question-title",
+      "id": "block-progress-text-06",
+      "type": "text-inline",
       "position": 1,
       "content": {
-        "text": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?"
+        "text": "Você concluiu <strong>{progressPercent}%</strong> do teste."
       },
       "properties": {
-        "animation": {
-          "type": "fade",
-          "duration": 300
-        }
+        "textAlign": "center",
+        "fontSize": "text-sm md:text-base",
+        "className": "text-gray-600 mb-2"
       }
     },
     {
-      "id": "question-hero-06",
-      "type": "question-hero",
+      "id": "block-question-title-06",
+      "type": "text-inline",
       "position": 2,
       "content": {
-        "questionNumber": "5 de 10",
-        "questionText": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
-        "currentQuestion": 5,
-        "totalQuestions": 13,
-        "progressValue": 29,
-        "showProgress": true,
-        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        "logoAlt": "Logo Gisele Galvão"
+        "text": "Quais desses looks você usaria sem pensar duas vezes?"
       },
       "properties": {
-        "animation": {
-          "type": "fade",
-          "duration": 300
-        }
+        "fontFamily": "\"Playfair Display\", serif",
+        "fontWeight": "font-bold",
+        "fontSize": "text-2xl sm:text-3xl",
+        "textAlign": "center",
+        "className": "text-[#432818]"
       }
     },
     {
-      "id": "options-grid-06",
-      "type": "options grid",
+      "id": "block-options-grid-06",
+      "type": "quiz-options-grid",
       "position": 3,
-      "content": {
-        "options": [
-          {
-            "id": "natural",
-            "text": "Estampas clean, com poucas informações",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
-            "value": "natural"
-          },
-          {
-            "id": "classico",
-            "text": "Estampas clássicas e atemporais",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
-            "value": "classico"
-          },
-          {
-            "id": "contemporaneo",
-            "text": "Atemporais, mas que tenham uma pegada atual e moderna",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
-            "value": "contemporaneo"
-          },
-          {
-            "id": "elegante",
-            "text": "Estampas clássicas e atemporais, mas sofisticadas",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
-            "value": "elegante"
-          },
-          {
-            "id": "romantico",
-            "text": "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
-            "value": "romantico"
-          },
-          {
-            "id": "sexy",
-            "text": "Estampas de animal print, como onça, zebra e cobra",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
-            "value": "sexy"
-          },
-          {
-            "id": "dramatico",
-            "text": "Estampas geométricas, abstratas e exageradas como grandes poás",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
-            "value": "dramatico"
-          },
-          {
-            "id": "criativo",
-            "text": "Estampas diferentes do usual, como africanas, xadrez grandes",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
-            "value": "criativo"
-          }
-        ],
+      "properties": {
         "columns": 2,
         "multipleSelection": true,
         "minSelections": 3,
         "maxSelections": 3,
         "showImages": true,
-        "imageSize": 256,
-        "autoAdvance": true,
-        "autoAdvanceDelay": 1500,
-        "validationMessage": "Selecione 3 opções para continuar",
-        "requiredSelections": 3
+        "imageSize": "medium",
+        "validationMessage": "Selecione 3 opções para continuar"
       },
-      "properties": {
-        "animation": {
-          "type": "slideUp",
-          "duration": 300,
-          "delay": 100,
-          "easing": "ease-out"
-        }
+      "content": {
+        "options": [
+          {
+            "id": "natural-05",
+            "text": "Looks leves, fluidos e confortáveis",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            "value": "natural"
+          },
+          {
+            "id": "classico-05",
+            "text": "Looks alinhados, elegantes e atemporais",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            "value": "classico"
+          },
+          {
+            "id": "contemporaneo-05",
+            "text": "Looks modernos com toque criativo",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+            "value": "contemporaneo"
+          },
+          {
+            "id": "elegante-05",
+            "text": "Looks de caimento perfeito e sofisticação",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            "value": "elegante"
+          },
+          {
+            "id": "romantico-05",
+            "text": "Looks delicados, femininos e leves",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            "value": "romantico"
+          },
+          {
+            "id": "sexy-05",
+            "text": "Looks marcantes e seguros de si",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            "value": "sexy"
+          },
+          {
+            "id": "dramatico-05",
+            "text": "Looks imponentes e cheios de atitude",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            "value": "dramatico"
+          },
+          {
+            "id": "criativo-05",
+            "text": "Looks originais, coloridos e divertidos",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            "value": "criativo"
+          }
+        ]
       }
     },
     {
-      "id": "step-06-cta-next",
-      "type": "CTAButton",
+      "id": "block-next-button-06",
+      "type": "quiz-button",
       "position": 4,
+      "properties": {
+        "variant": "primary",
+        "size": "large",
+        "align": "center"
+      },
       "content": {
         "label": "Avançar",
-        "href": "#next",
-        "variant": "primary",
-        "size": "large"
+        "href": "#next"
       }
     }
   ],
-  "theme": {
-    "colors": {
-      "primary": "#B89B7A",
-      "primaryHover": "#A68B6A",
-      "primaryLight": "#F3E8D3",
-      "secondary": "#432818",
-      "background": "#FAF9F7",
-      "text": "#1F2937",
-      "border": "#E5E7EB",
-      "selected": "#B89B7A",
-      "hover": "#F3E8D3"
-    },
-    "fonts": {
-      "heading": "Playfair Display, serif",
-      "body": "Inter, sans-serif"
+  "validation": {
+    "rules": {
+      "selectedOptions": {
+        "minItems": 3,
+        "maxItems": 3,
+        "errorMessage": "Selecione exatamente 3 opções para continuar"
+      }
     }
+  },
+  "navigation": {
+    "nextStep": "step-07"
   }
 }
