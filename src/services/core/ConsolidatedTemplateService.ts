@@ -150,6 +150,11 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
    */
   private async loadFromRegistry(templateId: string): Promise<FullTemplate | null> {
     try {
+      // Os IDs no formato step-XX não fazem parte do templates/registry.
+      // Evitar tentativa de carregar para não poluir o console com warnings.
+      if (/^step-\d+$/i.test(templateId)) {
+        return null;
+      }
       const { loadFullTemplate } = await import('@/templates/registry');
       const registryTemplate = await loadFullTemplate(templateId);
       if (registryTemplate) {

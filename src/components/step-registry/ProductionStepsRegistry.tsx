@@ -629,7 +629,18 @@ export const PRODUCTION_STEPS: StepComponent[] = [
  * 
  * Registra todos os steps de produção no stepRegistry
  */
+// Evita registros duplicados em ambientes onde esta função é chamada mais de uma vez
+let __PRODUCTION_STEPS_ALREADY_REGISTERED = false;
+
 export const registerProductionSteps = () => {
+    if (__PRODUCTION_STEPS_ALREADY_REGISTERED) {
+        if (process.env.NODE_ENV === 'development') {
+            console.log('ℹ️ registerProductionSteps() já executado — ignorando chamada duplicada');
+        }
+        return;
+    }
+    __PRODUCTION_STEPS_ALREADY_REGISTERED = true;
+
     console.log('🎯 Registrando steps de produção no StepRegistry...');
 
     PRODUCTION_STEPS.forEach(step => {
@@ -654,7 +665,7 @@ export const registerProductionSteps = () => {
     }
 };
 
-// Auto-registro em desenvolvimento
+// Auto-registro em desenvolvimento (idempotente via guarda acima)
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     registerProductionSteps();
 }
