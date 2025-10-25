@@ -95,8 +95,12 @@ export function printFullStepsDebug() {
 
     // Ordenar por número e imprimir
     rows.sort((a, b) => a['#'] - b['#']);
+    // Exibir a tabela com índice sendo o próprio ID (step-XX) para evitar duas colunas de índice
+    const table = Object.fromEntries(
+      rows.map(({ ['#']: _num, ...rest }) => [rest.ID, rest])
+    );
     console.log('🧩 Debug Completo de Etapas (StepRegistry × QUIZ_STEPS)');
-    console.table(rows);
+    console.table(table);
     console.log('💡 Dica: chame window.printFullStepsDebug() para reimprimir a qualquer momento.');
   } catch (e) {
     console.error('❌ Falha ao gerar debug completo de etapas:', e);
@@ -216,8 +220,12 @@ export async function printFullStepsDebugDeep() {
     }
 
     rows.sort((a, b) => a['#'] - b['#']);
+    // Exibir a tabela com índice sendo o próprio ID (step-XX) para evitar duas colunas de índice
+    const table = Object.fromEntries(
+      rows.map(({ ['#']: _num, ...rest }) => [rest.ID, rest])
+    );
     console.log('🧩 Debug Completo (Profundo) • StepRegistry × QUIZ_STEPS × Template');
-    console.table(rows);
+    console.table(table);
     console.log('💡 Dica: chame window.printFullStepsDebugDeep() para reimprimir esta versão completa.');
   } catch (e) {
     console.error('❌ Falha ao gerar debug profundo de etapas:', e);

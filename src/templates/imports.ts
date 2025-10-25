@@ -47,26 +47,50 @@ export const loadTemplate = async (templateId: string) => {
   const template = getQuiz21StepsTemplate() as any;
 
   // Navegador: tentar aplicar override via JSON v3 (public/templates/step-XX-v3.json)
-  // Rodamos isso de forma best-effort e apenas uma vez por step durante a sessão
+  // Rodamos isso de forma best-effort, respeitando BASE_URL, deduplicando tentativas
+  // e evitando múltiplos fetches paralelos para o mesmo step.
   if (typeof window !== 'undefined') {
     const w = window as any;
-    w.__jsonV3Overrides = w.__jsonV3Overrides || new Set<string>();
-    if (!w.__jsonV3Overrides.has(stepId)) {
-      try {
-        const resp = await fetch(`/templates/${stepId}-v3.json`, { cache: 'no-store' });
-        if (resp.ok) {
-          const json = await resp.json();
-          const registry = TemplateRegistry.getInstance();
-          // Registrar override diretamente; consumidores convertem sections→blocks quando necessário
-          registry.registerOverride(stepId, json as any);
-          w.__jsonV3Overrides.add(stepId);
-          if (process.env.NODE_ENV === 'development') {
-            console.log(`🧩 [imports] Override JSON v3 aplicado para ${stepId}`);
-          }
-        }
-      } catch (e) {
-        // Silencioso: fallback para TS permanece
+    w.__jsonV3Overrides = w.__jsonV3Overrides || new Set<string>(); // passos com override aplicado
+    w.__jsonV3Attempts = w.__jsonV3Attempts || new Set<string>();   // passos já tentados (inclui 404)
+    w.__jsonV3InFlight = w.__jsonV3InFlight || new Map<string, Promise<boolean>>(); // tentativas em andamento
+
+    const base: string = (import.meta as any)?.env?.BASE_URL || '/';
+    const url = `${base.replace(/\/$/, '')}/templates/${stepId}-v3.json`;
+
+    const shouldAttempt = !w.__jsonV3Overrides.has(stepId) && !w.__jsonV3Attempts.has(stepId);
+    if (shouldAttempt) {
+      // Reutiliza uma única promessa em caso de chamadas concorrentes
+      if (!w.__jsonV3InFlight.has(stepId)) {
+        w.__jsonV3InFlight.set(
+          stepId,
+          (async () => {
+            try {
+              const resp = await fetch(url, { cache: 'no-store' });
+              if (resp.ok) {
+                const json = await resp.json();
+                const registry = TemplateRegistry.getInstance();
+                registry.registerOverride(stepId, json as any);
+                w.__jsonV3Overrides.add(stepId);
+                if (process.env.NODE_ENV === 'development') {
+                  console.log(`🧩 [imports] Override JSON v3 aplicado para ${stepId}`);
+                }
+                return true;
+              }
+              return false;
+            } catch {
+              return false;
+            } finally {
+              // Marcar como tentado para evitar spam de 404; novo build/refresh limpa este estado.
+              w.__jsonV3Attempts.add(stepId);
+            }
+          })()
+        );
       }
+      // Aguarda a primeira tentativa quando chamado inline; ignora o resultado.
+      try { await w.__jsonV3InFlight.get(stepId); } catch { }
+      // limpeza de referência em voo após término
+      w.__jsonV3InFlight.delete(stepId);
     }
   }
 
@@ -129,20 +153,45 @@ if (typeof window !== 'undefined') {
       try {
         const registry = TemplateRegistry.getInstance();
         const ids = Array.from({ length: 21 }, (_, i) => `step-${String(i + 1).padStart(2, '0')}`);
-        await Promise.all(ids.map(async (id) => {
-          try {
-            const resp = await fetch(`/templates/${id}-v3.json`, { cache: 'no-store' });
-            if (resp.ok) {
-              const json = await resp.json();
-              registry.registerOverride(id, json as any);
-              if (process.env.NODE_ENV === 'development') {
-                console.log(`🧩 [imports] Override JSON v3 pré-carregado para ${id}`);
-              }
+        const base: string = (import.meta as any)?.env?.BASE_URL || '/';
+        const baseTrimmed = base.replace(/\/$/, '');
+        // Reutiliza o mesmo mecanismo de tentativa para deduplicar com loadTemplate
+        w.__jsonV3Overrides = w.__jsonV3Overrides || new Set<string>();
+        w.__jsonV3Attempts = w.__jsonV3Attempts || new Set<string>();
+        w.__jsonV3InFlight = w.__jsonV3InFlight || new Map<string, Promise<boolean>>();
+
+        await Promise.all(
+          ids.map(async (id) => {
+            if (w.__jsonV3Overrides.has(id) || w.__jsonV3Attempts.has(id)) return;
+            const url = `${baseTrimmed}/templates/${id}-v3.json`;
+            if (!w.__jsonV3InFlight.has(id)) {
+              w.__jsonV3InFlight.set(
+                id,
+                (async () => {
+                  try {
+                    const resp = await fetch(url, { cache: 'no-store' });
+                    if (resp.ok) {
+                      const json = await resp.json();
+                      registry.registerOverride(id, json as any);
+                      w.__jsonV3Overrides.add(id);
+                      if (process.env.NODE_ENV === 'development') {
+                        console.log(`🧩 [imports] Override JSON v3 pré-carregado para ${id}`);
+                      }
+                      return true;
+                    }
+                    return false;
+                  } catch {
+                    return false;
+                  } finally {
+                    w.__jsonV3Attempts.add(id);
+                  }
+                })()
+              );
             }
-          } catch {
-            // ignorar: sem v3 para esse step
-          }
-        }));
+            try { await w.__jsonV3InFlight.get(id); } catch { }
+            w.__jsonV3InFlight.delete(id);
+          })
+        );
       } catch {
         // silencioso
       }
