@@ -161,7 +161,8 @@ export class TemplateLoader {
   private async loadFromPublicStepJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
       const base = `/templates/${normalizedKey}`;
-      const urls = [`${base}-v3.json`, `${base}.json`];
+      // Prioridade atual: preferir arquivos canônicos step-XX.json; manter fallback para -v3.json
+      const urls = [`${base}.json`, `${base}-v3.json`];
       let data: any | null = null;
 
       for (const url of urls) {
