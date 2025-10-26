@@ -2,20 +2,424 @@
 
 ```yaml
 - generic [ref=e3]:
-  - generic [ref=e6]:
-    - generic [ref=e7]: ⚠️
-    - heading "Erro no Editor" [level=2] [ref=e8]
-    - paragraph [ref=e9]: Ocorreu um erro inesperado no editor. Isso pode ser causado por um problema de contexto.
-    - paragraph [ref=e11]: "Failed to fetch dynamically imported module: http://localhost:5173/src/components/editor/quiz/QuizModularProductionEditor.tsx"
-    - generic [ref=e12]:
-      - button "🔄 Recarregar Página" [ref=e13] [cursor=pointer]
-      - button "🏠 Voltar ao Início" [ref=e14] [cursor=pointer]
-    - generic [ref=e15]:
-      - paragraph [ref=e16]: "Se o problema persistir, tente:"
-      - list [ref=e17]:
-        - listitem [ref=e18]: • Ctrl+Shift+R (hard refresh)
-        - listitem [ref=e19]: • Limpar cache do navegador
-        - listitem [ref=e20]: • Usar modo incógnito
+  - generic [ref=e4]:
+    - 'button "Modular: ON (desativar)" [ref=e5] [cursor=pointer]'
+    - generic [ref=e6]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - heading "Etapas" [level=2] [ref=e10]
+          - paragraph [ref=e11]: 21 etapas configuradas
+        - generic [ref=e15]:
+          - button "step-01 5" [ref=e16] [cursor=pointer]:
+            - generic [ref=e18]:
+              - text: step-01
+              - generic [ref=e19]: "5"
+          - button "step-02 4" [ref=e20] [cursor=pointer]:
+            - generic [ref=e22]:
+              - text: step-02
+              - generic [ref=e23]: "4"
+          - button "step-03 4" [ref=e24] [cursor=pointer]:
+            - generic [ref=e26]:
+              - text: step-03
+              - generic [ref=e27]: "4"
+          - button "step-04 5" [ref=e28] [cursor=pointer]:
+            - generic [ref=e30]:
+              - text: step-04
+              - generic [ref=e31]: "5"
+          - button "step-05 5" [ref=e32] [cursor=pointer]:
+            - generic [ref=e34]:
+              - text: step-05
+              - generic [ref=e35]: "5"
+          - button "step-06 5" [ref=e36] [cursor=pointer]:
+            - generic [ref=e38]:
+              - text: step-06
+              - generic [ref=e39]: "5"
+          - button "step-07 5" [ref=e40] [cursor=pointer]:
+            - generic [ref=e42]:
+              - text: step-07
+              - generic [ref=e43]: "5"
+          - button "step-08 5" [ref=e44] [cursor=pointer]:
+            - generic [ref=e46]:
+              - text: step-08
+              - generic [ref=e47]: "5"
+          - button "step-09 5" [ref=e48] [cursor=pointer]:
+            - generic [ref=e50]:
+              - text: step-09
+              - generic [ref=e51]: "5"
+          - button "step-10 5" [ref=e52] [cursor=pointer]:
+            - generic [ref=e54]:
+              - text: step-10
+              - generic [ref=e55]: "5"
+          - button "step-11 5" [ref=e56] [cursor=pointer]:
+            - generic [ref=e58]:
+              - text: step-11
+              - generic [ref=e59]: "5"
+          - button "step-12 3" [ref=e60] [cursor=pointer]:
+            - generic [ref=e62]:
+              - text: step-12
+              - generic [ref=e63]: "3"
+          - button "step-13 5" [ref=e64] [cursor=pointer]:
+            - generic [ref=e66]:
+              - text: step-13
+              - generic [ref=e67]: "5"
+          - button "step-14 5" [ref=e68] [cursor=pointer]:
+            - generic [ref=e70]:
+              - text: step-14
+              - generic [ref=e71]: "5"
+          - button "step-15 5" [ref=e72] [cursor=pointer]:
+            - generic [ref=e74]:
+              - text: step-15
+              - generic [ref=e75]: "5"
+          - button "step-16 5" [ref=e76] [cursor=pointer]:
+            - generic [ref=e78]:
+              - text: step-16
+              - generic [ref=e79]: "5"
+          - button "step-17 5" [ref=e80] [cursor=pointer]:
+            - generic [ref=e82]:
+              - text: step-17
+              - generic [ref=e83]: "5"
+          - button "step-18 5" [ref=e84] [cursor=pointer]:
+            - generic [ref=e86]:
+              - text: step-18
+              - generic [ref=e87]: "5"
+          - button "step-19 5" [ref=e88] [cursor=pointer]:
+            - generic [ref=e90]:
+              - text: step-19
+              - generic [ref=e91]: "5"
+          - button "step-20 12" [ref=e92] [cursor=pointer]:
+            - generic [ref=e94]:
+              - text: step-20
+              - generic [ref=e95]: "12"
+          - button "step-21 2" [ref=e96] [cursor=pointer]:
+            - generic [ref=e98]:
+              - text: step-21
+              - generic [ref=e99]: "2"
+      - generic [ref=e101]:
+        - generic [ref=e102]:
+          - heading "Componentes" [level=2] [ref=e103]
+          - generic [ref=e104]:
+            - img [ref=e105]
+            - textbox "Buscar componentes..." [ref=e108]
+          - paragraph [ref=e109]: Arraste para o canvas →
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - heading "quiz" [level=3] [ref=e115]
+            - generic [ref=e116]:
+              - generic [ref=e117]:
+                - img [ref=e119]
+                - generic [ref=e121]: Logo do Quiz
+              - generic [ref=e122]:
+                - img [ref=e124]
+                - generic [ref=e126]: Barra de Progresso
+              - generic [ref=e127]:
+                - img [ref=e129]
+                - generic [ref=e131]: Botão Voltar
+              - generic [ref=e132]:
+                - img [ref=e134]
+                - generic [ref=e136]: Cabeçalho de Pergunta
+              - generic [ref=e137]:
+                - img [ref=e139]
+                - generic [ref=e141]: Loader de Transição
+              - generic [ref=e142]:
+                - img [ref=e144]
+                - generic [ref=e146]: Header do Quiz
+              - generic [ref=e147]:
+                - img [ref=e149]
+                - generic [ref=e151]: "Pergunta: Progresso"
+              - generic [ref=e152]:
+                - img [ref=e154]
+                - generic [ref=e156]: "Pergunta: Número"
+              - generic [ref=e157]:
+                - img [ref=e159]
+                - generic [ref=e161]: "Pergunta: Texto"
+              - generic [ref=e162]:
+                - img [ref=e164]
+                - generic [ref=e166]: "Pergunta: Instruções"
+              - generic [ref=e167]:
+                - img [ref=e169]
+                - generic [ref=e171]: "Pergunta: Navegação"
+              - generic [ref=e172]:
+                - img [ref=e174]
+                - generic [ref=e176]: Grid de Opções
+              - generic [ref=e177]:
+                - img [ref=e179]
+                - generic [ref=e181]: Hero de Pergunta
+              - generic [ref=e182]:
+                - img [ref=e184]
+                - generic [ref=e186]: Pergunta Estratégica
+              - generic [ref=e187]:
+                - img [ref=e189]
+                - generic [ref=e191]: Hero de Transição
+          - generic [ref=e192]:
+            - heading "content" [level=3] [ref=e193]
+            - generic [ref=e194]:
+              - generic [ref=e195]:
+                - img [ref=e197]
+                - generic [ref=e200]: Imagem Display
+              - generic [ref=e201]:
+                - img [ref=e203]
+                - generic [ref=e206]: Título (H1-H6)
+              - generic [ref=e207]:
+                - img [ref=e209]
+                - generic [ref=e212]: Texto
+              - generic [ref=e213]:
+                - img [ref=e215]
+                - generic [ref=e218]: Imagem
+          - generic [ref=e219]:
+            - heading "layout" [level=3] [ref=e220]
+            - generic [ref=e221]:
+              - generic [ref=e222]:
+                - img [ref=e224]
+                - generic [ref=e227]: Container
+              - generic [ref=e228]:
+                - img [ref=e230]
+                - generic [ref=e233]: Seção
+          - generic [ref=e234]:
+            - heading "visual" [level=3] [ref=e235]
+            - generic [ref=e236]:
+              - generic [ref=e237]:
+                - img [ref=e239]
+                - generic [ref=e244]: Barra Decorativa
+              - generic [ref=e245]:
+                - img [ref=e247]
+                - generic [ref=e252]: Gradiente Animado
+          - generic [ref=e253]:
+            - heading "forms" [level=3] [ref=e254]
+            - generic [ref=e255]:
+              - generic [ref=e256]:
+                - img [ref=e258]
+                - generic [ref=e261]: Campo de Texto
+              - generic [ref=e262]:
+                - img [ref=e264]
+                - generic [ref=e267]: Formulário de Lead
+              - generic [ref=e268]:
+                - img [ref=e270]
+                - generic [ref=e273]: Formulário Conectado
+          - generic [ref=e274]:
+            - heading "action" [level=3] [ref=e275]
+            - generic [ref=e276]:
+              - generic [ref=e277]:
+                - img [ref=e279]
+                - generic [ref=e283]: Botão
+              - generic [ref=e284]:
+                - img [ref=e286]
+                - generic [ref=e290]: Aviso Legal
+          - generic [ref=e291]:
+            - heading "transition" [level=3] [ref=e292]
+            - generic [ref=e293]:
+              - generic [ref=e294]:
+                - img [ref=e296]
+                - generic [ref=e299]: "Transição: Título"
+              - generic [ref=e300]:
+                - img [ref=e302]
+                - generic [ref=e305]: "Transição: Loader"
+              - generic [ref=e306]:
+                - img [ref=e308]
+                - generic [ref=e311]: "Transição: Texto"
+              - generic [ref=e312]:
+                - img [ref=e314]
+                - generic [ref=e317]: "Transição: Progresso"
+              - generic [ref=e318]:
+                - img [ref=e320]
+                - generic [ref=e323]: "Transição: Mensagem"
+          - generic [ref=e324]:
+            - heading "result" [level=3] [ref=e325]
+            - generic [ref=e326]:
+              - generic [ref=e327]:
+                - img [ref=e329]
+                - generic [ref=e333]: Card de Resultado
+              - generic [ref=e334]:
+                - img [ref=e336]
+                - generic [ref=e340]: Header de Resultado
+              - generic [ref=e341]:
+                - img [ref=e343]
+                - generic [ref=e347]: Card de Estilo
+              - generic [ref=e348]:
+                - img [ref=e350]
+                - generic [ref=e354]: Grid de Estilos
+              - generic [ref=e355]:
+                - img [ref=e357]
+                - generic [ref=e361]: "Resultado: Cabeçalho"
+              - generic [ref=e362]:
+                - img [ref=e364]
+                - generic [ref=e368]: "Resultado: Congratulações"
+              - generic [ref=e369]:
+                - img [ref=e371]
+                - generic [ref=e375]: "Resultado: Estilo Principal"
+              - generic [ref=e376]:
+                - img [ref=e378]
+                - generic [ref=e382]: "Resultado: Barras de Compatibilidade"
+              - generic [ref=e383]:
+                - img [ref=e385]
+                - generic [ref=e389]: "Resultado: Card de Estilo"
+              - generic [ref=e390]:
+                - img [ref=e392]
+                - generic [ref=e396]: "Resultado: Imagem"
+              - generic [ref=e397]:
+                - img [ref=e399]
+                - generic [ref=e403]: "Resultado: Descrição"
+              - generic [ref=e404]:
+                - img [ref=e406]
+                - generic [ref=e410]: "Resultado: Características"
+              - generic [ref=e411]:
+                - img [ref=e413]
+                - generic [ref=e417]: "Resultado: CTA Principal"
+              - generic [ref=e418]:
+                - img [ref=e420]
+                - generic [ref=e424]: "Resultado: CTA Secundário"
+              - generic [ref=e425]:
+                - img [ref=e427]
+                - generic [ref=e431]: "Resultado: Estilos Secundários"
+              - generic [ref=e432]:
+                - img [ref=e434]
+                - generic [ref=e438]: "Resultado: Compartilhar"
+              - generic [ref=e439]:
+                - img [ref=e441]
+                - generic [ref=e445]: "Step20: Header"
+              - generic [ref=e446]:
+                - img [ref=e448]
+                - generic [ref=e452]: "Step20: Revelação de Estilo"
+              - generic [ref=e453]:
+                - img [ref=e455]
+                - generic [ref=e459]: "Step20: Saudação"
+              - generic [ref=e460]:
+                - img [ref=e462]
+                - generic [ref=e466]: "Step20: Compatibilidade"
+              - generic [ref=e467]:
+                - img [ref=e469]
+                - generic [ref=e473]: "Step20: Estilos Secundários"
+              - generic [ref=e474]:
+                - img [ref=e476]
+                - generic [ref=e480]: "Step20: Oferta Personalizada"
+              - generic [ref=e481]:
+                - img [ref=e483]
+                - generic [ref=e487]: "Step20: Template Completo"
+          - generic [ref=e488]:
+            - heading "offer" [level=3] [ref=e489]
+            - generic [ref=e490]:
+              - generic [ref=e491]:
+                - img [ref=e493]
+                - generic [ref=e497]: Hero de Oferta
+              - generic [ref=e498]:
+                - img [ref=e500]
+                - generic [ref=e504]: Tabela de Preços
+              - generic [ref=e505]:
+                - img [ref=e507]
+                - generic [ref=e511]: Sales Hero
+              - generic [ref=e512]:
+                - img [ref=e514]
+                - generic [ref=e518]: Timer de Urgência
+              - generic [ref=e519]:
+                - img [ref=e521]
+                - generic [ref=e525]: Antes e Depois
+              - generic [ref=e526]:
+                - img [ref=e528]
+                - generic [ref=e532]: Ancoragem de Valor
+              - generic [ref=e533]:
+                - img [ref=e535]
+                - generic [ref=e539]: Seção de Bônus
+              - generic [ref=e540]:
+                - img [ref=e542]
+                - generic [ref=e546]: Grade de Depoimentos
+              - generic [ref=e547]:
+                - img [ref=e549]
+                - generic [ref=e553]: Depoimento Individual
+              - generic [ref=e554]:
+                - img [ref=e556]
+                - generic [ref=e560]: Carrossel de Depoimentos
+              - generic [ref=e561]:
+                - img [ref=e563]
+                - generic [ref=e567]: Garantia
+              - generic [ref=e568]:
+                - img [ref=e570]
+                - generic [ref=e574]: Compra Segura
+              - generic [ref=e575]:
+                - img [ref=e577]
+                - generic [ref=e581]: Lista de Benefícios
+              - generic [ref=e582]:
+                - img [ref=e584]
+                - generic [ref=e588]: Seção da Mentora
+          - generic [ref=e589]:
+            - heading "navigation" [level=3] [ref=e590]
+            - generic [ref=e592]:
+              - img [ref=e594]
+              - generic [ref=e597]: Navegação do Quiz
+          - generic [ref=e598]:
+            - heading "ai" [level=3] [ref=e599]
+            - generic [ref=e601]:
+              - img [ref=e603]
+              - generic [ref=e607]: Gerador de IA Fashion
+          - generic [ref=e608]:
+            - heading "advanced" [level=3] [ref=e609]
+            - generic [ref=e611]:
+              - img [ref=e613]
+              - generic [ref=e617]: Template Wrapper
+      - generic [ref=e619]:
+        - generic [ref=e621]:
+          - heading "Canvas" [level=2] [ref=e622]
+          - paragraph [ref=e623]: 5 blocos
+        - generic [ref=e628]:
+          - generic [ref=e629]:
+            - button [ref=e631]:
+              - img [ref=e632]
+            - generic [ref=e639]:
+              - button [ref=e640] [cursor=pointer]:
+                - img [ref=e641]
+              - button [ref=e644] [cursor=pointer]:
+                - img [ref=e645]
+            - generic [ref=e649]:
+              - generic [ref=e650]: intro-logo-header
+              - generic [ref=e651]: Preview não disponível
+          - generic [ref=e652]:
+            - button [ref=e654]:
+              - img [ref=e655]
+            - generic [ref=e662]:
+              - button [ref=e663] [cursor=pointer]:
+                - img [ref=e664]
+              - button [ref=e667] [cursor=pointer]:
+                - img [ref=e668]
+            - generic [ref=e672]:
+              - generic [ref=e673]: intro-title
+              - generic [ref=e674]: Preview não disponível
+          - generic [ref=e675]:
+            - button [ref=e677]:
+              - img [ref=e678]
+            - generic [ref=e685]:
+              - button [ref=e686] [cursor=pointer]:
+                - img [ref=e687]
+              - button [ref=e690] [cursor=pointer]:
+                - img [ref=e691]
+            - generic [ref=e695]:
+              - generic [ref=e696]: intro-image
+              - generic [ref=e697]: Preview não disponível
+          - generic [ref=e698]:
+            - button [ref=e700]:
+              - img [ref=e701]
+            - generic [ref=e708]:
+              - button [ref=e709] [cursor=pointer]:
+                - img [ref=e710]
+              - button [ref=e713] [cursor=pointer]:
+                - img [ref=e714]
+            - generic [ref=e718]:
+              - generic [ref=e719]: intro-description
+              - generic [ref=e720]: Preview não disponível
+          - generic [ref=e721]:
+            - button [ref=e723]:
+              - img [ref=e724]
+            - generic [ref=e731]:
+              - button [ref=e732] [cursor=pointer]:
+                - img [ref=e733]
+              - button [ref=e736] [cursor=pointer]:
+                - img [ref=e737]
+            - generic [ref=e741]:
+              - generic [ref=e742]: intro-form
+              - generic [ref=e743]: Preview não disponível
+      - generic [ref=e745]:
+        - generic [ref=e747]:
+          - img [ref=e748]
+          - heading "Propriedades" [level=2] [ref=e751]
+        - alert [ref=e756]:
+          - generic [ref=e757]: Selecione um bloco no canvas para editar suas propriedades
   - region "Notifications (F8)":
     - list
 ```
