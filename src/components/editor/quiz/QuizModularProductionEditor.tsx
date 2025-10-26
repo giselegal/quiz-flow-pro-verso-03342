@@ -2631,7 +2631,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         Modular: ON (desativar)
                     </button>
                 )}
-                <div className="grid grid-cols-12 gap-0 h-screen">
+                <div className="grid grid-cols-12 gap-0 h-screen" data-testid="modular-layout">
                     {/* Coluna 1: Navegação de etapas */}
                     <div className="col-span-2" data-testid="column-steps">
                         <StepNavigatorColumn
