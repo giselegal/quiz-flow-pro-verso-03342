@@ -2608,13 +2608,27 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const topLevelBlocks = (selectedStep?.blocks || [])
             .filter(b => !b.parentId)
             .sort((a, b) => (a.order || 0) - (b.order || 0))
-            .map(b => ({
-                id: b.id,
-                type: b.type,
-                label: b.type,
-                order: b.order || 0,
-                isSelected: b.id === effectiveSelectedBlockId,
-            }));
+            .map(b => {
+                // Preview leve: exibe conteúdo textual básico quando disponível
+                const textContent = (b.content?.text || b.content?.title || b.properties?.text || '') as string;
+                const previewNode = (
+                    <div data-testid={`canvas-preview-${b.id}`} className="space-y-1">
+                        {textContent ? (
+                            <div className="text-sm" data-testid="canvas-block-text">{textContent}</div>
+                        ) : (
+                            <div className="text-xs text-muted-foreground">Sem conteúdo</div>
+                        )}
+                    </div>
+                );
+                return ({
+                    id: b.id,
+                    type: b.type,
+                    label: b.type,
+                    order: b.order || 0,
+                    isSelected: b.id === effectiveSelectedBlockId,
+                    preview: previewNode,
+                });
+            });
 
         return (
             <>
