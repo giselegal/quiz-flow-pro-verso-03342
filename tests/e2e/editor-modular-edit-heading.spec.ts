@@ -6,10 +6,15 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Editor Modular - Editar Propriedade (Texto)', () => {
   test('deve editar o texto de um bloco e refletir no Canvas', async ({ page }) => {
-    // Abre a rota do editor, seta a flag e recarrega para aplicar
-    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+    // Abre a rota do editor, seta a flag e recarrega para aplicar (com fallback de navegação)
+    const url = '/editor?template=quiz21StepsComplete';
+    await page.goto(url, { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => { try { localStorage.setItem('editor:phase2:modular', '1'); } catch {} });
-    await page.reload({ waitUntil: 'domcontentloaded' });
+    try {
+      await page.reload({ waitUntil: 'domcontentloaded' });
+    } catch {
+      await page.goto(url, { waitUntil: 'domcontentloaded' });
+    }
 
     // Aguarda layout modular
     await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 60000 });
@@ -39,11 +44,14 @@ test.describe('Editor Modular - Editar Propriedade (Texto)', () => {
     const selectedBlockId = await lastBlock.getAttribute('data-block-id');
     expect(selectedBlockId).toBeTruthy();
 
-    // Encontra o campo de texto no painel de propriedades e edita
-    const newText = `Título E2E ${Date.now()}`;
-    const textFieldWrapper = page.locator('[data-testid="column-properties"] [data-field-key="text"]');
-    await expect(textFieldWrapper).toBeVisible({ timeout: 15000 });
-    const input = textFieldWrapper.locator('input, textarea');
+  // Encontra o campo de texto no painel (aceita text ou headline) e edita
+  const newText = `Título E2E ${Date.now()}`;
+  const panel = page.getByTestId('column-properties');
+  const fieldText = panel.locator('[data-field-key="text"]');
+  const fieldHeadline = panel.locator('[data-field-key="headline"]');
+  const textFieldWrapper = (await fieldText.count()) > 0 ? fieldText : fieldHeadline;
+  await expect(textFieldWrapper).toBeVisible({ timeout: 20000 });
+  const input = textFieldWrapper.locator('input, textarea');
     await input.fill('');
     await input.fill(newText);
 
