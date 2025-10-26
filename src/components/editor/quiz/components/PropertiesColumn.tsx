@@ -46,7 +46,10 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           <h2 className="text-lg font-semibold">Propriedades</h2>
         </div>
         {selectedBlockType && (
-          <p className="text-sm text-muted-foreground mt-1">
+          <p
+            className="text-sm text-muted-foreground mt-1"
+            data-testid="properties-selected-type"
+          >
             {selectedBlockType}
           </p>
         )}
@@ -55,7 +58,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <ScrollArea className="flex-1">
         <div className="p-4">
           {!selectedBlockId ? (
-            <Alert>
+            <Alert data-testid="properties-no-selection">
               <AlertDescription>
                 Selecione um bloco no canvas para editar suas propriedades
               </AlertDescription>
@@ -69,7 +72,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                   <label className="text-sm font-medium">
                     {field.label}
                   </label>
-                  
+
                   {field.type === 'text' && (
                     <input
                       type="text"
@@ -79,7 +82,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                       className="w-full px-3 py-2 border rounded-md"
                     />
                   )}
-                  
+
                   {field.type === 'textarea' && (
                     <textarea
                       value={field.value || ''}
@@ -89,7 +92,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                       className="w-full px-3 py-2 border rounded-md"
                     />
                   )}
-                  
+
                   {field.type === 'number' && (
                     <input
                       type="number"
@@ -98,7 +101,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                       className="w-full px-3 py-2 border rounded-md"
                     />
                   )}
-                  
+
                   {field.type === 'color' && (
                     <input
                       type="color"
@@ -107,7 +110,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                       className="w-full h-10 border rounded-md"
                     />
                   )}
-                  
+
                   {field.type === 'select' && field.options && (
                     <select
                       value={field.value || ''}
@@ -122,7 +125,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                       ))}
                     </select>
                   )}
-                  
+
                   {field.type === 'boolean' && (
                     <label className="flex items-center gap-2">
                       <input
@@ -134,7 +137,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                       <span className="text-sm">{field.description || 'Habilitar'}</span>
                     </label>
                   )}
-                  
+
                   {field.description && field.type !== 'boolean' && (
                     <p className="text-xs text-muted-foreground">
                       {field.description}

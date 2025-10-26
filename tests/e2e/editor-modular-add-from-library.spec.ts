@@ -5,13 +5,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Editor modular - adicionar componente da biblioteca', () => {
   test('adiciona um item ao Canvas e aumenta a contagem de blocos', async ({ page }) => {
-    // Abre a origem primeiro para garantir o localStorage no mesmo origin
-    await page.goto('/', { waitUntil: 'domcontentloaded' });
-    await page.evaluate(() => {
-      try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
-    });
-
-    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'networkidle' });
+    // Abre a rota do editor, seta a flag e recarrega para aplicar
+    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+    await page.evaluate(() => { try { localStorage.setItem('editor:phase2:modular', '1'); } catch {} });
+    await page.reload({ waitUntil: 'domcontentloaded' });
 
     // Aguarda layout modular
     await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 60000 });
