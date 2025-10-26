@@ -479,22 +479,22 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [themeOverrides, setThemeOverrides] = useState<Partial<DesignTokens>>({});
     // Configuração global de cabeçalho (logo + progresso) fixo
     const [headerConfig, setHeaderConfig] = useState(() => {
-        try {
-            const raw = StorageService.safeGetString('quiz_editor_header_config_v1');
-            if (raw) return JSON.parse(raw);
-        } catch {/* ignore */ }
-        return {
-            showLogo: true,
-            logoUrl: BRAND_LOGO_URL,
-            logoWidth: '140px',
-            progressEnabled: true,
-            autoProgress: true,
-            manualPercent: 0,
-            barHeight: '4px',
-            // Usar cor em formato #rrggbb (sem canal alpha) para compatibilidade com inputs type="color"
-            barColor: '#ccaa6a',
-            barBackground: '#E5E7EB',
-            align: 'left', // 'left' | 'center' | 'right'
+        return (
+            <>
+                {import.meta.env.DEV && (
+                    <button
+                        type="button"
+                        onClick={() => {
+                            try { localStorage.setItem('editor:phase2:modular', '0'); } catch {}
+                            window.location.reload();
+                        }}
+                        className="fixed top-2 right-2 z-50 bg-amber-500 hover:bg-amber-600 text-white text-xs font-medium px-3 py-1.5 rounded shadow"
+                        title="Alternar layout modular (desativar)"
+                    >
+                        Modular: ON (desativar)
+                    </button>
+                )}
+                <div className="grid grid-cols-12 gap-0 h-screen" data-testid="modular-layout">
             title: ''
         };
     });
@@ -2632,40 +2632,47 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 )}
                 <div className="grid grid-cols-12 gap-0 h-screen">
                     {/* Coluna 1: Navegação de etapas */}
-                    <StepNavigatorColumn
-                        className="col-span-2"
-                        steps={stepItems}
-                        currentStep={stepIdToUse}
-                        onStepChange={(id) => { setSelectedStepIdUnified(id); setSelectedBlockIdUnified(''); }}
-                    />
+                    <div className="col-span-2" data-testid="column-steps">
+                        <StepNavigatorColumn
+                            className="h-full"
+                            steps={stepItems}
+                            currentStep={stepIdToUse}
+                            onStepChange={(id) => { setSelectedStepIdUnified(id); setSelectedBlockIdUnified(''); }}
+                        />
+                    </div>
 
                     {/* Coluna 2: Biblioteca de componentes */}
-                    <ComponentLibraryColumn
-                        className="col-span-2"
-                        components={libItems}
-                        onComponentDragStart={(comp) => {
-                            const target = (editorCtx ? effectiveSelectedStepId : selectedStepId) || steps[0]?.id;
-                            if (target) addBlockToStep(target, comp.type);
-                        }}
-                    />
+                    <div className="col-span-2" data-testid="column-library">
+                        <ComponentLibraryColumn
+                            className="h-full"
+                            components={libItems}
+                            onComponentDragStart={(comp) => {
+                                const target = (editorCtx ? effectiveSelectedStepId : selectedStepId) || steps[0]?.id;
+                                if (target) addBlockToStep(target, comp.type);
+                            }}
+                        />
+                    </div>
 
                     {/* Coluna 3: Canvas */}
-                    <CanvasColumn
-                        className="col-span-5"
-                        blocks={topLevelBlocks}
-                        isPreviewMode={false}
-                        onBlockSelect={(id) => setSelectedBlockIdUnified(id)}
-                        onBlockDelete={(id) => { if (!selectedStep) return; removeBlock(selectedStep.id, id); }}
-                        onBlockDuplicate={(id) => { if (!selectedStep) return; const blk = (selectedStep.blocks || []).find(b => b.id === id); if (blk) duplicateBlock(selectedStep.id, blk); }}
-                    />
+                    <div className="col-span-5" data-testid="column-canvas">
+                        <CanvasColumn
+                            className="h-full"
+                            blocks={topLevelBlocks}
+                            isPreviewMode={false}
+                            onBlockSelect={(id) => setSelectedBlockIdUnified(id)}
+                            onBlockDelete={(id) => { if (!selectedStep) return; removeBlock(selectedStep.id, id); }}
+                            onBlockDuplicate={(id) => { if (!selectedStep) return; const blk = (selectedStep.blocks || []).find(b => b.id === id); if (blk) duplicateBlock(selectedStep.id, blk); }}
+                        />
+                    </div>
 
                     {/* Coluna 4: Propriedades (reutiliza painel completo via renderCustomEditor) */}
-                    <PropertiesColumnPhase2
-                        className="col-span-3"
-                        selectedBlockId={effectiveSelectedBlockId}
-                        selectedBlockType={selectedBlock?.type}
-                        renderCustomEditor={() => (
-                            <PropertiesPanel
+                    <div className="col-span-3" data-testid="column-properties">
+                        <PropertiesColumnPhase2
+                            className="h-full"
+                            selectedBlockId={effectiveSelectedBlockId}
+                            selectedBlockType={selectedBlock?.type}
+                            renderCustomEditor={() => (
+                                <PropertiesPanel
                                 selectedStep={selectedStep}
                                 selectedBlock={selectedBlock}
                                 headerConfig={headerConfig}
@@ -2789,6 +2796,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             />
                         )}
                     />
+                    </div>
                 </div>
             </>
         );
