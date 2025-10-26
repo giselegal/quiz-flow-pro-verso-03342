@@ -53,3 +53,4 @@ export { imageSchema } from './blocks/image';
 export { buttonSchema } from './blocks/button';
 export { optionsGridSchema } from './blocks/options-grid';
 export { urgencyTimerInlineSchema } from './blocks/urgency-timer-inline';
+export { introLogoHeaderSchema } from './blocks/intro-logo-header';

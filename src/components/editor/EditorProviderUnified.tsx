@@ -476,15 +476,26 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     const saveToSupabase = useCallback(async () => {
         if (!enableSupabase || !unifiedCrud) {
-            console.log('💾 Supabase desabilitado ou UnifiedCRUD indisponível');
+            console.log('💾 [SaveToSupabase] Supabase desabilitado ou UnifiedCRUD indisponível', {
+                enableSupabase,
+                hasUnifiedCrud: !!unifiedCrud,
+                funnelId
+            });
             return;
         }
 
         const now = Date.now();
         if (now - lastSaveRef.current < 2000) {
-            console.log('⏱️ Debounce: ignorando save muito frequente');
+            console.log('⏱️ [SaveToSupabase] Debounce: ignorando save muito frequente');
             return;
         }
+
+        console.log('💾 [SaveToSupabase] Iniciando salvamento...', {
+            funnelId,
+            stepsCount: Object.keys(state.stepBlocks).length,
+            totalBlocks: Object.values(state.stepBlocks).reduce((acc, blocks) => acc + blocks.length, 0),
+            currentStep: state.currentStep
+        });
 
         try {
             setState(prev => ({ ...prev, isLoading: true }));
@@ -508,9 +519,17 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 }
             };
 
-            await unifiedCrud.saveFunnel(funnelData);
+            if (!unifiedCrud.saveFunnel) {
+                throw new Error('UnifiedCRUD.saveFunnel não está disponível');
+            }
 
-            console.log('✅ Salvo no Supabase com sucesso');
+            const result = await unifiedCrud.saveFunnel(funnelData);
+
+            console.log('✅ [SaveToSupabase] Salvo no Supabase com sucesso', {
+                funnelId,
+                result,
+                timestamp: new Date().toISOString()
+            });
 
             // Salvar também no persistence service local
             if (funnelId) {
@@ -519,7 +538,13 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             }
 
         } catch (error) {
-            console.error('❌ Erro ao salvar no Supabase:', error);
+            console.error('❌ [SaveToSupabase] Erro ao salvar no Supabase:', {
+                error,
+                message: error instanceof Error ? error.message : 'Unknown error',
+                funnelId,
+                enableSupabase,
+                hasUnifiedCrud: !!unifiedCrud
+            });
             throw error;
         } finally {
             setState(prev => ({ ...prev, isLoading: false }));

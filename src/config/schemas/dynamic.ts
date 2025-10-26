@@ -206,6 +206,7 @@ export function initializeSchemaRegistry(): void {
   registerSchema('quiz-options', () => import('./blocks/options-grid').then(m => m.optionsGridSchema));
   // Header compacto do quiz (logo + barra)
   registerSchema('quiz-intro-header', () => import('./blocks/intro-blocks').then(m => m.quizIntroHeaderSchema));
+  registerSchema('intro-logo-header', () => import('./blocks/intro-logo-header').then(m => m.introLogoHeaderSchema));
   // Footer simples
   registerSchema('footer-copyright', () => import('./blocks/intro-blocks').then(m => m.footerCopyrightSchema));
   // Pricing section
