@@ -32,11 +32,10 @@ test.describe('Editor modular - seleção e painel de propriedades', () => {
       count = await canvas.locator('[data-testid="canvas-block"]').count();
     }
 
-    // Seleciona o último bloco (o mais novo, se acabamos de adicionar)
-  const lastBlock = canvas.locator('[data-testid="canvas-block"]').nth(count - 1);
-  await lastBlock.scrollIntoViewIfNeeded();
-  await expect(lastBlock).toBeVisible();
-  await lastBlock.click();
+    // Seleciona o último bloco (o mais novo, se acabamos de adicionar) de forma robusta
+    const lastBlock = canvas.locator('[data-testid="canvas-block"]').last();
+    await lastBlock.waitFor({ state: 'visible' });
+    await lastBlock.click();
 
     // Painel de propriedades deve refletir a seleção
     await expect(page.getByTestId('properties-no-selection')).toHaveCount(0);
