@@ -81,10 +81,12 @@ export const CanvasColumn: React.FC<CanvasColumnProps> = ({
               {blocks.map((block, index) => (
                 <div
                   key={block.id}
+                  data-testid="canvas-block"
+                  data-block-id={block.id}
                   className={cn(
                     'relative group rounded-lg border transition-all',
-                    block.isSelected 
-                      ? 'border-primary ring-2 ring-primary/20 bg-primary/5' 
+                    block.isSelected
+                      ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
                       : 'border-border hover:border-primary/50',
                     isPreviewMode && 'pointer-events-none'
                   )}

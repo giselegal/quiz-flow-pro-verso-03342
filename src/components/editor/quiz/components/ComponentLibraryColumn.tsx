@@ -10,11 +10,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { 
-  Type, 
-  Image as ImageIcon, 
-  MousePointer, 
-  List, 
+import {
+  Type,
+  Image as ImageIcon,
+  MousePointer,
+  List,
   Layout,
   Search
 } from 'lucide-react';
@@ -51,7 +51,7 @@ export const ComponentLibraryColumn: React.FC<ComponentLibraryColumnProps> = ({
 
   // Agrupar componentes por categoria
   const groupedComponents = useMemo(() => {
-    const filtered = components.filter(c => 
+    const filtered = components.filter(c =>
       c.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -71,7 +71,7 @@ export const ComponentLibraryColumn: React.FC<ComponentLibraryColumnProps> = ({
     <div className={cn('flex flex-col h-full border-r bg-muted/20', className)}>
       <div className="p-4 border-b bg-background space-y-3">
         <h2 className="text-lg font-semibold">Componentes</h2>
-        
+
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -106,6 +106,7 @@ export const ComponentLibraryColumn: React.FC<ComponentLibraryColumnProps> = ({
                       key={component.id}
                       draggable
                       onDragStart={() => onComponentDragStart?.(component)}
+                      data-testid={`lib-item-${component.type}`}
                       className={cn(
                         'flex items-center gap-3 p-3 rounded-lg border',
                         'bg-card hover:bg-accent cursor-grab active:cursor-grabbing',
