@@ -28,6 +28,7 @@ export const getStepTemplate = (stepId: string) => {
     : stepId;
 
   const registry = TemplateRegistry.getInstance();
+
   const fromRegistry = registry.get(stepKey);
   if (fromRegistry) {
     return { step: fromRegistry, source: 'registry' as const };
@@ -36,6 +37,29 @@ export const getStepTemplate = (stepId: string) => {
   const template = getQuiz21StepsTemplate() as any;
   return { step: template?.[stepKey], source: 'ts' as const };
 };
+
+// Helper: determina preferência por Sections v3 (URL > localStorage > flag atual)
+function readPreferSectionsV3(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const url = new URL(window.location.href);
+    const qp = url.searchParams.get('v3');
+    // Permite ?v3=1|true|sections para forçar preferência
+    if (qp && /^(1|true|sections)$/i.test(qp)) {
+      window.localStorage.setItem('qfp.preferSectionsV3', '1');
+      return true;
+    }
+    if (qp && /^(0|false|blocks?)$/i.test(qp)) {
+      window.localStorage.setItem('qfp.preferSectionsV3', '0');
+      return false;
+    }
+    const ls = window.localStorage.getItem('qfp.preferSectionsV3');
+    if (ls === '1') return true;
+    if (ls === '0') return false;
+  } catch {}
+  const w = window as any;
+  return !!w.__editorPreferSectionsV3;
+}
 
 // Função para carregar template de forma consistente
 export const loadTemplate = async (templateId: string) => {
@@ -57,7 +81,8 @@ export const loadTemplate = async (templateId: string) => {
     w.__jsonV3Attempts = w.__jsonV3Attempts || new Set<string>();   // passos já tentados (inclui 404)
     w.__jsonV3InFlight = w.__jsonV3InFlight || new Map<string, Promise<boolean>>(); // tentativas em andamento
     // Flag opcional: no editor, preferir sections v3 (atômicos) ao invés de overrides de blocks
-    w.__editorPreferSectionsV3 = w.__editorPreferSectionsV3 ?? false;
+    // Lê de querystring/localStorage quando disponível
+    w.__editorPreferSectionsV3 = readPreferSectionsV3();
 
     const base: string = (import.meta as any)?.env?.BASE_URL || '/';
     const baseTrimmed = base.replace(/\/$/, '');
@@ -73,8 +98,20 @@ export const loadTemplate = async (templateId: string) => {
           (async () => {
             try {
               let resp: Response | undefined;
-              // 1) tentar blocos v3.1 (somente se não estivermos em modo editor preferindo sections)
-              if (!w.__editorPreferSectionsV3) {
+              if (w.__editorPreferSectionsV3) {
+                // Preferir sections
+                resp = await fetch(urlV3, { cache: 'no-store' });
+                if (resp.ok) {
+                  const json = await resp.json();
+                  const registry = TemplateRegistry.getInstance();
+                  registry.registerOverride(stepId, json as any);
+                  w.__jsonV3Overrides.add(stepId);
+                  if (process.env.NODE_ENV === 'development') {
+                    console.log(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
+                  }
+                  return true;
+                }
+                // fallback para blocks
                 resp = await fetch(urlBlocks, { cache: 'no-store' });
                 if (resp.ok) {
                   const json = await resp.json();
@@ -86,18 +123,31 @@ export const loadTemplate = async (templateId: string) => {
                   }
                   return true;
                 }
-              }
-              // 2) tentar v3 sections (preferido em editor quando __editorPreferSectionsV3 = true)
-              resp = await fetch(urlV3, { cache: 'no-store' });
-              if (resp.ok) {
-                const json = await resp.json();
-                const registry = TemplateRegistry.getInstance();
-                registry.registerOverride(stepId, json as any);
-                w.__jsonV3Overrides.add(stepId);
-                if (process.env.NODE_ENV === 'development') {
-                  console.log(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
+              } else {
+                // Preferir blocks
+                resp = await fetch(urlBlocks, { cache: 'no-store' });
+                if (resp.ok) {
+                  const json = await resp.json();
+                  const registry = TemplateRegistry.getInstance();
+                  registry.registerOverride(stepId, json as any);
+                  w.__jsonV3Overrides.add(stepId);
+                  if (process.env.NODE_ENV === 'development') {
+                    console.log(`🧩 [imports] Override JSON v3.1 (blocks) aplicado para ${stepId}`);
+                  }
+                  return true;
                 }
-                return true;
+                // fallback para sections
+                resp = await fetch(urlV3, { cache: 'no-store' });
+                if (resp.ok) {
+                  const json = await resp.json();
+                  const registry = TemplateRegistry.getInstance();
+                  registry.registerOverride(stepId, json as any);
+                  w.__jsonV3Overrides.add(stepId);
+                  if (process.env.NODE_ENV === 'development') {
+                    console.log(`🧩 [imports] Override JSON v3 (sections) aplicado para ${stepId}`);
+                  }
+                  return true;
+                }
               }
               return false;
             } catch {
@@ -181,6 +231,8 @@ if (typeof window !== 'undefined') {
         w.__jsonV3Overrides = w.__jsonV3Overrides || new Set<string>();
         w.__jsonV3Attempts = w.__jsonV3Attempts || new Set<string>();
         w.__jsonV3InFlight = w.__jsonV3InFlight || new Map<string, Promise<boolean>>();
+        // Aplicar preferência no pré-carregamento
+        w.__editorPreferSectionsV3 = readPreferSectionsV3();
 
         await Promise.all(
           ids.map(async (id) => {
@@ -192,25 +244,28 @@ if (typeof window !== 'undefined') {
                 id,
                 (async () => {
                   try {
-                    // 1) tentar blocos v3.1
-                    let resp = await fetch(urlBlocks, { cache: 'no-store' });
+                    // Respeitar preferência: tentar primeiro sections quando ativado
+                    const firstUrl = w.__editorPreferSectionsV3 ? urlV3 : urlBlocks;
+                    const secondUrl = w.__editorPreferSectionsV3 ? urlBlocks : urlV3;
+
+                    let resp = await fetch(firstUrl, { cache: 'no-store' });
                     if (resp.ok) {
                       const json = await resp.json();
                       registry.registerOverride(id, json as any);
                       w.__jsonV3Overrides.add(id);
                       if (process.env.NODE_ENV === 'development') {
-                        console.log(`🧩 [imports] Override JSON v3.1 (blocks) pré-carregado para ${id}`);
+                        console.log(`🧩 [imports] Override JSON ${firstUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`);
                       }
                       return true;
                     }
-                    // 2) tentar v3 sections
-                    resp = await fetch(urlV3, { cache: 'no-store' });
+
+                    resp = await fetch(secondUrl, { cache: 'no-store' });
                     if (resp.ok) {
                       const json = await resp.json();
                       registry.registerOverride(id, json as any);
                       w.__jsonV3Overrides.add(id);
                       if (process.env.NODE_ENV === 'development') {
-                        console.log(`🧩 [imports] Override JSON v3 (sections) pré-carregado para ${id}`);
+                        console.log(`🧩 [imports] Override JSON ${secondUrl.includes('/blocks/') ? 'v3.1 (blocks)' : 'v3 (sections)'} pré-carregado para ${id}`);
                       }
                       return true;
                     }
