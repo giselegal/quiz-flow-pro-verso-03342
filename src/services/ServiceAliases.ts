@@ -149,12 +149,14 @@ export const pageConfigService = ConfigurationService;
 // HELPER: Log de uso de alias deprecated
 // ============================================================================
 
+import { appLogger } from '@/utils/logger';
+
 const logDeprecationWarning = (oldName: string, newName: string) => {
-  if (process.env.NODE_ENV === 'development') {
-    console.warn(
-      `⚠️ [DEPRECATION] "${oldName}" é um alias deprecated. ` +
+  if (import.meta.env.DEV) {
+    appLogger.warn(
+      `🚨 DEPRECATION: "${oldName}" é um alias deprecated. ` +
       `Use "${newName}" diretamente. ` +
-      `Este alias será removido na versão 2.0.0`
+      `Este alias será removido na v2.0.0`
     );
   }
 };
