@@ -7,6 +7,10 @@
 // Cache para templates carregados
 const templateCache = new Map<number, any>();
 
+// 📦 Mapear templates locais estáticos com Vite (elimina warning de import dinâmico)
+// Chaves no formato './step-XX.json' → conteúdo JSON
+const localTemplates = import.meta.glob('./step-*.json', { eager: true, import: 'default' }) as Record<string, any>;
+
 // 🎯 FUNÇÃO PRINCIPAL: Carregar template real PRIMEIRO
 async function loadRealTemplate(stepNumber: number): Promise<any> {
   const stepId = stepNumber.toString().padStart(2, '0');
@@ -59,18 +63,16 @@ async function loadRealTemplate(stepNumber: number): Promise<any> {
       }
     }
 
-    // 🔄 PRIORIDADE 2: Tentar template local (fallback)
-    try {
+    // 🔄 PRIORIDADE 2: Tentar template local (fallback) via import.meta.glob
+    {
       const localPath = `./step-${stepId}.json`;
-      const moduleImport = await import(localPath);
-      const template = moduleImport.default || moduleImport;
-
+      const template = localTemplates[localPath];
       if (template && (template.blocks || template.sections)) {
         console.log(`📁 Template local carregado: ${stepNumber}`);
         return template;
+      } else {
+        console.warn(`⚠️ Template local não encontrado para step ${stepNumber} em ${localPath}`);
       }
-    } catch (importError) {
-      console.warn(`⚠️ Template local não encontrado para step ${stepNumber}:`, importError);
     }
 
     console.warn(`❌ NENHUM TEMPLATE encontrado para step ${stepNumber}`);
