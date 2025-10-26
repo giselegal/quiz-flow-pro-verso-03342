@@ -40,6 +40,13 @@ test.describe('Editor Modular - Editar Propriedade (Texto)', () => {
   await lastBlock.waitFor({ state: 'visible' });
   await lastBlock.click();
 
+  // Garante que o painel de propriedades está com um tipo selecionado visível
+  const selectedTypeLabel = page.getByTestId('properties-selected-type');
+  await expect(selectedTypeLabel).toBeVisible({ timeout: 20000 });
+
+  // Foca na aba "Propriedades" para garantir o conteúdo certo
+  await page.getByRole('tab', { name: 'Propriedades' }).click();
+
   // Aguarda o formulário dinâmico carregar para o tipo selecionado
   await expect(page.locator('[data-testid="dynamic-properties-form"]')).toBeVisible({ timeout: 20000 });
 
@@ -52,8 +59,13 @@ test.describe('Editor Modular - Editar Propriedade (Texto)', () => {
   const panel = page.getByTestId('column-properties');
   const fieldText = panel.locator('[data-field-key="text"]');
   const fieldHeadline = panel.locator('[data-field-key="headline"]');
-  const textFieldWrapper = (await fieldText.count()) > 0 ? fieldText : fieldHeadline;
-  await expect(textFieldWrapper).toBeVisible({ timeout: 20000 });
+    const textFieldWrapper = (await fieldText.count()) > 0 ? fieldText : fieldHeadline;
+    // Se não encontrou nenhum dos dois, faz uma asserção útil para debug
+    if (await textFieldWrapper.count() === 0) {
+      const typeText = await selectedTypeLabel.textContent();
+      throw new Error(`Campo 'text' ou 'headline' não encontrado no painel. Tipo selecionado: ${typeText || '(desconhecido)'}`);
+    }
+    await expect(textFieldWrapper).toBeVisible({ timeout: 20000 });
   const input = textFieldWrapper.locator('input, textarea');
     await input.fill('');
     await input.fill(newText);
