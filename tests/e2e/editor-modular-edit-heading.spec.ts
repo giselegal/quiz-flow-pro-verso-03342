@@ -35,10 +35,13 @@ test.describe('Editor Modular - Editar Propriedade (Texto)', () => {
       expect(after).toBeGreaterThan(initialCount);
     }).toPass();
 
-    // Seleciona o último bloco do canvas (o recém-adicionado)
-    const lastBlock = canvasBlocks.last();
-    await lastBlock.waitFor({ state: 'visible' });
-    await lastBlock.click();
+  // Seleciona o último bloco do canvas (o recém-adicionado)
+  const lastBlock = canvasBlocks.last();
+  await lastBlock.waitFor({ state: 'visible' });
+  await lastBlock.click();
+
+  // Aguarda o formulário dinâmico carregar para o tipo selecionado
+  await expect(page.locator('[data-testid="dynamic-properties-form"]')).toBeVisible({ timeout: 20000 });
 
     // Captura o id do bloco selecionado para verificar o preview específico
     const selectedBlockId = await lastBlock.getAttribute('data-block-id');

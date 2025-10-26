@@ -319,7 +319,7 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
     };
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-3" data-testid="dynamic-properties-form" data-type={type}>
             {/* Busca rápida */}
             <div className="sticky top-0 z-10 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-md border px-2 py-1.5">
                 <Input
