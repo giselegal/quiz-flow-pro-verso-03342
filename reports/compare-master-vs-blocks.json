@@ -1,0 +1,840 @@
+{
+  "summary": {
+    "ok": 21,
+    "warn": 0,
+    "mismatch": 0,
+    "missing": 0
+  },
+  "report": [
+    {
+      "stepId": "step-01",
+      "master": {
+        "titles": [
+          "Bem-vinda ao Quiz de Estilo"
+        ],
+        "optionCount": 0,
+        "optionIds": []
+      },
+      "blocks": {
+        "titles": [],
+        "types": [
+          "hero-block",
+          "welcome-form-block"
+        ],
+        "optionCount": 0,
+        "optionIds": []
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": false
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-02",
+      "master": {
+        "titles": [
+          "Pergunta 1 de 10"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "QUAL O SEU TIPO DE ROUPA FAVORITA?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": false
+      },
+      "status": "OK",
+      "notes": [
+        "Títulos não coincidem exatamente (pode ser esperado)"
+      ]
+    },
+    {
+      "stepId": "step-03",
+      "master": {
+        "titles": [
+          "Pergunta 2 de 10"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "RESUMA A SUA PERSONALIDADE:"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": false
+      },
+      "status": "OK",
+      "notes": [
+        "Títulos não coincidem exatamente (pode ser esperado)"
+      ]
+    },
+    {
+      "stepId": "step-04",
+      "master": {
+        "titles": [
+          "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-05",
+      "master": {
+        "titles": [
+          "QUAIS DETALHES VOCÊ GOSTA?"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "QUAIS DETALHES VOCÊ GOSTA?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-06",
+      "master": {
+        "titles": [
+          "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-07",
+      "master": {
+        "titles": [
+          "QUAL CASACO É SEU FAVORITO?"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "QUAL CASACO É SEU FAVORITO?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-08",
+      "master": {
+        "titles": [
+          "QUAL SUA CALÇA FAVORITA?"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "QUAL SUA CALÇA FAVORITA?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-09",
+      "master": {
+        "titles": [
+          "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-10",
+      "master": {
+        "titles": [
+          "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-11",
+      "master": {
+        "titles": [
+          "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES..."
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES..."
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 8,
+        "optionIds": [
+          "natural",
+          "classico",
+          "contemporaneo",
+          "elegante",
+          "romantico",
+          "sexy",
+          "dramatico",
+          "criativo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-12",
+      "master": {
+        "titles": [],
+        "optionCount": 0,
+        "optionIds": []
+      },
+      "blocks": {
+        "titles": [
+          "🕐 Enquanto calculamos o seu resultado..."
+        ],
+        "types": [
+          "transition.next"
+        ],
+        "optionCount": 0,
+        "optionIds": []
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": false
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-13",
+      "master": {
+        "titles": [
+          "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "desconectada",
+          "duvidas",
+          "as-vezes-acerto",
+          "segura-evoluir"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "desconectada",
+          "duvidas",
+          "as-vezes-acerto",
+          "segura-evoluir"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-14",
+      "master": {
+        "titles": [
+          "O que mais te desafia na hora de se vestir?"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "combinar-pecas",
+          "comprar-impulso",
+          "imagem-nao-reflete",
+          "perco-tempo"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "O que mais te desafia na hora de se vestir?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "combinar-pecas",
+          "comprar-impulso",
+          "imagem-nao-reflete",
+          "perco-tempo"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-15",
+      "master": {
+        "titles": [
+          "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "quase-todos-dias",
+          "compromissos-importantes",
+          "as-vezes-limitada",
+          "raramente-segura"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "quase-todos-dias",
+          "compromissos-importantes",
+          "as-vezes-limitada",
+          "raramente-segura"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-16",
+      "master": {
+        "titles": [
+          "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "sim-quero",
+          "sim-momento-certo",
+          "tenho-duvidas",
+          "nao-prefiro-continuar"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "sim-quero",
+          "sim-momento-certo",
+          "tenho-duvidas",
+          "nao-prefiro-continuar"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-17",
+      "master": {
+        "titles": [
+          "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "sim-vale-muito",
+          "sim-se-certeza",
+          "talvez-depende",
+          "nao-nao-pronta"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "sim-vale-muito",
+          "sim-se-certeza",
+          "talvez-depende",
+          "nao-nao-pronta"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-18",
+      "master": {
+        "titles": [
+          "Qual desses resultados você mais gostaria de alcançar?"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "montar-looks-facilidade",
+          "usar-que-tenho",
+          "comprar-consciencia",
+          "ser-admirada"
+        ]
+      },
+      "blocks": {
+        "titles": [
+          "Qual desses resultados você mais gostaria de alcançar?"
+        ],
+        "types": [
+          "question-block"
+        ],
+        "optionCount": 4,
+        "optionIds": [
+          "montar-looks-facilidade",
+          "usar-que-tenho",
+          "comprar-consciencia",
+          "ser-admirada"
+        ]
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": true
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-19",
+      "master": {
+        "titles": [],
+        "optionCount": 0,
+        "optionIds": []
+      },
+      "blocks": {
+        "titles": [
+          "Você chegou até aqui — e isso já diz muito sobre você."
+        ],
+        "types": [
+          "transition.next"
+        ],
+        "optionCount": 0,
+        "optionIds": []
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": false
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-20",
+      "master": {
+        "titles": [],
+        "optionCount": 0,
+        "optionIds": []
+      },
+      "blocks": {
+        "titles": [
+          "Além do {primaryStyle}, você também tem traços de:",
+          "5 Passos – Vista-se de Você"
+        ],
+        "types": [
+          "result.headline",
+          "result.secondaryList",
+          "offer.core",
+          "offer.urgency",
+          "offer.testimonial"
+        ],
+        "optionCount": 0,
+        "optionIds": []
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": false
+      },
+      "status": "OK",
+      "notes": []
+    },
+    {
+      "stepId": "step-21",
+      "master": {
+        "titles": [],
+        "optionCount": 0,
+        "optionIds": []
+      },
+      "blocks": {
+        "titles": [
+          "5 Passos – Vista-se de Você"
+        ],
+        "types": [
+          "offer.core",
+          "offer.urgency",
+          "offer.testimonial"
+        ],
+        "optionCount": 0,
+        "optionIds": []
+      },
+      "diffs": {
+        "optionIdsMissingInBlocks": [],
+        "optionIdsExtraInBlocks": [],
+        "optionCountEqual": true,
+        "titlesOverlap": false
+      },
+      "status": "OK",
+      "notes": []
+    }
+  ]
+}

@@ -473,6 +473,7 @@ export function convertBlocksToStep(
                 break;
 
             case 'quiz-options':
+            case 'options-grid':
                 step.options = block.content.options;
                 step.requiredSelections = block.properties.requiredSelections || block.properties.maxSelections;
                 break;

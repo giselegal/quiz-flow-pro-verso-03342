@@ -276,8 +276,26 @@ class QuizEditorBridge {
         const quizSteps: Record<string, QuizStep> = {};
 
         steps.forEach(step => {
-            const { id, order, ...stepData } = step;
-            quizSteps[id] = stepData;
+            const { id, order, ...rest } = step as any;
+
+            // Se o draft possui blocos atômicos, converter para forma macro antes de publicar
+            let macroStep: any = { ...rest };
+            if (Array.isArray(rest.blocks) && rest.blocks.length > 0) {
+                try {
+                    const partial = convertBlocksToStep(id, rest.type || 'question', rest.blocks);
+                    // Mesclar mantendo type e campos já preenchidos; partial tem precedência para campos derivados dos blocos
+                    macroStep = {
+                        ...rest,
+                        ...partial,
+                    };
+                    // Remover payload específico do editor
+                    delete macroStep.blocks;
+                } catch (e) {
+                    console.warn(`⚠️ Falha ao converter blocos atômicos para macro em ${id}. Publicando estrutura original.`, e);
+                }
+            }
+
+            quizSteps[id] = macroStep as QuizStep;
         });
 
         return quizSteps;

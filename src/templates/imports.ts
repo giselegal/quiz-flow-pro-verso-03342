@@ -56,6 +56,8 @@ export const loadTemplate = async (templateId: string) => {
     w.__jsonV3Overrides = w.__jsonV3Overrides || new Set<string>(); // passos com override aplicado
     w.__jsonV3Attempts = w.__jsonV3Attempts || new Set<string>();   // passos já tentados (inclui 404)
     w.__jsonV3InFlight = w.__jsonV3InFlight || new Map<string, Promise<boolean>>(); // tentativas em andamento
+    // Flag opcional: no editor, preferir sections v3 (atômicos) ao invés de overrides de blocks
+    w.__editorPreferSectionsV3 = w.__editorPreferSectionsV3 ?? false;
 
     const base: string = (import.meta as any)?.env?.BASE_URL || '/';
     const baseTrimmed = base.replace(/\/$/, '');
@@ -70,19 +72,22 @@ export const loadTemplate = async (templateId: string) => {
           stepId,
           (async () => {
             try {
-              // 1) tentar blocos v3.1
-              let resp = await fetch(urlBlocks, { cache: 'no-store' });
-              if (resp.ok) {
-                const json = await resp.json();
-                const registry = TemplateRegistry.getInstance();
-                registry.registerOverride(stepId, json as any);
-                w.__jsonV3Overrides.add(stepId);
-                if (process.env.NODE_ENV === 'development') {
-                  console.log(`🧩 [imports] Override JSON v3.1 (blocks) aplicado para ${stepId}`);
+              let resp: Response | undefined;
+              // 1) tentar blocos v3.1 (somente se não estivermos em modo editor preferindo sections)
+              if (!w.__editorPreferSectionsV3) {
+                resp = await fetch(urlBlocks, { cache: 'no-store' });
+                if (resp.ok) {
+                  const json = await resp.json();
+                  const registry = TemplateRegistry.getInstance();
+                  registry.registerOverride(stepId, json as any);
+                  w.__jsonV3Overrides.add(stepId);
+                  if (process.env.NODE_ENV === 'development') {
+                    console.log(`🧩 [imports] Override JSON v3.1 (blocks) aplicado para ${stepId}`);
+                  }
+                  return true;
                 }
-                return true;
               }
-              // 2) tentar v3 sections
+              // 2) tentar v3 sections (preferido em editor quando __editorPreferSectionsV3 = true)
               resp = await fetch(urlV3, { cache: 'no-store' });
               if (resp.ok) {
                 const json = await resp.json();
