@@ -109,6 +109,11 @@ import CanvasArea from './components/CanvasArea';
 import BlockRow from './components/BlockRow';
 import { BlockComponent, EditableQuizStep, BlockSnippet } from './types';
 import PropertiesPanel from './components/PropertiesPanel';
+// Fase 2 - Colunas Modulares
+import { StepNavigatorColumn } from './components/StepNavigatorColumn';
+import { ComponentLibraryColumn } from './components/ComponentLibraryColumn';
+import { CanvasColumn } from './components/CanvasColumn';
+import { PropertiesColumn as PropertiesColumnPhase2 } from './components/PropertiesColumn';
 import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 import { useUnsavedChanges } from '@/hooks/useUnsavedChanges';
 import { UnsavedChangesIndicator } from './components/UnsavedChangesIndicator';
@@ -2563,6 +2568,213 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     <Loader2 className="w-12 h-12 mx-auto mb-4 animate-spin text-primary" />
                     <p className="text-muted-foreground">Carregando editor modular...</p>
                 </div>
+            </div>
+        );
+    }
+
+    // FASE 2: Layout Modular (4 colunas) - habilitado por flag simples
+    const USE_PHASE2_MODULAR_LAYOUT = (() => {
+        try {
+            const v = StorageService.safeGetString('editor:phase2:modular');
+            if (v === '1') return true;
+            if (v === '0') return false;
+        } catch { /* ignore */ }
+        return !!import.meta.env.DEV; // habilita por padrão em DEV
+    })();
+
+    if (USE_PHASE2_MODULAR_LAYOUT) {
+        const currentStepId = editorCtx ? effectiveSelectedStepId : selectedStepId;
+        const fallbackStepId = steps[0]?.id || '';
+        const stepIdToUse = currentStepId || fallbackStepId;
+
+        // Itens da coluna de etapas
+        const stepItems = steps.map(s => ({
+            id: s.id,
+            label: s.id,
+            blockCount: (s.blocks || []).length
+        }));
+
+        // Itens da biblioteca de componentes (map do registry)
+        const libItems = AVAILABLE_COMPONENTS.map(comp => ({
+            id: comp.type,
+            type: comp.type,
+            label: comp.label,
+            category: comp.category,
+            icon: getCategoryIcon(comp.category)
+        }));
+
+        // Blocos do canvas do step atual (somente top-level para visual simplificada)
+        const topLevelBlocks = (selectedStep?.blocks || [])
+            .filter(b => !b.parentId)
+            .sort((a, b) => (a.order || 0) - (b.order || 0))
+            .map(b => ({
+                id: b.id,
+                type: b.type,
+                label: b.type,
+                order: b.order || 0,
+                isSelected: b.id === effectiveSelectedBlockId,
+            }));
+
+        return (
+            <div className="grid grid-cols-12 gap-0 h-screen">
+                {/* Coluna 1: Navegação de etapas */}
+                <StepNavigatorColumn
+                    className="col-span-2"
+                    steps={stepItems}
+                    currentStep={stepIdToUse}
+                    onStepChange={(id) => { setSelectedStepIdUnified(id); setSelectedBlockIdUnified(''); }}
+                />
+
+                {/* Coluna 2: Biblioteca de componentes */}
+                <ComponentLibraryColumn
+                    className="col-span-2"
+                    components={libItems}
+                    onComponentDragStart={(comp) => {
+                        const target = (editorCtx ? effectiveSelectedStepId : selectedStepId) || steps[0]?.id;
+                        if (target) addBlockToStep(target, comp.type);
+                    }}
+                />
+
+                {/* Coluna 3: Canvas */}
+                <CanvasColumn
+                    className="col-span-5"
+                    blocks={topLevelBlocks}
+                    isPreviewMode={false}
+                    onBlockSelect={(id) => setSelectedBlockIdUnified(id)}
+                    onBlockDelete={(id) => { if (!selectedStep) return; removeBlock(selectedStep.id, id); }}
+                    onBlockDuplicate={(id) => { if (!selectedStep) return; const blk = (selectedStep.blocks || []).find(b => b.id === id); if (blk) duplicateBlock(selectedStep.id, blk); }}
+                />
+
+                {/* Coluna 4: Propriedades (reutiliza painel completo via renderCustomEditor) */}
+                <PropertiesColumnPhase2
+                    className="col-span-3"
+                    selectedBlockId={effectiveSelectedBlockId}
+                    selectedBlockType={selectedBlock?.type}
+                    renderCustomEditor={() => (
+                        <PropertiesPanel
+                            selectedStep={selectedStep}
+                            selectedBlock={selectedBlock}
+                            headerConfig={headerConfig}
+                            onHeaderConfigChange={(patch) => setHeaderConfig((c: any) => ({ ...c, ...patch }))}
+                            clipboard={clipboard}
+                            canPaste={!!clipboard && clipboard.length > 0 && !!selectedStep}
+                            onPaste={() => selectedStep && pasteBlocks(selectedStep.id)}
+                            multiSelectedIds={multiSelectedIds}
+                            onDuplicateInline={() => { if (!selectedStep || !selectedBlock) return; const newBlock = { ...selectedBlock, id: `block-${Date.now()}` }; setSteps(prev => prev.map(step => step.id === selectedStep.id ? { ...step, blocks: [...step.blocks, newBlock] } : step)); setIsDirty(true); }}
+                            onPrepareDuplicateToAnother={() => { if (!selectedStep || !selectedBlock) return; setBlockPendingDuplicate(selectedBlock); setTargetStepId(selectedStep.id); setDuplicateModalOpen(true); }}
+                            onCopyMultiple={() => { if (!selectedStep) return; const blocks = selectedStep.blocks.filter(b => multiSelectedIds.includes(b.id)); copyMultiple(blocks); }}
+                            onRemoveMultiple={removeMultiple}
+                            onRemoveBlock={() => { if (!selectedStep || !selectedBlock) return; removeBlock(selectedStep.id, selectedBlock.id); }}
+                            onSaveAsSnippet={() => { if (!selectedStep) return; const ids = multiSelectedIds.length ? multiSelectedIds : (selectedBlock ? [selectedBlock.id] : []); if (ids.length === 0) return; const blocksToSave = selectedStep.blocks.filter(b => ids.includes(b.id)); const name = prompt('Nome do snippet:', blocksToSave[0]?.type || 'Snippet'); if (!name) return; snippetsManager.create(name, blocksToSave); refreshSnippets(); toast({ title: 'Snippet salvo', description: name }); }}
+                            snippets={snippets as any}
+                            snippetFilter={snippetFilter}
+                            onSnippetFilterChange={setSnippetFilter}
+                            onSnippetInsert={(s: any) => { if (!selectedStep) return; setSteps(prev => { const next = prev.map(st => { if (st.id !== selectedStep.id) return st; const baseLen = st.blocks.filter(b => !b.parentId).length; const timestamp = Date.now(); const idMap: Record<string, string> = {}; const cloned = s.blocks.map((b: any, idx: number) => { const newId = `${b.id}-snip-${timestamp}-${idx}`; idMap[b.id] = newId; return { ...b, id: newId }; }).map((b: any) => ({ ...b, parentId: b.parentId ? idMap[b.parentId] : null, order: b.parentId ? b.order : baseLen + b.order })); return { ...st, blocks: [...st.blocks, ...cloned] }; }); pushHistory(next); return next; }); setIsDirty(true); toast({ title: 'Snippet inserido', description: s.name }); }}
+                            onSnippetRename={(s: any, newName: string) => { snippetsManager.update(s.id, { name: newName }); refreshSnippets(); }}
+                            onSnippetDelete={(s: any) => { snippetsManager.remove(s.id); refreshSnippets(); }}
+                            onRefreshSnippets={refreshSnippets}
+                            onBlockPatch={(patch) => {
+                                if (!selectedBlock || !selectedStep) return;
+                                const contentObj = selectedBlock.content && typeof selectedBlock.content === 'object' ? selectedBlock.content : {};
+                                const contentKeys = new Set(Object.keys(contentObj));
+                                (async () => {
+                                    let contentFieldSet: Set<string> | null = null;
+                                    try {
+                                        const modern = await SchemaAPI.get(selectedBlock.type as any);
+                                        if (modern && Array.isArray((modern as any).properties)) {
+                                            contentFieldSet = new Set(
+                                                (modern.properties as any[])
+                                                    .filter((p: any) => (p.group || 'content') === 'content')
+                                                    .map((p: any) => p.key)
+                                            );
+                                        }
+                                    } catch {
+                                        contentFieldSet = null;
+                                    }
+                                    const propPatch: Record<string, any> = {};
+                                    const contentPatch: Record<string, any> = {};
+                                    Object.entries(patch).forEach(([k, v]) => {
+                                        const shouldGoToContent = (contentFieldSet ? contentFieldSet.has(k) : contentKeys.has(k));
+                                        if (shouldGoToContent) contentPatch[k] = v; else propPatch[k] = v;
+                                    });
+                                    if (selectedBlock.type === 'pricing') {
+                                        const pricingKeys = ['originalPrice', 'salePrice', 'currency', 'installmentsCount', 'installmentsValue', 'features'] as const;
+                                        const hasPricingFields = Object.keys(patch).some(k => (pricingKeys as readonly string[]).includes(k));
+                                        if (hasPricingFields) {
+                                            const currentPricing = (selectedBlock.content?.pricing || {}) as any;
+                                            const nextPricing = { ...currentPricing } as any;
+                                            if ('originalPrice' in patch) nextPricing.originalPrice = patch.originalPrice;
+                                            if ('salePrice' in patch) nextPricing.salePrice = patch.salePrice;
+                                            if ('currency' in patch) nextPricing.currency = patch.currency;
+                                            if ('features' in patch) nextPricing.features = Array.isArray(patch.features) ? patch.features : currentPricing.features || [];
+                                            const curInstall = currentPricing.installments || {};
+                                            const nextInstall = { ...curInstall } as any;
+                                            if ('installmentsCount' in patch) nextInstall.count = patch.installmentsCount;
+                                            if ('installmentsValue' in patch) nextInstall.value = patch.installmentsValue;
+                                            if (Object.keys(nextInstall).length > 0) nextPricing.installments = nextInstall;
+                                            contentPatch.pricing = nextPricing;
+                                            pricingKeys.forEach(k => { delete propPatch[k]; delete (contentPatch as any)[k]; });
+                                        }
+                                    }
+                                    if ((selectedBlock.type === 'quiz-options' || selectedBlock.type === 'options-grid') && 'options' in patch) {
+                                        contentPatch.options = patch.options;
+                                        delete (propPatch as any).options;
+                                    }
+                                    if (Object.keys(propPatch).length) updateBlockProperties(selectedStep.id, selectedBlock.id, propPatch);
+                                    if (Object.keys(contentPatch).length) updateBlockContent(selectedStep.id, selectedBlock.id, contentPatch);
+                                })();
+                            }}
+                            isOfferStep={!!(selectedStep && selectedStep.type === 'offer')}
+                            OfferMapComponent={OfferMap as any}
+                            onOfferMapUpdate={(c: any) => { if (!selectedStep) return; setSteps(prev => prev.map(st => st.id === selectedStep.id ? { ...st, offerMap: c.offerMap } : st)); setIsDirty(true); }}
+                            ThemeEditorPanel={ThemeEditorPanel as any}
+                            onApplyTheme={(t) => setThemeOverrides(t)}
+                            currentRuntimeScoring={currentRuntimeScoringMemo}
+                            unifiedConfig={unifiedConfig as any}
+                            onUnifiedConfigPatch={(patch) => {
+                                setUnifiedConfig(prev => {
+                                    const base = prev || {} as any;
+                                    const next: any = { ...base };
+                                    if (patch.runtime) next.runtime = { ...(base.runtime || {}), ...patch.runtime };
+                                    if (patch.results) next.results = { ...(base.results || {}), ...patch.results };
+                                    if (patch.ui) next.ui = { ...(base.ui || {}), ...patch.ui };
+                                    if (patch.settings) next.settings = { ...(base.settings || {}), ...patch.settings };
+                                    return next;
+                                });
+                            }}
+                            onRuntimeScoringChange={(scoring) => {
+                                setUnifiedConfig(prev => {
+                                    const base = prev || {} as any;
+                                    const nextRuntime = { ...(base.runtime || {}), scoring: { ...(base.runtime?.scoring || {}), ...scoring } };
+                                    return { ...base, runtime: nextRuntime } as any;
+                                });
+                            }}
+                            onStepPropsApply={async (rawProps: any) => {
+                                if (!selectedStep) return;
+                                try {
+                                    const type = selectedStep.type;
+                                    const schema: any = (SCHEMAS as any)[type];
+                                    if (!schema) throw new Error(`Schema não encontrado para tipo: ${type}`);
+                                    const validated = schema.parse(rawProps);
+                                    const migrated = migrateProps(type, validated);
+                                    const normalized = normalizeByType(type, migrated, selectedStep.id);
+                                    const stepWithMeta = { ...selectedStep, meta: { ...(selectedStep as any).meta, props: normalized } } as any;
+                                    const converted = PropsToBlocksAdapter.applyPropsToBlocks(stepWithMeta);
+                                    setSteps(prev => {
+                                        const next = prev.map(s => (s.id === selectedStep.id ? { ...converted } : s));
+                                        pushHistory(next);
+                                        return next;
+                                    });
+                                    setIsDirty(true);
+                                    toast({ title: 'Props aplicadas', description: 'Canvas atualizado a partir das propriedades' });
+                                } catch (e: any) {
+                                    console.error('Erro ao aplicar props → blocks', e);
+                                    toast({ title: 'Erro ao aplicar props', description: e?.message || 'Falha de validação', variant: 'destructive' } as any);
+                                }
+                            }}
+                        />
+                    )}
+                />
             </div>
         );
     }
