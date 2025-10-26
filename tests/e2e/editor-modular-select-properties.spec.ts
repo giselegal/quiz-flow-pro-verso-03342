@@ -7,7 +7,12 @@ test.describe('Editor modular - seleção e painel de propriedades', () => {
     // Abre o editor, liga a flag e recarrega para aplicar
     await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => { try { localStorage.setItem('editor:phase2:modular', '1'); } catch {} });
-    await page.reload({ waitUntil: 'domcontentloaded' });
+    try {
+      await page.reload({ waitUntil: 'domcontentloaded' });
+    } catch {
+      // Fallback em navegadores que abortam reload no dev server: navega novamente
+      await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+    }
 
     // Aguarda layout modular
     await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 60000 });
@@ -28,8 +33,10 @@ test.describe('Editor modular - seleção e painel de propriedades', () => {
     }
 
     // Seleciona o último bloco (o mais novo, se acabamos de adicionar)
-    const lastBlock = canvas.locator('[data-testid="canvas-block"]').nth(count - 1);
-    await lastBlock.click();
+  const lastBlock = canvas.locator('[data-testid="canvas-block"]').nth(count - 1);
+  await lastBlock.scrollIntoViewIfNeeded();
+  await expect(lastBlock).toBeVisible();
+  await lastBlock.click();
 
     // Painel de propriedades deve refletir a seleção
     await expect(page.getByTestId('properties-no-selection')).toHaveCount(0);
