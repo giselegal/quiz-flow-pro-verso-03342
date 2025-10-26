@@ -28,6 +28,9 @@ import { stepBlocksKey, masterBlocksKey, masterTemplateKey } from '@/utils/cache
 import { EditorHistoryService } from '@/services/editor/HistoryService';
 import { TemplateLoader } from '@/services/editor/TemplateLoader';
 import EditorStateManager from '@/services/editor/EditorStateManager';
+import { funnelComponentsService } from '@/services/funnelComponentsService';
+import type { UnifiedStage, UnifiedFunnel } from '@/services/UnifiedCRUDService';
+import { createLogger } from '@/utils/logger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -475,49 +478,64 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // ============================================================================
 
     const saveToSupabase = useCallback(async () => {
+        const log = createLogger({ namespace: 'SaveToSupabase' });
         if (!enableSupabase || !unifiedCrud) {
-            console.log('💾 [SaveToSupabase] Supabase desabilitado ou UnifiedCRUD indisponível', {
+            log.info('Supabase desabilitado ou UnifiedCRUD indisponível', {
                 enableSupabase,
                 hasUnifiedCrud: !!unifiedCrud,
-                funnelId
+                funnelId,
             });
             return;
         }
 
         const now = Date.now();
         if (now - lastSaveRef.current < 2000) {
-            console.log('⏱️ [SaveToSupabase] Debounce: ignorando save muito frequente');
+            log.info('Debounce: ignorando save muito frequente');
             return;
         }
 
-        console.log('💾 [SaveToSupabase] Iniciando salvamento...', {
+        log.info('Iniciando salvamento...', {
             funnelId,
             stepsCount: Object.keys(state.stepBlocks).length,
             totalBlocks: Object.values(state.stepBlocks).reduce((acc, blocks) => acc + blocks.length, 0),
-            currentStep: state.currentStep
+            currentStep: state.currentStep,
         });
 
         try {
             setState(prev => ({ ...prev, isLoading: true }));
             lastSaveRef.current = now;
 
-            const funnelData = {
-                id: funnelId,
-                name: `Funnel ${funnelId}`,
-                type: 'quiz',
-                config: {
-                    steps: state.stepBlocks,
-                    settings: {
-                        currentStep: state.currentStep,
-                        selectedBlockId: state.selectedBlockId
-                    }
-                },
-                metadata: {
-                    lastSaved: new Date().toISOString(),
-                    version: '1.0.0',
-                    editorVersion: '5.0.0'
-                }
-            };
+            // 1) Converter stepBlocks -> UnifiedFunnel.stages (shape esperado pelo UnifiedCRUDService)
+            const stages: UnifiedStage[] = Object.entries(state.stepBlocks).map(([stepKey, blocks], idx) => {
+                const match = stepKey.match(/step-(\d{1,2})/);
+                const stepNumber = match ? parseInt(match[1], 10) : idx + 1;
+                return {
+                    id: stepKey,
+                    name: `Etapa ${String(stepNumber).padStart(2, '0')}`,
+                    description: '',
+                    blocks: (blocks || []) as any,
+                    order: stepNumber - 1,
+                    isRequired: true,
+                    settings: {},
+                    metadata: {
+                        blocksCount: (blocks || []).length,
+                        isValid: true,
+                    },
+                };
+            });
+
+            const funnelData: UnifiedFunnel = {
+                id: funnelId || `funnel-${Date.now()}`,
+                name: `Funnel ${funnelId || ''}`.trim(),
+                description: '',
+                stages,
+                settings: {},
+                status: 'draft',
+                version: '1.0.0',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                metadata: { totalBlocks: stages.reduce((s, st) => s + st.blocks.length, 0), completedStages: 0, isValid: true },
+            } as any;
 
             if (!unifiedCrud.saveFunnel) {
                 throw new Error('UnifiedCRUD.saveFunnel não está disponível');
@@ -525,20 +543,60 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
             const result = await unifiedCrud.saveFunnel(funnelData);
 
-            console.log('✅ [SaveToSupabase] Salvo no Supabase com sucesso', {
-                funnelId,
-                result,
-                timestamp: new Date().toISOString()
+            log.info('Salvo no UnifiedCRUD (cache + sync)', {
+                funnelId: funnelData.id,
+                opSuccess: result?.success,
             });
 
-            // Salvar também no persistence service local
-            if (funnelId) {
+            // 2) Persistir snapshot local (para recuperação rápida)
+            if (funnelData.id) {
                 const { editorPersistence } = await import('@/services/persistence/EditorPersistenceService');
-                await editorPersistence.saveSnapshot(state.stepBlocks, funnelId);
+                await editorPersistence.saveSnapshot(state.stepBlocks, funnelData.id);
+            }
+
+            // 3) Sincronizar com Supabase component_instances (fonte atual de verdade)
+            try {
+                if (funnelData.id) {
+                    for (const [stepKey, blocks] of Object.entries(state.stepBlocks)) {
+                        const match = stepKey.match(/step-(\d{1,2})/);
+                        const stepNumber = match ? parseInt(match[1], 10) : 0;
+                        if (!stepNumber) continue;
+
+                        // Limpar existentes
+                        try {
+                            const existing = await funnelComponentsService.getComponents({ funnelId: funnelData.id, stepNumber });
+                            for (const c of existing) {
+                                await funnelComponentsService.deleteComponent(c.id);
+                            }
+                        } catch (e) {
+                            log.warn('Falha ao limpar componentes existentes (seguindo)...', { stepNumber, err: (e as any)?.message });
+                        }
+
+                        // Inserir na ordem
+                        for (let i = 0; i < (blocks?.length || 0); i++) {
+                            const b: any = (blocks as any)[i];
+                            try {
+                                await funnelComponentsService.addComponent({
+                                    funnelId: funnelData.id,
+                                    stepNumber,
+                                    instanceKey: b.id || `${stepKey}-block-${i + 1}`,
+                                    componentTypeKey: b.type || 'text',
+                                    orderIndex: i + 1,
+                                    properties: { ...(b.properties || {}), ...(b.content || {}) },
+                                });
+                            } catch (e) {
+                                log.warn('Falha ao inserir componente', { stepNumber, blockIndex: i, err: (e as any)?.message });
+                            }
+                        }
+                    }
+                    log.info('Sincronização com component_instances concluída', { funnelId: funnelData.id });
+                }
+            } catch (e) {
+                log.warn('Sincronização com component_instances falhou', { err: (e as any)?.message });
             }
 
         } catch (error) {
-            console.error('❌ [SaveToSupabase] Erro ao salvar no Supabase:', {
+            console.error('❌ [SaveToSupabase] Erro ao salvar:', {
                 error,
                 message: error instanceof Error ? error.message : 'Unknown error',
                 funnelId,
