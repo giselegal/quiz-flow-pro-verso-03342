@@ -5,12 +5,13 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Editor modular - adicionar componente da biblioteca', () => {
   test('adiciona um item ao Canvas e aumenta a contagem de blocos', async ({ page }) => {
-    // Força o layout modular ligado
-    await page.addInitScript(() => {
+    // Abre a origem primeiro para garantir o localStorage no mesmo origin
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await page.evaluate(() => {
       try { localStorage.setItem('editor:phase2:modular', '1'); } catch {}
     });
 
-    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'domcontentloaded' });
+    await page.goto('/editor?template=quiz21StepsComplete', { waitUntil: 'networkidle' });
 
     // Aguarda layout modular
     await expect(page.getByTestId('modular-layout')).toBeVisible({ timeout: 60000 });
