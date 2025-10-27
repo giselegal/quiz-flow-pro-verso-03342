@@ -296,7 +296,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         setError(null);
 
         try {
-            if (debug) console.log('🔄 UnifiedCRUDProvider: Refreshing funnels');
+            if (debug) logger.debug('unifiedCRUD', '🔄 UnifiedCRUDProvider: Refreshing funnels');
 
             const funnelList = await funnelUnifiedService.listFunnels({
                 includeUnpublished: true,
@@ -306,12 +306,12 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
 
             setFunnels(funnelList);
 
-            if (debug) console.log(`✅ ${funnelList.length} funnels loaded`);
+            if (debug) logger.debug('unifiedCRUD', '✅ Funnels loaded', { count: funnelList.length });
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar lista de funis';
             setError(errorMessage);
-            if (debug) console.error('❌ Error refreshing funnels:', err);
+            if (debug) logger.error('unifiedCRUD', '❌ Error refreshing funnels', err as any);
         } finally {
             setIsLoading(false);
         }
@@ -332,14 +332,14 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
     // Auto-load funnel se funnelId fornecido
     useEffect(() => {
         if (autoLoad && funnelId && !currentFunnel) {
-            loadFunnel(funnelId).catch(console.error);
+            loadFunnel(funnelId).catch(err => logger.error('unifiedCRUD', '❌ Auto-load funnel falhou', err as any));
         }
     }, [autoLoad, funnelId, currentFunnel, loadFunnel]);
 
     // Carregar lista inicial
     useEffect(() => {
         if (autoLoad && funnels.length === 0) {
-            refreshFunnels().catch(console.error);
+            refreshFunnels().catch(err => logger.error('unifiedCRUD', '❌ Refresh inicial de funnels falhou', err as any));
         }
     }, [autoLoad, funnels.length, refreshFunnels]);
 
