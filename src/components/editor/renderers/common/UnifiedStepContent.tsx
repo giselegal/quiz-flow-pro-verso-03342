@@ -228,8 +228,21 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
     }, [findBlockIdByTypes, findBlockId]);
 
     // Abrir painel de propriedades: selecionar bloco real via provider
-    const handleOpenProperties = useCallback((logicalBlockId: string) => {
-        const realId = resolveRealBlockId(logicalBlockId);
+    const handleOpenProperties = useCallback((blockId: string) => {
+        // 1) Tentar resolver ID lógico para ID real (quando vindo de wrappers)
+        let realId = resolveRealBlockId(blockId);
+
+        // 2) Fallback: se já for um ID real presente nos blocos do step, usar diretamente
+        if (!realId) {
+            try {
+                const raw = (editorState.stepBlocks as any)[stepKey];
+                const blocks: any[] = Array.isArray(raw) ? raw : [];
+                if (blocks.some(b => String(b.id) === String(blockId))) {
+                    realId = String(blockId);
+                }
+            } catch { /* noop */ }
+        }
+
         if (realId && editor?.actions?.setSelectedBlockId) {
             editor.actions.setSelectedBlockId(realId);
             try {
@@ -238,7 +251,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                 }
             } catch { /* noop */ }
         }
-    }, [editor?.actions, resolveRealBlockId]);
+    }, [editor?.actions, resolveRealBlockId, editorState.stepBlocks, stepKey, ui?.propertiesPanelOpen, togglePropertiesPanel]);
 
     // Selecionar um bloco real diretamente (usado pelos steps modulares)
     const handleSelectBlock = useCallback((blockId: string) => {
@@ -341,6 +354,8 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                             ? (editorState.stepBlocks as any)[stepKey]
                             : ((step as any)?.blocks || [])}
                         isEditable={isEditMode}
+                        selectedBlockId={(selectedBlockId || undefined) as any}
+                        onBlockSelect={handleSelectBlock}
                         currentAnswers={(sessionData as any)[`answers_${stepKey}`] || []}
                         enableAutoAdvance={isEditMode ? !!autoAdvanceInEdit : true}
                         onAnswersChange={(answers: string[]) => {
@@ -360,6 +375,8 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                         data={stepData as any}
                         blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
                         isEditable={isEditMode}
+                        selectedBlockId={(selectedBlockId || undefined) as any}
+                        onBlockSelect={handleSelectBlock}
                         currentAnswer={(sessionData as any)[`answer_${stepKey}`] || ''}
                         onAnswerChange={(answer: string) => {
                             if ((isEditMode && productionParityInEdit) || isPreviewMode) {
