@@ -34,8 +34,7 @@ export default [
       'isolation-test-script.js',
       // Temporário: evitar erro ENOENT intermitente neste caminho específico durante lint
       'src/components/editor/dnd/SortablePreviewBlockWrapper.tsx',
-      // Temporário: symlink corrompido; ignorar até normalização do arquivo
-      'src/components/editor/sidebar/EnhancedComponentsSidebar.tsx',
+      // (Resolvido) symlink corrompido substituído por reexport válido
     ],
   },
 
