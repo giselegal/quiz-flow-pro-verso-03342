@@ -5,6 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
 
+const isProd = process.env.NODE_ENV === 'production' || process.env.CI === 'true';
+
 export default [
   // Ignore patterns
   {
@@ -78,8 +80,9 @@ export default [
         { allowConstantExport: true },
       ],
 
-      // General code quality rules
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
+  // General code quality rules
+  // Em produção/CI, elevar para erro para bloquear novos console.log
+  'no-console': [isProd ? 'error' : 'warn', { allow: ['warn', 'error'] }],
       'no-debugger': 'warn',
       'no-alert': 'warn',
       'no-duplicate-imports': 'error',

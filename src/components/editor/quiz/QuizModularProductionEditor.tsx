@@ -508,6 +508,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Unified CRUD (para obter/criar funnelId quando necessário)
     const crud = useUnifiedCRUD();
 
+    // Feature flag para integração das colunas modulares (Fase 2)
+    const USE_PHASE2_COLUMNS = useMemo(() => {
+        try {
+            const v = (import.meta as any)?.env?.VITE_USE_PHASE2_COLUMNS;
+            if (typeof v === 'string') return v === 'true';
+        } catch {/* ignore */ }
+        return true; // habilitado por padrão
+    }, []);
+
     // Componente de cabeçalho fixo
     const FixedProgressHeader: React.FC<{ config: any; steps: EditableQuizStep[]; currentStepId: string }> = ({ config, steps, currentStepId }) => {
         if (!config.showLogo && !config.progressEnabled) return null;
@@ -3024,29 +3033,58 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         </div>
                     )}
                     stepsPanel={(
-                        <StepNavigator
-                            steps={steps}
-                            selectedStepId={editorCtx ? effectiveSelectedStepId : selectedStepId}
-                            byStep={byStep as any}
-                            onSelect={(id) => { setSelectedStepIdUnified(id); setSelectedBlockIdUnified(''); }}
-                            onAddStep={handleAddStep}
-                            onMoveStep={handleMoveStep}
-                            onDeleteStep={handleDeleteStep}
-                            extractStepMeta={(s: any) => ({ id: s.id, type: s.type, blockCount: s.blocks?.length || 0 })}
-                            isStepDirty={isStepDirty}
-                        />
+                        USE_PHASE2_COLUMNS ? (
+                            <StepNavigatorColumn
+                                steps={steps.map(s => ({
+                                    id: s.id,
+                                    label: `${s.id}${s.type ? ` · ${s.type}` : ''}`,
+                                    blockCount: (s.blocks || []).length,
+                                    isValid: true,
+                                }))}
+                                currentStep={editorCtx ? effectiveSelectedStepId : selectedStepId}
+                                onStepChange={(id) => { setSelectedStepIdUnified(id); setSelectedBlockIdUnified(''); }}
+                            />
+                        ) : (
+                            <StepNavigator
+                                steps={steps}
+                                selectedStepId={editorCtx ? effectiveSelectedStepId : selectedStepId}
+                                byStep={byStep as any}
+                                onSelect={(id) => { setSelectedStepIdUnified(id); setSelectedBlockIdUnified(''); }}
+                                onAddStep={handleAddStep}
+                                onMoveStep={handleMoveStep}
+                                onDeleteStep={handleDeleteStep}
+                                extractStepMeta={(s: any) => ({ id: s.id, type: s.type, blockCount: s.blocks?.length || 0 })}
+                                isStepDirty={isStepDirty}
+                            />
+                        )
                     )}
                     libraryPanel={(
-                        <ComponentLibraryPanel
-                            components={COMPONENT_LIBRARY as any}
-                            categories={['layout', 'content', 'visual', 'quiz', 'forms', 'action', 'result', 'offer', 'navigation', 'ai', 'advanced']}
-                            selectedStepId={editorCtx ? effectiveSelectedStepId : selectedStepId}
-                            onAdd={(type) => {
-                                const stepIdToUse = editorCtx ? effectiveSelectedStepId : selectedStepId;
-                                if (stepIdToUse) addBlockToStep(stepIdToUse, type);
-                            }}
-                            onQuizCreated={handleBuilderQuizCreated}
-                        />
+                        USE_PHASE2_COLUMNS ? (
+                            <ComponentLibraryColumn
+                                components={(COMPONENT_LIBRARY as any).map((c: any) => ({
+                                    id: c.type,
+                                    type: c.type,
+                                    label: c.label,
+                                    category: c.category,
+                                    icon: c.icon,
+                                }))}
+                                onComponentDragStart={(comp) => {
+                                    const stepIdToUse = editorCtx ? effectiveSelectedStepId : selectedStepId;
+                                    if (stepIdToUse) addBlockToStep(stepIdToUse, comp.type);
+                                }}
+                            />
+                        ) : (
+                            <ComponentLibraryPanel
+                                components={COMPONENT_LIBRARY as any}
+                                categories={['layout', 'content', 'visual', 'quiz', 'forms', 'action', 'result', 'offer', 'navigation', 'ai', 'advanced']}
+                                selectedStepId={editorCtx ? effectiveSelectedStepId : selectedStepId}
+                                onAdd={(type) => {
+                                    const stepIdToUse = editorCtx ? effectiveSelectedStepId : selectedStepId;
+                                    if (stepIdToUse) addBlockToStep(stepIdToUse, type);
+                                }}
+                                onQuizCreated={handleBuilderQuizCreated}
+                            />
+                        )
                     )}
                     canvasPanel={(
                         <CanvasArea
