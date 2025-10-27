@@ -51,7 +51,7 @@ import {
     Minimize2,
     MoreVertical,
     Pin,
-    PinOff
+    PinOff,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { discoverComponentProperties, DiscoveredProperty } from './core/PropertyDiscovery';
@@ -102,42 +102,42 @@ const CATEGORY_CONFIG: Record<PropertyCategory, { icon: React.ReactNode; color: 
     [PropertyCategory.CONTENT]: {
         icon: <Type className="w-4 h-4" />,
         color: 'bg-blue-500',
-        description: 'Textos, títulos e conteúdo principal'
+        description: 'Textos, títulos e conteúdo principal',
     },
     [PropertyCategory.STYLE]: {
         icon: <Palette className="w-4 h-4" />,
         color: 'bg-purple-500',
-        description: 'Cores, fontes e estilos visuais'
+        description: 'Cores, fontes e estilos visuais',
     },
     [PropertyCategory.LAYOUT]: {
         icon: <Layout className="w-4 h-4" />,
         color: 'bg-green-500',
-        description: 'Posicionamento e espaçamento'
+        description: 'Posicionamento e espaçamento',
     },
     [PropertyCategory.BEHAVIOR]: {
         icon: <Zap className="w-4 h-4" />,
         color: 'bg-orange-500',
-        description: 'Interações e comportamentos'
+        description: 'Interações e comportamentos',
     },
     [PropertyCategory.ADVANCED]: {
         icon: <Settings className="w-4 h-4" />,
         color: 'bg-gray-500',
-        description: 'Configurações avançadas'
+        description: 'Configurações avançadas',
     },
     [PropertyCategory.ANIMATION]: {
         icon: <Sparkles className="w-4 h-4" />,
         color: 'bg-pink-500',
-        description: 'Animações e transições'
+        description: 'Animações e transições',
     },
     [PropertyCategory.ACCESSIBILITY]: {
         icon: <Eye className="w-4 h-4" />,
         color: 'bg-teal-500',
-        description: 'Acessibilidade e usabilidade'
+        description: 'Acessibilidade e usabilidade',
     },
     [PropertyCategory.SEO]: {
         icon: <Search className="w-4 h-4" />,
         color: 'bg-indigo-500',
-        description: 'SEO e metadados'
+        description: 'SEO e metadados',
     },
 };
 
@@ -160,7 +160,7 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
     onDelete,
     onDuplicate,
     onClose,
-    className
+    className,
 }) => {
     // ===== STATE MANAGEMENT =====
     const [searchTerm, setSearchTerm] = useState('');
@@ -173,7 +173,7 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
         showAdvanced: false,
         showDescriptions: true,
         isPinned: false,
-        isExpanded: true
+        isExpanded: true,
     });
     const [history, setHistory] = useState<HistoryEntry[]>([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
@@ -206,7 +206,7 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
                     properties: [],
                     icon: config.icon,
                     color: config.color,
-                    description: config.description
+                    description: config.description,
                 };
             }
             groups[property.category].properties.push(property);
@@ -225,8 +225,8 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
                 properties: group.properties.filter(prop =>
                     prop.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     prop.key.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    prop.description?.toLowerCase().includes(searchTerm.toLowerCase())
-                )
+                    prop.description?.toLowerCase().includes(searchTerm.toLowerCase()),
+                ),
             })).filter(group => group.properties.length > 0);
         }
 
@@ -239,7 +239,7 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
         if (!viewState.showAdvanced) {
             groups = groups.map(group => ({
                 ...group,
-                properties: group.properties.filter(prop => !prop.isAdvanced)
+                properties: group.properties.filter(prop => !prop.isAdvanced),
             })).filter(group => group.properties.length > 0);
         }
 
@@ -256,7 +256,7 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
         availableVariables: [],
         otherProperties: tempValues,
         userName: userName || '',
-        quizResult: quizResult || {}
+        quizResult: quizResult || {},
     }), [selectedBlock, currentStep, totalSteps, userName, quizResult, tempValues]);
 
     // ===== EVENT HANDLERS =====
@@ -270,7 +270,7 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
         const newEntry: HistoryEntry = {
             timestamp: Date.now(),
             changes: { [key]: value },
-            description: `Alterou ${key}`
+            description: `Alterou ${key}`,
         };
 
         setHistory(prev => [...prev.slice(0, historyIndex + 1), newEntry]);
@@ -396,9 +396,9 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
 
         return (
             <Card key={property.key} className={cn(
-                "relative group transition-all duration-200",
-                isLocked && "opacity-60",
-                isFavorite && "ring-2 ring-yellow-400"
+                'relative group transition-all duration-200',
+                isLocked && 'opacity-60',
+                isFavorite && 'ring-2 ring-yellow-400',
             )}>
                 <CardContent className="p-3">
                     <div className="flex items-start justify-between mb-2">
@@ -419,7 +419,7 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
                                             onClick={() => toggleFavorite(property.key)}
                                             className="h-6 w-6 p-0"
                                         >
-                                            <Star className={cn("w-3 h-3", isFavorite && "fill-current text-yellow-500")} />
+                                            <Star className={cn('w-3 h-3', isFavorite && 'fill-current text-yellow-500')} />
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent>
@@ -482,7 +482,7 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
                         className="w-full justify-between p-3 h-auto hover:bg-accent/50"
                     >
                         <div className="flex items-center gap-3">
-                            <div className={cn("w-3 h-3 rounded", config.color)} />
+                            <div className={cn('w-3 h-3 rounded', config.color)} />
                             {config.icon}
                             <div className="text-left">
                                 <div className="font-medium">{group.category.toUpperCase()}</div>
@@ -515,7 +515,7 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
     // ===== RENDER =====
     if (!selectedBlock) {
         return (
-            <Card className={cn("w-full max-w-md mx-auto", className)}>
+            <Card className={cn('w-full max-w-md mx-auto', className)}>
                 <CardContent className="flex flex-col items-center justify-center p-8 text-center">
                     <Settings className="w-12 h-12 text-muted-foreground mb-4" />
                     <h3 className="text-lg font-semibold mb-2">Nenhum Bloco Selecionado</h3>
@@ -528,11 +528,11 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
     }
 
     return (
-        <Card className={cn("w-full", viewState.isExpanded ? "max-w-md" : "max-w-sm", className)}>
+        <Card className={cn('w-full', viewState.isExpanded ? 'max-w-md' : 'max-w-sm', className)}>
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className={cn("w-3 h-3 rounded", CATEGORY_CONFIG[PropertyCategory.CONTENT].color)} />
+                        <div className={cn('w-3 h-3 rounded', CATEGORY_CONFIG[PropertyCategory.CONTENT].color)} />
                         <CardTitle className="text-lg">Propriedades</CardTitle>
                         {isDirty && <div className="w-2 h-2 bg-orange-500 rounded-full" />}
                     </div>
@@ -719,7 +719,7 @@ export const EnhancedNoCodePropertiesPanel: React.FC<EnhancedNoCodePropertiesPan
                                                         onSelect={() => setSelectedCategory(category as PropertyCategory)}
                                                     >
                                                         <div className="flex items-center gap-2">
-                                                            <div className={cn("w-2 h-2 rounded", config.color)} />
+                                                            <div className={cn('w-2 h-2 rounded', config.color)} />
                                                             {config.icon}
                                                             {category}
                                                         </div>

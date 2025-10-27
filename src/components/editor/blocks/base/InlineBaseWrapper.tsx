@@ -83,7 +83,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
         alignClasses[align],
         wrap && 'flex-wrap',
         isResponsive && 'w-full',
-        className
+        className,
       )}
       style={{
         minHeight,

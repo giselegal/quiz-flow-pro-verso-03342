@@ -52,7 +52,7 @@ export const MetricCard = ({
                         ? 'text-emerald-500'
                         : trend === 'down'
                           ? 'text-red-500'
-                          : 'text-orange-500'
+                          : 'text-orange-500',
                     )}
                   >
                     {trend === 'up' ? (
@@ -97,7 +97,7 @@ export const MetricCard = ({
                       ? 'text-emerald-500'
                       : trend === 'down'
                         ? 'text-red-500'
-                        : 'text-orange-500'
+                        : 'text-orange-500',
                   )}
                 >
                   {trend === 'up' ? (
@@ -143,7 +143,7 @@ export const MetricsGrid: React.FC<MetricsGridProps> & MetricsGridComposition = 
           'grid-cols-1 md:grid-cols-2 lg:grid-cols-4': columns === 4,
           'grid-cols-1 md:grid-cols-3 lg:grid-cols-5': columns === 5,
         },
-        className
+        className,
       )}
     >
       {children}

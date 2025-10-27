@@ -21,7 +21,7 @@ export default function QuestionNavigationBlock({
   isEditable = false,
   onSelect,
   onOpenProperties,
-  contextData
+  contextData,
 }: QuestionNavigationBlockProps) {
   const canProceed = contextData?.canProceed || false;
   const onNext = contextData?.onNext;
@@ -63,7 +63,7 @@ export default function QuestionNavigationBlock({
     // Navegação por ID configurável
     if (nextStepId) {
       import('@/utils/stepEvents').then(({ dispatchNavigate }) =>
-        dispatchNavigate(nextStepId, { source: 'question-navigation:next', blockId: block.id })
+        dispatchNavigate(nextStepId, { source: 'question-navigation:next', blockId: block.id }),
       );
       try {
         window.dispatchEvent(new CustomEvent('quiz-navigation-next', { detail: { target: nextStepId, blockId: block.id } }));
@@ -85,7 +85,7 @@ export default function QuestionNavigationBlock({
     if (onBack) return onBack();
     if (prevStepId) {
       import('@/utils/stepEvents').then(({ dispatchNavigate }) =>
-        dispatchNavigate(prevStepId, { source: 'question-navigation:back', blockId: block.id })
+        dispatchNavigate(prevStepId, { source: 'question-navigation:back', blockId: block.id }),
       );
       try {
         window.dispatchEvent(new CustomEvent('quiz-navigation-back', { detail: { target: prevStepId, blockId: block.id } }));
@@ -126,7 +126,7 @@ export default function QuestionNavigationBlock({
             }`}
           style={{
             backgroundColor: (enableWhenValid ? canProceed : true) ? enabledColor : disabledColor,
-            color: (enableWhenValid ? canProceed : true) ? 'white' : disabledTextColor
+            color: (enableWhenValid ? canProceed : true) ? 'white' : disabledTextColor,
           }}
         >
           {buttonText}

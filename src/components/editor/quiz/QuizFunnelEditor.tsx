@@ -63,24 +63,24 @@ const OfferContentSchema = z.object({
     buttonText: z.string().optional(),
     testimonial: z.object({
         quote: z.string().optional(),
-        author: z.string().optional()
+        author: z.string().optional(),
     }).optional(),
     ctaLabel: z.string().optional(),
     ctaUrl: z.string().url().optional().or(z.literal('')).optional(),
-    image: z.string().optional()
+    image: z.string().optional(),
 });
 
 const BlockInstanceSchema = z.object({
     id: z.string(),
     type: z.string(),
-    config: z.record(z.any()).default({})
+    config: z.record(z.any()).default({}),
 });
 
 const BaseStepSchema = z.object({
     id: z.string().min(1),
     type: z.enum(['intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer']),
     nextStep: z.string().optional().or(z.literal('')),
-    blocks: z.array(BlockInstanceSchema).optional()
+    blocks: z.array(BlockInstanceSchema).optional(),
 });
 
 const IntroStepSchema = BaseStepSchema.extend({
@@ -89,7 +89,7 @@ const IntroStepSchema = BaseStepSchema.extend({
     formQuestion: z.string().optional(),
     placeholder: z.string().optional(),
     buttonText: z.string().optional(),
-    image: z.string().optional()
+    image: z.string().optional(),
 });
 
 const QuestionOptionSchema = z.object({ id: z.string(), text: z.string(), image: z.string().optional() });
@@ -98,32 +98,32 @@ const QuestionStepSchema = BaseStepSchema.extend({
     questionNumber: z.string().optional(),
     questionText: z.string().optional(),
     requiredSelections: z.number().int().positive().max(20).optional(),
-    options: z.array(QuestionOptionSchema).default([])
+    options: z.array(QuestionOptionSchema).default([]),
 });
 
 const StrategicQuestionStepSchema = BaseStepSchema.extend({
     type: z.literal('strategic-question'),
     questionText: z.string().optional(),
-    options: z.array(z.object({ id: z.string(), text: z.string() })).default([])
+    options: z.array(z.object({ id: z.string(), text: z.string() })).default([]),
 });
 
 const TransitionStepSchema = BaseStepSchema.extend({
     type: z.literal('transition'),
     title: z.string().optional(),
-    text: z.string().optional()
+    text: z.string().optional(),
 });
 const TransitionResultStepSchema = BaseStepSchema.extend({
     type: z.literal('transition-result'),
-    title: z.string().optional()
+    title: z.string().optional(),
 });
 const ResultStepSchema = BaseStepSchema.extend({
     type: z.literal('result'),
-    title: z.string().optional()
+    title: z.string().optional(),
 });
 const OfferStepSchema = BaseStepSchema.extend({
     type: z.literal('offer'),
     offerMap: z.record(OfferContentSchema).default({}),
-    image: z.string().optional()
+    image: z.string().optional(),
 });
 
 const AnyStepSchema = z.discriminatedUnion('type', [
@@ -133,7 +133,7 @@ const AnyStepSchema = z.discriminatedUnion('type', [
     TransitionStepSchema,
     TransitionResultStepSchema,
     ResultStepSchema,
-    OfferStepSchema
+    OfferStepSchema,
 ]);
 
 const StepsArraySchema = z.array(AnyStepSchema).min(1);
@@ -143,7 +143,7 @@ const ExportSchema = z.object({
     version: z.number().int().default(1),
     exportedAt: z.string().optional(),
     blockRegistry: z.array(BlockExportMetaSchema).default([]),
-    steps: StepsArraySchema
+    steps: StepsArraySchema,
 });
 
 type ParsedStep = z.infer<typeof AnyStepSchema>;
@@ -199,7 +199,7 @@ function detectCycle(steps: ParsedStep[]): CycleReport {
 }
 
 const STEP_TYPES: Array<QuizStep['type']> = [
-    'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer'
+    'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer',
 ];
 
 // Util para criar novo step básico
@@ -214,7 +214,7 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
                 formQuestion: 'Como posso te chamar?',
                 placeholder: 'Seu nome...',
                 buttonText: 'Começar',
-                nextStep: ''
+                nextStep: '',
             };
         case 'question':
             return {
@@ -225,9 +225,9 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
                 requiredSelections: 3,
                 options: [
                     { id: 'opt-1', text: 'Opção 1' },
-                    { id: 'opt-2', text: 'Opção 2' }
+                    { id: 'opt-2', text: 'Opção 2' },
                 ],
-                nextStep: ''
+                nextStep: '',
             };
         case 'strategic-question':
             return {
@@ -236,9 +236,9 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
                 questionText: 'Pergunta estratégica...',
                 options: [
                     { id: 'estr-1', text: 'Resposta A' },
-                    { id: 'estr-2', text: 'Resposta B' }
+                    { id: 'estr-2', text: 'Resposta B' },
                 ],
-                nextStep: ''
+                nextStep: '',
             };
         case 'transition':
             return { id: baseId, type: 'transition', title: 'Transição...', text: 'Processando...', nextStep: '' };
@@ -260,7 +260,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             '⚠️⚠️⚠️ DEPRECATED: QuizFunnelEditor foi depreciado em 11/out/2025.\n' +
             '✅ Use QuizModularProductionEditor em vez disso.\n' +
             '📋 Guia de migração: MIGRATION_EDITOR.md\n' +
-            '⏰ Este componente será removido em 01/nov/2025'
+            '⏰ Este componente será removido em 01/nov/2025',
         );
     }, []);
 
@@ -348,7 +348,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
         nextStep: s.nextStep,
         options: s.type === 'question' || s.type === 'strategic-question' ? s.options : undefined,
         offerMap: s.type === 'offer' ? s.offerMap : undefined,
-        blocks: (s.blocks || []).map(b => ({ id: b.id, type: b.type, config: b.config }))
+        blocks: (s.blocks || []).map(b => ({ id: b.id, type: b.type, config: b.config })),
     })).join('|')]);
 
     // ===================== MODO SIMULAÇÃO (Preview Real) =====================
@@ -426,7 +426,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     const selectStrategic = (step: EditableQuizStep, optionId: string) => {
         setSimState(prev => ({
             ...prev,
-            strategicAnswers: { ...prev.strategicAnswers, [step.questionText || step.id]: optionId }
+            strategicAnswers: { ...prev.strategicAnswers, [step.questionText || step.id]: optionId },
         }));
         if (step.nextStep) {
             const timer = window.setTimeout(() => gotoStep(step.nextStep), 800);
@@ -479,7 +479,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                 userName: simState.userName,
                 primaryStyle: simState.resultStyle,
                 secondaryStyles: simState.secondaryStyles,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
             };
             StorageService.safeSetJSON('quizResultPayload', payload);
         } catch (e) {
@@ -510,7 +510,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
         if (!text) return '';
         const primary = phPrimaryStyle || 'principal';
         const secondaries = phSecondaryStyles.split(',').map(s => s.trim()).filter(Boolean);
-        const repl = (src: string, token: string, value: string) => src.replace(new RegExp(token.replace(/[{}]/g, m => '\\' + m), 'g'), value);
+        const repl = (src: string, token: string, value: string) => src.replace(new RegExp(token.replace(/[{}]/g, m => `\\${  m}`), 'g'), value);
         let out = text;
         out = repl(out, '{userName}', phUserName || 'Usuária');
         out = repl(out, '{primaryStyle}', primary);
@@ -1187,8 +1187,8 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                 });
                                                 // options length / ids
                                                 if ((before as any).options || (after as any).options) {
-                                                    const bOpts = ((before as any).options || []).map((o: any) => o.id + ':' + o.text).join('|');
-                                                    const aOpts = ((after as any).options || []).map((o: any) => o.id + ':' + o.text).join('|');
+                                                    const bOpts = ((before as any).options || []).map((o: any) => `${o.id  }:${  o.text}`).join('|');
+                                                    const aOpts = ((after as any).options || []).map((o: any) => `${o.id  }:${  o.text}`).join('|');
                                                     if (bOpts !== aOpts) changes.push('options');
                                                 }
                                                 if (before.type === 'offer' || after.type === 'offer') {
@@ -1205,7 +1205,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                             setImportDiff({ added, removed, modified });
                                             setPendingImport(second.data as EditableQuizStep[]);
                                         } catch (err: any) {
-                                            alert('Falha ao importar JSON: ' + err.message);
+                                            alert(`Falha ao importar JSON: ${  err.message}`);
                                         } finally {
                                             e.target.value = '';
                                         }
@@ -1483,7 +1483,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                                                     // Atualizar preview se estiver ativo
                                                                                     if (activeBlockPreviewId === b.id) setActiveBlockPreviewId(b.id);
                                                                                 } catch (err: any) {
-                                                                                    setBlockConfigError('JSON inválido: ' + err.message);
+                                                                                    setBlockConfigError(`JSON inválido: ${  err.message}`);
                                                                                 }
                                                                             }}>Salvar</Button>
                                                                         </div>

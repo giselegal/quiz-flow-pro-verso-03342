@@ -44,7 +44,7 @@ const ImageSkeleton: React.FC<ImageLoadingProps> = ({ width, height, className }
         style={{
             width: width || '100%',
             height: height || '200px',
-            minHeight: '100px'
+            minHeight: '100px',
         }}
     >
         <div className="flex items-center justify-center h-full text-gray-400">
@@ -62,14 +62,14 @@ const ImageSkeleton: React.FC<ImageLoadingProps> = ({ width, height, className }
 const ImageError: React.FC<ImageLoadingProps & { error: string }> = ({
     width,
     height,
-    className
+    className,
 }) => (
     <div
         className={`bg-red-50 border border-red-200 rounded flex flex-col items-center justify-center text-red-500 ${className}`}
         style={{
             width: width || '100%',
             height: height || '200px',
-            minHeight: '100px'
+            minHeight: '100px',
         }}
     >
         <svg className="w-8 h-8 mb-2" fill="currentColor" viewBox="0 0 24 24">
@@ -87,7 +87,7 @@ const ImageError: React.FC<ImageLoadingProps & { error: string }> = ({
 
 function useIntersectionObserver(
     elementRef: React.RefObject<Element>,
-    { threshold = 0.1, root = null, rootMargin = '0%' }
+    { threshold = 0.1, root = null, rootMargin = '0%' },
 ): boolean {
     const [isIntersecting, setIsIntersecting] = useState(false);
 
@@ -99,7 +99,7 @@ function useIntersectionObserver(
             ([entry]) => {
                 setIsIntersecting(entry.isIntersecting);
             },
-            { threshold, root, rootMargin }
+            { threshold, root, rootMargin },
         );
 
         observer.observe(element);
@@ -138,7 +138,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     // Usar Intersection Observer para lazy loading
     const isInView = useIntersectionObserver(imgRef, {
         threshold: 0.1,
-        rootMargin: '50px'
+        rootMargin: '50px',
     });
 
     // Determinar se deve carregar a imagem
@@ -155,8 +155,8 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
             quality,
             format,
             maxWidth: width,
-            maxHeight: height
-        }
+            maxHeight: height,
+        },
     );
 
     // Callbacks

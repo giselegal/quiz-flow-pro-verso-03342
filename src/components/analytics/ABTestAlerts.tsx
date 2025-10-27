@@ -106,7 +106,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
         JSON.parse(savedAlerts).map((alert: any) => ({
           ...alert,
           timestamp: new Date(alert.timestamp),
-        }))
+        })),
       );
     }
   }, []);
@@ -138,7 +138,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
       // 1. Verificar significância estatística
       if (confidenceLevel >= config.significanceThreshold && significance && winner !== 'tie') {
         const existingAlert = alerts.find(
-          a => a.type === 'significance_reached' && !a.acknowledged
+          a => a.type === 'significance_reached' && !a.acknowledged,
         );
         if (!existingAlert) {
           newAlerts.push({
@@ -218,7 +218,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
 
   const acknowledgeAlert = (alertId: string) => {
     setAlerts(prev =>
-      prev.map(alert => (alert.id === alertId ? { ...alert, acknowledged: true } : alert))
+      prev.map(alert => (alert.id === alertId ? { ...alert, acknowledged: true } : alert)),
     );
   };
 

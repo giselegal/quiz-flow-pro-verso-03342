@@ -26,7 +26,7 @@ const OfferModule: React.FC<OfferModuleProps> = ({
   gradientTo = '#aa6b5d',
   // ctaColor = '#B89B7A', // Unused for now
   className = '',
-  isSelected = false
+  isSelected = false,
 }) => {
   const { primaryStyle, isLoading } = useQuizData();
 
@@ -50,7 +50,7 @@ const OfferModule: React.FC<OfferModuleProps> = ({
       navigator.share({
         title: 'Meu Estilo Pessoal',
         text: `Descobri que meu estilo é ${primaryStyle.style}!`,
-        url: window.location.href
+        url: window.location.href,
       });
     }
   };
@@ -60,7 +60,7 @@ const OfferModule: React.FC<OfferModuleProps> = ({
       className={cn(
         'w-full p-6 rounded-lg text-center text-white space-y-4',
         isSelected && 'ring-2 ring-primary ring-offset-2',
-        className
+        className,
       )}
       style={getBackgroundStyle()}
     >

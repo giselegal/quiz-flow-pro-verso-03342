@@ -31,7 +31,7 @@ const SimpleFormContainerBlock: React.FC<SimpleFormContainerBlockProps> = ({
         title = 'Como posso te chamar?',
         placeholder = 'Digite seu primeiro nome aqui...',
         buttonText = 'Continuar',
-        requiredMessage = 'Por favor, digite seu nome para continuar'
+        requiredMessage = 'Por favor, digite seu nome para continuar',
     } = block.content || {};
 
     const handleSubmit = (e: React.FormEvent) => {

@@ -155,23 +155,23 @@ const initialConfig: FunnelConfig = {
     primaryColor: 'hsl(var(--primary))',
     secondaryColor: 'hsl(var(--secondary))',
     fontFamily: 'Inter, sans-serif',
-    borderRadius: '8px'
+    borderRadius: '8px',
   },
   layout: {
     maxWidth: '1200px',
     padding: '20px',
-    spacing: '16px'
+    spacing: '16px',
   },
   behavior: {
     autoSave: true,
     enableAnimations: true,
-    showProgress: true
+    showProgress: true,
   },
   analytics: {
     trackEvents: true,
     collectMetrics: true,
-    enableHeatmap: false
-  }
+    enableHeatmap: false,
+  },
 };
 
 const initialQuizState: QuizState = {
@@ -192,7 +192,7 @@ const initialMetrics: PerformanceMetrics = {
   providersLoaded: 1, // Reduced from 5+ to 1
   lastOptimization: Date.now(),
   cacheHitRate: 0,
-  averageLoadTime: 0
+  averageLoadTime: 0,
 };
 
 const initialState = {
@@ -202,7 +202,7 @@ const initialState = {
   error: null,
   config: initialConfig,
   quiz: initialQuizState,
-  metrics: initialMetrics
+  metrics: initialMetrics,
 };
 
 // 🎯 REDUCER
@@ -220,7 +220,7 @@ function funnelMasterReducer(state: any, action: FunnelAction): any {
         funnel: action.payload,
         isLoading: false,
         error: null,
-        isReady: !!action.payload
+        isReady: !!action.payload,
       };
     
     case 'SET_FUNNEL_ID':
@@ -229,7 +229,7 @@ function funnelMasterReducer(state: any, action: FunnelAction): any {
     case 'UPDATE_CONFIG':
       return { 
         ...state, 
-        config: { ...state.config, ...action.payload }
+        config: { ...state.config, ...action.payload },
       };
     
     case 'RESET_CONFIG':
@@ -238,13 +238,13 @@ function funnelMasterReducer(state: any, action: FunnelAction): any {
     case 'UPDATE_QUIZ_STATE':
       return { 
         ...state, 
-        quiz: { ...state.quiz, ...action.payload }
+        quiz: { ...state.quiz, ...action.payload },
       };
     
     case 'SET_USER_NAME':
       return {
         ...state,
-        quiz: { ...state.quiz, userName: action.payload }
+        quiz: { ...state.quiz, userName: action.payload },
       };
     
     case 'ADD_ANSWER':
@@ -252,8 +252,8 @@ function funnelMasterReducer(state: any, action: FunnelAction): any {
         ...state,
         quiz: { 
           ...state.quiz, 
-          answers: [...state.quiz.answers, action.payload] 
-        }
+          answers: [...state.quiz.answers, action.payload], 
+        },
       };
     
     case 'UPDATE_SELECTIONS':
@@ -263,9 +263,9 @@ function funnelMasterReducer(state: any, action: FunnelAction): any {
           ...state.quiz,
           currentStepSelections: {
             ...state.quiz.currentStepSelections,
-            [action.payload.step]: action.payload.selections
-          }
-        }
+            [action.payload.step]: action.payload.selections,
+          },
+        },
       };
     
     case 'RESET_QUIZ':
@@ -274,7 +274,7 @@ function funnelMasterReducer(state: any, action: FunnelAction): any {
     case 'UPDATE_METRICS':
       return { 
         ...state, 
-        metrics: { ...state.metrics, ...action.payload }
+        metrics: { ...state.metrics, ...action.payload },
       };
     
     default:
@@ -300,11 +300,11 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
   children,
   funnelId,
   enableCache = true,
-  debugMode = false
+  debugMode = false,
 }) => {
   const [state, dispatch] = useReducer(funnelMasterReducer, {
     ...initialState,
-    funnelId: funnelId || null
+    funnelId: funnelId || null,
   });
 
   // Simple cache implementation
@@ -362,8 +362,8 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
         ...funnelData,
         pages: (pagesData || []).map(page => ({
           ...page,
-          blocks: Array.isArray(page.blocks) ? page.blocks : []
-        }))
+          blocks: Array.isArray(page.blocks) ? page.blocks : [],
+        })),
       };
 
       // Cache the result
@@ -411,7 +411,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
           id: crypto.randomUUID(),
           name, 
           description: description || null,
-          user_id: userId 
+          user_id: userId, 
         })
         .select()
         .single();
@@ -472,7 +472,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       
       dispatch({ 
         type: 'UPDATE_QUIZ_STATE', 
-        payload: { currentStep: nextStep, progress }
+        payload: { currentStep: nextStep, progress },
       });
     },
 
@@ -482,7 +482,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       
       dispatch({ 
         type: 'UPDATE_QUIZ_STATE', 
-        payload: { currentStep: prevStep, progress }
+        payload: { currentStep: prevStep, progress },
       });
     },
 
@@ -492,7 +492,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       
       dispatch({ 
         type: 'UPDATE_QUIZ_STATE', 
-        payload: { currentStep: validStep, progress }
+        payload: { currentStep: validStep, progress },
       });
     },
 
@@ -500,7 +500,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       const updatedResponses = { ...state.quiz.responses, [questionId]: response };
       dispatch({ 
         type: 'UPDATE_QUIZ_STATE', 
-        payload: { responses: updatedResponses }
+        payload: { responses: updatedResponses },
       });
     },
 
@@ -520,7 +520,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
     submitQuiz: async (): Promise<void> => {
       dispatch({ 
         type: 'UPDATE_QUIZ_STATE', 
-        payload: { isComplete: true, progress: 100 }
+        payload: { isComplete: true, progress: 100 },
       });
       
       // Here you would save the quiz results to the database
@@ -539,7 +539,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
         .from('funnel_pages')
         .insert({
           id: crypto.randomUUID(),
-          ...page
+          ...page,
         })
         .select()
         .single();
@@ -548,7 +548,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
 
       const updatedFunnel = {
         ...state.funnel,
-        pages: [...(state.funnel?.pages || []), data]
+        pages: [...(state.funnel?.pages || []), data],
       };
       
       dispatch({ type: 'SET_FUNNEL', payload: updatedFunnel });
@@ -563,7 +563,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       if (error) throw error;
 
       const updatedPages = state.funnel?.pages?.map((page: FunnelPage) => 
-        page.id === pageId ? { ...page, ...updates } : page
+        page.id === pageId ? { ...page, ...updates } : page,
       ) || [];
 
       const updatedFunnel = { ...state.funnel, pages: updatedPages };
@@ -587,7 +587,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       // Update page orders in batch
       const updates = pageIds.map((id, index) => ({
         id,
-        page_order: index + 1
+        page_order: index + 1,
       }));
 
       for (const update of updates) {
@@ -625,24 +625,24 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
         type: 'UPDATE_METRICS',
         payload: {
           lastOptimization: Date.now(),
-          averageLoadTime: optimizationTime
-        }
+          averageLoadTime: optimizationTime,
+        },
       });
 
       if (debugMode) {
         console.log('🎯 FunnelMaster: Performance optimized', {
           time: optimizationTime,
-          metrics: state.metrics
+          metrics: state.metrics,
         });
       }
-    }
+    },
   }), [state, enableCache, debugMode, cache]);
 
   // 🎯 CONTEXT VALUE
   const contextValue: FunnelMasterContextType = useMemo(() => ({
     ...state,
     isReady: !!state.funnel && !state.isLoading,
-    ...actions
+    ...actions,
   }), [state, actions]);
 
   // 🎯 DEBUG LOGGING
@@ -651,7 +651,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       funnelId: state.funnelId,
       isReady: contextValue.isReady,
       isLoading: state.isLoading,
-      metrics: state.metrics
+      metrics: state.metrics,
     });
   }
 
@@ -693,7 +693,7 @@ export const useFunnels = () => {
     isLoading: master.isLoading,
     createFunnel: master.createFunnel,
     updateFunnel: master.updateFunnel,
-    deleteFunnel: master.deleteFunnel
+    deleteFunnel: master.deleteFunnel,
   };
 };
 
@@ -705,7 +705,7 @@ export const useUnifiedFunnel = () => {
     funnelId: master.funnelId,
     isReady: master.isReady,
     isLoading: master.isLoading,
-    pages: master.funnel?.pages || []
+    pages: master.funnel?.pages || [],
   };
 };
 
@@ -715,7 +715,7 @@ export const useFunnelConfig = () => {
   return {
     config: master.config,
     updateConfig: master.updateConfig,
-    resetConfig: master.resetConfig
+    resetConfig: master.resetConfig,
   };
 };
 
@@ -731,7 +731,7 @@ export const useQuizFlow = () => {
     previousStep: master.previousStep,
     goToStep: master.goToStep,
     updateResponse: master.updateResponse,
-    isComplete: master.quiz.isComplete
+    isComplete: master.quiz.isComplete,
   };
 };
 
@@ -774,8 +774,8 @@ export const useQuiz21Steps = () => {
     getStepRequirements: () => ({
       requiredSelections: master.quiz.currentStep === 1 ? 0 : 3, // Customize per step
       allowMultiple: true,
-      validationRule: 'requiresValidSelection'
-    })
+      validationRule: 'requiresValidSelection',
+    }),
   };
 };
 

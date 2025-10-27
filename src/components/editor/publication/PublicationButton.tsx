@@ -25,7 +25,7 @@ interface PublicationSettingsButtonProps {
 export function PublicationSettingsButton({
     funnelId,
     funnelTitle = 'Funil',
-    className = ''
+    className = '',
 }: PublicationSettingsButtonProps) {
     const [showDialog, setShowDialog] = useState(false);
 
@@ -35,9 +35,9 @@ export function PublicationSettingsButton({
         publishFunnel,
         isPublishing,
         getPublicationStatus,
-        generatePreviewUrl
+        generatePreviewUrl,
     } = useFunnelPublication(funnelId, {
-        autoSave: true
+        autoSave: true,
     });
 
     const publicationStatus = getPublicationStatus();
@@ -61,8 +61,8 @@ export function PublicationSettingsButton({
                 is_published: true,
                 settings: {
                     ...currentFunnel.settings,
-                    ...settings // Aplicar configurações de publicação
-                }
+                    ...settings, // Aplicar configurações de publicação
+                },
             });
 
             if (syncSuccess) {
@@ -84,21 +84,21 @@ export function PublicationSettingsButton({
                     icon: '🟢',
                     label: 'Online',
                     variant: 'default' as const,
-                    color: 'text-green-600'
+                    color: 'text-green-600',
                 };
             case 'error':
                 return {
                     icon: '🔴',
                     label: 'Erro',
                     variant: 'destructive' as const,
-                    color: 'text-red-600'
+                    color: 'text-red-600',
                 };
             default:
                 return {
                     icon: '⭕',
                     label: 'Rascunho',
                     variant: 'secondary' as const,
-                    color: 'text-yellow-600'
+                    color: 'text-yellow-600',
                 };
         }
     };
@@ -172,7 +172,7 @@ export function PublicationSettingsButton({
  */
 export function QuickPublicationStatus({
     funnelId,
-    showUrl = false
+    showUrl = false,
 }: {
     funnelId: string;
     showUrl?: boolean;
@@ -184,7 +184,7 @@ export function QuickPublicationStatus({
     const statusConfig = {
         published: { icon: '🟢', label: 'Online', color: 'text-green-600' },
         error: { icon: '🔴', label: 'Erro', color: 'text-red-600' },
-        draft: { icon: '⭕', label: 'Rascunho', color: 'text-yellow-600' }
+        draft: { icon: '⭕', label: 'Rascunho', color: 'text-yellow-600' },
     };
 
     const config = statusConfig[status];
@@ -217,7 +217,7 @@ export function QuickPublicationStatus({
 export function QuickPublishButton({
     funnelId,
     className = '',
-    size = 'default'
+    size = 'default',
 }: {
     funnelId: string;
     className?: string;
@@ -242,7 +242,7 @@ export function QuickPublishButton({
                 icon: '🚀',
                 label: 'Publicando...',
                 disabled: true,
-                className: 'bg-gradient-to-r from-blue-600 to-purple-600'
+                className: 'bg-gradient-to-r from-blue-600 to-purple-600',
             };
         }
 
@@ -251,7 +251,7 @@ export function QuickPublishButton({
                 icon: '🔄',
                 label: 'Atualizar',
                 disabled: false,
-                className: 'bg-gradient-to-r from-green-600 to-emerald-600'
+                className: 'bg-gradient-to-r from-green-600 to-emerald-600',
             };
         }
 
@@ -259,7 +259,7 @@ export function QuickPublishButton({
             icon: '📡',
             label: 'Publicar',
             disabled: false,
-            className: 'bg-gradient-to-r from-blue-600 to-purple-600'
+            className: 'bg-gradient-to-r from-blue-600 to-purple-600',
         };
     };
 

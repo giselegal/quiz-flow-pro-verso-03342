@@ -22,7 +22,7 @@ export default function IntroStepDebug({ data, onNameSubmit }: any) {
                         padding: '10px 20px',
                         border: 'none',
                         marginTop: '10px',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
                     }}>
                         Teste
                     </button>

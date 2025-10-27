@@ -185,7 +185,7 @@ const GradientAnimationBlock: React.FC<GradientAnimationBlockProps> = ({
         containerConfig.minHeight,
         `${containerConfig.position}`,
         `overflow-${containerConfig.overflow}`,
-        className
+        className,
       )}
     >
       {/* Gradiente de fundo */}
@@ -220,7 +220,7 @@ export default GradientAnimationBlock;
 // ✅ CONFIGURAÇÃO JSON EXPORTÁVEL - PRESETS
 export const getGradientAnimationConfig = (
   preset: 'intro' | 'question' | 'result' | 'custom' = 'intro',
-  customConfig?: Partial<any>
+  customConfig?: Partial<any>,
 ) => {
   const presets = {
     intro: {

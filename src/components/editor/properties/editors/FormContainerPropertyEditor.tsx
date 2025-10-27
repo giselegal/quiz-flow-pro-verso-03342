@@ -122,7 +122,7 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
         <div
           className="space-y-4"
           style={{
-            backgroundColor: backgroundColor,
+            backgroundColor,
             padding: `${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px`,
             margin: `${marginTop}px 0 ${marginBottom}px 0`,
             borderRadius: `${borderRadius}px`,
@@ -139,7 +139,7 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
                 placeholder={namePlaceholder}
                 className="w-full px-3 py-2 rounded border"
                 style={{
-                  borderColor: borderColor,
+                  borderColor,
                   color: textColor,
                   fontSize: `${fontSize}px`,
                   borderRadius: `${borderRadius}px`,
@@ -160,7 +160,7 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
                 placeholder={emailPlaceholder}
                 className="w-full px-3 py-2 rounded border"
                 style={{
-                  borderColor: borderColor,
+                  borderColor,
                   color: textColor,
                   fontSize: `${fontSize}px`,
                   borderRadius: `${borderRadius}px`,
@@ -181,7 +181,7 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
                 placeholder={phonePlaceholder}
                 className="w-full px-3 py-2 rounded border"
                 style={{
-                  borderColor: borderColor,
+                  borderColor,
                   color: textColor,
                   fontSize: `${fontSize}px`,
                   borderRadius: `${borderRadius}px`,

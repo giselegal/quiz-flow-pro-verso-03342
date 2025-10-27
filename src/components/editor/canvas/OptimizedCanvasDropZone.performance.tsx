@@ -26,7 +26,7 @@ const PERFORMANCE_CONFIG = {
     REDUCE_ANIMATIONS: false,
 
     // Debug
-    ENABLE_PERF_LOGGING: process.env.NODE_ENV === 'development'
+    ENABLE_PERF_LOGGING: process.env.NODE_ENV === 'development',
 };
 
 // 🚀 Hook de Performance para Canvas
@@ -86,7 +86,7 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
     isPreviewing = false,
     onSelectBlock,
     className,
-    scopeId
+    scopeId,
 }) => {
     const { renderCount } = useCanvasPerformance();
     const [visibleBlocks, setVisibleBlocks] = React.useState<Block[]>(blocks);
@@ -103,8 +103,8 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
         data: {
             type: 'canvas',
             accepts: ['sidebar-component', 'canvas-block'],
-            scopeId
-        }
+            scopeId,
+        },
     });
 
     // 🚀 RENDERIZAÇÃO PROGRESSIVA
@@ -129,7 +129,7 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
         const renderBatch = () => {
             const nextProgress = Math.min(
                 currentProgress + PERFORMANCE_CONFIG.BATCH_SIZE,
-                totalBlocks
+                totalBlocks,
             );
 
             setVisibleBlocks(blocks.slice(0, nextProgress));
@@ -162,7 +162,7 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
         PERFORMANCE_CONFIG.ENABLE_GPU_ACCELERATION && [
             'transform-gpu',
             'will-change-transform',
-            'backface-hidden'
+            'backface-hidden',
         ],
 
         // Estados visuais
@@ -171,7 +171,7 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
 
         // Performance classes
         'contain-layout-style',
-        className
+        className,
     ), [isOver, isPreviewing, isDragging, className]);
 
     // 📊 Logging de Performance
@@ -240,7 +240,7 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
                                         'p-4 border rounded-lg bg-white shadow-sm',
                                         'transition-all duration-200',
                                         selectedBlockId === block.id && 'ring-2 ring-brand border-brand',
-                                        'hover:shadow-md cursor-pointer'
+                                        'hover:shadow-md cursor-pointer',
                                     )}
                                     onClick={() => !isPreviewing && onSelectBlock(block.id)}
                                 >

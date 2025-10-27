@@ -256,7 +256,7 @@ export function ButtonInline({
         getMarginClass(marginRight, 'right'),
 
         // Custom classes
-        className
+        className,
       )}
       style={{
         backgroundColor:

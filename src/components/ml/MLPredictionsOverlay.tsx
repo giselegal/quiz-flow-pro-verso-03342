@@ -13,7 +13,7 @@ import {
     Activity,
     Cpu,
     Database,
-    RefreshCw
+    RefreshCw,
 } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -84,8 +84,8 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                     recommendations: [
                         'Otimizar carregamento de imagens',
                         'Simplificar formulários',
-                        'Implementar scroll suave'
-                    ]
+                        'Implementar scroll suave',
+                    ],
                 },
                 {
                     segment: 'Usuários Desktop',
@@ -96,8 +96,8 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                     recommendations: [
                         'Adicionar CTA secundário',
                         'Melhorar headlines',
-                        'Implementar urgência'
-                    ]
+                        'Implementar urgência',
+                    ],
                 },
                 {
                     segment: 'Primeira Visita',
@@ -108,9 +108,9 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                     recommendations: [
                         'Criar onboarding interativo',
                         'Destacar valor único',
-                        'Reduzir fricção inicial'
-                    ]
-                }
+                        'Reduzir fricção inicial',
+                    ],
+                },
             ];
 
             const mockOptimizations: OptimizationSuggestion[] = [
@@ -122,7 +122,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                     impact: 'high',
                     difficulty: 'easy',
                     predictedLift: 23.5,
-                    priority: 1
+                    priority: 1,
                 },
                 {
                     id: 'opt-2',
@@ -132,7 +132,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                     impact: 'high',
                     difficulty: 'medium',
                     predictedLift: 31.2,
-                    priority: 2
+                    priority: 2,
                 },
                 {
                     id: 'opt-3',
@@ -142,7 +142,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                     impact: 'medium',
                     difficulty: 'easy',
                     predictedLift: 14.8,
-                    priority: 3
+                    priority: 3,
                 },
                 {
                     id: 'opt-4',
@@ -152,8 +152,8 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                     impact: 'medium',
                     difficulty: 'hard',
                     predictedLift: 18.7,
-                    priority: 4
-                }
+                    priority: 4,
+                },
             ];
 
             const mockInsights: MLInsight[] = [
@@ -164,7 +164,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                     description: 'IA detectou que 67% dos usuários abandonam na questão 5. Implementar checkpoint pode recuperar 24% deles.',
                     confidence: 94.3,
                     actionable: true,
-                    metrics: { before: 12.3, after: 18.7, improvement: 52.0 }
+                    metrics: { before: 12.3, after: 18.7, improvement: 52.0 },
                 },
                 {
                     id: 'insight-2',
@@ -173,7 +173,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                     description: 'Usuários que gastam 2-3 minutos têm 340% mais chance de conversão que os que gastam <1 minuto.',
                     confidence: 89.1,
                     actionable: true,
-                    metrics: { before: 15.2, after: 21.6, improvement: 42.1 }
+                    metrics: { before: 15.2, after: 21.6, improvement: 42.1 },
                 },
                 {
                     id: 'insight-3',
@@ -182,8 +182,8 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                     description: 'Machine Learning identificou que botões pequenos causam 43% mais cliques acidentais.',
                     confidence: 91.7,
                     actionable: true,
-                    metrics: { before: 8.1, after: 13.4, improvement: 65.4 }
-                }
+                    metrics: { before: 8.1, after: 13.4, improvement: 65.4 },
+                },
             ];
 
             setPredictions(mockPredictions);
@@ -212,7 +212,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
 
             trackEvent('ml_analysis_completed', {
                 predictions: predictions.length,
-                optimizations: optimizations.length
+                optimizations: optimizations.length,
             });
 
         } catch (error) {
@@ -226,7 +226,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
         const configs = {
             low: { color: 'bg-gray-100 text-gray-800', label: 'Baixo' },
             medium: { color: 'bg-yellow-100 text-yellow-800', label: 'Médio' },
-            high: { color: 'bg-green-100 text-green-800', label: 'Alto' }
+            high: { color: 'bg-green-100 text-green-800', label: 'Alto' },
         };
         const config = configs[impact as keyof typeof configs];
         return <Badge className={config.color}>{config.label}</Badge>;
@@ -236,7 +236,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
         const configs = {
             easy: { color: 'bg-green-100 text-green-800', label: 'Fácil' },
             medium: { color: 'bg-yellow-100 text-yellow-800', label: 'Médio' },
-            hard: { color: 'bg-red-100 text-red-800', label: 'Difícil' }
+            hard: { color: 'bg-red-100 text-red-800', label: 'Difícil' },
         };
         const config = configs[difficulty as keyof typeof configs];
         return <Badge className={config.color}>{config.label}</Badge>;
@@ -247,7 +247,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
             performance: <Activity className="w-4 h-4" />,
             engagement: <Target className="w-4 h-4" />,
             conversion: <TrendingUp className="w-4 h-4" />,
-            'user-experience': <Lightbulb className="w-4 h-4" />
+            'user-experience': <Lightbulb className="w-4 h-4" />,
         };
         return icons[category as keyof typeof icons] || <Brain className="w-4 h-4" />;
     };
@@ -344,7 +344,7 @@ export function MLPredictionsOverlay({ onClose }: MLPredictionsOverlayProps) {
                             { key: 'predictions', label: 'Previsões ML', icon: Brain, count: predictions.length },
                             { key: 'optimizations', label: 'Otimizações', icon: Zap, count: optimizations.length },
                             { key: 'insights', label: 'Insights', icon: Lightbulb, count: insights.length },
-                            { key: 'settings', label: 'Configurações', icon: Settings, count: 0 }
+                            { key: 'settings', label: 'Configurações', icon: Settings, count: 0 },
                         ].map(({ key, label, icon: Icon, count }) => (
                             <button
                                 key={key}

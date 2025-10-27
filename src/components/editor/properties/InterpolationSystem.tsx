@@ -21,7 +21,7 @@ import {
   CheckCircle,
   Plus,
   Info,
-  Sparkles
+  Sparkles,
 } from 'lucide-react';
 import { DynamicVariable, AVAILABLE_VARIABLES } from '@/services/PropertyExtractionService';
 
@@ -51,7 +51,7 @@ export const InterpolationField: React.FC<InterpolationFieldProps> = ({
   multiline = false,
   required = false,
   error,
-  className = ''
+  className = '',
 }) => {
   const [showPreview, setShowPreview] = useState(false);
   const [showVariables, setShowVariables] = useState(false);
@@ -86,7 +86,7 @@ export const InterpolationField: React.FC<InterpolationFieldProps> = ({
       isValid: errors.length === 0,
       errors,
       warnings,
-      hasVariables: matches.length > 0
+      hasVariables: matches.length > 0,
     };
   }, [value, availableVariables]);
 
@@ -275,7 +275,7 @@ export const InterpolationPreview: React.FC<{
 }> = ({
   text,
   variables = AVAILABLE_VARIABLES,
-  className = ''
+  className = '',
 }) => {
     const interpolated = useMemo(() => {
       let result = text;
@@ -300,7 +300,7 @@ export const InterpolationPreview: React.FC<{
  */
 export const validateInterpolation = (
   text: string,
-  availableVariables: DynamicVariable[] = AVAILABLE_VARIABLES
+  availableVariables: DynamicVariable[] = AVAILABLE_VARIABLES,
 ) => {
   const errors: string[] = [];
   const variables: string[] = [];
@@ -331,7 +331,7 @@ export const validateInterpolation = (
     isValid: errors.length === 0,
     errors,
     variables,
-    hasVariables: variables.length > 0
+    hasVariables: variables.length > 0,
   };
 };
 
@@ -339,7 +339,7 @@ export const validateInterpolation = (
  * Hook para gerenciar interpolação
  */
 export const useInterpolation = (
-  availableVariables: DynamicVariable[] = AVAILABLE_VARIABLES
+  availableVariables: DynamicVariable[] = AVAILABLE_VARIABLES,
 ) => {
   const interpolate = useCallback((text: string) => {
     let result = text;
@@ -359,6 +359,6 @@ export const useInterpolation = (
   return {
     interpolate,
     validate,
-    availableVariables
+    availableVariables,
   };
 };

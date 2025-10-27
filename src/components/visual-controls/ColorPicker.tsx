@@ -54,7 +54,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               <div
                 className={cn(
                   'w-4 h-4 rounded border border-gray-300',
-                  isTransparent && 'bg-transparent border-dashed'
+                  isTransparent && 'bg-transparent border-dashed',
                 )}
                 style={{
                   backgroundColor: isTransparent ? 'transparent' : value,
@@ -81,7 +81,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       'w-10 h-10 rounded border-2 hover:scale-110 transition-transform',
                       value === color
                         ? 'border-[#B89B7A] ring-2 ring-[#B89B7A]/30'
-                        : 'border-gray-300'
+                        : 'border-gray-300',
                     )}
                     style={{ backgroundColor: color }}
                     title={name}
@@ -101,7 +101,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                   }}
                   className={cn(
                     'w-full h-10 rounded border-2 border-dashed hover:bg-gray-50 transition-colors flex items-center justify-center',
-                    value === 'transparent' ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300'
+                    value === 'transparent' ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300',
                   )}
                   aria-label="Selecionar cor transparente"
                 >

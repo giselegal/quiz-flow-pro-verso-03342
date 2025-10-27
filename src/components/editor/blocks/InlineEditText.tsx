@@ -61,7 +61,7 @@ export const InlineEditText: React.FC<InlineEditTextProps> = ({
         'min-h-[1.5em] inline-block',
         isSelected && 'bg-brand/10 ring-2 ring-brand',
         disabled && 'cursor-not-allowed opacity-50',
-        className
+        className,
       )}
       style={style}
       onClick={handleClick}

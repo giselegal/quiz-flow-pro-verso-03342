@@ -73,7 +73,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
               key={index}
               className={cn(
                 'w-4 h-4',
-                index < ratingValue ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'
+                index < ratingValue ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300',
               )}
             />
           ))}
@@ -87,7 +87,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
       className={cn(
         'overflow-hidden transition-shadow duration-300 hover:shadow-lg',
         isHighlighted ? 'border-2 border-primary shadow-md' : 'border border-gray-200',
-        className
+        className,
       )}
       style={style}
     >

@@ -39,7 +39,7 @@ import {
     Info,
     Sparkles,
     Home,
-    ChevronRight
+    ChevronRight,
 } from 'lucide-react';
 import { Link } from 'wouter';
 import { EnhancedUnifiedDataService } from '@/services/core/EnhancedUnifiedDataService';
@@ -69,7 +69,7 @@ const CURRENT_FUNNEL = {
         strategic: 6,         // Etapas 13-18: Perguntas estratégicas
         transition2: 1,       // Etapa 19: Transição
         result: 1,            // Etapa 20: Resultado
-        offer: 1              // Etapa 21: Oferta
+        offer: 1,              // Etapa 21: Oferta
     },
     features: [
         `${TOTAL_STEPS} etapas otimizadas`,
@@ -79,14 +79,14 @@ const CURRENT_FUNNEL = {
         'Integração com Hotmart',
         'Analytics em tempo real',
         'Responsivo mobile',
-        'Templates JSON modulares'
+        'Templates JSON modulares',
     ],
     colors: {
         primary: '#B89B7A',    // Dourado da marca
         secondary: '#432818',  // Marrom
         background: '#fffaf7', // Creme
-        accent: '#a08966'      // Dourado escuro
-    }
+        accent: '#a08966',      // Dourado escuro
+    },
 };
 
 // ============================================================================
@@ -118,7 +118,7 @@ const CurrentFunnelPage: React.FC = () => {
                 if (typeof (EnhancedUnifiedDataService as any).getAdvancedAnalytics === 'function') {
                     analyticsData = await (EnhancedUnifiedDataService as any).getAdvancedAnalytics({
                         funnel: CURRENT_FUNNEL.slug,
-                        timeRange: '7d'
+                        timeRange: '7d',
                     });
                 }
             } catch (analyticsError) {
@@ -130,8 +130,8 @@ const CurrentFunnelPage: React.FC = () => {
                 analytics: analyticsData || {
                     views: 0,
                     completions: 0,
-                    conversionRate: 0
-                }
+                    conversionRate: 0,
+                },
             }); console.log('✅ Métricas carregadas:', { realTimeMetrics, analyticsData });
         } catch (err) {
             console.error('❌ Erro ao carregar métricas:', err);
@@ -142,13 +142,13 @@ const CurrentFunnelPage: React.FC = () => {
                 realTime: {
                     activeUsers: 23,
                     conversionRate: 68,
-                    totalRevenue: 12450
+                    totalRevenue: 12450,
                 },
                 analytics: {
                     views: 1847,
                     completions: 1256,
-                    conversionRate: 68
-                }
+                    conversionRate: 68,
+                },
             });
         } finally {
             setIsLoading(false);
@@ -453,7 +453,7 @@ const CurrentFunnelPage: React.FC = () => {
                                         strategic: { title: 'Perguntas Estratégicas', desc: 'Refinamento e qualificação', icon: Award },
                                         transition2: { title: 'Transição 2', desc: 'Preparação para resultado', icon: Zap },
                                         result: { title: 'Resultado', desc: 'Estilo personalizado descoberto', icon: Sparkles },
-                                        offer: { title: 'Oferta', desc: 'Método 5 Passos - R$97', icon: TrendingUp }
+                                        offer: { title: 'Oferta', desc: 'Método 5 Passos - R$97', icon: TrendingUp },
                                     };
 
                                     const info = labels[key];

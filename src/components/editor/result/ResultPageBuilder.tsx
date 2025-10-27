@@ -34,7 +34,7 @@ export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primarySty
                 type: type as any,
                 content: {},
                 properties: {},
-                order: 0
+                order: 0,
               };
               await actions.addBlock(currentStepKey, newBlock);
               setSelectedComponent(newBlock.id);

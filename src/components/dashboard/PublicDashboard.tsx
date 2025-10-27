@@ -17,7 +17,7 @@ import {
   Zap,
   Brain,
   Target,
-  Download
+  Download,
 } from 'lucide-react';
 
 interface ProjectMetrics {
@@ -45,8 +45,8 @@ const PublicDashboard: React.FC = () => {
     performance: {
       loadTime: 1.8,
       cacheHitRate: 87.3,
-      bundleSize: 1.2
-    }
+      bundleSize: 1.2,
+    },
   });
 
   const [isLive, setIsLive] = useState(true);
@@ -60,8 +60,8 @@ const PublicDashboard: React.FC = () => {
           sessionTime: prev.sessionTime + 1,
           performance: {
             ...prev.performance,
-            cacheHitRate: Math.min(95, prev.performance.cacheHitRate + Math.random() * 0.1)
-          }
+            cacheHitRate: Math.min(95, prev.performance.cacheHitRate + Math.random() * 0.1),
+          },
         }));
       }
     }, 1000);
@@ -89,11 +89,11 @@ const PublicDashboard: React.FC = () => {
       timestamp: new Date().toISOString(),
       project: 'Quiz Editor Pro',
       metrics,
-      generatedAt: 'Sistema v1.0'
+      generatedAt: 'Sistema v1.0',
     };
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: 'application/json'
+      type: 'application/json',
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -117,15 +117,15 @@ const PublicDashboard: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <Badge variant={isLive ? "default" : "secondary"}>
-              {isLive ? "🟢 Live" : "⏸️ Pausado"}
+            <Badge variant={isLive ? 'default' : 'secondary'}>
+              {isLive ? '🟢 Live' : '⏸️ Pausado'}
             </Badge>
             <Button
               onClick={() => setIsLive(!isLive)}
               variant="outline"
               size="sm"
             >
-              {isLive ? "Pausar" : "Retomar"}
+              {isLive ? 'Pausar' : 'Retomar'}
             </Button>
             <Button onClick={exportMetrics} variant="outline" size="sm">
               <Download className="w-4 h-4 mr-2" />
@@ -326,7 +326,7 @@ const PublicDashboard: React.FC = () => {
                       { name: 'Botão', count: 12, color: 'bg-green-500' },
                       { name: 'Imagem', count: 8, color: 'bg-purple-500' },
                       { name: 'Formulário', count: 6, color: 'bg-orange-500' },
-                      { name: 'Vídeo', count: 4, color: 'bg-red-500' }
+                      { name: 'Vídeo', count: 4, color: 'bg-red-500' },
                     ].map((item, i) => (
                       <div key={i} className="flex items-center justify-between">
                         <div className="flex items-center gap-2">

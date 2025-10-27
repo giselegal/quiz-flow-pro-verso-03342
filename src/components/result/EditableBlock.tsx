@@ -36,14 +36,14 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       textareaRef.current.focus();
       textareaRef.current.setSelectionRange(
         textareaRef.current.value.length,
-        textareaRef.current.value.length
+        textareaRef.current.value.length,
       );
     }
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
       inputRef.current.setSelectionRange(
         inputRef.current.value.length,
-        inputRef.current.value.length
+        inputRef.current.value.length,
       );
     }
   }, [isEditing]);
@@ -201,7 +201,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                 <Button
                   onClick={() => {
                     const newItems = (editContent.items || ['']).filter(
-                      (_: any, i: number) => i !== index
+                      (_: any, i: number) => i !== index,
                     );
                     setEditContent({ ...editContent, items: newItems });
                   }}
@@ -379,7 +379,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       className={cn(
         'p-6 cursor-pointer transition-all duration-200 relative group',
         isSelected && 'ring-2 ring-[#B89B7A] border-[#B89B7A]',
-        className
+        className,
       )}
       onClick={onClick}
     >

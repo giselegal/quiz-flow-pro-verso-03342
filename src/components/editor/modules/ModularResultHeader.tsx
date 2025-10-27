@@ -40,14 +40,14 @@ const ModularResultHeaderComponent: React.FC<ModularResultHeaderProps> = ({
         'single-column': 'flex flex-col gap-8',
         'two-column': 'grid md:grid-cols-2 gap-8 items-start',
         'grid': 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
-        'flexible': 'flex flex-col lg:flex-row gap-8 items-start'
+        'flexible': 'flex flex-col lg:flex-row gap-8 items-start',
     };
 
     // Classes para padding
     const paddingClasses = {
         sm: 'p-4',
         md: 'p-6',
-        lg: 'p-8'
+        lg: 'p-8',
     };
 
     // Classes para border radius
@@ -55,14 +55,14 @@ const ModularResultHeaderComponent: React.FC<ModularResultHeaderProps> = ({
         sm: 'rounded-sm',
         md: 'rounded-md',
         lg: 'rounded-lg',
-        xl: 'rounded-xl'
+        xl: 'rounded-xl',
     };
 
     // Classes para mobile layout
     const mobileLayoutClasses = {
         stack: 'flex flex-col gap-4 md:gap-6',
         compact: 'flex flex-col gap-2 md:gap-4',
-        minimal: 'flex flex-col gap-1 md:gap-2'
+        minimal: 'flex flex-col gap-1 md:gap-2',
     };
 
     return (
@@ -72,9 +72,9 @@ const ModularResultHeaderComponent: React.FC<ModularResultHeaderProps> = ({
                 paddingClasses[padding],
                 borderRadiusClasses[borderRadius],
                 // Layout responsivo
-                'block md:' + containerLayoutClasses[containerLayout].replace('grid ', '').replace('flex ', ''),
+                `block md:${  containerLayoutClasses[containerLayout].replace('grid ', '').replace('flex ', '')}`,
                 // Mobile layout
-                mobileLayoutClasses[mobileLayout]
+                mobileLayoutClasses[mobileLayout],
             )}
             style={{ backgroundColor: backgroundColor !== 'transparent' ? backgroundColor : undefined }}
         >
@@ -179,7 +179,7 @@ export const ModularResultHeaderBlock: React.FC<BlockComponentProps> = ({
     // Estados de loading, erro e retry (compatibilidade)
     if (isLoading) {
         return (
-            <div className={cn("text-center p-8", className)}>
+            <div className={cn('text-center p-8', className)}>
                 <div className="animate-pulse space-y-4">
                     <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto"></div>
                     <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
@@ -192,7 +192,7 @@ export const ModularResultHeaderBlock: React.FC<BlockComponentProps> = ({
 
     if (error) {
         return (
-            <div className={cn("text-center p-8", className)}>
+            <div className={cn('text-center p-8', className)}>
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
                     <div className="text-yellow-800 mb-2">⚠️ Problema no resultado</div>
                     <p className="text-sm text-yellow-700 mb-4">{error}</p>
@@ -209,7 +209,7 @@ export const ModularResultHeaderBlock: React.FC<BlockComponentProps> = ({
 
     if (!hasResult || !primaryStyle) {
         return (
-            <div className={cn("text-center p-8", className)}>
+            <div className={cn('text-center p-8', className)}>
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
                     <div className="text-gray-800 mb-2">📋 Resultado não disponível</div>
                     <p className="text-sm text-gray-600 mb-4">Nenhum resultado foi calculado ainda.</p>
@@ -230,7 +230,7 @@ export const ModularResultHeaderBlock: React.FC<BlockComponentProps> = ({
     const percentage = computeEffectivePrimaryPercentage(
         primaryStyle as any,
         secondaryStyles as any[],
-        (primaryStyle as any)?.percentage || 0
+        (primaryStyle as any)?.percentage || 0,
     );
 
     const {
@@ -248,7 +248,7 @@ export const ModularResultHeaderBlock: React.FC<BlockComponentProps> = ({
                 isSelected
                     ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
                     : 'border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30',
-                className
+                className,
             )}
             style={{ backgroundColor }}
         >

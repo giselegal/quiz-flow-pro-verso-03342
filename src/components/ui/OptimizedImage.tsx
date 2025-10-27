@@ -129,7 +129,7 @@ export default function OptimizedImage({
                 objectFit === 'fill' && 'object-fill',
                 objectFit === 'none' && 'object-none',
                 objectFit === 'scale-down' && 'object-scale-down',
-                'blur-xl scale-110' // Blur effect for placeholders
+                'blur-xl scale-110', // Blur effect for placeholders
               )}
               aria-hidden="true"
             />
@@ -164,7 +164,7 @@ export default function OptimizedImage({
           objectFit === 'fill' && 'object-fill',
           objectFit === 'none' && 'object-none',
           objectFit === 'scale-down' && 'object-scale-down',
-          className
+          className,
         )}
         style={style}
       />

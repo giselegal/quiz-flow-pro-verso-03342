@@ -90,7 +90,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 type: block.type || 'text',
                 order: idx, // Usar índice como order
                 content: block.data || {},
-                properties: block.data || {}
+                properties: block.data || {},
             }));
 
             console.log('🔍 useStepBlocks DEBUG - Normalized blocks:', normalizedBlocks);
@@ -100,7 +100,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 type: 'step', // Tipo genérico
                 order: funnelStep.order || stepIndex + 1,
                 title: funnelStep.title || `Etapa ${stepIndex + 1}`,
-                blocks: normalizedBlocks
+                blocks: normalizedBlocks,
             };
         } catch (err) {
             console.error('❌ Erro ao derivar step:', err);
@@ -151,7 +151,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
     const addBlock = useCallback((
         type: string,
         properties: Record<string, any> = {},
-        content: Record<string, any> = {}
+        content: Record<string, any> = {},
     ) => {
         if (!step) {
             console.warn('⚠️ Step não encontrado para adicionar bloco');
@@ -167,8 +167,8 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 type,
                 data: {
                     ...content,
-                    ...properties
-                }
+                    ...properties,
+                },
             };
 
             console.log(`➕ Adicionando bloco ao step ${step.id}:`, newBlock);
@@ -239,8 +239,8 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
                 type: original.type,
                 data: {
                     ...original.content,
-                    ...original.properties
-                }
+                    ...original.properties,
+                },
             };
 
             console.log(`📋 Duplicando bloco ${blockId}:`, duplicate);
@@ -291,7 +291,7 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
             // Forçar re-render
             setUpdateTrigger(prev => prev + 1);
 
-            console.log(`✅ Blocos reordenados com sucesso`);
+            console.log('✅ Blocos reordenados com sucesso');
         } catch (err) {
             console.error('❌ Erro ao reordenar blocos:', err);
             setError(err instanceof Error ? err.message : 'Erro ao reordenar blocos');
@@ -378,6 +378,6 @@ export function useStepBlocks(stepIndex: number): UseStepBlocksResult {
         moveBlockUp,
         moveBlockDown,
         getBlock,
-        getBlockIndex
+        getBlockIndex,
     };
 }

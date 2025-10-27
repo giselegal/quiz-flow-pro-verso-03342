@@ -74,7 +74,7 @@ const SpinnerBlock: React.FC<BlockComponentProps> = ({
                 'spinner-block',
                 centered && 'flex flex-col items-center justify-center',
                 isSelected && 'ring-2 ring-blue-500 ring-offset-4 rounded',
-                className
+                className,
             )}
             style={{
                 marginTop: `${marginTop}px`,
@@ -90,7 +90,7 @@ const SpinnerBlock: React.FC<BlockComponentProps> = ({
                     'rounded-full border-t-transparent',
                     sizeClasses[size as keyof typeof sizeClasses],
                     thicknessClasses[thickness as keyof typeof thicknessClasses],
-                    speedClasses[speed as keyof typeof speedClasses]
+                    speedClasses[speed as keyof typeof speedClasses],
                 )}
                 style={{
                     borderColor: `${color}33`, // 20% opacity para borda base
@@ -105,7 +105,7 @@ const SpinnerBlock: React.FC<BlockComponentProps> = ({
                 <p
                     className={cn(
                         'mt-3',
-                        textSizeClasses[textSize as keyof typeof textSizeClasses]
+                        textSizeClasses[textSize as keyof typeof textSizeClasses],
                     )}
                     style={{ color }}
                 >

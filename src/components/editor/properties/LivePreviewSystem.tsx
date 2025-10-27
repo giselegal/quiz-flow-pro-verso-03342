@@ -23,7 +23,7 @@ import {
     Clock,
     Monitor,
     Smartphone,
-    Tablet
+    Tablet,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -60,7 +60,7 @@ interface AnimationFrame {
 const DEVICE_SIZES = {
     desktop: { width: 1200, height: 800, label: 'Desktop' },
     tablet: { width: 768, height: 1024, label: 'Tablet' },
-    mobile: { width: 375, height: 667, label: 'Mobile' }
+    mobile: { width: 375, height: 667, label: 'Mobile' },
 };
 
 const EASING_FUNCTIONS = {
@@ -69,7 +69,7 @@ const EASING_FUNCTIONS = {
     'ease-out': 'cubic-bezier(0, 0, 0.58, 1)',
     'ease-in-out': 'cubic-bezier(0.42, 0, 0.58, 1)',
     'linear': 'linear',
-    'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+    'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
 };
 
 // ===== MAIN COMPONENT =====
@@ -78,7 +78,7 @@ export const LivePreviewSystem: React.FC<LivePreviewSystemProps> = ({
     isEnabled,
     onToggle,
     onPropertyChange,
-    className
+    className,
 }) => {
     // ===== STATE =====
     const [settings, setSettings] = useState<PreviewSettings>({
@@ -89,7 +89,7 @@ export const LivePreviewSystem: React.FC<LivePreviewSystemProps> = ({
         device: 'desktop',
         zoom: 100,
         highlightChanges: true,
-        showTooltips: true
+        showTooltips: true,
     });
 
     const [animationQueue, setAnimationQueue] = useState<AnimationFrame[]>([]);
@@ -225,13 +225,13 @@ export const LivePreviewSystem: React.FC<LivePreviewSystemProps> = ({
 
     // ===== RENDER =====
     return (
-        <Card className={cn("w-full", className)}>
+        <Card className={cn('w-full', className)}>
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Eye className="w-4 h-4" />
                         <CardTitle className="text-sm">Preview em Tempo Real</CardTitle>
-                        <Badge variant={isEnabled ? "default" : "secondary"} className="text-xs">
+                        <Badge variant={isEnabled ? 'default' : 'secondary'} className="text-xs">
                             {isEnabled ? 'Ativo' : 'Inativo'}
                         </Badge>
                     </div>
@@ -323,7 +323,7 @@ export const LivePreviewSystem: React.FC<LivePreviewSystemProps> = ({
                                 <Button
                                     key={device}
                                     size="sm"
-                                    variant={settings.device === device ? "default" : "outline"}
+                                    variant={settings.device === device ? 'default' : 'outline'}
                                     onClick={() => handleDeviceChange(device as keyof typeof DEVICE_SIZES)}
                                     className="flex flex-col items-center gap-1 h-auto py-2"
                                 >
@@ -414,8 +414,8 @@ export const LivePreviewSystem: React.FC<LivePreviewSystemProps> = ({
                                         <div
                                             key={`${frame.timestamp}-${index}`}
                                             className={cn(
-                                                "flex items-center justify-between p-2 text-xs rounded",
-                                                index === currentFrame ? "bg-primary/10" : "bg-muted/50"
+                                                'flex items-center justify-between p-2 text-xs rounded',
+                                                index === currentFrame ? 'bg-primary/10' : 'bg-muted/50',
                                             )}
                                         >
                                             <div className="flex items-center gap-2">

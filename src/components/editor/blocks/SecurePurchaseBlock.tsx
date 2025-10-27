@@ -51,7 +51,7 @@ const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps & { block?: any }> 
         getMarginClass((marginTop as number | string) ?? 0, 'top'),
         getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
         getMarginClass((marginLeft as number | string) ?? 0, 'left'),
-        getMarginClass((marginRight as number | string) ?? 0, 'right')
+        getMarginClass((marginRight as number | string) ?? 0, 'right'),
       )}
     >
       <div className="max-w-2xl mx-auto">

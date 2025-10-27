@@ -26,7 +26,7 @@ import {
     AlertTriangle,
     Loader2,
     Maximize2,
-    Minimize2
+    Minimize2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
@@ -48,12 +48,12 @@ interface QuizProductionEditorProps {
 
 export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
     funnelId: initialFunnelId,
-    className
+    className,
 }) => {
     // 🚨 Console warning para desenvolvedores
     appLogger.warn(
         '⚠️ DEPRECATED: QuizProductionEditor será removido em 01/nov/2025. ' +
-        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
     );
 
     const [, setLocation] = useLocation();
@@ -89,7 +89,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
             const editableSteps = funnel.steps.map(step => ({
                 ...step,
                 id: step.id,
-                order: step.order
+                order: step.order,
             }));
 
             setSteps(editableSteps);
@@ -107,14 +107,14 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
             toast({
                 title: 'Erro',
                 description: 'Falha ao carregar o funil',
-                variant: 'destructive'
+                variant: 'destructive',
             });
 
             // Fallback: carregar QUIZ_STEPS
             const fallbackSteps = Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
                 id,
                 order: index + 1,
-                ...step
+                ...step,
             }));
             setSteps(fallbackSteps);
             setSelectedStepId(fallbackSteps[0]?.id || '');
@@ -131,7 +131,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
             slug: 'quiz-estilo',
             steps,
             isPublished: false,
-            version: 1
+            version: 1,
         };
 
         const validation = quizEditorBridge.validateFunnel(funnel);
@@ -150,7 +150,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
                 slug: 'quiz-estilo',
                 steps,
                 isPublished: false,
-                version: 1
+                version: 1,
             };
 
             const savedId = await quizEditorBridge.saveDraft(funnel);
@@ -168,7 +168,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
             toast({
                 title: 'Erro ao salvar',
                 description: String(error),
-                variant: 'destructive'
+                variant: 'destructive',
             });
         } finally {
             setIsSaving(false);
@@ -182,7 +182,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
             toast({
                 title: 'Validação falhou',
                 description: 'Corrija os erros antes de publicar',
-                variant: 'destructive'
+                variant: 'destructive',
             });
             return;
         }
@@ -191,7 +191,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
             toast({
                 title: 'Salve primeiro',
                 description: 'Salve o rascunho antes de publicar',
-                variant: 'destructive'
+                variant: 'destructive',
             });
             return;
         }
@@ -199,7 +199,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
         const confirmed = window.confirm(
             '⚠️ ATENÇÃO: Isso substituirá o funil de produção!\n\n' +
             'O quiz /quiz-estilo será atualizado imediatamente.\n\n' +
-            'Deseja continuar?'
+            'Deseja continuar?',
         );
 
         if (!confirmed) return;
@@ -224,7 +224,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
             toast({
                 title: 'Erro ao publicar',
                 description: String(error),
-                variant: 'destructive'
+                variant: 'destructive',
             });
         } finally {
             setIsPublishing(false);
@@ -237,8 +237,8 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
             prev.map(step =>
                 step.id === stepId
                     ? { ...step, ...updates }
-                    : step
-            )
+                    : step,
+            ),
         );
         setIsDirty(true);
     }, []);
@@ -246,7 +246,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
     // Step selecionado
     const selectedStep = useMemo(() =>
         steps.find(s => s.id === selectedStepId),
-        [steps, selectedStepId]
+        [steps, selectedStepId],
     );
 
     if (isLoading) {
@@ -356,12 +356,12 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
                 <div
                     className={cn(
                         'flex-1 overflow-auto bg-white border-r',
-                        isPreviewMaximized && 'hidden'
+                        isPreviewMaximized && 'hidden',
                     )}
                     style={{
                         width: showPreview && !isPreviewMaximized
                             ? `${100 - previewWidth}%`
-                            : '100%'
+                            : '100%',
                     }}
                 >
                     <div className="p-6">
@@ -376,7 +376,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
                                         'p-4 border rounded-lg cursor-pointer transition-colors',
                                         selectedStepId === step.id
                                             ? 'border-blue-500 bg-blue-50'
-                                            : 'border-gray-200 hover:border-gray-300'
+                                            : 'border-gray-200 hover:border-gray-300',
                                     )}
                                     onClick={() => setSelectedStepId(step.id)}
                                 >
@@ -410,10 +410,10 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
                     <div
                         className={cn(
                             'bg-gray-100 border-l flex flex-col',
-                            isPreviewMaximized && 'flex-1'
+                            isPreviewMaximized && 'flex-1',
                         )}
                         style={{
-                            width: isPreviewMaximized ? '100%' : `${previewWidth}%`
+                            width: isPreviewMaximized ? '100%' : `${previewWidth}%`,
                         }}
                     >
                         <div className="flex items-center justify-between px-4 py-2 bg-white border-b">

@@ -15,7 +15,7 @@ interface IntroFooterProps {
 const IntroFooter: React.FC<IntroFooterProps> = ({
     copyrightText = 'Gisele Galvão - Todos os direitos reservados',
     year = new Date().getFullYear(),
-    className = 'w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto'
+    className = 'w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto',
 }) => {
     return (
         <footer className={className}>

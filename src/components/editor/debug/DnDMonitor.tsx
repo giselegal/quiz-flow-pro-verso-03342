@@ -91,7 +91,7 @@ export const DnDMonitor: React.FC = () => {
         events: [
           ...prev.events.slice(-4),
           `🎯 dnd-end: over=${String(overId || '')} action=${String(
-            (action || validation?.action || '') as any
+            (action || validation?.action || '') as any,
           )}`,
         ],
       }));

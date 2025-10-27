@@ -127,7 +127,7 @@ export const useValidation = () => {
       const applicableRules = VALIDATION_RULES.filter(
         rule =>
           rule.field === field ||
-          (rule.field.includes('[]') && field.includes(rule.field.replace('[]', '')))
+          (rule.field.includes('[]') && field.includes(rule.field.replace('[]', ''))),
       );
 
       const results: ValidationResult[] = [];
@@ -164,7 +164,7 @@ export const useValidation = () => {
 
       return results;
     },
-    []
+    [],
   );
 
   const validateFunnel = useCallback(
@@ -183,7 +183,7 @@ export const useValidation = () => {
           if (context.funnel.seo) {
             allResults.push(...validateField('seo.title', context.funnel.seo.title, context));
             allResults.push(
-              ...validateField('seo.description', context.funnel.seo.description, context)
+              ...validateField('seo.description', context.funnel.seo.description, context),
             );
           }
         }
@@ -193,7 +193,7 @@ export const useValidation = () => {
           context.pages.forEach((page, index) => {
             allResults.push(...validateField(`pages[${index}].title`, page.title, context));
             allResults.push(
-              ...validateField(`pages[${index}].components`, page.components, context)
+              ...validateField(`pages[${index}].components`, page.components, context),
             );
           });
         }
@@ -205,7 +205,7 @@ export const useValidation = () => {
         setIsValidating(false);
       }
     },
-    [validateField]
+    [validateField],
   );
 
   const getValidationSummary = useMemo(() => {

@@ -14,38 +14,38 @@ import { Loader2 } from 'lucide-react';
 // 🎯 COMPONENTES CRÍTICOS LAZY LOADED
 const LazyAreaChart = lazy(() =>
     import('recharts').then(module => ({
-        default: module.AreaChart
-    }))
+        default: module.AreaChart,
+    })),
 );
 
 const LazyModernUnifiedEditor = lazy(() =>
     import('@/pages/editor/ModernUnifiedEditor').then(module => ({
-        default: module.default
-    }))
+        default: module.default,
+    })),
 );
 
 const LazyEditorProvider = lazy(() =>
     import('@/components/editor/EditorProviderMigrationAdapter').then(module => ({
-        default: module.EditorProvider
-    }))
+        default: module.EditorProvider,
+    })),
 );
 
 const LazyEnhancedPropertiesPanel = lazy(() =>
     import('@/components/editor/properties/EnhancedPropertiesPanel').then(module => ({
-        default: module.default
-    }))
+        default: module.default,
+    })),
 );
 
 const LazyParticipantsPage = lazy(() =>
     import('@/pages/admin/ParticipantsPage').then(module => ({
-        default: module.default
-    }))
+        default: module.default,
+    })),
 );
 
 const LazyMetricsPage = lazy(() =>
     import('@/pages/admin/MetricsPage').then(module => ({
-        default: module.default
-    }))
+        default: module.default,
+    })),
 );
 
 // 🎨 LOADING SKELETONS ESPECÍFICOS

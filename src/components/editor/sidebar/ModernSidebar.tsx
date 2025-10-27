@@ -139,7 +139,7 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({ className, isColla
         'flex flex-col h-full bg-white border-r border-gray-200',
         'transition-all duration-300 ease-in-out',
         isCollapsed ? 'w-16' : 'w-80',
-        className
+        className,
       )}
     >
       {/* Header */}

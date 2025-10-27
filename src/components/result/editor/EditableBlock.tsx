@@ -65,7 +65,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       style={style}
       className={cn(
         'relative border-2 cursor-pointer transition-all duration-200',
-        isSelected ? 'border-[#B89B7A] shadow-lg' : 'border-gray-200 hover:border-gray-300'
+        isSelected ? 'border-[#B89B7A] shadow-lg' : 'border-gray-200 hover:border-gray-300',
       )}
       onClick={handleClick}
     >

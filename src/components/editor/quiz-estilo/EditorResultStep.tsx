@@ -21,7 +21,7 @@ export default function EditorResultStep({
     data,
     userProfile,
     onEdit,
-    isEditable = false
+    isEditable = false,
 }: EditorResultStepProps) {
 
     // Dados seguros com fallbacks
@@ -34,8 +34,8 @@ export default function EditorResultStep({
         characteristics: data.characteristics || [
             'Elegante e refinado',
             'Atemporal e sofisticado',
-            'Valoriza qualidade'
-        ]
+            'Valoriza qualidade',
+        ],
     };
 
     return (

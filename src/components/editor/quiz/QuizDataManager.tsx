@@ -122,7 +122,7 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
   const clearAllData = () => {
     if (
       window.confirm(
-        'Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.'
+        'Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.',
       )
     ) {
       onDataChange({});

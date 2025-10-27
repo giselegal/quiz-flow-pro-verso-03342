@@ -30,7 +30,7 @@ const QuizOfferPricingInlineBlock: React.FC<BlockComponentProps> = ({
         'border-2 border-[#432818]/30',
         isSelected && 'ring-2 ring-blue-500',
         'cursor-pointer',
-        className
+        className,
       )}
       onClick={onClick}
     >

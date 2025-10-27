@@ -19,7 +19,7 @@ import {
     ArrowLeft,
     ArrowRight,
     Grid3x3,
-    Layout
+    Layout,
 } from 'lucide-react';
 import type { PropertyEditorProps } from './types';
 
@@ -40,7 +40,7 @@ export const AlignmentEditor: React.FC<PropertyEditorProps> = ({ property, onCha
         justifyContent: 'flex-start',
         alignItems: 'center',
         flexDirection: 'row',
-        display: 'flex'
+        display: 'flex',
     };
 
     const updateValue = (updates: Partial<AlignmentValue>) => {
@@ -51,7 +51,7 @@ export const AlignmentEditor: React.FC<PropertyEditorProps> = ({ property, onCha
         { value: 'left', icon: AlignLeft, label: 'Esquerda' },
         { value: 'center', icon: AlignCenter, label: 'Centro' },
         { value: 'right', icon: AlignRight, label: 'Direita' },
-        { value: 'justify', icon: AlignJustify, label: 'Justificado' }
+        { value: 'justify', icon: AlignJustify, label: 'Justificado' },
     ];
 
     const justifyOptions = [
@@ -60,21 +60,21 @@ export const AlignmentEditor: React.FC<PropertyEditorProps> = ({ property, onCha
         { value: 'flex-end', label: 'Fim', icon: ArrowRight },
         { value: 'space-between', label: 'Entre', icon: Layout },
         { value: 'space-around', label: 'Ao Redor', icon: Layout },
-        { value: 'space-evenly', label: 'Uniforme', icon: Layout }
+        { value: 'space-evenly', label: 'Uniforme', icon: Layout },
     ];
 
     const alignOptions = [
         { value: 'flex-start', label: 'Topo', icon: ArrowUp },
         { value: 'center', label: 'Centro', icon: Grid3x3 },
         { value: 'flex-end', label: 'Base', icon: ArrowDown },
-        { value: 'stretch', label: 'Esticar', icon: Rows }
+        { value: 'stretch', label: 'Esticar', icon: Rows },
     ];
 
     const directionOptions = [
         { value: 'row', label: 'Linha →', icon: ArrowRight },
         { value: 'column', label: 'Coluna ↓', icon: ArrowDown },
         { value: 'row-reverse', label: 'Linha ←', icon: ArrowLeft },
-        { value: 'column-reverse', label: 'Coluna ↑', icon: ArrowUp }
+        { value: 'column-reverse', label: 'Coluna ↑', icon: ArrowUp },
     ];
 
     return (
@@ -110,7 +110,7 @@ export const AlignmentEditor: React.FC<PropertyEditorProps> = ({ property, onCha
                         return (
                             <Button
                                 key={option.value}
-                                variant={isActive ? "default" : "outline"}
+                                variant={isActive ? 'default' : 'outline'}
                                 size="sm"
                                 className="h-8 px-2"
                                 onClick={() => updateValue({ textAlign: option.value as any })}
@@ -135,7 +135,7 @@ export const AlignmentEditor: React.FC<PropertyEditorProps> = ({ property, onCha
                                 return (
                                     <Button
                                         key={option.value}
-                                        variant={isActive ? "default" : "outline"}
+                                        variant={isActive ? 'default' : 'outline'}
                                         size="sm"
                                         className="h-8 px-2 text-xs"
                                         onClick={() => updateValue({ flexDirection: option.value as any })}
@@ -160,7 +160,7 @@ export const AlignmentEditor: React.FC<PropertyEditorProps> = ({ property, onCha
                                 return (
                                     <Button
                                         key={option.value}
-                                        variant={isActive ? "default" : "outline"}
+                                        variant={isActive ? 'default' : 'outline'}
                                         size="sm"
                                         className="h-8 px-1 text-xs"
                                         onClick={() => updateValue({ justifyContent: option.value as any })}
@@ -184,7 +184,7 @@ export const AlignmentEditor: React.FC<PropertyEditorProps> = ({ property, onCha
                                 return (
                                     <Button
                                         key={option.value}
-                                        variant={isActive ? "default" : "outline"}
+                                        variant={isActive ? 'default' : 'outline'}
                                         size="sm"
                                         className="h-8 px-1 text-xs"
                                         onClick={() => updateValue({ alignItems: option.value as any })}

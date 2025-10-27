@@ -28,11 +28,11 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  CollisionDetection
+  CollisionDetection,
 } from '@dnd-kit/core';
 import {
   restrictToWindowEdges,
-  restrictToFirstScrollableAncestor
+  restrictToFirstScrollableAncestor,
 } from '@dnd-kit/modifiers';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { logger } from '@/utils/debugLogger';
@@ -115,7 +115,7 @@ export const UnifiedDndProvider: React.FC<UnifiedDndProviderProps> = ({
   collisionDetection,
   modifiers,
   enableAnalytics = true,
-  debugMode = false
+  debugMode = false,
 }) => {
   // 🎯 ESTADO DO DND
   const [isDragging, setIsDragging] = React.useState(false);
@@ -131,7 +131,7 @@ export const UnifiedDndProvider: React.FC<UnifiedDndProviderProps> = ({
     successfulDrops: 0,
     cancelledDrags: 0,
     averageDragTime: 0,
-    dragStartTime: 0
+    dragStartTime: 0,
   }).current;
 
   // 🎯 SENSORES OTIMIZADOS
@@ -143,7 +143,7 @@ export const UnifiedDndProvider: React.FC<UnifiedDndProviderProps> = ({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   // 🎯 COLLISION DETECTION INTELIGENTE
@@ -155,7 +155,7 @@ export const UnifiedDndProvider: React.FC<UnifiedDndProviderProps> = ({
   const optimizedModifiers = useMemo(() => {
     return modifiers || [
       restrictToWindowEdges,
-      restrictToFirstScrollableAncestor
+      restrictToFirstScrollableAncestor,
     ];
   }, [modifiers]);
 
@@ -236,7 +236,7 @@ export const UnifiedDndProvider: React.FC<UnifiedDndProviderProps> = ({
       logger.info('UnifiedDnd: Drag finalizado', { 
         activeId: active.id, 
         overId: over?.id,
-        success: !!over 
+        success: !!over, 
       });
     }
     
@@ -268,7 +268,7 @@ export const UnifiedDndProvider: React.FC<UnifiedDndProviderProps> = ({
     dropSuccessRate,
     registerDroppable,
     unregisterDroppable,
-    getDroppableMetadata
+    getDroppableMetadata,
   }), [
     isDragging,
     activeId, 
@@ -277,7 +277,7 @@ export const UnifiedDndProvider: React.FC<UnifiedDndProviderProps> = ({
     dropSuccessRate,
     registerDroppable,
     unregisterDroppable,
-    getDroppableMetadata
+    getDroppableMetadata,
   ]);
 
   // 🎯 PERFORMANCE MONITORING
@@ -288,9 +288,9 @@ export const UnifiedDndProvider: React.FC<UnifiedDndProviderProps> = ({
           totalDrags: analytics.totalDrags,
           successfulDrops: analytics.successfulDrops,
           cancelledDrags: analytics.cancelledDrags,
-          successRate: dropSuccessRate.toFixed(1) + '%',
-          averageDragTime: analytics.averageDragTime.toFixed(0) + 'ms',
-          registeredDroppables: droppableRegistry.size
+          successRate: `${dropSuccessRate.toFixed(1)  }%`,
+          averageDragTime: `${analytics.averageDragTime.toFixed(0)  }ms`,
+          registeredDroppables: droppableRegistry.size,
         });
       }, 30000); // A cada 30 segundos
 

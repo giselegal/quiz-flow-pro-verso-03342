@@ -19,7 +19,7 @@ import {
   CheckCircle, 
   AlertCircle,
   Play,
-  Loader2
+  Loader2,
 } from 'lucide-react';
 
 interface OptimizationRecommendation {
@@ -86,7 +86,7 @@ export const AIOptimizationPanel: React.FC = () => {
         networkLatency: Math.random() * 100 + 50, // 50-150ms
         userInteractionLatency: Math.random() * 200 + 50, // 50-250ms
         errorRate: Math.random() * 5, // 0-5%
-        userEngagement: Math.random() * 40 + 60 // 60-100%
+        userEngagement: Math.random() * 40 + 60, // 60-100%
       };
 
       const mockBehaviorPatterns = [
@@ -96,8 +96,8 @@ export const AIOptimizationPanel: React.FC = () => {
           avgDuration: Math.random() * 2000 + 500,
           successRate: Math.random() * 20 + 80,
           dropOffPoints: ['component_selection', 'property_editing'],
-          optimizationPotential: Math.random() * 50 + 10
-        }
+          optimizationPotential: Math.random() * 50 + 10,
+        },
       ];
 
       const { data, error } = await supabase.functions.invoke('ai-optimization-engine', {
@@ -108,25 +108,25 @@ export const AIOptimizationPanel: React.FC = () => {
           userPreferences: {
             prioritizeSpeed: true,
             prioritizeMemory: false,
-            prioritizeUX: true
-          }
-        }
+            prioritizeUX: true,
+          },
+        },
       });
 
       if (error) throw error;
 
       setAnalysisResult(data);
       toast({
-        title: "✨ Análise IA Concluída",
+        title: '✨ Análise IA Concluída',
         description: `${data.recommendations.length} recomendações encontradas`,
       });
 
     } catch (error) {
       console.error('AI Analysis error:', error);
       toast({
-        title: "❌ Erro na Análise IA",
-        description: error instanceof Error ? error.message : "Falha na análise",
-        variant: "destructive"
+        title: '❌ Erro na Análise IA',
+        description: error instanceof Error ? error.message : 'Falha na análise',
+        variant: 'destructive',
       });
     } finally {
       setIsAnalyzing(false);
@@ -141,15 +141,15 @@ export const AIOptimizationPanel: React.FC = () => {
       setAppliedRecommendations(prev => new Set([...prev, recommendation.title]));
       
       toast({
-        title: "✅ Otimização Aplicada",
+        title: '✅ Otimização Aplicada',
         description: `${recommendation.title} foi aplicada com sucesso`,
       });
 
     } catch (error) {
       toast({
-        title: "❌ Erro na Aplicação",
-        description: "Falha ao aplicar otimização",
-        variant: "destructive"
+        title: '❌ Erro na Aplicação',
+        description: 'Falha ao aplicar otimização',
+        variant: 'destructive',
       });
     }
   }, [toast]);

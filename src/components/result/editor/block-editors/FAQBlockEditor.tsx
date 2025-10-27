@@ -41,7 +41,7 @@ export const FAQBlockEditor: React.FC<FAQBlockEditorProps> = ({ content, onUpdat
 
   const updateFAQItem = (id: string, field: keyof FAQItem, value: string) => {
     const updatedItems = faqItems.map(item =>
-      item.id === id ? { ...item, [field]: value } : item
+      item.id === id ? { ...item, [field]: value } : item,
     );
     updateFAQItems(updatedItems);
   };

@@ -23,7 +23,7 @@ import {
   Image as ImageIcon,
   Type,
   Hash,
-  Tag
+  Tag,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -46,7 +46,7 @@ interface OptionsArrayEditorProps {
 export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
   value = [],
   onChange,
-  className = ''
+  className = '',
 }) => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
@@ -58,7 +58,7 @@ export const OptionsArrayEditor: React.FC<OptionsArrayEditorProps> = ({
       imageUrl: 'https://via.placeholder.com/256x256',
       value: `option-${value.length + 1}`,
       category: 'Categoria A',
-      points: 1
+      points: 1,
     };
     
     onChange([...value, newOption]);

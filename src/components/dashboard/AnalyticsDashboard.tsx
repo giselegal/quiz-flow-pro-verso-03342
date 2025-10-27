@@ -19,7 +19,7 @@ import {
     Pie,
     Cell,
     AreaChart,
-    Area
+    Area,
 } from 'recharts';
 import {
     Users,
@@ -27,7 +27,7 @@ import {
     Clock,
     TrendingUp,
     Smartphone,
-    AlertCircle
+    AlertCircle,
 } from 'lucide-react';
 
 // ============================================================================
@@ -66,13 +66,13 @@ const COLORS = {
     info: '#06b6d4',
     purple: '#8b5cf6',
     pink: '#ec4899',
-    indigo: '#6366f1'
+    indigo: '#6366f1',
 };
 
 const DEVICE_COLORS = {
     mobile: COLORS.primary,
     tablet: COLORS.warning,
-    desktop: COLORS.success
+    desktop: COLORS.success,
 };
 
 // ============================================================================
@@ -85,19 +85,19 @@ const KPICard: React.FC<KPICardProps> = ({
     subtitle,
     icon,
     trend = 'neutral',
-    color = 'blue'
+    color = 'blue',
 }) => {
     const colorClasses = {
         green: 'bg-green-50 border-green-200 text-green-800',
         red: 'bg-red-50 border-red-200 text-red-800',
         blue: 'bg-blue-50 border-blue-200 text-blue-800',
-        orange: 'bg-orange-50 border-orange-200 text-orange-800'
+        orange: 'bg-orange-50 border-orange-200 text-orange-800',
     };
 
     const trendIcon = {
         up: <TrendingUp className="w-4 h-4 text-green-600" />,
         down: <TrendingUp className="w-4 h-4 text-red-600 rotate-180" />,
-        neutral: null
+        neutral: null,
     };
 
     return (
@@ -152,7 +152,7 @@ export const AnalyticsDashboard: React.FC = () => {
         deviceDistribution: [],
         dailyActivity: [],
         styleDistribution: [],
-        timeDistribution: []
+        timeDistribution: [],
     });
     const [loading, setLoading] = useState(true);
 
@@ -219,7 +219,7 @@ export const AnalyticsDashboard: React.FC = () => {
             .map(([step, count]) => ({
                 step: parseInt(step),
                 count,
-                percentage: (count / totalParticipants) * 100
+                percentage: (count / totalParticipants) * 100,
             }))
             .sort((a, b) => a.step - b.step);
 
@@ -234,7 +234,7 @@ export const AnalyticsDashboard: React.FC = () => {
             .map(([device, count]) => ({
                 device,
                 count,
-                percentage: (count / totalParticipants) * 100
+                percentage: (count / totalParticipants) * 100,
             }))
             .sort((a, b) => b.count - a.count);
 
@@ -247,16 +247,16 @@ export const AnalyticsDashboard: React.FC = () => {
 
         const dailyActivity = last7Days.map(date => {
             const dayParticipants = sessions.filter(s =>
-                s.started_at.startsWith(date)
+                s.started_at.startsWith(date),
             );
             const dayCompleted = dayParticipants.filter(s =>
-                s.status === 'completed'
+                s.status === 'completed',
             );
 
             return {
-                date: date.split('-')[2] + '/' + date.split('-')[1],
+                date: `${date.split('-')[2]  }/${  date.split('-')[1]}`,
                 participants: dayParticipants.length,
-                completed: dayCompleted.length
+                completed: dayCompleted.length,
             };
         });
 
@@ -271,7 +271,7 @@ export const AnalyticsDashboard: React.FC = () => {
             .map(([style, count]) => ({
                 style,
                 count,
-                percentage: results.length > 0 ? (count / results.length) * 100 : 0
+                percentage: results.length > 0 ? (count / results.length) * 100 : 0,
             }))
             .sort((a, b) => b.count - a.count)
             .slice(0, 8); // Top 8 estilos
@@ -281,7 +281,7 @@ export const AnalyticsDashboard: React.FC = () => {
             { range: '< 3 min', min: 0, max: 180 },
             { range: '3-5 min', min: 180, max: 300 },
             { range: '5-10 min', min: 300, max: 600 },
-            { range: '10+ min', min: 600, max: Infinity }
+            { range: '10+ min', min: 600, max: Infinity },
         ];
 
         const timeDistribution = timeRanges.map(({ range, min, max }) => {
@@ -301,7 +301,7 @@ export const AnalyticsDashboard: React.FC = () => {
             deviceDistribution,
             dailyActivity,
             styleDistribution,
-            timeDistribution
+            timeDistribution,
         };
     };
 
@@ -345,8 +345,8 @@ export const AnalyticsDashboard: React.FC = () => {
                     value={`${analytics.completionRate}%`}
                     subtitle="Participantes que finalizaram"
                     icon={<Target className="w-8 h-8" />}
-                    color={analytics.completionRate > 70 ? "green" : analytics.completionRate > 50 ? "orange" : "red"}
-                    trend={analytics.completionRate > 70 ? "up" : analytics.completionRate < 50 ? "down" : "neutral"}
+                    color={analytics.completionRate > 70 ? 'green' : analytics.completionRate > 50 ? 'orange' : 'red'}
+                    trend={analytics.completionRate > 70 ? 'up' : analytics.completionRate < 50 ? 'down' : 'neutral'}
                 />
                 <KPICard
                     title="Tempo Médio"

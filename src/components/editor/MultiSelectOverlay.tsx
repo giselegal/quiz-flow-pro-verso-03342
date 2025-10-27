@@ -39,7 +39,7 @@ export const MultiSelectOverlay: React.FC<MultiSelectOverlayProps> = ({
           'bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg',
           'flex items-center gap-3 transition-all duration-200',
           'animate-in slide-in-from-top-2',
-          className
+          className,
         )}
       >
         {/* Contador */}
@@ -227,7 +227,7 @@ export const useMultiSelectIndicator = (isSelected: boolean) => {
     'data-selected': isSelected,
     className: cn(
       'transition-all duration-200',
-      isSelected && 'relative z-20 transform scale-[1.02]'
+      isSelected && 'relative z-20 transform scale-[1.02]',
     ),
   };
 };

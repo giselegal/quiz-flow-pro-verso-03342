@@ -36,7 +36,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
     className,
     onComplete,
     onStepChange,
-    debugMode = false
+    debugMode = false,
 }) => {
     // Estado do quiz flow
     const [currentStep, setCurrentStep] = useState(1);
@@ -111,7 +111,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                     templateName: tpl?.templateName,
                     totalSteps: detectedSteps,
                     hasTemplate: !!tpl?.template,
-                    hasRealData: !!realQuizData
+                    hasRealData: !!realQuizData,
                 });
 
             } catch (error) {
@@ -161,7 +161,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 userAnswers,
                 progress,
                 currentStep,
-                totalSteps
+                totalSteps,
             });
         }
     }, [currentStep, stepData, userAnswers, totalSteps, onStepChange]);
@@ -173,7 +173,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 answers: userAnswers,
                 funnelId,
                 totalSteps,
-                completedAt: new Date().toISOString()
+                completedAt: new Date().toISOString(),
             });
         }
     }, [currentStep, totalSteps, userAnswers, funnelId, onComplete]);
@@ -198,7 +198,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
     const handleStepAnswer = (stepNumber: number, answerData: any) => {
         setUserAnswers(prev => ({
             ...prev,
-            [stepNumber]: answerData
+            [stepNumber]: answerData,
         }));
     };    // Cálculos derivados
     const progress = Math.round((currentStep / totalSteps) * 100);
@@ -397,7 +397,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                         'flex items-center justify-center gap-2 px-6 py-3 font-medium rounded-lg border transition-colors',
                         currentStep === 1
                             ? 'bg-stone-100 text-stone-400 cursor-not-allowed border-stone-200'
-                            : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 shadow-sm'
+                            : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 shadow-sm',
                     )}
                 >
                     ← Anterior
@@ -408,7 +408,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                     onClick={nextStep}
                     className={cn(
                         'flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 font-medium rounded-lg transition-colors',
-                        'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
+                        'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm',
                     )}
                 >
                     {currentStep === totalSteps ? 'Finalizar' : 'Próximo'} →

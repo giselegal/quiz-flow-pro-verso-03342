@@ -22,7 +22,7 @@ import {
     Activity,
     CheckCircle,
     XCircle,
-    Settings
+    Settings,
 } from 'lucide-react';
 
 // ============================================================================
@@ -60,7 +60,7 @@ class SystemDiagnostics {
         averageRenderTime: 0,
         memoryUsage: 0,
         networkErrors: 0,
-        supabaseErrors: 0
+        supabaseErrors: 0,
     };
 
     private renderHistory: number[] = [];
@@ -80,7 +80,7 @@ class SystemDiagnostics {
                 description: 'Sistema está fazendo requisições para tabelas que não existem (quiz_drafts, quiz_production)',
                 solution: 'Implementar cache local e verificação de endpoints',
                 status: 'detected',
-                autoFix: this.fixSupabaseErrors.bind(this)
+                autoFix: this.fixSupabaseErrors.bind(this),
             });
         }
 
@@ -101,7 +101,7 @@ class SystemDiagnostics {
                 description: `Sistema renderizado ${this.metrics.renderCount} vezes em pouco tempo`,
                 solution: 'Implementar memoização e otimizar dependências',
                 status: 'detected',
-                autoFix: this.fixExcessiveRenders.bind(this)
+                autoFix: this.fixExcessiveRenders.bind(this),
             });
         }
 
@@ -116,7 +116,7 @@ class SystemDiagnostics {
                 description: `Aplicação usando ${memoryMB.toFixed(2)}MB de memória`,
                 solution: 'Limpeza de referências e garbage collection',
                 status: 'detected',
-                autoFix: this.fixMemoryUsage.bind(this)
+                autoFix: this.fixMemoryUsage.bind(this),
             });
         }
 
@@ -133,7 +133,7 @@ class SystemDiagnostics {
             'quiz-theme-config',
             'quiz-step-1',
             'quiz-step-2',
-            'quiz-step-3'
+            'quiz-step-3',
         ];
 
         configTimeouts.forEach(config => {
@@ -145,7 +145,7 @@ class SystemDiagnostics {
                 description: `Configuração ${config} não carregou dentro do tempo esperado`,
                 solution: 'Implementar cache local e valores padrão robustos',
                 status: 'detected',
-                autoFix: () => this.fixConfigTimeout(config)
+                autoFix: () => this.fixConfigTimeout(config),
             });
         });
 
@@ -161,7 +161,7 @@ class SystemDiagnostics {
             quiz_drafts: new Map(),
             quiz_production: new Map(),
             lastUpdate: Date.now(),
-            ttl: 5 * 60 * 1000 // 5 minutos
+            ttl: 5 * 60 * 1000, // 5 minutos
         };
 
         // Salvar no localStorage como fallback
@@ -181,7 +181,7 @@ class SystemDiagnostics {
         const debounceConfig = {
             renderDelay: 300,
             maxRenders: 10,
-            timeWindow: 1000
+            timeWindow: 1000,
         };
 
         // Salvar configuração
@@ -222,7 +222,7 @@ class SystemDiagnostics {
             'quiz-theme-config': { primaryColor: '#007bff', fontFamily: 'Inter' },
             'quiz-step-1': { type: 'question', title: 'Pergunta Padrão' },
             'quiz-step-2': { type: 'question', title: 'Pergunta Padrão 2' },
-            'quiz-step-3': { type: 'result', title: 'Resultado Padrão' }
+            'quiz-step-3': { type: 'result', title: 'Resultado Padrão' },
         };
 
         const defaultConfig = defaultConfigs[configName as keyof typeof defaultConfigs];
@@ -250,7 +250,7 @@ class SystemDiagnostics {
                 // Retornar dados mockados em vez de fazer a requisição
                 return new Response(JSON.stringify({ data: [], error: null }), {
                     status: 200,
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
                 });
             }
 
@@ -302,7 +302,7 @@ class SystemDiagnostics {
         return [
             ...this.detectSupabaseIssues(),
             ...this.detectPerformanceIssues(),
-            ...this.detectLoadingIssues()
+            ...this.detectLoadingIssues(),
         ];
     }
 }
@@ -346,8 +346,8 @@ export const SystemDiagnosticsPanel: React.FC<{
             prev.map(d =>
                 d.id === diagnosticId
                     ? { ...d, status: 'fixing' }
-                    : d
-            )
+                    : d,
+            ),
         );
 
         try {
@@ -358,8 +358,8 @@ export const SystemDiagnosticsPanel: React.FC<{
                 prev.map(d =>
                     d.id === diagnosticId
                         ? { ...d, status: 'fixed' }
-                        : d
-                )
+                        : d,
+                ),
             );
         } catch (error) {
             appLogger.error(`Erro ao aplicar correção ${diagnosticId}:`, error);
@@ -369,8 +369,8 @@ export const SystemDiagnosticsPanel: React.FC<{
                 prev.map(d =>
                     d.id === diagnosticId
                         ? { ...d, status: 'failed' }
-                        : d
-                )
+                        : d,
+                ),
             );
         }
     };

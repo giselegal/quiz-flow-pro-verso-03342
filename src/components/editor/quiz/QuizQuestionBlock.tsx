@@ -45,7 +45,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   }
 
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
-    properties.selectedOptions || []
+    properties.selectedOptions || [],
   );
   const [currentStep, setCurrentStep] = useState<any>(null);
 
@@ -106,7 +106,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   const calculateProgress = () => {
     if (!currentStep) return 0;
     const totalSteps = QUIZ_CONFIGURATION.steps.filter(
-      s => s.type !== 'intro' && s.type !== 'result'
+      s => s.type !== 'intro' && s.type !== 'result',
     ).length;
     const currentStepNumber = Number(activeStageId) || 1;
     return Math.min((currentStepNumber / totalSteps) * 100, 100);
@@ -252,7 +252,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
                     </CardContent>
                   </Card>
                 );
-              }) || []
+              }) || [],
           )}
         </div>
 

@@ -78,13 +78,13 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
     onDuplicate,
     onMoveUp,
     onMoveDown,
-    className
+    className,
 }) => {
     // ⚠️ DEPRECATION WARNING
     useEffect(() => {
         console.warn(
             '⚠️ DEPRECATED: BlockRenderer (editor/components) será removido em 21/out/2025. ' +
-            'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md'
+            'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md',
         );
     }, []);
 
@@ -98,7 +98,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
                 className={cn(
                     'p-4 border-2 border-red-300 bg-red-50 rounded-lg',
                     'flex items-center gap-3',
-                    className
+                    className,
                 )}
             >
                 <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
@@ -136,7 +136,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
             className={cn(
                 'block-wrapper',
                 isSelected && 'block-selected',
-                className
+                className,
             )}
             data-block-id={block.id}
             data-block-type={block.type}

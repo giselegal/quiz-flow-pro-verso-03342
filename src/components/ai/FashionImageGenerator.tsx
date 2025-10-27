@@ -25,7 +25,7 @@ export function FashionImageGenerator({ onImageGenerated, defaultPrompt }: Fashi
         bodyType: 'slim',
         age: 'young-adult',
         season: 'verão',
-        budget: 'medium'
+        budget: 'medium',
     });
 
     const [provider, setProvider] = useState<'dalle3' | 'stable-diffusion'>('dalle3');
@@ -36,7 +36,7 @@ export function FashionImageGenerator({ onImageGenerated, defaultPrompt }: Fashi
     const fashionAI = useFashionAI({
         provider,
         apiKey,
-        style: 'realistic'
+        style: 'realistic',
     });
 
     const handleGenerate = async () => {
@@ -51,7 +51,7 @@ export function FashionImageGenerator({ onImageGenerated, defaultPrompt }: Fashi
             const newImage = {
                 url: result.imageUrl,
                 prompt: result.prompt,
-                provider: result.provider
+                provider: result.provider,
             };
             setGeneratedImages(prev => [newImage, ...prev]);
             onImageGenerated?.(result.imageUrl, result.prompt);
@@ -70,7 +70,7 @@ export function FashionImageGenerator({ onImageGenerated, defaultPrompt }: Fashi
         const newImages = successful.map(result => ({
             url: result.imageUrl!,
             prompt: result.prompt,
-            provider: result.provider
+            provider: result.provider,
         }));
 
         setGeneratedImages(prev => [...newImages, ...prev]);
@@ -80,7 +80,7 @@ export function FashionImageGenerator({ onImageGenerated, defaultPrompt }: Fashi
         const template = FASHION_PROMPTS[promptKey];
         setCurrentRequest(prev => ({
             ...prev,
-            ...template
+            ...template,
         }));
     };
 
@@ -88,7 +88,7 @@ export function FashionImageGenerator({ onImageGenerated, defaultPrompt }: Fashi
         const colors = FASHION_COLORS[paletteKey];
         setCurrentRequest(prev => ({
             ...prev,
-            colors: colors.slice(0, 3) // Máximo 3 cores
+            colors: colors.slice(0, 3), // Máximo 3 cores
         }));
     };
 

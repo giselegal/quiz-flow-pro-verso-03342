@@ -17,7 +17,7 @@ interface EditableSpacerProps {
 export default function EditableSpacer({
     height = 32,
     isEditable = false,
-    onEdit = () => { }
+    onEdit = () => { },
 }: EditableSpacerProps) {
     if (!isEditable) {
         // MODO PREVIEW: Espaçamento invisível

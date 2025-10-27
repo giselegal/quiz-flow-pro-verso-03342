@@ -35,7 +35,7 @@ export const StyleButtons: React.FC<StyleButtonsProps> = ({
           'p-2 h-8 w-8',
           isBold
             ? 'bg-[#B89B7A] hover:bg-[#A08766] text-white'
-            : 'border-[#B89B7A]/30 hover:bg-[#B89B7A]/10'
+            : 'border-[#B89B7A]/30 hover:bg-[#B89B7A]/10',
         )}
         title="Negrito"
       >
@@ -50,7 +50,7 @@ export const StyleButtons: React.FC<StyleButtonsProps> = ({
           'p-2 h-8 w-8',
           isItalic
             ? 'bg-[#B89B7A] hover:bg-[#A08766] text-white'
-            : 'border-[#B89B7A]/30 hover:bg-[#B89B7A]/10'
+            : 'border-[#B89B7A]/30 hover:bg-[#B89B7A]/10',
         )}
         title="Itálico"
       >
@@ -65,7 +65,7 @@ export const StyleButtons: React.FC<StyleButtonsProps> = ({
           'p-2 h-8 w-8',
           isUnderline
             ? 'bg-[#B89B7A] hover:bg-[#A08766] text-white'
-            : 'border-[#B89B7A]/30 hover:bg-[#B89B7A]/10'
+            : 'border-[#B89B7A]/30 hover:bg-[#B89B7A]/10',
         )}
         title="Sublinhado"
       >

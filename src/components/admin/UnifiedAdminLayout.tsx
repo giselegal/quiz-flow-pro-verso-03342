@@ -17,7 +17,7 @@ import {
     Edit,
     ArrowLeft,
     Home,
-    Plus
+    Plus,
 } from 'lucide-react';
 import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
@@ -56,7 +56,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
     children,
     currentView = 'dashboard',
     funnelId,
-    className = ''
+    className = '',
 }) => {
     const [activeView, setActiveView] = useState(currentView);
     const [syncStats, setSyncStats] = useState(EditorDashboardSyncService.getSyncStats());
@@ -71,8 +71,8 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
             detailsMinor: state.theme.secondaryColor,
             buttons: state.theme.primaryColor,
             glowEffect: state.theme.primaryColor,
-            accent: state.theme.secondaryColor
-        }
+            accent: state.theme.secondaryColor,
+        },
     }), [state.theme]);
 
     // Computa iniciais para avatar simples
@@ -93,7 +93,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
             dashboard: '/admin/dashboard',
             funnels: '/admin/funnels',
             analytics: '/admin/analytics',
-            'current-funnel': '/admin/funil-atual'
+            'current-funnel': '/admin/funil-atual',
         };
 
         UnifiedRoutingService.navigate(paths[view]);
@@ -127,13 +127,13 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
         if (routeInfo?.breadcrumbs) {
             return routeInfo.breadcrumbs.map((crumb, index, array) => ({
                 ...crumb,
-                active: index === array.length - 1
+                active: index === array.length - 1,
             }));
         }
 
         // Fallback breadcrumbs
         const breadcrumbs: AdminBreadcrumb[] = [
-            { label: 'Admin', path: '/admin/dashboard' }
+            { label: 'Admin', path: '/admin/dashboard' },
         ];
 
         switch (activeView) {
@@ -149,7 +149,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
             case 'editor':
                 breadcrumbs.push(
                     { label: 'Funis', path: '/admin/funnels' },
-                    { label: 'Editor', path: '#', active: true }
+                    { label: 'Editor', path: '#', active: true },
                 );
                 break;
             default:
@@ -204,7 +204,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
             className={`min-h-screen ${className}`}
             style={{
                 background: theme.colors.background,
-                color: theme.colors.text
+                color: theme.colors.text,
             }}
         >
             {/* Header Unificado - Design com Nova Identidade Visual */}
@@ -214,7 +214,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                     borderColor: `${theme.colors.detailsMinor}30`,
                     backgroundColor: `${theme.colors.background}95`,
                     backdropFilter: 'blur(20px)',
-                    boxShadow: `0 0 30px ${theme.colors.glowEffect}20`
+                    boxShadow: `0 0 30px ${theme.colors.glowEffect}20`,
                 }}
             >
                 <div className="flex h-18 items-center px-8">
@@ -225,7 +225,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                 className="flex items-center justify-center w-10 h-10 rounded-xl shadow-lg glow-button"
                                 style={{
                                     background: `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`,
-                                    boxShadow: `0 0 20px ${theme.colors.buttons}50`
+                                    boxShadow: `0 0 20px ${theme.colors.buttons}50`,
                                 }}
                             >
                                 <BarChart3 className="w-5 h-5 text-white" />
@@ -238,7 +238,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                         WebkitBackgroundClip: 'text',
                                         WebkitTextFillColor: 'transparent',
                                         backgroundClip: 'text',
-                                        filter: `drop-shadow(0 0 10px ${theme.colors.detailsMinor}50)`
+                                        filter: `drop-shadow(0 0 10px ${theme.colors.detailsMinor}50)`,
                                     }}
                                 >
                                     Admin Dashboard
@@ -258,7 +258,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                 <div
                                     className="w-px h-6"
                                     style={{
-                                        background: `linear-gradient(to bottom, transparent, ${theme.colors.detailsMinor}50, transparent)`
+                                        background: `linear-gradient(to bottom, transparent, ${theme.colors.detailsMinor}50, transparent)`,
                                     }}
                                 />
                                 <div
@@ -266,7 +266,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                     style={{
                                         backgroundColor: `${theme.colors.glowEffect}20`,
                                         borderColor: `${theme.colors.detailsMinor}40`,
-                                        boxShadow: `0 0 10px ${theme.colors.glowEffect}30`
+                                        boxShadow: `0 0 10px ${theme.colors.glowEffect}30`,
                                     }}
                                 >
                                     <div
@@ -291,7 +291,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                             style={{
                                 backgroundColor: `${theme.colors.background}60`,
                                 borderColor: `${theme.colors.detailsMinor}30`,
-                                boxShadow: `0 0 20px ${theme.colors.glowEffect}20`
+                                boxShadow: `0 0 20px ${theme.colors.glowEffect}20`,
                             }}
                         >
                             <Tabs value={activeView} onValueChange={(value) => handleNavigateToView(value as any)} className="w-full">
@@ -306,7 +306,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                             color: activeView === 'dashboard' ? '#ffffff !important' : `${theme.colors.text} !important`,
                                             boxShadow: activeView === 'dashboard'
                                                 ? `0 0 15px ${theme.colors.buttons}40`
-                                                : 'none'
+                                                : 'none',
                                         }}
                                     >
                                         <Home className="w-4 h-4" />
@@ -322,7 +322,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                             color: activeView === 'funnels' ? '#ffffff !important' : `${theme.colors.text} !important`,
                                             boxShadow: activeView === 'funnels'
                                                 ? `0 0 15px ${theme.colors.buttons}40`
-                                                : 'none'
+                                                : 'none',
                                         }}
                                     >
                                         <Target className="w-4 h-4" />
@@ -338,7 +338,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                             color: activeView === 'analytics' ? '#ffffff !important' : `${theme.colors.text} !important`,
                                             boxShadow: activeView === 'analytics'
                                                 ? `0 0 15px ${theme.colors.buttons}40`
-                                                : 'none'
+                                                : 'none',
                                         }}
                                     >
                                         <Activity className="w-4 h-4" />
@@ -366,7 +366,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                     : `${theme.colors.background}60`,
                                 boxShadow: activeView === 'current-funnel'
                                     ? `0 0 15px ${theme.colors.glowEffect}30`
-                                    : 'none'
+                                    : 'none',
                             }}
                         >
                             <Target className="w-4 h-4 mr-2" />
@@ -381,7 +381,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                             style={{
                                 borderColor: `${theme.colors.detailsMinor}40`,
                                 background: `${theme.colors.background}70`,
-                                boxShadow: `0 0 12px ${theme.colors.glowEffect}25`
+                                boxShadow: `0 0 12px ${theme.colors.glowEffect}25`,
                             }}
                             title={displayName}
                         >
@@ -390,7 +390,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                 style={{
                                     background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
                                     color: '#fff',
-                                    boxShadow: `0 0 10px ${theme.colors.detailsMinor}50`
+                                    boxShadow: `0 0 10px ${theme.colors.detailsMinor}50`,
                                 }}
                             >
                                 {initials}
@@ -414,7 +414,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                     borderColor: `${theme.colors.detailsMinor}60`,
                                     color: theme.colors.text,
                                     backgroundColor: `${theme.colors.background}50`,
-                                    boxShadow: `0 0 10px ${theme.colors.glowEffect}20`
+                                    boxShadow: `0 0 10px ${theme.colors.glowEffect}20`,
                                 }}
                             >
                                 Preview
@@ -431,7 +431,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                     borderColor: `${theme.colors.detailsMinor}60`,
                                     color: theme.colors.text,
                                     backgroundColor: `${theme.colors.background}50`,
-                                    boxShadow: `0 0 10px ${theme.colors.glowEffect}20`
+                                    boxShadow: `0 0 10px ${theme.colors.glowEffect}20`,
                                 }}
                             >
                                 <ArrowLeft className="w-4 h-4 mr-2" />
@@ -446,7 +446,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                             className="shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-2.5 rounded-xl font-medium text-white glow-button"
                             style={{
                                 background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
-                                boxShadow: `0 0 20px ${theme.colors.detailsMinor}40, 0 4px 20px rgba(0, 0, 0, 0.2)`
+                                boxShadow: `0 0 20px ${theme.colors.detailsMinor}40, 0 4px 20px rgba(0, 0, 0, 0.2)`,
                             }}
                             title="Abrir Editor"
                         >
@@ -461,7 +461,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                             className="shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-2.5 rounded-xl font-medium text-white glow-button"
                             style={{
                                 background: `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`,
-                                boxShadow: `0 0 20px ${theme.colors.buttons}40, 0 4px 20px rgba(0, 0, 0, 0.2)`
+                                boxShadow: `0 0 20px ${theme.colors.buttons}40, 0 4px 20px rgba(0, 0, 0, 0.2)`,
                             }}
                             title="Editar Funil (quiz-estilo)"
                         >
@@ -475,7 +475,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                             className="shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-2.5 rounded-xl font-medium text-white glow-button"
                             style={{
                                 background: `linear-gradient(135deg, ${theme.colors.buttons} 0%, ${theme.colors.detailsMinor} 100%)`,
-                                boxShadow: `0 0 20px ${theme.colors.buttons}40, 0 4px 20px rgba(0, 0, 0, 0.2)`
+                                boxShadow: `0 0 20px ${theme.colors.buttons}40, 0 4px 20px rgba(0, 0, 0, 0.2)`,
                             }}
                         >
                             <Plus className="w-4 h-4 mr-2" />
@@ -489,7 +489,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                     className="px-8 py-3 backdrop-blur-sm border-t"
                     style={{
                         background: `linear-gradient(90deg, ${theme.colors.glowEffect}20, ${theme.colors.detailsMinor}10)`,
-                        borderColor: `${theme.colors.detailsMinor}30`
+                        borderColor: `${theme.colors.detailsMinor}30`,
                     }}
                 >
                     <nav className="flex items-center space-x-2 text-sm">
@@ -504,7 +504,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                     style={{
                                         color: crumb.active ? theme.colors.detailsMinor : `${theme.colors.text}70`,
                                         fontWeight: crumb.active ? '600' : '400',
-                                        cursor: crumb.path === '#' ? 'default' : 'pointer'
+                                        cursor: crumb.path === '#' ? 'default' : 'pointer',
                                     }}
                                     disabled={crumb.path === '#'}
                                 >
@@ -521,7 +521,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                 <div
                     className="h-full backdrop-blur-sm"
                     style={{
-                        background: `linear-gradient(135deg, ${theme.colors.background}60, ${theme.colors.glowEffect}10)`
+                        background: `linear-gradient(135deg, ${theme.colors.background}60, ${theme.colors.glowEffect}10)`,
                     }}
                 >
                     <React.Suspense
@@ -532,7 +532,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                                         className="w-8 h-8 mx-auto mb-4 border-2 border-t-transparent rounded-full animate-spin"
                                         style={{
                                             borderColor: `${theme.colors.detailsMinor}30`,
-                                            borderTopColor: 'transparent'
+                                            borderTopColor: 'transparent',
                                         }}
                                     ></div>
                                     <p style={{ color: `${theme.colors.text}70` }}>Carregando...</p>

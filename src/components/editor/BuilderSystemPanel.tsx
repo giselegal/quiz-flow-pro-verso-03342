@@ -32,7 +32,7 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({ onQuizCr
     applyPreset,
     generateCustomTemplate,
     isReady,
-    canUseAI
+    canUseAI,
   } = useBuilderSystem();
 
   const [aiPrompt, setAiPrompt] = useState('');
@@ -69,7 +69,7 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({ onQuizCr
         name: customName,
         type: 'quiz',
         steps: customSteps,
-        theme: customTheme
+        theme: customTheme,
       });
       onQuizCreated?.(result);
       setCustomName('');

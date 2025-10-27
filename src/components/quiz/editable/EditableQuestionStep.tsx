@@ -26,7 +26,7 @@ export default function EditableQuestionStep({
     currentAnswers,
     onAnswersChange,
     isEditable = false,
-    onEdit = () => { }
+    onEdit = () => { },
 }: EditableQuestionStepProps) {
     const [localAnswers, setLocalAnswers] = useState<string[]>(currentAnswers);
 
@@ -53,7 +53,7 @@ export default function EditableQuestionStep({
         const newOptions = [...(data.options || []), {
             id: `opt-${Date.now()}`,
             text: 'Nova opção',
-            image: hasImages ? '/api/placeholder/150/150' : undefined
+            image: hasImages ? '/api/placeholder/150/150' : undefined,
         }];
         onEdit('options', newOptions);
     };
@@ -65,7 +65,7 @@ export default function EditableQuestionStep({
 
     const handleOptionEdit = (optionId: string, field: string, value: any) => {
         const newOptions = (data.options || []).map(opt =>
-            opt.id === optionId ? { ...opt, [field]: value } : opt
+            opt.id === optionId ? { ...opt, [field]: value } : opt,
         );
         onEdit('options', newOptions);
     };

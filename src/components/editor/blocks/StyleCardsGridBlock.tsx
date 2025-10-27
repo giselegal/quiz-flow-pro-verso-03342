@@ -132,7 +132,7 @@ const StyleCardInlineBlock: React.FC<any> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={!disabled ? onClick : undefined}
     >

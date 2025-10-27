@@ -15,7 +15,7 @@ const QuestionStepEditor: React.FC<Props> = ({ stepId, props, onApply }) => {
     const { register, control, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(QuestionStepSchema),
         defaultValues: props as any,
-        mode: 'onChange'
+        mode: 'onChange',
     });
 
     const { fields, append, remove, move } = useFieldArray({ control, name: 'options' as const });

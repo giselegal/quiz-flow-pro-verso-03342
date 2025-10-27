@@ -83,7 +83,7 @@ describe('OptimizedPropertiesPanel', () => {
             <OptimizedPropertiesPanel
                 selectedBlock={mockSelectedBlock}
                 onUpdate={onUpdate}
-            />
+            />,
         );
         expect(container).toBeInTheDocument();
         expect(onUpdate).toBeDefined();
@@ -95,7 +95,7 @@ describe('OptimizedPropertiesPanel', () => {
             <OptimizedPropertiesPanel
                 selectedBlock={mockSelectedBlock}
                 onClose={onClose}
-            />
+            />,
         );
         expect(container).toBeInTheDocument();
         expect(onClose).toBeDefined();
@@ -107,7 +107,7 @@ describe('OptimizedPropertiesPanel', () => {
             <OptimizedPropertiesPanel
                 selectedBlock={mockSelectedBlock}
                 onDelete={onDelete}
-            />
+            />,
         );
         expect(container).toBeInTheDocument();
         expect(onDelete).toBeDefined();

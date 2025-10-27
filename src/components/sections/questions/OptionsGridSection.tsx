@@ -367,7 +367,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps & { properties
                 >
                     {validationMessage.replace(
                         '{count}',
-                        `${minSelections - localSelected.length}`
+                        `${minSelections - localSelected.length}`,
                     )}
                 </p>
             )}

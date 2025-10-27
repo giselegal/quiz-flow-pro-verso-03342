@@ -99,7 +99,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
                 'flex items-center w-full',
                 alignClasses[align as keyof typeof alignClasses],
                 isSelected && 'ring-2 ring-blue-500 ring-offset-4 rounded',
-                className
+                className,
             )}
             style={{
                 marginTop: `${marginTop}px`,
@@ -113,7 +113,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
                 <div
                     className={cn(
                         'decorative-bar',
-                        animated && 'animate-pulse'
+                        animated && 'animate-pulse',
                     )}
                     style={getBarStyle()}
                 />
@@ -124,7 +124,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
                     <div
                         className={cn(
                             'decorative-bar flex-grow',
-                            animated && 'animate-pulse'
+                            animated && 'animate-pulse',
                         )}
                         style={getBarStyle()}
                     />
@@ -134,7 +134,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
                     <div
                         className={cn(
                             'decorative-bar flex-grow',
-                            animated && 'animate-pulse'
+                            animated && 'animate-pulse',
                         )}
                         style={getBarStyle()}
                     />

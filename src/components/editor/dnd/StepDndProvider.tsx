@@ -22,7 +22,7 @@ export const StepDndProvider: React.FC<StepDndProviderProps> = React.memo(({
   children,
   onDragStart: _onDragStart,
   onDragEnd: _onDragEnd,
-  onDragCancel: _onDragCancel
+  onDragCancel: _onDragCancel,
 }) => {
   // 🎯 SIMPLIFICADO: Apenas wrapper sem DndContext duplicado
   // O DndContext é fornecido pelo PureBuilderProvider

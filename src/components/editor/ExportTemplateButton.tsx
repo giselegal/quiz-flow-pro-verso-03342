@@ -20,7 +20,7 @@ interface ExportTemplateButtonProps {
 export function ExportTemplateButton({
     funnelId,
     buttonText = 'Exportar para JSON v3.0',
-    variant = 'outline'
+    variant = 'outline',
 }: ExportTemplateButtonProps) {
     const [isExporting, setIsExporting] = useState(false);
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');

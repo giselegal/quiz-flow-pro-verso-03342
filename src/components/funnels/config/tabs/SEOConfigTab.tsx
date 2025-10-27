@@ -105,7 +105,7 @@ export default function SEOConfigTab({ seo, onUpdate, disabled = false }: SEOCon
                         id="seo-keywords"
                         value={seo.keywords?.join(', ') || ''}
                         onChange={(e) => onUpdate({
-                            keywords: e.target.value.split(',').map(k => k.trim()).filter(Boolean)
+                            keywords: e.target.value.split(',').map(k => k.trim()).filter(Boolean),
                         })}
                         placeholder="palavra1, palavra2, palavra3"
                         disabled={disabled}

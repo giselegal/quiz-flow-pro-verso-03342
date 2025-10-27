@@ -96,7 +96,7 @@ export function useBlockOperations({
   const updateBlockProperty = useCallback((
     blockId: string,
     key: string,
-    value: any
+    value: any,
   ) => {
     if (!selectedStepId) return;
 
@@ -108,7 +108,7 @@ export function useBlockOperations({
         blocks: step.blocks.map((block: BlockComponent) =>
           block.id === blockId
             ? { ...block, properties: { ...block.properties, [key]: value } }
-            : block
+            : block,
         ),
       };
     });

@@ -16,7 +16,7 @@ interface TextBlockProps {
 
 const TextBlock: React.FC<TextBlockProps> = ({
   block,
-  isSelected
+  isSelected,
 }) => {
   const { content = {}, properties = {} } = block;
   

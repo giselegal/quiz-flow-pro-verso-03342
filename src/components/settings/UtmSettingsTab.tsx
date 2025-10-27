@@ -36,7 +36,7 @@ export const UtmSettingsTab: React.FC = () => {
         'facebook',
         'social',
         'retargeting',
-        'ad_1'
+        'ad_1',
       ),
     };
 

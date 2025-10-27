@@ -9,7 +9,7 @@ import {
     Zap,
     Eye,
     ArrowRight,
-    Globe
+    Globe,
 } from 'lucide-react';
 import StepNoCodeConnections from './StepNoCodeConnections';
 import { NoCodeConfigPanel } from '@/pages/admin/NoCodeConfigPage';
@@ -33,7 +33,7 @@ const EditorNoCodePanel: React.FC<EditorNoCodePanelProps> = ({ className = '' })
             <SheetTrigger asChild>
                 <Button
                     variant="outline"
-                    className={className || `relative border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white`}
+                    className={className || 'relative border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white'}
                 >
                     <Settings className="w-4 h-4 mr-2" />
                     Configurações NOCODE

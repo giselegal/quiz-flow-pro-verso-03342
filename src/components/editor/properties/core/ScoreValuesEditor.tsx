@@ -25,7 +25,7 @@ const ScoreValuesEditor: React.FC<PropertyEditorProps> = ({ property, onChange }
         'gamine',
         'ingenue',
         'elegant',
-        'bohemian'
+        'bohemian',
     ];
 
     // Obter estilos atuais (combinando existentes + padrões)
@@ -35,7 +35,7 @@ const ScoreValuesEditor: React.FC<PropertyEditorProps> = ({ property, onChange }
     const updateStyleScore = (styleName: string, score: number) => {
         const newScoreValues = {
             ...scoreValues,
-            [styleName]: score
+            [styleName]: score,
         };
         onChange(property.key, newScoreValues);
     };
@@ -66,7 +66,7 @@ const ScoreValuesEditor: React.FC<PropertyEditorProps> = ({ property, onChange }
             gamine: 'Gamine',
             ingenue: 'Ingênua',
             elegant: 'Elegante',
-            bohemian: 'Boêmio'
+            bohemian: 'Boêmio',
         };
         return labels[styleName] || styleName.charAt(0).toUpperCase() + styleName.slice(1);
     };

@@ -33,7 +33,7 @@ import {
     Step20CompatibilityBlock,
     Step20SecondaryStylesBlock,
     Step20PersonalizedOfferBlock,
-    Step20CompleteTemplateBlock
+    Step20CompleteTemplateBlock,
 } from '@/components/editor/blocks/Step20ModularBlocks';
 import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
 
@@ -205,7 +205,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'secure-purchase': lazy(() => import('@/components/editor/blocks/SecurePurchaseBlock')),
     'value-anchoring': lazy(() => import('@/components/editor/blocks/ValueAnchoringBlock')),
     'mentor-section-inline': lazy(
-        () => import('@/components/editor/blocks/MentorSectionInlineBlock')
+        () => import('@/components/editor/blocks/MentorSectionInlineBlock'),
     ),
 
     // 🎯 NOVOS COMPONENTES DE DEPOIMENTOS COM DADOS REAIS
@@ -214,10 +214,10 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
 
     // ✅ ALIASES PARA COMPATIBILIDADE
     'personalized-hook-inline': lazy(
-        () => import('@/components/editor/blocks/StyleCardInlineBlock')
+        () => import('@/components/editor/blocks/StyleCardInlineBlock'),
     ),
     'final-value-proposition-inline': lazy(
-        () => import('@/components/editor/blocks/ValueAnchoringBlock')
+        () => import('@/components/editor/blocks/ValueAnchoringBlock'),
     ),
     navigation: lazy(() => import('@/components/editor/blocks/QuizNavigationBlock')),
     'quiz-results': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
@@ -246,7 +246,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
 
     // ✅ BLOCOS AVANÇADOS
     'connected-template-wrapper': lazy(
-        () => import('@/components/editor/blocks/ConnectedTemplateWrapperBlock')
+        () => import('@/components/editor/blocks/ConnectedTemplateWrapperBlock'),
     ),
     'quiz-navigation': lazy(() => import('@/components/editor/blocks/QuizNavigationBlock')),
     'gradient-animation': lazy(() => import('@/components/editor/blocks/GradientAnimationBlock')),
@@ -291,7 +291,7 @@ export const getEnhancedBlockComponent = (type: string) => {
         appLogger.debug(`🎯 Componente encontrado para "${type}":`, {
             exists: !!component,
             type: typeof component,
-            name: (component as any)?.name || (component as any)?.displayName || 'Sem nome'
+            name: (component as any)?.name || (component as any)?.displayName || 'Sem nome',
         });
         if (isValidReactComponent(component)) {
             return component;
@@ -549,12 +549,12 @@ export const AVAILABLE_COMPONENTS = [
  * Retorna o bloco completo com propriedades normalizadas
  */
 export const normalizeBlockProperties = (block: any) => {
-    appLogger.debug(`🔧 normalizeBlockProperties chamado para bloco:`, {
+    appLogger.debug('🔧 normalizeBlockProperties chamado para bloco:', {
         blockId: block?.id,
         originalType: block?.type,
         hasType: !!block?.type,
         blockKeys: Object.keys(block || {}),
-        fullBlock: block
+        fullBlock: block,
     });
 
     if (!block) return { type: undefined, properties: {} };
@@ -622,7 +622,7 @@ export const normalizeBlockProperties = (block: any) => {
     return {
         ...block,
         type: block.type,  // Garantir que o tipo seja preservado
-        properties: normalizedProperties
+        properties: normalizedProperties,
     };
 };
 
@@ -632,7 +632,7 @@ export const normalizeBlockProperties = (block: any) => {
 export const getRegistryStats = () => {
     const totalComponents = Object.keys(ENHANCED_BLOCK_REGISTRY).length;
     const staticComponents = Object.values(ENHANCED_BLOCK_REGISTRY).filter(
-        (comp) => typeof comp === 'function' && !(comp as any).$$typeof
+        (comp) => typeof comp === 'function' && !(comp as any).$$typeof,
     ).length;
     const lazyComponents = totalComponents - staticComponents;
 

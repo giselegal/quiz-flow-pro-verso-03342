@@ -70,7 +70,7 @@ export const QuizSidebarModular: React.FC<QuizSidebarModularProps> = ({ onClose 
       acc[component.category].push(component);
       return acc;
     },
-    {} as Record<string, ComponentItem[]>
+    {} as Record<string, ComponentItem[]>,
   );
 
   const handleComponentAdd = (componentId: string) => {

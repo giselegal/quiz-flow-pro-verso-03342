@@ -6,7 +6,7 @@ import { useResultOptional } from '@/contexts/ResultContext';
 export default function ResultCTABlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   // Ler de content primeiro, fallback para properties
   const buttonTextRaw = block.content?.text || block.properties?.text || 'Ver Recomendações';
@@ -27,9 +27,9 @@ export default function ResultCTABlock({
         blockType: 'result-cta',
         ctaType: 'secondary',
         ctaText: buttonText,
-        url: url,
-        timestamp: Date.now()
-      }
+        url,
+        timestamp: Date.now(),
+      },
     }));
 
     onClick?.();
@@ -50,7 +50,7 @@ export default function ResultCTABlock({
         className="w-full"
         style={{
           backgroundColor,
-          color: textColor
+          color: textColor,
         }}
       >
         {buttonText}

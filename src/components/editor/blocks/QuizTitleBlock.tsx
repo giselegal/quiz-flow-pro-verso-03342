@@ -116,7 +116,7 @@ const QuizTitleBlock: React.FC<QuizTitleBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={onClick}
     >
@@ -129,7 +129,7 @@ const QuizTitleBlock: React.FC<QuizTitleBlockProps> = ({
           fontWeightClass,
           textStyle?.includes('italic') ? 'italic' : '',
           textStyle?.includes('underline') ? 'underline' : '',
-          margin
+          margin,
         )}
         style={{
           fontSize: fontSizeClass,

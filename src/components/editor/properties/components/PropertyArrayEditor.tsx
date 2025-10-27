@@ -93,7 +93,7 @@ export const PropertyArrayEditor: React.FC<PropertyArrayEditorProps> = ({
       const newItems = items.filter((_, i) => i !== index);
       onChange(newItems);
     },
-    [items, onChange]
+    [items, onChange],
   );
 
   const handleUpdateItem = useCallback(
@@ -102,7 +102,7 @@ export const PropertyArrayEditor: React.FC<PropertyArrayEditorProps> = ({
       newItems[index] = { ...newItems[index], [field]: value };
       onChange(newItems);
     },
-    [items, onChange]
+    [items, onChange],
   );
 
   const handleImageChange = useCallback(
@@ -115,7 +115,7 @@ export const PropertyArrayEditor: React.FC<PropertyArrayEditorProps> = ({
       };
       onChange(newItems);
     },
-    [items, onChange]
+    [items, onChange],
   );
 
   const handleDragStart = useCallback((index: number) => {
@@ -135,7 +135,7 @@ export const PropertyArrayEditor: React.FC<PropertyArrayEditorProps> = ({
       onChange(newItems);
       setDraggedIndex(index);
     },
-    [draggedIndex, items, onChange]
+    [draggedIndex, items, onChange],
   );
 
   const handleDragEnd = useCallback(() => {
@@ -148,7 +148,7 @@ export const PropertyArrayEditor: React.FC<PropertyArrayEditorProps> = ({
         className={cn(
           'text-sm font-medium',
           required && "after:content-['*'] after:text-red-500 after:ml-1",
-          error && 'text-red-600'
+          error && 'text-red-600',
         )}
       >
         {label} ({items.length}/{maxItems})
@@ -165,7 +165,7 @@ export const PropertyArrayEditor: React.FC<PropertyArrayEditorProps> = ({
             className={cn(
               'flex items-start gap-3 p-3 bg-background rounded-lg border border-border',
               draggedIndex === index && 'opacity-50',
-              'cursor-move hover:shadow-sm transition-all duration-200'
+              'cursor-move hover:shadow-sm transition-all duration-200',
             )}
           >
             <GripVertical className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
@@ -204,7 +204,7 @@ export const PropertyArrayEditor: React.FC<PropertyArrayEditorProps> = ({
                 <Textarea
                   value={item.description || ''}
                   onChange={e => handleUpdateItem(index, 'description', e.target.value)}
-                  placeholder={`Descrição detalhada da opção (ex: "Amo roupas confortáveis e práticas para o dia a dia.")`}
+                  placeholder={'Descrição detalhada da opção (ex: "Amo roupas confortáveis e práticas para o dia a dia.")'}
                   disabled={disabled}
                   className="text-sm resize-none"
                   rows={2}

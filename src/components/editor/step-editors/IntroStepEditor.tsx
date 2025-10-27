@@ -15,7 +15,7 @@ const IntroStepEditor: React.FC<Props> = ({ stepId, props, onApply }) => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(IntroStepSchema),
         defaultValues: props as any,
-        mode: 'onChange'
+        mode: 'onChange',
     });
 
     useEffect(() => { reset(props as any); }, [stepId]);

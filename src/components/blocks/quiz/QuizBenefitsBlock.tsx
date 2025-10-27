@@ -251,7 +251,7 @@ const QuizBenefitsBlock: React.FC<QuizBenefitsBlockProps> = ({
           getMarginClass(marginTop, 'top'),
           getMarginClass(marginBottom, 'bottom'),
           getMarginClass(marginLeft, 'left'),
-          getMarginClass(marginRight, 'right')
+          getMarginClass(marginRight, 'right'),
         )}
         style={{
           backgroundColor: isCard ? colors.backgroundAlt : 'transparent',

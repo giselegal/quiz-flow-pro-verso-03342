@@ -22,7 +22,7 @@ import {
     Zap,
     Shield,
     Download,
-    RefreshCw
+    RefreshCw,
 } from 'lucide-react';
 
 // ============================================================================
@@ -66,7 +66,7 @@ class SystemValidatorClass {
             'PreviewMigrationWrapper',
             'PerformanceDashboard',
             'FeatureFlagSystem',
-            'AutoIntegrationSystem'
+            'AutoIntegrationSystem',
         ];
 
         // Lista de hooks principais
@@ -74,7 +74,7 @@ class SystemValidatorClass {
             'useAdvancedCache',
             'useLiveCanvasPreview',
             'useRenderOptimization',
-            'useAdvancedWebSocket'
+            'useAdvancedWebSocket',
         ];
 
         // Verificar componentes
@@ -92,7 +92,7 @@ class SystemValidatorClass {
                         `${component} is properly imported and accessible` :
                         `${component} could not be imported`,
                     fixSuggestion: exists ? undefined :
-                        `Verify that ${component}.tsx exists and exports are correct`
+                        `Verify that ${component}.tsx exists and exports are correct`,
                 });
             } catch (error) {
                 importTests.push({
@@ -101,7 +101,7 @@ class SystemValidatorClass {
                     name: `${component} Component`,
                     status: 'fail',
                     message: `Import error: ${error}`,
-                    fixSuggestion: 'Check file path and export syntax'
+                    fixSuggestion: 'Check file path and export syntax',
                 });
             }
         });
@@ -120,7 +120,7 @@ class SystemValidatorClass {
                         `${hook} is properly imported and accessible` :
                         `${hook} could not be imported`,
                     fixSuggestion: exists ? undefined :
-                        `Verify that ${hook}.ts exists and exports are correct`
+                        `Verify that ${hook}.ts exists and exports are correct`,
                 });
             } catch (error) {
                 importTests.push({
@@ -129,7 +129,7 @@ class SystemValidatorClass {
                     name: `${hook} Hook`,
                     status: 'fail',
                     message: `Hook import error: ${error}`,
-                    fixSuggestion: 'Check hook file path and export syntax'
+                    fixSuggestion: 'Check hook file path and export syntax',
                 });
             }
         });
@@ -146,12 +146,12 @@ class SystemValidatorClass {
             '@/components/ui/card',
             '@/components/ui/button',
             '@/components/ui/badge',
-            '@/components/ui/alert'
+            '@/components/ui/alert',
         ];
 
         // Dependências de ícones
         const iconDependencies = [
-            'lucide-react'
+            'lucide-react',
         ];
 
         // Verificar dependências UI
@@ -167,7 +167,7 @@ class SystemValidatorClass {
                     `${dep} is available` :
                     `${dep} is not available`,
                 fixSuggestion: available ? undefined :
-                    'Install required UI component library or create custom components'
+                    'Install required UI component library or create custom components',
             });
         });
 
@@ -184,7 +184,7 @@ class SystemValidatorClass {
                     `${dep} is available` :
                     `${dep} is not available - icons may not display`,
                 fixSuggestion: available ? undefined :
-                    'npm install lucide-react or replace with alternative icons'
+                    'npm install lucide-react or replace with alternative icons',
             });
         });
 
@@ -208,7 +208,7 @@ class SystemValidatorClass {
                 message: `React ${reactVersion} ${isCompatible ? 'is compatible' : 'may have compatibility issues'}`,
                 details: { version: reactVersion },
                 fixSuggestion: isCompatible ? undefined :
-                    'Consider upgrading to React 18+ for optimal performance'
+                    'Consider upgrading to React 18+ for optimal performance',
             });
         } catch (error) {
             compatTests.push({
@@ -217,7 +217,7 @@ class SystemValidatorClass {
                 name: 'React Version',
                 status: 'warning',
                 message: 'Could not detect React version',
-                fixSuggestion: 'Verify React installation'
+                fixSuggestion: 'Verify React installation',
             });
         }
 
@@ -226,7 +226,7 @@ class SystemValidatorClass {
             { name: 'localStorage', api: 'localStorage' },
             { name: 'WebSocket', api: 'WebSocket' },
             { name: 'Performance API', api: 'performance' },
-            { name: 'ResizeObserver', api: 'ResizeObserver' }
+            { name: 'ResizeObserver', api: 'ResizeObserver' },
         ];
 
         browserAPIs.forEach(({ name, api }) => {
@@ -241,7 +241,7 @@ class SystemValidatorClass {
                     `${name} is available` :
                     `${name} is not available - some features may be disabled`,
                 fixSuggestion: available ? undefined :
-                    `Consider polyfills for ${name} or graceful degradation`
+                    `Consider polyfills for ${name} or graceful degradation`,
             });
         });
 
@@ -262,7 +262,7 @@ class SystemValidatorClass {
             status: estimatedBundleSize < 500 ? 'pass' : estimatedBundleSize < 1000 ? 'warning' : 'fail',
             message: `Estimated bundle size: ${estimatedBundleSize}KB`,
             details: { sizeKB: estimatedBundleSize },
-            fixSuggestion: estimatedBundleSize > 1000 ? 'Consider code splitting or removing unused dependencies' : undefined
+            fixSuggestion: estimatedBundleSize > 1000 ? 'Consider code splitting or removing unused dependencies' : undefined,
         });
 
         // Verificar performance de rendering
@@ -275,7 +275,7 @@ class SystemValidatorClass {
             status: renderingPerf.score > 80 ? 'pass' : renderingPerf.score > 60 ? 'warning' : 'fail',
             message: `Rendering performance score: ${renderingPerf.score}/100`,
             details: renderingPerf,
-            fixSuggestion: renderingPerf.score < 80 ? 'Enable render optimization features' : undefined
+            fixSuggestion: renderingPerf.score < 80 ? 'Enable render optimization features' : undefined,
         });
 
         // Verificar uso de memória
@@ -288,7 +288,7 @@ class SystemValidatorClass {
             status: memoryUsage < 50 ? 'pass' : memoryUsage < 100 ? 'warning' : 'fail',
             message: `Estimated memory usage: ${memoryUsage}MB`,
             details: { memoryMB: memoryUsage },
-            fixSuggestion: memoryUsage > 100 ? 'Enable advanced caching and cleanup unused objects' : undefined
+            fixSuggestion: memoryUsage > 100 ? 'Enable advanced caching and cleanup unused objects' : undefined,
         });
 
         return perfTests;
@@ -305,7 +305,7 @@ class SystemValidatorClass {
             name: 'localStorage Usage',
             status: 'pass',
             message: 'localStorage usage appears secure (no sensitive data stored)',
-            fixSuggestion: undefined
+            fixSuggestion: undefined,
         });
 
         // Verificar WebSocket security
@@ -320,7 +320,7 @@ class SystemValidatorClass {
                 'WebSocket connections will use WSS (secure)' :
                 'WebSocket connections may use WS (insecure) in production',
             fixSuggestion: wsSecure ? undefined :
-                'Ensure WSS is used in production environment'
+                'Ensure WSS is used in production environment',
         });
 
         // Verificar XSS protection
@@ -330,7 +330,7 @@ class SystemValidatorClass {
             name: 'XSS Protection',
             status: 'pass',
             message: 'No dangerous innerHTML usage detected',
-            fixSuggestion: undefined
+            fixSuggestion: undefined,
         });
 
         return securityTests;
@@ -352,7 +352,7 @@ class SystemValidatorClass {
             ...depResults,
             ...compatResults,
             ...perfResults,
-            ...securityResults
+            ...securityResults,
         ];
 
         return this.results;
@@ -371,7 +371,7 @@ class SystemValidatorClass {
             categories[category] = {
                 status: hasFailures ? 'fail' : hasWarnings ? 'warning' : 'pass',
                 count: categoryResults.length,
-                issues: categoryResults.filter(r => r.status !== 'pass')
+                issues: categoryResults.filter(r => r.status !== 'pass'),
             };
         });
 
@@ -391,7 +391,7 @@ class SystemValidatorClass {
         return {
             overall,
             score,
-            categories
+            categories,
         };
     }
 
@@ -403,7 +403,7 @@ class SystemValidatorClass {
             'PreviewMigrationWrapper',
             'PerformanceDashboard',
             'FeatureFlagSystem',
-            'AutoIntegrationSystem'
+            'AutoIntegrationSystem',
         ];
         return knownComponents.includes(component);
     }
@@ -414,7 +414,7 @@ class SystemValidatorClass {
             'useAdvancedCache',
             'useLiveCanvasPreview',
             'useRenderOptimization',
-            'useAdvancedWebSocket'
+            'useAdvancedWebSocket',
         ];
         return knownHooks.includes(hook);
     }
@@ -448,8 +448,8 @@ class SystemValidatorClass {
             details: {
                 memoization: true,
                 virtualization: true,
-                debouncing: true
-            }
+                debouncing: true,
+            },
         };
     }
 
@@ -507,12 +507,12 @@ export const SystemValidator: React.FC<{
             environment: {
                 userAgent: navigator.userAgent,
                 url: window.location.href,
-                timestamp: Date.now()
-            }
+                timestamp: Date.now(),
+            },
         };
 
         const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-            type: 'application/json'
+            type: 'application/json',
         });
 
         const url = URL.createObjectURL(blob);
@@ -538,7 +538,7 @@ export const SystemValidator: React.FC<{
             pass: { variant: 'default' as const, className: 'bg-green-600' },
             fail: { variant: 'destructive' as const },
             warning: { variant: 'secondary' as const, className: 'bg-yellow-600' },
-            info: { variant: 'outline' as const }
+            info: { variant: 'outline' as const },
         };
 
         return (

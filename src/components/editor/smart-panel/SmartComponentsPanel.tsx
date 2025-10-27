@@ -19,14 +19,14 @@ const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddCompon
     { type: 'text', label: 'Texto', category: 'conteudo' },
     { type: 'button', label: 'Botão', category: 'interacao' },
     { type: 'image', label: 'Imagem', category: 'midia' },
-    { type: 'form', label: 'Formulário', category: 'formulario' }
+    { type: 'form', label: 'Formulário', category: 'formulario' },
   ];
 
   // Filter based on search term
   const components = allComponents.filter(
     (comp: any) =>
       comp.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      comp.category.toLowerCase().includes(searchTerm.toLowerCase())
+      comp.category.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (

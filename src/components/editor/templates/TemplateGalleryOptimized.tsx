@@ -100,8 +100,8 @@ const PREDEFINED_TEMPLATES: Template[] = [
                 },
                 content: {},
                 order: 1,
-            }
-        ]
+            },
+        ],
     },
     {
         id: 'visual-question',
@@ -142,8 +142,8 @@ const PREDEFINED_TEMPLATES: Template[] = [
                 },
                 content: {},
                 order: 1,
-            }
-        ]
+            },
+        ],
     },
     {
         id: 'result-celebration',
@@ -172,9 +172,9 @@ const PREDEFINED_TEMPLATES: Template[] = [
                 },
                 content: {},
                 order: 0,
-            }
-        ]
-    }
+            },
+        ],
+    },
 ];
 
 const TemplateGallery: React.FC<TemplateGalleryProps> = ({ onApplyTemplate, currentBlocks, onSaveAsTemplate }) => {
@@ -241,8 +241,8 @@ const TemplateGallery: React.FC<TemplateGalleryProps> = ({ onApplyTemplate, curr
             prev.map(template =>
                 template.id === templateId
                     ? { ...template, isFavorite: !template.isFavorite }
-                    : template
-            )
+                    : template,
+            ),
         );
     };
 

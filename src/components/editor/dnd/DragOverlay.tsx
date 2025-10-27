@@ -28,7 +28,7 @@ export const DragOverlay: React.FC<DragOverlayProps> = ({
           'absolute inset-0 z-50 flex items-center justify-center',
           'transition-all duration-200 ease-in-out',
           'border-2 border-dashed rounded-lg',
-          isValidDrop ? 'border-green-400 bg-green-50/80' : 'border-red-400 bg-red-50/80'
+          isValidDrop ? 'border-green-400 bg-green-50/80' : 'border-red-400 bg-red-50/80',
         )}
       >
         <div
@@ -37,7 +37,7 @@ export const DragOverlay: React.FC<DragOverlayProps> = ({
             'flex items-center gap-2',
             isValidDrop
               ? 'bg-green-100 text-green-800 border border-green-200'
-              : 'bg-red-100 text-red-800 border border-red-200'
+              : 'bg-red-100 text-red-800 border border-red-200',
           )}
         >
           {isValidDrop ? (
@@ -81,7 +81,7 @@ export const DropZoneIndicator: React.FC<DropZoneIndicatorProps> = ({
         'flex items-center justify-center',
         'transition-all duration-200',
         canDrop ? 'border-blue-400 bg-blue-50/50' : 'border-gray-300 bg-gray-50/50',
-        isEmpty && 'relative border-gray-300 bg-gray-50 min-h-[200px]'
+        isEmpty && 'relative border-gray-300 bg-gray-50 min-h-[200px]',
       )}
     >
       {isEmpty ? (
@@ -94,7 +94,7 @@ export const DropZoneIndicator: React.FC<DropZoneIndicatorProps> = ({
         <div
           className={cn(
             'px-3 py-2 rounded-md font-medium text-sm',
-            canDrop ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'
+            canDrop ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800',
           )}
         >
           {canDrop ? '✅ Solte aqui' : '❌ Drop inválido'}

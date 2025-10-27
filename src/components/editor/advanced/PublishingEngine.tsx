@@ -20,7 +20,7 @@ import {
   Clock,
   BarChart3,
   Copy,
-  ExternalLink
+  ExternalLink,
 } from 'lucide-react';
 import { PublishService, PublishOptions, PublishResult } from '@/services/publishService';
 
@@ -243,7 +243,7 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
                 size="lg"
                 onClick={() => setPublishOptions(prev => ({
                   ...prev,
-                  environment: prev.environment === 'staging' ? 'production' : 'staging'
+                  environment: prev.environment === 'staging' ? 'production' : 'staging',
                 }))}
               >
                 <Globe className="w-4 h-4 mr-2" />
@@ -264,7 +264,7 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
                     value={publishOptions.customDomain || ''}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPublishOptions(prev => ({
                       ...prev,
-                      customDomain: e.target.value
+                      customDomain: e.target.value,
                     }))}
                   />
                 </div>
@@ -275,7 +275,7 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
                     checked={publishOptions.enableAnalytics}
                     onCheckedChange={(checked: boolean) => setPublishOptions(prev => ({
                       ...prev,
-                      enableAnalytics: checked
+                      enableAnalytics: checked,
                     }))}
                   />
                 </div>

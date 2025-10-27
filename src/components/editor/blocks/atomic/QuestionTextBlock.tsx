@@ -15,7 +15,7 @@ export default function QuestionTextBlock({
   isSelected = false,
   isEditable = false,
   onSelect,
-  onOpenProperties
+  onOpenProperties,
 }: QuestionTextBlockProps) {
   // Aceita aliases comuns: content.questionText, content.text, properties.questionText
   const questionText = block.content?.questionText ||

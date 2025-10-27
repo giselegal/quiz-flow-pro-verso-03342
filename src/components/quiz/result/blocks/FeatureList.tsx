@@ -17,7 +17,7 @@ export default function FeatureList({
     features,
     totalLabel = 'Valor Total',
     totalValue,
-    title = 'O Que Você Recebe Hoje'
+    title = 'O Que Você Recebe Hoje',
 }: FeatureListProps) {
     return (
         <div className="bg-white p-5 sm:p-6 rounded-lg shadow-md border border-[#B89B7A]/20 max-w-lg mx-auto">

@@ -33,7 +33,7 @@ export default function DynamicPropertiesPanel({
     onPropertyChange,
     onPreviewToggle,
     onSave,
-    onReset
+    onReset,
 }: DynamicPropertiesPanelProps) {
 
     // ============================================================================
@@ -50,13 +50,13 @@ export default function DynamicPropertiesPanel({
         resetToDefaults,
         componentDefinition,
         hasUnsavedChanges,
-        lastSaved
+        lastSaved,
     } = useComponentConfiguration({
         componentId,
         funnelId,
         realTimeSync: true,
         autoSave: false, // Manual save for editor
-        cacheEnabled: true
+        cacheEnabled: true,
     });
 
     const [previewEnabled, setPreviewEnabled] = useState(true);
@@ -223,7 +223,7 @@ export default function DynamicPropertiesPanel({
                         type: propDef.type as any, // Usar any para compatibilidade entre enums
                         category: PropertyCategory.ADVANCED, // Categoria padrão
                         value: currentValue,
-                        ...propDef.editor.props
+                        ...propDef.editor.props,
                     }}
                     onChange={handlePropertyUpdate}
                 />

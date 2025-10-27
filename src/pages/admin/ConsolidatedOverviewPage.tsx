@@ -79,7 +79,7 @@ const ConsolidatedOverviewPage: React.FC = () => {
                 // Carregar dados reais do Supabase
                 const [funnelSummary, realMetrics] = await Promise.all([
                     consolidatedFunnelService.getDashboardSummary(),
-                    realDataAnalyticsService.getRealMetrics()
+                    realDataAnalyticsService.getRealMetrics(),
                 ]);
 
                 setDashboardData({
@@ -326,7 +326,7 @@ const ConsolidatedOverviewPage: React.FC = () => {
                         <div className="flex items-center text-sm mb-3">
                             <ArrowUpRight className="h-4 w-4 text-[#B89B7A] mr-1" />
                             <span className="text-[#B89B7A] font-semibold">
-                                {realMetrics.completedSessions > 0 ? '+' + Math.round((realMetrics.leadGeneration / realMetrics.completedSessions) * 100) : 0}%
+                                {realMetrics.completedSessions > 0 ? `+${  Math.round((realMetrics.leadGeneration / realMetrics.completedSessions) * 100)}` : 0}%
                             </span>
                             <span className="ml-1 text-[#6B4F43]">dos completados</span>
                         </div>

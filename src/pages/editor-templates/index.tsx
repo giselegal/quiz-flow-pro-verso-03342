@@ -63,7 +63,7 @@ const EditorTemplatesPage: React.FC = () => {
         id: clonedInstance.id,
         name: clonedInstance.name,
         status: 'draft' as const,
-        updatedAt: clonedInstance.createdAt
+        updatedAt: clonedInstance.createdAt,
       };
 
       console.log('💾 Salvando funil no localStorage:', newFunnel);
@@ -132,7 +132,7 @@ const EditorTemplatesPage: React.FC = () => {
                     </p>
                   </div>
                   <Badge
-                    variant={template.isOfficial ? "default" : "secondary"}
+                    variant={template.isOfficial ? 'default' : 'secondary'}
                     className="ml-2"
                   >
                     {template.isOfficial ? 'Oficial' : 'Personalizado'}

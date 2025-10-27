@@ -27,7 +27,7 @@ import {
   AlertTriangle,
   Clock,
   Wifi,
-  WifiOff
+  WifiOff,
 } from 'lucide-react';
 import { useUnifiedCollaboration } from '@/hooks/core/useUnifiedCollaboration';
 
@@ -48,7 +48,7 @@ export function CollaborationPanel({
   userEmail,
   userAvatar,
   isOpen,
-  onClose
+  onClose,
 }: CollaborationPanelProps) {
   const [activeTab, setActiveTab] = useState<'users' | 'chat' | 'comments' | 'notifications' | 'settings'>('users');
   const [chatMessage, setChatMessage] = useState('');
@@ -100,7 +100,7 @@ export function CollaborationPanel({
     resolveComment,
     selectElement,
     sync,
-    resolveConflicts
+    resolveConflicts,
   } = useUnifiedCollaboration(funnelId, userId, userName, userEmail, userAvatar);
 
   // Inicializar sessão se não estiver conectado
@@ -172,7 +172,7 @@ export function CollaborationPanel({
             { id: 'chat', label: 'Chat', icon: MessageCircle },
             { id: 'comments', label: 'Comentários', icon: MessageCircle },
             { id: 'notifications', label: 'Notificações', icon: Bell },
-            { id: 'settings', label: 'Configurações', icon: Settings }
+            { id: 'settings', label: 'Configurações', icon: Settings },
           ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}

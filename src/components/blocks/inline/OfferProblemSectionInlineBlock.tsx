@@ -47,7 +47,7 @@ const OfferProblemSectionInlineBlock: React.FC<BlockComponentProps> = ({
         spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.large,
         isSelected && 'ring-2 ring-blue-500 ring-offset-2',
         'cursor-pointer',
-        className
+        className,
       )}
       onClick={onClick}
     >
@@ -55,7 +55,7 @@ const OfferProblemSectionInlineBlock: React.FC<BlockComponentProps> = ({
         <div className="bg-white rounded-2xl p-8 shadow-lg border border-[#E5DDD5]/30">
           <div
             className={cn(
-              layout === 'side-by-side' ? 'grid md:grid-cols-2 gap-8 items-center' : 'text-center'
+              layout === 'side-by-side' ? 'grid md:grid-cols-2 gap-8 items-center' : 'text-center',
             )}
           >
             <div>
@@ -71,7 +71,7 @@ const OfferProblemSectionInlineBlock: React.FC<BlockComponentProps> = ({
                     {problem
                       .split('**')
                       .map((part: string, partIndex: number) =>
-                        partIndex % 2 === 1 ? <strong key={partIndex}>{part}</strong> : part
+                        partIndex % 2 === 1 ? <strong key={partIndex}>{part}</strong> : part,
                       )}
                   </p>
                 ))}
@@ -84,7 +84,7 @@ const OfferProblemSectionInlineBlock: React.FC<BlockComponentProps> = ({
                     {highlightText
                       .split('**')
                       .map((part: string, index: number) =>
-                        index % 2 === 1 ? <strong key={index}>{part}</strong> : part
+                        index % 2 === 1 ? <strong key={index}>{part}</strong> : part,
                       )}
                   </p>
                 </div>

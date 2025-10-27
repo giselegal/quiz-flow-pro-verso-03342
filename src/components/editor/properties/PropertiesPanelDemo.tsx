@@ -42,8 +42,8 @@ const mockHeaderBlock: UnifiedBlock = {
     },
     content: {
         title: 'Conteúdo do Header',
-        subtitle: 'Subtítulo do conteúdo'
-    }
+        subtitle: 'Subtítulo do conteúdo',
+    },
 };
 
 const mockFormBlock: UnifiedBlock = {
@@ -61,8 +61,8 @@ const mockFormBlock: UnifiedBlock = {
     },
     content: {
         value: '',
-        errorMessage: ''
-    }
+        errorMessage: '',
+    },
 };
 
 // ===== DEMONSTRAÇÃO =====
@@ -72,10 +72,10 @@ interface PropertiesPanelDemoProps {
 }
 
 export const PropertiesPanelDemo: React.FC<PropertiesPanelDemoProps> = ({
-    demoMode = 'header'
+    demoMode = 'header',
 }) => {
     const [selectedBlock, setSelectedBlock] = React.useState<UnifiedBlock>(
-        demoMode === 'header' ? mockHeaderBlock : mockFormBlock
+        demoMode === 'header' ? mockHeaderBlock : mockFormBlock,
     );
 
     const handleUpdate = (updates: Partial<UnifiedBlock>) => {
@@ -84,12 +84,12 @@ export const PropertiesPanelDemo: React.FC<PropertiesPanelDemoProps> = ({
             ...updates,
             properties: {
                 ...prev.properties,
-                ...updates.properties
+                ...updates.properties,
             },
             content: {
                 ...prev.content,
-                ...updates.content
-            }
+                ...updates.content,
+            },
         }));
     };
 
@@ -172,7 +172,7 @@ export const PropertiesPanelDemo: React.FC<PropertiesPanelDemoProps> = ({
                                             <div
                                                 className="bg-blue-600 h-2 rounded-full"
                                                 style={{
-                                                    width: `${(selectedBlock.properties.progressValue / selectedBlock.properties.progressMax) * 100}%`
+                                                    width: `${(selectedBlock.properties.progressValue / selectedBlock.properties.progressMax) * 100}%`,
                                                 }}
                                             ></div>
                                         </div>
@@ -191,7 +191,7 @@ export const PropertiesPanelDemo: React.FC<PropertiesPanelDemoProps> = ({
                                         className="w-full p-2 border border-gray-300 rounded"
                                         style={{
                                             borderColor: selectedBlock.properties?.borderColor,
-                                            backgroundColor: selectedBlock.properties?.backgroundColor
+                                            backgroundColor: selectedBlock.properties?.backgroundColor,
                                         }}
                                     />
                                 </div>

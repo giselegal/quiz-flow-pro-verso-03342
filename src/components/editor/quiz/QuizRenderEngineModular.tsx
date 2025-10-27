@@ -54,7 +54,7 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
         className={cn(
           'quiz-block transition-all duration-200',
           isEditable && 'editor-mode',
-          isSelected && 'selected'
+          isSelected && 'selected',
         )}
       >
         <UniversalBlockRenderer
@@ -73,7 +73,7 @@ export const QuizRenderEngineModular: React.FC<QuizRenderEngineProps> = ({
         'quiz-render-engine space-y-6',
         mode === 'editor' && 'editor-container',
         mode === 'preview' && 'preview-container',
-        mode === 'production' && 'production-container'
+        mode === 'production' && 'production-container',
       )}
     >
       {blocks.sort((a, b) => a.order - b.order).map(renderBlock)}

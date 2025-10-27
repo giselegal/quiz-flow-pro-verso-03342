@@ -48,7 +48,7 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
         isSelected && 'ring-2 ring-[#432818]',
         'cursor-pointer hover:scale-105',
         'relative',
-        className
+        className,
       )}
       onClick={onClick}
     >

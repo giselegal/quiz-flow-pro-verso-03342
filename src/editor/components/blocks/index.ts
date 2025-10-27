@@ -43,7 +43,7 @@ export {
     QuizIntroHeaderBlock,
     TextBlock,
     // FormInputBlock,
-    ButtonBlock
+    ButtonBlock,
 };
 
 console.log('✅ Componentes modulares registrados no BlockRegistry');

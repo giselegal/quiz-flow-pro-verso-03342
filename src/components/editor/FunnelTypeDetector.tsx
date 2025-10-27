@@ -20,7 +20,7 @@ import {
     HelpCircle,
     AlertCircle,
     CheckCircle,
-    Settings
+    Settings,
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
@@ -29,7 +29,7 @@ import {
     loadFunnelConfig,
     isPredefinedFunnel,
     getPredefinedFunnelConfig,
-    type FunnelType
+    type FunnelType,
 } from '@/services/FunnelTypesRegistry';
 
 // ============================================================================
@@ -59,7 +59,7 @@ const CATEGORY_ICONS = {
     'ecommerce': ShoppingCart,
     'lead-gen': Users,
     'survey': HelpCircle,
-    'other': Settings
+    'other': Settings,
 };
 
 // ============================================================================
@@ -69,7 +69,7 @@ const CATEGORY_ICONS = {
 const FunnelTypeDetector: React.FC<FunnelDetectorProps> = ({
     funnelId,
     onFunnelLoaded,
-    onTypeDetected
+    onTypeDetected,
 }) => {
     const [loading, setLoading] = useState(true);
     const [detectedFunnel, setDetectedFunnel] = useState<DetectedFunnel | null>(null);
@@ -137,7 +137,7 @@ const FunnelTypeDetector: React.FC<FunnelDetectorProps> = ({
                 id: funnelId,
                 type: funnelType,
                 config: funnelConfig,
-                isPredefined: isPredefinedFunnel(funnelId)
+                isPredefined: isPredefinedFunnel(funnelId),
             };
 
             setDetectedFunnel(detected);
@@ -147,7 +147,7 @@ const FunnelTypeDetector: React.FC<FunnelDetectorProps> = ({
             onFunnelLoaded(funnelConfig);
 
             toast({
-                title: "✅ Funil detectado com sucesso",
+                title: '✅ Funil detectado com sucesso',
                 description: `${funnelType.name} carregado`,
             });
 
@@ -156,9 +156,9 @@ const FunnelTypeDetector: React.FC<FunnelDetectorProps> = ({
             setError(error instanceof Error ? error.message : 'Erro desconhecido');
 
             toast({
-                title: "❌ Erro na detecção",
-                description: "Não foi possível detectar o tipo do funil",
-                variant: "destructive"
+                title: '❌ Erro na detecção',
+                description: 'Não foi possível detectar o tipo do funil',
+                variant: 'destructive',
             });
         } finally {
             setLoading(false);

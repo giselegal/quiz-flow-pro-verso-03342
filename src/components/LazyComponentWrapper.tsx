@@ -96,7 +96,7 @@ export const withLazyLoading = <P extends object>(
     loadingMessage?: string;
     errorFallback?: ReactNode;
     preload?: boolean;
-  }
+  },
 ) => {
   const LazyComponent = React.lazy(importFn);
 

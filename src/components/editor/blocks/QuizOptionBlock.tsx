@@ -36,7 +36,7 @@ const QuizOptionBlock: React.FC<QuizOptionBlockProps> = ({ block, isSelected, on
     textAlign,
     borderRadius,
     fullWidth && 'block',
-    isSelected && 'ring-2 ring-amber-500/60 ring-offset-1'
+    isSelected && 'ring-2 ring-amber-500/60 ring-offset-1',
   );
 
   const style: React.CSSProperties = {

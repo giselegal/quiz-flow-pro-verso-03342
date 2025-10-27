@@ -16,21 +16,21 @@ vi.mock('@/lib/supabase/client', () => ({
         from: vi.fn(() => ({
             select: vi.fn(() => ({
                 eq: vi.fn(() => ({
-                    single: vi.fn(() => Promise.resolve({ data: null, error: null }))
+                    single: vi.fn(() => Promise.resolve({ data: null, error: null })),
                 })),
                 order: vi.fn(() => ({
-                    limit: vi.fn(() => Promise.resolve({ data: [], error: null }))
-                }))
+                    limit: vi.fn(() => Promise.resolve({ data: [], error: null })),
+                })),
             })),
             insert: vi.fn(() => Promise.resolve({ data: null, error: null })),
             update: vi.fn(() => Promise.resolve({ data: null, error: null })),
-            delete: vi.fn(() => Promise.resolve({ data: null, error: null }))
+            delete: vi.fn(() => Promise.resolve({ data: null, error: null })),
         })),
         auth: {
             getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
-            getUser: vi.fn(() => Promise.resolve({ data: { user: null }, error: null }))
-        }
-    }
+            getUser: vi.fn(() => Promise.resolve({ data: { user: null }, error: null })),
+        },
+    },
 }));
 
 vi.mock('@dnd-kit/core', () => ({
@@ -46,12 +46,12 @@ vi.mock('@dnd-kit/core', () => ({
         listeners: {},
         setNodeRef: vi.fn(),
         transform: null,
-        isDragging: false
+        isDragging: false,
     })),
     useDroppable: vi.fn(() => ({
         setNodeRef: vi.fn(),
-        isOver: false
-    }))
+        isOver: false,
+    })),
 }));
 
 vi.mock('@dnd-kit/sortable', () => ({
@@ -63,8 +63,8 @@ vi.mock('@dnd-kit/sortable', () => ({
         setNodeRef: vi.fn(),
         transform: null,
         transition: null,
-        isDragging: false
-    }))
+        isDragging: false,
+    })),
 }));
 
 describe('🚀 Editor Loading Test - /editor Route', () => {
@@ -108,7 +108,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
                 render(
                     <BrowserRouter>
                         <QuizModularProductionEditor />
-                    </BrowserRouter>
+                    </BrowserRouter>,
                 );
             }).not.toThrow();
         });
@@ -119,7 +119,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             // Deve mostrar algum indicador de carregamento ou conteúdo inicial
@@ -133,13 +133,13 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
                 // Não deve haver erro de "Rendered more hooks"
                 expect(errorSpy).not.toHaveBeenCalledWith(
-                    expect.stringContaining('Rendered more hooks')
+                    expect.stringContaining('Rendered more hooks'),
                 );
             });
         });
@@ -152,7 +152,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             const { container } = render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -168,7 +168,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -185,7 +185,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -202,7 +202,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             const { unmount } = render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -223,7 +223,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -241,7 +241,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
                 render(
                     <BrowserRouter>
                         <QuizModularProductionEditor />
-                    </BrowserRouter>
+                    </BrowserRouter>,
                 );
             }).not.toThrow();
         });
@@ -254,7 +254,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -269,7 +269,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -278,7 +278,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
 
             // Não deve ter erro de ordem de hooks
             expect(errorSpy).not.toHaveBeenCalledWith(
-                expect.stringContaining('hook')
+                expect.stringContaining('hook'),
             );
         });
 
@@ -288,7 +288,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -306,7 +306,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             const { rerender } = render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -318,17 +318,17 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
                 rerender(
                     <BrowserRouter>
                         <QuizModularProductionEditor />
-                    </BrowserRouter>
+                    </BrowserRouter>,
                 );
                 rerender(
                     <BrowserRouter>
                         <QuizModularProductionEditor />
-                    </BrowserRouter>
+                    </BrowserRouter>,
                 );
                 rerender(
                     <BrowserRouter>
                         <QuizModularProductionEditor />
-                    </BrowserRouter>
+                    </BrowserRouter>,
                 );
             }).not.toThrow();
         });
@@ -340,7 +340,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             const { rerender } = render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -351,12 +351,12 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             rerender(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
                 expect(errorSpy).not.toHaveBeenCalledWith(
-                    expect.stringContaining('Rendered more hooks')
+                    expect.stringContaining('Rendered more hooks'),
                 );
             });
         });
@@ -369,7 +369,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             const { container } = render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -385,7 +385,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             const { container } = render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {
@@ -401,7 +401,7 @@ describe('🚀 Editor Loading Test - /editor Route', () => {
             render(
                 <BrowserRouter>
                     <QuizModularProductionEditor />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
 
             await waitFor(() => {

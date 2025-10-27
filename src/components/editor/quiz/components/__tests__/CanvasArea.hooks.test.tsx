@@ -29,27 +29,27 @@ vi.mock('@/components/ui/tabs', () => ({
     TabsList: ({ children }: any) => <div>{children}</div>,
     TabsTrigger: ({ children, value }: any) => (
         <button data-testid={`tab-trigger-${value}`}>{children}</button>
-    )
+    ),
 }));
 
 vi.mock('@/components/ui/card', () => ({
     Card: ({ children }: any) => <div data-testid="card">{children}</div>,
-    CardContent: ({ children }: any) => <div>{children}</div>
+    CardContent: ({ children }: any) => <div>{children}</div>,
 }));
 
 vi.mock('@dnd-kit/sortable', () => ({
     SortableContext: ({ children }: any) => <div>{children}</div>,
-    verticalListSortingStrategy: {}
+    verticalListSortingStrategy: {},
 }));
 
 vi.mock('@/components/ui/tooltip', () => ({
-    TooltipProvider: ({ children }: any) => <div>{children}</div>
+    TooltipProvider: ({ children }: any) => <div>{children}</div>,
 }));
 
 vi.mock('@/components/ui/button', () => ({
     Button: ({ children, onClick }: any) => (
         <button onClick={onClick}>{children}</button>
-    )
+    ),
 }));
 
 describe('CanvasArea - Hook Conditional Fix', () => {
@@ -67,7 +67,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
             total: 0,
             scrollTop: 0,
             setScrollTop: vi.fn(),
-            containerRef: { current: null }
+            containerRef: { current: null },
         });
 
         // Props padrão
@@ -92,7 +92,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
             previewNode: <div>Preview</div>,
             FixedProgressHeader: () => <div>Header</div>,
             StyleResultCard: () => <div>Result</div>,
-            OfferMap: () => <div>Offers</div>
+            OfferMap: () => <div>Offers</div>,
         };
     });
 
@@ -106,7 +106,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: []
+                blocks: [],
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -120,7 +120,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-empty',
                 order: 0,
                 type: 'question',
-                blocks: []
+                blocks: [],
             };
 
             render(<CanvasArea {...mockProps} selectedStep={emptyStep} />);
@@ -129,7 +129,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 blocks: [],
                 rowHeight: 140,
                 overscan: 6,
-                enabled: false // virtualização desabilitada para lista vazia
+                enabled: false, // virtualização desabilitada para lista vazia
             });
         });
 
@@ -142,7 +142,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 blocks: [],
                 rowHeight: 140,
                 overscan: 6,
-                enabled: false
+                enabled: false,
             });
         });
 
@@ -151,14 +151,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(10)
+                blocks: createBlocks(10),
             };
 
             const step2: EditableQuizStep = {
                 id: 'step-2',
                 order: 1,
                 type: 'question',
-                blocks: createBlocks(100)
+                blocks: createBlocks(100),
             };
 
             const { rerender } = render(<CanvasArea {...mockProps} selectedStep={step1} />);
@@ -179,14 +179,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(50)
+                blocks: createBlocks(50),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
 
             // Não deve haver erro de "Rendered more hooks than during the previous render"
             expect(consoleError).not.toHaveBeenCalledWith(
-                expect.stringContaining('Rendered more hooks')
+                expect.stringContaining('Rendered more hooks'),
             );
 
             consoleError.mockRestore();
@@ -199,13 +199,13 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(59)
+                blocks: createBlocks(59),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
 
             expect(mockUseVirtualBlocks).toHaveBeenCalledWith(
-                expect.objectContaining({ enabled: false })
+                expect.objectContaining({ enabled: false }),
             );
         });
 
@@ -214,13 +214,13 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(60)
+                blocks: createBlocks(60),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
 
             expect(mockUseVirtualBlocks).toHaveBeenCalledWith(
-                expect.objectContaining({ enabled: true })
+                expect.objectContaining({ enabled: true }),
             );
         });
 
@@ -229,14 +229,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(100)
+                blocks: createBlocks(100),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} activeId="block-1" />);
 
             // Virtualização deve ser desabilitada durante drag
             expect(mockUseVirtualBlocks).toHaveBeenCalledWith(
-                expect.objectContaining({ enabled: false })
+                expect.objectContaining({ enabled: false }),
             );
         });
 
@@ -245,23 +245,23 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(100)
+                blocks: createBlocks(100),
             };
 
             const { rerender } = render(
-                <CanvasArea {...mockProps} selectedStep={step} activeId="block-1" />
+                <CanvasArea {...mockProps} selectedStep={step} activeId="block-1" />,
             );
 
             // Durante drag
             expect(mockUseVirtualBlocks).toHaveBeenLastCalledWith(
-                expect.objectContaining({ enabled: false })
+                expect.objectContaining({ enabled: false }),
             );
 
             // Após drag
             rerender(<CanvasArea {...mockProps} selectedStep={step} activeId={null} />);
 
             expect(mockUseVirtualBlocks).toHaveBeenLastCalledWith(
-                expect.objectContaining({ enabled: true })
+                expect.objectContaining({ enabled: true }),
             );
         });
 
@@ -271,14 +271,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 createBlock('block-2', 'block-1', 0), // filho de block-1
                 createBlock('block-3', null, 1),
                 createBlock('block-4', 'block-3', 0), // filho de block-3
-                createBlock('block-5', null, 2)
+                createBlock('block-5', null, 2),
             ];
 
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks
+                blocks,
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -289,9 +289,9 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                     blocks: expect.arrayContaining([
                         expect.objectContaining({ id: 'block-1' }),
                         expect.objectContaining({ id: 'block-3' }),
-                        expect.objectContaining({ id: 'block-5' })
-                    ])
-                })
+                        expect.objectContaining({ id: 'block-5' }),
+                    ]),
+                }),
             );
 
             // Não deve incluir blocos filhos
@@ -305,14 +305,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
             const blocks: BlockComponent[] = [
                 createBlock('block-c', null, 2),
                 createBlock('block-a', null, 0),
-                createBlock('block-b', null, 1)
+                createBlock('block-b', null, 1),
             ];
 
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks
+                blocks,
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -333,14 +333,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 total: 100,
                 scrollTop: 0,
                 setScrollTop: vi.fn(),
-                containerRef: { current: null }
+                containerRef: { current: null },
             });
 
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(100)
+                blocks: createBlocks(100),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -358,14 +358,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 total: 30,
                 scrollTop: 0,
                 setScrollTop: vi.fn(),
-                containerRef: { current: null }
+                containerRef: { current: null },
             });
 
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(30)
+                blocks: createBlocks(30),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -381,14 +381,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 total: 100,
                 scrollTop: 2000,
                 setScrollTop: vi.fn(),
-                containerRef: { current: null }
+                containerRef: { current: null },
             });
 
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(100)
+                blocks: createBlocks(100),
             };
 
             const { container } = render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -405,14 +405,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 total: 100,
                 scrollTop: 0,
                 setScrollTop: vi.fn(),
-                containerRef: { current: null }
+                containerRef: { current: null },
             });
 
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(100)
+                blocks: createBlocks(100),
             };
 
             const { container } = render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -432,14 +432,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 total: 100,
                 scrollTop: 1500,
                 setScrollTop: vi.fn(),
-                containerRef: { current: null }
+                containerRef: { current: null },
             });
 
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: allBlocks
+                blocks: allBlocks,
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -461,20 +461,20 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(50)
+                blocks: createBlocks(50),
             };
 
             const step2: EditableQuizStep = {
                 id: 'step-2',
                 order: 1,
                 type: 'question',
-                blocks: createBlocks(80)
+                blocks: createBlocks(80),
             };
 
             const { rerender } = render(<CanvasArea {...mockProps} selectedStep={step1} />);
 
             expect(mockUseVirtualBlocks).toHaveBeenLastCalledWith(
-                expect.objectContaining({ blocks: expect.any(Array) })
+                expect.objectContaining({ blocks: expect.any(Array) }),
             );
 
             rerender(<CanvasArea {...mockProps} selectedStep={step2} />);
@@ -491,7 +491,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: initialBlocks
+                blocks: initialBlocks,
             };
 
             const { rerender } = render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -511,7 +511,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks
+                blocks,
             };
 
             const { rerender } = render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -529,19 +529,19 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(100)
+                blocks: createBlocks(100),
             };
 
             const { rerender } = render(
-                <CanvasArea {...mockProps} selectedStep={step} activeTab="canvas" />
+                <CanvasArea {...mockProps} selectedStep={step} activeTab="canvas" />,
             );
 
             rerender(
-                <CanvasArea {...mockProps} selectedStep={step} activeTab="preview" />
+                <CanvasArea {...mockProps} selectedStep={step} activeTab="preview" />,
             );
 
             rerender(
-                <CanvasArea {...mockProps} selectedStep={step} activeTab="canvas" />
+                <CanvasArea {...mockProps} selectedStep={step} activeTab="canvas" />,
             );
 
             // Hook deve ser chamado consistentemente
@@ -554,7 +554,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
             const invalidStep = {
                 id: 'step-invalid',
                 order: 0,
-                type: 'question'
+                type: 'question',
                 // blocks ausente
             } as any;
 
@@ -568,7 +568,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: null as any
+                blocks: null as any,
             };
 
             expect(() => {
@@ -579,14 +579,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
         it('TC-H023: deve lidar com blocks sem parentId definido', () => {
             const blocks = [
                 { id: 'block-1', type: 'heading', order: 0 } as any,
-                { id: 'block-2', type: 'text', order: 1 } as any
+                { id: 'block-2', type: 'text', order: 1 } as any,
             ];
 
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks
+                blocks,
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -601,14 +601,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 createBlock('block-1', null, 5),
                 createBlock('block-2', null, 2),
                 createBlock('block-3', null, 8),
-                createBlock('block-4', null, 1)
+                createBlock('block-4', null, 1),
             ];
 
             const step: EditableQuizStep = {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks
+                blocks,
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
@@ -626,14 +626,14 @@ describe('CanvasArea - Hook Conditional Fix', () => {
                 id: 'step-1',
                 order: 0,
                 type: 'question',
-                blocks: createBlocks(60)
+                blocks: createBlocks(60),
             };
 
             render(<CanvasArea {...mockProps} selectedStep={step} />);
 
             // Exatamente 60 blocos deve HABILITAR virtualização
             expect(mockUseVirtualBlocks).toHaveBeenCalledWith(
-                expect.objectContaining({ enabled: true })
+                expect.objectContaining({ enabled: true }),
             );
         });
     });
@@ -644,7 +644,7 @@ describe('CanvasArea - Hook Conditional Fix', () => {
 function createBlock(
     id: string,
     parentId: string | null,
-    order: number
+    order: number,
 ): BlockComponent {
     return {
         id,
@@ -652,7 +652,7 @@ function createBlock(
         parentId,
         order,
         properties: {},
-        content: {}
+        content: {},
     };
 }
 
@@ -660,6 +660,6 @@ function createBlocks(count: number): BlockComponent[] {
     return Array.from({ length: count }, (_, i) => createBlock(
         `block-${i}`,
         null,
-        i
+        i,
     ));
 }

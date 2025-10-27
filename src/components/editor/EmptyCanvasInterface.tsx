@@ -18,7 +18,7 @@ interface EmptyCanvasInterfaceProps {
 
 export const EmptyCanvasInterface: React.FC<EmptyCanvasInterfaceProps> = ({
     onCreateFirstStep,
-    className = ''
+    className = '',
 }) => {
     const { actions } = usePureBuilder();
     const { addNotification } = useNotification();

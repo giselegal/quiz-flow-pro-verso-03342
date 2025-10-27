@@ -67,12 +67,12 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
   // Handlers memoizados
   const handleUpdate = useMemo(() =>
     onUpdate ? (updates: any) => onUpdate(block.id, updates) : undefined,
-    [block.id, onUpdate]
+    [block.id, onUpdate],
   );
 
   const handleClick = useMemo(() =>
     () => onSelect(block.id),
-    [block.id, onSelect]
+    [block.id, onSelect],
   );
 
   const handleDelete = useMemo(() =>
@@ -80,7 +80,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
       e.stopPropagation();
       onDelete(block.id);
     } : undefined,
-    [block.id, onDelete]
+    [block.id, onDelete],
   );
 
   const handleDuplicate = useMemo(() =>
@@ -88,7 +88,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
       e.stopPropagation();
       onDuplicate(block.id);
     } : undefined,
-    [block.id, onDuplicate]
+    [block.id, onDuplicate],
   );
 
   // Log de render (apenas logging; métrica já registrada acima)
@@ -96,7 +96,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
     logger.render(`EditableBlock[${block.type}]`, {
       blockId: block.id,
       isSelected,
-      hasComponent: !!BlockComponent
+      hasComponent: !!BlockComponent,
     });
   }, [block.type, block.id, BlockComponent, isSelected, logger]);
 
@@ -104,8 +104,8 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
     return (
       <div
         className={cn(
-          "p-4 border-2 border-dashed border-red-300 bg-red-50 rounded",
-          className
+          'p-4 border-2 border-dashed border-red-300 bg-red-50 rounded',
+          className,
         )}
         style={style}
         onClick={handleClick}
@@ -128,7 +128,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = memo(({
         'editable-block relative group transition-all duration-200',
         'hover:ring-1 hover:ring-gray-300 cursor-pointer',
         isSelected && 'ring-2 ring-blue-500 ring-offset-2',
-        className
+        className,
       )}
       style={style}
       onClick={handleClick}

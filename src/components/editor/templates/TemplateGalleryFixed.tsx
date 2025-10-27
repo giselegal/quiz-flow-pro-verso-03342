@@ -367,8 +367,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
   const toggleFavorite = (templateId: string) => {
     setTemplates(prev =>
       prev.map(template =>
-        template.id === templateId ? { ...template, isFavorite: !template.isFavorite } : template
-      )
+        template.id === templateId ? { ...template, isFavorite: !template.isFavorite } : template,
+      ),
     );
   };
 

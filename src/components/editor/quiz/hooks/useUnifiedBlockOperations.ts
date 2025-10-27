@@ -49,7 +49,7 @@ export function useUnifiedBlockOperations({
     type: string,
     properties: Record<string, any> = {},
     content: Record<string, any> = {},
-    parentId?: string | null
+    parentId?: string | null,
   ): string | null => {
     let newBlockId: string | null = null;
 
@@ -99,7 +99,7 @@ export function useUnifiedBlockOperations({
       properties?: Partial<Record<string, any>>;
       content?: Partial<Record<string, any>>;
       type?: string;
-    }
+    },
   ): boolean => {
     let success = false;
 
@@ -149,7 +149,7 @@ export function useUnifiedBlockOperations({
     stepId: string,
     blockId: string,
     key: string,
-    value: any
+    value: any,
   ): boolean => {
     return updateBlock(stepId, blockId, {
       properties: { [key]: value },
@@ -161,7 +161,7 @@ export function useUnifiedBlockOperations({
    */
   const deleteBlock = useCallback((
     stepId: string,
-    blockId: string
+    blockId: string,
   ): boolean => {
     let success = false;
 
@@ -226,7 +226,7 @@ export function useUnifiedBlockOperations({
   const duplicateBlock = useCallback((
     sourceStepId: string,
     blockId: string,
-    targetStepId?: string
+    targetStepId?: string,
   ): string | null => {
     let newBlockId: string | null = null;
 
@@ -274,7 +274,7 @@ export function useUnifiedBlockOperations({
   const reorderBlocks = useCallback((
     stepId: string,
     oldIndex: number,
-    newIndex: number
+    newIndex: number,
   ): boolean => {
     let success = false;
 
@@ -309,7 +309,7 @@ export function useUnifiedBlockOperations({
     stepId: string,
     blockId: string,
     targetParentId: string | null,
-    overBlockId: string | null
+    overBlockId: string | null,
   ): boolean => {
     let success = false;
 
@@ -380,7 +380,7 @@ export function useUnifiedBlockOperations({
    */
   const insertSnippetBlocks = useCallback((
     stepId: string,
-    snippetBlocks: BlockComponent[]
+    snippetBlocks: BlockComponent[],
   ): string[] => {
     const insertedIds: string[] = [];
 

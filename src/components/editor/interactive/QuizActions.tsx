@@ -216,7 +216,7 @@ export const QuizActions: React.FC<QuizActionsProps> = memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 /**
@@ -278,7 +278,7 @@ export const SimpleQuizActions: React.FC<SimpleQuizActionsProps> = memo(
         </button>
       </div>
     );
-  }
+  },
 );
 
 QuizActions.displayName = 'QuizActions';

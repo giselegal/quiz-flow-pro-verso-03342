@@ -172,7 +172,7 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       gap="none"
       justify="center"
@@ -201,7 +201,7 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
           backgroundColor !== 'transparent' && `bg-${backgroundColor}`,
 
           // Minimum interaction area
-          'min-h-[20px] min-w-[20px]'
+          'min-h-[20px] min-w-[20px]',
         )}
         style={{
           backgroundColor: backgroundColor !== 'transparent' ? backgroundColor : undefined,
@@ -256,7 +256,7 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
               onClick={() =>
                 handlePropertyChange(
                   'direction',
-                  direction === 'vertical' ? 'horizontal' : 'vertical'
+                  direction === 'vertical' ? 'horizontal' : 'vertical',
                 )
               }
               style={{ borderColor: '#E5DDD5' }}

@@ -20,7 +20,7 @@ const FAQBlockPreview: React.FC<FAQBlockPreviewProps> = ({ content }) => {
   const { faqItems = [], defaultOpen = false, style = {} } = content;
 
   // Define o valor padrão para o Accordion
-  const defaultValue = defaultOpen && faqItems.length > 0 ? `item-0` : undefined;
+  const defaultValue = defaultOpen && faqItems.length > 0 ? 'item-0' : undefined;
 
   return (
     <div style={style} className="w-full">

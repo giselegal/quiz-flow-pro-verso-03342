@@ -64,7 +64,7 @@ const BenefitsBlock: React.FC<BenefitsBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
     >
       <div className="max-w-3xl mx-auto px-4">

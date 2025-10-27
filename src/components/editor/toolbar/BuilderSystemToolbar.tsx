@@ -35,7 +35,7 @@ import {
   TrendingUp,
   Sparkles,
   ChevronDown,
-  Activity
+  Activity,
 } from 'lucide-react';
 
 interface BuilderSystemToolbarProps {
@@ -47,7 +47,7 @@ interface BuilderSystemToolbarProps {
 export const BuilderSystemToolbar: React.FC<BuilderSystemToolbarProps> = ({
   onModeChange,
   onQuickAction,
-  className = ''
+  className = '',
 }) => {
   const { toast } = useToast();
   const builderSystem = useBuilderSystem();
@@ -64,9 +64,9 @@ export const BuilderSystemToolbar: React.FC<BuilderSystemToolbarProps> = ({
     toast({
       title: `Modo ${checked ? 'Automático' : 'Manual'} ativado`,
       description: checked 
-        ? "IA irá otimizar automaticamente suas criações"
-        : "Controle manual total sobre as configurações",
-      variant: "default"
+        ? 'IA irá otimizar automaticamente suas criações'
+        : 'Controle manual total sobre as configurações',
+      variant: 'default',
     });
   };
 
@@ -76,18 +76,18 @@ export const BuilderSystemToolbar: React.FC<BuilderSystemToolbarProps> = ({
       switch (action) {
         case 'optimize':
           toast({
-            title: "🔄 Otimizando...",
-            description: "Aplicando otimizações automáticas",
-            variant: "default"
+            title: '🔄 Otimizando...',
+            description: 'Aplicando otimizações automáticas',
+            variant: 'default',
           });
           onQuickAction?.('optimize');
           break;
           
         case 'ai-improve':
           toast({
-            title: "🤖 IA ativa",
-            description: "Melhorando conteúdo com inteligência artificial",
-            variant: "default"
+            title: '🤖 IA ativa',
+            description: 'Melhorando conteúdo com inteligência artificial',
+            variant: 'default',
           });
           onQuickAction?.('ai-improve');
           break;
@@ -102,9 +102,9 @@ export const BuilderSystemToolbar: React.FC<BuilderSystemToolbarProps> = ({
       }
     } catch (error) {
       toast({
-        title: "Erro na ação",
-        description: error instanceof Error ? error.message : "Erro desconhecido",
-        variant: "destructive"
+        title: 'Erro na ação',
+        description: error instanceof Error ? error.message : 'Erro desconhecido',
+        variant: 'destructive',
       });
     }
   };

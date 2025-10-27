@@ -64,7 +64,7 @@ export const RealTimeMonitoringDashboard: React.FC = () => {
     error,
     getSystemStatus,
     checkHealth,
-    getMetrics
+    getMetrics,
   } = useSecurityMonitor();
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export const RealTimeMonitoringDashboard: React.FC = () => {
         await Promise.all([
           getSystemStatus(),
           checkHealth(),
-          getMetrics()
+          getMetrics(),
         ]);
       } catch (err) {
         console.error('Failed to refresh monitoring data:', err);

@@ -23,7 +23,7 @@ import {
     Download,
     RefreshCw,
     TrendingUp,
-    Eye
+    Eye,
 } from 'lucide-react';
 
 // ============================================================================
@@ -55,9 +55,9 @@ export const DashboardControls: React.FC<DashboardControlsProps> = ({
     analyticsFilters = {
         dateRange: 'all',
         deviceType: 'all',
-        status: 'all'
+        status: 'all',
     },
-    onFiltersChange
+    onFiltersChange,
 }) => {
     const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -77,20 +77,20 @@ export const DashboardControls: React.FC<DashboardControlsProps> = ({
             value: 'both',
             label: 'Analytics + Tabela',
             icon: <Eye className="w-4 h-4" />,
-            description: 'Visualização completa'
+            description: 'Visualização completa',
         },
         {
             value: 'analytics',
             label: 'Apenas Analytics',
             icon: <BarChart3 className="w-4 h-4" />,
-            description: 'Foco em gráficos'
+            description: 'Foco em gráficos',
         },
         {
             value: 'table',
             label: 'Apenas Tabela',
             icon: <Table className="w-4 h-4" />,
-            description: 'Foco em dados'
-        }
+            description: 'Foco em dados',
+        },
     ];
 
     const dateRangeOptions = [
@@ -98,21 +98,21 @@ export const DashboardControls: React.FC<DashboardControlsProps> = ({
         { value: 'today', label: 'Hoje' },
         { value: 'week', label: 'Última semana' },
         { value: 'month', label: 'Último mês' },
-        { value: 'quarter', label: 'Último trimestre' }
+        { value: 'quarter', label: 'Último trimestre' },
     ];
 
     const deviceOptions = [
         { value: 'all', label: 'Todos os dispositivos' },
         { value: 'mobile', label: 'Mobile' },
         { value: 'tablet', label: 'Tablet' },
-        { value: 'desktop', label: 'Desktop' }
+        { value: 'desktop', label: 'Desktop' },
     ];
 
     const statusOptions = [
         { value: 'all', label: 'Todos os status' },
         { value: 'completed', label: 'Completados' },
         { value: 'abandoned', label: 'Abandonados' },
-        { value: 'active', label: 'Em andamento' }
+        { value: 'active', label: 'Em andamento' },
     ];
 
     return (
@@ -130,7 +130,7 @@ export const DashboardControls: React.FC<DashboardControlsProps> = ({
                             {viewOptions.map((option) => (
                                 <Button
                                     key={option.value}
-                                    variant={currentView === option.value ? "default" : "outline"}
+                                    variant={currentView === option.value ? 'default' : 'outline'}
                                     size="sm"
                                     onClick={() => onViewChange(option.value as any)}
                                     className="flex items-center gap-2"

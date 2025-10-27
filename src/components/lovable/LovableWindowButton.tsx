@@ -65,7 +65,7 @@ export const LovableWindowButton: React.FC = () => {
             },
             bubbles: true,
             cancelable: false,
-          })
+          }),
         );
       });
 
@@ -80,7 +80,7 @@ export const LovableWindowButton: React.FC = () => {
             forced: true,
           },
         },
-        '*'
+        '*',
       );
 
       console.log('🎯 BOTÃO LOVABLE ACIONADO - Janela deve abrir!');

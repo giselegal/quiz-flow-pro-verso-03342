@@ -141,8 +141,8 @@ export function EditorHeader({
           onClick={onPublish}
           disabled={isPublishing}
           className={cn(
-            "h-8",
-            !isDirty && "bg-primary"
+            'h-8',
+            !isDirty && 'bg-primary',
           )}
         >
           {isPublishing ? (

@@ -56,7 +56,7 @@ import {
     Monitor,
 
     // Status
-    Play
+    Play,
 } from 'lucide-react';
 
 // Import dos hooks básicos
@@ -287,11 +287,11 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
                 backgroundColor: '#f3f4f6',
                 border: '2px dashed #d1d5db',
                 borderRadius: '8px',
-                padding: '16px'
+                padding: '16px',
             },
-            children: []
+            children: [],
         },
-        preview: '/previews/container.svg'
+        preview: '/previews/container.svg',
     },
 
     {
@@ -306,11 +306,11 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
             styles: {
                 width: '100%',
                 padding: '60px 20px',
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
             },
-            children: []
+            children: [],
         },
-        preview: '/previews/section.svg'
+        preview: '/previews/section.svg',
     },
 
     // Typography
@@ -327,10 +327,10 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
                 fontSize: '2rem',
                 fontWeight: 'bold',
                 color: '#1f2937',
-                marginBottom: '1rem'
-            }
+                marginBottom: '1rem',
+            },
         },
-        preview: '/previews/heading.svg'
+        preview: '/previews/heading.svg',
     },
 
     {
@@ -345,10 +345,10 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
             styles: {
                 fontSize: '1rem',
                 lineHeight: '1.6',
-                color: '#4b5563'
-            }
+                color: '#4b5563',
+            },
         },
-        preview: '/previews/text.svg'
+        preview: '/previews/text.svg',
     },
 
     // Interactive Elements
@@ -369,14 +369,14 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
                 border: 'none',
                 fontSize: '1rem',
                 fontWeight: '500',
-                cursor: 'pointer'
+                cursor: 'pointer',
             },
             behaviors: {
-                onClick: 'alert("Botão clicado!")'
-            }
+                onClick: 'alert("Botão clicado!")',
+            },
         },
         preview: '/previews/button.svg',
-        aiEnhanced: true
+        aiEnhanced: true,
     },
 
     // Media
@@ -390,15 +390,15 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
             type: 'image',
             content: {
                 src: 'https://via.placeholder.com/400x300',
-                alt: 'Descrição da imagem'
+                alt: 'Descrição da imagem',
             },
             styles: {
                 width: '100%',
                 height: 'auto',
-                borderRadius: '8px'
-            }
+                borderRadius: '8px',
+            },
         },
-        preview: '/previews/image.svg'
+        preview: '/previews/image.svg',
     },
 
     // Forms
@@ -412,17 +412,17 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
             type: 'input',
             properties: {
                 placeholder: 'Digite aqui...',
-                required: false
+                required: false,
             },
             styles: {
                 width: '100%',
                 padding: '12px',
                 border: '1px solid #d1d5db',
                 borderRadius: '6px',
-                fontSize: '1rem'
-            }
+                fontSize: '1rem',
+            },
         },
-        preview: '/previews/input.svg'
+        preview: '/previews/input.svg',
     },
 
     // Advanced Components
@@ -436,17 +436,17 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
             type: 'quiz',
             content: {
                 title: 'Quiz Personalizado',
-                questions: []
+                questions: [],
             },
             styles: {
                 backgroundColor: '#f9fafb',
                 padding: '24px',
                 borderRadius: '12px',
-                border: '1px solid #e5e7eb'
-            }
+                border: '1px solid #e5e7eb',
+            },
         },
         preview: '/previews/quiz.svg',
-        aiEnhanced: true
+        aiEnhanced: true,
     },
 
     {
@@ -459,16 +459,16 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = [
             type: 'funnel',
             content: {
                 title: 'Funil de Conversão',
-                steps: []
+                steps: [],
             },
             styles: {
                 width: '100%',
-                minHeight: '600px'
-            }
+                minHeight: '600px',
+            },
         },
         preview: '/previews/funnel.svg',
-        aiEnhanced: true
-    }
+        aiEnhanced: true,
+    },
 ];
 
 // Group components by category
@@ -526,7 +526,7 @@ const Canvas: React.FC<CanvasProps> = ({
     onElementUpdate,
     onElementDrop: _onElementDrop,
     deviceMode,
-    zoomLevel
+    zoomLevel,
 }) => {
     const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -606,7 +606,7 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
     element,
     isSelected,
     onSelect,
-    onUpdate
+    onUpdate,
 }) => {
     const [isHovered, setIsHovered] = useState(false);
 
@@ -696,7 +696,7 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
                 height: element.size?.height || 'auto',
                 transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
                 zIndex: element.layer || 1,
-                opacity: element.visible !== false ? 1 : 0.5
+                opacity: element.visible !== false ? 1 : 0.5,
             }}
             onClick={handleClick}
             onMouseEnter={() => setIsHovered(true)}
@@ -738,7 +738,7 @@ interface PropertiesPanelProps {
 
 const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     selectedElement,
-    onElementUpdate
+    onElementUpdate,
 }) => {
     const handlePropertyChange = (key: string, value: any, section: 'content' | 'properties' | 'styles' | 'behaviors' = 'properties') => {
         if (!selectedElement) return;
@@ -1084,7 +1084,7 @@ const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onComponentSelect: _o
 
         return categoryComponents.filter(component =>
             component.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            component.description.toLowerCase().includes(searchTerm.toLowerCase())
+            component.description.toLowerCase().includes(searchTerm.toLowerCase()),
         );
     }, [activeCategory, searchTerm]);
 
@@ -1109,7 +1109,7 @@ const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onComponentSelect: _o
                     {Object.keys(COMPONENT_CATEGORIES).map((category) => (
                         <Button
                             key={category}
-                            variant={activeCategory === category ? "default" : "outline"}
+                            variant={activeCategory === category ? 'default' : 'outline'}
                             size="sm"
                             onClick={() => setActiveCategory(category)}
                             className="text-xs"
@@ -1159,7 +1159,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
     onUndo,
     onRedo,
     canUndo,
-    canRedo
+    canRedo,
 }) => {
     const handleDeviceChange = (device: 'desktop' | 'tablet' | 'mobile') => {
         onStateChange({ deviceMode: device });
@@ -1321,7 +1321,7 @@ export const UniversalVisualEditor: React.FC = () => {
         editMode: 'visual',
         activeTab: 'components',
         renderMode: 'realtime',
-        showDebugInfo: false
+        showDebugInfo: false,
     });
 
     // Canvas Elements
@@ -1343,7 +1343,7 @@ export const UniversalVisualEditor: React.FC = () => {
 
     const handleElementUpdate = useCallback((updatedElement: EditorElement) => {
         setElements(prev => prev.map(el =>
-            el.id === updatedElement.id ? updatedElement : el
+            el.id === updatedElement.id ? updatedElement : el,
         ));
         analytics.trackEvent('element_updated', { elementId: updatedElement.id });
     }, [analytics]);
@@ -1365,7 +1365,7 @@ export const UniversalVisualEditor: React.FC = () => {
             visible: true,
             layer: 1,
             tags: [],
-            children: []
+            children: [],
         };
 
         setElements(prev => [...prev, newElement]);
@@ -1374,7 +1374,7 @@ export const UniversalVisualEditor: React.FC = () => {
         analytics.trackEvent('element_added', {
             elementId: newElement.id,
             elementType: newElement.type,
-            position
+            position,
         });
     }, [elements.length, updateEditorState, analytics]);
 

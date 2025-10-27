@@ -158,7 +158,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
 
   const handlePageUpdate = (pageIndex: number, updates: Partial<SimplePage>) => {
     const updatedPages = funnel.pages.map((page, index) =>
-      index === pageIndex ? { ...page, ...updates } : page
+      index === pageIndex ? { ...page, ...updates } : page,
     );
 
     const updatedFunnel = {

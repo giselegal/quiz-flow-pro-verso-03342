@@ -147,7 +147,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
 
   const updateQuestion = (id: string, field: 'question' | 'answer', value: string) => {
     const updatedQuestions = questions.map((q: any) =>
-      q.id === id ? { ...q, [field]: value } : q
+      q.id === id ? { ...q, [field]: value } : q,
     );
     handlePropertyChange('questions', updatedQuestions);
   };
@@ -188,7 +188,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       minHeight="20rem"
       editLabel="Editar FAQ"
@@ -199,7 +199,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
           <div
             className={cn(
               'mb-6 md:mb-8',
-              alignmentClasses[alignment as keyof typeof alignmentClasses]
+              alignmentClasses[alignment as keyof typeof alignmentClasses],
             )}
           >
             <InlineEditableText
@@ -225,7 +225,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                   cardStyles[cardStyle as keyof typeof cardStyles],
                   'rounded-lg overflow-hidden group relative',
                   ANIMATIONS.transition,
-                  'hover:shadow-lg hover:scale-[1.02]'
+                  'hover:shadow-lg hover:scale-[1.02]',
                 )}
               >
                 {/* Remove Button - Visible when selected */}
@@ -248,7 +248,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                     'flex items-center justify-between',
                     'p-4 md:p-5 lg:p-6',
                     'bg-gray-50 hover:bg-gray-100 cursor-pointer',
-                    ANIMATIONS.transition
+                    ANIMATIONS.transition,
                   )}
                   onClick={e => {
                     e.stopPropagation();
@@ -265,7 +265,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                       className={cn(
                         'text-lg font-semibold',
                         `text-[${BRAND_COLORS.secondary.main}]`,
-                        'w-full'
+                        'w-full',
                       )}
                       fontWeight="semibold"
                       textAlign="left"
@@ -279,7 +279,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                         className={cn(
                           'w-4 h-4 md:w-5 md:h-5',
                           `text-[${BRAND_COLORS.primary.main}]`,
-                          ANIMATIONS.transition
+                          ANIMATIONS.transition,
                         )}
                       />
                     ) : (
@@ -287,7 +287,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                         className={cn(
                           'w-4 h-4 md:w-5 md:h-5',
                           `text-[${BRAND_COLORS.primary.main}]`,
-                          ANIMATIONS.transition
+                          ANIMATIONS.transition,
                         )}
                       />
                     )}
@@ -300,7 +300,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                     className={cn(
                       'p-4 md:p-5 lg:p-6',
                       'bg-white border-t border-gray-100',
-                      ANIMATIONS.transition
+                      ANIMATIONS.transition,
                     )}
                   >
                     <InlineEditableText
@@ -312,7 +312,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                       className={cn(
                         'text-sm md:text-base lg:text-lg',
                         `text-[${BRAND_COLORS.neutral.gray600}]`,
-                        'leading-relaxed'
+                        'leading-relaxed',
                       )}
                       textAlign="left"
                       multiline
@@ -331,7 +331,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                 'flex items-center justify-center',
                 'min-h-[80px] group cursor-pointer',
                 'hover:border-gray-400 transition-colors',
-                'p-4 md:p-6'
+                'p-4 md:p-6',
               )}
               onClick={addQuestion}
             >

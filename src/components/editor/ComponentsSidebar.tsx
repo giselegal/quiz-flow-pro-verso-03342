@@ -269,7 +269,7 @@ export const ComponentsSidebar: React.FC = () => {
       id: `block-${Date.now()}`,
       type,
       content: {},
-      order: 0
+      order: 0,
     };
     actions.addBlock(stepKey, newBlock);
   };
@@ -282,7 +282,7 @@ export const ComponentsSidebar: React.FC = () => {
     if (isStep20) {
       // Na etapa 20, mostrar apenas componentes relevantes
       return blockCategories.filter(category =>
-        category.title === 'Resultado Step 20' || category.title === 'Conteúdo'
+        category.title === 'Resultado Step 20' || category.title === 'Conteúdo',
       );
     }
 

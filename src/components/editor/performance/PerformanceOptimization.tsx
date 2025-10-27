@@ -23,7 +23,7 @@ import React, {
     Suspense,
     createContext,
     useContext,
-    ReactNode
+    ReactNode,
 } from 'react';
 import { useEditorCore, useEditorElements, EditorElement } from '../core/EditorCore';
 
@@ -102,7 +102,7 @@ class AdvancedCache<T = any> {
         this.cache.set(key, {
             value,
             timestamp: new Date(),
-            hits: 1
+            hits: 1,
         });
 
         this.updateAccessOrder(key);
@@ -141,7 +141,7 @@ class AdvancedCache<T = any> {
                 const items = Array.from(this.cache.entries());
                 const lfu = items.reduce((min, [key, item]) =>
                     item.hits < min.hits ? { key, hits: item.hits } : min,
-                    { key: items[0][0], hits: items[0][1].hits }
+                    { key: items[0][0], hits: items[0][1].hits },
                 );
                 keyToEvict = lfu.key;
                 break;
@@ -248,7 +248,7 @@ class WebWorkerManager {
             const enhancedTask = {
                 ...task,
                 resolve,
-                reject
+                reject,
             };
 
             this.taskQueue.push(enhancedTask);
@@ -277,7 +277,7 @@ class WebWorkerManager {
             worker.postMessage({
                 taskId: task.id,
                 type: task.type,
-                data: task.data
+                data: task.data,
             });
 
             // Set timeout if specified
@@ -294,7 +294,7 @@ class WebWorkerManager {
 
     private getWorkerCurrentTask(workerId: string): WorkerTask | null {
         return Array.from(this.activeTasks.values()).find(task =>
-            Array.from(this.workers.keys()).indexOf(workerId) !== -1
+            Array.from(this.workers.keys()).indexOf(workerId) !== -1,
         ) || null;
     }
 
@@ -326,7 +326,7 @@ class WebWorkerManager {
 export const useVirtualization = (
     items: any[],
     config: VirtualizationConfig,
-    containerRef: React.RefObject<HTMLElement>
+    containerRef: React.RefObject<HTMLElement>,
 ) => {
     const [scrollTop, setScrollTop] = useState(0);
     const [visibleRange, setVisibleRange] = useState({ start: 0, end: 0 });
@@ -337,7 +337,7 @@ export const useVirtualization = (
         const startIndex = Math.floor(scrollTop / config.itemHeight);
         const endIndex = Math.min(
             startIndex + Math.ceil(config.containerHeight / config.itemHeight) + config.overscan,
-            items.length
+            items.length,
         );
 
         setVisibleRange({ start: Math.max(0, startIndex - config.overscan), end: endIndex });
@@ -363,7 +363,7 @@ export const useVirtualization = (
     const visibleItems = useMemo(() => {
         return items.slice(visibleRange.start, visibleRange.end).map((item, index) => ({
             ...item,
-            index: visibleRange.start + index
+            index: visibleRange.start + index,
         }));
     }, [items, visibleRange]);
 
@@ -374,7 +374,7 @@ export const useVirtualization = (
         visibleItems,
         totalHeight,
         offsetY,
-        visibleRange
+        visibleRange,
     };
 };
 
@@ -412,7 +412,7 @@ export const useLazyLoading = (config: LazyLoadConfig) => {
                             const viewportHeight = window.innerHeight;
                             const distance = Math.min(
                                 Math.abs(rect.top),
-                                Math.abs(rect.bottom - viewportHeight)
+                                Math.abs(rect.bottom - viewportHeight),
                             );
 
                             if (distance > config.unloadDistance) {
@@ -427,8 +427,8 @@ export const useLazyLoading = (config: LazyLoadConfig) => {
                 },
                 {
                     rootMargin: config.rootMargin,
-                    threshold: config.threshold
-                }
+                    threshold: config.threshold,
+                },
             );
         }
 
@@ -454,7 +454,7 @@ export const useLazyLoading = (config: LazyLoadConfig) => {
         observe,
         unobserve,
         isLoaded: (itemId: string) => loadedItems.has(itemId),
-        isLoading: (itemId: string) => loadingItems.has(itemId)
+        isLoading: (itemId: string) => loadingItems.has(itemId),
     };
 };
 
@@ -484,7 +484,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
     children,
     cacheConfig = {},
     enableProfiling = true,
-    enableWorkers = true
+    enableWorkers = true,
 }) => {
     const [metrics, setMetrics] = useState<PerformanceMetrics>({
         renderTime: 0,
@@ -494,7 +494,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
         cacheHitRate: 0,
         workerTasksActive: 0,
         frameRate: 0,
-        lastUpdate: new Date()
+        lastUpdate: new Date(),
     });
 
     const cache = useMemo(() => new AdvancedCache({
@@ -502,7 +502,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
         ttl: 5 * 60 * 1000, // 5 minutes
         strategy: 'lru',
         compressionEnabled: false,
-        ...cacheConfig
+        ...cacheConfig,
     }), [cacheConfig]);
 
     const workerManager = useMemo(() =>
@@ -522,7 +522,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
             cacheHitRate: cache.getHitRate(),
             workerTasksActive: workerManager?.getActiveTaskCount() || 0,
             frameRate: calculateFrameRate(),
-            lastUpdate: new Date()
+            lastUpdate: new Date(),
         };
 
         setMetrics(newMetrics);
@@ -534,7 +534,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
 
         // Keep only last second of frames
         frameRateCounter.current = frameRateCounter.current.filter(
-            time => now - time < 1000
+            time => now - time < 1000,
         );
 
         return frameRateCounter.current.length;
@@ -563,7 +563,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
         const task: WorkerTask = {
             ...taskData,
             id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-            timestamp: new Date()
+            timestamp: new Date(),
         };
 
         return await workerManager.executeTask(task);
@@ -618,7 +618,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
         stopProfiling,
         executeWorkerTask,
         clearCache: () => cache.clear(),
-        optimizeMemory
+        optimizeMemory,
     };
 
     return (
@@ -641,7 +641,7 @@ export const usePerformance = () => {
 export const useOptimizedDebounce = <T extends (...args: any[]) => void>(
     callback: T,
     delay: number,
-    options: { leading?: boolean; trailing?: boolean; maxWait?: number } = {}
+    options: { leading?: boolean; trailing?: boolean; maxWait?: number } = {},
 ): T => {
     const { leading = false, trailing = true, maxWait } = options;
     const timeoutRef = useRef<NodeJS.Timeout>();
@@ -715,7 +715,7 @@ interface PerformanceMonitorProps {
 
 export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = memo(({
     className = '',
-    showDetails = false
+    showDetails = false,
 }) => {
     const { metrics } = usePerformance();
 
@@ -729,7 +729,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = memo(({
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         if (bytes === 0) return '0 Bytes';
         const i = Math.floor(Math.log(bytes) / Math.log(1024));
-        return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+        return `${Math.round(bytes / Math.pow(1024, i) * 100) / 100  } ${  sizes[i]}`;
     };
 
     return (
@@ -743,7 +743,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = memo(({
             borderRadius: '6px',
             fontSize: '11px',
             fontFamily: 'monospace',
-            zIndex: 10000
+            zIndex: 10000,
         }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ color: getPerformanceColor(metrics.frameRate, [30, 50]) }}>
@@ -784,7 +784,7 @@ export const VirtualizedList = memo(<T,>({
     height,
     renderItem,
     className = '',
-    overscan = 5
+    overscan = 5,
 }: VirtualizedListProps<T>) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { startProfiling, stopProfiling } = usePerformance();
@@ -793,13 +793,13 @@ export const VirtualizedList = memo(<T,>({
         itemHeight,
         containerHeight: height,
         overscan,
-        threshold: items.length
+        threshold: items.length,
     };
 
     const { visibleItems, totalHeight, offsetY } = useVirtualization(
         items,
         virtualizationConfig,
-        containerRef
+        containerRef,
     );
 
     useEffect(() => {
@@ -816,7 +816,7 @@ export const VirtualizedList = memo(<T,>({
             style={{
                 height,
                 overflow: 'auto',
-                position: 'relative'
+                position: 'relative',
             }}
         >
             <div style={{ height: totalHeight, position: 'relative' }}>
@@ -826,7 +826,7 @@ export const VirtualizedList = memo(<T,>({
                             key={index}
                             style={{
                                 height: itemHeight,
-                                position: 'relative'
+                                position: 'relative',
                             }}
                             data-virtualized="true"
                         >

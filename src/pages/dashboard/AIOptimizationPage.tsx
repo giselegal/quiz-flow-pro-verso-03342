@@ -17,7 +17,7 @@ import {
   Activity,
   Lightbulb,
   RefreshCw,
-  CheckCircle
+  CheckCircle,
 } from 'lucide-react';
 
 export const AIOptimizationPage: React.FC = () => {

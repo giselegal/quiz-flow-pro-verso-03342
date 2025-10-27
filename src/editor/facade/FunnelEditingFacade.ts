@@ -105,7 +105,7 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
             steps: [...snapshot.steps].sort((a, b) => a.order - b.order),
             selectedStepId: snapshot.steps[0]?.id || null,
             dirty: false,
-            meta: snapshot.meta || {}
+            meta: snapshot.meta || {},
         };
         this.persistFn = persistFn;
     }
@@ -149,9 +149,9 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
                     title: s.title,
                     order: s.order,
                     blocks: s.blocks.map(b => ({ id: b.id, type: b.type, data: b.data })),
-                    meta: s.meta
+                    meta: s.meta,
                 })),
-                meta: { ...this.state.meta, updatedAt: Date.now() }
+                meta: { ...this.state.meta, updatedAt: Date.now() },
             };
             if (this.persistFn) {
                 await this.persistFn(snapshot);

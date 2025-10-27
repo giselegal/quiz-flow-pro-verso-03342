@@ -58,7 +58,7 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
         acc[key] = propConfig.default;
         return acc;
       }, {} as any),
-    })
+    }),
   );
 
   const allBlocks = [...modularBlocks, ...blockDefinitions];
@@ -93,7 +93,7 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
       groups[category].push(block);
       return groups;
     },
-    {} as Record<string, typeof allBlocks>
+    {} as Record<string, typeof allBlocks>,
   );
 
   const categoryOrder = [

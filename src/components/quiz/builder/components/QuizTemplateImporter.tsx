@@ -126,7 +126,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
           quizTemplate.questions,
           quizTemplate.name,
           quizTemplate.description,
-          `Resultado de ${quizTemplate.name}`
+          `Resultado de ${quizTemplate.name}`,
         );
       } else {
         // It's already a QuizBuilderState
@@ -167,7 +167,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
           caktoquizQuestions,
           'Quiz de Estilo Pessoal',
           'Descubra seu estilo predominante respondendo às perguntas a seguir',
-          'Seu Resultado de Estilo Pessoal'
+          'Seu Resultado de Estilo Pessoal',
         );
 
         // Adiciona um pequeno atraso para simular um processo e dar feedback visual ao usuário
@@ -233,7 +233,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
           id: componentId,
           type: 'stageResult',
           order: 0,
-          stageId: stageId,
+          stageId,
           data: {
             stageTitle: 'Resultado do Quiz',
             resultLayout: 'classic',
@@ -286,7 +286,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
                     'overflow-hidden border hover:border-[#B89B7A] transition-all cursor-pointer',
                     isImporting && selectedTemplateId === template.id
                       ? 'border-[#B89B7A] shadow-md'
-                      : 'border-[#B89B7A]/30'
+                      : 'border-[#B89B7A]/30',
                   )}
                 >
                   <div className="w-full h-48 overflow-hidden">
@@ -332,7 +332,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
                     'overflow-hidden border hover:border-[#B89B7A] transition-all cursor-pointer',
                     isImporting && selectedTemplateId === source.id
                       ? 'border-[#B89B7A] shadow-md'
-                      : 'border-[#B89B7A]/30'
+                      : 'border-[#B89B7A]/30',
                   )}
                 >
                   <div className="w-full h-48 overflow-hidden">

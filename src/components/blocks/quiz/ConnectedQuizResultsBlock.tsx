@@ -7,7 +7,7 @@ import React from 'react';
 export const ConnectedQuizResultsBlock = ({ 
   quizResult, 
   onNext, 
-  onRestart 
+  onRestart, 
 }: any) => {
   if (!quizResult) {
     return (

@@ -47,7 +47,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
     cropAspectRatio,
     maxWidth = 2000,
     maxHeight = 2000,
-    maxFileSizeMB = 10
+    maxFileSizeMB = 10,
 }) => {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
@@ -79,12 +79,12 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
                     // ✅ Pasta organizada
                     folder: 'quiz-images',
                     // Apenas imagens
-                    resourceType: 'image'
+                    resourceType: 'image',
                 },
                 // ✅ Callback de progresso
                 (progress: CloudinaryUploadProgress) => {
                     setUploadProgress(progress.percentage);
-                }
+                },
             );
 
             // Sucesso! Armazenar informações e URL otimizada

@@ -16,7 +16,7 @@ import {
   ChevronDown,
   ChevronUp,
   AlertCircle,
-  Search
+  Search,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
@@ -60,108 +60,108 @@ const STEP_DEFINITIONS: Record<string, Omit<StepInfo, 'key' | 'number' | 'blocks
   'step-1': {
     title: 'Coleta do Nome',
     description: 'Primeira etapa para coletar o nome do usuário',
-    type: 'intro'
+    type: 'intro',
   },
   'step-2': {
     title: 'Tipo de Roupa Favorita',
     description: 'Questão sobre preferências de vestimenta',
-    type: 'question'
+    type: 'question',
   },
   'step-3': {
     title: 'Personalidade',
     description: 'Análise do perfil de personalidade',
-    type: 'question'
+    type: 'question',
   },
   'step-4': {
     title: 'Visual de Identificação',
     description: 'Como o usuário gosta de se expressar',
-    type: 'question'
+    type: 'question',
   },
   'step-5': {
     title: 'Detalhes Preferidos',
     description: 'Preferências sobre detalhes no visual',
-    type: 'question'
+    type: 'question',
   },
   'step-6': {
     title: 'Estampas Favoritas',
     description: 'Tipos de estampas preferidas',
-    type: 'question'
+    type: 'question',
   },
   'step-7': {
     title: 'Casaco Favorito',
     description: 'Preferências para peças de sobreposição',
-    type: 'question'
+    type: 'question',
   },
   'step-8': {
     title: 'Sapatos Favoritos',
     description: 'Estilo de calçados preferidos',
-    type: 'question'
+    type: 'question',
   },
   'step-9': {
     title: 'Cores Preferidas',
     description: 'Paleta de cores de preferência',
-    type: 'question'
+    type: 'question',
   },
   'step-10': {
     title: 'Acessórios',
     description: 'Preferências sobre acessórios',
-    type: 'question'
+    type: 'question',
   },
   'step-11': {
     title: 'Ocasião de Uso',
     description: 'Contextos onde as roupas serão usadas',
-    type: 'question'
+    type: 'question',
   },
   'step-12': {
     title: 'Transição Estratégica',
     description: 'Preparação para questões estratégicas',
-    type: 'transition'
+    type: 'transition',
   },
   'step-13': {
     title: 'Orçamento',
     description: 'Faixa de investimento disponível',
-    type: 'strategic'
+    type: 'strategic',
   },
   'step-14': {
     title: 'Frequência de Compras',
     description: 'Com que frequência compra roupas',
-    type: 'strategic'
+    type: 'strategic',
   },
   'step-15': {
     title: 'Influências',
     description: 'O que influencia suas decisões de moda',
-    type: 'strategic'
+    type: 'strategic',
   },
   'step-16': {
     title: 'Desafios de Estilo',
     description: 'Principais dificuldades com moda',
-    type: 'strategic'
+    type: 'strategic',
   },
   'step-17': {
     title: 'Objetivo de Imagem',
     description: 'Como quer ser vista pelas pessoas',
-    type: 'strategic'
+    type: 'strategic',
   },
   'step-18': {
     title: 'Confiança no Estilo',
     description: 'Nível de confiança atual com o visual',
-    type: 'strategic'
+    type: 'strategic',
   },
   'step-19': {
     title: 'Transição para Resultado',
     description: 'Preparação para mostrar o resultado',
-    type: 'transition'
+    type: 'transition',
   },
   'step-20': {
     title: 'Página de Resultado',
     description: 'Exibição do estilo predominante calculado',
-    type: 'result'
+    type: 'result',
   },
   'step-21': {
     title: 'Página de Oferta',
     description: 'Apresentação da consultoria personalizada',
-    type: 'offer'
-  }
+    type: 'offer',
+  },
 };
 
 const STEP_TYPE_META = {
@@ -170,7 +170,7 @@ const STEP_TYPE_META = {
   strategic: { label: 'Estratégica', color: 'bg-purple-100 text-purple-800' },
   transition: { label: 'Transição', color: 'bg-orange-100 text-orange-800' },
   result: { label: 'Resultado', color: 'bg-yellow-100 text-yellow-800' },
-  offer: { label: 'Oferta', color: 'bg-red-100 text-red-800' }
+  offer: { label: 'Oferta', color: 'bg-red-100 text-red-800' },
 };
 
 // ===== UTILITIES =====
@@ -219,22 +219,22 @@ const generateBlockPreview = (block: Block): string => {
   // Tentar extrair texto do conteúdo
   if (block.content?.text) {
     const text = String(block.content.text);
-    return text.length > 50 ? text.substring(0, 50) + '...' : text;
+    return text.length > 50 ? `${text.substring(0, 50)  }...` : text;
   }
 
   if (block.properties?.text) {
     const text = String(block.properties.text);
-    return text.length > 50 ? text.substring(0, 50) + '...' : text;
+    return text.length > 50 ? `${text.substring(0, 50)  }...` : text;
   }
 
   if (block.properties?.title) {
     const text = String(block.properties.title);
-    return text.length > 50 ? text.substring(0, 50) + '...' : text;
+    return text.length > 50 ? `${text.substring(0, 50)  }...` : text;
   }
 
   if (block.properties?.content) {
     const text = String(block.properties.content);
-    return text.length > 50 ? text.substring(0, 50) + '...' : text;
+    return text.length > 50 ? `${text.substring(0, 50)  }...` : text;
   }
 
   return `${block.type} (${block.id})`;
@@ -257,7 +257,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
   onBlockUpdate,
   onBlockDuplicate,
   onBlockDelete,
-  className
+  className,
 }) => {
   // Estados locais
   const [activeStep, setActiveStep] = useState('step-1');
@@ -285,7 +285,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
         blocks,
         isValid,
         hasChanges: false, // TODO: Implementar detecção de mudanças
-        propertyCount
+        propertyCount,
       };
     });
   }, []);
@@ -306,8 +306,8 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
         step.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         step.blocks.some(block =>
           block.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          block.id.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+          block.id.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
       );
     }
 
@@ -329,7 +329,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
       propertyCount: countBlockProperties(block),
       hasInterpolation: hasInterpolation(block),
       isValid: validateBlock(block),
-      preview: generateBlockPreview(block)
+      preview: generateBlockPreview(block),
     }));
   }, [activeStepInfo]);
 
@@ -395,7 +395,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
       totalProperties,
       validSteps,
       stepsWithChanges,
-      completionPercentage: Math.round((validSteps / stepsInfo.length) * 100)
+      completionPercentage: Math.round((validSteps / stepsInfo.length) * 100),
     };
   }, [stepsInfo]);
 
@@ -478,7 +478,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
                       'p-3 rounded-lg cursor-pointer transition-all',
                       isActive
                         ? 'bg-blue-100 border-2 border-blue-300'
-                        : 'bg-white border border-gray-200 hover:bg-gray-50'
+                        : 'bg-white border border-gray-200 hover:bg-gray-50',
                     )}
                     onClick={() => handleStepChange(step.key)}
                   >
@@ -529,7 +529,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
                             'p-2 text-sm border rounded cursor-pointer transition-colors',
                             selectedBlock?.id === block.id
                               ? 'bg-blue-50 border-blue-300'
-                              : 'bg-white border-gray-200 hover:bg-gray-50'
+                              : 'bg-white border-gray-200 hover:bg-gray-50',
                           )}
                           onClick={() => {
                             handleStepChange(step.key);
@@ -639,7 +639,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
                       'p-3 border rounded-lg cursor-pointer transition-all',
                       isSelected
                         ? 'bg-blue-50 border-blue-300'
-                        : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                        : 'bg-gray-50 border-gray-200 hover:bg-gray-100',
                     )}
                     onClick={() => block && handleBlockSelect(block)}
                   >

@@ -173,7 +173,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
           parts.push(
             <span key={keyIndex++} style={{ color }}>
               {parseFormattedText(beforeText)}
-            </span>
+            </span>,
           );
         }
       }
@@ -183,7 +183,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
       parts.push(
         <span key={keyIndex++} style={{ color: colorValue }}>
           {parseFormattedText(coloredText)}
-        </span>
+        </span>,
       );
 
       lastIndex = match.index + match[0].length;
@@ -196,7 +196,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         parts.push(
           <span key={keyIndex++} style={{ color }}>
             {parseFormattedText(remainingText)}
-          </span>
+          </span>,
         );
       }
     }
@@ -286,7 +286,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             hasSpanTag,
             hasStrongTag,
             willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
-            contentPreview: personalizedContent?.substring(0, 200) + '...',
+            contentPreview: `${personalizedContent?.substring(0, 200)  }...`,
           });
         }
       }
@@ -345,7 +345,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         handleCancel();
       }
     },
-    [handleSave, handleCancel]
+    [handleSave, handleCancel],
   );
 
   // Auto-focus quando inicia edição
@@ -360,7 +360,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   const autoResizeTextarea = useCallback(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight  }px`;
     }
   }, []);
 
@@ -402,7 +402,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
 
-        className
+        className,
       )}
       style={{ backgroundColor }}
       onClick={handleClick}
@@ -433,7 +433,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
               lineHeight || 'leading-normal',
               // 🎯 MARGENS LATERAIS aplicadas no textarea de edição
               getMarginClass(marginLeft, 'left'),
-              getMarginClass(marginRight, 'right')
+              getMarginClass(marginRight, 'right'),
             )}
             style={{
               color,
@@ -471,7 +471,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 
             // 🎯 MARGENS LATERAIS aplicadas no conteúdo interno
             getMarginClass(marginLeft, 'left'),
-            getMarginClass(marginRight, 'right')
+            getMarginClass(marginRight, 'right'),
           )}
           style={{
             color,
@@ -527,7 +527,7 @@ export const createTextBlock = (
     fontSize: (typeof TEXT_SIZES)[number];
     fontWeight: (typeof TEXT_WEIGHTS)[number];
     textAlign: (typeof TEXT_ALIGNS)[number];
-  }> = {}
+  }> = {},
 ) => ({
   id: crypto.randomUUID?.() ?? Math.random().toString(36),
   type: 'text-inline',

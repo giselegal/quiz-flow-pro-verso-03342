@@ -47,7 +47,7 @@ function validateBlock(step: QuizStep, block: BlockComponent): ValidationError[]
             message: 'Heading sem texto',
             severity: 'error',
             field: 'text',
-            blockType: block.type
+            blockType: block.type,
         });
     }
     if (block.type === 'button' && !block.content?.label) {
@@ -59,7 +59,7 @@ function validateBlock(step: QuizStep, block: BlockComponent): ValidationError[]
             message: 'Botão sem label',
             severity: 'warning',
             field: 'label',
-            blockType: block.type
+            blockType: block.type,
         });
     }
     // Option question example: must have >=2 options
@@ -73,7 +73,7 @@ function validateBlock(step: QuizStep, block: BlockComponent): ValidationError[]
                 message: 'Mínimo de 2 opções',
                 severity: 'error',
                 field: 'options',
-                blockType: block.type
+                blockType: block.type,
             });
         }
     }
@@ -89,7 +89,7 @@ function validateStep(step: QuizStep): ValidationError[] {
             targetId: step.id,
             stepId: step.id,
             message: 'Etapa sem blocos',
-            severity: 'warning'
+            severity: 'warning',
         });
     }
     return errs;
@@ -127,7 +127,7 @@ export function useValidation(steps: QuizStep[], debounceMs = 300): ValidationRe
         id: s.id, 
         blocks: Array.isArray(s.blocks) 
             ? s.blocks.map((b: any) => ({ id: b.id, t: b.type, c: b.content, p: b.properties }))
-            : []
+            : [],
     })))]);
 
     const byStep: Record<string, ValidationError[]> = {};

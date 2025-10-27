@@ -17,7 +17,7 @@ interface ButtonBlockProps {
 const ButtonBlock: React.FC<ButtonBlockProps> = ({
   block,
   isSelected,
-  isPreview
+  isPreview,
 }) => {
   const { content = {}, properties = {} } = block;
   

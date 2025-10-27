@@ -71,7 +71,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={onClick}
     >

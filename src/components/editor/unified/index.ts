@@ -42,7 +42,7 @@ export type {
   FunnelSettings,
   StageSettings,
   CRUDOperation,
-  CRUDResult
+  CRUDResult,
 } from '@/services/UnifiedCRUDService';
 
 // 🔄 SISTEMA DE VERSIONAMENTO
@@ -151,7 +151,7 @@ export {
   UnifiedStepRenderer,
   UnifiedStepRendererStyles,
   type UnifiedStepRendererProps,
-  type RenderMode
+  type RenderMode,
 } from './UnifiedStepRenderer';
 
 // 🚀 OTIMIZAÇÕES DE PERFORMANCE
@@ -161,7 +161,7 @@ export {
   PERFORMANCE_TARGETS,
   getChunkForStep,
   getPreloadSteps,
-  getWebpackChunkConfig
+  getWebpackChunkConfig,
 } from './ChunkOptimization';// Re-export do stepRegistry para conveniência
 export { stepRegistry } from '@/components/step-registry/StepRegistry';
 

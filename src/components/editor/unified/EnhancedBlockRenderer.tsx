@@ -59,7 +59,7 @@ const ValidationAwareBlockWrapper: React.FC<{
   canAutoAdvance,
   timeToAutoAdvance,
   onSelect,
-  children
+  children,
 }) => {
     const [isHovering, setIsHovering] = React.useState(false);
 
@@ -87,7 +87,7 @@ const ValidationAwareBlockWrapper: React.FC<{
           isSelected && 'ring-2 ring-primary ring-offset-2',
           isHovering && !isSelected && 'ring-1 ring-primary/20',
           validationState === 'invalid' && 'ring-2 ring-red-500/50',
-          validationState === 'valid' && 'ring-2 ring-green-500/30'
+          validationState === 'valid' && 'ring-2 ring-green-500/30',
         )}
         onClick={(e) => {
           e.stopPropagation();
@@ -129,7 +129,7 @@ const ValidationAwareBlockWrapper: React.FC<{
           validationState === 'invalid' && 'bg-red-500/5',
           validationState === 'warning' && 'bg-yellow-500/5',
           validationState === 'pending' && 'bg-blue-500/5',
-          validationState === 'none' && 'bg-primary/5'
+          validationState === 'none' && 'bg-primary/5',
         )} />
 
         {/* Indicador de auto-advance */}
@@ -173,7 +173,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
     stepNumber: currentStep,
     funnelId,
     autoAdvanceEnabled: enableAutoAdvance && isPreview,
-    autoAdvanceDelay: getAutoAdvanceDelay(block.type, currentStep)
+    autoAdvanceDelay: getAutoAdvanceDelay(block.type, currentStep),
   });
 
   // Determinar estado de validação baseado no tipo de bloco
@@ -227,7 +227,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
     return (
       <div className={cn(
         'min-h-[60px] border border-red-200 bg-red-50 rounded-lg p-4 text-center',
-        className
+        className,
       )}>
         <div className="text-red-600 text-sm">
           ⚠️ Componente não encontrado: <code>{block.type}</code>
@@ -309,7 +309,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
           <div className={cn(
             'min-h-[80px] bg-stone-50 border border-stone-200 rounded-lg animate-pulse',
             'flex items-center justify-center',
-            className
+            className,
           )}>
             <LoadingSpinner size="sm" />
             <span className="ml-2 text-sm text-stone-500">

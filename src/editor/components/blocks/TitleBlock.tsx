@@ -23,7 +23,7 @@ export const TitleBlock: React.FC<BlockComponentProps> = ({
         textAlign = 'center',
         color = '#432818',
         marginBottom = '1rem',
-        className: customClassName
+        className: customClassName,
     } = data.props;
 
     return (
@@ -32,7 +32,7 @@ export const TitleBlock: React.FC<BlockComponentProps> = ({
                 'title-block relative p-4 transition-all duration-200',
                 isEditable && 'cursor-pointer hover:bg-gray-50',
                 isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/30',
-                customClassName
+                customClassName,
             )}
             style={{ marginBottom }}
             onClick={isEditable ? onSelect : undefined}
@@ -50,7 +50,7 @@ export const TitleBlock: React.FC<BlockComponentProps> = ({
                 className={cn(
                     `text-${fontSize}`,
                     `font-${fontWeight}`,
-                    `text-${textAlign}`
+                    `text-${textAlign}`,
                 )}
                 style={{ color }}
             >

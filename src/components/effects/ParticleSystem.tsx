@@ -71,7 +71,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
               },
               life: particle.life - 0.02,
             }))
-            .filter(particle => particle.life > 0)
+            .filter(particle => particle.life > 0),
         );
       }, 16);
 

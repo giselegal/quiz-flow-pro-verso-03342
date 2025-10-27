@@ -106,7 +106,7 @@ const ActiveUsersIndicator: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveCustomers(prev =>
-        Math.max(300, Math.min(350, prev + (Math.floor(Math.random() * 5) - 2)))
+        Math.max(300, Math.min(350, prev + (Math.floor(Math.random() * 5) - 2))),
       );
     }, 13000);
     return () => clearInterval(interval);
@@ -290,7 +290,7 @@ const PreviewQuizOfferPage: React.FC = () => {
       trackButtonClick(buttonId, action, 'quiz_offer_page');
       window.open('https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912', '_blank');
     },
-    [trackButtonClick]
+    [trackButtonClick],
   );
 
   // Preload de imagens críticas
@@ -782,7 +782,7 @@ const PreviewQuizOfferPage: React.FC = () => {
                       imgClassName="rounded-xl aspect-square object-cover"
                     />
                   </div>
-                )
+                ),
               )}
             </div>
             <div className="mb-10 sm:mb-14 image-hover-effect overflow-hidden rounded-2xl shadow-xl max-w-xl mx-auto">

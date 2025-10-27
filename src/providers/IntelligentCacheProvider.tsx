@@ -17,7 +17,7 @@ import React, {
     useCallback,
     useRef,
     ReactNode,
-    useMemo
+    useMemo,
 } from 'react';
 
 // 🎯 CACHE CONFIGURATION
@@ -38,7 +38,7 @@ const DEFAULT_CACHE_CONFIG: CacheConfig = {
     defaultTTL: 300000, // 5 minutes
     gcInterval: 60000, // 1 minute
     compressionEnabled: true,
-    encryptionEnabled: false
+    encryptionEnabled: false,
 };
 
 // 🎯 CACHE ENTRY
@@ -161,7 +161,7 @@ class MemoryCacheLayer implements CacheLayer {
         return {
             hits: this.stats.hits,
             misses: this.stats.misses,
-            hitRate: total > 0 ? this.stats.hits / total : 0
+            hitRate: total > 0 ? this.stats.hits / total : 0,
         };
     }
 
@@ -425,7 +425,7 @@ class IntelligentCacheManager {
         totalHits: 0,
         totalMisses: 0,
         gcRuns: 0,
-        lastGC: Date.now()
+        lastGC: Date.now(),
     };
 
     constructor(config: CacheConfig = DEFAULT_CACHE_CONFIG) {
@@ -477,13 +477,13 @@ class IntelligentCacheManager {
             tags?: string[];
             persistent?: boolean;
             priority?: 'high' | 'medium' | 'low';
-        } = {}
+        } = {},
     ): Promise<boolean> {
         const {
             ttl = this.config.defaultTTL,
             tags = [],
             persistent = false,
-            priority = 'medium'
+            priority = 'medium',
         } = options;
 
         const serializedData = this.serializeData(data);
@@ -497,7 +497,7 @@ class IntelligentCacheManager {
             size: JSON.stringify(serializedData).length,
             compressed: this.config.compressionEnabled,
             encrypted: this.config.encryptionEnabled,
-            tags
+            tags,
         };
 
         let success = false;
@@ -524,7 +524,7 @@ class IntelligentCacheManager {
         const results = await Promise.allSettled([
             this.memoryLayer.delete(key),
             this.indexedDBLayer.delete(key),
-            this.localStorageLayer.delete(key)
+            this.localStorageLayer.delete(key),
         ]);
 
         return results.some(result => result.status === 'fulfilled' && result.value);
@@ -536,7 +536,7 @@ class IntelligentCacheManager {
             const results = await Promise.allSettled([
                 this.memoryLayer.clear(),
                 this.indexedDBLayer.clear(),
-                this.localStorageLayer.clear()
+                this.localStorageLayer.clear(),
             ]);
             return results.every(result => result.status === 'fulfilled' && result.value);
         }
@@ -554,27 +554,27 @@ class IntelligentCacheManager {
                 entries: (await this.memoryLayer.keys()).length,
                 totalSize: await this.memoryLayer.size(),
                 hitRate: memoryStats.hitRate,
-                missRate: 1 - memoryStats.hitRate
+                missRate: 1 - memoryStats.hitRate,
             },
             indexedDBCache: {
                 entries: await this.indexedDBLayer.size(),
                 totalSize: 0, // Would need more complex calculation
                 hitRate: 0, // Would need tracking
-                missRate: 1
+                missRate: 1,
             },
             localStorageCache: {
                 entries: (await this.localStorageLayer.keys()).length,
                 totalSize: await this.localStorageLayer.size(),
                 hitRate: 0, // Would need tracking
-                missRate: 1
+                missRate: 1,
             },
             overall: {
                 totalEntries: 0, // Sum of all layers
                 totalSize: 0, // Sum of all layers
                 overallHitRate: this.stats.totalHits / (this.stats.totalHits + this.stats.totalMisses),
                 gcRuns: this.stats.gcRuns,
-                lastGC: this.stats.lastGC
-            }
+                lastGC: this.stats.lastGC,
+            },
         };
     }
 
@@ -641,7 +641,7 @@ interface IntelligentCacheProviderProps {
 export const IntelligentCacheProvider: React.FC<IntelligentCacheProviderProps> = ({
     children,
     config = {},
-    debugMode = false
+    debugMode = false,
 }) => {
     const cacheManagerRef = useRef<IntelligentCacheManager | null>(null);
     const [stats, setStats] = useState<CacheStats | null>(null);
@@ -672,7 +672,7 @@ export const IntelligentCacheProvider: React.FC<IntelligentCacheProviderProps> =
         set: <T,>(key: string, data: T, options?: any) => cacheManager.set(key, data, options),
         delete: (key: string) => cacheManager.delete(key),
         clear: (tags?: string[]) => cacheManager.clear(tags),
-        getStats: () => cacheManager.getStats()
+        getStats: () => cacheManager.getStats(),
     }), [cacheManager]);
 
     // Debug logging
@@ -697,7 +697,7 @@ export const IntelligentCacheProvider: React.FC<IntelligentCacheProviderProps> =
                     fontSize: '12px',
                     fontFamily: 'monospace',
                     zIndex: 9999,
-                    maxWidth: '300px'
+                    maxWidth: '300px',
                 }}>
                     <h4>Cache Stats</h4>
                     <div>Hit Rate: {(stats.overall.overallHitRate * 100).toFixed(1)}%</div>
@@ -726,7 +726,7 @@ export const useCachedData = <T,>(
         ttl?: number;
         refreshInterval?: number;
         persistent?: boolean;
-    } = {}
+    } = {},
 ) => {
     const { get, set } = useIntelligentCache();
     const [data, setData] = useState<T | null>(null);

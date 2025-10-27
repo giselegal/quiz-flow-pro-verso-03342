@@ -146,7 +146,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       style={{ backgroundColor, color: textColor }}
       onClick={handleClick}
@@ -167,7 +167,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
           <h1
             className={cn(
               'text-4xl md:text-5xl font-bold leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
-              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
+              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
             )}
             style={{ color: textColor }}
             onClick={onClick}
@@ -179,7 +179,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
           <h2
             className={cn(
               'text-xl md:text-2xl text-opacity-80 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
-              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
+              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
             )}
             style={{ color: textColor }}
             onClick={onClick}
@@ -191,7 +191,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
           <p
             className={cn(
               'text-lg text-opacity-70 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
-              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
+              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
             )}
             style={{ color: textColor }}
             onClick={onClick}
@@ -228,7 +228,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
                 'w-full p-4 text-lg rounded-lg border-2 bg-white/90',
                 error
                   ? 'border-red-500 focus:ring-red-500'
-                  : 'border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20'
+                  : 'border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20',
               )}
               autoFocus
               required
@@ -245,7 +245,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
               'focus:outline-none focus:ring-4 focus:ring-opacity-50',
               nome.trim()
                 ? 'bg-[#B89B7A] hover:bg-[#A38A69] text-white hover:scale-105 shadow-lg focus:ring-[#B89B7A]'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed',
             )}
             title="Texto do botão editável no Painel de Propriedades"
           >

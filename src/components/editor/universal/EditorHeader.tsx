@@ -119,7 +119,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                                     'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border shadow-sm',
                                     state.isSupabaseEnabled
                                         ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                                        : 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                                        : 'bg-amber-500/20 text-amber-400 border-amber-500/30',
                                 )}
                                 title={state.isSupabaseEnabled ? 'Connected to Supabase' : 'Offline mode'}
                             >
@@ -136,7 +136,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                                 disabled={!actions.canUndo}
                                 className={cn(
                                     'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-l-lg',
-                                    actions.canUndo ? 'text-gray-300 hover:bg-gray-700/50' : 'text-gray-600 cursor-not-allowed bg-gray-800/30'
+                                    actions.canUndo ? 'text-gray-300 hover:bg-gray-700/50' : 'text-gray-600 cursor-not-allowed bg-gray-800/30',
                                 )}
                                 title="Undo (Ctrl+Z)"
                             >
@@ -154,7 +154,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                                     'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-r-lg transition-colors',
                                     actions.canRedo
                                         ? 'text-white bg-gray-800/50 hover:bg-gray-700/60 border border-gray-700/50'
-                                        : 'text-gray-500 cursor-not-allowed bg-gray-900/30 border border-gray-800/30'
+                                        : 'text-gray-500 cursor-not-allowed bg-gray-900/30 border border-gray-800/30',
                                 )}
                                 title="Refazer (Ctrl+Y)"
                             >
@@ -203,7 +203,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                                                 actions.importJSON(json);
                                                 notification?.success?.('JSON importado com sucesso!');
                                             } catch (error) {
-                                                notification?.error?.('Erro ao importar JSON: ' + (error as Error).message);
+                                                notification?.error?.(`Erro ao importar JSON: ${  (error as Error).message}`);
                                             }
                                         };
                                         reader.readAsText(file);
@@ -260,7 +260,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                                     'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium transition-colors',
                                     mode === 'edit'
                                         ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-sm'
-                                        : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                                        : 'text-gray-300 hover:text-white hover:bg-gray-700/50',
                                 )}
                                 aria-label="Modo de edição"
                             >
@@ -276,7 +276,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                                     'flex items-center gap-2 px-4 py-2 text-sm rounded-md font-medium transition-colors',
                                     mode === 'preview'
                                         ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-sm'
-                                        : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                                        : 'text-gray-300 hover:text-white hover:bg-gray-700/50',
                                 )}
                                 aria-label="Modo de visualização"
                             >

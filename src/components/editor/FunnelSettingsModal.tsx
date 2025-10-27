@@ -20,7 +20,7 @@ import {
     Facebook,
     Settings,
     AlertTriangle,
-    ExternalLink
+    ExternalLink,
 } from 'lucide-react';
 
 interface SEOSettings {
@@ -73,7 +73,7 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
     funnelId,
     funnelName,
     isOpen,
-    onClose
+    onClose,
 }) => {
     const [saving, setSaving] = useState(false);
     const [activeTab, setActiveTab] = useState('seo');
@@ -84,21 +84,21 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
         description: 'Descubra seu estilo pessoal único com nosso quiz interativo e receba recomendações personalizadas.',
         keywords: 'estilo pessoal, quiz, moda, personal stylist, Gisele Galvão',
         ogImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        siteName: 'QuizFlow - Gisele Galvão'
+        siteName: 'QuizFlow - Gisele Galvão',
     });
 
     const [domainSettings, setDomainSettings] = useState<DomainSettings>({
         customDomain: '',
         subdomain: 'quiz',
         protocol: 'https',
-        redirectWww: false
+        redirectWww: false,
     });
 
     const [pixelSettings, setPixelSettings] = useState<PixelSettings>({
         facebookPixelId: '1311550759901086',
         googleAnalyticsId: '',
         googleTagManagerId: '',
-        enabled: true
+        enabled: true,
     });
 
     const [funnelSettings, setFunnelSettings] = useState<FunnelSettings>({
@@ -106,7 +106,7 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
         primaryColor: '#B89B7A',
         secondaryColor: '#432818',
         fontFamily: 'Playfair Display',
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
     });
 
     // 💾 Carregar configurações do localStorage/Supabase
@@ -144,7 +144,7 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
                 domain: domainSettings,
                 pixel: pixelSettings,
                 funnel: funnelSettings,
-                lastModified: new Date().toISOString()
+                lastModified: new Date().toISOString(),
             };
 
             // Salvar no localStorage

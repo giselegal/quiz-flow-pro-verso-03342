@@ -25,7 +25,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   className = '',
   placeholder = 'Digite aqui...',
   multiline = false,
-  renderAs
+  renderAs,
 }) => {
   const [isEditingLocal, setIsEditingLocal] = useState(false);
   const [editValue, setEditValue] = useState(value);
@@ -76,7 +76,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         <div
           className={cn(
             'relative group cursor-pointer',
-            isEditing && 'hover:bg-blue-50/50 rounded p-1 -m-1'
+            isEditing && 'hover:bg-blue-50/50 rounded p-1 -m-1',
           )}
           onClick={handleStartEdit}
         >
@@ -94,7 +94,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
           'relative group cursor-pointer',
           className,
           isEditing && 'hover:bg-blue-50/50 rounded p-1 -m-1',
-          !value && 'text-stone-400 italic'
+          !value && 'text-stone-400 italic',
         )}
         onClick={handleStartEdit}
       >
@@ -118,7 +118,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
           placeholder={placeholder}
           className={cn(
             'w-full bg-white border-2 border-blue-500 rounded px-2 py-1 resize-none',
-            className
+            className,
           )}
           rows={3}
         />
@@ -132,7 +132,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
           placeholder={placeholder}
           className={cn(
             'w-full bg-white border-2 border-blue-500 rounded px-2 py-1',
-            className
+            className,
           )}
         />
       )}

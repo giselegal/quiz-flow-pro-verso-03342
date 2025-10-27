@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 export default function ResultCTASecondaryBlock({
     block,
     isSelected,
-    onClick
+    onClick,
 }: AtomicBlockProps) {
     // Ler apenas de content
     const text = block.content?.text || 'Refazer Quiz';

@@ -19,7 +19,7 @@ import {
     CheckCircle,
     Wifi,
     WifiOff,
-    RefreshCw
+    RefreshCw,
 } from 'lucide-react';
 
 interface PreviewMonitorProps {
@@ -47,7 +47,7 @@ interface MonitorStats {
 
 const PreviewMonitor: React.FC<PreviewMonitorProps> = ({
     isVisible = process.env.NODE_ENV === 'development',
-    position = 'bottom-right'
+    position = 'bottom-right',
 }) => {
     const [expanded, setExpanded] = useState(false);
     const [stats, setStats] = useState<MonitorStats>({
@@ -57,9 +57,9 @@ const PreviewMonitor: React.FC<PreviewMonitorProps> = ({
             loadTime: 0,
             apiCalls: 0,
             cacheHits: 0,
-            errors: 0
+            errors: 0,
         },
-        componentStatus: {}
+        componentStatus: {},
     });
 
     // Atualizar estatísticas a cada segundo
@@ -84,8 +84,8 @@ const PreviewMonitor: React.FC<PreviewMonitorProps> = ({
                 interceptorStats,
                 performanceMetrics: {
                     ...prev.performanceMetrics,
-                    cacheHits: cacheStats.size
-                }
+                    cacheHits: cacheStats.size,
+                },
             }));
         } catch (error) {
             console.warn('Erro ao atualizar stats do monitor:', error);

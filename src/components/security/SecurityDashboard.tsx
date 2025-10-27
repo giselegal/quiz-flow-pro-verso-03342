@@ -17,7 +17,7 @@ import {
   CheckCircle, 
   XCircle, 
   RefreshCw,
-  TrendingUp
+  TrendingUp,
 } from 'lucide-react';
 
 export const SecurityDashboard: React.FC = () => {
@@ -32,7 +32,7 @@ export const SecurityDashboard: React.FC = () => {
     getMetrics,
     isSystemHealthy,
     hasCriticalIssues,
-    hasWarnings
+    hasWarnings,
   } = useSecurityMonitor();
 
   const [metricsData, setMetricsData] = useState(null);
@@ -42,7 +42,7 @@ export const SecurityDashboard: React.FC = () => {
     try {
       await Promise.all([
         checkHealth(),
-        getSystemStatus()
+        getSystemStatus(),
       ]);
     } catch (err) {
       console.error('Erro ao atualizar:', err);
@@ -75,10 +75,10 @@ export const SecurityDashboard: React.FC = () => {
   };
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
+    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
       healthy: 'default',
       warning: 'secondary', 
-      critical: 'destructive'
+      critical: 'destructive',
     };
     
     return (

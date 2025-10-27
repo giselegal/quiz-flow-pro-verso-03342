@@ -55,7 +55,7 @@ import {
     AlignCenter,
     AlignRight,
     ImageIcon,
-    Copy
+    Copy,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Block } from '@/types/editor';
@@ -140,7 +140,7 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
     layout,
     onReorder,
     index,
-    totalItems
+    totalItems,
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [tempText, setTempText] = useState(option.text);
@@ -181,8 +181,8 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
     return (
         <div
             className={cn(
-                "group relative bg-white border rounded-lg p-3 transition-all duration-200 hover:shadow-md",
-                "border-gray-200 hover:border-gray-300"
+                'group relative bg-white border rounded-lg p-3 transition-all duration-200 hover:shadow-md',
+                'border-gray-200 hover:border-gray-300',
             )}
         >
             {/* ✅ CORREÇÃO: Substituído drag handle por botões de reordenação */}
@@ -249,9 +249,9 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
 
                 {/* Content based on layout */}
                 <div className={cn(
-                    "space-y-2",
-                    layout.arrangement === 'image-text' && "flex items-center gap-3",
-                    layout.arrangement === 'text-image' && "flex items-center gap-3 flex-row-reverse"
+                    'space-y-2',
+                    layout.arrangement === 'image-text' && 'flex items-center gap-3',
+                    layout.arrangement === 'text-image' && 'flex items-center gap-3 flex-row-reverse',
                 )}>
                     {/* Image Section */}
                     {(layout.arrangement === 'image-text' || layout.arrangement === 'text-image' || layout.arrangement === 'image-only') && (
@@ -340,7 +340,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
     onDelete,
     onDuplicate,
     onClose,
-    className
+    className,
 }) => {
     // ===== STATE =====
     const [data, setData] = useState<MultipleChoiceOptionsData>(() => ({
@@ -352,29 +352,29 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
             columns: 2,
             direction: 'vertical',
             arrangement: 'image-text',
-            alignment: 'left'
+            alignment: 'left',
         },
         validation: {
             multipleChoice: false,
             required: true,
-            autoAdvance: false
+            autoAdvance: false,
         },
         style: {
             border: 'small',
             shadow: 'medium',
             spacing: 'small',
             detail: 'none',
-            style: 'simple'
+            style: 'simple',
         },
         colors: {
             background: '#ffffff',
             text: '#1f2937',
             border: '#e5e7eb',
             hover: '#f3f4f6',
-            selected: '#3b82f6'
+            selected: '#3b82f6',
         },
         componentId: selectedBlock?.id || 'multiple-choice-block',
-        maxDisplayed: 10
+        maxDisplayed: 10,
     }));
 
     const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
@@ -433,7 +433,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
     const handleReorderOptions = useCallback((fromIndex: number, toIndex: number) => {
         const reorderedOptions = arrayMove(sortedOptions, fromIndex, toIndex).map((option, index) => ({
             ...option,
-            order: index
+            order: index,
         }));
 
         setData(prev => ({ ...prev, options: reorderedOptions }));
@@ -444,7 +444,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
         const newOption: QuizOption = {
             id: `option-${Date.now()}`,
             text: `Opção ${data.options.length + 1}`,
-            order: data.options.length
+            order: data.options.length,
         };
 
         const updatedOptions = [...data.options, newOption];
@@ -454,7 +454,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
 
     const handleEditOption = useCallback((id: string, text: string) => {
         const updatedOptions = data.options.map(option =>
-            option.id === id ? { ...option, text } : option
+            option.id === id ? { ...option, text } : option,
         );
 
         setData(prev => ({ ...prev, options: updatedOptions }));
@@ -463,7 +463,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
 
     const handleImageChange = useCallback((id: string, image: string) => {
         const updatedOptions = data.options.map(option =>
-            option.id === id ? { ...option, image } : option
+            option.id === id ? { ...option, image } : option,
         );
 
         setData(prev => ({ ...prev, options: updatedOptions }));
@@ -511,7 +511,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
             text: '#1f2937',
             border: '#e5e7eb',
             hover: '#f3f4f6',
-            selected: '#3b82f6'
+            selected: '#3b82f6',
         };
 
         handleColorChange(key, defaultColors[key]);
@@ -535,7 +535,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
         icon: React.ReactNode,
         content: React.ReactNode,
         sectionKey: string,
-        badge?: string
+        badge?: string,
     ) => {
         const isCollapsed = collapsedSections.has(sectionKey);
 
@@ -564,7 +564,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
     // ===== RENDER =====
     if (!selectedBlock || selectedBlock.type !== 'options-grid') {
         return (
-            <Card className={cn("w-full max-w-md", className)}>
+            <Card className={cn('w-full max-w-md', className)}>
                 <CardContent className="flex flex-col items-center justify-center p-8 text-center">
                     <Settings className="w-12 h-12 text-muted-foreground mb-4" />
                     <h3 className="text-lg font-semibold mb-2">Bloco Não Compatível</h3>
@@ -577,7 +577,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
     }
 
     return (
-        <Card className={cn("w-full max-w-md", className)}>
+        <Card className={cn('w-full max-w-md', className)}>
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
@@ -707,7 +707,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
 
                                 {/* Validation Settings */}
                                 {renderSection(
-                                    "Validações",
+                                    'Validações',
                                     <Settings className="w-4 h-4" />,
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
@@ -749,7 +749,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                             />
                                         </div>
                                     </div>,
-                                    "validations"
+                                    'validations',
                                 )}
                             </div>
                         </ScrollArea>
@@ -760,7 +760,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                         <ScrollArea className="h-[70vh]">
                             <div className="space-y-4">
                                 {renderSection(
-                                    "Layout",
+                                    'Layout',
                                     <Layout className="w-4 h-4" />,
                                     <div className="space-y-4">
                                         <div className="space-y-2">
@@ -847,11 +847,11 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                             </Select>
                                         </div>
                                     </div>,
-                                    "layout"
+                                    'layout',
                                 )}
 
                                 {renderSection(
-                                    "Geral",
+                                    'Geral',
                                     <Settings className="w-4 h-4" />,
                                     <div className="space-y-4">
                                         <div className="space-y-2">
@@ -871,7 +871,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                             </p>
                                         </div>
                                     </div>,
-                                    "general"
+                                    'general',
                                 )}
                             </div>
                         </ScrollArea>
@@ -882,7 +882,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                         <ScrollArea className="h-[70vh]">
                             <div className="space-y-4">
                                 {renderSection(
-                                    "Estilização",
+                                    'Estilização',
                                     <Palette className="w-4 h-4" />,
                                     <div className="space-y-4">
                                         <div className="grid grid-cols-2 gap-3">
@@ -959,11 +959,11 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                             </div>
                                         </div>
                                     </div>,
-                                    "styling"
+                                    'styling',
                                 )}
 
                                 {renderSection(
-                                    "Personalização de Cores",
+                                    'Personalização de Cores',
                                     <Palette className="w-4 h-4" />,
                                     <div className="space-y-4">
                                         {Object.entries(data.colors).map(([key, value]) => (
@@ -1009,7 +1009,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                             </div>
                                         ))}
                                     </div>,
-                                    "colors"
+                                    'colors',
                                 )}
                             </div>
                         </ScrollArea>
@@ -1020,7 +1020,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                         <ScrollArea className="h-[70vh]">
                             <div className="space-y-4">
                                 {renderSection(
-                                    "Avançado",
+                                    'Avançado',
                                     <Settings className="w-4 h-4" />,
                                     <div className="space-y-4">
                                         <div className="space-y-2">
@@ -1044,12 +1044,12 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                             </p>
                                         </div>
                                     </div>,
-                                    "advanced"
+                                    'advanced',
                                 )}
 
                                 {/* Preview */}
                                 {renderSection(
-                                    "Preview",
+                                    'Preview',
                                     <Eye className="w-4 h-4" />,
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-2">
@@ -1077,18 +1077,18 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                         </div>
 
                                         <div className={cn(
-                                            "border rounded-lg p-4 bg-white transition-all duration-300",
-                                            previewMode === 'desktop' && "w-full",
-                                            previewMode === 'tablet' && "w-3/4 mx-auto",
-                                            previewMode === 'mobile' && "w-1/2 mx-auto"
+                                            'border rounded-lg p-4 bg-white transition-all duration-300',
+                                            previewMode === 'desktop' && 'w-full',
+                                            previewMode === 'tablet' && 'w-3/4 mx-auto',
+                                            previewMode === 'mobile' && 'w-1/2 mx-auto',
                                         )}>
                                             <div
                                                 className={cn(
-                                                    "grid gap-2",
-                                                    `grid-cols-${data.layout.columns}`
+                                                    'grid gap-2',
+                                                    `grid-cols-${data.layout.columns}`,
                                                 )}
                                                 style={{
-                                                    gridTemplateColumns: `repeat(${data.layout.columns}, 1fr)`
+                                                    gridTemplateColumns: `repeat(${data.layout.columns}, 1fr)`,
                                                 }}
                                             >
                                                 {sortedOptions.slice(0, data.maxDisplayed).map((option) => (
@@ -1098,14 +1098,14 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                                         style={{
                                                             backgroundColor: data.colors.background,
                                                             color: data.colors.text,
-                                                            borderColor: data.colors.border
+                                                            borderColor: data.colors.border,
                                                         }}
                                                     >
                                                         <div className={cn(
-                                                            "flex items-center gap-2",
-                                                            data.layout.arrangement === 'text-image' && "flex-row-reverse",
-                                                            data.layout.alignment === 'center' && "justify-center",
-                                                            data.layout.alignment === 'right' && "justify-end"
+                                                            'flex items-center gap-2',
+                                                            data.layout.arrangement === 'text-image' && 'flex-row-reverse',
+                                                            data.layout.alignment === 'center' && 'justify-center',
+                                                            data.layout.alignment === 'right' && 'justify-end',
                                                         )}>
                                                             {(data.layout.arrangement === 'image-text' || data.layout.arrangement === 'text-image' || data.layout.arrangement === 'image-only') && option.image && (
                                                                 <img
@@ -1123,7 +1123,7 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                                             </div>
                                         </div>
                                     </div>,
-                                    "preview"
+                                    'preview',
                                 )}
 
                                 {/* Actions */}

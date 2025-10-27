@@ -22,7 +22,7 @@ const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
     stepData,
     stepNumber,
     onSave,
-    className = ''
+    className = '',
 }) => {
     const editorContext = useEditor({ optional: true });
     if (!editorContext) return null;
@@ -59,7 +59,7 @@ const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
                     blockId,
                     property,
                     value,
-                    updates
+                    updates,
                 });
             }
         } catch (error) {

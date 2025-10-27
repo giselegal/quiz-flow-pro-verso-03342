@@ -42,7 +42,7 @@ export default function ModularIntroStep({
     onBlockSelect,
     onOpenProperties,
     onBlocksReorder,
-    onNameSubmit
+    onNameSubmit,
 }: ModularIntroStepProps) {
 
     const safeData = {
@@ -51,7 +51,7 @@ export default function ModularIntroStep({
         placeholder: data.placeholder || 'Digite seu primeiro nome aqui...',
         buttonText: data.buttonText || 'Quero Descobrir meu Estilo Agora!',
         image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
-        description: data.description || 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.'
+        description: data.description || 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
     };
 
     // Identificador do step
@@ -85,7 +85,7 @@ export default function ModularIntroStep({
     }, [effectiveBlocks, hasRealBlocks]);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     );
 
     const handleDragEnd = (event: any) => {

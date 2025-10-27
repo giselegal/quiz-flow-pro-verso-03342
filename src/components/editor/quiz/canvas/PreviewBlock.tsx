@@ -61,7 +61,7 @@ export const PreviewBlock: React.FC<PreviewBlockProps> = memo(({
     logger.render(`PreviewBlock[${block.type}]`, {
       blockId: block.id,
       hasComponent: !!BlockComponent,
-      hasSessionData: !!sessionData
+      hasSessionData: !!sessionData,
     });
   }, [block.type, block.id, BlockComponent, sessionData, logger]);
 
@@ -69,8 +69,8 @@ export const PreviewBlock: React.FC<PreviewBlockProps> = memo(({
     return (
       <div
         className={cn(
-          "p-4 border border-gray-200 bg-gray-50 rounded",
-          className
+          'p-4 border border-gray-200 bg-gray-50 rounded',
+          className,
         )}
         style={style}
         data-block-id={block.id}
@@ -87,7 +87,7 @@ export const PreviewBlock: React.FC<PreviewBlockProps> = memo(({
     <div
       className={cn(
         'preview-block',
-        className
+        className,
       )}
       style={style}
       data-block-id={block.id}

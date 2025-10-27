@@ -57,7 +57,7 @@ function SortableStepItem({
       <Card
         className={cn(
           'p-3 mb-2 cursor-pointer transition-all hover:shadow-md',
-          isSelected && 'ring-2 ring-primary bg-primary/5'
+          isSelected && 'ring-2 ring-primary bg-primary/5',
         )}
         onClick={onSelect}
       >

@@ -8,7 +8,7 @@ import {
   UserGreetingModule,
   CompatibilityModule,
   SecondaryStylesModule,
-  OfferModule
+  OfferModule,
 } from '../modules/step20';
 
 /**
@@ -21,7 +21,7 @@ export const Step20ResultHeaderBlock: React.FC<BlockComponentProps> = ({
   block, 
   isSelected = false, 
   onPropertyChange,
-  className = '' 
+  className = '', 
 }) => {
   return (
     <div className={cn('step20-result-header-block', className)}>
@@ -41,7 +41,7 @@ export const Step20StyleRevealBlock: React.FC<BlockComponentProps> = ({
   block, 
   isSelected = false, 
   onPropertyChange,
-  className = '' 
+  className = '', 
 }) => {
   return (
     <div className={cn('step20-style-reveal-block', className)}>
@@ -61,7 +61,7 @@ export const Step20UserGreetingBlock: React.FC<BlockComponentProps> = ({
   block, 
   isSelected = false, 
   onPropertyChange,
-  className = '' 
+  className = '', 
 }) => {
   return (
     <div className={cn('step20-user-greeting-block', className)}>
@@ -81,7 +81,7 @@ export const Step20CompatibilityBlock: React.FC<BlockComponentProps> = ({
   block, 
   isSelected = false, 
   onPropertyChange,
-  className = '' 
+  className = '', 
 }) => {
   return (
     <div className={cn('step20-compatibility-block', className)}>
@@ -101,7 +101,7 @@ export const Step20SecondaryStylesBlock: React.FC<BlockComponentProps> = ({
   block, 
   isSelected = false, 
   onPropertyChange,
-  className = '' 
+  className = '', 
 }) => {
   return (
     <div className={cn('step20-secondary-styles-block', className)}>
@@ -121,7 +121,7 @@ export const Step20PersonalizedOfferBlock: React.FC<BlockComponentProps> = ({
   block, 
   isSelected = false, 
   onPropertyChange,
-  className = '' 
+  className = '', 
 }) => {
   return (
     <div className={cn('step20-personalized-offer-block', className)}>
@@ -141,7 +141,7 @@ export const Step20CompleteTemplateBlock: React.FC<BlockComponentProps> = ({
   block, 
   isSelected = false, 
   onPropertyChange,
-  className = '' 
+  className = '', 
 }) => {
   const {
     showResultHeader = true,
@@ -151,19 +151,19 @@ export const Step20CompleteTemplateBlock: React.FC<BlockComponentProps> = ({
     showSecondaryStyles = true,
     showPersonalizedOffer = true,
     templateLayout = 'vertical',
-    spacing = 'lg'
+    spacing = 'lg',
   } = block?.properties || {};
 
   const layoutClasses = {
     vertical: 'space-y-8',
     horizontal: 'grid grid-cols-1 md:grid-cols-2 gap-8',
-    grid: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+    grid: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
   };
 
   const spacingClasses = {
     sm: 'space-y-4 gap-4',
     md: 'space-y-6 gap-6', 
-    lg: 'space-y-8 gap-8'
+    lg: 'space-y-8 gap-8',
   };
 
   return (
@@ -172,7 +172,7 @@ export const Step20CompleteTemplateBlock: React.FC<BlockComponentProps> = ({
       layoutClasses[templateLayout as keyof typeof layoutClasses] || layoutClasses.vertical,
       spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.lg,
       isSelected && 'ring-2 ring-primary ring-offset-4',
-      className
+      className,
     )}>
       <QuizDataProvider block={block}>
         {/* Header do resultado */}
@@ -238,5 +238,5 @@ export default {
   Step20CompatibilityBlock,
   Step20SecondaryStylesBlock,
   Step20PersonalizedOfferBlock,
-  Step20CompleteTemplateBlock
+  Step20CompleteTemplateBlock,
 };

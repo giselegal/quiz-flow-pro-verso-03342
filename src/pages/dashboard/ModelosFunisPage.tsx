@@ -23,7 +23,7 @@ import {
   Zap,
   Award,
   Palette,
-  Plus
+  Plus,
 } from 'lucide-react';
 
 // Templates reais disponíveis
@@ -82,7 +82,7 @@ const ModelosFunisPage: React.FC = () => {
           features: template.features,
           isActive: template.isActive,
           templatePath: template.templatePath,
-          editorUrl: template.editorUrl
+          editorUrl: template.editorUrl,
         }));
 
         // Adicionar modelos específicos do quiz21StepsComplete
@@ -103,11 +103,11 @@ const ModelosFunisPage: React.FC = () => {
               'Interface responsiva otimizada',
               'Analytics integrado',
               'Cálculos automáticos',
-              'Múltiplos tipos de questão'
+              'Múltiplos tipos de questão',
             ],
             isActive: true,
             templatePath: '/templates/quiz21StepsComplete',
-            editorUrl: '/editor?template=quiz21StepsComplete'
+            editorUrl: '/editor?template=quiz21StepsComplete',
           },
           {
             id: 'quiz-estilo-simplificado',
@@ -124,11 +124,11 @@ const ModelosFunisPage: React.FC = () => {
               'Menor abandono (menos etapas)',
               'Resultados precisos',
               'Mobile-first design',
-              'Integração social'
+              'Integração social',
             ],
             isActive: true,
             templatePath: '/templates/quiz10StepsSimplified',
-            editorUrl: '/editor?template=quiz10StepsSimplified'
+            editorUrl: '/editor?template=quiz10StepsSimplified',
           },
           {
             id: 'quiz-personalidade-profissional',
@@ -145,11 +145,11 @@ const ModelosFunisPage: React.FC = () => {
               'Resultados orientados a carreira',
               'Recomendações de desenvolvimento',
               'Integração LinkedIn',
-              'Relatórios para RH'
+              'Relatórios para RH',
             ],
             isActive: true,
             templatePath: '/templates/quizProfessional',
-            editorUrl: '/editor?template=quizProfessional'
+            editorUrl: '/editor?template=quizProfessional',
           },
           {
             id: 'lead-magnet-fashion',
@@ -166,12 +166,12 @@ const ModelosFunisPage: React.FC = () => {
               'Integração email marketing',
               'Segmentação automática',
               'Follow-up sequences',
-              'Analytics de conversão'
+              'Analytics de conversão',
             ],
             isActive: true,
             templatePath: '/templates/leadMagnetFashion',
-            editorUrl: '/editor?template=leadMagnetFashion'
-          }
+            editorUrl: '/editor?template=leadMagnetFashion',
+          },
         ];
 
         const allModels = [...funnelModels, ...quiz21Models];
@@ -205,7 +205,7 @@ const ModelosFunisPage: React.FC = () => {
       filtered = filtered.filter(model =>
         model.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         model.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        model.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        model.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())),
       );
     }
 
@@ -363,7 +363,7 @@ const ModelosFunisPage: React.FC = () => {
             {categories.map((category) => (
               <Button
                 key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
+                variant={selectedCategory === category ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setSelectedCategory(category)}
               >

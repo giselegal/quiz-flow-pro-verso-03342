@@ -72,12 +72,12 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
     },
     isSelected && 'ring-2 ring-blue-500 ring-opacity-50 rounded-lg',
     'rounded-lg border border-opacity-10',
-    className
+    className,
   );
 
   const containerStyle = {
     backgroundColor,
-    borderColor: borderColor + '20',
+    borderColor: `${borderColor  }20`,
   };
 
   // Process secondary styles for thumbnails
@@ -131,11 +131,11 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
             {/* Decorative corners */}
             <div
               className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2"
-              style={{ borderColor: borderColor }}
+              style={{ borderColor }}
             ></div>
             <div
               className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2"
-              style={{ borderColor: borderColor }}
+              style={{ borderColor }}
             ></div>
           </div>
 
@@ -149,7 +149,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
                   alt={thumbnail.alt}
                   loading="lazy"
                   className="w-[60px] h-auto rounded-md shadow-sm border hover:scale-105 transition-transform duration-300"
-                  style={{ borderColor: borderColor + '40' }}
+                  style={{ borderColor: `${borderColor  }40` }}
                   width="80"
                   height="auto"
                 />
@@ -166,7 +166,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
           <span
             className="px-4 py-2 rounded-full text-sm font-medium"
             style={{
-              backgroundColor: borderColor + '20',
+              backgroundColor: `${borderColor  }20`,
               color: borderColor,
               border: `1px solid ${borderColor}40`,
             }}

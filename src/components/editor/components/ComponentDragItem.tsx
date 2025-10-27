@@ -51,7 +51,7 @@ export const ComponentDragItem: React.FC<ComponentDragItemProps> = ({
         'transition-all duration-200',
         'flex items-center gap-3',
         isDragging && 'opacity-50 scale-95 shadow-lg z-50',
-        isDragging && 'border-blue-400 bg-blue-100'
+        isDragging && 'border-blue-400 bg-blue-100',
       )}
     >
       {/* Ícone do componente */}

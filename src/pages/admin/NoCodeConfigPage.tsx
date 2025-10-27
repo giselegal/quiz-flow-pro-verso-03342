@@ -26,7 +26,7 @@ import {
   Check,
   AlertCircle,
   Monitor,
-  Trophy
+  Trophy,
 } from 'lucide-react';
 
 interface SEOSettings {
@@ -98,21 +98,21 @@ export const NoCodeConfigPanel: React.FC = () => {
     description: 'Descubra seu estilo pessoal único com nosso quiz interativo e receba recomendações personalizadas.',
     keywords: 'estilo pessoal, quiz, moda, personal stylist, Gisele Galvão',
     ogImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-    siteName: 'QuizFlow - Gisele Galvão'
+    siteName: 'QuizFlow - Gisele Galvão',
   });
 
   const [domainSettings, setDomainSettings] = useState<DomainSettings>({
     customDomain: '',
     subdomain: 'quiz',
     protocol: 'https',
-    redirectWww: false
+    redirectWww: false,
   });
 
   const [pixelSettings, setPixelSettings] = useState<PixelSettings>({
     facebookPixelId: '',
     googleAnalyticsId: '',
     googleTagManagerId: '',
-    enabled: true
+    enabled: true,
   });
 
   const [publishingSettings, setPublishingSettings] = useState<PublishingSettings>({
@@ -121,7 +121,7 @@ export const NoCodeConfigPanel: React.FC = () => {
     backupEnabled: true,
     basePublishUrl: 'https://quizquest.app',
     previewUrl: 'https://preview.quizquest.app',
-    cdnUrl: 'https://cdn.quizquest.app'
+    cdnUrl: 'https://cdn.quizquest.app',
   });
 
   const [funnelSettings, setFunnelSettings] = useState<FunnelSettings>({
@@ -129,7 +129,7 @@ export const NoCodeConfigPanel: React.FC = () => {
     primaryColor: '#B89B7A',
     secondaryColor: '#432818',
     fontFamily: 'Playfair Display',
-    logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+    logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
   });
 
   const [step20Settings, setStep20Settings] = useState<Step20Settings>({
@@ -147,7 +147,7 @@ export const NoCodeConfigPanel: React.FC = () => {
     enableSocialSharing: step20Config.enableSocialSharing,
     socialShareText: step20Config.socialShareText,
     showNextSteps: step20Config.showNextSteps,
-    nextStepsText: step20Config.nextStepsText
+    nextStepsText: step20Config.nextStepsText,
   });
 
   const [saving, setSaving] = useState(false);
@@ -164,8 +164,8 @@ export const NoCodeConfigPanel: React.FC = () => {
     // await saveHeaderConfig(headerSettings);
 
     toast({
-      title: "Configurações de Header Salvas!",
-      description: "As configurações do cabeçalho foram aplicadas com sucesso.",
+      title: 'Configurações de Header Salvas!',
+      description: 'As configurações do cabeçalho foram aplicadas com sucesso.',
     });
 
     setSaving(false);
@@ -183,7 +183,7 @@ export const NoCodeConfigPanel: React.FC = () => {
     }
 
     toast({
-      title: "Configurações salvas!",
+      title: 'Configurações salvas!',
       description: `As configurações de ${section} foram salvas com sucesso.`,
     });
 
@@ -192,15 +192,15 @@ export const NoCodeConfigPanel: React.FC = () => {
 
   const connectVercel = async () => {
     toast({
-      title: "Integração Vercel",
-      description: "Conectando com a API do Vercel para configuração de domínio...",
+      title: 'Integração Vercel',
+      description: 'Conectando com a API do Vercel para configuração de domínio...',
     });
 
     // TODO: Implement Vercel API integration
     setTimeout(() => {
       toast({
-        title: "Vercel conectado!",
-        description: "Domínio personalizado será configurado em breve.",
+        title: 'Vercel conectado!',
+        description: 'Domínio personalizado será configurado em breve.',
       });
     }, 2000);
   };
@@ -470,7 +470,7 @@ export const NoCodeConfigPanel: React.FC = () => {
                     value={publishingSettings.templateStorage}
                     onValueChange={(value) => setPublishingSettings({
                       ...publishingSettings,
-                      templateStorage: value as PublishingSettings['templateStorage']
+                      templateStorage: value as PublishingSettings['templateStorage'],
                     })}
                   >
                     <SelectTrigger>
@@ -492,7 +492,7 @@ export const NoCodeConfigPanel: React.FC = () => {
                     value={publishingSettings.templatePath}
                     onChange={(e) => setPublishingSettings({
                       ...publishingSettings,
-                      templatePath: e.target.value
+                      templatePath: e.target.value,
                     })}
                     placeholder="/public/templates/"
                   />
@@ -506,7 +506,7 @@ export const NoCodeConfigPanel: React.FC = () => {
                       checked={publishingSettings.backupEnabled}
                       onCheckedChange={(checked) => setPublishingSettings({
                         ...publishingSettings,
-                        backupEnabled: checked
+                        backupEnabled: checked,
                       })}
                     />
                     <span className="text-sm">Criar backup a cada salvamento</span>
@@ -542,7 +542,7 @@ export const NoCodeConfigPanel: React.FC = () => {
                     value={publishingSettings.basePublishUrl}
                     onChange={(e) => setPublishingSettings({
                       ...publishingSettings,
-                      basePublishUrl: e.target.value
+                      basePublishUrl: e.target.value,
                     })}
                     placeholder="https://quizquest.app"
                   />
@@ -555,7 +555,7 @@ export const NoCodeConfigPanel: React.FC = () => {
                     value={publishingSettings.previewUrl}
                     onChange={(e) => setPublishingSettings({
                       ...publishingSettings,
-                      previewUrl: e.target.value
+                      previewUrl: e.target.value,
                     })}
                     placeholder="https://preview.quizquest.app"
                   />
@@ -568,7 +568,7 @@ export const NoCodeConfigPanel: React.FC = () => {
                     value={publishingSettings.cdnUrl}
                     onChange={(e) => setPublishingSettings({
                       ...publishingSettings,
-                      cdnUrl: e.target.value
+                      cdnUrl: e.target.value,
                     })}
                     placeholder="https://cdn.quizquest.app"
                   />

@@ -101,7 +101,7 @@ export const InlineEditableBlock: React.FC<InlineEditableBlockProps> = ({
         'relative group transition-all duration-200',
         isActive && 'ring-2 ring-primary ring-offset-2',
         'hover:ring-1 hover:ring-primary/50',
-        className
+        className,
       )}
       onClick={() => onActivate(block.id)}
     >

@@ -60,7 +60,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
         // Log apenas quando encontrar o botão
         if (btn) {
           appLogger.debug(
-            `🔘 [FormContainerBlock] Button ${buttonId} ${disabled ? 'DISABLED' : 'ENABLED'}`
+            `🔘 [FormContainerBlock] Button ${buttonId} ${disabled ? 'DISABLED' : 'ENABLED'}`,
           );
         }
       });
@@ -117,7 +117,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
             window.dispatchEvent(new CustomEvent('navigate-to-step', { detail }));
             window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', { detail }));
           },
-          Number(delay) || 0
+          Number(delay) || 0,
         );
       }
     };

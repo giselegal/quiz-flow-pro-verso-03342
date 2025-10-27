@@ -95,7 +95,7 @@ const BonusBlock: React.FC<BonusBlockProps & { block?: any }> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
     >
       <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] text-center mb-2">{title}</h2>

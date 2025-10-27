@@ -95,7 +95,7 @@ export default function IntroStepDirect({ onNameSubmit }: IntroStepDirectProps) 
                             aspectRatio: '1.47',
                             maxHeight: '204px',
                             width: '100%',
-                            maxWidth: '300px'
+                            maxWidth: '300px',
                         }}
                     >
                         <img
@@ -109,7 +109,7 @@ export default function IntroStepDirect({ onNameSubmit }: IntroStepDirectProps) 
                                 maxHeight: '204px',
                                 width: '100%',
                                 height: 'auto',
-                                objectFit: 'contain'
+                                objectFit: 'contain',
                             }}
                         />
                     </div>

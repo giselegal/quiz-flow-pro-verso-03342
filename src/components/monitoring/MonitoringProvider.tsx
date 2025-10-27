@@ -34,7 +34,7 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
   children,
   enableAlerts = true,
   healthCheckInterval = 30000,
-  enableAnalytics = true
+  enableAnalytics = true,
 }) => {
   const [healthStatus, setHealthStatus] = useState<HealthStatus | null>(null);
   const [errorCount, setErrorCount] = useState(0);
@@ -54,9 +54,9 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
       // Alertas de erro crítico
       if (enableAlerts && error.level === 'error') {
         toast({
-          title: "🚨 Erro Detectado",
+          title: '🚨 Erro Detectado',
           description: error.message.substring(0, 100),
-          variant: "destructive"
+          variant: 'destructive',
         });
       }
     }, 0);
@@ -68,9 +68,9 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
     // Alertas críticos
     if (enableAlerts && status.status === 'unhealthy') {
       toast({
-        title: "⚠️ Sistema Crítico",
-        description: "Detectados problemas no sistema. Verificando...",
-        variant: "destructive"
+        title: '⚠️ Sistema Crítico',
+        description: 'Detectados problemas no sistema. Verificando...',
+        variant: 'destructive',
       });
     }
   }, [enableAlerts, toast]);
@@ -101,7 +101,7 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
       if (enableAnalytics) {
         analyticsService.trackEvent({
           event_name: 'monitoring_started',
-          event_category: 'system'
+          event_category: 'system',
         });
       }
     }
@@ -115,7 +115,7 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
       if (enableAnalytics) {
         analyticsService.trackEvent({
           event_name: 'monitoring_stopped',
-          event_category: 'system'
+          event_category: 'system',
         });
       }
     }
@@ -126,7 +126,7 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
       analyticsService.trackEvent({
         event_name: name,
         event_category: 'application',
-        custom_parameters: properties
+        custom_parameters: properties,
       });
     }
   };
@@ -134,7 +134,7 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
   const trackError = (error: Error | string, context?: Record<string, any>): string => {
     return errorTrackingService.captureError(error, {
       component: 'application',
-      metadata: context
+      metadata: context,
     });
   };
 
@@ -147,7 +147,7 @@ export const MonitoringProvider: React.FC<MonitoringProviderProps> = ({
     startMonitoring,
     stopMonitoring,
     trackEvent,
-    trackError
+    trackError,
   };
 
   return (
@@ -170,7 +170,7 @@ export const useMonitoringContext = (): MonitoringContextType => {
  */
 export const withMonitoring = <P extends object>(
   Component: React.ComponentType<P>,
-  componentName?: string
+  componentName?: string,
 ) => {
   const WrappedComponent: React.FC<P> = (props) => {
     const { trackEvent, trackError } = useMonitoringContext();
@@ -192,7 +192,7 @@ export const withMonitoring = <P extends object>(
         if ('onError' in props && typeof props.onError === 'function') {
           (props.onError as Function)(error);
         }
-      }
+      },
     };
 
     return <Component {...enhancedProps} />;

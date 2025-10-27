@@ -43,7 +43,7 @@ export const OptimizedCanvasDropZone: React.FC<OptimizedCanvasDropZoneProps> = (
         isOver
           ? 'border-primary bg-primary/5 shadow-inner'
           : 'border-border/50 hover:border-border',
-        className
+        className,
       )}
     >
       {/* Estado vazio */}
@@ -52,7 +52,7 @@ export const OptimizedCanvasDropZone: React.FC<OptimizedCanvasDropZoneProps> = (
           <div
             className={cn(
               'text-center space-y-4 transition-all duration-300',
-              isOver && 'scale-105'
+              isOver && 'scale-105',
             )}
           >
             <div className="text-6xl">📱</div>

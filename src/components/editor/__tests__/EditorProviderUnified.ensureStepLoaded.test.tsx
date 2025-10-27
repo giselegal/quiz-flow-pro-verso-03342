@@ -13,15 +13,15 @@ const MasterJSONFixture = {
             sections: [
                 { type: 'question-hero', id: 'hero-03', content: {} },
                 { type: 'options-grid', id: 'grid-03', content: {} },
-            ]
+            ],
         },
         'step-21': {
             type: 'offer',
             sections: [
-                { type: 'offer-hero', id: 'offer-hero-21', content: {} }
-            ]
-        }
-    }
+                { type: 'offer-hero', id: 'offer-hero-21', content: {} },
+            ],
+        },
+    },
 };
 
 function TestConsumer({ onReady }: { onReady: (ctx: ReturnType<typeof useEditor>) => void }) {
@@ -47,7 +47,7 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
         render(
             <EditorProviderUnified>
                 <TestConsumer onReady={onReady} />
-            </EditorProviderUnified>
+            </EditorProviderUnified>,
         );
 
         await actions.ensureStepLoaded('step-03');
@@ -70,7 +70,7 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
         render(
             <EditorProviderUnified>
                 <TestConsumer onReady={onReady} />
-            </EditorProviderUnified>
+            </EditorProviderUnified>,
         );
 
         await actions.ensureStepLoaded('step-21');
@@ -91,7 +91,7 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
         render(
             <EditorProviderUnified>
                 <TestConsumer onReady={onReady} />
-            </EditorProviderUnified>
+            </EditorProviderUnified>,
         );
 
         const spy = vi.spyOn(loadStepTemplates, 'loadStepTemplate');
@@ -113,7 +113,7 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
         render(
             <EditorProviderUnified>
                 <TestConsumer onReady={onReady} />
-            </EditorProviderUnified>
+            </EditorProviderUnified>,
         );
 
         const spy = vi.spyOn(loadStepTemplates, 'loadStepTemplate');
@@ -134,7 +134,7 @@ describe('EditorProviderUnified.ensureStepLoaded', () => {
         render(
             <EditorProviderUnified>
                 <TestConsumer onReady={onReady} />
-            </EditorProviderUnified>
+            </EditorProviderUnified>,
         );
 
         const spy = vi.spyOn(loadStepTemplates, 'loadStepTemplate');

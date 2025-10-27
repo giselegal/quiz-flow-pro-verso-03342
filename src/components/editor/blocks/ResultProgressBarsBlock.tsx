@@ -18,7 +18,7 @@ export default function ResultProgressBarsBlock({
   const scores: StyleScore[] = content?.scores || properties?.scores || [
     { name: 'Clássico Elegante', score: 85 },
     { name: 'Romântico', score: 72 },
-    { name: 'Natural', score: 65 }
+    { name: 'Natural', score: 65 },
   ];
   const showTop3 = properties?.showTop3 !== false;
   const barColor = properties?.barColor || 'hsl(var(--primary))';

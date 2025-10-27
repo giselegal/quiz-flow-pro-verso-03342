@@ -22,7 +22,7 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
         'secondary-styles p-6 border border-gray-200 rounded-lg bg-white',
         'hover:shadow-md transition-all duration-200',
         isSelected && 'ring-2 ring-[#432818] bg-[#432818]',
-        'cursor-pointer'
+        'cursor-pointer',
         // Margens universais com controles deslizantes
       )}
       onClick={onClick}

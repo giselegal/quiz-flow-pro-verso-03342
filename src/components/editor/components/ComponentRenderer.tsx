@@ -42,7 +42,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   useEffect(() => {
     appLogger.warn(
       '⚠️ DEPRECATED: ComponentRenderer (editor/components) será removido em 21/out/2025. ' +
-      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md'
+      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md',
     );
   }, []);
 

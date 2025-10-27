@@ -11,7 +11,7 @@ import {
     HeroSection,
     SocialProofSection,
     OfferSection,
-    GuaranteeSection
+    GuaranteeSection,
 } from './result';
 
 interface ResultStepProps {
@@ -104,7 +104,7 @@ interface ResultStepProps {
 export default function ResultStep({
     data,
     userProfile,
-    scores
+    scores,
 }: ResultStepProps) {
     // ⚠️ DEPRECATION WARNING (Development Only)
     if (process.env.NODE_ENV === 'development') {
@@ -124,7 +124,7 @@ export default function ResultStep({
             '  • ANALISE_ACOPLAMENTO_STEPS_12_19_20.md\n' +
             '  • LOGICA_CALCULOS_RESULTADOS.md\n' +
             '  • PLANO_ACAO_DESACOPLAMENTO.md\n\n' +
-            '🗑️ REMOÇÃO: Planejada para v2.0'
+            '🗑️ REMOÇÃO: Planejada para v2.0',
         );
     }
 
@@ -147,7 +147,7 @@ export default function ResultStep({
         height: 300,
         fallbackText: styleConfig?.name || 'Estilo',
         fallbackBgColor: '#f8f9fa',
-        fallbackTextColor: '#6b7280'
+        fallbackTextColor: '#6b7280',
     });
 
     const guideImage = useImageWithFallback(styleConfig?.guideImageUrl, {
@@ -155,7 +155,7 @@ export default function ResultStep({
         height: 400,
         fallbackText: `Guia ${styleConfig?.name || 'Estilo'}`,
         fallbackBgColor: '#f1f5f9',
-        fallbackTextColor: '#64748b'
+        fallbackTextColor: '#64748b',
     });    // Scroll para o topo quando carregar
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -181,7 +181,7 @@ export default function ResultStep({
             ['romantico', scores.romantico],
             ['sexy', scores.sexy],
             ['dramatico', scores.dramatico],
-            ['criativo', scores.criativo]
+            ['criativo', scores.criativo],
         ] as [string, number][];
 
         // Calcular total de pontos
@@ -195,11 +195,11 @@ export default function ResultStep({
                 const displayKey = resolveStyleId(styleKey); // chave canônica (acentuada se existir)
                 return {
                     key: styleKey,
-                    displayKey: displayKey,
+                    displayKey,
                     name: styleConfigGisele[displayKey]?.name || displayKey,
                     score,
                     percentage: ((score / totalPoints) * 100),
-                    originalIndex // Preserva ordem original para desempate
+                    originalIndex, // Preserva ordem original para desempate
                 };
             })
             .filter(style => style.score > 0)
@@ -229,7 +229,7 @@ export default function ResultStep({
             (window as any).gtag('event', 'checkout_initiated', {
                 'event_category': 'ecommerce',
                 'event_label': `CTA_Click_${userProfile.resultStyle}`,
-                'value': 497.00
+                'value': 497.00,
             });
         }
 
@@ -240,36 +240,36 @@ export default function ResultStep({
     const offerFeatures = [
         { icon: '✅', label: '31 Aulas Online (Acesso Imediato)', value: 'R$ 297,00' },
         { icon: '✅', label: 'Bônus: Guia de Visagismo Facial (PDF)', value: 'R$ 67,00' },
-        { icon: '✅', label: 'Bônus: Peças-Chave + Inventário', value: 'R$ 83,00' }
+        { icon: '✅', label: 'Bônus: Peças-Chave + Inventário', value: 'R$ 83,00' },
     ];
 
     const offerPricing = {
         current: 97,
         original: 447,
         installments: { quantity: 8, value: 14.11 },
-        discount: 78
+        discount: 78,
     };
 
     // Dados para a seção de prova social (componente modular)
     const testimonials = [
         {
-            name: "Maria Silva",
-            role: "Advogada",
-            quote: "Finalmente descobri como me vestir com elegância e profissionalismo. Meu guarda-roupa nunca fez tanto sentido!",
-            rating: 5
+            name: 'Maria Silva',
+            role: 'Advogada',
+            quote: 'Finalmente descobri como me vestir com elegância e profissionalismo. Meu guarda-roupa nunca fez tanto sentido!',
+            rating: 5,
         },
         {
-            name: "Ana Costa",
-            role: "Empresária",
-            quote: "O guia me ajudou a encontrar meu estilo pessoal. Agora me sinto confiante em qualquer ocasião.",
-            rating: 5
+            name: 'Ana Costa',
+            role: 'Empresária',
+            quote: 'O guia me ajudou a encontrar meu estilo pessoal. Agora me sinto confiante em qualquer ocasião.',
+            rating: 5,
         },
         {
-            name: "Julia Santos",
-            role: "Designer",
-            quote: "Economizei muito dinheiro parando de comprar peças que não combinam comigo. Recomendo!",
-            rating: 5
-        }
+            name: 'Julia Santos',
+            role: 'Designer',
+            quote: 'Economizei muito dinheiro parando de comprar peças que não combinam comigo. Recomendo!',
+            rating: 5,
+        },
     ];
 
     return (
@@ -376,7 +376,7 @@ export default function ResultStep({
                                                             }`}
                                                         style={{
                                                             width: `${style.percentage}%`,
-                                                            animationDelay: `${index * 0.2}s`
+                                                            animationDelay: `${index * 0.2}s`,
                                                         }}
                                                     />
                                                 </div>
@@ -510,10 +510,10 @@ export default function ResultStep({
 
                         <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 max-w-4xl mx-auto mb-6 md:mb-8">
                             {[
-                                { text: "Construir looks com intenção e identidade visual", icon: "🎯" },
-                                { text: "Utilizar cores, modelagens e tecidos a seu favor", icon: "🎨" },
-                                { text: "Alinhar sua imagem aos seus objetivos profissionais", icon: "💼" },
-                                { text: "Desenvolver um guarda-roupa funcional e inteligente", icon: "👗" }
+                                { text: 'Construir looks com intenção e identidade visual', icon: '🎯' },
+                                { text: 'Utilizar cores, modelagens e tecidos a seu favor', icon: '🎨' },
+                                { text: 'Alinhar sua imagem aos seus objetivos profissionais', icon: '💼' },
+                                { text: 'Desenvolver um guarda-roupa funcional e inteligente', icon: '👗' },
                             ].map((item, idx) => (
                                 <div key={idx} className="flex items-center text-left p-4 bg-[#B89B7A]/5 rounded-lg">
                                     <span className="text-2xl mr-4">{item.icon}</span>
@@ -539,11 +539,11 @@ export default function ResultStep({
                     features={offerFeatures}
                     pricing={offerPricing}
                     cta={{
-                        text: "✨ Começar Minha Transformação Agora",
-                        onClick: handleCTAClick
+                        text: '✨ Começar Minha Transformação Agora',
+                        onClick: handleCTAClick,
                     }}
                     countdown={{
-                        enabled: false // Removido countdown - usando mensagem estática
+                        enabled: false, // Removido countdown - usando mensagem estática
                     }}
                     urgencyNote="⚡ Esta é uma oferta exclusiva para você que completou o diagnóstico"
                     returnPriceNote="O preço volta para R$ 447,00 quando você sair desta página"

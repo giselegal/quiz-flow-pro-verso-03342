@@ -9,7 +9,7 @@ import {
   BarChart3,
   PieChart,
   Download,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react';
 import {
   Line,
@@ -25,7 +25,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-  Pie
+  Pie,
 } from 'recharts';
 
 // Mock data for demonstration
@@ -225,7 +225,7 @@ const MetricsPage: React.FC = () => {
                   contentStyle={{ 
                     backgroundColor: '#FFFFFF', 
                     border: '1px solid #D4C4A0',
-                    borderRadius: '8px'
+                    borderRadius: '8px',
                   }} 
                 />
                 <Area
@@ -289,7 +289,7 @@ const MetricsPage: React.FC = () => {
                 contentStyle={{ 
                   backgroundColor: '#FFFFFF', 
                   border: '1px solid #D4C4A0',
-                  borderRadius: '8px'
+                  borderRadius: '8px',
                 }} 
               />
               <Legend />

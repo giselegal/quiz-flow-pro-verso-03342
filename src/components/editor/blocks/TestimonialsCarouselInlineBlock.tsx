@@ -22,7 +22,7 @@ const TESTIMONIALS_DATABASE = [
         transformation: 'Passou de insegura com as roupas para referência de elegância no trabalho',
         location: 'São Paulo, SP',
         date: 'Março 2024',
-        category: 'Estilo Profissional'
+        category: 'Estilo Profissional',
     },
     {
         id: 'sonia',
@@ -35,7 +35,7 @@ const TESTIMONIALS_DATABASE = [
         transformation: 'Organizou completamente seu closet e descobriu seu estilo pessoal',
         location: 'Rio de Janeiro, RJ',
         date: 'Janeiro 2024',
-        category: 'Guarda-roupa Cápsula'
+        category: 'Guarda-roupa Cápsula',
     },
     {
         id: 'ana',
@@ -48,7 +48,7 @@ const TESTIMONIALS_DATABASE = [
         transformation: 'De mãe perdida para mulher confiante e estilosa',
         location: 'Belo Horizonte, MG',
         date: 'Fevereiro 2024',
-        category: 'Estilo Pós-Maternidade'
+        category: 'Estilo Pós-Maternidade',
     },
     {
         id: 'patricia',
@@ -61,8 +61,8 @@ const TESTIMONIALS_DATABASE = [
         transformation: 'Aparência renovada com as cores certas',
         location: 'Brasília, DF',
         date: 'Abril 2024',
-        category: 'Coloração Pessoal'
-    }
+        category: 'Coloração Pessoal',
+    },
 ];
 
 // Função para converter valores de margem em classes Tailwind
@@ -127,20 +127,20 @@ const TestimonialsCarouselInlineBlock: React.FC<BlockComponentProps> = ({
     // Filtrar depoimentos selecionados
     const activeTestimonials = useMemo(() => {
         return TESTIMONIALS_DATABASE.filter(testimonial =>
-            selectedTestimonials.includes(testimonial.id)
+            selectedTestimonials.includes(testimonial.id),
         );
     }, [selectedTestimonials]);
 
     // Navegação do carrossel
     const nextSlide = useCallback(() => {
         setCurrentIndex((prev) =>
-            prev + itemsPerView >= activeTestimonials.length ? 0 : prev + itemsPerView
+            prev + itemsPerView >= activeTestimonials.length ? 0 : prev + itemsPerView,
         );
     }, [itemsPerView, activeTestimonials.length]);
 
     const prevSlide = useCallback(() => {
         setCurrentIndex((prev) =>
-            prev === 0 ? Math.max(0, activeTestimonials.length - itemsPerView) : prev - itemsPerView
+            prev === 0 ? Math.max(0, activeTestimonials.length - itemsPerView) : prev - itemsPerView,
         );
     }, [itemsPerView, activeTestimonials.length]);
 
@@ -180,7 +180,7 @@ const TestimonialsCarouselInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
     ), [isSelected, isPreviewing, className, borderRadius, marginTop, marginBottom, marginLeft, marginRight]);
 
     // Calcular depoimentos visíveis
@@ -316,10 +316,10 @@ const TestimonialsCarouselInlineBlock: React.FC<BlockComponentProps> = ({
                 {/* Depoimentos */}
                 <div className={cn(
                     layoutClasses[layout as keyof typeof layoutClasses],
-                    layout === 'grid' && `grid-cols-1 md:grid-cols-${Math.min(itemsPerView, 2)} lg:grid-cols-${itemsPerView}`
+                    layout === 'grid' && `grid-cols-1 md:grid-cols-${Math.min(itemsPerView, 2)} lg:grid-cols-${itemsPerView}`,
                 )}>
                     {visibleTestimonials.map((testimonial) =>
-                        renderTestimonial(testimonial)
+                        renderTestimonial(testimonial),
                     )}
                 </div>
 
@@ -354,10 +354,10 @@ const TestimonialsCarouselInlineBlock: React.FC<BlockComponentProps> = ({
                                     'w-2 h-2 rounded-full transition-all',
                                     Math.floor(currentIndex / itemsPerView) === index
                                         ? 'w-8'
-                                        : 'opacity-50 hover:opacity-75'
+                                        : 'opacity-50 hover:opacity-75',
                                 )}
                                 style={{
-                                    backgroundColor: accentColor
+                                    backgroundColor: accentColor,
                                 }}
                             />
                         ))}

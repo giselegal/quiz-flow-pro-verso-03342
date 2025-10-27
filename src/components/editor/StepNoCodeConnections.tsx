@@ -21,7 +21,7 @@ import {
     Edit,
     Save,
     Eye,
-    Shuffle
+    Shuffle,
 } from 'lucide-react';
 
 // Types para configuração de conexões
@@ -58,7 +58,7 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
         totalSteps: 21,
         connections: [],
         defaultFlow: 'linear',
-        hasConditionalLogic: false
+        hasConditionalLogic: false,
     });
 
     const [newConnection, setNewConnection] = useState<Partial<StepConnection>>({
@@ -66,7 +66,7 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
         toStep: 2,
         condition: { type: 'always' },
         label: '',
-        isActive: true
+        isActive: true,
     });
 
     // Carregar configuração salva
@@ -94,7 +94,7 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
                 toStep: i + 1,
                 condition: { type: 'always' },
                 label: `Etapa ${i} → Etapa ${i + 1}`,
-                isActive: true
+                isActive: true,
             });
         }
 
@@ -105,21 +105,21 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
             toStep: 'end',
             condition: { type: 'always' },
             label: `Etapa ${flowConfig.totalSteps} → Resultado`,
-            isActive: true
+            isActive: true,
         });
 
         setFlowConfig(prev => ({
             ...prev,
-            connections: defaultConnections
+            connections: defaultConnections,
         }));
     };
 
     const addConnection = () => {
         if (!newConnection.fromStep || !newConnection.toStep || !newConnection.label) {
             toast({
-                title: "Campos obrigatórios",
-                description: "Preencha todos os campos para criar a conexão.",
-                variant: "destructive"
+                title: 'Campos obrigatórios',
+                description: 'Preencha todos os campos para criar a conexão.',
+                variant: 'destructive',
             });
             return;
         }
@@ -130,13 +130,13 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
             toStep: newConnection.toStep as number | 'conditional' | 'end',
             condition: newConnection.condition || { type: 'always' },
             label: newConnection.label as string,
-            isActive: true
+            isActive: true,
         };
 
         setFlowConfig(prev => ({
             ...prev,
             connections: [...prev.connections, connection],
-            hasConditionalLogic: prev.hasConditionalLogic || connection.condition?.type !== 'always'
+            hasConditionalLogic: prev.hasConditionalLogic || connection.condition?.type !== 'always',
         }));
 
         // Reset form
@@ -145,12 +145,12 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
             toStep: 2,
             condition: { type: 'always' },
             label: '',
-            isActive: true
+            isActive: true,
         });
 
         toast({
-            title: "Conexão criada!",
-            description: `Conexão "${connection.label}" adicionada com sucesso.`
+            title: 'Conexão criada!',
+            description: `Conexão "${connection.label}" adicionada com sucesso.`,
         });
     };
 
@@ -158,20 +158,20 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
         setFlowConfig(prev => ({
             ...prev,
             connections: prev.connections.map(conn =>
-                conn.id === id ? { ...conn, ...updates } : conn
-            )
+                conn.id === id ? { ...conn, ...updates } : conn,
+            ),
         }));
     };
 
     const deleteConnection = (id: string) => {
         setFlowConfig(prev => ({
             ...prev,
-            connections: prev.connections.filter(conn => conn.id !== id)
+            connections: prev.connections.filter(conn => conn.id !== id),
         }));
 
         toast({
-            title: "Conexão removida",
-            description: "A conexão foi removida do fluxo."
+            title: 'Conexão removida',
+            description: 'A conexão foi removida do fluxo.',
         });
     };
 
@@ -179,8 +179,8 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
         StorageService.safeSetJSON('quiz-step-connections', flowConfig);
 
         toast({
-            title: "Configuração salva!",
-            description: "As conexões entre etapas foram salvas com sucesso."
+            title: 'Configuração salva!',
+            description: 'As conexões entre etapas foram salvas com sucesso.',
         });
     };
 
@@ -334,7 +334,7 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
                                 value={flowConfig.totalSteps}
                                 onChange={(e) => setFlowConfig(prev => ({
                                     ...prev,
-                                    totalSteps: parseInt(e.target.value) || 21
+                                    totalSteps: parseInt(e.target.value) || 21,
                                 }))}
                             />
                         </div>
@@ -427,7 +427,7 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
                                         onValueChange={(value) =>
                                             setNewConnection(prev => ({
                                                 ...prev,
-                                                toStep: value === 'end' ? 'end' : parseInt(value)
+                                                toStep: value === 'end' ? 'end' : parseInt(value),
                                             }))
                                         }
                                     >
@@ -452,7 +452,7 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
                                         onValueChange={(value: 'always' | 'answer' | 'score') =>
                                             setNewConnection(prev => ({
                                                 ...prev,
-                                                condition: { ...prev.condition, type: value }
+                                                condition: { ...prev.condition, type: value },
                                             }))
                                         }
                                     >
@@ -508,11 +508,11 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className="flex items-center gap-2">
-                                                <Badge variant={connection.isActive ? "default" : "secondary"}>
+                                                <Badge variant={connection.isActive ? 'default' : 'secondary'}>
                                                     Etapa {connection.fromStep}
                                                 </Badge>
                                                 <ArrowRight className="w-4 h-4 text-[#B89B7A]" />
-                                                <Badge variant={connection.toStep === 'end' ? "destructive" : "outline"}>
+                                                <Badge variant={connection.toStep === 'end' ? 'destructive' : 'outline'}>
                                                     {connection.toStep === 'end' ? 'Resultado' : `Etapa ${connection.toStep}`}
                                                 </Badge>
                                             </div>

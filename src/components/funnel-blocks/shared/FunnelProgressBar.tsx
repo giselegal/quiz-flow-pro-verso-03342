@@ -44,11 +44,11 @@ const FunnelProgressBar: React.FC<FunnelProgressBarProps> = ({
           className={cn(
             'bg-current rounded-full',
             sizeClasses[size],
-            animated && 'transition-all duration-500'
+            animated && 'transition-all duration-500',
           )}
           style={{
             width: `${progressPercentage}%`,
-            color: color,
+            color,
           }}
         />
       </div>

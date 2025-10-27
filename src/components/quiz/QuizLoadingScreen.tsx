@@ -22,7 +22,7 @@ export const QuizLoadingScreen: React.FC<QuizLoadingScreenProps> = ({
   status,
   onRetry,
   onSkip,
-  errorMessage
+  errorMessage,
 }) => {
   const [progress, setProgress] = useState(0);
   const [currentMessage, setCurrentMessage] = useState('');
@@ -31,14 +31,14 @@ export const QuizLoadingScreen: React.FC<QuizLoadingScreenProps> = ({
     loading: [
       'Carregando seus dados...',
       'Verificando respostas...',
-      'Preparando análise...'
+      'Preparando análise...',
     ],
     calculating: [
       'Analisando seu perfil...',
       'Calculando compatibilidades...',
       'Determinando seu estilo...',
-      'Finalizando resultado...'
-    ]
+      'Finalizando resultado...',
+    ],
   };
 
   useEffect(() => {

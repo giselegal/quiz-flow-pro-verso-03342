@@ -185,7 +185,7 @@ export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTem
       acc[template.category].push(template);
       return acc;
     },
-    {} as Record<string, PropertyTemplate[]>
+    {} as Record<string, PropertyTemplate[]>,
   );
 
   return (

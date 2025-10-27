@@ -17,7 +17,7 @@ import {
   Play,
   Monitor,
   Smartphone,
-  Tablet
+  Tablet,
 } from 'lucide-react';
 import NoCodePropertiesPanel from './properties/NoCodePropertiesPanel';
 import ComprehensiveStepNavigation from './properties/ComprehensiveStepNavigation';
@@ -42,7 +42,7 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
     type: 'text',
     order: 1,
     content: {
-      text: 'Olá, {userName}! Descubra seu estilo predominante.'
+      text: 'Olá, {userName}! Descubra seu estilo predominante.',
     },
     properties: {
       fontSize: 'text-3xl',
@@ -53,8 +53,8 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
       marginTop: 12,
       marginBottom: 10,
       padding: 24,
-      borderRadius: 8
-    }
+      borderRadius: 8,
+    },
   };
 
   // Handlers
@@ -207,7 +207,7 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
                                 marginTop: `${mockBlock.properties?.marginTop}px`,
                                 marginBottom: `${mockBlock.properties?.marginBottom}px`,
                                 padding: `${mockBlock.properties?.padding}px`,
-                                borderRadius: `${mockBlock.properties?.borderRadius}px`
+                                borderRadius: `${mockBlock.properties?.borderRadius}px`,
                               }}
                             >
                               {/* Simular interpolação */}

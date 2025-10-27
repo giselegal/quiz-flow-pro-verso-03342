@@ -32,26 +32,26 @@ const iconMap = {
   trophy: Trophy,
   star: Star, 
   heart: Heart,
-  award: Award
+  award: Award,
 };
 
 const sizeMap = {
   sm: 'w-6 h-6',
   md: 'w-8 h-8',
   lg: 'w-12 h-12',
-  xl: 'w-16 h-16'
+  xl: 'w-16 h-16',
 };
 
 const spacingMap = {
   sm: 'space-y-2',
   md: 'space-y-4',
-  lg: 'space-y-6'
+  lg: 'space-y-6',
 };
 
 const alignmentMap = {
   left: 'text-left',
   center: 'text-center',
-  right: 'text-right'
+  right: 'text-right',
 };
 
 const ResultHeaderModule: React.FC<ResultHeaderModuleProps> = ({
@@ -70,7 +70,7 @@ const ResultHeaderModule: React.FC<ResultHeaderModuleProps> = ({
   borderRadius = '0px',
   padding = '16px',
   className = '',
-  isSelected = false
+  isSelected = false,
 }) => {
   const { userName, isLoading } = useQuizData();
   
@@ -92,12 +92,12 @@ const ResultHeaderModule: React.FC<ResultHeaderModuleProps> = ({
         spacingMap[spacing],
         alignmentMap[alignment],
         isSelected && 'ring-2 ring-primary ring-offset-2',
-        className
+        className,
       )}
       style={{ 
         backgroundColor: backgroundColor !== 'transparent' ? backgroundColor : undefined,
         borderRadius,
-        padding
+        padding,
       }}
     >
       {/* Ícone comemorativo */}
@@ -151,8 +151,8 @@ const ResultHeaderModule: React.FC<ResultHeaderModuleProps> = ({
     textColor: '#432818',
     iconColor: '#B89B7A',
     borderRadius: '0px',
-    padding: '16px'
-  }
+    padding: '16px',
+  },
 };
 
 export default ResultHeaderModule;

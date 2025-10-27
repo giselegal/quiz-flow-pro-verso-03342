@@ -431,8 +431,8 @@ export const UniversalPropertyRenderer: React.FC<UniversalPropertyRendererProps>
   if (compact) {
     return (
       <div className={cn(
-        "p-3 border rounded-lg",
-        property.isAdvanced && "border-dashed opacity-75"
+        'p-3 border rounded-lg',
+        property.isAdvanced && 'border-dashed opacity-75',
       )}>
         {getRenderer()}
       </div>
@@ -441,8 +441,8 @@ export const UniversalPropertyRenderer: React.FC<UniversalPropertyRendererProps>
 
   return (
     <div className={cn(
-      "space-y-2",
-      property.isAdvanced && "opacity-75"
+      'space-y-2',
+      property.isAdvanced && 'opacity-75',
     )}>
       {getRenderer()}
       {property.isAdvanced && (

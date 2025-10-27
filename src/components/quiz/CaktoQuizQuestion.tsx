@@ -27,7 +27,7 @@ const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswe
       // Convert to QuizResponse format for onAnswer
       const quizResponse: QuizResponse = {
         questionId: question.id,
-        selectedOptions: selectedOptions,
+        selectedOptions,
 
         timestamp: new Date(),
       };
@@ -50,7 +50,7 @@ const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswe
               onChange={e => {
                 const optionId = option.id;
                 setSelectedOptions(prev =>
-                  e.target.checked ? [...prev, optionId] : prev.filter(id => id !== optionId)
+                  e.target.checked ? [...prev, optionId] : prev.filter(id => id !== optionId),
                 );
               }}
             />

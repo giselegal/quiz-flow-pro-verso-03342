@@ -19,7 +19,7 @@ import {
     Activity,
     Wifi,
     WifiOff,
-    RefreshCw
+    RefreshCw,
 } from 'lucide-react';
 
 import { BlockComponent, EditableQuizStep } from '../types';
@@ -85,7 +85,7 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
     OfferMap,
     funnelId = 'quiz-estilo-21-steps',
     onStepChange,
-    onBlockUpdate
+    onBlockUpdate,
 }) => {
     // ===== STATE =====
     const [previewSize, setPreviewSize] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
@@ -103,7 +103,7 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
         isActive: isPreviewActive,
         isUpdating: isPreviewUpdating,
         hasError: hasPreviewError,
-        errorMessage: previewErrorMessage
+        errorMessage: previewErrorMessage,
     } = useLiveCanvasPreview(steps, selectedStep?.id, {
         enableDebounce: true,
         debounceDelay: 300,
@@ -111,7 +111,7 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
         cacheTTL: 30000,
         enableDebug: process.env.NODE_ENV === 'development',
         maxUpdatesPerSecond: 10,
-        isolatePreviewState: true
+        isolatePreviewState: true,
     });
 
     // Hook do editor para operações de bloco
@@ -133,11 +133,11 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
         topSpacer: canvasTopSpacer,
         bottomSpacer: canvasBottomSpacer,
         containerRef: virtualContainerRef,
-        total: totalCanvasBlocks
+        total: totalCanvasBlocks,
     } = useVirtualBlocks({
         blocks: currentStepBlocks,
         rowHeight: 100,
-        enabled: shouldVirtualize
+        enabled: shouldVirtualize,
     });
 
     const blocksToRender = shouldVirtualize ? canvasVirtualizedBlocks : currentStepBlocks;
@@ -354,7 +354,7 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
                                     defaultDevice: previewSize,
                                     showDebugInfo: showPreviewSettings,
                                     highlightChanges: true,
-                                    isolatePreviewState: true
+                                    isolatePreviewState: true,
                                 }}
                                 className="h-full"
                             />
@@ -412,7 +412,7 @@ export const EnhancedCanvasArea: React.FC<EnhancedCanvasAreaProps> = ({
                                 previewSize === 'mobile' && 'max-w-[375px] border rounded-md shadow-sm',
                                 previewSize === 'tablet' && 'max-w-[768px] border rounded-md shadow-sm',
                                 previewSize === 'desktop' && 'max-w-full',
-                                'bg-white'
+                                'bg-white',
                             ]
                                 .filter(Boolean)
                                 .join(' ')

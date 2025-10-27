@@ -27,7 +27,7 @@ import {
   CheckCircle,
   Download,
   Settings,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react';
 
 interface SecuritySettings {
@@ -52,14 +52,14 @@ export const SecuritySettingsPage: React.FC = () => {
     logSecurityEvent, 
     checkHealth, 
     systemStatus,
-    isSystemHealthy 
+    isSystemHealthy, 
   } = useSecurityMonitor();
   
   const {
     createBackup,
     listBackups,
     cleanupOldBackups,
-    isLoading: backupLoading
+    isLoading: backupLoading,
   } = useBackupSystem();
 
   const [recentBackups, setRecentBackups] = useState<(BackupRecord | any)[]>([]);
@@ -91,7 +91,7 @@ export const SecuritySettingsPage: React.FC = () => {
           two_factor_enabled: data.two_factor_enabled ?? false,
           backup_notifications: data.backup_notifications ?? true,
           security_alerts: data.security_alerts ?? true,
-          session_timeout: data.session_timeout ?? 3600
+          session_timeout: data.session_timeout ?? 3600,
         };
         setSettings(processedData);
       } else {
@@ -101,16 +101,16 @@ export const SecuritySettingsPage: React.FC = () => {
           two_factor_enabled: false,
           backup_notifications: true,
           security_alerts: true,
-          session_timeout: 3600
+          session_timeout: 3600,
         };
         setSettings(defaultSettings);
       }
     } catch (error) {
       console.error('Failed to load security settings:', error);
       toast({
-        title: "Erro",
-        description: "Falha ao carregar configurações de segurança.",
-        variant: "destructive"
+        title: 'Erro',
+        description: 'Falha ao carregar configurações de segurança.',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -142,7 +142,7 @@ export const SecuritySettingsPage: React.FC = () => {
         .from('user_security_settings')
         .upsert({
           ...newSettings,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         });
 
       if (error) throw error;
@@ -154,22 +154,22 @@ export const SecuritySettingsPage: React.FC = () => {
         event_type: 'security_settings_updated',
         event_data: {
           changes: Object.keys(updatedSettings),
-          two_factor_enabled: newSettings.two_factor_enabled
+          two_factor_enabled: newSettings.two_factor_enabled,
         },
-        severity: 'medium'
+        severity: 'medium',
       });
 
       toast({
-        title: "Sucesso",
-        description: "Configurações de segurança atualizadas.",
+        title: 'Sucesso',
+        description: 'Configurações de segurança atualizadas.',
       });
 
     } catch (error) {
       console.error('Failed to save security settings:', error);
       toast({
-        title: "Erro",
-        description: "Falha ao salvar configurações.",
-        variant: "destructive"
+        title: 'Erro',
+        description: 'Falha ao salvar configurações.',
+        variant: 'destructive',
       });
     } finally {
       setIsSaving(false);
@@ -184,12 +184,12 @@ export const SecuritySettingsPage: React.FC = () => {
       await createBackup({
         type: 'full',
         description: 'Manual backup from security settings',
-        user_id: user.id
+        user_id: user.id,
       });
 
       toast({
-        title: "Backup Criado",
-        description: "Backup iniciado com sucesso.",
+        title: 'Backup Criado',
+        description: 'Backup iniciado com sucesso.',
       });
 
       // Recarregar lista de backups
@@ -198,9 +198,9 @@ export const SecuritySettingsPage: React.FC = () => {
     } catch (error) {
       console.error('Backup creation failed:', error);
       toast({
-        title: "Erro",
-        description: "Falha ao criar backup.",
-        variant: "destructive"
+        title: 'Erro',
+        description: 'Falha ao criar backup.',
+        variant: 'destructive',
       });
     }
   };
@@ -209,16 +209,16 @@ export const SecuritySettingsPage: React.FC = () => {
     try {
       await cleanupOldBackups();
       toast({
-        title: "Sucesso",
-        description: "Backups antigos removidos com sucesso.",
+        title: 'Sucesso',
+        description: 'Backups antigos removidos com sucesso.',
       });
       await loadRecentBackups();
     } catch (error) {
       console.error('Cleanup failed:', error);
       toast({
-        title: "Erro",
-        description: "Falha ao limpar backups antigos.",
-        variant: "destructive"
+        title: 'Erro',
+        description: 'Falha ao limpar backups antigos.',
+        variant: 'destructive',
       });
     }
   };

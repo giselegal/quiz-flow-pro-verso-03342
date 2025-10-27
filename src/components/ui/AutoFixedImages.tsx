@@ -41,7 +41,7 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
             fixBlurryIntroQuizImages();
             debounceTimeoutRef.current = null;
           },
-          { timeout: 1000 }
+          { timeout: 1000 },
         );
       }, 300) as unknown as number;
     } else {
@@ -84,7 +84,7 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
             () => {
               fixBlurryIntroQuizImages();
             },
-            { timeout: 2000 }
+            { timeout: 2000 },
           );
         } else {
           // Fallback mais suave
@@ -112,8 +112,8 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
         const hasImageChanges = mutations.some(mutation =>
           Array.from(mutation.addedNodes).some(
             node =>
-              node.nodeName === 'IMG' || (node instanceof Element && node.querySelector('img'))
-          )
+              node.nodeName === 'IMG' || (node instanceof Element && node.querySelector('img')),
+          ),
         );
 
         // Só processar se houver mudanças em imagens

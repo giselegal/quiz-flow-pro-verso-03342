@@ -73,7 +73,7 @@ export const ValidationMessages: React.FC<ValidationMessagesProps> = memo(
         )}
       </div>
     );
-  }
+  },
 );
 
 // Helper para gerar mensagens de validação específicas
@@ -150,7 +150,7 @@ export const ValidationSuccess: React.FC<ValidationSuccessProps> = memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 /**
@@ -170,7 +170,7 @@ export function useFieldValidation() {
         setBlockTypes(prev => ({ ...prev, [fieldId]: fieldType }));
       }
     },
-    []
+    [],
   );
 
   const markAsInteracted = React.useCallback((fieldId: string) => {
@@ -187,7 +187,7 @@ export function useFieldValidation() {
 
   const interactedErrorCount = React.useMemo(() => {
     return Object.entries(validationState).filter(
-      ([fieldId, isValid]) => !isValid && hasInteractedWith[fieldId]
+      ([fieldId, isValid]) => !isValid && hasInteractedWith[fieldId],
     ).length;
   }, [validationState, hasInteractedWith]);
 

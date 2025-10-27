@@ -26,7 +26,7 @@ export const FunnelSystemDebugger: React.FC = () => {
         const log: DebugLog = {
             timestamp: new Date().toLocaleTimeString(),
             message,
-            type
+            type,
         };
         setLogs(prev => [...prev, log]);
         console.log(`[${log.timestamp}] ${message}`);
@@ -37,14 +37,14 @@ export const FunnelSystemDebugger: React.FC = () => {
 
         try {
             // Verificar localStorage
-            const hasLocalStorage = typeof (Storage) !== "undefined";
+            const hasLocalStorage = typeof (Storage) !== 'undefined';
 
             // Verificar lista de funis
             const funnels = funnelLocalStore.list();
 
             setSystemStatus({
                 localStorage: hasLocalStorage,
-                funnelsCount: funnels.length
+                funnelsCount: funnels.length,
             });
 
             if (hasLocalStorage) {
@@ -76,7 +76,7 @@ export const FunnelSystemDebugger: React.FC = () => {
                 id: `debug-test-${Date.now()}`,
                 name: `Funil Debug ${new Date().toLocaleTimeString()}`,
                 status: 'draft' as const,
-                updatedAt: new Date().toISOString()
+                updatedAt: new Date().toISOString(),
             };
 
             funnelLocalStore.upsert(testFunnel);
@@ -144,7 +144,7 @@ export const FunnelSystemDebugger: React.FC = () => {
             systemStatus,
             logs,
             localStorage: {} as Record<string, string | null>,
-            funnels: funnelLocalStore.list()
+            funnels: funnelLocalStore.list(),
         };
 
         // Coletar dados do localStorage

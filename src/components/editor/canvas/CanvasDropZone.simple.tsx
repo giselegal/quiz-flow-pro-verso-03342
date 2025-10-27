@@ -48,7 +48,7 @@ const EditorNavigationControls: React.FC<{
     if (currentStep > 1) {
       const newStep = currentStep - 1;
       window.dispatchEvent(new CustomEvent('navigate-to-step', {
-        detail: { step: newStep, source: 'editor-navigation' }
+        detail: { step: newStep, source: 'editor-navigation' },
       }));
     }
   };
@@ -57,7 +57,7 @@ const EditorNavigationControls: React.FC<{
     if (currentStep < totalSteps) {
       const newStep = currentStep + 1;
       window.dispatchEvent(new CustomEvent('navigate-to-step', {
-        detail: { step: newStep, source: 'editor-navigation' }
+        detail: { step: newStep, source: 'editor-navigation' },
       }));
     }
   };
@@ -93,7 +93,7 @@ const EditorNavigationControls: React.FC<{
               'px-4 py-2 text-sm rounded-lg border transition-colors',
               currentStep === 1
                 ? 'bg-stone-100 text-stone-400 border-stone-200 cursor-not-allowed'
-                : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 hover:border-stone-400'
+                : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 hover:border-stone-400',
             )}
           >
             ← Anterior
@@ -105,7 +105,7 @@ const EditorNavigationControls: React.FC<{
               'px-4 py-2 text-sm rounded-lg transition-colors',
               currentStep === totalSteps
                 ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
+                : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm',
             )}
           >
             {currentStep === totalSteps ? 'Finalizado' : 'Próxima →'}
@@ -140,7 +140,7 @@ const EditorNavigationControls: React.FC<{
               'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg border transition-colors',
               currentStep === 1
                 ? 'bg-stone-100 text-stone-400 border-stone-200 cursor-not-allowed'
-                : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 hover:border-stone-400 shadow-sm'
+                : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 hover:border-stone-400 shadow-sm',
             )}
           >
             ← Anterior
@@ -152,7 +152,7 @@ const EditorNavigationControls: React.FC<{
               'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-colors',
               currentStep === totalSteps
                 ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
+                : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm',
             )}
           >
             {currentStep === totalSteps ? 'Finalizado' : 'Próxima →'}
@@ -177,7 +177,7 @@ const InterBlockDropZoneBase: React.FC<{
     id: generateUniqueId({
       stepNumber: scopeId ?? 'default',
       position,
-      type: 'slot'
+      type: 'slot',
     }),
     data: { ...data, scopeId: scopeId ?? 'default' },
   });
@@ -195,7 +195,7 @@ const InterBlockDropZoneBase: React.FC<{
         // Quando ativo (há drag em andamento) mas não está over: indicar posição sutil
         isActive && !isOver && 'min-h-[40px] bg-brand/5 rounded-full',
         // Só permitir eventos quando há drag ativo
-        isActive ? 'pointer-events-auto' : 'pointer-events-none'
+        isActive ? 'pointer-events-auto' : 'pointer-events-none',
       )}
       data-dnd-dropzone-type="slot"
       data-position={position}
@@ -274,14 +274,14 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     return blocks.map(block => generateUniqueId({
       stepNumber: scopeId ?? 'default',
       blockId: String(block.id),
-      type: 'block'
+      type: 'block',
     }));
   }, [blocks, scopeId]);
 
   // 🚀 OTIMIZAÇÃO: Hook para aplicar estilos dinâmicos - condicionar para evitar re-render
   const canvasStylesEnabled = React.useMemo(() =>
     process.env.NODE_ENV === 'development' && (window as any).__CANVAS_STYLES_DEBUG === true,
-    []
+    [],
   );
 
   if (canvasStylesEnabled) {
@@ -293,7 +293,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     'useRenderCount',
     'sortableItems-useMemo',
     'useCanvasContainerStyles',
-    'hookCalls-useMemo'
+    'hookCalls-useMemo',
   ], []);
 
   React.useEffect(() => {
@@ -307,9 +307,9 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   const droppableId = React.useMemo(() =>
     generateUniqueId({
       stepNumber: scopeId ?? 'default',
-      type: 'dropzone'
+      type: 'dropzone',
     }),
-    [scopeId]
+    [scopeId],
   );
 
   // 🚀 OTIMIZAÇÃO: Memoizar dados do droppable
@@ -318,7 +318,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     accepts: rootAccepts,
     position: blocks.length,
     debug: 'main-canvas-zone',
-    scopeId: scopeId ?? 'default'
+    scopeId: scopeId ?? 'default',
   }), [rootAccepts, blocks.length, scopeId]);
 
   const { setNodeRef, isOver } = useDroppable({
@@ -425,7 +425,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     !isDraggingAnyValidComponent &&
     !virtDisabledDynamic &&
     blocks.length > VIRTUALIZE_THRESHOLD,
-    [isPreviewing, isDraggingAnyValidComponent, virtDisabledDynamic, blocks.length, VIRTUALIZE_THRESHOLD]
+    [isPreviewing, isDraggingAnyValidComponent, virtDisabledDynamic, blocks.length, VIRTUALIZE_THRESHOLD],
   );
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
@@ -488,7 +488,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
     blocks.length > EDIT_PROGRESSIVE_THRESHOLD;
 
   const [editRenderCount, setEditRenderCount] = React.useState<number>(
-    enableProgressiveEdit ? Math.min(EDIT_BATCH_SIZE, blocks.length) : blocks.length
+    enableProgressiveEdit ? Math.min(EDIT_BATCH_SIZE, blocks.length) : blocks.length,
   );
 
   // Ajusta quando o tamanho muda ou quando entramos/saímos do modo progressivo
@@ -565,7 +565,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
         'border border-dashed border-gray-200 rounded-lg',
         'dnd-droppable-zone',
         'customizable-width',
-        className
+        className,
       )}
       data-over={isOver}
       data-preview={isPreviewing}

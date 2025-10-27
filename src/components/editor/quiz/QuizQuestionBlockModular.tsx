@@ -238,7 +238,7 @@ export const QuizQuestionBlockModular: React.FC<QuizQuestionBlockModularProps> =
         return newSelections;
       });
     },
-    [isEditing, multipleSelection, maxSelections, onSelectionChange]
+    [isEditing, multipleSelection, maxSelections, onSelectionChange],
   );
 
   // ========================================
@@ -289,7 +289,7 @@ export const QuizQuestionBlockModular: React.FC<QuizQuestionBlockModularProps> =
             'hover:shadow-md',
             isOptionSelected && selectionStyle === 'border' && 'border-2',
             isOptionSelected && selectionStyle === 'shadow' && 'shadow-lg',
-            isOptionSelected && selectionStyle === 'background' && 'bg-opacity-10'
+            isOptionSelected && selectionStyle === 'background' && 'bg-opacity-10',
           )}
           style={{
             borderColor:
@@ -322,7 +322,7 @@ export const QuizQuestionBlockModular: React.FC<QuizQuestionBlockModularProps> =
                     alt={option.text}
                     className={cn(
                       'object-cover rounded',
-                      imageSize === 'custom' ? '' : imageClasses
+                      imageSize === 'custom' ? '' : imageClasses,
                     )}
                     style={
                       imageSize === 'custom'
@@ -341,7 +341,7 @@ export const QuizQuestionBlockModular: React.FC<QuizQuestionBlockModularProps> =
                 <div
                   className={cn(
                     'flex items-center justify-center bg-gray-100 rounded',
-                    imageSize === 'custom' ? '' : imageClasses
+                    imageSize === 'custom' ? '' : imageClasses,
                   )}
                   style={
                     imageSize === 'custom'
@@ -387,7 +387,7 @@ export const QuizQuestionBlockModular: React.FC<QuizQuestionBlockModularProps> =
       theme.textColor,
       mode,
       scoreValues,
-    ]
+    ],
   );
 
   // ========================================
@@ -398,7 +398,7 @@ export const QuizQuestionBlockModular: React.FC<QuizQuestionBlockModularProps> =
       className={cn(
         'quiz-question-block p-6 rounded-lg',
         isEditing && 'border-2 border-dashed border-blue-300',
-        className
+        className,
       )}
       style={{ backgroundColor: theme.backgroundColor }}
     >

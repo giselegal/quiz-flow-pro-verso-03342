@@ -14,7 +14,7 @@ const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = ({
     data,
     isSelected,
     isEditable,
-    onSelect
+    onSelect,
 }) => {
     // Extrair propriedades do JSON
     const title = data.content?.title || 'Título não definido';
@@ -31,7 +31,7 @@ const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = ({
                 'relative p-6 transition-all duration-200 cursor-pointer',
                 'hover:ring-1 hover:ring-blue-300',
                 isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/30',
-                isEditable && 'cursor-pointer'
+                isEditable && 'cursor-pointer',
             )}
             style={{ backgroundColor }}
             onClick={onSelect}
@@ -51,7 +51,7 @@ const QuizIntroHeaderBlock: React.FC<BlockComponentProps> = ({
                     className={cn(
                         `text-${fontSize}`,
                         `font-${fontWeight}`,
-                        'mb-2'
+                        'mb-2',
                     )}
                     style={{ color: textColor }}
                 >

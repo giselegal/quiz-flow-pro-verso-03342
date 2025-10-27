@@ -20,7 +20,7 @@ export const ThemeEditorPanel: React.FC<{ onApply?: (tokens: Partial<DesignToken
     const update = (group: keyof DesignTokens, key: string, value: string) => {
         setOverrides(prev => ({
             ...prev,
-            [group]: { ...(prev as any)[group], [key]: value }
+            [group]: { ...(prev as any)[group], [key]: value },
         }));
     };
 
@@ -39,7 +39,7 @@ export const ThemeEditorPanel: React.FC<{ onApply?: (tokens: Partial<DesignToken
         colors: { ...tokens.colors, ...(overrides.colors || {}) },
         spacing: { ...tokens.spacing, ...(overrides.spacing || {}) },
         radius: { ...tokens.radius, ...(overrides.radius || {}) },
-        fontScale: { ...tokens.fontScale, ...(overrides.fontScale || {}) }
+        fontScale: { ...tokens.fontScale, ...(overrides.fontScale || {}) },
     };
 
     return (

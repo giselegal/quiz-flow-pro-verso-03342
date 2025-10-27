@@ -106,7 +106,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
         // Evento padronizado
         const stepNumber = parseInt(block.id?.match(/step-(\d+)/)?.[1] || '0');
-        const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : `q1`;
+        const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : 'q1';
         window.dispatchEvent(
           new CustomEvent('quiz-selection-change', {
             detail: {
@@ -121,7 +121,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
               minSelections,
               maxSelections,
             },
-          })
+          }),
         );
 
         return newSelected;
@@ -143,7 +143,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
       if (onValidate) onValidate(validity.isValid);
 
       const stepNumber = parseInt(block.id?.match(/step-(\d+)/)?.[1] || '0');
-      const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : `q1`;
+      const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : 'q1';
       window.dispatchEvent(
         new CustomEvent('quiz-selection-change', {
           detail: {
@@ -158,7 +158,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
             minSelections,
             maxSelections,
           },
-        })
+        }),
       );
     }
   };
@@ -193,7 +193,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
       className={cn(
         'options-grid-inline-block w-full',
         className,
-        isSelected && 'ring-2 ring-blue-500 ring-opacity-50'
+        isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
       )}
       style={{
         maxWidth: containerWidth ? `${containerWidth}px` : undefined,
@@ -209,7 +209,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
           columns === 1 && 'grid-cols-1',
           columns === 2 && 'grid-cols-1 md:grid-cols-2',
           columns === 3 && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-          columns === 4 && 'grid-cols-2 md:grid-cols-4'
+          columns === 4 && 'grid-cols-2 md:grid-cols-4',
         )}
         style={{
           gap: spacing ? `${spacing}px` : `${gap}px`, // usar spacing se definido, senão gap
@@ -223,18 +223,18 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
               case 'background':
                 return isSelectedOption
                   ? { backgroundColor: `${selectedBorderColor}1A`, borderColor: selectedBorderColor }
-                  : { borderColor: borderColor };
+                  : { borderColor };
               case 'shadow':
                 return isSelectedOption
                   ? {
                     boxShadow: `0 0 0 2px ${selectedBorderColor}55, 0 8px 20px ${selectedBorderColor}33`,
                     borderColor: selectedBorderColor,
                   }
-                  : { borderColor: borderColor };
+                  : { borderColor };
               default:
                 return isSelectedOption
                   ? { borderColor: selectedBorderColor }
-                  : { borderColor: borderColor };
+                  : { borderColor };
             }
           })();
 
@@ -280,7 +280,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                     'order-2 mt-3',
                     layoutOrientation === 'horizontal' &&
                     (imagePosition === 'left' || imagePosition === 'right') &&
-                    'flex-shrink-0'
+                    'flex-shrink-0',
                   )}
                 >
                   <img
@@ -310,14 +310,14 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                   className={cn(
                     'option-text',
                     layoutOrientation === 'horizontal' && 'flex-1',
-                    layoutOrientation === 'vertical' && imagePosition === 'bottom' && 'order-1'
+                    layoutOrientation === 'vertical' && imagePosition === 'bottom' && 'order-1',
                   )}
                 >
                   {/* Título da opção */}
                   <h4
                     className={cn(
                       'text-sm font-bold leading-tight mb-1',
-                      isSelectedOption ? 'text-[var(--primary)]' : 'text-foreground'
+                      isSelectedOption ? 'text-[var(--primary)]' : 'text-foreground',
                     )}
                   >
                     {option.text}
@@ -328,7 +328,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                     <p
                       className={cn(
                         'text-xs leading-relaxed opacity-90',
-                        isSelectedOption ? 'text-[var(--primary)]' : 'text-muted-foreground'
+                        isSelectedOption ? 'text-[var(--primary)]' : 'text-muted-foreground',
                       )}
                     >
                       {option.description}

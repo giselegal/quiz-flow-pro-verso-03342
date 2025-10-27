@@ -26,7 +26,7 @@ interface PerformanceMonitorProps {
 
 export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
   children,
-  enableAutoOptimization = true
+  enableAutoOptimization = true,
 }) => {
   const [metrics, setMetrics] = useState<PerformanceMetrics>({
     renderTime: 0,
@@ -35,7 +35,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     bundleSize: 0,
     networkLatency: 0,
     userEngagement: 0,
-    errorRate: 0
+    errorRate: 0,
   });
 
   const [alerts, setAlerts] = useState<string[]>([]);
@@ -103,8 +103,8 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
         device_info: {
           userAgent: navigator.userAgent,
           screenResolution: `${screen.width}x${screen.height}`,
-          deviceMemory: (navigator as any).deviceMemory || 'unknown'
-        }
+          deviceMemory: (navigator as any).deviceMemory || 'unknown',
+        },
       });
     } catch (error) {
       console.error('❌ Failed to record metrics:', error);
@@ -118,7 +118,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
       memoryUsage: 0.2,
       cacheHitRate: 0.2,
       networkLatency: 0.2,
-      errorRate: 0.1
+      errorRate: 0.1,
     };
 
     const scores = {
@@ -126,7 +126,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
       memoryUsage: Math.max(0, 100 - metrics.memoryUsage / 2),
       cacheHitRate: metrics.cacheHitRate,
       networkLatency: Math.max(0, 100 - metrics.networkLatency / 10),
-      errorRate: Math.max(0, 100 - metrics.errorRate * 10)
+      errorRate: Math.max(0, 100 - metrics.errorRate * 10),
     };
 
     return Object.entries(weights).reduce((total, [key, weight]) => {
@@ -169,7 +169,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
       setInterval(monitorMemory, 5000), // Every 5 seconds
       setInterval(monitorCache, 3000),  // Every 3 seconds
       setInterval(recordMetrics, 30000), // Every 30 seconds
-      setInterval(performAutoOptimization, 60000) // Every minute
+      setInterval(performAutoOptimization, 60000), // Every minute
     ];
 
     return () => intervals.forEach(clearInterval);

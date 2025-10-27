@@ -60,7 +60,7 @@ export const CharacteristicsPropertyEditor: React.FC<CharacteristicsPropertyEdit
 
     const updateCharacteristic = (id: string, field: keyof Characteristic, value: string) => {
         const updatedItems = items.map((item) =>
-            item.id === id ? { ...item, [field]: value } : item
+            item.id === id ? { ...item, [field]: value } : item,
         );
         handleContentUpdate('items', updatedItems);
     };

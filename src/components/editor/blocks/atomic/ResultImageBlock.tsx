@@ -4,7 +4,7 @@ import { AtomicBlockProps } from '@/types/blockProps';
 export default function ResultImageBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   // Ler de content primeiro, fallback para properties
   const imageUrl = block.content?.imageUrl || block.content?.src || block.properties?.url || '';

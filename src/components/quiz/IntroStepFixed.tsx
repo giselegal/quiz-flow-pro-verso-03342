@@ -99,7 +99,7 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                             aspectRatio: '1.47',
                             maxHeight: '204px',
                             width: '100%',
-                            maxWidth: '300px'
+                            maxWidth: '300px',
                         }}
                     >
                         <img
@@ -113,7 +113,7 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                                 maxHeight: '204px',
                                 width: '100%',
                                 height: 'auto',
-                                objectFit: 'contain'
+                                objectFit: 'contain',
                             }}
                         />
                     </div>
@@ -152,7 +152,7 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                             <input
                                 id="name"
                                 type="text"
-                                placeholder={safeData.placeholder || "Digite seu nome"}
+                                placeholder={safeData.placeholder || 'Digite seu nome'}
                                 value={nome}
                                 onChange={(e) => setNome(e.target.value)}
                                 onKeyPress={handleKeyPress}

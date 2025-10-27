@@ -17,7 +17,7 @@ const ResponsiveColumnsEditor: React.FC<PropertyEditorProps> = ({ property, onCh
     const updateColumns = (breakpoint: string, columns: number) => {
         const newResponsiveColumns = {
             ...responsiveColumns,
-            [breakpoint]: columns
+            [breakpoint]: columns,
         };
         onChange(property.key, newResponsiveColumns);
     };
@@ -28,7 +28,7 @@ const ResponsiveColumnsEditor: React.FC<PropertyEditorProps> = ({ property, onCh
             <div
                 className="grid gap-1 w-full h-12 bg-gray-100 p-1 rounded border"
                 style={{
-                    gridTemplateColumns: `repeat(${columns}, 1fr)`
+                    gridTemplateColumns: `repeat(${columns}, 1fr)`,
                 }}
             >
                 {items.map((_, i) => (
@@ -51,7 +51,7 @@ const ResponsiveColumnsEditor: React.FC<PropertyEditorProps> = ({ property, onCh
             description: 'Celulares (< 768px)',
             min: 1,
             max: 2,
-            current: responsiveColumns.mobile || 1
+            current: responsiveColumns.mobile || 1,
         },
         {
             key: 'tablet',
@@ -60,7 +60,7 @@ const ResponsiveColumnsEditor: React.FC<PropertyEditorProps> = ({ property, onCh
             description: 'Tablets (768px - 1024px)',
             min: 1,
             max: 4,
-            current: responsiveColumns.tablet || 2
+            current: responsiveColumns.tablet || 2,
         },
         {
             key: 'desktop',
@@ -69,8 +69,8 @@ const ResponsiveColumnsEditor: React.FC<PropertyEditorProps> = ({ property, onCh
             description: 'Desktop (> 1024px)',
             min: 1,
             max: 6,
-            current: responsiveColumns.desktop || 3
-        }
+            current: responsiveColumns.desktop || 3,
+        },
     ];
 
     return (

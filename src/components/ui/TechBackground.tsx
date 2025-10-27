@@ -9,7 +9,7 @@ interface TechBackgroundProps {
 const TechBackground: React.FC<TechBackgroundProps> = ({ 
   variant = 'hero', 
   className = '',
-  children 
+  children, 
 }) => {
   const getBackgroundClasses = () => {
     switch (variant) {
@@ -34,7 +34,7 @@ const TechBackground: React.FC<TechBackgroundProps> = ({
             linear-gradient(90deg, rgba(0, 191, 255, 0.1) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px',
-          animation: 'grid-move 20s linear infinite'
+          animation: 'grid-move 20s linear infinite',
         }} />
       </div>
 
@@ -78,7 +78,7 @@ const TechBackground: React.FC<TechBackgroundProps> = ({
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 3}s`
+              animationDuration: `${2 + Math.random() * 3}s`,
             }}
           />
         ))}

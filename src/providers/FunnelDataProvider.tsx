@@ -26,7 +26,7 @@ interface FunnelDataProviderWrapperProps {
 }
 
 export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps> = ({
-    children
+    children,
 }) => {
     const editorContext = useEditor({ optional: true });
     if (!editorContext) return <>{children}</>;
@@ -41,12 +41,12 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
                 stepBlocks: Object.keys(state.stepBlocks),
                 stepBlocksCounts: Object.entries(state.stepBlocks).map(([key, blocks]) => ({ [key]: (blocks as any[]).length })),
                 selectedBlockId: state.selectedBlockId,
-                isLoading: state.isLoading
+                isLoading: state.isLoading,
             },
             funnelsContext: {
                 hasContext: !!funnelsContext,
-                currentFunnelId: funnelsContext?.currentFunnelId
-            }
+                currentFunnelId: funnelsContext?.currentFunnelId,
+            },
         });
     }, [state, funnelsContext]);
 
@@ -93,8 +93,8 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
                         actions.updateBlock(stepKey, blockId, {
                             properties: {
                                 ...stepBlocks[blockIndex].properties,
-                                ...properties
-                            }
+                                ...properties,
+                            },
                         });
 
                         console.log(`✅ Bloco ${blockId} atualizado em ${stepKey} via EditorProvider`);
@@ -107,7 +107,7 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
                 return funnelsContext?.currentFunnelId || 'local-funnel';
             },
 
-            isSupabaseEnabled: () => detectSupabaseEnabled()
+            isSupabaseEnabled: () => detectSupabaseEnabled(),
         };
 
         // 🔗 Connect the API to real funnel data
@@ -117,7 +117,7 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
             currentStep: state.currentStep,
             funnelId: funnelsContext?.currentFunnelId,
             stepsWithBlocks: Object.keys(state.stepBlocks).length,
-            isSupabaseEnabled: detectSupabaseEnabled()
+            isSupabaseEnabled: detectSupabaseEnabled(),
         });
 
         // Cleanup function
@@ -128,7 +128,7 @@ export const FunnelDataProviderWrapper: React.FC<FunnelDataProviderWrapperProps>
         state.currentStep,
         state.stepBlocks,
         funnelsContext?.currentFunnelId,
-        actions
+        actions,
     ]);
 
     return <>{children}</>;

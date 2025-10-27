@@ -56,7 +56,7 @@ export const QuizResultValidator: React.FC = () => {
             await calculateAndSaveQuizResult();
             checkValidation();
           },
-          fixLabel: 'Calcular Resultado'
+          fixLabel: 'Calcular Resultado',
         });
       } else if (legacyResult && !unifiedResult) {
         foundIssues.push({
@@ -66,7 +66,7 @@ export const QuizResultValidator: React.FC = () => {
             unifiedQuizStorage.saveResult(legacyResult);
             checkValidation();
           },
-          fixLabel: 'Sincronizar'
+          fixLabel: 'Sincronizar',
         });
       } else if (unifiedResult && !legacyResult) {
         foundIssues.push({
@@ -76,7 +76,7 @@ export const QuizResultValidator: React.FC = () => {
             StorageService.safeSetJSON('quizResult', unifiedResult);
             checkValidation();
           },
-          fixLabel: 'Sincronizar'
+          fixLabel: 'Sincronizar',
         });
       }
 
@@ -143,7 +143,7 @@ export const QuizResultValidator: React.FC = () => {
             }
             checkValidation();
           },
-          fixLabel: 'Sincronizar Dados'
+          fixLabel: 'Sincronizar Dados',
         });
       }
 
@@ -208,7 +208,7 @@ export const QuizResultValidator: React.FC = () => {
               key={idx}
               className={cn(
                 'flex items-start gap-2 p-2 rounded border text-sm',
-                getIssueColor(issue.type)
+                getIssueColor(issue.type),
               )}
             >
               {getIssueIcon(issue.type)}

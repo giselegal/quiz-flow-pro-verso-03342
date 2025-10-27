@@ -50,14 +50,14 @@ export function Testimonial({
     properties = {},
     onUpdate,
     onPropertiesUpdate,
-    mode = 'preview'
+    mode = 'preview',
 }: TestimonialProps) {
     const {
         showPhoto = true,
         quoteStyle = 'italic',
         alignment = 'left',
         backgroundColor = 'transparent',
-        textColor = '#5b4135'
+        textColor = '#5b4135',
     } = properties;
 
     // Extrair iniciais do autor para avatar fallback
@@ -74,13 +74,13 @@ export function Testimonial({
         const alignmentClass = {
             left: 'text-left',
             center: 'text-center',
-            right: 'text-right'
+            right: 'text-right',
         }[alignment];
 
         const quoteStyleClass = {
             italic: 'italic',
             bold: 'font-bold',
-            normal: ''
+            normal: '',
         }[quoteStyle];
 
         return (
@@ -111,7 +111,7 @@ export function Testimonial({
                             <div
                                 className="flex items-center gap-3"
                                 style={{
-                                    justifyContent: alignment === 'center' ? 'center' : alignment === 'right' ? 'flex-end' : 'flex-start'
+                                    justifyContent: alignment === 'center' ? 'center' : alignment === 'right' ? 'flex-end' : 'flex-start',
                                 }}
                             >
                                 {showPhoto && (

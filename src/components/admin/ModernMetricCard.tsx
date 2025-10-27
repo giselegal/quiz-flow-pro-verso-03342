@@ -94,7 +94,7 @@ export function ModernMetricCard({
                 colorVariant.border,
                 color === 'blue' && 'hover:shadow-[#687ef7]/20',
                 color === 'purple' && 'hover:shadow-[#d85dfb]/20',
-                className
+                className,
             )}
         >
             <CardContent className="p-0">
@@ -111,7 +111,7 @@ export function ModernMetricCard({
                     <div
                         className={cn(
                             'w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg',
-                            colorVariant.iconBg
+                            colorVariant.iconBg,
                         )}
                     >
                         <div className={colorVariant.iconColor}>

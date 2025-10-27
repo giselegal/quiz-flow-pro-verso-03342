@@ -35,12 +35,12 @@ interface QuizFunnelEditorProps {
 
 const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
     funnelId,
-    templateId
+    templateId,
 }) => {
     // 🚨 Console warning para desenvolvedores
     appLogger.warn(
         '⚠️ DEPRECATED: QuizFunnelEditorWYSIWYG_Refactored será removido em 01/nov/2025. ' +
-        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
     );
 
     const crud = useUnifiedCRUD();
@@ -93,7 +93,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
             if (crud.currentFunnel) {
                 const updatedFunnel = {
                     ...crud.currentFunnel,
-                    quizSteps: useModularSystem ? modularSteps : steps
+                    quizSteps: useModularSystem ? modularSteps : steps,
                 };
                 await crud.saveFunnel(updatedFunnel);
             }
@@ -107,12 +107,12 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
     const handleUpdateStep = (stepId: string, updates: any) => {
         if (useModularSystem) {
             const newSteps = modularSteps.map(step =>
-                step.id === stepId ? { ...step, ...updates } : step
+                step.id === stepId ? { ...step, ...updates } : step,
             );
             updateModularSteps(newSteps);
         } else {
             const newSteps = steps.map(step =>
-                step.id === stepId ? { ...step, ...updates } : step
+                step.id === stepId ? { ...step, ...updates } : step,
             );
             updateSteps(newSteps);
         }
@@ -121,12 +121,12 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
     const handleReorderSteps = (newOrder: string[]) => {
         if (useModularSystem) {
             const reordered = newOrder.map(id =>
-                modularSteps.find(step => step.id === id)!
+                modularSteps.find(step => step.id === id)!,
             ).filter(Boolean);
             updateModularSteps(reordered);
         } else {
             const reordered = newOrder.map(id =>
-                steps.find(step => step.id === id)!
+                steps.find(step => step.id === id)!,
             ).filter(Boolean);
             updateSteps(reordered);
         }
@@ -142,8 +142,8 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
                     name: `${stepToDuplicate.name} (Cópia)`,
                     components: stepToDuplicate.components.map(comp => ({
                         ...comp,
-                        id: `comp-${Date.now()}-${Math.random()}`
-                    }))
+                        id: `comp-${Date.now()}-${Math.random()}`,
+                    })),
                 };
                 updateModularSteps([...modularSteps, duplicated]);
             }
@@ -152,7 +152,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
             if (stepToDuplicate) {
                 const duplicated = {
                     ...stepToDuplicate,
-                    id: `step-${Date.now()}`
+                    id: `step-${Date.now()}`,
                 };
                 updateSteps([...steps, duplicated]);
             }
@@ -180,7 +180,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
             id: `step-${Date.now()}`,
             type: 'intro' as const,
             name: 'Novo Step',
-            components: []
+            components: [],
         };
 
         if (useModularSystem) {
@@ -193,7 +193,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
                 formQuestion: 'Como posso te chamar?',
                 placeholder: 'Digite seu nome',
                 buttonText: 'Continuar',
-                nextStep: ''
+                nextStep: '',
             };
             updateSteps([...steps, traditionStep]);
         }
@@ -206,12 +206,12 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
             metadata: {
                 version: '2.0',
                 system: useModularSystem ? 'modular' : 'traditional',
-                exportedAt: new Date().toISOString()
-            }
+                exportedAt: new Date().toISOString(),
+            },
         };
 
         const blob = new Blob([JSON.stringify(dataToExport, null, 2)], {
-            type: 'application/json'
+            type: 'application/json',
         });
 
         const url = URL.createObjectURL(blob);

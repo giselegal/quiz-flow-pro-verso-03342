@@ -78,8 +78,8 @@ export const ValidatedOptionsGrid: React.FC<ValidatedOptionsGridProps> = ({
           detail: {
             fromStep: stepNumber,
             toStep: stepNumber + 1,
-            source: 'options-grid-auto-advance'
-          }
+            source: 'options-grid-auto-advance',
+          },
         }));
       }, autoAdvanceDelay);
 
@@ -177,14 +177,14 @@ export const ValidatedOptionsGrid: React.FC<ValidatedOptionsGridProps> = ({
                 isSelected && validationState === 'warning' && 'border-yellow-500 bg-yellow-50',
                 
                 // Preview mode
-                isPreview && 'cursor-default'
+                isPreview && 'cursor-default',
               )}
             >
               {/* Indicador de seleção */}
               <div className="flex items-start gap-3">
                 <div className={cn(
                   'mt-1 w-5 h-5 border-2 rounded-full flex items-center justify-center transition-colors',
-                  isSelected ? 'border-primary bg-primary' : 'border-stone-300'
+                  isSelected ? 'border-primary bg-primary' : 'border-stone-300',
                 )}>
                   {isSelected && (
                     <div className="w-2 h-2 bg-white rounded-full" />
@@ -230,7 +230,7 @@ export const ValidatedOptionsGrid: React.FC<ValidatedOptionsGridProps> = ({
       {showValidation && selectedOptions.length > 0 && (
         <div className={cn(
           'text-sm px-1 transition-all duration-200',
-          hasEnoughSelections ? 'text-green-600' : 'text-yellow-600'
+          hasEnoughSelections ? 'text-green-600' : 'text-yellow-600',
         )}>
           {hasEnoughSelections ? (
             <>

@@ -7,7 +7,7 @@ export const AnalyticsDashboard: React.FC = () => {
     performanceMetrics,
     isLoadingPerformance,
     refreshPerformanceMetrics,
-    trackPerformanceMetric
+    trackPerformanceMetric,
   } = useAnalytics();
 
   useEffect(() => {
@@ -142,7 +142,7 @@ export const AnalyticsDashboard: React.FC = () => {
             onClick={() => trackPerformanceMetric({
               metricName: 'pageLoad',
               value: performance.now(),
-              unit: 'ms'
+              unit: 'ms',
             })}
             className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
           >
@@ -152,7 +152,7 @@ export const AnalyticsDashboard: React.FC = () => {
             onClick={() => trackPerformanceMetric({
               metricName: 'apiResponse',
               value: Math.random() * 1000 + 100,
-              unit: 'ms'
+              unit: 'ms',
             })}
             className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
           >
@@ -162,7 +162,7 @@ export const AnalyticsDashboard: React.FC = () => {
             onClick={() => trackPerformanceMetric({
               metricName: 'memoryUsage',
               value: Math.random() * 50 + 10,
-              unit: 'mb'
+              unit: 'mb',
             })}
             className="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700"
           >
@@ -172,7 +172,7 @@ export const AnalyticsDashboard: React.FC = () => {
             onClick={() => trackPerformanceMetric({
               metricName: 'bundleSize',
               value: Math.random() * 2 + 0.5,
-              unit: 'mb'
+              unit: 'mb',
             })}
             className="px-3 py-1 bg-orange-600 text-white rounded text-sm hover:bg-orange-700"
           >

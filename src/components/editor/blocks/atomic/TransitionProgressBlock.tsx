@@ -4,7 +4,7 @@ import { AtomicBlockProps } from '@/types/blockProps';
 export default function TransitionProgressBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   const progress = block.content?.progress || 70;
   const color = block.content?.color || '#B89B7A';
@@ -24,7 +24,7 @@ export default function TransitionProgressBlock({
           className="h-full transition-all duration-500 rounded-full"
           style={{
             width: `${progress}%`,
-            backgroundColor: color
+            backgroundColor: color,
           }}
         />
       </div>

@@ -5,7 +5,7 @@ import EditorJsonTemplatesPage from '../index';
 
 // Mock do EditorLayout
 vi.mock('@/components/layout/EditorLayout', () => ({
-    default: ({ children }: { children: React.ReactNode }) => <div data-testid="editor-layout">{children}</div>
+    default: ({ children }: { children: React.ReactNode }) => <div data-testid="editor-layout">{children}</div>,
 }));
 
 // Mock do QuizStepAdapter
@@ -16,8 +16,8 @@ vi.mock('@/adapters/QuizStepAdapter', () => ({
                 throw new Error('JSON inválido');
             }
             return json;
-        })
-    }
+        }),
+    },
 }));
 
 // Mock do fetch
@@ -30,7 +30,7 @@ describe('EditorJsonTemplatesPage', () => {
 
         // Mock de templates para testes
         (global.fetch as any).mockResolvedValue({
-            ok: false
+            ok: false,
         });
     });
 
@@ -422,7 +422,7 @@ describe('EditorJsonTemplatesPage', () => {
                 click: vi.fn(),
                 href: '',
                 download: '',
-                style: { display: '' }
+                style: { display: '' },
             };
 
             vi.spyOn(document, 'createElement').mockReturnValue(mockLink as any);
@@ -466,7 +466,7 @@ describe('EditorJsonTemplatesPage', () => {
 
             expect(mockOpen).toHaveBeenCalledWith(
                 expect.stringContaining('/quiz-estilo?step=1&preview=true'),
-                '_blank'
+                '_blank',
             );
         });
 
@@ -538,25 +538,25 @@ describe('EditorJsonTemplatesPage', () => {
                         category: 'quiz-imported',
                         tags: [],
                         createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
+                        updatedAt: new Date().toISOString(),
                     },
                     layout: {
                         containerWidth: '100%',
                         spacing: 'normal',
                         backgroundColor: '#ffffff',
-                        responsive: true
+                        responsive: true,
                     },
                     validation: {},
                     analytics: {
                         events: [],
                         trackingId: '',
                         utmParams: false,
-                        customEvents: []
+                        customEvents: [],
                     },
-                    blocks: []
+                    blocks: [],
                 })],
                 'template.json',
-                { type: 'application/json' }
+                { type: 'application/json' },
             );
 
             const input = importButton.parentElement?.querySelector('input[type="file"]');

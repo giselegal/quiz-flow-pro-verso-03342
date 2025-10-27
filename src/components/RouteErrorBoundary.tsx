@@ -30,7 +30,7 @@ export class RouteErrorBoundary extends Component<Props, State> {
         // Atualiza o state para mostrar a UI de erro
         return {
             hasError: true,
-            error
+            error,
         };
     }
 
@@ -41,13 +41,13 @@ export class RouteErrorBoundary extends Component<Props, State> {
             route: this.props.routeName,
             url: window.location.href,
             userAgent: navigator.userAgent,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         });
 
         // Atualizar state com informações do erro
         this.setState({
             error,
-            errorInfo
+            errorInfo,
         });
 
         // Aqui você pode enviar o erro para um serviço de monitoramento

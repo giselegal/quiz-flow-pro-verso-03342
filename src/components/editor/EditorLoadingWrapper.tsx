@@ -21,7 +21,7 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
     children,
     templateId,
     funnelId,
-    timeout = 10000
+    timeout = 10000,
 }) => {
     const [isTimeout, setIsTimeout] = React.useState(false);
     const [startTime] = React.useState(Date.now());

@@ -25,7 +25,7 @@ describe('EditorProvider actions (unit)', () => {
     render(
       <MigrationEditorProvider enableSupabase={false}>
         <ConsumerBridge actionsRef={actionsRef} stateRef={stateRef} />
-      </MigrationEditorProvider>
+      </MigrationEditorProvider>,
     );
 
     // Wait until actions are populated

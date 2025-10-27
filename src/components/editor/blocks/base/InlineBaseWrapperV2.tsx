@@ -293,7 +293,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
         'cursor-pointer',
 
         // Classes customizadas (máxima flexibilidade)
-        className
+        className,
       )}
       style={{
         minHeight,

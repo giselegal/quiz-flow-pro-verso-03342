@@ -17,7 +17,7 @@ import {
     AlertTriangle,
     CheckCircle,
     Activity,
-    BarChart3
+    BarChart3,
 } from 'lucide-react';
 
 // Componentes do sistema
@@ -27,7 +27,7 @@ import {
     useFeatureFlags,
     useOptimizedPreview,
     usePreviewMonitoring,
-    usePreviewVariant
+    usePreviewVariant,
 } from '../testing/FeatureFlagSystem';
 
 // ============================================================================
@@ -138,7 +138,7 @@ const usePerformanceTracker = (systemType: 'legacy' | 'optimized') => {
             errorCount: 0,
             userInteractions: 0,
             timestamp: Date.now(),
-            ...metricData
+            ...metricData,
         };
 
         setMetrics(prev => [fullMetric, ...prev.slice(0, 99)]); // Keep last 100
@@ -210,7 +210,7 @@ export const PreviewMigrationWrapper: React.FC<PreviewMigrationWrapperProps> = (
                 legacyTracker.trackMetric({
                     memoryUsage,
                     renderTime: Math.random() * 100 + 50, // Simulated
-                    updateTime: Math.random() * 200 + 100
+                    updateTime: Math.random() * 200 + 100,
                 });
             }
 
@@ -218,7 +218,7 @@ export const PreviewMigrationWrapper: React.FC<PreviewMigrationWrapperProps> = (
                 optimizedTracker.trackMetric({
                     memoryUsage,
                     renderTime: Math.random() * 30 + 10, // Better performance
-                    updateTime: Math.random() * 50 + 20
+                    updateTime: Math.random() * 50 + 20,
                 });
             }
         }, 5000);
@@ -301,7 +301,7 @@ export const PreviewMigrationWrapper: React.FC<PreviewMigrationWrapperProps> = (
                             debounceDelay: 300,
                             showDebugInfo: showDebugPanel,
                             highlightChanges: true,
-                            isolatePreviewState: true
+                            isolatePreviewState: true,
                         }}
                     />
 

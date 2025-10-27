@@ -19,7 +19,7 @@ export const StyleSelector: React.FC<StyleSelectorProps> = ({
   availableStyles,
   currentStyle,
   onStyleChange,
-  className = ''
+  className = '',
 }) => {
   return (
     <div className={cn('bg-white rounded-lg border border-stone-200 p-4', className)}>
@@ -40,7 +40,7 @@ export const StyleSelector: React.FC<StyleSelectorProps> = ({
                 'p-3 rounded-lg border-2 transition-all duration-200 text-left hover:shadow-md',
                 isSelected 
                   ? 'border-primary bg-primary/10 ring-2 ring-primary/20' 
-                  : 'border-stone-200 bg-white hover:border-stone-300'
+                  : 'border-stone-200 bg-white hover:border-stone-300',
               )}
             >
               {/* Cor do estilo */}

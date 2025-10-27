@@ -15,7 +15,7 @@ export default function QuestionProgressBlock({
   isSelected = false,
   isEditable = false,
   onSelect,
-  onOpenProperties
+  onOpenProperties,
 }: QuestionProgressBlockProps) {
   const stepNumber = block.properties?.stepNumber || 1;
   const totalSteps = block.properties?.totalSteps || 21;
@@ -40,8 +40,8 @@ export default function QuestionProgressBlock({
             totalSteps,
             progress,
             milestone,
-            timestamp: Date.now()
-          }
+            timestamp: Date.now(),
+          },
         }));
       }
     }

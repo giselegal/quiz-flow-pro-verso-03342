@@ -18,7 +18,7 @@ export default function HeroSection({
     subheadline,
     description,
     heroImage,
-    className = ''
+    className = '',
 }: HeroSectionProps) {
     return (
         <div className={`text-center mb-10 md:mb-12 ${className}`}>

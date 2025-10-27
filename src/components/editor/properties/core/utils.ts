@@ -41,7 +41,7 @@ export const applyMiddlewares = (value: any, middlewares: PropertyMiddleware[]):
 export const createPropertyConfig = (
   key: string,
   defaultValue: any,
-  middlewares: PropertyMiddleware[] = []
+  middlewares: PropertyMiddleware[] = [],
 ) => ({
   key,
   defaultValue,
@@ -69,6 +69,6 @@ export const groupPropertiesByCategory = (properties: BaseProperty[]) => {
       acc[category].push(property);
       return acc;
     },
-    {} as Record<string, BaseProperty[]>
+    {} as Record<string, BaseProperty[]>,
   );
 };

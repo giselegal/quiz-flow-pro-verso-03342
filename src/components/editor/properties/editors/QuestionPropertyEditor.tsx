@@ -32,7 +32,7 @@ import {
   Palette,
   Layout,
   Zap,
-  HelpCircle
+  HelpCircle,
 } from 'lucide-react';
 
 import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
@@ -47,34 +47,34 @@ const questionTooltips = {
   title: {
     title: 'Título da Questão',
     content: 'Define o texto principal da questão que será exibido aos usuários.',
-    examples: ['Qual é o seu objetivo principal?', 'Como você prefere aprender?']
+    examples: ['Qual é o seu objetivo principal?', 'Como você prefere aprender?'],
   },
   options: {
     title: 'Opções de Resposta',
     content: 'Lista de opções disponíveis para o usuário escolher.',
-    examples: [{ text: 'Opção A', value: 'a', score: 10 }]
+    examples: [{ text: 'Opção A', value: 'a', score: 10 }],
   },
   scoring: {
     title: 'Sistema de Pontuação',
     content: 'Configura como as respostas são pontuadas e avaliadas.',
-    examples: ['Pontuação por opção', 'Pontuação global']
+    examples: ['Pontuação por opção', 'Pontuação global'],
   },
   layout: {
     title: 'Layout e Apresentação',
     content: 'Controla a aparência visual e disposição dos elementos.',
-    examples: ['Grid', 'Lista', 'Cards']
+    examples: ['Grid', 'Lista', 'Cards'],
   },
   animation: {
     title: 'Animações',
     content: 'Efeitos visuais para transições e interações.',
-    examples: ['Fade in', 'Slide up', 'Bounce']
-  }
+    examples: ['Fade in', 'Slide up', 'Bounce'],
+  },
 };
 
 // Simple tooltip component
 const TooltipHelper: React.FC<{ content: string; children: React.ReactNode }> = ({
   content,
-  children
+  children,
 }) => (
   <div className="relative group inline-block">
     {children}
@@ -169,7 +169,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
   onUpdate,
   onValidate,
   isPreviewMode = false,
-  onDelete
+  onDelete,
 }) => {
   const [activeTab, setActiveTab] = useState('content');
   const [previewMode, setPreviewMode] = useState(false);
@@ -185,7 +185,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
 
   // Estado local para opções com drag & drop (futuro)
   const [localOptions, setLocalOptions] = useState<QuestionOption[]>(
-    properties.options || []
+    properties.options || [],
   );
 
   useEffect(() => {
@@ -221,7 +221,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
       text: `Opção ${localOptions.length + 1}`,
       imageUrl: '',
       value: '',
-      scoreValues: {}
+      scoreValues: {},
     };
     const newOptions = [...localOptions, newOption];
     setLocalOptions(newOptions);
@@ -292,32 +292,32 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
       id: 'content',
       label: 'Conteúdo',
       icon: Type,
-      description: 'Texto e opções da questão'
+      description: 'Texto e opções da questão',
     },
     {
       id: 'validation',
       label: 'Validação',
       icon: CheckCircle2,
-      description: 'Regras de seleção e validação'
+      description: 'Regras de seleção e validação',
     },
     {
       id: 'behavior',
       label: 'Comportamento',
       icon: Zap,
-      description: 'Auto-avançar e interações'
+      description: 'Auto-avançar e interações',
     },
     {
       id: 'styling',
       label: 'Visual',
       icon: Palette,
-      description: 'Cores, layout e animações'
+      description: 'Cores, layout e animações',
     },
     {
       id: 'scoring',
       label: 'Pontuação',
       icon: Target,
-      description: 'Score values por opção'
-    }
+      description: 'Score values por opção',
+    },
   ];
 
   return (
@@ -339,7 +339,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
 
           <div className="flex items-center gap-2">
             <Button
-              variant={previewMode ? "default" : "outline"}
+              variant={previewMode ? 'default' : 'outline'}
               size="sm"
               onClick={() => setPreviewMode(!previewMode)}
             >
@@ -764,7 +764,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                       value: properties.padding,
                       type: PropertyType.OBJECT,
                       label: 'Padding',
-                      category: PropertyCategory.LAYOUT
+                      category: PropertyCategory.LAYOUT,
                     }}
                     onChange={handlePropertyChange}
                   />
@@ -774,7 +774,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                       value: properties.margin,
                       type: PropertyType.OBJECT,
                       label: 'Margin',
-                      category: PropertyCategory.LAYOUT
+                      category: PropertyCategory.LAYOUT,
                     }}
                     onChange={handlePropertyChange}
                   />
@@ -799,7 +799,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                     value: properties.animation,
                     type: PropertyType.OBJECT,
                     label: 'Animation',
-                    category: PropertyCategory.ANIMATION
+                    category: PropertyCategory.ANIMATION,
                   }}
                   onChange={handlePropertyChange}
                 />
@@ -823,7 +823,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                     value: properties.scoreValues,
                     type: PropertyType.OBJECT,
                     label: 'Score Values',
-                    category: PropertyCategory.BEHAVIOR
+                    category: PropertyCategory.BEHAVIOR,
                   }}
                   onChange={handlePropertyChange}
                 />
@@ -857,7 +857,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
                           value: option.scoreValues || {},
                           type: PropertyType.OBJECT,
                           label: `Option ${index + 1} Scores`,
-                          category: PropertyCategory.BEHAVIOR
+                          category: PropertyCategory.BEHAVIOR,
                         }}
                         onChange={(_key, value) => {
                           handleOptionUpdate(index, { scoreValues: value });

@@ -93,7 +93,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         visible: vVisible,
         topSpacer: vTopSpacer,
         bottomSpacer: vBottomSpacer,
-        total: vTotal
+        total: vTotal,
     } = useVirtualBlocks({ blocks: rootBlocks, rowHeight: 140, overscan: 6, enabled: virtualizationEnabled });
 
     // 🎯 USAR EDITOR MODE CONTEXT ao invés de activeTab
@@ -104,7 +104,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         isPreviewMode,
         previewSessionData,
         updatePreviewSessionData,
-        resetPreviewSession
+        resetPreviewSession,
     } = useEditorMode();
     const { previewDevice, setPreviewDevice } = useEditorMode();
 
@@ -114,7 +114,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     if (activeTab !== undefined && process.env.NODE_ENV === 'development') {
         appLogger.warn(
             '⚠️ DEPRECATION: activeTab/onTabChange estão deprecated.\n' +
-            'Use EditorModeContext (viewMode) ao invés.'
+            'Use EditorModeContext (viewMode) ao invés.',
         );
     }
 
@@ -144,7 +144,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     // ✅ NOVO: Zona droppable ao final do canvas para aceitar novos componentes
     const { setNodeRef: setDropZoneRef, isOver } = useDroppable({
-        id: 'canvas-end'
+        id: 'canvas-end',
     }); return (
         <div className="flex-1 bg-gray-100 flex flex-col overflow-hidden">
             {/* 🎯 CANVAS HEADER - Controles de modo e device */}
@@ -260,7 +260,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     <UnifiedStepRenderer
                                         step={{
                                             ...migratedStep,
-                                            blocks: stepBlocks
+                                            blocks: stepBlocks,
                                         } as any}
                                         mode="edit"
                                         isSelected={selectedBlockId === migratedStep.id}
@@ -341,7 +341,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                         <UnifiedStepRenderer
                                             step={{
                                                 ...migratedStep,
-                                                blocks: stepBlocks
+                                                blocks: stepBlocks,
                                             } as any}
                                             mode="preview"
                                             sessionData={previewSessionData}

@@ -22,7 +22,7 @@ import {
   Hash,
   Target,
   Gift,
-  User
+  User,
 } from 'lucide-react';
 
 export interface StepInfo {
@@ -52,7 +52,7 @@ const STEP_TYPE_CONFIG = {
   strategic: { icon: Target, color: 'bg-purple-500', label: 'Estratégica' },
   transition: { icon: Play, color: 'bg-yellow-500', label: 'Transição' },
   result: { icon: CheckCircle, color: 'bg-emerald-500', label: 'Resultado' },
-  offer: { icon: Gift, color: 'bg-red-500', label: 'Oferta' }
+  offer: { icon: Gift, color: 'bg-red-500', label: 'Oferta' },
 };
 
 const StepNavigator: React.FC<StepNavigatorProps> = ({
@@ -62,7 +62,7 @@ const StepNavigator: React.FC<StepNavigatorProps> = ({
   onStepChange,
   onPreviewMode,
   isPreviewMode = false,
-  className = ''
+  className = '',
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -177,7 +177,7 @@ const StepNavigator: React.FC<StepNavigatorProps> = ({
 
         {/* Botão Preview */}
         <Button
-          variant={isPreviewMode ? "default" : "outline"}
+          variant={isPreviewMode ? 'default' : 'outline'}
           size="sm"
           onClick={handlePreviewToggle}
           className="w-full"

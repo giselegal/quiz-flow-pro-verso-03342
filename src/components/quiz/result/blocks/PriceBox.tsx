@@ -18,7 +18,7 @@ export default function PriceBox({
     installments,
     discount,
     title = 'OFERTA ESPECIAL',
-    urgencyText = '🔥 78% de desconto - HOJE APENAS'
+    urgencyText = '🔥 78% de desconto - HOJE APENAS',
 }: PriceBoxProps) {
     const formatPrice = (price: number) => {
         return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });

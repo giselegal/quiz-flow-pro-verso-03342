@@ -46,7 +46,7 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
       e.stopPropagation();
       onDuplicate(block.id);
     },
-    [block.id, onDuplicate]
+    [block.id, onDuplicate],
   );
 
   const handleDelete = React.useCallback(
@@ -54,7 +54,7 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
       e.stopPropagation();
       onDelete(block.id);
     },
-    [block.id, onDelete]
+    [block.id, onDelete],
   );
 
   return (
@@ -67,7 +67,7 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
         isDragging && 'opacity-50 scale-105 shadow-2xl',
         isSelected
           ? 'border-primary bg-primary/10 shadow-lg'
-          : 'border-transparent hover:border-primary/50 hover:bg-primary/5'
+          : 'border-transparent hover:border-primary/50 hover:bg-primary/5',
       )}
       onClick={handleSelect}
     >
@@ -77,7 +77,7 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
           'absolute -top-10 left-0 right-0 flex items-center justify-between',
           'bg-white border border-border rounded-md shadow-sm px-2 py-1',
           'transition-all duration-200',
-          isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+          isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
         )}
       >
         {/* Informações do bloco */}
@@ -99,7 +99,7 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
             onClick={handleDuplicate}
             className={cn(
               'p-1 rounded hover:bg-secondary transition-colors',
-              'text-muted-foreground hover:text-foreground'
+              'text-muted-foreground hover:text-foreground',
             )}
             title="Duplicar bloco"
           >
@@ -109,7 +109,7 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
             onClick={handleDelete}
             className={cn(
               'p-1 rounded hover:bg-destructive/10 transition-colors',
-              'text-muted-foreground hover:text-destructive'
+              'text-muted-foreground hover:text-destructive',
             )}
             title="Remover bloco"
           >
@@ -141,7 +141,7 @@ export const OptimizedSortableBlock: React.FC<OptimizedSortableBlockProps> = ({
       <div
         className={cn(
           'absolute -bottom-2 left-0 right-0 h-1 bg-primary rounded-full',
-          'transition-all duration-200 scale-x-0 group-hover:scale-x-100'
+          'transition-all duration-200 scale-x-0 group-hover:scale-x-100',
         )}
       />
     </div>

@@ -48,7 +48,7 @@ export function usePanelWidths(options: UsePanelWidthsOptions = {}) {
         return React.createElement('div', {
             onMouseDown: (e: React.MouseEvent) => startResize(panel, e),
             className: cn('resize-handle group w-1 cursor-col-resize relative z-10', 'after:absolute after:inset-0 after:bg-transparent hover:after:bg-blue-300/30'),
-            style: { width: 6, marginLeft: side === 'right' ? -3 : 0, marginRight: side === 'left' ? -3 : 0, cursor: 'col-resize' }
+            style: { width: 6, marginLeft: side === 'right' ? -3 : 0, marginRight: side === 'left' ? -3 : 0, cursor: 'col-resize' },
         });
     };
 

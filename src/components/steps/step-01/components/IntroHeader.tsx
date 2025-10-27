@@ -20,7 +20,7 @@ const IntroHeader: React.FC<IntroHeaderProps> = ({
     logo = 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png',
     showGoldenBar = true,
     isEditable = false,
-    onEdit = () => { }
+    onEdit = () => { },
 }) => {
     // Processar título com HTML quando necessário
     const isHtmlTitle = title.includes('<span') || title.includes('<strong');

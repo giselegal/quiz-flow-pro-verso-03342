@@ -21,7 +21,7 @@ export const DuplicateBlockDialog: React.FC<DuplicateBlockDialogProps> = ({
     onChangeTarget,
     onCancel,
     onConfirm,
-    disabledConfirm
+    disabledConfirm,
 }) => {
     return (
         <Dialog open={open} onOpenChange={(o) => { if (!o) onCancel(); }}>

@@ -77,7 +77,7 @@ const GuaranteeBlock: React.FC<GuaranteeBlockProps & { block?: any }> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
     >
       <div className="max-w-2xl mx-auto px-4">

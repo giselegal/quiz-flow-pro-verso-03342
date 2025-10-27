@@ -20,7 +20,7 @@ import {
     Loader2,
     RefreshCw,
     Download,
-    Bug
+    Bug,
 } from 'lucide-react';
 
 // Componentes a serem testados (usando tipos para evitar erros de import)
@@ -70,12 +70,12 @@ class TestRunner {
     async runTest(
         id: string,
         name: string,
-        testFn: () => Promise<void> | void
+        testFn: () => Promise<void> | void,
     ): Promise<TestResult> {
         const result: TestResult = {
             id,
             name,
-            status: 'running'
+            status: 'running',
         };
 
         this.results.set(id, result);
@@ -121,7 +121,7 @@ const ComponentTests = {
     testLiveCanvasPreview: async (): Promise<void> => {
         const mockSteps = [
             { id: 'step-1', order: 1, type: 'question', title: 'Test Step 1' },
-            { id: 'step-2', order: 2, type: 'question', title: 'Test Step 2' }
+            { id: 'step-2', order: 2, type: 'question', title: 'Test Step 2' },
         ];
 
         // Verificar se o componente renderiza sem erro (simulado)
@@ -132,8 +132,8 @@ const ComponentTests = {
             config: {
                 autoRefresh: true,
                 debounceDelay: 100,
-                showDebugInfo: false
-            }
+                showDebugInfo: false,
+            },
         };
 
         // Simular validação de props sem render real
@@ -155,7 +155,7 @@ const ComponentTests = {
             selectedStep: { id: 'test', order: 1, type: 'question', title: 'Test' },
             funnelId: 'test-funnel',
             enableComparison: false,
-            showMetrics: true
+            showMetrics: true,
         };
 
         // Verificar se as props são aceitas corretamente (simulado)
@@ -176,7 +176,7 @@ const ComponentTests = {
             steps: [],
             selectedStepId: undefined,
             enableExport: true,
-            autoRefresh: false
+            autoRefresh: false,
         };
 
         // Verificar props básicas (simulado)
@@ -189,7 +189,7 @@ const ComponentTests = {
         }
 
         appLogger.debug('✅ PerformanceDashboard component test passed (props validation)');
-    }
+    },
 };
 
 // ============================================================================
@@ -210,8 +210,8 @@ const HookTests = {
                 misses: 0,
                 hitRate: 0,
                 totalSize: 0,
-                memoryUsage: 0
-            }
+                memoryUsage: 0,
+            },
         };
 
         // Testar operações básicas
@@ -229,7 +229,7 @@ const HookTests = {
         const mockConfig = {
             steps: [{ id: 'test', order: 1, type: 'question', title: 'Test' }],
             funnelId: 'test-funnel',
-            selectedStepId: 'test'
+            selectedStepId: 'test',
         };
 
         // Simular hook retorno
@@ -240,12 +240,12 @@ const HookTests = {
             metrics: {
                 avgUpdateTime: 50,
                 errorRate: 0,
-                updatesPerSecond: 2
+                updatesPerSecond: 2,
             },
             cacheStats: {
                 efficiency: 0.85,
-                hitRate: 0.90
-            }
+                hitRate: 0.90,
+            },
         };
 
         // Validar estrutura esperada
@@ -269,12 +269,12 @@ const HookTests = {
                 reconnectAttempts: 0,
                 lastError: null,
                 messageQueue: [],
-                latency: 0
+                latency: 0,
             },
             connect: () => Promise.resolve(),
             disconnect: () => { },
             send: () => Promise.resolve(),
-            subscribe: () => () => { }
+            subscribe: () => () => { },
         };
 
         // Validar interface
@@ -287,7 +287,7 @@ const HookTests = {
         }
 
         appLogger.debug('✅ useAdvancedWebSocket hook test passed');
-    }
+    },
 };
 
 // ============================================================================
@@ -301,7 +301,7 @@ const IntegrationTests = {
         const mockProviderStructure = {
             FeatureFlagProvider: { children: 'MockApp' },
             LivePreviewProvider: { children: 'MockApp' },
-            testApp: React.createElement('div', { id: 'test-app' }, 'Test App')
+            testApp: React.createElement('div', { id: 'test-app' }, 'Test App'),
         };
 
         // Validar estrutura básica
@@ -350,7 +350,7 @@ const IntegrationTests = {
         const memoryDiff = finalMemory - initialMemory;
 
         appLogger.debug(`✅ Memory usage test passed (diff: ${(memoryDiff / 1024 / 1024).toFixed(2)}MB)`);
-    }
+    },
 };
 
 // ============================================================================
@@ -376,8 +376,8 @@ export const IntegrationTestSuite: React.FC<{
             tests: [
                 { id: 'live-canvas-preview', name: 'LiveCanvasPreview', testFn: ComponentTests.testLiveCanvasPreview },
                 { id: 'migration-wrapper', name: 'PreviewMigrationWrapper', testFn: ComponentTests.testPreviewMigrationWrapper },
-                { id: 'performance-dashboard', name: 'PerformanceDashboard', testFn: ComponentTests.testPerformanceDashboard }
-            ]
+                { id: 'performance-dashboard', name: 'PerformanceDashboard', testFn: ComponentTests.testPerformanceDashboard },
+            ],
         },
         {
             id: 'hooks',
@@ -385,8 +385,8 @@ export const IntegrationTestSuite: React.FC<{
             tests: [
                 { id: 'advanced-cache', name: 'useAdvancedCache', testFn: HookTests.testAdvancedCache },
                 { id: 'live-canvas-preview-hook', name: 'useLiveCanvasPreview', testFn: HookTests.testLiveCanvasPreview },
-                { id: 'advanced-websocket', name: 'useAdvancedWebSocket', testFn: HookTests.testAdvancedWebSocket }
-            ]
+                { id: 'advanced-websocket', name: 'useAdvancedWebSocket', testFn: HookTests.testAdvancedWebSocket },
+            ],
         },
         {
             id: 'integration',
@@ -394,9 +394,9 @@ export const IntegrationTestSuite: React.FC<{
             tests: [
                 { id: 'full-integration', name: 'Full Integration', testFn: IntegrationTests.testFullIntegration },
                 { id: 'performance-baseline', name: 'Performance Baseline', testFn: IntegrationTests.testPerformanceBaseline },
-                { id: 'memory-usage', name: 'Memory Usage', testFn: IntegrationTests.testMemoryUsage }
-            ]
-        }
+                { id: 'memory-usage', name: 'Memory Usage', testFn: IntegrationTests.testMemoryUsage },
+            ],
+        },
     ];
 
     // Executar todos os testes
@@ -420,7 +420,7 @@ export const IntegrationTestSuite: React.FC<{
                 id: suiteDefinition.id,
                 name: suiteDefinition.name,
                 tests: [],
-                status: 'running'
+                status: 'running',
             };
 
             const startTime = performance.now();
@@ -431,7 +431,7 @@ export const IntegrationTestSuite: React.FC<{
                     const result = await testRunner.runTest(
                         testDef.id,
                         testDef.name,
-                        testDef.testFn
+                        testDef.testFn,
                     );
 
                     suite.tests.push(result);
@@ -444,7 +444,7 @@ export const IntegrationTestSuite: React.FC<{
                         name: testDef.name,
                         status: 'failed',
                         message: error instanceof Error ? error.message : 'Unknown error',
-                        details: error
+                        details: error,
                     };
 
                     suite.tests.push(failedResult);
@@ -493,18 +493,18 @@ export const IntegrationTestSuite: React.FC<{
                 totalTests,
                 passedTests,
                 failedTests,
-                successRate: totalTests > 0 ? (passedTests / totalTests * 100).toFixed(1) : '0'
+                successRate: totalTests > 0 ? (passedTests / totalTests * 100).toFixed(1) : '0',
             },
             suites: testSuites,
             environment: {
                 userAgent: navigator.userAgent,
                 timestamp: Date.now(),
-                url: window.location.href
-            }
+                url: window.location.href,
+            },
         };
 
         const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-            type: 'application/json'
+            type: 'application/json',
         });
 
         const url = URL.createObjectURL(blob);
@@ -532,7 +532,7 @@ export const IntegrationTestSuite: React.FC<{
             failed: { variant: 'destructive' },
             warning: { variant: 'secondary', className: 'bg-yellow-600' },
             running: { variant: 'outline' },
-            pending: { variant: 'outline' }
+            pending: { variant: 'outline' },
         };
 
         const config = variants[status] || variants.pending;

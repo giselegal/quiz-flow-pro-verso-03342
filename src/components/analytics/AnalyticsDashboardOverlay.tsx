@@ -16,7 +16,7 @@ import {
     CheckCircle,
     ArrowUp,
     ArrowDown,
-    Minimize2
+    Minimize2,
 } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -60,7 +60,7 @@ export function AnalyticsDashboardOverlay({ onClose }: AnalyticsDashboardOverlay
         bounceRate: 0,
         deviceBreakdown: { desktop: 0, mobile: 0, tablet: 0 },
         topPerformingSteps: [],
-        liveActivity: []
+        liveActivity: [],
     });
 
     // Simulate real-time data updates
@@ -73,7 +73,7 @@ export function AnalyticsDashboardOverlay({ onClose }: AnalyticsDashboardOverlay
             deviceBreakdown: {
                 desktop: Math.floor(Math.random() * 40) + 30,
                 mobile: Math.floor(Math.random() * 30) + 25,
-                tablet: Math.floor(Math.random() * 20) + 10
+                tablet: Math.floor(Math.random() * 20) + 10,
             },
             topPerformingSteps: [
                 { stepName: 'Landing Page', conversionRate: Math.random() * 20 + 15, visitors: Math.floor(Math.random() * 100) + 50 },
@@ -87,7 +87,7 @@ export function AnalyticsDashboardOverlay({ onClose }: AnalyticsDashboardOverlay
                 { timestamp: '8s', action: 'Answered', step: 'Question 1', device: 'Desktop' },
                 { timestamp: '12s', action: 'Converted', step: 'Results', device: 'Mobile' },
                 { timestamp: '15s', action: 'Shared', step: 'Results', device: 'Tablet' },
-            ]
+            ],
         });
 
         const updateMetrics = () => {

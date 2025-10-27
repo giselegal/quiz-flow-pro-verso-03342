@@ -47,7 +47,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     properties: {
       // Apenas propriedades essenciais para drag
       visible: block.properties?.visible ?? true,
-    }
+    },
   }), [block.id, block.type, block.position, block.properties?.visible, scopeId]);
 
   // Make block draggable for reordering - agora com IDs estáveis
@@ -96,7 +96,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
     const target = e.target as HTMLElement | null;
     const isInteractive = !!target?.closest(
-      'input, textarea, select, button, [contenteditable="true"], [role="textbox"], [role="button"], .allow-text-selection'
+      'input, textarea, select, button, [contenteditable="true"], [role="textbox"], [role="button"], .allow-text-selection',
     );
     const onDragHandle = !!target?.closest('[data-drag-handle]');
 
@@ -152,7 +152,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
           // Em etapas com conteúdo altamente interativo, facilitar hover/target do wrapper
           'hover:ring-1 hover:ring-[#B89B7A]/40 hover:ring-offset-1',
           // Forçar ponteiro padrão no wrapper para evitar cursor de texto ao selecionar
-          'cursor-default'
+          'cursor-default',
         )}
         data-dnd-dropzone-type="bloco"
         data-block-id={String(block.id)}

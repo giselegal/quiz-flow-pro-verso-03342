@@ -26,7 +26,7 @@ export const OptionsBlock: React.FC<BlockComponentProps> = ({
         requiredSelections = 1,
         layout = 'grid',
         columns = 2,
-        className: customClassName
+        className: customClassName,
     } = data.props;
 
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -51,7 +51,7 @@ export const OptionsBlock: React.FC<BlockComponentProps> = ({
                 'options-block relative p-4 transition-all duration-200',
                 isEditable && 'cursor-pointer hover:bg-gray-50',
                 isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/30',
-                customClassName
+                customClassName,
             )}
             onClick={isEditable ? () => onSelect && onSelect() : undefined}
             data-block-id={data.id}
@@ -74,7 +74,7 @@ export const OptionsBlock: React.FC<BlockComponentProps> = ({
             <div
                 className={cn(
                     layout === 'grid' && `grid gap-4 grid-cols-${columns}`,
-                    layout === 'list' && 'flex flex-col gap-3'
+                    layout === 'list' && 'flex flex-col gap-3',
                 )}
             >
                 {options.map((option: QuizOption) => {
@@ -88,7 +88,7 @@ export const OptionsBlock: React.FC<BlockComponentProps> = ({
                                 isOptionSelected
                                     ? 'border-blue-500 bg-blue-50'
                                     : 'border-gray-200 hover:border-gray-300',
-                                isEditable && 'cursor-default opacity-80'
+                                isEditable && 'cursor-default opacity-80',
                             )}
                             onClick={() => toggleOption(option.id)}
                         >
@@ -113,7 +113,7 @@ export const OptionsBlock: React.FC<BlockComponentProps> = ({
                                         'w-5 h-5 border-2 rounded flex items-center justify-center flex-shrink-0 mt-0.5',
                                         isOptionSelected
                                             ? 'border-blue-500 bg-blue-500'
-                                            : 'border-gray-300'
+                                            : 'border-gray-300',
                                     )}
                                 >
                                     {isOptionSelected && (

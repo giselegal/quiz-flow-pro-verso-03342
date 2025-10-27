@@ -70,7 +70,7 @@ const FullFunnelPreview: React.FC<{
             requiresInput: true,
             inputType: 'text',
             placeholder: 'Digite seu primeiro nome...',
-            progress: 0
+            progress: 0,
         } as IntroStep,
         2: {
             type: 'quiz',
@@ -85,10 +85,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'romantico_q1', text: 'Delicadeza em tecidos suaves e fluidos', style: 'Romântico' },
                 { id: 'sexy_q1', text: 'Sensualidade com destaque para o corpo', style: 'Sexy' },
                 { id: 'dramatico_q1', text: 'Impacto visual com peças estruturadas e assimétricas', style: 'Dramático' },
-                { id: 'criativo_q1', text: 'Mix criativo com formas ousadas e originais', style: 'Criativo' }
+                { id: 'criativo_q1', text: 'Mix criativo com formas ousadas e originais', style: 'Criativo' },
             ],
             requiredSelections: 3,
-            progress: 10
+            progress: 10,
         } as QuizStep,
         3: {
             type: 'quiz',
@@ -103,10 +103,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'romantico_q2', text: 'Feminina, meiga, delicada, sensível', style: 'Romântico' },
                 { id: 'sexy_q2', text: 'Glamorosa, vaidosa, sensual', style: 'Sexy' },
                 { id: 'dramatico_q2', text: 'Cosmopolita, moderna e audaciosa', style: 'Dramático' },
-                { id: 'criativo_q2', text: 'Exótica, aventureira, livre', style: 'Criativo' }
+                { id: 'criativo_q2', text: 'Exótica, aventureira, livre', style: 'Criativo' },
             ],
             requiredSelections: 3,
-            progress: 20
+            progress: 20,
         } as QuizStep,
         4: {
             type: 'quiz',
@@ -121,10 +121,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'romantico_q3', text: 'Visual romântico, feminino e delicado', style: 'Romântico' },
                 { id: 'sexy_q3', text: 'Visual sensual, com saia justa e decote', style: 'Sexy' },
                 { id: 'dramatico_q3', text: 'Visual marcante e urbano (jeans + jaqueta)', style: 'Dramático' },
-                { id: 'criativo_q3', text: 'Visual criativo, colorido e ousado', style: 'Criativo' }
+                { id: 'criativo_q3', text: 'Visual criativo, colorido e ousado', style: 'Criativo' },
             ],
             requiredSelections: 3,
-            progress: 30
+            progress: 30,
         },
         5: {
             type: 'quiz',
@@ -139,10 +139,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'romantico_q4', text: 'Detalhes delicados, laços, babados', style: 'Romântico' },
                 { id: 'sexy_q4', text: 'Roupas que valorizem meu corpo: couro, zíper, fendas', style: 'Sexy' },
                 { id: 'dramatico_q4', text: 'Detalhes marcantes, firmeza e peso', style: 'Dramático' },
-                { id: 'criativo_q4', text: 'Detalhes diferentes do convencional, produções ousadas', style: 'Criativo' }
+                { id: 'criativo_q4', text: 'Detalhes diferentes do convencional, produções ousadas', style: 'Criativo' },
             ],
             requiredSelections: 3,
-            progress: 40
+            progress: 40,
         },
         // Continuando com as outras questões...
         6: {
@@ -158,10 +158,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'romantico_q5', text: 'Estampas florais e/ou delicadas como bolinhas, borboletas e corações', style: 'Romântico' },
                 { id: 'sexy_q5', text: 'Estampas de animal print, como onça, zebra e cobra', style: 'Sexy' },
                 { id: 'dramatico_q5', text: 'Estampas geométricas, abstratas e exageradas como grandes poás', style: 'Dramático' },
-                { id: 'criativo_q5', text: 'Estampas diferentes do usual, como africanas, xadrez grandes', style: 'Criativo' }
+                { id: 'criativo_q5', text: 'Estampas diferentes do usual, como africanas, xadrez grandes', style: 'Criativo' },
             ],
             requiredSelections: 3,
-            progress: 50
+            progress: 50,
         },
         7: {
             type: 'quiz',
@@ -176,10 +176,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'romantico_q6', text: 'Casaco pink vibrante e moderno', style: 'Romântico' },
                 { id: 'sexy_q6', text: 'Jaqueta vinho de couro estilosa', style: 'Sexy' },
                 { id: 'dramatico_q6', text: 'Jaqueta preta estilo rocker', style: 'Dramático' },
-                { id: 'criativo_q6', text: 'Casaco estampado criativo e colorido', style: 'Criativo' }
+                { id: 'criativo_q6', text: 'Casaco estampado criativo e colorido', style: 'Criativo' },
             ],
             requiredSelections: 3,
-            progress: 60
+            progress: 60,
         },
         8: {
             type: 'quiz',
@@ -194,10 +194,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'romantico_q7', text: 'Calça ampla rosa alfaiatada', style: 'Romântico' },
                 { id: 'sexy_q7', text: 'Legging preta de couro', style: 'Sexy' },
                 { id: 'dramatico_q7', text: 'Calça reta preta de couro', style: 'Dramático' },
-                { id: 'criativo_q7', text: 'Calça estampada floral leve e ampla', style: 'Criativo' }
+                { id: 'criativo_q7', text: 'Calça estampada floral leve e ampla', style: 'Criativo' },
             ],
             requiredSelections: 3,
-            progress: 70
+            progress: 70,
         },
         9: {
             type: 'quiz',
@@ -212,10 +212,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'romantico_q8', text: 'Sandália anabela off white', style: 'Romântico' },
                 { id: 'sexy_q8', text: 'Sandália rosa de tiras finas', style: 'Sexy' },
                 { id: 'dramatico_q8', text: 'Scarpin preto moderno com vinil transparente', style: 'Dramático' },
-                { id: 'criativo_q8', text: 'Scarpin colorido estampado', style: 'Criativo' }
+                { id: 'criativo_q8', text: 'Scarpin colorido estampado', style: 'Criativo' },
             ],
             requiredSelections: 3,
-            progress: 80
+            progress: 80,
         },
         10: {
             type: 'quiz',
@@ -230,10 +230,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'romantico_q9', text: 'Peças delicadas e com um toque feminino', style: 'Romântico' },
                 { id: 'sexy_q9', text: 'Brincos longos, colares que valorizem minha beleza', style: 'Sexy' },
                 { id: 'dramatico_q9', text: 'Acessórios pesados, que causem um impacto', style: 'Dramático' },
-                { id: 'criativo_q9', text: 'Acessórios diferentes, grandes e marcantes', style: 'Criativo' }
+                { id: 'criativo_q9', text: 'Acessórios diferentes, grandes e marcantes', style: 'Criativo' },
             ],
             requiredSelections: 3,
-            progress: 90
+            progress: 90,
         },
         11: {
             type: 'quiz',
@@ -248,17 +248,17 @@ const FullFunnelPreview: React.FC<{
                 { id: 'romantico_q10', text: 'São delicados', style: 'Romântico' },
                 { id: 'sexy_q10', text: 'São perfeitos ao meu corpo', style: 'Sexy' },
                 { id: 'dramatico_q10', text: 'São diferentes, e trazem um efeito para minha roupa', style: 'Dramático' },
-                { id: 'criativo_q10', text: 'São exclusivos, criam identidade no look', style: 'Criativo' }
+                { id: 'criativo_q10', text: 'São exclusivos, criam identidade no look', style: 'Criativo' },
             ],
             requiredSelections: 3,
-            progress: 100
+            progress: 100,
         },
         12: {
             type: 'transition',
             title: 'Enquanto calculamos o seu resultado...',
             description: 'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.',
             category: 'Transição',
-            progress: 55
+            progress: 55,
         } as TransitionStep,
         // Questões estratégicas (13-18)
         13: {
@@ -270,10 +270,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'q13_opt1', text: 'Me sinto desconectada da mulher que sou hoje' },
                 { id: 'q13_opt2', text: 'Tenho dúvidas sobre o que realmente me valoriza' },
                 { id: 'q13_opt3', text: 'Às vezes acerto, às vezes erro' },
-                { id: 'q13_opt4', text: 'Me sinto segura, mas sei que posso evoluir' }
+                { id: 'q13_opt4', text: 'Me sinto segura, mas sei que posso evoluir' },
             ],
             requiredSelections: 1,
-            progress: 65
+            progress: 65,
         },
         14: {
             type: 'strategic',
@@ -284,10 +284,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'q14_opt1', text: 'Tenho peças, mas não sei como combiná-las' },
                 { id: 'q14_opt2', text: 'Compro por impulso e me arrependo depois' },
                 { id: 'q14_opt3', text: 'Minha imagem não reflete quem eu sou' },
-                { id: 'q14_opt4', text: 'Perco tempo e acabo usando sempre os mesmos looks' }
+                { id: 'q14_opt4', text: 'Perco tempo e acabo usando sempre os mesmos looks' },
             ],
             requiredSelections: 1,
-            progress: 70
+            progress: 70,
         },
         15: {
             type: 'strategic',
@@ -298,10 +298,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'q15_opt1', text: 'Quase todos os dias — é sempre uma indecisão' },
                 { id: 'q15_opt2', text: 'Sempre que tenho um compromisso importante' },
                 { id: 'q15_opt3', text: 'Às vezes, mas me sinto limitada nas escolhas' },
-                { id: 'q15_opt4', text: 'Raramente — já me sinto segura ao me vestir' }
+                { id: 'q15_opt4', text: 'Raramente — já me sinto segura ao me vestir' },
             ],
             requiredSelections: 1,
-            progress: 75
+            progress: 75,
         },
         16: {
             type: 'strategic',
@@ -312,10 +312,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'q16_opt1', text: 'Sim! Se existisse algo assim, eu quero' },
                 { id: 'q16_opt2', text: 'Sim, mas teria que ser no momento certo' },
                 { id: 'q16_opt3', text: 'Tenho dúvidas se funcionaria pra mim' },
-                { id: 'q16_opt4', text: 'Não, prefiro continuar como estou' }
+                { id: 'q16_opt4', text: 'Não, prefiro continuar como estou' },
             ],
             requiredSelections: 1,
-            progress: 80
+            progress: 80,
         },
         17: {
             type: 'strategic',
@@ -326,10 +326,10 @@ const FullFunnelPreview: React.FC<{
                 { id: 'q17_opt1', text: 'Sim! Por esse resultado, vale muito' },
                 { id: 'q17_opt2', text: 'Sim, mas só se eu tiver certeza de que funciona pra mim' },
                 { id: 'q17_opt3', text: 'Talvez — depende do que está incluso' },
-                { id: 'q17_opt4', text: 'Não, ainda não estou pronta para investir' }
+                { id: 'q17_opt4', text: 'Não, ainda não estou pronta para investir' },
             ],
             requiredSelections: 1,
-            progress: 85
+            progress: 85,
         },
         18: {
             type: 'strategic',
@@ -341,32 +341,32 @@ const FullFunnelPreview: React.FC<{
                 { id: 'q18_opt2', text: 'Usar o que já tenho e me sentir estilosa' },
                 { id: 'q18_opt3', text: 'Comprar com mais consciência e sem culpa' },
                 { id: 'q18_opt4', text: 'Ser admirada pela imagem que transmito' },
-                { id: 'q18_opt5', text: 'Resgatar peças esquecidas e criar novos looks com estilo' }
+                { id: 'q18_opt5', text: 'Resgatar peças esquecidas e criar novos looks com estilo' },
             ],
             requiredSelections: 1,
-            progress: 90
+            progress: 90,
         },
         19: {
             type: 'processing',
             title: 'Processando seu resultado...',
             description: 'Estamos analisando suas respostas e preparando um resultado personalizado para você.',
             category: 'Processamento',
-            progress: 95
+            progress: 95,
         } as TransitionStep,
         20: {
             type: 'result',
             title: 'Seu Estilo Predominante',
             description: 'Descubra qual é o seu estilo e como aplicá-lo no dia a dia',
             category: 'Resultado',
-            progress: 98
+            progress: 98,
         },
         21: {
             type: 'offer',
             title: 'Receba Seu Guia de Estilo Completo',
             description: 'Transforme sua descoberta em ação com nosso material exclusivo',
             category: 'Conversão',
-            progress: 100
-        }
+            progress: 100,
+        },
     }), []);
 
     const currentStepData = funnelSteps[currentStep as keyof typeof funnelSteps];
@@ -395,7 +395,7 @@ const FullFunnelPreview: React.FC<{
                             'Romantico': 'Romântico',
                             'Sexy': 'Sexy',
                             'Dramatico': 'Dramático',
-                            'Criativo': 'Criativo'
+                            'Criativo': 'Criativo',
                         };
 
                         const finalStyleName = styleMapping[styleName] || styleName;
@@ -415,7 +415,7 @@ const FullFunnelPreview: React.FC<{
 
         // Calcular porcentagem baseada nas respostas
         const percentage = Math.max(60, Math.min(95,
-            Math.round((dominantCount / Math.max(totalAnswers, 1)) * 100) + Math.random() * 10
+            Math.round((dominantCount / Math.max(totalAnswers, 1)) * 100) + Math.random() * 10,
         ));
 
         return {
@@ -423,20 +423,20 @@ const FullFunnelPreview: React.FC<{
             percentage: Math.round(percentage),
             description: getStyleDescription(dominantStyle),
             secondaryStyles: sortedStyles.slice(1, 3).map(([style]) => style),
-            styleScores: styleCount
+            styleScores: styleCount,
         };
     }, [answers]);
 
     const getStyleDescription = (style: string) => {
         const descriptions: Record<string, string> = {
-            Natural: "Seu estilo é autêntico e descomplicado. Você valoriza o conforto sem abrir mão da elegância, preferindo peças versáteis que reflitam sua personalidade espontânea.",
-            Clássico: "Você tem um estilo atemporal e refinado. Prefere qualidade à quantidade, investindo em peças que nunca saem de moda e transmitem seriedade e organização.",
-            Contemporâneo: "Seu estilo é moderno e prático. Você gosta de estar atualizada com as tendências, mas sempre priorizando a funcionalidade e o conforto no dia a dia.",
-            Elegante: "Você possui um estilo sofisticado e impecável. Valoriza detalhes refinados e peças que transmitem status, sempre priorizando a qualidade e a distinção.",
-            Romântico: "Seu estilo é delicado e feminino. Você se identifica com tecidos suaves, detalhes delicados e cores que ressaltam sua sensibilidade e doçura.",
-            Sexy: "Você tem um estilo marcante e sensual. Não tem medo de valorizar seu corpo e usar sua feminilidade como ferramenta de expressão pessoal.",
-            Dramático: "Seu estilo é bold e impactante. Você gosta de causar impressão com peças estruturadas, detalhes marcantes e uma presença forte e urbana.",
-            Criativo: "Você tem um estilo único e original. Não tem medo de ousar, misturar texturas, estampas e criar looks que expressem sua personalidade criativa e livre."
+            Natural: 'Seu estilo é autêntico e descomplicado. Você valoriza o conforto sem abrir mão da elegância, preferindo peças versáteis que reflitam sua personalidade espontânea.',
+            Clássico: 'Você tem um estilo atemporal e refinado. Prefere qualidade à quantidade, investindo em peças que nunca saem de moda e transmitem seriedade e organização.',
+            Contemporâneo: 'Seu estilo é moderno e prático. Você gosta de estar atualizada com as tendências, mas sempre priorizando a funcionalidade e o conforto no dia a dia.',
+            Elegante: 'Você possui um estilo sofisticado e impecável. Valoriza detalhes refinados e peças que transmitem status, sempre priorizando a qualidade e a distinção.',
+            Romântico: 'Seu estilo é delicado e feminino. Você se identifica com tecidos suaves, detalhes delicados e cores que ressaltam sua sensibilidade e doçura.',
+            Sexy: 'Você tem um estilo marcante e sensual. Não tem medo de valorizar seu corpo e usar sua feminilidade como ferramenta de expressão pessoal.',
+            Dramático: 'Seu estilo é bold e impactante. Você gosta de causar impressão com peças estruturadas, detalhes marcantes e uma presença forte e urbana.',
+            Criativo: 'Você tem um estilo único e original. Não tem medo de ousar, misturar texturas, estampas e criar looks que expressem sua personalidade criativa e livre.',
         };
         return descriptions[style] || descriptions.Natural;
     };
@@ -493,7 +493,7 @@ const FullFunnelPreview: React.FC<{
 
             setAnswers(prev => ({
                 ...prev,
-                [questionId]: newSelections
+                [questionId]: newSelections,
             }));
 
             // Auto-advance se atingiu o número necessário de seleções
@@ -506,7 +506,7 @@ const FullFunnelPreview: React.FC<{
             const questionId = `qs${currentStep - 12}`;
             setStrategicAnswers(prev => ({
                 ...prev,
-                [questionId]: optionId
+                [questionId]: optionId,
             }));
 
             // Auto-advance após seleção
@@ -525,9 +525,9 @@ const FullFunnelPreview: React.FC<{
                 description: quizResult.description,
                 percentage: quizResult.percentage,
                 resultStyle: quizResult.style,
-                userName: userName,
+                userName,
                 styleScores: quizResult.styleScores,
-                secondaryStyles: quizResult.secondaryStyles
+                secondaryStyles: quizResult.secondaryStyles,
             });
             onBack(); // Voltar para o editor
         }
@@ -877,18 +877,18 @@ export const ResultCommonPropertyEditor: React.FC<PropertyEditorProps> = ({
         {
             key: 'minimal',
             label: 'Minimal',
-            patch: { showBothImages: false, showSpecialTips: false, backgroundColor: 'transparent', spacing: 'compact' }
+            patch: { showBothImages: false, showSpecialTips: false, backgroundColor: 'transparent', spacing: 'compact' },
         },
         {
             key: 'visual',
             label: 'Destaque Visual',
-            patch: { showBothImages: true, showSpecialTips: true, backgroundColor: '#FFF8F3', spacing: 'relaxed', showBorder: true, borderColor: '#B89B7A' }
+            patch: { showBothImages: true, showSpecialTips: true, backgroundColor: '#FFF8F3', spacing: 'relaxed', showBorder: true, borderColor: '#B89B7A' },
         },
         {
             key: 'guide',
             label: 'Guia + Imagem',
-            patch: { showBothImages: true, showSpecialTips: true, guideImageUrl: props.guideImageUrl || '', styleGuideImageUrl: props.styleGuideImageUrl || '' }
-        }
+            patch: { showBothImages: true, showSpecialTips: true, guideImageUrl: props.guideImageUrl || '', styleGuideImageUrl: props.styleGuideImageUrl || '' },
+        },
     ]), [props.guideImageUrl, props.styleGuideImageUrl]);
 
     // Se está no modo preview de produção, mostrar o componente funcional

@@ -44,8 +44,8 @@ function decomposeIntroStep(step: EditableQuizStep): BlockData[] {
             metadata: {
                 label: 'Título Principal',
                 icon: '📝',
-                category: 'intro'
-            }
+                category: 'intro',
+            },
         });
     }
 
@@ -66,8 +66,8 @@ function decomposeIntroStep(step: EditableQuizStep): BlockData[] {
             metadata: {
                 label: 'Imagem de Destaque',
                 icon: '🖼️',
-                category: 'intro'
-            }
+                category: 'intro',
+            },
         });
     }
 
@@ -87,8 +87,8 @@ function decomposeIntroStep(step: EditableQuizStep): BlockData[] {
             metadata: {
                 label: 'Campo de Nome',
                 icon: '📥',
-                category: 'intro'
-            }
+                category: 'intro',
+            },
         });
     }
 
@@ -107,8 +107,8 @@ function decomposeIntroStep(step: EditableQuizStep): BlockData[] {
             metadata: {
                 label: 'Botão de Ação',
                 icon: '🔘',
-                category: 'intro'
-            }
+                category: 'intro',
+            },
         });
     }
 
@@ -140,8 +140,8 @@ function decomposeQuestionStep(step: EditableQuizStep): BlockData[] {
             metadata: {
                 label: 'Texto da Pergunta',
                 icon: '❓',
-                category: 'question'
-            }
+                category: 'question',
+            },
         });
     }
 
@@ -161,8 +161,8 @@ function decomposeQuestionStep(step: EditableQuizStep): BlockData[] {
             metadata: {
                 label: `Opções (${step.options.length})`,
                 icon: '✅',
-                category: 'question'
-            }
+                category: 'question',
+            },
         });
     }
 
@@ -201,8 +201,8 @@ function decomposeTransitionStep(step: EditableQuizStep): BlockData[] {
             metadata: {
                 label: 'Mensagem de Transição',
                 icon: '⏳',
-                category: 'transition'
-            }
+                category: 'transition',
+            },
         });
     }
 
@@ -233,8 +233,8 @@ function decomposeResultStep(step: EditableQuizStep): BlockData[] {
             metadata: {
                 label: 'Título do Resultado',
                 icon: '🏆',
-                category: 'result'
-            }
+                category: 'result',
+            },
         });
     }
 
@@ -265,8 +265,8 @@ function decomposeOfferStep(step: EditableQuizStep): BlockData[] {
             metadata: {
                 label: 'Imagem da Oferta',
                 icon: '🎁',
-                category: 'offer'
-            }
+                category: 'offer',
+            },
         });
     }
 
@@ -317,7 +317,7 @@ export function convertStepToStepData(step: EditableQuizStep): StepData {
         metadata: {
             name: `Step ${step.type}`,
             description: `Step do tipo ${step.type}`,
-        }
+        },
     };
 }
 

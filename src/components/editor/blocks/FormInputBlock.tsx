@@ -15,7 +15,7 @@ interface FormInputBlockProps extends BlockComponentProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: string | number,
-  type: 'top' | 'bottom' | 'left' | 'right'
+  type: 'top' | 'bottom' | 'left' | 'right',
 ): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
@@ -178,7 +178,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     window.dispatchEvent(
       new CustomEvent('quiz-input-change', {
         detail: { blockId: block?.id || '', value: newValue.trim(), valid },
-      })
+      }),
     );
 
     // Compatibilidade: ativar/desativar botão de próxima etapa explicitamente (Etapa 1)
@@ -207,14 +207,14 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           // Save to Supabase
           try {
             await userResponseService.createQuizUser({
-              sessionId: sessionId,
+              sessionId,
               name: newValue.trim(),
             });
 
             // Also save response data
             await userResponseService.saveResponse({
               userId: sessionId,
-              sessionId: sessionId,
+              sessionId,
               step: 'step-01',
               data: {
                 name: newValue.trim(),
@@ -246,14 +246,14 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
             window.dispatchEvent(
               new CustomEvent('quiz-user-name-updated', {
                 detail: { userName: newValue.trim(), source: 'FormInputBlock' },
-              })
+              }),
             );
           } catch { }
         }
 
         appLogger.debug('📝 [FormInputBlock] Input change processed:', {
           blockId: block?.id,
-          sessionId: sessionId,
+          sessionId,
           value: newValue.trim(),
           valid,
           isNameField: name === 'userName' || block?.id?.includes('name'),
@@ -294,8 +294,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
             className="text-sm font-medium uppercase tracking-wide"
             style={{
               color: labelColor,
-              fontFamily: fontFamily,
-              fontWeight: fontWeight,
+              fontFamily,
+              fontWeight,
             }}
           >
             {label}
@@ -315,12 +315,12 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           value={value}
           onChange={e => handleInputChange(e.target.value)}
           style={{
-            backgroundColor: backgroundColor,
-            borderColor: borderColor,
+            backgroundColor,
+            borderColor,
             color: textColor,
             fontSize: `${fontSize}px`,
-            fontFamily: fontFamily,
-            fontWeight: fontWeight,
+            fontFamily,
+            fontWeight,
             borderRadius: `${borderRadius}px`,
           }}
           className={`

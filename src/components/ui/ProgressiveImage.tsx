@@ -84,7 +84,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           alt={`Carregando ${alt}`}
           className={cn(
             'w-full h-full object-cover absolute inset-0 blur-sm transition-opacity duration-300',
-            isLowQualityLoaded ? 'opacity-100' : 'opacity-0'
+            isLowQualityLoaded ? 'opacity-100' : 'opacity-0',
           )}
           width={width || '100%'}
           height={height || 'auto'}
@@ -101,7 +101,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         alt={alt}
         className={cn(
           'w-full h-full object-cover transition-all duration-500',
-          isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.02]'
+          isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.02]',
         )}
         width={width || '100%'}
         height={height || 'auto'}

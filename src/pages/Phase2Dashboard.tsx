@@ -28,7 +28,7 @@ export default function Phase2Dashboard() {
         personalization: personalization.getPersonalizationMetrics(),
         integrations: integrations.getIntegrationMetrics(),
         whiteLabel: whiteLabelPlatform.getPlatformMetrics(),
-        totalROI: 0
+        totalROI: 0,
       };
 
       // Calculate combined ROI
@@ -297,7 +297,7 @@ function StatusCard({ title, value, subtitle, icon, color, revenue }: any) {
     blue: 'from-blue-600/20 to-blue-800/20 border-blue-500/30',
     purple: 'from-purple-600/20 to-purple-800/20 border-purple-500/30',
     green: 'from-green-600/20 to-green-800/20 border-green-500/30',
-    orange: 'from-orange-600/20 to-orange-800/20 border-orange-500/30'
+    orange: 'from-orange-600/20 to-orange-800/20 border-orange-500/30',
   };
 
   return (

@@ -14,7 +14,7 @@ import {
     Sparkles,
     Crown,
     Edit3,
-    Eye
+    Eye,
 } from 'lucide-react';
 
 // ===============================
@@ -28,7 +28,7 @@ const EditorNavigation: React.FC = () => {
             name: 'Canvas',
             icon: Edit3,
             path: '/editor',
-            description: 'Editor visual'
+            description: 'Editor visual',
         },
         {
             id: 'preview',
@@ -36,8 +36,8 @@ const EditorNavigation: React.FC = () => {
             icon: Eye,
             path: '/editor/preview',
             description: 'Visualização em tempo real',
-            badge: 'Live'
-        }
+            badge: 'Live',
+        },
     ];
 
     return (
@@ -120,7 +120,7 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
     maxWidth = 500,
     position,
     onResize,
-    className = ''
+    className = '',
 }) => {
     const [isResizing, setIsResizing] = React.useState(false);
     const [currentWidth, setCurrentWidth] = React.useState(width);
@@ -202,7 +202,7 @@ interface CanvasContainerProps {
 
 export const CanvasContainer: React.FC<CanvasContainerProps> = ({
     children,
-    className = ''
+    className = '',
 }) => {
     return (
         <div
@@ -225,7 +225,7 @@ export const MiniAnalyticsWidget: React.FC = () => {
     const [metrics, setMetrics] = React.useState({
         activeElements: 0,
         renderTime: 0,
-        memoryUsage: 0
+        memoryUsage: 0,
     });
 
     React.useEffect(() => {
@@ -234,7 +234,7 @@ export const MiniAnalyticsWidget: React.FC = () => {
             setMetrics({
                 activeElements: Math.floor(Math.random() * 20) + 5,
                 renderTime: Math.floor(Math.random() * 50) + 10,
-                memoryUsage: Math.floor(Math.random() * 30) + 20
+                memoryUsage: Math.floor(Math.random() * 30) + 20,
             });
         }, 2000);
 
@@ -281,7 +281,7 @@ interface GridOverlayProps {
 export const GridOverlay: React.FC<GridOverlayProps> = ({
     visible,
     size = 20,
-    color = 'rgba(0,0,0,0.1)'
+    color = 'rgba(0,0,0,0.1)',
 }) => {
     if (!visible) return null;
 
@@ -290,7 +290,7 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
       linear-gradient(to right, ${color} 1px, transparent 1px),
       linear-gradient(to bottom, ${color} 1px, transparent 1px)
     `,
-        backgroundSize: `${size}px ${size}px`
+        backgroundSize: `${size}px ${size}px`,
     };
 
     return (

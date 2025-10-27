@@ -16,7 +16,7 @@ import {
   Grid3X3, 
   List, 
   Star, 
-  Plus
+  Plus,
 } from 'lucide-react';
 
 export interface UnifiedComponentsPanelProps {
@@ -35,7 +35,7 @@ const SIMPLE_COMPONENTS = [
     description: 'Pergunta interativa com múltiplas opções',
     category: 'quiz',
     icon: '❓',
-    isNew: false
+    isNew: false,
   },
   {
     id: 'button',
@@ -43,7 +43,7 @@ const SIMPLE_COMPONENTS = [
     description: 'Botão interativo customizável',
     category: 'interactive',
     icon: '🔘',
-    isNew: false
+    isNew: false,
   },
   {
     id: 'text',
@@ -51,7 +51,7 @@ const SIMPLE_COMPONENTS = [
     description: 'Bloco de texto simples',
     category: 'content',
     icon: '📝',
-    isNew: false
+    isNew: false,
   },
   {
     id: 'image',
@@ -59,7 +59,7 @@ const SIMPLE_COMPONENTS = [
     description: 'Imagem responsiva',
     category: 'media',
     icon: '🖼️',
-    isNew: false
+    isNew: false,
   },
   {
     id: 'testimonial',
@@ -67,8 +67,8 @@ const SIMPLE_COMPONENTS = [
     description: 'Card de depoimento',
     category: 'social',
     icon: '⭐',
-    isNew: true
-  }
+    isNew: true,
+  },
 ];
 
 export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
@@ -76,7 +76,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
   onAddComponent,
   showSearch = true,
   showCategories = true,
-  compactMode = false
+  compactMode = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -90,7 +90,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
       components = components.filter(comp => 
         comp.name.toLowerCase().includes(searchTerm) ||
         comp.description.toLowerCase().includes(searchTerm) ||
-        comp.category.toLowerCase().includes(searchTerm)
+        comp.category.toLowerCase().includes(searchTerm),
       );
     }
 
@@ -119,7 +119,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
         className={cn(
           'group relative border border-border rounded-lg bg-card hover:bg-accent/50 transition-colors cursor-pointer',
           isGridView ? 'p-3' : 'p-2 flex items-center gap-3',
-          isCompact && 'p-2'
+          isCompact && 'p-2',
         )}
         onClick={() => onAddComponent?.(component.id, component)}
         title={`Adicionar ${component.name}`}
@@ -128,7 +128,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
         <div className={cn(
           'flex items-center justify-center rounded-md bg-primary/10 text-primary',
           isGridView ? 'w-8 h-8 mx-auto mb-2' : 'w-6 h-6 flex-shrink-0',
-          isCompact && 'w-5 h-5'
+          isCompact && 'w-5 h-5',
         )}>
           <span className={cn('text-sm', isCompact && 'text-xs')}>
             {component.icon}
@@ -141,7 +141,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
             <h4 className={cn(
               'font-medium text-foreground truncate',
               isGridView ? 'text-xs' : 'text-sm',
-              isCompact && 'text-xs'
+              isCompact && 'text-xs',
             )}>
               {component.name}
             </h4>
@@ -157,7 +157,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
           {!isCompact && (
             <p className={cn(
               'text-muted-foreground text-xs line-clamp-2',
-              isGridView && 'text-center'
+              isGridView && 'text-center',
             )}>
               {component.description}
             </p>
@@ -167,7 +167,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
         {/* Add Button Overlay */}
         <div className={cn(
           'absolute inset-0 bg-primary/90 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity',
-          'text-primary-foreground font-medium text-sm'
+          'text-primary-foreground font-medium text-sm',
         )}>
           <Plus className="w-4 h-4 mr-1" />
           Adicionar
@@ -238,7 +238,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
                     'gap-2',
                     viewMode === 'grid' 
                       ? 'grid grid-cols-2 gap-2' 
-                      : 'space-y-1'
+                      : 'space-y-1',
                   )}>
                     {components.map(component => (
                       <ComponentItem
@@ -257,7 +257,7 @@ export const UnifiedComponentsPanel: React.FC<UnifiedComponentsPanelProps> = ({
               'gap-2',
               viewMode === 'grid' 
                 ? 'grid grid-cols-2 gap-2' 
-                : 'space-y-1'
+                : 'space-y-1',
             )}>
               {filteredComponents.map(component => (
                 <ComponentItem

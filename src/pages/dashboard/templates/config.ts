@@ -55,7 +55,7 @@ export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
             'Design mobile-first responsivo',
             'Animações suaves entre etapas',
             'Sistema de progress tracking',
-            'Integração com CRM/Email marketing'
+            'Integração com CRM/Email marketing',
         ],
         estimatedTime: '8-12 min',
         conversionRate: '78%',
@@ -65,14 +65,14 @@ export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
             colors: true,
             layout: true,
             content: true,
-            logic: true
+            logic: true,
         },
         analytics: {
             views: 1250,
             uses: 89,
             rating: 4.8,
-            lastUpdated: '2024-09-20'
-        }
+            lastUpdated: '2024-09-20',
+        },
     },
     {
         id: 'leadMagnetFashion',
@@ -91,7 +91,7 @@ export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
             'Popup inteligente com timing perfeito',
             'Formulários com validação avançada',
             'Ofertas personalizadas por segmento',
-            'Remarketing pixel configurado'
+            'Remarketing pixel configurado',
         ],
         estimatedTime: '3-5 min',
         conversionRate: '65%',
@@ -101,14 +101,14 @@ export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
             colors: true,
             layout: true,
             content: true,
-            logic: false
+            logic: false,
         },
         analytics: {
             views: 2100,
             uses: 156,
             rating: 4.6,
-            lastUpdated: '2024-09-18'
-        }
+            lastUpdated: '2024-09-18',
+        },
     },
     {
         id: 'webinarSignup',
@@ -127,7 +127,7 @@ export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
             'Lista de espera automática quando lotado',
             'Dashboard de participantes em tempo real',
             'Integração com Zoom/Teams/Meet',
-            'Certificados automáticos pós-evento'
+            'Certificados automáticos pós-evento',
         ],
         estimatedTime: '2-3 min',
         conversionRate: '72%',
@@ -137,14 +137,14 @@ export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
             colors: true,
             layout: true,
             content: true,
-            logic: true
+            logic: true,
         },
         analytics: {
             views: 890,
             uses: 67,
             rating: 4.9,
-            lastUpdated: '2024-09-22'
-        }
+            lastUpdated: '2024-09-22',
+        },
     },
     {
         id: 'npseSurvey',
@@ -163,7 +163,7 @@ export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
             'Dashboard executivo em tempo real',
             'Ações automáticas baseadas em respostas',
             'Follow-up personalizado por segmento',
-            'Exportação de dados para BI'
+            'Exportação de dados para BI',
         ],
         estimatedTime: '1-2 min',
         conversionRate: '85%',
@@ -173,14 +173,14 @@ export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
             colors: true,
             layout: true,
             content: true,
-            logic: true
+            logic: true,
         },
         analytics: {
             views: 1560,
             uses: 124,
             rating: 4.7,
-            lastUpdated: '2024-09-19'
-        }
+            lastUpdated: '2024-09-19',
+        },
     },
     {
         id: 'roiCalculator',
@@ -199,7 +199,7 @@ export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
             'Integração direta com CRM',
             'Campos personalizáveis por setor',
             'Comparativo com benchmarks de mercado',
-            'Follow-up automático baseado em score'
+            'Follow-up automático baseado em score',
         ],
         estimatedTime: '4-6 min',
         conversionRate: '68%',
@@ -210,15 +210,15 @@ export const FUNCTIONAL_TEMPLATES: TemplateConfig[] = [
             colors: true,
             layout: true,
             content: true,
-            logic: true
+            logic: true,
         },
         analytics: {
             views: 756,
             uses: 43,
             rating: 4.9,
-            lastUpdated: '2024-09-21'
-        }
-    }
+            lastUpdated: '2024-09-21',
+        },
+    },
 ];
 
 // 🎯 CATEGORIAS DISPONÍVEIS
@@ -228,7 +228,7 @@ export const TEMPLATE_CATEGORIES = [
     'Captura de Leads',
     'Eventos',
     'Feedback',
-    'Ferramenta'
+    'Ferramenta',
 ];
 
 // 🎯 FILTROS AVANÇADOS
@@ -236,7 +236,7 @@ export const TEMPLATE_FILTERS = {
     status: ['active', 'testing', 'beta', 'deprecated'],
     type: ['quiz', 'funnel', 'survey', 'calculator', 'landing', 'form'],
     difficulty: ['beginner', 'intermediate', 'advanced'],
-    estimatedTime: ['1-3 min', '3-5 min', '5-10 min', '10+ min']
+    estimatedTime: ['1-3 min', '3-5 min', '5-10 min', '10+ min'],
 };
 
 // 🎯 FUNÇÕES UTILITÁRIAS
@@ -271,7 +271,7 @@ export const getTemplateStats = () => {
         activeTemplates,
         avgConversionRate: `${Math.round(avgConversionRate)}%`,
         totalSteps,
-        functionalRate: '100%'
+        functionalRate: '100%',
     };
 };
 

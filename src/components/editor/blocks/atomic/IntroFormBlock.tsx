@@ -18,7 +18,7 @@ export default function IntroFormBlock({
   isEditable = false,
   onSelect,
   onOpenProperties,
-  onNameSubmit
+  onNameSubmit,
 }: IntroFormBlockProps) {
   const [inputValue, setInputValue] = useState('');
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -45,8 +45,8 @@ export default function IntroFormBlock({
           blockId: block.id,
           stepNumber: 1,
           formType: 'intro-name',
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       }));
     }
   };
@@ -61,8 +61,8 @@ export default function IntroFormBlock({
         blockId: block.id,
         nameLength: newValue.length,
         hasSpaces: newValue.includes(' '),
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     }));
   };
 
@@ -79,8 +79,8 @@ export default function IntroFormBlock({
           formType: 'intro-name',
           nameLength: trimmedName.length,
           hasSpaces: trimmedName.includes(' '),
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       }));
 
       // 🔥 TRACKING: Name collected (lead captured!)
@@ -89,8 +89,8 @@ export default function IntroFormBlock({
           blockId: block.id,
           name: trimmedName, // Ou hash se quiser privacidade: btoa(trimmedName)
           stepNumber: 1,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       }));
 
       onNameSubmit?.(trimmedName);
@@ -136,7 +136,7 @@ export default function IntroFormBlock({
               style={{
                 borderColor: '#B89B7A',
                 backgroundColor: '#FFF',
-                color: '#432818'
+                color: '#432818',
               }}
             />
           </div>

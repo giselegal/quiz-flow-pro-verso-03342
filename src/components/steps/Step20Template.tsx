@@ -27,7 +27,7 @@ interface Step20TemplateProps {
 const Step20Template: React.FC<Step20TemplateProps> = ({
   className = '',
   onPropertyChange: _onPropertyChange,
-  blocks = []
+  blocks = [],
 }) => {
   // 🎯 FASE 1: Usar apenas useQuizResult (que deve ser otimizado) e evitar múltiplos motores
   const { primaryStyle, secondaryStyles } = useQuizResult();
@@ -61,7 +61,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
       isValid: hasEnoughData && errors.length === 0,
       errors,
       selectionCount,
-      data
+      data,
     };
   }, []);
 
@@ -111,7 +111,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
         id: data.metadata?.currentStep?.toString() || 'step20',
         session_id: 'step20-session',
         responses: convertSelectionsToResponses(data.selections),
-        current_step: 20
+        current_step: 20,
       };
 
       const results = await quizResultsService.calculateResults(session);
@@ -151,7 +151,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
 
       responses[stepNumber] = {
         questionId,
-        selectedOptions
+        selectedOptions,
       };
     });
 
@@ -179,7 +179,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
       totalQuestions: results.metadata.totalQuestions,
       userData: { name: userName },
       styleProfile: results.styleProfile,
-      recommendations: results.recommendations
+      recommendations: results.recommendations,
     };
   };
 
@@ -239,7 +239,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
                   {JSON.stringify({
                     primaryStyle,
                     validationErrors,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
                   }, null, 2)}
                 </pre>
               </div>
@@ -294,7 +294,7 @@ const Step20Template: React.FC<Step20TemplateProps> = ({
                 type: block.type,
                 order: 0,
                 content: {},
-                properties: block.properties || {}
+                properties: block.properties || {},
               } as any}
               isPreviewing
             />

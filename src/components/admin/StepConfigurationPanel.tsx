@@ -28,7 +28,7 @@ import {
     RotateCcw,
     Save,
     Zap,
-    Shield
+    Shield,
 } from 'lucide-react';
 import { HybridTemplateService } from '@/services/aliases';
 
@@ -80,16 +80,16 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
                     requiredSelections: config.validation.requiredSelections,
                     maxSelections: config.validation.maxSelections,
                     minLength: config.validation.minLength,
-                    validationMessage: config.validation.message
+                    validationMessage: config.validation.message,
                 });
             }
             setConfigurations(configs);
         } catch (error) {
             console.error('Erro ao carregar configurações:', error);
             toast({
-                title: "Erro",
-                description: "Não foi possível carregar as configurações das etapas.",
-                variant: "destructive"
+                title: 'Erro',
+                description: 'Não foi possível carregar as configurações das etapas.',
+                variant: 'destructive',
             });
         } finally {
             setLoading(false);
@@ -101,8 +101,8 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
             prev.map(config =>
                 config.stepNumber === stepNumber
                     ? { ...config, ...updates }
-                    : config
-            )
+                    : config,
+            ),
         );
     };
 
@@ -126,21 +126,21 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
                     maxSelections: config.maxSelections,
                     minLength: config.minLength,
                     message: config.validationMessage,
-                }
+                },
             };
 
             await HybridTemplateService.saveStepOverride(stepNumber, stepTemplate);
 
             toast({
-                title: "Configuração Salva!",
+                title: 'Configuração Salva!',
                 description: `Etapa ${stepNumber} configurada com sucesso.`,
             });
         } catch (error) {
             console.error('Erro ao salvar:', error);
             toast({
-                title: "Erro",
-                description: "Não foi possível salvar a configuração.",
-                variant: "destructive"
+                title: 'Erro',
+                description: 'Não foi possível salvar a configuração.',
+                variant: 'destructive',
             });
         } finally {
             setSaving(false);
@@ -154,15 +154,15 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
                 await saveConfiguration(config.stepNumber);
             }
             toast({
-                title: "Todas as Configurações Salvas!",
-                description: "Todas as 21 etapas foram configuradas com sucesso.",
+                title: 'Todas as Configurações Salvas!',
+                description: 'Todas as 21 etapas foram configuradas com sucesso.',
             });
         } catch (error) {
             console.error('Erro ao salvar todas:', error);
             toast({
-                title: "Erro",
-                description: "Erro ao salvar algumas configurações.",
-                variant: "destructive"
+                title: 'Erro',
+                description: 'Erro ao salvar algumas configurações.',
+                variant: 'destructive',
             });
         } finally {
             setSaving(false);
@@ -173,8 +173,8 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
         HybridTemplateService.clearCache();
         await loadAllConfigurations();
         toast({
-            title: "Configurações Resetadas",
-            description: "Todas as configurações foram restauradas para o padrão.",
+            title: 'Configurações Resetadas',
+            description: 'Todas as configurações foram restauradas para o padrão.',
         });
     };
 
@@ -232,12 +232,12 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
                                 {configurations.map((config) => (
                                     <Button
                                         key={config.stepNumber}
-                                        variant={selectedStep === config.stepNumber ? "default" : "ghost"}
+                                        variant={selectedStep === config.stepNumber ? 'default' : 'ghost'}
                                         onClick={() => setSelectedStep(config.stepNumber)}
                                         className="w-full justify-between"
                                         style={{
                                             backgroundColor: selectedStep === config.stepNumber ? '#B89B7A' : 'transparent',
-                                            color: selectedStep === config.stepNumber ? 'white' : '#432818'
+                                            color: selectedStep === config.stepNumber ? 'white' : '#432818',
                                         }}
                                     >
                                         <span>Etapa {config.stepNumber}</span>
@@ -396,7 +396,7 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
                                                         value={currentConfig.requiredSelections || 1}
                                                         onChange={(e) =>
                                                             updateStepConfig(selectedStep, {
-                                                                requiredSelections: parseInt(e.target.value) || 1
+                                                                requiredSelections: parseInt(e.target.value) || 1,
                                                             })
                                                         }
                                                         min={1}
@@ -411,7 +411,7 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
                                                         value={currentConfig.maxSelections || 3}
                                                         onChange={(e) =>
                                                             updateStepConfig(selectedStep, {
-                                                                maxSelections: parseInt(e.target.value) || 3
+                                                                maxSelections: parseInt(e.target.value) || 3,
                                                             })
                                                         }
                                                         min={1}
@@ -429,7 +429,7 @@ export const StepConfigurationPanel: React.FC<StepConfigPanelProps> = ({ classNa
                                                     value={currentConfig.minLength || 2}
                                                     onChange={(e) =>
                                                         updateStepConfig(selectedStep, {
-                                                            minLength: parseInt(e.target.value) || 2
+                                                            minLength: parseInt(e.target.value) || 2,
                                                         })
                                                     }
                                                     min={1}

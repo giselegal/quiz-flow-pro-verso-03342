@@ -71,7 +71,7 @@ export {
     ProgressSection,
     MainImageSection,
     ModularResultEditor,
-    ModularResultHeaderBlock
+    ModularResultHeaderBlock,
 } from './modules';
 
 export type {
@@ -79,7 +79,7 @@ export type {
     UserInfoSectionProps,
     ProgressSectionProps,
     MainImageSectionProps,
-    ModularResultHeaderProps
+    ModularResultHeaderProps,
 } from './modules';
 
 // ============================================================================
@@ -118,8 +118,8 @@ export const UNIVERSAL_STEP_EDITOR_CONFIG = {
         QUESTION: 'question',
         TRANSITION: 'transition',
         RESULT: 'result',
-        CUSTOM: 'custom'
-    } as const
+        CUSTOM: 'custom',
+    } as const,
 } as const;
 
 // ============================================================================
@@ -140,7 +140,7 @@ export const initializeUniversalStepEditor = async () => {
         console.error('❌ Erro ao inicializar Universal Step Editor:', error);
         return {
             success: false,
-            error: error instanceof Error ? error.message : String(error)
+            error: error instanceof Error ? error.message : String(error),
         };
     }
 };

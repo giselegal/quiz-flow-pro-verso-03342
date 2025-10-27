@@ -247,7 +247,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
           <div ref={previewRef} className="min-h-full p-4">
             {blocks.length > 0 ? (
               renderDeviceFrame(
-                <div className="space-y-4">{blocks.map(block => renderBlock(block))}</div>
+                <div className="space-y-4">{blocks.map(block => renderBlock(block))}</div>,
               )
             ) : (
               <div style={{ color: '#8B7355' }}>
@@ -272,7 +272,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
               <div
                 className={cn(
                   'w-2 h-2 rounded-full',
-                  loadTime < 100 ? 'bg-green-500' : loadTime < 300 ? 'bg-yellow-500' : 'bg-red-500'
+                  loadTime < 100 ? 'bg-green-500' : loadTime < 300 ? 'bg-yellow-500' : 'bg-red-500',
                 )}
               />
               <span>{loadTime < 100 ? 'Excelente' : loadTime < 300 ? 'Bom' : 'Lento'}</span>

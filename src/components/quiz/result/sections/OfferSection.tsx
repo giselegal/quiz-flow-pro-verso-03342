@@ -45,7 +45,7 @@ export default function OfferSection({
     cta,
     countdown = { enabled: true, minutes: 15 },
     urgencyNote,
-    returnPriceNote
+    returnPriceNote,
 }: OfferSectionProps) {
     return (
         <div className="bg-gradient-to-br from-[#B89B7A]/10 to-[#a08966]/5 p-5 sm:p-6 md:p-8 rounded-lg shadow-lg mb-10 md:mb-12 border-2 border-[#B89B7A]/20">
@@ -76,7 +76,7 @@ export default function OfferSection({
                         features={features}
                         totalValue={pricing.original.toLocaleString('pt-BR', {
                             style: 'currency',
-                            currency: 'BRL'
+                            currency: 'BRL',
                         })}
                     />
                 </div>

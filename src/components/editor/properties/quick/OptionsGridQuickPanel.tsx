@@ -65,8 +65,8 @@ export default function OptionsGridQuickPanel({ block, onBatchUpdate }: OptionsG
                     <div>
                         <span className="font-medium">Seleção:</span>{' '}
                         {props.minSelections || props.requiredSelections || 0}
-                        {props.requiredSelections ? ' / ' + props.requiredSelections : ''}
-                        {props.maxSelections ? ' / ' + props.maxSelections : ''}
+                        {props.requiredSelections ? ` / ${  props.requiredSelections}` : ''}
+                        {props.maxSelections ? ` / ${  props.maxSelections}` : ''}
                     </div>
                     <Separator orientation="vertical" className="h-4" />
                     <div>

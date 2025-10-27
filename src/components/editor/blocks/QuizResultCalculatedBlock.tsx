@@ -59,7 +59,7 @@ const styleColors = {
   'Sexy': '#B85C5C',
   'Dramático': '#7A5A8B',
   'Criativo': '#8BA55A',
-  'Neutro': '#999999'
+  'Neutro': '#999999',
 };
 
 const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
@@ -127,13 +127,13 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
     primaryResult = {
       style: results.primaryStyle.style || results.primaryStyle.category,
       percentage: results.primaryStyle.percentage || 0,
-      color: styleColors[results.primaryStyle.style || results.primaryStyle.category] || styleColors['Natural']
+      color: styleColors[results.primaryStyle.style || results.primaryStyle.category] || styleColors['Natural'],
     };
 
     secondaryResults = (results.secondaryStyles || []).map((style, index) => ({
       style: style.style || style.category,
       percentage: style.percentage || 0,
-      color: styleColors[style.style || style.category] || styleColors['Natural']
+      color: styleColors[style.style || style.category] || styleColors['Natural'],
     }));
   } else {
     // Fallback to mock data while loading or if no results

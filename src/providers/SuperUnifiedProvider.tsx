@@ -27,7 +27,7 @@ import React, {
     useMemo,
     useCallback,
     ReactNode,
-    useState
+    useState,
 } from 'react';
 import { supabase } from '@/integrations/supabase/customClient';
 
@@ -188,7 +188,7 @@ const initialState: SuperUnifiedState = {
         user: null,
         isAuthenticated: false,
         isLoading: false,
-        error: null
+        error: null,
     },
 
     theme: {
@@ -196,7 +196,7 @@ const initialState: SuperUnifiedState = {
         primaryColor: '#4F46E5',
         secondaryColor: '#7C3AED',
         fontFamily: 'Inter, sans-serif',
-        borderRadius: '8px'
+        borderRadius: '8px',
     },
 
     editor: {
@@ -213,7 +213,7 @@ const initialState: SuperUnifiedState = {
         funnelSettings: {},
         validationErrors: [],
         isDirty: false,
-        lastSaved: null
+        lastSaved: null,
     },
 
     ui: {
@@ -222,7 +222,7 @@ const initialState: SuperUnifiedState = {
         activeModal: null,
         toasts: [],
         isLoading: false,
-        loadingMessage: ''
+        loadingMessage: '',
     },
 
     cache: {
@@ -230,7 +230,7 @@ const initialState: SuperUnifiedState = {
         templates: {},
         users: {},
         lastUpdated: {},
-        hitRate: 0
+        hitRate: 0,
     },
 
     performance: {
@@ -239,15 +239,15 @@ const initialState: SuperUnifiedState = {
         cacheHitRate: 0,
         averageRenderTime: 0,
         memoryUsage: 0,
-        lastOptimization: Date.now()
+        lastOptimization: Date.now(),
     },
 
     features: {
         enableCache: true,
         enableAnalytics: true,
         enableCollaboration: false,
-        enableAdvancedEditor: true
-    }
+        enableAdvancedEditor: true,
+    },
 };
 
 // 🎯 REDUCER
@@ -259,8 +259,8 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 ui: {
                     ...state.ui,
                     isLoading: action.payload.loading,
-                    loadingMessage: action.payload.message || state.ui.loadingMessage
-                }
+                    loadingMessage: action.payload.message || state.ui.loadingMessage,
+                },
             };
 
         case 'SET_ERROR':
@@ -268,7 +268,7 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 ...state,
                 auth: action.payload.section === 'auth'
                     ? { ...state.auth, error: action.payload.error }
-                    : state.auth
+                    : state.auth,
             };
 
         case 'SET_FUNNELS':
@@ -283,22 +283,22 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     }, {} as Record<string, UnifiedFunnelData>),
                     lastUpdated: {
                         ...state.cache.lastUpdated,
-                        funnels: Date.now()
-                    }
-                }
+                        funnels: Date.now(),
+                    },
+                },
             };
 
         case 'SET_CURRENT_FUNNEL':
             return {
                 ...state,
-                currentFunnel: action.payload
+                currentFunnel: action.payload,
             };
 
         case 'UPDATE_FUNNEL':
             const updatedFunnels = state.funnels.map(funnel =>
                 funnel.id === action.payload.id
                     ? { ...funnel, ...action.payload.updates }
-                    : funnel
+                    : funnel,
             );
             return {
                 ...state,
@@ -312,34 +312,34 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                         ...state.cache.funnels,
                         [action.payload.id]: {
                             ...state.cache.funnels[action.payload.id],
-                            ...action.payload.updates
-                        }
-                    }
-                }
+                            ...action.payload.updates,
+                        },
+                    },
+                },
             };
 
         case 'SET_AUTH_STATE':
             return {
                 ...state,
-                auth: { ...state.auth, ...action.payload }
+                auth: { ...state.auth, ...action.payload },
             };
 
         case 'SET_THEME':
             return {
                 ...state,
-                theme: { ...state.theme, ...action.payload }
+                theme: { ...state.theme, ...action.payload },
             };
 
         case 'SET_EDITOR_STATE':
             return {
                 ...state,
-                editor: { ...state.editor, ...action.payload }
+                editor: { ...state.editor, ...action.payload },
             };
 
         case 'SET_UI_STATE':
             return {
                 ...state,
-                ui: { ...state.ui, ...action.payload }
+                ui: { ...state.ui, ...action.payload },
             };
 
         case 'ADD_TOAST':
@@ -347,8 +347,8 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 ...state,
                 ui: {
                     ...state.ui,
-                    toasts: [...state.ui.toasts, action.payload]
-                }
+                    toasts: [...state.ui.toasts, action.payload],
+                },
             };
 
         case 'REMOVE_TOAST':
@@ -356,8 +356,8 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 ...state,
                 ui: {
                     ...state.ui,
-                    toasts: state.ui.toasts.filter(toast => toast.id !== action.payload)
-                }
+                    toasts: state.ui.toasts.filter(toast => toast.id !== action.payload),
+                },
             };
 
         case 'UPDATE_CACHE':
@@ -368,9 +368,9 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     [action.payload.key]: action.payload.data,
                     lastUpdated: {
                         ...state.cache.lastUpdated,
-                        [action.payload.key]: Date.now()
-                    }
-                }
+                        [action.payload.key]: Date.now(),
+                    },
+                },
             };
 
         case 'UPDATE_PERFORMANCE':
@@ -379,8 +379,8 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 performance: {
                     ...state.performance,
                     ...action.payload,
-                    renderCount: state.performance.renderCount + 1
-                }
+                    renderCount: state.performance.renderCount + 1,
+                },
             };
 
         case 'TOGGLE_FEATURE':
@@ -388,8 +388,8 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 ...state,
                 features: {
                     ...state.features,
-                    [action.payload.feature]: action.payload.enabled
-                }
+                    [action.payload.feature]: action.payload.enabled,
+                },
             };
 
         // 🆕 FASE 3: Editor block operations
@@ -402,11 +402,11 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                         ...state.editor.stepBlocks,
                         [action.payload.stepIndex]: [
                             ...(state.editor.stepBlocks[action.payload.stepIndex] || []),
-                            action.payload.block
-                        ]
+                            action.payload.block,
+                        ],
                     },
-                    isDirty: true
-                }
+                    isDirty: true,
+                },
             };
 
         case 'UPDATE_BLOCK':
@@ -419,11 +419,11 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                         [action.payload.stepIndex]: (state.editor.stepBlocks[action.payload.stepIndex] || []).map(
                             block => block.id === action.payload.blockId
                                 ? { ...block, ...action.payload.updates }
-                                : block
-                        )
+                                : block,
+                        ),
                     },
-                    isDirty: true
-                }
+                    isDirty: true,
+                },
             };
 
         case 'REMOVE_BLOCK':
@@ -434,11 +434,11 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     stepBlocks: {
                         ...state.editor.stepBlocks,
                         [action.payload.stepIndex]: (state.editor.stepBlocks[action.payload.stepIndex] || []).filter(
-                            block => block.id !== action.payload.blockId
-                        )
+                            block => block.id !== action.payload.blockId,
+                        ),
                     },
-                    isDirty: true
-                }
+                    isDirty: true,
+                },
             };
 
         case 'REORDER_BLOCKS':
@@ -448,10 +448,10 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     ...state.editor,
                     stepBlocks: {
                         ...state.editor.stepBlocks,
-                        [action.payload.stepIndex]: action.payload.blocks
+                        [action.payload.stepIndex]: action.payload.blocks,
                     },
-                    isDirty: true
-                }
+                    isDirty: true,
+                },
             };
 
         case 'SET_STEP_BLOCKS':
@@ -461,9 +461,9 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                     ...state.editor,
                     stepBlocks: {
                         ...state.editor.stepBlocks,
-                        [action.payload.stepIndex]: action.payload.blocks
-                    }
-                }
+                        [action.payload.stepIndex]: action.payload.blocks,
+                    },
+                },
             };
 
         case 'VALIDATE_STEP':
@@ -471,8 +471,8 @@ const superUnifiedReducer = (state: SuperUnifiedState, action: SuperUnifiedActio
                 ...state,
                 editor: {
                     ...state.editor,
-                    validationErrors: action.payload.errors
-                }
+                    validationErrors: action.payload.errors,
+                },
             };
 
         default:
@@ -558,11 +558,11 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     funnelId,
     autoLoad = false,
     debugMode = false,
-    initialFeatures = {}
+    initialFeatures = {},
 }) => {
     const [state, dispatch] = useReducer(superUnifiedReducer, {
         ...initialState,
-        features: { ...initialState.features, ...initialFeatures }
+        features: { ...initialState.features, ...initialFeatures },
     });
 
     const [renderStartTime] = useState(() => performance.now());
@@ -576,12 +576,12 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             type: 'UPDATE_PERFORMANCE',
             payload: {
                 averageRenderTime: renderTime,
-                lastOptimization: Date.now()
-            }
+                lastOptimization: Date.now(),
+            },
         });
 
         if (debugMode) {
-            console.log('🚀 SuperUnifiedProvider render time:', renderTime.toFixed(2) + 'ms');
+            console.log('🚀 SuperUnifiedProvider render time:', `${renderTime.toFixed(2)  }ms`);
         }
     }, [renderStartTime, debugMode]);
 
@@ -619,7 +619,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 dispatch({ type: 'SET_CURRENT_FUNNEL', payload: cached });
                 dispatch({
                     type: 'UPDATE_PERFORMANCE',
-                    payload: { cacheHitRate: state.performance.cacheHitRate + 1 }
+                    payload: { cacheHitRate: state.performance.cacheHitRate + 1 },
                 });
                 return;
             }
@@ -655,7 +655,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 .from('funnels')
                 .upsert({
                     ...funnelToSave,
-                    updated_at: new Date().toISOString()
+                    updated_at: new Date().toISOString(),
                 })
                 .select()
                 .single();
@@ -672,8 +672,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     type: 'success',
                     title: 'Salvo!',
                     message: 'Funil salvo com sucesso',
-                    duration: 3000
-                }
+                    duration: 3000,
+                },
             });
         } catch (error: any) {
             dispatch({ type: 'SET_ERROR', payload: { section: 'save', error: error.message } });
@@ -683,9 +683,9 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     id: Date.now().toString(),
                     type: 'error',
                     title: 'Erro',
-                    message: 'Erro ao salvar: ' + error.message,
-                    duration: 5000
-                }
+                    message: `Erro ao salvar: ${  error.message}`,
+                    duration: 5000,
+                },
             });
         } finally {
             dispatch({ type: 'SET_LOADING', payload: { section: 'save', loading: false } });
@@ -705,7 +705,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     settings: options.settings || {},
                     version: 1,
                     is_published: false,
-                    user_id: options.userId || null
+                    user_id: options.userId || null,
                 })
                 .select()
                 .single();
@@ -756,8 +756,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 description: originalFunnel.description,
                 settings: originalFunnel.settings,
                 pages: originalFunnel.pages,
-                quizSteps: originalFunnel.quizSteps
-            }
+                quizSteps: originalFunnel.quizSteps,
+            },
         );
 
         return duplicated;
@@ -776,16 +776,16 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 payload: {
                     user: data.user,
                     isAuthenticated: true,
-                    isLoading: false
-                }
+                    isLoading: false,
+                },
             });
         } catch (error: any) {
             dispatch({
                 type: 'SET_AUTH_STATE',
                 payload: {
                     error: error.message,
-                    isLoading: false
-                }
+                    isLoading: false,
+                },
             });
         }
     }, []);
@@ -798,8 +798,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 payload: {
                     user: null,
                     isAuthenticated: false,
-                    error: null
-                }
+                    error: null,
+                },
             });
         } catch (error: any) {
             dispatch({ type: 'SET_AUTH_STATE', payload: { error: error.message } });
@@ -818,16 +818,16 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 payload: {
                     user: data.user,
                     isAuthenticated: !!data.user,
-                    isLoading: false
-                }
+                    isLoading: false,
+                },
             });
         } catch (error: any) {
             dispatch({
                 type: 'SET_AUTH_STATE',
                 payload: {
                     error: error.message,
-                    isLoading: false
-                }
+                    isLoading: false,
+                },
             });
         }
     }, []);
@@ -854,7 +854,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     const togglePreviewMode = useCallback(() => {
         dispatch({
             type: 'SET_EDITOR_STATE',
-            payload: { isPreviewMode: !state.editor.isPreviewMode }
+            payload: { isPreviewMode: !state.editor.isPreviewMode },
         });
     }, [state.editor.isPreviewMode]);
 
@@ -873,8 +873,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 type: 'info',
                 title: 'Copiado!',
                 message: 'Item copiado para a área de transferência',
-                duration: 2000
-            }
+                duration: 2000,
+            },
         });
     }, []);
 
@@ -915,7 +915,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         const id = Date.now().toString();
         dispatch({
             type: 'ADD_TOAST',
-            payload: { ...toast, id }
+            payload: { ...toast, id },
         });
 
         // Auto remove toast
@@ -941,21 +941,21 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
     const toggleSidebar = useCallback(() => {
         dispatch({
             type: 'SET_UI_STATE',
-            payload: { showSidebar: !state.ui.showSidebar }
+            payload: { showSidebar: !state.ui.showSidebar },
         });
     }, [state.ui.showSidebar]);
 
     const togglePropertiesPanel = useCallback(() => {
         dispatch({
             type: 'SET_UI_STATE',
-            payload: { showPropertiesPanel: !state.ui.showPropertiesPanel }
+            payload: { showPropertiesPanel: !state.ui.showPropertiesPanel },
         });
     }, [state.ui.showPropertiesPanel]);
 
     const setLoading = useCallback((loading: boolean, message?: string) => {
         dispatch({
             type: 'SET_LOADING',
-            payload: { section: 'general', loading, message }
+            payload: { section: 'general', loading, message },
         });
     }, []);
 
@@ -964,7 +964,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         if (section) {
             dispatch({
                 type: 'UPDATE_CACHE',
-                payload: { key: section, data: {} }
+                payload: { key: section, data: {} },
             });
         } else {
             // Clear all cache
@@ -972,7 +972,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 if (key !== 'hitRate') {
                     dispatch({
                         type: 'UPDATE_CACHE',
-                        payload: { key, data: {} }
+                        payload: { key, data: {} },
                     });
                 }
             });
@@ -987,7 +987,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         return {
             hitRate: state.cache.hitRate,
             itemCount,
-            memoryUsage: JSON.stringify(state.cache).length
+            memoryUsage: JSON.stringify(state.cache).length,
         };
     }, [state.cache]);
 
@@ -1005,14 +1005,14 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
             if (now - state.cache.lastUpdated[key] > maxAge) {
                 dispatch({
                     type: 'UPDATE_CACHE',
-                    payload: { key, data: {} }
+                    payload: { key, data: {} },
                 });
             }
         });
 
         dispatch({
             type: 'UPDATE_PERFORMANCE',
-            payload: { lastOptimization: now }
+            payload: { lastOptimization: now },
         });
     }, [state.cache.lastUpdated]);
 
@@ -1021,7 +1021,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         const newValue = enabled !== undefined ? enabled : !state.features[feature];
         dispatch({
             type: 'TOGGLE_FEATURE',
-            payload: { feature, enabled: newValue }
+            payload: { feature, enabled: newValue },
         });
     }, [state.features]);
 
@@ -1051,8 +1051,8 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                     payload: {
                         user: session?.user || null,
                         isAuthenticated: !!session?.user,
-                        isLoading: false
-                    }
+                        isLoading: false,
+                    },
                 });
             });
             subscription = (result as any)?.data?.subscription || null;
@@ -1128,7 +1128,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
 
         // Feature flags
         toggleFeature,
-        isFeatureEnabled
+        isFeatureEnabled,
     }), [
         state,
         loadFunnels, loadFunnel, saveFunnel, createFunnel, deleteFunnel, duplicateFunnel,
@@ -1139,7 +1139,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
         showToast, hideToast, openModal, closeModal, toggleSidebar, togglePropertiesPanel, setLoading,
         clearCache, getCacheStats,
         getPerformanceMetrics, optimizePerformance,
-        toggleFeature, isFeatureEnabled
+        toggleFeature, isFeatureEnabled,
     ]);
 
     // ✅ Debug apenas quando necessário (não a cada render)
@@ -1149,7 +1149,7 @@ export const SuperUnifiedProvider: React.FC<SuperUnifiedProviderProps> = ({
                 funnelsCount: state.funnels.length,
                 currentFunnel: state.currentFunnel?.name,
                 isAuthenticated: state.auth.isAuthenticated,
-                theme: state.theme.theme
+                theme: state.theme.theme,
             });
         }
     }, [debugMode]); // Só executa uma vez no mount
@@ -1180,7 +1180,7 @@ export const useUnifiedAuth = () => {
         logout: signOut, // ✅ Alias para compatibilidade
         signUp,
         login: signIn, // ✅ Alias para compatibilidade
-        signup: signUp // ✅ Alias para compatibilidade
+        signup: signUp, // ✅ Alias para compatibilidade
     };
 };
 
@@ -1192,7 +1192,7 @@ export const useUnifiedTheme = () => {
     return {
         ...state.theme,
         setTheme,
-        updateThemeColors
+        updateThemeColors,
     };
 };
 
@@ -1204,7 +1204,7 @@ export const useUnifiedEditor = () => {
         togglePreviewMode,
         enableDragDrop,
         copyToClipboard,
-        pasteFromClipboard
+        pasteFromClipboard,
     } = useSuperUnified();
 
     return {
@@ -1214,7 +1214,7 @@ export const useUnifiedEditor = () => {
         togglePreviewMode,
         enableDragDrop,
         copyToClipboard,
-        pasteFromClipboard
+        pasteFromClipboard,
     };
 };
 
@@ -1227,7 +1227,7 @@ export const useUnifiedUI = () => {
         closeModal,
         toggleSidebar,
         togglePropertiesPanel,
-        setLoading
+        setLoading,
     } = useSuperUnified();
 
     return {
@@ -1238,7 +1238,7 @@ export const useUnifiedUI = () => {
         closeModal,
         toggleSidebar,
         togglePropertiesPanel,
-        setLoading
+        setLoading,
     };
 };
 
@@ -1250,7 +1250,7 @@ export const useUnifiedFunnels = () => {
         saveFunnel,
         createFunnel,
         deleteFunnel,
-        duplicateFunnel
+        duplicateFunnel,
     } = useSuperUnified();
 
     return {
@@ -1263,7 +1263,7 @@ export const useUnifiedFunnels = () => {
         saveFunnel,
         createFunnel,
         deleteFunnel,
-        duplicateFunnel
+        duplicateFunnel,
     };
 };
 

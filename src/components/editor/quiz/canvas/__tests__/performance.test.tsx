@@ -37,7 +37,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
           block={mockBlock}
           isSelected={false}
           onSelect={() => {}}
-        />
+        />,
       );
       
       const end = performance.now();
@@ -52,7 +52,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
           block={mockBlock}
           isSelected={false}
           onSelect={() => {}}
-        />
+        />,
       );
       
       const initialRenders = MemoizationMetrics.getStats('EditableBlock').renders;
@@ -63,7 +63,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
           block={mockBlock}
           isSelected={false}
           onSelect={() => {}}
-        />
+        />,
       );
       
       const finalRenders = MemoizationMetrics.getStats('EditableBlock').renders;
@@ -78,7 +78,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
           block={mockBlock}
           isSelected={false}
           onSelect={() => {}}
-        />
+        />,
       );
       
       const initialRenders = MemoizationMetrics.getStats('EditableBlock').renders;
@@ -89,7 +89,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
           block={mockBlock}
           isSelected={true}
           onSelect={() => {}}
-        />
+        />,
       );
       
       const finalRenders = MemoizationMetrics.getStats('EditableBlock').renders;
@@ -106,7 +106,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
       render(
         <PreviewBlock
           block={mockBlock}
-        />
+        />,
       );
       
       const end = performance.now();
@@ -117,7 +117,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
 
     it('should have high memoization hit rate (>80%)', () => {
       const { rerender } = render(
-        <PreviewBlock block={mockBlock} />
+        <PreviewBlock block={mockBlock} />,
       );
       
       // Fazer 10 re-renders com mesmas props
@@ -146,7 +146,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
         <IsolatedPreview
           blocks={blocks}
           funnelId="test"
-        />
+        />,
       );
       
       const end = performance.now();
@@ -171,7 +171,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
           block={mockBlock}
           isSelected={false}
           onSelect={() => {}}
-        />
+        />,
       );
       
       // Fazer 100 re-renders
@@ -181,7 +181,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
             block={{ ...mockBlock, content: { text: `Test ${i}` } }}
             isSelected={i % 2 === 0}
             onSelect={() => {}}
-          />
+          />,
         );
       }
       
@@ -200,7 +200,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
           block={mockBlock}
           isSelected={false}
           onSelect={() => {}}
-        />
+        />,
       );
       
       // 5 re-renders
@@ -210,7 +210,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
             block={mockBlock}
             isSelected={false}
             onSelect={() => {}}
-          />
+          />,
         );
       }
       
@@ -222,7 +222,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
 
     it('should calculate hit rate correctly', () => {
       const { rerender } = render(
-        <PreviewBlock block={mockBlock} />
+        <PreviewBlock block={mockBlock} />,
       );
       
       // 10 re-renders com mesmas props (deve memoizar todas)
@@ -253,7 +253,7 @@ describe('Performance Benchmarks', () => {
           block={mockBlock}
           isSelected={false}
           onSelect={() => {}}
-        />
+        />,
       );
       
       const end = performance.now();

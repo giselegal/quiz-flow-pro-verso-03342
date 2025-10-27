@@ -16,7 +16,7 @@ interface HeadlineBlockProps {
 
 const HeadlineBlock: React.FC<HeadlineBlockProps> = ({
   block,
-  isSelected
+  isSelected,
 }) => {
   const { content = {}, properties = {} } = block;
   

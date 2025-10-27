@@ -32,8 +32,8 @@ export const DraggableComponentItemForce: React.FC<DraggableComponentItemProps> 
   const data = {
     type: 'sidebar-component',
     blockType: String(blockType),
-    title: title,
-    description: description,
+    title,
+    description,
     category: category || 'default',
     source: 'sidebar',
   };
@@ -50,7 +50,7 @@ export const DraggableComponentItemForce: React.FC<DraggableComponentItemProps> 
         'pointer-events-auto touch-manipulation select-none',
         'dnd-draggable-item',
         disabled && 'opacity-30 cursor-not-allowed bg-gray-900/30',
-        className
+        className,
       )}
       // Fallback: permitir adicionar por duplo clique
       onDoubleClick={() => {

@@ -23,7 +23,7 @@ export const NoCodePropertiesPanelClean: React.FC<NoCodePropertiesPanelCleanProp
   onUpdate,
   onDuplicate,
   onDelete,
-  onReset
+  onReset,
 }) => {
   return (
     <div className="h-full w-full">

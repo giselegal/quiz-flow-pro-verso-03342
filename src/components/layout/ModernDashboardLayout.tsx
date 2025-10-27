@@ -33,7 +33,7 @@ import {
     Copy,
     Shield,
     Brain,
-    HardDrive
+    HardDrive,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -44,7 +44,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 
@@ -73,7 +73,7 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
     children,
     title,
     subtitle,
-    actions
+    actions,
 }) => {
     const [location] = useLocation();
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -85,28 +85,28 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                 {
                     href: '/dashboard',
                     label: 'Overview',
-                    icon: LayoutDashboard
+                    icon: LayoutDashboard,
                 },
                 {
                     href: '/dashboard/analytics',
                     label: 'Analytics',
                     icon: BarChart3,
                     badge: 'Novo',
-                    badgeVariant: 'default'
+                    badgeVariant: 'default',
                 },
                 {
                     href: '/dashboard/real-time',
                     label: 'Tempo Real',
-                    icon: Activity
+                    icon: Activity,
                 },
                 {
                     href: '/dashboard/monitoring',
                     label: 'Monitoramento',
                     icon: Shield,
                     badge: 'Live',
-                    badgeVariant: 'default'
-                }
-            ]
+                    badgeVariant: 'default',
+                },
+            ],
         },
         {
             label: 'Conteúdo',
@@ -116,21 +116,21 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                     label: 'Meus Funis',
                     icon: Target,
                     badge: 'Live',
-                    badgeVariant: 'default'
+                    badgeVariant: 'default',
                 },
                 {
                     href: '/dashboard/funnel-templates',
                     label: 'Templates de Funis',
                     icon: Copy,
                     badge: 'Templates',
-                    badgeVariant: 'secondary'
+                    badgeVariant: 'secondary',
                 },
                 {
                     href: '/dashboard/templates',
                     label: 'Biblioteca de Templates',
-                    icon: Database
-                }
-            ]
+                    icon: Database,
+                },
+            ],
         },
         {
             label: 'IA & Otimização',
@@ -140,16 +140,16 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                     label: 'IA & Otimização',
                     icon: Brain,
                     badge: 'AI',
-                    badgeVariant: 'default'
+                    badgeVariant: 'default',
                 },
                 {
                     href: '/dashboard/backup',
                     label: 'Backup & Recovery',
                     icon: HardDrive,
                     badge: 'Pro',
-                    badgeVariant: 'secondary'
-                }
-            ]
+                    badgeVariant: 'secondary',
+                },
+            ],
         },
         {
             label: 'Ferramentas',
@@ -160,19 +160,19 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                     icon: Edit3,
                     badge: 'Editor',
                     badgeVariant: 'secondary',
-                    isExternal: true
+                    isExternal: true,
                 },
                 {
                     href: '/dashboard/ab-tests',
                     label: 'Testes A/B',
-                    icon: TestTube
+                    icon: TestTube,
                 },
                 {
                     href: '/dashboard/creatives',
                     label: 'Criativos',
-                    icon: Palette
-                }
-            ]
+                    icon: Palette,
+                },
+            ],
         },
         {
             label: 'Sistema',
@@ -180,15 +180,15 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                 {
                     href: '/dashboard/settings',
                     label: 'Configurações',
-                    icon: Settings
+                    icon: Settings,
                 },
                 {
                     href: '/dashboard/integrations',
                     label: 'Integrações',
-                    icon: Zap
-                }
-            ]
-        }
+                    icon: Zap,
+                },
+            ],
+        },
     ];
 
     const isCurrentPath = (href: string) => {
@@ -215,13 +215,13 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
             'ab-tests': 'Testes A/B',
             'creatives': 'Criativos',
             'settings': 'Configurações',
-            'integrations': 'Integrações'
+            'integrations': 'Integrações',
         };
 
         return segments.map((segment, index) => ({
             label: breadcrumbMap[segment] || segment.charAt(0).toUpperCase() + segment.slice(1),
-            path: '/' + segments.slice(0, index + 1).join('/'),
-            isLast: index === segments.length - 1
+            path: `/${  segments.slice(0, index + 1).join('/')}`,
+            isLast: index === segments.length - 1,
         }));
     }, [location]);
 
@@ -237,8 +237,8 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
 
             {/* Sidebar */}
             <aside className={cn(
-                "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0",
-                sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                'fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0',
+                sidebarOpen ? 'translate-x-0' : '-translate-x-full',
             )}>
                 {/* Sidebar Header */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -272,15 +272,15 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
 
                                     const linkContent = (
                                         <div className={cn(
-                                            "flex items-center justify-between w-full px-3 py-2 text-sm rounded-lg transition-colors",
+                                            'flex items-center justify-between w-full px-3 py-2 text-sm rounded-lg transition-colors',
                                             isActive
-                                                ? "bg-blue-50 text-blue-700 border border-blue-200"
-                                                : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900',
                                         )}>
                                             <div className="flex items-center space-x-3">
                                                 <IconComponent className={cn(
-                                                    "w-5 h-5",
-                                                    isActive ? "text-blue-600" : "text-gray-500"
+                                                    'w-5 h-5',
+                                                    isActive ? 'text-blue-600' : 'text-gray-500',
                                                 )} />
                                                 <span className="font-medium">{item.label}</span>
                                             </div>

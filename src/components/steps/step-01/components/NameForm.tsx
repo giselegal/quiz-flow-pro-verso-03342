@@ -45,7 +45,7 @@ const NameForm: React.FC<NameFormProps> = ({
     primaryColor = '#B89B7A',
     focusColor = '#A1835D',
     isEditable = false,
-    disabled = false
+    disabled = false,
 }) => {
     const [nome, setNome] = useState(initialValue);
     const [isValid, setIsValid] = useState(false);
@@ -110,7 +110,7 @@ const NameForm: React.FC<NameFormProps> = ({
                         onKeyPress={handleKeyPress}
                         className="w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors"
                         style={{
-                            borderColor: primaryColor
+                            borderColor: primaryColor,
                         }}
                         autoFocus={autoFocus}
                         required={required}
@@ -126,7 +126,7 @@ const NameForm: React.FC<NameFormProps> = ({
                     style={{
                         backgroundColor: isValid ? primaryColor : `${primaryColor}80`, // 80 = 50% opacity
                         color: isValid ? 'white' : 'rgba(255, 255, 255, 0.9)',
-                        cursor: isValid ? 'pointer' : 'not-allowed'
+                        cursor: isValid ? 'pointer' : 'not-allowed',
                     }}
                     disabled={!isValid || disabled}
                     onMouseEnter={(e) => {

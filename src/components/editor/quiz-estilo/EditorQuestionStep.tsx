@@ -19,7 +19,7 @@ export default function EditorQuestionStep({
     currentAnswers = [],
     onAnswersChange,
     onEdit,
-    isEditable = false
+    isEditable = false,
 }: EditorQuestionStepProps) {
 
     // Dados seguros com fallbacks
@@ -31,8 +31,8 @@ export default function EditorQuestionStep({
         options: data.options || [
             { id: 'opt1', text: 'Opção 1', image: undefined },
             { id: 'opt2', text: 'Opção 2', image: undefined },
-            { id: 'opt3', text: 'Opção 3', image: undefined }
-        ]
+            { id: 'opt3', text: 'Opção 3', image: undefined },
+        ],
     };
 
     const hasImages = safeData.options[0]?.image;

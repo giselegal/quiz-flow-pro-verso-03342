@@ -83,13 +83,13 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
     },
     'border border-opacity-10 rounded-lg',
     isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
-    className
+    className,
   );
 
   const containerStyle = {
     backgroundColor,
     color: textColor,
-    borderColor: accentColor + '20',
+    borderColor: `${accentColor  }20`,
   };
 
   const getIcon = (iconName: string) => {
@@ -186,7 +186,7 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
                   <div key={index} className="text-center">
                     <div
                       className="w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: accentColor + '20' }}
+                      style={{ backgroundColor: `${accentColor  }20` }}
                     >
                       <IconComponent className="w-6 h-6" style={{ color: accentColor }} />
                     </div>

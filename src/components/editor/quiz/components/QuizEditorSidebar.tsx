@@ -32,7 +32,7 @@ const STEP_TYPE_LABELS: Record<string, string> = {
     'transition-result': '🔄 Transição para Resultado',
     result: '🎉 Resultado',
     offer: '💰 Oferta',
-    custom: '⚙️ Personalizado'
+    custom: '⚙️ Personalizado',
 };
 
 const STEP_TYPE_COLORS: Record<string, string> = {
@@ -42,7 +42,7 @@ const STEP_TYPE_COLORS: Record<string, string> = {
     transition: '#7C3AED',
     'transition-result': '#EA580C',
     result: '#0891B2',
-    offer: '#CA8A04'
+    offer: '#CA8A04',
 };
 
 const QuizEditorSidebar: React.FC<QuizEditorSidebarProps> = memo(({
@@ -55,12 +55,12 @@ const QuizEditorSidebar: React.FC<QuizEditorSidebarProps> = memo(({
     onSelectId,
     onReorderSteps,
     onDuplicateStep,
-    onDeleteStep
+    onDeleteStep,
 }) => {
     // Current steps based on system
     const currentSteps = useMemo(() =>
         useModularSystem ? modularSteps : steps,
-        [useModularSystem, modularSteps, steps]
+        [useModularSystem, modularSteps, steps],
     );
 
     // Get step display info
@@ -193,7 +193,7 @@ const QuizEditorSidebar: React.FC<QuizEditorSidebarProps> = memo(({
         handleDrop,
         onDuplicateStep,
         onDeleteStep,
-        currentSteps.length
+        currentSteps.length,
     ]);
 
     if (!currentSteps || currentSteps.length === 0) {

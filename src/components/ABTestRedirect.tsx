@@ -34,7 +34,7 @@ const ABTestRedirect: React.FC<ABTestRedirectProps> = ({ children }) => {
       console.log(
         `🎯 Acesso direto ao quiz solicitado - parâmetro: ${
           forceQuiz ? 'quiz=true' : 'skip-ab=true'
-        }`
+        }`,
       );
     }
   }, [location, setLocation]);

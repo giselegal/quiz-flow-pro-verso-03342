@@ -78,7 +78,7 @@ const PersonalizedHookInlineBlock: React.FC<BlockComponentProps> = ({
     },
     isSelected && 'ring-2 ring-blue-500 ring-opacity-50 rounded-lg',
     'rounded-lg border border-opacity-20',
-    className
+    className,
   );
 
   const handleCTAClick = () => {
@@ -99,7 +99,7 @@ const PersonalizedHookInlineBlock: React.FC<BlockComponentProps> = ({
   const containerStyle = {
     backgroundColor,
     color: textColor,
-    borderColor: accentColor + '33', // 20% opacity
+    borderColor: `${accentColor  }33`, // 20% opacity
   };
 
   return (
@@ -125,7 +125,7 @@ const PersonalizedHookInlineBlock: React.FC<BlockComponentProps> = ({
           <span
             className="px-4 py-2 rounded-full text-sm font-medium"
             style={{
-              backgroundColor: accentColor + '20',
+              backgroundColor: `${accentColor  }20`,
               color: accentColor,
               border: `1px solid ${accentColor}40`,
             }}

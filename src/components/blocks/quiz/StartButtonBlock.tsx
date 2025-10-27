@@ -174,7 +174,7 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
       ? 'hover:shadow-lg transform hover:scale-[1.02]'
       : '',
     enablePulseEffect && !disabled && !loading ? 'animate-pulse' : '',
-    className
+    className,
   );
 
   // Estilos do botão baseados na variante

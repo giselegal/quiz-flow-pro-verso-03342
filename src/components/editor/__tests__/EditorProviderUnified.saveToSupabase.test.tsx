@@ -58,7 +58,7 @@ describe('EditorProviderUnified.saveToSupabase', () => {
         render(
             <EditorProviderUnified enableSupabase={true} funnelId="f-1" initial={initial}>
                 <TriggerSave />
-            </EditorProviderUnified>
+            </EditorProviderUnified>,
         );
 
         await waitFor(() => {

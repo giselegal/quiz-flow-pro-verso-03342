@@ -82,7 +82,7 @@ const CharacteristicsListInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       style={{ backgroundColor }}
       onClick={onClick}

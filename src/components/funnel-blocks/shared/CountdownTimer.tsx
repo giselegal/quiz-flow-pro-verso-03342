@@ -36,9 +36,9 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
     minutes: number;
     seconds: number;
   }>({
-    hours: hours,
-    minutes: minutes,
-    seconds: seconds,
+    hours,
+    minutes,
+    seconds,
   });
   const [isRunning, setIsRunning] = useState(autoStart);
   const [isComplete, setIsComplete] = useState(false);
@@ -118,7 +118,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
       'gap-1 text-sm': variant === 'compact',
       'gap-4': variant === 'large',
     },
-    className
+    className,
   );
 
   const digitClasses = cn(
@@ -127,7 +127,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
       'w-12 h-12 text-xl': variant === 'default',
       'w-8 h-8 text-sm': variant === 'compact',
       'w-16 h-16 text-2xl': variant === 'large',
-    }
+    },
   );
 
   const separatorClasses = cn('text-gray-800 font-bold', {

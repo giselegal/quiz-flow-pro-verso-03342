@@ -7,19 +7,19 @@
 // 🎯 FASE P1: Unified App Provider (RECOMENDADO)
 export { 
   UnifiedAppProvider,
-  default as UnifiedAppProviderDefault
+  default as UnifiedAppProviderDefault,
 } from './UnifiedAppProvider';
 
 // ⚠️ DEPRECATED: Consolidated Provider (usar UnifiedAppProvider)
 export { 
   ConsolidatedProvider,
-  default as ConsolidatedProviderDefault
+  default as ConsolidatedProviderDefault,
 } from './ConsolidatedProvider';
 
 // Super Unified Provider
 export {
   default as SuperUnifiedProvider,
-  useSuperUnified
+  useSuperUnified,
 } from './SuperUnifiedProvider';
 
 // Funnel Master Provider (consolidates 5+ providers)
@@ -30,7 +30,7 @@ export {
   useUnifiedFunnel,
   useFunnelConfig,
   useQuizFlow,
-  useQuiz21Steps
+  useQuiz21Steps,
 } from './FunnelMasterProvider';
 
 // Optimized Provider Stack

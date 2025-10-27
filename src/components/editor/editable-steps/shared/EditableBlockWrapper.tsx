@@ -48,7 +48,7 @@ export const EditableBlockWrapper: React.FC<EditableBlockWrapperProps> = ({
     canDelete = true,
     className = '',
     style = {},
-    blockId
+    blockId,
 }) => {
 
     // 🎯 Handle click para seleção
@@ -82,8 +82,8 @@ export const EditableBlockWrapper: React.FC<EditableBlockWrapperProps> = ({
         ...style,
         ...(isSelected && {
             position: 'relative' as const,
-            zIndex: 10
-        })
+            zIndex: 10,
+        }),
     }), [style, isSelected]);
 
     return (

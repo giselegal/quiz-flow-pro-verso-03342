@@ -4,7 +4,7 @@ import { AtomicBlockProps } from '@/types/blockProps';
 export default function IntroLogoBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   const logoUrl = block.properties?.logoUrl || block.content?.logoUrl || '';
   const logoAlt = block.properties?.logoAlt || block.content?.logoAlt || 'Logo';

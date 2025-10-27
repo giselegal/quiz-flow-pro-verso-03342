@@ -179,7 +179,7 @@ describe('QuizNavigation', () => {
 
       testCases.forEach(({ current, total, expected }) => {
         const { rerender } = render(
-          <QuizNavigation {...defaultProps} currentStep={current} totalSteps={total} />
+          <QuizNavigation {...defaultProps} currentStep={current} totalSteps={total} />,
         );
 
         expect(screen.getByText(`${expected}% concluído`)).toBeInTheDocument();

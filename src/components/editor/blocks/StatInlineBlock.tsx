@@ -215,7 +215,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       minHeight="4rem"
       editLabel="Editar Estatística"
@@ -227,7 +227,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
           currentSize.padding,
           layout === 'vertical'
             ? 'flex flex-col items-center text-center'
-            : 'flex items-center gap-4'
+            : 'flex items-center gap-4',
         )}
         onClick={handleClick}
       >
@@ -236,7 +236,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
           <div
             className={cn(
               'flex-shrink-0 p-2 bg-gray-50 rounded-full',
-              layout === 'vertical' && 'mb-2'
+              layout === 'vertical' && 'mb-2',
             )}
           >
             {getIcon()}
@@ -250,7 +250,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
             className={cn(
               'font-bold text-gray-800 leading-none',
               currentSize.value,
-              isAnimating && 'animate-pulse'
+              isAnimating && 'animate-pulse',
             )}
           >
             <InlineEditableText

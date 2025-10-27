@@ -33,7 +33,7 @@ const DividerInlineBlock: React.FC<Props> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       style={{ marginTop: `${marginY}px`, marginBottom: `${marginY}px` }}
       {...props}

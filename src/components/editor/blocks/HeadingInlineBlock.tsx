@@ -12,7 +12,7 @@ import type { BlockComponentProps } from '@/types/blocks';
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: number | string,
-  type: 'top' | 'bottom' | 'left' | 'right'
+  type: 'top' | 'bottom' | 'left' | 'right',
 ) => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
@@ -161,7 +161,7 @@ const HeadingTag = tagName as keyof JSX.IntrinsicElements;
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={onClick}
     >
@@ -176,7 +176,7 @@ const HeadingTag = tagName as keyof JSX.IntrinsicElements;
           // Largura máxima
           maxWidthClasses[maxWidth as keyof typeof maxWidthClasses],
           // Visual
-          'leading-tight tracking-tight transition-colors duration-200'
+          'leading-tight tracking-tight transition-colors duration-200',
         )}
         style={{
           color,

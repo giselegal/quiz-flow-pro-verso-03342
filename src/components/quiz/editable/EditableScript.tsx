@@ -22,7 +22,7 @@ export default function EditableScript({
     code = '',
     visible = false,
     isEditable = false,
-    onEdit = () => { }
+    onEdit = () => { },
 }: EditableScriptProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [localCode, setLocalCode] = useState(code);

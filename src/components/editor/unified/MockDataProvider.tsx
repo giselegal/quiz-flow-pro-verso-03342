@@ -72,7 +72,7 @@ export const MockDataProvider: React.FC<{
     selectedOptions: {
       2: ['opcao1', 'opcao2', 'opcao3'],
       3: ['opcao1', 'opcao4', 'opcao6'],
-    }
+    },
   }));
 
   const resultData = React.useMemo((): MockResultData => ({
@@ -81,30 +81,30 @@ export const MockDataProvider: React.FC<{
       category: 'Clássico',
       percentage: 85,
       description: 'Seu estilo clássico reflete elegância e sofisticação. Você aprecia peças atemporais e bem estruturadas que transmitem confiança e profissionalismo.',
-      score: 85
+      score: 85,
     },
     secondaryStyles: [
       { 
         style: 'Romântico', 
         category: 'Romântico', 
         percentage: 65, 
-        score: 65 
+        score: 65, 
       },
       { 
         style: 'Natural', 
         category: 'Natural', 
         percentage: 45, 
-        score: 45 
-      }
+        score: 45, 
+      },
     ],
-    userName: quizState.userName
+    userName: quizState.userName,
   }), [quizState.userName]);
 
   const updateQuizState = React.useCallback((updates: Partial<MockQuizState>) => {
     setQuizState(prev => ({
       ...prev,
       ...updates,
-      progress: updates.currentStep ? (updates.currentStep / prev.totalSteps) * 100 : prev.progress
+      progress: updates.currentStep ? (updates.currentStep / prev.totalSteps) * 100 : prev.progress,
     }));
   }, []);
 
@@ -113,12 +113,12 @@ export const MockDataProvider: React.FC<{
       ...prev,
       answers: {
         ...prev.answers,
-        [step]: answer
+        [step]: answer,
       },
       validationStates: {
         ...prev.validationStates,
-        [`step-${step}`]: true
-      }
+        [`step-${step}`]: true,
+      },
     }));
   }, []);
 
@@ -127,8 +127,8 @@ export const MockDataProvider: React.FC<{
       ...prev,
       validationStates: {
         ...prev.validationStates,
-        [blockId]: isValid
-      }
+        [blockId]: isValid,
+      },
     }));
   }, []);
 
@@ -173,10 +173,10 @@ export const useMockData = (): MockDataContextType => {
           category: 'Clássico',
           percentage: 85,
           description: 'Estilo clássico e elegante',
-          score: 85
+          score: 85,
         },
         secondaryStyles: [],
-        userName: 'Usuário Teste'
+        userName: 'Usuário Teste',
       },
       updateQuizState: () => {},
       simulateAnswer: () => {},
@@ -226,7 +226,7 @@ export const useMockStepData = (step: number, funnelId: string = 'quiz21StepsCom
           { id: 'opcao4', text: 'Opção 4 - Mockada', description: 'Descrição da opção 4' },
           { id: 'opcao5', text: 'Opção 5 - Mockada', description: 'Descrição da opção 5' },
           { id: 'opcao6', text: 'Opção 6 - Mockada', description: 'Descrição da opção 6' },
-        ]
+        ],
       };
     }
 

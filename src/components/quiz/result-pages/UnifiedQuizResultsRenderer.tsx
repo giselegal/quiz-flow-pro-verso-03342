@@ -166,7 +166,7 @@ export class UnifiedQuizResultsRenderer {
      */
     renderResult(
         result: UnifiedQuizResult,
-        options: ResultRenderOptions = {}
+        options: ResultRenderOptions = {},
     ): React.ReactElement {
         const finalOptions = this.mergeOptions(options);
 
@@ -211,7 +211,7 @@ export class UnifiedQuizResultsRenderer {
      */
     renderFullResult(
         result: UnifiedQuizResult,
-        options: ResultRenderOptions = {}
+        options: ResultRenderOptions = {},
     ): React.ReactElement {
         const { secondaryStyles, tips } = result;
 
@@ -252,7 +252,7 @@ export class UnifiedQuizResultsRenderer {
                     <div className="flex items-center justify-center mb-4">
                         <CheckCircle className="w-8 h-8 text-green-600 mr-3" />
                         <CardTitle className="text-2xl font-bold text-center text-[#432818]">
-                            {congratulationsText || "🎉 Resultado do Quiz Completo!"}
+                            {congratulationsText || '🎉 Resultado do Quiz Completo!'}
                         </CardTitle>
                     </div>
 
@@ -354,7 +354,7 @@ export class UnifiedQuizResultsRenderer {
      */
     private renderSecondaryStyles(
         secondaryStyles: NonNullable<UnifiedQuizResult['secondaryStyles']>,
-        _options: ResultRenderOptions
+        _options: ResultRenderOptions,
     ): React.ReactElement {
         return (
             <Card className="w-full shadow-lg rounded-2xl bg-gradient-to-br from-gray-50 to-slate-100">
@@ -451,7 +451,7 @@ export class UnifiedQuizResultsRenderer {
      */
     private renderCta(
         cta: NonNullable<UnifiedQuizResult['cta']>,
-        options: ResultRenderOptions
+        options: ResultRenderOptions,
     ): React.ReactElement {
         const handleClick = () => {
             if (options.onCtaClick) {
@@ -512,7 +512,7 @@ export class UnifiedQuizResultsRenderer {
         return {
             isValid,
             errors,
-            warnings
+            warnings,
         };
     }
 
@@ -534,7 +534,7 @@ export class UnifiedQuizResultsRenderer {
             onCtaClick: () => { },
             onShareClick: () => { },
             onRetryClick: () => { },
-            ...options
+            ...options,
         };
     }
 
@@ -551,7 +551,7 @@ export class UnifiedQuizResultsRenderer {
         const sizes = {
             small: 'w-16 h-16',
             medium: 'w-32 h-32 md:w-40 md:h-40',
-            large: 'w-48 h-48 md:w-56 md:h-56'
+            large: 'w-48 h-48 md:w-56 md:h-56',
         };
 
         return `${sizes[size]} object-cover rounded-2xl shadow-lg`;

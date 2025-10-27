@@ -82,7 +82,7 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
     },
     'rounded-lg border-2',
     isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
-    className
+    className,
   );
 
   const containerStyle = {
@@ -178,7 +178,7 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Trust Badges */}
         {showTrustBadges && trustBadges.length > 0 && (
-          <div className="border-t pt-6" style={{ borderColor: borderColor + '30' }}>
+          <div className="border-t pt-6" style={{ borderColor: `${borderColor  }30` }}>
             <div className="flex flex-wrap items-center justify-center gap-6">
               {trustBadges.map((badge: any, index: number) => {
                 const IconComponent = getIcon(badge.icon);

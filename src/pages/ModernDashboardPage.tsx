@@ -73,7 +73,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                     Novo Funil
                 </Button>
             </div>
-        )
+        ),
     },
     '/dashboard/analytics': {
         title: 'Analytics',
@@ -89,7 +89,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                     Exportar
                 </Button>
             </div>
-        )
+        ),
     },
     '/dashboard/real-time': {
         title: 'Tempo Real',
@@ -99,7 +99,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Auto-refresh
             </Button>
-        )
+        ),
     },
     '/dashboard/monitoring': {
         title: 'Monitoramento Avançado',
@@ -109,7 +109,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Atualizar Status
             </Button>
-        )
+        ),
     },
     '/dashboard/ai-optimization': {
         title: 'IA & Otimização',
@@ -119,7 +119,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                 <Plus className="w-4 h-4 mr-2" />
                 Executar Análise
             </Button>
-        )
+        ),
     },
     '/dashboard/backup': {
         title: 'Backup & Recovery',
@@ -129,7 +129,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                 <Plus className="w-4 h-4 mr-2" />
                 Criar Backup
             </Button>
-        )
+        ),
     },
     '/dashboard/funnels': {
         title: 'Meus Funis',
@@ -139,7 +139,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Funil
             </Button>
-        )
+        ),
     },
     '/dashboard/funnel-templates': {
         title: 'Templates de Funis',
@@ -149,7 +149,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                 <Plus className="w-4 h-4 mr-2" />
                 Criar Template
             </Button>
-        )
+        ),
     },
     '/dashboard/participants': {
         title: 'Participantes',
@@ -165,7 +165,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                     Exportar
                 </Button>
             </div>
-        )
+        ),
     },
     '/dashboard/facebook-metrics': {
         title: 'Facebook Ads',
@@ -181,7 +181,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                     Exportar
                 </Button>
             </div>
-        )
+        ),
     },
     '/dashboard/ab-tests': {
         title: 'Testes A/B',
@@ -191,7 +191,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Teste
             </Button>
-        )
+        ),
     },
     '/dashboard/creatives': {
         title: 'Criativos',
@@ -201,7 +201,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Criativo
             </Button>
-        )
+        ),
     },
     '/dashboard/templates': {
         title: 'Templates',
@@ -214,7 +214,7 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
     '/dashboard/settings': {
         title: 'Configurações',
         subtitle: 'Personalize e configure o sistema',
-    }
+    },
 };
 
 const ModernDashboardPage: React.FC = () => {

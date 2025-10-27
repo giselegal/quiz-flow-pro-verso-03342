@@ -70,7 +70,7 @@ const ResourcePreloader: React.FC = () => {
       // Limpar links de preconnect quando componente desmontar
       document
         .querySelectorAll(
-          'link[rel="preconnect"], link[rel="dns-prefetch"], link[rel="preload"][as="image"]'
+          'link[rel="preconnect"], link[rel="dns-prefetch"], link[rel="preload"][as="image"]',
         )
         .forEach(el => {
           const href = el.getAttribute('href');

@@ -21,7 +21,7 @@ const TemplatesFunisPage: React.FC = () => {
         AVAILABLE_TEMPLATES,
         totalTemplates: AVAILABLE_TEMPLATES.length,
         activeTemplates: TemplateService.getActiveTemplates(),
-        quiz21Template: TemplateService.getTemplate('quiz21StepsComplete')
+        quiz21Template: TemplateService.getTemplate('quiz21StepsComplete'),
     });
 
     const filteredTemplates = React.useMemo(() => {
@@ -46,7 +46,7 @@ const TemplatesFunisPage: React.FC = () => {
             result = result.filter(template =>
                 template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+                template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())),
             );
         }
 
@@ -60,7 +60,7 @@ const TemplatesFunisPage: React.FC = () => {
         selectedDifficulty,
         searchTerm,
         filteredCount: filteredTemplates.length,
-        filteredTemplates: filteredTemplates.map(t => ({ id: t.id, name: t.name, isActive: t.isActive }))
+        filteredTemplates: filteredTemplates.map(t => ({ id: t.id, name: t.name, isActive: t.isActive })),
     });
 
     const handleUseTemplate = (templateId: string) => {
@@ -187,7 +187,7 @@ const TemplatesFunisPage: React.FC = () => {
                                             style={{
                                                 backgroundColor: template.difficulty === 'Fácil' ? '#10B981' :
                                                     template.difficulty === 'Intermediário' ? '#F59E0B' : '#EF4444',
-                                                color: 'white'
+                                                color: 'white',
                                             }}
                                         >
                                             {template.difficulty}

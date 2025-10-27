@@ -15,14 +15,14 @@ interface QuizPerformanceDebugProps {
 
 export function QuizPerformanceDebug({ 
   showMetrics = true, 
-  currentStep = 1 
+  currentStep = 1, 
 }: QuizPerformanceDebugProps) {
   const {
     metrics,
     isLoading,
     cacheSize,
     getQuizMetrics,
-    navigateToStep
+    navigateToStep,
   } = useQuiz21Performance();
 
   const quizMetrics = getQuizMetrics();

@@ -97,7 +97,7 @@ export function persistResultPayload(userName: string, primary?: string, seconda
             userName,
             primaryStyle: primary,
             secondaryStyles: secondary,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         };
         StorageService.safeSetJSON('quizResultPayload', payload);
         return true;
@@ -126,5 +126,5 @@ export default {
     detectCycle,
     persistResultPayload,
     persistOffer,
-    getDefaultSteps
+    getDefaultSteps,
 };

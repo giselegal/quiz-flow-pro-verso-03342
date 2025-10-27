@@ -16,7 +16,7 @@ stepRegistry.register({
     config: {
         allowNavigation: {
             next: true,
-            previous: false // Primeira etapa não permite voltar
+            previous: false, // Primeira etapa não permite voltar
         },
         validation: {
             required: true,
@@ -25,16 +25,16 @@ stepRegistry.register({
                     field: 'userName',
                     required: true,
                     minLength: 2,
-                    message: 'Nome deve ter pelo menos 2 caracteres'
-                }
-            ]
+                    message: 'Nome deve ter pelo menos 2 caracteres',
+                },
+            ],
         },
         metadata: {
             description: 'Etapa de apresentação e captura do nome do usuário',
             category: 'intro',
-            estimatedTime: 30 // 30 segundos
-        }
-    }
+            estimatedTime: 30, // 30 segundos
+        },
+    },
 });
 
 // Exports principais

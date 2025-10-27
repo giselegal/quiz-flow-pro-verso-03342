@@ -62,7 +62,7 @@ const StepHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         // Estados do editor
         isSelected && 'ring-2 ring-[#432818] ring-offset-2',
         'cursor-pointer transition-all duration-200',
-        className
+        className,
       )}
       style={{
         backgroundColor: backgroundColor === 'transparent' ? undefined : backgroundColor,
@@ -76,7 +76,7 @@ const StepHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         className={cn(
           'object-cover rounded-lg',
           // Tamanho responsivo baseado no logoWidth
-          logoWidth <= 64 ? 'max-w-16' : logoWidth <= 96 ? 'max-w-24' : 'max-w-32'
+          logoWidth <= 64 ? 'max-w-16' : logoWidth <= 96 ? 'max-w-24' : 'max-w-32',
         )}
         alt={logoAlt}
         src={logoUrl}

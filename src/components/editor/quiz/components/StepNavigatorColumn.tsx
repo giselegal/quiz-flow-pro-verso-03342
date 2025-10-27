@@ -49,7 +49,7 @@ export const StepNavigatorColumn: React.FC<StepNavigatorColumnProps> = ({
               variant={currentStep === step.id ? 'default' : 'ghost'}
               className={cn(
                 'w-full justify-start text-left gap-2',
-                currentStep === step.id && 'bg-primary text-primary-foreground'
+                currentStep === step.id && 'bg-primary text-primary-foreground',
               )}
               onClick={() => onStepChange(step.id)}
             >

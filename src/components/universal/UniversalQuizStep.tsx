@@ -24,7 +24,7 @@ const UniversalQuizStep: React.FC<UniversalQuizStepProps> = ({
     stepNumber,
     onNext,
     onBack,
-    data
+    data,
 }) => {
     const {
         config,
@@ -37,11 +37,11 @@ const UniversalQuizStep: React.FC<UniversalQuizStepProps> = ({
         canGoBack,
         shouldShowProgress,
         validationMessage,
-        theme
+        theme,
     } = useStepConfig({
         funnelId,
         stepNumber,
-        onAutoAdvance: onNext // Auto-avanço automático!
+        onAutoAdvance: onNext, // Auto-avanço automático!
     });
 
     if (isLoading) {
@@ -65,7 +65,7 @@ const UniversalQuizStep: React.FC<UniversalQuizStepProps> = ({
                     <div
                         className="bg-blue-600 h-2 transition-all duration-300"
                         style={{
-                            width: `${(stepNumber / (data.totalSteps || 21)) * 100}%`
+                            width: `${(stepNumber / (data.totalSteps || 21)) * 100}%`,
                         }}
                     />
                 </div>
@@ -93,7 +93,7 @@ const UniversalQuizStep: React.FC<UniversalQuizStepProps> = ({
                                 type="text"
                                 value={inputValue}
                                 onChange={(e) => updateInput(e.target.value)}
-                                placeholder={data.placeholder || "Digite sua resposta..."}
+                                placeholder={data.placeholder || 'Digite sua resposta...'}
                                 className="w-full p-4 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:outline-none"
                                 maxLength={config.validation.maxLength}
                                 minLength={config.validation.minLength}

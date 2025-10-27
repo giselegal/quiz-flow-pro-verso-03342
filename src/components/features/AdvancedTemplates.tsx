@@ -17,7 +17,7 @@ import {
   Star,
   Download,
   Eye,
-  Wand2
+  Wand2,
 } from 'lucide-react';
 
 interface TemplateView {
@@ -58,7 +58,7 @@ const AdvancedTemplates: React.FC = () => {
         usageCount: 1247,
         isNew: false,
         isPremium: false,
-        tags: ['conversion', 'form', 'cta']
+        tags: ['conversion', 'form', 'cta'],
       },
       {
         id: 'template-2',
@@ -72,7 +72,7 @@ const AdvancedTemplates: React.FC = () => {
         usageCount: 892,
         isNew: true,
         isPremium: true,
-        tags: ['produto', 'checkout', 'premium']
+        tags: ['produto', 'checkout', 'premium'],
       },
       {
         id: 'template-3',
@@ -86,7 +86,7 @@ const AdvancedTemplates: React.FC = () => {
         usageCount: 634,
         isNew: false,
         isPremium: false,
-        tags: ['saas', 'trial', 'demo']
+        tags: ['saas', 'trial', 'demo'],
       },
       {
         id: 'template-4',
@@ -100,7 +100,7 @@ const AdvancedTemplates: React.FC = () => {
         usageCount: 521,
         isNew: false,
         isPremium: true,
-        tags: ['b2b', 'executivo', 'profissional']
+        tags: ['b2b', 'executivo', 'profissional'],
       },
       {
         id: 'template-5',
@@ -114,7 +114,7 @@ const AdvancedTemplates: React.FC = () => {
         usageCount: 1156,
         isNew: true,
         isPremium: false,
-        tags: ['educacao', 'video', 'certificado']
+        tags: ['educacao', 'video', 'certificado'],
       },
       {
         id: 'template-6',
@@ -128,8 +128,8 @@ const AdvancedTemplates: React.FC = () => {
         usageCount: 387,
         isNew: false,
         isPremium: false,
-        tags: ['saude', 'natural', 'consulta']
-      }
+        tags: ['saude', 'natural', 'consulta'],
+      },
     ];
 
     setTemplates(mockTemplates);
@@ -145,7 +145,7 @@ const AdvancedTemplates: React.FC = () => {
       filtered = filtered.filter(template => 
         template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         template.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        template.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        template.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())),
       );
     }
 
@@ -173,7 +173,7 @@ const AdvancedTemplates: React.FC = () => {
     { value: 'e-commerce', label: 'E-commerce' },
     { value: 'saas', label: 'SaaS' },
     { value: 'consultoria', label: 'Consultoria' },
-    { value: 'educacao', label: 'Educação' }
+    { value: 'educacao', label: 'Educação' },
   ];
 
   const industries = [
@@ -182,7 +182,7 @@ const AdvancedTemplates: React.FC = () => {
     { value: 'ecommerce', label: 'E-commerce' },
     { value: 'consultoria', label: 'Consultoria' },
     { value: 'educacao', label: 'Educação' },
-    { value: 'saude', label: 'Saúde' }
+    { value: 'saude', label: 'Saúde' },
   ];
 
   const styles = [
@@ -192,7 +192,7 @@ const AdvancedTemplates: React.FC = () => {
     { value: 'minimalista', label: 'Minimalista' },
     { value: 'corporativo', label: 'Corporativo' },
     { value: 'jovem', label: 'Jovem' },
-    { value: 'natural', label: 'Natural' }
+    { value: 'natural', label: 'Natural' },
   ];
 
   const generateCustomTemplate = () => {

@@ -18,7 +18,7 @@ export default function EditorTransitionStep({
     data,
     onComplete,
     onEdit,
-    isEditable = false
+    isEditable = false,
 }: EditorTransitionStepProps) {
 
     // Dados seguros com fallbacks
@@ -26,7 +26,7 @@ export default function EditorTransitionStep({
         title: data.title || 'Preparando seu resultado...',
         subtitle: data.subtitle || 'Analisando suas respostas',
         description: data.description || 'Em poucos segundos você descobrirá seu estilo predominante.',
-        image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cs_fpoukb.png'
+        image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cs_fpoukb.png',
     };
 
     React.useEffect(() => {

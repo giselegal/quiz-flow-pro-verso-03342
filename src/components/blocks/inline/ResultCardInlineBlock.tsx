@@ -120,7 +120,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
         // Estados do editor
         isSelected && 'ring-2 ring-[#432818] ring-offset-2',
         'cursor-pointer hover:scale-[1.02]',
-        className
+        className,
       )}
       style={{
         backgroundColor: backgroundColor === 'white' ? undefined : backgroundColor,
@@ -133,7 +133,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
           <div
             className={cn(
               'rounded-full p-2 flex items-center justify-center',
-              iconSizes[size as keyof typeof iconSizes]
+              iconSizes[size as keyof typeof iconSizes],
             )}
             style={{ backgroundColor: `${accentColor}20` }}
           >

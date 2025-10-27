@@ -31,7 +31,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = memo(({
   useEffect(() => {
     console.warn(
       '⚠️ DEPRECATED: BlockRenderer será removido em 21/out/2025. ' +
-      'Use UniversalBlockRenderer a partir de @/components/core/renderers.'
+      'Use UniversalBlockRenderer a partir de @/components/core/renderers.',
     );
   }, []);
 

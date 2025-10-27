@@ -26,7 +26,7 @@ import {
   Zap,
   Shield,
   Search,
-  Accessibility
+  Accessibility,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -121,7 +121,7 @@ const VALIDATION_RULES: ValidationRule[] = [
           return {
             isValid: false,
             message: 'Variável vazia encontrada: {}',
-            suggestion: 'Remova as chaves vazias ou adicione um nome de variável válido'
+            suggestion: 'Remova as chaves vazias ou adicione um nome de variável válido',
           };
         }
 
@@ -130,7 +130,7 @@ const VALIDATION_RULES: ValidationRule[] = [
           return {
             isValid: false,
             message: `Variável com nome inválido: {${variableName}}`,
-            suggestion: 'Use apenas letras, números e underscore. Comece com uma letra.'
+            suggestion: 'Use apenas letras, números e underscore. Comece com uma letra.',
           };
         }
 
@@ -139,13 +139,13 @@ const VALIDATION_RULES: ValidationRule[] = [
           return {
             isValid: false,
             message: `Variável desconhecida: {${variableName}}`,
-            suggestion: `Variáveis disponíveis: ${context.availableVariables.join(', ')}`
+            suggestion: `Variáveis disponíveis: ${context.availableVariables.join(', ')}`,
           };
         }
       }
 
       return { isValid: true };
-    }
+    },
   },
 
   // Acessibilidade
@@ -165,13 +165,13 @@ const VALIDATION_RULES: ValidationRule[] = [
           return {
             isValid: false,
             message: 'Imagem sem texto alternativo',
-            suggestion: 'Adicione uma descrição da imagem para acessibilidade'
+            suggestion: 'Adicione uma descrição da imagem para acessibilidade',
           };
         }
       }
 
       return { isValid: true };
-    }
+    },
   },
 
   {
@@ -196,13 +196,13 @@ const VALIDATION_RULES: ValidationRule[] = [
           return {
             isValid: false,
             message: `Contraste insuficiente (${contrast.toFixed(1)}:1)`,
-            suggestion: 'Use cores com maior contraste para melhor legibilidade (mínimo 4.5:1)'
+            suggestion: 'Use cores com maior contraste para melhor legibilidade (mínimo 4.5:1)',
           };
         }
       }
 
       return { isValid: true };
-    }
+    },
   },
 
   // SEO
@@ -224,7 +224,7 @@ const VALIDATION_RULES: ValidationRule[] = [
           return {
             isValid: false,
             message: 'Título muito curto para SEO',
-            suggestion: 'Use pelo menos 10 caracteres para melhor otimização'
+            suggestion: 'Use pelo menos 10 caracteres para melhor otimização',
           };
         }
 
@@ -232,13 +232,13 @@ const VALIDATION_RULES: ValidationRule[] = [
           return {
             isValid: false,
             message: 'Título muito longo para SEO',
-            suggestion: 'Mantenha até 60 caracteres para melhor exibição em buscadores'
+            suggestion: 'Mantenha até 60 caracteres para melhor exibição em buscadores',
           };
         }
       }
 
       return { isValid: true };
-    }
+    },
   },
 
   // Performance
@@ -259,13 +259,13 @@ const VALIDATION_RULES: ValidationRule[] = [
           return {
             isValid: false,
             message: 'Imagem não otimizada',
-            suggestion: 'Use imagens do Cloudinary para melhor performance'
+            suggestion: 'Use imagens do Cloudinary para melhor performance',
           };
         }
       }
 
       return { isValid: true };
-    }
+    },
   },
 
   // Design
@@ -287,14 +287,14 @@ const VALIDATION_RULES: ValidationRule[] = [
             isValid: false,
             message: 'Espaçamento inconsistente',
             suggestion: 'Use valores múltiplos de 4 para consistência visual',
-            autoFixValue: Math.round(value / 4) * 4
+            autoFixValue: Math.round(value / 4) * 4,
           };
         }
       }
 
       return { isValid: true };
     },
-    autoFix: (value: number) => Math.round(value / 4) * 4
+    autoFix: (value: number) => Math.round(value / 4) * 4,
   },
 
   // Content
@@ -313,14 +313,14 @@ const VALIDATION_RULES: ValidationRule[] = [
           return {
             isValid: false,
             message: 'Conteúdo vazio',
-            suggestion: 'Adicione conteúdo significativo para melhor experiência do usuário'
+            suggestion: 'Adicione conteúdo significativo para melhor experiência do usuário',
           };
         }
       }
 
       return { isValid: true };
-    }
-  }
+    },
+  },
 ];
 
 // ===== UTILITIES =====
@@ -357,38 +357,38 @@ const CATEGORY_META = {
   [ValidationCategory.INTERPOLATION]: {
     icon: Zap,
     label: 'Interpolação',
-    color: 'text-blue-600'
+    color: 'text-blue-600',
   },
   [ValidationCategory.ACCESSIBILITY]: {
     icon: Accessibility,
     label: 'Acessibilidade',
-    color: 'text-green-600'
+    color: 'text-green-600',
   },
   [ValidationCategory.SEO]: {
     icon: Search,
     label: 'SEO',
-    color: 'text-purple-600'
+    color: 'text-purple-600',
   },
   [ValidationCategory.PERFORMANCE]: {
     icon: Zap,
     label: 'Performance',
-    color: 'text-orange-600'
+    color: 'text-orange-600',
   },
   [ValidationCategory.DESIGN]: {
     icon: Eye,
     label: 'Design',
-    color: 'text-pink-600'
+    color: 'text-pink-600',
   },
   [ValidationCategory.CONTENT]: {
     icon: Info,
     label: 'Conteúdo',
-    color: 'text-indigo-600'
+    color: 'text-indigo-600',
   },
   [ValidationCategory.TECHNICAL]: {
     icon: Shield,
     label: 'Técnico',
-    color: 'text-gray-600'
-  }
+    color: 'text-gray-600',
+  },
 };
 
 /**
@@ -400,29 +400,29 @@ const SEVERITY_META = {
     label: 'Erro',
     color: 'text-red-600',
     bgColor: 'bg-red-50',
-    borderColor: 'border-red-200'
+    borderColor: 'border-red-200',
   },
   [ValidationSeverity.WARNING]: {
     icon: AlertTriangle,
     label: 'Aviso',
     color: 'text-yellow-600',
     bgColor: 'bg-yellow-50',
-    borderColor: 'border-yellow-200'
+    borderColor: 'border-yellow-200',
   },
   [ValidationSeverity.INFO]: {
     icon: Info,
     label: 'Info',
     color: 'text-blue-600',
     bgColor: 'bg-blue-50',
-    borderColor: 'border-blue-200'
+    borderColor: 'border-blue-200',
   },
   [ValidationSeverity.SUCCESS]: {
     icon: CheckCircle,
     label: 'Sucesso',
     color: 'text-green-600',
     bgColor: 'bg-green-50',
-    borderColor: 'border-green-200'
-  }
+    borderColor: 'border-green-200',
+  },
 };
 
 // ===== COMPONENTE PRINCIPAL =====
@@ -432,7 +432,7 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
   context,
   onValidationChange,
   onAutoFix,
-  className
+  className,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ValidationCategory | 'all'>('all');
@@ -445,7 +445,7 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
       const propertyContext: ValidationContext = {
         ...context,
         propertyKey,
-        otherProperties: properties
+        otherProperties: properties,
       };
 
       VALIDATION_RULES.forEach(rule => {
@@ -460,7 +460,7 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
               message: result.message || rule.name,
               suggestion: result.suggestion || rule.suggestion,
               autoFixValue: result.autoFixValue,
-              category: rule.category
+              category: rule.category,
             });
           }
         } catch (error) {
@@ -552,7 +552,7 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
             className={cn(
               'h-2',
               stats.score >= 80 ? 'bg-green-100' :
-                stats.score >= 60 ? 'bg-yellow-100' : 'bg-red-100'
+                stats.score >= 60 ? 'bg-yellow-100' : 'bg-red-100',
             )}
           />
         </div>
@@ -623,7 +623,7 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
                     className={cn(
                       'p-3 border rounded-lg',
                       severityMeta.bgColor,
-                      severityMeta.borderColor
+                      severityMeta.borderColor,
                     )}
                   >
                     <div className="flex items-start justify-between">

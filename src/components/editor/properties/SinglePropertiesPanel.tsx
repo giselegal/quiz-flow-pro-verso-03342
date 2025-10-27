@@ -455,7 +455,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
         blockType: selectedBlock?.type,
         properties: selectedBlock?.properties,
         content: selectedBlock?.content,
-        fullBlock: selectedBlock
+        fullBlock: selectedBlock,
     });
 
     appLogger.debug('🔍 DEBUG CRÍTICO - Análise detalhada do selectedBlock:', {
@@ -469,7 +469,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
         hasContent: selectedBlock?.content !== undefined,
         contentType: typeof selectedBlock?.content,
         contentKeys: selectedBlock?.content ? Object.keys(selectedBlock.content) : 'N/A',
-        contentValues: selectedBlock?.content || 'N/A'
+        contentValues: selectedBlock?.content || 'N/A',
     });
 
     // Hook otimizado de propriedades com debouncing
@@ -481,7 +481,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
             appLogger.debug('🔄 SinglePropertiesPanel - enviando updates:', updates);
             // Adaptar para o formato esperado pelo editor atual
             onUpdate(updates.properties || updates);
-        } : undefined
+        } : undefined,
     });
 
     // Debounced update para melhor performance
@@ -494,7 +494,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
             style: getPropertiesByCategory('style'),
             layout: getPropertiesByCategory('layout'),
             behavior: getPropertiesByCategory('behavior'),
-            advanced: getPropertiesByCategory('advanced')
+            advanced: getPropertiesByCategory('advanced'),
         };
 
         // Remove categorias vazias
@@ -536,7 +536,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
             'pricing', 'pricing-card-inline',
             // ✅ RESULT COMPONENTS - Componentes de resultado
             'result-header-inline', 'modular-result-header', 'quiz-result-header',
-            'quiz-result-style', 'quiz-result-secondary', 'result-card'
+            'quiz-result-style', 'quiz-result-secondary', 'result-card',
         ];
         return supportedTypes.includes(selectedBlock.type);
     }, [selectedBlock?.type]);

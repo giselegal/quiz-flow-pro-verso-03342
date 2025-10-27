@@ -23,7 +23,7 @@ import {
   CheckCircle,
   AlertCircle,
   GitBranch,
-  Zap
+  Zap,
 } from 'lucide-react';
 import { Link } from 'wouter';
 
@@ -62,7 +62,7 @@ export function QuizFunnelCard({
   onEdit,
   onPreview,
   onPublish,
-  onAnalytics
+  onAnalytics,
 }: QuizFunnelCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 

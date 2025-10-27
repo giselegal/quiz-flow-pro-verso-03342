@@ -12,7 +12,7 @@ import {
     RotateCcw,
     Code,
     Sparkles,
-    Timer
+    Timer,
 } from 'lucide-react';
 import ContextualTooltip, { tooltipLibrary } from './ContextualTooltip';
 import type { PropertyEditorProps } from './types';
@@ -34,7 +34,7 @@ interface AnimationConfig {
  */
 const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
     property,
-    onChange
+    onChange,
 }) => {
     const [config, setConfig] = useState<AnimationConfig>({
         type: 'fadeIn',
@@ -43,7 +43,7 @@ const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
         timing: 'ease',
         direction: 'normal',
         iteration: 1,
-        trigger: 'load'
+        trigger: 'load',
     });
 
     const [isPlaying, setIsPlaying] = useState(false);
@@ -74,7 +74,7 @@ const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
           from { opacity: 0; }
           to { opacity: 1; }
         }
-      `
+      `,
         },
         slideIn: {
             keyframes: 'transform: translateX(-100%) → transform: translateX(0)',
@@ -83,7 +83,7 @@ const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
           from { transform: translateX(-100%); }
           to { transform: translateX(0); }
         }
-      `
+      `,
         },
         scaleIn: {
             keyframes: 'transform: scale(0) → transform: scale(1)',
@@ -92,7 +92,7 @@ const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
           from { transform: scale(0); }
           to { transform: scale(1); }
         }
-      `
+      `,
         },
         bounce: {
             keyframes: 'Multi-step bounce effect',
@@ -103,7 +103,7 @@ const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
           70% { transform: translate3d(0,-15px,0); }
           90% { transform: translate3d(0,-4px,0); }
         }
-      `
+      `,
         },
         pulse: {
             keyframes: 'transform: scale(1) → scale(1.05) → scale(1)',
@@ -113,7 +113,7 @@ const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
           50% { transform: scale(1.05); }
           100% { transform: scale(1); }
         }
-      `
+      `,
         },
         shake: {
             keyframes: 'Horizontal shake motion',
@@ -123,7 +123,7 @@ const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
           10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
           20%, 40%, 60%, 80% { transform: translateX(10px); }
         }
-      `
+      `,
         },
         rotate: {
             keyframes: 'transform: rotate(0deg) → rotate(360deg)',
@@ -132,8 +132,8 @@ const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
-      `
-        }
+      `,
+        },
     };
 
     const generateCSS = (): string => {
@@ -450,7 +450,7 @@ const AnimationPreviewEditor: React.FC<PropertyEditorProps> = ({
                             size="sm"
                             onClick={() => updateConfig({
                                 type: 'fadeIn', duration: 0.5, delay: 0, timing: 'ease',
-                                direction: 'normal', iteration: 1, trigger: 'load'
+                                direction: 'normal', iteration: 1, trigger: 'load',
                             })}
                             className="h-7 px-2 text-xs text-red-600 hover:text-red-700"
                         >

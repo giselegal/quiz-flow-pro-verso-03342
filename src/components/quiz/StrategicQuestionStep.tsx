@@ -15,7 +15,7 @@ interface StrategicQuestionStepProps {
 export default function StrategicQuestionStep({
     data,
     currentAnswer,
-    onAnswerChange
+    onAnswerChange,
 }: StrategicQuestionStepProps) {
     const safeOnAnswerChange: (answer: string) => void =
         typeof onAnswerChange === 'function' ? onAnswerChange : (answer: string) => {

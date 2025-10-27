@@ -33,7 +33,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
           propertyName !== 'options';
       onValidate?.(isValid);
     },
-    [onUpdate, onValidate, block.properties?.options]
+    [onUpdate, onValidate, block.properties?.options],
   );
 
   if (isPreviewMode) {
@@ -242,7 +242,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                   <SelectContent>
                     {Array.from(
                       { length: Math.max(currentOptions.length, 8) },
-                      (_, i) => i + 1
+                      (_, i) => i + 1,
                     ).map(num => (
                       <SelectItem key={num} value={String(num)}>
                         {num} Seleções

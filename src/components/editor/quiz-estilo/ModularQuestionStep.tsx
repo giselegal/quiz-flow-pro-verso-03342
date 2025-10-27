@@ -47,7 +47,7 @@ export default function ModularQuestionStep({
     onBlockSelect,
     onOpenProperties,
     onBlocksReorder,
-    onBlockUpdate
+    onBlockUpdate,
 }: ModularQuestionStepProps) {
 
     const safeData = {
@@ -58,8 +58,8 @@ export default function ModularQuestionStep({
         options: data.options || [
             { id: 'opt1', text: 'Opção 1', image: undefined },
             { id: 'opt2', text: 'Opção 2', image: undefined },
-            { id: 'opt3', text: 'Opção 3', image: undefined }
-        ]
+            { id: 'opt3', text: 'Opção 3', image: undefined },
+        ],
     };
 
     // Estado local para feedback de validação (fallback UI)
@@ -102,7 +102,7 @@ export default function ModularQuestionStep({
     const emitNavigate = (target: number) => {
         try {
             window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', {
-                detail: { step: target, stepId: `step-${String(target).padStart(2, '0')}`, source: 'modular-question-step' }
+                detail: { step: target, stepId: `step-${String(target).padStart(2, '0')}`, source: 'modular-question-step' },
             }));
         } catch { }
     };
@@ -132,7 +132,7 @@ export default function ModularQuestionStep({
                 order: stepNumber || 0,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-            }
+            },
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data?.id, data?.logic, safeData.requiredSelections, safeData.questionText, JSON.stringify(safeData.options)]);
@@ -156,7 +156,7 @@ export default function ModularQuestionStep({
             domainQuestion.id,
             'participant-temp',
             safeData.requiredSelections > 1 ? [...currentAnswers] : currentAnswers[0] || '',
-            { submittedAt: new Date(), timeSpent: 0, attemptNumber: 1 }
+            { submittedAt: new Date(), timeSpent: 0, attemptNumber: 1 },
         );
         const res = ans.validateAgainst(domainQuestion);
         if (!res.isValid) {
@@ -230,7 +230,7 @@ export default function ModularQuestionStep({
     const [order, setOrder] = React.useState<string[]>(initialOrder);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     );
 
     const handleDragEnd = (event: any) => {

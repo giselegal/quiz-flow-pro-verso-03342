@@ -25,5 +25,5 @@ import { stepRegistry } from '../step-registry/StepRegistry';
 
 console.log('📱 Steps modulares carregados:', {
     total: stepRegistry.getAll().length,
-    steps: stepRegistry.getAll().map(s => s.name)
+    steps: stepRegistry.getAll().map(s => s.name),
 });

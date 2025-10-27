@@ -27,7 +27,7 @@ export const ConsolidatedProvider: React.FC<ConsolidatedProviderProps> = ({
   children,
   context = FunnelContext.EDITOR,
   superProps,
-  crudProps
+  crudProps,
 }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>

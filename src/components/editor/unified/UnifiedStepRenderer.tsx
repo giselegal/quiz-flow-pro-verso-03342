@@ -140,7 +140,7 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
                     hasTemplate: !!template,
                     isObject: typeof template === 'object',
                     templateVersion: template?.templateVersion,
-                    templateKeys: template ? Object.keys(template).slice(0, 5) : []
+                    templateKeys: template ? Object.keys(template).slice(0, 5) : [],
                 });
 
                 if (template && typeof template === 'object' && template.templateVersion === '3.0') {
@@ -149,12 +149,12 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
                         type: 'v3' as const,
                         component: V3Renderer,
                         isRegistry: false,
-                        template: template as TemplateV3
+                        template: template as TemplateV3,
                     };
                 } else {
                     appLogger.debug('⚠️ [V3.0 NOT DETECTED] Fallback para lazy/registry:', {
                         stepId,
-                        reason: !template ? 'no template' : typeof template !== 'object' ? 'not object' : 'no v3.0 version'
+                        reason: !template ? 'no template' : typeof template !== 'object' ? 'not object' : 'no v3.0 version',
                     });
                 }
             } catch (error) {
@@ -170,7 +170,7 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
             return {
                 type: 'lazy' as const,
                 component: LazyStepComponents[stepId as LazyStepId],
-                isRegistry: false
+                isRegistry: false,
             };
         }
 
@@ -182,14 +182,14 @@ const useOptimizedStepComponent = (stepId: string, mode: RenderMode) => {
                 type: 'registry' as const,
                 component: registryComponent?.component,
                 isRegistry: true,
-                stepComponent: registryComponent
+                stepComponent: registryComponent,
             };
         } catch (error) {
             appLogger.error(`❌ Step "${stepId}" não encontrado:`, error);
             return {
                 type: 'error' as const,
                 component: null,
-                isRegistry: false
+                isRegistry: false,
             };
         }
     }, [stepId, mode]);
@@ -244,7 +244,7 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
                         // Usar o componente lazy já definido
                         const LazyComponent = LazyStepComponents[preloadStepId as LazyStepId];
                         const preloadPromise = Promise.resolve(LazyComponent); const timeoutPromise = new Promise((_, reject) =>
-                            setTimeout(() => reject(new Error('Preload timeout')), maxLoadTime)
+                            setTimeout(() => reject(new Error('Preload timeout')), maxLoadTime),
                         );
 
                         await Promise.race([preloadPromise, timeoutPromise]);
@@ -267,8 +267,8 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
     if (stepComponentInfo.type === 'error' || !stepComponentInfo.component) {
         return (
             <div className={cn(
-                "flex items-center justify-center p-8 border-2 border-dashed border-red-300 rounded-lg bg-red-50",
-                className
+                'flex items-center justify-center p-8 border-2 border-dashed border-red-300 rounded-lg bg-red-50',
+                className,
             )}>
                 <div className="text-center">
                     <div className="text-red-500 text-lg mb-2">⚠️</div>
@@ -342,7 +342,7 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
         ...stepProps,
     }), [
         stepId, mode, stepProps, quizState, onStepUpdate, onStepSelect,
-        onNext, onPrevious, theme, isSelected, isEditable
+        onNext, onPrevious, theme, isSelected, isEditable,
     ]);
 
     // � V3.0: Preparar userData para V3Renderer
@@ -385,14 +385,14 @@ export const UnifiedStepRenderer: React.FC<UnifiedStepRendererProps> = ({
     const renderStep = () => {
         // Wrapper base com estilos do modo
         const wrapperClasses = cn(
-            "unified-step-renderer",
+            'unified-step-renderer',
             `unified-step-renderer--${mode}`,
             `unified-step-renderer--${stepId}`,
             {
                 'unified-step-renderer--selected': isSelected && mode === 'editable',
                 'unified-step-renderer--editable': isEditable,
             },
-            className
+            className,
         );
 
         const wrapperStyles = {

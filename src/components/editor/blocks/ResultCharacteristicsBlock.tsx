@@ -13,7 +13,7 @@ export default function ResultCharacteristicsBlock({
   const characteristics = content?.items || properties?.characteristics || [
     'Elegante e refinado',
     'Atemporal e sofisticado',
-    'Valoriza qualidade'
+    'Valoriza qualidade',
   ];
   const title = properties?.title || 'Suas principais características:';
   const columns = properties?.columns || 3;

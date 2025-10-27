@@ -24,7 +24,7 @@ import {
   Target,
   Users,
   TrendingUp,
-  Calendar
+  Calendar,
 } from 'lucide-react';
 import { TemplateRegistry } from '@/config/unifiedTemplatesRegistry';
 import useMyTemplates from '@/hooks/useMyTemplates';
@@ -76,8 +76,8 @@ export const TemplatesPage: React.FC = () => {
         tags: t.tags || [],
         blocks: t.stepCount,
         difficulty: t.stepCount <= 8 ? 'Fácil' : t.stepCount <= 15 ? 'Médio' : 'Avançado',
-        author: 'Meu Template'
-      }))
+        author: 'Meu Template',
+      })),
     ];
   }, [officialTemplates, userTemplates]);
 
@@ -92,7 +92,7 @@ export const TemplatesPage: React.FC = () => {
   const categorySet = new Set(merged.map(t => t.category));
   const categories = [
     { id: 'all', name: 'Todos', count: merged.length },
-    ...Array.from(categorySet).map(cat => ({ id: cat, name: cat, count: merged.filter(t => t.category === cat).length }))
+    ...Array.from(categorySet).map(cat => ({ id: cat, name: cat, count: merged.filter(t => t.category === cat).length })),
   ];
 
   return (
@@ -189,7 +189,7 @@ export const TemplatesPage: React.FC = () => {
             {categories.map(category => (
               <Button
                 key={category.id}
-                variant={selectedCategory === category.id ? "default" : "ghost"}
+                variant={selectedCategory === category.id ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setSelectedCategory(category.id)}
                 className="relative"
@@ -214,14 +214,14 @@ export const TemplatesPage: React.FC = () => {
 
           <div className="flex border rounded-lg p-1">
             <Button
-              variant={viewMode === 'grid' ? "default" : "ghost"}
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('grid')}
             >
               <Grid className="w-4 h-4" />
             </Button>
             <Button
-              variant={viewMode === 'list' ? "default" : "ghost"}
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('list')}
             >

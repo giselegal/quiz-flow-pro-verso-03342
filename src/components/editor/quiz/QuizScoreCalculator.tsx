@@ -131,7 +131,7 @@ export const QuizScoreCalculator: React.FC<QuizScoreCalculatorProps> = ({
         return (
           total +
           (stage.blocks?.filter(
-            (block: any) => block.type === 'quiz-question-block' && block.props?.correctAnswer
+            (block: any) => block.type === 'quiz-question-block' && block.props?.correctAnswer,
           ).length || 0)
         );
       }, 0) || 0;

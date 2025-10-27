@@ -9,16 +9,16 @@ export { MainImageSection } from './MainImageSection';
 
 // Exportar componentes principais
 export {
-    ModularResultHeaderBlock
+    ModularResultHeaderBlock,
 } from './ModularResultHeader';
 
 export {
     ModularResultEditor,
-    ResponsivePreview
+    ResponsivePreview,
 } from './ModularResultEditor';
 
 export {
-    Step20SystemSelector
+    Step20SystemSelector,
 } from './Step20SystemSelector';// Re-exportar os tipos das props para facilitar uso
 export type { HeaderSectionProps } from './HeaderSection';
 export type { UserInfoSectionProps } from './UserInfoSection';

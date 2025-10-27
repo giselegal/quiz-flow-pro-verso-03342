@@ -56,7 +56,7 @@ export const SecondaryStylesPropertyEditor: React.FC<SecondaryStylesPropertyEdit
 
     const updateStyle = (id: string, field: keyof SecondaryStyle, value: string | number) => {
         const updatedStyles = styles.map((style) =>
-            style.id === id ? { ...style, [field]: value } : style
+            style.id === id ? { ...style, [field]: value } : style,
         );
         handleContentUpdate('styles', updatedStyles);
     };

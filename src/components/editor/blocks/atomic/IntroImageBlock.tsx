@@ -4,7 +4,7 @@ import { AtomicBlockProps } from '@/types/blockProps';
 export default function IntroImageBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   // Compatibilidade JSON v3: content.imageUrl, imageAlt, width/height
   const src = (block as any)?.content?.imageUrl || block.properties?.src || (block as any)?.content?.src || '';

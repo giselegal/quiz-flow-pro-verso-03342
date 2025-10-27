@@ -215,7 +215,7 @@ export const QuizNavigation: React.FC<QuizNavigationProps> = memo(
         )}
       </div>
     );
-  }
+  },
 );
 
 QuizNavigation.displayName = 'QuizNavigation';

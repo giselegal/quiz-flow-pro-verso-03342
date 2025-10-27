@@ -20,7 +20,7 @@ import {
     Zap,
     Save,
     RefreshCw,
-    Palette
+    Palette,
 } from 'lucide-react';
 import { NoCodeConfigPanel } from '@/pages/admin/NoCodeConfigPage';
 import GlobalConfigPanel from '@/components/editor/GlobalConfigPanel';
@@ -36,7 +36,7 @@ interface FunnelTechnicalConfigPanelProps {
 const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProps> = ({
     funnelId,
     className = '',
-    onConfigUpdate
+    onConfigUpdate,
 }) => {
     const [activeTab, setActiveTab] = useState('connections');
     const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +55,7 @@ const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProps> = ({
             const allConfigs = {
                 connections: StorageService.safeGetString('quiz-step-connections'),
                 nocode: StorageService.safeGetString('quiz-nocode-config'),
-                global: StorageService.safeGetString('quiz-global-config')
+                global: StorageService.safeGetString('quiz-global-config'),
             };
 
             // Callback para notificar mudanças

@@ -61,16 +61,16 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
         defaultProps: {
             content: {
                 title: 'Bem-vinda',
-                subtitle: 'Descubra seu estilo pessoal'
+                subtitle: 'Descubra seu estilo pessoal',
             },
             properties: {
                 alignment: 'center',
                 fontSize: '2xl',
                 fontWeight: 'bold',
                 textColor: '#432818',
-                backgroundColor: '#FAF9F7'
-            }
-        }
+                backgroundColor: '#FAF9F7',
+            },
+        },
     },
     {
         type: 'text',
@@ -81,15 +81,15 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
         defaultProps: {
             content: {
                 text: 'Texto descritivo...',
-                html: '<p>Texto com <strong>formatação</strong></p>'
+                html: '<p>Texto com <strong>formatação</strong></p>',
             },
             properties: {
                 fontSize: 'base',
                 textColor: '#334155',
                 lineHeight: '1.6',
-                marginBottom: '1rem'
-            }
-        }
+                marginBottom: '1rem',
+            },
+        },
     },
     {
         type: 'form-input',
@@ -102,16 +102,16 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 label: 'Como posso te chamar?',
                 placeholder: 'Digite seu nome...',
                 type: 'text',
-                name: 'name'
+                name: 'name',
             },
             properties: {
                 required: true,
                 variableName: 'userName',
                 validation: 'text',
                 minLength: 2,
-                maxLength: 50
-            }
-        }
+                maxLength: 50,
+            },
+        },
     },
     {
         type: 'button',
@@ -122,7 +122,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
         defaultProps: {
             content: {
                 text: 'Começar Quiz',
-                icon: 'arrow-right'
+                icon: 'arrow-right',
             },
             properties: {
                 variant: 'primary',
@@ -130,9 +130,9 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 fullWidth: true,
                 action: 'next',
                 backgroundColor: '#3B82F6',
-                textColor: '#FFFFFF'
-            }
-        }
+                textColor: '#FFFFFF',
+            },
+        },
     },
 
     // ========================================================================
@@ -148,16 +148,16 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             content: {
                 questionNumber: 'Pergunta X de 10',
                 questionText: 'Qual das opções abaixo mais combina com você?',
-                subtitle: 'Selecione 3 opções'
+                subtitle: 'Selecione 3 opções',
             },
             properties: {
                 requiredSelections: 3,
                 multipleChoice: true,
                 showCounter: true,
                 fontSize: 'xl',
-                fontWeight: 'semibold'
-            }
-        }
+                fontWeight: 'semibold',
+            },
+        },
     },
     {
         type: 'quiz-options',
@@ -173,16 +173,16 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                         text: 'Opção 1',
                         image: 'https://via.placeholder.com/300',
                         value: 'romantico',
-                        points: 1
+                        points: 1,
                     },
                     {
                         id: 'opt-2',
                         text: 'Opção 2',
                         image: 'https://via.placeholder.com/300',
                         value: 'classico',
-                        points: 1
-                    }
-                ]
+                        points: 1,
+                    },
+                ],
             },
             properties: {
                 columns: 3,
@@ -190,9 +190,9 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 aspectRatio: '1/1',
                 hoverEffect: 'scale',
                 selectedBorderColor: '#3B82F6',
-                selectedBorderWidth: '3px'
-            }
-        }
+                selectedBorderWidth: '3px',
+            },
+        },
     },
     {
         type: 'quiz-navigation',
@@ -204,16 +204,16 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             content: {
                 backText: 'Voltar',
                 nextText: 'Próxima Pergunta',
-                disabledText: 'Selecione 3 opções para continuar'
+                disabledText: 'Selecione 3 opções para continuar',
             },
             properties: {
                 showBack: true,
                 showNext: true,
                 disableNextUntilComplete: true,
                 position: 'bottom-center',
-                spacing: '1rem'
-            }
-        }
+                spacing: '1rem',
+            },
+        },
     },
 
     // ========================================================================
@@ -231,17 +231,17 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 messages: [
                     'Processando suas preferências',
                     'Identificando seu estilo',
-                    'Preparando resultado personalizado'
-                ]
+                    'Preparando resultado personalizado',
+                ],
             },
             properties: {
                 duration: 3000,
                 autoProgress: true,
                 showProgress: true,
                 backgroundColor: '#FAF9F7',
-                loaderType: 'dots'
-            }
-        }
+                loaderType: 'dots',
+            },
+        },
     },
     {
         type: 'transition-result',
@@ -252,15 +252,15 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
         defaultProps: {
             content: {
                 title: 'Preparando seu resultado...',
-                subtitle: 'Em alguns segundos você descobrirá seu estilo predominante'
+                subtitle: 'Em alguns segundos você descobrirá seu estilo predominante',
             },
             properties: {
                 duration: 2000,
                 autoProgress: true,
                 showAnimation: true,
-                animationType: 'fade-in'
-            }
-        }
+                animationType: 'fade-in',
+            },
+        },
     },
 
     // ========================================================================
@@ -281,22 +281,22 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                     classico: { min: 0, max: 100, label: 'Clássico' },
                     moderno: { min: 0, max: 100, label: 'Moderno' },
                     criativo: { min: 0, max: 100, label: 'Criativo' },
-                    dramatico: { min: 0, max: 100, label: 'Dramático' }
+                    dramatico: { min: 0, max: 100, label: 'Dramático' },
                 },
                 resultLogic: {
                     winnerSelection: 'highest_score',
                     tieBreaker: 'secondary_scores',
-                    minThreshold: 20
+                    minThreshold: 20,
                 },
                 leadCapture: {
                     id: 'step20-form',
                     type: 'lead-form',
                     properties: {
                         fields: ['name', 'email', 'phone'],
-                        submitText: 'Receber Guia Gratuito'
-                    }
-                }
-            }
+                        submitText: 'Receber Guia Gratuito',
+                    },
+                },
+            },
         },
         schema: {
             type: 'object',
@@ -304,7 +304,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 calculationMethod: {
                     type: 'string',
                     enum: ['weighted_sum', 'percentage', 'ranking'],
-                    title: 'Método de Cálculo'
+                    title: 'Método de Cálculo',
                 },
                 scoreMapping: {
                     type: 'object',
@@ -314,9 +314,9 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                         properties: {
                             min: { type: 'number', title: 'Mínimo' },
                             max: { type: 'number', title: 'Máximo' },
-                            label: { type: 'string', title: 'Label' }
-                        }
-                    }
+                            label: { type: 'string', title: 'Label' },
+                        },
+                    },
                 },
                 resultLogic: {
                     type: 'object',
@@ -325,23 +325,23 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                         winnerSelection: {
                             type: 'string',
                             enum: ['highest_score', 'threshold_based'],
-                            title: 'Seleção do Vencedor'
+                            title: 'Seleção do Vencedor',
                         },
                         tieBreaker: {
                             type: 'string',
                             enum: ['secondary_scores', 'random', 'first_encountered'],
-                            title: 'Critério de Desempate'
+                            title: 'Critério de Desempate',
                         },
                         minThreshold: {
                             type: 'number',
                             title: 'Limite Mínimo (%)',
                             minimum: 0,
-                            maximum: 100
-                        }
-                    }
-                }
-            }
-        }
+                            maximum: 100,
+                        },
+                    },
+                },
+            },
+        },
     },
     {
         type: 'result-headline',
@@ -353,16 +353,16 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             content: {
                 title: '{userName}, seu estilo é:',
                 resultVariable: 'dominantStyle',
-                celebrationEmoji: '🎉'
+                celebrationEmoji: '🎉',
             },
             properties: {
                 fontSize: '3xl',
                 fontWeight: 'bold',
                 textAlign: 'center',
                 showConfetti: true,
-                animateIn: true
-            }
-        }
+                animateIn: true,
+            },
+        },
     },
     {
         type: 'result-secondary-list',
@@ -376,16 +376,16 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 items: [
                     'Característica 1',
                     'Característica 2',
-                    'Característica 3'
-                ]
+                    'Característica 3',
+                ],
             },
             properties: {
                 layout: 'vertical',
                 iconType: 'checkmark',
                 iconColor: '#10B981',
-                spacing: '0.5rem'
-            }
-        }
+                spacing: '0.5rem',
+            },
+        },
     },
     {
         type: 'result-description',
@@ -395,7 +395,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
         description: 'Descrição detalhada do resultado',
         defaultProps: {
             content: {
-                text: 'Baseado nas suas respostas, você tem características...'
+                text: 'Baseado nas suas respostas, você tem características...',
             },
             properties: {
                 fontSize: 'base',
@@ -403,9 +403,9 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 textAlign: 'left',
                 backgroundColor: '#F9FAFB',
                 padding: '1.5rem',
-                borderRadius: '0.5rem'
-            }
-        }
+                borderRadius: '0.5rem',
+            },
+        },
     },
 
     // ========================================================================
@@ -424,7 +424,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 image: 'https://via.placeholder.com/600x400',
                 price: 'R$ 497',
                 originalPrice: 'R$ 997',
-                discount: '50% OFF'
+                discount: '50% OFF',
             },
             properties: {
                 layout: 'horizontal',
@@ -432,9 +432,9 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 badgeText: 'OFERTA LIMITADA',
                 badgeColor: '#EF4444',
                 borderColor: '#B89B7A',
-                borderWidth: '2px'
-            }
-        }
+                borderWidth: '2px',
+            },
+        },
     },
     {
         type: 'offer-urgency',
@@ -447,16 +447,16 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 title: 'Esta oferta expira em:',
                 type: 'countdown',
                 endTime: '+24h',
-                urgencyMessage: 'Restam apenas {count} vagas!'
+                urgencyMessage: 'Restam apenas {count} vagas!',
             },
             properties: {
                 showCountdown: true,
                 countdownSize: 'lg',
                 backgroundColor: '#FEF2F2',
                 textColor: '#991B1B',
-                pulsate: true
-            }
-        }
+                pulsate: true,
+            },
+        },
     },
     {
         type: 'checkout-button',
@@ -468,7 +468,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             content: {
                 text: 'QUERO TRANSFORMAR MEU ESTILO',
                 subtext: 'Pagamento 100% seguro',
-                icon: 'lock'
+                icon: 'lock',
             },
             properties: {
                 size: 'xl',
@@ -478,9 +478,9 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 textColor: '#FFFFFF',
                 fontSize: 'lg',
                 fontWeight: 'bold',
-                pulseAnimation: true
-            }
-        }
+                pulseAnimation: true,
+            },
+        },
     },
 
     // ========================================================================
@@ -495,16 +495,16 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
         defaultProps: {
             content: {
                 url: 'https://via.placeholder.com/800x600',
-                alt: 'Imagem descritiva'
+                alt: 'Imagem descritiva',
             },
             properties: {
                 width: '100%',
                 aspectRatio: '16/9',
                 objectFit: 'cover',
                 borderRadius: '0.5rem',
-                lazyLoad: true
-            }
-        }
+                lazyLoad: true,
+            },
+        },
     },
     {
         type: 'divider',
@@ -518,9 +518,9 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 width: '100%',
                 height: '1px',
                 backgroundColor: '#E5E7EB',
-                margin: '2rem 0'
-            }
-        }
+                margin: '2rem 0',
+            },
+        },
     },
     {
         type: 'spacer',
@@ -532,9 +532,9 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             content: {},
             properties: {
                 height: '2rem',
-                width: '100%'
-            }
-        }
+                width: '100%',
+            },
+        },
     },
     {
         type: 'progress-bar',
@@ -546,7 +546,7 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
             content: {
                 currentStep: 1,
                 totalSteps: 21,
-                showPercentage: true
+                showPercentage: true,
             },
             properties: {
                 height: '8px',
@@ -554,10 +554,10 @@ export const BLOCK_DEFINITIONS: BlockDefinition[] = [
                 fillColor: '#3B82F6',
                 borderRadius: '9999px',
                 position: 'top',
-                showLabels: true
-            }
-        }
-    }
+                showLabels: true,
+            },
+        },
+    },
 ];
 
 // ============================================================================

@@ -22,7 +22,7 @@ import {
     Save,
     RefreshCw,
     Eye,
-    Copy
+    Copy,
 } from 'lucide-react';
 
 interface BrandColors {
@@ -68,24 +68,24 @@ const DEFAULT_BRAND_KIT: BrandKitConfig = {
         accent: '#E6DDD4',
         background: '#FAF9F7',
         text: '#432818',
-        muted: '#8F7A6A'
+        muted: '#8F7A6A',
     },
     fonts: {
         heading: 'Playfair Display, serif',
-        body: 'Inter, sans-serif'
+        body: 'Inter, sans-serif',
     },
     assets: {
         logo: '/logo.png',
-        favicon: '/favicon.ico'
+        favicon: '/favicon.ico',
     },
     name: 'Brand Kit Padrão',
     description: 'Configurações de marca padrão do sistema',
-    lastModified: new Date().toISOString()
+    lastModified: new Date().toISOString(),
 };
 
 const BrandKitManager: React.FC<BrandKitManagerProps> = ({
     className = '',
-    onBrandUpdate
+    onBrandUpdate,
 }) => {
     const [brandKit, setBrandKit] = useState<BrandKitConfig>(DEFAULT_BRAND_KIT);
     const [activeTab, setActiveTab] = useState('colors');
@@ -109,9 +109,9 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
             ...prev,
             colors: {
                 ...prev.colors,
-                [colorKey]: value
+                [colorKey]: value,
             },
-            lastModified: new Date().toISOString()
+            lastModified: new Date().toISOString(),
         }));
         setHasChanges(true);
     };
@@ -121,9 +121,9 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
             ...prev,
             fonts: {
                 ...prev.fonts,
-                [fontKey]: value
+                [fontKey]: value,
             },
-            lastModified: new Date().toISOString()
+            lastModified: new Date().toISOString(),
         }));
         setHasChanges(true);
     };
@@ -133,9 +133,9 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
             ...prev,
             assets: {
                 ...prev.assets,
-                [assetKey]: value
+                [assetKey]: value,
             },
-            lastModified: new Date().toISOString()
+            lastModified: new Date().toISOString(),
         }));
         setHasChanges(true);
     };
@@ -170,7 +170,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
 
     const exportBrandKit = () => {
         const dataStr = JSON.stringify(brandKit, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+        const dataUri = `data:application/json;charset=utf-8,${  encodeURIComponent(dataStr)}`;
         const exportFileDefaultName = `brand-kit-${Date.now()}.json`;
 
         const linkElement = document.createElement('a');
@@ -189,7 +189,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
                 const imported = JSON.parse(e.target?.result as string);
                 setBrandKit({
                     ...imported,
-                    lastModified: new Date().toISOString()
+                    lastModified: new Date().toISOString(),
                 });
                 setHasChanges(true);
             } catch (error) {
@@ -429,7 +429,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
                                     style={{
                                         backgroundColor: brandKit.colors.background,
                                         color: brandKit.colors.text,
-                                        fontFamily: brandKit.fonts.body
+                                        fontFamily: brandKit.fonts.body,
                                     }}
                                 >
                                     <h1
@@ -437,7 +437,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
                                             color: brandKit.colors.primary,
                                             fontFamily: brandKit.fonts.heading,
                                             fontSize: '2rem',
-                                            fontWeight: 'bold'
+                                            fontWeight: 'bold',
                                         }}
                                     >
                                         Seu Brand Kit
@@ -452,7 +452,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
                                                 color: brandKit.colors.secondary,
                                                 fontSize: '1.5rem',
                                                 fontWeight: '600',
-                                                marginBottom: '0.5rem'
+                                                marginBottom: '0.5rem',
                                             }}
                                         >
                                             Título Secundário
@@ -465,7 +465,7 @@ const BrandKitManager: React.FC<BrandKitManagerProps> = ({
                                     <Button
                                         style={{
                                             backgroundColor: brandKit.colors.primary,
-                                            color: brandKit.colors.background
+                                            color: brandKit.colors.background,
                                         }}
                                     >
                                         Botão de Exemplo

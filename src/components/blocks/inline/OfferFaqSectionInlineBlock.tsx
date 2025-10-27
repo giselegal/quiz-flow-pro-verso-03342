@@ -49,7 +49,7 @@ const OfferFaqSectionInlineBlock: React.FC<BlockComponentProps> = ({
         spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.large,
         isSelected && 'ring-2 ring-blue-500 ring-offset-2',
         'cursor-pointer',
-        className
+        className,
       )}
       onClick={onClick}
     >
@@ -79,7 +79,7 @@ const OfferFaqSectionInlineBlock: React.FC<BlockComponentProps> = ({
                     size={24}
                     className={cn(
                       'text-[#B89B7A] transition-transform duration-300',
-                      openItem === index && 'transform rotate-90'
+                      openItem === index && 'transform rotate-90',
                     )}
                   />
                 </button>

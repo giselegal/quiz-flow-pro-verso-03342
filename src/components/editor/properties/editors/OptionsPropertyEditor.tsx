@@ -31,7 +31,7 @@ export const OptionsPropertyEditor: React.FC<PropertyEditorProps> = ({
             propertyName !== 'items';
       onValidate?.(isValid);
     },
-    [onUpdate, onValidate, block.properties?.items]
+    [onUpdate, onValidate, block.properties?.items],
   );
 
   if (isPreviewMode) {

@@ -29,7 +29,7 @@ class BlockRendererDebug {
         hitRate: 0,
         totalLookups: 0,
         cacheHits: 0,
-        cacheMisses: 0
+        cacheMisses: 0,
     };
 
     // 📊 Registrar estatística de render
@@ -43,10 +43,10 @@ class BlockRendererDebug {
 
         // Log renders lentos
         if (stats.renderTime > 50) {
-            console.warn(`⚠️ Render lento detectado:`, {
+            console.warn('⚠️ Render lento detectado:', {
                 blockType: stats.blockType,
                 renderTime: `${stats.renderTime.toFixed(2)}ms`,
-                blockId: stats.blockId
+                blockId: stats.blockId,
             });
         }
     }
@@ -77,7 +77,7 @@ class BlockRendererDebug {
             uniqueComponentTypes: componentTypes.length,
             componentTypes: componentTypes.sort(),
             cacheStats: this.cacheStats,
-            recentRenders: this.renderStats.slice(-10)
+            recentRenders: this.renderStats.slice(-10),
         };
     }
 
@@ -94,7 +94,7 @@ class BlockRendererDebug {
                 typeStats[stat.blockType] = {
                     count: 0,
                     avgRenderTime: 0,
-                    slowRenders: 0
+                    slowRenders: 0,
                 };
             }
 
@@ -123,7 +123,7 @@ class BlockRendererDebug {
             hitRate: 0,
             totalLookups: 0,
             cacheHits: 0,
-            cacheMisses: 0
+            cacheMisses: 0,
         };
     }
 
@@ -138,7 +138,7 @@ class BlockRendererDebug {
             totalRenders: report.totalRenders,
             avgRenderTime: `${report.avgRenderTime}ms`,
             slowRenders: `${report.slowRenders} (${report.slowRenderPercentage}%)`,
-            uniqueComponents: report.uniqueComponentTypes
+            uniqueComponents: report.uniqueComponentTypes,
         });
 
         console.log('🗂️ Cache Stats:', report.cacheStats);
@@ -173,7 +173,7 @@ if (typeof window !== 'undefined') {
         getReport: () => blockRendererDebug.getPerformanceReport(),
         getTypeStats: () => blockRendererDebug.getComponentTypeStats(),
         printReport: () => blockRendererDebug.printReport(),
-        clear: () => blockRendererDebug.clearStats()
+        clear: () => blockRendererDebug.clearStats(),
     };
 
     console.log('🔍 Block Renderer Debug disponível em: window.__blockRendererDebug');

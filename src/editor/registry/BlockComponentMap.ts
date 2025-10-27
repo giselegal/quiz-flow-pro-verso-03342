@@ -23,19 +23,19 @@ import OfferBlock from '../components/blocks/OfferBlock';
  */
 export const BLOCK_COMPONENT_MAP: Record<string, React.ComponentType<BlockComponentProps>> = {
     // Blocos básicos
-    'TitleBlock': TitleBlock,
-    'ImageBlock': ImageBlock,
+    TitleBlock,
+    ImageBlock,
     // 'FormInputBlock': FormInputBlock, // removido temporariamente (tipagem incompatível)
     'ButtonBlock': ButtonBlockModular,
 
     // Blocos de questões
-    'QuestionTextBlock': QuestionTextBlock,
-    'OptionsBlock': OptionsBlock,
+    QuestionTextBlock,
+    OptionsBlock,
 
     // Blocos de transição e resultado
-    'TransitionBlock': TransitionBlock,
-    'ResultBlock': ResultBlock,
-    'OfferBlock': OfferBlock,
+    TransitionBlock,
+    ResultBlock,
+    OfferBlock,
 
     // Aliases
     'title': TitleBlock,

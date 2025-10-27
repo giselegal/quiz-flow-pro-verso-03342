@@ -84,7 +84,7 @@ export const BlockPropertiesProvider: React.FC<{ children: React.ReactNode }> = 
         return {
             properties,
             loading: new Set(),
-            errors: new Map()
+            errors: new Map(),
         };
     });
 
@@ -125,7 +125,7 @@ export const BlockPropertiesProvider: React.FC<{ children: React.ReactNode }> = 
                 value,
                 type,
                 timestamp: Date.now(),
-                updatedBy: 'user'
+                updatedBy: 'user',
             };
 
             logger.info(`Setting property ${blockId}.${key}:`, { value, type });
@@ -137,7 +137,7 @@ export const BlockPropertiesProvider: React.FC<{ children: React.ReactNode }> = 
             setState(prev => ({
                 ...prev,
                 properties: new Map(prev.properties).set(propertyKey, property),
-                errors: new Map(prev.errors)
+                errors: new Map(prev.errors),
             }));
 
             // Simular persistência remota (placeholder para API real)
@@ -149,7 +149,7 @@ export const BlockPropertiesProvider: React.FC<{ children: React.ReactNode }> = 
                 logger.error(`Failed to save property ${propertyKey}:`, error);
                 setState(prev => ({
                     ...prev,
-                    errors: new Map(prev.errors).set(propertyKey, error as Error)
+                    errors: new Map(prev.errors).set(propertyKey, error as Error),
                 }));
                 throw error;
             }
@@ -173,7 +173,7 @@ export const BlockPropertiesProvider: React.FC<{ children: React.ReactNode }> = 
                 return {
                     ...prev,
                     properties: newProperties,
-                    errors: newErrors
+                    errors: newErrors,
                 };
             });
 
@@ -218,7 +218,7 @@ export const BlockPropertiesProvider: React.FC<{ children: React.ReactNode }> = 
 
             const blockProperties = api.getAllProperties(blockId);
             const removePromises = blockProperties.map(prop =>
-                api.removeProperty(prop.blockId, prop.key)
+                api.removeProperty(prop.blockId, prop.key),
             );
 
             await Promise.all(removePromises);
@@ -259,7 +259,7 @@ export const BlockPropertiesProvider: React.FC<{ children: React.ReactNode }> = 
 
             setState(prev => ({
                 ...prev,
-                loading: new Set(prev.loading).add(`${blockId}:sync`)
+                loading: new Set(prev.loading).add(`${blockId}:sync`),
             }));
 
             try {
@@ -274,7 +274,7 @@ export const BlockPropertiesProvider: React.FC<{ children: React.ReactNode }> = 
 
                     return {
                         ...prev,
-                        loading: newLoading
+                        loading: newLoading,
                     };
                 });
             } catch (error) {
@@ -290,7 +290,7 @@ export const BlockPropertiesProvider: React.FC<{ children: React.ReactNode }> = 
                     return {
                         ...prev,
                         loading: newLoading,
-                        errors: newErrors
+                        errors: newErrors,
                     };
                 });
 
@@ -303,7 +303,7 @@ export const BlockPropertiesProvider: React.FC<{ children: React.ReactNode }> = 
 
             const syncPromises = blockIds.map(blockId => api.sync(blockId));
             await Promise.all(syncPromises);
-        }
+        },
     }), [state, logger]);
 
     return (
@@ -343,7 +343,7 @@ export const useBlockProperty = (blockId: string, key: string, defaultValue: any
         setValue: updateValue,
         isLoading,
         error,
-        remove: () => api.removeProperty(blockId, key)
+        remove: () => api.removeProperty(blockId, key),
     };
 };
 
@@ -375,14 +375,14 @@ export const useBlockPropertiesAll = (blockId: string) => {
         clearProperties,
         sync,
         isLoading,
-        error
+        error,
     };
 };
 
 // ✅ COMPONENTE DE EXEMPLO PARA EDITAR PROPRIEDADES
 export const BlockPropertyEditor: React.FC<{ blockId: string; propertyKey: string }> = ({
     blockId,
-    propertyKey
+    propertyKey,
 }) => {
     const { value, setValue, isLoading, error } = useBlockProperty(blockId, propertyKey, '');
     const logger = useLogger('PropertyEditor');
@@ -394,7 +394,7 @@ export const BlockPropertyEditor: React.FC<{ blockId: string; propertyKey: strin
             await setValue(newValue);
             logger.debug(`Property ${blockId}.${propertyKey} updated to:`, newValue);
         } catch (error) {
-            logger.error(`Failed to update property:`, error);
+            logger.error('Failed to update property:', error);
         }
     };
 

@@ -77,7 +77,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState<'conversion' | 'engagement' | 'revenue'>(
-    'conversion'
+    'conversion',
   );
   const [confidenceLevel, setConfidenceLevel] = useState<number>(0);
   const [winner, setWinner] = useState<'A' | 'B' | 'tie' | null>(null);
@@ -119,7 +119,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
       // Calcular significância estatística
       const { confidence, isSignificant, winningVariant } = calculateStatisticalSignificance(
         variantAMetrics,
-        variantBMetrics
+        variantBMetrics,
       );
 
       setConfidenceLevel(confidence);
@@ -199,7 +199,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
 
   const calculateStatisticalSignificance = (
     variantA: ABTestMetrics,
-    variantB: ABTestMetrics
+    variantB: ABTestMetrics,
   ): {
     confidence: number;
     isSignificant: boolean;
@@ -248,7 +248,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
   const getMetricComparison = (
     metricA: number,
     metricB: number,
-    format: 'percentage' | 'number' | 'currency' = 'number'
+    format: 'percentage' | 'number' | 'currency' = 'number',
   ) => {
     const diff = ((metricB - metricA) / metricA) * 100;
     const isPositive = diff > 0;
@@ -300,7 +300,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
         e =>
           e.timestamp >= dayStart &&
           e.timestamp < dayEnd &&
-          e.customData?.pixel_id === '1311550759901086'
+          e.customData?.pixel_id === '1311550759901086',
       );
 
       // Eventos da versão B
@@ -308,14 +308,14 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
         e =>
           e.timestamp >= dayStart &&
           e.timestamp < dayEnd &&
-          e.customData?.pixel_id === '1038647624890676'
+          e.customData?.pixel_id === '1038647624890676',
       );
 
       const visitorsA = new Set(
-        eventsA.filter(e => e.eventName === 'PageView').map(e => e.customData?.session_id)
+        eventsA.filter(e => e.eventName === 'PageView').map(e => e.customData?.session_id),
       ).size;
       const visitorsB = new Set(
-        eventsB.filter(e => e.eventName === 'PageView').map(e => e.customData?.session_id)
+        eventsB.filter(e => e.eventName === 'PageView').map(e => e.customData?.session_id),
       ).size;
       const leadsA = eventsA.filter(e => e.eventName === 'Lead').length;
       const leadsB = eventsB.filter(e => e.eventName === 'Lead').length;
@@ -612,7 +612,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' })
                 getMetricComparison(
                   metrics.A.conversionRate,
                   metrics.B.conversionRate,
-                  'percentage'
+                  'percentage',
                 ).difference
               }{' '}
               vs Versão A

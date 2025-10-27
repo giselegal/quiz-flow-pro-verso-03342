@@ -27,7 +27,7 @@ import {
     User,
     LogOut,
     Menu,
-    X
+    X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -60,32 +60,32 @@ const navigationItems: NavigationItem[] = [
         href: '/dashboard',
         label: 'Visão Geral',
         icon: LayoutDashboard,
-        description: 'Dashboard principal com métricas'
+        description: 'Dashboard principal com métricas',
     },
     {
         href: '/dashboard/participants',
         label: 'Participantes',
         icon: Users,
-        description: 'Gerenciar participantes e respostas'
+        description: 'Gerenciar participantes e respostas',
     },
     {
         href: '/dashboard/analytics',
         label: 'Analytics',
         icon: BarChart3,
-        description: 'Análises e relatórios detalhados'
+        description: 'Análises e relatórios detalhados',
     },
     {
         href: '/dashboard/templates',
         label: 'Templates',
         icon: Plus,
-        description: 'Modelos de funis disponíveis'
+        description: 'Modelos de funis disponíveis',
     },
     {
         href: '/dashboard/settings',
         label: 'Configurações',
         icon: Settings,
-        description: 'Configurações do sistema'
-    }
+        description: 'Configurações do sistema',
+    },
 ];
 
 // ============================================================================
@@ -119,8 +119,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
             {/* Sidebar */}
             <div className={cn(
-                "fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out z-50 lg:relative lg:translate-x-0",
-                isOpen ? "translate-x-0" : "-translate-x-full"
+                'fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out z-50 lg:relative lg:translate-x-0',
+                isOpen ? 'translate-x-0' : '-translate-x-full',
             )}>
                 <div className="flex flex-col h-full">
                     {/* Logo & Close Button */}
@@ -152,15 +152,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                                 href={item.href}
                                 onClick={() => onClose()}
                                 className={cn(
-                                    "flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group",
+                                    'flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group',
                                     isActive(item.href)
-                                        ? "bg-[#1A0F3D]/10 text-[#1A0F3D] border border-[#1A0F3D]/20"
-                                        : "text-gray-600 hover:bg-gray-50 hover:text-[#1A0F3D]"
+                                        ? 'bg-[#1A0F3D]/10 text-[#1A0F3D] border border-[#1A0F3D]/20'
+                                        : 'text-gray-600 hover:bg-gray-50 hover:text-[#1A0F3D]',
                                 )}
                             >
                                 <item.icon className={cn(
-                                    "w-5 h-5",
-                                    isActive(item.href) ? "text-[#2E1A6B]" : "text-gray-400 group-hover:text-[#2E1A6B]"
+                                    'w-5 h-5',
+                                    isActive(item.href) ? 'text-[#2E1A6B]' : 'text-gray-400 group-hover:text-[#2E1A6B]',
                                 )} />
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
@@ -223,7 +223,7 @@ const TopBar: React.FC<TopBarProps> = ({
     title,
     subtitle,
     onMenuClick,
-    headerActions
+    headerActions,
 }) => {
     return (
         <div className="bg-white border-b border-gray-200 px-4 py-3 lg:px-6">
@@ -284,7 +284,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     title,
     subtitle,
     headerActions,
-    className
+    className,
 }) => {
     const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
@@ -316,7 +316,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
                 {/* Page Content */}
                 <main className="flex-1 overflow-auto">
-                    <div className={cn("h-full", className)}>
+                    <div className={cn('h-full', className)}>
                         {children}
                     </div>
                 </main>
@@ -342,7 +342,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     title,
     subtitle,
     actions,
-    className
+    className,
 }) => (
     <DashboardLayout
         title={title}
@@ -367,9 +367,9 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
     subtitle,
     children,
     actions,
-    className
+    className,
 }) => (
-    <Card className={cn("h-full", className)}>
+    <Card className={cn('h-full', className)}>
         <div className="border-b border-gray-200 px-6 py-4">
             <div className="flex items-center justify-between">
                 <div>

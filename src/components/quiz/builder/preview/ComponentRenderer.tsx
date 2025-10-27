@@ -46,7 +46,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   useEffect(() => {
     console.warn(
       '⚠️ DEPRECATED: ComponentRenderer (quiz/builder/preview) será removido em 21/out/2025. ' +
-      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md'
+      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md',
     );
   }, []);
 
@@ -149,7 +149,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
       className={cn(
         'mb-4 p-4 transition-colors',
         isSelected && !isPreviewing ? 'border-2 border-[#B89B7A]' : '',
-        !isPreviewing && 'hover:bg-gray-50 cursor-pointer'
+        !isPreviewing && 'hover:bg-gray-50 cursor-pointer',
       )}
       onClick={() => !isPreviewing && onSelect && onSelect()}
     >

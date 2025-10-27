@@ -22,7 +22,7 @@ const StyleRevealModule: React.FC<StyleRevealModuleProps> = ({
   textColor = '#432818',
   accentColor = '#B89B7A',
   className = '',
-  isSelected = false
+  isSelected = false,
 }) => {
   const { primaryStyle, isLoading } = useQuizData();
 
@@ -41,7 +41,7 @@ const StyleRevealModule: React.FC<StyleRevealModuleProps> = ({
         'w-full p-6 rounded-lg transition-all duration-200',
         layout === 'card' ? 'text-center' : 'flex items-center gap-6',
         isSelected && 'ring-2 ring-primary ring-offset-2',
-        className
+        className,
       )}
       style={{ backgroundColor }}
     >

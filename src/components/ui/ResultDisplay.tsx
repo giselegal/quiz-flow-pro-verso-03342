@@ -1,8 +1,8 @@
-import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { CheckCircle } from "lucide-react";
-import { SpecialTipsCard } from "@/components/ui/SpecialTipsCard";
+import React from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { CheckCircle } from 'lucide-react';
+import { SpecialTipsCard } from '@/components/ui/SpecialTipsCard';
 
 interface ResultDisplayProps {
   username: string;
@@ -28,8 +28,8 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({
   tips,
   category,
   onCtaClick,
-  ctaText = "Quero Aprimorar Meu Estilo",
-  ctaUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912"
+  ctaText = 'Quero Aprimorar Meu Estilo',
+  ctaUrl = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
 }) => {
   const handleCtaClick = () => {
     if (onCtaClick) {

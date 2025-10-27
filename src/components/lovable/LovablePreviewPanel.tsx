@@ -37,7 +37,7 @@ export const LovablePreviewPanel: React.FC<LovablePreviewPanelProps> = ({ childr
             timestamp: Date.now(),
             mode: 'live-preview',
           },
-        })
+        }),
       );
 
       // Adiciona meta tag para detecção

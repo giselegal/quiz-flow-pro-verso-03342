@@ -71,12 +71,12 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
       question: 'Qual é a sua pergunta?',
       options: [
         { id: '1', text: 'Opção 1', score: 10 },
-        { id: '2', text: 'Opção 2', score: 20 }
+        { id: '2', text: 'Opção 2', score: 20 },
       ],
       multipleSelection: false,
-      required: true
+      required: true,
     },
-    component: () => import('@/components/blocks/inline/ButtonInline')
+    component: () => import('@/components/blocks/inline/ButtonInline'),
   },
 
   'options-grid': {
@@ -105,11 +105,11 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
         { id: '1', text: 'Opção 1', imageUrl: '' },
         { id: '2', text: 'Opção 2', imageUrl: '' },
         { id: '3', text: 'Opção 3', imageUrl: '' },
-        { id: '4', text: 'Opção 4', imageUrl: '' }
-      ]
+        { id: '4', text: 'Opção 4', imageUrl: '' },
+      ],
     },
     requiredProps: ['options'],
-    component: () => import('@/components/editor/blocks/OptionsGridBlock')
+    component: () => import('@/components/editor/blocks/OptionsGridBlock'),
   },
 
   'multiple-choice': {
@@ -121,7 +121,7 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '☑️',
     type: 'multiple-choice',
     difficulty: 'beginner',
-    component: () => import('@/components/blocks/inline/ButtonInline')
+    component: () => import('@/components/blocks/inline/ButtonInline'),
   },
 
   'quiz-navigation': {
@@ -133,7 +133,7 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '⏭️',
     type: 'quiz-navigation',
     difficulty: 'beginner',
-    component: () => import('@/components/blocks/inline/ButtonInline')
+    component: () => import('@/components/blocks/inline/ButtonInline'),
   },
 
   // Content Components
@@ -149,9 +149,9 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     defaultProps: {
       content: 'Digite seu texto aqui...',
       textAlign: 'left',
-      fontSize: 'md'
+      fontSize: 'md',
     },
-    component: () => import('@/components/blocks/inline/ButtonInline')
+    component: () => import('@/components/blocks/inline/ButtonInline'),
   },
 
   'image': {
@@ -163,7 +163,7 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '🖼️',
     type: 'image',
     difficulty: 'beginner',
-    component: () => import('@/components/blocks/inline/ButtonInline')
+    component: () => import('@/components/blocks/inline/ButtonInline'),
   },
 
   // Interactive Components
@@ -179,9 +179,9 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     defaultProps: {
       text: 'Clique aqui',
       variant: 'primary',
-      size: 'md'
+      size: 'md',
     },
-    component: () => import('@/components/blocks/inline/ButtonInline')
+    component: () => import('@/components/blocks/inline/ButtonInline'),
   },
 
   'testimonial': {
@@ -193,8 +193,8 @@ export const COMPONENT_REGISTRY: Record<string, ComponentMetadata> = {
     icon: '⭐',
     type: 'testimonial',
     difficulty: 'intermediate',
-    component: () => import('@/components/blocks/inline/TestimonialCardInlineBlock')
-  }
+    component: () => import('@/components/blocks/inline/TestimonialCardInlineBlock'),
+  },
 };
 
 // 🎯 REGISTRY UTILITIES
@@ -223,7 +223,7 @@ export const searchComponents = (query: string): ComponentMetadata[] => {
     .filter(component => 
       component.name.toLowerCase().includes(searchTerm) ||
       component.description.toLowerCase().includes(searchTerm) ||
-      component.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+      component.tags.some(tag => tag.toLowerCase().includes(searchTerm)),
     );
 };
 
@@ -285,10 +285,10 @@ export const getRegistryStats = () => {
     byDifficulty: {
       beginner: getComponentsByDifficulty('beginner').length,
       intermediate: getComponentsByDifficulty('intermediate').length,
-      advanced: getComponentsByDifficulty('advanced').length
+      advanced: getComponentsByDifficulty('advanced').length,
     },
     newComponents: getNewComponents().length,
-    proComponents: getProComponents().length
+    proComponents: getProComponents().length,
   };
 };
 

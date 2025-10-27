@@ -295,7 +295,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         console.log('🎯 Quiz21Steps: Navegou para etapa', step, 'stageId:', stageId);
       }
     },
-    [currentStep, answers, trackStepComplete, trackStepStart, debug, totalSteps]
+    [currentStep, answers, trackStepComplete, trackStepStart, debug, totalSteps],
   );
 
   // 🎯 Próxima etapa
@@ -342,7 +342,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         console.log('🎯 Quiz21Steps: Nome definido:', name);
       }
     },
-    [setUserNameFromInput, supabaseSession.id, startSupabaseQuiz, debug]
+    [setUserNameFromInput, supabaseSession.id, startSupabaseQuiz, debug],
   );
 
   const saveAnswer = useCallback(
@@ -412,7 +412,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
       getStepRequirements,
       goToNextStep,
       debug,
-    ]
+    ],
   );
 
   const updateStepSelections = useCallback(
@@ -423,7 +423,7 @@ export const Quiz21StepsProvider: React.FC<Quiz21StepsProviderProps> = ({
         console.log('🎯 Quiz21Steps: Seleções atualizadas:', selections);
       }
     },
-    [debug]
+    [debug],
   );
 
   const resetQuiz = useCallback(() => {

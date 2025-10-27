@@ -78,7 +78,7 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
                 y: Math.random() * 600,
               }
             : undefined,
-        }))
+        })),
       );
       schedule('collab-cursor-tick', tick, 3000, 'timeout');
     };
@@ -227,7 +227,7 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ projec
                 </span>
               </div>
             </div>
-          )
+          ),
       )}
     </div>
   );

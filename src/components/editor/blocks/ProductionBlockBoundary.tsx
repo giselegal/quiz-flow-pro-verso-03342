@@ -131,7 +131,7 @@ export class ProductionBlockBoundary extends Component<Props, State> {
 
   private handleReportBug = () => {
     const subject = encodeURIComponent(
-      `Bug Report: ${this.props.blockType || 'Unknown'} Block Error`
+      `Bug Report: ${this.props.blockType || 'Unknown'} Block Error`,
     );
     const body = encodeURIComponent(`
 Block Type: ${this.props.blockType || 'Unknown'}
@@ -168,7 +168,7 @@ Please describe what you were doing when this error occurred:
           className={cn(
             'relative border-2 border-red-200 bg-red-50 rounded-lg p-4',
             'min-h-[120px] flex flex-col items-center justify-center',
-            'text-red-700'
+            'text-red-700',
           )}
         >
           {/* Ícone de erro */}
@@ -194,7 +194,7 @@ Please describe what you were doing when this error occurred:
                 className={cn(
                   'flex items-center gap-1 px-3 py-1.5 text-xs',
                   'bg-red-100 hover:bg-red-200 rounded-md',
-                  'transition-colors duration-200'
+                  'transition-colors duration-200',
                 )}
               >
                 <RefreshCw className="w-3 h-3" />
@@ -207,7 +207,7 @@ Please describe what you were doing when this error occurred:
               className={cn(
                 'flex items-center gap-1 px-3 py-1.5 text-xs',
                 'bg-gray-100 hover:bg-gray-200 rounded-md',
-                'transition-colors duration-200'
+                'transition-colors duration-200',
               )}
             >
               <Bug className="w-3 h-3" />

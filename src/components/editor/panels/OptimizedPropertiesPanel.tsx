@@ -35,7 +35,7 @@ interface OptimizedPropertiesPanelProps {
 export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   className,
   width = 320,
-  position = 'right'
+  position = 'right',
 }) => {
   // 🔧 HOOKS
   // TODO: Update to use EditorProvider interface
@@ -53,7 +53,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
     return selectedBlocks.map((id: string) => ({
       id,
       type: 'text', // mock
-      properties: { text: 'Sample text' } // mock
+      properties: { text: 'Sample text' }, // mock
     }));
   }, [selectedBlocks]);
 
@@ -64,11 +64,11 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
   const handlePropertyChange = useCallback(async (
     blockId: string,
     property: string,
-    value: any
+    value: any,
   ) => {
     try {
       await updateBlock(blockId, {
-        [property]: value
+        [property]: value,
       });
     } catch (error) {
       appLogger.error('❌ Erro ao atualizar propriedade:', error);
@@ -78,7 +78,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
   const handleDeleteSelected = useCallback(async () => {
     try {
       await Promise.all(
-        selectedBlocks.map((blockId: string) => deleteBlock(blockId))
+        selectedBlocks.map((blockId: string) => deleteBlock(blockId)),
       );
     } catch (error) {
       appLogger.error('❌ Erro ao deletar blocos:', error);
@@ -92,7 +92,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
         className={cn(
           'border-l bg-muted/20 flex flex-col',
           position === 'left' && 'border-l-0 border-r',
-          className
+          className,
         )}
         style={{ width }}
       >
@@ -125,7 +125,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
         className={cn(
           'border-l bg-muted/20 flex flex-col',
           position === 'left' && 'border-l-0 border-r',
-          className
+          className,
         )}
         style={{ width }}
       >
@@ -189,7 +189,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
       className={cn(
         'border-l bg-muted/20 flex flex-col',
         position === 'left' && 'border-l-0 border-r',
-        className
+        className,
       )}
       style={{ width }}
     >
@@ -250,7 +250,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
                     onChange={(e) => handlePropertyChange(
                       singleBlock.id,
                       'text',
-                      e.target.value
+                      e.target.value,
                     )}
                     className="text-xs h-8"
                     placeholder="Digite o texto..."
@@ -268,7 +268,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
                       onChange={(e) => handlePropertyChange(
                         singleBlock.id,
                         'text',
-                        e.target.value
+                        e.target.value,
                       )}
                       className="text-xs h-8"
                       placeholder="Clique aqui"
@@ -282,7 +282,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
                       onChange={(e) => handlePropertyChange(
                         singleBlock.id,
                         'url',
-                        e.target.value
+                        e.target.value,
                       )}
                       className="text-xs h-8"
                       placeholder="https://..."

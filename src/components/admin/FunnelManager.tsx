@@ -18,7 +18,7 @@ import {
     RefreshCw,
     Database,
     Settings,
-    Info
+    Info,
 } from 'lucide-react';
 
 interface FunnelInfo {
@@ -47,7 +47,7 @@ const FunnelManager: React.FC = () => {
                 key.includes('funnel') ||
                 key.includes('Funnel') ||
                 key.includes('quiz') ||
-                key.includes('Quiz')
+                key.includes('Quiz'),
             );
 
             setTotalFunnelKeys(funnelKeys.length);
@@ -63,7 +63,7 @@ const FunnelManager: React.FC = () => {
                         origin: funnel.origin,
                         isActive: funnel.isActive,
                         totalSteps: funnel.totalSteps,
-                        stepConfigurations: Object.keys(funnel.stepConfigurations || {}).length
+                        stepConfigurations: Object.keys(funnel.stepConfigurations || {}).length,
                     });
                 } catch (error) {
                     console.error('Erro ao parsear funil:', error);
@@ -103,7 +103,7 @@ const FunnelManager: React.FC = () => {
                 key.includes('funnel') ||
                 key.includes('Funnel') ||
                 key.includes('quiz') ||
-                key.includes('Quiz')
+                key.includes('Quiz'),
             );
 
             // Remover funis antigos
@@ -129,7 +129,7 @@ const FunnelManager: React.FC = () => {
                     templateSource: 'quiz21StepsComplete.ts',
                     hasStepConfig: true,
                     isNoCodeEnabled: true,
-                    persistenceMethod: 'localStorage'
+                    persistenceMethod: 'localStorage',
                 },
                 stepConfigurations: {
                     'step-1': {
@@ -137,7 +137,7 @@ const FunnelManager: React.FC = () => {
                         stepName: 'Coleta de Nome',
                         nextStep: 'linear',
                         isActive: true,
-                        type: 'form'
+                        type: 'form',
                     },
                     'step-2': {
                         stepId: '2',
@@ -145,7 +145,7 @@ const FunnelManager: React.FC = () => {
                         nextStep: 'linear',
                         isActive: true,
                         type: 'quiz',
-                        requiredSelections: 3
+                        requiredSelections: 3,
                     },
                     'step-3': {
                         stepId: '3',
@@ -153,29 +153,29 @@ const FunnelManager: React.FC = () => {
                         nextStep: 'linear',
                         isActive: true,
                         type: 'quiz',
-                        requiredSelections: 3
+                        requiredSelections: 3,
                     },
                     'step-20': {
                         stepId: '20',
                         stepName: 'Página de Resultado',
                         nextStep: 'step-21',
                         isActive: true,
-                        type: 'result'
+                        type: 'result',
                     },
                     'step-21': {
                         stepId: '21',
                         stepName: 'Página de Oferta',
                         nextStep: 'end',
                         isActive: true,
-                        type: 'offer'
-                    }
+                        type: 'offer',
+                    },
                 },
                 navigation: {
                     enableBackButton: true,
                     showProgress: true,
                     autoAdvance: true,
-                    validateBeforeAdvance: true
-                }
+                    validateBeforeAdvance: true,
+                },
             };
 
             StorageService.safeSetJSON('active-funnel-main', activeFunnelData);

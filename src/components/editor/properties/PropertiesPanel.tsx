@@ -35,7 +35,7 @@ interface PropertiesPanelProps {
 const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   blockId,
   stepIndex = 0,
-  onClose
+  onClose,
 }) => {
   const {
     getBlock,
@@ -45,7 +45,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     moveBlockUp,
     moveBlockDown,
     getBlockIndex,
-    blocks
+    blocks,
   } = useStepBlocks(stepIndex);
 
   const [localValues, setLocalValues] = useState<Record<string, any>>({});
@@ -61,7 +61,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     if (block) {
       setLocalValues({
         ...block.content,
-        ...block.properties
+        ...block.properties,
       });
       setHasChanges(false);
     }
@@ -87,7 +87,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
       updateBlock(blockId, {
         content: Object.keys(content).length > 0 ? content : undefined,
-        properties: Object.keys(properties).length > 0 ? properties : undefined
+        properties: Object.keys(properties).length > 0 ? properties : undefined,
       });
 
       setHasChanges(false);
@@ -100,7 +100,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   const handleChange = useCallback((key: string, value: any) => {
     setLocalValues(prev => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
     setHasChanges(true);
   }, []);
@@ -182,7 +182,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       placeholder="JSON com configuração dos estilos"
                     />
                     <div className="text-xs text-gray-500 mt-1">
-                      Exemplo: {`{"romantico": {"min": 0, "max": 100, "label": "Romântico"}}`}
+                      Exemplo: {'{"romantico": {"min": 0, "max": 100, "label": "Romântico"}}'}
                     </div>
                   </div>
                 );

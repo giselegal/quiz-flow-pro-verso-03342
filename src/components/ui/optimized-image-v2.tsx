@@ -61,7 +61,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     <div
       className={`relative overflow-hidden ${className}`}
       style={{
-        paddingBottom: paddingBottom,
+        paddingBottom,
         backgroundColor: placeholderColor,
       }}
     >

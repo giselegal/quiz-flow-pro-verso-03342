@@ -37,7 +37,7 @@ const LocalStorageManager: React.FC<LocalStorageManagerProps> = memo(({
   enableAutoCleanup = true,
   cleanupInterval = 30 * 60 * 1000, // 30 minutos
   maxQuotaThreshold = 0.8, // 80%
-  showStats = process.env.NODE_ENV === 'development'
+  showStats = process.env.NODE_ENV === 'development',
 }) => {
   const [stats, setStats] = useState<StorageStats | null>(null);
   const [isCleaningUp, setIsCleaningUp] = useState(false);
@@ -54,7 +54,7 @@ const LocalStorageManager: React.FC<LocalStorageManagerProps> = memo(({
           usage: `${Math.round(storageStats.quota.usagePercentage)}%`,
           items: storageStats.itemCount,
           compressed: storageStats.compressedItems,
-          saved: `${Math.round(storageStats.totalSavings / 1024)}KB`
+          saved: `${Math.round(storageStats.totalSavings / 1024)}KB`,
         });
       }
     } catch (error) {

@@ -76,7 +76,7 @@ export function useVirtualBlocks(opts: UseVirtualBlocksOptions): VirtualBlocksRe
 
         return {
             topSpacer: startIndex * rowHeight,
-            bottomSpacer: (total - endIndex) * rowHeight
+            bottomSpacer: (total - endIndex) * rowHeight,
         };
     }, [enabled, safeBlocks.length, scrollTop, rowHeight, overscan, viewportHeight]);
 
@@ -87,6 +87,6 @@ export function useVirtualBlocks(opts: UseVirtualBlocksOptions): VirtualBlocksRe
         total: safeBlocks.length,
         scrollTop,
         setScrollTop,
-        containerRef
+        containerRef,
     };
 }

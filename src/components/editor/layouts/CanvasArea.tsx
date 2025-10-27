@@ -31,7 +31,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   selectedBlockId,
   actions,
   isDragging,
-  funnelId = 'quiz-estilo-21-steps' // Fallback alinhado ao runtime
+  funnelId = 'quiz-estilo-21-steps', // Fallback alinhado ao runtime
 }) => {
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
@@ -51,7 +51,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
         previewDevice === 'tablet' && 'px-16',
         previewDevice === 'desktop' && 'px-24',
         previewDevice === 'xl' && 'px-32',
-        className
+        className,
       )}
       data-canvas-container
       ref={containerRef}
@@ -68,7 +68,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
         previewDevice === 'mobile' && 'max-w-sm',
         previewDevice === 'tablet' && 'max-w-3xl',
         previewDevice === 'desktop' && 'max-w-5xl',
-        previewDevice === 'xl' && 'max-w-6xl'
+        previewDevice === 'xl' && 'max-w-6xl',
       )}>
         {mode === 'preview' ? (
           <div className="w-full">

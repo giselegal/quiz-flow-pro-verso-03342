@@ -43,7 +43,7 @@ export function useBlockOperationsManager({
   const addBlockToCurrentStep = useCallback((
     type: string,
     properties: Record<string, any> = {},
-    content: Record<string, any> = {}
+    content: Record<string, any> = {},
   ) => {
     if (!currentStepId) return null;
 
@@ -65,7 +65,7 @@ export function useBlockOperationsManager({
     updates: {
       properties?: Partial<Record<string, any>>;
       content?: Partial<Record<string, any>>;
-    }
+    },
   ) => {
     if (!currentStepId) return false;
     return blockOps.updateBlock(currentStepId, blockId, updates);
@@ -77,7 +77,7 @@ export function useBlockOperationsManager({
   const updateCurrentBlockProperty = useCallback((
     blockId: string,
     key: string,
-    value: any
+    value: any,
   ) => {
     if (!currentStepId) return false;
     return blockOps.updateBlockProperty(currentStepId, blockId, key, value);
@@ -120,7 +120,7 @@ export function useBlockOperationsManager({
    */
   const reorderBlocksInCurrentStep = useCallback((
     oldIndex: number,
-    newIndex: number
+    newIndex: number,
   ) => {
     if (!currentStepId) return false;
     return blockOps.reorderBlocks(currentStepId, oldIndex, newIndex);
@@ -130,7 +130,7 @@ export function useBlockOperationsManager({
    * Inserir snippet no step atual
    */
   const insertSnippetInCurrentStep = useCallback((
-    snippetBlocks: any[]
+    snippetBlocks: any[],
   ) => {
     if (!currentStepId) return [];
     return blockOps.insertSnippetBlocks(currentStepId, snippetBlocks);

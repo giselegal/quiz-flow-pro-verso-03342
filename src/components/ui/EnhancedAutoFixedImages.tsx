@@ -47,7 +47,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
                     fixBlurryImages(wrapperRef.current);
                   }
                 },
-                { timeout: 1000 }
+                { timeout: 1000 },
               );
             } else {
               setTimeout(() => {
@@ -82,7 +82,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
         setTimeout(() => {
           if (wrapperRef.current) {
             console.log(
-              'Fallback: Executando correção após timeout (sem suporte a PerformanceObserver)'
+              'Fallback: Executando correção após timeout (sem suporte a PerformanceObserver)',
             );
             fixBlurryImages(wrapperRef.current);
           }
@@ -144,7 +144,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
                   pendingCorrection = false;
                 }
               },
-              { timeout: 1000 }
+              { timeout: 1000 },
             );
           } else {
             setTimeout(() => {

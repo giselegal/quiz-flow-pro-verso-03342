@@ -61,7 +61,7 @@ export function ImageUploader({
       };
       reader.readAsDataURL(file);
     },
-    [maxSize, onChange]
+    [maxSize, onChange],
   );
 
   const handleDrop = useCallback(
@@ -74,7 +74,7 @@ export function ImageUploader({
         handleFileSelect(file);
       }
     },
-    [handleFileSelect]
+    [handleFileSelect],
   );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -112,7 +112,7 @@ export function ImageUploader({
         <div
           className={cn(
             'w-20 h-20 rounded-md border border-gray-300 flex-shrink-0 overflow-hidden bg-gray-50',
-            aspectRatio && 'aspect-square'
+            aspectRatio && 'aspect-square',
           )}
         >
           {value ? (
@@ -155,7 +155,7 @@ export function ImageUploader({
                       className={cn(
                         'border-2 border-dashed rounded-lg p-6 text-center transition-colors',
                         dragActive ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300',
-                        'hover:border-gray-400'
+                        'hover:border-gray-400',
                       )}
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}

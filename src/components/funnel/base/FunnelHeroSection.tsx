@@ -96,7 +96,7 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
       className={cn(
         'py-8 md:py-16 px-4 md:px-8 transition-all duration-200',
         isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
-        className
+        className,
       )}
       style={{
         backgroundColor,
@@ -118,7 +118,7 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             className={cn(
               'space-y-6',
               getTextOrder(),
-              layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left'
+              layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left',
             )}
           >
             {/* Logo */}
@@ -126,7 +126,7 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
               <div
                 className={cn(
                   'mb-6',
-                  layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left'
+                  layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left',
                 )}
               >
                 <img
@@ -134,7 +134,7 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
                   alt={logoAlt}
                   className={cn(
                     'h-12 md:h-16 mb-4',
-                    layout === 'hero-centered' ? 'mx-auto' : 'mx-auto md:mx-0'
+                    layout === 'hero-centered' ? 'mx-auto' : 'mx-auto md:mx-0',
                   )}
                 />
               </div>
@@ -144,7 +144,7 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             <h1
               className={cn(
                 'text-3xl md:text-4xl lg:text-5xl font-playfair leading-tight',
-                layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left'
+                layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left',
               )}
             >
               {title}
@@ -154,7 +154,7 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             <p
               className={cn(
                 'text-lg md:text-xl opacity-80',
-                layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left'
+                layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left',
               )}
             >
               {description}
@@ -164,7 +164,7 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             <div
               className={cn(
                 'flex',
-                layout === 'hero-centered' ? 'justify-center' : 'justify-center md:justify-start'
+                layout === 'hero-centered' ? 'justify-center' : 'justify-center md:justify-start',
               )}
             >
               <Button
@@ -186,7 +186,7 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
               <p
                 className={cn(
                   'text-sm opacity-70',
-                  layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left'
+                  layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left',
                 )}
               >
                 {ctaSubtext}

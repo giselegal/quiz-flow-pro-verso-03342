@@ -59,7 +59,7 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
   const progressData = useMemo(() => {
     const percentage = (quizState.currentStep / quizState.totalSteps) * 100;
     const completedSteps = Object.keys(quizState.stepValidation).filter(
-      step => quizState.stepValidation[parseInt(step)]
+      step => quizState.stepValidation[parseInt(step)],
     ).length;
 
     return {
@@ -191,7 +191,7 @@ export const QuizStepsNavigation: React.FC<QuizStepsNavigationProps> = ({
       className={cn(
         'quiz-steps-full bg-white border-b shadow-sm',
         mode === 'editor' && 'bg-gray-50',
-        className
+        className,
       )}
     >
       <div className="container mx-auto px-4 py-3">

@@ -15,7 +15,7 @@ interface ProviderGuardProps {
 
 export const ProviderGuard: React.FC<ProviderGuardProps> = ({ 
   children, 
-  fallback 
+  fallback, 
 }) => {
   const [isReady, setIsReady] = useState(false);
 

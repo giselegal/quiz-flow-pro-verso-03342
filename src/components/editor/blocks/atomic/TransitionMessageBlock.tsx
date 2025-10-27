@@ -5,7 +5,7 @@ import { useResultOptional } from '@/contexts/ResultContext';
 export default function TransitionMessageBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   const emoji = block.content?.emoji || '✨';
   const messageRaw = block.content?.text || '';
@@ -20,7 +20,7 @@ export default function TransitionMessageBlock({
       className={`p-6 mt-6 transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
       style={{
         backgroundColor,
-        borderRadius
+        borderRadius,
       }}
       onClick={(e) => { e.stopPropagation(); onClick?.(); }}
     >

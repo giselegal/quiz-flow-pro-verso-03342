@@ -20,7 +20,7 @@ export class SafeBoundary extends React.Component<Props, State> {
         try {
             this.props.onError?.(error);
             if (import.meta && (import.meta as any).env && (import.meta as any).env.DEV) {
-                // eslint-disable-next-line no-console
+                 
                 console.error(`[SafeBoundary] ${this.props.label || 'Erro no componente'}`, error, info);
             }
         } catch { }

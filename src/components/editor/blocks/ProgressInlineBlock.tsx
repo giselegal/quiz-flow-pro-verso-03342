@@ -89,7 +89,7 @@ const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={!disabled ? onClick : undefined}
     >
@@ -127,7 +127,7 @@ const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
                   if (newPercentage !== null && !isNaN(Number(newPercentage))) {
                     onPropertyChange(
                       'percentage',
-                      Math.max(0, Math.min(100, Number(newPercentage)))
+                      Math.max(0, Math.min(100, Number(newPercentage))),
                     );
                   }
                 }

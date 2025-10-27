@@ -63,7 +63,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({ settings, onUpda
 
   const updateRedirect = (index: number, updates: any) => {
     const updatedRedirects = settings.redirects.map((redirect, i) =>
-      i === index ? { ...redirect, ...updates } : redirect
+      i === index ? { ...redirect, ...updates } : redirect,
     );
     onUpdate({ redirects: updatedRedirects });
   };

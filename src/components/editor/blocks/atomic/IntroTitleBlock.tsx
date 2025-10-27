@@ -4,7 +4,7 @@ import { AtomicBlockProps } from '@/types/blockProps';
 export default function IntroTitleBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   // Suporta JSON v3: content.titleHtml | content.title, além de formas legadas
   const titleHtml: string | undefined = (block as any)?.content?.titleHtml;
@@ -57,7 +57,7 @@ export default function IntroTitleBlock({
       parts.push(
         <span key={match.index} style={{ color: `#${match[1]}` }} className="font-bold">
           {match[2]}
-        </span>
+        </span>,
       );
       lastIndex = regex.lastIndex;
     }

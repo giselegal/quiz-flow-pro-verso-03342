@@ -281,7 +281,7 @@ export const StepNavigationOverview: React.FC<StepNavigationOverviewProps> = ({
                       ? 'bg-blue-500 text-white border-blue-600'
                       : hasCustomConfig
                         ? 'bg-green-100 text-green-700 border-green-300'
-                        : 'bg-gray-100 text-gray-600 border-gray-300'
+                        : 'bg-gray-100 text-gray-600 border-gray-300',
                   )}
                   title={`Etapa ${stepNumber}${hasCustomConfig ? ' (Customizada)' : ' (Padrão)'}`}
                 >

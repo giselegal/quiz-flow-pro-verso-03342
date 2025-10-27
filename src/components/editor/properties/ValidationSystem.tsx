@@ -28,7 +28,7 @@ interface ValidationIndicatorProps {
 
 export const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
   result,
-  className = ''
+  className = '',
 }) => {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
@@ -60,7 +60,7 @@ export const validateProperty = (key: string, value: any): ValidationResult => {
       type: 'warning',
       category: 'content',
       message: 'Campo obrigatório vazio',
-      suggestion: 'Preencha este campo para melhorar a experiência'
+      suggestion: 'Preencha este campo para melhorar a experiência',
     });
   }
 
@@ -69,6 +69,6 @@ export const validateProperty = (key: string, value: any): ValidationResult => {
   return {
     isValid: issues.filter(i => i.type === 'error').length === 0,
     score,
-    issues
+    issues,
   };
 };

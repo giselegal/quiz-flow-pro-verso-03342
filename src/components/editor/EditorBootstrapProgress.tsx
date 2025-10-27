@@ -12,7 +12,7 @@ interface EditorBootstrapProgressProps {
 export const EditorBootstrapProgress: React.FC<EditorBootstrapProgressProps> = ({ step, total, label, phase, className }) => {
     const value = Math.min(100, Math.round((step / total) * 100));
     return (
-        <div className={"w-full max-w-md mx-auto flex flex-col items-center gap-3 " + (className || '')}>
+        <div className={`w-full max-w-md mx-auto flex flex-col items-center gap-3 ${  className || ''}`}>
             <div className="text-sm font-medium text-foreground">Inicializando Editor</div>
             <Progress.Root className="relative overflow-hidden bg-muted rounded-full w-full h-3" value={value}>
                 <Progress.Indicator

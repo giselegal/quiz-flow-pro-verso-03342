@@ -16,7 +16,7 @@ import {
   MousePointer,
   List,
   Layout,
-  Search
+  Search,
 } from 'lucide-react';
 
 export interface ComponentLibraryItem {
@@ -53,7 +53,7 @@ export const ComponentLibraryColumn: React.FC<ComponentLibraryColumnProps> = ({
   const groupedComponents = useMemo(() => {
     const filtered = components.filter(c =>
       c.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.category.toLowerCase().includes(searchTerm.toLowerCase())
+      c.category.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     return filtered.reduce((acc, component) => {
@@ -110,7 +110,7 @@ export const ComponentLibraryColumn: React.FC<ComponentLibraryColumnProps> = ({
                       className={cn(
                         'flex items-center gap-3 p-3 rounded-lg border',
                         'bg-card hover:bg-accent cursor-grab active:cursor-grabbing',
-                        'transition-colors'
+                        'transition-colors',
                       )}
                     >
                       <div className="flex-shrink-0 w-8 h-8 rounded bg-primary/10 flex items-center justify-center">

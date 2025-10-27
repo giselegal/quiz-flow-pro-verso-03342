@@ -5,7 +5,7 @@ import { useResultOptional } from '@/contexts/ResultContext';
 export default function TransitionTextBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   const textRaw = block.content?.text || '';
   const fontSize = block.content?.fontSize || 'lg';
@@ -18,7 +18,7 @@ export default function TransitionTextBlock({
     'sm': 'text-sm',
     'base': 'text-base',
     'lg': 'text-lg',
-    'xl': 'text-xl'
+    'xl': 'text-xl',
   };
 
   return (

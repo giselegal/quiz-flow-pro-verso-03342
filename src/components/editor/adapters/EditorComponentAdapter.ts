@@ -78,12 +78,12 @@ export function createAdapter<TProps>(
     config: Omit<EditorComponentAdapter<TProps>, 'createMocks' | 'validateProps'> & {
         createMocks?: (originalProps: TProps) => Partial<TProps>;
         validateProps?: (props: TProps) => ValidationResult;
-    }
+    },
 ): EditorComponentAdapter<TProps> {
     return {
         createMocks: (props) => ({}),
         validateProps: (props) => ({ isValid: true, errors: [], warnings: [] }),
-        ...config
+        ...config,
     };
 }
 

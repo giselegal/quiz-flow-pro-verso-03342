@@ -17,7 +17,7 @@ import {
     Tooltip,
     ResponsiveContainer,
     Cell,
-    ReferenceLine
+    ReferenceLine,
 } from 'recharts';
 import {
     TrendingDown,
@@ -25,7 +25,7 @@ import {
     Clock,
     Target,
     Users,
-    Zap
+    Zap,
 } from 'lucide-react';
 
 // ============================================================================
@@ -86,14 +86,14 @@ const STEP_NAMES = {
     18: 'Tendências',
     19: 'Sustentabilidade',
     20: 'Futuro',
-    21: 'Finalização'
+    21: 'Finalização',
 };
 
 const DIFFICULTY_COLORS = {
     easy: '#10b981',    // Verde
     medium: '#f59e0b',  // Amarelo
     hard: '#ef4444',    // Vermelho
-    critical: '#7c2d12' // Vermelho escuro
+    critical: '#7c2d12', // Vermelho escuro
 };
 
 // ============================================================================
@@ -213,7 +213,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
 
             // Contar participantes que saíram nesta etapa
             const dropoffAtStep = sessions.filter(s =>
-                s.current_step === step && s.status === 'abandoned'
+                s.current_step === step && s.status === 'abandoned',
             ).length;
 
             // Calcular tempo médio para esta etapa
@@ -238,7 +238,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
                 dropoff: dropoffAtStep,
                 dropoffPercentage: abandonmentRate,
                 averageTime: Math.round(averageTime),
-                difficulty
+                difficulty,
             });
         }
 
@@ -259,7 +259,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
 
             // Taxa de abandono nesta etapa
             const abandonedAtStep = sessions.filter(s =>
-                s.current_step === step && s.status === 'abandoned'
+                s.current_step === step && s.status === 'abandoned',
             ).length;
             const abandonmentRate = stepSessions.length > 0
                 ? (abandonedAtStep / stepSessions.length) * 100
@@ -267,14 +267,14 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
 
             // Taxa de retry (aproximada baseada em tempo excessivo)
             const retryRate = stepResponses.filter(r =>
-                (r.response_time_ms || 0) > 60000 // Mais de 1 minuto
+                (r.response_time_ms || 0) > 60000, // Mais de 1 minuto
             ).length / Math.max(stepResponses.length, 1) * 100;
 
             // Calcular dificuldade (0-100)
             const difficulty = Math.min(100, Math.round(
                 (avgResponseTime / 2) + // Tempo contribui até 50 pontos
                 (abandonmentRate * 2) + // Abandono contribui até 50 pontos  
-                (retryRate / 2) // Retry contribui até 50 pontos
+                (retryRate / 2), // Retry contribui até 50 pontos
             ));
 
             // Determinar cor baseada na dificuldade
@@ -290,7 +290,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
                 abandonmentRate,
                 retryRate,
                 difficulty,
-                color
+                color,
             });
         }
 
@@ -319,7 +319,7 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ filters = 
     const totalDropoff = funnelData.reduce((acc, step) => acc + step.dropoff, 0);
     const criticalSteps = funnelData.filter(step => step.difficulty === 'critical');
     const biggestDropoff = funnelData.reduce((max, step) =>
-        step.dropoff > max.dropoff ? step : max, funnelData[0] || { dropoff: 0 }
+        step.dropoff > max.dropoff ? step : max, funnelData[0] || { dropoff: 0 },
     );
 
     return (

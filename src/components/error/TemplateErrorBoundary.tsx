@@ -34,7 +34,7 @@ export class TemplateErrorBoundary extends React.Component<TemplateErrorBoundary
         stack: error.stack,
         url: window.location.href,
         timestamp: Date.now(),
-        toString: error.toString()
+        toString: error.toString(),
       };
       console.error('🔍 Erro salvo em window.__LAST_TEMPLATE_ERROR__');
 
@@ -49,7 +49,7 @@ export class TemplateErrorBoundary extends React.Component<TemplateErrorBoundary
     console.error('🚨 Erro detalhado no Template:', {
       error: error.message,
       stack: error.stack,
-      componentStack: errorInfo.componentStack
+      componentStack: errorInfo.componentStack,
     });
   }
 

@@ -9,13 +9,13 @@ export interface WithPropertyControlsProps {
 
 export const withPropertyControls = (
   WrappedComponent: React.FC<WithPropertyControlsProps>,
-  config: Partial<PropertyConfig> = {}
+  config: Partial<PropertyConfig> = {},
 ) => {
   return (props: any) => {
     const { properties, updateProperty } = useUnifiedProperties(
       props.blockType,
       props.blockId,
-      props.block
+      props.block,
     );
 
     const handleUpdate = (key: string, value: any) => {

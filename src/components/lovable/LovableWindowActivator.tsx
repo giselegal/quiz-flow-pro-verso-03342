@@ -86,7 +86,7 @@ export const LovableWindowActivator: React.FC = () => {
                 action: 'force-open-window',
                 projectId: '65efd17d-5178-405d-9721-909c97470c6d',
               },
-            })
+            }),
           );
         });
 
@@ -109,7 +109,7 @@ export const LovableWindowActivator: React.FC = () => {
                 timestamp: Date.now(),
                 action: 'immediate-open',
               },
-            })
+            }),
           );
         };
         if (typeof (window as any).requestIdleCallback === 'function') {
@@ -137,7 +137,7 @@ export const LovableWindowActivator: React.FC = () => {
                 timestamp: now,
               },
             },
-            '*'
+            '*',
           );
         };
 
@@ -194,7 +194,7 @@ export const LovableWindowActivator: React.FC = () => {
             timestamp: Date.now(),
             action: 'periodic-reactivation',
           },
-        })
+        }),
       );
     }, REACTIVATE_MS);
 

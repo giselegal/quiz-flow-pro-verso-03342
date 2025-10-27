@@ -366,7 +366,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         optionsCount: options?.length || 0,
         selectedOptions: isPreviewMode ? previewSelections : selectedOptions,
         blockId: block?.id,
-        currentStep: (window as any)?.__quizCurrentStep ?? currentStepFromEditor
+        currentStep: (window as any)?.__quizCurrentStep ?? currentStepFromEditor,
       });
     }
   }, [isPreviewMode, multipleSelectionCompat, previewSelections, selectedOptions, block?.id, currentStepFromEditor]);
@@ -374,7 +374,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // 🎯 CONFIGURAÇÃO DE STEP USANDO O HOOK
   const { config: stepConfig, isLoading: stepConfigLoading } = useStepConfig({
     funnelId: 'quiz21steps', // Usando o ID padrão
-    stepNumber: currentStepFromEditor || 1 // Usar 1 como fallback se for null
+    stepNumber: currentStepFromEditor || 1, // Usar 1 como fallback se for null
   });
 
   // 🎯 CONFIGURAÇÃO HÍBRIDA POR ETAPA (Agora usando o hook)
@@ -399,7 +399,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           autoAdvanceDelay: stepConfig.behavior.autoAdvanceDelay || 1000,
           validationMessage: stepConfig.validation.message,
           allowBack: stepConfig.behavior.allowBack,
-          showProgress: stepConfig.behavior.showProgress
+          showProgress: stepConfig.behavior.showProgress,
         };
       }
 
@@ -448,13 +448,13 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       const tempConfig = {
         metadata: {
           type: getStepType(stepNumber) as any,
-          stepNumber
+          stepNumber,
         },
         behavior: {
           autoAdvance: stepNumber >= 2 && stepNumber <= 11, // Etapas 2-11 têm auto-avanço
           autoAdvanceDelay: 1500,
           showProgress: true,
-          allowBack: stepNumber > 1 // Não permitir voltar na primeira etapa
+          allowBack: stepNumber > 1, // Não permitir voltar na primeira etapa
         },
         validation: {
           type: optionsGrid ? 'selection' : 'none',
@@ -462,8 +462,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           requiredSelections: (optionsGrid?.properties?.requiredSelections ?? optionsGrid?.content?.requiredSelections ?? 1),
           minSelections: (optionsGrid?.properties?.minSelections ?? optionsGrid?.content?.minSelections ?? 1),
           maxSelections: (optionsGrid?.properties?.maxSelections ?? optionsGrid?.content?.maxSelections ?? 1),
-          message: 'Por favor, complete esta etapa para continuar'
-        }
+          message: 'Por favor, complete esta etapa para continuar',
+        },
       };
 
       appLogger.debug(`🔄 OptionsGridBlock: Configuração extraída do template para step ${stepNumber}:`, tempConfig);
@@ -477,7 +477,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         autoAdvanceDelay: tempConfig.behavior.autoAdvanceDelay || 1000,
         validationMessage: tempConfig.validation.message,
         allowBack: tempConfig.behavior.allowBack,
-        showProgress: tempConfig.behavior.showProgress
+        showProgress: tempConfig.behavior.showProgress,
       };
     } catch (error) {
       appLogger.error(`❌ OptionsGridBlock: Erro ao carregar configuração para step ${stepNumber}:`, error);
@@ -687,7 +687,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       currentPreviewSelections: previewSelections,
       currentSelectedOptions: selectedOptions,
       allowDeselection,
-      maxSelections
+      maxSelections,
     });
 
     if (isPreviewMode) {
@@ -750,7 +750,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               selectedOptions: newSelections,
               selectedIds: newSelections,
             },
-          })
+          }),
         );
       } catch { }
 
@@ -818,7 +818,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               previewAutoAdvanceRef.current = false;
             },
             delayMs,
-            'timeout'
+            'timeout',
           );
         }
       } else if (onStepComplete && hasMinSelections) {
@@ -896,7 +896,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             selectedOptions: newSelections,
             selectedIds: newSelections,
           },
-        })
+        }),
       );
 
       // 🎯 APLICAR COMPORTAMENTO ESPECÍFICO POR ETAPA
@@ -922,12 +922,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           window.dispatchEvent(
             new CustomEvent('navigate-to-step', {
               detail: { stepId: nextStep, source: 'options-grid-auto-advance' },
-            })
+            }),
           );
           window.dispatchEvent(
             new CustomEvent('quiz-navigate-to-step', {
               detail: { stepId: nextStep, source: 'options-grid-auto-advance' },
-            })
+            }),
           );
 
           // Libera para um próximo uso quando o usuário retornar/alterar
@@ -1007,7 +1007,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           // 🎯 Hover do ModularQuestionStep
           const hoverStyles: React.CSSProperties = {
             borderColor: '#deac6d',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
           };
 
           return (
@@ -1032,7 +1032,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                   currentTarget: e.currentTarget,
                   isPreviewMode,
                   multipleSelection: multipleSelectionCompat,
-                  timestamp: Date.now()
+                  timestamp: Date.now(),
                 });
 
                 // Forçar interrupção de qualquer evento concorrente
@@ -1049,7 +1049,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                   zIndex: window.getComputedStyle(element).zIndex,
                   position: window.getComputedStyle(element).position,
                   display: window.getComputedStyle(element).display,
-                  visibility: window.getComputedStyle(element).visibility
+                  visibility: window.getComputedStyle(element).visibility,
                 });
 
                 // Adicionar marcação visual temporária para debug
@@ -1089,7 +1089,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                 ...selectedStyles,
                 cursor: 'pointer !important',
                 pointerEvents: 'auto',
-                userSelect: 'none'
+                userSelect: 'none',
               }}
             >
               {opt.imageUrl && showImageEffective && (

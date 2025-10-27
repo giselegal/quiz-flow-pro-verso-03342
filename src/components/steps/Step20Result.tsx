@@ -23,8 +23,8 @@ interface Step20ResultProps {
 }
 
 const Step20Result: React.FC<Step20ResultProps> = ({
-  className = "",
-  isPreview = false
+  className = '',
+  isPreview = false,
 }) => {
   const { primaryStyle, secondaryStyles, isLoading, error, retry } = useQuizResult();
   const [userName, setUserName] = useState<string>('');

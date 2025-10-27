@@ -35,7 +35,7 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
 
   const updateCustomWebhook = (id: string, updates: any) => {
     const updatedWebhooks = settings.customWebhooks.map(webhook =>
-      webhook.id === id ? { ...webhook, ...updates } : webhook
+      webhook.id === id ? { ...webhook, ...updates } : webhook,
     );
     onUpdate({ customWebhooks: updatedWebhooks });
   };

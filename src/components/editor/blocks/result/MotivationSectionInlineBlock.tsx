@@ -73,13 +73,13 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
     },
     'rounded-lg border border-opacity-10',
     isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
-    className
+    className,
   );
 
   const containerStyle = {
     backgroundColor,
     color: textColor,
-    borderColor: accentColor + '20',
+    borderColor: `${accentColor  }20`,
   };
 
   const icons = [Sparkles, Target, Zap, Sparkles]; // Cycling through icons
@@ -125,7 +125,7 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
                   {showIcons && IconComponent && (
                     <div
                       className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-0.5"
-                      style={{ backgroundColor: accentColor + '20' }}
+                      style={{ backgroundColor: `${accentColor  }20` }}
                     >
                       <IconComponent className="w-4 h-4" style={{ color: accentColor }} />
                     </div>

@@ -15,7 +15,7 @@ export default function FooterCopyrightBlock({
   isSelected = false,
   isEditable = false,
   onSelect,
-  onOpenProperties
+  onOpenProperties,
 }: FooterCopyrightBlockProps) {
   // Suporta {currentYear} como token dinâmico
   const textRaw = block.content?.text || block.properties?.text || '© {currentYear} Gisele Galvão - Todos os direitos reservados';

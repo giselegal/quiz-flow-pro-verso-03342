@@ -18,7 +18,7 @@ import {
   Play,
   Pause,
   RotateCcw,
-  CheckCircle
+  CheckCircle,
 } from 'lucide-react';
 
 interface ABTest {
@@ -68,7 +68,7 @@ const ABTesting: React.FC = () => {
           conversions: 47,
           visitors: 234,
           conversionRate: 20.1,
-          isControl: true
+          isControl: true,
         },
         {
           id: 'variant-a',
@@ -78,17 +78,17 @@ const ABTesting: React.FC = () => {
           conversions: 62,
           visitors: 241,
           conversionRate: 25.7,
-          isControl: false
-        }
+          isControl: false,
+        },
       ],
       metrics: {
         totalVisitors: 475,
         totalConversions: 109,
         overallConversionRate: 22.9,
-        confidence: 94.2
+        confidence: 94.2,
       },
       created: Date.now() - 5 * 24 * 60 * 60 * 1000, // 5 days ago
-      startDate: Date.now() - 5 * 24 * 60 * 60 * 1000
+      startDate: Date.now() - 5 * 24 * 60 * 60 * 1000,
     },
     {
       id: 'test-2', 
@@ -104,7 +104,7 @@ const ABTesting: React.FC = () => {
           conversions: 0,
           visitors: 0,
           conversionRate: 0,
-          isControl: true
+          isControl: true,
         },
         {
           id: 'variant-b',
@@ -114,7 +114,7 @@ const ABTesting: React.FC = () => {
           conversions: 0,
           visitors: 0,
           conversionRate: 0,
-          isControl: false
+          isControl: false,
         },
         {
           id: 'variant-c',
@@ -124,17 +124,17 @@ const ABTesting: React.FC = () => {
           conversions: 0,
           visitors: 0,
           conversionRate: 0,
-          isControl: false
-        }
+          isControl: false,
+        },
       ],
       metrics: {
         totalVisitors: 0,
         totalConversions: 0,
         overallConversionRate: 0,
-        confidence: 0
+        confidence: 0,
       },
-      created: Date.now() - 2 * 24 * 60 * 60 * 1000
-    }
+      created: Date.now() - 2 * 24 * 60 * 60 * 1000,
+    },
   ]);
 
   const [activeTest, setActiveTest] = useState<string>('test-1');
@@ -164,7 +164,7 @@ const ABTesting: React.FC = () => {
           return { 
             ...test, 
             status: 'running', 
-            startDate: Date.now() 
+            startDate: Date.now(), 
           };
         case 'pause':
           return { ...test, status: 'paused' };
@@ -172,7 +172,7 @@ const ABTesting: React.FC = () => {
           return { 
             ...test, 
             status: 'completed', 
-            endDate: Date.now() 
+            endDate: Date.now(), 
           };
         case 'reset':
           return {
@@ -182,14 +182,14 @@ const ABTesting: React.FC = () => {
               ...v,
               conversions: 0,
               visitors: 0,
-              conversionRate: 0
+              conversionRate: 0,
             })),
             metrics: {
               totalVisitors: 0,
               totalConversions: 0,
               overallConversionRate: 0,
-              confidence: 0
-            }
+              confidence: 0,
+            },
           };
         default:
           return test;

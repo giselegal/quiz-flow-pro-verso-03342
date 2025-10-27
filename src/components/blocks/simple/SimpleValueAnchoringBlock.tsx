@@ -16,7 +16,7 @@ const SimpleValueAnchoringBlock: React.FC<BlockComponentProps> = ({
     block,
     isSelected,
     editMode,
-    onSelect
+    onSelect,
 }) => {
     const content = block.content || {};
 

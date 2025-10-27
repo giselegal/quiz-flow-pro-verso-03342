@@ -193,7 +193,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       minHeight="4rem"
       editLabel="Editar CTA"
@@ -204,7 +204,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
           SPACING.padding.md,
           ANIMATIONS.transition,
           'hover:shadow-lg hover:scale-105',
-          styleClasses[buttonStyle as keyof typeof styleClasses] || styleClasses.brand
+          styleClasses[buttonStyle as keyof typeof styleClasses] || styleClasses.brand,
         )}
         onClick={handleClick}
         onMouseEnter={() => setIsHovered(true)}
@@ -260,7 +260,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
         <div
           className={cn(
             'flex-shrink-0 transition-transform duration-300',
-            isHovered && 'translate-x-1'
+            isHovered && 'translate-x-1',
           )}
         >
           <ArrowRight className="w-6 h-6 text-white" />

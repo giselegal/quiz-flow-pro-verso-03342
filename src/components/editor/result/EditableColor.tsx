@@ -39,7 +39,7 @@ export const EditableColor: React.FC<EditableColorProps> = ({
   label,
   value,
   onChange,
-  className = ''
+  className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [customValue, setCustomValue] = useState(value);
@@ -108,7 +108,7 @@ export const EditableColor: React.FC<EditableColorProps> = ({
                   onClick={() => handlePresetSelect(color)}
                   className={cn(
                     'w-6 h-6 rounded border-2 transition-transform hover:scale-110',
-                    value === color ? 'border-stone-800' : 'border-stone-300'
+                    value === color ? 'border-stone-800' : 'border-stone-300',
                   )}
                   style={{ backgroundColor: color }}
                   title={color}

@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   X, Trash2, RotateCcw, Plus, Minus, Upload, Eye, EyeOff,
   Info, Palette, Image, Settings, Layout, Type, Check,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react';
 import { blocksRegistry, type PropSchema } from '@/core/blocks/registry';
 import QuizQuestionPropertiesPanel from '@/components/editor/properties/QuizQuestionPropertiesPanel';
@@ -31,7 +31,7 @@ const categoryIcons = {
   style: Palette,
   validation: Check,
   behavior: Settings,
-  general: Settings
+  general: Settings,
 };
 
 const categoryLabels = {
@@ -40,14 +40,14 @@ const categoryLabels = {
   style: 'Estilo',
   validation: 'Validação',
   behavior: 'Comportamento',
-  general: 'Geral'
+  general: 'Geral',
 };
 
 // ✨ HOOK PARA SINCRONIZAÇÃO BIDIRECIONAL COM BACKEND
 const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
   const [localState, setLocalState] = useState(() => ({
     ...selectedBlock?.properties || {},
-    ...selectedBlock?.content || {}
+    ...selectedBlock?.content || {},
   }));
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -59,7 +59,7 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
     if (selectedBlock) {
       setLocalState({
         ...selectedBlock.properties || {},
-        ...selectedBlock.content || {}
+        ...selectedBlock.content || {},
       });
       setHasUnsavedChanges(false);
       setSaveStatus('idle');
@@ -91,7 +91,7 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
 
           await onUpdate(selectedBlock.id, {
             ...(Object.keys(properties).length > 0 && { properties }),
-            ...(Object.keys(content).length > 0 && { content })
+            ...(Object.keys(content).length > 0 && { content }),
           });
 
           setHasUnsavedChanges(false);
@@ -126,7 +126,7 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
     isSaving,
     hasUnsavedChanges,
     saveStatus,
-    lastSaved
+    lastSaved,
   };
 };
 
@@ -182,7 +182,7 @@ const ImageFieldEditor: React.FC<{
             className="max-w-full h-20 object-contain mx-auto rounded"
             style={{
               width: currentWidth ? `${currentWidth}px` : 'auto',
-              height: currentHeight ? `${currentHeight}px` : 'auto'
+              height: currentHeight ? `${currentHeight}px` : 'auto',
             }}
           />
           <div className="absolute top-1 right-1 bg-black/50 text-white text-[8px] px-1 rounded">
@@ -267,7 +267,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     isSaving,
     hasUnsavedChanges,
     saveStatus,
-    lastSaved
+    lastSaved,
   } = useBackendSync(selectedBlock, _onUpdate);
 
   if (!selectedBlock) {
@@ -718,7 +718,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
                             : typeof value === 'string'
                               ? `"${value}"`
                               : JSON.stringify(value).length > 30
-                                ? JSON.stringify(value).slice(0, 30) + '...'
+                                ? `${JSON.stringify(value).slice(0, 30)  }...`
                                 : JSON.stringify(value)
                           }
                         </span>

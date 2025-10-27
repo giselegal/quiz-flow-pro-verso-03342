@@ -71,7 +71,7 @@ const QuizRunnerShell: React.FC<QuizRunnerShellProps> = ({
           <button
             className={cn(
               'px-3 py-2 rounded border text-sm',
-              (currentStep === 1 || !canGoPrev) && 'opacity-50 cursor-not-allowed'
+              (currentStep === 1 || !canGoPrev) && 'opacity-50 cursor-not-allowed',
             )}
             onClick={onPrev}
             disabled={currentStep === 1 || !onPrev || !canGoPrev}
@@ -81,7 +81,7 @@ const QuizRunnerShell: React.FC<QuizRunnerShellProps> = ({
           <button
             className={cn(
               'px-3 py-2 rounded text-sm text-white transition-all',
-              'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]'
+              'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]',
             )}
             onClick={onNext}
             disabled={currentStep === totalSteps || !onNext || !canGoNext}
@@ -97,7 +97,7 @@ const QuizRunnerShell: React.FC<QuizRunnerShellProps> = ({
     <div
       className={cn(
         'bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20 overflow-hidden',
-        className
+        className,
       )}
     >
       {children}
@@ -109,7 +109,7 @@ const QuizRunnerShell: React.FC<QuizRunnerShellProps> = ({
       <button
         className={cn(
           'px-3 py-2 rounded border text-sm',
-          (currentStep === 1 || !canGoPrev) && 'opacity-50 cursor-not-allowed'
+          (currentStep === 1 || !canGoPrev) && 'opacity-50 cursor-not-allowed',
         )}
         onClick={onPrev}
         disabled={currentStep === 1 || !onPrev || !canGoPrev}
@@ -119,7 +119,7 @@ const QuizRunnerShell: React.FC<QuizRunnerShellProps> = ({
       <button
         className={cn(
           'px-3 py-2 rounded text-sm text-white transition-all',
-          'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]'
+          'bg-gradient-to-r from-[#B89B7A] to-[#8B7355]',
         )}
         onClick={onNext}
         disabled={currentStep === totalSteps || !onNext || !canGoNext}

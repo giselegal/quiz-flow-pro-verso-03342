@@ -20,7 +20,7 @@ interface OfferStepProps {
 export default function OfferStep({
     data,
     userProfile,
-    offerKey
+    offerKey,
 }: OfferStepProps) {
     const offerContent = data.offerMap?.[offerKey];
 

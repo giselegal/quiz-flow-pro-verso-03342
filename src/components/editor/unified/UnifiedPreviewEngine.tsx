@@ -55,7 +55,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   mode = 'preview',
   enableProductionMode = false,
   realTimeUpdate = false,
-  debugInfo = {}
+  debugInfo = {},
 }) => {
   appLogger.debug('🎯 [DEBUG] UnifiedPreviewEngine recebeu props:', {
     mode,
@@ -64,7 +64,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     funnelId,
     currentStep,
     blocksCount: blocks.length,
-    debugInfo
+    debugInfo,
   });
 
   // 🎯 FASE 3: PREVIEW EM TEMPO REAL com debounce implícito
@@ -75,7 +75,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
         blocksCount: blocks.length,
         selectedBlock: selectedBlockId,
         timestamp: new Date().toISOString(),
-        enableProductionMode
+        enableProductionMode,
       });
     }
   }, [blocks, selectedBlockId, currentStep, realTimeUpdate, enableProductionMode]);

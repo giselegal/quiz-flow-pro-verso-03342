@@ -15,7 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Target, Brain, Settings, Crown,
-  CheckCircle, AlertTriangle, Info
+  CheckCircle, AlertTriangle, Info,
 } from 'lucide-react';
 
 // Providers necessários
@@ -50,7 +50,7 @@ interface QuizEditorState {
 
 const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
   funnelId,
-  className = ''
+  className = '',
 }) => {
   // Estado local
   const [state, setState] = useState<QuizEditorState>({
@@ -59,7 +59,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
     errorMessage: '',
     totalSteps: TOTAL_STEPS,
     currentStep: 1,
-    quizMetadata: null
+    quizMetadata: null,
   });
 
   // Hooks
@@ -89,7 +89,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
         ...prev,
         isLoaded: true,
         totalSteps: editorData.totalSteps,
-        quizMetadata: editorData.quizMetadata
+        quizMetadata: editorData.quizMetadata,
       }));
 
       addNotification('✅ Quiz carregado com sucesso no editor', 'success');
@@ -97,7 +97,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
       console.log('✅ Quiz carregado:', {
         totalSteps: editorData.totalSteps,
         stepsConverted: Object.keys(editorData.stepBlocks).length,
-        metadata: editorData.quizMetadata
+        metadata: editorData.quizMetadata,
       });
 
     } catch (error) {
@@ -106,7 +106,7 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
       setState(prev => ({
         ...prev,
         hasError: true,
-        errorMessage: error instanceof Error ? error.message : 'Erro desconhecido'
+        errorMessage: error instanceof Error ? error.message : 'Erro desconhecido',
       }));
 
       addNotification('❌ Erro ao carregar quiz no editor', 'error');

@@ -18,7 +18,7 @@ export const QuestionEditor: React.FC<QuestionEditorProps> = ({
   onSave,
   onCancel,
   onDelete,
-  isNew = false
+  isNew = false,
 }) => {
   const [editedQuestion, setEditedQuestion] = useState(() => ({
     id: question?.id || `question-${Date.now()}`,
@@ -44,7 +44,7 @@ export const QuestionEditor: React.FC<QuestionEditorProps> = ({
             value={editedQuestion.title}
             onChange={(e) => setEditedQuestion(prev => ({ 
               ...prev, 
-              title: e.target.value 
+              title: e.target.value, 
             }))}
             className="w-full p-2 border rounded"
             placeholder="Digite o título da pergunta"
@@ -57,7 +57,7 @@ export const QuestionEditor: React.FC<QuestionEditorProps> = ({
             value={editedQuestion.type}
             onChange={(e) => setEditedQuestion(prev => ({ 
               ...prev, 
-              type: e.target.value as any
+              type: e.target.value as any,
             }))}
             className="w-full p-2 border rounded"
           >

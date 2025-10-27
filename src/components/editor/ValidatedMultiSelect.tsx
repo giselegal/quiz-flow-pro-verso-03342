@@ -76,7 +76,7 @@ export const ValidatedMultiSelect: React.FC<ValidatedMultiSelectProps> = ({
         <ValidationFeedback
           result={{
             success: false,
-            errors: errors,
+            errors,
           }}
         />
       )}

@@ -30,7 +30,7 @@ import type {
     FunnelSEOOverrides,
     FunnelTrackingConfig,
     FunnelUTMConfig,
-    FunnelWebhooksConfig
+    FunnelWebhooksConfig,
 } from '@/templates/funnel-configs/quiz21StepsComplete.config';
 
 // ============================================================================
@@ -50,7 +50,7 @@ interface FunnelTechnicalConfigPanelProps {
 export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProps> = ({
     funnelId,
     onConfigChange,
-    className = ''
+    className = '',
 }) => {
     // ============================================================================
     // ESTADOS
@@ -86,7 +86,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
                 // Salvar a configuração gerada
                 loadedConfig = await persistenceService.saveConfig(funnelId, generatedConfig, {
                     source: 'generated',
-                    validate: false // Não validar config gerada automaticamente
+                    validate: false, // Não validar config gerada automaticamente
                 });
             }
 
@@ -133,8 +133,8 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
             ...prev!,
             seo: {
                 ...prev!.seo,
-                ...seoUpdates
-            }
+                ...seoUpdates,
+            },
         }));
     }, [config]);
 
@@ -145,8 +145,8 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
             ...prev!,
             tracking: {
                 ...prev!.tracking,
-                ...trackingUpdates
-            }
+                ...trackingUpdates,
+            },
         }));
     }, [config]);
 
@@ -157,8 +157,8 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
             ...prev!,
             utm: {
                 ...prev!.utm,
-                ...utmUpdates
-            }
+                ...utmUpdates,
+            },
         }));
     }, [config]);
 
@@ -170,8 +170,8 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
             webhooks: {
                 ...prev.webhooks,
                 ...webhooksUpdates,
-                enabled: webhooksUpdates.enabled ?? prev.webhooks?.enabled ?? false
-            }
+                enabled: webhooksUpdates.enabled ?? prev.webhooks?.enabled ?? false,
+            },
         }) : prev);
     }, [config]);
 
@@ -195,8 +195,8 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
                     backup: true,
                     updateCache: true,
                     source: 'manual',
-                    userId: 'current-user' // TODO: Obter do contexto de auth
-                }
+                    userId: 'current-user', // TODO: Obter do contexto de auth
+                },
             );
 
             // Atualizar estado local
@@ -353,7 +353,7 @@ export const FunnelTechnicalConfigPanel: React.FC<FunnelTechnicalConfigPanelProp
                                     id="seo-keywords"
                                     value={config.seo?.keywords?.join(', ') || ''}
                                     onChange={(e) => updateSEO({
-                                        keywords: e.target.value.split(',').map(k => k.trim()).filter(Boolean)
+                                        keywords: e.target.value.split(',').map(k => k.trim()).filter(Boolean),
                                     })}
                                     placeholder="palavra1, palavra2, palavra3"
                                     disabled={previewMode}

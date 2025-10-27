@@ -456,7 +456,7 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
       components: category.components.filter(
         component =>
           component.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          component.description.toLowerCase().includes(searchTerm.toLowerCase())
+          component.description.toLowerCase().includes(searchTerm.toLowerCase()),
       ),
     }))
     .filter(category => category.components.length > 0);

@@ -83,7 +83,7 @@ export const QuizOfferHeroBlock: React.FC<QuizOfferHeroBlockProps> = ({
       className={cn(
         'transition-all overflow-hidden',
         isSelected && 'ring-2 ring-primary rounded',
-        className
+        className,
       )}
       style={containerStyle}
       onClick={onClick}

@@ -20,13 +20,13 @@ interface ResultPreviewSwitcherProps {
 export const ResultPreviewSwitcher: React.FC<ResultPreviewSwitcherProps> = ({
   className = '',
   isPreview = false,
-  enableEditing = true
+  enableEditing = true,
 }) => {
   const {
     previewMode,
     currentResult,
     availableStyles,
-    switchPrimaryStyle
+    switchPrimaryStyle,
   } = useQuizResultEditor();
 
   // Modo único (padrão)

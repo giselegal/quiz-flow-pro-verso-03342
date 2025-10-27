@@ -4,7 +4,7 @@ import { AtomicBlockProps } from '@/types/blockProps';
 export default function ResultCharacteristicsBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   // ✅ Ler apenas de content
   const characteristics = block.content?.items || [];

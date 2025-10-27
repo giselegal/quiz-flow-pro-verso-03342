@@ -70,7 +70,7 @@ export const QuizQuestionHeaderBlock: React.FC<QuizQuestionHeaderBlockProps> = (
       className={cn(
         'transition-all',
         isSelected && 'ring-2 ring-primary rounded',
-        className
+        className,
       )}
       style={containerStyle}
       onClick={onClick}

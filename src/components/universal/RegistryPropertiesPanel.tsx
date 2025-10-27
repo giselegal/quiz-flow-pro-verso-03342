@@ -66,7 +66,7 @@ const CATEGORIES = {
   style: { label: 'Estilo', icon: Palette, color: 'text-purple-600' },
   validation: { label: 'Validação', icon: Check, color: 'text-orange-600' },
   behavior: { label: 'Comportamento', icon: Settings, color: 'text-red-600' },
-  general: { label: 'Geral', icon: Sparkles, color: 'text-gray-600' }
+  general: { label: 'Geral', icon: Sparkles, color: 'text-gray-600' },
 };
 
 // ✨ GRID LAYOUTS PARA ORGANIZAÇÃO VISUAL (aplicados dinamicamente)
@@ -99,7 +99,7 @@ const shouldUseGrid = (schemas: ModernPropSchema[], category: string) => {
 const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
   const [localState, setLocalState] = useState(() => ({
     ...selectedBlock?.properties || {},
-    ...selectedBlock?.content || {}
+    ...selectedBlock?.content || {},
   }));
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -111,7 +111,7 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
     if (selectedBlock) {
       const newState = {
         ...selectedBlock.properties || {},
-        ...selectedBlock.content || {}
+        ...selectedBlock.content || {},
       };
       setLocalState(newState);
       setHasUnsavedChanges(false);
@@ -189,7 +189,7 @@ const useBackendSync = (selectedBlock: any, onUpdate: Function) => {
     saveProgress,
     lastSaved,
     updateField,
-    resetField
+    resetField,
   };
 };
 
@@ -344,7 +344,7 @@ const OptionsArrayEditor: React.FC<{
 
   const updateOption = (index: number, field: string, newValue: string) => {
     const updated = value.map((option, i) =>
-      i === index ? { ...option, [field]: newValue } : option
+      i === index ? { ...option, [field]: newValue } : option,
     );
     onUpdate(updated);
   };
@@ -785,7 +785,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
   selectedBlock,
   onUpdate,
   onClose,
-  onDelete
+  onDelete,
 }) => {
   const {
     localState,
@@ -794,7 +794,7 @@ const RegistryPropertiesPanel: React.FC<RegistryPropertiesPanelProps> = ({
     saveProgress,
     lastSaved,
     updateField,
-    resetField
+    resetField,
   } = useBackendSync(selectedBlock, onUpdate);
 
   if (!selectedBlock) {

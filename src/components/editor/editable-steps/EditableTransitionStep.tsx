@@ -30,13 +30,13 @@ const EditableTransitionStep: React.FC<EditableTransitionStepProps> = ({
     canMoveDown,
     canDelete,
     blockId,
-    onPropertyClick
+    onPropertyClick,
 }) => {
 
     // 🎭 Props editáveis específicas do TransitionStep
     const editableProps = [
         'title',
-        'text'
+        'text',
     ];
 
     // 🎪 Mock callback para onComplete (editor não deve avançar automaticamente)
@@ -63,7 +63,7 @@ const EditableTransitionStep: React.FC<EditableTransitionStepProps> = ({
         stepType: data.type === 'transition-result' ? 'transition-result' as const : 'transition' as const,
         title: data.title || 'Analisando suas respostas...',
         text: data.text || 'Aguarde enquanto preparamos seu resultado personalizado.',
-        ...data
+        ...data,
     }), [data]);
 
     return (

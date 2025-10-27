@@ -17,7 +17,7 @@ interface ConditionalFieldsWrapperProps {
 export const ConditionalFieldsWrapper: React.FC<ConditionalFieldsWrapperProps> = ({
   property,
   allProperties,
-  children
+  children,
 }) => {
   // Verifica se o campo deve ser exibido baseado nas condições
   const shouldShow = React.useMemo(() => {

@@ -74,7 +74,7 @@ export const FAQSection: React.FC<FAQSectionProps> = props => {
   } = props;
 
   const [openFAQs, setOpenFAQs] = useState<Set<string>>(
-    new Set(openFirst && faqs.length > 0 ? [faqs[0].id || '0'] : [])
+    new Set(openFirst && faqs.length > 0 ? [faqs[0].id || '0'] : []),
   );
 
   // Classes de alinhamento
@@ -157,7 +157,7 @@ export const FAQSection: React.FC<FAQSectionProps> = props => {
     deviceView || 'desktop',
     'tight',
     'full',
-    className
+    className,
   );
 
   return (

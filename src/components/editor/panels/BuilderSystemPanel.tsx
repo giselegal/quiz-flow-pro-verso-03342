@@ -24,7 +24,7 @@ import {
   Rocket,
   Loader2,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
 } from 'lucide-react';
 
 interface BuilderSystemPanelProps {
@@ -34,14 +34,14 @@ interface BuilderSystemPanelProps {
 
 export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({
   onQuizGenerated,
-  className = ''
+  className = '',
 }) => {
   const { toast } = useToast();
   const builderSystem = useBuilderSystem({
     aiEnabled: true,
     templatesEnabled: true,
     autoOptimization: true,
-    mode: 'hybrid'
+    mode: 'hybrid',
   });
 
   // Estados locais da interface
@@ -55,9 +55,9 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({
   const handleCreateWithAI = async () => {
     if (!aiPrompt.trim()) {
       toast({
-        title: "Campo obrigatório",
-        description: "Digite uma descrição do quiz que deseja criar",
-        variant: "destructive"
+        title: 'Campo obrigatório',
+        description: 'Digite uma descrição do quiz que deseja criar',
+        variant: 'destructive',
       });
       return;
     }
@@ -66,9 +66,9 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({
       const result = await builderSystem.createWithAI(aiPrompt, selectedQuizType);
       
       toast({
-        title: "✨ Quiz criado com IA!",
+        title: '✨ Quiz criado com IA!',
         description: `Quiz "${aiPrompt}" gerado com ${result?.funnel?.steps?.length || 21} etapas`,
-        variant: "default"
+        variant: 'default',
       });
 
       onQuizGenerated?.(result);
@@ -76,9 +76,9 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({
 
     } catch (error) {
       toast({
-        title: "Erro na criação com IA",
-        description: error instanceof Error ? error.message : "Erro desconhecido",
-        variant: "destructive"
+        title: 'Erro na criação com IA',
+        description: error instanceof Error ? error.message : 'Erro desconhecido',
+        variant: 'destructive',
       });
     }
   };
@@ -87,9 +87,9 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({
   const handleApplyPreset = async () => {
     if (!selectedPreset) {
       toast({
-        title: "Selecione um preset",
-        description: "Escolha um template predefinido para aplicar",
-        variant: "destructive"
+        title: 'Selecione um preset',
+        description: 'Escolha um template predefinido para aplicar',
+        variant: 'destructive',
       });
       return;
     }
@@ -98,9 +98,9 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({
       const result = await builderSystem.applyPreset(selectedPreset);
       
       toast({
-        title: "🎨 Preset aplicado!",
+        title: '🎨 Preset aplicado!',
         description: `Template "${selectedPreset}" configurado com sucesso`,
-        variant: "default"
+        variant: 'default',
       });
 
       onQuizGenerated?.(result);
@@ -108,9 +108,9 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({
 
     } catch (error) {
       toast({
-        title: "Erro ao aplicar preset",
-        description: error instanceof Error ? error.message : "Erro desconhecido",
-        variant: "destructive"
+        title: 'Erro ao aplicar preset',
+        description: error instanceof Error ? error.message : 'Erro desconhecido',
+        variant: 'destructive',
       });
     }
   };
@@ -119,9 +119,9 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({
   const handleGenerateCustom = async () => {
     if (!customName.trim()) {
       toast({
-        title: "Nome obrigatório",
-        description: "Digite um nome para o template personalizado",
-        variant: "destructive"
+        title: 'Nome obrigatório',
+        description: 'Digite um nome para o template personalizado',
+        variant: 'destructive',
       });
       return;
     }
@@ -130,13 +130,13 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({
       const result = await builderSystem.generateCustomTemplate({
         name: customName,
         type: selectedQuizType,
-        steps: customSteps
+        steps: customSteps,
       });
       
       toast({
-        title: "🎯 Template personalizado criado!",
+        title: '🎯 Template personalizado criado!',
         description: `Template "${customName}" com ${customSteps} etapas`,
-        variant: "default"
+        variant: 'default',
       });
 
       onQuizGenerated?.(result);
@@ -144,9 +144,9 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({
 
     } catch (error) {
       toast({
-        title: "Erro ao criar template",
-        description: error instanceof Error ? error.message : "Erro desconhecido",
-        variant: "destructive"
+        title: 'Erro ao criar template',
+        description: error instanceof Error ? error.message : 'Erro desconhecido',
+        variant: 'destructive',
       });
     }
   };

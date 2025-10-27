@@ -16,7 +16,7 @@ interface ImageBlockProps {
 
 const ImageBlock: React.FC<ImageBlockProps> = ({
   block,
-  isSelected
+  isSelected,
 }) => {
   const { content = {}, properties = {} } = block;
   

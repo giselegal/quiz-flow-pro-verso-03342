@@ -46,7 +46,7 @@ export function usePanelWidths(options: UsePanelWidthsOptions = {}): { panelWidt
     const Resizer = ({ panel, side }: { panel: keyof PanelWidths; side: 'right' | 'left' }) => (
         <div
             onMouseDown={(e) => startResize(panel, e)}
-            className={"resize-handle group w-1 cursor-col-resize relative z-10 after:absolute after:inset-0 after:bg-transparent hover:after:bg-blue-300/30"}
+            className={'resize-handle group w-1 cursor-col-resize relative z-10 after:absolute after:inset-0 after:bg-transparent hover:after:bg-blue-300/30'}
             style={{ width: 6, marginLeft: side === 'right' ? -3 : 0, marginRight: side === 'left' ? -3 : 0, cursor: 'col-resize' }}
         />
     );

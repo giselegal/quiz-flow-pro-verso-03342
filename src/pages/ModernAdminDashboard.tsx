@@ -51,69 +51,69 @@ const routeConfig = {
   '/admin': {
     component: AdminOverview,
     title: 'Dashboard Principal',
-    description: 'Visão geral das métricas e atividades'
+    description: 'Visão geral das métricas e atividades',
   },
 
   // Analytics e métricas
   '/admin/analytics': {
     component: EnhancedAnalytics,
     title: 'Analytics em Tempo Real',
-    description: 'Métricas detalhadas e dados em tempo real'
+    description: 'Métricas detalhadas e dados em tempo real',
   },
   '/admin/participants': {
     component: ParticipantsPage,
     title: 'Participantes',
-    description: 'Dados dos usuários e sessões'
+    description: 'Dados dos usuários e sessões',
   },
   '/admin/facebook-metrics': {
     component: FacebookMetrics,
     title: 'Métricas do Facebook',
-    description: 'Integração com Facebook Ads'
+    description: 'Integração com Facebook Ads',
   },
 
   // Gestão de conteúdo
   '/admin/funnels': {
     component: MeusFunisReal,
     title: 'Meus Funis',
-    description: 'Gerenciar funis criados'
+    description: 'Gerenciar funis criados',
   },
   '/admin/templates': {
     component: TemplatesReal,
     title: 'Templates',
-    description: 'Biblioteca de templates'
+    description: 'Biblioteca de templates',
   },
 
   // Ferramentas
   '/admin/ab-tests': {
     component: ABTestsPage,
     title: 'Testes A/B',
-    description: 'Configurar e analisar testes'
+    description: 'Configurar e analisar testes',
   },
   '/admin/creatives': {
     component: CreativesPage,
     title: 'Materiais Criativos',
-    description: 'Banco de imagens e assets'
+    description: 'Banco de imagens e assets',
   },
 
   // Configurações
   '/admin/settings': {
     component: SettingsPage,
     title: 'Configurações',
-    description: 'Configurações da conta e sistema'
+    description: 'Configurações da conta e sistema',
   },
 
   // Editor integrado
   '/admin/editor': {
     component: AdminOverview, // Redirect to main dashboard for now
     title: 'Editor',
-    description: 'Acesso ao editor visual de funis'
+    description: 'Acesso ao editor visual de funis',
   }
   ,
   '/admin/editor/quiz-modular-pro': {
     component: EditorModularProDashboard,
     title: 'Editor Modular Pro',
-    description: 'Status do /editor/quiz-estilo-modular-pro com métricas reais'
-  }
+    description: 'Status do /editor/quiz-estilo-modular-pro com métricas reais',
+  },
 };
 
 // ============================================================================

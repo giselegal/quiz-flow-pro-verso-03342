@@ -98,7 +98,7 @@ const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps
                 key: childBlock.id,
                 block: childBlock,
                 properties: childBlock.properties as any,
-                ...childBlock.properties
+                ...childBlock.properties,
               });
             })
             : // Ou, se nenhum filho foi declarado nas propriedades, renderiza os filhos React passados
@@ -124,7 +124,7 @@ const ConnectedTemplateWrapperBlock: React.FC<ConnectedTemplateWrapperBlockProps
                 key: childBlock.id,
                 block: childBlock,
                 properties: childBlock.properties as any,
-                ...childBlock.properties
+                ...childBlock.properties,
               });
             })
             : children}

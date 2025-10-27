@@ -23,7 +23,7 @@ interface Step20SystemSelectorProps {
  */
 export const Step20SystemSelector: React.FC<Step20SystemSelectorProps> = ({
     className,
-    onSystemChange
+    onSystemChange,
 }) => {
     const [selectedSystem, setSelectedSystem] = useState<'legacy' | 'modular' | 'editor'>('modular');
     const [showPreview, setShowPreview] = useState(true);
@@ -41,7 +41,7 @@ export const Step20SystemSelector: React.FC<Step20SystemSelectorProps> = ({
             icon: '📄',
             description: 'Resultado simples e funcional',
             pros: ['Estável', 'Rápido', 'Compatível'],
-            cons: ['Limitado', 'Não editável']
+            cons: ['Limitado', 'Não editável'],
         },
         {
             id: 'modular' as const,
@@ -49,7 +49,7 @@ export const Step20SystemSelector: React.FC<Step20SystemSelectorProps> = ({
             icon: '🧩',
             description: 'Componentes flexíveis e responsivos',
             pros: ['Responsivo', 'Reutilizável', 'Modular'],
-            cons: ['Mais complexo']
+            cons: ['Mais complexo'],
         },
         {
             id: 'editor' as const,
@@ -57,8 +57,8 @@ export const Step20SystemSelector: React.FC<Step20SystemSelectorProps> = ({
             icon: '🎨',
             description: 'Editor visual drag-and-drop',
             pros: ['Visual', 'Drag & Drop', 'Customizável'],
-            cons: ['Mais pesado', 'Complexo']
-        }
+            cons: ['Mais pesado', 'Complexo'],
+        },
     ];
 
     // Dados do quiz para preview
@@ -87,7 +87,7 @@ export const Step20SystemSelector: React.FC<Step20SystemSelectorProps> = ({
                             'p-4 cursor-pointer transition-all duration-200 hover:shadow-lg',
                             selectedSystem === system.id
                                 ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/5'
-                                : 'border border-gray-200 hover:border-[#B89B7A]/50'
+                                : 'border border-gray-200 hover:border-[#B89B7A]/50',
                         )}
                         onClick={() => handleSystemChange(system.id)}
                     >
@@ -184,8 +184,8 @@ export const Step20SystemSelector: React.FC<Step20SystemSelectorProps> = ({
                                         borderRadius: 'lg',
                                         userName,
                                         styleName,
-                                        percentage
-                                    }
+                                        percentage,
+                                    },
                                 }}
                                 isSelected={false}
                                 onPropertyChange={(key, value) => {

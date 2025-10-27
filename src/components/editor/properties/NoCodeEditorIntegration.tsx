@@ -30,7 +30,7 @@ export const NoCodeEditorIntegration: React.FC<NoCodeEditorIntegrationProps> = (
   onUpdate,
   onDuplicate,
   onDelete,
-  className = ''
+  className = '',
 }) => {
   const [viewMode, setViewMode] = useState<'simple' | 'advanced'>('simple');
 

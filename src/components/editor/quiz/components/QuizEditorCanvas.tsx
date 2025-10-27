@@ -54,12 +54,12 @@ const QuizEditorCanvas: React.FC<QuizEditorCanvasProps> = memo(({
     onSelectBlockId,
     onUpdateStep,
     onInsertAfter,
-    onRemoveStep
+    onRemoveStep,
 }) => {
     // Determine which steps to render
     const currentSteps = useMemo(() =>
         useModularSystem ? modularSteps : steps,
-        [useModularSystem, modularSteps, steps]
+        [useModularSystem, modularSteps, steps],
     );
 
     // Component resolver for modular system
@@ -167,7 +167,7 @@ const QuizEditorCanvas: React.FC<QuizEditorCanvasProps> = memo(({
         dragEnabled,
         onInsertAfter,
         onRemoveStep,
-        steps.length
+        steps.length,
     ]);
 
     // Render preview step
@@ -195,7 +195,7 @@ const QuizEditorCanvas: React.FC<QuizEditorCanvasProps> = memo(({
     // Render method based on mode
     const renderStep = useMemo(() =>
         previewMode === 'edit' ? renderModularStep : renderPreviewStep,
-        [previewMode, renderModularStep, renderPreviewStep]
+        [previewMode, renderModularStep, renderPreviewStep],
     );
 
     // Loading fallback

@@ -23,7 +23,7 @@ export default function EditorOfferStep({
     userProfile,
     offerKey = 'default',
     onEdit,
-    isEditable = false
+    isEditable = false,
 }: EditorOfferStepProps) {
 
     // Dados seguros com fallbacks
@@ -39,9 +39,9 @@ export default function EditorOfferStep({
             'Análise completa do seu estilo',
             'Guia personalizado de cores',
             'Dicas de combinações exclusivas',
-            'Suporte por 30 dias'
+            'Suporte por 30 dias',
         ],
-        image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png'
+        image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
     };
 
     return (

@@ -23,15 +23,15 @@ export class QuizFunnelAdapter implements IFunnelAdapter {
                 blocks: (s.blocks || []).map((b: any) => ({
                     id: b.id || `blk-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
                     type: b.type || 'unknown',
-                    data: b.config || b.data || {}
+                    data: b.config || b.data || {},
                 })),
-                meta: { type: s.type, nextStep: s.nextStep }
+                meta: { type: s.type, nextStep: s.nextStep },
             })),
             meta: {
                 id: funnel?.id,
                 templateId: funnel?.templateId,
-                updatedAt: Date.now()
-            }
+                updatedAt: Date.now(),
+            },
         };
     }
 
@@ -42,7 +42,7 @@ export class QuizFunnelAdapter implements IFunnelAdapter {
             order: s.order,
             type: s.meta?.type,
             nextStep: s.meta?.nextStep,
-            blocks: s.blocks.map(b => ({ id: b.id, type: b.type, config: b.data }))
+            blocks: s.blocks.map(b => ({ id: b.id, type: b.type, config: b.data })),
         }));
         return { ...base, quizSteps } as any;
     }

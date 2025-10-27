@@ -20,7 +20,7 @@ const REAL_TESTIMONIALS = {
         result: 'Descobriu seu estilo clássico-elegante',
         beforeAfter: 'Passou de insegura com as roupas para referência de elegância no trabalho',
         location: 'São Paulo, SP',
-        date: 'Março 2024'
+        date: 'Março 2024',
     },
     sonia: {
         name: 'Sonia Spier',
@@ -31,8 +31,8 @@ const REAL_TESTIMONIALS = {
         result: 'Criou um guarda-roupa cápsula perfeito',
         beforeAfter: 'Organizou completamente seu closet e descobriu seu estilo pessoal',
         location: 'Rio de Janeiro, RJ',
-        date: 'Janeiro 2024'
-    }
+        date: 'Janeiro 2024',
+    },
 };
 
 // Função para converter valores de margem em classes Tailwind
@@ -110,7 +110,7 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
                 result: clientResult || 'Resultado transformador',
                 location: clientLocation || 'Brasil',
                 date: testimonialDate || new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }),
-                rating: rating,
+                rating,
             };
         }
         return REAL_TESTIMONIALS[testimonialType as keyof typeof REAL_TESTIMONIALS] || REAL_TESTIMONIALS.mariangela;
@@ -155,7 +155,7 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
     ), [cardStyle, borderRadius, shadowIntensity, isSelected, isPreviewing, className, marginTop, marginBottom, marginLeft, marginRight]);
 
     return (
@@ -163,7 +163,7 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
             className={containerClasses}
             style={{
                 backgroundColor,
-                borderColor: cardStyle === 'elegant' || cardStyle === 'luxury' ? borderColor : undefined
+                borderColor: cardStyle === 'elegant' || cardStyle === 'luxury' ? borderColor : undefined,
             }}
             onClick={onClick}
         >

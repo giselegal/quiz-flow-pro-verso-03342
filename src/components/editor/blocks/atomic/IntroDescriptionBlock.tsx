@@ -5,7 +5,7 @@ import { sanitizeHtml } from '@/utils/sanitizeHtml';
 export default function IntroDescriptionBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   const content = (block as any)?.content?.text || block.properties?.content || '';
   const fontSize = block.properties?.fontSize || 'text-base';

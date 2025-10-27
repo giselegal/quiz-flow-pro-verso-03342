@@ -17,7 +17,7 @@ import {
     AlertCircle,
     RotateCcw,
     Eye,
-    Download
+    Download,
 } from 'lucide-react';
 import ContextualTooltip, { tooltipLibrary } from './ContextualTooltip';
 import type { PropertyEditorProps } from './types';
@@ -45,7 +45,7 @@ interface FilePreview {
  */
 const EnhancedUploadEditor: React.FC<PropertyEditorProps> = ({
     property,
-    onChange
+    onChange,
 }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,7 +55,7 @@ const EnhancedUploadEditor: React.FC<PropertyEditorProps> = ({
         acceptedTypes: (property as any).acceptedTypes || ['image/*', 'video/*', 'audio/*'],
         multiple: (property as any).multiple || false,
         storage: (property as any).storage || 'url',
-        ...(property as any).uploadConfig
+        ...(property as any).uploadConfig,
     };
 
     // Estado
@@ -73,7 +73,7 @@ const EnhancedUploadEditor: React.FC<PropertyEditorProps> = ({
                 size: 0,
                 type: getTypeFromUrl(currentValue),
                 url: currentValue,
-                status: 'success'
+                status: 'success',
             }]);
         }
     }, [property.value]);
@@ -90,7 +90,7 @@ const EnhancedUploadEditor: React.FC<PropertyEditorProps> = ({
         const k = 1024;
         const sizes = ['B', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))  } ${  sizes[i]}`;
     };
 
     const validateFile = (file: File): string | null => {
@@ -128,7 +128,7 @@ const EnhancedUploadEditor: React.FC<PropertyEditorProps> = ({
                     type: file.type,
                     url: '',
                     status: 'error',
-                    error: validation
+                    error: validation,
                 });
                 continue;
             }
@@ -142,7 +142,7 @@ const EnhancedUploadEditor: React.FC<PropertyEditorProps> = ({
                 type: file.type,
                 url: previewUrl,
                 status: 'uploading',
-                progress: 0
+                progress: 0,
             });
 
             // Simular upload (em produção, usar storage real)
@@ -167,7 +167,7 @@ const EnhancedUploadEditor: React.FC<PropertyEditorProps> = ({
             setFiles(prev => prev.map(f =>
                 f.url === previewUrl
                     ? { ...f, progress, status: progress === 100 ? 'success' : 'uploading' }
-                    : f
+                    : f,
             ));
         }
 
@@ -177,7 +177,7 @@ const EnhancedUploadEditor: React.FC<PropertyEditorProps> = ({
         setFiles(prev => prev.map(f =>
             f.url === previewUrl
                 ? { ...f, url: finalUrl, status: 'success' }
-                : f
+                : f,
         ));
 
         // Atualizar propriedade
@@ -205,7 +205,7 @@ const EnhancedUploadEditor: React.FC<PropertyEditorProps> = ({
             size: 0,
             type: getTypeFromUrl(urlInput),
             url: urlInput,
-            status: 'success'
+            status: 'success',
         };
 
         if (config.multiple) {

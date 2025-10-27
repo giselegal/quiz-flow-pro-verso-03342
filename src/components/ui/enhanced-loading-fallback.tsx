@@ -11,7 +11,7 @@ export const EnhancedLoadingFallback: React.FC<EnhancedLoadingFallbackProps> = (
   message = 'Carregando...', 
   showProgress = false,
   progress = 0,
-  variant = 'default' 
+  variant = 'default', 
 }) => {
   const renderSpinner = () => (
     <div className="relative">

@@ -37,14 +37,14 @@ export const LiveEditControls: React.FC<LiveEditControlsProps> = ({
     onSettings,
     canMoveUp = true,
     canMoveDown = true,
-    canDelete = true
+    canDelete = true,
 }) => {
     if (!isVisible) return null;
 
     const positionClasses = {
         'top': 'absolute -top-12 left-0 z-10',
         'bottom': 'absolute -bottom-12 left-0 z-10',
-        'overlay': 'absolute top-2 right-2 z-10'
+        'overlay': 'absolute top-2 right-2 z-10',
     };
 
     const controls = [
@@ -53,43 +53,43 @@ export const LiveEditControls: React.FC<LiveEditControlsProps> = ({
             label: 'Editar',
             onClick: onEdit,
             className: 'text-blue-600 hover:bg-blue-50',
-            enabled: true
+            enabled: true,
         },
         {
             icon: Settings,
             label: 'Configurações',
             onClick: onSettings,
             className: 'text-gray-600 hover:bg-gray-50',
-            enabled: true
+            enabled: true,
         },
         {
             icon: Copy,
             label: 'Duplicar',
             onClick: onDuplicate,
             className: 'text-green-600 hover:bg-green-50',
-            enabled: true
+            enabled: true,
         },
         {
             icon: MoveUp,
             label: 'Mover para cima',
             onClick: onMoveUp,
             className: 'text-purple-600 hover:bg-purple-50',
-            enabled: canMoveUp
+            enabled: canMoveUp,
         },
         {
             icon: MoveDown,
             label: 'Mover para baixo',
             onClick: onMoveDown,
             className: 'text-purple-600 hover:bg-purple-50',
-            enabled: canMoveDown
+            enabled: canMoveDown,
         },
         {
             icon: Trash2,
             label: 'Deletar',
             onClick: onDelete,
             className: 'text-red-600 hover:bg-red-50',
-            enabled: canDelete
-        }
+            enabled: canDelete,
+        },
     ];
 
     return (

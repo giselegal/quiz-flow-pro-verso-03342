@@ -35,7 +35,7 @@ const DEFAULT_PRODUCTION_CONFIG: ProductionConfig = {
   enableErrorReporting: true,
   cacheStrategy: 'conservative',
   maxCacheAge: 24 * 60 * 60 * 1000, // 24 hours
-  preloadResources: []
+  preloadResources: [],
 };
 
 // 🎯 SERVICE WORKER REGISTRATION
@@ -80,7 +80,7 @@ const initializeAnalytics = (config: ProductionConfig) => {
     logger.info('ProductionOptimizer: Page view tracked', {
       path: window.location.pathname,
       timestamp: Date.now(),
-      userAgent: navigator.userAgent
+      userAgent: navigator.userAgent,
     });
   };
 
@@ -92,7 +92,7 @@ const initializeAnalytics = (config: ProductionConfig) => {
         loadTime: navigation.loadEventEnd - navigation.fetchStart,
         domContentLoaded: navigation.domContentLoadedEventEnd - navigation.fetchStart,
         firstPaint: 0,
-        firstContentfulPaint: 0
+        firstContentfulPaint: 0,
       };
 
       // Get paint metrics
@@ -133,7 +133,7 @@ const initializeErrorReporting = (config: ProductionConfig) => {
       timestamp: Date.now(),
       url: window.location.href,
       userAgent: navigator.userAgent,
-      additionalInfo: info
+      additionalInfo: info,
     };
 
     logger.error('ProductionOptimizer: Error reported', errorReport);
@@ -147,14 +147,14 @@ const initializeErrorReporting = (config: ProductionConfig) => {
     reportError(event.error, {
       filename: event.filename,
       lineno: event.lineno,
-      colno: event.colno
+      colno: event.colno,
     });
   });
 
   // Unhandled promise rejection handler
   window.addEventListener('unhandledrejection', (event) => {
     reportError(event.reason, {
-      type: 'unhandledRejection'
+      type: 'unhandledRejection',
     });
   });
 };
@@ -221,7 +221,7 @@ export const useProductionOptimizer = (config: Partial<ProductionConfig> = {}) =
   return {
     initialize,
     reportCustomEvent,
-    config: finalConfig
+    config: finalConfig,
   };
 };
 
@@ -235,7 +235,7 @@ export interface ProductionOptimizerProviderProps {
 export const ProductionOptimizerProvider: React.FC<ProductionOptimizerProviderProps> = ({
   children,
   config = {},
-  autoInitialize = true
+  autoInitialize = true,
 }) => {
   const optimizer = useProductionOptimizer(config);
 

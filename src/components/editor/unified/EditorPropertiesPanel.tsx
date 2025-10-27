@@ -100,7 +100,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
 }) => {
   // Estado local para controle de categorias expandidas
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set(['content', 'style'])
+    new Set(['content', 'style']),
   );
 
   // Estado local para valores temporários (antes de salvar)
@@ -316,7 +316,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
 
       return value !== undefined ? value : property.defaultValue;
     },
-    [selectedBlock, tempValues]
+    [selectedBlock, tempValues],
   );
 
   // Atualizar valor temporário

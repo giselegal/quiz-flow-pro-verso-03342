@@ -304,7 +304,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
         )}
       </div>
     );
-  }
+  },
 );
 
 InteractiveQuizCanvas.displayName = 'InteractiveQuizCanvas';

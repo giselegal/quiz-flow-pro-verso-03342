@@ -21,7 +21,7 @@ export const ButtonBlock: React.FC<BlockComponentProps> = ({
         variant = 'default',
         size = 'lg',
         className: customClassName,
-        icon
+        icon,
     } = data.props;
 
     return (
@@ -30,7 +30,7 @@ export const ButtonBlock: React.FC<BlockComponentProps> = ({
                 'button-block relative p-4 transition-all duration-200',
                 isEditable && 'cursor-pointer hover:bg-gray-50',
                 isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/30',
-                customClassName
+                customClassName,
             )}
             onClick={isEditable ? onSelect : undefined}
             data-block-id={data.id}

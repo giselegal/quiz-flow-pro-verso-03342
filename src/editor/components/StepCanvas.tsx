@@ -31,7 +31,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
     selectedBlockId,
     onSelectBlock,
     isEditable = true,
-    className
+    className,
 }) => {
     const { step, blocks, isLoading, error } = useStepBlocks(stepIndex);
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -150,7 +150,7 @@ const StepCanvas: React.FC<StepCanvasProps> = ({
                             key={block.id}
                             className={cn(
                                 'relative transition-all duration-200',
-                                isDragOver && 'border-t-2 border-blue-500'
+                                isDragOver && 'border-t-2 border-blue-500',
                             )}
                             draggable={isEditable}
                             onDragStart={(e) => {

@@ -119,7 +119,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
         appLogger.debug(`✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`);
         appLogger.debug(
           '📊 StepsPanel: Estatísticas dos templates:',
-          stepTemplateService.getTemplateStats()
+          stepTemplateService.getTemplateStats(),
         );
         return serviceSteps;
       }
@@ -169,7 +169,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
         hasTemplate: false,
       };
     },
-    [serviceStepsReference]
+    [serviceStepsReference],
   );
 
   const handleKeyPress = useCallback(
@@ -180,7 +180,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
         handleEditCancel();
       }
     },
-    [handleEditSave, handleEditCancel]
+    [handleEditSave, handleEditCancel],
   );
 
   return (
@@ -205,7 +205,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                   'hover:shadow-sm cursor-pointer',
                   selectedStepId === step.id
                     ? 'bg-[#B89B7A]/10 border-[#B89B7A]/30 shadow-sm'
-                    : 'bg-white border-gray-200 hover:border-gray-300'
+                    : 'bg-white border-gray-200 hover:border-gray-300',
                 )}
                 onClick={() => onStepSelect(step.id)}
               >

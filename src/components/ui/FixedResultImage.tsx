@@ -34,7 +34,7 @@ function getHighQualityUrl(url: string): string {
   const parts = url.split('/upload/');
   if (parts.length !== 2) return url;
 
-  const baseUrl = parts[0] + '/upload/';
+  const baseUrl = `${parts[0]  }/upload/`;
   let pathAndQuery = parts[1];
 
   // Remover qualquer parâmetro de blur existente
@@ -46,7 +46,7 @@ function getHighQualityUrl(url: string): string {
   let finalPath = pathAndQuery;
 
   if (versionMatch) {
-    version = versionMatch[1] + '/';
+    version = `${versionMatch[1]  }/`;
     finalPath = pathAndQuery.substring(version.length);
   }
 

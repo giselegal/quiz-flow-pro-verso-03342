@@ -27,7 +27,7 @@ export const SystemIntegration: React.FC<SystemIntegrationProps> = ({ children }
     console.log('📊 [SYSTEM] Status dos sistemas:', {
       rateLimit: !rateLimitHook.isLoading,
       backup: !backupHook.isLoading,
-      responsive: isDesktop ? 'desktop' : 'mobile'
+      responsive: isDesktop ? 'desktop' : 'mobile',
     });
 
     return () => {

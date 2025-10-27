@@ -20,7 +20,7 @@ export function AITestComponent() {
         improveText,
         generateDesign,
         isConfigured,
-        reset
+        reset,
     } = useAI();
 
     const handleGenerate = async () => {
@@ -33,7 +33,7 @@ export function AITestComponent() {
             switch (selectedFunction) {
                 case 'content':
                     response = await generateContent([
-                        { role: 'user', content: prompt }
+                        { role: 'user', content: prompt },
                     ]);
                     setResult(response?.content);
                     break;
@@ -105,7 +105,7 @@ export function AITestComponent() {
                                 <li>3. Adicione no arquivo <code className="bg-gray-200 px-1 rounded">.env</code>:</li>
                             </ol>
                             <pre className="bg-gray-800 text-green-400 p-2 rounded mt-2 text-xs overflow-x-auto">
-                                {`VITE_GITHUB_MODELS_TOKEN=seu_token_aqui`}
+                                {'VITE_GITHUB_MODELS_TOKEN=seu_token_aqui'}
                             </pre>
                         </div>
 
@@ -158,7 +158,7 @@ export function AITestComponent() {
                                 { key: 'funnel', label: '🚀 Funil', desc: 'Gerar steps de funil' },
                                 { key: 'content', label: '📝 Conteúdo', desc: 'Gerar texto livre' },
                                 { key: 'text', label: '✨ Melhorar Texto', desc: 'Otimizar copy' },
-                                { key: 'design', label: '🎨 Design', desc: 'Gerar paleta de cores' }
+                                { key: 'design', label: '🎨 Design', desc: 'Gerar paleta de cores' },
                             ].map(({ key, label, desc }) => (
                                 <Button
                                     key={key}

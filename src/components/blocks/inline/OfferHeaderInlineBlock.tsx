@@ -50,7 +50,7 @@ const OfferHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         'border-b border-gray-100',
         isSelected && 'ring-2 ring-blue-500 ring-offset-2',
         'cursor-pointer',
-        className
+        className,
       )}
       style={{
         backgroundColor,
@@ -62,7 +62,7 @@ const OfferHeaderInlineBlock: React.FC<BlockComponentProps> = ({
           spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.small,
           containerClasses[containerWidth as keyof typeof containerClasses] ||
             containerClasses.container,
-          'flex justify-center'
+          'flex justify-center',
         )}
       >
         <img

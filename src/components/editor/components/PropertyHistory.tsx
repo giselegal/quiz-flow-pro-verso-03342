@@ -138,7 +138,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                     const isFutureEntry = index > currentIndex;
                     const changes = getChangedProperties(
                       entry.properties,
-                      history[index - 1]?.properties
+                      history[index - 1]?.properties,
                     );
 
                     return (

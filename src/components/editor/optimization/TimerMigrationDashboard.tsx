@@ -18,7 +18,7 @@ import {
   Zap,
   RefreshCw,
   FileText,
-  TrendingUp
+  TrendingUp,
 } from 'lucide-react';
 import { getMigrationStatus, TIMER_MIGRATION_LIST } from '@/utils/timerMigration';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
@@ -30,7 +30,7 @@ interface TimerMigrationDashboardProps {
 
 export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = ({
   onMigrateFile,
-  onGenerateReport
+  onGenerateReport,
 }) => {
   const [migrationStatus, setMigrationStatus] = useState(getMigrationStatus());
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -71,7 +71,7 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
     const criticalFiles = [
       'CountdownTimerBlock.tsx',
       'LoadingTransitionBlock.tsx',
-      'QuizTransitionBlock.tsx'
+      'QuizTransitionBlock.tsx',
     ];
 
     if (criticalFiles.some(file => filePath.includes(file))) {
@@ -85,7 +85,7 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
     const completed = [
       'src/components/blocks/quiz/LoadingTransitionBlock.tsx',
       'src/components/editor/EditorProvider.tsx',
-      'src/components/editor/blocks/ButtonInlineBlock.tsx'
+      'src/components/editor/blocks/ButtonInlineBlock.tsx',
     ];
 
     return completed.includes(filePath) ? 'completed' : 'pending';

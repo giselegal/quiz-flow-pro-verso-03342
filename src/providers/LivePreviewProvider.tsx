@@ -86,14 +86,14 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
     maxReconnectAttempts = 5,
     enableHeartbeat = true,
     heartbeatInterval = 30000,
-    enableDebug = false
+    enableDebug = false,
 }) => {
     // ===== STATE =====
     const [connectionState, setConnectionState] = useState<LivePreviewConnectionState>({
         isConnected: false,
         isConnecting: false,
         reconnectAttempts: 0,
-        latency: 0
+        latency: 0,
     });
 
     // ===== REFS =====
@@ -129,7 +129,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                 pingTimeRef.current = Date.now();
                 wsRef.current.send(JSON.stringify({
                     type: 'ping',
-                    timestamp: pingTimeRef.current
+                    timestamp: pingTimeRef.current,
                 }));
             }
         };
@@ -159,7 +159,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
         setConnectionState(prev => ({
             ...prev,
             isConnecting: true,
-            lastError: undefined
+            lastError: undefined,
         }));
 
         try {
@@ -178,7 +178,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                     isConnected: true,
                     isConnecting: false,
                     reconnectAttempts: 0,
-                    connectionId: `conn_${Date.now()}`
+                    connectionId: `conn_${Date.now()}`,
                 }));
 
                 startHeartbeat();
@@ -201,7 +201,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
 
                     const message: LivePreviewMessage = {
                         ...rawMessage,
-                        timestamp: rawMessage.timestamp || Date.now()
+                        timestamp: rawMessage.timestamp || Date.now(),
                     };
 
                     setConnectionState(prev => ({ ...prev, lastMessage: message }));
@@ -246,7 +246,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                 setConnectionState(prev => ({
                     ...prev,
                     isConnected: false,
-                    isConnecting: false
+                    isConnecting: false,
                 }));
 
                 stopHeartbeat();
@@ -260,7 +260,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                     reconnectTimeoutRef.current = setTimeout(() => {
                         setConnectionState(prev => ({
                             ...prev,
-                            reconnectAttempts: prev.reconnectAttempts + 1
+                            reconnectAttempts: prev.reconnectAttempts + 1,
                         }));
 
                         connect(currentFunnelIdRef.current);
@@ -272,7 +272,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
                 setConnectionState(prev => ({
                     ...prev,
                     lastError: 'WebSocket connection error',
-                    isConnecting: false
+                    isConnecting: false,
                 }));
 
                 if (enableDebug) {
@@ -284,7 +284,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
             setConnectionState(prev => ({
                 ...prev,
                 isConnecting: false,
-                lastError: error instanceof Error ? error.message : 'Unknown connection error'
+                lastError: error instanceof Error ? error.message : 'Unknown connection error',
             }));
 
             if (enableDebug) {
@@ -298,7 +298,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
         autoReconnect,
         maxReconnectAttempts,
         reconnectInterval,
-        enableDebug
+        enableDebug,
     ]);
 
     const disconnect = useCallback(() => {
@@ -318,7 +318,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
             ...prev,
             isConnected: false,
             isConnecting: false,
-            connectionId: undefined
+            connectionId: undefined,
         }));
 
         if (enableDebug) {
@@ -345,7 +345,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
         const fullMessage: LivePreviewMessage = {
             ...message,
             timestamp: Date.now(),
-            source: 'editor'
+            source: 'editor',
         };
 
         try {
@@ -362,13 +362,13 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
     const broadcast = useCallback((
         type: LivePreviewMessage['type'],
         data: any,
-        stepId?: string
+        stepId?: string,
     ) => {
         sendMessage({
             type,
             funnelId: currentFunnelIdRef.current,
             stepId,
-            data
+            data,
         });
     }, [sendMessage]);
 
@@ -414,7 +414,7 @@ export const LivePreviewProvider: React.FC<LivePreviewProviderProps> = ({
         onStepUpdate,
         connect,
         disconnect,
-        reconnect
+        reconnect,
     };
 
     return (

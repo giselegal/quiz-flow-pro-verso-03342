@@ -10,8 +10,8 @@ const mockBlock = {
         subtitle: 'Subtítulo',
         showLogo: true,
         logoUrl: '',
-        textAlign: 'center'
-    }
+        textAlign: 'center',
+    },
 };
 
 describe('RegistryPropertiesPanel', () => {
@@ -22,7 +22,7 @@ describe('RegistryPropertiesPanel', () => {
                 onUpdate={() => { }}
                 onClose={() => { }}
                 onDelete={() => { }}
-            />
+            />,
         );
         expect(getByText('Nenhum bloco selecionado')).toBeInTheDocument();
         expect(getByText('Clique em um elemento para editar suas propriedades')).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('RegistryPropertiesPanel', () => {
                 onUpdate={() => { }}
                 onClose={() => { }}
                 onDelete={() => { }}
-            />
+            />,
         );
         // Novo header inclui prefixo e título derivado do registry
         expect(getByText(/API PANEL ATIVO/)).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe('RegistryPropertiesPanel', () => {
                 onUpdate={onUpdate}
                 onClose={() => { }}
                 onDelete={() => { }}
-            />
+            />,
         );
         // Localiza input de título via testid estável
         const input = getByTestId('prop-input-title') as HTMLInputElement;
@@ -67,7 +67,7 @@ describe('RegistryPropertiesPanel', () => {
                 onUpdate={() => { }}
                 onClose={() => { }}
                 onDelete={() => { }}
-            />
+            />,
         );
         // Prefer getByDisplayValue; se não existir, fallback manual
         const input = getByDisplayValue('Título Original') as HTMLInputElement | undefined;
@@ -81,7 +81,7 @@ describe('RegistryPropertiesPanel', () => {
                 onUpdate={() => { }}
                 onClose={() => { }}
                 onDelete={() => { }}
-            />
+            />,
         );
 
         // Verifica se os botões de reset estão presentes (procura por title)

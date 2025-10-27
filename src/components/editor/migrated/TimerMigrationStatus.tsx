@@ -24,7 +24,7 @@ interface TimerMigrationStatusProps {
  * para useOptimizedScheduler em toda a aplicação
  */
 const TimerMigrationStatus: React.FC<TimerMigrationStatusProps> = memo(({
-  showInProduction = false
+  showInProduction = false,
 }) => {
   const [files, setFiles] = useState<TimerMigrationFile[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -101,7 +101,7 @@ const TimerMigrationStatus: React.FC<TimerMigrationStatusProps> = memo(({
       path: 'src/components/editor/blocks/result/UrgencyCountdownInlineBlock.tsx',
       name: 'UrgencyCountdownInlineBlock',
       originalCount: 1,
-    }
+    },
   ];
 
   // Simular análise dos arquivos (em produção, isso seria feito via análise de código)
@@ -138,7 +138,7 @@ const TimerMigrationStatus: React.FC<TimerMigrationStatusProps> = memo(({
       pendingFiles: acc.pendingFiles + (file.status === 'pending' ? 1 : 0),
       errorFiles: acc.errorFiles + (file.status === 'error' ? 1 : 0),
     }),
-    { total: 0, migrated: 0, files: 0, migratedFiles: 0, pendingFiles: 0, errorFiles: 0 }
+    { total: 0, migrated: 0, files: 0, migratedFiles: 0, pendingFiles: 0, errorFiles: 0 },
   );
 
   const progressPercentage = stats.total > 0 ? Math.round((stats.migrated / stats.total) * 100) : 0;
@@ -165,14 +165,14 @@ const TimerMigrationStatus: React.FC<TimerMigrationStatusProps> = memo(({
             {progressPercentage}%
           </div>
           <div className={cn(
-            "w-2 h-2 rounded-full",
-            progressPercentage === 100 ? "bg-green-500" : "bg-yellow-500"
+            'w-2 h-2 rounded-full',
+            progressPercentage === 100 ? 'bg-green-500' : 'bg-yellow-500',
           )} />
         </div>
         
         <div className={cn(
-          "text-gray-400 transition-transform",
-          isExpanded && "rotate-90"
+          'text-gray-400 transition-transform',
+          isExpanded && 'rotate-90',
         )}>
           ▶
         </div>

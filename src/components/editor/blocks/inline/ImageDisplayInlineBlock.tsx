@@ -15,7 +15,7 @@ export default function ImageDisplayInlineBlock({
   isSelected = false,
   isEditable = false,
   onSelect,
-  onOpenProperties
+  onOpenProperties,
 }: ImageDisplayInlineBlockProps) {
   const src = block.properties?.src || 'https://via.placeholder.com/300x204';
   const alt = block.properties?.alt || 'Imagem';
@@ -40,10 +40,10 @@ export default function ImageDisplayInlineBlock({
           <div 
             className={`overflow-hidden ${rounded ? 'rounded-lg' : ''} shadow-sm`}
             style={{ 
-              aspectRatio: aspectRatio,
+              aspectRatio,
               maxHeight: '204px',
               width: '100%',
-              maxWidth: maxWidth
+              maxWidth,
             }}
           >
             <img 
@@ -51,11 +51,11 @@ export default function ImageDisplayInlineBlock({
               alt={alt}
               className="w-full h-full"
               style={{
-                maxWidth: maxWidth,
+                maxWidth,
                 maxHeight: '204px',
                 width: '100%',
                 height: 'auto',
-                objectFit: objectFit
+                objectFit,
               }}
             />
           </div>

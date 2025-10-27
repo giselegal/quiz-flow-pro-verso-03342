@@ -17,7 +17,7 @@ interface EditorIntroStepProps {
 export default function EditorIntroStep({
     data,
     onEdit,
-    isEditable = false
+    isEditable = false,
 }: EditorIntroStepProps) {
     const [nome, setNome] = useState('');
 
@@ -70,7 +70,7 @@ export default function EditorIntroStep({
                                 aspectRatio: '1.47',
                                 maxHeight: '204px',
                                 width: '100%',
-                                maxWidth: '300px'
+                                maxWidth: '300px',
                             }}
                         >
                             <img
@@ -84,7 +84,7 @@ export default function EditorIntroStep({
                                     maxHeight: '204px',
                                     width: '100%',
                                     height: 'auto',
-                                    objectFit: 'contain'
+                                    objectFit: 'contain',
                                 }}
                             />
                         </div>

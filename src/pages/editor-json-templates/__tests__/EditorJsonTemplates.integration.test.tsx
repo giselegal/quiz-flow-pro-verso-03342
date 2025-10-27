@@ -6,7 +6,7 @@ import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
 
 // Mock do EditorLayout
 vi.mock('@/components/layout/EditorLayout', () => ({
-    default: ({ children }: { children: React.ReactNode }) => <div data-testid="editor-layout">{children}</div>
+    default: ({ children }: { children: React.ReactNode }) => <div data-testid="editor-layout">{children}</div>,
 }));
 
 describe('EditorJsonTemplatesPage - Testes de Integração', () => {
@@ -50,7 +50,7 @@ describe('EditorJsonTemplatesPage - Testes de Integração', () => {
             const descriptionTextarea = screen.getByText(/Template para/i).closest('textarea');
             if (descriptionTextarea) {
                 fireEvent.change(descriptionTextarea, {
-                    target: { value: 'Descrição editada no teste de integração' }
+                    target: { value: 'Descrição editada no teste de integração' },
                 });
             }
 
@@ -91,7 +91,7 @@ describe('EditorJsonTemplatesPage - Testes de Integração', () => {
             // Encontrar editor JSON (textarea grande)
             await waitFor(() => {
                 const jsonTextarea = screen.getAllByRole('textbox').find(
-                    (element) => element.getAttribute('rows') === '20'
+                    (element) => element.getAttribute('rows') === '20',
                 );
                 expect(jsonTextarea).toBeInTheDocument();
 
@@ -103,7 +103,7 @@ describe('EditorJsonTemplatesPage - Testes de Integração', () => {
                     parsed.metadata.name = 'Template Editado via JSON';
 
                     fireEvent.change(jsonTextarea, {
-                        target: { value: JSON.stringify(parsed, null, 2) }
+                        target: { value: JSON.stringify(parsed, null, 2) },
                     });
                 }
             });
@@ -186,7 +186,7 @@ describe('EditorJsonTemplatesPage - Testes de Integração', () => {
                 click: vi.fn(),
                 href: '',
                 download: '',
-                style: { display: '' }
+                style: { display: '' },
             };
 
             vi.spyOn(document, 'createElement').mockReturnValue(mockLink as any);
@@ -211,7 +211,7 @@ describe('EditorJsonTemplatesPage - Testes de Integração', () => {
 
             // Criar arquivo do dado exportado
             const file = new File([exportedData], 'template.json', {
-                type: 'application/json'
+                type: 'application/json',
             });
 
             // Importar o arquivo
@@ -346,7 +346,7 @@ describe('EditorJsonTemplatesPage - Testes de Integração', () => {
 
             expect(mockOpen).toHaveBeenCalledWith(
                 '/quiz-estilo?step=7&preview=true',
-                '_blank'
+                '_blank',
             );
         });
 
@@ -442,7 +442,7 @@ describe('EditorJsonTemplatesPage - Testes de Integração', () => {
             });
 
             expect(mockConfirm).toHaveBeenCalledWith(
-                expect.stringContaining('Tem certeza')
+                expect.stringContaining('Tem certeza'),
             );
 
             await waitFor(() => {

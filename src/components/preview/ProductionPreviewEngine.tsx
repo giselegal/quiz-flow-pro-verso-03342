@@ -23,7 +23,7 @@ export interface ProductionPreviewEngineProps {
 export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = ({
   blocks = [],
   funnelId,
-  className = ''
+  className = '',
 }) => {
   return (
     <div className={`production-preview p-4 ${className}`}>

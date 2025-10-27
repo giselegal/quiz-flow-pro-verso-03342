@@ -80,7 +80,7 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={!disabled ? onClick : undefined}
     >

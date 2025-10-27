@@ -30,7 +30,7 @@ interface QuizTransitionBlockProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: number | string,
-  type: 'top' | 'bottom' | 'left' | 'right'
+  type: 'top' | 'bottom' | 'left' | 'right',
 ) => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
@@ -118,7 +118,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={onClick}
       style={{ backgroundColor, color: textColor }}

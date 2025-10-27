@@ -22,7 +22,7 @@ import {
     Palette,
     Settings,
     CheckCircle,
-    AlertCircle
+    AlertCircle,
 } from 'lucide-react';
 
 interface GlobalConfig {
@@ -105,13 +105,13 @@ const defaultConfig: GlobalConfig = {
         ogDescription: 'Descubra seu estilo predominante através do nosso quiz personalizado e transforme seu guarda-roupa com confiança.',
         ogImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/og-image-style-quiz.webp',
         favicon: '/favicon.ico',
-        customMetaTags: ''
+        customMetaTags: '',
     },
     domain: {
         primaryDomain: 'quiz-sell-genius.com',
         customDomains: [],
         ssl: true,
-        redirects: ''
+        redirects: '',
     },
     tracking: {
         googleAnalytics: '',
@@ -119,14 +119,14 @@ const defaultConfig: GlobalConfig = {
         googleTagManager: '',
         hotjar: '',
         customScripts: '',
-        enableTracking: true
+        enableTracking: true,
     },
     campaign: {
         defaultSource: 'facebook',
         defaultMedium: 'cpc',
         defaultCampaign: 'quiz_style_abtest_2025',
         autoUTM: true,
-        trackingPrefix: 'qsq'
+        trackingPrefix: 'qsq',
     },
     webhooks: {
         leadCapture: '',
@@ -134,7 +134,7 @@ const defaultConfig: GlobalConfig = {
         purchaseComplete: '',
         quizComplete: '',
         enableWebhooks: false,
-        secretKey: ''
+        secretKey: '',
     },
     branding: {
         primaryColor: '#B89B7A',
@@ -143,15 +143,15 @@ const defaultConfig: GlobalConfig = {
         fontFamily: 'Inter',
         logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         faviconUrl: '/favicon.ico',
-        customCSS: ''
+        customCSS: '',
     },
     legal: {
         privacyPolicyUrl: '/privacy',
         termsOfServiceUrl: '/terms',
         cookiePolicy: '',
         gdprCompliant: true,
-        showCookieBanner: true
-    }
+        showCookieBanner: true,
+    },
 };
 
 const STORAGE_KEY = 'quiz-global-config';
@@ -189,8 +189,8 @@ export const GlobalConfigPanel: React.FC = () => {
             ...prev,
             [section]: {
                 ...prev[section],
-                [field]: value
-            }
+                [field]: value,
+            },
         }));
     };
 

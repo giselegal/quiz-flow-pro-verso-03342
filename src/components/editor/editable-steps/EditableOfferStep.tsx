@@ -28,20 +28,20 @@ const EditableOfferStep: React.FC<EditableOfferStepProps> = ({
     canMoveDown,
     canDelete,
     blockId,
-    onPropertyClick
+    onPropertyClick,
 }) => {
 
     // 🎭 Props editáveis específicas do OfferStep
     const editableProps = [
         'title',
-        'text'
+        'text',
         // offerMap pode ser editável através de interface específica
     ];
 
     // 🎪 Mock userProfile para preview
     const mockUserProfile = useMemo(() => ({
         userName: 'Preview User',
-        resultStyle: 'clássico'
+        resultStyle: 'clássico',
     }), []);
 
     // 🎪 Mock offerKey - usar 'default' que deve existir no offerMap
@@ -72,13 +72,13 @@ const EditableOfferStep: React.FC<EditableOfferStepProps> = ({
                     'Análise completa do seu estilo pessoal',
                     'Guia de cores personalizado',
                     'Dicas de combinações práticas',
-                    'Suporte por 30 dias'
+                    'Suporte por 30 dias',
                 ],
                 buttonText: 'Quero Transformar Meu Estilo Agora!',
                 testimonial: {
                     quote: 'Transformou completamente minha forma de me vestir!',
-                    author: 'Maria S.'
-                }
+                    author: 'Maria S.',
+                },
             },
             'premium': {
                 title: 'Transformação Completa do Guarda-Roupa',
@@ -91,15 +91,15 @@ const EditableOfferStep: React.FC<EditableOfferStepProps> = ({
                     'Consultoria de estilo completa',
                     'Personal shopper por 3 meses',
                     'Organização do guarda-roupa',
-                    'Guia de compras personalizado'
+                    'Guia de compras personalizado',
                 ],
                 buttonText: 'Quero a Transformação Completa!',
                 testimonial: {
                     quote: 'Melhor investimento que fiz para meu estilo!',
-                    author: 'Ana L.'
-                }
-            }
-        }
+                    author: 'Ana L.',
+                },
+            },
+        },
     }), [data]);
 
     return (

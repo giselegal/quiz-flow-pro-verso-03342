@@ -18,7 +18,7 @@ import {
   TrendingUp,
   Server,
   Zap,
-  Brain
+  Brain,
 } from 'lucide-react';
 
 const SystemStatusPage: React.FC = () => {
@@ -36,7 +36,7 @@ const SystemStatusPage: React.FC = () => {
       'phase6': { name: 'Testes & Validação', status: 'active', health: 85 },
       'phase7': { name: 'UX & Polish', status: 'active', health: 87 },
       'phase8': { name: 'Recursos Avançados (AI)', status: 'active', health: 83 },
-      'phase9': { name: 'Integração & Deploy', status: 'active', health: 89 }
+      'phase9': { name: 'Integração & Deploy', status: 'active', health: 89 },
     };
     
     return phases[phase as keyof typeof phases] || { name: 'Desconhecido', status: 'inactive', health: 0 };
@@ -44,7 +44,7 @@ const SystemStatusPage: React.FC = () => {
 
   const phases = [
     'phase1', 'phase2', 'phase3', 'phase4', 'phase5', 
-    'phase6', 'phase7', 'phase8', 'phase9'
+    'phase6', 'phase7', 'phase8', 'phase9',
   ];
 
   return (

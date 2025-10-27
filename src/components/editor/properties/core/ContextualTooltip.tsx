@@ -8,7 +8,7 @@ import {
     Code,
     Lightbulb,
     X,
-    ExternalLink
+    ExternalLink,
 } from 'lucide-react';
 
 interface TooltipInfo {
@@ -36,7 +36,7 @@ const ContextualTooltip: React.FC<ContextualTooltipProps> = ({
     info,
     trigger = 'click',
     position = 'right',
-    compact = false
+    compact = false,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -225,7 +225,7 @@ export const tooltipLibrary = {
         tips: [
             'Use valores negativos para sobrepor elementos',
             'Margens verticais podem colapsar entre elementos adjacentes',
-            'Use "auto" para centralizar elementos horizontalmente'
+            'Use "auto" para centralizar elementos horizontalmente',
         ],
         codeExample: `/* Individual */
 margin-top: 16px;
@@ -236,8 +236,8 @@ margin-left: 8px;
 /* Shorthand */  
 margin: 16px 8px;`,
         relatedLinks: [
-            { label: 'CSS Margin Guide', url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/margin' }
-        ]
+            { label: 'CSS Margin Guide', url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/margin' },
+        ],
     },
 
     padding: {
@@ -248,7 +248,7 @@ margin: 16px 8px;`,
         tips: [
             'Padding aumenta o tamanho total do elemento',
             'Não aceita valores negativos',
-            'Útil para criar área clicável maior em botões'
+            'Útil para criar área clicável maior em botões',
         ],
         codeExample: `/* Todos os lados */
 padding: 12px;
@@ -259,8 +259,8 @@ padding: 16px 24px;
 /* Individual */
 padding: 16px 24px 8px 12px;`,
         relatedLinks: [
-            { label: 'CSS Padding Guide', url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/padding' }
-        ]
+            { label: 'CSS Padding Guide', url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/padding' },
+        ],
     },
 
     animation: {
@@ -272,7 +272,7 @@ padding: 16px 24px 8px 12px;`,
             'Use durações curtas (0.2-0.5s) para interações',
             'Durações longas (1-2s) para efeitos chamativos',
             'Prefira transforms para melhor performance',
-            'Teste em dispositivos móveis para suavidade'
+            'Teste em dispositivos móveis para suavidade',
         ],
         codeExample: `/* Definir keyframes */
 @keyframes fadeIn {
@@ -286,8 +286,8 @@ padding: 16px 24px 8px 12px;`,
 }`,
         relatedLinks: [
             { label: 'CSS Animations Guide', url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations' },
-            { label: 'Animation Performance', url: 'https://web.dev/animations/' }
-        ]
+            { label: 'Animation Performance', url: 'https://web.dev/animations/' },
+        ],
     },
 
     upload: {
@@ -299,7 +299,7 @@ padding: 16px 24px 8px 12px;`,
             'URLs são mais rápidas que upload de arquivos',
             'Otimize imagens antes do upload (WebP recomendado)',
             'Considere CDNs para melhor performance',
-            'Sempre forneça texto alternativo para acessibilidade'
+            'Sempre forneça texto alternativo para acessibilidade',
         ],
         codeExample: `<!-- HTML -->
 <input 
@@ -316,8 +316,8 @@ padding: 16px 24px 8px 12px;`,
 />`,
         relatedLinks: [
             { label: 'Image Optimization', url: 'https://web.dev/fast/#optimize-your-images' },
-            { label: 'File API Guide', url: 'https://developer.mozilla.org/en-US/docs/Web/API/File' }
-        ]
+            { label: 'File API Guide', url: 'https://developer.mozilla.org/en-US/docs/Web/API/File' },
+        ],
     },
 
     scoreValues: {
@@ -329,7 +329,7 @@ padding: 16px 24px 8px 12px;`,
             'Use valores consistentes entre opções',
             'Considere pesos diferentes para perguntas importantes',
             'Teste cenários extremos (todos zeros, valores máximos)',
-            'Documente a lógica de scoring para manutenção'
+            'Documente a lógica de scoring para manutenção',
         ],
         codeExample: `{
   "romantic": 5,
@@ -343,8 +343,8 @@ const scores = calculateScores(answers);
 const winner = Object.keys(scores)
   .reduce((a, b) => scores[a] > scores[b] ? a : b);`,
         relatedLinks: [
-            { label: 'Quiz Logic Best Practices', url: '#' }
-        ]
+            { label: 'Quiz Logic Best Practices', url: '#' },
+        ],
     },
 
     responsiveColumns: {
@@ -356,7 +356,7 @@ const winner = Object.keys(scores)
             'Sempre teste em dispositivos reais',
             'Considere conteúdo variável ao definir colunas',
             'Use breakpoints padrão (768px tablet, 1024px desktop)',
-            'Mantenha legibilidade em telas pequenas'
+            'Mantenha legibilidade em telas pequenas',
         ],
         codeExample: `/* CSS Grid */
 .grid {
@@ -374,9 +374,9 @@ const winner = Object.keys(scores)
 }`,
         relatedLinks: [
             { label: 'CSS Grid Guide', url: 'https://css-tricks.com/snippets/css/complete-guide-grid/' },
-            { label: 'Responsive Design', url: 'https://web.dev/responsive-web-design-basics/' }
-        ]
-    }
+            { label: 'Responsive Design', url: 'https://web.dev/responsive-web-design-basics/' },
+        ],
+    },
 };
 
 export default ContextualTooltip;

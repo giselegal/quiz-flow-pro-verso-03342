@@ -20,7 +20,7 @@ import {
     RotateCcw,
     Sparkles,
     Settings,
-    Layers
+    Layers,
 } from 'lucide-react';
 import ColorPicker from '@/components/visual-controls/ColorPicker';
 
@@ -117,7 +117,7 @@ export const CanvasContainerPropertyEditor: React.FC<CanvasContainerPropertyEdit
     properties,
     onUpdate,
     onReset,
-    isPreviewMode = false
+    isPreviewMode = false,
 }) => {
     const [activeTab, setActiveTab] = useState('canvas');
 
@@ -146,7 +146,7 @@ export const CanvasContainerPropertyEditor: React.FC<CanvasContainerPropertyEdit
                         borderColor: properties.canvasBorder,
                         borderRadius: `${properties.canvasBorderRadius}px`,
                         padding: `${properties.canvasPadding}px`,
-                        margin: `${properties.canvasMargin}px`
+                        margin: `${properties.canvasMargin}px`,
                     }}
                 >
                     {/* Preview de um componente dentro do canvas */}
@@ -159,7 +159,7 @@ export const CanvasContainerPropertyEditor: React.FC<CanvasContainerPropertyEdit
                             padding: `${properties.componentContainerPadding}px`,
                             boxShadow: properties.componentContainerShadow,
                             transform: properties.componentContainerHoverEffect ? 'scale(1)' : 'none',
-                            cursor: properties.componentContainerHoverEffect ? 'pointer' : 'default'
+                            cursor: properties.componentContainerHoverEffect ? 'pointer' : 'default',
                         }}
                     >
                         Componente Preview
@@ -181,7 +181,7 @@ export const CanvasContainerPropertyEditor: React.FC<CanvasContainerPropertyEdit
                                 borderColor: properties.navigationButtonBorder,
                                 borderRadius: `${properties.navigationButtonBorderRadius}px`,
                                 padding: properties.navigationButtonPadding,
-                                border: '1px solid'
+                                border: '1px solid',
                             }}
                         >
                             Anterior
@@ -194,7 +194,7 @@ export const CanvasContainerPropertyEditor: React.FC<CanvasContainerPropertyEdit
                                 borderColor: properties.navigationButtonBorder,
                                 borderRadius: `${properties.navigationButtonBorderRadius}px`,
                                 padding: properties.navigationButtonPadding,
-                                border: '1px solid'
+                                border: '1px solid',
                             }}
                         >
                             Próximo
@@ -208,13 +208,13 @@ export const CanvasContainerPropertyEditor: React.FC<CanvasContainerPropertyEdit
                     style={{
                         backgroundColor: properties.toolbarBackground,
                         borderColor: properties.toolbarBorder,
-                        border: '1px solid'
+                        border: '1px solid',
                     }}
                 >
                     <div
                         className="w-8 h-8 rounded flex items-center justify-center"
                         style={{
-                            backgroundColor: properties.toolbarButtonBackground
+                            backgroundColor: properties.toolbarButtonBackground,
                         }}
                     >
                         <Settings className="w-4 h-4 text-gray-400" />
@@ -222,7 +222,7 @@ export const CanvasContainerPropertyEditor: React.FC<CanvasContainerPropertyEdit
                     <div
                         className="w-8 h-8 rounded flex items-center justify-center"
                         style={{
-                            backgroundColor: properties.toolbarButtonHoverBackground
+                            backgroundColor: properties.toolbarButtonHoverBackground,
                         }}
                     >
                         <Eye className="w-4 h-4 text-white" />

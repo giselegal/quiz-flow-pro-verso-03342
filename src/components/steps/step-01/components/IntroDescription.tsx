@@ -19,7 +19,7 @@ const IntroDescription: React.FC<IntroDescriptionProps> = ({
     highlightColor = '#B89B7A',
     secondaryColor = '#432818',
     isEditable = false,
-    onEdit = () => { }
+    onEdit = () => { },
 }) => {
     // Texto padrão caso não seja fornecido
     const defaultText = (

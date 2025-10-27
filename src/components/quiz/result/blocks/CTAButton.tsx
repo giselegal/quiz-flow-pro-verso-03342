@@ -18,19 +18,19 @@ export default function CTAButton({
     variant = 'primary',
     fullWidth = true,
     size = 'lg',
-    className = ''
+    className = '',
 }: CTAButtonProps) {
     const [isHovered, setIsHovered] = React.useState(false);
 
     const sizeClasses = {
         sm: 'py-3 px-4 text-base',
         md: 'py-4 px-6 text-lg',
-        lg: 'py-4 sm:py-6 px-6 sm:px-8 text-lg sm:text-xl'
+        lg: 'py-4 sm:py-6 px-6 sm:px-8 text-lg sm:text-xl',
     };
 
     const variantClasses = {
         primary: 'bg-gradient-to-r from-[#B89B7A] to-[#a08966] text-white shadow-xl',
-        secondary: 'bg-white text-[#432818] border-2 border-[#B89B7A] shadow-md'
+        secondary: 'bg-white text-[#432818] border-2 border-[#B89B7A] shadow-md',
     };
 
     return (

@@ -83,7 +83,7 @@ export default function QuizEstiloPessoalPage({ funnelId }: QuizEstiloPessoalPag
                                 event_label: 'quiz_estilo_pessoal'
                             });
                         }
-                    `
+                    `,
                 }}
             />
         </div>

@@ -15,12 +15,12 @@ interface MockResultGeneratorProps {
 }
 
 export const MockResultGenerator: React.FC<MockResultGeneratorProps> = ({
-  className = ''
+  className = '',
 }) => {
   const {
     availableStyles,
     switchPrimaryStyle,
-    generateMockResult
+    generateMockResult,
   } = useQuizResultEditor();
 
   // Gerar resultado aleatório
@@ -41,7 +41,7 @@ export const MockResultGenerator: React.FC<MockResultGeneratorProps> = ({
       15: ['opcao3'],
       16: ['opcao1'],
       17: ['opcao2'],
-      18: ['opcao3']
+      18: ['opcao3'],
     };
     
     generateMockResult(mockAnswers);
@@ -154,7 +154,7 @@ function generateAnswersForStyle(styleId: string): Record<number, string[]> {
     15: ['opcao3'],
     16: ['opcao1'],
     17: ['opcao2'],
-    18: ['opcao3']
+    18: ['opcao3'],
   };
 
   // Ajustar respostas para favorecer o estilo escolhido
@@ -165,7 +165,7 @@ function generateAnswersForStyle(styleId: string): Record<number, string[]> {
         2: ['opcao1', 'opcao1', 'opcao1'], // Mais respostas que favorecem clássico
         3: ['opcao1', 'opcao1', 'opcao2'],
         13: ['opcao1'],
-        14: ['opcao1']
+        14: ['opcao1'],
       };
     case 'romantico':
       return {
@@ -173,7 +173,7 @@ function generateAnswersForStyle(styleId: string): Record<number, string[]> {
         2: ['opcao2', 'opcao2', 'opcao2'],
         3: ['opcao2', 'opcao2', 'opcao3'],
         13: ['opcao2'],
-        14: ['opcao2']
+        14: ['opcao2'],
       };
     case 'dramatico':
       return {
@@ -181,7 +181,7 @@ function generateAnswersForStyle(styleId: string): Record<number, string[]> {
         2: ['opcao3', 'opcao3', 'opcao3'],
         3: ['opcao3', 'opcao3', 'opcao4'],
         13: ['opcao3'],
-        14: ['opcao3']
+        14: ['opcao3'],
       };
     case 'natural':
       return {
@@ -189,7 +189,7 @@ function generateAnswersForStyle(styleId: string): Record<number, string[]> {
         2: ['opcao4', 'opcao4', 'opcao4'],
         3: ['opcao4', 'opcao4', 'opcao5'],
         13: ['opcao4'],
-        14: ['opcao4']
+        14: ['opcao4'],
       };
     case 'criativo':
       return {
@@ -197,7 +197,7 @@ function generateAnswersForStyle(styleId: string): Record<number, string[]> {
         2: ['opcao5', 'opcao5', 'opcao5'],
         3: ['opcao5', 'opcao5', 'opcao6'],
         13: ['opcao5'],
-        14: ['opcao5']
+        14: ['opcao5'],
       };
     default:
       return base;

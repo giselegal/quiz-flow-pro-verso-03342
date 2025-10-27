@@ -22,7 +22,7 @@ const SimpleConnectedTemplateWrapperBlock: React.FC<BlockComponentProps> = ({
     block,
     isSelected,
     editMode,
-    onSelect
+    onSelect,
 }) => {
     const content = block.content || {};
     const properties = block.properties || {};

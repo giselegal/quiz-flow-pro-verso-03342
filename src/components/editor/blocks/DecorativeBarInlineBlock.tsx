@@ -10,7 +10,7 @@ import type { BlockComponentProps } from '@/types/blocks';
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: string | number,
-  type: 'top' | 'bottom' | 'left' | 'right'
+  type: 'top' | 'bottom' | 'left' | 'right',
 ): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
@@ -76,7 +76,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
   } = (block?.properties as any) || {};
 
   const resolveWidth = (
-    value: string | number
+    value: string | number,
   ): { className?: string; style?: React.CSSProperties } => {
     if (typeof value === 'number') return { style: { width: `${value}px` } };
     if (/^\d+(px|rem|em|%)$/.test(value) || value.includes('min(') || value.includes('max(')) {
@@ -97,7 +97,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       style={{
         marginTop: `${marginTop}px`,
@@ -118,7 +118,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
               : color,
           borderRadius: `${borderRadius}px`,
           ...(showShadow && {
-            boxShadow: `0 2px 6px rgba(184, 155, 122, 0.4)`,
+            boxShadow: '0 2px 6px rgba(184, 155, 122, 0.4)',
           }),
         }}
       />

@@ -4,7 +4,7 @@ import { AtomicBlockProps } from '@/types/blockProps';
 export default function ResultSecondaryStylesBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   // ✅ Ler apenas de content
   const styles = block.content?.styles || [];
@@ -28,7 +28,7 @@ export default function ResultSecondaryStylesBlock({
             className="p-4 rounded-lg border-2 transition-all"
             style={{
               backgroundColor,
-              borderColor
+              borderColor,
             }}
           >
             <div className="font-medium" style={{ color: '#5b4135' }}>

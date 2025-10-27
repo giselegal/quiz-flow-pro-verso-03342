@@ -137,7 +137,7 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     textAlignClasses[textAlign],
     disabled ? 'cursor-not-allowed opacity-50' : isPreviewing ? 'cursor-default' : 'cursor-pointer',
     isEditing && !isPreviewing ? 'cursor-text' : '',
-    className
+    className,
   );
 
   const displayValue = internalValue || placeholder;
@@ -155,7 +155,7 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
         className={cn(
           baseClasses,
           'border-none bg-transparent resize-none',
-          multiline ? 'min-h-[1.5em]' : 'h-auto'
+          multiline ? 'min-h-[1.5em]' : 'h-auto',
         )}
         style={{
           color,

@@ -20,7 +20,7 @@ export default function EditableIntroStep({
     data,
     onNameSubmit,
     isEditable = false,
-    onEdit = () => { }
+    onEdit = () => { },
 }: EditableIntroStepProps) {
     const [nome, setNome] = useState('');
 
@@ -153,7 +153,7 @@ export default function EditableIntroStep({
                     {/* Botão - EDITÁVEL */}
                     <div className="relative">
                         <button
-                            type={isEditable ? "button" : "submit"}
+                            type={isEditable ? 'button' : 'submit'}
                             onClick={isEditable ? () => { } : handleSubmit}
                             className={`w-full py-4 px-6 text-white font-semibold rounded-lg shadow-lg transition-all duration-300 ${isEditable
                                     ? 'bg-blue-500 hover:bg-blue-600 cursor-default'

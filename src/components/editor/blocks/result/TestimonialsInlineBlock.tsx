@@ -118,7 +118,7 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
       'text-right': textAlign === 'right',
     },
     isSelected && 'ring-2 ring-blue-500 ring-opacity-50 rounded-lg',
-    className
+    className,
   );
 
   const containerStyle = {
@@ -160,7 +160,7 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
         <div
           className={cn(
             'max-w-6xl mx-auto',
-            layout === 'grid' ? 'grid md:grid-cols-3 gap-6' : 'space-y-6'
+            layout === 'grid' ? 'grid md:grid-cols-3 gap-6' : 'space-y-6',
           )}
         >
           {testimonials.map((testimonial: any, index: number) => (
@@ -215,7 +215,7 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
                   <span
                     className="inline-block px-3 py-1 rounded-full text-xs font-medium"
                     style={{
-                      backgroundColor: accentColor + '20',
+                      backgroundColor: `${accentColor  }20`,
                       color: accentColor,
                     }}
                   >

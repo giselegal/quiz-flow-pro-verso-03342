@@ -14,7 +14,7 @@ const SupabaseFixTestPage: React.FC = () => {
             error: '#721c24',
             success: '#155724',
             warning: '#856404',
-            info: '#212529'
+            info: '#212529',
         };
 
         logEntry.style.color = colors[type];
@@ -28,7 +28,7 @@ const SupabaseFixTestPage: React.FC = () => {
             const testData = {
                 id: `test-${Date.now()}`,
                 name: 'Teste LocalStorage',
-                data: { example: true }
+                data: { example: true },
             };
             StorageService.safeSetJSON('test-funnel', testData);
             const retrieved = StorageService.safeGetJSON('test-funnel');
@@ -58,8 +58,8 @@ const SupabaseFixTestPage: React.FC = () => {
                     context: 'editor',
                     category: 'test',
                     templateId: null,
-                    isFromTemplate: false
-                }
+                    isFromTemplate: false,
+                },
             };
 
             addLog('✅ Estrutura de dados corrigida:', 'success');
@@ -92,7 +92,7 @@ const SupabaseFixTestPage: React.FC = () => {
             fontFamily: 'Arial, sans-serif',
             padding: '20px',
             backgroundColor: '#f5f5f5',
-            minHeight: '100vh'
+            minHeight: '100vh',
         }}>
             <div style={{
                 maxWidth: '800px',
@@ -100,7 +100,7 @@ const SupabaseFixTestPage: React.FC = () => {
                 background: 'white',
                 padding: '20px',
                 borderRadius: '8px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             }}>
                 <h1>🔧 Teste de Correção - Erro Supabase</h1>
 
@@ -110,7 +110,7 @@ const SupabaseFixTestPage: React.FC = () => {
                     margin: '10px 0',
                     backgroundColor: '#fff3cd',
                     color: '#856404',
-                    border: '1px solid #ffeaa7'
+                    border: '1px solid #ffeaa7',
                 }}>
                     <strong>Problema Original:</strong><br />
                     ❌ Erro no Supabase, salvando no localStorage: Error: Dados do funnel não foram retornados pelo Supabase
@@ -122,7 +122,7 @@ const SupabaseFixTestPage: React.FC = () => {
                     margin: '10px 0',
                     backgroundColor: '#d4edda',
                     color: '#155724',
-                    border: '1px solid #c3e6cb'
+                    border: '1px solid #c3e6cb',
                 }}>
                     <strong>Correções Implementadas:</strong><br />
                     ✅ Removida referência à coluna 'category' inexistente<br />
@@ -142,7 +142,7 @@ const SupabaseFixTestPage: React.FC = () => {
                         padding: '10px 20px',
                         borderRadius: '4px',
                         cursor: 'pointer',
-                        margin: '5px'
+                        margin: '5px',
                     }}
                 >
                     Testar LocalStorage
@@ -157,7 +157,7 @@ const SupabaseFixTestPage: React.FC = () => {
                         padding: '10px 20px',
                         borderRadius: '4px',
                         cursor: 'pointer',
-                        margin: '5px'
+                        margin: '5px',
                     }}
                 >
                     Testar Conexão Supabase
@@ -172,7 +172,7 @@ const SupabaseFixTestPage: React.FC = () => {
                         padding: '10px 20px',
                         borderRadius: '4px',
                         cursor: 'pointer',
-                        margin: '5px'
+                        margin: '5px',
                     }}
                 >
                     Simular Salvamento de Funil
@@ -188,7 +188,7 @@ const SupabaseFixTestPage: React.FC = () => {
                         fontFamily: 'monospace',
                         maxHeight: '300px',
                         overflowY: 'auto',
-                        margin: '10px 0'
+                        margin: '10px 0',
                     }}
                 ></div>
 
@@ -198,7 +198,7 @@ const SupabaseFixTestPage: React.FC = () => {
                     borderRadius: '4px',
                     backgroundColor: '#d4edda',
                     color: '#155724',
-                    border: '1px solid #c3e6cb'
+                    border: '1px solid #c3e6cb',
                 }}>
                     <strong>✅ Sistema Corrigido:</strong><br />
                     • FunnelUnifiedService.ts atualizado<br />

@@ -151,7 +151,7 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
     getMarginClass(marginBottom, 'bottom'),
     getMarginClass(marginLeft, 'left'),
     getMarginClass(marginRight, 'right'),
-    className
+    className,
   );
 
   return (
@@ -160,7 +160,7 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
         className={cn(
           'relative overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300',
           aspectRatioClasses[aspectRatio as keyof typeof aspectRatioClasses],
-          borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses]
+          borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
         )}
       >
         <EnhancedOptimizedImage
@@ -172,7 +172,7 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
           className={cn(
             'w-full h-auto transition-transform duration-500 hover:scale-105',
             objectFitClasses[objectFit as keyof typeof objectFitClasses],
-            customClassName && 'w-auto h-auto' // Se tem className customizada, não forçar w-full h-full
+            customClassName && 'w-auto h-auto', // Se tem className customizada, não forçar w-full h-full
           )}
           placeholder="blur"
           priority={false}

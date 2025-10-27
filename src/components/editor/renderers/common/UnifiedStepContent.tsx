@@ -97,11 +97,11 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
     const editorState = useMemo(() => ({
         stepBlocks: editor?.state?.stepBlocks || {},
         selectedBlockId: editor?.state?.selectedBlockId || null,
-        currentStep: editor?.state?.currentStep || 1
+        currentStep: editor?.state?.currentStep || 1,
     }), [
         editor?.state?.stepBlocks,
         editor?.state?.selectedBlockId,
-        editor?.state?.currentStep
+        editor?.state?.currentStep,
     ]);
 
     const selectedBlockId = editorState.selectedBlockId as string | null;

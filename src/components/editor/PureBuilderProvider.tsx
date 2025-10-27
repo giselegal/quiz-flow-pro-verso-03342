@@ -144,16 +144,16 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
                 theme: templateInfo.theme || 'modern-elegant',
                 allowBackward: true,
                 saveProgress: true,
-                showProgress: false
+                showProgress: false,
             },
-            totalSteps: 0
+            totalSteps: 0,
         };
     }
 
     appLogger.debug('🏗️ Generating funnel with Pure Builder System...', {
         funnelId,
         templateName: templateInfo.templateName,
-        totalSteps: templateInfo.totalSteps
+        totalSteps: templateInfo.totalSteps,
     });
 
     try {
@@ -171,7 +171,7 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
             'quiz-cores-perfeitas',
             'quiz-style-express',
             'step-1',
-            'step-2'
+            'step-2',
         ];
         const safeTemplate = validTemplates.includes(templateName) ? templateName : 'quiz21StepsComplete'; // ⚡ Fallback para template completo
 
@@ -192,14 +192,14 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
                 fallbackEnabled: true,
                 personalizationEnabled: true,
                 optimizationEnabled: true,
-                contentGenerationEnabled: true
+                contentGenerationEnabled: true,
             });
 
             // 🧠 DEFINIR CONTEXTO DE IA
             AIEnhancedHybridTemplateService.setAIContext({
                 userId: funnelId,
                 userName: 'Usuário',
-                sessionData: { templateId: templateInfo.baseId }
+                sessionData: { templateId: templateInfo.baseId },
             });
 
             // 🚀 CORREÇÃO CRÍTICA: Usar sistema funcional do /quiz-estilo
@@ -213,7 +213,7 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
         try {
             appLogger.debug('✅ Template carregado com sucesso:', {
                 availableSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE),
-                totalSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length
+                totalSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length,
             });
 
             // Carregar todos os steps disponíveis
@@ -238,8 +238,8 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
                             fontSize: 'text-lg',
                             textAlign: 'text-center',
                             containerWidth: 'full',
-                            spacing: 'small'
-                        }
+                            spacing: 'small',
+                        },
                     }] as Block[];
                 }
             }
@@ -260,8 +260,8 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
                         fontSize: 'text-lg',
                         textAlign: 'text-center',
                         containerWidth: 'full',
-                        spacing: 'small'
-                    }
+                        spacing: 'small',
+                    },
                 }] as Block[];
             }
         }
@@ -276,14 +276,14 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
             theme: templateInfo.theme || 'modern-elegant',
             allowBackward: true,
             saveProgress: true,
-            showProgress: true
+            showProgress: true,
         };
 
         return {
             stepBlocks,
             builderInstance: null, // Não precisamos do builder quando carregamos JSON
             funnelConfig,
-            totalSteps // ✅ USAR TOTAL STEPS DINÂMICO
+            totalSteps, // ✅ USAR TOTAL STEPS DINÂMICO
         };
 
     } catch (error) {
@@ -302,7 +302,7 @@ export const PureBuilderProvider: React.FC<{
     funnelId = 'quiz21StepsComplete', // ⚡ CORREÇÃO: Usar template disponível
     enableSupabase = true,
     initial = {},
-    children
+    children,
 }) => {
         // ⚡ STATE OTIMIZADO - Agora dinâmico baseado no template
         const [state, setState] = useState<PureBuilderState>({
@@ -326,7 +326,7 @@ export const PureBuilderProvider: React.FC<{
             apiStatus: 'idle',
             apiError: null,
             apiFunnelId: funnelId || null,
-            ...initial
+            ...initial,
         });
 
         // 🎯 Controlar total de steps dinamicamente
@@ -341,9 +341,9 @@ export const PureBuilderProvider: React.FC<{
             const alreadyWarned = (window as any).__PURE_BUILDER_DEPRECATED_WARNED__;
             if (!alreadyWarned && (import.meta as any).env?.DEV) {
                 (window as any).__PURE_BUILDER_DEPRECATED_WARNED__ = true;
-                // eslint-disable-next-line no-console
+                 
                 appLogger.warn(
-                    '⚠️ PureBuilderProvider is deprecated and will be removed soon. Use SuperUnifiedProvider or usePureBuilderCompat.'
+                    '⚠️ PureBuilderProvider is deprecated and will be removed soon. Use SuperUnifiedProvider or usePureBuilderCompat.',
                 );
             }
         }, []);
@@ -353,7 +353,7 @@ export const PureBuilderProvider: React.FC<{
                 isInitialized.current = true;
 
                 appLogger.debug('🏗️ Initializing PureBuilderProvider with Builder System...', {
-                    providedFunnelId: funnelId
+                    providedFunnelId: funnelId,
                 });
 
                 setState(prev => ({ ...prev, isLoading: true }));
@@ -373,17 +373,17 @@ export const PureBuilderProvider: React.FC<{
                             theme: 'modern-elegant',
                             allowBackward: true,
                             saveProgress: true,
-                            showProgress: false // Sem progresso para canvas vazio
+                            showProgress: false, // Sem progresso para canvas vazio
                         },
                         templateInfo: {
                             templateName: 'Canvas Vazio',
                             baseId: 'empty-canvas',
                             totalSteps: 0,
-                            theme: 'modern-elegant'
+                            theme: 'modern-elegant',
                         },
                         isLoading: false,
                         templateLoading: false,
-                        loadedSteps: new Set()
+                        loadedSteps: new Set(),
                     }));
 
                     setTotalSteps(0);
@@ -420,7 +420,7 @@ export const PureBuilderProvider: React.FC<{
                             stepBlocks: normalized.stepBlocks as any,
                             funnelConfig: normalized.funnelConfig,
                             templateInfo: { baseId: normalized.funnelConfig.templateId, totalSteps: normalized.totalSteps, templateName: 'API-Funnel' },
-                            totalSteps: normalized.totalSteps
+                            totalSteps: normalized.totalSteps,
                         };
                     } catch (error: any) {
                         appLogger.warn('⚠️ Falha ao carregar via API, caindo para templates locais:', error);
@@ -454,7 +454,7 @@ export const PureBuilderProvider: React.FC<{
                             templateInfo: apiResult.templateInfo,
                             isLoading: false,
                             templateLoading: false,
-                            loadedSteps: new Set(Array.from({ length: templateTotalSteps }, (_, i) => i + 1))
+                            loadedSteps: new Set(Array.from({ length: templateTotalSteps }, (_, i) => i + 1)),
                         }));
                         appLogger.debug(`✅ Pure Builder (API) initialized: ${templateTotalSteps} etapas`);
                         return;
@@ -472,7 +472,7 @@ export const PureBuilderProvider: React.FC<{
                                 templateInfo,
                                 isLoading: false,
                                 templateLoading: false,
-                                loadedSteps: new Set(Array.from({ length: templateTotalSteps }, (_, i) => i + 1))
+                                loadedSteps: new Set(Array.from({ length: templateTotalSteps }, (_, i) => i + 1)),
                             }));
                             appLogger.debug(`✅ Pure Builder (fallback local) initialized: ${templateTotalSteps} etapas`);
                         })
@@ -489,14 +489,14 @@ export const PureBuilderProvider: React.FC<{
                                     theme: 'modern-elegant',
                                     allowBackward: true,
                                     saveProgress: true,
-                                    showProgress: false
+                                    showProgress: false,
                                 },
                                 templateInfo: {
                                     templateName: 'Canvas Vazio (Erro Geral)',
                                     baseId: 'empty-fallback',
                                     totalSteps: 0,
-                                    theme: 'modern-elegant'
-                                }
+                                    theme: 'modern-elegant',
+                                },
                             }));
                             setTotalSteps(0);
                         });
@@ -522,7 +522,7 @@ export const PureBuilderProvider: React.FC<{
                 if (state.stepBlocks[stepKey] || step < 1 || step > totalSteps) return;
                 setState(prev => ({
                     ...prev,
-                    loadedSteps: new Set([...prev.loadedSteps, step])
+                    loadedSteps: new Set([...prev.loadedSteps, step]),
                 }));
             }, [state.stepBlocks, totalSteps]),
 
@@ -538,11 +538,11 @@ export const PureBuilderProvider: React.FC<{
                 const adjacentSteps = new Set([
                     Math.max(1, currentStep - 1),
                     currentStep,
-                    Math.min(totalSteps, currentStep + 1)
+                    Math.min(totalSteps, currentStep + 1),
                 ]);
                 setState(prev => ({
                     ...prev,
-                    loadedSteps: new Set([...prev.loadedSteps].filter(step => adjacentSteps.has(step)))
+                    loadedSteps: new Set([...prev.loadedSteps].filter(step => adjacentSteps.has(step))),
                 }));
             }, [state.currentStep, totalSteps]),
 
@@ -551,8 +551,8 @@ export const PureBuilderProvider: React.FC<{
                     ...prev,
                     stepBlocks: {
                         ...prev.stepBlocks,
-                        [stepKey]: [...(prev.stepBlocks[stepKey] || []), block]
-                    }
+                        [stepKey]: [...(prev.stepBlocks[stepKey] || []), block],
+                    },
                 }));
             }, []),
 
@@ -568,29 +568,29 @@ export const PureBuilderProvider: React.FC<{
                     id: 'welcome-block',
                     type: 'text-inline',
                     content: {
-                        text: 'Bem-vindo! Esta é sua primeira etapa.'
+                        text: 'Bem-vindo! Esta é sua primeira etapa.',
                     },
                     order: 0,
                     style: {},
                     properties: {
                         text: 'Bem-vindo! Esta é sua primeira etapa.',
                         fontSize: '18px',
-                        textAlign: 'center'
-                    }
+                        textAlign: 'center',
+                    },
                 };
 
                 setState(prev => ({
                     ...prev,
                     stepBlocks: {
-                        [firstStepKey]: [welcomeBlock]
+                        [firstStepKey]: [welcomeBlock],
                     },
                     currentStep: 1,
                     loadedSteps: new Set([1]),
                     funnelConfig: {
                         ...prev.funnelConfig,
                         totalSteps: 1,
-                        showProgress: true
-                    }
+                        showProgress: true,
+                    },
                 }));
 
                 setTotalSteps(1);
@@ -603,9 +603,9 @@ export const PureBuilderProvider: React.FC<{
                     stepBlocks: {
                         ...prev.stepBlocks,
                         [stepKey]: (prev.stepBlocks[stepKey] || []).map(block =>
-                            block.id === blockId ? { ...block, ...updates } : block
-                        )
-                    }
+                            block.id === blockId ? { ...block, ...updates } : block,
+                        ),
+                    },
                 }));
             }, []),
 
@@ -614,15 +614,15 @@ export const PureBuilderProvider: React.FC<{
                     ...prev,
                     stepBlocks: {
                         ...prev.stepBlocks,
-                        [stepKey]: (prev.stepBlocks[stepKey] || []).filter(block => block.id !== blockId)
-                    }
+                        [stepKey]: (prev.stepBlocks[stepKey] || []).filter(block => block.id !== blockId),
+                    },
                 }));
             }, []),
 
             setStepValid: useCallback((step: number, isValid: boolean) => {
                 setState(prev => ({
                     ...prev,
-                    stepValidation: { ...prev.stepValidation, [step]: isValid }
+                    stepValidation: { ...prev.stepValidation, [step]: isValid },
                 }));
             }, []),
 
@@ -630,7 +630,7 @@ export const PureBuilderProvider: React.FC<{
                 return JSON.stringify({
                     stepBlocks: state.stepBlocks,
                     funnelConfig: state.funnelConfig,
-                    totalSteps
+                    totalSteps,
                 }, null, 2);
             }, [state.stepBlocks, state.funnelConfig, totalSteps]),
 
@@ -640,7 +640,7 @@ export const PureBuilderProvider: React.FC<{
                     setState(prev => ({
                         ...prev,
                         stepBlocks: data.stepBlocks || {},
-                        funnelConfig: data.funnelConfig || {}
+                        funnelConfig: data.funnelConfig || {},
                     }));
                     if (data.totalSteps) setTotalSteps(data.totalSteps);
                 } catch (error) {
@@ -672,7 +672,7 @@ export const PureBuilderProvider: React.FC<{
                 return {
                     ...state.funnelConfig,
                     id: cloneId,
-                    name: newName || `Clone ${state.funnelConfig?.name || 'Funnel'}`
+                    name: newName || `Clone ${state.funnelConfig?.name || 'Funnel'}`,
                 };
             }, [state.funnelConfig]),
 
@@ -687,7 +687,7 @@ export const PureBuilderProvider: React.FC<{
                     stepBlocks.splice(index, 0, block);
                     return {
                         ...prev,
-                        stepBlocks: { ...prev.stepBlocks, [stepKey]: stepBlocks }
+                        stepBlocks: { ...prev.stepBlocks, [stepKey]: stepBlocks },
                     };
                 });
             }, []),
@@ -699,7 +699,7 @@ export const PureBuilderProvider: React.FC<{
                     stepBlocks.splice(newIndex, 0, movedBlock);
                     return {
                         ...prev,
-                        stepBlocks: { ...prev.stepBlocks, [stepKey]: stepBlocks }
+                        stepBlocks: { ...prev.stepBlocks, [stepKey]: stepBlocks },
                     };
                 });
             }, []),
@@ -711,7 +711,7 @@ export const PureBuilderProvider: React.FC<{
             canUndo: false,
             canRedo: false,
             undo: () => { },
-            redo: () => { }
+            redo: () => { },
         };
 
         // 🔧 CORREÇÃO: Memoizar state para evitar re-renders desnecessários
@@ -724,7 +724,7 @@ export const PureBuilderProvider: React.FC<{
             return {
                 ...state,
                 totalSteps,
-                machineStatus: derivedStatus
+                machineStatus: derivedStatus,
             };
         }, [state, totalSteps]);
 
@@ -739,23 +739,23 @@ export const PureBuilderProvider: React.FC<{
                     templateInfo: state.templateInfo ? {
                         baseId: state.templateInfo.baseId,
                         templateName: state.templateInfo.templateName,
-                        totalSteps: state.templateInfo.totalSteps
+                        totalSteps: state.templateInfo.totalSteps,
                     } : null,
                     funnelConfig: state.funnelConfig ? {
                         templateId: state.funnelConfig.templateId,
                         totalSteps: state.funnelConfig.totalSteps,
-                        showProgress: state.funnelConfig.showProgress
+                        showProgress: state.funnelConfig.showProgress,
                     } : null,
                     isLoading: state.isLoading,
                     templateLoading: state.templateLoading,
                     apiStatus: state.apiStatus,
-                    apiError: state.apiError
+                    apiError: state.apiError,
                 };
                 (window as any).__PURE_BUILDER_API__ = {
                     status: state.apiStatus,
                     error: state.apiError,
                     funnelId: state.apiFunnelId,
-                    lastUpdate: Date.now()
+                    lastUpdate: Date.now(),
                 };
             }
         }, [state, totalSteps]);
@@ -771,7 +771,7 @@ export const PureBuilderProvider: React.FC<{
                         lineno: ev.lineno,
                         colno: ev.colno,
                         stack: ev.error?.stack,
-                        capturedAt: Date.now()
+                        capturedAt: Date.now(),
                     };
                     appLogger.error('🛑 [GLOBAL_ERROR_CAPTURE] Primeiro erro global registrado:', (window as any).__FIRST_GLOBAL_ERROR__);
                 }

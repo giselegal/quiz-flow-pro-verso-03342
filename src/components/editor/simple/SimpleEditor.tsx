@@ -41,7 +41,7 @@ const SimpleEditor: React.FC = () => {
   // 🚨 Console warning para desenvolvedores
   appLogger.warn(
     '⚠️ DEPRECATED: SimpleEditor será removido em 01/nov/2025. ' +
-    'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+    'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
   );
 
   const [config, setConfig] = useState<EditorConfig>({

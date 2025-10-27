@@ -27,7 +27,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
   autoSaveEnabled = true,
   lastSaved,
   isSaving = false,
-  onManualSave
+  onManualSave,
 }) => {
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('saved');
   const [lastSaveTime, setLastSaveTime] = useState<Date | null>(lastSaved || null);
@@ -55,7 +55,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
       toast({
         title: 'Erro',
         description: 'Nenhum funil ativo para salvar',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
@@ -73,7 +73,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
         toast({
           title: 'Salvamento manual',
           description: 'Use o botão de salvar no editor para salvar as alterações',
-          variant: 'default'
+          variant: 'default',
         });
       }
 
@@ -83,7 +83,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
       toast({
         title: 'Salvo com sucesso',
         description: 'Suas alterações foram salvas no Supabase',
-        variant: 'default'
+        variant: 'default',
       });
     } catch (error) {
       appLogger.error('❌ Erro no salvamento manual:', error);
@@ -92,7 +92,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
       toast({
         title: 'Erro ao salvar',
         description: 'Não foi possível salvar as alterações',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     }
   };
@@ -106,7 +106,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
           text: 'Salvando...',
           color: 'text-blue-600',
           bgColor: 'bg-blue-50',
-          borderColor: 'border-blue-200'
+          borderColor: 'border-blue-200',
         };
       case 'saved':
         return {
@@ -114,7 +114,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
           text: 'Salvo',
           color: 'text-green-600',
           bgColor: 'bg-green-50',
-          borderColor: 'border-green-200'
+          borderColor: 'border-green-200',
         };
       case 'unsaved':
         return {
@@ -122,7 +122,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
           text: 'Não salvo',
           color: 'text-yellow-600',
           bgColor: 'bg-yellow-50',
-          borderColor: 'border-yellow-200'
+          borderColor: 'border-yellow-200',
         };
       case 'error':
         return {
@@ -130,7 +130,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
           text: 'Erro',
           color: 'text-red-600',
           bgColor: 'bg-red-50',
-          borderColor: 'border-red-200'
+          borderColor: 'border-red-200',
         };
       default:
         return {
@@ -138,7 +138,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
           text: 'Desconhecido',
           color: 'text-gray-600',
           bgColor: 'bg-gray-50',
-          borderColor: 'border-gray-200'
+          borderColor: 'border-gray-200',
         };
     }
   };
@@ -216,7 +216,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
  */
 export const CompactSaveIndicator: React.FC<Pick<SaveStatusIndicatorProps, 'isSaving' | 'lastSaved'>> = ({
   isSaving,
-  lastSaved
+  lastSaved,
 }) => {
   if (isSaving) {
     return (

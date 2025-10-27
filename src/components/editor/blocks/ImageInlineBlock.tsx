@@ -121,7 +121,7 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
   } as const;
 
   const resolveMaxWidth = (
-    value: string | number | undefined
+    value: string | number | undefined,
   ): { className?: string; style?: React.CSSProperties } => {
     if (value === undefined || value === null) return { className: undefined, style: undefined };
     if (typeof value === 'number') return { style: { maxWidth: value } };
@@ -159,7 +159,7 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
     getMarginClass(marginTop, 'top'),
     getMarginClass(marginBottom, 'bottom'),
     getMarginClass(marginLeft, 'left'),
-    getMarginClass(marginRight, 'right')
+    getMarginClass(marginRight, 'right'),
   ), [isSelected, className, marginTop, marginBottom, marginLeft, marginRight]);
 
   const imageClasses = useMemo(() => cn(
@@ -168,12 +168,12 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
     aspectRatioClasses[aspectRatio as keyof typeof aspectRatioClasses],
     resolveMaxWidth(maxWidth).className,
     alignmentClasses[alignment as keyof typeof alignmentClasses],
-    clickable && 'cursor-pointer'
+    clickable && 'cursor-pointer',
   ), [borderRadius, aspectRatio, maxWidth, alignment, clickable]);
 
   const imgClasses = useMemo(() => cn(
     'w-full h-full transition-transform duration-200 hover:scale-105 block',
-    objectFitClasses[objectFit as keyof typeof objectFitClasses]
+    objectFitClasses[objectFit as keyof typeof objectFitClasses],
   ), [objectFit]);
 
   const imageStyle = useMemo(() => ({

@@ -58,13 +58,13 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       className={cn(
         'bg-gradient-to-r rounded-lg flex items-center justify-center shadow-md transition-all duration-200 hover:shadow-lg',
         themeClasses[theme].gradient,
-        sizeClasses[size].icon
+        sizeClasses[size].icon,
       )}
     >
       <Sparkles
         className={cn(
           'text-white',
-          size === 'sm' ? 'h-3 w-3' : size === 'md' ? 'h-4 w-4' : 'h-6 w-6'
+          size === 'sm' ? 'h-3 w-3' : size === 'md' ? 'h-4 w-4' : 'h-6 w-6',
         )}
       />
     </div>
@@ -76,7 +76,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         className={cn(
           'font-semibold flex items-center gap-2',
           themeClasses[theme].text,
-          sizeClasses[size].text
+          sizeClasses[size].text,
         )}
       >
         QuizQuest
@@ -84,7 +84,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           <div
             className={cn(
               'bg-brand-primary/10 text-brand-primary border border-brand-primary/20 rounded px-1.5 py-0.5 flex items-center gap-1',
-              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-xs' : 'text-sm'
+              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-xs' : 'text-sm',
             )}
           >
             <Zap className={cn(size === 'sm' ? 'h-2 w-2' : 'h-3 w-3')} />

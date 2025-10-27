@@ -48,7 +48,7 @@ const DropZone: React.FC<DropZoneProps> = ({ position, index, isActive, onDrop }
         <div
             className={cn(
                 'h-2 -my-1 transition-all duration-200 relative',
-                isActive ? 'h-8 my-1' : 'h-2'
+                isActive ? 'h-8 my-1' : 'h-2',
             )}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
@@ -71,7 +71,7 @@ export const DragDropManager: React.FC<DragDropManagerProps> = ({
     onReorder,
     renderItem,
     enabled = true,
-    className = ''
+    className = '',
 }) => {
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -195,7 +195,7 @@ export const DragDropManager: React.FC<DragDropManagerProps> = ({
                         onDragOver={(e) => handleDragOver(e, index)}
                         className={cn(
                             'transition-all duration-200',
-                            isItemDragging(index) && 'opacity-50 scale-95'
+                            isItemDragging(index) && 'opacity-50 scale-95',
                         )}
                         data-drag-index={index}
                     >

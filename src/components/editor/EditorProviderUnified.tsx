@@ -143,7 +143,7 @@ const getInitialState = (enableSupabase: boolean = false): EditorState => ({
     stepValidation: {},
     isLoading: false,
     databaseMode: enableSupabase ? 'supabase' : 'local',
-    isSupabaseEnabled: enableSupabase
+    isSupabaseEnabled: enableSupabase,
 });
 
 export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
@@ -152,7 +152,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     quizId,
     storageKey = 'unified-editor',
     initial = {},
-    enableSupabase = false
+    enableSupabase = false,
 }) => {
     // ============================================================================
     // STATE MANAGEMENT
@@ -160,7 +160,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     const [state, setState] = useState<EditorState>(() => ({
         ...getInitialState(enableSupabase),
-        ...initial
+        ...initial,
     }));
 
     // Services initialization (memoized)
@@ -190,7 +190,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             quizId,
             enableSupabase,
             storageKey,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         });
 
         // Global flag para debugging
@@ -198,7 +198,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             (window as any).__UNIFIED_EDITOR_PROVIDER__ = {
                 mounted: true,
                 version: '5.0.0',
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
             };
         }
 
@@ -223,7 +223,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             if (typeof window !== 'undefined') {
                 (window as any).__UNIFIED_EDITOR_PROVIDER__ = {
                     mounted: false,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
                 };
             }
         };
@@ -242,7 +242,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     history.push(newState);
                     setHistoryState({
                         canUndo: history.canUndo,
-                        canRedo: history.canRedo
+                        canRedo: history.canRedo,
                     });
                 }, 0);
                 return newState;
@@ -257,7 +257,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             setState(previousState);
             setHistoryState({
                 canUndo: stateManager.canUndo,
-                canRedo: stateManager.canRedo
+                canRedo: stateManager.canRedo,
             });
         }
     }, [stateManager]);
@@ -268,7 +268,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             setState(nextState);
             setHistoryState({
                 canUndo: stateManager.canUndo,
-                canRedo: stateManager.canRedo
+                canRedo: stateManager.canRedo,
             });
         }
     }, [stateManager]);
@@ -321,7 +321,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const setStepValid = useCallback((step: number, isValid: boolean) => {
         setState(prev => ({
             ...prev,
-            stepValidation: { ...prev.stepValidation, [step]: isValid }
+            stepValidation: { ...prev.stepValidation, [step]: isValid },
         }));
     }, []);
 
@@ -354,7 +354,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             return {
                 ...prev,
                 stepBlocks: restBlocks,
-                stepSources: restSources as any
+                stepSources: restSources as any,
             } as EditorState;
         });
 
@@ -431,7 +431,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     setState(prev => ({
                         ...prev,
                         stepBlocks: { ...prev.stepBlocks, [normalizedNext]: cached as Block[] },
-                        stepSources: { ...(prev.stepSources || {}), [normalizedNext]: 'master-hydrated' }
+                        stepSources: { ...(prev.stepSources || {}), [normalizedNext]: 'master-hydrated' },
                     }));
                 }
             }, 500);
@@ -466,7 +466,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         setState({
             ...getInitialState(enableSupabase),
             stepBlocks: newStepBlocks,
-            stepSources: newStepSources
+            stepSources: newStepSources,
         });
 
         stateManager.clearHistory();
@@ -627,7 +627,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 message: error instanceof Error ? error.message : 'Unknown error',
                 funnelId,
                 enableSupabase,
-                hasUnifiedCrud: !!unifiedCrud
+                hasUnifiedCrud: !!unifiedCrud,
             });
             throw error;
         } finally {
@@ -651,7 +651,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     setState(prev => ({
                         ...prev,
                         stepBlocks: funnelData.steps,
-                        isLoading: false
+                        isLoading: false,
                     }));
                     appLogger.debug('✅ Componentes carregados do Supabase');
                 }
@@ -666,13 +666,13 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         return JSON.stringify({
             version: '5.0.0-unified',
             timestamp: new Date().toISOString(),
-            state: state,
+            state,
             funnelId,
             quizId,
             meta: {
                 stepsCount: Object.keys(state.stepBlocks).length,
-                totalBlocks: Object.values(state.stepBlocks).reduce((acc, blocks) => acc + blocks.length, 0)
-            }
+                totalBlocks: Object.values(state.stepBlocks).reduce((acc, blocks) => acc + blocks.length, 0),
+            },
         }, null, 2);
     }, [state, funnelId, quizId]);
 
@@ -682,7 +682,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             if (data.state) {
                 setState({
                     ...getInitialState(enableSupabase),
-                    ...data.state
+                    ...data.state,
                 });
                 stateManager.clearHistory();
                 appLogger.debug('✅ JSON importado com sucesso');
@@ -715,7 +715,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const contextValue: EditorContextValue = {
         state: {
             ...state,
-            isLoading: state.isLoading || (unifiedCrud?.isLoading ?? false)
+            isLoading: state.isLoading || (unifiedCrud?.isLoading ?? false),
         },
         actions: {
             // Navigation
@@ -746,8 +746,8 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             exportJSON,
             importJSON,
             saveToSupabase: enableSupabase ? saveToSupabase : undefined,
-            loadSupabaseComponents: enableSupabase ? loadSupabaseComponents : undefined
-        }
+            loadSupabaseComponents: enableSupabase ? loadSupabaseComponents : undefined,
+        },
     };
 
     return (

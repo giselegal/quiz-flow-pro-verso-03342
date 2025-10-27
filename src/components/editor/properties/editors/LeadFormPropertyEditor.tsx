@@ -32,7 +32,7 @@ export const LeadFormPropertyEditor: React.FC<PropertyEditorProps> = ({
             const isValid = Array.isArray(fields) && fields.length > 0;
             onValidate?.(isValid);
         },
-        [onUpdate, onValidate, block.properties?.fields]
+        [onUpdate, onValidate, block.properties?.fields],
     );
 
     if (isPreviewMode) {
@@ -473,7 +473,7 @@ export const LeadFormPropertyEditor: React.FC<PropertyEditorProps> = ({
                                 backgroundColor,
                                 borderColor,
                                 borderRadius: `${borderRadius}px`,
-                                fontSize: `${fontSize}px`
+                                fontSize: `${fontSize}px`,
                             }}
                         >
                             {currentFields.map((field: any) => (
@@ -501,7 +501,7 @@ export const LeadFormPropertyEditor: React.FC<PropertyEditorProps> = ({
                                 style={{
                                     backgroundColor: buttonColor,
                                     color: buttonTextColor,
-                                    borderRadius: `${borderRadius}px`
+                                    borderRadius: `${borderRadius}px`,
                                 }}
                             >
                                 {submitText}

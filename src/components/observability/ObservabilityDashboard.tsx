@@ -17,7 +17,7 @@ import {
   Users, 
   Zap,
   Download,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react';
 
 import { observabilityManager } from '@/core/observability/ObservabilityManager';
@@ -61,7 +61,7 @@ export const ObservabilityDashboard: React.FC = () => {
   const exportData = () => {
     const exportedData = observabilityManager.exportData();
     const blob = new Blob([JSON.stringify(exportedData, null, 2)], { 
-      type: 'application/json' 
+      type: 'application/json', 
     });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -148,7 +148,7 @@ export const ObservabilityDashboard: React.FC = () => {
             System health is {systemHealth.status}. 
             {systemHealth.errors.count > 0 && ` ${systemHealth.errors.count} errors detected.`}
             {systemHealth.performance.recommendations.length > 0 && 
-              ` Performance recommendations available.`
+              ' Performance recommendations available.'
             }
           </AlertDescription>
         </Alert>

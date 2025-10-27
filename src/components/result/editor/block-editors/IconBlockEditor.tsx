@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Block } from '@/types/editor';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ColorPicker } from "@/components/result/editor/ColorPicker";
+import { ColorPicker } from '@/components/result/editor/ColorPicker';
 import StyleEditor from '../style-editors/StyleEditor';
 
 // Lista de ícones disponíveis
@@ -54,7 +54,7 @@ const IconBlockEditor: React.FC<IconBlockEditorProps> = ({ block, onUpdate }) =>
     ? availableIcons.filter(
         item =>
           item.name.includes(searchTerm) ||
-          item.label.toLowerCase().includes(searchTerm.toLowerCase())
+          item.label.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     : availableIcons;
 

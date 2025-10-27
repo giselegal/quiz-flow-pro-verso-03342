@@ -1,9 +1,9 @@
-import React from "react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
-import { StyleResult } from "@/types/quiz";
+import React from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { StyleResult } from '@/types/quiz';
 
 /**
  * Nota:
@@ -50,7 +50,7 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
   onAnswerSubmit,
   onFormSubmit,
 }) => {
-  const blockId = id || block?.id || "unknown";
+  const blockId = id || block?.id || 'unknown';
 
   const {
     attributes,
@@ -81,13 +81,13 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
   // renderiza conteúdo por tipo de bloco
   const renderBlockContent = () => {
     if (!block) return null;
-    const blockType = (block.type || "").toString().toLowerCase();
+    const blockType = (block.type || '').toString().toLowerCase();
     const content = (block.content ?? {}) as any;
     const appliedStyle = primaryStyle || previewState?.calculatedResults;
 
     switch (blockType) {
-      case "header":
-      case "title":
+      case 'header':
+      case 'title':
         return (
           <div className="block-header">
             <h1
@@ -98,7 +98,7 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
                   : undefined,
               }}
             >
-              {content.title || content.text || "Título"}
+              {content.title || content.text || 'Título'}
             </h1>
             {content.subtitle && (
               <p className="text-lg text-gray-600 mb-4">{content.subtitle}</p>
@@ -106,13 +106,13 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
           </div>
         );
 
-      case "question":
-      case "quiz_question":
+      case 'question':
+      case 'quiz_question':
         return (
           <div className="block-question">
             <div className="question-header mb-4">
               <h3 className="text-lg font-semibold mb-2">
-                {content.title || content.question || "Pergunta do Quiz"}
+                {content.title || content.question || 'Pergunta do Quiz'}
               </h3>
               {content.description && (
                 <p className="text-sm text-gray-600 mb-4">
@@ -130,8 +130,8 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
                     <button
                       key={idx}
                       className={cn(
-                        "w-full p-3 text-left border rounded-lg transition-colors hover:bg-gray-50",
-                        selected && "bg-primary text-white"
+                        'w-full p-3 text-left border rounded-lg transition-colors hover:bg-gray-50',
+                        selected && 'bg-primary text-white',
                       )}
                       onClick={() => handleQuestionAnswer(option.value)}
                     >
@@ -148,8 +148,8 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
           </div>
         );
 
-      case "form":
-      case "lead_form":
+      case 'form':
+      case 'lead_form':
         return enableProductionMode ? (
           <form
             className="block-form"
@@ -161,7 +161,7 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
             }}
           >
             <h3 className="text-lg font-semibold mb-2">
-              {content.title || "Formulário"}
+              {content.title || 'Formulário'}
             </h3>
             {content.description && (
               <p className="text-sm text-gray-600 mb-4">{content.description}</p>
@@ -193,7 +193,7 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
                 type="submit"
                 className="w-full p-3 bg-primary text-white rounded"
               >
-                {content.submitText || "Enviar"}
+                {content.submitText || 'Enviar'}
               </button>
             </div>
           </form>
@@ -203,8 +203,8 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
           </div>
         );
 
-      case "result":
-      case "quiz_result": {
+      case 'result':
+      case 'quiz_result': {
         const result = previewState?.calculatedResults || appliedStyle;
         if (!result) {
           return (
@@ -216,7 +216,7 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
         return (
           <div className="block-result">
             <h3 className="text-xl font-bold mb-2">
-              {content.title || "Resultado do Quiz"}
+              {content.title || 'Resultado do Quiz'}
             </h3>
             <div className="p-4 border rounded">
               <h4 className="text-lg font-semibold mb-2">
@@ -235,12 +235,12 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
         );
       }
 
-      case "image":
+      case 'image':
         return content.src ? (
           <div className="block-image">
             <img
               src={content.src}
-              alt={content.alt || "Imagem"}
+              alt={content.alt || 'Imagem'}
               className="w-full h-auto rounded-lg"
             />
           </div>
@@ -250,16 +250,16 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
           </div>
         );
 
-      case "button":
-      case "cta":
+      case 'button':
+      case 'cta':
         return (
           <div className="block-button">
             <button
               className={cn(
-                "px-6 py-3 rounded-lg font-semibold transition-colors w-full",
+                'px-6 py-3 rounded-lg font-semibold transition-colors w-full',
                 enableProductionMode
-                  ? "bg-primary text-white hover:bg-primary/90 cursor-pointer"
-                  : "bg-gray-200 text-gray-700 cursor-default"
+                  ? 'bg-primary text-white hover:bg-primary/90 cursor-pointer'
+                  : 'bg-gray-200 text-gray-700 cursor-default',
               )}
               style={{
                 backgroundColor:
@@ -269,27 +269,27 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
               }}
               onClick={() => {
                 if (enableProductionMode && content.action) {
-                  console.log("🔘 Button action:", content.action);
+                  console.log('🔘 Button action:', content.action);
                 }
               }}
             >
-              {content.label || content.text || content.submitText || "Botão"}
+              {content.label || content.text || content.submitText || 'Botão'}
             </button>
           </div>
         );
 
-      case "text":
-      case "paragraph":
+      case 'text':
+      case 'paragraph':
         return (
           <div className="block-text">
             <p className="text-base leading-relaxed">
-              {content.text || content.paragraph || "Texto do parágrafo"}
+              {content.text || content.paragraph || 'Texto do parágrafo'}
             </p>
           </div>
         );
 
-      case "progress":
-      case "progress_bar":
+      case 'progress':
+      case 'progress_bar':
         return (
           <div className="block-progress">
             <div className="progress-header mb-2">
@@ -315,7 +315,7 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
         return (
           <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500">
             <div className="text-sm font-medium mb-1">
-              {block.type || "Bloco Desconhecido"}
+              {block.type || 'Bloco Desconhecido'}
             </div>
             {block.content?.text && (
               <div className="text-xs mt-1">{block.content.text}</div>
@@ -331,11 +331,11 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
       ref={setNodeRef}
       style={style}
       className={cn(
-        "relative block-preview-wrapper",
-        isSelected && "selected",
-        isDragging && "z-50 opacity-50",
-        enableProductionMode && "production-mode",
-        className
+        'relative block-preview-wrapper',
+        isSelected && 'selected',
+        isDragging && 'z-50 opacity-50',
+        enableProductionMode && 'production-mode',
+        className,
       )}
       onClick={onClick}
       {...(!enableProductionMode ? attributes : {})}
@@ -344,7 +344,7 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
       <div className="preview-block-content">
         {!enableProductionMode && (
           <div className="block-type-indicator text-xs text-gray-500 mb-1">
-            {block?.type || "Unknown Block"}
+            {block?.type || 'Unknown Block'}
           </div>
         )}
 

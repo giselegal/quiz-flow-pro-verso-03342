@@ -107,7 +107,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
     // Mobile-first padding using CSS-in-JS for precise control
     finalMobileOptimized && 'touch-manipulation',
     isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
-    className
+    className,
   );
 
   // Dynamic styles for mobile-first approach
@@ -178,7 +178,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
           blockId: block?.id,
           timestamp: new Date().toISOString(),
           fields: finalFields,
-          step: 'step-20'
+          step: 'step-20',
         },
       });
       window.dispatchEvent(event);
@@ -202,7 +202,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
         case 'next-step':
           // Trigger navigation to next step
           window.dispatchEvent(new CustomEvent('quiz-next-step', {
-            detail: { from: 'lead-form', formData }
+            detail: { from: 'lead-form', formData },
           }));
           break;
         default:
@@ -277,7 +277,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
             // Tablet breakpoint
             finalFields.length > 2 && 'md:grid-cols-2',
             // Desktop breakpoint  
-            finalFields.length > 4 && 'lg:grid-cols-3'
+            finalFields.length > 4 && 'lg:grid-cols-3',
           )}>
             {finalFields.map((field: any, index: number) => (
               <div key={field} className="space-y-2">
@@ -300,11 +300,11 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
                     'w-full transition-colors duration-200',
                     // Mobile-optimized input height
                     finalMobileOptimized && 'h-12 md:h-10',
-                    errors[field] && 'border-red-500 focus:border-red-500'
+                    errors[field] && 'border-red-500 focus:border-red-500',
                   )}
                   style={{
                     borderColor: errors[field] ? '#EF4444' : finalBorderColor,
-                    fontSize: finalMobileOptimized ? '16px' : `${finalFontSize}px` // Prevent zoom on iOS
+                    fontSize: finalMobileOptimized ? '16px' : `${finalFontSize}px`, // Prevent zoom on iOS
                   }}
                   required={finalRequired}
                   autoFocus={finalAutoFocus && index === 0}
@@ -323,7 +323,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
             className={cn(
               'w-full font-medium transition-all duration-200',
               // Mobile-optimized button height
-              finalMobileOptimized && 'h-12 text-lg md:h-10 md:text-base'
+              finalMobileOptimized && 'h-12 text-lg md:h-10 md:text-base',
             )}
             style={{
               backgroundColor: finalButtonColor,

@@ -89,7 +89,7 @@ export function printFullStepsDebug() {
         'Próxima Etapa': next,
         'Existe no Registry': existsReg,
         'Existe em QUIZ_STEPS': existsData,
-        'Alerta Tipo/Categoria': alerta
+        'Alerta Tipo/Categoria': alerta,
       });
     }
 
@@ -97,7 +97,7 @@ export function printFullStepsDebug() {
     rows.sort((a, b) => a['#'] - b['#']);
     // Exibir a tabela com índice sendo o próprio ID (step-XX) para evitar duas colunas de índice
     const table = Object.fromEntries(
-      rows.map(({ ['#']: _num, ...rest }) => [rest.ID, rest])
+      rows.map(({ ['#']: _num, ...rest }) => [rest.ID, rest]),
     );
     console.log('🧩 Debug Completo de Etapas (StepRegistry × QUIZ_STEPS)');
     console.table(table);
@@ -222,7 +222,7 @@ export async function printFullStepsDebugDeep() {
     rows.sort((a, b) => a['#'] - b['#']);
     // Exibir a tabela com índice sendo o próprio ID (step-XX) para evitar duas colunas de índice
     const table = Object.fromEntries(
-      rows.map(({ ['#']: _num, ...rest }) => [rest.ID, rest])
+      rows.map(({ ['#']: _num, ...rest }) => [rest.ID, rest]),
     );
     console.log('🧩 Debug Completo (Profundo) • StepRegistry × QUIZ_STEPS × Template');
     console.table(table);

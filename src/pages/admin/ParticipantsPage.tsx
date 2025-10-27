@@ -17,7 +17,7 @@ const ParticipantsPage: React.FC = () => {
     const [analyticsFilters, setAnalyticsFilters] = useState({
         dateRange: 'all',
         deviceType: 'all',
-        status: 'all'
+        status: 'all',
     });
     const [realMetrics, setRealMetrics] = useState<any>(null);
 

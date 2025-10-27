@@ -17,7 +17,7 @@ import {
   Copy, 
   Undo2,
   Eye,
-  Code2
+  Code2,
 } from 'lucide-react';
 
 interface AdvancedStylingPanelProps {
@@ -56,17 +56,17 @@ const themePresets: ThemePreset[] = [
       secondary: '#8b5cf6',
       accent: '#f59e0b',
       background: '#ffffff',
-      text: '#1f2937'
+      text: '#1f2937',
     },
     fonts: {
       heading: 'Inter, sans-serif',
-      body: 'Inter, sans-serif'
+      body: 'Inter, sans-serif',
     },
     effects: {
       shadow: true,
       gradient: false,
-      animation: 'slide-in'
-    }
+      animation: 'slide-in',
+    },
   },
   {
     id: 'elegant',
@@ -76,17 +76,17 @@ const themePresets: ThemePreset[] = [
       secondary: '#6b7280',
       accent: '#f3f4f6',
       background: '#ffffff',
-      text: '#111827'
+      text: '#111827',
     },
     fonts: {
       heading: 'Playfair Display, serif',
-      body: 'Source Sans Pro, sans-serif'
+      body: 'Source Sans Pro, sans-serif',
     },
     effects: {
       shadow: true,
       gradient: false,
-      animation: 'fade-in'
-    }
+      animation: 'fade-in',
+    },
   },
   {
     id: 'vibrant',
@@ -96,18 +96,18 @@ const themePresets: ThemePreset[] = [
       secondary: '#8b5cf6',
       accent: '#f59e0b',
       background: '#fef7ff',
-      text: '#701a75'
+      text: '#701a75',
     },
     fonts: {
       heading: 'Poppins, sans-serif',
-      body: 'Nunito, sans-serif'
+      body: 'Nunito, sans-serif',
     },
     effects: {
       shadow: true,
       gradient: true,
-      animation: 'bounce-in'
-    }
-  }
+      animation: 'bounce-in',
+    },
+  },
 ];
 
 export const AdvancedStylingPanel: React.FC<AdvancedStylingPanelProps> = ({
@@ -416,7 +416,7 @@ export const AdvancedStylingPanel: React.FC<AdvancedStylingPanelProps> = ({
                   checked={!!customStyles.boxShadow}
                   onCheckedChange={(checked) => 
                     handleStyleChange('boxShadow', 
-                      checked ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : 'none'
+                      checked ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : 'none',
                     )
                   }
                 />
@@ -430,7 +430,7 @@ export const AdvancedStylingPanel: React.FC<AdvancedStylingPanelProps> = ({
                     handleStyleChange('background', 
                       checked 
                         ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' 
-                        : customStyles.backgroundColor || '#ffffff'
+                        : customStyles.backgroundColor || '#ffffff',
                     )
                   }
                 />

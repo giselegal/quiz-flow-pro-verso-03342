@@ -181,7 +181,7 @@ export const SocialProof: React.FC<SocialProofProps> = props => {
     deviceView || 'desktop',
     'tight',
     'full',
-    className
+    className,
   );
 
   return (

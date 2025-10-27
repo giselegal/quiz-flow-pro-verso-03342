@@ -10,8 +10,8 @@ interface Step20ResultPageProps {
 }
 
 export const Step20ResultPage: React.FC<Step20ResultPageProps> = ({
-    className = "",
-    isPreview = false
+    className = '',
+    isPreview = false,
 }) => {
     const { configuration, getBackgroundStyle, getResultIcon } = useStep20Configuration();
 

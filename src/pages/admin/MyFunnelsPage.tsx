@@ -17,7 +17,7 @@ import {
   sanitizeAndNormalizeFunnelData,
   performSystemHealthCheck,
   errorManager,
-  createFunnelError
+  createFunnelError,
 } from '@/utils/improvedFunnelSystem';
 
 type Funnel = ReturnType<typeof funnelLocalStore.list>[number];
@@ -72,7 +72,7 @@ const MyFunnelsPage: React.FC = () => {
         console.error('❌ Erro ao carregar funis contextuais:', error);
         const storageError = createFunnelError('STORAGE_NOT_AVAILABLE',
           `Failed to load funnels: ${error instanceof Error ? error.message : 'Unknown error'}`, {
-          operation: 'loadContextualFunnels'
+          operation: 'loadContextualFunnels',
         });
         errorManager.handleError(storageError);
 
@@ -96,7 +96,7 @@ const MyFunnelsPage: React.FC = () => {
         isPublished: false,
         version: 1,
         settings: {},
-        pages: []
+        pages: [],
       },
       {
         id: 'lead-magnet-example',
@@ -105,8 +105,8 @@ const MyFunnelsPage: React.FC = () => {
         isPublished: false,
         version: 1,
         settings: {},
-        pages: []
-      }
+        pages: [],
+      },
     ];
 
     try {
@@ -132,7 +132,7 @@ const MyFunnelsPage: React.FC = () => {
       console.error('❌ Erro ao criar funis iniciais:', error);
       const creationError = createFunnelError('FUNNEL_CREATION_FAILED',
         `Failed to create initial funnels: ${error instanceof Error ? error.message : 'Unknown error'}`, {
-        operation: 'createInitialFunnels'
+        operation: 'createInitialFunnels',
       });
       errorManager.handleError(creationError);
 
@@ -141,7 +141,7 @@ const MyFunnelsPage: React.FC = () => {
         id: f.id,
         name: f.name,
         status: 'draft' as const,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       }));
       funnelLocalStore.saveList(legacyFunnels);
       setFunnels(legacyFunnels as any);
@@ -178,7 +178,7 @@ const MyFunnelsPage: React.FC = () => {
         isPublished: false,
         version: 1,
         settings: {},
-        pages: []
+        pages: [],
       };
 
       try {
@@ -198,7 +198,7 @@ const MyFunnelsPage: React.FC = () => {
           id: newId,
           name,
           status: 'draft' as const,
-          updatedAt: now
+          updatedAt: now,
         };
 
         const list = funnelLocalStore.list();
@@ -225,10 +225,10 @@ const MyFunnelsPage: React.FC = () => {
         settings: {
           steps: QUIZ_STYLE_21_STEPS_TEMPLATE,
           metadata: {
-            collectUserName: true
-          }
+            collectUserName: true,
+          },
         },
-        pages: []
+        pages: [],
       };
 
       // Salvar no contexto MY_FUNNELS
@@ -271,8 +271,8 @@ const MyFunnelsPage: React.FC = () => {
         metadata: {
           version: fullFunnelData.version,
           lastModified: new Date().toISOString(),
-          context: FunnelContext.MY_FUNNELS
-        }
+          context: FunnelContext.MY_FUNNELS,
+        },
       };
 
       const result = await publishFunnel(publishData);
@@ -305,7 +305,7 @@ const MyFunnelsPage: React.FC = () => {
       <AdminBreadcrumbs
         items={[
           { label: 'Dashboard', href: '/admin' },
-          { label: 'Meus Funis', href: '/admin/meus-funis' }
+          { label: 'Meus Funis', href: '/admin/meus-funis' },
         ]}
       />
 

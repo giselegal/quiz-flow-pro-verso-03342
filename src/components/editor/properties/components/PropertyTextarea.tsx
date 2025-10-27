@@ -20,7 +20,7 @@ export const PropertyTextarea: React.FC<PropertyInputProps> = ({
         className={cn(
           'text-sm font-medium',
           required && "after:content-['*'] after:text-red-500 after:ml-1",
-          error && 'text-red-600'
+          error && 'text-red-600',
         )}
       >
         {label}
@@ -34,7 +34,7 @@ export const PropertyTextarea: React.FC<PropertyInputProps> = ({
         rows={4}
         className={cn(
           error && 'border-red-500 focus:border-red-500',
-          'transition-colors resize-none'
+          'transition-colors resize-none',
         )}
       />
 

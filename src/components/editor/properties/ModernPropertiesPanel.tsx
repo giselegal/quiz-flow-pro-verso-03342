@@ -33,7 +33,7 @@ import {
   AlignLeftIcon,
   PlusIcon,
   TrashIcon,
-  GripVerticalIcon
+  GripVerticalIcon,
 } from 'lucide-react';
 
 interface ModernPropertiesPanelProps {
@@ -172,10 +172,10 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
         appLogger.debug('🔍 DEBUG - Array/Options-list control:', {
           property: property.key,
           propertyType: property.type,
-          value: value,
+          value,
           valueType: typeof value,
           isArray: Array.isArray(value),
-          length: Array.isArray(value) ? value.length : 'N/A'
+          length: Array.isArray(value) ? value.length : 'N/A',
         });
       }
 
@@ -196,7 +196,7 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
                   imageUrl: '',
                   value: `option-${currentArray.length + 1}`,
                   category: '',
-                  points: currentArray.length + 1
+                  points: currentArray.length + 1,
                 };
                 const newArray = [...currentArray, newOption];
                 appLogger.debug('🔍 Adding new option:', newOption, 'New array:', newArray);
@@ -334,8 +334,8 @@ function getCurrentValue(propKey: string, currentBlock?: Block): any {
         hasOptions: !!(currentBlock.content?.options),
         optionsLength: Array.isArray(currentBlock.content?.options) ? currentBlock.content.options.length : 'N/A',
         hasProperties: !!currentBlock.properties,
-        optionsInProperties: currentBlock.properties?.options
-      }
+        optionsInProperties: currentBlock.properties?.options,
+      },
     });
   }
 
@@ -370,7 +370,7 @@ function organizePropertiesByCategory(properties: any[]) {
       total: properties.length,
       propertyKeys: properties.map(p => p.key),
       arrayProperties: properties.filter(p => p.type === 'array' || p.type === PropertyType.ARRAY).map(p => p.key),
-      optionsProperties: properties.filter(p => p.key.includes('option')).map(p => p.key)
+      optionsProperties: properties.filter(p => p.key.includes('option')).map(p => p.key),
     });
   }
 
@@ -380,7 +380,7 @@ function organizePropertiesByCategory(properties: any[]) {
     style: { label: 'Estilização', icon: PaletteIcon, properties: [] as any[] },
     behavior: { label: 'Comportamento', icon: SettingsIcon, properties: [] as any[] },
     validation: { label: 'Validações', icon: CheckCircleIcon, properties: [] as any[] },
-    advanced: { label: 'Avançado', icon: CodeIcon, properties: [] as any[] }
+    advanced: { label: 'Avançado', icon: CodeIcon, properties: [] as any[] },
   };
 
   properties.forEach(prop => {
@@ -398,7 +398,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   onUpdate,
   onClose,
   onDelete,
-  onDuplicate
+  onDuplicate,
 }) => {
   const editorContext = useEditor({ optional: true });
   if (!editorContext) return null;
@@ -465,14 +465,14 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     if (Object.keys(propertyUpdates).length > 0) {
       finalUpdates.properties = {
         ...selectedBlock.properties,
-        ...propertyUpdates
+        ...propertyUpdates,
       };
     }
 
     if (Object.keys(contentUpdates).length > 0) {
       finalUpdates.content = {
         ...selectedBlock.content,
-        ...contentUpdates
+        ...contentUpdates,
       };
     }
 
@@ -483,7 +483,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
       onUpdate(finalUpdates);
     } else {
       // EditorProvider requires stepKey and blockId
-      const currentStepKey = `step-1`; // TODO: Get from state
+      const currentStepKey = 'step-1'; // TODO: Get from state
       actions.updateBlock(currentStepKey, selectedBlock.id, finalUpdates);
     }
   }, [selectedBlock, actions, onUpdate]);
@@ -510,13 +510,13 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     if (Object.keys(propertyUpdates).length > 0) {
       finalUpdates.properties = {
         ...selectedBlock.properties,
-        ...propertyUpdates
+        ...propertyUpdates,
       };
     }
     if (Object.keys(contentUpdates).length > 0) {
       finalUpdates.content = {
         ...selectedBlock.content,
-        ...contentUpdates
+        ...contentUpdates,
       };
     }
 
@@ -524,7 +524,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
       onUpdate(finalUpdates);
     } else {
       // EditorProvider requires stepKey and blockId
-      const currentStepKey = `step-1`; // TODO: Get from state
+      const currentStepKey = 'step-1'; // TODO: Get from state
       actions.updateBlock(currentStepKey, selectedBlock.id, finalUpdates);
     }
   }, [selectedBlock, onUpdate, actions]);
@@ -670,7 +670,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
                     onDelete();
                   } else {
                     // EditorProvider requires stepKey and blockId
-                    const currentStepKey = `step-1`; // TODO: Get from state
+                    const currentStepKey = 'step-1'; // TODO: Get from state
                     actions.removeBlock(currentStepKey, selectedBlock.id);
                   }
                 }

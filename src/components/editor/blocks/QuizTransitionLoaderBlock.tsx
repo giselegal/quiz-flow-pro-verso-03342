@@ -68,7 +68,7 @@ export const QuizTransitionLoaderBlock: React.FC<QuizTransitionLoaderBlockProps>
       className={cn(
         'flex flex-col items-center justify-center transition-all',
         isSelected && 'ring-2 ring-primary rounded',
-        className
+        className,
       )}
       style={containerStyle}
       onClick={onClick}

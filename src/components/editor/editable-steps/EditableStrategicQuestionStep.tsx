@@ -27,7 +27,7 @@ const EditableStrategicQuestionStep: React.FC<EditableStrategicQuestionStepProps
     data,
     currentAnswer,
     onAnswerChange,
-    onOpenProperties
+    onOpenProperties,
 }) => {
     const safeData = useMemo(() => ({
         ...data,
@@ -38,8 +38,8 @@ const EditableStrategicQuestionStep: React.FC<EditableStrategicQuestionStepProps
             { value: 'conforto', label: 'Conforto acima de tudo' },
             { value: 'aparencia', label: 'Aparência impecável' },
             { value: 'versatilidade', label: 'Versatilidade para diferentes ocasiões' },
-            { value: 'originalidade', label: 'Originalidade e exclusividade' }
-        ]
+            { value: 'originalidade', label: 'Originalidade e exclusividade' },
+        ],
     }), [data, step]);
 
     return (

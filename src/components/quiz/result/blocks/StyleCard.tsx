@@ -18,7 +18,7 @@ export default function StyleCard({
     features = [],
     icon = <Sparkles className="w-8 h-8 text-[#B89B7A]" />,
     isActive = true,
-    className = ''
+    className = '',
 }: StyleCardProps) {
     return (
         <div

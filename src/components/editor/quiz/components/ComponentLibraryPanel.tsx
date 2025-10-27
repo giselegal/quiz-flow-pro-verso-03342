@@ -27,7 +27,7 @@ export const ComponentLibraryPanel: React.FC<ComponentLibraryPanelProps> = ({
     categories = ['content', 'interactive', 'media', 'layout'],
     selectedStepId,
     onAdd,
-    onQuizCreated
+    onQuizCreated,
 }) => {
     const [activeTab, setActiveTab] = useState('components');
 
@@ -71,7 +71,7 @@ export const ComponentLibraryPanel: React.FC<ComponentLibraryPanelProps> = ({
                                     advanced: 'Avançado',
                                     // Legacy categories
                                     interactive: 'Interativo',
-                                    media: 'Mídia'
+                                    media: 'Mídia',
                                 };
 
                                 return (

@@ -27,7 +27,7 @@ import {
     Plus,
     Search,
     Clock,
-    User
+    User,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -70,11 +70,11 @@ const SYSTEM_PRESETS: Omit<PropertyPreset, 'id' | 'createdAt' | 'updatedAt' | 'c
             fontWeight: 'normal',
             borderRadius: '12px',
             padding: '24px',
-            margin: '16px'
+            margin: '16px',
         },
         tags: ['moderno', 'clean', 'suave'],
         isFavorite: false,
-        isSystem: true
+        isSystem: true,
     },
     {
         name: 'Quiz Elegante',
@@ -88,11 +88,11 @@ const SYSTEM_PRESETS: Omit<PropertyPreset, 'id' | 'createdAt' | 'updatedAt' | 'c
             fontWeight: 'semibold',
             borderRadius: '8px',
             padding: '32px',
-            margin: '20px'
+            margin: '20px',
         },
         tags: ['elegante', 'escuro', 'contraste'],
         isFavorite: false,
-        isSystem: true
+        isSystem: true,
     },
     {
         name: 'Quiz Minimalista',
@@ -106,11 +106,11 @@ const SYSTEM_PRESETS: Omit<PropertyPreset, 'id' | 'createdAt' | 'updatedAt' | 'c
             fontWeight: 'normal',
             borderRadius: '4px',
             padding: '16px',
-            margin: '8px'
+            margin: '8px',
         },
         tags: ['minimalista', 'simples', 'clean'],
         isFavorite: false,
-        isSystem: true
+        isSystem: true,
     },
     {
         name: 'Header com Logo',
@@ -123,11 +123,11 @@ const SYSTEM_PRESETS: Omit<PropertyPreset, 'id' | 'createdAt' | 'updatedAt' | 'c
             logoAlt: 'Logo da Marca',
             progressValue: 0,
             headerHeight: '80px',
-            backgroundColor: '#FEFDFB'
+            backgroundColor: '#FEFDFB',
         },
         tags: ['header', 'logo', 'progresso'],
         isFavorite: false,
-        isSystem: true
+        isSystem: true,
     },
     {
         name: 'Pergunta Múltipla Escolha',
@@ -140,12 +140,12 @@ const SYSTEM_PRESETS: Omit<PropertyPreset, 'id' | 'createdAt' | 'updatedAt' | 'c
             optionPadding: '16px',
             optionBorderRadius: '8px',
             highlightColor: '#B89B7A',
-            hoverEffect: true
+            hoverEffect: true,
         },
         tags: ['pergunta', 'múltipla-escolha', 'grid'],
         isFavorite: false,
-        isSystem: true
-    }
+        isSystem: true,
+    },
 ];
 
 // ===== MAIN COMPONENT =====
@@ -154,7 +154,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
     currentProperties,
     onApplyPreset,
     onClose,
-    className
+    className,
 }) => {
     // ===== STATE =====
     const [presets, setPresets] = useState<PropertyPreset[]>(() => {
@@ -164,7 +164,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
             id: `system-${index}`,
             createdAt: new Date(),
             updatedAt: new Date(),
-            createdBy: 'Sistema'
+            createdBy: 'Sistema',
         }));
     });
 
@@ -175,7 +175,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
         name: '',
         description: '',
         category: '',
-        tags: ''
+        tags: '',
     });
 
     // ===== COMPUTED VALUES =====
@@ -192,7 +192,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
             filtered = filtered.filter(preset =>
                 preset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 preset.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                preset.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+                preset.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())),
             );
         }
 
@@ -224,7 +224,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
             updatedAt: new Date(),
             createdBy: 'Usuário',
             isFavorite: false,
-            isSystem: false
+            isSystem: false,
         };
 
         setPresets(prev => [...prev, preset]);
@@ -240,7 +240,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
         setPresets(prev => prev.map(preset =>
             preset.id === presetId
                 ? { ...preset, isFavorite: !preset.isFavorite }
-                : preset
+                : preset,
         ));
     }, []);
 
@@ -256,7 +256,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
             createdAt: new Date(),
             updatedAt: new Date(),
             createdBy: 'Usuário',
-            isSystem: false
+            isSystem: false,
         };
 
         setPresets(prev => [...prev, duplicate]);
@@ -265,7 +265,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
     const handleExportPresets = useCallback(() => {
         const customPresets = presets.filter(p => !p.isSystem);
         const dataStr = JSON.stringify(customPresets, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+        const dataUri = `data:application/json;charset=utf-8,${  encodeURIComponent(dataStr)}`;
 
         const exportFileDefaultName = 'property-presets.json';
         const linkElement = document.createElement('a');
@@ -288,7 +288,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
                         id: `imported-${Date.now()}-${index}`,
                         createdAt: new Date(preset.createdAt),
                         updatedAt: new Date(),
-                        isSystem: false
+                        isSystem: false,
                     }));
                     setPresets(prev => [...prev, ...newPresets]);
                 }
@@ -301,7 +301,7 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
 
     // ===== RENDER =====
     return (
-        <Card className={cn("w-full max-w-full", className)}>
+        <Card className={cn('w-full max-w-full', className)}>
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -444,8 +444,8 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {filteredPresets.map(preset => (
                             <Card key={preset.id} className={cn(
-                                "relative group transition-all duration-200 hover:shadow-md",
-                                preset.isFavorite && "ring-2 ring-yellow-400"
+                                'relative group transition-all duration-200 hover:shadow-md',
+                                preset.isFavorite && 'ring-2 ring-yellow-400',
                             )}>
                                 <CardHeader className="pb-2">
                                     <div className="flex items-start justify-between">
@@ -474,8 +474,8 @@ export const PropertyPresetsManager: React.FC<PropertyPresetsManagerProps> = ({
                                                             className="h-6 w-6 p-0"
                                                         >
                                                             <Star className={cn(
-                                                                "w-3 h-3",
-                                                                preset.isFavorite && "fill-current text-yellow-500"
+                                                                'w-3 h-3',
+                                                                preset.isFavorite && 'fill-current text-yellow-500',
                                                             )} />
                                                         </Button>
                                                     </TooltipTrigger>

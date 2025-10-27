@@ -83,7 +83,7 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
           getMarginClass(marginTop, 'top'),
           getMarginClass(marginBottom, 'bottom'),
           getMarginClass(marginLeft, 'left'),
-          getMarginClass(marginRight, 'right')
+          getMarginClass(marginRight, 'right'),
         )}
       >
         <p>Finalize o quiz para ver seu estilo predominante</p>
@@ -111,7 +111,7 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
     <div
       className={cn(
         'p-6 bg-white shadow-md border border-[#B89B7A]/20 rounded-lg card-elegant',
-        className
+        className,
       )}
     >
       <div className="text-center mb-8">

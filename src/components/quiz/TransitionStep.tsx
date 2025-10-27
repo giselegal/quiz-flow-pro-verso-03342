@@ -56,7 +56,7 @@ export default function TransitionStep({ data, onComplete }: TransitionStepProps
             console.warn(
                 '⚠️ TransitionStep está deprecated e será removido na v2.0. ' +
                 'Migre para blocos atômicos no template JSON. ' +
-                'Ver ANALISE_ACOPLAMENTO_STEPS_12_19_20.md'
+                'Ver ANALISE_ACOPLAMENTO_STEPS_12_19_20.md',
             );
         }
     }, []);
@@ -98,10 +98,10 @@ export default function TransitionStep({ data, onComplete }: TransitionStepProps
                 {[1, 2, 3].map((dot) => (
                     <div
                         key={dot}
-                        className={`w-3 h-3 rounded-full bg-[#deac6d] animate-pulse`}
+                        className={'w-3 h-3 rounded-full bg-[#deac6d] animate-pulse'}
                         style={{
                             animationDelay: `${dot * 0.2}s`,
-                            animationDuration: '1.2s'
+                            animationDuration: '1.2s',
                         }}
                     ></div>
                 ))}
@@ -133,7 +133,7 @@ export default function TransitionStep({ data, onComplete }: TransitionStepProps
                             className="w-1 h-8 bg-[#deac6d] rounded-full animate-pulse"
                             style={{
                                 animationDelay: `${i * 0.1}s`,
-                                animationDuration: '2s'
+                                animationDuration: '2s',
                             }}
                         ></div>
                     ))}

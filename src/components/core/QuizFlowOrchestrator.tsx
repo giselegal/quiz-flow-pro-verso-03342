@@ -225,7 +225,7 @@ export const QuizFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const stepKey = `step-${step}`;
         return state.stepData[stepKey] || [];
       },
-      [state.stepData]
+      [state.stepData],
     ),
   };
 

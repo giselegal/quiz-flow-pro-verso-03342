@@ -58,7 +58,7 @@ export function ColorPicker({
       className={cn(
         size,
         'rounded-md border-2 border-gray-200 shadow-sm flex items-center justify-center relative overflow-hidden cursor-pointer transition-transform hover:scale-105',
-        color === 'transparent' && 'bg-gradient-to-br from-gray-100 to-gray-200'
+        color === 'transparent' && 'bg-gradient-to-br from-gray-100 to-gray-200',
       )}
       style={{
         backgroundColor: color === 'transparent' ? 'transparent' : color,
@@ -89,7 +89,7 @@ export function ColorPicker({
         onClick={() => handleColorSelect(colorOption.value)}
         className={cn(
           'group relative flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-50 transition-all',
-          isSelected && 'bg-brand-brightPink/10 ring-2 ring-brand-brightPink'
+          isSelected && 'bg-brand-brightPink/10 ring-2 ring-brand-brightPink',
         )}
         title={colorOption.label}
       >
@@ -151,7 +151,7 @@ export function ColorPicker({
                     'flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors',
                     activeTab === 'popular'
                       ? 'bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white shadow-sm'
-                      : 'text-brand-darkBlue hover:text-brand-brightPink'
+                      : 'text-brand-darkBlue hover:text-brand-brightPink',
                   )}
                 >
                   Populares
@@ -162,7 +162,7 @@ export function ColorPicker({
                     'flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors',
                     activeTab === 'all'
                       ? 'bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white shadow-sm'
-                      : 'text-brand-darkBlue hover:text-brand-brightPink'
+                      : 'text-brand-darkBlue hover:text-brand-brightPink',
                   )}
                 >
                   Paleta
@@ -174,7 +174,7 @@ export function ColorPicker({
                       'flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors',
                       activeTab === 'custom'
                         ? 'bg-gradient-to-r from-brand-brightPink to-brand-brightBlue text-white shadow-sm'
-                        : 'text-brand-darkBlue hover:text-brand-brightPink'
+                        : 'text-brand-darkBlue hover:text-brand-brightPink',
                     )}
                   >
                     Custom

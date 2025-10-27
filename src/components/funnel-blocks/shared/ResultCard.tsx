@@ -45,7 +45,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
       className={cn(
         'overflow-hidden transition-shadow duration-300 hover:shadow-lg',
         isHighlighted ? 'border-2 border-primary shadow-md' : 'border border-gray-200',
-        className
+        className,
       )}
       style={style}
     >

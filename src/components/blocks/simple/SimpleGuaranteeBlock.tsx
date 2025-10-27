@@ -16,7 +16,7 @@ const SimpleGuaranteeBlock: React.FC<BlockComponentProps> = ({
     block,
     isSelected,
     editMode,
-    onSelect
+    onSelect,
 }) => {
     const content = block.content || {};
 

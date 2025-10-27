@@ -22,7 +22,7 @@ import {
   Brain, 
   AlertTriangle,
   CheckCircle2,
-  Activity 
+  Activity, 
 } from 'lucide-react';
 
 interface QuizOptimizedRendererProps {

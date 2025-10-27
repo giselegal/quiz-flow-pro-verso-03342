@@ -5,7 +5,7 @@ import { useResultOptional } from '@/contexts/ResultContext';
 export default function ResultHeaderBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   // Ler de content primeiro, fallback para properties
   const titleRaw = block.content?.text || block.properties?.title || 'Parabéns!';

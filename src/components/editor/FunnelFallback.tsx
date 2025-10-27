@@ -35,7 +35,7 @@ export const FunnelFallback: React.FC<FunnelFallbackProps> = ({
     funnelId,
     suggestions = [],
     onRetry,
-    onCreateNew
+    onCreateNew,
 }) => {
     const [, setLocation] = useLocation();
 

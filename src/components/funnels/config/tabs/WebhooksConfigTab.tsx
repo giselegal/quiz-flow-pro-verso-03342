@@ -31,7 +31,7 @@ export default function WebhooksConfigTab({ webhooks, onUpdate, disabled = false
         { key: 'leadCapture', label: 'Captura de Lead', description: 'Disparado quando um visitante fornece seus dados de contato' },
         { key: 'formSubmission', label: 'Envio de Formulário', description: 'Disparado quando qualquer formulário é submetido' },
         { key: 'quizComplete', label: 'Quiz Finalizado', description: 'Disparado quando o usuário completa todo o quiz' },
-        { key: 'purchaseComplete', label: 'Compra Finalizada', description: 'Disparado quando uma compra é concluída' }
+        { key: 'purchaseComplete', label: 'Compra Finalizada', description: 'Disparado quando uma compra é concluída' },
     ];
 
     const getWebhookStatus = (url?: string) => {

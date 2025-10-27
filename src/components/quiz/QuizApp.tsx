@@ -65,7 +65,7 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
         answers: state.answers,
         strategicAnswers: state.userProfile.strategicAnswers,
         resultStyle: state.userProfile.resultStyle,
-        secondaryStyles: state.userProfile.secondaryStyles
+        secondaryStyles: state.userProfile.secondaryStyles,
     };
 
     // 🎯 FASE 2: Loading State
@@ -162,7 +162,7 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
                             mode="preview"
                             sessionData={{
                                 userName: unifiedQuizState.userName,
-                                ...Object.fromEntries(Object.entries(unifiedQuizState.answers).map(([k, v]) => [`answers_${k}`, v]))
+                                ...Object.fromEntries(Object.entries(unifiedQuizState.answers).map(([k, v]) => [`answers_${k}`, v])),
                             }}
                             onUpdateSessionData={(key, value) => {
                                 if (key === 'userName' && typeof value === 'string') setUserName(value);

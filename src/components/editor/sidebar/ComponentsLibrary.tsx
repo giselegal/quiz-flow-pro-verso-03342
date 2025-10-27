@@ -221,7 +221,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
         const matchesTags = component.tags.some(tag =>
-          tag.toLowerCase().includes(searchTerm.toLowerCase())
+          tag.toLowerCase().includes(searchTerm.toLowerCase()),
         );
 
         if (matchesName || matchesDescription || matchesTags) {
@@ -248,7 +248,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
             'cursor-pointer transition-all duration-200 hover:shadow-md border-2',
             isAvailable
               ? 'hover:border-[#B89B7A]/50 hover:bg-[#B89B7A]/5'
-              : 'opacity-60 cursor-not-allowed border-gray-200'
+              : 'opacity-60 cursor-not-allowed border-gray-200',
           )}
           onClick={() => isAvailable && handleAddBlock(component.type)}
         >
@@ -258,7 +258,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
                 <div
                   className={cn(
                     'w-8 h-8 rounded-lg flex items-center justify-center',
-                    isAvailable ? 'bg-[#B89B7A]/10' : 'bg-gray-100'
+                    isAvailable ? 'bg-[#B89B7A]/10' : 'bg-gray-100',
                   )}
                 >
                   <Icon
@@ -300,7 +300,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
               <h3
                 className={cn(
                   'font-medium text-sm',
-                  isAvailable ? 'text-[#432818]' : 'text-gray-500'
+                  isAvailable ? 'text-[#432818]' : 'text-gray-500',
                 )}
               >
                 {component.name}
@@ -436,7 +436,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
         <div style={{ color: '#6B4F43' }}>
           {Object.values(COMPONENT_CATEGORIES).reduce(
             (total, cat) => total + cat.components.length,
-            0
+            0,
           )}{' '}
           componentes disponíveis
         </div>

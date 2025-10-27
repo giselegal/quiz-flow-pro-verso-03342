@@ -138,24 +138,24 @@ export function AdminSidebar() {
                 : 'bg-brand-primary text-white'
             : isPriority
               ? 'text-brand-text hover:bg-brand-light bg-gradient-to-r from-white to-brand-light/50 border border-brand-primary/20'
-              : 'text-brand-text hover:bg-brand-light/50'
+              : 'text-brand-text hover:bg-brand-light/50',
         )}
       >
         <div className="flex items-center gap-3">
-          <Icon className={cn("w-5 h-5", isPriority && "text-brand-primary")} />
-          <span className={cn("font-medium", isPriority && "font-semibold")}>{item.title}</span>
+          <Icon className={cn('w-5 h-5', isPriority && 'text-brand-primary')} />
+          <span className={cn('font-medium', isPriority && 'font-semibold')}>{item.title}</span>
           {(item.badge || item.isAdvanced) && (
             <Badge
-              variant={item.isAdvanced ? "default" : "secondary"}
+              variant={item.isAdvanced ? 'default' : 'secondary'}
               className={cn(
-                "text-xs px-2 py-0.5 ml-auto",
+                'text-xs px-2 py-0.5 ml-auto',
                 isActive
-                  ? "bg-white/20 text-white"
+                  ? 'bg-white/20 text-white'
                   : item.isAdvanced
-                    ? "bg-gradient-to-r from-brand-accent to-brand-secondary text-white"
+                    ? 'bg-gradient-to-r from-brand-accent to-brand-secondary text-white'
                     : isPriority
-                      ? "bg-brand-primary text-white font-medium"
-                      : "bg-green-100 text-green-700"
+                      ? 'bg-brand-primary text-white font-medium'
+                      : 'bg-green-100 text-green-700',
               )}
             >
               {item.badge || 'Pro'}
@@ -165,14 +165,14 @@ export function AdminSidebar() {
         {item.description && (
           <span className={cn(
             'text-xs ml-8',
-            isActive ? 'text-white/70' : isPriority ? 'text-brand-text-secondary font-medium' : 'text-brand-text-secondary'
+            isActive ? 'text-white/70' : isPriority ? 'text-brand-text-secondary font-medium' : 'text-brand-text-secondary',
           )}>
             {item.description}
           </span>
         )}
         {(isAdvanced || isPriority) && (
           <div className="absolute top-1 right-1">
-            <Zap className={cn("w-3 h-3", isAdvanced ? "text-yellow-400" : "text-brand-primary")} />
+            <Zap className={cn('w-3 h-3', isAdvanced ? 'text-yellow-400' : 'text-brand-primary')} />
           </div>
         )}
       </Link>

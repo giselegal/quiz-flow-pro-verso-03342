@@ -60,7 +60,7 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
         }
       }
     },
-    [stepNumber, quizLogic, supabaseQuiz, sessionId]
+    [stepNumber, quizLogic, supabaseQuiz, sessionId],
   );
 
   // ✅ HANDLER: Respostas às questões (Etapas 2-11)
@@ -99,7 +99,7 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
         });
       }
     },
-    [stepType, stepNumber, quizLogic, supabaseQuiz]
+    [stepType, stepNumber, quizLogic, supabaseQuiz],
   );
 
   // ✅ HANDLER: Questões estratégicas (Etapas 12-18)
@@ -127,12 +127,12 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
             questionId,
             optionId,
             'strategic', // categoria
-            'user-preference' // tipo estratégico
+            'user-preference', // tipo estratégico
           );
         });
       }
     },
-    [stepType, stepNumber, quizLogic]
+    [stepType, stepNumber, quizLogic],
   );
 
   // ✅ HANDLER: Cálculo de resultados (Etapas 19-21)

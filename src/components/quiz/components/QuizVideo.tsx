@@ -32,7 +32,7 @@ const QuizVideo: React.FC<QuizVideoProps> = ({
       style={{
         width,
         maxWidth: '100%',
-        aspectRatio: aspectRatio,
+        aspectRatio,
       }}
     >
       {src ? (

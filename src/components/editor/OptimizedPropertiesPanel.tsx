@@ -93,7 +93,7 @@ const EnhancedArrayEditor: React.FC<{
       newItems[index] = value;
       onChange(newItems);
     },
-    [items, onChange]
+    [items, onChange],
   );
 
   const removeItem = useCallback(
@@ -101,7 +101,7 @@ const EnhancedArrayEditor: React.FC<{
       if (items.length <= minItems) return;
       onChange(items.filter((_, i) => i !== index));
     },
-    [items, onChange, minItems]
+    [items, onChange, minItems],
   );
 
   return (
@@ -415,7 +415,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
         </div>
       );
     },
-    [updateProperty, errors]
+    [updateProperty, errors],
   );
 
   // Status de validação

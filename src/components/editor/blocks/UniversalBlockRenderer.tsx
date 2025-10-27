@@ -31,7 +31,7 @@ import {
   Step20UserGreetingBlock,
   Step20CompatibilityBlock,
   Step20SecondaryStylesBlock,
-  Step20PersonalizedOfferBlock
+  Step20PersonalizedOfferBlock,
 } from './Step20ModularBlocks';
 
 // Blocos Atômicos de Transição (Steps 12 & 19)
@@ -109,7 +109,7 @@ const createFallbackComponent = (type: string) => {
     return (
       <div
         {...domProps}
-        className={cn("p-4 border border-gray-300 rounded", domProps.className)}
+        className={cn('p-4 border border-gray-300 rounded', domProps.className)}
       >
         <div className="text-sm text-gray-600">
           {type === 'text' && (block?.content?.text || block?.content?.content || 'Texto')}
@@ -150,7 +150,7 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'step20-complete-template': Step20ResultHeaderBlock,
   // ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
   'result-calculation': ResultCalculationSection,
-  'ResultCalculationSection': ResultCalculationSection,
+  ResultCalculationSection,
   // ✅ BLOCOS ATÔMICOS - Transição (Steps 12 & 19)
   'transition-title': TransitionTitleBlock,
   'transition-loader': TransitionLoaderBlock,
@@ -193,7 +193,7 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'container': createFallbackComponent('container'),
   // Suporte a tipos genéricos de quiz e funnel
   'quiz': createFallbackComponent('quiz'),
-  'funnel': createFallbackComponent('funnel')
+  'funnel': createFallbackComponent('funnel'),
 };
 
 // ✅ HOOK OTIMIZADO PARA RECUPERAÇÃO DE COMPONENTES
@@ -233,7 +233,7 @@ const useBlockComponent = (blockType: string): React.ComponentType<any> | null =
     } else {
       logger.warn(`Componente não encontrado: ${blockType}`, {
         availableInRegistry: Object.keys(BlockComponentRegistry),
-        availableInEnhanced: 'check EnhancedBlockRegistry'
+        availableInEnhanced: 'check EnhancedBlockRegistry',
       });
     }
 
@@ -257,9 +257,9 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   // 🚨 DEPRECATION WARNING
   if (isPreviewing !== undefined && process.env.NODE_ENV === 'development') {
     appLogger.warn(
-      `⚠️ DEPRECATION WARNING: A prop 'isPreviewing' está deprecated.\n` +
-      `Use EditableBlock para modo edição ou PreviewBlock para preview.\n` +
-      `Block ID: ${block.id}, Type: ${block.type}`
+      '⚠️ DEPRECATION WARNING: A prop \'isPreviewing\' está deprecated.\n' +
+      'Use EditableBlock para modo edição ou PreviewBlock para preview.\n' +
+      `Block ID: ${block.id}, Type: ${block.type}`,
     );
   }
 
@@ -287,7 +287,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         timestamp: now,
         renderTime,
         blockType: block.type,
-        isSelected
+        isSelected,
       };
       // LRU já limita tamanho, mas ainda assim evitar explosão de chaves
       renderCache.set(`${block.id}-${now % 10_000}`, renderData);
@@ -299,7 +299,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         timestamp: now,
         isSelected,
         isPreviewing,
-        hasComponent: !!BlockComponent
+        hasComponent: !!BlockComponent,
       });
     }
 
@@ -308,7 +308,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         blockId: block.id,
         renderTime: `${renderTime.toFixed(2)}ms`,
         isSelected,
-        isPreviewing
+        isPreviewing,
       });
     }
   });
@@ -329,7 +329,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
       blockId: block.id,
       isSelected,
       isPreviewing,
-      hasComponent: !!BlockComponent
+      hasComponent: !!BlockComponent,
     });
   }, [block.type, block.id, BlockComponent, isSelected, isPreviewing, logger]);
 
@@ -349,18 +349,18 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 
   if (!BlockComponent) {
     // Log detalhado para debug
-    logger.error(`Componente não encontrado`, {
+    logger.error('Componente não encontrado', {
       blockType: block.type,
       blockId: block.id,
       availableInCache: Array.from(componentCache.keys()),
-      availableInRegistry: Object.keys(BlockComponentRegistry)
+      availableInRegistry: Object.keys(BlockComponentRegistry),
     });
 
     return (
       <div
         className={cn(
-          "p-4 border-2 border-dashed border-red-300 bg-red-50 rounded",
-          className
+          'p-4 border-2 border-dashed border-red-300 bg-red-50 rounded',
+          className,
         )}
         style={style}
         onClick={!isPreviewing ? handleClick : undefined}
@@ -386,7 +386,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
                 blockContent: block.content,
                 blockProperties: block.properties,
                 availableComponents: Object.keys(BlockComponentRegistry),
-                cacheStats: cacheStats
+                cacheStats,
               });
             }}
             className="mt-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200"
@@ -407,7 +407,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         'universal-block-renderer relative group transition-all duration-200',
         isSelected && 'ring-2 ring-blue-500 ring-offset-2',
         isEditMode && 'hover:shadow-sm cursor-pointer',
-        className
+        className,
       )}
       style={style}
       onClick={isEditMode ? handleClick : undefined}
@@ -490,7 +490,7 @@ class ErrorBoundary extends React.Component<
       blockId: this.props.blockId,
       error: error.message,
       stack: error.stack,
-      errorInfo
+      errorInfo,
     });
   }
 

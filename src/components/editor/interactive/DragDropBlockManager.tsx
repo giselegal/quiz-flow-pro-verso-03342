@@ -40,7 +40,7 @@ interface SortableBlockProps {
 const SortableBlock: React.FC<SortableBlockProps> = ({ 
   block, 
   children, 
-  isDragging = false 
+  isDragging = false, 
 }) => {
   const {
     attributes,
@@ -63,7 +63,7 @@ const SortableBlock: React.FC<SortableBlockProps> = ({
       className={cn(
         'relative group',
         (isSortableDragging || isDragging) && 'opacity-50 z-50',
-        'hover:bg-muted/20 rounded-lg transition-colors'
+        'hover:bg-muted/20 rounded-lg transition-colors',
       )}
     >
       {/* Drag Handle */}
@@ -75,7 +75,7 @@ const SortableBlock: React.FC<SortableBlockProps> = ({
           'opacity-0 group-hover:opacity-100 transition-opacity',
           'cursor-grab active:cursor-grabbing',
           'p-1 rounded bg-background border border-border shadow-sm',
-          'hover:bg-muted'
+          'hover:bg-muted',
         )}
         title="Arrastar para reordenar"
       >
@@ -106,7 +106,7 @@ export const DragDropBlockManager: React.FC<DragDropBlockManagerProps> = ({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragStart = (event: DragStartEvent) => {

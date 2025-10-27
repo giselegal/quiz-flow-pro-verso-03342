@@ -73,7 +73,7 @@ export const FileLoadingSimulator: React.FC<FileLoadingSimulatorProps> = ({
         const fileName = randomBase.replace(/\.\w+$/, '') + randomExt;
         setRandomFileName(fileName);
       },
-      speed === 'slow' ? 1000 : speed === 'medium' ? 300 : 100
+      speed === 'slow' ? 1000 : speed === 'medium' ? 300 : 100,
     );
 
     return () => clearInterval(interval);

@@ -64,7 +64,7 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
         <ValidationFeedback
           result={{
             success: false,
-            errors: errors,
+            errors,
           }}
         />
       )}

@@ -15,7 +15,7 @@ const Step01TestComponent: React.FC = () => {
         userName: '',
         currentStep: 1,
         totalSteps: 21,
-        funnelId: 'test-funnel-123'
+        funnelId: 'test-funnel-123',
     };
 
     const mockHandlers = {

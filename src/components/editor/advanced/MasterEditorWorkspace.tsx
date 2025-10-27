@@ -25,7 +25,7 @@ import {
   Settings,
   Zap,
   BarChart3,
-  CheckCircle
+  CheckCircle,
 } from 'lucide-react';
 
 interface MasterEditorWorkspaceProps {
@@ -46,7 +46,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
   // 🚨 Console warning para desenvolvedores
   appLogger.warn(
     '⚠️ DEPRECATED: MasterEditorWorkspace será removido em 01/nov/2025. ' +
-    'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+    'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
   );
 
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('editor');
@@ -69,10 +69,10 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
           ...block,
           properties: {
             ...block.properties,
-            customStyles: { ...block.properties?.customStyles, ...styles }
-          }
+            customStyles: { ...block.properties?.customStyles, ...styles },
+          },
         }
-        : block
+        : block,
     );
     updateStepBlocks(updatedBlocks);
   };
@@ -85,7 +85,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
           integrationState.syncStatus === 'syncing' ? 'bg-blue-500 animate-pulse' :
             integrationState.syncStatus === 'success' ? 'bg-green-500' :
               integrationState.syncStatus === 'error' ? 'bg-red-500' :
-                'bg-gray-400'
+                'bg-gray-400',
         )} />
         <span className="text-sm text-muted-foreground">
           {integrationState.syncStatus === 'syncing' ? 'Sincronizando...' :
@@ -189,7 +189,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
                             key={block.id}
                             className={cn(
                               'cursor-pointer transition-all hover:ring-2 hover:ring-primary/50',
-                              selectedBlockForStyling?.id === block.id && 'ring-2 ring-primary'
+                              selectedBlockForStyling?.id === block.id && 'ring-2 ring-primary',
                             )}
                             onClick={() => setSelectedBlockForStyling(block)}
                           >

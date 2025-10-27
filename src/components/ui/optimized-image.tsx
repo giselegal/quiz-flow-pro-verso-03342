@@ -62,7 +62,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       {
         rootMargin: '50px',
         threshold: 0.1,
-      }
+      },
     );
 
     observerRef.current.observe(currentImgRef);
@@ -129,7 +129,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         className={cn(
           'bg-gray-100 flex items-center justify-center text-gray-400',
           fill ? 'absolute inset-0' : '',
-          className
+          className,
         )}
         style={fill ? { ...style } : { width, height, ...style }}
       >
@@ -171,7 +171,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           'transition-opacity duration-300',
           fill ? 'absolute inset-0 w-full h-full object-cover' : 'w-full h-auto',
           isLoaded ? 'opacity-100' : 'opacity-0',
-          className
+          className,
         )}
         style={{
           ...style,

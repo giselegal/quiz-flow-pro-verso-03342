@@ -9,13 +9,13 @@ const BonusSection: React.FC = () => {
   // Criar imagem otimizada de alta qualidade
   const bonus1ImageUrl = optimizeCloudinaryUrl(
     'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp',
-    { quality: 95, format: 'webp' }
+    { quality: 95, format: 'webp' },
   );
 
   // Criar imagem otimizada para o segundo bônus
   const bonus2ImageUrl = optimizeCloudinaryUrl(
     'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp',
-    { quality: 95, format: 'webp' }
+    { quality: 95, format: 'webp' },
   );
 
   return (

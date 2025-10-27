@@ -33,7 +33,7 @@ import {
     RefreshCw,
     Activity,
     Target,
-    Award
+    Award,
 } from 'lucide-react';
 
 // ============================================================================
@@ -55,19 +55,19 @@ const MetricCard: React.FC<MetricCardProps> = ({
     change,
     icon,
     trend = 'neutral',
-    color = 'blue'
+    color = 'blue',
 }) => {
     const colorClasses = {
         green: 'border-green-200 bg-gradient-to-br from-green-50 to-green-100 text-green-700',
         blue: 'border-brand-primary/30 bg-gradient-to-br from-brand-light to-white text-brand-text',
         brand: 'border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 text-slate-700',
-        orange: 'border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 text-orange-700'
+        orange: 'border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 text-orange-700',
     };
 
     const trendColors = {
         up: 'text-green-600',
         down: 'text-red-600',
-        neutral: 'text-brand-text-secondary'
+        neutral: 'text-brand-text-secondary',
     };
 
     return (
@@ -117,10 +117,10 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ data, title, height = 2
                             <div className="w-24 text-sm font-medium truncate text-brand-text">{item.label}</div>
                             <div className="flex-1 bg-brand-light rounded-full h-3 relative">
                                 <div
-                                    className={`h-3 rounded-full bg-gradient-to-r from-brand-primary to-brand-accent transition-all duration-500`}
+                                    className={'h-3 rounded-full bg-gradient-to-r from-brand-primary to-brand-accent transition-all duration-500'}
                                     style={{
                                         width: `${(item.value / maxValue) * 100}%`,
-                                        minWidth: item.value > 0 ? '8px' : '0px'
+                                        minWidth: item.value > 0 ? '8px' : '0px',
                                     }}
                                 />
                             </div>
@@ -243,18 +243,18 @@ export const RealTimeDashboard: React.FC = () => {
                     { style: 'Elegante', count: Math.floor(metrics.completedSessions * 0.35), percentage: 35 },
                     { style: 'Casual', count: Math.floor(metrics.completedSessions * 0.28), percentage: 28 },
                     { style: 'Boho', count: Math.floor(metrics.completedSessions * 0.22), percentage: 22 },
-                    { style: 'Clássico', count: Math.floor(metrics.completedSessions * 0.15), percentage: 15 }
+                    { style: 'Clássico', count: Math.floor(metrics.completedSessions * 0.15), percentage: 15 },
                 ],
                 recentActivity: metrics.conversionsByHour.slice(-6).map((item, index) => ({
                     time: `${item.hour}:00`,
-                    sessions: item.conversions
+                    sessions: item.conversions,
                 })),
                 deviceBreakdown: metrics.topDevices.map(device => ({
                     type: device.name,
                     count: Math.floor(metrics.totalSessions * (device.percentage / 100)),
-                    percentage: device.percentage
+                    percentage: device.percentage,
                 })),
-                currentActiveUsers: metrics.activeUsersRealTime
+                currentActiveUsers: metrics.activeUsersRealTime,
             };
 
             setDashboardData(data);
@@ -317,18 +317,18 @@ export const RealTimeDashboard: React.FC = () => {
         label: device.type,
         value: device.count,
         color: device.type === 'Desktop' ? 'bg-blue-500' :
-            device.type === 'Mobile' ? 'bg-green-500' : 'bg-slate-500'
+            device.type === 'Mobile' ? 'bg-green-500' : 'bg-slate-500',
     }));
 
     const styleData = dashboardData.popularStyles.slice(0, 5).map(style => ({
         label: style.style,
         value: style.count,
-        color: 'bg-gradient-to-r from-blue-500 to-slate-500'
+        color: 'bg-gradient-to-r from-blue-500 to-slate-500',
     }));
 
     const activityData = dashboardData.recentActivity.map(activity => ({
         label: activity.time,
-        value: activity.sessions
+        value: activity.sessions,
     }));
 
     // ============================================================================

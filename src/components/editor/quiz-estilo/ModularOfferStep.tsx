@@ -48,7 +48,7 @@ export default function ModularOfferStep({
     selectedBlockId,
     onBlockSelect = () => { },
     onOpenProperties = () => { },
-    onBlocksReorder
+    onBlocksReorder,
 }: ModularOfferStepProps) {
 
     const STEP_ID = data?.id || 'step-offer';
@@ -63,7 +63,7 @@ export default function ModularOfferStep({
 
     // DnD (para blocos reais e fallback lógico)
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     );
 
     const safeData = {
@@ -78,9 +78,9 @@ export default function ModularOfferStep({
             'Análise completa do seu estilo',
             'Guia personalizado de cores',
             'Dicas de combinações exclusivas',
-            'Suporte por 30 dias'
+            'Suporte por 30 dias',
         ],
-        image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png'
+        image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
     };
 
     // Block IDs (fallback legado)
@@ -104,7 +104,7 @@ export default function ModularOfferStep({
         'offer-benefits',
         'offer-pricing',
         'offer-cta',
-        'offer-guarantee'
+        'offer-guarantee',
     ];
     const initialOrder: string[] = (data?.metadata?.blockOrder && Array.isArray(data.metadata.blockOrder))
         ? data.metadata.blockOrder
@@ -175,7 +175,7 @@ export default function ModularOfferStep({
                                                         try {
                                                             window.dispatchEvent(new CustomEvent('quiz-offer-cta', { detail: { stepId: STEP_ID, blockId: block.id, payload } }));
                                                         } catch { /* noop */ }
-                                                    }
+                                                    },
                                                 }}
                                             />
                                         </SortableItem>

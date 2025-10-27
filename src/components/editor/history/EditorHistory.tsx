@@ -59,7 +59,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
     blocksToValidate.forEach(block => {
       // Validações básicas
       if (!block.id) {
-        errors.push(`Bloco sem ID encontrado`);
+        errors.push('Bloco sem ID encontrado');
       }
 
       if (!block.type) {
@@ -121,7 +121,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
 
       setCurrentIndex(prev => Math.min(prev + 1, 49));
     },
-    [currentIndex]
+    [currentIndex],
   );
 
   // Detectar mudanças nos blocos

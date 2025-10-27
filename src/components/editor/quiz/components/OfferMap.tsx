@@ -27,7 +27,7 @@ import {
     Check,
     AlertCircle,
     User,
-    MessageSquare
+    MessageSquare,
 } from 'lucide-react';
 
 // Tipos
@@ -60,7 +60,7 @@ export const OFFER_KEYS = [
     'Montar looks com mais facilidade e confiança',
     'Usar o que já tenho e me sentir estilosa',
     'Comprar com mais consciência e sem culpa',
-    'Ser admirada pela imagem que transmito'
+    'Ser admirada pela imagem que transmito',
 ] as const;
 
 export type OfferKey = typeof OFFER_KEYS[number];
@@ -91,10 +91,10 @@ export function OfferMap({
     userName = 'Maria',
     selectedOfferKey: propSelectedOfferKey,
     onNext,
-    className = ''
+    className = '',
 }: OfferMapProps) {
     const [selectedOfferKey, setSelectedOfferKey] = useState<OfferKey>(
-        propSelectedOfferKey || OFFER_KEYS[0]
+        propSelectedOfferKey || OFFER_KEYS[0],
     );
     const [isDirty, setIsDirty] = useState(false);
 
@@ -128,21 +128,21 @@ export function OfferMap({
                 ...newOfferMap[key],
                 testimonial: {
                     ...newOfferMap[key].testimonial,
-                    quote: value
-                }
+                    quote: value,
+                },
             };
         } else if (field === 'testimonial.author') {
             newOfferMap[key] = {
                 ...newOfferMap[key],
                 testimonial: {
                     ...newOfferMap[key].testimonial,
-                    author: value
-                }
+                    author: value,
+                },
             };
         } else {
             newOfferMap[key] = {
                 ...newOfferMap[key],
-                [field]: value
+                [field]: value,
             };
         }
 
@@ -185,7 +185,7 @@ export function OfferMap({
                                 return (
                                     <Button
                                         key={key}
-                                        variant={selectedOfferKey === key ? "default" : "outline"}
+                                        variant={selectedOfferKey === key ? 'default' : 'outline'}
                                         size="sm"
                                         onClick={() => setSelectedOfferKey(key)}
                                         className="justify-start h-auto py-3"
@@ -320,7 +320,7 @@ export function OfferMap({
                             title: '',
                             description: '',
                             buttonText: '',
-                            testimonial: { quote: '', author: '' }
+                            testimonial: { quote: '', author: '' },
                         };
 
                         return (
@@ -407,7 +407,7 @@ export function OfferMap({
                                     <div className="text-xs font-semibold text-blue-700 mb-2">Preview Rápido:</div>
                                     <div className="space-y-2">
                                         <p className="text-sm font-bold" dangerouslySetInnerHTML={{
-                                            __html: sanitizeHtml(replaceUserName(offer.title))
+                                            __html: sanitizeHtml(replaceUserName(offer.title)),
                                         }} />
                                         <p className="text-xs text-gray-700">{offer.description.substring(0, 100)}...</p>
                                         <Button size="sm" variant="secondary" className="w-full text-xs">

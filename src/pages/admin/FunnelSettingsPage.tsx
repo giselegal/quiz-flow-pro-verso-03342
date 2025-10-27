@@ -13,7 +13,7 @@ const FunnelSettingsPage: React.FC = () => {
   const funnelId = params?.id as string;
 
   const [settings, setSettings] = React.useState<FunnelSettings>(() =>
-    funnelLocalStore.getSettings(funnelId || 'default')
+    funnelLocalStore.getSettings(funnelId || 'default'),
   );
 
   const [name, setName] = React.useState(settings.name);

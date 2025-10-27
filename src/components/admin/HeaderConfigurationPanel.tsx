@@ -25,7 +25,7 @@ import {
   BarChart3,
   Zap,
   Save,
-  RotateCcw
+  RotateCcw,
 } from 'lucide-react';
 import { HeaderProperties, defaultHeaderProperties } from '@/config/headerPropertiesMapping';
 

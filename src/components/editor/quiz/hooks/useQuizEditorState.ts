@@ -85,17 +85,17 @@ export const useQuizEditorState = () => {
     // Selectors otimizados com useMemo
     const selectedStep = useMemo(() =>
         state.steps.find(step => step.id === state.selectedId),
-        [state.steps, state.selectedId]
+        [state.steps, state.selectedId],
     );
 
     const selectedModularStep = useMemo(() =>
         state.modularSteps.find(step => step.id === state.selectedId),
-        [state.modularSteps, state.selectedId]
+        [state.modularSteps, state.selectedId],
     );
 
     const currentSteps = useMemo(() =>
         state.useModularSystem ? state.modularSteps : state.steps,
-        [state.useModularSystem, state.modularSteps, state.steps]
+        [state.useModularSystem, state.modularSteps, state.steps],
     );
 
     // Actions otimizadas com useCallback
@@ -162,12 +162,12 @@ export const useQuizEditorState = () => {
                 title: 'Bem-vindo ao Quiz',
                 formQuestion: 'Como posso te chamar?',
                 placeholder: 'Digite seu nome',
-                buttonText: 'Começar Quiz'
+                buttonText: 'Começar Quiz',
             };
             setState(prev => ({
                 ...prev,
                 steps: [defaultStep],
-                selectedId: 'step-1'
+                selectedId: 'step-1',
             }));
         }
     }, [state.steps.length]);

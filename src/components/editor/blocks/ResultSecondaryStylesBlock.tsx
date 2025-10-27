@@ -17,7 +17,7 @@ export default function ResultSecondaryStylesBlock({
 }: UnifiedBlockComponentProps) {
   const styles: SecondaryStyle[] = content?.styles || properties?.styles || [
     { name: 'Romântico', description: 'Seu segundo estilo mais forte' },
-    { name: 'Natural', description: 'Complementa seu estilo principal' }
+    { name: 'Natural', description: 'Complementa seu estilo principal' },
   ];
   const showTop2 = properties?.showTop2 !== false;
   const title = properties?.title || 'Estilos Complementares:';

@@ -130,7 +130,7 @@ function DraggableComponent({ component }: { component: ComponentType }) {
       {...listeners}
       className={cn(
         'p-3 cursor-grab active:cursor-grabbing transition-all hover:shadow-md hover:scale-105',
-        isDragging && 'opacity-50'
+        isDragging && 'opacity-50',
       )}
     >
       <div className="flex items-start gap-3">

@@ -43,7 +43,7 @@ import {
     AlertCircle,
     Brain,
     Zap,
-    Shield
+    Shield,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { UnifiedDataService } from '@/services/core/UnifiedDataService';
@@ -89,14 +89,14 @@ interface QuickActionProps {
 
 const QuickAction: React.FC<QuickActionProps> = ({ title, description, href, icon, color }) => {
     const colorClasses = {
-        blue: "bg-blue-50 border-blue-200 hover:bg-blue-100",
-        green: "bg-green-50 border-green-200 hover:bg-green-100",
-        brand: "bg-slate-50 border-slate-200 hover:bg-slate-100",
-        orange: "bg-orange-50 border-orange-200 hover:bg-orange-100"
+        blue: 'bg-blue-50 border-blue-200 hover:bg-blue-100',
+        green: 'bg-green-50 border-green-200 hover:bg-green-100',
+        brand: 'bg-slate-50 border-slate-200 hover:bg-slate-100',
+        orange: 'bg-orange-50 border-orange-200 hover:bg-orange-100',
     };
 
     return (
-        <Link href={href} className={cn("transition-all hover:shadow-md cursor-pointer", colorClasses[color])}>
+        <Link href={href} className={cn('transition-all hover:shadow-md cursor-pointer', colorClasses[color])}>
             <Card>
                 <CardContent className="p-4">
                     <div className="flex items-start space-x-3">
@@ -126,7 +126,7 @@ const AdminDashboard: React.FC = () => {
         completedSessions: 0,
         conversionRate: 0,
         totalRevenue: 0,
-        activeUsersNow: 0
+        activeUsersNow: 0,
     });
     const [isLoading, setIsLoading] = useState(true);
     const theme = useTheme();
@@ -137,7 +137,7 @@ const AdminDashboard: React.FC = () => {
             title: 'Novo funil criado',
             description: 'Quiz de Estilo Pessoal v2',
             time: '2 horas atrás',
-            status: 'success'
+            status: 'success',
         },
         {
             id: 2,
@@ -145,7 +145,7 @@ const AdminDashboard: React.FC = () => {
             title: '12 novos participantes',
             description: 'Funil de Marketing Digital',
             time: '4 horas atrás',
-            status: 'info'
+            status: 'info',
         },
         {
             id: 3,
@@ -153,8 +153,8 @@ const AdminDashboard: React.FC = () => {
             title: 'Meta de conversão atingida',
             description: '85% de taxa de conversão',
             time: '6 horas atrás',
-            status: 'success'
-        }
+            status: 'success',
+        },
     ]);
 
     // ============================================================================
@@ -178,7 +178,7 @@ const AdminDashboard: React.FC = () => {
                 completedSessions: dashboardMetrics.completedSessions,
                 conversionRate: dashboardMetrics.conversionRate,
                 totalRevenue: dashboardMetrics.totalRevenue,
-                activeUsersNow: dashboardMetrics.activeUsersNow
+                activeUsersNow: dashboardMetrics.activeUsersNow,
             });
 
             console.log('✅ Dashboard carregado com dados reais:', {
@@ -188,7 +188,7 @@ const AdminDashboard: React.FC = () => {
                 completedSessions: dashboardMetrics.completedSessions,
                 conversionRate: dashboardMetrics.conversionRate,
                 totalRevenue: dashboardMetrics.totalRevenue,
-                source: 'UnifiedDataService (Supabase + fallback)'
+                source: 'UnifiedDataService (Supabase + fallback)',
             });
 
         } catch (error) {
@@ -203,7 +203,7 @@ const AdminDashboard: React.FC = () => {
                 completedSessions: 0,
                 conversionRate: 0,
                 totalRevenue: 0,
-                activeUsersNow: 0
+                activeUsersNow: 0,
             });
         } finally {
             setIsLoading(false);
@@ -223,12 +223,12 @@ const AdminDashboard: React.FC = () => {
             refresh: () => {
                 console.log('🔄 Dashboard: Recebida atualização do editor, recarregando dados...');
                 loadDashboardData(); // Recarregar dados quando houver mudanças no editor
-            }
+            },
         });
 
         // Escutar eventos de sincronização específicos
         const unsubscribeSync = EditorDashboardSyncService.onSync((event) => {
-            console.log(`📡 Dashboard: Evento de sincronização recebido:`, event);
+            console.log('📡 Dashboard: Evento de sincronização recebido:', event);
 
             // Recarregar dados para refletir mudanças
             if (event.type === 'publish' || event.type === 'save' || event.type === 'create' || event.type === 'delete') {
@@ -289,7 +289,7 @@ const AdminDashboard: React.FC = () => {
             className="p-8 space-y-8 min-h-screen animated-bg particles-bg"
             style={{
                 background: theme.colors.background,
-                color: theme.colors.text
+                color: theme.colors.text,
             }}
         >
             {/* Header Modernizado com Nova Identidade Visual */}
@@ -302,7 +302,7 @@ const AdminDashboard: React.FC = () => {
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text',
-                            filter: `drop-shadow(0 0 15px ${theme.colors.detailsMinor}50)`
+                            filter: `drop-shadow(0 0 15px ${theme.colors.detailsMinor}50)`,
                         }}
                     >
                         Dashboard Executivo
@@ -320,7 +320,7 @@ const AdminDashboard: React.FC = () => {
                         style={{
                             backgroundColor: `${theme.colors.background}60`,
                             borderColor: `${theme.colors.detailsMinor}40`,
-                            boxShadow: `0 0 20px ${theme.colors.glowEffect}20`
+                            boxShadow: `0 0 20px ${theme.colors.glowEffect}20`,
                         }}
                     >
                         <div
@@ -343,7 +343,7 @@ const AdminDashboard: React.FC = () => {
                             borderColor: `${theme.colors.detailsMinor}40`,
                             color: theme.colors.text,
                             background: `linear-gradient(135deg, ${theme.colors.buttons}20, ${theme.colors.detailsMinor}20)`,
-                            boxShadow: `0 0 15px ${theme.colors.glowEffect}30`
+                            boxShadow: `0 0 15px ${theme.colors.glowEffect}30`,
                         }}
                     >
                         <RefreshCw className="w-4 h-4 mr-2" />
@@ -357,7 +357,7 @@ const AdminDashboard: React.FC = () => {
                     className="grid w-full grid-cols-3 backdrop-blur-sm border shadow-sm p-1 rounded-2xl max-w-md glass-effect glow-card"
                     style={{
                         backgroundColor: `${theme.colors.background}60`,
-                        borderColor: `${theme.colors.detailsMinor}40`
+                        borderColor: `${theme.colors.detailsMinor}40`,
                     }}
                 >
                     <TabsTrigger
@@ -370,7 +370,7 @@ const AdminDashboard: React.FC = () => {
                             color: activeTab === 'overview' ? '#ffffff' : theme.colors.text,
                             boxShadow: activeTab === 'overview'
                                 ? `0 0 15px ${theme.colors.buttons}40`
-                                : 'none'
+                                : 'none',
                         }}
                     >
                         Visão Geral
@@ -385,7 +385,7 @@ const AdminDashboard: React.FC = () => {
                             color: activeTab === 'participants' ? '#ffffff' : theme.colors.text,
                             boxShadow: activeTab === 'participants'
                                 ? `0 0 15px ${theme.colors.buttons}40`
-                                : 'none'
+                                : 'none',
                         }}
                     >
                         Participantes
@@ -400,7 +400,7 @@ const AdminDashboard: React.FC = () => {
                             color: activeTab === 'analytics' ? '#ffffff' : theme.colors.text,
                             boxShadow: activeTab === 'analytics'
                                 ? `0 0 15px ${theme.colors.buttons}40`
-                                : 'none'
+                                : 'none',
                         }}
                     >
                         Analytics
@@ -418,28 +418,28 @@ const AdminDashboard: React.FC = () => {
                             <ModernMetricCard
                                 title="Total de Sessões"
                                 value={metrics.totalSessions.toLocaleString()}
-                                change={{ value: "+12% vs mês anterior", trend: "up" }}
+                                change={{ value: '+12% vs mês anterior', trend: 'up' }}
                                 icon={<Users className="w-6 h-6" />}
                                 color="blue"
                             />
                             <ModernMetricCard
                                 title="Total de Funis"
                                 value={metrics.totalFunnels}
-                                change={{ value: `${metrics.draftFunnels} rascunhos`, trend: "neutral" }}
+                                change={{ value: `${metrics.draftFunnels} rascunhos`, trend: 'neutral' }}
                                 icon={<Target className="w-6 h-6" />}
                                 color="green"
                             />
                             <ModernMetricCard
                                 title="Taxa de Conversão"
                                 value={`${metrics.conversionRate.toFixed(1)}%`}
-                                change={{ value: "+5.2% vs mês anterior", trend: "up" }}
+                                change={{ value: '+5.2% vs mês anterior', trend: 'up' }}
                                 icon={<TrendingUp className="w-6 h-6" />}
                                 color="purple"
                             />
                             <ModernMetricCard
                                 title="Receita Total"
                                 value={`R$ ${metrics.totalRevenue.toLocaleString()}`}
-                                change={{ value: "+18% vs mês anterior", trend: "up" }}
+                                change={{ value: '+18% vs mês anterior', trend: 'up' }}
                                 icon={<BarChart3 className="w-6 h-6" />}
                                 color="orange"
                             />
@@ -681,10 +681,10 @@ const AdminDashboard: React.FC = () => {
                                     {recentActivity.map((activity) => (
                                         <div key={activity.id} className="flex items-start space-x-4 p-4 rounded-2xl bg-gradient-to-r from-white/40 to-gray-50/40 hover:from-white/60 hover:to-gray-50/60 transition-all duration-200 border border-white/30">
                                             <div className={cn(
-                                                "w-3 h-3 rounded-full mt-1.5 flex-shrink-0 shadow-sm",
-                                                activity.status === 'success' && "bg-green-500 shadow-green-200",
-                                                activity.status === 'info' && "bg-blue-500 shadow-blue-200",
-                                                activity.status === 'warning' && "bg-orange-500 shadow-orange-200"
+                                                'w-3 h-3 rounded-full mt-1.5 flex-shrink-0 shadow-sm',
+                                                activity.status === 'success' && 'bg-green-500 shadow-green-200',
+                                                activity.status === 'info' && 'bg-blue-500 shadow-blue-200',
+                                                activity.status === 'warning' && 'bg-orange-500 shadow-orange-200',
                                             )} />
                                             <div className="flex-1 min-w-0">
                                                 <p className="font-semibold text-gray-900 text-sm">{activity.title}</p>

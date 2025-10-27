@@ -24,7 +24,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     onStepChange,
     onSave,
     readOnly = false,
-    showNavigation = true
+    showNavigation = true,
 }) => {
     const [isLoading, setIsLoading] = React.useState(true);
 

@@ -86,7 +86,7 @@ const BeforeAfterTransformationInlineBlock: React.FC<BlockComponentProps> = ({
       'text-right': textAlign === 'right',
     },
     isSelected && 'ring-2 ring-blue-500 ring-opacity-50 rounded-lg',
-    className
+    className,
   );
 
   const containerStyle = {

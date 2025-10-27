@@ -52,7 +52,7 @@ export function ImportTemplateButton({ onImportSuccess, onImportError }: ImportT
             // Importar para o editor
             const funnel = await quizEditorBridge.importAllJSONv3Templates(
                 templates,
-                `Imported from ${files.length} file(s)`
+                `Imported from ${files.length} file(s)`,
             );
 
             setStatus('success');

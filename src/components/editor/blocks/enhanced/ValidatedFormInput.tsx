@@ -110,7 +110,7 @@ export const ValidatedFormInput: React.FC<ValidatedFormInputProps> = ({
             isPreview && 'cursor-default opacity-75',
             
             // Hover states
-            !isPreview && 'hover:border-stone-400'
+            !isPreview && 'hover:border-stone-400',
           )}
         />
         
@@ -132,7 +132,7 @@ export const ValidatedFormInput: React.FC<ValidatedFormInputProps> = ({
         <div className={cn(
           'text-sm px-1 transition-all duration-200',
           validationState === 'invalid' && 'text-red-600',
-          validationState === 'warning' && 'text-yellow-600'
+          validationState === 'warning' && 'text-yellow-600',
         )}>
           {error || (value && value.length < 2 ? 'Nome deve ter pelo menos 2 caracteres' : '')}
         </div>

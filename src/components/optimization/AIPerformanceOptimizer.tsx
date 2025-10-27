@@ -22,7 +22,7 @@ import {
   CheckCircle,
   Target,
   Settings,
-  MemoryStick
+  MemoryStick,
 } from 'lucide-react';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { logger } from '@/utils/debugLogger';
@@ -69,7 +69,7 @@ export const AIPerformanceOptimizer: React.FC = () => {
     bundleSize: 0,
     cacheHitRate: 0,
     networkLatency: 0,
-    userInteractionLatency: 0
+    userInteractionLatency: 0,
   });
 
   // 🚀 ESTRATÉGIAS DE OTIMIZAÇÃO DISPONÍVEIS
@@ -82,7 +82,7 @@ export const AIPerformanceOptimizer: React.FC = () => {
       impact: 'high',
       autoApplicable: true,
       enabled: true,
-      performance_gain: 25
+      performance_gain: 25,
     },
     {
       id: 'memo-optimization',
@@ -92,7 +92,7 @@ export const AIPerformanceOptimizer: React.FC = () => {
       impact: 'medium',
       autoApplicable: true,
       enabled: true,
-      performance_gain: 15
+      performance_gain: 15,
     },
     {
       id: 'virtual-scrolling',
@@ -102,7 +102,7 @@ export const AIPerformanceOptimizer: React.FC = () => {
       impact: 'high',
       autoApplicable: false,
       enabled: false,
-      performance_gain: 40
+      performance_gain: 40,
     },
     {
       id: 'intelligent-caching',
@@ -112,7 +112,7 @@ export const AIPerformanceOptimizer: React.FC = () => {
       impact: 'medium',
       autoApplicable: true,
       enabled: true,
-      performance_gain: 20
+      performance_gain: 20,
     },
     {
       id: 'prefetch-optimization',
@@ -122,7 +122,7 @@ export const AIPerformanceOptimizer: React.FC = () => {
       impact: 'medium',
       autoApplicable: true,
       enabled: true,
-      performance_gain: 18
+      performance_gain: 18,
     },
     {
       id: 'debounce-optimization',
@@ -132,8 +132,8 @@ export const AIPerformanceOptimizer: React.FC = () => {
       impact: 'low',
       autoApplicable: true,
       enabled: true,
-      performance_gain: 8
-    }
+      performance_gain: 8,
+    },
   ]);
 
   // 📊 ATUALIZAR MÉTRICAS EM TEMPO REAL
@@ -145,7 +145,7 @@ export const AIPerformanceOptimizer: React.FC = () => {
         bundleSize: perfMetrics.bundleSize,
         cacheHitRate: 70 + Math.random() * 25,
         networkLatency: 50 + Math.random() * 100,
-        userInteractionLatency: 30 + Math.random() * 50
+        userInteractionLatency: 30 + Math.random() * 50,
       });
     };
 
@@ -161,31 +161,31 @@ export const AIPerformanceOptimizer: React.FC = () => {
     // Analisar cada métrica e recomendar otimizações
     if (metrics.renderTime > 16) { // > 60fps
       needsOptimization.push(
-        ...strategies.filter(s => s.category === 'rendering' && s.enabled)
+        ...strategies.filter(s => s.category === 'rendering' && s.enabled),
       );
     }
 
     if (metrics.memoryUsage > 80) {
       needsOptimization.push(
-        ...strategies.filter(s => s.category === 'memory' && s.enabled)
+        ...strategies.filter(s => s.category === 'memory' && s.enabled),
       );
     }
 
     if (metrics.bundleSize > 2) { // > 2MB
       needsOptimization.push(
-        ...strategies.filter(s => s.category === 'bundling' && s.enabled)
+        ...strategies.filter(s => s.category === 'bundling' && s.enabled),
       );
     }
 
     if (metrics.cacheHitRate < 70) {
       needsOptimization.push(
-        ...strategies.filter(s => s.category === 'caching' && s.enabled)
+        ...strategies.filter(s => s.category === 'caching' && s.enabled),
       );
     }
 
     if (metrics.networkLatency > 100) {
       needsOptimization.push(
-        ...strategies.filter(s => s.category === 'network' && s.enabled)
+        ...strategies.filter(s => s.category === 'network' && s.enabled),
       );
     }
 
@@ -231,7 +231,7 @@ export const AIPerformanceOptimizer: React.FC = () => {
       beforeMetrics,
       afterMetrics,
       improvement,
-      success: improvement > 0
+      success: improvement > 0,
     };
 
     // Atualizar métricas atuais
@@ -346,7 +346,7 @@ export const AIPerformanceOptimizer: React.FC = () => {
             checked={strategy.enabled}
             onCheckedChange={(enabled) => {
               setStrategies(prev => prev.map(s => 
-                s.id === strategy.id ? { ...s, enabled } : s
+                s.id === strategy.id ? { ...s, enabled } : s,
               ));
             }}
           />

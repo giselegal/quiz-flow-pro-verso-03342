@@ -13,7 +13,7 @@ const SimpleFormBlock: React.FC<BlockComponentProps> = ({
     const {
         title = 'Como posso te chamar?',
         placeholder = 'Digite seu nome...',
-        buttonText = 'Continuar'
+        buttonText = 'Continuar',
     } = block?.content || {};
 
     return (

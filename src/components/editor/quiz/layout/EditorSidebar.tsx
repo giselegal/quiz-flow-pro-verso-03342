@@ -59,10 +59,10 @@ export function EditorSidebar({
                 key={step.id}
                 onClick={() => onSelectStep(step.id)}
                 className={cn(
-                  "w-full flex items-center gap-2 px-3 py-2 rounded-md text-left transition-colors",
+                  'w-full flex items-center gap-2 px-3 py-2 rounded-md text-left transition-colors',
                   isActive
-                    ? "bg-primary/10 text-primary border border-primary/20"
-                    : "hover:bg-accent text-foreground"
+                    ? 'bg-primary/10 text-primary border border-primary/20'
+                    : 'hover:bg-accent text-foreground',
                 )}
               >
                 {/* Icon */}

@@ -34,7 +34,7 @@ import {
   Code,
   Info,
   AlertCircle,
-  Save
+  Save,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUserName } from '@/hooks/useUserName';
@@ -118,50 +118,50 @@ const useInterpolationSystem = () => {
       label: 'Nome do Usuário',
       description: 'Nome preenchido pelo usuário no quiz',
       example: 'Ana',
-      value: userName || 'Usuário'
+      value: userName || 'Usuário',
     },
     {
       key: 'resultStyle',
       label: 'Estilo Predominante',
       description: 'Resultado calculado do quiz de estilo',
       example: 'Clássico',
-      value: primaryStyle?.style || 'Seu Estilo'
+      value: primaryStyle?.style || 'Seu Estilo',
     },
     {
       key: 'quizStep',
       label: 'Etapa Atual',
       description: 'Número da etapa atual do quiz',
       example: '5',
-      value: currentStep.toString()
+      value: currentStep.toString(),
     },
     {
       key: 'offerPrice',
       label: 'Preço da Oferta',
       description: 'Preço especial da consultoria',
       example: 'R$ 297,00',
-      value: offerPrice
+      value: offerPrice,
     },
     {
       key: 'resultPercentage',
       label: 'Porcentagem do Resultado',
       description: 'Porcentagem do estilo predominante',
       example: '85%',
-      value: primaryStyle?.percentage ? `${Math.round(primaryStyle.percentage)}%` : '0%'
+      value: primaryStyle?.percentage ? `${Math.round(primaryStyle.percentage)}%` : '0%',
     },
     {
       key: 'count',
       label: 'Opções Selecionadas',
       description: 'Número de opções selecionadas pelo usuário',
       example: '3',
-      value: selectedCount.toString()
+      value: selectedCount.toString(),
     },
     {
       key: 'required',
       label: 'Opções Obrigatórias',
       description: 'Número mínimo/máximo de opções requeridas',
       example: '5',
-      value: requiredCount.toString()
-    }
+      value: requiredCount.toString(),
+    },
   ], [userName, primaryStyle, currentStep, offerPrice, selectedCount, requiredCount]);
 
   // Interpolação de texto
@@ -196,7 +196,7 @@ const useInterpolationSystem = () => {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }, [availableVariables]);
 
@@ -207,7 +207,7 @@ const useInterpolationSystem = () => {
     setCurrentStep,
     setOfferPrice,
     setSelectedCount,
-    setRequiredCount
+    setRequiredCount,
   };
 };
 
@@ -241,7 +241,7 @@ const extractAllProperties = (block: Block): PropertyField[] => {
   const basicFields = [
     { key: 'id', value: block.id, label: 'ID do Bloco' },
     { key: 'type', value: block.type, label: 'Tipo' },
-    { key: 'order', value: block.order, label: 'Ordem' }
+    { key: 'order', value: block.order, label: 'Ordem' },
   ];
 
   basicFields.forEach(field => {
@@ -259,7 +259,7 @@ const createPropertyField = (
   label: string,
   value: any,
   blockType: string,
-  category?: PropertyCategory
+  category?: PropertyCategory,
 ): PropertyField => {
   const inferredType = inferFieldType(value);
   const inferredCategory = category || categorizeProperty(key, inferredType);
@@ -276,7 +276,7 @@ const createPropertyField = (
     isEditable: true,
     isAdvanced: inferredCategory === PropertyCategory.ADVANCED,
     supportsInterpolation: inferredType === 'text' || inferredType === 'textarea',
-    validation: getValidation(inferredType)
+    validation: getValidation(inferredType),
   };
 };
 
@@ -398,50 +398,50 @@ const CATEGORY_META = {
     icon: Type,
     label: 'Conteúdo',
     description: 'Textos, títulos e mídia',
-    color: 'text-blue-600'
+    color: 'text-blue-600',
   },
   [PropertyCategory.STYLE]: {
     icon: Palette,
     label: 'Estilo',
     description: 'Cores, fontes e aparência',
-    color: 'text-purple-600'
+    color: 'text-purple-600',
   },
   [PropertyCategory.LAYOUT]: {
     icon: Layout,
     label: 'Layout',
     description: 'Tamanho, posição e espaçamento',
-    color: 'text-green-600'
+    color: 'text-green-600',
   },
   [PropertyCategory.BEHAVIOR]: {
     icon: Zap,
     label: 'Comportamento',
     description: 'Interações e regras',
-    color: 'text-orange-600'
+    color: 'text-orange-600',
   },
   [PropertyCategory.ANIMATION]: {
     icon: Sparkles,
     label: 'Animação',
     description: 'Transições e efeitos',
-    color: 'text-pink-600'
+    color: 'text-pink-600',
   },
   [PropertyCategory.ACCESSIBILITY]: {
     icon: Eye,
     label: 'Acessibilidade',
     description: 'Suporte a leitores de tela',
-    color: 'text-indigo-600'
+    color: 'text-indigo-600',
   },
   [PropertyCategory.SEO]: {
     icon: Search,
     label: 'SEO',
     description: 'Otimização para buscadores',
-    color: 'text-teal-600'
+    color: 'text-teal-600',
   },
   [PropertyCategory.ADVANCED]: {
     icon: Settings,
     label: 'Avançado',
     description: 'Configurações técnicas',
-    color: 'text-gray-600'
-  }
+    color: 'text-gray-600',
+  },
 };
 
 // ===== COMPONENTE PRINCIPAL =====
@@ -455,7 +455,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
   onDuplicate,
   onClose,
   previewMode = false,
-  onPreviewToggle
+  onPreviewToggle,
 }) => {
   // Estados locais
   const [searchTerm, setSearchTerm] = useState('');
@@ -469,7 +469,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
     availableVariables,
     interpolateText,
     validateInterpolation,
-    setCurrentStep: setInterpolationStep
+    setCurrentStep: setInterpolationStep,
   } = useInterpolationSystem();
 
   // Atualizar step para interpolação
@@ -492,7 +492,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
       filtered = filtered.filter(prop =>
         prop.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
         prop.key.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (prop.description && prop.description.toLowerCase().includes(searchTerm.toLowerCase()))
+        (prop.description && prop.description.toLowerCase().includes(searchTerm.toLowerCase())),
       );
     }
 
@@ -562,7 +562,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
     blockType: selectedBlock?.type || '',
     stepNumber: currentStep,
     availableVariables: availableVariables.map(v => v.key),
-    otherProperties: { ...selectedBlock?.properties, ...selectedBlock?.content, ...tempValues }
+    otherProperties: { ...selectedBlock?.properties, ...selectedBlock?.content, ...tempValues },
   }), [selectedBlock, currentStep, availableVariables, tempValues]);
 
   const getCurrentValue = useCallback((property: PropertyField) => {
@@ -654,7 +654,7 @@ export const NoCodePropertiesPanel: React.FC<NoCodePropertiesPanelProps> = ({
     property: PropertyField,
     value: any,
     onChange: (value: any) => void,
-    hasChanges: boolean
+    hasChanges: boolean,
   ) => {
     const baseClassName = cn(hasChanges && 'border-blue-500 bg-blue-50');
 

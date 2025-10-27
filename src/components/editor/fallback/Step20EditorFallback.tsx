@@ -26,7 +26,7 @@ interface Step20EditorFallbackProps {
  */
 export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
   blocks,
-  onUpdateBlock
+  onUpdateBlock,
 }) => {
   const { primaryStyle, isLoading, error } = useQuizResult();
   const [showFallback, setShowFallback] = useState(false);
@@ -36,7 +36,7 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
   useEffect(() => {
     // Determine if we should show fallback
     const hasResultHeaderBlock = blocks.some(block =>
-      block.type === 'result-header-inline' || block.type === 'quiz-result'
+      block.type === 'result-header-inline' || block.type === 'quiz-result',
     );
     const hasValidResult = Boolean(primaryStyle) && !error;
     const isStillLoading = isLoading;
@@ -64,7 +64,7 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
         blocksCount: blocks.length,
         error: typeof error === 'string' ? error : 'Erro no cálculo',
         blockTypes: blocks.map(b => b.type),
-        useModular: shouldUseModular
+        useModular: shouldUseModular,
       });
       setShowFallback(true);
       setUseModularSystem(shouldUseModular);
@@ -72,7 +72,7 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
       appLogger.debug('✅ [Step20EditorFallback] Renderização normal:', {
         hasResultHeaderBlock,
         hasValidResult,
-        blocksCount: blocks.length
+        blocksCount: blocks.length,
       });
       setShowFallback(false);
       setUseModularSystem(false);
@@ -158,8 +158,8 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
               // Dados do quiz para os módulos
               userName: getBestUserName(),
               styleName: mapToFriendlyStyle((primaryStyle as any)?.category || 'Natural'),
-              percentage: (primaryStyle as any)?.percentage || 0
-            }
+              percentage: (primaryStyle as any)?.percentage || 0,
+            },
           }}
           isSelected={false}
           onPropertyChange={onUpdateBlock ? (key, value) => {

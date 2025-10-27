@@ -60,7 +60,7 @@ interface CalculatedResult {
 export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> = ({
     props,
     quizData,
-    onResultCalculated
+    onResultCalculated,
 }) => {
     const [calculated, setCalculated] = useState<CalculatedResult | null>(null);
     const [isCalculating, setIsCalculating] = useState(false);
@@ -79,7 +79,7 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
         try {
             console.log('🧮 Calculando resultados do quiz...', {
                 totalAnswers: Object.keys(quizData.answers).length,
-                method: props.calculationMethod
+                method: props.calculationMethod,
             });
 
             // Calcular pontuações por estilo
@@ -114,7 +114,7 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
             const stylesWithPercentages = Object.entries(styleScores).map(([style, score]) => ({
                 name: props.scoreMapping[style]?.label || style,
                 score,
-                percentage: Math.round((score / totalPoints) * 100)
+                percentage: Math.round((score / totalPoints) * 100),
             }));
 
             // Ordenar por pontuação (maior primeiro)
@@ -133,8 +133,8 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
                 metadata: {
                     totalAnswers,
                     calculationMethod: props.calculationMethod,
-                    timestamp: new Date().toISOString()
-                }
+                    timestamp: new Date().toISOString(),
+                },
             };
 
             console.log('🎯 Resultado final calculado:', result);
@@ -160,7 +160,7 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
         // Extrair estilo do ID da opção (ex: "romantico_1" -> "romantico")
         const patterns = [
             /^(romantico|classico|moderno|criativo|dramatico)/i,
-            /_?(romantico|classico|moderno|criativo|dramatico)/i
+            /_?(romantico|classico|moderno|criativo|dramatico)/i,
         ];
 
         for (const pattern of patterns) {
@@ -176,7 +176,7 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
             'classic': 'classico',
             'modern': 'moderno',
             'creative': 'criativo',
-            'dramatic': 'dramatico'
+            'dramatic': 'dramatico',
         };
 
         for (const [key, style] of Object.entries(styleMappings)) {
@@ -289,7 +289,7 @@ export const ResultCalculationSection: React.FC<ResultCalculationSectionProps> =
           window.dispatchEvent(new CustomEvent('quizResultCalculated', { 
             detail: ${JSON.stringify(calculated)} 
           }));
-        `
+        `,
             }} />
         </div>
     );

@@ -23,7 +23,7 @@ interface PreviewInteractionLayerProps {
 export const PreviewInteractionLayer: React.FC<PreviewInteractionLayerProps> = ({
   block,
   sessionData,
-  onUpdateSessionData
+  onUpdateSessionData,
 }) => {
   
   // 🎯 LÓGICA DE INTERATIVIDADE POR TIPO DE BLOCO

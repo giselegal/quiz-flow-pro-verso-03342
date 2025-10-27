@@ -20,7 +20,7 @@ import {
     Pause,
     RotateCcw,
     Activity,
-    Target
+    Target,
 } from 'lucide-react';
 
 // Sistema Components
@@ -78,29 +78,29 @@ class ComponentDetector {
                 detected: this.isComponentPresent('CanvasArea'),
                 optimizable: true,
                 currentVersion: this.getComponentVersion('CanvasArea'),
-                recommendedAction: 'Substitute with PreviewMigrationWrapper'
+                recommendedAction: 'Substitute with PreviewMigrationWrapper',
             },
             {
                 name: 'QuizRenderer',
                 detected: this.isComponentPresent('QuizRenderer'),
                 optimizable: true,
                 currentVersion: this.getComponentVersion('QuizRenderer'),
-                recommendedAction: 'Apply virtualization optimizations'
+                recommendedAction: 'Apply virtualization optimizations',
             },
             {
                 name: 'BlockRenderer',
                 detected: this.isComponentPresent('BlockRenderer'),
                 optimizable: true,
                 currentVersion: this.getComponentVersion('BlockRenderer'),
-                recommendedAction: 'Add smart memoization'
+                recommendedAction: 'Add smart memoization',
             },
             {
                 name: 'StepNavigation',
                 detected: this.isComponentPresent('StepNavigation'),
                 optimizable: true,
                 currentVersion: this.getComponentVersion('StepNavigation'),
-                recommendedAction: 'Enable preview sync'
-            }
+                recommendedAction: 'Enable preview sync',
+            },
         ];
 
         components.forEach(component => {
@@ -150,14 +150,14 @@ class PerformanceAnalyzer {
     static setBaseline(metrics: any): void {
         this.baseline = {
             ...metrics,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         };
     }
 
     static updateMetrics(metrics: any): void {
         this.currentMetrics = {
             ...metrics,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         };
     }
 
@@ -227,7 +227,7 @@ export const AutoIntegrationProvider: React.FC<{
         enableGradualRollout: true,
         rolloutPercentage: 10,
         debugMode: process.env.NODE_ENV === 'development',
-        ...initialConfig
+        ...initialConfig,
     });
 
     const [status, setStatus] = useState<IntegrationStatus>({
@@ -236,7 +236,7 @@ export const AutoIntegrationProvider: React.FC<{
         optimizationsApplied: [],
         issuesFound: [],
         performanceGain: 0,
-        lastUpdate: Date.now()
+        lastUpdate: Date.now(),
     });
 
     // Auto-detection effect
@@ -262,7 +262,7 @@ export const AutoIntegrationProvider: React.FC<{
             setStatus(prev => ({
                 ...prev,
                 componentsDetected,
-                lastUpdate: Date.now()
+                lastUpdate: Date.now(),
             }));
 
             if (config.debugMode) {
@@ -290,7 +290,7 @@ export const AutoIntegrationProvider: React.FC<{
                 ...prev,
                 isActive: true,
                 optimizationsApplied: optimizations,
-                lastUpdate: Date.now()
+                lastUpdate: Date.now(),
             }));
 
             if (config.debugMode) {
@@ -306,7 +306,7 @@ export const AutoIntegrationProvider: React.FC<{
             ...prev,
             isActive: false,
             optimizationsApplied: [],
-            lastUpdate: Date.now()
+            lastUpdate: Date.now(),
         }));
 
         if (config.debugMode) {
@@ -320,7 +320,7 @@ export const AutoIntegrationProvider: React.FC<{
         updateConfig,
         runDetection,
         applyOptimizations,
-        rollback
+        rollback,
     };
 
     return (
@@ -360,7 +360,7 @@ export const AutoIntegrationPanel: React.FC<{
                 <CardTitle className="flex items-center gap-2">
                     <Zap className="w-5 h-5" />
                     Auto Integration System
-                    <Badge variant={status.isActive ? "default" : "outline"}>
+                    <Badge variant={status.isActive ? 'default' : 'outline'}>
                         {status.isActive ? 'Active' : 'Inactive'}
                     </Badge>
                 </CardTitle>
@@ -426,7 +426,7 @@ export const AutoIntegrationPanel: React.FC<{
                     </Button>
 
                     <Button
-                        variant={status.isActive ? "outline" : "default"}
+                        variant={status.isActive ? 'outline' : 'default'}
                         size="sm"
                         onClick={status.isActive ? rollback : applyOptimizations}
                         disabled={status.componentsDetected.length === 0}
@@ -535,7 +535,7 @@ export const SmartIntegrationWrapper: React.FC<{
     children,
     enableAutoOptimization = false,
     fallbackComponent: FallbackComponent,
-    fallbackProps = {}
+    fallbackProps = {},
 }) => {
         const [shouldOptimize, setShouldOptimize] = useState(false);
         const [detectionComplete, setDetectionComplete] = useState(false);

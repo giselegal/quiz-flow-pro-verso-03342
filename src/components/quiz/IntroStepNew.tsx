@@ -133,7 +133,7 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                             aspectRatio: '1.47',
                             maxHeight: '204px',
                             width: '100%',
-                            maxWidth: '300px'
+                            maxWidth: '300px',
                         }}
                     >
                         <div className="relative w-full h-full bg-[#F8F5F0]">
@@ -155,7 +155,7 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                                         maxHeight: '204px',
                                         width: '100%',
                                         height: 'auto',
-                                        objectFit: 'contain'
+                                        objectFit: 'contain',
                                     }}
                                 />
                             </picture>
@@ -196,7 +196,7 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                             <input
                                 id="name"
                                 type="text"
-                                placeholder={data.placeholder || "Digite seu nome"}
+                                placeholder={data.placeholder || 'Digite seu nome'}
                                 value={nome}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     setNome(e.target.value);
@@ -204,8 +204,8 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                                 }}
                                 onKeyPress={handleKeyPress}
                                 className={`w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:ring-offset-2 focus:ring-offset-[#FEFEFE] focus-visible:ring-offset-[#FEFEFE] ${error
-                                        ? "border-red-500 focus:ring-red-500 focus-visible:ring-red-500"
-                                        : "border-[#B89B7A] focus:ring-[#A1835D] focus-visible:ring-[#A1835D]"
+                                        ? 'border-red-500 focus:ring-red-500 focus-visible:ring-red-500'
+                                        : 'border-[#B89B7A] focus:ring-[#A1835D] focus-visible:ring-[#A1835D]'
                                     }`}
                                 autoFocus
                                 aria-required="true"
@@ -213,7 +213,7 @@ export default function IntroStep({ data, onNameSubmit }: IntroStepProps) {
                                 inputMode="text"
                                 maxLength={32}
                                 aria-invalid={!!error}
-                                aria-describedby={error ? "name-error" : undefined}
+                                aria-describedby={error ? 'name-error' : undefined}
                                 required
                             />
                             {error && (

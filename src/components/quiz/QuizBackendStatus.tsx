@@ -16,7 +16,7 @@ import {
   AlertCircle, 
   CheckCircle2,
   Brain,
-  HardDrive 
+  HardDrive, 
 } from 'lucide-react';
 import { useQuizBackendIntegration } from '@/hooks/useQuizBackendIntegration';
 

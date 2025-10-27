@@ -42,7 +42,7 @@ interface QuizDataProviderProps {
 export const QuizDataProvider: React.FC<QuizDataProviderProps> = ({
   children,
   block,
-  fallbackUserName = 'Participante'
+  fallbackUserName = 'Participante',
 }) => {
   const { primaryStyle, secondaryStyles, isLoading, error, retry, hasResult } = useQuizResult();
 
@@ -56,14 +56,14 @@ export const QuizDataProvider: React.FC<QuizDataProviderProps> = ({
     percentage: computeEffectivePrimaryPercentage(
       primaryStyle as any,
       secondaryStyles as any[],
-      primaryStyle.percentage || 85
-    )
+      primaryStyle.percentage || 85,
+    ),
   } : null;
 
   const processedSecondaryStyles = (secondaryStyles || []).map(style => ({
     style: mapToFriendlyStyle(style.style || style.category || 'Complementar'),
     category: style.category || style.style || 'Complementar',
-    percentage: style.percentage || 0
+    percentage: style.percentage || 0,
   }));
 
   // Método para atualizar dados (placeholder para futuras funcionalidades)
@@ -85,7 +85,7 @@ export const QuizDataProvider: React.FC<QuizDataProviderProps> = ({
     hasResult,
     retry,
     refreshData,
-    setPreviewMode
+    setPreviewMode,
   };
 
   return (

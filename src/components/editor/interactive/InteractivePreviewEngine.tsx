@@ -13,7 +13,7 @@ import {
   Settings2, 
   Eye, 
   RotateCcw,
-  Save 
+  Save, 
 } from 'lucide-react';
 
 interface InteractivePreviewEngineProps {
@@ -39,7 +39,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
     const updatedBlocks = blocks.map(block => 
       block.id === blockId 
         ? { ...block, ...changes }
-        : block
+        : block,
     );
     onBlocksUpdate(updatedBlocks);
     setHasUnsavedChanges(true);
@@ -85,7 +85,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
         key={block.id}
         className={cn(
           editMode === 'properties' && 'cursor-pointer hover:ring-1 hover:ring-primary/50 rounded-lg transition-all',
-          activeBlockId === block.id && editMode === 'properties' && 'ring-2 ring-primary'
+          activeBlockId === block.id && editMode === 'properties' && 'ring-2 ring-primary',
         )}
         onClick={() => editMode === 'properties' && setActiveBlockId(block.id)}
       >

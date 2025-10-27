@@ -22,7 +22,7 @@ const DefaultFallback = () => (
 export const LazyBoundary: React.FC<LazyBoundaryProps> = ({ children, fallback, suppressHydrationWarning }) => {
     return (
         <Suspense fallback={fallback || <DefaultFallback />}>
-            {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+            { }
             <>{children}</>
         </Suspense>
     );

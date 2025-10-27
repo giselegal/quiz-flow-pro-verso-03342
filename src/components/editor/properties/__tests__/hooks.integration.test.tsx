@@ -13,12 +13,12 @@ import { useQuizResult } from '@/hooks/useQuizResult';
 const mockAuthContext = {
     user: {
         name: 'Ana Costa',
-        email: 'ana.costa@example.com'
-    }
+        email: 'ana.costa@example.com',
+    },
 };
 
 vi.mock('@/context/AuthContext', () => ({
-    useAuth: () => mockAuthContext
+    useAuth: () => mockAuthContext,
 }));
 
 describe('Hooks Integration Tests', () => {
@@ -159,18 +159,18 @@ describe('Hooks Integration Tests', () => {
             const availableVariables = [
                 {
                     key: 'userName',
-                    value: userName || 'Usuário'
+                    value: userName || 'Usuário',
                 },
                 {
                     key: 'resultStyle',
-                    value: quizResult.current.primaryStyle?.style || 'Seu Estilo'
+                    value: quizResult.current.primaryStyle?.style || 'Seu Estilo',
                 },
                 {
                     key: 'resultPercentage',
                     value: quizResult.current.primaryStyle?.percentage
                         ? `${Math.round(quizResult.current.primaryStyle.percentage)}%`
-                        : '0%'
-                }
+                        : '0%',
+                },
             ];
 
             // Testa interpolação como seria feita no componente real

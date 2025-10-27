@@ -6,7 +6,7 @@ import { useCallback, useState } from 'react';
  */
 export const usePropertiesPanel = (
   selectedBlock: Block | null,
-  onUpdateBlock: (blockId: string, updates: Record<string, any>) => void
+  onUpdateBlock: (blockId: string, updates: Record<string, any>) => void,
 ) => {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
@@ -20,7 +20,7 @@ export const usePropertiesPanel = (
         onUpdateBlock(selectedBlock.id, { properties: mergedProperties });
       }
     },
-    [selectedBlock, onUpdateBlock]
+    [selectedBlock, onUpdateBlock],
   );
 
   const handleTogglePreview = useCallback(() => {

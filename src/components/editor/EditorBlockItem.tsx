@@ -124,7 +124,7 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
         getMarginClass(block.properties?.marginTop ?? 0, 'top'),
         getMarginClass(block.properties?.marginBottom ?? 0, 'bottom'),
         getMarginClass(block.properties?.marginLeft ?? 0, 'left'),
-        getMarginClass(block.properties?.marginRight ?? 0, 'right')
+        getMarginClass(block.properties?.marginRight ?? 0, 'right'),
       )}
     >
       {/* Block Header */}
@@ -150,7 +150,7 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
             variant="ghost"
             size="sm"
             onClick={() => setIsExpanded(!isExpanded)}
-            aria-label={isExpanded ? "Recolher propriedades do bloco" : "Expandir propriedades do bloco"}
+            aria-label={isExpanded ? 'Recolher propriedades do bloco' : 'Expandir propriedades do bloco'}
           >
             {isExpanded ? (
               <ChevronUp className="w-4 h-4 text-[#8F7A6A]" />

@@ -114,7 +114,7 @@ const TemplateInvestigationPage: React.FC = () => {
             '/api/templates/list',
             '/api/funnel-templates',
             '/templates/list.json',
-            '/data/templates.json'
+            '/data/templates.json',
         ];
 
         const results: any = {};
@@ -146,7 +146,7 @@ const TemplateInvestigationPage: React.FC = () => {
             '/templates/templates.json',
             '/cache/templates.json',
             '/public/templates.json',
-            '/data/funnel-templates.json'
+            '/data/funnel-templates.json',
         ];
 
         const results: any = {};
@@ -222,7 +222,7 @@ const TemplateInvestigationPage: React.FC = () => {
                             <div key={i} className="text-sm mb-2 p-2 bg-gray-50 rounded">
                                 <p className="font-mono text-xs">{item.key}</p>
                                 <p className="text-xs text-gray-600">
-                                    {typeof item.data === 'object' ? Object.keys(item.data).length + ' keys' : 'string'}
+                                    {typeof item.data === 'object' ? `${Object.keys(item.data).length  } keys` : 'string'}
                                 </p>
                             </div>
                         ))}

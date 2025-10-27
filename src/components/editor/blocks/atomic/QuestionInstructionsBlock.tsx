@@ -20,7 +20,7 @@ export default function QuestionInstructionsBlock({
   isEditable = false,
   onSelect,
   onOpenProperties,
-  contextData
+  contextData,
 }: QuestionInstructionsBlockProps) {
   const requiredSelections = block.properties?.requiredSelections || 
                              contextData?.requiredSelections || 

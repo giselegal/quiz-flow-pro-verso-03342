@@ -32,14 +32,14 @@ const PROP_SELECTORS: Record<string, string> = {
     'questionNumber': '[data-editable="questionNumber"], .question-number',
     'text': '[data-editable="text"], p, .text-content',
     'image': '[data-editable="image"], img',
-    'options': '[data-editable="options"], .option, .quiz-option'
+    'options': '[data-editable="options"], .option, .quiz-option',
 };
 
 export const PropertyHighlighter: React.FC<PropertyHighlighterProps> = ({
     editableProps,
     onPropertyClick,
     isActive,
-    children
+    children,
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [hoveredProp, setHoveredProp] = useState<string | null>(null);

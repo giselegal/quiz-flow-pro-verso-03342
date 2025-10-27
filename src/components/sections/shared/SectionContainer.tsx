@@ -39,7 +39,7 @@ export const SectionContainer: React.FC<SectionContainerProps> = ({
                     }
                 });
             },
-            { threshold: 0.1 }
+            { threshold: 0.1 },
         );
 
         observer.observe(containerRef.current);

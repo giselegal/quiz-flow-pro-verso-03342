@@ -30,7 +30,7 @@ import {
     ModularQuestionStep as QuestionStep,
     ModularStrategicQuestionStep as StrategicQuestionStep,
     ModularTransitionStep as TransitionStep,
-    ModularResultStep as ResultStep
+    ModularResultStep as ResultStep,
 } from '@/components/quiz-modular';
 
 interface QuizAppConnectedProps {
@@ -43,13 +43,13 @@ interface QuizAppConnectedProps {
 
 export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', editorMode = false, previewMode = false, initialStepId, initialConfig }: QuizAppConnectedProps) {
     // 🐛 DEBUG CRÍTICO: Log de props recebidas
-    console.log(`🎯 QuizAppConnected RENDERIZADO`, {
+    console.log('🎯 QuizAppConnected RENDERIZADO', {
         funnelId,
         editorMode,
         previewMode,
         initialStepId,
         hasInitialConfig: !!initialConfig,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
     });
 
     // Registrar steps de produção (seguro chamar múltiplas vezes - stepRegistry lida com duplicatas)
@@ -67,7 +67,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             externalSteps![step.id] = {
                 ...step,
                 type: step.type || 'question',
-                blocks: step.blocks || []
+                blocks: step.blocks || [],
             };
         });
         console.log(`🔄 Usando initialConfig com ${initialConfig.steps.length} steps`);
@@ -78,10 +78,10 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             externalSteps = registry.steps;
             console.log(`🔗 Registry detectado com ${Object.keys(externalSteps).length} steps:`, {
                 stepIds: Object.keys(externalSteps),
-                firstStepSample: externalSteps[Object.keys(externalSteps)[0]]
+                firstStepSample: externalSteps[Object.keys(externalSteps)[0]],
             });
         } else {
-            console.log(`⚠️ Registry vazio ou ausente - usando fallback`);
+            console.log('⚠️ Registry vazio ou ausente - usando fallback');
         }
     }
 
@@ -94,24 +94,24 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         properties: globalConfig,
         isLoading: globalLoading,
         error: globalError,
-        connectionStatus
+        connectionStatus,
     } = useComponentConfiguration({
         componentId: 'quiz-global-config',
         funnelId,
         realTimeSync: true,
         autoSave: editorMode,
-        editorMode: editorMode || previewMode // 🎨 Modo editor/preview: carregamento instantâneo
+        editorMode: editorMode || previewMode, // 🎨 Modo editor/preview: carregamento instantâneo
     });
 
     // Configurações de tema e visual
     const {
         properties: themeConfig,
-        isLoading: themeLoading
+        isLoading: themeLoading,
     } = useComponentConfiguration({
         componentId: 'quiz-theme-config',
         funnelId,
         realTimeSync: true,
-        editorMode: editorMode || previewMode // 🎨 Modo editor/preview: carregamento instantâneo
+        editorMode: editorMode || previewMode, // 🎨 Modo editor/preview: carregamento instantâneo
     });
 
     // ============================================================================
@@ -219,7 +219,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             type: currentStepData.type,
             isQuestion,
             isStrategic,
-            requiredSelections: currentStepData.requiredSelections
+            requiredSelections: currentStepData.requiredSelections,
         });
 
         if (!isQuestion && !isStrategic) {
@@ -240,7 +240,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             shouldAutoAdvance = !!strategicAnswer;
             console.log(`🎯 Estratégica [${state.currentStep}]:`, {
                 strategicAnswer,
-                shouldAutoAdvance
+                shouldAutoAdvance,
             });
         } else {
             // Perguntas normais: avançar quando atingir requiredSelections
@@ -248,7 +248,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             console.log(`📝 Pergunta [${state.currentStep}]:`, {
                 currentAnswers: currentAnswers.length,
                 requiredCount,
-                shouldAutoAdvance
+                shouldAutoAdvance,
             });
         }
 
@@ -272,7 +272,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         state.answers,
         state.userProfile.strategicAnswers,
         currentStepData,
-        nextStep
+        nextStep,
     ]);
 
     // ============================================================================
@@ -286,13 +286,13 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     const {
         properties: currentStepConfig,
         isLoading: stepLoading,
-        updateProperty: updateStepProperty
+        updateProperty: updateStepProperty,
     } = useComponentConfiguration({
         componentId: `quiz-step-${currentStepNumber}`,
         funnelId,
         realTimeSync: true,
         autoSave: editorMode,
-        editorMode: editorMode || previewMode // 🎨 Em preview, usar caminho offline (sem fetch)
+        editorMode: editorMode || previewMode, // 🎨 Em preview, usar caminho offline (sem fetch)
     });
 
     // ============================================================================
@@ -352,8 +352,8 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         // Override para modo editor
         ...(editorMode && {
             showDebugInfo: true,
-            allowRealTimeEditing: true
-        })
+            allowRealTimeEditing: true,
+        }),
     };
 
     // ============================================================================
@@ -494,7 +494,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             return (
                 <div
                     key={idx}
-                    className={"normalized-block-wrapper" + (debug ? ' outline outline-2 outline-emerald-400/70 rounded-sm relative' : '')}
+                    className={`normalized-block-wrapper${  debug ? ' outline outline-2 outline-emerald-400/70 rounded-sm relative' : ''}`}
                     data-block-type={block.type}
                 >
                     {debug && (
@@ -508,8 +508,8 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                             userProfile: state.userProfile,
                             onNameSubmit: (name: string) => { setUserName(name); nextStep(); },
                             onAnswersChange: (answers: string[]) => { addAnswer(state.currentStep, answers); },
-                            onComplete: () => nextStep()
-                        }
+                            onComplete: () => nextStep(),
+                        },
                     })}
                 </div>
             );
@@ -537,7 +537,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         answers: state.answers,
         strategicAnswers: state.userProfile.strategicAnswers,
         resultStyle: state.userProfile.resultStyle,
-        secondaryStyles: state.userProfile.secondaryStyles
+        secondaryStyles: state.userProfile.secondaryStyles,
     };
 
     // Calcular requiredSelections efetivo (usa util centralizada)
@@ -547,7 +547,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     const unifiedStepProps = {
         ...currentStepData,
         ...currentStepConfig,
-        requiredSelections: effectiveRequiredSelections
+        requiredSelections: effectiveRequiredSelections,
     } as any;
 
     // Handler de atualização vindo dos adapters via UnifiedStepRenderer
@@ -697,7 +697,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                                 style={{
                                     width: `${progress}%`,
                                     backgroundColor: 'var(--progress-color)',
-                                    transitionDuration: `${progressConfig.animationDuration}ms`
+                                    transitionDuration: `${progressConfig.animationDuration}ms`,
                                 }}
                             ></div>
                         </div>
@@ -769,7 +769,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         )}
                     </div>
                 ) : normalizedStep ? (
-                    <div className={"max-w-6xl mx-auto px-4 py-8 space-y-8" + (normalizedDebug ? ' normalized-debug-mode' : '')}>
+                    <div className={`max-w-6xl mx-auto px-4 py-8 space-y-8${  normalizedDebug ? ' normalized-debug-mode' : ''}`}>
                         {normalizedStep.blocks.map((b: any, idx: number) => (
                             <NormalizedBlockRenderer key={idx} block={b} idx={idx} debug={normalizedDebug} />
                         ))}
@@ -807,7 +807,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                                         sessionData={{
                                             userName: unifiedQuizState.userName,
                                             // mapear respostas do formato antigo para chaves answers_step-XX
-                                            ...Object.fromEntries(Object.entries(unifiedQuizState.answers).map(([k, v]) => [`answers_${k}`, v]))
+                                            ...Object.fromEntries(Object.entries(unifiedQuizState.answers).map(([k, v]) => [`answers_${k}`, v])),
                                         }}
                                         onUpdateSessionData={(key, value) => {
                                             if (key === 'userName' && typeof value === 'string') setUserName(value);

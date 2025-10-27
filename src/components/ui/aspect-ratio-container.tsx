@@ -22,7 +22,7 @@ export const AspectRatioContainer: React.FC<AspectRatioContainerProps> = ({
       className={`relative ${className}`}
       style={{
         aspectRatio: ratio,
-        minHeight: minHeight,
+        minHeight,
         backgroundColor: bgColor,
       }}
     >

@@ -23,7 +23,7 @@ import {
     Wifi,
     WifiOff,
     Clock,
-    Settings
+    Settings,
 } from 'lucide-react';
 import { cn } from '../../../lib/utils';
 import QuizAppConnected from '../../quiz/QuizAppConnected';
@@ -86,22 +86,22 @@ const DEVICE_CONFIGS = {
         maxWidth: '1200px',
         icon: Monitor,
         label: 'Desktop',
-        scale: 1
+        scale: 1,
     },
     tablet: {
         width: '768px',
         maxWidth: '768px',
         icon: Tablet,
         label: 'Tablet',
-        scale: 0.8
+        scale: 0.8,
     },
     mobile: {
         width: '375px',
         maxWidth: '375px',
         icon: Smartphone,
         label: 'Mobile',
-        scale: 0.6
-    }
+        scale: 0.6,
+    },
 } as const;
 
 const DEFAULT_CONFIG: Required<LivePreviewConfig> = {
@@ -110,7 +110,7 @@ const DEFAULT_CONFIG: Required<LivePreviewConfig> = {
     defaultDevice: 'desktop',
     showDebugInfo: false,
     highlightChanges: true,
-    isolatePreviewState: true
+    isolatePreviewState: true,
 };
 
 // ============================================================================
@@ -143,12 +143,12 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
     selectedStepId,
     onStepChange,
     config: userConfig,
-    className
+    className,
 }) => {
     // ===== CONFIG MERGER =====
     const config = useMemo(() => ({
         ...DEFAULT_CONFIG,
-        ...userConfig
+        ...userConfig,
     }), [userConfig]);
 
     // ===== STATE =====
@@ -158,7 +158,7 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
         zoom: 100,
         status: 'idle',
         lastUpdate: Date.now(),
-        updateCount: 0
+        updateCount: 0,
     });
 
     // ===== DEBOUNCED VALUES =====
@@ -179,7 +179,7 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
         setPreviewState(prev => ({
             ...prev,
             isEnabled: !prev.isEnabled,
-            status: !prev.isEnabled ? 'syncing' : 'idle'
+            status: !prev.isEnabled ? 'syncing' : 'idle',
         }));
     }, []);
 
@@ -187,7 +187,7 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
         setPreviewState(prev => ({
             ...prev,
             device,
-            lastUpdate: Date.now()
+            lastUpdate: Date.now(),
         }));
     }, []);
 
@@ -196,14 +196,14 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
             ...prev,
             status: 'updating',
             lastUpdate: Date.now(),
-            updateCount: prev.updateCount + 1
+            updateCount: prev.updateCount + 1,
         }));
 
         // Simular delay de refresh
         setTimeout(() => {
             setPreviewState(prev => ({
                 ...prev,
-                status: 'idle'
+                status: 'idle',
             }));
         }, 500);
     }, []);
@@ -242,21 +242,21 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
                     status: 'idle',
                     lastUpdate: Date.now(),
                     updateCount: prev.updateCount + 1,
-                    errorMessage: undefined
+                    errorMessage: undefined,
                 }));
 
                 if (config.showDebugInfo) {
                     appLogger.debug('🎭 LiveCanvasPreview synced:', {
                         stepsCount: debouncedSteps.length,
                         runtimeSteps: Object.keys(runtimeMap).length,
-                        timestamp: new Date().toISOString()
+                        timestamp: new Date().toISOString(),
                     });
                 }
             } catch (error) {
                 setPreviewState(prev => ({
                     ...prev,
                     status: 'error',
-                    errorMessage: error instanceof Error ? error.message : 'Erro desconhecido'
+                    errorMessage: error instanceof Error ? error.message : 'Erro desconhecido',
                 }));
                 appLogger.error('❌ LiveCanvasPreview sync error:', error);
             }
@@ -285,15 +285,15 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
             syncing: { icon: RefreshCw, color: 'text-blue-500', label: 'Sincronizando...' },
             updating: { icon: Clock, color: 'text-yellow-500', label: 'Atualizando...' },
             error: { icon: WifiOff, color: 'text-red-500', label: 'Erro' },
-            disconnected: { icon: WifiOff, color: 'text-gray-500', label: 'Desconectado' }
+            disconnected: { icon: WifiOff, color: 'text-gray-500', label: 'Desconectado' },
         };
 
         const { icon: Icon, color, label } = statusConfig[previewState.status];
 
         return (
             <div className="flex items-center gap-1 text-xs">
-                <Icon className={cn("w-3 h-3", color, {
-                    'animate-spin': previewState.status === 'syncing' || previewState.status === 'updating'
+                <Icon className={cn('w-3 h-3', color, {
+                    'animate-spin': previewState.status === 'syncing' || previewState.status === 'updating',
                 })} />
                 <span className={color}>{label}</span>
             </div>
@@ -309,7 +309,7 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
                 return (
                     <Button
                         key={device}
-                        variant={isActive ? "default" : "outline"}
+                        variant={isActive ? 'default' : 'outline'}
                         size="sm"
                         onClick={() => handleDeviceChange(device)}
                         className="p-2"
@@ -366,15 +366,15 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
             <div
                 ref={previewContainerRef}
                 className={cn(
-                    "preview-container transition-all duration-300",
-                    config.highlightChanges && previewState.status === 'syncing' && "ring-2 ring-blue-300"
+                    'preview-container transition-all duration-300',
+                    config.highlightChanges && previewState.status === 'syncing' && 'ring-2 ring-blue-300',
                 )}
                 style={{
                     width: DEVICE_CONFIGS[previewState.device].width,
                     maxWidth: DEVICE_CONFIGS[previewState.device].maxWidth,
                     margin: '0 auto',
                     transform: `scale(${DEVICE_CONFIGS[previewState.device].scale})`,
-                    transformOrigin: 'top center'
+                    transformOrigin: 'top center',
                 }}
             >
                 <QuizAppConnected
@@ -412,7 +412,7 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
 
     // ===== MAIN RENDER =====
     return (
-        <Card className={cn("w-full h-full flex flex-col", className)}>
+        <Card className={cn('w-full h-full flex flex-col', className)}>
             <CardHeader className="pb-3 space-y-3">
                 {/* Header Principal */}
                 <div className="flex items-center justify-between">
@@ -448,8 +448,8 @@ export const LiveCanvasPreview: React.FC<LiveCanvasPreviewProps> = ({
                                     title="Atualizar manualmente"
                                 >
                                     <RefreshCw className={cn(
-                                        "w-3 h-3",
-                                        previewState.status === 'updating' && "animate-spin"
+                                        'w-3 h-3',
+                                        previewState.status === 'updating' && 'animate-spin',
                                     )} />
                                 </Button>
                             </div>
@@ -500,7 +500,7 @@ function convertStepsToRuntimeMap(steps: any[]): Record<string, any> {
             questionText: step.questionText || step.title || '',
             options: step.options || [],
             blocks: step.blocks || [],
-            ...step
+            ...step,
         };
     });
 

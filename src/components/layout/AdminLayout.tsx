@@ -19,7 +19,7 @@ import {
   Edit3,
   ChevronRight,
   Menu,
-  X
+  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -49,26 +49,26 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, subtitle, ac
       href: '/admin',
       label: 'Dashboard',
       icon: LayoutDashboard,
-      active: location === '/admin'
+      active: location === '/admin',
     },
     {
       href: '/admin/analytics',
       label: 'Analytics',
       icon: BarChart3,
-      active: location === '/admin/analytics'
+      active: location === '/admin/analytics',
     },
     {
       href: '/admin/settings',
       label: 'Configurações',
       icon: Settings,
-      active: location === '/admin/settings'
+      active: location === '/admin/settings',
     },
     {
       href: '/editor',
       label: 'Editor',
       icon: Edit3,
-      badge: 'Novo'
-    }
+      badge: 'Novo',
+    },
   ];
 
   const breadcrumbs = React.useMemo(() => {
@@ -78,13 +78,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, subtitle, ac
       'admin': 'Administração',
       'analytics': 'Analytics',
       'settings': 'Configurações',
-      'dashboard': 'Dashboard'
+      'dashboard': 'Dashboard',
     };
 
     return segments.map((segment, index) => ({
       label: breadcrumbMap[segment] || segment,
-      path: '/' + segments.slice(0, index + 1).join('/'),
-      isLast: index === segments.length - 1
+      path: `/${  segments.slice(0, index + 1).join('/')}`,
+      isLast: index === segments.length - 1,
     }));
   }, [location]);
 
@@ -100,8 +100,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, subtitle, ac
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        'fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0',
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full',
       )}>
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div className="flex items-center space-x-3">
@@ -127,10 +127,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, subtitle, ac
           {navigationItems.map((item) => (
             <Link key={item.href} href={item.href}>
               <a className={cn(
-                "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                'flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                 item.active 
-                  ? "bg-primary text-primary-foreground" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  ? 'bg-primary text-primary-foreground' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent',
               )}>
                 <item.icon className="w-4 h-4 flex-shrink-0" />
                 <span className="flex-1">{item.label}</span>

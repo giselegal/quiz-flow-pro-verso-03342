@@ -25,7 +25,7 @@ import {
     Check,
     ArrowRight,
     AlertCircle,
-    Crown
+    Crown,
 } from 'lucide-react';
 import { styleConfigGisele, type StyleId } from '@/data/styles';
 import { motion } from 'framer-motion';
@@ -68,7 +68,7 @@ export function StyleResultCard({
     previewUserName = 'Maria',
     mode = 'result',
     onNext,
-    className = ''
+    className = '',
 }: StyleResultCardProps) {
     const [isRevealing, setIsRevealing] = useState(false);
 
@@ -118,7 +118,7 @@ export function StyleResultCard({
         'romântico': Heart,
         'sexy': Heart,
         'dramático': Star,
-        'criativo': Sparkles
+        'criativo': Sparkles,
     };
 
     const Icon = styleIcons[styleId] || Award;
@@ -130,7 +130,7 @@ export function StyleResultCard({
                 <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    transition={{ duration: 0.8, ease: 'easeOut' }}
                     className="text-center"
                 >
                     <Sparkles className="h-16 w-16 mx-auto mb-4 text-[#B89B7A] animate-pulse" />

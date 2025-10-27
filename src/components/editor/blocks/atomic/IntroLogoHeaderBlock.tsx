@@ -15,7 +15,7 @@ export default function IntroLogoHeaderBlock({
   isSelected = false,
   isEditable = false,
   onSelect,
-  onOpenProperties
+  onOpenProperties,
 }: IntroLogoHeaderBlockProps) {
   const logoUrl = block.content?.logoUrl || block.properties?.logoUrl || 
     'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png';
@@ -52,7 +52,7 @@ export default function IntroLogoHeaderBlock({
               style={{ 
                 backgroundColor: lineColor,
                 width: `${lineWidth}px`, 
-                maxWidth: '90%' 
+                maxWidth: '90%', 
               }} 
             />
           </div>

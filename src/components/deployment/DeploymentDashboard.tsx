@@ -17,7 +17,7 @@ import {
   Rocket,
   BarChart3,
   Shield,
-  Database
+  Database,
 } from 'lucide-react';
 import { runDeploymentChecklist, type DeploymentReport } from '@/utils/deploymentChecklist';
 import { useProductionOptimization } from '@/hooks/useProductionOptimization';

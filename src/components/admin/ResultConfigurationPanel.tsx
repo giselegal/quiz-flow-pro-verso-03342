@@ -27,7 +27,7 @@ import {
     Eye,
     Upload,
     Copy,
-    Award
+    Award,
 } from 'lucide-react';
 import { styleConfig } from '@/config/styleConfig';
 import { HybridTemplateService } from '@/services/aliases';
@@ -77,7 +77,7 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
                     guideImage: config.guideImage,
                     dicasEspeciais: config.specialTips || [],
                     categoria: config.category,
-                    palavrasChave: config.keywords || []
+                    palavrasChave: config.keywords || [],
                 };
             });
 
@@ -85,9 +85,9 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
         } catch (error) {
             console.error('Erro ao carregar configurações de resultado:', error);
             toast({
-                title: "Erro",
-                description: "Não foi possível carregar as configurações de resultado.",
-                variant: "destructive"
+                title: 'Erro',
+                description: 'Não foi possível carregar as configurações de resultado.',
+                variant: 'destructive',
             });
         } finally {
             setLoading(false);
@@ -99,8 +99,8 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
             ...prev,
             [styleName]: {
                 ...prev[styleName],
-                ...updates
-            }
+                ...updates,
+            },
         }));
     };
 
@@ -116,7 +116,7 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
                     name: `Resultado ${styleName}`,
                     description: config.descricao,
                     type: 'result',
-                    category: 'resultado'
+                    category: 'resultado',
                 },
                 result: {
                     estilo: styleName,
@@ -126,23 +126,23 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
                     guideImage: config.guideImage,
                     dicasEspeciais: config.dicasEspeciais,
                     categoria: config.categoria,
-                    palavrasChave: config.palavrasChave
-                }
+                    palavrasChave: config.palavrasChave,
+                },
             };
 
             // Salvar no HybridTemplateService (step 20 é onde os resultados são exibidos)
             await HybridTemplateService.saveStepOverride(20, resultOverride);
 
             toast({
-                title: "Configuração Salva!",
+                title: 'Configuração Salva!',
                 description: `Resultado ${styleName} configurado com sucesso.`,
             });
         } catch (error) {
             console.error('Erro ao salvar:', error);
             toast({
-                title: "Erro",
-                description: "Não foi possível salvar a configuração.",
-                variant: "destructive"
+                title: 'Erro',
+                description: 'Não foi possível salvar a configuração.',
+                variant: 'destructive',
             });
         } finally {
             setSaving(false);
@@ -156,15 +156,15 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
                 await saveConfiguration(styleName);
             }
             toast({
-                title: "Todas as Configurações Salvas!",
-                description: "Todos os resultados foram configurados com sucesso.",
+                title: 'Todas as Configurações Salvas!',
+                description: 'Todos os resultados foram configurados com sucesso.',
             });
         } catch (error) {
             console.error('Erro ao salvar todas:', error);
             toast({
-                title: "Erro",
-                description: "Erro ao salvar algumas configurações.",
-                variant: "destructive"
+                title: 'Erro',
+                description: 'Erro ao salvar algumas configurações.',
+                variant: 'destructive',
             });
         } finally {
             setSaving(false);
@@ -174,8 +174,8 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
     const resetToDefaults = async () => {
         await loadAllResultConfigurations();
         toast({
-            title: "Configurações Resetadas",
-            description: "Todas as configurações foram restauradas para o padrão.",
+            title: 'Configurações Resetadas',
+            description: 'Todas as configurações foram restauradas para o padrão.',
         });
     };
 
@@ -189,7 +189,7 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
             if (file) {
                 // Aqui você implementaria o upload real
                 toast({
-                    title: "Upload simulado",
+                    title: 'Upload simulado',
                     description: `Imagem ${file.name} seria enviada para ${field}`,
                 });
             }
@@ -200,8 +200,8 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
         toast({
-            title: "Copiado!",
-            description: "URL copiada para a área de transferência.",
+            title: 'Copiado!',
+            description: 'URL copiada para a área de transferência.',
         });
     };
 
@@ -256,12 +256,12 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
                                     return (
                                         <Button
                                             key={styleName}
-                                            variant={selectedStyle === styleName ? "default" : "ghost"}
+                                            variant={selectedStyle === styleName ? 'default' : 'ghost'}
                                             onClick={() => setSelectedStyle(styleName)}
                                             className="w-full justify-between p-3 h-auto flex-col"
                                             style={{
                                                 backgroundColor: selectedStyle === styleName ? '#B89B7A' : 'transparent',
-                                                color: selectedStyle === styleName ? 'white' : '#432818'
+                                                color: selectedStyle === styleName ? 'white' : '#432818',
                                             }}
                                         >
                                             <div className="flex items-center justify-between w-full">
@@ -354,7 +354,7 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
                                                 value={currentConfig.palavrasChave.join(', ')}
                                                 onChange={(e) =>
                                                     updateStyleConfig(selectedStyle, {
-                                                        palavrasChave: e.target.value.split(',').map(k => k.trim())
+                                                        palavrasChave: e.target.value.split(',').map(k => k.trim()),
                                                     })
                                                 }
                                                 placeholder="elegante, sofisticado, clássico"
@@ -369,7 +369,7 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
                                             value={currentConfig.dicasEspeciais.join('\n')}
                                             onChange={(e) =>
                                                 updateStyleConfig(selectedStyle, {
-                                                    dicasEspeciais: e.target.value.split('\n').filter(tip => tip.trim())
+                                                    dicasEspeciais: e.target.value.split('\n').filter(tip => tip.trim()),
                                                 })
                                             }
                                             placeholder="Digite uma dica por linha..."
@@ -477,12 +477,12 @@ export const ResultConfigurationPanel: React.FC<ResultConfigPanelProps> = ({ cla
                                             🔧 Variáveis Disponíveis para Interpolação
                                         </h4>
                                         <div className="text-sm text-blue-800 space-y-1">
-                                            <p><code>{`{{estilo}}`}</code> - Nome do estilo (ex: Natural)</p>
-                                            <p><code>{`{{descricao}}`}</code> - Descrição personalizada do estilo</p>
-                                            <p><code>{`{{imagemPrincipal}}`}</code> - URL da imagem principal</p>
-                                            <p><code>{`{{imagemProdutoPersonalizado}}`}</code> - URL do guia personalizado</p>
-                                            <p><code>{`{{categoria}}`}</code> - Categoria do estilo</p>
-                                            <p><code>{`{{userName}}`}</code> - Nome do usuário</p>
+                                            <p><code>{'{{estilo}}'}</code> - Nome do estilo (ex: Natural)</p>
+                                            <p><code>{'{{descricao}}'}</code> - Descrição personalizada do estilo</p>
+                                            <p><code>{'{{imagemPrincipal}}'}</code> - URL da imagem principal</p>
+                                            <p><code>{'{{imagemProdutoPersonalizado}}'}</code> - URL do guia personalizado</p>
+                                            <p><code>{'{{categoria}}'}</code> - Categoria do estilo</p>
+                                            <p><code>{'{{userName}}'}</code> - Nome do usuário</p>
                                         </div>
                                     </div>
 

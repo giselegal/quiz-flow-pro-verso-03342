@@ -32,7 +32,7 @@ type ViewportMode = 'desktop' | 'tablet' | 'mobile' | 'xl';
 const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     stepNumber = 1,
     className = '',
-    onStepChange
+    onStepChange,
 }) => {
     // Hooks
     const editorContext = useEditor();
@@ -69,7 +69,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
             safeCurrentStep,
             blocksCount: blocks.length,
             blocks: blocks.map(b => ({ id: b.id, type: b.type, properties: Object.keys(b.properties || {}) })),
-            stepBlocksRef: state.stepBlocks
+            stepBlocksRef: state.stepBlocks,
         });
         return blocks;
     }, [safeCurrentStep, state.stepBlocks]);
@@ -77,7 +77,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Drag and Drop
     const { isDragging, handleDragStart, handleDragEnd } = useEditorDragAndDrop({
         currentStepData: currentStepData as any,
-        currentStepKey: currentStepKey,
+        currentStepKey,
         actions: actions as any,
         notification: notification as any,
     });
@@ -88,7 +88,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
             (acc[c.category] = acc[c.category] || []).push(c);
             return acc;
         }, {}),
-        []
+        [],
     );
 
     // Block selecionado - com deep logging
@@ -103,9 +103,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
                 propertiesKeys: Object.keys(block.properties || {}),
                 contentKeys: block.content ? Object.keys(block.content) : [],
                 fullProperties: block.properties,
-                fullContent: block.content
+                fullContent: block.content,
             } : null,
-            totalBlocksInStep: currentStepData.length
+            totalBlocksInStep: currentStepData.length,
         });
         return block;
     }, [currentStepData, selectedBlockId]);
@@ -116,7 +116,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
             selectedBlockId,
             selectedBlock: selectedBlock ? { id: selectedBlock.id, type: selectedBlock.type } : null,
             currentStepData: currentStepData.length,
-            currentStepKey
+            currentStepKey,
         });
     }, [selectedBlockId, selectedBlock, currentStepData.length, currentStepKey]);
 
@@ -131,7 +131,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     const getStepAnalysis = useCallback((step: number) => ({
         icon: 'info' as const,
         label: `Step ${step}`,
-        desc: `Configuração do step ${step}`
+        desc: `Configuração do step ${step}`,
     }), []);
 
     // Extrair funções estáveis
@@ -155,8 +155,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
             selectedBlockBeforeUpdate: selectedBlock ? {
                 id: selectedBlock.id,
                 properties: selectedBlock.properties,
-                content: selectedBlock.content
-            } : null
+                content: selectedBlock.content,
+            } : null,
         });
 
         if (selectedBlockId) {
@@ -167,7 +167,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
             setTimeout(() => {
                 appLogger.debug('⏰ Estado após updateBlock (1s delay):', {
                     newStepBlocks: state.stepBlocks,
-                    currentStepAfterUpdate: state.stepBlocks?.[currentStepKey]
+                    currentStepAfterUpdate: state.stepBlocks?.[currentStepKey],
                 });
             }, 100);
         } else {

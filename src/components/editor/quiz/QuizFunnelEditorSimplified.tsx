@@ -21,7 +21,7 @@ interface QuizFunnelEditorProps {
 type EditableQuizStep = QuizStep & { id: string };
 
 const STEP_TYPES: Array<QuizStep['type']> = [
-    'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer'
+    'intro', 'question', 'strategic-question', 'transition', 'transition-result', 'result', 'offer',
 ];
 
 function createBlankStep(type: QuizStep['type']): EditableQuizStep {
@@ -35,7 +35,7 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
                 formQuestion: 'Como posso te chamar?',
                 placeholder: 'Seu nome...',
                 buttonText: 'Começar',
-                nextStep: ''
+                nextStep: '',
             };
         case 'question':
             return {
@@ -46,9 +46,9 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
                 requiredSelections: 3,
                 options: [
                     { id: 'opt-1', text: 'Opção 1' },
-                    { id: 'opt-2', text: 'Opção 2' }
+                    { id: 'opt-2', text: 'Opção 2' },
                 ],
-                nextStep: ''
+                nextStep: '',
             };
         case 'strategic-question':
             return {
@@ -57,9 +57,9 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
                 questionText: 'Pergunta estratégica...',
                 options: [
                     { id: 'estr-1', text: 'Resposta A' },
-                    { id: 'estr-2', text: 'Resposta B' }
+                    { id: 'estr-2', text: 'Resposta B' },
                 ],
-                nextStep: ''
+                nextStep: '',
             };
         case 'transition':
             return { id: baseId, type: 'transition', title: 'Transição...', text: 'Processando...', nextStep: '' };
@@ -78,7 +78,7 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
     // 🚨 Console warning para desenvolvedores
     appLogger.warn(
         '⚠️ DEPRECATED: QuizFunnelEditorSimplified será removido em 01/nov/2025. ' +
-        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
     );
 
     const crud = useUnifiedCRUD();
@@ -173,7 +173,7 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
             style={{
                 color: '#1a1716',
                 backgroundColor: 'white',
-                '--tw-text-opacity': '1'
+                '--tw-text-opacity': '1',
             } as React.CSSProperties}
         >
             <div className="h-10 border-b flex items-center gap-2 px-3 text-xs bg-muted/30">
@@ -260,7 +260,7 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
                                             <Button size="sm" variant="ghost" onClick={() =>
                                                 updateStep(selectedStep.id, {
                                                     options: [...(selectedStep.options || []),
-                                                    { id: `opt-${Date.now()}`, text: 'Nova opção' }]
+                                                    { id: `opt-${Date.now()}`, text: 'Nova opção' }],
                                                 })
                                             }>+ Add</Button>
                                         </div>

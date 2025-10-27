@@ -24,7 +24,7 @@ import {
     CheckCircle,
     Target,
     BarChart3,
-    Sparkles
+    Sparkles,
 } from 'lucide-react';
 import type { TemplateConfig } from './config';
 
@@ -62,7 +62,7 @@ const TemplateDetailsModal: React.FC<TemplateDetailsModalProps> = ({
     onClose,
     onPreview,
     onEdit,
-    onDuplicate
+    onDuplicate,
 }) => {
     if (!template) return null;
 

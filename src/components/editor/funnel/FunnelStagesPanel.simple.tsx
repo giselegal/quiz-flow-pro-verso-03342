@@ -12,7 +12,7 @@ const FunnelStagesPanel: React.FC = () => {
     name: 'Step 1', 
     order: 1, 
     description: 'First step',
-    metadata: { blocksCount: 0 }
+    metadata: { blocksCount: 0 },
   }]; // Mock stages
   const activeStageId = `step-${state.currentStep}`;
   const stageActions = { setActiveStage: (id: string) => actions.setCurrentStep(parseInt(id.replace('step-', ''))) };

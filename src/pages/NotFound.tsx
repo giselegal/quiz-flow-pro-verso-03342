@@ -17,7 +17,7 @@ import {
   ArrowLeft,
   Settings,
   AlertTriangle,
-  ExternalLink
+  ExternalLink,
 } from 'lucide-react';
 
 interface NotFoundProps {
@@ -26,8 +26,8 @@ interface NotFoundProps {
 }
 
 const NotFound: React.FC<NotFoundProps> = ({
-  message = "Página não encontrada",
-  showDebugInfo = process.env.NODE_ENV === 'development'
+  message = 'Página não encontrada',
+  showDebugInfo = process.env.NODE_ENV === 'development',
 }) => {
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
 
@@ -35,7 +35,7 @@ const NotFound: React.FC<NotFoundProps> = ({
     { path: '/', label: 'Página Inicial', icon: Home },
     { path: '/admin', label: 'Dashboard Admin', icon: Settings },
     { path: '/editor', label: 'Editor de Funis', icon: ExternalLink },
-    { path: '/templates', label: 'Templates', icon: ExternalLink }
+    { path: '/templates', label: 'Templates', icon: ExternalLink },
   ]; return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="max-w-2xl w-full space-y-8">
@@ -59,7 +59,7 @@ const NotFound: React.FC<NotFoundProps> = ({
               <div className="text-sm text-muted-foreground space-y-1">
                 <p><strong>Rota atual:</strong> {currentPath}</p>
                 <p><strong>Timestamp:</strong> {new Date().toLocaleString()}</p>
-                <p><strong>User Agent:</strong> {typeof navigator !== 'undefined' ? navigator.userAgent.substring(0, 60) + '...' : 'N/A'}</p>
+                <p><strong>User Agent:</strong> {typeof navigator !== 'undefined' ? `${navigator.userAgent.substring(0, 60)  }...` : 'N/A'}</p>
               </div>
             </CardContent>
           </Card>

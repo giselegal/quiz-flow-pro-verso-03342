@@ -52,7 +52,7 @@ export const GlobalEventInterceptor = () => {
               zIndex: getComputedStyle(target)?.zIndex,
               position: getComputedStyle(target)?.position,
             },
-            event: event,
+            event,
             timestamp: Date.now(),
           });
         }

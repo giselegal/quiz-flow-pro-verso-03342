@@ -16,7 +16,7 @@ import {
   ArrowRight,
   Star,
   TrendingUp,
-  Users
+  Users,
 } from 'lucide-react';
 
 const featuredModels = [
@@ -28,7 +28,7 @@ const featuredModels = [
     conversionRate: '73%',
     category: 'Quiz',
     color: 'bg-blue-50 border-blue-200 text-blue-700',
-    icon: '🎨'
+    icon: '🎨',
   },
   {
     id: 'lead-magnet-fashion',
@@ -38,7 +38,7 @@ const featuredModels = [
     conversionRate: '81%',
     category: 'Lead Generation',
     color: 'bg-pink-50 border-pink-200 text-pink-700',
-    icon: '👗'
+    icon: '👗',
   },
   {
     id: 'quiz-personalidade-profissional',
@@ -48,8 +48,8 @@ const featuredModels = [
     conversionRate: '68%',
     category: 'B2B',
     color: 'bg-purple-50 border-purple-200 text-purple-700',
-    icon: '💼'
-  }
+    icon: '💼',
+  },
 ];
 
 const FunnelModelsCard: React.FC = () => {

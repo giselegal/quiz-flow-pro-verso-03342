@@ -17,7 +17,7 @@ interface State {
 
 export class GlobalErrorBoundary extends Component<Props, State> {
   public state: State = {
-    hasError: false
+    hasError: false,
   };
 
   public static getDerivedStateFromError(error: Error): State {
@@ -29,7 +29,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
     
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
 
     // Call optional error handler
@@ -39,7 +39,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'exception', {
         description: error.toString(),
-        fatal: true
+        fatal: true,
       });
     }
   }

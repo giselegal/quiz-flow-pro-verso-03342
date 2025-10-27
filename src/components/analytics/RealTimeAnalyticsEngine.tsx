@@ -22,7 +22,7 @@ import {
   AlertTriangle,
   CheckCircle,
   Target,
-  Gauge
+  Gauge,
 } from 'lucide-react';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { useAnalytics } from '@/hooks/useAnalytics';
@@ -86,7 +86,7 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
             : 'Performance de renderização está otimizada',
           impact: metrics.renderTime > 16 ? 85 : 20,
           effort: 30,
-          autoFixAvailable: true
+          autoFixAvailable: true,
         },
         {
           type: 'ux',
@@ -98,7 +98,7 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
             : 'Responsividade da interface está adequada',
           impact: 70,
           effort: 25,
-          autoFixAvailable: false
+          autoFixAvailable: false,
         },
         {
           type: 'engagement',
@@ -110,8 +110,8 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
             : 'Nível de engajamento está satisfatório',
           impact: 90,
           effort: 60,
-          autoFixAvailable: false
-        }
+          autoFixAvailable: false,
+        },
       ];
       
       setInsights(simulatedInsights);
@@ -124,7 +124,7 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
       trackEvent('ai_insights_generated', {
         insightCount: simulatedInsights.length,
         optimizationScore: newScore,
-        highSeverityIssues: simulatedInsights.filter(i => i.severity === 'high').length
+        highSeverityIssues: simulatedInsights.filter(i => i.severity === 'high').length,
       });
       
     } catch (error) {
@@ -143,7 +143,7 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
         avgDuration: 1200,
         successRate: 92,
         dropOffPoints: ['Componentes complexos', 'Múltiplos targets'],
-        optimizationPotential: 15
+        optimizationPotential: 15,
       },
       {
         action: 'Edição de Propriedades',
@@ -151,7 +151,7 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
         avgDuration: 850,
         successRate: 96,
         dropOffPoints: ['Validação complexa'],
-        optimizationPotential: 8
+        optimizationPotential: 8,
       },
       {
         action: 'Navegação entre Steps',
@@ -159,7 +159,7 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
         avgDuration: 500,
         successRate: 99,
         dropOffPoints: [],
-        optimizationPotential: 3
+        optimizationPotential: 3,
       },
       {
         action: 'Uso de Templates',
@@ -167,8 +167,8 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
         avgDuration: 2500,
         successRate: 88,
         dropOffPoints: ['Seleção de template', 'Customização inicial'],
-        optimizationPotential: 25
-      }
+        optimizationPotential: 25,
+      },
     ];
     
     setBehaviorPatterns(patterns);
@@ -184,14 +184,14 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
       bundleSize: perfMetrics.bundleSize,
       interactionLatency: 50 + Math.random() * 100,
       errorRate: Math.random() * 2,
-      userEngagement: 70 + Math.random() * 25
+      userEngagement: 70 + Math.random() * 25,
     };
 
     // Track métricas
     trackPerformanceMetric({
       metricName: 'editor_performance_composite',
       value: (currentMetrics.renderTime + currentMetrics.interactionLatency) / 2,
-      unit: 'ms'
+      unit: 'ms',
     });
 
     // Gerar insights se necessário
@@ -210,7 +210,7 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
     trackEvent('auto_fix_executed', {
       insightType: insight.type,
       severity: insight.severity,
-      impact: insight.impact
+      impact: insight.impact,
     });
 
     // Simular auto-fix (em produção faria mudanças reais)
@@ -341,7 +341,7 @@ export const RealTimeAnalyticsEngine: React.FC = () => {
           </div>
           
           <Button
-            variant={isActive ? "destructive" : "default"}
+            variant={isActive ? 'destructive' : 'default'}
             onClick={() => setIsActive(!isActive)}
             className="flex items-center gap-2"
           >

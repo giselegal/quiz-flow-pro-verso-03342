@@ -21,7 +21,7 @@ import {
   Cpu,
   AlertTriangle,
   CheckCircle,
-  Clock
+  Clock,
 } from 'lucide-react';
 
 interface AIRecommendation {
@@ -49,7 +49,7 @@ const AIInsightsPage: React.FC = () => {
     abTesting: true,
     fashionAI: false,
     predictiveAnalytics: false,
-    automatedOptimization: false
+    automatedOptimization: false,
   };
 
   // Mock AI status (would come from useFunnelAI)
@@ -61,7 +61,7 @@ const AIInsightsPage: React.FC = () => {
     performanceScore: 87,
     conversionOptimization: 'Alto potencial detectado',
     userBehaviorAnalysis: 'Padrões identificados',
-    recommendations: '4 recomendações ativas'
+    recommendations: '4 recomendações ativas',
   };
 
   // Mock recommendations based on real system capabilities
@@ -74,7 +74,7 @@ const AIInsightsPage: React.FC = () => {
       effort: 'Fácil',
       category: 'Performance',
       applied: false,
-      estimatedImprovement: '+40% velocidade inicial'
+      estimatedImprovement: '+40% velocidade inicial',
     },
     {
       id: 'opt-2', 
@@ -84,7 +84,7 @@ const AIInsightsPage: React.FC = () => {
       effort: 'Médio',
       category: 'Conversão',
       applied: false,
-      estimatedImprovement: '+15% completion rate'
+      estimatedImprovement: '+15% completion rate',
     },
     {
       id: 'opt-3',
@@ -94,7 +94,7 @@ const AIInsightsPage: React.FC = () => {
       effort: 'Médio', 
       category: 'UX',
       applied: false,
-      estimatedImprovement: '+25% responsividade'
+      estimatedImprovement: '+25% responsividade',
     },
     {
       id: 'opt-4',
@@ -104,8 +104,8 @@ const AIInsightsPage: React.FC = () => {
       effort: 'Fácil',
       category: 'Performance',
       applied: true,
-      estimatedImprovement: '+30% primeira carga'
-    }
+      estimatedImprovement: '+30% primeira carga',
+    },
   ];
 
   const handleApplyRecommendation = async (recommendation: AIRecommendation) => {

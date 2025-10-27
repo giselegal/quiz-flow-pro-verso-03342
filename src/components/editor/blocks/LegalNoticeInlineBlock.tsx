@@ -4,7 +4,7 @@ import { appLogger } from '@/utils/logger';
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: string | number,
-  type: 'top' | 'bottom' | 'left' | 'right'
+  type: 'top' | 'bottom' | 'left' | 'right',
 ): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
@@ -103,19 +103,19 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
 
   const textStyles: React.CSSProperties = {
     fontSize: `${fontSize}px`,
-    fontFamily: fontFamily,
-    fontWeight: fontWeight,
+    fontFamily,
+    fontWeight,
     color: textColor,
-    lineHeight: lineHeight,
+    lineHeight,
     margin: 0,
   };
 
   const linkStyles: React.CSSProperties = {
     fontSize: `${fontSize}px`,
-    fontFamily: fontFamily,
-    fontWeight: fontWeight,
+    fontFamily,
+    fontWeight,
     color: linkColor,
-    lineHeight: lineHeight,
+    lineHeight,
     textDecoration: 'none',
     cursor: 'pointer',
     transition: 'all 0.2s ease',

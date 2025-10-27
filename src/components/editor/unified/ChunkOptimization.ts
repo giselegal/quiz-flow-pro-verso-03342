@@ -24,7 +24,7 @@ export const STEP_CHUNKS_CONFIG: StepChunksConfig = {
         name: 'steps-intro',
         priority: 10,
         test: /step-01/,
-        steps: ['step-01']
+        steps: ['step-01'],
     },
 
     // Chunk para steps de perguntas (mais comum)
@@ -32,7 +32,7 @@ export const STEP_CHUNKS_CONFIG: StepChunksConfig = {
         name: 'steps-questions',
         priority: 20,
         test: /step-(02|03|04|05|06|07|08|09|10|11)/,
-        steps: ['step-02', 'step-03', 'step-04', 'step-05', 'step-06', 'step-07', 'step-08', 'step-09', 'step-10', 'step-11']
+        steps: ['step-02', 'step-03', 'step-04', 'step-05', 'step-06', 'step-07', 'step-08', 'step-09', 'step-10', 'step-11'],
     },
 
     // Chunk para step estratégico
@@ -40,7 +40,7 @@ export const STEP_CHUNKS_CONFIG: StepChunksConfig = {
         name: 'steps-strategic',
         priority: 15,
         test: /step-12/,
-        steps: ['step-12']
+        steps: ['step-12'],
     },
 
     // Chunk para transição
@@ -48,7 +48,7 @@ export const STEP_CHUNKS_CONFIG: StepChunksConfig = {
         name: 'steps-transition',
         priority: 5,
         test: /step-13/,
-        steps: ['step-13']
+        steps: ['step-13'],
     },
 
     // Chunk para resultado e oferta (final)
@@ -56,8 +56,8 @@ export const STEP_CHUNKS_CONFIG: StepChunksConfig = {
         name: 'steps-final',
         priority: 30,
         test: /step-(14|15)/,
-        steps: ['step-14', 'step-15']
-    }
+        steps: ['step-14', 'step-15'],
+    },
 };
 
 /**
@@ -75,7 +75,7 @@ export const PRELOAD_STRATEGY = {
             'step-12': ['step-13'], // Após estratégica, carregar transição
             'step-13': ['step-14'], // Após transição, carregar resultado
             'step-14': ['step-15'], // Após resultado, carregar oferta
-        }
+        },
     },
 
     // Steps que devem ser carregados sob demanda
@@ -100,7 +100,7 @@ export const PERFORMANCE_TARGETS = {
         'steps-strategic': 250, // 250ms - importante
         'steps-transition': 150, // 150ms - rápido
         'steps-final': 500,    // 500ms - pode ser mais lento
-    }
+    },
 } as const;
 
 /**
@@ -137,7 +137,7 @@ export const getWebpackChunkConfig = () => ({
                 name: STEP_CHUNKS_CONFIG.intro.name,
                 test: STEP_CHUNKS_CONFIG.intro.test,
                 priority: STEP_CHUNKS_CONFIG.intro.priority,
-                enforce: true
+                enforce: true,
             },
 
             // Steps de perguntas
@@ -145,7 +145,7 @@ export const getWebpackChunkConfig = () => ({
                 name: STEP_CHUNKS_CONFIG.questions.name,
                 test: STEP_CHUNKS_CONFIG.questions.test,
                 priority: STEP_CHUNKS_CONFIG.questions.priority,
-                enforce: true
+                enforce: true,
             },
 
             // Step estratégico
@@ -153,7 +153,7 @@ export const getWebpackChunkConfig = () => ({
                 name: STEP_CHUNKS_CONFIG.strategic.name,
                 test: STEP_CHUNKS_CONFIG.strategic.test,
                 priority: STEP_CHUNKS_CONFIG.strategic.priority,
-                enforce: true
+                enforce: true,
             },
 
             // Step de transição
@@ -161,7 +161,7 @@ export const getWebpackChunkConfig = () => ({
                 name: STEP_CHUNKS_CONFIG.transition.name,
                 test: STEP_CHUNKS_CONFIG.transition.test,
                 priority: STEP_CHUNKS_CONFIG.transition.priority,
-                enforce: true
+                enforce: true,
             },
 
             // Steps finais
@@ -169,10 +169,10 @@ export const getWebpackChunkConfig = () => ({
                 name: STEP_CHUNKS_CONFIG.final.name,
                 test: STEP_CHUNKS_CONFIG.final.test,
                 priority: STEP_CHUNKS_CONFIG.final.priority,
-                enforce: true
-            }
-        }
-    }
+                enforce: true,
+            },
+        },
+    },
 });
 
 export default {
@@ -181,5 +181,5 @@ export default {
     PERFORMANCE_TARGETS,
     getChunkForStep,
     getPreloadSteps,
-    getWebpackChunkConfig
+    getWebpackChunkConfig,
 };

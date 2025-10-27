@@ -127,7 +127,7 @@ class MemoryLeakDetector {
           type: 'component',
           description: `Component ${component.name} alive for ${Math.round(age / 1000)}s`,
           size: 0,
-          timestamp: component.timestamp
+          timestamp: component.timestamp,
         });
       }
     });
@@ -139,7 +139,7 @@ class MemoryLeakDetector {
         type: 'timer',
         description: `${this.timers.size} active timers (potential leak)`,
         size: this.timers.size,
-        timestamp: currentTime
+        timestamp: currentTime,
       });
     }
 
@@ -150,7 +150,7 @@ class MemoryLeakDetector {
         type: 'listener',
         description: `${this.listeners.size} active listeners (potential leak)`,
         size: this.listeners.size,
-        timestamp: currentTime
+        timestamp: currentTime,
       });
     }
 
@@ -182,7 +182,7 @@ class MemoryLeakDetector {
 const leakDetector = new MemoryLeakDetector();
 const objectPool = new ResourcePool(
   () => ({}),
-  (obj) => Object.keys(obj).forEach(key => delete (obj as any)[key])
+  (obj) => Object.keys(obj).forEach(key => delete (obj as any)[key]),
 );
 
 // 🎯 MEMORY MANAGER HOOK
@@ -193,7 +193,7 @@ export const useMemoryManager = () => {
     heapSizeLimit: 0,
     allocatedComponents: 0,
     cleanupOperations: 0,
-    memoryLeaks: []
+    memoryLeaks: [],
   });
 
   const cleanupOperationsRef = useRef(0);
@@ -212,7 +212,7 @@ export const useMemoryManager = () => {
         heapSizeLimit: memInfo.jsHeapSizeLimit,
         allocatedComponents: prev.allocatedComponents,
         cleanupOperations: cleanupOperationsRef.current,
-        memoryLeaks: leaks
+        memoryLeaks: leaks,
       }));
     }
   }, []);
@@ -224,7 +224,7 @@ export const useMemoryManager = () => {
     
     setMetrics(prev => ({
       ...prev,
-      allocatedComponents: prev.allocatedComponents + 1
+      allocatedComponents: prev.allocatedComponents + 1,
     }));
 
     return id;
@@ -236,7 +236,7 @@ export const useMemoryManager = () => {
     
     setMetrics(prev => ({
       ...prev,
-      allocatedComponents: Math.max(0, prev.allocatedComponents - 1)
+      allocatedComponents: Math.max(0, prev.allocatedComponents - 1),
     }));
   }, []);
 
@@ -254,7 +254,7 @@ export const useMemoryManager = () => {
     updateMetrics();
     logger.info('MemoryManager: Cleanup completed', {
       operations: cleanupOperationsRef.current,
-      poolSize: objectPool.size
+      poolSize: objectPool.size,
     });
   }, [updateMetrics]);
 
@@ -305,14 +305,14 @@ export const useMemoryManager = () => {
     stopAutoCleanup,
     getPooledObject,
     returnPooledObject,
-    updateMetrics
+    updateMetrics,
   };
 };
 
 // 🎯 MEMORY MANAGED COMPONENT HOC
 export const withMemoryManagement = <P extends object>(
   WrappedComponent: React.ComponentType<P>,
-  componentName?: string
+  componentName?: string,
 ) => {
   const MemoizedComponent = React.memo(WrappedComponent);
   
@@ -346,7 +346,7 @@ export const MemoryManagerProvider: React.FC<MemoryManagerProviderProps> = ({
   children,
   autoCleanupInterval = 30000,
   enableAutoCleanup = true,
-  enableLeakDetection = true
+  enableLeakDetection = true,
 }) => {
   const memoryManager = useMemoryManager();
 

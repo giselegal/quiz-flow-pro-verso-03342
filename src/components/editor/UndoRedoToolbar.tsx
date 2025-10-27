@@ -54,7 +54,7 @@ export const UndoRedoToolbar: React.FC<UndoRedoToolbarProps> = ({
           disabled
             ? 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
             : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100 shadow-sm hover:shadow-md',
-          'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1'
+          'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1',
         )}
       >
         {children}

@@ -28,7 +28,7 @@ import {
   Edit,
   Play,
   Archive,
-  Trash2
+  Trash2,
 } from 'lucide-react';
 import { QuizFunnelCard } from '@/components/dashboard/QuizFunnelCard';
 import { unifiedCRUDService } from '@/services/UnifiedCRUDService';
@@ -79,7 +79,7 @@ const QuizFunnelsPage: React.FC = () => {
     if (searchTerm.trim()) {
       filtered = filtered.filter(funnel =>
         funnel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        funnel.description.toLowerCase().includes(searchTerm.toLowerCase())
+        funnel.description.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -102,15 +102,15 @@ const QuizFunnelsPage: React.FC = () => {
           stages: [],
           settings: {},
           createdAt: new Date(),
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       ];
 
       // Filtrar apenas funis quiz
       const quizFunnels = allFunnels.filter((funnel: any) =>
         funnel.id.includes('quiz') ||
         funnel.name.toLowerCase().includes('quiz') ||
-        funnel.type === 'quiz'
+        funnel.type === 'quiz',
       );
 
       // Converter para formato QuizFunnel
@@ -138,12 +138,12 @@ const QuizFunnelsPage: React.FC = () => {
             totalSteps: 21,
             completedSteps: funnel.stages?.length || 0,
             analytics: {
-              views: views,
-              completions: completions,
-              conversionRate: conversionRate
-            }
+              views,
+              completions,
+              conversionRate,
+            },
           };
-        })
+        }),
       );
 
       setFunnels(formattedFunnels);
@@ -185,7 +185,7 @@ const QuizFunnelsPage: React.FC = () => {
         // Atualizar status
         await unifiedCRUDService.saveFunnel({
           ...funnel,
-          status: 'published'
+          status: 'published',
         });
 
         // Recarregar lista
@@ -208,7 +208,7 @@ const QuizFunnelsPage: React.FC = () => {
     { value: 'all', label: 'Todos', count: funnels.length },
     { value: 'draft', label: 'Rascunho', count: funnels.filter(f => f.status === 'draft').length },
     { value: 'published', label: 'Publicado', count: funnels.filter(f => f.status === 'published').length },
-    { value: 'archived', label: 'Arquivado', count: funnels.filter(f => f.status === 'archived').length }
+    { value: 'archived', label: 'Arquivado', count: funnels.filter(f => f.status === 'archived').length },
   ];
 
   if (isLoading) {
@@ -271,7 +271,7 @@ const QuizFunnelsPage: React.FC = () => {
           {statusOptions.map(option => (
             <Button
               key={option.value}
-              variant={selectedStatus === option.value ? "default" : "outline"}
+              variant={selectedStatus === option.value ? 'default' : 'outline'}
               size="sm"
               onClick={() => setSelectedStatus(option.value)}
             >
@@ -285,14 +285,14 @@ const QuizFunnelsPage: React.FC = () => {
 
         <div className="flex items-center space-x-2">
           <Button
-            variant={viewMode === 'grid' ? "default" : "outline"}
+            variant={viewMode === 'grid' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setViewMode('grid')}
           >
             <Grid className="w-4 h-4" />
           </Button>
           <Button
-            variant={viewMode === 'list' ? "default" : "outline"}
+            variant={viewMode === 'list' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setViewMode('list')}
           >

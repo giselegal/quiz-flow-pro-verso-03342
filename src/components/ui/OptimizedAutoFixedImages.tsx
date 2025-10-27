@@ -30,7 +30,7 @@ const OptimizedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
             () => {
               fixBlurryImages();
             },
-            { timeout: 3000 }
+            { timeout: 3000 },
           ); // Timeout aumentado para garantir que o LCP já ocorreu
         }, 2000); // Atraso adicional para priorizar renderização e interatividade iniciais
 
@@ -70,7 +70,7 @@ const OptimizedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
             () => {
               fixBlurryImages();
             },
-            { timeout: 2000 }
+            { timeout: 2000 },
           );
         } else {
           setTimeout(fixBlurryImages, 1000);

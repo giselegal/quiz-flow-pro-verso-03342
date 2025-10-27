@@ -109,7 +109,7 @@ export function FunnelPublicationPanel({
     funnelId,
     settings,
     onSettingsChange,
-    onPublish
+    onPublish,
 }: {
     funnelId: string;
     settings: FunnelPublicationSettings;
@@ -218,7 +218,7 @@ export function FunnelPublicationPanel({
                                         value={settings.domain.subdomain || ''}
                                         onChange={(e) => onSettingsChange({
                                             ...settings,
-                                            domain: { ...settings.domain, subdomain: e.target.value }
+                                            domain: { ...settings.domain, subdomain: e.target.value },
                                         })}
                                     />
                                     <p className="text-sm text-muted-foreground mt-1">
@@ -234,7 +234,7 @@ export function FunnelPublicationPanel({
                                         value={settings.domain.slug}
                                         onChange={(e) => onSettingsChange({
                                             ...settings,
-                                            domain: { ...settings.domain, slug: e.target.value }
+                                            domain: { ...settings.domain, slug: e.target.value },
                                         })}
                                     />
                                 </div>
@@ -248,7 +248,7 @@ export function FunnelPublicationPanel({
                                     value={settings.domain.customDomain || ''}
                                     onChange={(e) => onSettingsChange({
                                         ...settings,
-                                        domain: { ...settings.domain, customDomain: e.target.value }
+                                        domain: { ...settings.domain, customDomain: e.target.value },
                                     })}
                                 />
                                 <p className="text-sm text-muted-foreground mt-1">
@@ -282,7 +282,7 @@ export function FunnelPublicationPanel({
                                 results={settings.results}
                                 onChange={(results) => onSettingsChange({
                                     ...settings,
-                                    results
+                                    results,
                                 })}
                             />
                         </CardContent>
@@ -303,7 +303,7 @@ export function FunnelPublicationPanel({
                                 seo={settings.seo}
                                 onChange={(seo) => onSettingsChange({
                                     ...settings,
-                                    seo
+                                    seo,
                                 })}
                             />
                         </CardContent>
@@ -324,7 +324,7 @@ export function FunnelPublicationPanel({
                                 tracking={settings.tracking}
                                 onChange={(tracking) => onSettingsChange({
                                     ...settings,
-                                    tracking
+                                    tracking,
                                 })}
                             />
                         </CardContent>
@@ -345,7 +345,7 @@ export function FunnelPublicationPanel({
                                 security={settings.security}
                                 onChange={(security) => onSettingsChange({
                                     ...settings,
-                                    security
+                                    security,
                                 })}
                             />
                         </CardContent>
@@ -387,7 +387,7 @@ function ResultsConfiguration({ results, onChange }: {
                         size="sm"
                         onClick={() => onChange({
                             ...results,
-                            secondary: [...(results.secondary || []), createEmptyResult()]
+                            secondary: [...(results.secondary || []), createEmptyResult()],
                         })}
                     >
                         ➕ Adicionar
@@ -404,7 +404,7 @@ function ResultsConfiguration({ results, onChange }: {
                                     size="sm"
                                     onClick={() => onChange({
                                         ...results,
-                                        secondary: results.secondary?.filter((_, i) => i !== index)
+                                        secondary: results.secondary?.filter((_, i) => i !== index),
                                     })}
                                 >
                                     🗑️
@@ -549,7 +549,7 @@ function SEOConfiguration({ seo, onChange }: {
                     value={seo.keywords?.join(', ') || ''}
                     onChange={(e) => onChange({
                         ...seo,
-                        keywords: e.target.value.split(',').map(k => k.trim()).filter(Boolean)
+                        keywords: e.target.value.split(',').map(k => k.trim()).filter(Boolean),
                     })}
                     placeholder="quiz de estilo, personalidade, moda"
                 />
@@ -598,7 +598,7 @@ function TrackingConfiguration({ tracking, onChange }: {
                             value={tracking.utmParameters.source || ''}
                             onChange={(e) => onChange({
                                 ...tracking,
-                                utmParameters: { ...tracking.utmParameters, source: e.target.value }
+                                utmParameters: { ...tracking.utmParameters, source: e.target.value },
                             })}
                             placeholder="facebook"
                         />
@@ -611,7 +611,7 @@ function TrackingConfiguration({ tracking, onChange }: {
                             value={tracking.utmParameters.medium || ''}
                             onChange={(e) => onChange({
                                 ...tracking,
-                                utmParameters: { ...tracking.utmParameters, medium: e.target.value }
+                                utmParameters: { ...tracking.utmParameters, medium: e.target.value },
                             })}
                             placeholder="social"
                         />
@@ -624,7 +624,7 @@ function TrackingConfiguration({ tracking, onChange }: {
                             value={tracking.utmParameters.campaign || ''}
                             onChange={(e) => onChange({
                                 ...tracking,
-                                utmParameters: { ...tracking.utmParameters, campaign: e.target.value }
+                                utmParameters: { ...tracking.utmParameters, campaign: e.target.value },
                             })}
                             placeholder="quiz-estilo-2025"
                         />
@@ -637,7 +637,7 @@ function TrackingConfiguration({ tracking, onChange }: {
                             value={tracking.utmParameters.term || ''}
                             onChange={(e) => onChange({
                                 ...tracking,
-                                utmParameters: { ...tracking.utmParameters, term: e.target.value }
+                                utmParameters: { ...tracking.utmParameters, term: e.target.value },
                             })}
                             placeholder="estilo-pessoal"
                         />
@@ -672,7 +672,7 @@ function SecurityConfiguration({ security, onChange }: {
                     value={security.webhookUrls?.join('\n') || ''}
                     onChange={(e) => onChange({
                         ...security,
-                        webhookUrls: e.target.value.split('\n').filter(Boolean)
+                        webhookUrls: e.target.value.split('\n').filter(Boolean),
                     })}
                     placeholder="https://api.meusite.com/webhook/quiz&#10;https://zapier.com/hooks/catch/..."
                     rows={3}
@@ -694,6 +694,6 @@ function createEmptyResult(): ResultConfiguration {
         description: '',
         percentage: 0,
         primaryFunction: '',
-        images: {}
+        images: {},
     };
 }

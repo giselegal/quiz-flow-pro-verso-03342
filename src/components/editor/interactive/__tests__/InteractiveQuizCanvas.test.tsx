@@ -21,7 +21,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(screen.getByText('Quiz de Estilo')).toBeInTheDocument();
@@ -32,7 +32,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(screen.getByText('Etapa 1')).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(screen.getByText('Qual é sua cor favorita?')).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const opcaoAzul = screen.getByText('Azul');
@@ -73,7 +73,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Tentar ir para próxima etapa sem responder
@@ -82,7 +82,7 @@ describe('InteractiveQuizCanvas', () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText('Complete todos os campos obrigatórios para continuar')
+          screen.getByText('Complete todos os campos obrigatórios para continuar'),
         ).toBeInTheDocument();
       });
     });
@@ -91,7 +91,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Selecionar uma opção
@@ -117,7 +117,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const opcaoAzul = screen.getByText('Azul');
@@ -152,7 +152,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(screen.getByText('Etapa 2')).toBeInTheDocument();
@@ -164,7 +164,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Na primeira etapa, não deve haver botão anterior
@@ -175,7 +175,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Responder primeira questão e avançar
@@ -202,7 +202,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Selecionar opção da categoria 'cool'
@@ -221,7 +221,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Ir para segunda etapa (campo de input)
@@ -247,7 +247,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Navegar para campo de input
@@ -277,7 +277,7 @@ describe('InteractiveQuizCanvas', () => {
       render(
         <TestWrapper>
           <InteractiveQuizCanvas />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Simular clique em próximo com delay
@@ -305,7 +305,7 @@ describe('InteractiveQuizCanvas - Integração', () => {
     render(
       <EditorProvider funnelId="test-complex-funnel">
         <InteractiveQuizCanvas />
-      </EditorProvider>
+      </EditorProvider>,
     );
 
     expect(screen.getByText('Seção 2')).toBeInTheDocument();
@@ -316,7 +316,7 @@ describe('InteractiveQuizCanvas - Integração', () => {
     render(
       <EditorProvider funnelId="test-empty-funnel">
         <InteractiveQuizCanvas />
-      </EditorProvider>
+      </EditorProvider>,
     );
 
     expect(screen.getByText('Nenhum conteúdo disponível')).toBeInTheDocument();

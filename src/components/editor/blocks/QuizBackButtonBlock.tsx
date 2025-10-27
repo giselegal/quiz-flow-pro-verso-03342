@@ -86,7 +86,7 @@ export const QuizBackButtonBlock: React.FC<QuizBackButtonBlockProps> = ({
       className={cn(
         'inline-block transition-all',
         isSelected && 'ring-2 ring-primary rounded',
-        className
+        className,
       )}
       style={containerStyle}
       onClick={onClick}

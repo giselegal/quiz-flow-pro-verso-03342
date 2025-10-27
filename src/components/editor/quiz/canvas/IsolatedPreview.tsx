@@ -52,7 +52,7 @@ const PreviewContainer: React.FC<{ children: React.ReactNode }> = ({ children })
         'w-full': previewDevice === 'desktop',
         'max-w-[375px] mx-auto border-x': previewDevice === 'mobile',
         'max-w-[768px] mx-auto border-x': previewDevice === 'tablet',
-      }
+      },
     );
   }, [previewDevice]);
 
@@ -70,7 +70,7 @@ const PreviewContainer: React.FC<{ children: React.ReactNode }> = ({ children })
 export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
   blocks,
   funnelId,
-  className
+  className,
 }) => {
   // 🎯 FASE 3: CONECTAR ao editor context
   const editorCtx = useEditor({ optional: true } as any);
@@ -80,7 +80,7 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
     blocksCount: blocks.length,
     funnelId,
     selectedBlockId,
-    hasEditorContext: !!editorCtx
+    hasEditorContext: !!editorCtx,
   });
 
   // 🎯 FASE 3: REAGIR a mudanças nos blocos (com debounce implícito via useEffect)
@@ -88,7 +88,7 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
     appLogger.debug('⚡ Preview atualizado:', {
       blocksCount: blocks.length,
       selectedBlock: selectedBlockId,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }, [blocks, selectedBlockId]);
 
@@ -159,7 +159,7 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
  * Lazy-loaded version do IsolatedPreview
  */
 export const LazyIsolatedPreview = React.lazy(() =>
-  Promise.resolve({ default: IsolatedPreview })
+  Promise.resolve({ default: IsolatedPreview }),
 );
 
 export default IsolatedPreview;

@@ -88,10 +88,10 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 }) => {
     // Estado local para edição simples de scoring (UI leve)
     const [tieBreak, setTieBreak] = React.useState<'alphabetical' | 'first' | 'natural-first' | 'random'>(
-        (currentRuntimeScoring?.tieBreak as any) || 'alphabetical'
+        (currentRuntimeScoring?.tieBreak as any) || 'alphabetical',
     );
     const [weightsText, setWeightsText] = React.useState<string>(
-        currentRuntimeScoring?.weights ? JSON.stringify(currentRuntimeScoring.weights, null, 2) : ''
+        currentRuntimeScoring?.weights ? JSON.stringify(currentRuntimeScoring.weights, null, 2) : '',
     );
 
     React.useEffect(() => {
@@ -164,7 +164,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                                 hasCategory: 'category' in options[0],
                                                 imageUrl: options[0].imageUrl,
                                                 points: options[0].points,
-                                                category: options[0].category
+                                                category: options[0].category,
                                             });
                                         }
                                     }
@@ -192,7 +192,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                                     text: opt.text,
                                                     imageUrl: opt.imageUrl || opt.image || '❌ AUSENTE',
                                                     points: opt.points ?? opt.score ?? '❌ AUSENTE',
-                                                    category: opt.category || '❌ AUSENTE'
+                                                    category: opt.category || '❌ AUSENTE',
                                                 });
                                             });
                                         }
@@ -267,7 +267,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                 <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">Mapa de Ofertas</h3>
                                 <p className="text-[11px] text-muted-foreground leading-relaxed">Edite as 4 variações de oferta personalizadas. Use <code>{'{userName}'}</code> nos textos.</p>
                                 <React.Suspense fallback={<div className="text-[11px] text-muted-foreground">Carregando editor de ofertas…</div>}>
-                                    <OfferMapComponent mode="editor" content={{ offerMap: selectedStep?.offerMap || {} }} onUpdate={onOfferMapUpdate} userName={"Preview"} />
+                                    <OfferMapComponent mode="editor" content={{ offerMap: selectedStep?.offerMap || {} }} onUpdate={onOfferMapUpdate} userName={'Preview'} />
                                 </React.Suspense>
                             </div>
                         ) : (

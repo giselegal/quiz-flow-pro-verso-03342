@@ -42,7 +42,7 @@ export class UnifiedErrorBoundary extends Component<
     this.state = {
       hasError: false,
       errorContext: props.context || 'global',
-      retryCount: 0
+      retryCount: 0,
     };
   }
 
@@ -62,7 +62,7 @@ export class UnifiedErrorBoundary extends Component<
 
     this.setState({ 
       errorInfo,
-      errorContext: context
+      errorContext: context,
     });
 
     // 🔔 Callback personalizado
@@ -90,7 +90,7 @@ export class UnifiedErrorBoundary extends Component<
     const criticalErrors = [
       'ChunkLoadError',  // Bundle loading issues
       'TypeError: Cannot read properties of null', // Ref errors
-      'Maximum update depth exceeded' // Infinite render loops
+      'Maximum update depth exceeded', // Infinite render loops
     ];
 
     return !criticalErrors.some(critical => error.message.includes(critical));
@@ -116,7 +116,7 @@ export class UnifiedErrorBoundary extends Component<
       hasError: false,
       error: undefined,
       errorInfo: undefined,
-      retryCount: prevState.retryCount + 1
+      retryCount: prevState.retryCount + 1,
     }));
   };
 
@@ -126,8 +126,8 @@ export class UnifiedErrorBoundary extends Component<
   private renderContextualFallback(): ReactNode {
     const { errorContext } = this.state;
 
-    const baseClasses = "min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100";
-    const cardClasses = "max-w-md w-full bg-white rounded-xl shadow-lg p-6 mx-4";
+    const baseClasses = 'min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100';
+    const cardClasses = 'max-w-md w-full bg-white rounded-xl shadow-lg p-6 mx-4';
 
     // 🎨 CONTEXTOS ESPECÍFICOS
     switch (errorContext) {

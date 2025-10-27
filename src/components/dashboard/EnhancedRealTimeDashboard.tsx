@@ -21,7 +21,7 @@ import {
     Globe,
     Smartphone,
     Monitor,
-    BarChart3
+    BarChart3,
 } from 'lucide-react';
 
 // ============================================================================
@@ -45,20 +45,20 @@ const MetricCard: React.FC<MetricCardProps> = ({
     icon,
     trend = 'neutral',
     color = 'blue',
-    isLoading = false
+    isLoading = false,
 }) => {
     const colorClasses = {
         green: 'border-green-200 bg-gradient-to-br from-green-50 to-green-100 text-green-700',
         blue: 'border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700',
         brand: 'border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 text-slate-700',
         orange: 'border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 text-orange-700',
-        purple: 'border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 text-purple-700'
+        purple: 'border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 text-purple-700',
     };
 
     const trendColors = {
         up: 'text-green-600',
         down: 'text-red-600',
-        neutral: 'text-gray-600'
+        neutral: 'text-gray-600',
     };
 
     if (isLoading) {
@@ -144,11 +144,11 @@ const SimpleLineChart: React.FC<SimpleLineChartProps> = ({ data, title }) => {
     const maxValue = Math.max(...data.map(d => d.conversions));
     const points = data.map((item, index) => ({
         x: (index / (data.length - 1)) * 100,
-        y: 100 - (item.conversions / maxValue) * 80
+        y: 100 - (item.conversions / maxValue) * 80,
     }));
 
     const pathData = points.map((point, index) => 
-        `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`
+        `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`,
     ).join(' ');
 
     return (
@@ -212,7 +212,7 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                 activeUsersRealTime: metrics.activeUsersRealTime,
                 sessionsLastHour: metrics.sessionsLastHour,
                 conversionRate: metrics.conversionRate,
-                source: 'EnhancedUnifiedDataService (Supabase)'
+                source: 'EnhancedUnifiedDataService (Supabase)',
             });
 
         } catch (error) {
@@ -395,7 +395,7 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                                     label: device.name,
                                     value: device.percentage,
                                     color: device.name === 'Desktop' ? 'bg-blue-500' : 
-                                           device.name === 'Mobile' ? 'bg-green-500' : 'bg-purple-500'
+                                           device.name === 'Mobile' ? 'bg-green-500' : 'bg-purple-500',
                                 }))}
                             />
                         )}
@@ -417,7 +417,7 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                                     label: country.country,
                                     value: country.users,
                                     color: index === 0 ? 'bg-green-500' : 
-                                           index === 1 ? 'bg-blue-500' : 'bg-gray-500'
+                                           index === 1 ? 'bg-blue-500' : 'bg-gray-500',
                                 }))}
                             />
                         )}
@@ -458,7 +458,7 @@ const EnhancedRealTimeDashboard: React.FC = () => {
                                 value: browser.percentage,
                                 color: index === 0 ? 'bg-orange-500' : 
                                        index === 1 ? 'bg-blue-500' : 
-                                       index === 2 ? 'bg-red-500' : 'bg-gray-500'
+                                       index === 2 ? 'bg-red-500' : 'bg-gray-500',
                             }))}
                         />
                     )}

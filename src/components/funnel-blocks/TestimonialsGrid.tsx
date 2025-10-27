@@ -192,7 +192,7 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
     deviceView || 'desktop',
     'tight',
     'full',
-    className
+    className,
   );
 
   return (

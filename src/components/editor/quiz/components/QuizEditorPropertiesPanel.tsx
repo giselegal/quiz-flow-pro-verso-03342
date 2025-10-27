@@ -24,7 +24,7 @@ const QuizEditorPropertiesPanel: React.FC<QuizEditorPropertiesPanelProps> = memo
     selectedBlockId,
     isVisible,
     onUpdateStep,
-    onClose
+    onClose,
 }) => {
     // Handle input change
     const handleInputChange = useCallback((field: keyof EditableQuizStep, value: any) => {
@@ -172,7 +172,7 @@ const QuizEditorPropertiesPanel: React.FC<QuizEditorPropertiesPanelProps> = memo
                                     value={option.text}
                                     onChange={(e) => handleArrayInputChange('options', index, {
                                         ...option,
-                                        text: e.target.value
+                                        text: e.target.value,
                                     })}
                                     placeholder={`Opção ${index + 1}`}
                                 />
@@ -181,7 +181,7 @@ const QuizEditorPropertiesPanel: React.FC<QuizEditorPropertiesPanelProps> = memo
                                     value={option.image || ''}
                                     onChange={(e) => handleArrayInputChange('options', index, {
                                         ...option,
-                                        image: e.target.value
+                                        image: e.target.value,
                                     })}
                                     placeholder="URL da imagem (opcional)"
                                 />
@@ -199,7 +199,7 @@ const QuizEditorPropertiesPanel: React.FC<QuizEditorPropertiesPanelProps> = memo
                             onClick={() => handleAddArrayItem('options', {
                                 id: `option-${Date.now()}`,
                                 text: '',
-                                image: ''
+                                image: '',
                             })}
                             className="add-btn"
                         >
@@ -453,7 +453,7 @@ const QuizEditorPropertiesPanel: React.FC<QuizEditorPropertiesPanelProps> = memo
         renderQuestionProperties,
         renderResultProperties,
         renderOfferProperties,
-        renderTransitionProperties
+        renderTransitionProperties,
     ]);
 
     if (!isVisible) return null;

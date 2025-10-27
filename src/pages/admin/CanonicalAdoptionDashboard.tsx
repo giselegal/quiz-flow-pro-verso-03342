@@ -18,7 +18,7 @@ const CanonicalAdoptionDashboard: React.FC = () => {
         [
             { label: 'Chamadas Canônicas', value: stats.totalCanonical, color: 'text-green-600' },
             { label: 'Chamadas Legacy (bridge)', value: stats.totalLegacy, color: 'text-amber-600' },
-            { label: 'Adoção (%)', value: stats.adoptionRate + '%', color: 'text-blue-600' },
+            { label: 'Adoção (%)', value: `${stats.adoptionRate  }%`, color: 'text-blue-600' },
         ]
     ), [stats]);
 

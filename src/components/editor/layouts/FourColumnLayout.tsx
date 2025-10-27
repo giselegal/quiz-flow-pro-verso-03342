@@ -67,7 +67,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
   rightSidebarCollapsible = true,
   leftPanelInitialState = true,
   leftSidebarInitialState = true,
-  rightSidebarInitialState = true
+  rightSidebarInitialState = true,
 }) => {
   // 🎯 COLLAPSIBLE STATE MANAGEMENT
   const [leftPanelOpen, setLeftPanelOpen] = useState(leftPanelInitialState);
@@ -82,31 +82,31 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
         'transition-all duration-300 ease-in-out',
         'border-r border-border bg-card overflow-hidden',
         hideLeftPanelOnMobile && 'hidden lg:flex',
-        'flex-shrink-0'
+        'flex-shrink-0',
       ),
       leftSidebar: cn(
         leftSidebarOpen ? leftSidebarWidth : 'w-0',
         'transition-all duration-300 ease-in-out',
         'border-r border-border bg-card overflow-hidden',
         hideLeftSidebarOnMobile && 'hidden md:flex',
-        'flex-shrink-0'
+        'flex-shrink-0',
       ),
       mainContent: cn(
         'flex-1 bg-background min-w-0',
-        'transition-all duration-300 ease-in-out'
+        'transition-all duration-300 ease-in-out',
       ),
       rightSidebar: cn(
         rightSidebarOpen ? rightSidebarWidth : 'w-0',
         'transition-all duration-300 ease-in-out',
         'border-l border-border bg-card overflow-hidden',
         hideRightSidebarOnMobile && 'hidden xl:flex',
-        'flex-shrink-0'
-      )
+        'flex-shrink-0',
+      ),
     };
   }, [
     leftPanelOpen, leftSidebarOpen, rightSidebarOpen,
     leftPanelWidth, leftSidebarWidth, rightSidebarWidth,
-    hideLeftPanelOnMobile, hideLeftSidebarOnMobile, hideRightSidebarOnMobile
+    hideLeftPanelOnMobile, hideLeftSidebarOnMobile, hideRightSidebarOnMobile,
   ]);
 
   // 🎯 TOGGLE BUTTONS COMPONENT

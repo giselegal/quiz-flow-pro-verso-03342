@@ -12,7 +12,7 @@ describe('SafeBoundary', () => {
         render(
             <SafeBoundary label="Falhou bloco X">
                 <Boom />
-            </SafeBoundary>
+            </SafeBoundary>,
         );
         expect(screen.getByRole('alert')).toHaveTextContent('Falhou bloco X');
     });
@@ -21,7 +21,7 @@ describe('SafeBoundary', () => {
         render(
             <SafeBoundary fallback={<div data-testid="fb">fallback</div>}>
                 <Boom />
-            </SafeBoundary>
+            </SafeBoundary>,
         );
         expect(screen.getByTestId('fb')).toHaveTextContent('fallback');
     });
@@ -31,7 +31,7 @@ describe('SafeBoundary', () => {
         render(
             <SafeBoundary onError={onError}>
                 <Boom />
-            </SafeBoundary>
+            </SafeBoundary>,
         );
         expect(onError).toHaveBeenCalled();
     });

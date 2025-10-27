@@ -29,7 +29,7 @@ import {
     FileText,
     Copy,
     Star,
-    Calendar
+    Calendar,
 } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs';
@@ -230,7 +230,7 @@ const MyTemplatesPage: React.FC = () => {
             <AdminBreadcrumbs
                 items={[
                     { label: 'Dashboard', href: '/admin' },
-                    { label: 'Meus Templates', href: '/admin/meus-templates' }
+                    { label: 'Meus Templates', href: '/admin/meus-templates' },
                 ]}
             />
 

@@ -41,7 +41,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     }
   };
   if (isDebug()) {
-    // eslint-disable-next-line no-console
+     
     appLogger.debug(`🧩 DraggableComponentItem renderizado: ${blockType}`);
   }
 
@@ -53,8 +53,8 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     data: {
       type: 'sidebar-component',
       blockType: String(blockType),
-      title: title,
-      description: description,
+      title,
+      description,
       category: category || 'default',
       source: 'sidebar',
     },
@@ -62,7 +62,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   });
 
   if (isDebug()) {
-    // eslint-disable-next-line no-console
+     
     appLogger.debug(`🔧 useDraggable config para ${blockType}:`, {
       id: draggableId,
       disabled,
@@ -75,26 +75,26 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   // Debug: verificar se o draggable está sendo configurado
   React.useEffect(() => {
     if (!isDebug()) return;
-    // eslint-disable-next-line no-console
+     
     appLogger.debug('🔧 Item configurado:', blockType, 'disabled:', disabled);
-    // eslint-disable-next-line no-console
+     
     appLogger.debug('✅ setNodeRef disponível para', blockType);
 
     // Verificar se listeners foram aplicados
     if (listeners) {
-      // eslint-disable-next-line no-console
+       
       appLogger.debug('🎧 Listeners aplicados a', blockType, Object.keys(listeners));
     } else {
-      // eslint-disable-next-line no-console
+       
       appLogger.warn('⚠️ Listeners NÃO aplicados a', blockType);
     }
 
     // Verificar se attributes foram aplicados
     if (attributes) {
-      // eslint-disable-next-line no-console
+       
       appLogger.debug('🏷️ Attributes aplicados a', blockType, Object.keys(attributes));
     } else {
-      // eslint-disable-next-line no-console
+       
       appLogger.warn('⚠️ Attributes NÃO aplicados a', blockType);
     }
   }, [blockType, disabled, listeners, attributes]);
@@ -102,7 +102,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   // Debug simples para mouse events + FORÇAR eventos DnD
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!isDebug()) return;
-    // eslint-disable-next-line no-console
+     
     appLogger.debug('🖱️ MouseDown no item:', {
       blockType,
       disabled,
@@ -118,20 +118,20 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     // ✅ FORÇA o início do drag programaticamente se os listeners não estão funcionando
     if (!isDragging && e.button === 0) {
       // Botão esquerdo
-      // eslint-disable-next-line no-console
+       
       appLogger.debug('🔄 Tentando forçar início do drag para:', blockType);
     }
   };
 
   const handleMouseEnter = () => {
     if (!isDebug()) return;
-    // eslint-disable-next-line no-console
+     
     appLogger.debug('🖱️ MouseEnter no item:', blockType);
   };
 
   const handleMouseLeave = () => {
     if (!isDebug()) return;
-    // eslint-disable-next-line no-console
+     
     appLogger.debug('🖱️ MouseLeave no item:', blockType);
   };
 
@@ -160,7 +160,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
         // Marcador
         'dnd-draggable-item',
         disabled && 'opacity-30 cursor-not-allowed bg-gray-900/30',
-        className
+        className,
       )}
       style={style}
       data-dragging={isDragging}

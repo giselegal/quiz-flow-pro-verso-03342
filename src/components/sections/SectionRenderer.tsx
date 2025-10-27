@@ -83,15 +83,15 @@ interface SectionRendererProps {
  */
 const SECTION_COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
     // Result sections (existentes)
-    'HeroSection': HeroSection,
-    'StyleProfileSection': StyleProfileSection,
-    'CTAButton': CTAButton,
-    'TransformationSection': TransformationSection,
-    'MethodStepsSection': MethodStepsSection,
-    'BonusSection': BonusSection,
-    'SocialProofSection': SocialProofSection,
-    'OfferSection': OfferSection,
-    'GuaranteeSection': GuaranteeSection,
+    HeroSection,
+    StyleProfileSection,
+    CTAButton,
+    TransformationSection,
+    MethodStepsSection,
+    BonusSection,
+    SocialProofSection,
+    OfferSection,
+    GuaranteeSection,
 
     // Intro sections (novos)
     'intro-hero': IntroHeroSection,
@@ -251,7 +251,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
                     }
                 });
             },
-            { threshold: 0.5 }
+            { threshold: 0.5 },
         );
 
         if (sectionRef.current) {

@@ -58,7 +58,7 @@ const IntroStepAdapter: React.FC<BaseStepProps> = (props) => {
             showLogo: data.showLogo !== false,
             logoUrl: data.logoUrl || '',
             imageIntro: data.imageIntro || '',
-            ...data
+            ...data,
         },
         onNameSubmit: (name: string) => {
             const trimmed = (name || '').trim();
@@ -71,7 +71,7 @@ const IntroStepAdapter: React.FC<BaseStepProps> = (props) => {
             onNext();
         },
         // Props adicionais do UnifiedStepRenderer
-        ...otherProps
+        ...otherProps,
     };
 
     return <OriginalIntroStep {...adaptedProps} />;
@@ -246,7 +246,7 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
                     hasStepData: !!stepData,
                     hasSections: !!stepData?.sections,
                     hasBlocks: !!stepData?.blocks,
-                    type: typeof stepData
+                    type: typeof stepData,
                 });
 
                 // ✅ CORREÇÃO: Verificar se tem sections (template TS) ou blocks (template JSON)
@@ -316,10 +316,10 @@ const TransitionStepAdapter: React.FC<BaseStepProps> = (props) => {
             duration: data.duration || 3000,
             showContinueButton: data.showContinueButton,
             continueButtonText: data.continueButtonText || 'Continuar',
-            ...data
+            ...data,
         },
         onComplete: onNext,
-        ...otherProps
+        ...otherProps,
     };
 
     return (
@@ -376,7 +376,7 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
                     hasStepData: !!stepData,
                     hasSections: !!stepData?.sections,
                     hasBlocks: !!stepData?.blocks,
-                    type: typeof stepData
+                    type: typeof stepData,
                 });
 
                 // ✅ CORREÇÃO: Verificar se tem sections (template TS) ou blocks (template JSON)
@@ -411,7 +411,7 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
     const userProfile = {
         userName: quizState?.userName || 'Usuário',
         resultStyle: quizState?.resultStyle || 'classico',
-        secondaryStyles: quizState?.secondaryStyles || []
+        secondaryStyles: quizState?.secondaryStyles || [],
     };
 
     // Se template tem blocos, usar blocos atômicos
@@ -453,8 +453,8 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
     // Se não há blocos no template, usar StyleResultCard (legado)
     const StyleResultCard = React.lazy(() =>
         import('@/components/editor/quiz/components/StyleResultCard').then(m => ({
-            default: m.StyleResultCard
-        }))
+            default: m.StyleResultCard,
+        })),
     );
 
     const cardProps = {
@@ -464,7 +464,7 @@ const ResultStepAdapter: React.FC<BaseStepProps> = (props) => {
         scores: quizState?.scores,
         mode: 'result' as const,
         onNext,
-        className: 'w-full'
+        className: 'w-full',
     };
 
     return (
@@ -495,8 +495,8 @@ const OfferStepAdapter: React.FC<BaseStepProps> = (props) => {
     // Importar OfferMap dinamicamente
     const OfferMap = React.lazy(() =>
         import('@/components/editor/quiz/components/OfferMap').then(m => ({
-            default: m.OfferMap
-        }))
+            default: m.OfferMap,
+        })),
     );
 
     // Derivar offerKey da resposta estratégica da pergunta 18
@@ -508,18 +508,18 @@ const OfferStepAdapter: React.FC<BaseStepProps> = (props) => {
         'montar-looks-facilidade': 'Montar looks com mais facilidade e confiança',
         'usar-que-tenho': 'Usar o que já tenho e me sentir estilosa',
         'comprar-consciencia': 'Comprar com mais consciência e sem culpa',
-        'ser-admirada': 'Ser admirada pela imagem que transmito'
+        'ser-admirada': 'Ser admirada pela imagem que transmito',
     };
     const offerKey = answerToKey[answer] || 'Montar looks com mais facilidade e confiança' as const;    // Props para OfferMap
     const offerMapProps = {
         content: {
-            offerMap: data.offerMap || {}
+            offerMap: data.offerMap || {},
         },
         mode: 'preview' as const,
         userName: quizState?.userName || 'Usuário',
         selectedOfferKey: offerKey,
         onNext,
-        className: 'w-full'
+        className: 'w-full',
     };
 
     return (
@@ -536,18 +536,18 @@ const createStepConfig = (overrides: Partial<StepConfig> = {}): StepConfig => ({
     allowNavigation: {
         next: true,
         previous: true,
-        ...overrides.allowNavigation
+        ...overrides.allowNavigation,
     },
     validation: {
         required: false,
         rules: [],
-        ...overrides.validation
+        ...overrides.validation,
     },
     metadata: {
         category: 'question',
-        ...overrides.metadata
+        ...overrides.metadata,
     },
-    ...overrides
+    ...overrides,
 });/**
  * 📋 DEFINIÇÕES DOS STEPS DE PRODUÇÃO
  */
@@ -560,15 +560,15 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         config: createStepConfig({
             allowNavigation: { next: true, previous: false },
             validation: { required: true, rules: [{ field: 'userName', required: true }] },
-            metadata: { category: 'intro' }
-        })
+            metadata: { category: 'intro' },
+        }),
     },
     // Perguntas principais (2–11)
     ...Array.from({ length: 10 }, (_, i) => ({
         id: `step-${String(i + 2).padStart(2, '0')}`,
         name: `Pergunta ${i + 1}`,
         component: QuestionStepAdapter,
-        config: createStepConfig({ metadata: { category: 'question' } })
+        config: createStepConfig({ metadata: { category: 'question' } }),
     })),
     // Transição pós-perguntas (12)
     {
@@ -577,8 +577,8 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         component: TransitionStepAdapter,
         config: createStepConfig({
             allowNavigation: { next: false, previous: false },
-            metadata: { category: 'transition' }
-        })
+            metadata: { category: 'transition' },
+        }),
     },
     // Perguntas estratégicas (13–18)
     ...Array.from({ length: 6 }, (_, i) => ({
@@ -587,8 +587,8 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         component: StrategicQuestionStepAdapter,
         config: createStepConfig({
             validation: { required: true },
-            metadata: { category: 'strategic' }
-        })
+            metadata: { category: 'strategic' },
+        }),
     })),
     // Transição para resultado (19)
     {
@@ -598,15 +598,15 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         config: createStepConfig({
             allowNavigation: { next: false, previous: false },
             // Tipo nos dados é 'transition-result'; categoria no registry permanece 'transition'
-            metadata: { category: 'transition' }
-        })
+            metadata: { category: 'transition' },
+        }),
     },
     // Resultado (20)
     {
         id: 'step-20',
         name: 'Seu Resultado',
         component: ResultStepAdapter,
-        config: createStepConfig({ metadata: { category: 'result' } })
+        config: createStepConfig({ metadata: { category: 'result' } }),
     },
     // Oferta (21)
     {
@@ -615,9 +615,9 @@ export const PRODUCTION_STEPS: StepComponent[] = [
         component: OfferStepAdapter,
         config: createStepConfig({
             allowNavigation: { next: false, previous: true },
-            metadata: { category: 'offer' }
-        })
-    }
+            metadata: { category: 'offer' },
+        }),
+    },
 ];
 
 /**
@@ -672,5 +672,5 @@ export {
     StrategicQuestionStepAdapter,
     TransitionStepAdapter,
     ResultStepAdapter,
-    OfferStepAdapter
+    OfferStepAdapter,
 };

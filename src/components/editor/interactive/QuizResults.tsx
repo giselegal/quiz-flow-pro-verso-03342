@@ -350,7 +350,7 @@ Faça você também: [link do quiz]`;
             <button
               onClick={() =>
                 window.open(
-                  `mailto:?subject=Meu Resultado do Quiz&body=${encodeURIComponent(`Descobri meu estilo: ${primaryResult.title}`)}`
+                  `mailto:?subject=Meu Resultado do Quiz&body=${encodeURIComponent(`Descobri meu estilo: ${primaryResult.title}`)}`,
                 )
               }
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-700 font-medium transition-all"
@@ -373,7 +373,7 @@ Faça você também: [link do quiz]`;
         </motion.div>
       </div>
     );
-  }
+  },
 );
 
 QuizResults.displayName = 'QuizResults';

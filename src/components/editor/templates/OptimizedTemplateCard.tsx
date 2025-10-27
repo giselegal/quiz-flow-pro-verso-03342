@@ -43,7 +43,7 @@ export const OptimizedTemplateCard: React.FC<OptimizedTemplateCardProps> = ({
     viewMode,
     onApply,
     onToggleFavorite,
-    onPreview
+    onPreview,
 }) => {
     // Otimizar a thumbnail se for uma URL de imagem
     const { isLoading, compressionRatio } = useOptimizedImage(
@@ -53,8 +53,8 @@ export const OptimizedTemplateCard: React.FC<OptimizedTemplateCardProps> = ({
             maxHeight: viewMode === 'grid' ? 300 : 96,
             quality: 0.8,
             format: 'webp',
-            enableCache: true
-        }
+            enableCache: true,
+        },
     );
 
     // Função para renderizar a thumbnail
@@ -99,7 +99,7 @@ export const OptimizedTemplateCard: React.FC<OptimizedTemplateCardProps> = ({
         return new Intl.DateTimeFormat('pt-BR', {
             day: '2-digit',
             month: 'short',
-            year: 'numeric'
+            year: 'numeric',
         }).format(date);
     };
 

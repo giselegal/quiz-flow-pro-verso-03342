@@ -311,8 +311,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
     <div className="bg-white/90 backdrop-blur-sm border border-stone-200/50 shadow-sm rounded-lg mb-6 p-3 sm:p-4">
       {/* Layout Desktop - só mostrar em telas realmente grandes ou quando não é preview do editor */}
       <div className={cn(
-        "items-center justify-between",
-        mode === 'preview' ? "hidden xl:flex" : "hidden lg:flex"
+        'items-center justify-between',
+        mode === 'preview' ? 'hidden xl:flex' : 'hidden lg:flex',
       )}>
         <div className="flex items-center gap-4">
           <h2 className="text-lg font-semibold text-stone-800">Quiz Style Challenge</h2>
@@ -351,8 +351,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
 
       {/* Layout Mobile/Tablet - mais agressivo para preview do editor */}
       <div className={cn(
-        "space-y-3 sm:space-y-4",
-        mode === 'preview' ? "xl:hidden" : "lg:hidden"
+        'space-y-3 sm:space-y-4',
+        mode === 'preview' ? 'xl:hidden' : 'lg:hidden',
       )}>
         {/* Título e etapa */}
         <div className="flex flex-col space-y-1">
@@ -382,7 +382,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
               'flex-1 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm rounded-lg border transition-colors',
               currentStep === 1
                 ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300'
+                : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300',
             )}
           >
             ← Anterior
@@ -394,7 +394,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
               'flex-1 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm rounded-lg transition-colors text-center',
               nextDisabled
                 ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
+                : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm',
             )}
           >
             {nextLabel}
@@ -500,8 +500,8 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
             <div
               key={block.id || index}
               className={
-                'block-container relative transition-all ' +
-                (isSelected ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg' : '')
+                `block-container relative transition-all ${ 
+                isSelected ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg' : ''}`
               }
               onMouseDown={() => {
                 if (isSelectable && block.id && onBlockClick) {
@@ -556,12 +556,12 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
       }}
     >
       <div className={cn(
-        "container mx-auto py-8 max-w-4xl",
+        'container mx-auto py-8 max-w-4xl',
         // No preview do editor, ajustar padding para responsividade
-        mode === 'preview' ? "px-2 sm:px-4" : "px-6",
+        mode === 'preview' ? 'px-2 sm:px-4' : 'px-6',
         // Se está sendo usado em editor, otimizar para viewport menor
         mode === 'preview' && typeof window !== 'undefined' &&
-        window.location.pathname.includes('/editor') && "max-w-3xl py-4"
+        window.location.pathname.includes('/editor') && 'max-w-3xl py-4',
       )}>
         {/* Apenas mostrar cabeçalho em modo production, não no editor nem no preview do editor */}
         {mode === 'production' && renderHeader()}
@@ -605,7 +605,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
                   'flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg border transition-colors',
                   currentStep === 1
                     ? 'bg-stone-100 text-stone-400 cursor-not-allowed border-stone-200'
-                    : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 shadow-sm'
+                    : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 shadow-sm',
                 )}
               >
                 ← Anterior
@@ -629,7 +629,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
                   'flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-colors',
                   nextDisabled
                     ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
+                    : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm',
                 )}
               >
                 {nextLabel} →
@@ -659,7 +659,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
                     'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg border transition-colors',
                     currentStep === 1
                       ? 'bg-stone-100 text-stone-400 cursor-not-allowed border-stone-200'
-                      : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 shadow-sm'
+                      : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300 shadow-sm',
                   )}
                 >
                   ← Anterior
@@ -672,7 +672,7 @@ export const QuizRenderer: React.FC<QuizRendererProps> = React.memo(({
                     'flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-colors',
                     nextDisabled
                       ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm'
+                      : 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white hover:from-[#A08966] hover:to-[#7A6B4D] shadow-sm',
                   )}
                 >
                   {nextLabel} →

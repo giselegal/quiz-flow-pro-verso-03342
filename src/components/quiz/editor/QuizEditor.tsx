@@ -38,8 +38,8 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
                 ...question,
                 question: question.title || question.question || '',
               }
-            : q
-        )
+            : q,
+        ),
       );
     }
 

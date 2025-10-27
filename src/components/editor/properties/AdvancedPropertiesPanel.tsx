@@ -15,7 +15,7 @@ import React, {
     useEffect,
     useCallback,
     useMemo,
-    useRef
+    useRef,
 } from 'react';
 import { useEditorCore, useEditorElements, useEditorSelection, EditorElement } from '../core/EditorCore';
 
@@ -86,29 +86,29 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 label: 'Content',
                 icon: '📝',
                 order: 1,
-                properties: ['content', 'placeholder']
+                properties: ['content', 'placeholder'],
             },
             {
                 id: 'typography',
                 label: 'Typography',
                 icon: '🔤',
                 order: 2,
-                properties: ['fontSize', 'fontWeight', 'fontFamily', 'lineHeight', 'textAlign']
+                properties: ['fontSize', 'fontWeight', 'fontFamily', 'lineHeight', 'textAlign'],
             },
             {
                 id: 'appearance',
                 label: 'Appearance',
                 icon: '🎨',
                 order: 3,
-                properties: ['color', 'backgroundColor', 'border', 'borderRadius', 'shadow']
+                properties: ['color', 'backgroundColor', 'border', 'borderRadius', 'shadow'],
             },
             {
                 id: 'layout',
                 label: 'Layout',
                 icon: '📐',
                 order: 4,
-                properties: ['width', 'height', 'padding', 'margin']
-            }
+                properties: ['width', 'height', 'padding', 'margin'],
+            },
         ],
         properties: {
             content: {
@@ -118,14 +118,14 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 defaultValue: 'Text Element',
                 required: true,
                 group: 'content',
-                description: 'The text content to display'
+                description: 'The text content to display',
             },
             placeholder: {
                 key: 'placeholder',
                 label: 'Placeholder',
                 type: 'string',
                 group: 'content',
-                description: 'Placeholder text when content is empty'
+                description: 'Placeholder text when content is empty',
             },
             fontSize: {
                 key: 'fontSize',
@@ -134,7 +134,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 defaultValue: 16,
                 validation: { min: 8, max: 72 },
                 unit: 'px',
-                group: 'typography'
+                group: 'typography',
             },
             fontWeight: {
                 key: 'fontWeight',
@@ -146,9 +146,9 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                     { value: '400', label: 'Normal' },
                     { value: '500', label: 'Medium' },
                     { value: '600', label: 'Semi Bold' },
-                    { value: '700', label: 'Bold' }
+                    { value: '700', label: 'Bold' },
                 ],
-                group: 'typography'
+                group: 'typography',
             },
             fontFamily: {
                 key: 'fontFamily',
@@ -160,9 +160,9 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                     { value: 'Arial', label: 'Arial' },
                     { value: 'Helvetica', label: 'Helvetica' },
                     { value: 'Georgia', label: 'Georgia' },
-                    { value: 'Times New Roman', label: 'Times New Roman' }
+                    { value: 'Times New Roman', label: 'Times New Roman' },
                 ],
-                group: 'typography'
+                group: 'typography',
             },
             lineHeight: {
                 key: 'lineHeight',
@@ -170,7 +170,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 type: 'range',
                 defaultValue: 1.5,
                 validation: { min: 1, max: 3 },
-                group: 'typography'
+                group: 'typography',
             },
             textAlign: {
                 key: 'textAlign',
@@ -181,30 +181,30 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                     { value: 'left', label: 'Left' },
                     { value: 'center', label: 'Center' },
                     { value: 'right', label: 'Right' },
-                    { value: 'justify', label: 'Justify' }
+                    { value: 'justify', label: 'Justify' },
                 ],
-                group: 'typography'
+                group: 'typography',
             },
             color: {
                 key: 'color',
                 label: 'Text Color',
                 type: 'color',
                 defaultValue: '#000000',
-                group: 'appearance'
+                group: 'appearance',
             },
             backgroundColor: {
                 key: 'backgroundColor',
                 label: 'Background Color',
                 type: 'color',
                 defaultValue: 'transparent',
-                group: 'appearance'
+                group: 'appearance',
             },
             border: {
                 key: 'border',
                 label: 'Border',
                 type: 'string',
                 placeholder: 'e.g., 1px solid #ccc',
-                group: 'appearance'
+                group: 'appearance',
             },
             borderRadius: {
                 key: 'borderRadius',
@@ -213,14 +213,14 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 defaultValue: 0,
                 validation: { min: 0, max: 50 },
                 unit: 'px',
-                group: 'appearance'
+                group: 'appearance',
             },
             shadow: {
                 key: 'shadow',
                 label: 'Box Shadow',
                 type: 'string',
                 placeholder: 'e.g., 0 2px 4px rgba(0,0,0,0.1)',
-                group: 'appearance'
+                group: 'appearance',
             },
             width: {
                 key: 'width',
@@ -228,7 +228,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 type: 'string',
                 defaultValue: 'auto',
                 suggestions: ['auto', '100%', '50%', '300px'],
-                group: 'layout'
+                group: 'layout',
             },
             height: {
                 key: 'height',
@@ -236,7 +236,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 type: 'string',
                 defaultValue: 'auto',
                 suggestions: ['auto', '100px', '200px', '50vh'],
-                group: 'layout'
+                group: 'layout',
             },
             padding: {
                 key: 'padding',
@@ -244,7 +244,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 type: 'string',
                 defaultValue: '0',
                 placeholder: 'e.g., 10px or 10px 20px',
-                group: 'layout'
+                group: 'layout',
             },
             margin: {
                 key: 'margin',
@@ -252,9 +252,9 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 type: 'string',
                 defaultValue: '0',
                 placeholder: 'e.g., 10px or 10px 20px',
-                group: 'layout'
-            }
-        }
+                group: 'layout',
+            },
+        },
     },
 
     button: {
@@ -265,29 +265,29 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 label: 'Content',
                 icon: '📝',
                 order: 1,
-                properties: ['text', 'icon', 'iconPosition']
+                properties: ['text', 'icon', 'iconPosition'],
             },
             {
                 id: 'behavior',
                 label: 'Behavior',
                 icon: '⚡',
                 order: 2,
-                properties: ['onClick', 'disabled', 'loading', 'type']
+                properties: ['onClick', 'disabled', 'loading', 'type'],
             },
             {
                 id: 'appearance',
                 label: 'Appearance',
                 icon: '🎨',
                 order: 3,
-                properties: ['variant', 'size', 'color', 'backgroundColor', 'borderRadius']
+                properties: ['variant', 'size', 'color', 'backgroundColor', 'borderRadius'],
             },
             {
                 id: 'layout',
                 label: 'Layout',
                 icon: '📐',
                 order: 4,
-                properties: ['width', 'height', 'padding', 'margin']
-            }
+                properties: ['width', 'height', 'padding', 'margin'],
+            },
         ],
         properties: {
             text: {
@@ -306,15 +306,15 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                             return 'Button text should be less than 50 characters';
                         }
                         return null;
-                    }
-                }
+                    },
+                },
             },
             icon: {
                 key: 'icon',
                 label: 'Icon',
                 type: 'string',
                 group: 'content',
-                suggestions: ['✓', '×', '→', '←', '↑', '↓', '⚙️', '❤️', '⭐']
+                suggestions: ['✓', '×', '→', '←', '↑', '↓', '⚙️', '❤️', '⭐'],
             },
             iconPosition: {
                 key: 'iconPosition',
@@ -323,10 +323,10 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 defaultValue: 'left',
                 options: [
                     { value: 'left', label: 'Left' },
-                    { value: 'right', label: 'Right' }
+                    { value: 'right', label: 'Right' },
                 ],
                 group: 'content',
-                conditional: { property: 'icon', value: '', operator: '!==' }
+                conditional: { property: 'icon', value: '', operator: '!==' },
             },
             onClick: {
                 key: 'onClick',
@@ -338,23 +338,23 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                     { value: 'submit', label: 'Submit Form' },
                     { value: 'next', label: 'Next Step' },
                     { value: 'previous', label: 'Previous Step' },
-                    { value: 'custom', label: 'Custom Action' }
+                    { value: 'custom', label: 'Custom Action' },
                 ],
-                group: 'behavior'
+                group: 'behavior',
             },
             disabled: {
                 key: 'disabled',
                 label: 'Disabled',
                 type: 'boolean',
                 defaultValue: false,
-                group: 'behavior'
+                group: 'behavior',
             },
             loading: {
                 key: 'loading',
                 label: 'Loading State',
                 type: 'boolean',
                 defaultValue: false,
-                group: 'behavior'
+                group: 'behavior',
             },
             type: {
                 key: 'type',
@@ -364,9 +364,9 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 options: [
                     { value: 'button', label: 'Button' },
                     { value: 'submit', label: 'Submit' },
-                    { value: 'reset', label: 'Reset' }
+                    { value: 'reset', label: 'Reset' },
                 ],
-                group: 'behavior'
+                group: 'behavior',
             },
             variant: {
                 key: 'variant',
@@ -378,9 +378,9 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                     { value: 'secondary', label: 'Secondary' },
                     { value: 'success', label: 'Success' },
                     { value: 'warning', label: 'Warning' },
-                    { value: 'danger', label: 'Danger' }
+                    { value: 'danger', label: 'Danger' },
                 ],
-                group: 'appearance'
+                group: 'appearance',
             },
             size: {
                 key: 'size',
@@ -390,23 +390,23 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 options: [
                     { value: 'sm', label: 'Small' },
                     { value: 'md', label: 'Medium' },
-                    { value: 'lg', label: 'Large' }
+                    { value: 'lg', label: 'Large' },
                 ],
-                group: 'appearance'
+                group: 'appearance',
             },
             color: {
                 key: 'color',
                 label: 'Text Color',
                 type: 'color',
                 defaultValue: '#ffffff',
-                group: 'appearance'
+                group: 'appearance',
             },
             backgroundColor: {
                 key: 'backgroundColor',
                 label: 'Background Color',
                 type: 'color',
                 defaultValue: '#3b82f6',
-                group: 'appearance'
+                group: 'appearance',
             },
             borderRadius: {
                 key: 'borderRadius',
@@ -415,7 +415,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 defaultValue: 6,
                 validation: { min: 0, max: 50 },
                 unit: 'px',
-                group: 'appearance'
+                group: 'appearance',
             },
             width: {
                 key: 'width',
@@ -423,7 +423,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 type: 'string',
                 defaultValue: 'auto',
                 suggestions: ['auto', '100%', '200px', 'fit-content'],
-                group: 'layout'
+                group: 'layout',
             },
             height: {
                 key: 'height',
@@ -431,7 +431,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 type: 'string',
                 defaultValue: 'auto',
                 suggestions: ['auto', '40px', '50px', '60px'],
-                group: 'layout'
+                group: 'layout',
             },
             padding: {
                 key: 'padding',
@@ -439,7 +439,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 type: 'string',
                 defaultValue: '8px 16px',
                 suggestions: ['4px 8px', '8px 16px', '12px 24px', '16px 32px'],
-                group: 'layout'
+                group: 'layout',
             },
             margin: {
                 key: 'margin',
@@ -447,9 +447,9 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 type: 'string',
                 defaultValue: '0',
                 placeholder: 'e.g., 10px or 10px 20px',
-                group: 'layout'
-            }
-        }
+                group: 'layout',
+            },
+        },
     },
 
     'result-calculation': {
@@ -460,29 +460,29 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 label: 'Cálculo',
                 icon: '🧮',
                 order: 1,
-                properties: ['calculationMethod', 'minThreshold']
+                properties: ['calculationMethod', 'minThreshold'],
             },
             {
                 id: 'styles',
                 label: 'Estilos',
                 icon: '🎨',
                 order: 2,
-                properties: ['scoreMapping']
+                properties: ['scoreMapping'],
             },
             {
                 id: 'logic',
                 label: 'Lógica',
                 icon: '⚡',
                 order: 3,
-                properties: ['winnerSelection', 'tieBreaker']
+                properties: ['winnerSelection', 'tieBreaker'],
             },
             {
                 id: 'lead',
                 label: 'Lead Capture',
                 icon: '📧',
                 order: 4,
-                properties: ['leadCaptureEnabled', 'submitText', 'formFields']
-            }
+                properties: ['leadCaptureEnabled', 'submitText', 'formFields'],
+            },
         ],
         properties: {
             calculationMethod: {
@@ -493,10 +493,10 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 options: [
                     { value: 'weighted_sum', label: 'Soma Ponderada' },
                     { value: 'percentage', label: 'Percentual' },
-                    { value: 'ranking', label: 'Ranking' }
+                    { value: 'ranking', label: 'Ranking' },
                 ],
                 group: 'calculation',
-                description: 'Como os resultados do quiz serão calculados'
+                description: 'Como os resultados do quiz serão calculados',
             },
             minThreshold: {
                 key: 'minThreshold',
@@ -506,7 +506,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 validation: { min: 0, max: 100 },
                 unit: '%',
                 group: 'calculation',
-                description: 'Pontuação mínima para considerar um estilo'
+                description: 'Pontuação mínima para considerar um estilo',
             },
             scoreMapping: {
                 key: 'scoreMapping',
@@ -517,10 +517,10 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                     classico: { min: 0, max: 100, label: 'Clássico' },
                     moderno: { min: 0, max: 100, label: 'Moderno' },
                     criativo: { min: 0, max: 100, label: 'Criativo' },
-                    dramatico: { min: 0, max: 100, label: 'Dramático' }
+                    dramatico: { min: 0, max: 100, label: 'Dramático' },
                 },
                 group: 'styles',
-                description: 'Configuração dos estilos e suas faixas de pontuação'
+                description: 'Configuração dos estilos e suas faixas de pontuação',
             },
             winnerSelection: {
                 key: 'winnerSelection',
@@ -529,10 +529,10 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 defaultValue: 'highest_score',
                 options: [
                     { value: 'highest_score', label: 'Maior Pontuação' },
-                    { value: 'threshold_based', label: 'Baseado em Limite' }
+                    { value: 'threshold_based', label: 'Baseado em Limite' },
                 ],
                 group: 'logic',
-                description: 'Como determinar o estilo principal'
+                description: 'Como determinar o estilo principal',
             },
             tieBreaker: {
                 key: 'tieBreaker',
@@ -542,10 +542,10 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 options: [
                     { value: 'secondary_scores', label: 'Pontuações Secundárias' },
                     { value: 'random', label: 'Aleatório' },
-                    { value: 'first_encountered', label: 'Primeiro Encontrado' }
+                    { value: 'first_encountered', label: 'Primeiro Encontrado' },
                 ],
                 group: 'logic',
-                description: 'Como resolver empates entre estilos'
+                description: 'Como resolver empates entre estilos',
             },
             leadCaptureEnabled: {
                 key: 'leadCaptureEnabled',
@@ -553,7 +553,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 type: 'boolean',
                 defaultValue: true,
                 group: 'lead',
-                description: 'Mostrar formulário de captura de leads'
+                description: 'Mostrar formulário de captura de leads',
             },
             submitText: {
                 key: 'submitText',
@@ -562,7 +562,7 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                 defaultValue: 'Receber Guia Gratuito',
                 group: 'lead',
                 conditional: { property: 'leadCaptureEnabled', value: true, operator: '===' },
-                description: 'Texto do botão de submissão do formulário'
+                description: 'Texto do botão de submissão do formulário',
             },
             formFields: {
                 key: 'formFields',
@@ -573,14 +573,14 @@ const PROPERTY_SCHEMAS: Record<string, PropertySchema> = {
                     { value: 'name', label: 'Nome' },
                     { value: 'email', label: 'E-mail' },
                     { value: 'phone', label: 'Telefone' },
-                    { value: 'company', label: 'Empresa' }
+                    { value: 'company', label: 'Empresa' },
                 ],
                 group: 'lead',
                 conditional: { property: 'leadCaptureEnabled', value: true, operator: '===' },
-                description: 'Campos a serem exibidos no formulário'
-            }
-        }
-    }
+                description: 'Campos a serem exibidos no formulário',
+            },
+        },
+    },
 };
 
 // 🎯 PROPERTY INPUT COMPONENTS
@@ -597,7 +597,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
     value,
     onChange,
     error,
-    disabled = false
+    disabled = false,
 }) => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -609,7 +609,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
         // Filter suggestions
         if (definition.suggestions && typeof newValue === 'string') {
             const filtered = definition.suggestions.filter(s =>
-                s.toLowerCase().includes(newValue.toLowerCase())
+                s.toLowerCase().includes(newValue.toLowerCase()),
             );
             setSuggestions(filtered);
             setShowSuggestions(filtered.length > 0 && newValue.length > 0);
@@ -628,8 +628,8 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                 border: `1px solid ${error ? '#ef4444' : '#d1d5db'}`,
                 borderRadius: '4px',
                 fontSize: '14px',
-                outline: 'none'
-            }
+                outline: 'none',
+            },
         };
 
         switch (definition.type) {
@@ -656,7 +656,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                                 boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
                                 zIndex: 1000,
                                 maxHeight: '200px',
-                                overflowY: 'auto'
+                                overflowY: 'auto',
                             }}>
                                 {suggestions.map((suggestion, index) => (
                                     <div
@@ -664,7 +664,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                                         style={{
                                             padding: '8px 12px',
                                             cursor: 'pointer',
-                                            borderBottom: index < suggestions.length - 1 ? '1px solid #f3f4f6' : 'none'
+                                            borderBottom: index < suggestions.length - 1 ? '1px solid #f3f4f6' : 'none',
                                         }}
                                         onMouseDown={() => {
                                             onChange(suggestion);
@@ -724,7 +724,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                             justifyContent: 'space-between',
                             fontSize: '12px',
                             color: '#6b7280',
-                            marginTop: '4px'
+                            marginTop: '4px',
                         }}>
                             <span>{definition.validation?.min ?? 0}</span>
                             <span>
@@ -742,7 +742,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
-                        cursor: disabled ? 'not-allowed' : 'pointer'
+                        cursor: disabled ? 'not-allowed' : 'pointer',
                     }}>
                         <input
                             type="checkbox"
@@ -767,7 +767,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                                 height: '40px',
                                 border: 'none',
                                 borderRadius: '4px',
-                                cursor: 'pointer'
+                                cursor: 'pointer',
                             }}
                         />
                         <input
@@ -785,7 +785,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         onChange={(e) => handleInputChange(e.target.value)}
                         style={{
                             ...baseProps.style,
-                            cursor: disabled ? 'not-allowed' : 'pointer'
+                            cursor: disabled ? 'not-allowed' : 'pointer',
                         }}
                     >
                         {definition.options?.map((option) => (
@@ -808,7 +808,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                         style={{
                             ...baseProps.style,
                             height: '120px',
-                            cursor: disabled ? 'not-allowed' : 'pointer'
+                            cursor: disabled ? 'not-allowed' : 'pointer',
                         }}
                     >
                         {definition.options?.map((option) => (
@@ -881,7 +881,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                             ...baseProps.style,
                             fontFamily: 'Consolas, Monaco, "Courier New", monospace',
                             fontSize: '12px',
-                            lineHeight: '1.4'
+                            lineHeight: '1.4',
                         }}
                     />
                 );
@@ -904,7 +904,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                     marginBottom: '4px',
                     fontSize: '12px',
                     fontWeight: 500,
-                    color: '#374151'
+                    color: '#374151',
                 }}>
                     {definition.label}
                     {definition.required && <span style={{ color: '#ef4444' }}>*</span>}
@@ -918,7 +918,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                 <div style={{
                     marginTop: '4px',
                     fontSize: '12px',
-                    color: '#ef4444'
+                    color: '#ef4444',
                 }}>
                     {error}
                 </div>
@@ -928,7 +928,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
                 <div style={{
                     marginTop: '4px',
                     fontSize: '11px',
-                    color: '#6b7280'
+                    color: '#6b7280',
                 }}>
                     {definition.description}
                 </div>
@@ -959,7 +959,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
     enableHistory = true,
     width = 320,
     height = 600,
-    className = ''
+    className = '',
 }) => {
     const { core } = useEditorCore();
     const { selectedElements: coreSelectedElements } = useEditorSelection();
@@ -973,7 +973,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
     // Merge schemas
     const allSchemas = useMemo(() => ({
         ...PROPERTY_SCHEMAS,
-        ...customSchemas
+        ...customSchemas,
     }), [customSchemas]);
 
     // Get schema for current selection
@@ -1013,7 +1013,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
             .sort((a, b) => (a.order || 0) - (b.order || 0))
             .map(group => ({
                 ...group,
-                properties: group.properties.filter(propKey => propKey in filteredProperties)
+                properties: group.properties.filter(propKey => propKey in filteredProperties),
             }))
             .filter(group => group.properties.length > 0);
     }, [currentSchema, filteredProperties]);
@@ -1065,8 +1065,8 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                 ...prev,
                 [elementId]: {
                     ...prev[elementId] || {},
-                    [propertyKey]: error
-                }
+                    [propertyKey]: error,
+                },
             }));
             return;
         } else {
@@ -1093,8 +1093,8 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                     property: propertyKey,
                     oldValue,
                     newValue,
-                    timestamp: Date.now()
-                }
+                    timestamp: Date.now(),
+                },
             ]);
         }
 
@@ -1102,8 +1102,8 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
         const updates: Partial<EditorElement> = {
             properties: {
                 ...element.properties,
-                [propertyKey]: newValue
-            }
+                [propertyKey]: newValue,
+            },
         };
 
         onElementUpdate?.(elementId, updates);
@@ -1121,8 +1121,8 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
             updates[element.id] = {
                 properties: {
                     ...element.properties,
-                    [propertyKey]: newValue
-                }
+                    [propertyKey]: newValue,
+                },
             };
         });
 
@@ -1186,7 +1186,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#6b7280',
-                    fontSize: '14px'
+                    fontSize: '14px',
                 }}
             >
                 Select an element to edit properties
@@ -1205,21 +1205,21 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                 borderRadius: '8px',
                 display: 'flex',
                 flexDirection: 'column',
-                overflow: 'hidden'
+                overflow: 'hidden',
             }}
         >
             {/* Header */}
             <div style={{
                 padding: '16px',
                 borderBottom: '1px solid #e5e7eb',
-                background: '#f9fafb'
+                background: '#f9fafb',
             }}>
                 <h3 style={{
                     margin: 0,
                     fontSize: '16px',
                     fontWeight: 600,
                     color: '#111827',
-                    marginBottom: '8px'
+                    marginBottom: '8px',
                 }}>
                     Properties
                     {elements.length > 1 && (
@@ -1241,7 +1241,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                         border: '1px solid #d1d5db',
                         borderRadius: '4px',
                         fontSize: '12px',
-                        outline: 'none'
+                        outline: 'none',
                     }}
                 />
             </div>
@@ -1250,7 +1250,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
             <div style={{
                 flex: 1,
                 overflow: 'auto',
-                padding: '16px'
+                padding: '16px',
             }}>
                 {groupedProperties.map(group => {
                     const isCollapsed = collapsedGroups.has(group.id);
@@ -1272,7 +1272,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                                     cursor: 'pointer',
                                     fontSize: '13px',
                                     fontWeight: 500,
-                                    color: '#374151'
+                                    color: '#374151',
                                 }}
                             >
                                 <span>{group.icon}</span>
@@ -1289,7 +1289,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                                     padding: '8px',
                                     background: '#fafafa',
                                     border: '1px solid #f0f0f0',
-                                    borderRadius: '4px'
+                                    borderRadius: '4px',
                                 }}>
                                     {group.properties.map(propKey => {
                                         const definition = filteredProperties[propKey];
@@ -1317,7 +1317,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                                         // For multiple elements (batch editing)
                                         if (enableBatchEditing) {
                                             const commonValue = elements.every(el =>
-                                                el.properties[propKey] === elements[0].properties[propKey]
+                                                el.properties[propKey] === elements[0].properties[propKey],
                                             ) ? elements[0].properties[propKey] : '(mixed)';
 
                                             return (
@@ -1345,12 +1345,12 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                 <div style={{
                     padding: '12px 16px',
                     borderTop: '1px solid #e5e7eb',
-                    background: '#f9fafb'
+                    background: '#f9fafb',
                 }}>
                     <div style={{
                         fontSize: '12px',
                         color: '#6b7280',
-                        marginBottom: '4px'
+                        marginBottom: '4px',
                     }}>
                         Recent Changes
                     </div>
@@ -1358,7 +1358,7 @@ export const AdvancedPropertiesPanel: React.FC<AdvancedPropertiesPanelProps> = (
                         maxHeight: '100px',
                         overflow: 'auto',
                         fontSize: '11px',
-                        color: '#4b5563'
+                        color: '#4b5563',
                     }}>
                         {changeHistory.slice(-5).reverse().map((change, index) => (
                             <div key={index} style={{ marginBottom: '2px' }}>

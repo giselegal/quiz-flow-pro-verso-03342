@@ -37,7 +37,7 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
   } = (block?.properties as any) || {};
 
   const [isButtonEnabled, setIsButtonEnabled] = useState(
-    !requiresValidInput && !requiresGridSelection
+    !requiresValidInput && !requiresGridSelection,
   );
   const [gridSelectionValid, setGridSelectionValid] = useState(!requiresGridSelection);
   const [inputValid, setInputValid] = useState(!requiresValidInput);
@@ -142,7 +142,7 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
       window.dispatchEvent(
         new CustomEvent('quiz-navigate-to-step', {
           detail: { stepId: nextStepId, fromButtonId: block?.id },
-        })
+        }),
       );
     }
 

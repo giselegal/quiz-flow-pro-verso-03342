@@ -34,7 +34,7 @@ const TemplateDiagnosticPage: React.FC = () => {
                 status: AVAILABLE_TEMPLATES.length > 0 ? 'success' : 'error',
                 count: AVAILABLE_TEMPLATES.length,
                 templates: AVAILABLE_TEMPLATES.map(t => ({ id: t.id, name: t.name })),
-                error: null
+                error: null,
             };
 
             // 2. Testar templateLibraryService
@@ -46,7 +46,7 @@ const TemplateDiagnosticPage: React.FC = () => {
                     builtinCount: builtinTemplates.length,
                     totalCount: allTemplates.length,
                     templates: allTemplates.map(t => ({ id: t.id, name: t.name })),
-                    error: null
+                    error: null,
                 };
             } catch (error: any) {
                 results.libraryService = {
@@ -54,7 +54,7 @@ const TemplateDiagnosticPage: React.FC = () => {
                     error: error?.message || String(error),
                     builtinCount: 0,
                     totalCount: 0,
-                    templates: []
+                    templates: [],
                 };
             }
 
@@ -65,14 +65,14 @@ const TemplateDiagnosticPage: React.FC = () => {
                     status: unifiedTemplates.length > 0 ? 'success' : 'warning',
                     count: unifiedTemplates.length,
                     templates: unifiedTemplates.map(t => ({ id: t.id, name: t.name })),
-                    error: null
+                    error: null,
                 };
             } catch (error: any) {
                 results.unifiedRegistry = {
                     status: 'error',
                     error: error?.message || String(error),
                     count: 0,
-                    templates: []
+                    templates: [],
                 };
             }
 
@@ -83,14 +83,14 @@ const TemplateDiagnosticPage: React.FC = () => {
                     status: 'success',
                     count: myTemplates.length,
                     templates: myTemplates.map(t => ({ id: t.id, name: t.name })),
-                    error: null
+                    error: null,
                 };
             } catch (error: any) {
                 results.userTemplates = {
                     status: 'error',
                     error: error?.message || String(error),
                     count: 0,
-                    templates: []
+                    templates: [],
                 };
             }
 
@@ -103,7 +103,7 @@ const TemplateDiagnosticPage: React.FC = () => {
                         status: 'success',
                         accessible: true,
                         sampleTemplate: { id: templateData.metadata?.id, name: templateData.metadata?.name },
-                        error: null
+                        error: null,
                     };
                 } else {
                     throw new Error(`HTTP ${response.status}`);
@@ -113,7 +113,7 @@ const TemplateDiagnosticPage: React.FC = () => {
                     status: 'error',
                     accessible: false,
                     error: error?.message || String(error),
-                    sampleTemplate: null
+                    sampleTemplate: null,
                 };
             }
 
@@ -125,7 +125,7 @@ const TemplateDiagnosticPage: React.FC = () => {
             console.error('❌ Erro no diagnóstico:', error);
             results.general = {
                 status: 'error',
-                error: error?.message || String(error)
+                error: error?.message || String(error),
             };
             setDiagnostics(results);
         } finally {

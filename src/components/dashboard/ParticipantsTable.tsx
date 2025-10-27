@@ -26,7 +26,7 @@ import {
     Clock,
     Target,
     Palette,
-    RefreshCw
+    RefreshCw,
 } from 'lucide-react';
 
 // ============================================================================
@@ -148,7 +148,7 @@ const ParticipantsTable: React.FC = () => {
                     time_spent: session.completed_at && session.started_at
                         ? Math.round((new Date(session.completed_at).getTime() - new Date(session.started_at).getTime()) / 1000)
                         : undefined,
-                    status: session.completed_at ? 'completed' : (session.current_step || 0) > 1 ? 'active' : 'abandoned'
+                    status: session.completed_at ? 'completed' : (session.current_step || 0) > 1 ? 'active' : 'abandoned',
                 };
             });
 
@@ -158,7 +158,7 @@ const ParticipantsTable: React.FC = () => {
             // Extrair estilos únicos para filtro
             const styles = [...new Set(participantsData
                 .filter(p => p.final_result?.primaryStyle)
-                .map(p => p.final_result!.primaryStyle)
+                .map(p => p.final_result!.primaryStyle),
             )];
             setAvailableStyles(styles);
 
@@ -244,7 +244,7 @@ const ParticipantsTable: React.FC = () => {
             filtered = filtered.filter(p =>
                 p.user_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 p.session_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                p.final_result?.primaryStyle.toLowerCase().includes(searchTerm.toLowerCase())
+                p.final_result?.primaryStyle.toLowerCase().includes(searchTerm.toLowerCase()),
             );
         }
 
@@ -322,8 +322,8 @@ const ParticipantsTable: React.FC = () => {
                 p.completion_percentage,
                 p.final_result?.primaryStyle || '',
                 formatDuration(p.time_spent),
-                p.status
-            ].join(','))
+                p.status,
+            ].join(',')),
         ].join('\n');
 
         const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -640,7 +640,7 @@ const ParticipantsTable: React.FC = () => {
                                         return (
                                             <Button
                                                 key={pageNum}
-                                                variant={currentPage === pageNum ? "default" : "outline"}
+                                                variant={currentPage === pageNum ? 'default' : 'outline'}
                                                 size="sm"
                                                 onClick={() => goToPage(pageNum)}
                                                 className="w-8 h-8 p-0"

@@ -40,7 +40,7 @@ export default function ModularTransitionStep({
     selectedBlockId,
     onBlockSelect = () => { },
     onOpenProperties = () => { },
-    editor: editorProp
+    editor: editorProp,
 }: ModularTransitionStepProps) {
     const editorContext = useEditor({ optional: true });
     const editor = editorProp || editorContext;
@@ -90,7 +90,7 @@ export default function ModularTransitionStep({
                 blocksCount: blocks.length,
                 blockTypes: blocks.map((b: any) => b.type),
                 isEditable,
-                enableAutoAdvance
+                enableAutoAdvance,
             });
         }
     }, [stepKey, blocks.length, isEditable, enableAutoAdvance]);
@@ -114,7 +114,7 @@ export default function ModularTransitionStep({
         const delay = Number(
             data?.navigation?.autoAdvanceDelay ??
             data?.metadata?.autoAdvanceDelay ??
-            3000
+            3000,
         );
 
         const shouldAutoAdvance = (!!onComplete) && (enableAutoAdvance || !isEditable);
@@ -129,8 +129,8 @@ export default function ModularTransitionStep({
     // Configurar sensores de drag
     const sensors = useSensors(
         useSensor(PointerSensor, {
-            activationConstraint: { distance: 4 }
-        })
+            activationConstraint: { distance: 4 },
+        }),
     );
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -144,7 +144,7 @@ export default function ModularTransitionStep({
             appLogger.debug('🎯 ModularTransitionStep: Novo componente arrastado da biblioteca', {
                 activeId: activeIdStr,
                 overId: over.id,
-                stepKey
+                stepKey,
             });
 
             const componentType = activeIdStr.slice(4); // Remove 'lib:' prefix
@@ -167,7 +167,7 @@ export default function ModularTransitionStep({
                 type: componentType as any, // Type assertion para BlockType
                 order: insertIndex,
                 content: {},
-                properties: {}
+                properties: {},
             };
 
             // Adicionar via editor actions

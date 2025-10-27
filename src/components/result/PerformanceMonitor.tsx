@@ -48,7 +48,7 @@ const PerformanceMonitor: React.FC = () => {
       const preloadBenefit =
         preloadedResults && totalLoadTime
           ? Math.round(
-              ((avgLoadTimeWithoutPreload - totalLoadTime) / avgLoadTimeWithoutPreload) * 100
+              ((avgLoadTimeWithoutPreload - totalLoadTime) / avgLoadTimeWithoutPreload) * 100,
             )
           : null;
 

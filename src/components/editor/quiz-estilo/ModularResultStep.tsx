@@ -105,7 +105,7 @@ export default function ModularResultStep({
     selectedBlockId,
     onBlockSelect = () => { },
     onOpenProperties = () => { },
-    editor: editorProp
+    editor: editorProp,
 }: ModularResultStepProps) {
     const editorContext = useEditor({ optional: true });
     const resultCtx = useResultOptional();
@@ -149,12 +149,12 @@ export default function ModularResultStep({
             user: { name: resultCtx.userProfile.userName },
             result: { styleName: resultCtx.styleConfig?.name },
             calculations: resultCtx.calculations,
-            styleConfig: resultCtx.styleConfig
+            styleConfig: resultCtx.styleConfig,
         };
         return injected.map((b: Block) => ({
             ...b,
             content: interpolateDeep(b.content, ctx),
-            properties: interpolateDeep(b.properties, ctx)
+            properties: interpolateDeep(b.properties, ctx),
         }));
     }, [sourceBlocks, userProfile, resultCtx]);
 
@@ -182,8 +182,8 @@ export default function ModularResultStep({
                     userName: userProfile.userName,
                     resultStyle: userProfile.resultStyle,
                     hasScores: !!userProfile.scores,
-                    hasSecondaryStyles: !!userProfile.secondaryStyles
-                } : 'none'
+                    hasSecondaryStyles: !!userProfile.secondaryStyles,
+                } : 'none',
             });
         }
     }, [stepKey, blocks.length, userProfile]);
@@ -205,8 +205,8 @@ export default function ModularResultStep({
     // Configurar sensores de drag
     const sensors = useSensors(
         useSensor(PointerSensor, {
-            activationConstraint: { distance: 4 }
-        })
+            activationConstraint: { distance: 4 },
+        }),
     );
 
     const handleDragEnd = (event: DragEndEvent) => {
@@ -220,7 +220,7 @@ export default function ModularResultStep({
             appLogger.debug('🎯 ModularResultStep: Novo componente arrastado da biblioteca', {
                 activeId: activeIdStr,
                 overId: over.id,
-                stepKey
+                stepKey,
             });
 
             const componentType = activeIdStr.slice(4); // Remove 'lib:' prefix
@@ -243,7 +243,7 @@ export default function ModularResultStep({
                 type: componentType as any, // Type assertion para BlockType
                 order: insertIndex,
                 content: {},
-                properties: {}
+                properties: {},
             };
 
             // Adicionar via editor actions

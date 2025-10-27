@@ -43,7 +43,7 @@ class CanvasPreviewSyncDiagnostic {
             failedSyncs: 0,
             avgSyncTime: 0,
             lastSyncTimestamp: 0,
-            issues: []
+            issues: [],
         };
         this.syncHistory = [];
         this.observers = [];
@@ -108,7 +108,7 @@ class CanvasPreviewSyncDiagnostic {
             const hasPreviewChanges = mutations.some(mutation =>
                 mutation.target instanceof Element &&
                 (mutation.target.closest('.preview-container') ||
-                    mutation.target.matches('[data-preview-step]'))
+                    mutation.target.matches('[data-preview-step]')),
             );
 
             if (hasPreviewChanges) {
@@ -120,7 +120,7 @@ class CanvasPreviewSyncDiagnostic {
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ['data-preview-step', 'class', 'style']
+            attributeFilter: ['data-preview-step', 'class', 'style'],
         });
     }
 
@@ -150,7 +150,7 @@ class CanvasPreviewSyncDiagnostic {
                     severity: 'high',
                     description: 'Edit feito no canvas mas preview não atualizou em 2s+',
                     timestamp: Date.now(),
-                    autoFixable: true
+                    autoFixable: true,
                 });
                 this.updateSyncMetrics(Date.now() - lastEditTime, false);
                 lastEditTime = 0;
@@ -171,7 +171,7 @@ class CanvasPreviewSyncDiagnostic {
                     severity: 'critical',
                     description: `Preview renderizando ${renderCount} vezes muito rapidamente`,
                     timestamp: Date.now(),
-                    autoFixable: true
+                    autoFixable: true,
                 });
                 resetRenderCount();
             }
@@ -202,7 +202,7 @@ class CanvasPreviewSyncDiagnostic {
                         canvasState: canvasData,
                         previewState: previewData,
                         timestamp: Date.now(),
-                        autoFixable: true
+                        autoFixable: true,
                     });
                 }
             }
@@ -218,7 +218,7 @@ class CanvasPreviewSyncDiagnostic {
                 eventQueue.push({
                     event: eventType,
                     timestamp: Date.now(),
-                    processed: false
+                    processed: false,
                 });
             });
         });
@@ -226,7 +226,7 @@ class CanvasPreviewSyncDiagnostic {
         // Verificar se eventos foram processados
         setInterval(() => {
             const unprocessedEvents = eventQueue.filter(e =>
-                !e.processed && Date.now() - e.timestamp > 3000
+                !e.processed && Date.now() - e.timestamp > 3000,
             );
 
             if (unprocessedEvents.length > 0) {
@@ -235,7 +235,7 @@ class CanvasPreviewSyncDiagnostic {
                     severity: 'high',
                     description: `${unprocessedEvents.length} eventos não processados`,
                     timestamp: Date.now(),
-                    autoFixable: true
+                    autoFixable: true,
                 });
 
                 // Marcar como reportados
@@ -265,7 +265,7 @@ class CanvasPreviewSyncDiagnostic {
             stepCount: previewContainer.querySelectorAll('[data-preview-step]').length,
             selectedStep: previewContainer.querySelector('[data-step-selected]')?.getAttribute('data-step-id'),
             lastUpdate: Date.now(),
-            content: previewContainer.textContent?.slice(0, 100) // Sample content
+            content: previewContainer.textContent?.slice(0, 100), // Sample content
         };
     }
 
@@ -300,7 +300,7 @@ class CanvasPreviewSyncDiagnostic {
     private addSyncIssue(issue: Omit<SyncIssue, 'timestamp'> & { timestamp?: number }) {
         const fullIssue: SyncIssue = {
             ...issue,
-            timestamp: issue.timestamp || Date.now()
+            timestamp: issue.timestamp || Date.now(),
         };
 
         this.metrics.issues.push(fullIssue);
@@ -349,7 +349,7 @@ class CanvasPreviewSyncDiagnostic {
         const canvasData = this.getCanvasData();
         if (canvasData) {
             window.dispatchEvent(new CustomEvent('force-preview-sync', {
-                detail: canvasData
+                detail: canvasData,
             }));
         }
     }
@@ -434,7 +434,7 @@ ${'='.repeat(55)}
 ${metrics.issues.length === 0
                 ? '   ✅ Nenhum problema detectado!'
                 : metrics.issues.slice(-5).map(issue =>
-                    `   ${issue.severity === 'critical' ? '🔴' : issue.severity === 'high' ? '🟡' : '🟢'} ${issue.description}`
+                    `   ${issue.severity === 'critical' ? '🔴' : issue.severity === 'high' ? '🟡' : '🟢'} ${issue.description}`,
                 ).join('\n')
             }
 
@@ -515,7 +515,7 @@ export const CanvasPreviewSyncPanel: React.FC = () => {
             zIndex: 10000,
             maxHeight: '80vh',
             overflow: 'auto',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                 <h3 style={{ margin: 0, fontSize: '14px' }}>🔄 Sync Canvas ↔ Preview</h3>
@@ -528,7 +528,7 @@ export const CanvasPreviewSyncPanel: React.FC = () => {
                         color: 'white',
                         border: 'none',
                         borderRadius: '4px',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
                     }}
                 >
                     {autoRefresh ? 'Auto' : 'Manual'}
@@ -546,7 +546,7 @@ export const CanvasPreviewSyncPanel: React.FC = () => {
                         <div style={{
                             fontSize: '16px',
                             fontWeight: 'bold',
-                            color: parseFloat(successRate) > 90 ? '#4CAF50' : parseFloat(successRate) > 70 ? '#ff9800' : '#f44336'
+                            color: parseFloat(successRate) > 90 ? '#4CAF50' : parseFloat(successRate) > 70 ? '#ff9800' : '#f44336',
                         }}>
                             {successRate}%
                         </div>
@@ -556,7 +556,7 @@ export const CanvasPreviewSyncPanel: React.FC = () => {
                         <div style={{
                             fontSize: '16px',
                             fontWeight: 'bold',
-                            color: metrics.avgSyncTime > 1000 ? '#f44336' : metrics.avgSyncTime > 500 ? '#ff9800' : '#4CAF50'
+                            color: metrics.avgSyncTime > 1000 ? '#f44336' : metrics.avgSyncTime > 500 ? '#ff9800' : '#4CAF50',
                         }}>
                             {metrics.avgSyncTime.toFixed(0)}ms
                         </div>
@@ -566,7 +566,7 @@ export const CanvasPreviewSyncPanel: React.FC = () => {
                         <div style={{
                             fontSize: '16px',
                             fontWeight: 'bold',
-                            color: metrics.issues.length === 0 ? '#4CAF50' : metrics.issues.length < 5 ? '#ff9800' : '#f44336'
+                            color: metrics.issues.length === 0 ? '#4CAF50' : metrics.issues.length < 5 ? '#ff9800' : '#f44336',
                         }}>
                             {metrics.issues.length}
                         </div>
@@ -587,7 +587,7 @@ export const CanvasPreviewSyncPanel: React.FC = () => {
                                     issue.severity === 'high' ? '#f57c00' :
                                         issue.severity === 'medium' ? '#1976d2' : '#388e3c',
                                 borderRadius: '4px',
-                                fontSize: '10px'
+                                fontSize: '10px',
                             }}
                         >
                             <div style={{ fontWeight: 'bold' }}>
@@ -614,7 +614,7 @@ export const CanvasPreviewSyncPanel: React.FC = () => {
                         border: 'none',
                         borderRadius: '4px',
                         cursor: 'pointer',
-                        fontSize: '11px'
+                        fontSize: '11px',
                     }}
                 >
                     📋 Gerar Relatório Completo

@@ -87,7 +87,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       actualBlock?.type || '',
       actualBlock?.id,
       actualBlock,
-      onUpdate // Passa o `onUpdate` do painel diretamente para o hook
+      onUpdate, // Passa o `onUpdate` do painel diretamente para o hook
     );
 
   // ✅ OTIMIZAÇÃO: Logs de debug removidos para melhor performance
@@ -334,7 +334,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
                     <SelectItem key={`${option.value}-${optionIdx}`} value={option.value}>
                       {option.label}
                     </SelectItem>
-                  ) : null
+                  ) : null,
                 )}
               </SelectContent>
             </Select>

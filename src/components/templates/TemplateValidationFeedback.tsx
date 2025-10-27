@@ -30,7 +30,7 @@ export const TemplateValidationFeedback: React.FC<TemplateValidationFeedbackProp
                       <li key={index} className="error-message">
                         {error.message}
                       </li>
-                    ) : null
+                    ) : null,
                   )}
                 </ul>
               </li>

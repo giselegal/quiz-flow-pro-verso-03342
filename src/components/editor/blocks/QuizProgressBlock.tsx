@@ -73,7 +73,7 @@ export const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
       className={cn(
         'w-full transition-all',
         isSelected && 'ring-2 ring-primary rounded',
-        className
+        className,
       )}
       style={containerStyle}
       onClick={onClick}

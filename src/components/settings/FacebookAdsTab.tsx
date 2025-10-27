@@ -81,7 +81,7 @@ export const FacebookAdsTab = () => {
                   <Button
                     onClick={() =>
                       navigator.clipboard.writeText(
-                        `${window.location.origin}?utm_source=facebook&utm_medium=cpc&utm_campaign=${campaignExamples.awareness}&utm_content=carousel_1`
+                        `${window.location.origin}?utm_source=facebook&utm_medium=cpc&utm_campaign=${campaignExamples.awareness}&utm_content=carousel_1`,
                       )
                     }
                     variant="link"
@@ -101,7 +101,7 @@ export const FacebookAdsTab = () => {
                   <Button
                     onClick={() =>
                       navigator.clipboard.writeText(
-                        `${window.location.origin}?utm_source=facebook&utm_medium=cpc&utm_campaign=${campaignExamples.consideration}&utm_content=video_ad`
+                        `${window.location.origin}?utm_source=facebook&utm_medium=cpc&utm_campaign=${campaignExamples.consideration}&utm_content=video_ad`,
                       )
                     }
                     variant="link"
@@ -121,7 +121,7 @@ export const FacebookAdsTab = () => {
                   <Button
                     onClick={() =>
                       navigator.clipboard.writeText(
-                        `${window.location.origin}?utm_source=facebook&utm_medium=cpc&utm_campaign=${campaignExamples.conversion}&utm_content=image_ad`
+                        `${window.location.origin}?utm_source=facebook&utm_medium=cpc&utm_campaign=${campaignExamples.conversion}&utm_content=image_ad`,
                       )
                     }
                     variant="link"

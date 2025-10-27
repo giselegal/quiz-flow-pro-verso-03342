@@ -28,7 +28,7 @@ const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = () => {
     categories,
     isLoading,
     loadComponents,
-    totalComponents
+    totalComponents,
   } = useEditorReusableComponentsSimple();
 
   // Mock additional properties for compatibility

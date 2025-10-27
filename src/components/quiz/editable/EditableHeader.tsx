@@ -24,7 +24,7 @@ export default function EditableHeader({
     progress = 0,
     onBack = () => { },
     isEditable = false,
-    onEdit = () => { }
+    onEdit = () => { },
 }: EditableHeaderProps) {
     const progressPercentage = Math.min(Math.max(progress, 0), 100);
     const translateX = 100 - progressPercentage;
@@ -87,7 +87,7 @@ export default function EditableHeader({
                         className="h-full bg-primary transition-all duration-500 ease-out"
                         style={{
                             transform: `translateX(-${translateX}%)`,
-                            width: '100%'
+                            width: '100%',
                         }}
                     />
                     {isEditable && (

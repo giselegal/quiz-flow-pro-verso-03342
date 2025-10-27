@@ -69,7 +69,7 @@ export const QuizLogoBlock: React.FC<QuizLogoBlockProps> = ({
       className={cn(
         'inline-block transition-all',
         isSelected && 'ring-2 ring-primary',
-        className
+        className,
       )}
       style={containerStyle}
       onClick={onClick}

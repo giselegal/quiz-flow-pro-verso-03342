@@ -49,7 +49,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
     animation = 'shimmer',
     backgroundColor = '#e2e8f0',
     highlightColor = '#f1f5f9',
-    rounded = false
+    rounded = false,
 }) => {
 
     const getSkeletonStyle = (customWidth?: string | number, customHeight?: string | number) => ({
@@ -75,7 +75,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
                     className={`${baseClasses} skeleton-text-line`}
                     style={getSkeletonStyle(
                         index === lines - 1 ? '60%' : '100%', // Última linha mais curta
-                        '1em'
+                        '1em',
                     )}
                 />
             ))}
@@ -108,7 +108,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
                         className={`${baseClasses} skeleton-text-line`}
                         style={getSkeletonStyle(
                             index === 2 ? '70%' : '100%',
-                            '14px'
+                            '14px',
                         )}
                     />
                 ))}

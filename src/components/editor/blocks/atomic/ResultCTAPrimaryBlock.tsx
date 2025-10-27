@@ -12,7 +12,7 @@ import { useResult } from '@/contexts/ResultContext';
 export default function ResultCTAPrimaryBlock({
     block,
     isSelected,
-    onClick
+    onClick,
 }: AtomicBlockProps) {
     // 🎯 Tentar usar context (modo production)
     let contextAvailable = false;
@@ -62,7 +62,7 @@ export default function ResultCTAPrimaryBlock({
                 className="w-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
                 style={{
                     backgroundColor,
-                    color: textColor
+                    color: textColor,
                 }}
             >
                 {text}

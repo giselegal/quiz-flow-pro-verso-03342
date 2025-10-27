@@ -43,7 +43,7 @@ const DEFAULT_BUDGET: PerformanceBudget = {
   maxChunkSize: 500 * 1024,          // 500KB
   maxLoadTime: 3000,                 // 3s
   maxMemoryUsage: 100 * 1024 * 1024, // 100MB
-  warningThreshold: 0.8               // 80%
+  warningThreshold: 0.8,               // 80%
 };
 
 // 🎯 DYNAMIC IMPORT CACHE
@@ -75,7 +75,7 @@ class ImportCache {
     return {
       cacheSize: this.cache.size,
       hitRate: this.hitCount / (this.hitCount + this.missCount),
-      avgLoadTime: Array.from(this.loadTimes.values()).reduce((a, b) => a + b, 0) / this.loadTimes.size || 0
+      avgLoadTime: Array.from(this.loadTimes.values()).reduce((a, b) => a + b, 0) / this.loadTimes.size || 0,
     };
   }
 
@@ -98,7 +98,7 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
     pendingChunks: [],
     memoryUsage: 0,
     loadTime: 0,
-    cacheHitRate: 0
+    cacheHitRate: 0,
   });
 
   const [budgetWarnings, setBudgetWarnings] = useState<string[]>([]);
@@ -114,14 +114,14 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
 
       setMetrics(prev => ({
         ...prev,
-        memoryUsage
+        memoryUsage,
       }));
 
       // Check budget
       if (memoryUsage > finalBudget.maxMemoryUsage * finalBudget.warningThreshold) {
         setBudgetWarnings(prev => [
           ...prev.filter(w => !w.includes('Memory')),
-          `Memory usage: ${(memoryUsage / 1024 / 1024).toFixed(1)}MB (${((memoryUsage / finalBudget.maxMemoryUsage) * 100).toFixed(1)}%)`
+          `Memory usage: ${(memoryUsage / 1024 / 1024).toFixed(1)}MB (${((memoryUsage / finalBudget.maxMemoryUsage) * 100).toFixed(1)}%)`,
         ]);
       }
     }
@@ -134,7 +134,7 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
     setMetrics(prev => ({
       ...prev,
       cacheHitRate: stats.hitRate,
-      loadTime: stats.avgLoadTime
+      loadTime: stats.avgLoadTime,
     }));
 
     // Performance budget checks
@@ -160,7 +160,7 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
   // 🎯 OPTIMIZED DYNAMIC IMPORT
   const optimizedImport = useCallback(async <T,>(
     key: string,
-    loader: () => Promise<{ default: T }>
+    loader: () => Promise<{ default: T }>,
   ): Promise<T> => {
     try {
       const startTime = Date.now();
@@ -205,14 +205,14 @@ export const useBundleOptimizer = (budget: Partial<PerformanceBudget> = {}) => {
     optimizedImport,
     preloadComponent,
     cleanup,
-    cacheStats: importCache.getStats()
+    cacheStats: importCache.getStats(),
   };
 };
 
 // 🎯 SMART COMPONENT LOADER
 export const createSmartLoader = (
   componentPath: string,
-  fallbackPath?: string
+  fallbackPath?: string,
 ) => {
   return React.lazy(() => {
     const loader = () => import(componentPath);
@@ -240,7 +240,7 @@ export interface BundleOptimizerProviderProps {
 export const BundleOptimizerProvider: React.FC<BundleOptimizerProviderProps> = ({
   children,
   budget = {},
-  enableMonitoring = true
+  enableMonitoring = true,
 }) => {
   const optimizer = useBundleOptimizer(budget);
 
@@ -263,7 +263,7 @@ export const BundleOptimizerProvider: React.FC<BundleOptimizerProviderProps> = (
           logger.debug('Bundle: Resource loaded:', {
             name: entry.name,
             duration: entry.duration,
-            size: (entry as any).transferSize
+            size: (entry as any).transferSize,
           });
         }
       });

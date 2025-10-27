@@ -26,7 +26,7 @@ export const DevResultDebug: React.FC = () => {
                 userName: StorageService.safeGetString('userName') || '',
                 quizUserName: StorageService.safeGetString('quizUserName') || '',
                 quizResult: StorageService.safeGetJSON('quizResult'),
-                currentStep: (globalThis as any)?.__quizCurrentStep || ''
+                currentStep: (globalThis as any)?.__quizCurrentStep || '',
             });
 
             // Current stats

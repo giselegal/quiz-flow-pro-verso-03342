@@ -62,7 +62,7 @@ export const DataTab: React.FC<DataTabProps> = ({ analyticsData, loading }) => {
                               'userEmail',
                               'email',
                               'sessionId',
-                            ].includes(key)
+                            ].includes(key),
                         )
                         .map(([key, value]) => (
                           <div key={key} className="text-xs">

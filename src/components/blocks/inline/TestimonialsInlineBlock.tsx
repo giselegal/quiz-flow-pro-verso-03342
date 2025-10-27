@@ -26,7 +26,7 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
         'w-full p-4 rounded-lg transition-all duration-200',
         isSelected && 'ring-2 ring-blue-500',
         'cursor-pointer',
-        className
+        className,
       )}
       onClick={onClick}
     >

@@ -21,10 +21,10 @@ interface EditorLayoutProps {
 
 const EditorLayout: React.FC<EditorLayoutProps> = ({
   children,
-  title = "Editor Neural",
-  subtitle = "Editor visual unificado",
+  title = 'Editor Neural',
+  subtitle = 'Editor visual unificado',
   showBackButton = true,
-  className = ""
+  className = '',
 }) => {
   const [, setLocation] = useLocation();
 

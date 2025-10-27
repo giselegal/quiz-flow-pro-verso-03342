@@ -242,7 +242,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = props => {
     deviceView || 'desktop',
     'tight',
     'full',
-    className
+    className,
   );
 
   return (

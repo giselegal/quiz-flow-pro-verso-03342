@@ -33,7 +33,7 @@ export default function EditableAdvancedOptions({
     onOptionsChange = () => { },
     isEditable = false,
     onEdit = () => { },
-    multiSelect = false
+    multiSelect = false,
 }: EditableAdvancedOptionsProps) {
     const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -57,7 +57,7 @@ export default function EditableAdvancedOptions({
         const newOption: AdvancedOption = {
             id: `option-${Date.now()}`,
             text: 'Nova opção',
-            prefix: String.fromCharCode(65 + options.length) + ')' // A), B), C)...
+            prefix: `${String.fromCharCode(65 + options.length)  })`, // A), B), C)...
         };
 
         const newOptions = [...options, newOption];
@@ -69,14 +69,14 @@ export default function EditableAdvancedOptions({
         // Reajustar prefixos
         const reindexedOptions = newOptions.map((opt, index) => ({
             ...opt,
-            prefix: String.fromCharCode(65 + index) + ')'
+            prefix: `${String.fromCharCode(65 + index)  })`,
         }));
         onEdit('options', reindexedOptions);
     };
 
     const handleOptionEdit = (optionId: string, field: string, value: any) => {
         const newOptions = options.map(opt =>
-            opt.id === optionId ? { ...opt, [field]: value } : opt
+            opt.id === optionId ? { ...opt, [field]: value } : opt,
         );
         onEdit('options', newOptions);
     };
@@ -167,7 +167,7 @@ export default function EditableAdvancedOptions({
                                                 </span>
                                                 <span
                                                     dangerouslySetInnerHTML={{
-                                                        __html: displayText
+                                                        __html: displayText,
                                                     }}
                                                 />
                                             </p>

@@ -23,7 +23,7 @@ export const QuestionTextBlock: React.FC<BlockComponentProps> = ({
         fontWeight = 'bold',
         textAlign = 'center',
         color = '#432818',
-        className: customClassName
+        className: customClassName,
     } = data.props;
 
     return (
@@ -32,7 +32,7 @@ export const QuestionTextBlock: React.FC<BlockComponentProps> = ({
                 'question-text-block relative p-4 transition-all duration-200',
                 isEditable && 'cursor-pointer hover:bg-gray-50',
                 isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/30',
-                customClassName
+                customClassName,
             )}
             onClick={isEditable ? onSelect : undefined}
             data-block-id={data.id}
@@ -59,7 +59,7 @@ export const QuestionTextBlock: React.FC<BlockComponentProps> = ({
                     `text-${fontSize}`,
                     `font-${fontWeight}`,
                     `text-${textAlign}`,
-                    'uppercase tracking-wide'
+                    'uppercase tracking-wide',
                 )}
                 style={{ color }}
             >

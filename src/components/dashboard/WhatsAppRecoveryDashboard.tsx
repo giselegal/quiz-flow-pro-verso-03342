@@ -29,7 +29,7 @@ import {
   Clock,
   Users,
   TrendingUp,
-  Smartphone
+  Smartphone,
 } from 'lucide-react';
 
 // ============================================================================
@@ -45,7 +45,7 @@ export function WhatsAppRecoveryDashboard() {
     stop,
     sendTestMessage,
     isPhoneValid,
-    formatPhone
+    formatPhone,
   } = useWhatsAppCartRecovery();
 
   const { stats, recentActivity } = useWhatsAppRecoveryStats();
@@ -56,7 +56,7 @@ export function WhatsAppRecoveryDashboard() {
     phoneNumberId: '',
     businessAccountId: '',
     webhookVerifyToken: '',
-    apiVersion: 'v18.0'
+    apiVersion: 'v18.0',
   });
   
   const [testPhone, setTestPhone] = useState('');
@@ -73,14 +73,14 @@ export function WhatsAppRecoveryDashboard() {
     
     if (success) {
       toast({
-        title: "✅ Configuração salva",
-        description: "WhatsApp Business API configurado com sucesso"
+        title: '✅ Configuração salva',
+        description: 'WhatsApp Business API configurado com sucesso',
       });
     } else {
       toast({
-        title: "❌ Erro na configuração",
-        description: state.error || "Verifique os dados e tente novamente",
-        variant: "destructive"
+        title: '❌ Erro na configuração',
+        description: state.error || 'Verifique os dados e tente novamente',
+        variant: 'destructive',
       });
     }
     
@@ -93,9 +93,9 @@ export function WhatsAppRecoveryDashboard() {
   const handleTestMessage = async () => {
     if (!isPhoneValid(testPhone)) {
       toast({
-        title: "❌ Telefone inválido",
-        description: "Digite um número de telefone brasileiro válido",
-        variant: "destructive"
+        title: '❌ Telefone inválido',
+        description: 'Digite um número de telefone brasileiro válido',
+        variant: 'destructive',
       });
       return;
     }
@@ -106,14 +106,14 @@ export function WhatsAppRecoveryDashboard() {
     
     if (success) {
       toast({
-        title: "✅ Mensagem enviada",
-        description: `Mensagem de teste enviada para ${formatPhone(testPhone)}`
+        title: '✅ Mensagem enviada',
+        description: `Mensagem de teste enviada para ${formatPhone(testPhone)}`,
       });
     } else {
       toast({
-        title: "❌ Erro ao enviar",
-        description: state.error || "Falha no envio da mensagem",
-        variant: "destructive"
+        title: '❌ Erro ao enviar',
+        description: state.error || 'Falha no envio da mensagem',
+        variant: 'destructive',
       });
     }
     
@@ -127,14 +127,14 @@ export function WhatsAppRecoveryDashboard() {
     if (state.isActive) {
       stop();
       toast({
-        title: "🛑 Agente parado",
-        description: "Recuperação de carrinho desativada"
+        title: '🛑 Agente parado',
+        description: 'Recuperação de carrinho desativada',
       });
     } else {
       start();
       toast({
-        title: "🚀 Agente iniciado",
-        description: "Monitorando carrinhos abandonados"
+        title: '🚀 Agente iniciado',
+        description: 'Monitorando carrinhos abandonados',
       });
     }
   };
@@ -153,18 +153,18 @@ export function WhatsAppRecoveryDashboard() {
         </div>
         
         <div className="flex items-center gap-3">
-          <Badge variant={state.isActive ? "default" : "secondary"}>
-            {state.isActive ? "🟢 Ativo" : "🔴 Inativo"}
+          <Badge variant={state.isActive ? 'default' : 'secondary'}>
+            {state.isActive ? '🟢 Ativo' : '🔴 Inativo'}
           </Badge>
           
           {state.isConfigured && (
             <Button
               onClick={handleToggleAgent}
-              variant={state.isActive ? "destructive" : "default"}
+              variant={state.isActive ? 'destructive' : 'default'}
               size="sm"
             >
               {state.isActive ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
-              {state.isActive ? "Parar" : "Iniciar"}
+              {state.isActive ? 'Parar' : 'Iniciar'}
             </Button>
           )}
         </div>
@@ -378,7 +378,7 @@ export function WhatsAppRecoveryDashboard() {
                 disabled={isConfiguring || !config.accessToken || !config.phoneNumberId}
                 className="w-full"
               >
-                {isConfiguring ? "Configurando..." : "💾 Salvar Configuração"}
+                {isConfiguring ? 'Configurando...' : '💾 Salvar Configuração'}
               </Button>
 
               {state.isConfigured && (
@@ -405,7 +405,7 @@ export function WhatsAppRecoveryDashboard() {
                     Enviado 30 minutos após abandono do carrinho
                   </p>
                   <div className="bg-green-50 p-3 rounded text-sm">
-                    "Olá {"{nome}"}! 👋 Notei que você estava interessado no {"{produto}"}.
+                    "Olá {'{nome}'}! 👋 Notei que você estava interessado no {'{produto}'}.
                     Que tal finalizar sua compra agora? 🎯"
                   </div>
                 </div>
@@ -416,7 +416,7 @@ export function WhatsAppRecoveryDashboard() {
                     Mensagem interativa com botões de ação
                   </p>
                   <div className="bg-blue-50 p-3 rounded text-sm">
-                    "Olá {"{nome}"}! Preparei uma oferta especial para você! 🎁
+                    "Olá {'{nome}'}! Preparei uma oferta especial para você! 🎁
                     [✅ Finalizar Compra] [🎁 Ver Desconto] [❌ Não Tenho Interesse]"
                   </div>
                 </div>
@@ -428,7 +428,7 @@ export function WhatsAppRecoveryDashboard() {
                   </p>
                   <div className="bg-orange-50 p-3 rounded text-sm">
                     "Última chance! 20% OFF com código VOLTA20 ⏰
-                    Válido apenas por 24h! {"{link}"}'"
+                    Válido apenas por 24h! {'{link}'}'"
                   </div>
                 </div>
               </div>
@@ -468,7 +468,7 @@ export function WhatsAppRecoveryDashboard() {
                 className="w-full"
               >
                 <Send className="w-4 h-4 mr-2" />
-                {isTesting ? "Enviando..." : "📤 Enviar Teste"}
+                {isTesting ? 'Enviando...' : '📤 Enviar Teste'}
               </Button>
             </CardContent>
           </Card>
@@ -488,21 +488,21 @@ export function WhatsAppRecoveryDashboard() {
                       buyer: {
                         email: 'teste@email.com',
                         name: 'João Teste',
-                        phone: testPhone
+                        phone: testPhone,
                       },
                       product: {
                         name: 'Curso de Estilo Pessoal',
-                        price: { value: 497, currency_value: 'BRL' }
+                        price: { value: 497, currency_value: 'BRL' },
                       },
                       transaction: {
-                        id: 'test_' + Date.now()
-                      }
-                    }
+                        id: `test_${  Date.now()}`,
+                      },
+                    },
                   };
 
                   toast({
-                    title: "🔄 Webhook simulado",
-                    description: "Carrinho abandonado simulado para teste"
+                    title: '🔄 Webhook simulado',
+                    description: 'Carrinho abandonado simulado para teste',
                   });
                 }}
                 variant="outline"

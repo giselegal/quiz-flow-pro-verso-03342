@@ -105,7 +105,7 @@ export const QuizDemo: React.FC = () => {
                 .sort(([, a], [, b]) => (b as number) - (a as number))
                 .map(([categoria, pontos]) => {
                   const pontuacaoTotal = Math.max(
-                    ...(Object.values(resultados.pontuacoes) as number[])
+                    ...(Object.values(resultados.pontuacoes) as number[]),
                   );
                   const porcentagem = Math.round(((pontos as number) / pontuacaoTotal) * 100);
                   return (
@@ -138,7 +138,7 @@ export const QuizDemo: React.FC = () => {
                   <strong>Categoria Dominante:</strong>{' '}
                   {
                     Object.entries(resultados.pontuacoes).sort(
-                      ([, a], [, b]) => (b as number) - (a as number)
+                      ([, a], [, b]) => (b as number) - (a as number),
                     )[0]?.[0]
                   }
                 </div>

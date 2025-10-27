@@ -22,7 +22,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 }) => {
   const droppableId = React.useMemo(
     () => generateUniqueId({ stepNumber: scopeId ?? 'default', type: 'dropzone' }),
-    [scopeId]
+    [scopeId],
   );
 
   const { setNodeRef, isOver } = useDroppable({
@@ -46,7 +46,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       g.__DND_LOGS = g.__DND_LOGS || new Set<string>();
       if (g.__DND_LOGS.has(key)) return;
       g.__DND_LOGS.add(key);
-      // eslint-disable-next-line no-console
+       
       appLogger.debug('🎯 CanvasDropZone montado!', {
         id: droppableId,
         isEmpty,
@@ -66,7 +66,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
         // ✅ Garante que o root seja tratado como droppable principal nas correções globais
         'dnd-droppable-zone',
         isOver && 'bg-[#B89B7A]/10',
-        className
+        className,
       )}
       role="button"
       aria-roledescription="sortable"
@@ -81,7 +81,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
         <div
           className={cn(
             'relative bg-white rounded-lg shadow-sm min-h-[600px]',
-            isOver && 'ring-2 ring-[#B89B7A]/40'
+            isOver && 'ring-2 ring-[#B89B7A]/40',
           )}
         >
           {children}

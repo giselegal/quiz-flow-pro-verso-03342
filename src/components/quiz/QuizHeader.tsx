@@ -37,7 +37,7 @@ export const QuizHeader: React.FC<QuizHeaderProps> = ({
     ? Math.round(
         ((totalQuestions + currentStrategicQuestionIndex + 1) /
           (totalQuestions + totalNumberOfStrategicQuestions)) *
-          100
+          100,
       )
     : Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100);
 

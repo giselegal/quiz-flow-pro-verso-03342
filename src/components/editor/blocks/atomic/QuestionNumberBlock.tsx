@@ -15,7 +15,7 @@ export default function QuestionNumberBlock({
   isSelected = false,
   isEditable = false,
   onSelect,
-  onOpenProperties
+  onOpenProperties,
 }: QuestionNumberBlockProps) {
   const questionNumber = block.content?.questionNumber || 
                         block.properties?.questionNumber || 

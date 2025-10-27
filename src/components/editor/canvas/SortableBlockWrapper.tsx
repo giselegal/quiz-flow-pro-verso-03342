@@ -25,7 +25,7 @@ interface SortableBlockWrapperProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: number | string,
-  type: 'top' | 'bottom' | 'left' | 'right'
+  type: 'top' | 'bottom' | 'left' | 'right',
 ): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
@@ -87,7 +87,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 
   // 🔧 Integrar propriedades de container diretamente
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
-    block.properties
+    block.properties,
   );
 
   appLogger.debug('🔧 SortableBlockWrapper - processedProperties:', {
@@ -112,7 +112,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 
   const uniqueId = React.useMemo(
     () => generateUniqueId({ stepNumber: numericStep, blockId: String(block.id), type: 'block' }),
-    [numericStep, block.id]
+    [numericStep, block.id],
   );
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -120,7 +120,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     data: {
       type: 'canvas-block', // TIPO CRUCIAL que o DndProvider espera
       blockId: String(block.id),
-      block: block,
+      block,
       scopeId: numericStep,
     },
   });
@@ -203,7 +203,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           getMarginClass(marginTop, 'top'),
           getMarginClass(marginBottom, 'bottom'),
           getMarginClass(marginLeft, 'left'),
-          getMarginClass(marginRight, 'right')
+          getMarginClass(marginRight, 'right'),
         )}
         style={{
           ...contentStyles, // 🎯 Aplicar estilos inline (scale) apenas no Card, não nas margens

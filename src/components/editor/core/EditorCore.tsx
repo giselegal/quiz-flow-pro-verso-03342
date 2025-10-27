@@ -18,7 +18,7 @@ import React, {
     useEffect,
     useMemo,
     useRef,
-    ReactNode
+    ReactNode,
 } from 'react';
 import { appLogger } from '@/utils/logger';
 
@@ -27,7 +27,7 @@ const useSuperUnified = () => ({ getState: () => ({}), setState: () => { } });
 const useIntelligentCache = () => ({
     get: async (_key: string) => null,
     set: async (_key: string, _value: any) => { },
-    cache: new Map()
+    cache: new Map(),
 });
 
 // 🎯 TYPES AND INTERFACES
@@ -171,12 +171,12 @@ const createInitialState = (): EditorState => ({
         y: 0,
         zoom: 1,
         width: 1200,
-        height: 800
+        height: 800,
     },
 
     selection: {
         mode: 'single',
-        elements: []
+        elements: [],
     },
 
     mode: 'design',
@@ -190,7 +190,7 @@ const createInitialState = (): EditorState => ({
         snapToGrid: true,
         showGrid: true,
         color: '#e5e5e5',
-        opacity: 0.5
+        opacity: 0.5,
     },
 
     guides: {
@@ -199,7 +199,7 @@ const createInitialState = (): EditorState => ({
         vertical: [],
         snapToGuides: true,
         showDistances: true,
-        color: '#3b82f6'
+        color: '#3b82f6',
     },
 
     preferences: {
@@ -213,17 +213,17 @@ const createInitialState = (): EditorState => ({
             'ctrl+y': 'redo',
             'ctrl+s': 'save',
             'ctrl+d': 'duplicate',
-            'delete': 'delete'
+            'delete': 'delete',
         },
         theme: 'light',
-        language: 'pt-BR'
+        language: 'pt-BR',
     },
 
     isLoading: false,
     isDirty: false,
     lastSaved: Date.now(),
     errors: [],
-    warnings: []
+    warnings: [],
 });
 
 // 🎯 REDUCER
@@ -235,7 +235,7 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
         case 'SET_VIEWPORT':
             return {
                 ...state,
-                viewport: { ...state.viewport, ...action.payload }
+                viewport: { ...state.viewport, ...action.payload },
             };
 
         case 'SET_SELECTION':
@@ -249,7 +249,7 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
                 ...state,
                 elements: newElements,
                 elementOrder: [...state.elementOrder, action.payload.id],
-                isDirty: true
+                isDirty: true,
             };
         }
 
@@ -263,15 +263,15 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
                     ...action.payload.updates,
                     metadata: {
                         ...existing.metadata,
-                        modified: Date.now()
-                    }
+                        modified: Date.now(),
+                    },
                 });
             }
 
             return {
                 ...state,
                 elements: newElements,
-                isDirty: true
+                isDirty: true,
             };
         }
 
@@ -285,9 +285,9 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
                 elementOrder: state.elementOrder.filter(id => id !== action.payload),
                 selection: {
                     ...state.selection,
-                    elements: state.selection.elements.filter(id => id !== action.payload)
+                    elements: state.selection.elements.filter(id => id !== action.payload),
                 },
-                isDirty: true
+                isDirty: true,
             };
         }
 
@@ -295,25 +295,25 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
             return {
                 ...state,
                 elementOrder: action.payload,
-                isDirty: true
+                isDirty: true,
             };
 
         case 'SET_GRID':
             return {
                 ...state,
-                grid: { ...state.grid, ...action.payload }
+                grid: { ...state.grid, ...action.payload },
             };
 
         case 'SET_GUIDES':
             return {
                 ...state,
-                guides: { ...state.guides, ...action.payload }
+                guides: { ...state.guides, ...action.payload },
             };
 
         case 'SET_PREFERENCES':
             return {
                 ...state,
-                preferences: { ...state.preferences, ...action.payload }
+                preferences: { ...state.preferences, ...action.payload },
             };
 
         case 'SET_ACTIVE_PANEL':
@@ -325,7 +325,7 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
         case 'ADD_ERROR':
             return {
                 ...state,
-                errors: [...state.errors, action.payload]
+                errors: [...state.errors, action.payload],
             };
 
         case 'CLEAR_ERRORS':
@@ -470,7 +470,7 @@ export class EditorCore {
     constructor(
         dispatch: React.Dispatch<EditorAction>,
         state: EditorState,
-        cache?: any
+        cache?: any,
     ) {
         this.dispatch = dispatch;
         this.state = state;
@@ -518,8 +518,8 @@ export class EditorCore {
             type: 'SET_SELECTION',
             payload: {
                 mode: 'single',
-                elements: [id]
-            }
+                elements: [id],
+            },
         });
         this.emit('selectionChanged', [id]);
     }
@@ -529,8 +529,8 @@ export class EditorCore {
             type: 'SET_SELECTION',
             payload: {
                 mode: 'multiple',
-                elements: ids
-            }
+                elements: ids,
+            },
         });
         this.emit('selectionChanged', ids);
     }
@@ -540,8 +540,8 @@ export class EditorCore {
             type: 'SET_SELECTION',
             payload: {
                 mode: 'single',
-                elements: []
-            }
+                elements: [],
+            },
         });
         this.emit('selectionChanged', []);
     }
@@ -636,12 +636,12 @@ export class EditorCore {
                 viewport: this.state.viewport,
                 grid: this.state.grid,
                 guides: this.state.guides,
-                preferences: this.state.preferences
+                preferences: this.state.preferences,
             };
 
             await this.cache.set('editor-state', serializedState, {
                 ttl: 3600000, // 1 hour
-                persistent: true
+                persistent: true,
             });
 
             this.dispatch({ type: 'SET_DIRTY', payload: false });
@@ -675,8 +675,8 @@ export class EditorCore {
                         grid: serializedState.grid,
                         guides: serializedState.guides,
                         preferences: serializedState.preferences,
-                        isDirty: false
-                    }
+                        isDirty: false,
+                    },
                 });
 
                 this.emit('loaded');
@@ -712,12 +712,12 @@ export const EditorCoreProvider: React.FC<EditorCoreProviderProps> = ({
     children,
     initialState = {},
     autoSave = true,
-    autoSaveInterval = 30000
+    autoSaveInterval = 30000,
 }) => {
     const { cache } = useIntelligentCache();
     const [state, dispatch] = useReducer(editorReducer, {
         ...createInitialState(),
-        ...initialState
+        ...initialState,
     });
 
     const coreRef = useRef<EditorCore | null>(null);
@@ -753,7 +753,7 @@ export const EditorCoreProvider: React.FC<EditorCoreProviderProps> = ({
     const contextValue = useMemo<EditorCoreContextType>(() => ({
         core: coreRef.current!,
         state,
-        dispatch
+        dispatch,
     }), [state]);
 
     return (
@@ -784,7 +784,7 @@ export const useEditorElements = () => {
         updateElement: (id: string, updates: Partial<EditorElement>) => core.updateElement(id, updates),
         deleteElement: (id: string) => core.deleteElement(id),
         getElement: (id: string) => core.getElement(id),
-        getElementsByType: (type: string) => core.getElementsByType(type)
+        getElementsByType: (type: string) => core.getElementsByType(type),
     }), [core, state.elements, state.elementOrder]);
 };
 
@@ -796,7 +796,7 @@ export const useEditorSelection = () => {
         selectedElements: core.getSelectedElements(),
         selectElement: (id: string) => core.selectElement(id),
         selectElements: (ids: string[]) => core.selectElements(ids),
-        clearSelection: () => core.clearSelection()
+        clearSelection: () => core.clearSelection(),
     }), [core, state.selection]);
 };
 
@@ -808,7 +808,7 @@ export const useEditorViewport = () => {
         setViewport: (viewport: Partial<EditorViewport>) => core.setViewport(viewport),
         zoomIn: (factor?: number) => core.zoomIn(factor),
         zoomOut: (factor?: number) => core.zoomOut(factor),
-        zoomToFit: () => core.zoomToFit()
+        zoomToFit: () => core.zoomToFit(),
     }), [core, state.viewport]);
 };
 
@@ -820,7 +820,7 @@ export const useEditorTools = () => {
         availableTools: core.getPluginManager().getTools(),
         setActiveTool: (tool: string) => dispatch({ type: 'SET_ACTIVE_TOOL', payload: tool }),
         mode: state.mode,
-        setMode: (mode: EditorMode) => dispatch({ type: 'SET_MODE', payload: mode })
+        setMode: (mode: EditorMode) => dispatch({ type: 'SET_MODE', payload: mode }),
     }), [core, state.activeTool, state.mode, dispatch]);
 };
 
@@ -832,7 +832,7 @@ export const useEditorPersistence = () => {
         isLoading: state.isLoading,
         lastSaved: state.lastSaved,
         save: () => core.save(),
-        load: () => core.load()
+        load: () => core.load(),
     }), [core, state.isDirty, state.isLoading, state.lastSaved]);
 };
 

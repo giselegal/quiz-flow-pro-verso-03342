@@ -101,7 +101,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
         className={cn(
           'flex items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-lg',
           'text-gray-500 bg-gray-50',
-          className
+          className,
         )}
         style={{ maxWidth: viewportConfig.maxWidth }}
       >

@@ -41,7 +41,7 @@ const IAInsightsPage: React.FC = () => {
                     type: 'optimization',
                     impact: 'high',
                     confidence: 87,
-                    data: { currentConversion: 77, potentialImprovement: 15 }
+                    data: { currentConversion: 77, potentialImprovement: 15 },
                 },
                 {
                     id: '2',
@@ -50,7 +50,7 @@ const IAInsightsPage: React.FC = () => {
                     type: 'prediction',
                     impact: 'medium',
                     confidence: 92,
-                    data: { segmentSize: 1200, conversionRate: 34 }
+                    data: { segmentSize: 1200, conversionRate: 34 },
                 },
                 {
                     id: '3',
@@ -59,7 +59,7 @@ const IAInsightsPage: React.FC = () => {
                     type: 'recommendation',
                     impact: 'medium',
                     confidence: 83,
-                    data: { currentEngagement: 12, potentialIncrease: 28 }
+                    data: { currentEngagement: 12, potentialIncrease: 28 },
                 },
                 {
                     id: '4',
@@ -68,8 +68,8 @@ const IAInsightsPage: React.FC = () => {
                     type: 'alert',
                     impact: 'high',
                     confidence: 76,
-                    data: { currentTrend: -5, projectedImpact: -12 }
-                }
+                    data: { currentTrend: -5, projectedImpact: -12 },
+                },
             ]);
             setLoading(false);
         }, 1000);

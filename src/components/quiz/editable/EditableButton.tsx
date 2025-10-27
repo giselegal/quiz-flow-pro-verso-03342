@@ -30,7 +30,7 @@ export default function EditableButton({
     disabled = false,
     fullWidth = true,
     isEditable = false,
-    onEdit = () => { }
+    onEdit = () => { },
 }: EditableButtonProps) {
     const [isEditing, setIsEditing] = useState(false);
 

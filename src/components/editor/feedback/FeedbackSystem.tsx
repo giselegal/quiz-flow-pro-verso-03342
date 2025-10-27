@@ -120,7 +120,7 @@ export const useLoadingState = () => {
 export const useAutoSave = (
   saveFunction: () => Promise<void>,
   deps: any[],
-  options: { interval?: number; enabled?: boolean } = {}
+  options: { interval?: number; enabled?: boolean } = {},
 ) => {
   const { interval = 3000, enabled = true } = options;
   const [autoSaveState, setAutoSaveState] = useState<AutoSaveState>({
@@ -285,7 +285,7 @@ export const ToastContainer: React.FC = () => {
         <Toast key={toast.id} toast={toast} onRemove={removeToast} />
       ))}
     </div>,
-    document.body
+    document.body,
   );
 };
 

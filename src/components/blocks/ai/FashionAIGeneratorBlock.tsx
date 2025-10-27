@@ -64,7 +64,7 @@ export const FashionAIGeneratorBlock: React.FC<FashionAIGeneratorBlockProps> = (
     quizResult,
     isSelected,
     onSelect,
-    isEditing = false
+    isEditing = false,
 }) => {
     const { content, properties } = block;
     // const { aiData, interpolateText } = useAIInterpolation(quizResult || null);
@@ -108,7 +108,7 @@ export const FashionAIGeneratorBlock: React.FC<FashionAIGeneratorBlockProps> = (
             const placeholderImages = [
                 `https://via.placeholder.com/400x500/FF69B4/FFFFFF?text=Look+1+${currentStyle}`,
                 `https://via.placeholder.com/400x500/8A2BE2/FFFFFF?text=Look+2+${currentStyle}`,
-                `https://via.placeholder.com/400x500/FF1493/FFFFFF?text=Look+3+${currentStyle}`
+                `https://via.placeholder.com/400x500/FF1493/FFFFFF?text=Look+3+${currentStyle}`,
             ];
 
             // Simula delay de geração
@@ -183,7 +183,7 @@ export const FashionAIGeneratorBlock: React.FC<FashionAIGeneratorBlockProps> = (
             romantico: ['Use tecidos fluidos', 'Aposte em detalhes delicados', 'Cores suaves são ideais'],
             sexy: ['Valorize suas curvas', 'Use cores intensas', 'Invista em peças marcantes'],
             dramatico: ['Ouse em contrastes', 'Use peças statement', 'Aposte em acessórios marcantes'],
-            criativo: ['Misture texturas', 'Use cores vibrantes', 'Ouse em combinações']
+            criativo: ['Misture texturas', 'Use cores vibrantes', 'Ouse em combinações'],
         };
 
         const styleTips = tips[currentStyle as keyof typeof tips] || tips.elegante;
@@ -215,7 +215,7 @@ export const FashionAIGeneratorBlock: React.FC<FashionAIGeneratorBlockProps> = (
                     backgroundColor: properties.backgroundColor,
                     borderRadius: properties.borderRadius,
                     padding: properties.padding,
-                    marginBottom: properties.marginBottom
+                    marginBottom: properties.marginBottom,
                 }}
             >
                 <div className="text-center">
@@ -241,7 +241,7 @@ export const FashionAIGeneratorBlock: React.FC<FashionAIGeneratorBlockProps> = (
                 backgroundColor: properties.backgroundColor,
                 borderRadius: properties.borderRadius,
                 padding: properties.padding,
-                marginBottom: properties.marginBottom
+                marginBottom: properties.marginBottom,
             }}
         >
             {/* Header */}
@@ -284,7 +284,7 @@ export const FashionAIGeneratorBlock: React.FC<FashionAIGeneratorBlockProps> = (
                         className={`grid gap-${properties.spacing / 4}`}
                         style={{
                             gridTemplateColumns: `repeat(${properties.columns}, 1fr)`,
-                            gap: properties.spacing
+                            gap: properties.spacing,
                         }}
                     >
                         {generatedImages.map((imageUrl, index) => (

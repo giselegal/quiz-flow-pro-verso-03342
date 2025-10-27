@@ -55,18 +55,18 @@ const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
   onDuplicate,
   sessionData,
   onUpdateSessionData,
-  renderBlockPreview
+  renderBlockPreview,
 }) => {
   
   // 🎯 DRAG & DROP (apenas Edit Mode)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
-    disabled: mode === 'preview'
+    disabled: mode === 'preview',
   });
   
   const style = mode === 'edit' ? {
     transform: transform ? CSS.Transform.toString(transform) : undefined,
-    transition
+    transition,
   } : undefined;
   
   // 🎯 INTERATIVIDADE CONDICIONAL
@@ -93,7 +93,7 @@ const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
         (isSelected || isMultiSelected) && 'ring-2 ring-primary shadow-lg',
         hasErrors && !isSelected && 'shadow-[0_0_0_1px_hsl(var(--destructive))]',
         isMultiSelected && 'bg-primary/5',
-        isDragging && 'opacity-50 scale-95'
+        isDragging && 'opacity-50 scale-95',
       )}
       onClick={clickHandler}
       {...(mode === 'edit' ? { ...attributes, ...listeners } : {})}
@@ -117,7 +117,7 @@ const UnifiedBlockRendererComponent: React.FC<UnifiedBlockRendererProps> = ({
       {/* 🎯 CONTEÚDO VISUAL - IDÊNTICO EM AMBOS OS MODOS */}
       <div className={cn(
         mode === 'edit' && 'pl-8 pr-10',
-        mode === 'preview' && 'px-0'
+        mode === 'preview' && 'px-0',
       )}>
         {/* 🔑 CHAVE: Renderizar preview visual (sempre igual) */}
         {renderBlockPreview(block, allBlocks)}

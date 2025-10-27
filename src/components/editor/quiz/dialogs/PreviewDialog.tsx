@@ -16,7 +16,7 @@ import { Loader2 } from 'lucide-react';
 
 // Lazy load do preview de produção
 const QuizProductionPreview = React.lazy(
-  () => import('../QuizProductionPreview')
+  () => import('../QuizProductionPreview'),
 );
 
 interface PreviewDialogProps {

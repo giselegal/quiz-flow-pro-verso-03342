@@ -25,7 +25,7 @@ const AlignmentDashboard: React.FC = () => {
     overall: 0,
     categories: { supabase: 0, types: 0, components: 0, performance: 0 },
     issues: [],
-    lastCheck: ''
+    lastCheck: '',
   });
   const [isChecking, setIsChecking] = useState(false);
 
@@ -42,10 +42,10 @@ const AlignmentDashboard: React.FC = () => {
           supabase: 100,
           types: 100, 
           components: 70,
-          performance: 80
+          performance: 80,
         },
         issues: ['component_configurations migration pendente'],
-        lastCheck: new Date().toLocaleString()
+        lastCheck: new Date().toLocaleString(),
       };
       
       setStatus(mockStatus);
@@ -81,7 +81,7 @@ const AlignmentDashboard: React.FC = () => {
           <p className="text-gray-600">Monitor de alinhamento frontend-backend</p>
         </div>
         <Button onClick={checkAlignment} disabled={isChecking}>
-          <RefreshCw className={'h-4 w-4 mr-2 ' + (isChecking ? 'animate-spin' : '')} />
+          <RefreshCw className={`h-4 w-4 mr-2 ${  isChecking ? 'animate-spin' : ''}`} />
           {isChecking ? 'Verificando...' : 'Verificar'}
         </Button>
       </div>
@@ -118,7 +118,7 @@ const AlignmentDashboard: React.FC = () => {
                 <h3 className="font-semibold capitalize">{category}</h3>
                 {getStatusIcon(score)}
               </div>
-              <p className={'text-2xl font-bold ' + getStatusColor(score)}>
+              <p className={`text-2xl font-bold ${  getStatusColor(score)}`}>
                 {score}%
               </p>
             </CardContent>

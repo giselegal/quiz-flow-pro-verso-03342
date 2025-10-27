@@ -34,7 +34,7 @@ export const QuizQuestionPropertiesPanel: React.FC<Props> = ({ block, onUpdate, 
                 onUpdate({ [key]: value });
             }
         },
-        [onUpdate]
+        [onUpdate],
     );
 
     const currentOptions = useMemo(() => {

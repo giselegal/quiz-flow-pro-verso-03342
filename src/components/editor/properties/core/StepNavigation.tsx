@@ -50,7 +50,7 @@ export const StepNavigation: React.FC<StepNavigationProps> = ({
   currentStep,
   totalSteps,
   onStepChange,
-  className
+  className,
 }) => {
   const canGoPrevious = currentStep > 1;
   const canGoNext = currentStep < totalSteps;
@@ -59,7 +59,7 @@ export const StepNavigation: React.FC<StepNavigationProps> = ({
     return STEP_METADATA[step as keyof typeof STEP_METADATA] || {
       title: `Etapa ${step}`,
       type: 'unknown',
-      color: 'bg-gray-500'
+      color: 'bg-gray-500',
     };
   };
 
@@ -79,13 +79,13 @@ export const StepNavigation: React.FC<StepNavigationProps> = ({
               className={cn(
                 'h-8 min-w-[2rem] px-2 text-xs',
                 isActive && 'ring-2 ring-blue-200',
-                !isActive && 'hover:bg-gray-50'
+                !isActive && 'hover:bg-gray-50',
               )}
             >
               <div className="flex items-center gap-1">
                 <div className={cn(
                   'w-2 h-2 rounded-full',
-                  isActive ? 'bg-white' : meta.color
+                  isActive ? 'bg-white' : meta.color,
                 )} />
                 <span className="font-medium">{step}</span>
                 {isQuestion && (

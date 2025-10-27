@@ -34,9 +34,9 @@ describe('useSelectionClipboard', () => {
                     makeBlock('b1', 0),
                     makeBlock('b2', 1),
                     makeBlock('b3', 2),
-                    makeBlock('b4', 3)
-                ]
-            }
+                    makeBlock('b4', 3),
+                ],
+            },
         ];
         steps = cloneSteps(stepsInitial);
         historyCalls = [];

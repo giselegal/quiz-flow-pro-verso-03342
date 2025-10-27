@@ -22,7 +22,7 @@ const QuizQuestionHeaderBlock: React.FC<QuizQuestionHeaderRendererProps> = ({ bl
     const totalQuestions: number = Number(props.totalQuestions ?? content.totalQuestions ?? 21);
     // Aceita aliases: properties.questionText, content.questionText e content.text
     const questionTextRaw: string = String(
-        props.questionText ?? content.questionText ?? content.text ?? 'Qual é a sua preferência?'
+        props.questionText ?? content.questionText ?? content.text ?? 'Qual é a sua preferência?',
     );
     const showProgress: boolean = Boolean(props.showProgress ?? content.showProgress ?? true);
     const result = useResultOptional();

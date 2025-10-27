@@ -24,7 +24,7 @@ export const STEP20_MODULES = {
   USER_GREETING: 'step20-user-greeting',
   COMPATIBILITY: 'step20-compatibility',
   SECONDARY_STYLES: 'step20-secondary-styles',
-  PERSONALIZED_OFFER: 'step20-personalized-offer'
+  PERSONALIZED_OFFER: 'step20-personalized-offer',
 } as const;
 
 export type Step20ModuleType = typeof STEP20_MODULES[keyof typeof STEP20_MODULES];

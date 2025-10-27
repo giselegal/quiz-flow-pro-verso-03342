@@ -22,7 +22,7 @@ export const useStep01Logic = ({
     initialData,
     onSave,
     onNext,
-    funnelId
+    funnelId,
 }: UseStep01LogicProps) => {
     // Estado local do componente
     const [userName, setUserName] = useState(initialData?.userName || '');
@@ -63,7 +63,7 @@ export const useStep01Logic = ({
             const stepData = {
                 userName: trimmedName,
                 completedAt: new Date().toISOString(),
-                stepId: 'step-01'
+                stepId: 'step-01',
             };
             onSave(stepData);
 
@@ -74,7 +74,7 @@ export const useStep01Logic = ({
             console.log('👤 Step01: Nome capturado:', {
                 name: trimmedName,
                 timestamp: new Date().toISOString(),
-                funnelId
+                funnelId,
             });
 
             // Avançar para próximo step
@@ -120,7 +120,7 @@ export const useStep01Logic = ({
             stepNumber: 1,
             totalSteps: 21,
             category: 'intro' as const,
-            estimatedTime: 30 // segundos
-        }
+            estimatedTime: 30, // segundos
+        },
     };
 };

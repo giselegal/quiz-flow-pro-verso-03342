@@ -18,7 +18,7 @@ export const useStepHandlers = (
   selectedStepId: string,
   setSelectedStepId: (stepId: string) => void,
   setSelectedBlockId: (blockId: string | null) => void,
-  handlePopulateStep: (stepId: string) => void
+  handlePopulateStep: (stepId: string) => void,
 ) => {
   const handleStepSelect = useCallback(
     (stepId: string) => {
@@ -39,7 +39,7 @@ export const useStepHandlers = (
         console.log(`✅ Etapa ${stepId} já tem ${selectedStep?.blocksCount || 0} blocos`);
       }
     },
-    [steps, setSelectedStepId, setSelectedBlockId, handlePopulateStep]
+    [steps, setSelectedStepId, setSelectedBlockId, handlePopulateStep],
   );
 
   const handleStepAdd = useCallback(() => {
@@ -64,7 +64,7 @@ export const useStepHandlers = (
     (stepId: string, updates: Partial<QuizStep>) => {
       setSteps(prev => prev.map(step => (step.id === stepId ? { ...step, ...updates } : step)));
     },
-    [setSteps]
+    [setSteps],
   );
 
   const handleStepDelete = useCallback(
@@ -81,7 +81,7 @@ export const useStepHandlers = (
         }
       }
     },
-    [steps, selectedStepId, setSteps, setSelectedStepId]
+    [steps, selectedStepId, setSteps, setSelectedStepId],
   );
 
   const handleStepDuplicate = useCallback(
@@ -102,7 +102,7 @@ export const useStepHandlers = (
         setSteps(prev => [...prev, newStep]);
       }
     },
-    [steps, setSteps]
+    [steps, setSteps],
   );
 
   const handleStepReorder = useCallback((draggedId: string, targetId: string) => {

@@ -35,7 +35,7 @@ interface EnhancedOptimizedImageProps {
 const BlurPlaceholder: React.FC<{ width?: number; height?: number; aspectRatio?: number }> = ({
     width,
     height,
-    aspectRatio = 16 / 9
+    aspectRatio = 16 / 9,
 }) => {
     const calculatedHeight = height || (width ? width / aspectRatio : 200);
 
@@ -47,7 +47,7 @@ const BlurPlaceholder: React.FC<{ width?: number; height?: number; aspectRatio?:
                 height: calculatedHeight,
                 background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
                 backgroundSize: '200% 100%',
-                animation: 'shimmer 1.5s infinite'
+                animation: 'shimmer 1.5s infinite',
             }}
             aria-label="Carregando imagem..."
         />
@@ -57,7 +57,7 @@ const BlurPlaceholder: React.FC<{ width?: number; height?: number; aspectRatio?:
 const SkeletonPlaceholder: React.FC<{ width?: number; height?: number; aspectRatio?: number }> = ({
     width,
     height,
-    aspectRatio = 16 / 9
+    aspectRatio = 16 / 9,
 }) => {
     const calculatedHeight = height || (width ? width / aspectRatio : 200);
 
@@ -95,7 +95,7 @@ const EnhancedOptimizedImage: React.FC<EnhancedOptimizedImageProps> = memo(({
     priority = false,
     onLoad,
     onError,
-    sizes
+    sizes,
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
@@ -110,7 +110,7 @@ const EnhancedOptimizedImage: React.FC<EnhancedOptimizedImageProps> = memo(({
     const { optimizedImages, isLoading } = useResponsiveOptimization(
         src,
         baseWidth,
-        aspectRatio
+        aspectRatio,
     );
 
     /**
@@ -128,8 +128,8 @@ const EnhancedOptimizedImage: React.FC<EnhancedOptimizedImageProps> = memo(({
             },
             {
                 rootMargin: '50px', // Carrega 50px antes de entrar na viewport
-                threshold: 0.1
-            }
+                threshold: 0.1,
+            },
         );
 
         if (containerRef.current) {
@@ -215,7 +215,7 @@ const EnhancedOptimizedImage: React.FC<EnhancedOptimizedImageProps> = memo(({
                 className={`bg-gray-100 border-2 border-dashed border-gray-300 rounded flex items-center justify-center text-gray-500 ${className}`}
                 style={{
                     width: width || '100%',
-                    height: height || (width ? width / aspectRatio : 200)
+                    height: height || (width ? width / aspectRatio : 200),
                 }}
             >
                 <div className="text-center p-4">

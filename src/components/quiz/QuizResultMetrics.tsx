@@ -71,8 +71,8 @@ export const QuizResultMetrics: React.FC = () => {
       dataQuality: {
         selectionsCount: 0,
         averageSelectionsPerQuestion: 0,
-        completionRate: 0
-      }
+        completionRate: 0,
+      },
     };
     setMetrics(initialMetrics);
     StorageService.safeSetJSON('quiz-metrics', initialMetrics);
@@ -83,14 +83,14 @@ export const QuizResultMetrics: React.FC = () => {
     const updated = {
       ...current,
       calculationAttempts: current.calculationAttempts + 1,
-      lastCalculationTime: Date.now()
+      lastCalculationTime: Date.now(),
     };
     setMetrics(updated);
     StorageService.safeSetJSON('quiz-metrics', updated);
 
     // Emitir evento customizado para tracking
     window.dispatchEvent(new CustomEvent('quiz-calculation-started', {
-      detail: { timestamp: Date.now() }
+      detail: { timestamp: Date.now() },
     }));
   };
 
@@ -102,7 +102,7 @@ export const QuizResultMetrics: React.FC = () => {
       ...current,
       successfulCalculations: current.successfulCalculations + 1,
       averageCalculationTime: (current.averageCalculationTime + calculationTime) / 2,
-      dataQuality: calculateDataQuality()
+      dataQuality: calculateDataQuality(),
     };
     setMetrics(updated);
     StorageService.safeSetJSON('quiz-metrics', updated);
@@ -114,7 +114,7 @@ export const QuizResultMetrics: React.FC = () => {
       const current = metrics || initializeMetricsSync();
       const updated = {
         ...current,
-        failedCalculations: current.failedCalculations + 1
+        failedCalculations: current.failedCalculations + 1,
       };
       setMetrics(updated);
       StorageService.safeSetJSON('quiz-metrics', updated);
@@ -126,7 +126,7 @@ export const QuizResultMetrics: React.FC = () => {
     (window as any).__quizMetrics = {
       recordFailedCalculation,
       recordCalculationAttempt,
-      loadMetrics
+      loadMetrics,
     };
   }, [metrics]);
 
@@ -140,8 +140,8 @@ export const QuizResultMetrics: React.FC = () => {
       dataQuality: {
         selectionsCount: 0,
         averageSelectionsPerQuestion: 0,
-        completionRate: 0
-      }
+        completionRate: 0,
+      },
     };
     return initial;
   };
@@ -155,13 +155,13 @@ export const QuizResultMetrics: React.FC = () => {
       return {
         selectionsCount: totalQuestions,
         averageSelectionsPerQuestion: stats.selectionsCount / Math.max(1, expectedQuestions),
-        completionRate: (totalQuestions / expectedQuestions) * 100
+        completionRate: (totalQuestions / expectedQuestions) * 100,
       };
     } catch {
       return {
         selectionsCount: 0,
         averageSelectionsPerQuestion: 0,
-        completionRate: 0
+        completionRate: 0,
       };
     }
   };
@@ -182,7 +182,7 @@ export const QuizResultMetrics: React.FC = () => {
     const data = {
       ...metrics,
       timestamp: new Date().toISOString(),
-      successRate: getSuccessRate()
+      successRate: getSuccessRate(),
     };
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });

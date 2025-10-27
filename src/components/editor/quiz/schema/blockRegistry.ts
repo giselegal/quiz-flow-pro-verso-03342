@@ -27,12 +27,12 @@ function deriveDefaults(type: string): Record<string, any> {
 }
 
 // Constantes de ícones
-const textIcon = createElement(Type, { className: "w-4 h-4" });
-const headingIcon = createElement(Type, { className: "w-5 h-5" });
-const imageIcon = createElement(ImageIcon, { className: "w-4 h-4" });
-const buttonIcon = createElement(MousePointer, { className: "w-4 h-4" });
-const listIcon = createElement(List, { className: "w-4 h-4" });
-const layoutIcon = createElement(Layout, { className: "w-4 h-4" });
+const textIcon = createElement(Type, { className: 'w-4 h-4' });
+const headingIcon = createElement(Type, { className: 'w-5 h-5' });
+const imageIcon = createElement(ImageIcon, { className: 'w-4 h-4' });
+const buttonIcon = createElement(MousePointer, { className: 'w-4 h-4' });
+const listIcon = createElement(List, { className: 'w-4 h-4' });
+const layoutIcon = createElement(Layout, { className: 'w-4 h-4' });
 
 export const blockRegistry: BlockRegistryItem[] = [
     {
@@ -42,7 +42,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         category: 'content',
         defaultProps: deriveDefaults('text'),
         schemaKeys: getBlockSchema('text')?.properties.map((p: BasePropertySchema) => p.key) || [],
-        renderer: LazyNotImplemented
+        renderer: LazyNotImplemented,
     },
     {
         type: 'heading',
@@ -51,7 +51,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         category: 'content',
         defaultProps: deriveDefaults('heading'),
         schemaKeys: getBlockSchema('heading')?.properties.map((p: BasePropertySchema) => p.key) || [],
-        renderer: LazyNotImplemented
+        renderer: LazyNotImplemented,
     },
     {
         type: 'image',
@@ -60,7 +60,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         category: 'media',
         defaultProps: deriveDefaults('image'),
         schemaKeys: getBlockSchema('image')?.properties.map((p: BasePropertySchema) => p.key) || [],
-        renderer: LazyNotImplemented
+        renderer: LazyNotImplemented,
     },
     {
         type: 'button',
@@ -69,7 +69,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         category: 'interactive',
         defaultProps: deriveDefaults('button'),
         schemaKeys: getBlockSchema('button')?.properties.map((p: BasePropertySchema) => p.key) || [],
-        renderer: LazyNotImplemented
+        renderer: LazyNotImplemented,
     },
     {
         type: 'quiz-options',
@@ -78,7 +78,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         category: 'interactive',
         defaultProps: deriveDefaults('quiz-options'),
         schemaKeys: getBlockSchema('quiz-options')?.properties.map((p: BasePropertySchema) => p.key) || [],
-        renderer: LazyNotImplemented
+        renderer: LazyNotImplemented,
     },
     {
         type: 'form-input',
@@ -87,7 +87,7 @@ export const blockRegistry: BlockRegistryItem[] = [
         category: 'interactive',
         defaultProps: deriveDefaults('form-input'),
         schemaKeys: getBlockSchema('form-input')?.properties.map((p: BasePropertySchema) => p.key) || [],
-        renderer: LazyNotImplemented
+        renderer: LazyNotImplemented,
     },
     {
         type: 'container',
@@ -96,8 +96,8 @@ export const blockRegistry: BlockRegistryItem[] = [
         category: 'layout',
         defaultProps: deriveDefaults('container'),
         schemaKeys: getBlockSchema('container')?.properties.map((p: BasePropertySchema) => p.key) || [],
-        renderer: LazyNotImplemented
-    }
+        renderer: LazyNotImplemented,
+    },
 ];
 
 export function getRegistryItem(type: string) {

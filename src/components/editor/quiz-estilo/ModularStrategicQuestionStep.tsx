@@ -45,7 +45,7 @@ export default function ModularStrategicQuestionStep({
     onBlockSelect = () => { },
     onOpenProperties = () => { },
     onBlocksReorder,
-    onBlockUpdate
+    onBlockUpdate,
 }: ModularStrategicQuestionStepProps) {
 
     const safeData = {
@@ -54,8 +54,8 @@ export default function ModularStrategicQuestionStep({
         options: data.options || [
             { id: 'opt1', text: 'Opção A' },
             { id: 'opt2', text: 'Opção B' },
-            { id: 'opt3', text: 'Opção C' }
-        ]
+            { id: 'opt3', text: 'Opção C' },
+        ],
     };
 
     const handleOptionClick = (optionId: string) => {
@@ -109,7 +109,7 @@ export default function ModularStrategicQuestionStep({
     }, [effectiveBlocks, hasRealBlocks]);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     );
 
     const handleDragEnd = (event: any) => {
@@ -177,7 +177,7 @@ export default function ModularStrategicQuestionStep({
         const emitNavigate = (target: number) => {
             try {
                 window.dispatchEvent(new CustomEvent('quiz-navigate-to-step', {
-                    detail: { step: target, stepId: `step-${String(target).padStart(2, '0')}`, source: 'modular-strategic-question-step' }
+                    detail: { step: target, stepId: `step-${String(target).padStart(2, '0')}`, source: 'modular-strategic-question-step' },
                 }));
             } catch { }
         };

@@ -22,7 +22,7 @@ export const ImageBlock: React.FC<BlockComponentProps> = ({
         height = 'auto',
         objectFit = 'cover',
         rounded = true,
-        className: customClassName
+        className: customClassName,
     } = data.props;
 
     if (!src) {
@@ -33,7 +33,7 @@ export const ImageBlock: React.FC<BlockComponentProps> = ({
                     'flex items-center justify-center',
                     isEditable && 'cursor-pointer hover:border-gray-400',
                     isSelected && 'ring-2 ring-blue-500 ring-offset-2',
-                    customClassName
+                    customClassName,
                 )}
                 onClick={isEditable ? onSelect : undefined}
                 data-block-id={data.id}
@@ -58,7 +58,7 @@ export const ImageBlock: React.FC<BlockComponentProps> = ({
                 'image-block relative transition-all duration-200',
                 isEditable && 'cursor-pointer hover:opacity-90',
                 isSelected && 'ring-2 ring-blue-500 ring-offset-2',
-                customClassName
+                customClassName,
             )}
             onClick={isEditable ? onSelect : undefined}
             data-block-id={data.id}
@@ -77,11 +77,11 @@ export const ImageBlock: React.FC<BlockComponentProps> = ({
                 style={{
                     width,
                     height,
-                    objectFit: objectFit as any
+                    objectFit: objectFit as any,
                 }}
                 className={cn(
                     rounded && 'rounded-lg',
-                    'w-full'
+                    'w-full',
                 )}
                 onError={(e) => {
                     const target = e.target as HTMLImageElement;

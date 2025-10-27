@@ -39,7 +39,7 @@ export const OptimizedImageEnhanced: React.FC<OptimizedImageProps> = ({
           observer.disconnect();
         }
       },
-      { rootMargin: '50px' }
+      { rootMargin: '50px' },
     );
 
     observer.observe(imgRef.current);
@@ -81,7 +81,7 @@ export const OptimizedImageEnhanced: React.FC<OptimizedImageProps> = ({
         className={cn(
           'transition-opacity duration-300',
           isLoaded ? 'opacity-100' : 'opacity-0',
-          className
+          className,
         )}
       />
     </div>

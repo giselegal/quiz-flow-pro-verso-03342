@@ -31,12 +31,12 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     onStepChange,
     onSave,
     readOnly = false,
-    showNavigation = true
+    showNavigation = true,
 }) => {
     // 🚨 Console warning para desenvolvedores
     appLogger.warn(
         '⚠️ DEPRECATED: UniversalStepEditor será removido em 01/nov/2025. ' +
-        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
     );
 
     const [isLoading, setIsLoading] = React.useState(true);
@@ -64,13 +64,13 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                     const stepInfo = {
                         name: `Step ${stepNumber}`,
                         description: `Conteúdo do step ${stepNumber}`,
-                        blocks: stepData
+                        blocks: stepData,
                     };
                     setCurrentStepData(stepInfo);
                     appLogger.debug('✅ Dados do step carregados:', stepKey, {
                         nome: stepInfo.name,
                         blocos: stepData.length,
-                        primeiroBloco: stepData[0]
+                        primeiroBloco: stepData[0],
                     });
                 } else {
                     // Dados de fallback mais realistas
@@ -80,34 +80,34 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         blocks: [
                             {
                                 id: `step${stepNumber}-title`,
-                                type: "text",
+                                type: 'text',
                                 order: 1,
                                 content: {
-                                    text: `<span style="color: #B89B7A; font-weight: 700;">Step ${stepNumber}</span> do quiz interativo`
+                                    text: `<span style="color: #B89B7A; font-weight: 700;">Step ${stepNumber}</span> do quiz interativo`,
                                 },
                                 properties: {
-                                    fontSize: "text-2xl",
-                                    fontWeight: "font-bold",
-                                    textAlign: "center",
-                                    color: "#432818"
-                                }
+                                    fontSize: 'text-2xl',
+                                    fontWeight: 'font-bold',
+                                    textAlign: 'center',
+                                    color: '#432818',
+                                },
                             },
                             {
                                 id: `step${stepNumber}-question`,
-                                type: "form-container",
+                                type: 'form-container',
                                 order: 2,
                                 content: {
                                     title: `Pergunta do Step ${stepNumber}`,
-                                    placeholder: "Digite sua resposta...",
-                                    buttonText: "Continuar",
-                                    backgroundColor: "#FFFFFF",
-                                    borderColor: "#B89B7A",
-                                    buttonBackgroundColor: "#B89B7A",
-                                    buttonTextColor: "#FFFFFF"
+                                    placeholder: 'Digite sua resposta...',
+                                    buttonText: 'Continuar',
+                                    backgroundColor: '#FFFFFF',
+                                    borderColor: '#B89B7A',
+                                    buttonBackgroundColor: '#B89B7A',
+                                    buttonTextColor: '#FFFFFF',
                                 },
-                                properties: {}
-                            }
-                        ]
+                                properties: {},
+                            },
+                        ],
                     };
 
                     setCurrentStepData(fallbackData);
@@ -118,7 +118,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                 setCurrentStepData({
                     blocks: [],
                     name: `Step ${stepNumber} (Erro)`,
-                    description: 'Erro ao carregar conteúdo'
+                    description: 'Erro ao carregar conteúdo',
                 });
             } finally {
                 setIsLoading(false);
@@ -170,8 +170,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         autoSaveInterval: 30000,
                         compression: true,
                         encryption: false,
-                        backupEnabled: true
-                    }
+                        backupEnabled: true,
+                    },
                 },
 
                 // Steps do funil
@@ -181,7 +181,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                     description: currentStepData?.description || `Conteúdo do step ${stepNumber}`,
                     order: stepNumber,
                     type: stepNumber === 1 ? 'intro' : stepNumber <= 11 ? 'quiz' : stepNumber <= 18 ? 'strategic' : stepNumber === 19 ? 'transition' : stepNumber === 20 ? 'result' : 'offer',
-                    blocks: currentStepData?.blocks || []
+                    blocks: currentStepData?.blocks || [],
                 }],
 
                 // Blocos atualizados
@@ -196,11 +196,11 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                     hasConversion: stepNumber === 21,
                     optimization: 'complete',
                     lastModified: {
-                        stepId: stepId,
-                        stepNumber: stepNumber,
+                        stepId,
+                        stepNumber,
                         timestamp: Date.now(),
-                        user: 'editor'
-                    }
+                        user: 'editor',
+                    },
                 },
 
                 // Dados da sessão do usuário (inicializados vazios)
@@ -225,10 +225,10 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         secondary_styles: [],
                         total_score: 0,
                         style_scores: {},
-                        personalized_recommendations: []
-                    }
-                }
-            }
+                        personalized_recommendations: [],
+                    },
+                },
+            },
         };
 
         // 🔍 Validar schema antes de salvar
@@ -246,7 +246,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
         const schema = FUNNEL_PERSISTENCE_SCHEMA;
         appLogger.debug('🔍 Validando dados contra FUNNEL_PERSISTENCE_SCHEMA:', {
             schema: schema.persistence.dataStructure,
-            data: data
+            data,
         });
 
         // Validação básica da estrutura
@@ -260,7 +260,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
             appLogger.warn('❌ Schema inválido: Campos obrigatórios ausentes');
             setSchemaValidation({
                 isValid: false,
-                message: 'Schema inválido: Estrutura não conforme com FUNNEL_PERSISTENCE_SCHEMA'
+                message: 'Schema inválido: Estrutura não conforme com FUNNEL_PERSISTENCE_SCHEMA',
             });
             return false;
         }
@@ -268,7 +268,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
         appLogger.debug('✅ Schema válido: Estrutura conforme FUNNEL_PERSISTENCE_SCHEMA');
         setSchemaValidation({
             isValid: true,
-            message: 'Schema válido: Conforme FUNNEL_PERSISTENCE_SCHEMA'
+            message: 'Schema válido: Conforme FUNNEL_PERSISTENCE_SCHEMA',
         });
         return true;
     };
@@ -1318,7 +1318,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                 </div>
                             )}
                         </div>
-                    </div>
+                    </div>,
                 );
 
             case 'decorative-bar':
@@ -1470,7 +1470,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                             style={{ color: properties?.color || '#000000' }}
                             dangerouslySetInnerHTML={{ __html: content?.text || 'Texto não definido' }}
                         />
-                    </div>
+                    </div>,
                 );
 
             case 'form-container':
@@ -1492,7 +1492,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                     style={{
                                         backgroundColor: content?.backgroundColor || '#FFFFFF',
                                         borderColor: content?.borderColor || '#B89B7A',
-                                        color: content?.textColor || '#432818'
+                                        color: content?.textColor || '#432818',
                                     }}
                                 />
                             </div>
@@ -1500,13 +1500,13 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                 className="w-full py-3 px-4 rounded-md font-medium transition-colors"
                                 style={{
                                     backgroundColor: content?.buttonBackgroundColor || '#B89B7A',
-                                    color: content?.buttonTextColor || '#FFFFFF'
+                                    color: content?.buttonTextColor || '#FFFFFF',
                                 }}
                             >
                                 {content?.buttonText || 'Enviar'}
                             </button>
                         </div>
-                    </div>
+                    </div>,
                 );
 
             case 'legal-notice':
@@ -1743,7 +1743,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                     type: 'HeaderSection',
                                     id: `new-header-${Date.now()}`,
                                     content: { title: 'Novo Título', subtitle: 'Novo Subtítulo' },
-                                    properties: { fontSize: 'text-2xl', fontWeight: 'font-bold' }
+                                    properties: { fontSize: 'text-2xl', fontWeight: 'font-bold' },
                                 }));
                             }}
                         >
@@ -1764,7 +1764,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                     type: 'text',
                                     id: `new-text-${Date.now()}`,
                                     content: { text: 'Novo texto aqui...' },
-                                    properties: { fontSize: 'text-base', textAlign: 'left' }
+                                    properties: { fontSize: 'text-base', textAlign: 'left' },
                                 }));
                             }}
                         >
@@ -1785,7 +1785,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                     type: 'UserInfoSection',
                                     id: `new-userinfo-${Date.now()}`,
                                     content: {},
-                                    properties: {}
+                                    properties: {},
                                 }));
                             }}
                         >
@@ -1809,8 +1809,8 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                     properties: {
                                         src: 'https://via.placeholder.com/400x300',
                                         alt: 'Nova imagem',
-                                        maxWidth: 'md'
-                                    }
+                                        maxWidth: 'md',
+                                    },
                                 }));
                             }}
                         >
@@ -1837,9 +1837,9 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                         backgroundColor: '#FFFFFF',
                                         borderColor: '#B89B7A',
                                         buttonBackgroundColor: '#B89B7A',
-                                        buttonTextColor: '#FFFFFF'
+                                        buttonTextColor: '#FFFFFF',
                                     },
-                                    properties: {}
+                                    properties: {},
                                 }));
                             }}
                         >
@@ -1876,12 +1876,12 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                 // Adicionar o novo componente à lista de blocos
                                 const newBlock = {
                                     ...componentData,
-                                    order: currentStepData?.blocks?.length || 0
+                                    order: currentStepData?.blocks?.length || 0,
                                 };
 
                                 setCurrentStepData((prev: any) => ({
                                     ...prev,
-                                    blocks: [...(prev?.blocks || []), newBlock]
+                                    blocks: [...(prev?.blocks || []), newBlock],
                                 }));
 
                                 setHasUnsavedChanges(true);

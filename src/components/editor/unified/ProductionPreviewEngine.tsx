@@ -80,7 +80,7 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
       viewportSize === 'mobile' && 'max-w-sm mx-auto',
       viewportSize === 'tablet' && 'max-w-3xl mx-auto',
       viewportSize === 'desktop' && 'max-w-5xl mx-auto',
-      className
+      className,
     )}>
       {/* Debug info (apenas em modo desenvolvimento) */}
       {process.env.NODE_ENV === 'development' && mode === 'editor' && (

@@ -24,7 +24,7 @@ import {
     CheckCircle,
     Settings,
     Download,
-    RefreshCw
+    RefreshCw,
 } from 'lucide-react';
 
 // Hooks
@@ -92,7 +92,7 @@ export const PerformanceDashboard: React.FC<{
     className = '',
     enableExport = true,
     autoRefresh = true,
-    refreshInterval = 2000
+    refreshInterval = 2000,
 }) => {
         // ===== HOOKS =====
         const { metrics: cacheMetrics } = useAdvancedCache('preview');
@@ -105,7 +105,7 @@ export const PerformanceDashboard: React.FC<{
             messageTimeout: 10000,
             enableCompression: true,
             rateLimit: { maxMessages: 100, windowMs: 60000 },
-            debug: false
+            debug: false,
         });
         const featureFlags = useFeatureFlags();
         const livePreview = useLiveCanvasPreview(steps, selectedStepId, {
@@ -113,7 +113,7 @@ export const PerformanceDashboard: React.FC<{
             debounceDelay: 300,
             enableCache: true,
             cacheTTL: 30000,
-            enableDebug: false
+            enableDebug: false,
         });
 
         // ===== STATE =====
@@ -133,7 +133,7 @@ export const PerformanceDashboard: React.FC<{
             renderTime: { warning: 100, critical: 500 },
             websocketLatency: { warning: 100, critical: 300 },
             errorRate: { warning: 0.01, critical: 0.05 },
-            memoryUsage: { warning: 50 * 1024 * 1024, critical: 100 * 1024 * 1024 }
+            memoryUsage: { warning: 50 * 1024 * 1024, critical: 100 * 1024 * 1024 },
         };
 
         // ===== COLLECT METRICS =====
@@ -145,26 +145,26 @@ export const PerformanceDashboard: React.FC<{
                     size: cacheMetrics?.totalSize || 0,
                     memoryUsage: cacheMetrics?.memoryUsage || 0,
                     hits: cacheMetrics?.hits || 0,
-                    misses: cacheMetrics?.misses || 0
+                    misses: cacheMetrics?.misses || 0,
                 },
                 rendering: {
                     totalRenders: renderOptimization.metrics.totalRenders,
                     skippedRenders: renderOptimization.metrics.skippedRenders,
                     avgRenderTime: renderOptimization.metrics.avgRenderTime,
-                    efficiency: renderOptimization.metrics.renderEfficiency
+                    efficiency: renderOptimization.metrics.renderEfficiency,
                 },
                 websocket: {
                     isConnected: websocketState.isConnected,
                     latency: websocketState.latency,
                     messageCount: websocketState.messageQueue.length,
-                    rateLimitRemaining: 0 // TODO: Get from websocket
+                    rateLimitRemaining: 0, // TODO: Get from websocket
                 },
                 preview: {
                     updateTime: livePreview.metrics?.averageUpdateTime || 0,
                     cacheEfficiency: livePreview.metrics?.cacheEfficiency || 0,
                     errorRate: livePreview.metrics?.errorRate || 0,
-                    updatesPerSecond: livePreview.metrics?.updatesPerSecond || 0
-                }
+                    updatesPerSecond: livePreview.metrics?.updatesPerSecond || 0,
+                },
             };
         }, [cacheMetrics, renderOptimization.metrics, websocketState, livePreview]);
 
@@ -198,14 +198,14 @@ export const PerformanceDashboard: React.FC<{
                     id: `cache-critical-${Date.now()}`,
                     type: 'critical',
                     message: `Cache hit rate critically low: ${(snapshot.cache.hitRate * 100).toFixed(1)}%`,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 });
             } else if (snapshot.cache.hitRate < thresholds.cacheHitRate.warning) {
                 newAlerts.push({
                     id: `cache-warning-${Date.now()}`,
                     type: 'warning',
                     message: `Cache hit rate below optimal: ${(snapshot.cache.hitRate * 100).toFixed(1)}%`,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 });
             }
 
@@ -215,14 +215,14 @@ export const PerformanceDashboard: React.FC<{
                     id: `render-critical-${Date.now()}`,
                     type: 'critical',
                     message: `Render time critically high: ${snapshot.rendering.avgRenderTime.toFixed(1)}ms`,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 });
             } else if (snapshot.rendering.avgRenderTime > thresholds.renderTime.warning) {
                 newAlerts.push({
                     id: `render-warning-${Date.now()}`,
                     type: 'warning',
                     message: `Render time above optimal: ${snapshot.rendering.avgRenderTime.toFixed(1)}ms`,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 });
             }
 
@@ -232,14 +232,14 @@ export const PerformanceDashboard: React.FC<{
                     id: `ws-critical-${Date.now()}`,
                     type: 'critical',
                     message: `WebSocket latency critically high: ${snapshot.websocket.latency}ms`,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 });
             } else if (snapshot.websocket.latency > thresholds.websocketLatency.warning) {
                 newAlerts.push({
                     id: `ws-warning-${Date.now()}`,
                     type: 'warning',
                     message: `WebSocket latency above optimal: ${snapshot.websocket.latency}ms`,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 });
             }
 
@@ -249,7 +249,7 @@ export const PerformanceDashboard: React.FC<{
                     id: `memory-critical-${Date.now()}`,
                     type: 'critical',
                     message: `Memory usage critically high: ${(snapshot.cache.memoryUsage / 1024 / 1024).toFixed(1)}MB`,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 });
             }
 
@@ -268,7 +268,7 @@ export const PerformanceDashboard: React.FC<{
                     cacheHitRate: 0,
                     renderTime: 0,
                     websocketLatency: 0,
-                    memoryUsage: 0
+                    memoryUsage: 0,
                 };
             }
 
@@ -276,7 +276,7 @@ export const PerformanceDashboard: React.FC<{
                 cacheHitRate: currentSnapshot.cache.hitRate - previousSnapshot.cache.hitRate,
                 renderTime: currentSnapshot.rendering.avgRenderTime - previousSnapshot.rendering.avgRenderTime,
                 websocketLatency: currentSnapshot.websocket.latency - previousSnapshot.websocket.latency,
-                memoryUsage: currentSnapshot.cache.memoryUsage - previousSnapshot.cache.memoryUsage
+                memoryUsage: currentSnapshot.cache.memoryUsage - previousSnapshot.cache.memoryUsage,
             };
         }, [currentSnapshot, previousSnapshot]);
 
@@ -290,12 +290,12 @@ export const PerformanceDashboard: React.FC<{
                 metadata: {
                     stepsCount: steps.length,
                     selectedStepId,
-                    featureFlags: featureFlags.flags || {}
-                }
+                    featureFlags: featureFlags.flags || {},
+                },
             };
 
             const blob = new Blob([JSON.stringify(exportObj, null, 2)], {
-                type: 'application/json'
+                type: 'application/json',
             });
 
             const url = URL.createObjectURL(blob);
@@ -312,7 +312,7 @@ export const PerformanceDashboard: React.FC<{
             value: string | number,
             trend?: number,
             unit?: string,
-            status?: 'good' | 'warning' | 'critical'
+            status?: 'good' | 'warning' | 'critical',
         ) => (
             <Card className="h-24">
                 <CardContent className="p-3">
@@ -379,7 +379,7 @@ export const PerformanceDashboard: React.FC<{
                         currentSnapshot?.cache.hitRate ? (
                             currentSnapshot.cache.hitRate >= thresholds.cacheHitRate.warning ? 'good' :
                                 currentSnapshot.cache.hitRate >= thresholds.cacheHitRate.critical ? 'warning' : 'critical'
-                        ) : undefined
+                        ) : undefined,
                     )}
 
                     {renderMetricCard(
@@ -390,7 +390,7 @@ export const PerformanceDashboard: React.FC<{
                         currentSnapshot?.rendering.avgRenderTime ? (
                             currentSnapshot.rendering.avgRenderTime <= thresholds.renderTime.warning ? 'good' :
                                 currentSnapshot.rendering.avgRenderTime <= thresholds.renderTime.critical ? 'warning' : 'critical'
-                        ) : undefined
+                        ) : undefined,
                     )}
 
                     {renderMetricCard(
@@ -398,7 +398,7 @@ export const PerformanceDashboard: React.FC<{
                         currentSnapshot?.websocket.latency || 0,
                         trends.websocketLatency,
                         'ms',
-                        currentSnapshot?.websocket.isConnected ? 'good' : 'critical'
+                        currentSnapshot?.websocket.isConnected ? 'good' : 'critical',
                     )}
 
                     {renderMetricCard(
@@ -409,7 +409,7 @@ export const PerformanceDashboard: React.FC<{
                         currentSnapshot?.cache.memoryUsage ? (
                             currentSnapshot.cache.memoryUsage <= thresholds.memoryUsage.warning ? 'good' :
                                 currentSnapshot.cache.memoryUsage <= thresholds.memoryUsage.critical ? 'warning' : 'critical'
-                        ) : undefined
+                        ) : undefined,
                     )}
                 </div>
 
@@ -421,21 +421,21 @@ export const PerformanceDashboard: React.FC<{
                     <CardContent className="space-y-2">
                         <div className="flex items-center justify-between text-sm">
                             <span>Cache System</span>
-                            <Badge variant={currentSnapshot?.cache.hitRate && currentSnapshot.cache.hitRate > 0.8 ? "default" : "destructive"}>
+                            <Badge variant={currentSnapshot?.cache.hitRate && currentSnapshot.cache.hitRate > 0.8 ? 'default' : 'destructive'}>
                                 {currentSnapshot?.cache.hitRate ? 'Active' : 'Inactive'}
                             </Badge>
                         </div>
 
                         <div className="flex items-center justify-between text-sm">
                             <span>Render Optimization</span>
-                            <Badge variant={renderOptimization.config.enableRenderProfiling ? "default" : "outline"}>
+                            <Badge variant={renderOptimization.config.enableRenderProfiling ? 'default' : 'outline'}>
                                 {renderOptimization.config.enableRenderProfiling ? 'Enabled' : 'Disabled'}
                             </Badge>
                         </div>
 
                         <div className="flex items-center justify-between text-sm">
                             <span>WebSocket Connection</span>
-                            <Badge variant={currentSnapshot?.websocket.isConnected ? "default" : "destructive"}>
+                            <Badge variant={currentSnapshot?.websocket.isConnected ? 'default' : 'destructive'}>
                                 {currentSnapshot?.websocket.isConnected ? 'Connected' : 'Disconnected'}
                             </Badge>
                         </div>
@@ -462,7 +462,7 @@ export const PerformanceDashboard: React.FC<{
                         </CardTitle>
 
                         <div className="flex items-center gap-2">
-                            <Badge variant={autoRefresh ? "default" : "outline"} className="text-xs">
+                            <Badge variant={autoRefresh ? 'default' : 'outline'} className="text-xs">
                                 <Activity className="w-3 h-3 mr-1" />
                                 {autoRefresh ? 'Live' : 'Static'}
                             </Badge>

@@ -193,7 +193,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
               fallback: blocks.some(b => b.metadata?.isFallback),
             },
           }
-          : stage
+          : stage,
       ));
 
       setLoadedStages(prev => new Set([...prev, stageId]));
@@ -215,7 +215,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
               fallback: true,
             },
           }
-          : stage
+          : stage,
       ));
 
       // Retornar fallback
@@ -425,7 +425,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
               lastAccessed: Date.now(),
             },
           }
-          : stage
+          : stage,
       ));
 
       appLogger.debug(`✅ Blocos atualizados para ${stageId}: ${blocks.length} blocos`);

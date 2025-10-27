@@ -52,9 +52,9 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
           blockId: 'step01-lead-form',
           field: 'name',
           value: trimmed,
-          valid: valid,
+          valid,
         },
-      })
+      }),
     );
 
     return valid;
@@ -94,7 +94,7 @@ const ConnectedLeadForm: React.FC<ConnectedLeadFormProps> = ({
             formData,
             isValid: true,
           },
-        })
+        }),
       );
 
       // Callback opcional

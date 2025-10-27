@@ -38,7 +38,7 @@ class BlockErrorBoundary extends React.Component<{ block: Block; children?: Reac
 
   componentDidCatch(error: any, info: any) {
     // Log não-invasivo para diagnóstico
-    // eslint-disable-next-line no-console
+     
     console.error('[UniversalBlockRenderer] erro ao renderizar bloco', {
       block: this.props.block,
       error,
@@ -49,7 +49,7 @@ class BlockErrorBoundary extends React.Component<{ block: Block; children?: Reac
   componentDidUpdate(prevProps: Readonly<{ block: Block }>) {
     // Ao trocar de bloco, resetar estado de erro
     if (prevProps.block.id !== this.props.block.id && this.state.hasError) {
-      // eslint-disable-next-line react/no-did-update-set-state
+       
       this.setState({ hasError: false, error: undefined });
     }
   }
@@ -101,7 +101,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         'universal-block-renderer relative group transition-all duration-200',
         isSelected && 'ring-2 ring-blue-500 ring-offset-2',
         !isPreviewing && 'hover:shadow-sm cursor-pointer',
-        className
+        className,
       )}
       style={style}
       onClick={!isPreviewing ? handleClick : undefined}

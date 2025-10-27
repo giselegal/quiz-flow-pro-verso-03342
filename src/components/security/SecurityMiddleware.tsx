@@ -39,25 +39,25 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
                 url,
                 method,
                 endpoint,
-                user_agent: navigator.userAgent
+                user_agent: navigator.userAgent,
               },
-              severity: 'medium'
+              severity: 'medium',
             });
 
             // Retornar response de rate limit
             return new Response(
               JSON.stringify({
                 error: 'Rate limit exceeded',
-                retry_after: rateLimitResult.retry_after
+                retry_after: rateLimitResult.retry_after,
               }),
               {
                 status: 429,
                 statusText: 'Too Many Requests',
                 headers: {
                   'Content-Type': 'application/json',
-                  'Retry-After': (rateLimitResult.retry_after || 60).toString()
-                }
-              }
+                  'Retry-After': (rateLimitResult.retry_after || 60).toString(),
+                },
+              },
             );
           }
         }
@@ -79,8 +79,8 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
             url,
             method,
             status_code: response.status,
-            endpoint
-          }
+            endpoint,
+          },
         });
 
         // Log de requests suspeitos
@@ -94,9 +94,9 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
               method,
               status_code: response.status,
               duration,
-              user_agent: navigator.userAgent
+              user_agent: navigator.userAgent,
             },
-            severity
+            severity,
           });
         }
 
@@ -110,9 +110,9 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
             url,
             method,
             error: error instanceof Error ? error.message : 'Unknown error',
-            user_agent: navigator.userAgent
+            user_agent: navigator.userAgent,
           },
-          severity: 'medium'
+          severity: 'medium',
         });
 
         throw error;
@@ -125,9 +125,9 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
         event_type: 'page_visibility_change',
         event_data: {
           hidden: document.hidden,
-          visibility_state: document.visibilityState
+          visibility_state: document.visibilityState,
         },
-        severity: 'low'
+        severity: 'low',
       });
     };
 
@@ -136,7 +136,7 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
       logSecurityEvent({
         event_type: 'page_focus',
         event_data: { timestamp: Date.now() },
-        severity: 'low'
+        severity: 'low',
       });
     };
 
@@ -144,7 +144,7 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
       logSecurityEvent({
         event_type: 'page_blur',
         event_data: { timestamp: Date.now() },
-        severity: 'low'
+        severity: 'low',
       });
     };
 
@@ -165,9 +165,9 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
               event_data: {
                 width_diff: window.outerWidth - window.innerWidth,
                 height_diff: window.outerHeight - window.innerHeight,
-                user_agent: navigator.userAgent
+                user_agent: navigator.userAgent,
               },
-              severity: 'low'
+              severity: 'low',
             });
           }
         } else {
@@ -185,7 +185,7 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
         logSecurityEvent({
           event_type: 'console_log_intercepted',
           event_data: { args: args.slice(0, 3) }, // Primeiros 3 args apenas
-          severity: 'low'
+          severity: 'low',
         });
         return originalConsoleLog.apply(console, args);
       };
@@ -194,7 +194,7 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
         logSecurityEvent({
           event_type: 'console_error_intercepted',  
           event_data: { args: args.slice(0, 3) },
-          severity: 'medium'
+          severity: 'medium',
         });
         return originalConsoleError.apply(console, args);
       };

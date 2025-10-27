@@ -28,7 +28,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     appLogger.debug('🏗️  PropertiesColumn renderizado:', {
       hasSelectedBlock: !!selectedBlock,
       selectedBlockType: selectedBlock?.type,
-      selectedBlockId: selectedBlock?.id
+      selectedBlockId: selectedBlock?.id,
     });
   }, [selectedBlock]);
 
@@ -52,7 +52,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       className={cn(
         'h-full bg-background border-l border-border flex flex-col',
         'w-full',
-        className
+        className,
       )}
     >
       <Suspense fallback={

@@ -114,7 +114,7 @@ export const EditorControlsManager: React.FC<EditorControlsManagerProps> = ({
       trackEvent('editor_viewport_changed', { viewport, mode });
       onStateChange?.({ viewportSize: viewport });
     },
-    [actions, trackEvent, mode, onStateChange]
+    [actions, trackEvent, mode, onStateChange],
   );
 
   const handleSave = useCallback(() => {

@@ -12,7 +12,7 @@ import {
     IntroImage,
     IntroDescription,
     NameForm,
-    IntroFooter
+    IntroFooter,
 } from './components';
 import { useStep01Logic } from './hooks/useStep01Logic';
 
@@ -25,7 +25,7 @@ const Step01Container: React.FC<BaseStepProps> = ({
     onPrevious,
     onSave,
     data,
-    funnelId
+    funnelId,
 }) => {
     // Toda a lógica isolada no hook
     const {
@@ -37,12 +37,12 @@ const Step01Container: React.FC<BaseStepProps> = ({
         handleSubmit,
         progress,
         canProceed,
-        metadata
+        metadata,
     } = useStep01Logic({
         initialData: data,
         onSave,
         onNext,
-        funnelId
+        funnelId,
     });
 
     return (

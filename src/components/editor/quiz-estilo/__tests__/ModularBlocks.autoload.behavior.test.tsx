@@ -57,7 +57,7 @@ describe('Modular Components autoload behavior', () => {
                 blocks={[mkBlock('b1', 'transition-title')] as any}
                 editor={editor}
                 isEditable
-            />
+            />,
         );
 
         expect(ensureStepLoaded).not.toHaveBeenCalled();
@@ -74,7 +74,7 @@ describe('Modular Components autoload behavior', () => {
                 data={{ id: 'step-12' }}
                 blocks={[]}
                 editor={editor}
-            />
+            />,
         );
 
         await waitFor(() => {
@@ -93,7 +93,7 @@ describe('Modular Components autoload behavior', () => {
                 editor={editor}
                 isEditable
                 userProfile={{ userName: 'Teste', resultStyle: 'natural' }}
-            />
+            />,
         );
 
         expect(ensureStepLoaded).not.toHaveBeenCalled();
@@ -110,7 +110,7 @@ describe('Modular Components autoload behavior', () => {
                 blocks={[]}
                 editor={editor}
                 userProfile={{ userName: 'Teste', resultStyle: 'natural' }}
-            />
+            />,
         );
 
         await waitFor(() => {

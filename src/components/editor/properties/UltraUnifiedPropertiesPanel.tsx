@@ -55,7 +55,7 @@ import {
     Shield,
     Monitor,
     Smartphone,
-    Tablet
+    Tablet,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
@@ -124,7 +124,7 @@ const mockPropertyExtractionService = {
                         typeof value === 'number' ? 'number' : 'string',
                     category: 'content',
                     currentValue: value,
-                    description: `Configuração de ${key}`
+                    description: `Configuração de ${key}`,
                 });
             });
         }
@@ -141,7 +141,7 @@ const mockPropertyExtractionService = {
                                 typeof value === 'object' ? 'object' : 'string',
                     category: 'behavior',
                     currentValue: value,
-                    description: `Dados de ${key}`
+                    description: `Dados de ${key}`,
                 });
             });
         }
@@ -152,7 +152,7 @@ const mockPropertyExtractionService = {
     identifyInterpolationFields: (properties: PropertyField[]): PropertyField[] => {
         return properties.map(prop => ({
             ...prop,
-            supportsInterpolation: prop.type === 'string' || prop.type === 'text'
+            supportsInterpolation: prop.type === 'string' || prop.type === 'text',
         }));
     },
 
@@ -168,7 +168,7 @@ const mockPropertyExtractionService = {
         });
 
         return categorized;
-    }
+    },
 };
 
 // ===== INTERFACES =====
@@ -213,7 +213,7 @@ const PROPERTY_CATEGORIES: PropertyCategory[] = [
         description: 'Texto, imagens e mídia',
         icon: <Type className="w-4 h-4" />,
         color: 'blue',
-        priority: 1
+        priority: 1,
     },
     {
         key: 'visual',
@@ -221,7 +221,7 @@ const PROPERTY_CATEGORIES: PropertyCategory[] = [
         description: 'Cores, tipografia e estilo',
         icon: <Palette className="w-4 h-4" />,
         color: 'purple',
-        priority: 2
+        priority: 2,
     },
     {
         key: 'layout',
@@ -229,7 +229,7 @@ const PROPERTY_CATEGORIES: PropertyCategory[] = [
         description: 'Tamanho, espaçamento e posição',
         icon: <Layout className="w-4 h-4" />,
         color: 'green',
-        priority: 3
+        priority: 3,
     },
     {
         key: 'behavior',
@@ -237,7 +237,7 @@ const PROPERTY_CATEGORIES: PropertyCategory[] = [
         description: 'Interações e funcionalidade',
         icon: <Zap className="w-4 h-4" />,
         color: 'orange',
-        priority: 4
+        priority: 4,
     },
     {
         key: 'advanced',
@@ -245,8 +245,8 @@ const PROPERTY_CATEGORIES: PropertyCategory[] = [
         description: 'Configurações técnicas',
         icon: <Settings className="w-4 h-4" />,
         color: 'gray',
-        priority: 5
-    }
+        priority: 5,
+    },
 ];
 
 const SPECIALIZED_EDITORS = {
@@ -565,7 +565,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
     onReset,
     previewMode = 'desktop',
     onPreviewModeChange,
-    className = ''
+    className = '',
 }) => {
     // Estado do painel
     const [viewState, setViewState] = useState<ViewState>({
@@ -575,7 +575,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
         showPreview: false,
         isPinned: false,
         searchQuery: '',
-        selectedCategory: ''
+        selectedCategory: '',
     });
 
     // Histórico para undo/redo
@@ -589,7 +589,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
             return {
                 extractedProperties: [],
                 categorizedProperties: {} as any,
-                hasSpecializedEditor: false
+                hasSpecializedEditor: false,
             };
         }
 
@@ -609,14 +609,14 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
             return {
                 extractedProperties: withInterpolation,
                 categorizedProperties: categorized,
-                hasSpecializedEditor: hasSpecialized
+                hasSpecializedEditor: hasSpecialized,
             };
         } catch (error) {
             appLogger.warn('Erro ao extrair propriedades:', error);
             return {
                 extractedProperties: [],
                 categorizedProperties: {} as any,
-                hasSpecializedEditor: selectedBlock.type in SPECIALIZED_EDITORS
+                hasSpecializedEditor: selectedBlock.type in SPECIALIZED_EDITORS,
             };
         }
     }, [selectedBlock]);
@@ -629,7 +629,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
         if (viewState.searchQuery) {
             filtered = filtered.filter(prop =>
                 prop.label.toLowerCase().includes(viewState.searchQuery.toLowerCase()) ||
-                prop.path.toLowerCase().includes(viewState.searchQuery.toLowerCase())
+                prop.path.toLowerCase().includes(viewState.searchQuery.toLowerCase()),
             );
         }
 
@@ -649,7 +649,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
         // Adicionar ao histórico
         const historyEntry = {
             timestamp: Date.now(),
-            changes: updates
+            changes: updates,
         };
 
         setHistory(prev => [...prev.slice(0, historyIndex + 1), historyEntry]);

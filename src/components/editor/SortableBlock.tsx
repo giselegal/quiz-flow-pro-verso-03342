@@ -40,7 +40,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
     data: {
       type: 'canvas-block',
       blockId: id,
-      sourceStepKey: sourceStepKey,
+      sourceStepKey,
     },
   });
 
@@ -64,7 +64,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
         isDragging && 'opacity-50 scale-105',
         isSelected
           ? 'border-blue-500 bg-blue-500 bg-opacity-10 shadow-lg'
-          : 'border-transparent hover:border-2 hover:border-blue-500 hover:bg-blue-400 hover:bg-opacity-5'
+          : 'border-transparent hover:border-2 hover:border-blue-500 hover:bg-blue-400 hover:bg-opacity-5',
       )}
       onClick={e => {
         e.stopPropagation();
@@ -78,7 +78,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
           'absolute -top-10 left-0 text-xs px-3 py-1 rounded-t-lg font-medium shadow-lg transition-all duration-200',
           isSelected
             ? 'bg-blue-600 text-white opacity-100'
-            : 'bg-gray-800 text-white opacity-0 group-hover:opacity-100'
+            : 'bg-gray-800 text-white opacity-0 group-hover:opacity-100',
         )}
         data-testid={`editor-block-title-${id}`}
       >

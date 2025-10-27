@@ -37,10 +37,10 @@ const DropZoneBefore: React.FC<{ blockId: string; blockIndex: number; stepId: st
         id: dropZoneId,
         data: {
             dropZone: 'before',
-            blockId: blockId,
-            stepId: stepId,
-            insertIndex: blockIndex
-        }
+            blockId,
+            stepId,
+            insertIndex: blockIndex,
+        },
     });
 
     return (
@@ -50,12 +50,12 @@ const DropZoneBefore: React.FC<{ blockId: string; blockIndex: number; stepId: st
                 'h-8 -my-2 relative transition-all duration-200 border-2 rounded-md',
                 isOver
                     ? 'bg-blue-100 border-blue-400 border-dashed shadow-lg'
-                    : 'bg-gray-50 border-gray-300 border-dashed opacity-40 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400'
+                    : 'bg-gray-50 border-gray-300 border-dashed opacity-40 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400',
             )}
         >
             <div className={cn(
                 'absolute inset-0 flex items-center justify-center',
-                isOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                isOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
             )}>
                 <span className="text-[10px] font-medium text-blue-600 bg-white px-2 py-0.5 rounded shadow-sm">
                     {isOver ? '⬇ Soltar aqui' : '+ Soltar antes'}
@@ -98,7 +98,7 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                     isMultiSelected(block.id) && 'bg-blue-50',
                     isDragging && 'opacity-50',
                     isContainer && 'pb-8',
-                    isContainer && isHoverTarget && 'outline outline-2 outline-blue-400'
+                    isContainer && isHoverTarget && 'outline outline-2 outline-blue-400',
                 )}
                 onClick={(e) => handleBlockClick(e, block)}
                 ref={setNodeRef}
@@ -153,7 +153,7 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                                 <div
                                     className={cn(
                                         'min-h-[32px] rounded-md border border-dashed flex flex-col gap-2 p-2 bg-white/40 transition-colors',
-                                        isHoverTarget && 'border-blue-400 bg-blue-50/40'
+                                        isHoverTarget && 'border-blue-400 bg-blue-50/40',
                                     )}
                                     onDragOver={() => setHoverContainerId && setHoverContainerId(block.id)}
                                     onDragLeave={(e) => {

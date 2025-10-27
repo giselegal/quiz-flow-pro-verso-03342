@@ -28,7 +28,7 @@ export const EditableField: React.FC<EditableFieldProps> = ({
     placeholder = 'Digite aqui...',
     multiline = false,
     htmlContent = false,
-    children
+    children,
 }) => {
     const [localValue, setLocalValue] = useState(value);
     const [isEditing, setIsEditing] = useState(false);

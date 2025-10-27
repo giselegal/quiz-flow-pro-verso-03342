@@ -22,7 +22,7 @@ interface BadgeInlineBlockProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: number | string | undefined,
-  type: 'top' | 'bottom' | 'left' | 'right'
+  type: 'top' | 'bottom' | 'left' | 'right',
 ): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
@@ -123,7 +123,7 @@ const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={!disabled ? onClick : undefined}
     >

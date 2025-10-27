@@ -29,7 +29,7 @@ export const BrandKitSidebar: React.FC<BrandKitSidebarProps> = ({ onClose }) => 
         updateAssets,
         resetBrandKit,
         exportBrandKit,
-        importBrandKit
+        importBrandKit,
     } = useBrandKit();
 
     // Analytics tracking fallback for compatibility
@@ -80,7 +80,7 @@ export const BrandKitSidebar: React.FC<BrandKitSidebarProps> = ({ onClose }) => 
         'Source Sans Pro',
         'Raleway',
         'Ubuntu',
-        'Nunito'
+        'Nunito',
     ];
 
     return (
@@ -181,7 +181,7 @@ export const BrandKitSidebar: React.FC<BrandKitSidebarProps> = ({ onClose }) => 
                                         updateColors({
                                             primary: palette[0],
                                             secondary: palette[1],
-                                            accent: palette[2]
+                                            accent: palette[2],
                                         });
                                     }}
                                     className="flex h-8 rounded border border-gray-300 overflow-hidden hover:border-gray-400 transition-colors"

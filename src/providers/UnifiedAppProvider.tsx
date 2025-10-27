@@ -55,8 +55,8 @@ export const UnifiedAppProvider: React.FC<UnifiedAppProviderProps> = ({
     enableCache: true,
     enableAnalytics: true,
     enableCollaboration: false,
-    enableAdvancedEditor: true
-  }
+    enableAdvancedEditor: true,
+  },
 }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>

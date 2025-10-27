@@ -139,7 +139,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
                   className="absolute inset-0 border-2 rounded-full opacity-20"
                   style={{
                     borderColor: progressColor,
-                    animation: `ping 2s cubic-bezier(0, 0, 0.2, 1) infinite`,
+                    animation: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
                     animationDelay: `${i * 0.5}s`,
                   }}
                 />
@@ -161,7 +161,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
                 className="w-3 h-3 rounded-full"
                 style={{
                   backgroundColor: progressColor,
-                  animation: `bounce 1.4s ease-in-out infinite both`,
+                  animation: 'bounce 1.4s ease-in-out infinite both',
                   animationDelay: `${i * 0.16}s`,
                 }}
               />
@@ -178,7 +178,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
                 className="w-1 rounded-full"
                 style={{
                   backgroundColor: progressColor,
-                  animation: `pulse 1.2s ease-in-out infinite`,
+                  animation: 'pulse 1.2s ease-in-out infinite',
                   animationDelay: `${i * 0.1}s`,
                 }}
               />
@@ -195,7 +195,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
     deviceView || 'desktop',
     'tight',
     'full',
-    className
+    className,
   );
 
   const currentLoadingText = loadingTexts.length > 0 ? loadingTexts[currentTextIndex] : null;

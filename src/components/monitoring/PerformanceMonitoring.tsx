@@ -16,7 +16,7 @@ import {
     Shield,
     BarChart3,
     Gauge,
-    Server
+    Server,
 } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -84,7 +84,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             trend: 'down',
             change: -15.3,
             description: 'Tempo médio de carregamento da página inicial',
-            category: 'speed'
+            category: 'speed',
         },
         {
             id: 'bundle-size',
@@ -96,7 +96,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             trend: 'stable',
             change: 2.1,
             description: 'Tamanho total dos arquivos JavaScript',
-            category: 'efficiency'
+            category: 'efficiency',
         },
         {
             id: 'memory-usage',
@@ -108,7 +108,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             trend: 'up',
             change: 8.7,
             description: 'Consumo de memória durante a execução',
-            category: 'efficiency'
+            category: 'efficiency',
         },
         {
             id: 'error-rate',
@@ -120,7 +120,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             trend: 'down',
             change: -42.1,
             description: 'Percentual de erros JavaScript',
-            category: 'reliability'
+            category: 'reliability',
         },
         {
             id: 'bounce-rate',
@@ -132,7 +132,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             trend: 'down',
             change: -18.6,
             description: 'Usuários que saem sem interagir',
-            category: 'user-experience'
+            category: 'user-experience',
         },
         {
             id: 'api-response',
@@ -144,8 +144,8 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             trend: 'stable',
             change: -1.2,
             description: 'Tempo médio de resposta das APIs',
-            category: 'speed'
-        }
+            category: 'speed',
+        },
     ]);
 
     const [alerts, setAlerts] = useState<PerformanceAlert[]>([
@@ -159,8 +159,8 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             resolved: false,
             actions: [
                 { label: 'Analisar Componentes', action: 'analyze' },
-                { label: 'Otimizar Automaticamente', action: 'auto-optimize' }
-            ]
+                { label: 'Otimizar Automaticamente', action: 'auto-optimize' },
+            ],
         },
         {
             id: '2',
@@ -170,7 +170,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             timestamp: '1 hora atrás',
             severity: 'low',
             resolved: true,
-            actions: []
+            actions: [],
         },
         {
             id: '3',
@@ -182,9 +182,9 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             resolved: false,
             actions: [
                 { label: 'Ver Detalhes', action: 'details' },
-                { label: 'Aplicar Recomendação', action: 'apply' }
-            ]
-        }
+                { label: 'Aplicar Recomendação', action: 'apply' },
+            ],
+        },
     ]);
 
     const [optimizations, setOptimizations] = useState<OptimizationRecommendation[]>([
@@ -197,7 +197,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             category: 'performance',
             expectedGain: '18% melhoria no carregamento',
             priority: 1,
-            automated: true
+            automated: true,
         },
         {
             id: 'opt-2',
@@ -208,7 +208,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             category: 'performance',
             expectedGain: '45% redução no tráfego',
             priority: 2,
-            automated: true
+            automated: true,
         },
         {
             id: 'opt-3',
@@ -219,7 +219,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             category: 'performance',
             expectedGain: '25% menos requisições',
             priority: 3,
-            automated: false
+            automated: false,
         },
         {
             id: 'opt-4',
@@ -230,8 +230,8 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             category: 'security',
             expectedGain: 'Score SEO +15 pontos',
             priority: 4,
-            automated: true
-        }
+            automated: true,
+        },
     ]);
 
     // Simulação de atualizações em tempo real
@@ -242,7 +242,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             setPerformanceMetrics(prev => prev.map(metric => ({
                 ...metric,
                 value: metric.value + (Math.random() - 0.5) * 0.1,
-                change: metric.change + (Math.random() - 0.5) * 2
+                change: metric.change + (Math.random() - 0.5) * 2,
             })));
         }, 3000);
 
@@ -254,7 +254,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             excellent: 'text-green-600 bg-green-50',
             good: 'text-blue-600 bg-blue-50',
             warning: 'text-yellow-600 bg-yellow-50',
-            critical: 'text-red-600 bg-red-50'
+            critical: 'text-red-600 bg-red-50',
         };
         return colors[status as keyof typeof colors] || colors.good;
     };
@@ -264,7 +264,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             excellent: <CheckCircle className="w-4 h-4" />,
             good: <CheckCircle className="w-4 h-4" />,
             warning: <AlertTriangle className="w-4 h-4" />,
-            critical: <AlertTriangle className="w-4 h-4" />
+            critical: <AlertTriangle className="w-4 h-4" />,
         };
         return icons[status as keyof typeof icons] || icons.good;
     };
@@ -292,7 +292,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             performance: <Activity className="w-4 h-4" />,
             security: <Shield className="w-4 h-4" />,
             ux: <Users className="w-4 h-4" />,
-            seo: <Target className="w-4 h-4" />
+            seo: <Target className="w-4 h-4" />,
         };
         return icons[category as keyof typeof icons] || icons.performance;
     };
@@ -302,7 +302,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             warning: <AlertTriangle className="w-4 h-4 text-yellow-600" />,
             error: <AlertTriangle className="w-4 h-4 text-red-600" />,
             info: <Bell className="w-4 h-4 text-blue-600" />,
-            success: <CheckCircle className="w-4 h-4 text-green-600" />
+            success: <CheckCircle className="w-4 h-4 text-green-600" />,
         };
         return icons[type as keyof typeof icons] || icons.info;
     };
@@ -322,7 +322,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
             timestamp: 'Agora',
             severity: 'low',
             resolved: true,
-            actions: []
+            actions: [],
         };
 
         setAlerts(prev => [newAlert, ...prev]);
@@ -429,7 +429,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
                             { key: 'dashboard', label: 'Dashboard', icon: BarChart3, count: performanceMetrics.length },
                             { key: 'alerts', label: 'Alertas', icon: Bell, count: alerts.filter(a => !a.resolved).length },
                             { key: 'optimizations', label: 'Otimizações', icon: Zap, count: optimizations.length },
-                            { key: 'settings', label: 'Configurações', icon: Settings, count: 0 }
+                            { key: 'settings', label: 'Configurações', icon: Settings, count: 0 },
                         ].map(({ key, label, icon: Icon, count }) => (
                             <button
                                 key={key}
@@ -500,7 +500,7 @@ export function PerformanceMonitoring({ onClose }: PerformanceMonitoringProps) {
                                                             'bg-green-500'
                                                         }`}
                                                     style={{
-                                                        width: `${Math.min((metric.value / metric.threshold) * 100, 100)}%`
+                                                        width: `${Math.min((metric.value / metric.threshold) * 100, 100)}%`,
                                                     }}
                                                 />
                                             </div>

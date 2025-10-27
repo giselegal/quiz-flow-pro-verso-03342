@@ -19,7 +19,7 @@ import {
     Database,
     GitBranch,
     Settings,
-    BarChart3
+    BarChart3,
 } from 'lucide-react';
 
 // ============================================================================
@@ -110,7 +110,7 @@ const DEFAULT_FLAGS: Record<string, FeatureFlag> = {
         enabled: false,
         rolloutPercentage: 0,
         createdAt: Date.now(),
-        updatedAt: Date.now()
+        updatedAt: Date.now(),
     },
     'preview_monitoring': {
         key: 'preview_monitoring',
@@ -119,7 +119,7 @@ const DEFAULT_FLAGS: Record<string, FeatureFlag> = {
         enabled: true,
         rolloutPercentage: 100,
         createdAt: Date.now(),
-        updatedAt: Date.now()
+        updatedAt: Date.now(),
     },
     'preview_virtualization': {
         key: 'preview_virtualization',
@@ -128,8 +128,8 @@ const DEFAULT_FLAGS: Record<string, FeatureFlag> = {
         enabled: false,
         rolloutPercentage: 0,
         createdAt: Date.now(),
-        updatedAt: Date.now()
-    }
+        updatedAt: Date.now(),
+    },
 };
 
 const DEFAULT_TESTS: Record<string, ABTest> = {
@@ -144,20 +144,20 @@ const DEFAULT_TESTS: Record<string, ABTest> = {
                 name: 'Current System',
                 description: 'Existing LiveRuntimePreview implementation',
                 trafficPercentage: 70,
-                isControl: true
+                isControl: true,
             },
             {
                 id: 'optimized',
                 name: 'Optimized System',
                 description: 'New LiveCanvasPreview with performance optimizations',
                 trafficPercentage: 30,
-                isControl: false
-            }
+                isControl: false,
+            },
         ],
         metrics: ['update_time', 'cache_efficiency', 'error_rate', 'user_satisfaction'],
         startDate: Date.now(),
-        targetUsers: 'beta'
-    }
+        targetUsers: 'beta',
+    },
 };
 
 // ============================================================================
@@ -175,7 +175,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({
     children,
     persistToLocalStorage = true,
     enableAnalytics = false,
-    userId = 'anonymous'
+    userId = 'anonymous',
 }) => {
     // ===== STATE =====
     const [flags, setFlags] = useState<Record<string, FeatureFlag>>(DEFAULT_FLAGS);
@@ -241,8 +241,8 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({
             [flagKey]: {
                 ...prev[flagKey],
                 enabled: !prev[flagKey]?.enabled,
-                updatedAt: Date.now()
-            }
+                updatedAt: Date.now(),
+            },
         }));
     }, []);
 
@@ -252,8 +252,8 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({
             [flagKey]: {
                 ...prev[flagKey],
                 rolloutPercentage: Math.max(0, Math.min(100, percentage)),
-                updatedAt: Date.now()
-            }
+                updatedAt: Date.now(),
+            },
         }));
     }, []);
 
@@ -292,7 +292,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({
             // Persist assignment
             setUserAssignments(prev => ({
                 ...prev,
-                [assignmentKey]: assignedVariantId
+                [assignmentKey]: assignedVariantId,
             }));
         }
 
@@ -316,7 +316,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({
             userId,
             sessionId: `session_${Date.now()}`,
             metrics: { [metric]: value },
-            timestamp: Date.now()
+            timestamp: Date.now(),
         };
 
         setResults(prev => [...prev, result]);
@@ -328,7 +328,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({
                 variantId: variant.id,
                 metric,
                 value,
-                userId
+                userId,
             });
         }
     }, [getVariant, userId, enableAnalytics]);
@@ -348,7 +348,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({
         updateRollout,
         recordMetric,
         getTestResults,
-        assignUserToTest
+        assignUserToTest,
     };
 
     return (
@@ -374,7 +374,7 @@ export const FeatureFlagAdmin: React.FC<FeatureFlagAdminProps> = ({ className })
         toggleFlag,
         updateRollout,
         getTestResults,
-        recordMetric
+        recordMetric,
     } = useFeatureFlags();
 
     const [showTests, setShowTests] = useState(false);

@@ -102,7 +102,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       style={containerStyle}
       onClick={handleClick}

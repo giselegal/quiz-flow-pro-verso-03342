@@ -220,7 +220,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
       // 🔗 Persistência unificada (produção/runtime)
       try {
         // usar import dinâmico para evitar require no cliente
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+         
         (async () => {
           try {
             const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
@@ -251,7 +251,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
             selectedOptions: selectedIds,
             selectedIds, // compat
           },
-        })
+        }),
       );
 
       // 🔔 Notificar que respostas foram atualizadas (para hooks que recalculam)
@@ -262,7 +262,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     if (onPropertyChange) {
       onPropertyChange(
         'selectedOptions',
-        opts.map(opt => opt.id)
+        opts.map(opt => opt.id),
       );
       onPropertyChange('hasCompleteSelection', isValid);
     }
@@ -296,7 +296,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
       onPropertyChange('complete', true);
       onPropertyChange(
         'selectedOptions',
-        selectedOptions
+        selectedOptions,
       );
     }
   };
@@ -362,7 +362,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     gridColumnsClass,
     optionsWithImages: options.filter(opt => opt.imageUrl).length,
     totalOptions: options.length,
-    layout: hasImages ? '2 colunas (mobile + desktop)' : '1 coluna (todos dispositivos)'
+    layout: hasImages ? '2 colunas (mobile + desktop)' : '1 coluna (todos dispositivos)',
   });
 
   // Calcular tamanho da imagem
@@ -372,7 +372,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   // Estilos dinâmicos para bordas e sombras
   const optionStyles = {
     borderWidth: showBorders ? `${borderWidth}px` : '0px',
-    borderColor: borderColor,
+    borderColor,
     borderRadius: `${borderRadius}px`,
     boxShadow: showShadows
       ? `0 ${shadowIntensity}px ${shadowIntensity * 2}px ${shadowColor}`
@@ -426,11 +426,11 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
           optionStyles,
           gridGap: `${gridGap}px`,
           columns: responsiveColumns
-            ? `repeat(auto-fit, minmax(250px, 1fr))`
+            ? 'repeat(auto-fit, minmax(250px, 1fr))'
             : `repeat(${columns}, 1fr)`,
           imageWidth: `${finalImageWidth}px`,
           imageHeight: `${finalImageHeight}px`,
-          scale: scale,
+          scale,
           layoutOrientation,
           columnsCount: typeof columns === 'number' ? columns : parseInt(columns as string) || 2,
           borderWidth,

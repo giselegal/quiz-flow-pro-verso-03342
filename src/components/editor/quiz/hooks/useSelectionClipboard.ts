@@ -92,7 +92,7 @@ export function useSelectionClipboard(opts: UseSelectionClipboardOptions): UseSe
                 const clones = clipboard.map((b, i) => ({
                     ...b,
                     id: `${b.id}-paste-${Date.now()}-${i}`,
-                    order: baseLen + i
+                    order: baseLen + i,
                 }));
                 return { ...s, blocks: [...s.blocks, ...clones] };
             });
@@ -127,6 +127,6 @@ export function useSelectionClipboard(opts: UseSelectionClipboardOptions): UseSe
         copy,
         paste,
         removeSelected,
-        clipboard
+        clipboard,
     };
 }

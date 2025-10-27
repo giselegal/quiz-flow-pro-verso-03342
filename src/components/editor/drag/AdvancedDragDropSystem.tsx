@@ -18,7 +18,7 @@ import React, {
     useRef,
     useMemo,
     ReactNode,
-    CSSProperties
+    CSSProperties,
 } from 'react';
 import { useEditorCore, useEditorElements, useEditorSelection, useEditorViewport, EditorElement } from '../core/EditorCore';
 
@@ -105,7 +105,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
     dragPreviewOffset = { x: 10, y: 10 },
     onDragStart,
     onDragMove,
-    onDragEnd
+    onDragEnd,
 }) => {
     const { core } = useEditorCore();
     const { elements, updateElement } = useEditorElements();
@@ -123,7 +123,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
         const gridSize = core.getState().grid.size;
         return {
             x: Math.round(x / gridSize) * gridSize,
-            y: Math.round(y / gridSize) * gridSize
+            y: Math.round(y / gridSize) * gridSize,
         };
     }, [core, enableSnapping, constraints.snapToGrid]);
 
@@ -170,14 +170,14 @@ export const DragProvider: React.FC<DragProviderProps> = ({
                 left: element.position.x,
                 right: element.position.x + element.size.width,
                 top: element.position.y,
-                bottom: element.position.y + element.size.height
+                bottom: element.position.y + element.size.height,
             };
 
             const draggedBounds = {
                 left: x,
                 right: x + draggedElement.size.width,
                 top: y,
-                bottom: y + draggedElement.size.height
+                bottom: y + draggedElement.size.height,
             };
 
             // Snap to left edge
@@ -227,7 +227,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
             left: x,
             right: x + draggedElement.size.width,
             top: y,
-            bottom: y + draggedElement.size.height
+            bottom: y + draggedElement.size.height,
         };
 
         const collidingElements: string[] = [];
@@ -239,7 +239,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
                 left: element.position.x,
                 right: element.position.x + element.size.width,
                 top: element.position.y,
-                bottom: element.position.y + element.size.height
+                bottom: element.position.y + element.size.height,
             };
 
             // Check for overlap
@@ -257,7 +257,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
 
         return {
             hasCollision: collidingElements.length > 0,
-            collidingElements
+            collidingElements,
         };
     }, [elements, enableCollisionDetection]);
 
@@ -304,7 +304,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
             offset,
             isDragging: true,
             draggedElements,
-            modifiers: { shift: false, ctrl: false, alt: false }
+            modifiers: { shift: false, ctrl: false, alt: false },
         };
 
         setDragInfo(newDragInfo);
@@ -320,7 +320,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
                 pointerEvents: 'none',
                 zIndex: 10000,
                 width: element.size.width,
-                height: element.size.height
+                height: element.size.height,
             }}>
                 {draggedElements.length > 1 && (
                     <div style={{
@@ -332,12 +332,12 @@ export const DragProvider: React.FC<DragProviderProps> = ({
                         padding: '2px 6px',
                         borderRadius: '2px',
                         fontSize: '11px',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
                     }}>
                         {draggedElements.length} elements
                     </div>
                 )}
-            </div>
+            </div>,
         );
     }, [elements, selectedElements, onDragStart]);
 
@@ -360,7 +360,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
         const updatedDragInfo: DragInfo = {
             ...dragInfo,
             currentPosition: { x, y },
-            modifiers
+            modifiers,
         };
 
         setDragInfo(updatedDragInfo);
@@ -405,7 +405,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
                         const deltaY = currentPosition.y - dragInfo.startPosition.y;
                         newPosition = {
                             x: element.position.x + deltaX,
-                            y: element.position.y + deltaY
+                            y: element.position.y + deltaY,
                         };
                     }
                 }
@@ -423,7 +423,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
                 }
 
                 updateElement(draggedId, {
-                    position: newPosition
+                    position: newPosition,
                 });
             }
         }
@@ -452,7 +452,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
         endDrag,
         registerDropZone,
         unregisterDropZone,
-        setDragPreview
+        setDragPreview,
     };
 
     return (
@@ -466,7 +466,7 @@ export const DragProvider: React.FC<DragProviderProps> = ({
                         left: dragInfo.currentPosition.x + dragPreviewOffset.x,
                         top: dragInfo.currentPosition.y + dragPreviewOffset.y,
                         pointerEvents: 'none',
-                        zIndex: 10000
+                        zIndex: 10000,
                     }}
                 >
                     {dragPreview}
@@ -507,7 +507,7 @@ export const Draggable: React.FC<DraggableProps> = ({
     onDragStart,
     onDragEnd,
     className = '',
-    style = {}
+    style = {},
 }) => {
     const { startDrag, updateDrag, endDrag, setDragPreview } = useDrag();
     const dragRef = useRef<HTMLDivElement>(null);
@@ -546,7 +546,7 @@ export const Draggable: React.FC<DraggableProps> = ({
             const modifiers = {
                 shift: moveEvent.shiftKey,
                 ctrl: moveEvent.ctrlKey,
-                alt: moveEvent.altKey
+                alt: moveEvent.altKey,
             };
 
             updateDrag({ x: moveEvent.clientX, y: moveEvent.clientY }, modifiers);
@@ -616,7 +616,7 @@ export const Draggable: React.FC<DraggableProps> = ({
             style={{
                 cursor: disabled ? 'default' : isDragging ? 'grabbing' : 'grab',
                 userSelect: 'none',
-                ...style
+                ...style,
             }}
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
@@ -646,7 +646,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
     children,
     className = '',
     style = {},
-    highlightStyle = {}
+    highlightStyle = {},
 }) => {
     const { registerDropZone, unregisterDropZone, dragInfo } = useDrag();
     const dropRef = useRef<HTMLDivElement>(null);
@@ -662,7 +662,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
             bounds: { x: rect.left, y: rect.top, width: rect.width, height: rect.height },
             accepts,
             canDrop,
-            onDrop
+            onDrop,
         };
 
         registerDropZone(dropZone);
@@ -701,7 +701,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
             className={`drop-zone ${isHighlighted ? 'highlighted' : ''} ${className}`}
             style={{
                 ...style,
-                ...(isHighlighted ? highlightStyle : {})
+                ...(isHighlighted ? highlightStyle : {}),
             }}
         >
             {children}
@@ -719,7 +719,7 @@ interface DragHandleProps {
 export const DragHandle: React.FC<DragHandleProps> = ({
     children,
     className = '',
-    style = {}
+    style = {},
 }) => {
     return (
         <div
@@ -727,7 +727,7 @@ export const DragHandle: React.FC<DragHandleProps> = ({
             style={{
                 cursor: 'grab',
                 userSelect: 'none',
-                ...style
+                ...style,
             }}
         >
             {children || (
@@ -738,7 +738,7 @@ export const DragHandle: React.FC<DragHandleProps> = ({
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: '14px',
-                    color: '#6b7280'
+                    color: '#6b7280',
                 }}>
                     ⋮⋮
                 </div>

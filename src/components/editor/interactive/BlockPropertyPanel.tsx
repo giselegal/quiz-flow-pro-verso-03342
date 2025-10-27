@@ -155,7 +155,7 @@ export const BlockPropertyPanel: React.FC<BlockPropertyPanelProps> = ({
           <div className="space-y-3">
             <h4 className="text-sm font-semibold text-muted-foreground">Conteúdo</h4>
             {Object.entries(content).map(([key, value]) => 
-              renderProperty(key, value, 'content')
+              renderProperty(key, value, 'content'),
             )}
           </div>
         )}
@@ -167,7 +167,7 @@ export const BlockPropertyPanel: React.FC<BlockPropertyPanelProps> = ({
             <div className="space-y-3">
               <h4 className="text-sm font-semibold text-muted-foreground">Propriedades</h4>
               {Object.entries(properties).map(([key, value]) => 
-                renderProperty(key, value, 'property')
+                renderProperty(key, value, 'property'),
               )}
             </div>
           </>

@@ -22,7 +22,7 @@ export const QuizHeader: React.FC<QuizHeaderProps> = memo(
     const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
     const topCategory = Object.entries(scores).reduce(
       (top, [category, score]) => (score > top.score ? { category, score } : top),
-      { category: '', score: 0 }
+      { category: '', score: 0 },
     );
 
     return (
@@ -114,7 +114,7 @@ export const QuizHeader: React.FC<QuizHeaderProps> = memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 // Helper para categorizar etapas

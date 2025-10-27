@@ -10,7 +10,7 @@ interface CountdownTimerProps {
 export default function CountdownTimer({
     initialMinutes = 15,
     onExpire,
-    urgencyMessage = 'Esta oferta especial expira em:'
+    urgencyMessage = 'Esta oferta especial expira em:',
 }: CountdownTimerProps) {
     const [timeLeft, setTimeLeft] = useState(initialMinutes * 60);
 

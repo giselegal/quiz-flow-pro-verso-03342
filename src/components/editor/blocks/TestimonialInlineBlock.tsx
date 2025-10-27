@@ -89,7 +89,7 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={!disabled ? onClick : undefined}
     >
@@ -108,7 +108,7 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
                 key={i}
                 className={cn(
                   'w-3 h-3',
-                  i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                  i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300',
                 )}
               />
             ))}

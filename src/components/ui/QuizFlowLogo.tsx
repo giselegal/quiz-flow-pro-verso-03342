@@ -11,13 +11,13 @@ const QuizFlowLogo: React.FC<QuizFlowLogoProps> = ({
   size = 'md',
   variant = 'full',
   className = '',
-  theme = 'light'
+  theme = 'light',
 }) => {
   const sizeClasses = {
     sm: { icon: 'w-8 h-8', text: 'text-lg' },
     md: { icon: 'w-12 h-12', text: 'text-xl' },
     lg: { icon: 'w-16 h-16', text: 'text-2xl' },
-    xl: { icon: 'w-24 h-24', text: 'text-4xl' }
+    xl: { icon: 'w-24 h-24', text: 'text-4xl' },
   };
 
   const LogoIcon = () => (

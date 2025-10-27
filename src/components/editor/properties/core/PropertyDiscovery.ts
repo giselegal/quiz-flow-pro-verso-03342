@@ -251,7 +251,7 @@ function discoverQuizStepProperties(stepKey: string): ComponentPropertySchema | 
         ...prop,
         key: `${block.id}.${prop.key}`,
         label: `${block.type} - ${prop.label}`,
-        description: `${prop.description} (Bloco: ${block.id})`
+        description: `${prop.description} (Bloco: ${block.id})`,
       };
 
       allProperties.push(prefixedProperty);
@@ -268,7 +268,7 @@ function discoverQuizStepProperties(stepKey: string): ComponentPropertySchema | 
     componentType: stepKey,
     componentName,
     properties: allProperties,
-    categories
+    categories,
   };
 }
 
@@ -341,7 +341,7 @@ const createProperty = (
   type: PropertyType,
   label: string,
   category: PropertyCategory,
-  options?: any
+  options?: any,
 ): DiscoveredProperty => ({
   key,
   type,
@@ -420,7 +420,7 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
         max: field.max,
         step: field.step,
         required: field.required,
-      }
+      },
     ));
 
     return [...getUniversalPropertiesForBlock(currentBlock), ...schemaProperties];
@@ -443,7 +443,7 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
         max: field.max,
         step: field.step,
         required: field.required,
-      }
+      },
     ));
     return [...getUniversalPropertiesForBlock(currentBlock), ...fallbackProps];
   }
@@ -456,16 +456,16 @@ export function getPropertiesForComponentType(blockType: string, currentBlock: B
 function getUniversalPropertiesForBlock(currentBlock?: BlockConfig) {
   return [
     createProperty('marginTop', currentBlock?.properties?.marginTop || 0, PropertyType.RANGE, 'Margem Superior', PropertyCategory.LAYOUT, {
-      min: 0, max: 100, step: 2, unit: 'px'
+      min: 0, max: 100, step: 2, unit: 'px',
     }),
     createProperty('marginBottom', currentBlock?.properties?.marginBottom || 0, PropertyType.RANGE, 'Margem Inferior', PropertyCategory.LAYOUT, {
-      min: 0, max: 100, step: 2, unit: 'px'
+      min: 0, max: 100, step: 2, unit: 'px',
     }),
     createProperty('paddingTop', currentBlock?.properties?.paddingTop || 0, PropertyType.RANGE, 'Padding Superior', PropertyCategory.LAYOUT, {
-      min: 0, max: 100, step: 2, unit: 'px'
+      min: 0, max: 100, step: 2, unit: 'px',
     }),
     createProperty('paddingBottom', currentBlock?.properties?.paddingBottom || 0, PropertyType.RANGE, 'Padding Inferior', PropertyCategory.LAYOUT, {
-      min: 0, max: 100, step: 2, unit: 'px'
+      min: 0, max: 100, step: 2, unit: 'px',
     }),
     createProperty('backgroundColor', currentBlock?.properties?.backgroundColor || 'transparent', PropertyType.COLOR, 'Cor de Fundo', PropertyCategory.STYLE),
   ];
@@ -481,7 +481,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
     type: PropertyType,
     label: string,
     category: PropertyCategory,
-    options?: any
+    options?: any,
   ): DiscoveredProperty => ({
     key,
     type,
@@ -512,16 +512,16 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
   // Universal properties that apply to all components
   const getUniversalProperties = () => [
     createProperty('marginTop', 0, PropertyType.RANGE, 'Margem Superior', PropertyCategory.LAYOUT, {
-      min: 0, max: 100, step: 2, unit: 'px'
+      min: 0, max: 100, step: 2, unit: 'px',
     }),
     createProperty('marginBottom', 0, PropertyType.RANGE, 'Margem Inferior', PropertyCategory.LAYOUT, {
-      min: 0, max: 100, step: 2, unit: 'px'
+      min: 0, max: 100, step: 2, unit: 'px',
     }),
     createProperty('paddingTop', 0, PropertyType.RANGE, 'Padding Superior', PropertyCategory.LAYOUT, {
-      min: 0, max: 100, step: 2, unit: 'px'
+      min: 0, max: 100, step: 2, unit: 'px',
     }),
     createProperty('paddingBottom', 0, PropertyType.RANGE, 'Padding Inferior', PropertyCategory.LAYOUT, {
-      min: 0, max: 100, step: 2, unit: 'px'
+      min: 0, max: 100, step: 2, unit: 'px',
     }),
     createProperty('backgroundColor', 'transparent', PropertyType.COLOR, 'Cor de Fundo', PropertyCategory.STYLE),
   ];
@@ -551,22 +551,22 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: '100%', label: 'Largura Total' },
             { value: 'max-w-4xl', label: 'Container Médio' },
             { value: 'max-w-6xl', label: 'Container Grande' },
-            { value: 'max-w-full', label: 'Sem Limite' }
-          ]
+            { value: 'max-w-full', label: 'Sem Limite' },
+          ],
         }),
         createProperty('alignment', currentBlock?.properties?.alignment || 'center', PropertyType.SELECT, 'Alinhamento', PropertyCategory.LAYOUT, {
           options: [
             { value: 'left', label: 'Esquerda' },
             { value: 'center', label: 'Centro' },
-            { value: 'right', label: 'Direita' }
-          ]
+            { value: 'right', label: 'Direita' },
+          ],
         }),
         createProperty('spacing', currentBlock?.properties?.spacing || 'normal', PropertyType.SELECT, 'Espaçamento Interno', PropertyCategory.LAYOUT, {
           options: [
             { value: 'compact', label: 'Compacto' },
             { value: 'normal', label: 'Normal' },
-            { value: 'spacious', label: 'Espaçoso' }
-          ]
+            { value: 'spacious', label: 'Espaçoso' },
+          ],
         }),
 
         // === BEHAVIOR PROPERTIES ===
@@ -586,8 +586,8 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
           options: [
             { value: 'center', label: 'Centro' },
             { value: 'top center', label: 'Topo Centro' },
-            { value: 'bottom center', label: 'Base Centro' }
-          ]
+            { value: 'bottom center', label: 'Base Centro' },
+          ],
         }),
       ];
 
@@ -604,7 +604,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: 'lg', label: 'LG' },
             { value: 'xl', label: 'XL' },
             { value: '2xl', label: '2XL' },
-          ]
+          ],
         }),
         createProperty('fontWeight', currentBlock?.properties?.fontWeight ?? 'normal', PropertyType.SELECT, 'Peso da Fonte', PropertyCategory.STYLE, {
           options: [
@@ -613,7 +613,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: 'medium', label: 'Médio' },
             { value: 'semibold', label: 'Semi-negrito' },
             { value: 'bold', label: 'Negrito' },
-          ]
+          ],
         }),
         createProperty('textColor', currentBlock?.properties?.textColor ?? BRAND_COLORS.text, PropertyType.COLOR, 'Cor do Texto', PropertyCategory.STYLE),
         createProperty('alignment', currentBlock?.properties?.alignment ?? 'center', PropertyType.SELECT, 'Alinhamento', PropertyCategory.LAYOUT, {
@@ -621,7 +621,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: 'left', label: 'Esquerda' },
             { value: 'center', label: 'Centro' },
             { value: 'right', label: 'Direita' },
-          ]
+          ],
         }),
       ];
 
@@ -635,7 +635,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: 'h2', label: 'H2 - Seção' },
             { value: 'h3', label: 'H3 - Subseção' },
             { value: 'h4', label: 'H4 - Menor' },
-          ]
+          ],
         }),
         createProperty('fontSize', currentBlock?.properties?.fontSize ?? 'xl', PropertyType.SELECT, 'Tamanho da Fonte', PropertyCategory.STYLE, {
           options: [
@@ -643,7 +643,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: 'xl', label: 'Extra Grande' },
             { value: '2xl', label: '2X Grande' },
             { value: '3xl', label: '3X Grande' },
-          ]
+          ],
         }),
         createProperty('fontWeight', currentBlock?.properties?.fontWeight ?? 'bold', PropertyType.SELECT, 'Peso da Fonte', PropertyCategory.STYLE, {
           options: [
@@ -651,7 +651,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: 'medium', label: 'Médio' },
             { value: 'semibold', label: 'Semi-negrito' },
             { value: 'bold', label: 'Negrito' },
-          ]
+          ],
         }),
         createProperty('textColor', currentBlock?.properties?.textColor ?? BRAND_COLORS.text, PropertyType.COLOR, 'Cor do Texto', PropertyCategory.STYLE),
         createProperty('textAlign', currentBlock?.properties?.textAlign ?? 'center', PropertyType.SELECT, 'Alinhamento', PropertyCategory.LAYOUT, {
@@ -659,7 +659,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: 'left', label: 'Esquerda' },
             { value: 'center', label: 'Centro' },
             { value: 'right', label: 'Direita' },
-          ]
+          ],
         }),
       ];
 
@@ -676,14 +676,14 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: 'secondary', label: 'Secundário' },
             { value: 'outline', label: 'Contorno' },
             { value: 'ghost', label: 'Fantasma' },
-          ]
+          ],
         }),
         createProperty('size', currentBlock?.properties?.size ?? 'medium', PropertyType.SELECT, 'Tamanho', PropertyCategory.LAYOUT, {
           options: [
             { value: 'small', label: 'Pequeno' },
             { value: 'medium', label: 'Médio' },
             { value: 'large', label: 'Grande' },
-          ]
+          ],
         }),
         createProperty('backgroundColor', currentBlock?.properties?.backgroundColor ?? BRAND_COLORS.primary, PropertyType.COLOR, 'Cor de Fundo', PropertyCategory.STYLE),
         createProperty('textColor', currentBlock?.properties?.textColor ?? '#FFFFFF', PropertyType.COLOR, 'Cor do Texto', PropertyCategory.STYLE),
@@ -702,7 +702,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: 'email', label: 'Email' },
             { value: 'tel', label: 'Telefone' },
             { value: 'number', label: 'Número' },
-          ]
+          ],
         }),
         createProperty('borderColor', currentBlock?.properties?.borderColor ?? BRAND_COLORS.primary, PropertyType.COLOR, 'Cor da Borda', PropertyCategory.STYLE),
       ];
@@ -718,7 +718,7 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
             { value: '50%', label: '50%' },
             { value: '75%', label: '75%' },
             { value: '100%', label: '100%' },
-          ]
+          ],
         }),
       ];
 
@@ -798,8 +798,8 @@ function getHardcodedPropertiesForType(blockType: string, currentBlock?: BlockCo
               step: field.step,
               options: field.options,
               required: field.required,
-              description: field.description
-            }
+              description: field.description,
+            },
           );
         });
 
@@ -848,7 +848,7 @@ export function discoverComponentProperties(componentType: string): ComponentPro
       componentType,
       hasResult: !!unifiedPropsResult,
       resultLength: unifiedPropsResult?.length || 0,
-      resultType: Array.isArray(unifiedPropsResult) ? 'array' : typeof unifiedPropsResult
+      resultType: Array.isArray(unifiedPropsResult) ? 'array' : typeof unifiedPropsResult,
     });
 
     if (unifiedPropsResult && Array.isArray(unifiedPropsResult) && unifiedPropsResult.length > 0) {
@@ -859,8 +859,8 @@ export function discoverComponentProperties(componentType: string): ComponentPro
           key: p.key,
           type: p.type,
           category: p.category,
-          label: p.label
-        }))
+          label: p.label,
+        })),
       });
 
       const discoveredProperties: DiscoveredProperty[] = unifiedPropsResult.map(prop => ({
@@ -886,14 +886,14 @@ export function discoverComponentProperties(componentType: string): ComponentPro
         componentType,
         componentName,
         propertiesCount: discoveredProperties.length,
-        categoriesCount: categories.size
+        categoriesCount: categories.size,
       });
 
       return {
         componentType,
         componentName,
         properties: discoveredProperties,
-        categories
+        categories,
       };
     } else {
       console.log('⚠️ PropertyDiscovery: nenhuma propriedade retornada por getPropertiesForComponentType');
@@ -917,7 +917,7 @@ export function discoverComponentProperties(componentType: string): ComponentPro
     mappedType,
     encontrado: !!component,
     totalComponentes: MODULAR_COMPONENTS.length,
-    tiposDisponiveis: MODULAR_COMPONENTS.slice(0, 5).map(c => c.type)
+    tiposDisponiveis: MODULAR_COMPONENTS.slice(0, 5).map(c => c.type),
   });
 
   if (!component || !component.properties) {
@@ -949,7 +949,7 @@ export function discoverComponentProperties(componentType: string): ComponentPro
     if (propertyConfig.options) {
       property.options = propertyConfig.options.map((option: any) => ({
         value: option,
-        label: typeof option === 'string' ? createLabel(option) : String(option)
+        label: typeof option === 'string' ? createLabel(option) : String(option),
       }));
     }
 
@@ -977,7 +977,7 @@ export function discoverComponentProperties(componentType: string): ComponentPro
     componentType,
     componentName: component.name,
     properties: discoveredProperties,
-    categories
+    categories,
   };
 }
 

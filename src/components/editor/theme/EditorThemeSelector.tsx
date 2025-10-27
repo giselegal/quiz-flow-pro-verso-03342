@@ -11,7 +11,7 @@ interface ThemeSelectorProps {
 export const EditorThemeSelector: React.FC<ThemeSelectorProps> = ({
     currentTheme,
     onThemeChange,
-    onCustomColorChange
+    onCustomColorChange,
 }) => {
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [selectedColorProperty, setSelectedColorProperty] = useState<string>('');
@@ -175,7 +175,7 @@ export const useEditorTheme = () => {
     const updateCustomColor = (property: string, color: string) => {
         setCustomColors(prev => ({
             ...prev,
-            [property]: color
+            [property]: color,
         }));
     };
 

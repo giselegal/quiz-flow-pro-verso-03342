@@ -22,7 +22,7 @@ export function FunnelAIControlPanel({ className = '', compact = false }: Funnel
         disableAI,
         refreshStatus,
         isAIEnabled,
-        canUseAI
+        canUseAI,
     } = useFunnelAI();
 
     const handleToggleAI = async () => {
@@ -37,7 +37,7 @@ export function FunnelAIControlPanel({ className = '', compact = false }: Funnel
         return (
             <div className={`flex items-center gap-2 ${className}`}>
                 <Badge
-                    variant={isAIEnabled ? "default" : "secondary"}
+                    variant={isAIEnabled ? 'default' : 'secondary'}
                     className="flex items-center gap-1"
                 >
                     <Brain className="w-3 h-3" />
@@ -46,7 +46,7 @@ export function FunnelAIControlPanel({ className = '', compact = false }: Funnel
 
                 <Button
                     size="sm"
-                    variant={isAIEnabled ? "secondary" : "default"}
+                    variant={isAIEnabled ? 'secondary' : 'default'}
                     onClick={handleToggleAI}
                     disabled={aiStatus.loading}
                 >
@@ -77,7 +77,7 @@ export function FunnelAIControlPanel({ className = '', compact = false }: Funnel
                     </div>
 
                     <Badge
-                        variant={isAIEnabled ? "default" : "secondary"}
+                        variant={isAIEnabled ? 'default' : 'secondary'}
                         className="flex items-center gap-1"
                     >
                         <div className={`w-2 h-2 rounded-full ${isAIEnabled ? 'bg-green-500' : 'bg-gray-400'
@@ -148,7 +148,7 @@ export function FunnelAIControlPanel({ className = '', compact = false }: Funnel
                     <Button
                         onClick={handleToggleAI}
                         disabled={aiStatus.loading}
-                        className={isAIEnabled ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}
+                        className={isAIEnabled ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'}
                     >
                         {aiStatus.loading ? (
                             <Loader2 className="w-4 h-4 animate-spin mr-2" />

@@ -85,7 +85,7 @@ const SectionDividerBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(block.properties?.marginTop ?? 0, 'top'),
         getMarginClass(block.properties?.marginBottom ?? 0, 'bottom'),
         getMarginClass(block.properties?.marginLeft ?? 0, 'left'),
-        getMarginClass(block.properties?.marginRight ?? 0, 'right')
+        getMarginClass(block.properties?.marginRight ?? 0, 'right'),
       )}
       style={{ marginTop: margin / 2, marginBottom: margin / 2 }}
       onClick={onClick}
@@ -95,7 +95,7 @@ const SectionDividerBlock: React.FC<BlockComponentProps> = ({
         style={{
           borderColor: color,
           borderTopWidth: thickness,
-          width: width,
+          width,
           maxWidth: '100%',
         }}
       />

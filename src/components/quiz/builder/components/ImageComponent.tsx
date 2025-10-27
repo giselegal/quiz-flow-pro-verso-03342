@@ -50,7 +50,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({ data, style, isSelected
               className={cn(
                 'max-w-full mx-auto rounded-md',
                 imageLoaded ? 'opacity-100' : 'opacity-0',
-                'transition-opacity duration-300'
+                'transition-opacity duration-300',
               )}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}

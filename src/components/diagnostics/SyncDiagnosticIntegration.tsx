@@ -74,7 +74,7 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
                             zIndex: 10001,
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '10px'
+                            gap: '10px',
                         }}>
                             <button
                                 onClick={async () => {
@@ -91,7 +91,7 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
                                     borderRadius: '6px',
                                     cursor: 'pointer',
                                     fontSize: '12px',
-                                    fontWeight: 'bold'
+                                    fontWeight: 'bold',
                                 }}
                             >
                                 🧪 Testar Sync
@@ -112,7 +112,7 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
                                     border: 'none',
                                     borderRadius: '4px',
                                     cursor: 'pointer',
-                                    fontSize: '10px'
+                                    fontSize: '10px',
                                 }}
                             >
                                 ✖ Fechar
@@ -135,7 +135,7 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
                                 zIndex: 10001,
                                 overflow: 'auto',
                                 boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                                border: `2px solid ${diagnosticResults.failed === 0 ? '#4CAF50' : '#f44336'}`
+                                border: `2px solid ${diagnosticResults.failed === 0 ? '#4CAF50' : '#f44336'}`,
                             }}>
                                 <div style={{
                                     display: 'flex',
@@ -143,7 +143,7 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
                                     alignItems: 'center',
                                     marginBottom: '10px',
                                     borderBottom: '1px solid #333',
-                                    paddingBottom: '8px'
+                                    paddingBottom: '8px',
                                 }}>
                                     <h4 style={{ margin: 0, fontSize: '13px' }}>
                                         📊 Resultados do Teste
@@ -155,7 +155,7 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
                                             border: 'none',
                                             color: '#999',
                                             cursor: 'pointer',
-                                            fontSize: '16px'
+                                            fontSize: '16px',
                                         }}
                                     >
                                         ×
@@ -166,7 +166,7 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
                                     <div style={{
                                         color: diagnosticResults.failed === 0 ? '#4CAF50' : '#f44336',
                                         fontWeight: 'bold',
-                                        fontSize: '14px'
+                                        fontSize: '14px',
                                     }}>
                                         {diagnosticResults.passed}/{diagnosticResults.total} testes passaram
                                         ({((diagnosticResults.passed / diagnosticResults.total) * 100).toFixed(1)}%)
@@ -182,7 +182,7 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
                                                 marginBottom: '4px',
                                                 backgroundColor: test.success ? '#1b5e20' : '#b71c1c',
                                                 borderRadius: '4px',
-                                                fontSize: '10px'
+                                                fontSize: '10px',
                                             }}
                                         >
                                             <div style={{ fontWeight: 'bold' }}>
@@ -203,7 +203,7 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
                                         paddingTop: '8px',
                                         borderTop: '1px solid #333',
                                         fontSize: '10px',
-                                        color: '#ffeb3b'
+                                        color: '#ffeb3b',
                                     }}>
                                         💡 Pressione Ctrl+Shift+D para abrir/fechar diagnóstico
                                     </div>
@@ -232,7 +232,7 @@ export const withSyncDiagnostic = (WrappedComponent: React.ComponentType<any>) =
                             zIndex: 10000,
                             color: 'white',
                             fontSize: '16px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                         }}
                         title="Abrir diagnóstico de sincronização (Ctrl+Shift+D)"
                     >
@@ -250,7 +250,7 @@ export const useSyncMonitoring = () => {
         isInSync: true,
         canvasSteps: 0,
         previewSteps: 0,
-        lastCheck: Date.now()
+        lastCheck: Date.now(),
     });
 
     useEffect(() => {
@@ -266,12 +266,12 @@ export const useSyncMonitoring = () => {
                     isInSync: canvasCount === previewCount,
                     canvasSteps: canvasCount,
                     previewSteps: previewCount,
-                    lastCheck: Date.now()
+                    lastCheck: Date.now(),
                 });
 
                 // Disparar evento personalizado para outros componentes
                 window.dispatchEvent(new CustomEvent('sync-status-update', {
-                    detail: { canvasCount, previewCount, isInSync: canvasCount === previewCount }
+                    detail: { canvasCount, previewCount, isInSync: canvasCount === previewCount },
                 }));
 
             } catch (error) {
@@ -295,9 +295,9 @@ export const useSyncMonitoring = () => {
                         node instanceof Element && (
                             node.matches('[data-canvas-step], [data-preview-step]') ||
                             node.querySelector('[data-canvas-step], [data-preview-step]')
-                        )
+                        ),
                     )
-                )
+                ),
             );
 
             if (relevantChange) {
@@ -309,7 +309,7 @@ export const useSyncMonitoring = () => {
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ['data-canvas-step', 'data-preview-step']
+            attributeFilter: ['data-canvas-step', 'data-preview-step'],
         });
 
         return () => {

@@ -130,7 +130,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
         } catch (error) {
           toast({
             title: 'Erro',
-            description: 'Erro ao importar JSON: ' + (error as Error).message,
+            description: `Erro ao importar JSON: ${  (error as Error).message}`,
             variant: 'destructive',
           });
         }
@@ -204,7 +204,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
                   'px-3 py-2 text-sm rounded-md transition-all duration-200',
                   actions.canUndo
                     ? 'text-gray-700 hover:bg-white hover:shadow-sm'
-                    : 'text-gray-400 cursor-not-allowed'
+                    : 'text-gray-400 cursor-not-allowed',
                 )}
                 title="Desfazer (Ctrl+Z)"
               >
@@ -218,7 +218,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
                   'px-3 py-2 text-sm rounded-md transition-all duration-200',
                   actions.canRedo
                     ? 'text-gray-700 hover:bg-white hover:shadow-sm'
-                    : 'text-gray-400 cursor-not-allowed'
+                    : 'text-gray-400 cursor-not-allowed',
                 )}
                 title="Refazer (Ctrl+Y)"
               >
@@ -265,7 +265,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
                   'px-2 py-2 text-xs rounded-md transition-colors',
                   virtDisabled
                     ? 'text-amber-700 bg-amber-100 hover:bg-amber-200'
-                    : 'text-gray-600 hover:bg-gray-100'
+                    : 'text-gray-600 hover:bg-gray-100',
                 )}
                 title={
                   virtDisabled
@@ -288,7 +288,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
                   'px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium',
                   mode === 'edit'
                     ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50',
                 )}
               >
                 ✏️ Editar
@@ -300,7 +300,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
                   'px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium',
                   mode === 'preview'
                     ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50',
                 )}
               >
                 👁️ Preview
@@ -324,7 +324,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
           <div
             className={cn(
               'flex items-center justify-between text-sm',
-              'bg-blue-50 border-blue-200 text-blue-900'
+              'bg-blue-50 border-blue-200 text-blue-900',
             )}
           >
             <div>
@@ -341,7 +341,7 @@ export const EditableEditorHeader: React.FC<EditableEditorHeaderProps> = ({
           <div
             className={cn(
               'flex items-center justify-between text-sm',
-              'bg-green-50 border-green-200 text-green-900'
+              'bg-green-50 border-green-200 text-green-900',
             )}
           >
             <div>

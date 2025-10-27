@@ -18,7 +18,7 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import {
   Settings, Target, Palette, BarChart3, 
-  Plus, Trash2, Edit3, Save
+  Plus, Trash2, Edit3, Save,
 } from 'lucide-react';
 
 interface QuizPropertiesPanelProps {
@@ -47,14 +47,14 @@ interface StepConfiguration {
 
 const QUIZ_STYLES = [
   'Natural', 'Clássico', 'Contemporâneo', 'Elegante',
-  'Romântico', 'Sexy', 'Dramático', 'Criativo'
+  'Romântico', 'Sexy', 'Dramático', 'Criativo',
 ];
 
 const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
   stepNumber,
   stepType,
   onStepChange,
-  className = ''
+  className = '',
 }) => {
   // Estado local
   const [config, setConfig] = useState<StepConfiguration>({
@@ -63,7 +63,7 @@ const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
     questionText: '',
     options: [],
     maxSelections: 3,
-    isRequired: true
+    isRequired: true,
   });
 
   const [activeTab, setActiveTab] = useState<'content' | 'scoring' | 'styling' | 'logic'>('content');
@@ -82,7 +82,7 @@ const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
       questionText: getDefaultQuestionText(stepNumber, stepType),
       options: getDefaultOptions(stepNumber, stepType),
       maxSelections: stepType === 'Questão Estratégica' ? 1 : 3,
-      isRequired: true
+      isRequired: true,
     };
 
     setConfig(mockConfig);
@@ -92,7 +92,7 @@ const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
   const handleConfigChange = useCallback((field: keyof StepConfiguration, value: any) => {
     setConfig(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
     setIsEditing(true);
   }, []);
@@ -101,7 +101,7 @@ const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
     const newOption: QuestionOption = {
       id: `option-${Date.now()}`,
       text: 'Nova opção',
-      points: QUIZ_STYLES.reduce((acc, style) => ({ ...acc, [style]: 0 }), {})
+      points: QUIZ_STYLES.reduce((acc, style) => ({ ...acc, [style]: 0 }), {}),
     };
 
     handleConfigChange('options', [...(config.options || []), newOption]);
@@ -109,7 +109,7 @@ const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
 
   const handleOptionUpdate = useCallback((optionId: string, updates: Partial<QuestionOption>) => {
     const updatedOptions = (config.options || []).map(option =>
-      option.id === optionId ? { ...option, ...updates } : option
+      option.id === optionId ? { ...option, ...updates } : option,
     );
     handleConfigChange('options', updatedOptions);
   }, [config.options, handleConfigChange]);
@@ -305,7 +305,7 @@ const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
                                   onChange={(e) => {
                                     const newPoints = {
                                       ...option.points,
-                                      [style]: parseInt(e.target.value) || 0
+                                      [style]: parseInt(e.target.value) || 0,
                                     };
                                     handleOptionUpdate(option.id, { points: newPoints });
                                   }}
@@ -421,13 +421,13 @@ function getDefaultOptions(stepNumber: number, stepType: string): QuestionOption
       {
         id: 'option-1',
         text: 'Opção de exemplo 1',
-        points: QUIZ_STYLES.reduce((acc, style) => ({ ...acc, [style]: 0 }), {})
+        points: QUIZ_STYLES.reduce((acc, style) => ({ ...acc, [style]: 0 }), {}),
       },
       {
         id: 'option-2',
         text: 'Opção de exemplo 2',
-        points: QUIZ_STYLES.reduce((acc, style) => ({ ...acc, [style]: 0 }), {})
-      }
+        points: QUIZ_STYLES.reduce((acc, style) => ({ ...acc, [style]: 0 }), {}),
+      },
     ];
   }
   return [];

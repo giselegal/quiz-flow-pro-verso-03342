@@ -42,7 +42,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   useEffect(() => {
     console.warn(
       '⚠️ DEPRECATED: ComponentRenderer (quiz/builder) será removido em 21/out/2025. ' +
-      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md'
+      'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md',
     );
   }, []);
 
@@ -133,7 +133,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                     <button key={i} style={{ backgroundColor: '#E5DDD5' }}>
                       {(data.minValue || 1) + i}
                     </button>
-                  )
+                  ),
                 )}
               </div>
               <span className="text-sm">{data.maxLabel || 'Máximo'}</span>

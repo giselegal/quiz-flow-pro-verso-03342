@@ -28,7 +28,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
         !value && 'text-stone-400 italic',
         isSelected && 'bg-brand/10 outline outline-1 outline-brand',
         disabled && 'cursor-not-allowed opacity-50',
-        className
+        className,
       )}
       onClick={!disabled ? onClick : undefined}
       title="Clique para selecionar e editar no painel de propriedades"

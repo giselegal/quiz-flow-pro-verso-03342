@@ -23,7 +23,7 @@ import {
     ArrowLeft,
     FileText,
     Zap,
-    Target
+    Target,
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { HybridTemplateService } from '@/services/aliases';
@@ -107,13 +107,13 @@ const QuizEditorDashboard: React.FC = () => {
                     secondaryColor: '#f8bbd9',
                     backgroundColor: '#ffffff',
                     logoUrl: '',
-                    logoAlt: 'Logo'
+                    logoAlt: 'Logo',
                 },
                 navigation: {
                     autoAdvanceSteps: [],
                     manualAdvanceSteps: [],
                     transitionSteps: [12, 19],
-                    autoAdvanceDelay: 3000
+                    autoAdvanceDelay: 3000,
                 },
                 scoring: {
                     categories: ['classic', 'creative', 'elegant'],
@@ -122,9 +122,9 @@ const QuizEditorDashboard: React.FC = () => {
                         normalQuestionWeight: 1.0,
                         strategicQuestionWeight: 2.0,
                         minimumScoreDifference: 0.05,
-                        tieBreaker: 'strategic'
-                    }
-                }
+                        tieBreaker: 'strategic',
+                    },
+                },
             });
 
             // Carregar todos os steps
@@ -145,7 +145,7 @@ const QuizEditorDashboard: React.FC = () => {
                     validationType: stepConfig.validation.type,
                     required: stepConfig.validation.required,
                     message: stepConfig.validation.message,
-                    blocksCount: stepConfig.blocks?.length || 0
+                    blocksCount: stepConfig.blocks?.length || 0,
                 });
             }
             setQuizSteps(steps);
@@ -155,16 +155,16 @@ const QuizEditorDashboard: React.FC = () => {
             setStepConfig(firstStep);
 
             toast({
-                title: "✅ Quiz carregado com sucesso",
+                title: '✅ Quiz carregado com sucesso',
                 description: `${steps.length} etapas carregadas`,
             });
 
         } catch (error) {
             console.error('Erro ao carregar quiz:', error);
             toast({
-                title: "❌ Erro ao carregar quiz",
-                description: "Não foi possível carregar os dados do quiz",
-                variant: "destructive"
+                title: '❌ Erro ao carregar quiz',
+                description: 'Não foi possível carregar os dados do quiz',
+                variant: 'destructive',
             });
         } finally {
             setLoading(false);
@@ -183,9 +183,9 @@ const QuizEditorDashboard: React.FC = () => {
         } catch (error) {
             console.error('Erro ao carregar step:', error);
             toast({
-                title: "❌ Erro ao carregar etapa",
-                description: "Não foi possível carregar a configuração da etapa",
-                variant: "destructive"
+                title: '❌ Erro ao carregar etapa',
+                description: 'Não foi possível carregar a configuração da etapa',
+                variant: 'destructive',
             });
         }
     };
@@ -218,22 +218,22 @@ const QuizEditorDashboard: React.FC = () => {
                         allowBack: stepConfig.behavior.allowBack,
                         validationType: stepConfig.validation.type,
                         required: stepConfig.validation.required,
-                        message: stepConfig.validation.message
+                        message: stepConfig.validation.message,
                     }
-                    : step
+                    : step,
             ));
 
             toast({
-                title: "✅ Etapa salva com sucesso",
+                title: '✅ Etapa salva com sucesso',
                 description: `Step ${selectedStep} foi atualizada`,
             });
 
         } catch (error) {
             console.error('Erro ao salvar step:', error);
             toast({
-                title: "❌ Erro ao salvar",
-                description: "Não foi possível salvar as alterações",
-                variant: "destructive"
+                title: '❌ Erro ao salvar',
+                description: 'Não foi possível salvar as alterações',
+                variant: 'destructive',
             });
         } finally {
             setSaving(false);
@@ -257,8 +257,8 @@ const QuizEditorDashboard: React.FC = () => {
                 description: stepConfig.metadata.description,
                 type: stepConfig.metadata.type,
                 category: stepConfig.metadata.category,
-                [field]: value
-            }
+                [field]: value,
+            },
         });
     };
 
@@ -271,8 +271,8 @@ const QuizEditorDashboard: React.FC = () => {
                 autoAdvanceDelay: stepConfig.behavior.autoAdvanceDelay,
                 showProgress: stepConfig.behavior.showProgress,
                 allowBack: stepConfig.behavior.allowBack,
-                [field]: value
-            }
+                [field]: value,
+            },
         });
     };
 
@@ -284,8 +284,8 @@ const QuizEditorDashboard: React.FC = () => {
                 type: stepConfig.validation.type,
                 required: stepConfig.validation.required,
                 message: stepConfig.validation.message,
-                [field]: value
-            }
+                [field]: value,
+            },
         });
     };
 
@@ -405,7 +405,7 @@ const QuizEditorDashboard: React.FC = () => {
                                             <p className="text-sm text-gray-600 truncate">{step.name}</p>
                                         </div>
                                         <div className="flex items-center space-x-1">
-                                            <Badge variant={step.autoAdvance ? "default" : "secondary"} className="text-xs">
+                                            <Badge variant={step.autoAdvance ? 'default' : 'secondary'} className="text-xs">
                                                 {step.type}
                                             </Badge>
                                         </div>

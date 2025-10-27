@@ -191,7 +191,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
           getMarginClass(marginTop, 'top'),
           getMarginClass(marginBottom, 'bottom'),
           getMarginClass(marginLeft, 'left'),
-          getMarginClass(marginRight, 'right')
+          getMarginClass(marginRight, 'right'),
         )}
         onClick={onSelect}
         onMouseEnter={() => setIsHovered(true)}
@@ -223,7 +223,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
                   ? 'bg-[#432818]/20'
                   : variant === 'minimal'
                     ? 'bg-[#432818]/50'
-                    : 'bg-gradient-to-br from-[#432818]/20 to-[#432818]/30'
+                    : 'bg-gradient-to-br from-[#432818]/20 to-[#432818]/30',
               )}
             >
               <IconComponent
@@ -234,7 +234,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
                     : variant === 'minimal'
                       ? 'text-[#432818]'
                       : 'text-[#432818]',
-                  isHovered && 'scale-110'
+                  isHovered && 'scale-110',
                 )}
               />
             </div>
@@ -246,7 +246,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
               'text-2xl font-bold transition-all duration-300',
               isPreviewing ? 'cursor-default' : 'cursor-text',
               variant === 'premium' ? 'text-white' : 'text-[#432818]',
-              isHovered && 'scale-105'
+              isHovered && 'scale-105',
             )}
             suppressContentEditableWarning
             onBlur={e => !isPreviewing && onUpdate?.({ title: e.target.textContent })}
@@ -259,7 +259,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
             className={cn(
               'font-medium',
               isPreviewing ? 'cursor-default' : 'cursor-text',
-              variant === 'premium' ? 'text-[#432818]/90' : 'text-[#432818]'
+              variant === 'premium' ? 'text-[#432818]/90' : 'text-[#432818]',
             )}
             suppressContentEditableWarning
             onBlur={e => !isPreviewing && onUpdate?.({ subtitle: e.target.textContent })}
@@ -273,7 +273,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
               className={cn(
                 'text-lg line-through',
                 isPreviewing ? 'cursor-default' : 'cursor-text',
-                variant === 'premium' ? 'text-[#432818]/60' : 'text-gray-500'
+                variant === 'premium' ? 'text-[#432818]/60' : 'text-gray-500',
               )}
             >
               <span
@@ -287,7 +287,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
             <div className={cn(
               'text-4xl font-bold',
               isPreviewing ? 'cursor-default' : 'cursor-text',
-              variantStyles.price
+              variantStyles.price,
             )}>
               <span
                 suppressContentEditableWarning
@@ -310,13 +310,13 @@ const PricingCardInlineBlock: React.FC<Props> = ({
                   <Check
                     className={cn(
                       'w-4 h-4 flex-shrink-0',
-                      variant === 'premium' ? 'text-[#432818]' : 'text-[#432818]'
+                      variant === 'premium' ? 'text-[#432818]' : 'text-[#432818]',
                     )}
                   />
                   <span
                     className={cn(
                       'text-sm',
-                      variant === 'premium' ? 'text-[#432818]' : 'text-[#432818]'
+                      variant === 'premium' ? 'text-[#432818]' : 'text-[#432818]',
                     )}
                   >
                     {feature}
@@ -331,7 +331,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
             className={cn(
               'w-full font-bold py-3 px-6 text-lg transition-all duration-300 group relative overflow-hidden',
               variantStyles.button,
-              isHovered && 'transform scale-105'
+              isHovered && 'transform scale-105',
             )}
             onClick={e => {
               e.stopPropagation();

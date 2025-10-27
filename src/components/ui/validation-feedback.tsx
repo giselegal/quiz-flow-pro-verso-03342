@@ -37,7 +37,7 @@ export const ValidationFeedback: React.FC<FeedbackProps> = ({
         isVisible ? 'opacity-100' : 'opacity-0',
         hasErrors ? 'text-destructive' : hasWarnings ? 'text-warning' : 'text-success',
         'flex items-center gap-2',
-        className
+        className,
       )}
     >
       {showIcon && (
@@ -143,7 +143,7 @@ export const FieldFeedback: React.FC<FieldFeedbackProps> = ({
         'transition-all duration-200',
         error ? 'text-destructive' : 'text-success',
         'flex items-center gap-2',
-        className
+        className,
       )}
     >
       {showIcon && (
@@ -179,7 +179,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
         <div
           className={cn(
             'h-full transition-all duration-500',
-            validSteps.includes(currentStep) ? 'bg-success' : 'bg-primary'
+            validSteps.includes(currentStep) ? 'bg-success' : 'bg-primary',
           )}
           style={{ width: `${progress}%` }}
         />

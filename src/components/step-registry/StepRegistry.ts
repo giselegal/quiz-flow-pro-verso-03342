@@ -130,8 +130,8 @@ class StepRegistry {
                 Categoria: step.config.metadata?.category || 'N/A',
                 'Permite Próximo': step.config.allowNavigation.next ? '✅' : '❌',
                 'Permite Anterior': step.config.allowNavigation.previous ? '✅' : '❌',
-                'Validação Obrigatória': step.config.validation.required ? '✅' : '❌'
-            }))
+                'Validação Obrigatória': step.config.validation.required ? '✅' : '❌',
+            })),
         );
     }
 }

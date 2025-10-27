@@ -25,7 +25,7 @@ import {
     ChevronRight,
     CheckCircle2,
     Circle,
-    AlertCircle
+    AlertCircle,
 } from 'lucide-react';
 import type { QuizStep } from '@/data/quizSteps';
 
@@ -53,7 +53,7 @@ const STEP_LABELS = [
     { index: 17, label: 'Pergunta Estratégica 6', icon: '🎯', category: 'strategic' },
     { index: 18, label: 'Transição 2', icon: '⏳', category: 'transition' },
     { index: 19, label: 'Resultado', icon: '🎉', category: 'result' },
-    { index: 20, label: 'Oferta', icon: '💰', category: 'offer' }
+    { index: 20, label: 'Oferta', icon: '💰', category: 'offer' },
 ];
 
 const ModularEditorLayout: React.FC = () => {
@@ -166,10 +166,10 @@ const ModularEditorLayout: React.FC = () => {
                                     key={index}
                                     onClick={() => handleStepSelect(index)}
                                     className={cn(
-                                        "w-full flex items-center gap-2 px-3 py-2 rounded-md text-left transition-colors",
+                                        'w-full flex items-center gap-2 px-3 py-2 rounded-md text-left transition-colors',
                                         isActive
-                                            ? "bg-blue-50 text-blue-900 border border-blue-200"
-                                            : "hover:bg-gray-100 text-gray-700"
+                                            ? 'bg-blue-50 text-blue-900 border border-blue-200'
+                                            : 'hover:bg-gray-100 text-gray-700',
                                     )}
                                 >
                                     <span className="text-lg">{icon}</span>

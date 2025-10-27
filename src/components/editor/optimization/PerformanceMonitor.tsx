@@ -59,7 +59,7 @@ const PERFORMANCE_THRESHOLDS = {
   interactionTime: { good: 100, fair: 300 },
   memoryUsage: { good: 50 * 1024 * 1024, fair: 100 * 1024 * 1024 }, // 50MB, 100MB
   bundleSize: { good: 2 * 1024 * 1024, fair: 4 * 1024 * 1024 }, // 2MB, 4MB
-  cacheHitRate: { good: 0.8, fair: 0.6 } // 80%, 60%
+  cacheHitRate: { good: 0.8, fair: 0.6 }, // 80%, 60%
 };
 
 // 🎯 SCORE CALCULATOR
@@ -96,7 +96,7 @@ export const usePerformanceMonitor = () => {
     memoryScore: 100,
     bundleScore: 100,
     overallScore: 100,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
   const [history, setHistory] = useState<PerformanceMetrics[]>([]);
@@ -141,7 +141,7 @@ export const usePerformanceMonitor = () => {
       memoryScore,
       bundleScore,
       overallScore,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     setMetrics(newMetrics);
@@ -205,7 +205,7 @@ export const usePerformanceMonitor = () => {
     trackInteraction,
     trackError,
     trackWarning,
-    updateMetrics
+    updateMetrics,
   };
 };
 
@@ -300,7 +300,7 @@ export interface PerformanceMonitorProviderProps {
 
 export const PerformanceMonitorProvider: React.FC<PerformanceMonitorProviderProps> = ({
   children,
-  enableOverlay = true
+  enableOverlay = true,
 }) => {
   const monitor = usePerformanceMonitor();
   const [dismissedAlerts, setDismissedAlerts] = useState<number[]>([]);

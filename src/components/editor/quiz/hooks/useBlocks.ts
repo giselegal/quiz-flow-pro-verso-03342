@@ -41,7 +41,7 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
                     order: siblings.length,
                     parentId: partial.parentId || null,
                     properties: partial.properties || {},
-                    content: partial.content || {}
+                    content: partial.content || {},
                 };
                 return { ...st, blocks: [...st.blocks, block] };
             }) as S[];
@@ -160,7 +160,7 @@ export function useBlocks<S extends StepWithBlocks<B>, B extends BlockLike>({ st
                 const original = sourceStep.blocks.find(b => b.id === blockId);
                 if (!original) return st;
                 const siblings = st.blocks.filter(b => (b.parentId || null) === (original.parentId || null));
-                const clone: any = { ...original, id: original.id + '-dup-' + uuid(), order: siblings.length };
+                const clone: any = { ...original, id: `${original.id  }-dup-${  uuid()}`, order: siblings.length };
                 return { ...st, blocks: [...st.blocks, clone] };
             }) as S[];
             pushHistory?.(next);

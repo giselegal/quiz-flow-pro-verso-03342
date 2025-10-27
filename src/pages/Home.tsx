@@ -12,7 +12,7 @@ import {
   TrendingUp,
   CheckCircle,
   Star,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
 import { useAuth } from '@/contexts';
 
@@ -62,22 +62,22 @@ export const Home: React.FC = () => {
       label: 'Quizzes Criados',
       icon: Target,
       color: 'text-blue-600',
-      bg: 'bg-blue-50'
+      bg: 'bg-blue-50',
     },
     {
       number: '94%',
       label: 'Taxa de Conversão',
       icon: TrendingUp,
       color: 'text-green-600',
-      bg: 'bg-green-50'
+      bg: 'bg-green-50',
     },
     {
       number: '2min',
       label: 'Tempo de Configuração',
       icon: Zap,
       color: 'text-purple-600',
-      bg: 'bg-purple-50'
-    }
+      bg: 'bg-purple-50',
+    },
   ];
 
   const features = [
@@ -86,43 +86,43 @@ export const Home: React.FC = () => {
       title: 'Editor Visual',
       description: 'Interface intuitiva de arrastar e soltar para criar quizzes sem programação',
       color: 'text-blue-600',
-      bg: 'bg-blue-50'
+      bg: 'bg-blue-50',
     },
     {
       icon: BarChart3,
       title: 'Análises Avançadas',
       description: 'Métricas detalhadas de performance e rastreamento de conversão para otimização',
       color: 'text-green-600',
-      bg: 'bg-green-50'
+      bg: 'bg-green-50',
     },
     {
       icon: Users,
       title: 'Captura de Leads',
       description: 'Integração perfeita com CRM e ferramentas de automação de marketing',
       color: 'text-purple-600',
-      bg: 'bg-purple-50'
+      bg: 'bg-purple-50',
     },
     {
       icon: Zap,
       title: 'Templates Prontos',
       description: 'Biblioteca de designs profissionais com templates específicos por setor',
       color: 'text-orange-600',
-      bg: 'bg-orange-50'
+      bg: 'bg-orange-50',
     },
     {
       icon: TrendingUp,
       title: 'Teste A/B',
       description: 'Teste diferentes versões para maximizar engajamento e conversões',
       color: 'text-indigo-600',
-      bg: 'bg-indigo-50'
+      bg: 'bg-indigo-50',
     },
     {
       icon: CheckCircle,
       title: 'Responsivo Mobile',
       description: 'Performance perfeita em todos os dispositivos e tamanhos de tela',
       color: 'text-teal-600',
-      bg: 'bg-teal-50'
-    }
+      bg: 'bg-teal-50',
+    },
   ];
 
   // Simple loading state

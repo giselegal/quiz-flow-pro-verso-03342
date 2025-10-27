@@ -16,7 +16,7 @@ import {
   RotateCcw,
   Palette,
   Grid,
-  Settings
+  Settings,
 } from 'lucide-react';
 import { Block } from '@/types/editor';
 import { PropertyField } from '@/services/PropertyExtractionService';
@@ -32,7 +32,7 @@ export const PropertyPreview: React.FC<PropertyPreviewProps> = ({
   block,
   properties,
   onReset,
-  onCopy
+  onCopy,
 }) => {
   const previewData = React.useMemo(() => {
     const contentProps = properties.filter(p => p.category === 'content');
@@ -45,7 +45,7 @@ export const PropertyPreview: React.FC<PropertyPreviewProps> = ({
       style: styleProps, 
       layout: layoutProps,
       behavior: behaviorProps,
-      total: properties.length
+      total: properties.length,
     };
   }, [properties]);
 

@@ -15,7 +15,7 @@ import {
   Database,
   RefreshCw,
   Settings,
-  Gauge
+  Gauge,
 } from 'lucide-react';
 import TimerMigrationDashboard from './TimerMigrationDashboard';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
@@ -36,7 +36,7 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ()
     renderCount: 18,
     bundleSize: 2.1,
     jsHeapSize: 42.3,
-    domNodes: 1247
+    domNodes: 1247,
   });
 
   const optimizationTasks = [
@@ -47,7 +47,7 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ()
       impact: 'Alto',
       progress: 65,
       status: 'em-progresso',
-      estimatedGain: '+60% performance'
+      estimatedGain: '+60% performance',
     },
     {
       id: 'state',
@@ -56,7 +56,7 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ()
       impact: 'Alto',
       progress: 30,
       status: 'pendente',
-      estimatedGain: '-70% re-renders'
+      estimatedGain: '-70% re-renders',
     },
     {
       id: 'lazy-loading',
@@ -65,7 +65,7 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ()
       impact: 'Médio',
       progress: 45,
       status: 'em-progresso',
-      estimatedGain: '-50% bundle inicial'
+      estimatedGain: '-50% bundle inicial',
     },
     {
       id: 'memoization',
@@ -74,7 +74,7 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ()
       impact: 'Médio',
       progress: 80,
       status: 'quase-completo',
-      estimatedGain: '-40% re-renderizações'
+      estimatedGain: '-40% re-renderizações',
     },
     {
       id: 'code-splitting',
@@ -83,8 +83,8 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ()
       impact: 'Alto',
       progress: 15,
       status: 'pendente',
-      estimatedGain: '-60% tempo de carregamento'
-    }
+      estimatedGain: '-60% tempo de carregamento',
+    },
   ];
 
   const handleOptimizeAll = async () => {
@@ -103,7 +103,7 @@ export const PerformanceOptimizationSuite: React.FC<OptimizationSuiteProps> = ()
       loadTime: Math.round(prev.loadTime * 0.4), // 60% melhoria
       memoryUsage: Math.round(prev.memoryUsage * 0.3), // 70% redução
       renderCount: Math.round(prev.renderCount * 0.2), // 80% redução
-      bundleSize: prev.bundleSize * 0.5 // 50% redução
+      bundleSize: prev.bundleSize * 0.5, // 50% redução
     }));
 
     setIsOptimizing(false);

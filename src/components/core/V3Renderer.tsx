@@ -233,7 +233,7 @@ class V3RendererErrorBoundary extends React.Component<
 const useV3Analytics = (
     template: TemplateV3,
     userData: UserData | undefined,
-    onAnalytics?: (eventName: string, data: Record<string, any>) => void
+    onAnalytics?: (eventName: string, data: Record<string, any>) => void,
 ) => {
     // Track page view ao montar
     useEffect(() => {
@@ -271,7 +271,7 @@ const useV3Analytics = (
                 timestamp: new Date().toISOString(),
             });
         },
-        [template.metadata.id, onAnalytics]
+        [template.metadata.id, onAnalytics],
     );
 
     // Track scroll depth
@@ -281,7 +281,7 @@ const useV3Analytics = (
         let maxScrollDepth = 0;
         const trackScrollDepth = () => {
             const scrollPercentage = Math.round(
-                ((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100
+                ((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100,
             );
 
             if (scrollPercentage > maxScrollDepth) {
@@ -366,7 +366,7 @@ export const V3Renderer: React.FC<V3RendererProps> = ({
     const { handleSectionView } = useV3Analytics(
         template,
         userData,
-        mode === 'full' ? onAnalytics : undefined // Desabilitar analytics em preview/editor
+        mode === 'full' ? onAnalytics : undefined, // Desabilitar analytics em preview/editor
     );
 
     // Memoizar container style (CSS variables do theme)

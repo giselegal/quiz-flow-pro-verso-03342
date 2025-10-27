@@ -11,7 +11,7 @@ import {
   AlertTriangle, 
   XCircle, 
   X,
-  ExternalLink
+  ExternalLink,
 } from 'lucide-react';
 
 interface SecurityAlertProps {
@@ -21,13 +21,13 @@ interface SecurityAlertProps {
 
 export const SecurityAlert: React.FC<SecurityAlertProps> = ({ 
   onDismiss,
-  showDetails = false 
+  showDetails = false, 
 }) => {
   const { 
     systemStatus, 
     hasCriticalIssues, 
     hasWarnings,
-    isSystemHealthy 
+    isSystemHealthy, 
   } = useSecurity();
 
   // Não mostrar se o sistema está saudável

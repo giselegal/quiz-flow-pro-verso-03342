@@ -9,7 +9,7 @@ import {
     Link,
     Unlink,
     Box,
-    RotateCcw
+    RotateCcw,
 } from 'lucide-react';
 import ContextualTooltip, { tooltipLibrary } from './ContextualTooltip';
 import type { PropertyEditorProps } from './types';
@@ -25,7 +25,7 @@ interface BoxModelEditorProps extends PropertyEditorProps {
 const BoxModelEditor: React.FC<BoxModelEditorProps> = ({
     property,
     onChange,
-    type = 'margin'
+    type = 'margin',
 }) => {
     // Detectar se é margin ou padding pelo nome da propriedade
     const detectedType = property.key?.toLowerCase().includes('padding') ? 'padding' : 'margin';

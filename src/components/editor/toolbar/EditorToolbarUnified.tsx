@@ -15,7 +15,7 @@ interface EditorToolbarUnifiedProps {
 }
 
 export const EditorToolbarUnified: React.FC<EditorToolbarUnifiedProps> = ({
-    className = ''
+    className = '',
 }) => {
     const editorContext = useEditor({ optional: true });
     if (!editorContext) return null;
@@ -46,7 +46,7 @@ export const EditorToolbarUnified: React.FC<EditorToolbarUnifiedProps> = ({
     return (
         <div className={cn(
             'flex items-center justify-between h-16 px-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700/50',
-            className
+            className,
         )}>
             <div className="flex items-center space-x-6">
                 <motion.div
@@ -84,7 +84,7 @@ export const EditorToolbarUnified: React.FC<EditorToolbarUnifiedProps> = ({
                                 'h-9 w-9 p-0 transition-all duration-200',
                                 isActive
                                     ? 'bg-gradient-to-r from-brand-brightBlue to-brand-brightPink text-white shadow-lg scale-105'
-                                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50',
                             )}
                             onClick={() => setViewportSize(option.id as any)}
                             title={`${option.label} (${option.size})`}

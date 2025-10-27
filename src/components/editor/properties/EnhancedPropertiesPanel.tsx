@@ -321,7 +321,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   const organizedProperties = organizeProperties();
   const filteredProperties = searchTerm
     ? Object.entries(selectedBlock.properties || {}).filter(([key]) =>
-      key.toLowerCase().includes(searchTerm.toLowerCase())
+      key.toLowerCase().includes(searchTerm.toLowerCase()),
     )
     : null;
 
@@ -502,7 +502,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                   {organizedProperties[key]?.length > 0 ? (
                     <div className="space-y-4">
                       {organizedProperties[key].map(propertyKey =>
-                        renderPropertyControl(propertyKey, selectedBlock.properties?.[propertyKey])
+                        renderPropertyControl(propertyKey, selectedBlock.properties?.[propertyKey]),
                       )}
                     </div>
                   ) : (
@@ -526,7 +526,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
 
                   <div className="space-y-4">
                     {organizedProperties.other.map(propertyKey =>
-                      renderPropertyControl(propertyKey, selectedBlock.properties?.[propertyKey])
+                      renderPropertyControl(propertyKey, selectedBlock.properties?.[propertyKey]),
                     )}
                   </div>
                 </TabsContent>

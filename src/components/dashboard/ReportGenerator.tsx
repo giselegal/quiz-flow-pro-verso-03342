@@ -21,7 +21,7 @@ import {
     BarChart3,
     Users,
     TrendingUp,
-    Loader2
+    Loader2,
 } from 'lucide-react';
 
 // ============================================================================
@@ -48,14 +48,14 @@ interface ReportConfig {
 export const ReportGenerator: React.FC<ReportGeneratorProps> = ({
     analyticsData,
     funnelData,
-    participantData
+    participantData,
 }) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [config, setConfig] = useState<ReportConfig>({
         type: 'executive',
         period: 'month',
         format: 'pdf',
-        sections: ['kpis', 'funnel', 'devices', 'recommendations']
+        sections: ['kpis', 'funnel', 'devices', 'recommendations'],
     });
 
     // ========================================================================
@@ -67,39 +67,39 @@ export const ReportGenerator: React.FC<ReportGeneratorProps> = ({
             value: 'executive',
             label: 'Relatório Executivo',
             description: 'Visão geral com KPIs principais',
-            icon: <TrendingUp className="w-4 h-4" />
+            icon: <TrendingUp className="w-4 h-4" />,
         },
         {
             value: 'detailed',
             label: 'Relatório Detalhado',
             description: 'Análise completa com todos os gráficos',
-            icon: <BarChart3 className="w-4 h-4" />
+            icon: <BarChart3 className="w-4 h-4" />,
         },
         {
             value: 'funnel',
             label: 'Análise de Funil',
             description: 'Foco no funil de conversão',
-            icon: <TrendingUp className="w-4 h-4" />
+            icon: <TrendingUp className="w-4 h-4" />,
         },
         {
             value: 'participants',
             label: 'Lista de Participantes',
             description: 'Dados detalhados dos usuários',
-            icon: <Users className="w-4 h-4" />
-        }
+            icon: <Users className="w-4 h-4" />,
+        },
     ];
 
     const periodOptions = [
         { value: 'week', label: 'Última Semana' },
         { value: 'month', label: 'Último Mês' },
         { value: 'quarter', label: 'Último Trimestre' },
-        { value: 'all', label: 'Todos os Períodos' }
+        { value: 'all', label: 'Todos os Períodos' },
     ];
 
     const formatOptions = [
         { value: 'pdf', label: 'PDF', icon: <FileText className="w-4 h-4" /> },
         { value: 'excel', label: 'Excel', icon: <BarChart3 className="w-4 h-4" /> },
-        { value: 'csv', label: 'CSV', icon: <Download className="w-4 h-4" /> }
+        { value: 'csv', label: 'CSV', icon: <Download className="w-4 h-4" /> },
     ];
 
     // ========================================================================
@@ -121,8 +121,8 @@ export const ReportGenerator: React.FC<ReportGeneratorProps> = ({
                 data: {
                     analytics: analyticsData,
                     funnel: funnelData,
-                    participants: participantData
-                }
+                    participants: participantData,
+                },
             };
 
             // Para demonstração, vamos criar um download fictício
@@ -159,7 +159,7 @@ export const ReportGenerator: React.FC<ReportGeneratorProps> = ({
             'Tempo Médio,8 min',
             'Dispositivo Principal,Mobile',
             '',
-            'Para relatório completo, exporte em PDF ou Excel.'
+            'Para relatório completo, exporte em PDF ou Excel.',
         ].join('\n');
 
         downloadFile(csvContent, fileName, 'text/csv');

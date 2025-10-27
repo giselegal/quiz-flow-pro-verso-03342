@@ -283,7 +283,7 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
                                 { key: 'imageUrl', label: 'Imagem', type: 'text' },
                                 { key: 'points', label: 'Pontos', type: 'number' },
                                 { key: 'category', label: 'Categoria', type: 'text' },
-                            ]
+                            ],
                         }}
                     />
                 );

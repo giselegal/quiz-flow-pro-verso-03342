@@ -40,7 +40,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
   currentFunnelId,
   onFunnelSelect,
   onClose,
-  context = FunnelContext.EDITOR // 🎯 Contexto padrão é EDITOR
+  context = FunnelContext.EDITOR, // 🎯 Contexto padrão é EDITOR
 }) => {
   const [funnels, setFunnels] = useState<FunnelInfo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,7 +52,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
   // const contextualFunnelService = createMigratedContextualFunnelService(context);
   const contextualFunnelService = { 
     listFunnels: async () => [] as any,
-    saveFunnel: async (_funnel: any) => {}
+    saveFunnel: async (_funnel: any) => {},
   }; // placeholder
 
   // 🔍 Determinar funil atual
@@ -73,7 +73,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
         description: funnel.description || '',
         lastModified: funnel.lastModified || new Date(),
         isPublished: funnel.isPublished || false,
-        isActive: funnel.id === activeFunnelId
+        isActive: funnel.id === activeFunnelId,
       }));
 
       // 🎯 Adicionar funis do template apenas no contexto TEMPLATES ou se não há funis
@@ -85,13 +85,13 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
             description: 'Template padrão com 21 etapas pré-configuradas',
             lastModified: new Date(),
             isPublished: true,
-            isActive: activeFunnelId === 'quiz-estilo-completo'
-          }
+            isActive: activeFunnelId === 'quiz-estilo-completo',
+          },
         ];
 
         // Verificar se os templates já estão na lista contextual
         const existingTemplates = mappedFunnels.filter(f =>
-          templateFunnels.some(t => t.id === f.id)
+          templateFunnels.some(t => t.id === f.id),
         );
 
         if (existingTemplates.length === 0) {
@@ -106,7 +106,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
       toast({
         title: 'Erro ao carregar funis',
         description: 'Não foi possível carregar a lista de funis',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -124,7 +124,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
       toast({
         title: 'Nome obrigatório',
         description: 'Digite um nome para o novo funil',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
@@ -139,7 +139,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
         name: newFunnelName.trim(),
         description: `Funil criado em ${new Date().toLocaleDateString()}`,
         pages: [],
-        context
+        context,
       };
 
       await contextualFunnelService.saveFunnel(newFunnelData);
@@ -149,7 +149,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
       toast({
         title: 'Funil criado',
         description: `Funil "${newFunnelData.name}" criado com sucesso`,
-        variant: 'default'
+        variant: 'default',
       });
 
       // 🔄 Recarregar lista
@@ -169,7 +169,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
       toast({
         title: 'Erro ao criar funil',
         description: 'Não foi possível criar o novo funil',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     } finally {
       setCreating(false);
@@ -192,7 +192,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
     toast({
       title: 'Funil selecionado',
       description: `Agora editando: ${funnels.find(f => f.id === funnelId)?.name || funnelId}`,
-      variant: 'default'
+      variant: 'default',
     });
 
     // 🔗 Navegar para o editor com o funil selecionado

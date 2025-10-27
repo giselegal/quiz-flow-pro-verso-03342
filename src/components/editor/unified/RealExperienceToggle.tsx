@@ -26,7 +26,7 @@ export const RealExperienceToggle: React.FC<RealExperienceToggleProps> = ({
   currentStep = 1,
   totalSteps = 21,
   userName,
-  className = ''
+  className = '',
 }) => {
   return (
     <div className={cn(
@@ -34,13 +34,13 @@ export const RealExperienceToggle: React.FC<RealExperienceToggleProps> = ({
       isEnabled 
         ? 'from-green-50 to-emerald-50 border-green-200' 
         : 'from-blue-50 to-indigo-50 border-blue-200',
-      className
+      className,
     )}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className={cn(
             'w-10 h-10 rounded-full flex items-center justify-center',
-            isEnabled ? 'bg-green-100' : 'bg-blue-100'
+            isEnabled ? 'bg-green-100' : 'bg-blue-100',
           )}>
             {isEnabled ? (
               <CheckCircle className="w-5 h-5 text-green-600" />
@@ -52,13 +52,13 @@ export const RealExperienceToggle: React.FC<RealExperienceToggleProps> = ({
           <div>
             <h3 className={cn(
               'font-semibold',
-              isEnabled ? 'text-green-800' : 'text-blue-800'
+              isEnabled ? 'text-green-800' : 'text-blue-800',
             )}>
               {isEnabled ? '🚀 Experiência Real Ativada' : '🎯 Experiência Real Disponível'}
             </h3>
             <p className={cn(
               'text-sm mt-1',
-              isEnabled ? 'text-green-700' : 'text-blue-700'
+              isEnabled ? 'text-green-700' : 'text-blue-700',
             )}>
               {isEnabled 
                 ? 'QuizOrchestrator • Validação funcional • Auto-advance • Resultados reais'
@@ -90,11 +90,11 @@ export const RealExperienceToggle: React.FC<RealExperienceToggleProps> = ({
           )}
           
           <Button
-            variant={isEnabled ? "default" : "outline"}
+            variant={isEnabled ? 'default' : 'outline'}
             size="sm"
             onClick={() => onToggle(!isEnabled)}
             className={cn(
-              isEnabled && 'bg-green-600 hover:bg-green-700 border-green-600'
+              isEnabled && 'bg-green-600 hover:bg-green-700 border-green-600',
             )}
           >
             <Target className="w-4 h-4 mr-2" />

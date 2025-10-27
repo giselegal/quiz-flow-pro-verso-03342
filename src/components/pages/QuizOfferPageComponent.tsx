@@ -103,7 +103,7 @@ const QuizOfferPageComponent: React.FC = () => {
                 <p style={{ color: '#6B4F43' }}>"{testimonial.text}"</p>
                 <p style={{ color: '#432818' }}>- {testimonial.name}</p>
               </div>
-            )
+            ),
           )}
         </div>
       </div>
@@ -125,7 +125,7 @@ const QuizOfferPageComponent: React.FC = () => {
                 <h4 style={{ color: '#432818' }}>{item.title}</h4>
                 <p style={{ color: '#6B4F43' }}>{item.description}</p>
               </div>
-            )
+            ),
           )}
         </div>
 

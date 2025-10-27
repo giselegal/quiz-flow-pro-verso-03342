@@ -122,7 +122,7 @@ class SimpleHistory {
         // Adiciona novo state
         this.history.push({
             state: JSON.parse(JSON.stringify(state)), // Deep clone
-            timestamp: Date.now()
+            timestamp: Date.now(),
         });
 
         // Limita tamanho do histórico
@@ -197,7 +197,7 @@ const getInitialState = (): EditorState => ({
     selectedBlockId: null,
     stepValidation: {},
     isLoading: false,
-    databaseMode: 'supabase'
+    databaseMode: 'supabase',
 });
 
 export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = ({
@@ -205,14 +205,14 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
     funnelId,
     quizId,
     storageKey = 'optimized-editor',
-    initial = {}
+    initial = {},
 }) => {
     // 🚨 Console warning para desenvolvedores
     React.useEffect(() => {
         appLogger.warn(
             '⚠️ DEPRECATED: OptimizedEditorProvider (497 linhas) será removido em 01/nov/2025. ' +
             'Migre para EditorProviderUnified (605 linhas). ' +
-            'Ver ANALISE_EDITOR_PROVIDERS.md'
+            'Ver ANALISE_EDITOR_PROVIDERS.md',
         );
     }, []);
 
@@ -222,7 +222,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
 
     const [state, setState] = useState<EditorState>(() => ({
         ...getInitialState(),
-        ...initial
+        ...initial,
     }));
 
     const [history] = useState(() => new SimpleHistory());
@@ -239,7 +239,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
         history.push(newState);
         setHistoryState({
             canUndo: history.canUndo,
-            canRedo: history.canRedo
+            canRedo: history.canRedo,
         });
     }, [history]);
 
@@ -249,7 +249,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
             setState(previousState);
             setHistoryState({
                 canUndo: history.canUndo,
-                canRedo: history.canRedo
+                canRedo: history.canRedo,
             });
         }
     }, [history]);
@@ -260,7 +260,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
             setState(nextState);
             setHistoryState({
                 canUndo: history.canUndo,
-                canRedo: history.canRedo
+                canRedo: history.canRedo,
             });
         }
     }, [history]);
@@ -283,8 +283,8 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
             ...prev,
             stepBlocks: {
                 ...prev.stepBlocks,
-                [stepKey]: [...(prev.stepBlocks[stepKey] || []), block]
-            }
+                [stepKey]: [...(prev.stepBlocks[stepKey] || []), block],
+            },
         }));
     }, [updateStateWithHistory]);
 
@@ -296,8 +296,8 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
                 ...prev,
                 stepBlocks: {
                     ...prev.stepBlocks,
-                    [stepKey]: blocks
-                }
+                    [stepKey]: blocks,
+                },
             };
         });
     }, [updateStateWithHistory]);
@@ -307,9 +307,9 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
             ...prev,
             stepBlocks: {
                 ...prev.stepBlocks,
-                [stepKey]: (prev.stepBlocks[stepKey] || []).filter(block => block.id !== blockId)
+                [stepKey]: (prev.stepBlocks[stepKey] || []).filter(block => block.id !== blockId),
             },
-            selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId
+            selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId,
         }));
     }, [updateStateWithHistory]);
 
@@ -323,8 +323,8 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
                 ...prev,
                 stepBlocks: {
                     ...prev.stepBlocks,
-                    [stepKey]: blocks
-                }
+                    [stepKey]: blocks,
+                },
             };
         });
     }, [updateStateWithHistory]);
@@ -337,9 +337,9 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
                 [stepKey]: (prev.stepBlocks[stepKey] || []).map(block =>
                     block.id === blockId
                         ? { ...block, ...updates }
-                        : block
-                )
-            }
+                        : block,
+                ),
+            },
         }));
     }, [updateStateWithHistory]);
 
@@ -358,7 +358,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
     const setStepValid = useCallback((step: number, isValid: boolean) => {
         setState(prev => ({
             ...prev,
-            stepValidation: { ...prev.stepValidation, [step]: isValid }
+            stepValidation: { ...prev.stepValidation, [step]: isValid },
         }));
     }, []);
 
@@ -378,8 +378,8 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
             ...prev,
             stepBlocks: {
                 ...prev.stepBlocks,
-                [stepKey]: Array.isArray(templateBlocks) ? templateBlocks : []
-            }
+                [stepKey]: Array.isArray(templateBlocks) ? templateBlocks : [],
+            },
         }));
     }, [state.stepBlocks]);
 
@@ -395,7 +395,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
 
         updateStateWithHistory(() => ({
             ...getInitialState(),
-            stepBlocks
+            stepBlocks,
         }));
         history.clear();
     }, [updateStateWithHistory, history]);    // ============================================================================
@@ -418,8 +418,8 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
                 settings: {
                     ...currentFunnel.settings,
                     lastModified: new Date().toISOString(),
-                    currentStep: state.currentStep
-                }
+                    currentStep: state.currentStep,
+                },
             }; await saveFunnel(funnelData);
             appLogger.debug('✅ Saved to Supabase successfully');
 
@@ -434,9 +434,9 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
         return JSON.stringify({
             version: '4.0.0',
             timestamp: new Date().toISOString(),
-            state: state,
+            state,
             funnelId,
-            quizId
+            quizId,
         }, null, 2);
     }, [state, funnelId, quizId]);
 
@@ -446,7 +446,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
             if (data.state) {
                 updateStateWithHistory(() => ({
                     ...getInitialState(),
-                    ...data.state
+                    ...data.state,
                 }));
                 history.clear();
             }
@@ -476,7 +476,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
     const contextValue: EditorContextValue = {
         state: {
             ...state,
-            isLoading: isLoading || state.isLoading
+            isLoading: isLoading || state.isLoading,
         },
         actions: {
             // Navigation
@@ -504,8 +504,8 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
             // Data management
             exportJSON,
             importJSON,
-            saveToSupabase
-        }
+            saveToSupabase,
+        },
     };
 
     return (

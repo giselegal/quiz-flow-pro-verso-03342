@@ -22,7 +22,7 @@ const UserGreetingModule: React.FC<UserGreetingModuleProps> = ({
   nameColor = '#B89B7A',
   fontSize = 18,
   className = '',
-  isSelected = false
+  isSelected = false,
 }) => {
   const { userName, isLoading } = useQuizData();
 
@@ -39,7 +39,7 @@ const UserGreetingModule: React.FC<UserGreetingModuleProps> = ({
       className={cn(
         'flex items-center justify-center gap-2 font-bold',
         isSelected && 'ring-2 ring-primary ring-offset-2',
-        className
+        className,
       )}
       style={{ fontSize: `${fontSize}px`, color: textColor }}
     >

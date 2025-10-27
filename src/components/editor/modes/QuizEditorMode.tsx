@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import {
   Target, Brain, Eye, Settings, BarChart3,
-  Shuffle, Play, Pause, RotateCcw, Save
+  Shuffle, Play, Pause, RotateCcw, Save,
 } from 'lucide-react';
 
 // Hooks
@@ -42,14 +42,14 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   funnelId,
   onSave,
   onPreview,
-  className = ''
+  className = '',
 }) => {
   // Estado local
   const [state, setState] = useState<QuizEditorState>({
     activeTab: 'editor',
     isPreviewMode: false,
     isRealExperience: false,
-    selectedStepNumber: 1
+    selectedStepNumber: 1,
   });
 
   // Hooks
@@ -65,21 +65,21 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
     goToNext,
     goToPrevious,
     canGoNext,
-    canGoPrevious
+    canGoPrevious,
   } = navigation;
 
   const {
     quizConfig: config,
     quizQuestions,
     isLoading: configLoading,
-    reloadConfig
+    reloadConfig,
   } = quizConfig;
 
   // Atualizar step selecionado quando navegação muda
   useEffect(() => {
     setState(prev => ({
       ...prev,
-      selectedStepNumber: currentStep
+      selectedStepNumber: currentStep,
     }));
   }, [currentStep]);
 
@@ -87,7 +87,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   const handleTabChange = useCallback((tab: string) => {
     setState(prev => ({
       ...prev,
-      activeTab: tab as QuizEditorState['activeTab']
+      activeTab: tab as QuizEditorState['activeTab'],
     }));
   }, []);
 
@@ -99,7 +99,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   const handlePreviewToggle = useCallback(() => {
     setState(prev => ({
       ...prev,
-      isPreviewMode: !prev.isPreviewMode
+      isPreviewMode: !prev.isPreviewMode,
     }));
     onPreview?.();
   }, [onPreview]);
@@ -107,7 +107,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
   const handleRealExperienceToggle = useCallback(() => {
     setState(prev => ({
       ...prev,
-      isRealExperience: !prev.isRealExperience
+      isRealExperience: !prev.isRealExperience,
     }));
   }, []);
 
@@ -147,7 +147,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
 
           <div className="flex items-center gap-2">
             <Button
-              variant={state.isRealExperience ? "default" : "outline"}
+              variant={state.isRealExperience ? 'default' : 'outline'}
               size="sm"
               onClick={handleRealExperienceToggle}
             >
@@ -156,7 +156,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
             </Button>
 
             <Button
-              variant={state.isPreviewMode ? "default" : "outline"}
+              variant={state.isPreviewMode ? 'default' : 'outline'}
               size="sm"
               onClick={handlePreviewToggle}
             >

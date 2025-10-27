@@ -39,7 +39,7 @@ const MainEditorUnified: React.FC = () => {
         templateId,
         funnelId,
         debugMode,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
     });
 
     // Validação de parâmetros
@@ -112,7 +112,7 @@ const FunnelValidatedEditor: React.FC<{
             funnelId,
             isReady: funnelContext.isReady,
             isLoading: funnelContext.isLoading,
-            isError: funnelContext.isError
+            isError: funnelContext.isError,
         });
     }
 

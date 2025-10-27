@@ -18,14 +18,14 @@ import { Button } from '@/components/ui/button';
 // Painel de propriedades
 const SettingsPanel: React.FC = () => {
     const { enabled } = useEditor((state) => ({
-        enabled: state.options.enabled
+        enabled: state.options.enabled,
     }));
 
     return (
         <div className={cn(
             'w-80 bg-white border-l border-gray-200 p-4 overflow-y-auto',
             'transition-all duration-200',
-            !enabled && 'opacity-50 pointer-events-none'
+            !enabled && 'opacity-50 pointer-events-none',
         )}>
             <div className="space-y-4">
                 <h3 className="font-semibold text-gray-900 border-b pb-2">
@@ -44,7 +44,7 @@ const SettingsPanel: React.FC = () => {
 // Toolbar superior
 const Toolbar: React.FC = () => {
     const { enabled, actions, query } = useEditor((state) => ({
-        enabled: state.options.enabled
+        enabled: state.options.enabled,
     }));
 
     return (
@@ -60,7 +60,7 @@ const Toolbar: React.FC = () => {
 
             <div className="flex items-center space-x-2">
                 <Button
-                    variant={enabled ? "default" : "outline"}
+                    variant={enabled ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => actions.setOptions((options) => ({ ...options, enabled: !enabled }))}
                 >
@@ -110,7 +110,7 @@ const ComponentPanel: React.FC = () => {
                         className={cn(
                             'p-3 bg-white rounded-lg border border-gray-200 cursor-grab',
                             'hover:border-[#B89B7A] hover:bg-[#B89B7A]/5 transition-colors',
-                            'active:cursor-grabbing'
+                            'active:cursor-grabbing',
                         )}
                         ref={(ref) =>
                             connectors.create(ref!, React.createElement(HeaderSection))
@@ -128,7 +128,7 @@ const ComponentPanel: React.FC = () => {
                         className={cn(
                             'p-3 bg-white rounded-lg border border-gray-200 cursor-grab',
                             'hover:border-[#B89B7A] hover:bg-[#B89B7A]/5 transition-colors',
-                            'active:cursor-grabbing'
+                            'active:cursor-grabbing',
                         )}
                         ref={(ref) =>
                             connectors.create(ref!, React.createElement(UserInfoSection))
@@ -146,7 +146,7 @@ const ComponentPanel: React.FC = () => {
                         className={cn(
                             'p-3 bg-white rounded-lg border border-gray-200 cursor-grab',
                             'hover:border-[#B89B7A] hover:bg-[#B89B7A]/5 transition-colors',
-                            'active:cursor-grabbing'
+                            'active:cursor-grabbing',
                         )}
                         ref={(ref) =>
                             connectors.create(ref!, React.createElement(ProgressSection))
@@ -164,7 +164,7 @@ const ComponentPanel: React.FC = () => {
                         className={cn(
                             'p-3 bg-white rounded-lg border border-gray-200 cursor-grab',
                             'hover:border-[#B89B7A] hover:bg-[#B89B7A]/5 transition-colors',
-                            'active:cursor-grabbing'
+                            'active:cursor-grabbing',
                         )}
                         ref={(ref) =>
                             connectors.create(ref!, React.createElement(MainImageSection))
@@ -266,7 +266,7 @@ export const ModularResultEditor: React.FC = () => {
     // 🚨 Console warning para desenvolvedores
     appLogger.warn(
         '⚠️ DEPRECATED: ModularResultEditor será removido em 01/nov/2025. ' +
-        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
+        'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md',
     );
 
     const [showLayers, setShowLayers] = useState(false);
@@ -326,7 +326,7 @@ export const ResponsivePreview: React.FC<{ children: React.ReactNode }> = ({ chi
     const viewportStyles = {
         mobile: { width: '375px', height: '667px' },
         tablet: { width: '768px', height: '1024px' },
-        desktop: { width: '100%', height: '100%' }
+        desktop: { width: '100%', height: '100%' },
     };
 
     return (

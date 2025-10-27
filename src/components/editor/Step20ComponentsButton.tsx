@@ -20,43 +20,43 @@ const step20Components: Step20Component[] = [
     title: 'Header Comemorativo',
     description: 'Cabeçalho com parabéns e ícones',
     icon: <Trophy className="w-5 h-5" />,
-    color: 'from-yellow-500 to-orange-500'
+    color: 'from-yellow-500 to-orange-500',
   },
   {
     type: 'step20-user-greeting',
     title: 'Saudação Pessoal',
     description: 'Saudação com nome do usuário',
     icon: <User className="w-5 h-5" />,
-    color: 'from-blue-500 to-purple-500'
+    color: 'from-blue-500 to-purple-500',
   },
   {
     type: 'step20-style-reveal',
     title: 'Revelação do Estilo',
     description: 'Mostra o estilo descoberto',
     icon: <Palette className="w-5 h-5" />,
-    color: 'from-pink-500 to-rose-500'
+    color: 'from-pink-500 to-rose-500',
   },
   {
     type: 'step20-compatibility',
     title: 'Indicador Compatibilidade',
     description: 'Percentual animado de compatibilidade',
     icon: <Target className="w-5 h-5" />,
-    color: 'from-green-500 to-emerald-500'
+    color: 'from-green-500 to-emerald-500',
   },
   {
     type: 'step20-secondary-styles',
     title: 'Estilos Secundários',
     description: 'Grid com estilos complementares',
     icon: <Star className="w-5 h-5" />,
-    color: 'from-purple-500 to-indigo-500'
+    color: 'from-purple-500 to-indigo-500',
   },
   {
     type: 'step20-personalized-offer',
     title: 'Oferta Personalizada',
     description: 'CTA baseado no resultado',
     icon: <Heart className="w-5 h-5" />,
-    color: 'from-red-500 to-pink-500'
-  }
+    color: 'from-red-500 to-pink-500',
+  },
 ];
 
 export const Step20ComponentsButton: React.FC = () => {

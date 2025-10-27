@@ -22,7 +22,7 @@ export default function GuaranteeSection({
     urgencyNote,
     returnPriceNote,
     cta,
-    className = ''
+    className = '',
 }: GuaranteeSectionProps) {
     return (
         <div className={className}>

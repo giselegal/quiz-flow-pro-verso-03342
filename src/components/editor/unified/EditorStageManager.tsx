@@ -320,7 +320,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
         }
       }
     },
-    [mode, quizState.currentStep, actions, onStepSelect]
+    [mode, quizState.currentStep, actions, onStepSelect],
   );
 
   // Agrupar etapas por categoria
@@ -337,7 +337,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
         acc[category].push({ ...step, stepNumber });
         return acc;
       },
-      {} as Record<string, Array<StepMetadata & { stepNumber: number }>>
+      {} as Record<string, Array<StepMetadata & { stepNumber: number }>>,
     );
 
     return groups;
@@ -373,7 +373,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
           'cursor-pointer transition-all duration-200 hover:shadow-md',
           isActive && 'ring-2 ring-blue-500 bg-blue-50',
           !isClickable && 'opacity-50 cursor-not-allowed',
-          step.isCompleted && 'border-green-200 bg-green-50'
+          step.isCompleted && 'border-green-200 bg-green-50',
         )}
         onClick={() => isClickable && handleStepSelect(step.stepNumber)}
       >
@@ -396,7 +396,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
                 <h4
                   className={cn(
                     'text-sm font-medium truncate',
-                    isActive ? 'text-blue-900' : 'text-gray-900'
+                    isActive ? 'text-blue-900' : 'text-gray-900',
                   )}
                 >
                   {step.stepNumber}. {step.title}
@@ -427,7 +427,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
   // Renderizar grupo de etapas
   const renderStepGroup = (
     categoryKey: string,
-    steps: Array<StepMetadata & { stepNumber: number }>
+    steps: Array<StepMetadata & { stepNumber: number }>,
   ) => {
     const categoryLabels = {
       intro: 'Introdução',
@@ -535,7 +535,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
           {Object.entries(groupedSteps).map(([categoryKey, steps]) =>
-            renderStepGroup(categoryKey, steps)
+            renderStepGroup(categoryKey, steps),
           )}
         </div>
       </ScrollArea>

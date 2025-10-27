@@ -26,7 +26,7 @@ import {
     Plus,
     Eye,
     Edit,
-    BarChart3
+    BarChart3,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -42,7 +42,7 @@ interface MetricCardProps {
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, icon, className }) => (
-    <Card className={cn("transition-all hover:shadow-md", className)}>
+    <Card className={cn('transition-all hover:shadow-md', className)}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">{title}</CardTitle>
             <div className="text-gray-400">{icon}</div>
@@ -51,10 +51,10 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, icon, cla
             <div className="text-2xl font-bold text-gray-900">{value}</div>
             {change && (
                 <div className={cn(
-                    "flex items-center text-xs mt-1",
-                    change.trend === 'up' && "text-green-600",
-                    change.trend === 'down' && "text-red-600",
-                    change.trend === 'neutral' && "text-gray-600"
+                    'flex items-center text-xs mt-1',
+                    change.trend === 'up' && 'text-green-600',
+                    change.trend === 'down' && 'text-red-600',
+                    change.trend === 'neutral' && 'text-gray-600',
                 )}>
                     {change.trend === 'up' && <ArrowUpRight className="w-3 h-3 mr-1" />}
                     {change.trend === 'down' && <ArrowDownRight className="w-3 h-3 mr-1" />}
@@ -75,14 +75,14 @@ interface QuickActionProps {
 
 const QuickAction: React.FC<QuickActionProps> = ({ title, description, href, icon, color }) => {
     const colorClasses = {
-        blue: "bg-blue-50 border-blue-200 hover:bg-blue-100",
-        green: "bg-green-50 border-green-200 hover:bg-green-100",
-        brand: "bg-slate-50 border-slate-200 hover:bg-slate-100",
-        orange: "bg-orange-50 border-orange-200 hover:bg-orange-100"
+        blue: 'bg-blue-50 border-blue-200 hover:bg-blue-100',
+        green: 'bg-green-50 border-green-200 hover:bg-green-100',
+        brand: 'bg-slate-50 border-slate-200 hover:bg-slate-100',
+        orange: 'bg-orange-50 border-orange-200 hover:bg-orange-100',
     };
 
     return (
-        <Link href={href} className={cn("transition-all hover:shadow-md cursor-pointer", colorClasses[color])}>
+        <Link href={href} className={cn('transition-all hover:shadow-md cursor-pointer', colorClasses[color])}>
             <Card>
                 <CardContent className="p-4">
                     <div className="flex items-start space-x-3">
@@ -103,7 +103,7 @@ const OverviewPage: React.FC = () => {
         totalParticipants: 0,
         activeFunnels: 0,
         conversionRate: 0,
-        totalRevenue: 0
+        totalRevenue: 0,
     });
 
     const [recentActivity] = useState([
@@ -113,7 +113,7 @@ const OverviewPage: React.FC = () => {
             title: 'Novo funil criado',
             description: 'Quiz de Estilo Pessoal v2',
             time: '2 horas atrás',
-            status: 'success'
+            status: 'success',
         },
         {
             id: 2,
@@ -121,7 +121,7 @@ const OverviewPage: React.FC = () => {
             title: '12 novos participantes',
             description: 'Funil de Marketing Digital',
             time: '4 horas atrás',
-            status: 'info'
+            status: 'info',
         },
         {
             id: 3,
@@ -129,7 +129,7 @@ const OverviewPage: React.FC = () => {
             title: 'Meta de conversão atingida',
             description: '85% de taxa de conversão',
             time: '6 horas atrás',
-            status: 'success'
+            status: 'success',
         },
         {
             id: 4,
@@ -137,8 +137,8 @@ const OverviewPage: React.FC = () => {
             title: 'Funil com baixa performance',
             description: 'Quiz de Produto precisa de revisão',
             time: '1 dia atrás',
-            status: 'warning'
-        }
+            status: 'warning',
+        },
     ]);
 
     // Simular carregamento de dados
@@ -150,7 +150,7 @@ const OverviewPage: React.FC = () => {
                     totalParticipants: 1248,
                     activeFunnels: 8,
                     conversionRate: 68.5,
-                    totalRevenue: 15420
+                    totalRevenue: 15420,
                 });
             }, 1000);
         };
@@ -165,25 +165,25 @@ const OverviewPage: React.FC = () => {
                 <MetricCard
                     title="Total de Participantes"
                     value={metrics.totalParticipants.toLocaleString()}
-                    change={{ value: "+12% vs mês anterior", trend: "up" }}
+                    change={{ value: '+12% vs mês anterior', trend: 'up' }}
                     icon={<Users className="w-4 h-4" />}
                 />
                 <MetricCard
                     title="Funis Ativos"
                     value={metrics.activeFunnels}
-                    change={{ value: "+2 novos este mês", trend: "up" }}
+                    change={{ value: '+2 novos este mês', trend: 'up' }}
                     icon={<Target className="w-4 h-4" />}
                 />
                 <MetricCard
                     title="Taxa de Conversão"
                     value={`${metrics.conversionRate}%`}
-                    change={{ value: "+5.2% vs mês anterior", trend: "up" }}
+                    change={{ value: '+5.2% vs mês anterior', trend: 'up' }}
                     icon={<TrendingUp className="w-4 h-4" />}
                 />
                 <MetricCard
                     title="Receita Total"
                     value={`R$ ${metrics.totalRevenue.toLocaleString()}`}
-                    change={{ value: "+18% vs mês anterior", trend: "up" }}
+                    change={{ value: '+18% vs mês anterior', trend: 'up' }}
                     icon={<BarChart3 className="w-4 h-4" />}
                 />
             </div>
@@ -243,10 +243,10 @@ const OverviewPage: React.FC = () => {
                                 {recentActivity.map((activity) => (
                                     <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                                         <div className={cn(
-                                            "w-2 h-2 rounded-full mt-2 flex-shrink-0",
-                                            activity.status === 'success' && "bg-green-500",
-                                            activity.status === 'info' && "bg-blue-500",
-                                            activity.status === 'warning' && "bg-orange-500"
+                                            'w-2 h-2 rounded-full mt-2 flex-shrink-0',
+                                            activity.status === 'success' && 'bg-green-500',
+                                            activity.status === 'info' && 'bg-blue-500',
+                                            activity.status === 'warning' && 'bg-orange-500',
                                         )} />
                                         <div className="flex-1 min-w-0">
                                             <p className="font-medium text-gray-900 text-sm">{activity.title}</p>
@@ -279,7 +279,7 @@ const OverviewPage: React.FC = () => {
                             { name: 'Marketing Digital', participants: 324, conversion: 68, status: 'medium' },
                             { name: 'E-commerce Starter', participants: 189, conversion: 81, status: 'high' },
                             { name: 'Design Thinking', participants: 156, conversion: 45, status: 'low' },
-                            { name: 'Vendas Online', participants: 92, conversion: 59, status: 'medium' }
+                            { name: 'Vendas Online', participants: 92, conversion: 59, status: 'medium' },
                         ].map((funnel, index) => (
                             <div key={index} className="p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
                                 <div className="flex items-center justify-between mb-2">
@@ -295,10 +295,10 @@ const OverviewPage: React.FC = () => {
                                 <div className="w-full bg-gray-200 rounded-full h-2">
                                     <div
                                         className={cn(
-                                            "h-2 rounded-full transition-all",
-                                            funnel.status === 'high' && "bg-green-500",
-                                            funnel.status === 'medium' && "bg-yellow-500",
-                                            funnel.status === 'low' && "bg-red-500"
+                                            'h-2 rounded-full transition-all',
+                                            funnel.status === 'high' && 'bg-green-500',
+                                            funnel.status === 'medium' && 'bg-yellow-500',
+                                            funnel.status === 'low' && 'bg-red-500',
                                         )}
                                         style={{ width: `${funnel.conversion}%` }}
                                     />

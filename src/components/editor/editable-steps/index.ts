@@ -35,7 +35,7 @@ export const EDITABLE_COMPONENTS_MAP = {
     'transition': 'EditableTransitionStep',
     'transition-result': 'EditableTransitionStep', // Reutilizar
     'result': 'EditableResultStep',
-    'offer': 'EditableOfferStep'
+    'offer': 'EditableOfferStep',
 } as const;
 
 /**

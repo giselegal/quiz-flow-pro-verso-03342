@@ -15,13 +15,13 @@ const ICONS = {
     'arrow-right': ArrowRight,
     'lock': Lock,
     'cart': ShoppingCart,
-    'check': CheckCircle
+    'check': CheckCircle,
 };
 
 const ButtonBlock: React.FC<BlockComponentProps> = ({
     data,
     isSelected,
-    onSelect
+    onSelect,
 }) => {
     // Extrair propriedades
     const text = data.content?.text || 'Botão';
@@ -42,7 +42,7 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
             className={cn(
                 'relative p-4 transition-all duration-200 cursor-pointer',
                 'hover:ring-1 hover:ring-blue-200',
-                isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/20'
+                isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/20',
             )}
             onClick={onSelect}
             data-block-id={data.id}
@@ -62,11 +62,11 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
                         'flex items-center gap-2',
                         fullWidth && 'w-full',
                         fontSize && `text-${fontSize}`,
-                        fontWeight && `font-${fontWeight}`
+                        fontWeight && `font-${fontWeight}`,
                     )}
                     style={{
                         backgroundColor: backgroundColor || undefined,
-                        color: textColor || undefined
+                        color: textColor || undefined,
                     }}
                     disabled={true} // Preview mode
                 >

@@ -60,7 +60,7 @@ const CelebrationHeader = memo(({ displayName, styleLabel, styleInfo, variant }:
         <div className={cn(
           'rounded-2xl p-4 md:p-6',
           'bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10',
-          variant.isMinimal && 'p-3'
+          variant.isMinimal && 'p-3',
         )}>
           <h2 className={cn('font-bold text-[#432818] mb-1', variant.isMinimal ? 'text-lg' : 'text-2xl')}>
             Estilo Predominante: <span className="text-[#B89B7A]">{styleLabel}</span>
@@ -164,7 +164,7 @@ const StyleImage = ({ imageUrl, label, onClick, onError, width, height, variant 
         alt={label || 'Imagem'}
         className={cn(
           'w-full h-auto rounded-xl shadow-lg transition-transform duration-300 cursor-pointer object-cover',
-          !variant.isMinimal && 'hover:scale-105'
+          !variant.isMinimal && 'hover:scale-105',
         )}
         onClick={onClick}
         onError={onError}
@@ -302,7 +302,7 @@ const ResultHeaderInlineBlock = ({
   block,
   onPropertyChange,
   className = '',
-  isSelected = false
+  isSelected = false,
 }: ResultHeaderInlineBlockProps) => {
   // ⚠️ TODOS os hooks DEVEM vir ANTES de qualquer early return
   const [imageError, setImageError] = useState(false);
@@ -360,7 +360,7 @@ const ResultHeaderInlineBlock = ({
   const effectivePercentage = computeEffectivePrimaryPercentage(
     primaryStyle || {} as any,
     secondaryStyles || [] as any[],
-    computedPercentage || 0
+    computedPercentage || 0,
   );
 
   const displayPercentage = (effectivePercentage && effectivePercentage > 0)
@@ -371,7 +371,7 @@ const ResultHeaderInlineBlock = ({
   const safeVariant = mobileVariant || 'stack';
   const variant: VariantFlags = useMemo(() => ({
     isCompact: safeVariant === 'compact',
-    isMinimal: safeVariant === 'minimal'
+    isMinimal: safeVariant === 'minimal',
   }), [safeVariant]);
 
   // Defaults vindos de configuração de estilo
@@ -410,7 +410,7 @@ const ResultHeaderInlineBlock = ({
   // ✅ AGORA sim, após TODOS os hooks, podemos ter early returns
   if (error) {
     return (
-      <div className={cn("text-center p-8", className)}>
+      <div className={cn('text-center p-8', className)}>
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
           <div className="text-yellow-800 mb-2">⚠️ Problema no resultado</div>
           <p className="text-sm text-yellow-700 mb-4">{error}</p>
@@ -427,7 +427,7 @@ const ResultHeaderInlineBlock = ({
 
   if (!hasResult || !primaryStyle) {
     return (
-      <div className={cn("text-center p-8", className)}>
+      <div className={cn('text-center p-8', className)}>
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
           <div className="text-gray-800 mb-2">📋 Resultado não disponível</div>
           <p className="text-sm text-gray-600 mb-4">Nenhum resultado foi calculado ainda.</p>
@@ -449,7 +449,7 @@ const ResultHeaderInlineBlock = ({
         isSelected
           ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
           : 'border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30',
-        className
+        className,
       )}
       style={{ backgroundColor }}
     >

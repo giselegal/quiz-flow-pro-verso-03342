@@ -59,7 +59,7 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
         setIsUploading(false);
       }
     },
-    [disabled, onImageChange]
+    [disabled, onImageChange],
   );
 
   const handleClick = useCallback(() => {
@@ -93,7 +93,7 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
       // Limpar input para permitir reusar o mesmo arquivo
       e.target.value = '';
     },
-    [handleFileSelect]
+    [handleFileSelect],
   );
 
   const handleRemoveImage = useCallback(
@@ -101,7 +101,7 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
       e.stopPropagation();
       onImageChange('');
     },
-    [onImageChange]
+    [onImageChange],
   );
 
   const handleDragOver = useCallback(
@@ -111,7 +111,7 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
         setDragOver(true);
       }
     },
-    [disabled]
+    [disabled],
   );
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
@@ -131,7 +131,7 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
         handleFileSelect(file);
       }
     },
-    [disabled, handleFileSelect]
+    [disabled, handleFileSelect],
   );
 
   return (
@@ -142,7 +142,7 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
         !dragOver && imageUrl && 'border-border',
         !dragOver && !imageUrl && 'border-border hover:border-primary/50',
         disabled && 'cursor-not-allowed opacity-50',
-        className
+        className,
       )}
       style={{ width: size, height: size }}
       onClick={handleClick}

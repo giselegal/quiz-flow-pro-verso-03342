@@ -17,7 +17,7 @@ import {
     TrendingUp,
     TrendingDown,
     BarChart3,
-    Settings
+    Settings,
 } from 'lucide-react';
 import { useLiveCanvasPreview } from '@/hooks/canvas/useLiveCanvasPreview';
 
@@ -57,7 +57,7 @@ const DEFAULT_THRESHOLDS: PerformanceThresholds = {
     maxUpdateTime: 100,           // 100ms
     minCacheEfficiency: 0.7,      // 70%
     maxErrorRate: 0.1,            // 10%
-    maxUpdatesPerSecond: 15       // 15/sec
+    maxUpdatesPerSecond: 15,       // 15/sec
 };
 
 const TREND_HISTORY_SIZE = 50;    // Keep last 50 measurements
@@ -82,12 +82,12 @@ export const PreviewPerformanceMonitor: React.FC<PreviewPerformanceMonitorProps>
     thresholds: userThresholds,
     onAlert,
     enablePersistentStats = true,
-    className
+    className,
 }) => {
     // ===== CONFIGURATION =====
     const thresholds: PerformanceThresholds = {
         ...DEFAULT_THRESHOLDS,
-        ...userThresholds
+        ...userThresholds,
     };
 
     // ===== LIVE PREVIEW HOOK =====
@@ -96,12 +96,12 @@ export const PreviewPerformanceMonitor: React.FC<PreviewPerformanceMonitorProps>
         state,
         isActive,
         hasError,
-        errorMessage
+        errorMessage,
     } = useLiveCanvasPreview(steps, selectedStepId, {
         enableDebounce: true,
         debounceDelay: 300,
         enableCache: true,
-        enableDebug: process.env.NODE_ENV === 'development'
+        enableDebug: process.env.NODE_ENV === 'development',
     });
 
     // ===== STATE =====
@@ -119,14 +119,14 @@ export const PreviewPerformanceMonitor: React.FC<PreviewPerformanceMonitorProps>
         type: PerformanceAlert['type'],
         message: string,
         value?: number,
-        threshold?: number
+        threshold?: number,
     ): PerformanceAlert => ({
         id: `${type}-${Date.now()}-${Math.random()}`,
         type,
         message,
         timestamp: Date.now(),
         value,
-        threshold
+        threshold,
     });
 
     const addAlert = (alert: PerformanceAlert) => {
@@ -160,7 +160,7 @@ export const PreviewPerformanceMonitor: React.FC<PreviewPerformanceMonitorProps>
                 'warning',
                 `Preview update time is slow: ${metrics.averageUpdateTime.toFixed(1)}ms`,
                 metrics.averageUpdateTime,
-                thresholds.maxUpdateTime
+                thresholds.maxUpdateTime,
             ));
         }
 
@@ -170,7 +170,7 @@ export const PreviewPerformanceMonitor: React.FC<PreviewPerformanceMonitorProps>
                 'warning',
                 `Cache efficiency is low: ${(metrics.cacheEfficiency * 100).toFixed(1)}%`,
                 metrics.cacheEfficiency,
-                thresholds.minCacheEfficiency
+                thresholds.minCacheEfficiency,
             ));
         }
 
@@ -180,7 +180,7 @@ export const PreviewPerformanceMonitor: React.FC<PreviewPerformanceMonitorProps>
                 'error',
                 `High error rate: ${(metrics.errorRate * 100).toFixed(1)}%`,
                 metrics.errorRate,
-                thresholds.maxErrorRate
+                thresholds.maxErrorRate,
             ));
         }
 
@@ -190,7 +190,7 @@ export const PreviewPerformanceMonitor: React.FC<PreviewPerformanceMonitorProps>
                 'warning',
                 `High update frequency: ${metrics.updatesPerSecond.toFixed(1)}/sec`,
                 metrics.updatesPerSecond,
-                thresholds.maxUpdatesPerSecond
+                thresholds.maxUpdatesPerSecond,
             ));
         }
     }, [metrics, isActive, thresholds]);
@@ -206,7 +206,7 @@ export const PreviewPerformanceMonitor: React.FC<PreviewPerformanceMonitorProps>
                     updateTime: metrics.averageUpdateTime,
                     cacheEfficiency: metrics.cacheEfficiency,
                     errorRate: metrics.errorRate,
-                    updatesPerSecond: metrics.updatesPerSecond
+                    updatesPerSecond: metrics.updatesPerSecond,
                 };
 
                 setTrends(prev => [trend, ...prev.slice(0, TREND_HISTORY_SIZE - 1)]);
@@ -234,7 +234,7 @@ export const PreviewPerformanceMonitor: React.FC<PreviewPerformanceMonitorProps>
             updateTimeTrend: avgRecent > avgOlder ? 'worse' : 'better',
             updateTimeDelta: Math.abs(avgRecent - avgOlder),
             recentAvg: avgRecent,
-            olderAvg: avgOlder
+            olderAvg: avgOlder,
         };
     }, [trends]);
 

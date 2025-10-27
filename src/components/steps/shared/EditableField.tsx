@@ -41,7 +41,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
     maxLength,
     autoFocus = false,
     selectAllOnFocus = true,
-    as: Element = 'span'
+    as: Element = 'span',
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editValue, setEditValue] = useState(value);
@@ -106,7 +106,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
                 className={`${className} border-2 border-dashed focus:border-solid transition-all`}
                 style={{
                     borderColor: STEP_COLORS.primary,
-                    backgroundColor: 'rgba(184, 155, 122, 0.1)'
+                    backgroundColor: 'rgba(184, 155, 122, 0.1)',
                 }}
                 autoFocus={autoFocus}
                 rows={multiline ? 3 : undefined}

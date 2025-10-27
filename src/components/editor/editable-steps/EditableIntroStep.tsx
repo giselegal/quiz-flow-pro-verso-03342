@@ -30,7 +30,7 @@ const EditableIntroStep: React.FC<EditableIntroStepProps> = ({
     canMoveDown,
     canDelete,
     blockId,
-    onPropertyClick
+    onPropertyClick,
 }) => {
 
     // 🎭 Props editáveis específicas do IntroStep
@@ -39,7 +39,7 @@ const EditableIntroStep: React.FC<EditableIntroStepProps> = ({
         'formQuestion',
         'placeholder',
         'buttonText',
-        'image'
+        'image',
     ];
 
     // 🎪 Mock callback para onNameSubmit (editor não precisa submeter de verdade)
@@ -68,7 +68,7 @@ const EditableIntroStep: React.FC<EditableIntroStepProps> = ({
         formQuestion: data.formQuestion || 'Como posso te chamar?',
         placeholder: data.placeholder || 'Digite seu primeiro nome aqui...',
         buttonText: data.buttonText || 'Quero Descobrir meu Estilo Agora!',
-        image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png'
+        image: data.image || 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
     }), [data]);
 
     return (

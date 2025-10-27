@@ -26,7 +26,7 @@ const SimpleTextBlock: React.FC<BlockComponentProps> = ({
                 style={{
                     color: block.properties?.color,
                     fontSize: block.properties?.fontSize,
-                    textAlign: block.properties?.textAlign || 'left'
+                    textAlign: block.properties?.textAlign || 'left',
                 }}
             />
         </div>

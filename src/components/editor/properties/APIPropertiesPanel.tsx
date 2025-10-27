@@ -96,7 +96,7 @@ const FunnelDataDisplay: React.FC<{
                 blockOrder: currentBlock ? currentStepBlocks.indexOf(currentBlock) : -1,
                 // Status de integração
                 isConnectedToFunnel: !!currentBlock && !!funnelsContext,
-                canSaveToDatabase: false
+                canSaveToDatabase: false,
             };
         } catch (error) {
             appLogger.error('Erro ao buscar dados do funil:', error);
@@ -142,8 +142,8 @@ const FunnelDataDisplay: React.FC<{
                 </div>
                 <div>
                     <span className="text-gray-500">Status:</span>
-                    <Badge variant={funnelInfo.hasValidation ? "default" : "secondary"} className="text-xs">
-                        {funnelInfo.hasValidation ? "Válido" : "Pendente"}
+                    <Badge variant={funnelInfo.hasValidation ? 'default' : 'secondary'} className="text-xs">
+                        {funnelInfo.hasValidation ? 'Válido' : 'Pendente'}
                     </Badge>
                 </div>
             </div>
@@ -167,7 +167,7 @@ const PropertyField: React.FC<PropertyFieldProps> = memo(({
     schema,
     value,
     isValid,
-    onChange
+    onChange,
 }) => {
     const handleChange = useCallback((newValue: any) => {
         onChange(newValue);
@@ -285,7 +285,7 @@ export const APIPropertiesPanel: React.FC<APIPropertiesPanelProps> = memo(({
     onPropertyChange,
     onClose,
     onDelete,
-    className = ''
+    className = '',
 }) => {
     // Use our optimized hook with API
     const {
@@ -294,14 +294,14 @@ export const APIPropertiesPanel: React.FC<APIPropertiesPanelProps> = memo(({
         isLoading,
         error,
         updateProperty,
-        resetToDefaults
+        resetToDefaults,
     } = useBlockProperties({
         blockId,
         blockType,
         initialProperties,
         onPropertyChange,
         enableValidation: true,
-        enableTransformation: true
+        enableTransformation: true,
     });
 
     // Property validation states
@@ -321,7 +321,7 @@ export const APIPropertiesPanel: React.FC<APIPropertiesPanelProps> = memo(({
             key,
             schema,
             value: properties[key],
-            isValid: validationStates[key] !== false // default to true if not validated yet
+            isValid: validationStates[key] !== false, // default to true if not validated yet
         }));
     }, [definition?.properties, properties, validationStates]);
 
@@ -480,7 +480,7 @@ export const APIPropertiesPanel: React.FC<APIPropertiesPanelProps> = memo(({
                                 blockId,
                                 blockType,
                                 propertiesCount: Object.keys(properties).length,
-                                validationStates
+                                validationStates,
                             }, null, 2)}
                         </pre>
                     </details>

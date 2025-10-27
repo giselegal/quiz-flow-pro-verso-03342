@@ -38,7 +38,7 @@ export const SpecializedStepAdapter: React.FC<SpecializedStepAdapterProps> = ({
     data,
     onNext,
     onBack,
-    funnelId = 'quiz21StepsComplete'
+    funnelId = 'quiz21StepsComplete',
 }) => {
     console.log(`🔄 SpecializedStepAdapter: Adaptando step ${stepNumber} para UniversalQuizStep`);
 

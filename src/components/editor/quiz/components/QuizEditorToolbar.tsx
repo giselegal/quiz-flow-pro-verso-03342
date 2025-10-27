@@ -45,7 +45,7 @@ const QuizEditorToolbar: React.FC<QuizEditorToolbarProps> = memo(({
     onImport,
     onAddStep,
     onUndo,
-    onRedo
+    onRedo,
 }) => {
     // Handle mode toggle
     const handleModeToggle = useCallback(() => {

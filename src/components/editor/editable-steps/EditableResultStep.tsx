@@ -25,7 +25,7 @@ const EditableResultStep: React.FC<EditableResultStepProps> = ({
     isEditable = false,
     data,
     userProfile,
-    onOpenProperties
+    onOpenProperties,
 }) => {
     
     const safeData = useMemo(() => ({
@@ -33,7 +33,7 @@ const EditableResultStep: React.FC<EditableResultStepProps> = ({
         type: 'result' as const,
         title: data?.title || step?.title || 'Seu Estilo é: <span style="color: #B89B7A; font-weight: 700;">Elegante Sofisticado</span>',
         description: data?.description || step?.description || 'Você tem um gosto refinado e aprecia peças de qualidade que transmitem sobriedade e elegância.',
-        resultKey: data?.resultKey || step?.resultKey || 'elegante'
+        resultKey: data?.resultKey || step?.resultKey || 'elegante',
     }), [data, step]);
 
     return (

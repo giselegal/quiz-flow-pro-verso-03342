@@ -28,7 +28,7 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
     <div
       className={cn(
         'w-full min-w-0 h-full bg-gray-900 border-r border-gray-800/50 flex flex-col',
-        className
+        className,
       )}
       role="navigation"
       aria-label="Quiz Steps Navigation"
@@ -57,7 +57,7 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
                   'w-full text-left p-2 rounded border border-transparent text-xs transition-all focus:outline-none focus:ring-2 focus:ring-brand-brightBlue/50',
                   isActive
                     ? 'bg-gradient-to-r from-brand-brightBlue/20 to-brand-brightPink/20 border-brand-brightBlue/30 text-gray-200'
-                    : 'hover:bg-gray-800/50 text-gray-400 hover:text-gray-300'
+                    : 'hover:bg-gray-800/50 text-gray-400 hover:text-gray-300',
                 )}
                 aria-label={`Navigate to step ${step}: ${analysis.label}`}
                 aria-pressed={isActive}
@@ -76,7 +76,7 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
                         id={`step-${step}-status`}
                         className={cn(
                           'w-2 h-2 rounded-full',
-                          isValid ? 'bg-green-400' : 'bg-red-400'
+                          isValid ? 'bg-green-400' : 'bg-red-400',
                         )}
                         title={isValid ? 'Step is valid' : 'Step has validation errors'}
                         aria-label={isValid ? 'Step is valid' : 'Step has validation errors'}

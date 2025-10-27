@@ -333,7 +333,7 @@ export const usePreviewWithFallbacks = (
     enableAutoRecovery?: boolean;
     maxRetries?: number;
     fallbackMode?: 'skeleton' | 'empty' | 'error' | 'minimal';
-  }
+  },
 ) => {
   const [previewState, setPreviewState] = useState<{
     isReady: boolean;

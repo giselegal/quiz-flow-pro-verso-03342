@@ -39,7 +39,7 @@ export const QuizOptionImage: React.FC<QuizOptionImageProps> = ({
         format: 'auto',
         width: imageUrl.includes('sapatos') ? 400 : 500,
       }),
-    [imageUrl]
+    [imageUrl],
   );
 
   // Check if image is already preloaded on mount
@@ -62,7 +62,7 @@ export const QuizOptionImage: React.FC<QuizOptionImageProps> = ({
       className={cn(
         'w-full relative flex-grow overflow-hidden',
         'md:mx-auto', // Center on desktop
-        !isMobile && 'md:max-w-[40%]' // Reduced from 50% to 40% on desktop
+        !isMobile && 'md:max-w-[40%]', // Reduced from 50% to 40% on desktop
       )}
     >
       <AspectRatio ratio={imageUrl.includes('sapatos') ? 1 : 3 / 4} className="w-full h-full">
@@ -72,7 +72,7 @@ export const QuizOptionImage: React.FC<QuizOptionImageProps> = ({
             'transition-all duration-300',
             isSelected && 'scale-[1.03]',
             // Efeito de zoom para opções com imagem ao fazer hover
-            !isSelected && 'hover:scale-110'
+            !isSelected && 'hover:scale-110',
           )}
         >
           {/* Use OptimizedImage component instead of img tag */}
@@ -83,7 +83,7 @@ export const QuizOptionImage: React.FC<QuizOptionImageProps> = ({
               'object-cover w-full h-full transition-all duration-300',
               isSelected ? 'shadow-3d' : 'shadow-sm hover:shadow-md',
               // Enhanced 3D effect
-              isSelected && is3DQuestion && 'transform-3d rotate-y-12'
+              isSelected && is3DQuestion && 'transform-3d rotate-y-12',
             )}
             onLoad={() => setImageLoaded(true)}
             priority={true}

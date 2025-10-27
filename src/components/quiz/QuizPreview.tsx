@@ -311,7 +311,7 @@ export const QuizPreview: React.FC<QuizPreviewProps> = ({
           <div className="grid gap-3">
             {currentQuestion.options?.map((option, index) => {
               const isSelected = currentAnswer?.selectedOptions.includes(
-                option.id || `opt${index}`
+                option.id || `opt${index}`,
               );
 
               return (

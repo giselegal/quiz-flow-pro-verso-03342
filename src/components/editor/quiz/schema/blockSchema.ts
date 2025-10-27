@@ -250,7 +250,7 @@ export const blockSchemaMap: Record<string, any> = {
       fontSize: '2xl', 
       color: '#1F2937', 
       textAlign: 'center', 
-      fontWeight: 'bold' 
+      fontWeight: 'bold', 
     },
     propertySchema: [
       { key: 'text', type: 'string', label: 'Texto', required: true, default: 'Analisando suas respostas...' },
@@ -273,7 +273,7 @@ export const blockSchemaMap: Record<string, any> = {
       color: '#3B82F6', 
       dots: 3, 
       size: 'md', 
-      animationSpeed: 'normal' 
+      animationSpeed: 'normal', 
     },
     propertySchema: [
       { key: 'color', type: 'color', label: 'Cor do Loader', required: false, default: '#3B82F6' },
@@ -295,7 +295,7 @@ export const blockSchemaMap: Record<string, any> = {
       text: 'Aguarde um momento...', 
       fontSize: 16, 
       color: '#6B7280', 
-      textAlign: 'center' 
+      textAlign: 'center', 
     },
     propertySchema: [
       { key: 'text', type: 'string', label: 'Texto', required: true, default: 'Aguarde um momento...' },
@@ -318,7 +318,7 @@ export const blockSchemaMap: Record<string, any> = {
       totalSteps: 5, 
       showPercentage: true, 
       color: '#3B82F6', 
-      height: 4 
+      height: 4, 
     },
     propertySchema: [
       { key: 'currentStep', type: 'number', label: 'Etapa Atual', required: true, default: 1, min: 1 },
@@ -340,7 +340,7 @@ export const blockSchemaMap: Record<string, any> = {
     defaultData: { 
       message: 'Preparando seus resultados...', 
       icon: 'info', 
-      variant: 'info' 
+      variant: 'info', 
     },
     propertySchema: [
       { key: 'message', type: 'string', label: 'Mensagem', required: true, default: 'Preparando seus resultados...' },
@@ -368,7 +368,7 @@ export function getBlockSchema(type: string): BlockPropertySchemaDefinition | nu
     return {
       type: mapSchema.type,
       groups: mapSchema.groups,
-      properties: mapSchema.propertySchema
+      properties: mapSchema.propertySchema,
     };
   }
 
@@ -393,7 +393,7 @@ export function getBlockDefaults(type: string): Record<string, any> {
 // Helper to validate block properties
 export function validateBlockProperties(
   type: string,
-  properties: Record<string, any>
+  properties: Record<string, any>,
 ): { isValid: boolean; errors: string[] } {
   const schema = getBlockSchema(type);
   if (!schema) return { isValid: false, errors: ['Schema not found'] };
@@ -417,6 +417,6 @@ export function validateBlockProperties(
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 }

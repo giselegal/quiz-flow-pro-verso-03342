@@ -30,24 +30,24 @@ export default function TransformationSection({
     benefits,
     steps,
     beforeAfterImages,
-    className = ''
+    className = '',
 }: TransformationSectionProps) {
     const defaultSteps: TransformationStep[] = [
         {
             icon: <Zap className="w-6 h-6" />,
             title: 'Passo 1 — Autoconhecimento',
-            description: 'Descubra seu estilo único através de exercícios práticos'
+            description: 'Descubra seu estilo único através de exercícios práticos',
         },
         {
             icon: <Zap className="w-6 h-6" />,
             title: 'Passo 2 — Estratégia Visual',
-            description: 'Aprenda a usar cores e peças que valorizam você'
+            description: 'Aprenda a usar cores e peças que valorizam você',
         },
         {
             icon: <Zap className="w-6 h-6" />,
             title: 'Passo 3 — Transformação',
-            description: 'Implemente mudanças reais no seu guarda-roupa'
-        }
+            description: 'Implemente mudanças reais no seu guarda-roupa',
+        },
     ];
 
     const transformationSteps = steps || defaultSteps;

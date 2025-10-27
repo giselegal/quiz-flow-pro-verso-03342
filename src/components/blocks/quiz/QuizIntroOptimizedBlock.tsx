@@ -145,7 +145,7 @@ const QuizIntroOptimizedBlock = React.memo<QuizIntroOptimizedBlockProps>(
     });
 
     const { addCleanupCallback, performComponentCleanup } = useComponentCleanup(
-      `quiz-intro-${block?.id}`
+      `quiz-intro-${block?.id}`,
     );
 
     // Auto-cleanup on mount/unmount
@@ -181,7 +181,7 @@ const QuizIntroOptimizedBlock = React.memo<QuizIntroOptimizedBlockProps>(
       (value: string): boolean => {
         return value.trim().length >= minNameLength;
       },
-      [minNameLength]
+      [minNameLength],
     );
 
     // Input change handler with validation
@@ -205,10 +205,10 @@ const QuizIntroOptimizedBlock = React.memo<QuizIntroOptimizedBlockProps>(
               valid: isValid,
               field: 'name',
             },
-          })
+          }),
         );
       },
-      [validateInput, onInputChange, block?.id]
+      [validateInput, onInputChange, block?.id],
     );
 
     // Button click handler
@@ -223,7 +223,7 @@ const QuizIntroOptimizedBlock = React.memo<QuizIntroOptimizedBlockProps>(
             blockId: block?.id || 'quiz-intro-optimized',
             nextAction: 'step-02',
           },
-        })
+        }),
       );
 
       onNext?.();
@@ -232,7 +232,7 @@ const QuizIntroOptimizedBlock = React.memo<QuizIntroOptimizedBlockProps>(
     // Memoized style configurations
     const gradientBackground = useMemo(
       () => `bg-gradient-to-br from-[#FAF9F7] via-white to-[${primaryColor}]/10`,
-      [primaryColor]
+      [primaryColor],
     );
 
     // Variant-specific rendering
@@ -511,7 +511,7 @@ const QuizIntroOptimizedBlock = React.memo<QuizIntroOptimizedBlockProps>(
           'quiz-intro-optimized-block w-full transition-all duration-200',
           gradientBackground,
           isSelected && 'ring-2 ring-offset-2',
-          className
+          className,
         )}
         style={{
           backgroundColor: backgroundColor !== 'transparent' ? backgroundColor : undefined,
@@ -525,7 +525,7 @@ const QuizIntroOptimizedBlock = React.memo<QuizIntroOptimizedBlockProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 QuizIntroOptimizedBlock.displayName = 'QuizIntroOptimizedBlock';

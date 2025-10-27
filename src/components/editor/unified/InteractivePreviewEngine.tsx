@@ -77,7 +77,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   className = '',
   enableInteractions = true,
   enableRealExperience = false,
-  realTimeUpdate = false // 🎯 NOVO: Sistema de atualização em tempo real
+  realTimeUpdate = false, // 🎯 NOVO: Sistema de atualização em tempo real
 }) => {
   appLogger.debug('🎯 [DEBUG] InteractivePreviewEngine inicializado:', {
     mode,
@@ -85,7 +85,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
     realTimeUpdate,
     funnelId,
     currentStep: initialStep,
-    blocksCount: blocks.length
+    blocksCount: blocks.length,
   });
   const isProductionMode = mode === 'production';
   const isEditorMode = mode === 'editor';
@@ -104,7 +104,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
     autoAdvanceEnabled: true,
     timeToAutoAdvance: 0,
     isCalculatingResult: false,
-    resultData: null
+    resultData: null,
   });
 
   // 🎯 INICIALIZAR ORCHESTRATOR
@@ -112,7 +112,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
     appLogger.debug('🎯 [DEBUG] InteractivePreviewEngine - Inicializando orchestrator:', {
       enableRealExperience,
       funnelId,
-      autoAdvanceEnabled: quizState.autoAdvanceEnabled
+      autoAdvanceEnabled: quizState.autoAdvanceEnabled,
     });
 
     if (!enableRealExperience) {
@@ -140,14 +140,14 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
         appLogger.debug('🎯 [DEBUG] Orchestrator.onValidationChange:', { blockId, isValid });
         setQuizState(prev => ({
           ...prev,
-          validationStates: { ...prev.validationStates, [blockId]: isValid }
+          validationStates: { ...prev.validationStates, [blockId]: isValid },
         }));
       },
       onSelectionChange: (stepId: string, selections: string[]) => {
         appLogger.debug('🎯 [DEBUG] Orchestrator.onSelectionChange:', { stepId, selections });
         setQuizState(prev => ({
           ...prev,
-          selections: { ...prev.selections, [stepId]: selections }
+          selections: { ...prev.selections, [stepId]: selections },
         }));
       },
       goToStep: (step: number) => {
@@ -158,14 +158,14 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
         appLogger.debug('🎯 [DEBUG] Orchestrator.updateValidation:', { blockId, isValid });
         setQuizState(prev => ({
           ...prev,
-          validationStates: { ...prev.validationStates, [blockId]: isValid }
+          validationStates: { ...prev.validationStates, [blockId]: isValid },
         }));
       },
       updateSelections: (stepId: string, selections: string[]) => {
         appLogger.debug('🎯 [DEBUG] Orchestrator.updateSelections:', { stepId, selections });
         setQuizState(prev => ({
           ...prev,
-          selections: { ...prev.selections, [stepId]: selections }
+          selections: { ...prev.selections, [stepId]: selections },
         }));
       },
       updateUserData: (data: any) => {
@@ -173,7 +173,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
         if (data.name) {
           setQuizState(prev => ({ ...prev, userName: data.name }));
         }
-      }
+      },
     };
 
     appLogger.debug('🎯 [DEBUG] Orchestrator instance criada com sucesso');
@@ -191,7 +191,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
       },
       totalSteps: quizState.totalSteps,
       enableAutoAdvance: quizState.autoAdvanceEnabled,
-      validationRequired: true
+      validationRequired: true,
     };
   }, [enableRealExperience, quizState.totalSteps, quizState.autoAdvanceEnabled]);
 
@@ -203,7 +203,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
       ...quizDataPipeline,
       enableRealTimeProcessing: true,
       enableValidation: true,
-      sessionId: `preview-${Date.now()}`
+      sessionId: `preview-${Date.now()}`,
     };
   }, [enableRealExperience]);
 
@@ -221,17 +221,17 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
             category: 'Clássico',
             percentage: 85,
             description: `${userName}, seu estilo clássico reflete elegância e sofisticação.`,
-            score: 85
+            score: 85,
           },
           secondaryStyles: [
             { style: 'Romântico', category: 'Romântico', percentage: 65, score: 65 },
-            { style: 'Natural', category: 'Natural', percentage: 45, score: 45 }
+            { style: 'Natural', category: 'Natural', percentage: 45, score: 45 },
           ],
-          userName
+          userName,
         };
       },
       enableRealTimeCalculation: true,
-      algorithm: 'weighted-scoring'
+      algorithm: 'weighted-scoring',
     };
   }, [enableRealExperience]);
 
@@ -243,7 +243,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
         blocksCount: debouncedBlocks.length,
         selectedBlock: selectedBlockId,
         funnelId,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       // Atualizar estado se necessário
@@ -268,7 +268,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
     if (initialStep !== quizState.currentStep) {
       appLogger.debug('🔄 Sincronizando step externo:', {
         from: quizState.currentStep,
-        to: initialStep
+        to: initialStep,
       });
       setQuizState(prev => ({ ...prev, currentStep: initialStep }));
     }
@@ -296,14 +296,14 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
     const timer = setTimeout(() => {
       const canAdvance = navigation.canAdvanceToNext(
         quizState.currentStep,
-        quizState.validationStates
+        quizState.validationStates,
       );
 
       if (canAdvance && quizState.currentStep < quizState.totalSteps) {
         setQuizState(prev => ({
           ...prev,
           currentStep: prev.currentStep + 1,
-          timeToAutoAdvance: 0
+          timeToAutoAdvance: 0,
         }));
 
         if (orchestrator) {
@@ -326,13 +326,13 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
           if (styleEngine && dataPipeline) {
             const result = await styleEngine.calculateFinalResult(
               quizState.selections,
-              quizState.userName
+              quizState.userName,
             );
 
             setQuizState(prev => ({
               ...prev,
               resultData: result,
-              isCalculatingResult: false
+              isCalculatingResult: false,
             }));
           }
         } catch (error) {
@@ -351,12 +351,12 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
       ...prev,
       selections: {
         ...prev.selections,
-        [`step-${step}`]: ['option1', 'option2'].slice(0, Math.floor(Math.random() * 2) + 1)
+        [`step-${step}`]: ['option1', 'option2'].slice(0, Math.floor(Math.random() * 2) + 1),
       },
       validationStates: {
         ...prev.validationStates,
-        [`step-${step}`]: true
-      }
+        [`step-${step}`]: true,
+      },
     }));
 
     // Simular auto-advance se enabled
@@ -385,7 +385,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor)
+    useSensor(KeyboardSensor),
   );
 
   const handleDragStart = useCallback(() => {
@@ -407,7 +407,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
         // Atualizar ordem
         const updated = reordered.map((block, idx) => ({
           ...block,
-          order: idx
+          order: idx,
         }));
 
         if (onBlocksReordered) {
@@ -474,7 +474,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
       className={cn(
         'interactive-preview-engine relative h-full overflow-y-auto',
         'transition-all duration-300',
-        className
+        className,
       )}
       style={{
         maxWidth: viewportSize === 'mobile' ? '375px' : viewportSize === 'tablet' ? '768px' : '100%',

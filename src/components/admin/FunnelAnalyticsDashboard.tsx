@@ -27,7 +27,7 @@ import {
     AlertTriangle,
     CheckCircle2,
     Download,
-    Upload
+    Upload,
 } from 'lucide-react';
 
 interface GoogleAnalyticsConfig {
@@ -82,13 +82,13 @@ const DEFAULT_ANALYTICS_CONFIG: AnalyticsConfig = {
         enabled: false,
         trackingId: '',
         measurementId: '',
-        customEvents: ['quiz_start', 'quiz_complete', 'email_capture']
+        customEvents: ['quiz_start', 'quiz_complete', 'email_capture'],
     },
     facebookPixel: {
         enabled: false,
         pixelId: '',
         accessToken: '',
-        customEvents: ['ViewContent', 'Lead', 'Purchase']
+        customEvents: ['ViewContent', 'Lead', 'Purchase'],
     },
     utmTracking: {
         enabled: true,
@@ -96,7 +96,7 @@ const DEFAULT_ANALYTICS_CONFIG: AnalyticsConfig = {
         medium: 'organic',
         campaign: '',
         term: '',
-        content: ''
+        content: '',
     },
     conversionGoals: [
         {
@@ -104,25 +104,25 @@ const DEFAULT_ANALYTICS_CONFIG: AnalyticsConfig = {
             name: 'Quiz Completion',
             type: 'completion',
             value: 100,
-            description: 'User completes entire quiz'
+            description: 'User completes entire quiz',
         },
         {
             id: '2',
             name: 'Email Capture',
             type: 'email',
             value: 200,
-            description: 'User provides email address'
-        }
+            description: 'User provides email address',
+        },
     ],
     heatmapEnabled: false,
     sessionRecordingEnabled: false,
-    lastUpdated: new Date().toISOString()
+    lastUpdated: new Date().toISOString(),
 };
 
 const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
     className = '',
     funnelId,
-    onConfigUpdate
+    onConfigUpdate,
 }) => {
     const [config, setConfig] = useState<AnalyticsConfig>(DEFAULT_ANALYTICS_CONFIG);
     const [activeTab, setActiveTab] = useState('overview');
@@ -146,7 +146,7 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
         try {
             const updatedConfig = {
                 ...config,
-                lastUpdated: new Date().toISOString()
+                lastUpdated: new Date().toISOString(),
             };
 
             localStorage.setItem(`analytics-config-${funnelId || 'default'}`, JSON.stringify(updatedConfig));
@@ -168,7 +168,7 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
     const updateGoogleAnalytics = (updates: Partial<GoogleAnalyticsConfig>) => {
         setConfig(prev => ({
             ...prev,
-            googleAnalytics: { ...prev.googleAnalytics, ...updates }
+            googleAnalytics: { ...prev.googleAnalytics, ...updates },
         }));
         setHasChanges(true);
     };
@@ -176,7 +176,7 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
     const updateFacebookPixel = (updates: Partial<FacebookPixelConfig>) => {
         setConfig(prev => ({
             ...prev,
-            facebookPixel: { ...prev.facebookPixel, ...updates }
+            facebookPixel: { ...prev.facebookPixel, ...updates },
         }));
         setHasChanges(true);
     };
@@ -184,7 +184,7 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
     const updateUtmTracking = (updates: Partial<UtmTrackingConfig>) => {
         setConfig(prev => ({
             ...prev,
-            utmTracking: { ...prev.utmTracking, ...updates }
+            utmTracking: { ...prev.utmTracking, ...updates },
         }));
         setHasChanges(true);
     };
@@ -195,12 +195,12 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
             name: `Goal ${config.conversionGoals.length + 1}`,
             type: 'custom',
             value: 50,
-            description: 'Custom conversion goal'
+            description: 'Custom conversion goal',
         };
 
         setConfig(prev => ({
             ...prev,
-            conversionGoals: [...prev.conversionGoals, newGoal]
+            conversionGoals: [...prev.conversionGoals, newGoal],
         }));
         setHasChanges(true);
     };
@@ -208,14 +208,14 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
     const removeConversionGoal = (goalId: string) => {
         setConfig(prev => ({
             ...prev,
-            conversionGoals: prev.conversionGoals.filter(goal => goal.id !== goalId)
+            conversionGoals: prev.conversionGoals.filter(goal => goal.id !== goalId),
         }));
         setHasChanges(true);
     };
 
     const exportConfig = () => {
         const dataStr = JSON.stringify(config, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+        const dataUri = `data:application/json;charset=utf-8,${  encodeURIComponent(dataStr)}`;
         const exportFileDefaultName = `analytics-config-${funnelId || 'default'}-${Date.now()}.json`;
 
         const linkElement = document.createElement('a');
@@ -234,7 +234,7 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
                 const imported = JSON.parse(e.target?.result as string);
                 setConfig({
                     ...imported,
-                    lastUpdated: new Date().toISOString()
+                    lastUpdated: new Date().toISOString(),
                 });
                 setHasChanges(true);
             } catch (error) {
@@ -250,7 +250,7 @@ const FunnelAnalyticsDashboard: React.FC<FunnelAnalyticsDashboardProps> = ({
             config.googleAnalytics.enabled && config.googleAnalytics.trackingId,
             config.facebookPixel.enabled && config.facebookPixel.pixelId,
             config.utmTracking.enabled,
-            config.conversionGoals.length > 0
+            config.conversionGoals.length > 0,
         ].filter(Boolean);
 
         return `${items.length}/4`;

@@ -11,7 +11,7 @@ import { useResult } from '@/contexts/ResultContext';
 export default function ResultMainBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   // 🎯 Tentar usar context (modo production) ou fallback (modo editor)
   let userProfile, styleConfig, calculations;
@@ -50,8 +50,8 @@ export default function ResultMainBlock({
           styleName,
           percentage,
           hasContext: !!userProfile,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       }));
     }
   }, [block.id, isSelected, userName, styleName, percentage, userProfile]);

@@ -9,7 +9,7 @@ function mockLocalStorage() {
         setItem: (k: string, v: string) => { store[k] = v; },
         removeItem: (k: string) => { delete store[k]; },
         clear: () => { Object.keys(store).forEach(k => delete store[k]); },
-        _dump: () => store
+        _dump: () => store,
     } as Storage & { _dump: () => Record<string, string> };
 }
 
@@ -20,7 +20,7 @@ const baseQuestion = (id: string, questionNumber?: string) => ({
     questionText: 'Q',
     requiredSelections: 1,
     options: [{ id: 'A', text: 'A' }, { id: 'B', text: 'B' }, { id: 'C', text: 'C' }],
-    nextStep: undefined
+    nextStep: undefined,
 });
 
 describe('computeResultAdvanced', () => {
@@ -49,7 +49,7 @@ describe('selectOfferCandidate', () => {
     const offerMap = {
         A: { title: 'Oferta A' },
         B: { title: 'Oferta B' },
-        X: { title: 'Estratégica X' }
+        X: { title: 'Estratégica X' },
     };
 
     it('prioriza primary', () => {
@@ -77,7 +77,7 @@ describe('detectCycle', () => {
     it('detecta ciclo simples', () => {
         const steps = [
             { id: 'A', nextStep: 'B' },
-            { id: 'B', nextStep: 'A' }
+            { id: 'B', nextStep: 'A' },
         ];
         const rep = detectCycle(steps);
         expect(rep.hasCycle).toBe(true);
@@ -88,7 +88,7 @@ describe('detectCycle', () => {
         const steps = [
             { id: 'A', nextStep: 'B' },
             { id: 'B', nextStep: 'C' },
-            { id: 'C', nextStep: undefined }
+            { id: 'C', nextStep: undefined },
         ];
         const rep = detectCycle(steps);
         expect(rep.hasCycle).toBe(false);
@@ -102,7 +102,7 @@ describe('persistência', () => {
         // Patch via Object.defineProperty para contornar readonly
         Object.defineProperty(globalThis, 'localStorage', {
             value: ls,
-            configurable: true
+            configurable: true,
         });
     });
 

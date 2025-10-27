@@ -20,7 +20,7 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
         className={cn(
           'text-sm font-medium',
           required && "after:content-['*'] after:text-red-500 after:ml-1",
-          error && 'text-red-600'
+          error && 'text-red-600',
         )}
       >
         {label}

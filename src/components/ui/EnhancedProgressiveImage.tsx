@@ -56,7 +56,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
       setTimeout(() => {
         setRetryCount(prev => prev + 1);
         if (imgRef.current) {
-          imgRef.current.src = optimizedSrc + `?retry=${retryCount + 1}`;
+          imgRef.current.src = `${optimizedSrc  }?retry=${retryCount + 1}`;
         }
       }, 1000 * (retryCount + 1));
     } else {

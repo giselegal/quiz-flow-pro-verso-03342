@@ -50,7 +50,7 @@ export const Notification: React.FC<NotificationProps> = ({
       className={cn(
         'fixed top-4 right-4 z-50 p-4 rounded-lg border shadow-lg',
         'animate-in slide-in-from-right-full duration-300',
-        typeStyles[type]
+        typeStyles[type],
       )}
     >
       <div className="flex items-center gap-2">
@@ -85,7 +85,7 @@ export const useNotification = () => {
   const addNotification = (
     message: string,
     type: 'success' | 'error' | 'warning' | 'info' = 'info',
-    duration = 3000
+    duration = 3000,
   ) => {
     const id = Math.random().toString(36).substr(2, 9);
     setNotifications(prev => [...prev, { id, message, type, duration }]);

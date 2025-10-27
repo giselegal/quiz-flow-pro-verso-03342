@@ -22,7 +22,7 @@ import {
     ExternalLink,
     RefreshCw,
     CheckCircle,
-    AlertTriangle
+    AlertTriangle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -51,7 +51,7 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
     className,
     onStateChange,
     refreshToken,
-    editorSteps
+    editorSteps,
 }) => {
     // Live steps via WebSocket (se houver outro cliente broadcastando)
     const { liveSteps } = useFunnelLivePreview(funnelId);
@@ -69,7 +69,7 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             stepsCount: stepsArray.length,
             primeiroStepId: stepsArray[0]?.id,
             editorStepsCount: editorSteps?.length || 0,
-            liveStepsCount: Array.isArray(liveSteps) ? liveSteps.length : 0
+            liveStepsCount: Array.isArray(liveSteps) ? liveSteps.length : 0,
         });
     }, [externalStepsToUse, editorSteps, liveSteps]);
 
@@ -103,7 +103,7 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             setRefreshKey(prev => prev + 1);
             appLogger.debug('🔄 QuizProductionPreview: editorSteps mudou, forçando refresh', {
                 stepsCount: editorSteps.length,
-                refreshKey: refreshKey + 1
+                refreshKey: refreshKey + 1,
             });
         }
     }, [editorSteps]);
@@ -176,14 +176,14 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
             className={cn(
                 'relative flex flex-col bg-white border rounded-lg overflow-hidden',
                 isFullscreen && 'fixed inset-0 z-50 rounded-none',
-                className
+                className,
             )}
         >
             {/* Header de controles */}
             <div
                 className={cn(
                     'flex items-center justify-between px-4 py-3 bg-gray-50 border-b transition-all',
-                    !showControls && !isFullscreen && 'opacity-0 h-0 py-0'
+                    !showControls && !isFullscreen && 'opacity-0 h-0 py-0',
                 )}
             >
                 <div className="flex items-center gap-3">

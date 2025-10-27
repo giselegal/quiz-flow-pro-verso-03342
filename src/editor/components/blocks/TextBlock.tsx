@@ -13,7 +13,7 @@ const TextBlock: React.FC<BlockComponentProps> = ({
     data,
     isSelected,
     isEditable,
-    onSelect
+    onSelect,
 }) => {
     // Extrair propriedades
     const text = data.content?.text || '';
@@ -31,7 +31,7 @@ const TextBlock: React.FC<BlockComponentProps> = ({
             className={cn(
                 'relative p-4 transition-all duration-200 cursor-pointer',
                 'hover:ring-1 hover:ring-blue-200',
-                isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/20'
+                isSelected && 'ring-2 ring-blue-500 ring-offset-2 bg-blue-50/20',
             )}
             onClick={onSelect}
             data-block-id={data.id}
@@ -49,7 +49,7 @@ const TextBlock: React.FC<BlockComponentProps> = ({
                     style={{
                         color: textColor,
                         lineHeight,
-                        marginBottom
+                        marginBottom,
                     }}
                     dangerouslySetInnerHTML={{ __html: html }}
                 />
@@ -59,7 +59,7 @@ const TextBlock: React.FC<BlockComponentProps> = ({
                     style={{
                         color: textColor,
                         lineHeight,
-                        marginBottom
+                        marginBottom,
                     }}
                 >
                     {text || 'Texto não definido'}

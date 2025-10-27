@@ -19,7 +19,7 @@ export default function EditorStrategicQuestionStep({
     currentAnswer = '',
     onAnswerChange,
     onEdit,
-    isEditable = false
+    isEditable = false,
 }: EditorStrategicQuestionStepProps) {
 
     // Dados seguros com fallbacks
@@ -29,8 +29,8 @@ export default function EditorStrategicQuestionStep({
         options: data.options || [
             { id: 'opt1', text: 'Opção A' },
             { id: 'opt2', text: 'Opção B' },
-            { id: 'opt3', text: 'Opção C' }
-        ]
+            { id: 'opt3', text: 'Opção C' },
+        ],
     };
 
     const handleOptionClick = (optionId: string) => {

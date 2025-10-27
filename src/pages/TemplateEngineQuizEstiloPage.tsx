@@ -35,7 +35,7 @@ export default function TemplateEngineQuizEstiloPage() {
           name: 'Quiz Estilo - Produção',
           slug: TEMPLATE_SLUG,
           description: 'Funil de produção do quiz de estilo pessoal com 21 etapas',
-        }
+        },
       );
 
       setTemplate(draft);

@@ -49,7 +49,7 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
 
       return newBlock.id;
     },
-    [state.blocks.length]
+    [state.blocks.length],
   );
 
   const updateBlock = useCallback((id: string, updates: Partial<EditorBlock>) => {

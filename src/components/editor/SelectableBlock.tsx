@@ -48,7 +48,7 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = ({
     onDragStart,
     onDragEnd,
     children,
-    className = ''
+    className = '',
 }) => {
     const handleClick = useCallback((e: React.MouseEvent) => {
         // Só intercepta se não estiver clicando em um input/textarea/button
@@ -92,17 +92,17 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = ({
                 isSelected && isEditable && [
                     'ring-2 ring-blue-500 ring-offset-2',
                     'shadow-lg shadow-blue-500/20',
-                    'z-10'
+                    'z-10',
                 ],
                 // Hover styles (quando editável)
                 isEditable && [
                     'hover:ring-1 hover:ring-blue-300 hover:ring-offset-1',
                     'hover:shadow-md hover:shadow-blue-500/10',
-                    'cursor-pointer'
+                    'cursor-pointer',
                 ],
                 // Draggable styles
                 isDraggable && isEditable && 'select-none',
-                className
+                className,
             )}
             onClick={handleClick}
             draggable={isDraggable && isEditable}

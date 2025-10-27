@@ -20,7 +20,7 @@ interface TimeUnit {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: number | string | undefined,
-  type: 'top' | 'bottom' | 'left' | 'right'
+  type: 'top' | 'bottom' | 'left' | 'right',
 ): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
@@ -252,7 +252,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                 getMarginClass(marginTop, 'top'),
                 getMarginClass(marginBottom, 'bottom'),
                 getMarginClass(marginLeft, 'left'),
-                getMarginClass(marginRight, 'right')
+                getMarginClass(marginRight, 'right'),
               )}
             >
               {unit.value.toString().padStart(2, '0')}
@@ -260,7 +260,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
             <span
               className={cn(
                 'text-xs sm:text-sm font-medium uppercase tracking-wider',
-                themeClasses.accent
+                themeClasses.accent,
               )}
             >
               {unit.shortLabel}
@@ -284,7 +284,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                     : theme === 'neon'
                       ? 'bg-black text-[#B89B7A] border-[#B89B7A] shadow-[#B89B7A]/30'
                       : 'bg-black/90 text-white border-white/30 shadow-white/10',
-                pulseAnimation && isUrgent && 'animate-pulse'
+                pulseAnimation && isUrgent && 'animate-pulse',
               )}
             >
               {unit.value.toString().padStart(2, '0')}
@@ -292,7 +292,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
             <span
               className={cn(
                 'text-xs mt-1 font-medium uppercase tracking-wider',
-                themeClasses.accent
+                themeClasses.accent,
               )}
             >
               {unit.label}
@@ -341,7 +341,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                   strokeDashoffset={strokeDashoffset}
                   className="transition-all duration-500 drop-shadow-sm"
                   style={{
-                    filter: theme === 'neon' ? `drop-shadow(0 0 4px #B89B7A)` : undefined,
+                    filter: theme === 'neon' ? 'drop-shadow(0 0 4px #B89B7A)' : undefined,
                   }}
                 />
               </svg>
@@ -350,7 +350,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                   className={cn(
                     'text-base sm:text-lg md:text-xl font-bold tabular-nums transition-all duration-300',
                     pulseAnimation && isUrgent && 'animate-pulse',
-                    themeClasses.text
+                    themeClasses.text,
                   )}
                 >
                   {unit.value}
@@ -360,7 +360,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
             <span
               className={cn(
                 'text-xs mt-1 font-medium uppercase tracking-wider',
-                themeClasses.accent
+                themeClasses.accent,
               )}
             >
               {unit.label}
@@ -387,7 +387,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                   className={cn(
                     'text-2xl sm:text-3xl md:text-4xl font-bold tabular-nums mb-1 transition-all duration-300',
                     themeClasses.text,
-                    pulseAnimation && isUrgent && 'animate-pulse drop-shadow-lg'
+                    pulseAnimation && isUrgent && 'animate-pulse drop-shadow-lg',
                   )}
                 >
                   {unit.value.toString().padStart(2, '0')}
@@ -395,7 +395,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                 <div
                   className={cn(
                     'text-xs sm:text-sm font-medium opacity-80 uppercase tracking-wider',
-                    themeClasses.accent
+                    themeClasses.accent,
                   )}
                 >
                   {unit.label}
@@ -410,7 +410,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                         ? 'from-[#B89B7A]/50 to-[#E8D5C4]/50'
                         : theme === 'neon'
                           ? 'from-[#B89B7A] to-[#E8D5C4]'
-                          : 'from-orange-200 to-yellow-200'
+                          : 'from-orange-200 to-yellow-200',
                   )}
                 />
               </CardContent>
@@ -456,7 +456,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                 ? 'text-[#432818] bg-[#E8D5C4] border-[#B89B7A]/30'
                 : theme === 'neon'
                   ? 'text-orange-400 bg-orange-900/20 border-orange-400/30'
-                  : 'text-orange-200 bg-orange-900/20 border-orange-400/30'
+                  : 'text-orange-200 bg-orange-900/20 border-orange-400/30',
           )}
         >
           <Flame className="w-5 h-5" />
@@ -476,7 +476,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           'bg-gradient-to-br from-[#E8D5C4] to-white p-4 sm:p-6 md:p-8 rounded-xl text-[#432818] flex flex-col items-center justify-center min-h-[150px] sm:min-h-[180px] md:min-h-[200px] cursor-pointer transition-all duration-300 border border-[#B89B7A]/20',
           isSelected && 'ring-2 ring-[#B89B7A]/40 shadow-lg shadow-[#B89B7A]/10',
           !isSelected && 'hover:shadow-lg hover:shadow-[#B89B7A]/5 hover:border-[#B89B7A]/30',
-          className
+          className,
         )}
         onClick={onClick}
         data-block-id={block.id}
@@ -518,7 +518,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         !isSelected && 'hover:shadow-lg hover:scale-[1.01]',
         themeClasses.container,
         themeClasses.glow && `shadow-lg ${themeClasses.glow}`,
-        className
+        className,
       )}
       onClick={onClick}
       data-block-id={block.id}
@@ -539,7 +539,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           <h2
             className={cn(
               'text-xl sm:text-2xl md:text-3xl font-bold mb-2 drop-shadow-sm',
-              themeClasses.text
+              themeClasses.text,
             )}
           >
             <InlineEditableText
@@ -571,7 +571,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                   ? 'bg-[#B89B7A]/10'
                   : theme === 'neon'
                     ? 'bg-[#B89B7A]/20'
-                    : 'bg-white/20 backdrop-blur-sm'
+                    : 'bg-white/20 backdrop-blur-sm',
             )}
           >
             <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -592,7 +592,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           <div
             className={cn(
               'grid gap-3 sm:gap-4 justify-center',
-              layout === 'circular' ? 'grid-cols-2' : 'grid-cols-2'
+              layout === 'circular' ? 'grid-cols-2' : 'grid-cols-2',
             )}
           >
             {units.map((unit, index) => renderTimeUnit(unit, index))}
@@ -611,7 +611,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                     ? 'bg-[#B89B7A]/20'
                     : theme === 'neon'
                       ? 'bg-[#432818]/50'
-                      : 'bg-white/20'
+                      : 'bg-white/20',
               )}
             >
               <motion.div
@@ -623,7 +623,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                       ? 'bg-gradient-to-r from-[#B89B7A] to-[#432818]'
                       : theme === 'neon'
                         ? 'bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4] shadow-[#B89B7A]/50 shadow-lg'
-                        : 'bg-gradient-to-r from-white to-orange-200'
+                        : 'bg-gradient-to-r from-white to-orange-200',
                 )}
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}

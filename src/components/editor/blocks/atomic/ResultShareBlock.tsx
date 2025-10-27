@@ -6,7 +6,7 @@ import { Share2, Facebook, Twitter, Linkedin, MessageCircle } from 'lucide-react
 export default function ResultShareBlock({
     block,
     isSelected,
-    onClick
+    onClick,
 }: AtomicBlockProps) {
     // ✅ Ler apenas de content
     const title = block.content?.title || 'Compartilhe seu resultado';
@@ -21,8 +21,8 @@ export default function ResultShareBlock({
                 platform,
                 message,
                 url: window.location.href,
-                timestamp: Date.now()
-            }
+                timestamp: Date.now(),
+            },
         }));
 
         // Execute platform-specific share
@@ -36,13 +36,13 @@ export default function ResultShareBlock({
                 window.open(url, '_blank', 'width=600,height=400');
             },
             whatsapp: () => {
-                const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message + ' ' + window.location.href)}`;
+                const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${message  } ${  window.location.href}`)}`;
                 window.open(url, '_blank');
             },
             linkedin: () => {
                 const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
                 window.open(url, '_blank', 'width=600,height=400');
-            }
+            },
         };
 
         shareActions[platform]?.();
@@ -52,21 +52,21 @@ export default function ResultShareBlock({
         facebook: () => handleShare('facebook'),
         twitter: () => handleShare('twitter'),
         whatsapp: () => handleShare('whatsapp'),
-        linkedin: () => handleShare('linkedin')
+        linkedin: () => handleShare('linkedin'),
     };
 
     const platformIcons: Record<string, React.ReactNode> = {
         facebook: <Facebook className="w-5 h-5" />,
         twitter: <Twitter className="w-5 h-5" />,
         whatsapp: <MessageCircle className="w-5 h-5" />,
-        linkedin: <Linkedin className="w-5 h-5" />
+        linkedin: <Linkedin className="w-5 h-5" />,
     };
 
     const platformLabels: Record<string, string> = {
         facebook: 'Facebook',
         twitter: 'Twitter',
         whatsapp: 'WhatsApp',
-        linkedin: 'LinkedIn'
+        linkedin: 'LinkedIn',
     };
 
     return (

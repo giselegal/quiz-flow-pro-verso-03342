@@ -18,7 +18,7 @@ const FunnelsPage: React.FC = () => {
             participants: 487,
             conversion: 72,
             created: '2024-01-15',
-            lastModified: '2024-01-20'
+            lastModified: '2024-01-20',
         },
         {
             id: 2,
@@ -27,7 +27,7 @@ const FunnelsPage: React.FC = () => {
             participants: 324,
             conversion: 68,
             created: '2024-01-10',
-            lastModified: '2024-01-18'
+            lastModified: '2024-01-18',
         },
         {
             id: 3,
@@ -36,8 +36,8 @@ const FunnelsPage: React.FC = () => {
             participants: 0,
             conversion: 0,
             created: '2024-01-22',
-            lastModified: '2024-01-22'
-        }
+            lastModified: '2024-01-22',
+        },
     ];
 
     return (

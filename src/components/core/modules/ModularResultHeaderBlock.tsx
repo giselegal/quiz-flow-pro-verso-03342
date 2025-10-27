@@ -68,7 +68,7 @@ export const ModularResultHeaderBlock: React.FC<BlockComponentProps> = ({
     const percentage = percentageOverride ?? computeEffectivePrimaryPercentage(
         primaryStyle as any,
         secondaryStyles as any[],
-        (primaryStyle as any)?.percentage || 0
+        (primaryStyle as any)?.percentage || 0,
     );
 
     const {
@@ -89,7 +89,7 @@ export const ModularResultHeaderBlock: React.FC<BlockComponentProps> = ({
                 isSelected
                     ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
                     : 'border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30',
-                className
+                className,
             )}
             style={{ backgroundColor }}
         >

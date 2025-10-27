@@ -45,18 +45,18 @@ export const DisasterRecoveryPanel: React.FC<DisasterRecoveryPanelProps> = ({ cl
     
     try {
       toast({
-        title: "🔄 Iniciando Rollback",
-        description: "Executando rollback para versão anterior...",
+        title: '🔄 Iniciando Rollback',
+        description: 'Executando rollback para versão anterior...',
       });
 
       const result: RollbackResult = await rollbackService.rollback(
         targetVersion, 
-        'Manual rollback from disaster recovery panel'
+        'Manual rollback from disaster recovery panel',
       );
 
       if (result.success) {
         toast({
-          title: "✅ Rollback Concluído",
+          title: '✅ Rollback Concluído',
           description: `Rollback de ${result.fromVersion} para ${result.toVersion} executado em ${result.rollbackTime}ms`,
         });
         loadData();
@@ -66,9 +66,9 @@ export const DisasterRecoveryPanel: React.FC<DisasterRecoveryPanelProps> = ({ cl
 
     } catch (error) {
       toast({
-        title: "❌ Rollback Falhou",
+        title: '❌ Rollback Falhou',
         description: error instanceof Error ? error.message : 'Erro desconhecido',
-        variant: "destructive"
+        variant: 'destructive',
       });
     } finally {
       setIsRollingBack(false);
@@ -82,14 +82,14 @@ export const DisasterRecoveryPanel: React.FC<DisasterRecoveryPanelProps> = ({ cl
     
     try {
       toast({
-        title: "💾 Criando Backup",
-        description: "Executando backup manual...",
+        title: '💾 Criando Backup',
+        description: 'Executando backup manual...',
       });
 
       const backupId = await backupService.createBackup('manual', 'Manual backup from disaster recovery panel');
 
       toast({
-        title: "✅ Backup Criado",
+        title: '✅ Backup Criado',
         description: `Backup ${backupId} criado com sucesso`,
       });
       
@@ -97,9 +97,9 @@ export const DisasterRecoveryPanel: React.FC<DisasterRecoveryPanelProps> = ({ cl
 
     } catch (error) {
       toast({
-        title: "❌ Backup Falhou",
+        title: '❌ Backup Falhou',
         description: error instanceof Error ? error.message : 'Erro desconhecido',
-        variant: "destructive"
+        variant: 'destructive',
       });
     } finally {
       setIsBackingUp(false);
@@ -113,15 +113,15 @@ export const DisasterRecoveryPanel: React.FC<DisasterRecoveryPanelProps> = ({ cl
     
     try {
       toast({
-        title: "🔄 Iniciando Restauração",
-        description: "Restaurando dados do backup...",
+        title: '🔄 Iniciando Restauração',
+        description: 'Restaurando dados do backup...',
       });
 
       const success = await backupService.restoreFromBackup(backupId);
 
       if (success) {
         toast({
-          title: "✅ Restauração Concluída",
+          title: '✅ Restauração Concluída',
           description: `Dados restaurados do backup ${backupId}`,
         });
         loadData();
@@ -136,9 +136,9 @@ export const DisasterRecoveryPanel: React.FC<DisasterRecoveryPanelProps> = ({ cl
 
     } catch (error) {
       toast({
-        title: "❌ Restauração Falhou",
+        title: '❌ Restauração Falhou',
         description: error instanceof Error ? error.message : 'Erro desconhecido',
-        variant: "destructive"
+        variant: 'destructive',
       });
     } finally {
       setIsRestoring(false);
@@ -166,7 +166,7 @@ export const DisasterRecoveryPanel: React.FC<DisasterRecoveryPanelProps> = ({ cl
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))  } ${  sizes[i]}`;
   };
 
   return (

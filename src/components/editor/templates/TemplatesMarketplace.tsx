@@ -36,7 +36,7 @@ import {
   Clock,
   Users,
   Sparkles,
-  Play
+  Play,
 } from 'lucide-react';
 
 interface Template {
@@ -79,7 +79,7 @@ const MOCK_TEMPLATES: Template[] = [
     features: ['IA Personalizada', 'Scoring Automático', 'Analytics Integrado'],
     thumbnail: '/templates/product-quiz-thumb.jpg',
     isNew: true,
-    isTrending: true
+    isTrending: true,
   },
   {
     id: 'lead-qualification-advanced',
@@ -98,7 +98,7 @@ const MOCK_TEMPLATES: Template[] = [
     features: ['CRM Integration', 'Lead Scoring', 'Automated Follow-up'],
     thumbnail: '/templates/lead-qual-thumb.jpg',
     isPremium: true,
-    isTrending: true
+    isTrending: true,
   },
   {
     id: 'customer-satisfaction-survey',
@@ -115,7 +115,7 @@ const MOCK_TEMPLATES: Template[] = [
     steps: 12,
     estimatedTime: 6,
     features: ['NPS Calculation', 'Sentiment Analysis', 'Export Reports'],
-    thumbnail: '/templates/satisfaction-thumb.jpg'
+    thumbnail: '/templates/satisfaction-thumb.jpg',
   },
   {
     id: 'onboarding-assessment',
@@ -133,8 +133,8 @@ const MOCK_TEMPLATES: Template[] = [
     estimatedTime: 15,
     features: ['Progress Tracking', 'Personalized Path', 'Manager Dashboard'],
     thumbnail: '/templates/onboarding-thumb.jpg',
-    isNew: true
-  }
+    isNew: true,
+  },
 ];
 
 const CATEGORIES = [
@@ -143,7 +143,7 @@ const CATEGORIES = [
   { id: 'survey', name: 'Pesquisas', icon: TrendingUp },
   { id: 'lead-gen', name: 'Lead Gen', icon: Zap },
   { id: 'assessment', name: 'Avaliações', icon: Award },
-  { id: 'onboarding', name: 'Onboarding', icon: Users }
+  { id: 'onboarding', name: 'Onboarding', icon: Users },
 ];
 
 interface TemplatesMarketplaceProps {
@@ -155,7 +155,7 @@ interface TemplatesMarketplaceProps {
 export const TemplatesMarketplace: React.FC<TemplatesMarketplaceProps> = ({
   onPreviewTemplate,
   onApplyTemplate,
-  className = ''
+  className = '',
 }) => {
   const { toast } = useToast();
   
@@ -186,7 +186,7 @@ export const TemplatesMarketplace: React.FC<TemplatesMarketplaceProps> = ({
       filtered = filtered.filter(t => 
         t.name.toLowerCase().includes(query) ||
         t.description.toLowerCase().includes(query) ||
-        t.tags.some(tag => tag.toLowerCase().includes(query))
+        t.tags.some(tag => tag.toLowerCase().includes(query)),
       );
     }
 
@@ -218,9 +218,9 @@ export const TemplatesMarketplace: React.FC<TemplatesMarketplaceProps> = ({
 
   const handleApplyTemplate = useCallback((template: Template) => {
     toast({
-      title: "Template aplicado!",
+      title: 'Template aplicado!',
       description: `"${template.name}" foi aplicado ao seu projeto`,
-      variant: "default"
+      variant: 'default',
     });
     onApplyTemplate?.(template);
   }, [onApplyTemplate, toast]);

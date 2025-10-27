@@ -29,7 +29,7 @@ export const PropertyCheckbox: React.FC<PropertyInputProps> = ({
             'text-sm font-medium cursor-pointer',
             required && "after:content-['*'] after:text-red-500 after:ml-1",
             error && 'text-red-600',
-            disabled && 'cursor-not-allowed opacity-50'
+            disabled && 'cursor-not-allowed opacity-50',
           )}
         >
           {label}

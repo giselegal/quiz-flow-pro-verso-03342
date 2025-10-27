@@ -81,7 +81,7 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
     <div
       className={cn(
         'relative flex flex-col items-center justify-center p-6 rounded-xl shadow-md',
-        className
+        className,
       )}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}

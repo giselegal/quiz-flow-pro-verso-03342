@@ -39,7 +39,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 templateId: null,
-                isFromTemplate: false
+                isFromTemplate: false,
             };
 
             // Salvar diretamente no localStorage para simular dados antigos
@@ -53,7 +53,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                 description: 'Este funil deve ir direto para IndexedDB',
                 category: 'quiz',
                 context: FunnelContext.EDITOR,
-                userId: 'anonymous'
+                userId: 'anonymous',
             });
 
             if (newFunnel) {
@@ -66,7 +66,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
             addLog('📋 Testando listagem de funis...');
             const funnels = await service.listFunnels({
                 context: FunnelContext.EDITOR,
-                userId: 'anonymous'
+                userId: 'anonymous',
             });
 
             addLog(`📊 Encontrados ${funnels?.length || 0} funis`);
@@ -122,7 +122,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
             fontFamily: 'Arial, sans-serif',
             padding: '20px',
             backgroundColor: '#f5f5f5',
-            minHeight: '100vh'
+            minHeight: '100vh',
         }}>
             <div style={{
                 maxWidth: '1000px',
@@ -130,7 +130,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                 background: 'white',
                 padding: '20px',
                 borderRadius: '8px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             }}>
                 <h1>🗃️ Teste de Migração IndexedDB</h1>
 
@@ -141,7 +141,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                         border: '1px solid #bee5eb',
                         borderRadius: '4px',
                         padding: '15px',
-                        marginBottom: '15px'
+                        marginBottom: '15px',
                     }}>
                         <h3>✨ Melhorias Implementadas:</h3>
                         <ul>
@@ -157,7 +157,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                         backgroundColor: '#fff3cd',
                         border: '1px solid #ffeaa7',
                         borderRadius: '4px',
-                        padding: '15px'
+                        padding: '15px',
                     }}>
                         <h3>🔧 O que será testado:</h3>
                         <ol>
@@ -183,7 +183,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                             borderRadius: '4px',
                             cursor: isLoading ? 'not-allowed' : 'pointer',
                             marginRight: '10px',
-                            fontSize: '16px'
+                            fontSize: '16px',
                         }}
                     >
                         {isLoading ? '🔄 Executando...' : '🚀 Executar Teste'}
@@ -198,7 +198,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                             padding: '12px 24px',
                             borderRadius: '4px',
                             cursor: 'pointer',
-                            fontSize: '16px'
+                            fontSize: '16px',
                         }}
                     >
                         🧹 Limpar Dados de Teste
@@ -211,7 +211,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                     borderRadius: '4px',
                     padding: '15px',
                     maxHeight: '500px',
-                    overflowY: 'auto'
+                    overflowY: 'auto',
                 }}>
                     <h3>📋 Log de Execução:</h3>
                     {testResults.length === 0 ? (
@@ -225,7 +225,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                                     marginBottom: '5px',
                                     color: result.includes('❌') ? '#dc3545' :
                                         result.includes('✅') ? '#28a745' :
-                                            result.includes('⚠️') ? '#ffc107' : '#212529'
+                                            result.includes('⚠️') ? '#ffc107' : '#212529',
                                 }}>
                                     {result}
                                 </div>
@@ -239,7 +239,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
                     padding: '15px',
                     backgroundColor: '#d1ecf1',
                     border: '1px solid #bee5eb',
-                    borderRadius: '4px'
+                    borderRadius: '4px',
                 }}>
                     <h3>💡 Próximos Passos:</h3>
                     <p>Após este teste bem-sucedido, o sistema estará usando IndexedDB como storage principal, com:</p>

@@ -13,7 +13,7 @@ import {
     Zap,
     Database,
     Cloud,
-    Package
+    Package,
 } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -75,7 +75,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             features: ['TypeScript', 'Hooks', 'Styled Components', 'Props Interface'],
             optimizations: ['Tree Shaking', 'Lazy Loading', 'Memoization', 'Bundle Splitting'],
             platforms: ['Web', 'Next.js', 'Vite', 'Create React App'],
-            status: 'ready'
+            status: 'ready',
         },
         {
             id: 'html-standalone',
@@ -86,7 +86,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             features: ['Responsivo', 'SEO Otimizado', 'Performance', 'Acessibilidade'],
             optimizations: ['Minificação', 'Compressão', 'Critical CSS', 'Image Optimization'],
             platforms: ['Qualquer Servidor', 'CDN', 'GitHub Pages', 'Netlify'],
-            status: 'ready'
+            status: 'ready',
         },
         {
             id: 'pwa-app',
@@ -97,7 +97,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             features: ['Offline Support', 'Push Notifications', 'App Install', 'Background Sync'],
             optimizations: ['Service Worker', 'App Shell', 'Resource Caching', 'Data Sync'],
             platforms: ['Mobile Web', 'Desktop', 'App Stores'],
-            status: 'ready'
+            status: 'ready',
         },
         {
             id: 'pdf-document',
@@ -108,7 +108,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             features: ['Formulários', 'Assinaturas', 'Campos Calculados', 'Validação'],
             optimizations: ['Compressão', 'Fontes Incorporadas', 'Otimização de Imagens'],
             platforms: ['Adobe Reader', 'Navegadores', 'Mobile', 'Impressão'],
-            status: 'ready'
+            status: 'ready',
         },
         {
             id: 'amp-pages',
@@ -119,7 +119,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             features: ['AMP Valid', 'Instant Loading', 'SEO Boost', 'Mobile First'],
             optimizations: ['AMP Runtime', 'Lazy Loading', 'Preconnect', 'Resource Hints'],
             platforms: ['Google Search', 'Bing', 'Twitter', 'LinkedIn'],
-            status: 'ready'
+            status: 'ready',
         },
         {
             id: 'wordpress-plugin',
@@ -130,8 +130,8 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             features: ['Shortcodes', 'Gutenberg Blocks', 'Widget', 'Admin Panel'],
             optimizations: ['Asset Loading', 'Database Queries', 'Caching', 'Security'],
             platforms: ['WordPress.org', 'WordPress.com', 'WooCommerce'],
-            status: 'ready'
-        }
+            status: 'ready',
+        },
     ]);
 
     const [exportPresets] = useState<ExportPreset[]>([
@@ -142,7 +142,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             formats: ['react-component', 'html-standalone', 'pwa-app'],
             autoOptimization: true,
             platforms: ['Web', 'Mobile', 'Desktop'],
-            schedule: 'immediate'
+            schedule: 'immediate',
         },
         {
             id: 'marketing-kit',
@@ -151,7 +151,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             formats: ['amp-pages', 'html-standalone', 'pdf-document'],
             autoOptimization: true,
             platforms: ['Social Media', 'Email', 'Landing Pages'],
-            schedule: 'immediate'
+            schedule: 'immediate',
         },
         {
             id: 'cms-integration',
@@ -160,8 +160,8 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             formats: ['wordpress-plugin', 'html-standalone'],
             autoOptimization: true,
             platforms: ['WordPress', 'Drupal', 'Joomla'],
-            schedule: 'weekly'
-        }
+            schedule: 'weekly',
+        },
     ]);
 
     const [integrationPlatforms] = useState<IntegrationPlatform[]>([
@@ -172,7 +172,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             icon: <Code className="w-5 h-5 text-gray-800" />,
             status: 'connected',
             lastSync: '2 min atrás',
-            features: ['Auto Deploy', 'Custom Domain', 'HTTPS', 'Analytics']
+            features: ['Auto Deploy', 'Custom Domain', 'HTTPS', 'Analytics'],
         },
         {
             id: 'netlify',
@@ -181,7 +181,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             icon: <Cloud className="w-5 h-5 text-teal-600" />,
             status: 'connected',
             lastSync: '5 min atrás',
-            features: ['Edge Functions', 'Form Handling', 'Analytics', 'CDN Global']
+            features: ['Edge Functions', 'Form Handling', 'Analytics', 'CDN Global'],
         },
         {
             id: 'vercel',
@@ -189,7 +189,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             description: 'Plataforma para aplicações frontend',
             icon: <Globe className="w-5 h-5 text-black" />,
             status: 'disconnected',
-            features: ['Serverless Functions', 'Edge Network', 'Analytics', 'Preview URLs']
+            features: ['Serverless Functions', 'Edge Network', 'Analytics', 'Preview URLs'],
         },
         {
             id: 'wordpress',
@@ -198,8 +198,8 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             icon: <Package className="w-5 h-5 text-blue-600" />,
             status: 'connected',
             lastSync: '1 hora atrás',
-            features: ['Auto Post', 'Media Library', 'SEO', 'Social Sharing']
-        }
+            features: ['Auto Post', 'Media Library', 'SEO', 'Social Sharing'],
+        },
     ]);
 
     const [exportHistory, setExportHistory] = useState([
@@ -210,7 +210,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             createdAt: '2024-01-20 14:30',
             size: '2.4 MB',
             downloads: 127,
-            status: 'completed'
+            status: 'completed',
         },
         {
             id: '2',
@@ -219,8 +219,8 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             createdAt: '2024-01-19 09:15',
             size: '890 KB',
             downloads: 89,
-            status: 'completed'
-        }
+            status: 'completed',
+        },
     ]);
 
     const handleExport = async (formatIds: string[] = selectedFormats) => {
@@ -230,7 +230,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
         trackEvent('export_started', {
             formats: formatIds,
             autoOptimization,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         });
 
         try {
@@ -242,7 +242,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
                 ...format,
                 status: formatIds.includes(format.id) ? 'completed' : format.status,
                 lastExported: formatIds.includes(format.id) ? 'Agora' : format.lastExported,
-                size: formatIds.includes(format.id) ? `${Math.random() * 5 + 1}MB`.substring(0, 4) : format.size
+                size: formatIds.includes(format.id) ? `${Math.random() * 5 + 1}MB`.substring(0, 4) : format.size,
             })) as ExportFormat[]);
 
             // Adicionar ao histórico
@@ -253,14 +253,14 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
                 createdAt: new Date().toLocaleString(),
                 size: `${Math.random() * 10 + 1}MB`.substring(0, 4),
                 downloads: 0,
-                status: 'completed'
+                status: 'completed',
             };
 
             setExportHistory(prev => [newExport, ...prev]);
 
             trackEvent('export_completed', {
                 formats: formatIds,
-                duration: 3000
+                duration: 3000,
             });
 
         } catch (error) {
@@ -280,7 +280,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
         setSelectedFormats(prev =>
             prev.includes(formatId)
                 ? prev.filter(id => id !== formatId)
-                : [...prev, formatId]
+                : [...prev, formatId],
         );
     };
 
@@ -291,7 +291,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             completed: { color: 'bg-blue-100 text-blue-800', label: 'Concluído' },
             error: { color: 'bg-red-100 text-red-800', label: 'Erro' },
             connected: { color: 'bg-green-100 text-green-800', label: 'Conectado' },
-            disconnected: { color: 'bg-gray-100 text-gray-800', label: 'Desconectado' }
+            disconnected: { color: 'bg-gray-100 text-gray-800', label: 'Desconectado' },
         };
         const config = configs[status as keyof typeof configs];
         return <Badge className={config.color}>{config.label}</Badge>;
@@ -303,7 +303,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
             mobile: <Smartphone className="w-4 h-4" />,
             document: <FileText className="w-4 h-4" />,
             code: <Code className="w-4 h-4" />,
-            integration: <Database className="w-4 h-4" />
+            integration: <Database className="w-4 h-4" />,
         };
         return icons[category as keyof typeof icons];
     };
@@ -390,7 +390,7 @@ export function AdvancedExportSystem({ onClose }: AdvancedExportSystemProps) {
                             { key: 'formats', label: 'Formatos', icon: Download, count: exportFormats.length },
                             { key: 'presets', label: 'Presets', icon: Package, count: exportPresets.length },
                             { key: 'integrations', label: 'Integrações', icon: Share2, count: integrationPlatforms.filter(p => p.status === 'connected').length },
-                            { key: 'history', label: 'Histórico', icon: Database, count: exportHistory.length }
+                            { key: 'history', label: 'Histórico', icon: Database, count: exportHistory.length },
                         ].map(({ key, label, icon: Icon, count }) => (
                             <button
                                 key={key}

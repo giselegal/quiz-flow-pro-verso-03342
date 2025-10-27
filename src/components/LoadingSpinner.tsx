@@ -47,7 +47,7 @@ const sizeClasses = {
     sm: 'h-6 w-6 border-2',
     md: 'h-10 w-10 border-2',
     lg: 'h-16 w-16 border-3',
-    xl: 'h-24 w-24 border-4'
+    xl: 'h-24 w-24 border-4',
 };
 
 /**
@@ -58,7 +58,7 @@ function SpinnerVariant({ size = 'md' }: { size: LoadingSpinnerProps['size'] }) 
         <div
             className={cn(
                 'animate-spin rounded-full border-primary border-t-transparent',
-                sizeClasses[size]
+                sizeClasses[size],
             )}
             role="status"
             aria-label="Carregando"
@@ -87,7 +87,7 @@ function PulseVariant({ size = 'md' }: { size: LoadingSpinnerProps['size'] }) {
         <div
             className={cn(
                 'bg-primary rounded-full animate-pulse',
-                sizeClasses[size]
+                sizeClasses[size],
             )}
             role="status"
             aria-label="Carregando"
@@ -122,12 +122,12 @@ export function LoadingSpinner({
     size = 'md',
     variant = 'spinner',
     progress,
-    className
+    className,
 }: LoadingSpinnerProps) {
     const containerClasses = cn(
         'flex flex-col items-center justify-center gap-4',
         fullscreen && 'fixed inset-0 bg-background/80 backdrop-blur-sm z-50',
-        className
+        className,
     );
 
     const renderVariant = () => {

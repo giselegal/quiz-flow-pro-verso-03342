@@ -30,7 +30,7 @@ const EditableQuestionStep: React.FC<EditableQuestionStepProps> = ({
     canMoveDown,
     canDelete,
     blockId,
-    onPropertyClick
+    onPropertyClick,
 }) => {
 
     // 🎭 Props editáveis específicas do QuestionStep
@@ -38,7 +38,7 @@ const EditableQuestionStep: React.FC<EditableQuestionStepProps> = ({
         'questionNumber',
         'questionText',
         'options',
-        'requiredSelections'
+        'requiredSelections',
     ];
 
     // 🎪 Mock state para currentAnswers (simular seleções no preview)
@@ -80,9 +80,9 @@ const EditableQuestionStep: React.FC<EditableQuestionStepProps> = ({
         options: data.options || [
             { id: 'opt1', text: 'Opção 1', image: '' },
             { id: 'opt2', text: 'Opção 2', image: '' },
-            { id: 'opt3', text: 'Opção 3', image: '' }
+            { id: 'opt3', text: 'Opção 3', image: '' },
         ],
-        requiredSelections: data.requiredSelections || 1
+        requiredSelections: data.requiredSelections || 1,
     }), [data]);
 
     return (

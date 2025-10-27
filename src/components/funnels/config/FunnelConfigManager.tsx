@@ -32,7 +32,7 @@ interface FunnelConfigManagerProps {
 export default function FunnelConfigManager({
     funnelId,
     onConfigChange,
-    className = ''
+    className = '',
 }: FunnelConfigManagerProps) {
     // =================== Estados ===================
     const [config, setConfig] = useState<FunnelConfig>();
@@ -85,21 +85,21 @@ export default function FunnelConfigManager({
     const updateSEO = useCallback((seoUpdates: Partial<FunnelSEOOverrides>) => {
         setConfig(prev => prev ? {
             ...prev,
-            seo: { ...prev.seo, ...seoUpdates }
+            seo: { ...prev.seo, ...seoUpdates },
         } : prev);
     }, []);
 
     const updateTracking = useCallback((trackingUpdates: Partial<FunnelTrackingConfig>) => {
         setConfig(prev => prev ? {
             ...prev,
-            tracking: { ...prev.tracking, ...trackingUpdates }
+            tracking: { ...prev.tracking, ...trackingUpdates },
         } : prev);
     }, []);
 
     const updateUTM = useCallback((utmUpdates: Partial<FunnelUTMConfig>) => {
         setConfig(prev => prev ? {
             ...prev,
-            utm: { ...prev.utm, ...utmUpdates }
+            utm: { ...prev.utm, ...utmUpdates },
         } : prev);
     }, []);
 
@@ -109,8 +109,8 @@ export default function FunnelConfigManager({
             webhooks: {
                 ...prev.webhooks,
                 ...webhooksUpdates,
-                enabled: webhooksUpdates.enabled ?? prev.webhooks?.enabled ?? false
-            }
+                enabled: webhooksUpdates.enabled ?? prev.webhooks?.enabled ?? false,
+            },
         } : prev);
     }, []);
 
@@ -130,8 +130,8 @@ export default function FunnelConfigManager({
                     backup: true,
                     updateCache: true,
                     source: 'manual',
-                    userId: 'current-user' // TODO: Obter do contexto de auth
-                }
+                    userId: 'current-user', // TODO: Obter do contexto de auth
+                },
             );
 
             setOriginalConfig(config);

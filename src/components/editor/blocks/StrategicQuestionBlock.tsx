@@ -104,7 +104,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
 
   const handleOptionChange = (optionIndex: number, field: string, value: any) => {
     const updatedOptions = options.map((option: any, index: number) =>
-      index === optionIndex ? { ...option, [field]: value } : option
+      index === optionIndex ? { ...option, [field]: value } : option,
     );
     handlePropertyChange('options', updatedOptions);
   };
@@ -120,7 +120,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={onClick}
       style={{ backgroundColor, color: textColor }}

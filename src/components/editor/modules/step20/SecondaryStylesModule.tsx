@@ -24,7 +24,7 @@ const SecondaryStylesModule: React.FC<SecondaryStylesModuleProps> = ({
   titleColor = '#432818',
   textColor = '#6B4F43',
   className = '',
-  isSelected = false
+  isSelected = false,
 }) => {
   const { secondaryStyles, isLoading } = useQuizData();
 
@@ -56,7 +56,7 @@ const SecondaryStylesModule: React.FC<SecondaryStylesModuleProps> = ({
       className={cn(
         'w-full space-y-4',
         isSelected && 'ring-2 ring-primary ring-offset-2',
-        className
+        className,
       )}
     >
       {showTitle && title && (

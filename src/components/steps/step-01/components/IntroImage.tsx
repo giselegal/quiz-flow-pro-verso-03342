@@ -24,7 +24,7 @@ const IntroImage: React.FC<IntroImageProps> = ({
     maxHeight = 204,
     aspectRatio = 1.47,
     isEditable = false,
-    onEdit = () => { }
+    onEdit = () => { },
 }) => {
     return (
         <div className="mt-2 w-full mx-auto flex justify-center">
@@ -34,7 +34,7 @@ const IntroImage: React.FC<IntroImageProps> = ({
                     aspectRatio: aspectRatio.toString(),
                     maxHeight: `${maxHeight}px`,
                     width: '100%',
-                    maxWidth: `${maxWidth}px`
+                    maxWidth: `${maxWidth}px`,
                 }}
             >
                 <img
@@ -48,7 +48,7 @@ const IntroImage: React.FC<IntroImageProps> = ({
                         maxHeight: `${maxHeight}px`,
                         width: '100%',
                         height: 'auto',
-                        objectFit: 'contain'
+                        objectFit: 'contain',
                     }}
                 />
             </div>

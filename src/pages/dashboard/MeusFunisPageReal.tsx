@@ -19,7 +19,7 @@ import {
     TrendingUp,
     Plus,
     RefreshCw,
-    Loader2
+    Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -74,7 +74,7 @@ const MeusFunisPageReal: React.FC = () => {
         totalViews: 0,
         totalConversions: 0,
         avgConversionRate: 0,
-        totalRevenue: 0
+        totalRevenue: 0,
     });
     const [isLoading, setIsLoading] = useState(true);
     const [selectedStatus, setSelectedStatus] = useState('todos');
@@ -175,9 +175,9 @@ const MeusFunisPageReal: React.FC = () => {
                 // Não abortar: seguimos apenas com drafts (Supabase pode estar sem schema ou com RLS exigindo login)
                 console.warn('⚠️ Erro ao carregar funis (seguindo com drafts):', funnelsError?.message || funnelsError);
                 toast({
-                    title: "Continuando com rascunhos",
-                    description: "Não foi possível carregar funis publicados. Exibindo apenas rascunhos.",
-                    variant: "default",
+                    title: 'Continuando com rascunhos',
+                    description: 'Não foi possível carregar funis publicados. Exibindo apenas rascunhos.',
+                    variant: 'default',
                 });
             }
 
@@ -229,7 +229,7 @@ const MeusFunisPageReal: React.FC = () => {
                     completions,
                     conversionRate: parseFloat(conversionRate.toFixed(1)),
                     lastActivity: funnel.updated_at,
-                    status
+                    status,
                 };
             });
 
@@ -248,7 +248,7 @@ const MeusFunisPageReal: React.FC = () => {
                 completions: 0,
                 conversionRate: 0,
                 lastActivity: draft.updated_at,
-                status: 'draft'
+                status: 'draft',
             }));
 
             // Ordenar drafts primeiro por updated_at (ou created_at) desc, depois funis existentes
@@ -269,7 +269,7 @@ const MeusFunisPageReal: React.FC = () => {
                 totalViews,
                 totalConversions,
                 avgConversionRate: parseFloat(avgConversionRate.toFixed(1)),
-                totalRevenue: totalConversions * 45 // R$ 45 por conversão
+                totalRevenue: totalConversions * 45, // R$ 45 por conversão
             });
 
             console.log('✅ Funis carregados:', processedFunis.length, 'funis reais');
@@ -277,9 +277,9 @@ const MeusFunisPageReal: React.FC = () => {
         } catch (error) {
             console.error('❌ Erro ao carregar funis:', error);
             toast({
-                title: "Erro inesperado",
-                description: "Não foi possível carregar os funis. Tente novamente.",
-                variant: "destructive",
+                title: 'Erro inesperado',
+                description: 'Não foi possível carregar os funis. Tente novamente.',
+                variant: 'destructive',
             });
         } finally {
             setIsLoading(false);
@@ -315,23 +315,23 @@ const MeusFunisPageReal: React.FC = () => {
                     description: originalFunil.description,
                     user_id: originalFunil.user_id,
                     settings: originalFunil.settings,
-                    is_published: false
+                    is_published: false,
                 });
 
             if (error) throw error;
 
             toast({
-                title: "Funil duplicado!",
-                description: "O funil foi duplicado com sucesso.",
+                title: 'Funil duplicado!',
+                description: 'O funil foi duplicado com sucesso.',
             });
 
             loadFunis(); // Recarregar dados
         } catch (error) {
             console.error('Erro ao duplicar funil:', error);
             toast({
-                title: "Erro ao duplicar",
-                description: "Não foi possível duplicar o funil.",
-                variant: "destructive",
+                title: 'Erro ao duplicar',
+                description: 'Não foi possível duplicar o funil.',
+                variant: 'destructive',
             });
         }
     };
@@ -350,17 +350,17 @@ const MeusFunisPageReal: React.FC = () => {
             if (error) throw error;
 
             toast({
-                title: "Funil excluído!",
-                description: "O funil foi removido com sucesso.",
+                title: 'Funil excluído!',
+                description: 'O funil foi removido com sucesso.',
             });
 
             loadFunis(); // Recarregar dados
         } catch (error) {
             console.error('Erro ao excluir funil:', error);
             toast({
-                title: "Erro ao excluir",
-                description: "Não foi possível excluir o funil.",
-                variant: "destructive",
+                title: 'Erro ao excluir',
+                description: 'Não foi possível excluir o funil.',
+                variant: 'destructive',
             });
         }
     };
@@ -375,19 +375,19 @@ const MeusFunisPageReal: React.FC = () => {
             if (error) throw error;
 
             toast({
-                title: !currentStatus ? "Funil publicado!" : "Funil despublicado!",
+                title: !currentStatus ? 'Funil publicado!' : 'Funil despublicado!',
                 description: !currentStatus
-                    ? "O funil agora está ativo e pode receber participantes."
-                    : "O funil foi pausado e não receberá novos participantes.",
+                    ? 'O funil agora está ativo e pode receber participantes.'
+                    : 'O funil foi pausado e não receberá novos participantes.',
             });
 
             loadFunis(); // Recarregar dados
         } catch (error) {
             console.error('Erro ao alterar status:', error);
             toast({
-                title: "Erro ao alterar status",
-                description: "Não foi possível alterar o status do funil.",
-                variant: "destructive",
+                title: 'Erro ao alterar status',
+                description: 'Não foi possível alterar o status do funil.',
+                variant: 'destructive',
             });
         }
     };
@@ -425,7 +425,7 @@ const MeusFunisPageReal: React.FC = () => {
     const statusConfig = {
         active: { label: 'Ativo', color: 'bg-green-500', textColor: 'text-green-700', bgColor: 'bg-green-50' },
         draft: { label: 'Rascunho', color: 'bg-gray-500', textColor: 'text-gray-700', bgColor: 'bg-gray-50' },
-        paused: { label: 'Pausado', color: 'bg-yellow-500', textColor: 'text-yellow-700', bgColor: 'bg-yellow-50' }
+        paused: { label: 'Pausado', color: 'bg-yellow-500', textColor: 'text-yellow-700', bgColor: 'bg-yellow-50' },
     };
 
     if (isLoading) {
@@ -452,7 +452,7 @@ const MeusFunisPageReal: React.FC = () => {
                 ...production,
                 id: 'production',
                 name: 'Quiz Estilo Pessoal - Rascunho',
-                isPublished: false
+                isPublished: false,
             } as any);
             toast({ title: 'Rascunho criado', description: `ID: ${savedId}` });
             // abrir no editor para começar a editar
@@ -764,7 +764,7 @@ const MeusFunisPageReal: React.FC = () => {
                                         const url = new URL(window.location.href); url.searchParams.set('published', draftId); window.history.replaceState({}, '', url.toString());
                                         setConfirmPublishId(null); setPublishingDraftId(null); loadFunis();
                                     })
-                                    .catch(err => { toast({ title: 'Erro na publicação', description: err.message, variant: 'destructive' }); setPublishingDraftId(null); })
+                                    .catch(err => { toast({ title: 'Erro na publicação', description: err.message, variant: 'destructive' }); setPublishingDraftId(null); }),
                                 );
                             }} disabled={publishingDraftId !== null}>
                                 {publishingDraftId ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Play className="w-4 h-4 mr-2" />}

@@ -111,14 +111,14 @@ const ModeRenderer: React.FC<{
                     currentStep={state.currentStep}
                     totalSteps={totalSteps}
                     stepHasBlocks={Object.fromEntries(
-                      Array.from({ length: totalSteps }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
+                      Array.from({ length: totalSteps }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0]),
                     )}
                     stepValidation={state.stepValidation}
                     onSelectStep={actions.setCurrentStep}
                     getStepAnalysis={(step) => ({
                       icon: 'quiz',
                       label: `Etapa ${step}`,
-                      desc: `Quiz step ${step}`
+                      desc: `Quiz step ${step}`,
                     })}
                     renderIcon={(_name, className) => <span className={className}>🎯</span>}
                   />
@@ -201,14 +201,14 @@ const ModeRenderer: React.FC<{
                     currentStep={state.currentStep}
                     totalSteps={totalSteps}
                     stepHasBlocks={Object.fromEntries(
-                      Array.from({ length: totalSteps }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0])
+                      Array.from({ length: totalSteps }, (_, i) => [i + 1, (state.stepBlocks[`step-${i + 1}`]?.length || 0) > 0]),
                     )}
                     stepValidation={state.stepValidation}
                     onSelectStep={actions.setCurrentStep}
                     getStepAnalysis={(step) => ({
                       icon: 'quiz',
                       label: `Etapa ${step}`,
-                      desc: `Quiz step ${step}`
+                      desc: `Quiz step ${step}`,
                     })}
                     renderIcon={(_name, className) => <span className={className}>🎯</span>}
                   />
@@ -253,7 +253,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   mode = 'visual',
   funnelId,
   initialStep = 1,
-  className = 'h-full w-full'
+  className = 'h-full w-full',
 }) => {
   const { state, actions } = useEditor();
 
@@ -276,7 +276,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
     currentStep: state.currentStep,
     totalBlocks: Object.values(state.stepBlocks || {}).reduce((acc: number, blocks: any) => acc + (Array.isArray(blocks) ? blocks.length : 0), 0),
     selectedBlock: state.selectedBlockId,
-    funnelId
+    funnelId,
   }), [mode, state, funnelId]);
 
   React.useEffect(() => {

@@ -41,7 +41,7 @@ const QuizAnalyticsDashboard: React.FC = () => {
     const metrics = useMemo(() => getQuizMetrics({
         sessionId: filter.sessionId || undefined,
         fromTs: filter.from || undefined,
-        toTs: filter.to || undefined
+        toTs: filter.to || undefined,
     }), [events, filter]);
 
     const sessions = useMemo(() => Array.from(new Set(events.map(e => e.sessionId))), [events]);
@@ -159,7 +159,7 @@ const QuizAnalyticsDashboard: React.FC = () => {
                                         backoffBaseMs: 500,
                                         onProgress: info => {
                                             appendLog(`Batch ${info.batchIndex + 1}/${info.batchTotal} tentativa ${info.attempt} => ${info.success ? 'OK' : 'FAIL'}`);
-                                        }
+                                        },
                                     });
                                     setLastFlushResult(res);
                                     appendLog(`Concluído. Eventos enviados: ${res.flushed}`);
@@ -170,7 +170,7 @@ const QuizAnalyticsDashboard: React.FC = () => {
                                 }
                                 load();
                             } catch (err: any) {
-                                appendLog('Erro: ' + (err?.message || String(err)));
+                                appendLog(`Erro: ${  err?.message || String(err)}`);
                             } finally { setIsFlushing(false); }
                         }}>{isFlushing ? 'Enviando...' : 'Flush'}</Button>
                     </div>

@@ -22,7 +22,7 @@ const SimpleUrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
     block,
     isSelected,
     editMode,
-    onSelect
+    onSelect,
 }) => {
     const content = block.content || {};
     const properties = block.properties || {};
@@ -31,7 +31,7 @@ const SimpleUrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
     const [timeLeft, setTimeLeft] = useState({
         hours: 2,
         minutes: 15,
-        seconds: 30
+        seconds: 30,
     });
 
     // Timer effect

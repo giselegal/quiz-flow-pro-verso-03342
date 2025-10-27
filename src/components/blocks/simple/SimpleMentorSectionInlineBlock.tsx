@@ -16,7 +16,7 @@ const SimpleMentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
     block,
     isSelected,
     editMode,
-    onSelect
+    onSelect,
 }) => {
     const content = block.content || {};
 
@@ -37,10 +37,10 @@ const SimpleMentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
 
                 <div className="text-center md:text-left">
                     <h3 className="text-xl font-bold text-purple-900 mb-2">
-                        {content.mentorName || "Especialista em Estilo"}
+                        {content.mentorName || 'Especialista em Estilo'}
                     </h3>
                     <p className="text-purple-800 mb-3">
-                        {content.mentorTitle || "Consultora de Imagem"}
+                        {content.mentorTitle || 'Consultora de Imagem'}
                     </p>
                     <p className="text-sm text-purple-700">
                         Mais de 10 anos transformando o estilo de mulheres

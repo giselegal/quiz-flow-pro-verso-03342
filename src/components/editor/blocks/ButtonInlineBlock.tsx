@@ -26,7 +26,7 @@ import { assignVariant } from '@/utils/ab';
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: string | number,
-  type: 'top' | 'bottom' | 'left' | 'right'
+  type: 'top' | 'bottom' | 'left' | 'right',
 ): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
@@ -144,7 +144,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     getStepRules,
     isAlwaysActiveStep,
     getRequiredSelections,
-    getButtonActivationRule
+    getButtonActivationRule,
   } = useQuizRulesConfig();
   const { getCurrentStep } = useUnifiedQuizState();
   // 🎯 Atribuição A/B (opcional)
@@ -199,7 +199,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     stepRule: stepRule ? {
       type: stepRule.type,
       validation: stepRule.validation,
-      behavior: stepRule.behavior
+      behavior: stepRule.behavior,
     } : null,
     requiredSelections,
     buttonActivationRule,
@@ -207,7 +207,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     finalRequiresValidInput,
     finalRequiresValidSelection,
     finalAutoAdvanceOnComplete,
-    finalAutoAdvanceDelay
+    finalAutoAdvanceDelay,
   });
 
   // Suporte a controle externo de estado (eventos globais)
@@ -272,7 +272,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
           currentStep,
           requiredSelections,
           selectedCount,
-          isValid
+          isValid,
         });
 
         setIsSelectionValid(isValid);
@@ -354,7 +354,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     isValidated,
     isSelectionValid,
     finalRequiresValidInput,
-    finalRequiresValidSelection
+    finalRequiresValidSelection,
   ]);
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
@@ -397,7 +397,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       medium: 'shadow-md',
       large: 'shadow-lg',
       inner: 'shadow-inner',
-      glow: `shadow-lg`,
+      glow: 'shadow-lg',
     };
 
     return shadowClasses[shadowType as keyof typeof shadowClasses] || '';
@@ -443,9 +443,9 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   // Variantes de cor - usando as configurações customizáveis
   const getButtonStyles = () => {
     const baseStyle = {
-      fontFamily: fontFamily,
+      fontFamily,
       fontSize: `${fontSize}px`,
-      fontWeight: fontWeight,
+      fontWeight,
       borderRadius: `${borderRadius}px`,
       transition: 'all 0.3s ease',
       ...getShadowStyles(),
@@ -458,15 +458,15 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
           ...baseStyle,
           background: `linear-gradient(135deg, ${backgroundColor}, ${backgroundColor}dd)`,
           color: textColor,
-          borderColor: borderColor,
+          borderColor,
         };
       }
 
       return {
         ...baseStyle,
-        backgroundColor: backgroundColor,
+        backgroundColor,
         color: textColor,
-        borderColor: borderColor,
+        borderColor,
       };
     }
 
@@ -555,7 +555,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
 
       // Classes customizadas
-      className
+      className,
     );
   };
 
@@ -568,7 +568,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
       onClick={onClick}
       data-block-id={block?.id}
@@ -594,7 +594,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
           if (finalRequiresValidInput) {
             // 1) Tentar pegar diretamente do DOM (campo de nome)
             const nameInputEl = document.querySelector(
-              'input[name="userName"]'
+              'input[name="userName"]',
             ) as HTMLInputElement | null;
             const domValue = nameInputEl?.value?.trim() || '';
 
@@ -666,7 +666,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                 // Evento de atualização de nome
                 try {
                   window.dispatchEvent(
-                    new CustomEvent('quiz-user-name-updated', { detail: { userName, source: 'ButtonInlineBlock' } })
+                    new CustomEvent('quiz-user-name-updated', { detail: { userName, source: 'ButtonInlineBlock' } }),
                   );
                 } catch { }
               } catch {
@@ -678,7 +678,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                   StorageService.safeSetString('quizUserName', userName);
                   try {
                     window.dispatchEvent(
-                      new CustomEvent('quiz-user-name-updated', { detail: { userName, source: 'ButtonInlineBlock:fallback' } })
+                      new CustomEvent('quiz-user-name-updated', { detail: { userName, source: 'ButtonInlineBlock:fallback' } }),
                     );
                   } catch { }
                 } catch { }
@@ -688,7 +688,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
               window.dispatchEvent(
                 new CustomEvent('quiz-start', {
                   detail: { userName, timestamp: Date.now() },
-                })
+                }),
               );
 
               // Navegação: se configurado para auto-advance, usa nextStepId do próprio botão

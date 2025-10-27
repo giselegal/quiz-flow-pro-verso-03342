@@ -69,7 +69,7 @@ const OfferHeroSectionInlineBlock: React.FC<BlockComponentProps> = ({
         spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.large,
         isSelected && 'ring-2 ring-blue-500 ring-offset-2',
         'cursor-pointer',
-        className
+        className,
       )}
       onClick={onClick}
     >
@@ -93,7 +93,7 @@ const OfferHeroSectionInlineBlock: React.FC<BlockComponentProps> = ({
             {subtitle
               .split('**')
               .map((part: string, index: number) =>
-                index % 2 === 1 ? <strong key={index}>{part}</strong> : part
+                index % 2 === 1 ? <strong key={index}>{part}</strong> : part,
               )}
           </p>
 

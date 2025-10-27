@@ -37,7 +37,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
   isSaving,
   onManualSave,
   viewportMode = 'desktop',
-  onViewportModeChange
+  onViewportModeChange,
 }) => {
   const [currentFunnel, setCurrentFunnel] = useState<SchemaDrivenFunnelData | null>(null);
   const [showManager, setShowManager] = useState(false);
@@ -73,7 +73,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
             config: {},
             createdAt: new Date('2024-01-01'),
             lastModified: new Date(),
-            user_id: 'template'
+            user_id: 'template',
           });
         } else {
           // Para funis personalizados, buscar no Supabase
@@ -93,7 +93,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
               config: {},
               createdAt: new Date(),
               lastModified: new Date(),
-              user_id: 'unknown'
+              user_id: 'unknown',
             });
           }
         }
@@ -182,10 +182,10 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                       size="sm"
                       onClick={() => onViewportModeChange?.('mobile')}
                       className={cn(
-                        "h-8 px-3 rounded-md transition-colors",
+                        'h-8 px-3 rounded-md transition-colors',
                         viewportMode === 'mobile'
-                          ? "bg-brand-brightBlue text-white shadow-sm"
-                          : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                          ? 'bg-brand-brightBlue text-white shadow-sm'
+                          : 'text-gray-300 hover:text-white hover:bg-gray-700/50',
                       )}
                       aria-label="Visualização Mobile"
                     >
@@ -202,10 +202,10 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                       size="sm"
                       onClick={() => onViewportModeChange?.('tablet')}
                       className={cn(
-                        "h-8 px-3 rounded-md transition-colors",
+                        'h-8 px-3 rounded-md transition-colors',
                         viewportMode === 'tablet'
-                          ? "bg-brand-brightBlue text-white shadow-sm"
-                          : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                          ? 'bg-brand-brightBlue text-white shadow-sm'
+                          : 'text-gray-300 hover:text-white hover:bg-gray-700/50',
                       )}
                       aria-label="Visualização Tablet"
                     >
@@ -222,10 +222,10 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                       size="sm"
                       onClick={() => onViewportModeChange?.('desktop')}
                       className={cn(
-                        "h-8 px-3 rounded-md transition-colors",
+                        'h-8 px-3 rounded-md transition-colors',
                         viewportMode === 'desktop'
-                          ? "bg-brand-brightBlue text-white shadow-sm"
-                          : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                          ? 'bg-brand-brightBlue text-white shadow-sm'
+                          : 'text-gray-300 hover:text-white hover:bg-gray-700/50',
                       )}
                       aria-label="Visualização Desktop"
                     >
@@ -242,10 +242,10 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                       size="sm"
                       onClick={() => onViewportModeChange?.('xl')}
                       className={cn(
-                        "h-8 px-3 rounded-md transition-colors",
+                        'h-8 px-3 rounded-md transition-colors',
                         viewportMode === 'xl'
-                          ? "bg-brand-brightBlue text-white shadow-sm"
-                          : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                          ? 'bg-brand-brightBlue text-white shadow-sm'
+                          : 'text-gray-300 hover:text-white hover:bg-gray-700/50',
                       )}
                       aria-label="Visualização Large Desktop"
                     >

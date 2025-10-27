@@ -13,7 +13,7 @@ export const breakpoints = {
     md: '768px',   // Tablet
     lg: '1024px',  // Desktop
     xl: '1280px',  // Large desktop
-    '2xl': '1536px' // Extra large
+    '2xl': '1536px', // Extra large
 } as const;
 
 // Hook personalizado para responsividade
@@ -38,7 +38,7 @@ export const themeColors = {
 // Utilitários para Craft.js
 export const withCraftjsComponent = <T extends Record<string, any>>(
     Component: React.ComponentType<T>,
-    craft?: Partial<UserComponent<T>>
+    craft?: Partial<UserComponent<T>>,
 ): React.ComponentType<T> & { craft?: UserComponent<T> } => {
     const WrappedComponent = Component as any;
     if (craft) {
@@ -53,16 +53,16 @@ export const responsiveClasses = {
         small: 'max-w-sm mx-auto',
         medium: 'max-w-md mx-auto',
         large: 'max-w-lg mx-auto',
-        full: 'w-full'
+        full: 'w-full',
     },
     spacing: {
         small: 'p-2 gap-2',
         normal: 'p-4 gap-4',
-        large: 'p-6 gap-6'
+        large: 'p-6 gap-6',
     },
     text: {
         small: 'text-sm',
         normal: 'text-base',
-        large: 'text-lg'
-    }
+        large: 'text-lg',
+    },
 } as const;

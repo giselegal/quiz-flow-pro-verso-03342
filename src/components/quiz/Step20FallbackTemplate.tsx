@@ -27,7 +27,7 @@ interface Step20FallbackTemplateProps {
 const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
   className,
   onRetry,
-  useModularSystem = false // Padrão é false para manter compatibilidade
+  useModularSystem = false, // Padrão é false para manter compatibilidade
 }) => {
   const { primaryStyle, secondaryStyles, isLoading, error, retry, hasResult } = useQuizResult();
   const [showDebug, setShowDebug] = useState(false);
@@ -196,8 +196,8 @@ const Step20FallbackTemplate: React.FC<Step20FallbackTemplateProps> = ({
                 borderRadius: 'xl',
                 userName,
                 styleName: styleLabel,
-                percentage
-              }
+                percentage,
+              },
             }}
             isSelected={false}
             onPropertyChange={(key, value) => {

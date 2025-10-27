@@ -38,7 +38,7 @@ export const StepNavigator = <Step extends any = any>({
     onMoveStep,
     onDeleteStep,
     extractStepMeta = (s: any) => ({ id: s.id, type: s.type, blockCount: s.blocks?.length || 0 }),
-    isStepDirty = () => false // Default: nenhum step dirty
+    isStepDirty = () => false, // Default: nenhum step dirty
 }: StepNavigatorProps<Step>) => {
     const listRef = useRef<ListImperativeAPI | null>(null);
     const ITEM_HEIGHT = 90; // Altura aproximada de cada step item

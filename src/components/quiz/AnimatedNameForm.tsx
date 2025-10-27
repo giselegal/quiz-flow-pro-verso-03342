@@ -46,7 +46,7 @@ const AnimatedNameForm: React.FC<AnimatedNameFormProps> = ({ onSubmit }) => {
             'w-full p-2.5 bg-[#FEFEFE] rounded-md transition-all duration-200',
             showError
               ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'border-[#B89B7A] focus:border-[#A1835D] focus:ring-[#A1835D]'
+              : 'border-[#B89B7A] focus:border-[#A1835D] focus:ring-[#A1835D]',
           )}
           autoFocus
           aria-required="true"
@@ -69,7 +69,7 @@ const AnimatedNameForm: React.FC<AnimatedNameFormProps> = ({ onSubmit }) => {
           'w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-200',
           'bg-[#B89B7A] text-white hover:bg-[#A1835D] active:bg-[#947645] hover:shadow-lg',
           'focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 sm:py-3.5 sm:text-lg',
-          'disabled:opacity-70 disabled:cursor-not-allowed'
+          'disabled:opacity-70 disabled:cursor-not-allowed',
         )}
         disabled={formSubmitted && !isValid}
         onMouseEnter={() => setIsButtonHovered(true)}

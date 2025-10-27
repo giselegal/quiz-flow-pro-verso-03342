@@ -211,7 +211,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
       <AnimatedWrapper animation="fade" show={true} duration={400}>
         <Card
-          className={`p-6 ${timerStyle === 'urgent' ? colors.background + ' text-white' : 'bg-white'} shadow-lg border-0`}
+          className={`p-6 ${timerStyle === 'urgent' ? `${colors.background  } text-white` : 'bg-white'} shadow-lg border-0`}
         >
           {/* Header */}
           <div className="text-center mb-6">
@@ -244,7 +244,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
           <div className="flex justify-center items-center mb-6">
             <div className="flex items-center gap-1 md:gap-2">
               {getVisibleUnits().map((unit, index) =>
-                renderTimerUnit(unit.value, unit.label, index)
+                renderTimerUnit(unit.value, unit.label, index),
               )}
             </div>
           </div>
@@ -278,7 +278,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
                 className={`px-8 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105 ${
                   timerStyle === 'urgent'
                     ? 'bg-white text-red-600 hover:bg-gray-100'
-                    : colors.background + ' text-white hover:opacity-90'
+                    : `${colors.background  } text-white hover:opacity-90`
                 }`}
               >
                 <TrendingUp className="w-4 h-4 mr-2" />

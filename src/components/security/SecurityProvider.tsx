@@ -39,7 +39,7 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
   const [isSecure, setIsSecure] = useState(false);
   const [rateLimitStatus, setRateLimitStatus] = useState({
     remaining: 100,
-    resetTime: Date.now() + 3600000 // 1 hour
+    resetTime: Date.now() + 3600000, // 1 hour
   });
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
       if (data) {
         setRateLimitStatus({
           remaining: Math.max(0, data.limit_value - data.current),
-          resetTime: data.reset_time * 1000
+          resetTime: data.reset_time * 1000,
         });
       }
     } catch (error) {
@@ -116,8 +116,8 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
           event_data: data || {},
           timestamp: new Date().toISOString(),
           user_agent: navigator.userAgent,
-          url: window.location.href
-        }
+          url: window.location.href,
+        },
       });
     } catch (error) {
       console.error('❌ Security event logging failed:', error);
@@ -129,7 +129,7 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
     rateLimitStatus,
     validateInput,
     sanitizeHtml,
-    logSecurityEvent
+    logSecurityEvent,
   };
 
   return (

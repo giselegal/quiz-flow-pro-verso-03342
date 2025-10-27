@@ -25,7 +25,7 @@ vi.mock('@/components/ui/tabs', () => ({
         <button data-testid={`tab-trigger-${value}`} onClick={onClick}>
             {children}
         </button>
-    )
+    ),
 }));
 
 describe('Quiz Editor Integration Tests', () => {
@@ -51,10 +51,10 @@ describe('Quiz Editor Integration Tests', () => {
 
             // Não deve ter erros de hooks
             expect(consoleError).not.toHaveBeenCalledWith(
-                expect.stringContaining('Rendered more hooks')
+                expect.stringContaining('Rendered more hooks'),
             );
             expect(consoleError).not.toHaveBeenCalledWith(
-                expect.stringContaining('conditional')
+                expect.stringContaining('conditional'),
             );
 
             consoleError.mockRestore();
@@ -216,7 +216,7 @@ describe('Quiz Editor Integration Tests', () => {
             const blocks = [
                 { id: 'block-1', type: 'heading', content: 'Title' },
                 { id: 'block-2', type: 'text', content: 'Description' },
-                { id: 'block-3', type: 'image', content: 'image.jpg' }
+                { id: 'block-3', type: 'image', content: 'image.jpg' },
             ];
 
             const EditorWrapper = () => (
@@ -253,7 +253,7 @@ describe('Quiz Editor Integration Tests', () => {
         it('TC-INT-009: deve mostrar badge de virtualização com mais de 60 blocos', () => {
             const blocks = Array.from({ length: 100 }, (_, i) => ({
                 id: `block-${i}`,
-                type: 'heading'
+                type: 'heading',
             }));
 
             const EditorWrapper = () => {
@@ -288,7 +288,7 @@ describe('Quiz Editor Integration Tests', () => {
         it('TC-INT-010: não deve mostrar badge com menos de 60 blocos', () => {
             const blocks = Array.from({ length: 30 }, (_, i) => ({
                 id: `block-${i}`,
-                type: 'heading'
+                type: 'heading',
             }));
 
             const EditorWrapper = () => {
@@ -457,7 +457,7 @@ describe('Quiz Editor Integration Tests', () => {
 
                 const blocks = [
                     { id: 'block-1', type: 'heading', text: 'Title 1' },
-                    { id: 'block-2', type: 'text', text: 'Text 2' }
+                    { id: 'block-2', type: 'text', text: 'Text 2' },
                 ];
 
                 return (
@@ -556,7 +556,7 @@ describe('Quiz Editor Integration Tests', () => {
 
                 return (
                     <div>
-                        <button onClick={() => addAction('Action ' + (history.length))} data-testid="add-action">
+                        <button onClick={() => addAction(`Action ${  history.length}`)} data-testid="add-action">
                             Add Action
                         </button>
                         <button onClick={undo} disabled={currentIndex === 0} data-testid="undo">
@@ -611,7 +611,7 @@ describe('Quiz Editor Integration Tests', () => {
             render(
                 <QuizEditorErrorBoundary>
                     <ProblematicComponent />
-                </QuizEditorErrorBoundary>
+                </QuizEditorErrorBoundary>,
             );
 
             expect(screen.getByText(/Erro no QuizFunnelEditor/)).toBeInTheDocument();

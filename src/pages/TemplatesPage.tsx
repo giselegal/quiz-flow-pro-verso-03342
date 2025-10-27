@@ -19,7 +19,7 @@ import {
     Plus,
     FileText,
     Palette,
-    Settings
+    Settings,
 } from 'lucide-react';
 import { getUnifiedTemplates } from '@/config/unifiedTemplatesRegistry';
 
@@ -32,7 +32,7 @@ const CATEGORY_ICONS: Record<string, any> = {
     'lead-magnet': TrendingUp,
     'webinar': FileText,
     'ecommerce': Settings,
-    'default': FileText
+    'default': FileText,
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -43,7 +43,7 @@ const CATEGORY_COLORS: Record<string, string> = {
     'lead-magnet': 'bg-green-500',
     'webinar': 'bg-yellow-500',
     'ecommerce': 'bg-red-500',
-    'default': 'bg-gray-500'
+    'default': 'bg-gray-500',
 };
 
 // Template vazio especial
@@ -56,7 +56,7 @@ const BLANK_TEMPLATE = {
     icon: FileText,
     color: 'bg-gray-500',
     isOfficial: true,
-    popular: false
+    popular: false,
 };
 
 interface TemplatesPageProps {
@@ -83,12 +83,12 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
             icon: CATEGORY_ICONS[template.category] || CATEGORY_ICONS.default,
             color: CATEGORY_COLORS[template.category] || CATEGORY_COLORS.default,
             popular: template.usageCount > 1000,
-            isOfficial: template.isOfficial
+            isOfficial: template.isOfficial,
         })),
         {
             ...BLANK_TEMPLATE,
-            steps: 1 // Garantir que usa a mesma propriedade
-        }
+            steps: 1, // Garantir que usa a mesma propriedade
+        },
     ];
 
     // Extrair categorias dinâmicas dos templates
@@ -96,7 +96,7 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
     const categories = ['Todos', ...dynamicCategories, 'Básico'];
 
     const filteredTemplates = availableTemplates.filter(template => 
-        selectedCategory === 'Todos' || template.category === selectedCategory
+        selectedCategory === 'Todos' || template.category === selectedCategory,
     );
 
     const handleTemplateSelect = (templateId: string) => {

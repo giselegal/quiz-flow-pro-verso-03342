@@ -12,7 +12,7 @@ export default function GuaranteeCard({
     days = 7,
     title = 'Garantia de Satisfação Total',
     description = `Você tem ${days} dias para testar o guia. Se não ficar 100% satisfeita, devolvemos seu investimento sem perguntas.`,
-    icon = <Shield className="w-12 h-12 text-[#B89B7A] mx-auto mb-4" />
+    icon = <Shield className="w-12 h-12 text-[#B89B7A] mx-auto mb-4" />,
 }: GuaranteeCardProps) {
     return (
         <div className="bg-white p-5 sm:p-6 md:p-8 rounded-lg shadow-lg text-center">

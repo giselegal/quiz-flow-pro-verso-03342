@@ -28,7 +28,7 @@ export function useEditorStateManager({
   // Core state
   const [steps, setSteps] = useState<EditableQuizStep[]>(initialSteps);
   const [currentStepId, setCurrentStepId] = useState<string | null>(
-    initialSteps[0]?.id || null
+    initialSteps[0]?.id || null,
   );
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
@@ -70,7 +70,7 @@ export function useEditorStateManager({
    * Atualizar steps com histórico
    */
   const updateSteps = useCallback((
-    updater: EditableQuizStep[] | ((prev: EditableQuizStep[]) => EditableQuizStep[])
+    updater: EditableQuizStep[] | ((prev: EditableQuizStep[]) => EditableQuizStep[]),
   ) => {
     setSteps(prev => {
       const next = typeof updater === 'function' ? updater(prev) : updater;

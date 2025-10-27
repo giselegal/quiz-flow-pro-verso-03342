@@ -35,13 +35,13 @@ import {
   Code,
   Info,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
 } from 'lucide-react';
 import { Block } from '@/types/editor';
 import {
   PropertyField,
   CategorizedProperties,
-  propertyExtractionService
+  propertyExtractionService,
 } from '@/services/PropertyExtractionService';
 import { InterpolationField } from './InterpolationSystem';
 import { OptionsArrayEditor } from './OptionsArrayEditor';
@@ -64,7 +64,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
   onUpdate,
   onDuplicate,
   onDelete,
-  onReset
+  onReset,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -76,7 +76,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
     appLogger.debug('🔍 UniversalNoCodePanel - Extraindo propriedades:', {
       hasSelectedBlock: !!selectedBlock,
       blockType: selectedBlock?.type,
-      blockId: selectedBlock?.id
+      blockId: selectedBlock?.id,
     });
 
     if (!selectedBlock) {
@@ -91,12 +91,12 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
     appLogger.debug('🏷️  Propriedades categorizadas:', Object.keys(categorized).map(cat => ({
       category: cat,
-      count: categorized[cat].length
+      count: categorized[cat].length,
     })));
 
     return {
       extractedProperties: withInterpolation,
-      categorizedProperties: categorized
+      categorizedProperties: categorized,
     };
   }, [selectedBlock]);
 
@@ -139,7 +139,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
     appLogger.debug('🔍 Propriedades filtradas por categoria:', Object.keys(filtered).map(cat => ({
       category: cat,
-      count: filtered[cat].length
+      count: filtered[cat].length,
     })));
 
     return filtered;
@@ -150,7 +150,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
     appLogger.debug('📋 Categoria selecionada mudou:', {
       selectedCategory,
       availableCategories,
-      hasPropertiesInCategory: !!(filteredProperties[selectedCategory] && filteredProperties[selectedCategory].length > 0)
+      hasPropertiesInCategory: !!(filteredProperties[selectedCategory] && filteredProperties[selectedCategory].length > 0),
     });
   }, [selectedCategory, availableCategories, filteredProperties]);
 
@@ -160,7 +160,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
       selectedCategory,
       availableCategories,
       filteredCategories: Object.keys(filteredProperties),
-      tabsCount: availableCategories.length
+      tabsCount: availableCategories.length,
     });
   }, [selectedCategory, availableCategories, filteredProperties]);
 
@@ -186,7 +186,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
       const parentData = (selectedBlock as any)[parent] || {};
       updates[parent] = {
         ...parentData,
-        [child]: newValue
+        [child]: newValue,
       };
     } else {
       updates[property.key] = newValue;
@@ -620,7 +620,7 @@ function getCategoryInfo(category: string) {
     validation: { label: 'Validação', icon: Shield },
     accessibility: { label: 'Acessibilidade', icon: Shield },
     advanced: { label: 'Avançado', icon: Code },
-    metadata: { label: 'Metadados', icon: Info }
+    metadata: { label: 'Metadados', icon: Info },
   };
 
   return categoryMap[category] || { label: category, icon: Info };

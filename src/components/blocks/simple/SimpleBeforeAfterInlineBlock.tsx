@@ -22,7 +22,7 @@ const SimpleBeforeAfterInlineBlock: React.FC<BlockComponentProps> = ({
     block,
     isSelected,
     editMode,
-    onSelect
+    onSelect,
 }) => {
     const content = block.content || {};
     const properties = block.properties || {};
@@ -57,7 +57,7 @@ const SimpleBeforeAfterInlineBlock: React.FC<BlockComponentProps> = ({
                 <div className="text-center">
                     <div className="mb-4">
                         <span className="inline-block px-4 py-2 bg-gray-500 text-white font-semibold rounded-full text-sm">
-                            {content.beforeLabel || "ANTES"}
+                            {content.beforeLabel || 'ANTES'}
                         </span>
                     </div>
 
@@ -81,7 +81,7 @@ const SimpleBeforeAfterInlineBlock: React.FC<BlockComponentProps> = ({
                 <div className="text-center">
                     <div className="mb-4">
                         <span className="inline-block px-4 py-2 bg-green-600 text-white font-semibold rounded-full text-sm">
-                            {content.afterLabel || "DEPOIS"}
+                            {content.afterLabel || 'DEPOIS'}
                         </span>
                     </div>
 

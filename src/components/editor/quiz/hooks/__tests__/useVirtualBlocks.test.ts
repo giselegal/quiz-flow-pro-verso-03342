@@ -24,8 +24,8 @@ describe('useVirtualBlocks', () => {
                     blocks: [],
                     rowHeight: 140,
                     overscan: 6,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             expect(result.current.visible).toEqual([]);
@@ -40,8 +40,8 @@ describe('useVirtualBlocks', () => {
                     blocks: undefined as any,
                     rowHeight: 140,
                     overscan: 6,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             expect(result.current.visible).toEqual([]);
@@ -54,8 +54,8 @@ describe('useVirtualBlocks', () => {
                     blocks: null as any,
                     rowHeight: 140,
                     overscan: 6,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             expect(result.current.visible).toEqual([]);
@@ -68,8 +68,8 @@ describe('useVirtualBlocks', () => {
                     blocks: 'invalid' as any,
                     rowHeight: 140,
                     overscan: 6,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             expect(result.current.visible).toEqual([]);
@@ -79,8 +79,8 @@ describe('useVirtualBlocks', () => {
         it('TC-V005: deve usar valores padrão quando opções omitidas', () => {
             const { result } = renderHook(() =>
                 useVirtualBlocks({
-                    blocks: mockBlocks
-                })
+                    blocks: mockBlocks,
+                }),
             );
 
             expect(result.current.visible).toBeDefined();
@@ -95,8 +95,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 200,
                     overscan: 2,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // Com viewport de 600px e rowHeight de 200px, deve mostrar ~3 itens + overscan
@@ -110,8 +110,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 100,
                     overscan: 10,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // Overscan maior deve resultar em mais blocos visíveis
@@ -124,8 +124,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 6,
-                    enabled: false
-                })
+                    enabled: false,
+                }),
             );
 
             // Quando desabilitado, deve retornar TODOS os blocos
@@ -140,8 +140,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 6,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // Quando habilitado, deve retornar MENOS blocos que o total
@@ -157,8 +157,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // No topo (scrollTop = 0), deve mostrar primeiros blocos + overscan
@@ -173,8 +173,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // Simular scroll para baixo
@@ -196,8 +196,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // No topo, bottomSpacer deve ser grande
@@ -217,8 +217,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             const initialVisible = result.current.visible;
@@ -239,8 +239,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 6,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             expect(result.current.total).toBe(100);
@@ -252,8 +252,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 6,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             const firstRef = result.current.containerRef;
@@ -273,8 +273,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 2,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             const visible = result.current.visible;
@@ -293,8 +293,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 3,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // Rolar para posição do meio
@@ -315,8 +315,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 3,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             const visibleCount = result.current.visible.length;
@@ -332,8 +332,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 10,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // Rolar até o final
@@ -354,8 +354,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 10,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // Mesmo com overscan grande, não deve ter índice negativo
@@ -370,7 +370,7 @@ describe('useVirtualBlocks', () => {
         it('TC-V021: deve atualizar visible ao mudar blocks', () => {
             const { result, rerender } = renderHook(
                 ({ blocks }) => useVirtualBlocks({ blocks, enabled: true }),
-                { initialProps: { blocks: mockBlocks } }
+                { initialProps: { blocks: mockBlocks } },
             );
 
             const initialVisible = result.current.visible;
@@ -385,7 +385,7 @@ describe('useVirtualBlocks', () => {
         it('TC-V022: deve recalcular ao mudar enabled', () => {
             const { result, rerender } = renderHook(
                 ({ enabled }) => useVirtualBlocks({ blocks: mockBlocks, enabled }),
-                { initialProps: { enabled: true } }
+                { initialProps: { enabled: true } },
             );
 
             const virtualizedVisible = result.current.visible;
@@ -399,7 +399,7 @@ describe('useVirtualBlocks', () => {
         it('TC-V023: deve recalcular ao mudar rowHeight', () => {
             const { result, rerender } = renderHook(
                 ({ rowHeight }) => useVirtualBlocks({ blocks: mockBlocks, rowHeight, enabled: true }),
-                { initialProps: { rowHeight: 140 } }
+                { initialProps: { rowHeight: 140 } },
             );
 
             const initialVisible = result.current.visible.length;
@@ -412,7 +412,7 @@ describe('useVirtualBlocks', () => {
         it('TC-V024: deve recalcular ao mudar overscan', () => {
             const { result, rerender } = renderHook(
                 ({ overscan }) => useVirtualBlocks({ blocks: mockBlocks, overscan, enabled: true }),
-                { initialProps: { overscan: 2 } }
+                { initialProps: { overscan: 2 } },
             );
 
             const initialVisible = result.current.visible.length;
@@ -428,8 +428,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             expect(result.current.scrollTop).toBe(0);
@@ -449,8 +449,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             const firstVisible = result.current.visible;
@@ -469,8 +469,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             const firstTopSpacer = result.current.topSpacer;
@@ -491,7 +491,7 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
+                    enabled: true,
                 });
             });
 
@@ -516,8 +516,8 @@ describe('useVirtualBlocks', () => {
                     blocks: singleBlock,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             expect(result.current.visible).toHaveLength(1);
@@ -532,8 +532,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 1,
                     overscan: 2,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // Com rowHeight de 1px, deve mostrar muitos blocos
@@ -546,8 +546,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 10000,
                     overscan: 2,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // Com rowHeight de 10000px, poucos blocos cabem
@@ -560,8 +560,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 0,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             // Deve funcionar mesmo sem overscan
@@ -574,8 +574,8 @@ describe('useVirtualBlocks', () => {
                     blocks: mockBlocks,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             act(() => {
@@ -589,7 +589,7 @@ describe('useVirtualBlocks', () => {
         it('TC-V034: deve lidar com mudança de blocks para array vazio', () => {
             const { result, rerender } = renderHook(
                 ({ blocks }) => useVirtualBlocks({ blocks, enabled: true }),
-                { initialProps: { blocks: mockBlocks } }
+                { initialProps: { blocks: mockBlocks } },
             );
 
             expect(result.current.total).toBe(100);
@@ -604,7 +604,7 @@ describe('useVirtualBlocks', () => {
             const blocks: BlockComponent[] = [
                 { id: 'block-abc', type: 'heading', order: 0, properties: {}, content: {} },
                 { id: 'block-xyz', type: 'text', order: 1, properties: {}, content: {} },
-                { id: 'block-123', type: 'image', order: 2, properties: {}, content: {} }
+                { id: 'block-123', type: 'image', order: 2, properties: {}, content: {} },
             ];
 
             const { result } = renderHook(() =>
@@ -612,8 +612,8 @@ describe('useVirtualBlocks', () => {
                     blocks,
                     rowHeight: 140,
                     overscan: 4,
-                    enabled: true
-                })
+                    enabled: true,
+                }),
             );
 
             expect(result.current.total).toBe(3);
@@ -630,9 +630,9 @@ function createMockBlock(index: number): BlockComponent {
         type: 'heading',
         order: index,
         properties: {
-            text: `Block ${index}`
+            text: `Block ${index}`,
         },
-        content: {}
+        content: {},
     };
 }
 

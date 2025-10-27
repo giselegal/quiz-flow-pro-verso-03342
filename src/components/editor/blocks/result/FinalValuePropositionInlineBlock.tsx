@@ -96,7 +96,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
       'text-right': textAlign === 'right',
     },
     isSelected && 'ring-2 ring-blue-500 ring-opacity-50 rounded-lg',
-    className
+    className,
   );
 
   const handleCTAClick = () => {
@@ -163,7 +163,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Price Anchoring */}
         <div
           className="bg-white p-6 rounded-lg shadow-md border max-w-md mx-auto"
-          style={{ borderColor: primaryColor + '20' }}
+          style={{ borderColor: `${primaryColor  }20` }}
         >
           <h3 className="text-xl font-medium text-center mb-4" style={{ color: primaryColor }}>
             O Que Você Recebe Hoje
@@ -174,7 +174,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
               <div
                 key={index}
                 className="flex justify-between items-center p-2 border-b"
-                style={{ borderColor: primaryColor + '10' }}
+                style={{ borderColor: `${primaryColor  }10` }}
               >
                 <span>{item.item}</span>
                 <span className="font-medium">R$ {item.value},00</span>

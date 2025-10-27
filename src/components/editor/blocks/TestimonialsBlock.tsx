@@ -59,7 +59,7 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps & { block?: any }> = ({
           getMarginClass(marginTop, 'top'),
           getMarginClass(marginBottom, 'bottom'),
           getMarginClass(marginLeft, 'left'),
-          getMarginClass(marginRight, 'right')
+          getMarginClass(marginRight, 'right'),
         )}
       />
     ));
@@ -80,7 +80,7 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps & { block?: any }> = ({
           'max-w-6xl mx-auto',
           layout === 'grid'
             ? 'grid md:grid-cols-2 gap-6'
-            : 'flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory'
+            : 'flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory',
         )}
       >
         {testimonials.map((item: any, index: number) => (
@@ -88,7 +88,7 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps & { block?: any }> = ({
             key={index}
             className={cn(
               'p-8 relative overflow-hidden rounded-xl border border-[#B89B7A]/20 shadow-md hover:shadow-lg transition-all duration-300 h-full flex flex-col bg-white',
-              layout === 'carousel' && 'min-w-[300px] snap-start'
+              layout === 'carousel' && 'min-w-[300px] snap-start',
             )}
           >
             {/* Decorative elements */}

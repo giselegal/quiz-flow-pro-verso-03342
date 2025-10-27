@@ -67,7 +67,7 @@ const OfferProductShowcaseInlineBlock: React.FC<BlockComponentProps> = ({
         spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.large,
         isSelected && 'ring-2 ring-blue-500 ring-offset-2',
         'cursor-pointer',
-        className
+        className,
       )}
       onClick={onClick}
     >

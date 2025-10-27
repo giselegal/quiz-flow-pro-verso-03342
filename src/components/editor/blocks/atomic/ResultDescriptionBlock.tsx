@@ -5,7 +5,7 @@ import { useResultOptional } from '@/contexts/ResultContext';
 export default function ResultDescriptionBlock({
   block,
   isSelected,
-  onClick
+  onClick,
 }: AtomicBlockProps) {
   const descriptionRaw = block.content?.text || '';
   const fontSize = block.properties?.fontSize || 'base';
@@ -17,7 +17,7 @@ export default function ResultDescriptionBlock({
   const fontSizeClasses: Record<string, string> = {
     'sm': 'text-sm',
     'base': 'text-base',
-    'lg': 'text-lg'
+    'lg': 'text-lg',
   };
 
   return (

@@ -45,13 +45,13 @@ export default function QuizOptionsGridBlockConnected({
         updateProperty,
         componentDefinition,
         hasUnsavedChanges,
-        lastSaved
+        lastSaved,
     } = useComponentConfiguration({
         componentId,
         funnelId,
         realTimeSync: true,
         autoSave: editorMode,
-        autoSaveDelay: 1500
+        autoSaveDelay: 1500,
     });
 
     // ============================================================================
@@ -108,7 +108,7 @@ export default function QuizOptionsGridBlockConnected({
             showImages: true,
             imagePosition: 'top',
             borderRadius: 8,
-            showShadows: true
+            showShadows: true,
         };
 
         // Mesclar com configurações da API
@@ -158,7 +158,7 @@ export default function QuizOptionsGridBlockConnected({
             hasImages,
             imageSize: imageSize || 256,
             gridGap: gridGap || 8,
-            responsive: true
+            responsive: true,
         };
     }, [processedProperties]);
 
@@ -189,7 +189,7 @@ export default function QuizOptionsGridBlockConnected({
         ['--primary-color' as any]: (processedProperties as any).primaryColor,
         ['--selected-color' as any]: (processedProperties as any).selectedColor,
         ['--border-radius' as any]: `${(processedProperties as any).borderRadius}px`,
-        ['--hover-shadow' as any]: (processedProperties as any).showShadows ? '0 4px 12px rgba(0,0,0,0.1)' : 'none'
+        ['--hover-shadow' as any]: (processedProperties as any).showShadows ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
     }), [layoutConfig, processedProperties]);
 
     // ============================================================================

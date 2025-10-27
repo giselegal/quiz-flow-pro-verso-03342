@@ -88,7 +88,7 @@ export const CanvasColumn: React.FC<CanvasColumnProps> = ({
                     block.isSelected
                       ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
                       : 'border-border hover:border-primary/50',
-                    isPreviewMode && 'pointer-events-none'
+                    isPreviewMode && 'pointer-events-none',
                   )}
                   onClick={() => !isPreviewMode && onBlockSelect?.(block.id)}
                 >

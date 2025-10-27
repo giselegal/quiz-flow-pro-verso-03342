@@ -22,7 +22,7 @@ export default function StyleProfileSection({
     title = 'Seu Perfil de Estilo',
     subtitle,
     icon = <Palette className="w-8 h-8 text-[#B89B7A]" />,
-    className = ''
+    className = '',
 }: StyleProfileSectionProps) {
     return (
         <div className={`bg-gradient-to-br from-[#B89B7A]/5 to-[#a08966]/5 p-6 sm:p-8 rounded-lg shadow-md mb-10 ${className}`}>

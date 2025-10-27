@@ -27,7 +27,7 @@ const sidebarVariants = cva(
       isMobile: false,
       isCollapsed: false,
     },
-  }
+  },
 );
 
 interface SidebarProps
@@ -141,7 +141,7 @@ export function Sidebar({
           isMobile: mobile && !isOpen ? false : mobile && isOpen ? true : false,
           size,
         }),
-        className
+        className,
       )}
       {...props}
     />
@@ -156,7 +156,7 @@ export function SidebarHeader({ className, ...props }: React.HTMLAttributes<HTML
       className={cn(
         'flex h-14 items-center border-b px-4 transition-all dark:border-slate-700',
         isCollapsed ? 'lg:justify-center lg:px-0' : '',
-        className
+        className,
       )}
       {...props}
     />
@@ -175,7 +175,7 @@ export function SidebarFooter({ className, ...props }: React.HTMLAttributes<HTML
       className={cn(
         'flex items-center border-t p-4 transition-all dark:border-slate-700',
         isCollapsed ? 'lg:justify-center lg:px-0' : '',
-        className
+        className,
       )}
       {...props}
     />
@@ -236,7 +236,7 @@ export function SidebarMenuButton({
             <Comp
               className={cn(
                 'group inline-flex h-9 w-9 items-center justify-center rounded-md px-0 py-2 hover:bg-accent hover:text-accent-foreground',
-                className
+                className,
               )}
               {...props}
             />
@@ -253,7 +253,7 @@ export function SidebarMenuButton({
     <Comp
       className={cn(
         'group flex h-9 items-center rounded-md px-3 py-2 hover:bg-accent hover:text-accent-foreground',
-        className
+        className,
       )}
       {...props}
     />
@@ -277,7 +277,7 @@ export function SidebarMenuLink({ className, active, icon: Icon, ...props }: Sid
               className={cn(
                 'group inline-flex h-9 w-9 items-center justify-center rounded-md px-0 py-2 hover:bg-accent hover:text-accent-foreground',
                 active && 'bg-accent',
-                className
+                className,
               )}
               {...props}
             >
@@ -298,7 +298,7 @@ export function SidebarMenuLink({ className, active, icon: Icon, ...props }: Sid
       className={cn(
         'group flex h-9 items-center rounded-md px-3 py-2 hover:bg-accent hover:text-accent-foreground',
         active && 'bg-accent',
-        className
+        className,
       )}
       {...props}
     >

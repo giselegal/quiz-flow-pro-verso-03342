@@ -27,7 +27,7 @@ const SystemDiagnosticPage: React.FC = () => {
                 const systemStatus: SystemStatus = {
                     templateDiagnostic: templateResult,
                     hybridStatus: hybridResult,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
                 };
 
                 console.log('✅ [DIAGNOSTIC] Diagnóstico completo:', systemStatus);
@@ -53,7 +53,7 @@ const SystemDiagnosticPage: React.FC = () => {
                 justifyContent: 'center',
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 color: 'white',
-                fontFamily: 'monospace'
+                fontFamily: 'monospace',
             }}>
                 <div style={{ textAlign: 'center' }}>
                     <div style={{
@@ -63,7 +63,7 @@ const SystemDiagnosticPage: React.FC = () => {
                         borderTop: '4px solid white',
                         borderRadius: '50%',
                         animation: 'spin 1s linear infinite',
-                        margin: '0 auto 20px'
+                        margin: '0 auto 20px',
                     }}></div>
                     <h2>🔬 Executando Diagnóstico...</h2>
                     <p>Verificando status do sistema</p>
@@ -82,7 +82,7 @@ const SystemDiagnosticPage: React.FC = () => {
                 background: 'linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%)',
                 color: 'white',
                 fontFamily: 'monospace',
-                padding: '20px'
+                padding: '20px',
             }}>
                 <div style={{ textAlign: 'center', maxWidth: '600px' }}>
                     <h1>❌ Erro no Diagnóstico</h1>
@@ -90,7 +90,7 @@ const SystemDiagnosticPage: React.FC = () => {
                         background: 'rgba(0,0,0,0.3)',
                         padding: '20px',
                         borderRadius: '8px',
-                        marginTop: '20px'
+                        marginTop: '20px',
                     }}>
                         <pre>{error}</pre>
                     </div>
@@ -107,7 +107,7 @@ const SystemDiagnosticPage: React.FC = () => {
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             color: 'white',
             fontFamily: 'monospace',
-            padding: '20px'
+            padding: '20px',
         }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                 <header style={{ textAlign: 'center', marginBottom: '40px' }}>
@@ -117,7 +117,7 @@ const SystemDiagnosticPage: React.FC = () => {
                         background: 'rgba(255,255,255,0.1)',
                         padding: '10px',
                         borderRadius: '8px',
-                        marginTop: '20px'
+                        marginTop: '20px',
                     }}>
                         <strong>Timestamp:</strong> {status?.timestamp ? new Date(status.timestamp).toLocaleString() : 'N/A'}
                     </div>
@@ -127,14 +127,14 @@ const SystemDiagnosticPage: React.FC = () => {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
                     gap: '20px',
-                    marginBottom: '40px'
+                    marginBottom: '40px',
                 }}>
                     {/* Template Diagnostic */}
                     <div style={{
                         background: 'rgba(255,255,255,0.1)',
                         backdropFilter: 'blur(10px)',
                         borderRadius: '16px',
-                        padding: '20px'
+                        padding: '20px',
                     }}>
                         <h2>📊 Template Diagnostic</h2>
                         <div style={{ marginTop: '15px' }}>
@@ -151,7 +151,7 @@ const SystemDiagnosticPage: React.FC = () => {
                         background: 'rgba(255,255,255,0.1)',
                         backdropFilter: 'blur(10px)',
                         borderRadius: '16px',
-                        padding: '20px'
+                        padding: '20px',
                     }}>
                         <h2>🔗 Hybrid Integration</h2>
                         <div style={{ marginTop: '15px' }}>
@@ -178,7 +178,7 @@ const SystemDiagnosticPage: React.FC = () => {
                     background: 'rgba(255,255,255,0.1)',
                     backdropFilter: 'blur(10px)',
                     borderRadius: '16px',
-                    padding: '20px'
+                    padding: '20px',
                 }}>
                     <h2>🎯 Status Summary</h2>
                     <div style={{ marginTop: '15px' }}>
@@ -211,7 +211,7 @@ const SystemDiagnosticPage: React.FC = () => {
                                 borderRadius: '8px',
                                 cursor: 'pointer',
                                 fontSize: '16px',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
                             }}
                         >
                             🏆 Comparar Editores
@@ -225,7 +225,7 @@ const SystemDiagnosticPage: React.FC = () => {
                                 padding: '12px 24px',
                                 borderRadius: '8px',
                                 cursor: 'pointer',
-                                fontSize: '16px'
+                                fontSize: '16px',
                             }}
                         >
                             🔧 Editor Unificado
@@ -239,7 +239,7 @@ const SystemDiagnosticPage: React.FC = () => {
                                 padding: '12px 24px',
                                 borderRadius: '8px',
                                 cursor: 'pointer',
-                                fontSize: '16px'
+                                fontSize: '16px',
                             }}
                         >
                             ⚙️ ModularEditorPro
@@ -253,7 +253,7 @@ const SystemDiagnosticPage: React.FC = () => {
                                 padding: '12px 24px',
                                 borderRadius: '8px',
                                 cursor: 'pointer',
-                                fontSize: '16px'
+                                fontSize: '16px',
                             }}
                         >
                             📝 Testar Quiz
@@ -267,7 +267,7 @@ const SystemDiagnosticPage: React.FC = () => {
                                 padding: '12px 24px',
                                 borderRadius: '8px',
                                 cursor: 'pointer',
-                                fontSize: '16px'
+                                fontSize: '16px',
                             }}
                         >
                         🔄 Recarregar
@@ -281,7 +281,7 @@ const SystemDiagnosticPage: React.FC = () => {
                         borderRadius: '12px',
                         textAlign: 'center',
                         color: 'white',
-                        boxShadow: '0 8px 32px rgba(102, 126, 234, 0.3)'
+                        boxShadow: '0 8px 32px rgba(102, 126, 234, 0.3)',
                     }}>
                         <h2 style={{ margin: '0 0 1rem 0', fontSize: '24px' }}>🎯 Editor Funcional Ativo!</h2>
                         <p style={{ margin: '0 0 1.5rem 0', opacity: 0.9, fontSize: '16px' }}>
@@ -301,7 +301,7 @@ const SystemDiagnosticPage: React.FC = () => {
                                     fontWeight: 'bold',
                                     cursor: 'pointer',
                                     boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)',
-                                    transition: 'all 0.3s ease'
+                                    transition: 'all 0.3s ease',
                                 }}
                             >
                                 🎯 Testar Editor Principal
@@ -319,7 +319,7 @@ const SystemDiagnosticPage: React.FC = () => {
                                     fontWeight: 'bold',
                                     cursor: 'pointer',
                                     boxShadow: '0 4px 16px rgba(139, 92, 246, 0.4)',
-                                    transition: 'all 0.3s ease'
+                                    transition: 'all 0.3s ease',
                                 }}
                             >
                                 🔧 Editor Modular Pro
@@ -333,7 +333,7 @@ const SystemDiagnosticPage: React.FC = () => {
                             display: 'flex',
                             justifyContent: 'center',
                             gap: '2rem',
-                            flexWrap: 'wrap'
+                            flexWrap: 'wrap',
                         }}>
                             <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 ✅ 21 Etapas Funcionais

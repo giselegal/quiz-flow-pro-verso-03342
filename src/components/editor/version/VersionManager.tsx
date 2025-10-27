@@ -203,12 +203,12 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                                   {version.data.pages.length !== 1 ? 's' : ''} •{' '}
                                   {version.data.pages.reduce(
                                     (total: number, page: any) => total + page.blocks.length,
-                                    0
+                                    0,
                                   )}{' '}
                                   bloco
                                   {version.data.pages.reduce(
                                     (total: number, page: any) => total + page.blocks.length,
-                                    0
+                                    0,
                                   ) !== 1
                                     ? 's'
                                     : ''}

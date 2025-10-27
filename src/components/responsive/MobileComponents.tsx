@@ -18,7 +18,7 @@ interface MobileMenuProps {
 export const MobileMenu: React.FC<MobileMenuProps> = ({ 
   isOpen, 
   onToggle, 
-  children 
+  children, 
 }) => {
   return (
     <>
@@ -63,7 +63,7 @@ interface MobileEditorProps {
 
 export const MobileEditor: React.FC<MobileEditorProps> = ({ 
   children, 
-  className = '' 
+  className = '', 
 }) => {
   return (
     <div 
@@ -101,7 +101,7 @@ interface MobilePropertiesPanelProps {
 export const MobilePropertiesPanel: React.FC<MobilePropertiesPanelProps> = ({
   isOpen,
   onClose,
-  children
+  children,
 }) => {
   if (!isOpen) return null;
 
@@ -127,5 +127,5 @@ export default {
   MobileMenu,
   MobileEditor,
   MobileCanvas,
-  MobilePropertiesPanel
+  MobilePropertiesPanel,
 };

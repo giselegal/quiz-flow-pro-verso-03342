@@ -22,7 +22,7 @@ export function BrandKitAdvancedSidebar({ onClose }: BrandKitAdvancedSidebarProp
         updateFonts,
         updateAssets,
         resetBrandKit,
-        exportBrandKit
+        exportBrandKit,
     } = useBrandKit();
 
     const { trackEvent } = useAnalytics();
@@ -41,8 +41,8 @@ export function BrandKitAdvancedSidebar({ onClose }: BrandKitAdvancedSidebarProp
                 secondary: '#432818',
                 accent: '#E6DDD4',
                 background: '#FAF9F7',
-                text: '#432818'
-            }
+                text: '#432818',
+            },
         },
         {
             name: 'Moderno',
@@ -51,8 +51,8 @@ export function BrandKitAdvancedSidebar({ onClose }: BrandKitAdvancedSidebarProp
                 secondary: '#8B5CF6',
                 accent: '#EC4899',
                 background: '#F8FAFC',
-                text: '#1E293B'
-            }
+                text: '#1E293B',
+            },
         },
         {
             name: 'Natural',
@@ -61,8 +61,8 @@ export function BrandKitAdvancedSidebar({ onClose }: BrandKitAdvancedSidebarProp
                 secondary: '#10B981',
                 accent: '#34D399',
                 background: '#ECFDF5',
-                text: '#064E3B'
-            }
+                text: '#064E3B',
+            },
         },
         {
             name: 'Sunset',
@@ -71,16 +71,16 @@ export function BrandKitAdvancedSidebar({ onClose }: BrandKitAdvancedSidebarProp
                 secondary: '#DC2626',
                 accent: '#F59E0B',
                 background: '#FFF7ED',
-                text: '#9A3412'
-            }
-        }
+                text: '#9A3412',
+            },
+        },
     ];
 
     const fontPresets = [
         { name: 'Clássico', heading: 'Playfair Display, serif', body: 'Inter, sans-serif' },
         { name: 'Moderno', heading: 'Poppins, sans-serif', body: 'Inter, sans-serif' },
         { name: 'Minimalista', heading: 'Inter, sans-serif', body: 'Inter, sans-serif' },
-        { name: 'Elegante', heading: 'Crimson Pro, serif', body: 'Source Sans Pro, sans-serif' }
+        { name: 'Elegante', heading: 'Crimson Pro, serif', body: 'Source Sans Pro, sans-serif' },
     ];
 
     const handleColorChange = (colorKey: string, value: string) => {

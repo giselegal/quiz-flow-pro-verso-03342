@@ -41,7 +41,7 @@ const QuizIntro: React.FC<QuizIntroProps> = ({ onStart, globalStyles = {} }) => 
     <div
       className={cn(
         'min-h-screen flex items-center justify-center p-4 transition-all duration-700',
-        isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
       )}
       style={backgroundStyle}
     >

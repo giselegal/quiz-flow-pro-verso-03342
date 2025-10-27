@@ -80,9 +80,9 @@ export const IntroStepAdapter = createAdapter<IntroStepProps>({
             formQuestion: 'Como posso te chamar?',
             placeholder: 'Digite seu primeiro nome aqui...',
             buttonText: 'Quero Descobrir meu Estilo Agora!',
-            image: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png'
+            image: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png',
         } as QuizStep,
-        onNameSubmit: () => { }
+        onNameSubmit: () => { },
     },
     toEditableBlock: (props) => ({
         id: `intro-${Date.now()}`,
@@ -92,21 +92,21 @@ export const IntroStepAdapter = createAdapter<IntroStepProps>({
             formQuestion: props.data.formQuestion,
             placeholder: props.data.placeholder,
             buttonText: props.data.buttonText,
-            image: props.data.image
-        }
+            image: props.data.image,
+        },
     }),
     fromEditableBlock: (block) => ({
         data: {
             ...block.data,
-            type: 'intro'
+            type: 'intro',
         } as QuizStep,
-        onNameSubmit: () => { }
+        onNameSubmit: () => { },
     }),
     createMocks: (props) => ({
         onNameSubmit: (name: string) => {
             console.log('[Editor Mock] IntroStep - Nome submetido:', name);
-        }
-    })
+        },
+    }),
 });
 
 export const QuestionStepAdapter = createAdapter<QuestionStepProps>({
@@ -120,12 +120,12 @@ export const QuestionStepAdapter = createAdapter<QuestionStepProps>({
             questionText: 'Qual opção mais te representa?',
             options: [
                 { id: 'opt1', text: 'Opção 1', image: '' },
-                { id: 'opt2', text: 'Opção 2', image: '' }
+                { id: 'opt2', text: 'Opção 2', image: '' },
             ],
-            requiredSelections: 1
+            requiredSelections: 1,
         } as QuizStep,
         currentAnswers: [],
-        onAnswersChange: () => { }
+        onAnswersChange: () => { },
     },
     toEditableBlock: (props) => ({
         id: `question-${Date.now()}`,
@@ -134,23 +134,23 @@ export const QuestionStepAdapter = createAdapter<QuestionStepProps>({
             questionNumber: props.data.questionNumber,
             questionText: props.data.questionText,
             options: props.data.options,
-            requiredSelections: props.data.requiredSelections
-        }
+            requiredSelections: props.data.requiredSelections,
+        },
     }),
     fromEditableBlock: (block) => ({
         data: {
             ...block.data,
-            type: 'question'
+            type: 'question',
         } as QuizStep,
         currentAnswers: [],
-        onAnswersChange: () => { }
+        onAnswersChange: () => { },
     }),
     createMocks: (props) => ({
         currentAnswers: ['opt1'], // Mock de seleção para preview
         onAnswersChange: (answers: string[]) => {
             console.log('[Editor Mock] QuestionStep - Respostas:', answers);
-        }
-    })
+        },
+    }),
 });
 
 export const StrategicQuestionStepAdapter = createAdapter<StrategicQuestionStepProps>({
@@ -164,34 +164,34 @@ export const StrategicQuestionStepAdapter = createAdapter<StrategicQuestionStepP
             options: [
                 { id: 'priority1', text: 'Renovar o guarda-roupa completamente' },
                 { id: 'priority2', text: 'Adicionar algumas peças-chave' },
-                { id: 'priority3', text: 'Aprender a combinar o que já tenho' }
-            ]
+                { id: 'priority3', text: 'Aprender a combinar o que já tenho' },
+            ],
         } as QuizStep,
         currentAnswer: '',
-        onAnswerChange: () => { }
+        onAnswerChange: () => { },
     },
     toEditableBlock: (props) => ({
         id: `strategic-${Date.now()}`,
         type: 'strategic-question',
         data: {
             questionText: props.data.questionText,
-            options: props.data.options
-        }
+            options: props.data.options,
+        },
     }),
     fromEditableBlock: (block) => ({
         data: {
             ...block.data,
-            type: 'strategic-question'
+            type: 'strategic-question',
         } as QuizStep,
         currentAnswer: '',
-        onAnswerChange: () => { }
+        onAnswerChange: () => { },
     }),
     createMocks: (props) => ({
         currentAnswer: props.data.options?.[0]?.id || '', // Mock primeira opção selecionada
         onAnswerChange: (answer: string) => {
             console.log('[Editor Mock] StrategicQuestion - Resposta:', answer);
-        }
-    })
+        },
+    }),
 });
 
 export const TransitionStepAdapter = createAdapter<TransitionStepProps>({
@@ -204,28 +204,28 @@ export const TransitionStepAdapter = createAdapter<TransitionStepProps>({
             title: 'Analisando suas respostas...',
             text: 'Aguarde enquanto preparamos seu resultado personalizado.',
         } as QuizStep,
-        onComplete: () => { }
+        onComplete: () => { },
     },
     toEditableBlock: (props) => ({
         id: `transition-${Date.now()}`,
         type: 'transition',
         data: {
             title: props.data.title,
-            text: props.data.text
-        }
+            text: props.data.text,
+        },
     }),
     fromEditableBlock: (block) => ({
         data: {
             ...block.data,
-            type: 'transition'
+            type: 'transition',
         } as QuizStep,
-        onComplete: () => { }
+        onComplete: () => { },
     }),
     createMocks: (props) => ({
         onComplete: () => {
             console.log('[Editor Mock] TransitionStep - Transição completada');
-        }
-    })
+        },
+    }),
 });
 
 export const ResultStepAdapter = createAdapter<ResultStepProps>({
@@ -236,42 +236,42 @@ export const ResultStepAdapter = createAdapter<ResultStepProps>({
         data: {
             type: 'result',
             title: 'Seu Estilo Único',
-            text: 'Baseado nas suas respostas, identificamos seu estilo personalizado.'
+            text: 'Baseado nas suas respostas, identificamos seu estilo personalizado.',
         } as QuizStep,
         userProfile: {
             userName: 'Preview User',
             resultStyle: 'clássico',
-            secondaryStyles: ['elegante']
+            secondaryStyles: ['elegante'],
         },
-        scores: undefined
+        scores: undefined,
     },
     toEditableBlock: (props) => ({
         id: `result-${Date.now()}`,
         type: 'result',
         data: {
             title: props.data.title,
-            text: props.data.text
-        }
+            text: props.data.text,
+        },
     }),
     fromEditableBlock: (block) => ({
         data: {
             ...block.data,
-            type: 'result'
+            type: 'result',
         } as QuizStep,
         userProfile: {
             userName: 'Preview User',
             resultStyle: 'clássico',
-            secondaryStyles: ['elegante']
+            secondaryStyles: ['elegante'],
         },
-        scores: undefined
+        scores: undefined,
     }),
     createMocks: (props) => ({
         userProfile: {
             userName: 'Preview User',
             resultStyle: 'clássico',
-            secondaryStyles: ['elegante']
-        }
-    })
+            secondaryStyles: ['elegante'],
+        },
+    }),
 });
 
 export const OfferStepAdapter = createAdapter<OfferStepProps>({
@@ -290,8 +290,8 @@ export const OfferStepAdapter = createAdapter<OfferStepProps>({
                     buttonText: 'Quero Minha Transformação',
                     testimonial: {
                         quote: 'Depois dessa jornada nunca mais tive dúvida ao montar um look — economizei tempo, dinheiro e ganhei confiança.',
-                        author: 'Cliente Real (Exemplo)'
-                    }
+                        author: 'Cliente Real (Exemplo)',
+                    },
                 },
                 'upgrade': {
                     title: 'Mentoria Exclusiva Premium',
@@ -299,16 +299,16 @@ export const OfferStepAdapter = createAdapter<OfferStepProps>({
                     buttonText: 'Quero Acesso Premium',
                     testimonial: {
                         quote: 'O acompanhamento premium encurtou meu caminho – em semanas já estava com um guarda‑roupa funcional e estratégico.',
-                        author: 'Aluna Premium'
-                    }
-                }
-            }
+                        author: 'Aluna Premium',
+                    },
+                },
+            },
         } as QuizStep,
         userProfile: {
             userName: 'Preview User',
-            resultStyle: 'clássico'
+            resultStyle: 'clássico',
         },
-        offerKey: 'default'
+        offerKey: 'default',
     },
     toEditableBlock: (props) => ({
         id: `offer-${Date.now()}`,
@@ -316,27 +316,27 @@ export const OfferStepAdapter = createAdapter<OfferStepProps>({
         data: {
             title: props.data.title,
             text: props.data.text,
-            offerMap: props.data.offerMap
-        }
+            offerMap: props.data.offerMap,
+        },
     }),
     fromEditableBlock: (block) => ({
         data: {
             ...block.data,
-            type: 'offer'
+            type: 'offer',
         } as QuizStep,
         userProfile: {
             userName: 'Preview User',
-            resultStyle: 'clássico'
+            resultStyle: 'clássico',
         },
-        offerKey: 'default'
+        offerKey: 'default',
     }),
     createMocks: (props) => ({
         userProfile: {
             userName: 'Preview User',
-            resultStyle: 'clássico'
+            resultStyle: 'clássico',
         },
-        offerKey: 'default'
-    })
+        offerKey: 'default',
+    }),
 });
 
 /**
@@ -351,7 +351,7 @@ export const componentAdapters: Record<string, EditorComponentAdapter> = {
     'transition': TransitionStepAdapter,
     'transition-result': TransitionStepAdapter, // Reutilizar TransitionStep
     'result': ResultStepAdapter,
-    'offer': OfferStepAdapter
+    'offer': OfferStepAdapter,
 };
 
 /**
@@ -434,13 +434,13 @@ export class ComponentAdapterRegistry {
                 return {
                     data: step,
                     userProfile: { userName: 'Preview User', resultStyle: 'clássico', secondaryStyles: ['elegante'] },
-                    scores: undefined
+                    scores: undefined,
                 };
             case 'offer':
                 return {
                     data: step,
                     userProfile: { userName: 'Preview User', resultStyle: 'clássico' },
-                    offerKey: 'default'
+                    offerKey: 'default',
                 };
             default:
                 return adapter.defaultProps;
@@ -454,7 +454,7 @@ export class ComponentAdapterRegistry {
 export const REGISTRY_STATS = {
     totalAdapters: Object.keys(componentAdapters).length,
     supportedTypes: Object.keys(componentAdapters),
-    coverage: '100% dos componentes de produção mapeados'
+    coverage: '100% dos componentes de produção mapeados',
 };
 
 /**
@@ -485,6 +485,6 @@ export function validateRegistry(): { isValid: boolean; errors: string[] } {
 
     return {
         isValid: errors.length === 0,
-        errors
+        errors,
     };
 }

@@ -16,7 +16,7 @@ import {
     Trash2,
     Copy,
     Edit3,
-    RefreshCw
+    RefreshCw,
 } from 'lucide-react';
 import EditorLayout from '@/components/layout/EditorLayout';
 import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
@@ -158,7 +158,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
 
             // Salvar no localStorage (simulação - no real seria API)
             const savedTemplates = templates.map(t =>
-                t.metadata.id === selectedTemplate.metadata.id ? selectedTemplate : t
+                t.metadata.id === selectedTemplate.metadata.id ? selectedTemplate : t,
             );
             setTemplates(savedTemplates);
 
@@ -177,7 +177,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
             setValidationError(
                 error instanceof Error
                     ? error.message
-                    : 'Erro ao validar template'
+                    : 'Erro ao validar template',
             );
         } finally {
             setIsSaving(false);
@@ -190,7 +190,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
         const stepNumber = template.metadata.id.replace('quiz-step-', '');
         localStorage.setItem(
             `json-template-${stepNumber}`,
-            JSON.stringify(template, null, 2)
+            JSON.stringify(template, null, 2),
         );
 
         console.log('💾 Template salvo no localStorage:', template.metadata.id);
@@ -254,13 +254,13 @@ const EditorJsonTemplatesPage: React.FC = () => {
         if (!selectedTemplate) return;
 
         const confirmed = window.confirm(
-            `Tem certeza que deseja excluir o template "${selectedTemplate.metadata.name}"?`
+            `Tem certeza que deseja excluir o template "${selectedTemplate.metadata.name}"?`,
         );
 
         if (!confirmed) return;
 
         const filtered = templates.filter(
-            t => t.metadata.id !== selectedTemplate.metadata.id
+            t => t.metadata.id !== selectedTemplate.metadata.id,
         );
         setTemplates(filtered);
         setSelectedTemplate(null);
@@ -279,7 +279,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
     const filteredTemplates = templates.filter(t =>
         t.metadata.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.metadata.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        t.metadata.category.toLowerCase().includes(searchQuery.toLowerCase())
+        t.metadata.category.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     return (
@@ -624,7 +624,7 @@ const EditorJsonTemplatesPage: React.FC = () => {
                                                     </label>
                                                     <p className="text-sm">
                                                         {new Date(
-                                                            selectedTemplate.metadata.updatedAt
+                                                            selectedTemplate.metadata.updatedAt,
                                                         ).toLocaleString('pt-BR')}
                                                     </p>
                                                 </div>

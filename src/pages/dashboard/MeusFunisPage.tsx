@@ -12,7 +12,7 @@ import {
     BarChart3,
 
     Users,
-    TrendingUp
+    TrendingUp,
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
@@ -45,7 +45,7 @@ const meusFunis = [
         avgTime: '4 min',
         thumbnail: 'https://placehold.co/200x120/3b82f6/ffffff?text=Marketing+Quiz',
         lastEdited: '2 dias atrás',
-        revenue: 'R$ 15.400'
+        revenue: 'R$ 15.400',
     },
     {
         id: 'funil-nps-clientes-ativo',
@@ -65,7 +65,7 @@ const meusFunis = [
         avgTime: '3 min',
         thumbnail: 'https://placehold.co/200x120/10b981/ffffff?text=NPS+Survey',
         lastEdited: '1 hora atrás',
-        revenue: 'N/A'
+        revenue: 'N/A',
     },
     {
         id: 'funil-roi-consultoria',
@@ -85,7 +85,7 @@ const meusFunis = [
         avgTime: '7 min',
         thumbnail: 'https://placehold.co/200x120/ef4444/ffffff?text=ROI+Calc',
         lastEdited: '3 horas atrás',
-        revenue: 'R$ 28.900'
+        revenue: 'R$ 28.900',
     },
     {
         id: 'funil-leads-webinar',
@@ -105,7 +105,7 @@ const meusFunis = [
         avgTime: '2 min',
         thumbnail: 'https://placehold.co/200x120/8b5cf6/ffffff?text=Webinar+IA',
         lastEdited: '30 min atrás',
-        revenue: 'R$ 8.200'
+        revenue: 'R$ 8.200',
     },
     {
         id: 'funil-onboarding-clientes',
@@ -125,7 +125,7 @@ const meusFunis = [
         avgTime: '5 min',
         thumbnail: 'https://placehold.co/200x120/06b6d4/ffffff?text=Onboarding',
         lastEdited: '1 dia atrás',
-        revenue: 'N/A'
+        revenue: 'N/A',
     },
     {
         id: 'funil-teste-ab-landing',
@@ -145,7 +145,7 @@ const meusFunis = [
         avgTime: '2 min',
         thumbnail: 'https://placehold.co/200x120/f97316/ffffff?text=Curso+Online',
         lastEdited: '15 min atrás',
-        revenue: 'R$ 42.300'
+        revenue: 'R$ 42.300',
     },
     {
         id: 'funil-qualificacao-b2b-draft',
@@ -165,7 +165,7 @@ const meusFunis = [
         avgTime: '10 min',
         thumbnail: 'https://placehold.co/200x120/cccccc/ffffff?text=Em+Desenvolvimento',
         lastEdited: '2 horas atrás',
-        revenue: 'R$ 0'
+        revenue: 'R$ 0',
     },
     {
         id: 'funil-feedback-produto-pausado',
@@ -185,14 +185,14 @@ const meusFunis = [
         avgTime: '6 min',
         thumbnail: 'https://placehold.co/200x120/cccccc/ffffff?text=Pausado',
         lastEdited: '1 semana atrás',
-        revenue: 'N/A'
-    }
+        revenue: 'N/A',
+    },
 ];
 
 const statusConfig = {
     active: { label: 'Ativo', color: 'bg-green-500', textColor: 'text-green-700', bgColor: 'bg-green-50' },
     draft: { label: 'Rascunho', color: 'bg-gray-500', textColor: 'text-gray-700', bgColor: 'bg-gray-50' },
-    paused: { label: 'Pausado', color: 'bg-yellow-500', textColor: 'text-yellow-700', bgColor: 'bg-yellow-50' }
+    paused: { label: 'Pausado', color: 'bg-yellow-500', textColor: 'text-yellow-700', bgColor: 'bg-yellow-50' },
 };
 
 const MeusFunisPage: React.FC = () => {
@@ -239,7 +239,7 @@ const MeusFunisPage: React.FC = () => {
                 ...funilOriginal,
                 id: `${funilId}-copy-${Date.now()}`,
                 name: `${funilOriginal.name} - Cópia`,
-                status: 'draft'
+                status: 'draft',
             };
             setFunisData(prev => [novoFunil, ...prev]);
             notify('Funil duplicado com sucesso!', 'success', 'Duplicado');
@@ -261,8 +261,8 @@ const MeusFunisPage: React.FC = () => {
             prev.map(f =>
                 f.id === funilId
                     ? { ...f, status: newStatus }
-                    : f
-            )
+                    : f,
+            ),
         );
         notify(`Status alterado para ${newStatus === 'active' ? 'Ativo' : 'Pausado'}`, 'info', 'Status atualizado');
     };

@@ -15,7 +15,7 @@ interface QuestionStepProps {
 export default function QuestionStep({
     data,
     currentAnswers,
-    onAnswersChange
+    onAnswersChange,
 }: QuestionStepProps) {
     // Fallback defensivo: impedir TypeError se prop vier incorretamente definida
     const safeOnAnswersChange: (answers: string[]) => void =

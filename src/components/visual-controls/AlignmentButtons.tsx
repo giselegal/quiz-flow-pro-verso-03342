@@ -32,7 +32,7 @@ export const AlignmentButtons: React.FC<AlignmentButtonsProps> = ({
             'p-2 h-8 w-8',
             value === alignValue
               ? 'bg-[#B89B7A] hover:bg-[#A08766] text-white'
-              : 'border-[#B89B7A]/30 hover:bg-[#B89B7A]/10'
+              : 'border-[#B89B7A]/30 hover:bg-[#B89B7A]/10',
           )}
           title={label}
         >

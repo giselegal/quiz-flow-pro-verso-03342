@@ -29,11 +29,11 @@ export default function SocialProofSection({
     stats = [
         { icon: <Users className="w-6 h-6" />, value: '5.000+', label: 'Mulheres Transformadas' },
         { icon: <Award className="w-6 h-6" />, value: '4.9/5', label: 'Avaliação Média' },
-        { icon: <TrendingUp className="w-6 h-6" />, value: '95%', label: 'Satisfação' }
+        { icon: <TrendingUp className="w-6 h-6" />, value: '95%', label: 'Satisfação' },
     ],
     title = 'O Que Dizem Nossas Alunas',
     subtitle,
-    className = ''
+    className = '',
 }: SocialProofSectionProps) {
     return (
         <div className={`bg-white p-6 sm:p-8 md:p-10 rounded-lg shadow-lg ${className}`}>

@@ -58,7 +58,7 @@ import {
     List,
     MousePointer,
     Layout,
-    ArrowRightCircle
+    ArrowRightCircle,
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
@@ -180,36 +180,36 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
             text: comp.label,
             fontSize: '16px',
             color: '#432818',
-            textAlign: 'left'
+            textAlign: 'left',
         }),
         ...(comp.type.includes('heading') && {
             text: comp.label,
             level: 2,
             fontSize: '24px',
             color: '#432818',
-            textAlign: 'center'
+            textAlign: 'center',
         }),
         ...(comp.type.includes('button') && {
             text: 'Continuar',
             backgroundColor: '#B89B7A',
             textColor: '#FFFFFF',
-            action: 'next-step'
+            action: 'next-step',
         }),
         ...(comp.type.includes('image') && {
             src: INLINE_IMG_PLACEHOLDER,
             alt: 'Imagem',
             width: '100%',
-            borderRadius: '8px'
+            borderRadius: '8px',
         }),
         ...(comp.type.includes('container') && {
             backgroundColor: '#F8F9FA',
             padding: '16px',
-            borderRadius: '8px'
+            borderRadius: '8px',
         }),
         ...(comp.type.includes('form-input') && {
             label: 'Campo',
             placeholder: 'Digite aqui...',
-            required: true
+            required: true,
         }),
         ...(comp.type === 'options-grid' && {
             multiSelect: true,
@@ -220,7 +220,7 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
             layout: 'auto',
             showNextButton: true,
             enableButtonOnlyWhenValid: true,
-            nextButtonText: 'Avançar'
+            nextButtonText: 'Avançar',
         }),
         ...(comp.type === 'progress-header' && {
             showLogo: true,
@@ -232,7 +232,7 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
             barHeight: '4px',
             // Usar cor em formato #rrggbb (sem canal alpha) para compatibilidade com inputs type="color"
             barColor: '#b3a26a',
-            barBackground: '#E5E7EB'
+            barBackground: '#E5E7EB',
         }),
     },
     ...(comp.type === 'options-grid' && {
@@ -244,7 +244,7 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
                     imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/ecommerce/accessories-bag',
                     points: 10,
                     score: 10,
-                    category: 'A'
+                    category: 'A',
                 },
                 {
                     id: 'opt2',
@@ -252,7 +252,7 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
                     imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/food/fish-vegetables',
                     points: 20,
                     score: 20,
-                    category: 'B'
+                    category: 'B',
                 },
                 {
                     id: 'opt3',
@@ -260,11 +260,11 @@ const COMPONENT_LIBRARY: ComponentLibraryItem[] = AVAILABLE_COMPONENTS.map(comp 
                     imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1/samples/landscapes/beach-boat',
                     points: 30,
                     score: 30,
-                    category: 'C'
-                }
-            ]
-        }
-    })
+                    category: 'C',
+                },
+            ],
+        },
+    }),
 }));
 
 // ⚠️ LEGACY COMPONENT_LIBRARY (mantido comentado para referência)
@@ -279,8 +279,8 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
             text: 'Novo texto',
             fontSize: '16px',
             color: '#432818',
-            textAlign: 'left'
-        }
+            textAlign: 'left',
+        },
     },
     {
         type: 'heading',
@@ -292,8 +292,8 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
             level: 2,
             fontSize: '24px',
             color: '#432818',
-            textAlign: 'center'
-        }
+            textAlign: 'center',
+        },
     },
     // Variantes específicas da Etapa 1 (Intro) e reutilizáveis
     {
@@ -305,9 +305,9 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
         defaultProps: {
             textAlign: 'center',
             fontSize: '18px',
-            color: '#432818'
+            color: '#432818',
         },
-        defaultContent: { text: 'Subtítulo descritivo aqui...' }
+        defaultContent: { text: 'Subtítulo descritivo aqui...' },
     },
     {
         type: 'help-text',
@@ -318,9 +318,9 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
         defaultProps: {
             textAlign: 'center',
             fontSize: '12px',
-            color: '#6B7280'
+            color: '#6B7280',
         },
-        defaultContent: { text: 'Mensagem auxiliar para o usuário.' }
+        defaultContent: { text: 'Mensagem auxiliar para o usuário.' },
     },
     {
         type: 'primary-button',
@@ -332,8 +332,8 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
             text: 'Continuar',
             backgroundColor: '#B89B7A',
             textColor: '#FFFFFF',
-            action: 'next-step'
-        }
+            action: 'next-step',
+        },
     },
     {
         type: 'copyright',
@@ -344,9 +344,9 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
         defaultProps: {
             textAlign: 'center',
             fontSize: '11px',
-            color: '#6B7280'
+            color: '#6B7280',
         },
-        defaultContent: { text: '© 2025 Sua Marca - Todos os direitos reservados' }
+        defaultContent: { text: '© 2025 Sua Marca - Todos os direitos reservados' },
     },
     {
         type: 'lead-name',
@@ -357,8 +357,8 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
         defaultProps: {
             label: 'Como posso te chamar?',
             placeholder: 'Digite seu primeiro nome...',
-            required: true
-        }
+            required: true,
+        },
     },
     {
         type: 'image',
@@ -369,8 +369,8 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
             src: INLINE_IMG_PLACEHOLDER,
             alt: 'Imagem',
             width: '100%',
-            borderRadius: '8px'
-        }
+            borderRadius: '8px',
+        },
     },
     {
         type: 'button',
@@ -381,8 +381,8 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
             text: 'Clique aqui',
             backgroundColor: '#B89B7A',
             textColor: '#FFFFFF',
-            action: 'next-step'
-        }
+            action: 'next-step',
+        },
     },
     {
         type: 'form-input',
@@ -392,8 +392,8 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
         defaultProps: {
             label: 'Nome',
             placeholder: 'Digite aqui...',
-            required: true
-        }
+            required: true,
+        },
     },
     {
         type: 'container',
@@ -403,8 +403,8 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
         defaultProps: {
             backgroundColor: '#F8F9FA',
             padding: '16px',
-            borderRadius: '8px'
-        }
+            borderRadius: '8px',
+        },
     },
     {
         type: 'progress-header',
@@ -420,9 +420,9 @@ const COMPONENT_LIBRARY_LEGACY: ComponentLibraryItem[] = [
             autoProgress: true,
             barHeight: '4px',
             barColor: '#b3a26a',
-            barBackground: '#E5E7EB'
-        }
-    }
+            barBackground: '#E5E7EB',
+        },
+    },
 ];
 
 interface QuizModularProductionEditorProps {
@@ -430,7 +430,7 @@ interface QuizModularProductionEditorProps {
 }
 
 export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorProps> = ({
-    funnelId: initialFunnelId
+    funnelId: initialFunnelId,
 }) => {
     logModule.debug('✅ QuizModularProductionEditor: Component rendering', { initialFunnelId });
 
@@ -501,7 +501,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             barColor: '#ccaa6a',
             barBackground: '#E5E7EB',
             align: 'left',
-            title: ''
+            title: '',
         } as any;
     });
     useEffect(() => { try { StorageService.safeSetJSON('quiz_editor_header_config_v1', headerConfig); } catch {/* ignore */ } }, [headerConfig]);
@@ -595,7 +595,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         if (draft && Array.isArray(draft.steps) && draft.steps.length > 0) {
                             const validSteps = draft.steps.map((step: any) => ({
                                 ...step,
-                                blocks: Array.isArray(step.blocks) ? step.blocks : []
+                                blocks: Array.isArray(step.blocks) ? step.blocks : [],
                             }));
                             setSteps(validSteps as any);
                             setSelectedStepIdUnified(draft.steps[0]?.id || '');
@@ -635,7 +635,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 type: getStepType(idx),
                                 order: stepNumber,
                                 blocks,
-                                nextStep: stepNumber < 21 ? `step-${(stepNumber + 1).toString().padStart(2, '0')}` : undefined
+                                nextStep: stepNumber < 21 ? `step-${(stepNumber + 1).toString().padStart(2, '0')}` : undefined,
                             };
                         });
 
@@ -689,7 +689,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             order: idx + 1,
                                             blocks,
                                             nextStep: idx < 20 ? stepIds[idx + 1] : undefined,
-                                            metadata: stepConf?.metadata || {}
+                                            metadata: stepConf?.metadata || {},
                                         } as EditableQuizStep;
                                     });
 
@@ -738,7 +738,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     order: order++,
                                     parentId: null,
                                     content: partial.content || {},
-                                    properties: partial.properties || {}
+                                    properties: partial.properties || {},
                                 });
                             };
                             switch (quizStep.type) {
@@ -747,7 +747,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         push({
                                             type: 'heading',
                                             content: { text: quizStep.questionText },
-                                            properties: { level: 3, allowHtml: false, textAlign: 'center' }
+                                            properties: { level: 3, allowHtml: false, textAlign: 'center' },
                                         });
                                     }
                                     push({
@@ -759,8 +759,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             multiSelect: true,
                                             requiredSelections: quizStep.requiredSelections || 1,
                                             maxSelections: quizStep.requiredSelections || 3,
-                                            autoAdvance: true
-                                        }
+                                            autoAdvance: true,
+                                        },
                                     });
                                     break;
                                 }
@@ -769,7 +769,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         push({
                                             type: 'heading',
                                             content: { text: quizStep.questionText },
-                                            properties: { level: 3, textAlign: 'center' }
+                                            properties: { level: 3, textAlign: 'center' },
                                         });
                                     }
                                     push({
@@ -780,8 +780,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             multiSelect: false,
                                             requiredSelections: 1,
                                             maxSelections: 1,
-                                            autoAdvance: true
-                                        }
+                                            autoAdvance: true,
+                                        },
                                     });
                                     break;
                                 }
@@ -797,7 +797,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                 ...block,
                                                 id: block.id || `${stepId}-block-${idx + 1}`,
                                                 order: idx,
-                                                parentId: null
+                                                parentId: null,
                                             }));
                                         }
                                     }
@@ -806,21 +806,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         push({
                                             type: 'heading',
                                             content: { text: quizStep.title },
-                                            properties: { level: 2, allowHtml: true, textAlign: 'center' }
+                                            properties: { level: 2, allowHtml: true, textAlign: 'center' },
                                         });
                                     }
                                     if (quizStep.text) {
                                         push({
                                             type: 'text',
                                             content: { text: quizStep.text },
-                                            properties: { textAlign: 'center' }
+                                            properties: { textAlign: 'center' },
                                         });
                                     }
                                     if (quizStep.showContinueButton) {
                                         push({
                                             type: 'button',
                                             content: { text: quizStep.continueButtonText || 'Continuar' },
-                                            properties: { action: 'next-step' }
+                                            properties: { action: 'next-step' },
                                         });
                                     }
                                     break;
@@ -836,7 +836,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                 ...block,
                                                 id: block.id || `${stepId}-block-${idx + 1}`,
                                                 order: idx,
-                                                parentId: null
+                                                parentId: null,
                                             }));
                                         }
                                     }
@@ -844,7 +844,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     push({
                                         type: 'result-header-inline',
                                         content: { title: quizStep.title || 'Seu Resultado:' },
-                                        properties: {}
+                                        properties: {},
                                     });
                                     break;
                                 }
@@ -853,7 +853,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         push({
                                             type: 'image',
                                             content: { src: quizStep.image, alt: 'Oferta' },
-                                            properties: { width: '100%', borderRadius: '12px' }
+                                            properties: { width: '100%', borderRadius: '12px' },
                                         });
                                     }
                                     // Um bloco CTA genérico usando a primeira oferta do mapa como preview
@@ -864,9 +864,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             title: (firstOffer?.title as string) || 'Oferta Especial',
                                             description: (firstOffer?.description as string) || 'Conteúdo exclusivo liberado',
                                             buttonText: (firstOffer?.buttonText as string) || 'Quero Aproveitar',
-                                            offerKey: firstOffer ? Object.keys(quizStep.offerMap)[0] : undefined
+                                            offerKey: firstOffer ? Object.keys(quizStep.offerMap)[0] : undefined,
                                         },
-                                        properties: {}
+                                        properties: {},
                                     });
                                     break;
                                 }
@@ -912,7 +912,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         blocks,
                                         nextStep: next,
                                         // Metadados completos do quizStep para futura edição detalhada
-                                        meta: quizStep
+                                        meta: quizStep,
                                     } as EditableQuizStep;
                                 }));
 
@@ -960,7 +960,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
         appLogger.debug('🔄 Sincronizando EditorProvider.stepBlocks → QuizModularProductionEditor.steps', {
             stepsKeys: stepKeys,
-            currentStepsCount: steps.length
+            currentStepsCount: steps.length,
         });
 
         // Atualizar blocos nos steps correspondentes
@@ -980,8 +980,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             content: block.content || {},
                             properties: block.properties || {},
                             order: block.order || 0,
-                            parentId: block.parentId || null
-                        }))
+                            parentId: block.parentId || null,
+                        })),
                     };
                 }
 
@@ -1001,7 +1001,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 hasSteps: !!steps,
                 stepsLength: steps?.length,
                 isLoading,
-                url: typeof window !== 'undefined' ? window.location.href : 'N/A'
+                url: typeof window !== 'undefined' ? window.location.href : 'N/A',
             });
 
             // Criar etapa vazia padrão para não deixar editor completamente vazio
@@ -1017,10 +1017,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         level: 2,
                         fontSize: '24px',
                         color: '#432818',
-                        textAlign: 'center'
+                        textAlign: 'center',
                     },
                     order: 0,
-                    parentId: null
+                    parentId: null,
                 }, {
                     id: 'block-instructions',
                     type: 'text',
@@ -1028,12 +1028,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     properties: {
                         fontSize: '16px',
                         color: '#6B7280',
-                        textAlign: 'center'
+                        textAlign: 'center',
                     },
                     order: 1,
-                    parentId: null
+                    parentId: null,
                 }],
-                nextStep: undefined
+                nextStep: undefined,
             };
 
             setSteps([fallbackStep]);
@@ -1080,7 +1080,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 const n = stepNumberFromId(id);
                 if (!isNaN(n)) editorCtx.actions.setCurrentStep(n);
             }
-        }
+        },
     });
 
     // Hook de blocos (integração parcial - substituição progressiva dos handlers inline)
@@ -1090,7 +1090,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         deleteBlock: removeBlockHook,
         reorderOrMove,
         duplicateBlock: duplicateBlockHook,
-        insertSnippetBlocks
+        insertSnippetBlocks,
     } = useBlocks<{ id: string; blocks: any[] } & EditableQuizStep, any>({
         steps: steps as any,
         setSteps: setSteps as any,
@@ -1101,7 +1101,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             if (prevStep && nextStep) {
                 stepHistoryRef.current.pushStepChange(stepId, prevStep, nextStep);
             }
-        }
+        },
     });
 
     const generateNextStepId = (existing: string[]) => {
@@ -1122,7 +1122,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const [blockPendingDuplicate, setBlockPendingDuplicate] = useState<BlockComponent | null>(null);
     const [targetStepId, setTargetStepId] = useState<string>('');
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+        useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     );
     const [snippets, setSnippets] = useState<BlockSnippet[]>([]);
     const [snippetFilter, setSnippetFilter] = useState('');
@@ -1132,7 +1132,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Step selecionado
     const selectedStep = useMemo(() =>
         steps.find(s => s.id === (editorCtx ? effectiveSelectedStepId : selectedStepId)),
-        [steps, effectiveSelectedStepId, selectedStepId, editorCtx]
+        [steps, effectiveSelectedStepId, selectedStepId, editorCtx],
     );
 
     const setSelectedStepIdUnified = useCallback((id: string) => {
@@ -1151,7 +1151,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         selectedStepId: editorCtx ? effectiveSelectedStepId : selectedStepId,
         setSteps,
         pushHistory,
-        onDirty: () => setIsDirty(true)
+        onDirty: () => setIsDirty(true),
     });
     const { multiSelectedIds, clipboard, copy: copyGeneric, paste: pasteGeneric, removeSelected: removeMultiple, isMultiSelected, handleBlockClick, selectedBlockId, setSelectedBlockId } = selectionApi;
 
@@ -1204,7 +1204,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         addBlock(stepId, {
             type: component.blockType || component.type,
             properties: { ...component.defaultProps },
-            content: { ...(component.defaultContent || {}) }
+            content: { ...(component.defaultContent || {}) },
         } as any);
         // seleção do novo bloco: não temos id exato retornado; poderia ser aprimorado com retorno do hook
         setIsDirty(true);
@@ -1286,7 +1286,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 order: 0, // Será recalculado
                 properties: { ...component.defaultProps },
                 content: { ...(component.defaultContent || {}) },
-                parentId: null
+                parentId: null,
             };
 
             // Determinar posição de inserção
@@ -1326,7 +1326,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const updatedSteps = steps.map(step =>
                 step.id === curStepId
                     ? { ...step, blocks: updatedBlocks }
-                    : step
+                    : step,
             );
 
             setSteps(updatedSteps);
@@ -1521,8 +1521,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             JSON.stringify({
                 styles: Object.keys((unifiedConfig?.results?.styles as any) || {}),
                 offers: Object.keys((unifiedConfig?.results?.offersMap as any) || {}),
-                scoring: (unifiedConfig?.runtime as any)?.scoring ? Object.keys((unifiedConfig?.runtime as any).scoring) : []
-            })
+                scoring: (unifiedConfig?.runtime as any)?.scoring ? Object.keys((unifiedConfig?.runtime as any).scoring) : [],
+            }),
         ].join('|');
         const cached = previewCacheRef.current.get(id);
         if (cached && cached.key === key) return cached.node;
@@ -1535,7 +1535,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const placeholderContext = {
             userName: 'Preview',
             resultStyle: primaryTitle,
-            scores: previewResult?.scores || { classico: 0, natural: 0, romantico: 0 }
+            scores: previewResult?.scores || { classico: 0, natural: 0, romantico: 0 },
         };
         let node: React.ReactNode = null;
         // Heading
@@ -1558,7 +1558,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         level === 1 && 'text-3xl',
                         level === 2 && 'text-2xl',
                         level === 3 && 'text-xl',
-                        level >= 4 && 'text-lg'
+                        level >= 4 && 'text-lg',
                     )}
                 >{inner}</Tag>
             );
@@ -1589,7 +1589,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             objectFit: 'cover',
                             width: typeof width === 'number' ? `${width}px` : (width || '100%'),
                             height: typeof height === 'number' ? `${height}px` : (height || 'auto'),
-                            borderRadius
+                            borderRadius,
                         }}
                     />
                 </div>
@@ -1664,12 +1664,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 <div
                     className={cn(
                         'rounded-md border p-3 bg-gradient-to-br from-white to-slate-50 shadow-sm relative',
-                        'min-h-[48px]'
+                        'min-h-[48px]',
                     )}
                     style={{
                         backgroundColor: properties?.backgroundColor || undefined,
                         padding: properties?.padding || undefined,
-                        borderRadius: properties?.borderRadius || undefined
+                        borderRadius: properties?.borderRadius || undefined,
                     }}
                 >
                     <div className="flex items-center justify-between mb-1">
@@ -2359,7 +2359,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             width: properties?.imageMaxWidth ? `${properties.imageMaxWidth}px` : '100%',
                                             maxWidth: '100%',
                                             height: properties?.imageMaxHeight ? `${properties.imageMaxHeight}px` : 'auto',
-                                            objectFit: 'cover'
+                                            objectFit: 'cover',
                                         }}
                                     />
                                 )}
@@ -2384,7 +2384,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             onClick={handleNext}
                             className={cn(
                                 'quiz-button px-4 py-2 rounded-full text-sm',
-                                enableButtonOnlyWhenValid && !isValid && 'quiz-button-disabled'
+                                enableButtonOnlyWhenValid && !isValid && 'quiz-button-disabled',
                             )}
                             disabled={enableButtonOnlyWhenValid && !isValid}
                         >
@@ -2422,7 +2422,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         ...(reconstructed as any),
                         nextStep: (reconstructed as any).nextStep || s.nextStep,
                         offerMap: (reconstructed as any).offerMap || s.offerMap,
-                        blocks: s.blocks
+                        blocks: s.blocks,
                     };
                 }),
                 isPublished: false,
@@ -2454,7 +2454,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 toast({
                     title: 'Erro ao salvar',
                     description: message,
-                    variant: 'destructive'
+                    variant: 'destructive',
                 });
             }
         } finally {
@@ -2559,9 +2559,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         type: block.type,
                         content: block.content || {},
                         properties: block.properties || {},
-                        order: blockIndex
+                        order: blockIndex,
                     }))
-                    : []
+                    : [],
             }));
 
             setSteps(convertedSteps);
@@ -2579,7 +2579,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             toast({
                 title: 'Erro',
                 description: 'Falha ao converter quiz gerado',
-                variant: 'destructive'
+                variant: 'destructive',
             });
         }
     }, [toast]);
@@ -2590,7 +2590,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             toast({
                 title: 'Salve primeiro',
                 description: 'Salve o rascunho antes de publicar',
-                variant: 'destructive'
+                variant: 'destructive',
             });
             return;
         }
@@ -2602,14 +2602,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             toast({
                 title: 'Falha na validação',
                 description: `${errors.length} problemas críticos encontrados. Revise a navegação/etapas.`,
-                variant: 'destructive'
+                variant: 'destructive',
             });
             setNavOpen(true);
             return;
         }
 
         const confirmed = window.confirm(
-            '⚠️ Publicar para produção?\n\nIsso substituirá o funil /quiz-estilo atual.'
+            '⚠️ Publicar para produção?\n\nIsso substituirá o funil /quiz-estilo atual.',
         );
 
         if (!confirmed) return;
@@ -2628,7 +2628,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             toast({
                 title: 'Erro ao publicar',
                 description: String(error),
-                variant: 'destructive'
+                variant: 'destructive',
             });
         } finally {
             setIsPublishing(false);
@@ -2680,7 +2680,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const stepItems = steps.map(s => ({
             id: s.id,
             label: s.id,
-            blockCount: (s.blocks || []).length
+            blockCount: (s.blocks || []).length,
         }));
 
         // Itens da biblioteca de componentes (map do registry)
@@ -2689,7 +2689,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             type: comp.type,
             label: comp.label,
             category: comp.category,
-            icon: getCategoryIcon(comp.category)
+            icon: getCategoryIcon(comp.category),
         }));
 
         // Blocos do canvas do step atual (somente top-level para visual simplificada)
@@ -2834,7 +2834,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                     contentFieldSet = new Set(
                                                         (modern.properties as any[])
                                                             .filter((p: any) => (p.group || 'content') === 'content')
-                                                            .map((p: any) => p.key)
+                                                            .map((p: any) => p.key),
                                                     );
                                                 }
                                             } catch {
@@ -3189,7 +3189,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             contentFieldSet = new Set(
                                                 (modern.properties as any[])
                                                     .filter((p: any) => (p.group || 'content') === 'content')
-                                                    .map((p: any) => p.key)
+                                                    .map((p: any) => p.key),
                                             );
                                         }
                                     } catch {
@@ -3405,12 +3405,12 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
     const [registryReady, setRegistryReady] = React.useState(false);
 
     // 🐛 DEBUG: Log de renderização crítico
-    appLogger.debug(`🎨 LiveRuntimePreview RENDERIZADO`, {
+    appLogger.debug('🎨 LiveRuntimePreview RENDERIZADO', {
         stepsCount: steps.length,
         funnelId,
         selectedStepId,
         syncStatus,
-        registryReady
+        registryReady,
     });
 
     // ✅ FASE 1 (P0): Calcular runtimeMap usando transformação unificada
@@ -3432,7 +3432,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
             runtimeVersion,
             lastVersion: lastVersionRef.current,
             willUpdate: runtimeVersion !== lastVersionRef.current,
-            stepsCount: Object.keys(runtimeMap).length
+            stepsCount: Object.keys(runtimeMap).length,
         });
 
         // Só atualizar se realmente mudou a versão
@@ -3490,9 +3490,9 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
                         previewMode
                         initialStepId={selectedStepId}
                         initialConfig={{
-                            steps: steps,
+                            steps,
                             global: {},
-                            scoring: {}
+                            scoring: {},
                         }}
                     />
                 </BlockRegistryProvider>

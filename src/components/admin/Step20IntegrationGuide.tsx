@@ -10,8 +10,8 @@ export const Step20IntegrationGuide: React.FC = () => {
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
         toast({
-            title: "Código copiado!",
-            description: "O código foi copiado para a área de transferência.",
+            title: 'Código copiado!',
+            description: 'O código foi copiado para a área de transferência.',
         });
     };
 
@@ -81,7 +81,7 @@ export const NoCodeConfigPanel = () => {
       />
     </div>
   );
-};`
+};`,
     };
 
     return (

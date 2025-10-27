@@ -41,7 +41,7 @@ export const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
           color: 'text-green-600',
           bgColor: 'bg-green-50',
           borderColor: 'border-green-200',
-          label: 'Válido'
+          label: 'Válido',
         };
       case 'invalid':
         return {
@@ -49,7 +49,7 @@ export const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
           color: 'text-red-600',
           bgColor: 'bg-red-50',
           borderColor: 'border-red-200',
-          label: 'Inválido'
+          label: 'Inválido',
         };
       case 'warning':
         return {
@@ -57,7 +57,7 @@ export const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
           color: 'text-yellow-600',
           bgColor: 'bg-yellow-50',
           borderColor: 'border-yellow-200',
-          label: 'Atenção'
+          label: 'Atenção',
         };
       case 'pending':
         return {
@@ -65,7 +65,7 @@ export const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
           color: 'text-blue-600',
           bgColor: 'bg-blue-50',
           borderColor: 'border-blue-200',
-          label: 'Aguardando'
+          label: 'Aguardando',
         };
       default:
         return {
@@ -73,7 +73,7 @@ export const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
           color: 'text-stone-600',
           bgColor: 'bg-stone-50',
           borderColor: 'border-stone-200',
-          label: 'Desconhecido'
+          label: 'Desconhecido',
         };
     }
   };
@@ -96,7 +96,7 @@ export const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
       icon: 'w-5 h-5',
       text: 'text-base',
       padding: 'px-4 py-2',
-    }
+    },
   };
 
   return (
@@ -105,12 +105,12 @@ export const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
       config.bgColor,
       config.borderColor,
       sizeClasses[size].padding,
-      className
+      className,
     )}>
       {showIcon && (
         <IconComponent className={cn(
           sizeClasses[size].icon,
-          config.color
+          config.color,
         )} />
       )}
       
@@ -118,7 +118,7 @@ export const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
         <span className={cn(
           'font-medium',
           sizeClasses[size].text,
-          config.color
+          config.color,
         )}>
           {message || config.label}
         </span>
@@ -156,7 +156,7 @@ export const ValidationBadge: React.FC<{
     <div className={cn(
       'absolute -top-2 -right-2 z-20 rounded-full p-1.5',
       config,
-      className
+      className,
     )}>
       {IconComponent && <IconComponent className="w-3 h-3" />}
     </div>
@@ -173,20 +173,20 @@ export const useValidation = () => {
   const setValidation = React.useCallback((id: string, state: ValidationState, message?: string) => {
     setValidationStates(prev => ({
       ...prev,
-      [id]: state
+      [id]: state,
     }));
     
     if (message) {
       setValidationMessages(prev => ({
         ...prev,
-        [id]: message
+        [id]: message,
       }));
     }
   }, []);
 
   const getValidation = React.useCallback((id: string) => ({
     state: validationStates[id] || 'none',
-    message: validationMessages[id]
+    message: validationMessages[id],
   }), [validationStates, validationMessages]);
 
   const clearValidation = React.useCallback((id: string) => {
@@ -213,7 +213,7 @@ export const useValidation = () => {
     setValidation,
     getValidation,
     clearValidation,
-    clearAllValidations
+    clearAllValidations,
   };
 };
 

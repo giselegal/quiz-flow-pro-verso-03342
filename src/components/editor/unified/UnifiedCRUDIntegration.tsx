@@ -19,7 +19,7 @@ import {
   unifiedCRUDService, 
   UnifiedFunnel, 
   UnifiedStage, 
-  CRUDResult 
+  CRUDResult, 
 } from '@/services/UnifiedCRUDService';
 import { templatesCacheService } from '@/services/TemplatesCacheService';
 

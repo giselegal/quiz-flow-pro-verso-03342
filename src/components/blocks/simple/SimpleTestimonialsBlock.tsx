@@ -22,27 +22,27 @@ const SimpleTestimonialsBlock: React.FC<BlockComponentProps> = ({
     block,
     isSelected,
     editMode,
-    onSelect
+    onSelect,
 }) => {
     const content = block.content || {};
     const properties = block.properties || {};
 
     const testimonials = [
         {
-            name: "Ana Silva",
-            result: "Economizei R$ 2.000 em compras desnecessárias",
-            photo: "👩‍💼"
+            name: 'Ana Silva',
+            result: 'Economizei R$ 2.000 em compras desnecessárias',
+            photo: '👩‍💼',
         },
         {
-            name: "Maria Costa",
-            result: "Finalmente encontrei meu estilo único",
-            photo: "👩‍🎨"
+            name: 'Maria Costa',
+            result: 'Finalmente encontrei meu estilo único',
+            photo: '👩‍🎨',
         },
         {
-            name: "Carla Santos",
-            result: "Minha autoestima mudou completamente",
-            photo: "👩‍💻"
-        }
+            name: 'Carla Santos',
+            result: 'Minha autoestima mudou completamente',
+            photo: '👩‍💻',
+        },
     ];
 
     return (
@@ -78,7 +78,7 @@ const SimpleTestimonialsBlock: React.FC<BlockComponentProps> = ({
                         </p>
                         <div className="flex justify-center mt-2">
                             <div className="flex text-yellow-400">
-                                {"⭐".repeat(5)}
+                                {'⭐'.repeat(5)}
                             </div>
                         </div>
                     </div>

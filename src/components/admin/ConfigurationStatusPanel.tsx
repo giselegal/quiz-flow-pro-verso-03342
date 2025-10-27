@@ -10,7 +10,7 @@ import {
   Facebook,
   CreditCard,
   Eye,
-  Globe
+  Globe,
 } from 'lucide-react';
 import { FUNNEL_CONFIGS, getCurrentFunnel } from '@/services/pixelManager';
 
@@ -45,14 +45,14 @@ export const ConfigurationStatusPanel: React.FC = () => {
             name: 'Facebook Pixel',
             status: 'warning',
             message: 'Duplicatas detectadas',
-            details: `Alguns funis compartilham o mesmo Pixel ID`
+            details: 'Alguns funis compartilham o mesmo Pixel ID',
           });
         } else {
           newStatuses.push({
             name: 'Facebook Pixel',
             status: 'active',
             message: 'Configurado corretamente',
-            details: `Pixel ID: ${funnelConfig.pixelId}`
+            details: `Pixel ID: ${funnelConfig.pixelId}`,
           });
         }
       } else {
@@ -60,7 +60,7 @@ export const ConfigurationStatusPanel: React.FC = () => {
           name: 'Facebook Pixel',
           status: 'error',
           message: 'Não configurado',
-          details: 'Pixel ID não encontrado para o funil atual'
+          details: 'Pixel ID não encontrado para o funil atual',
         });
       }
     } catch (error) {
@@ -68,7 +68,7 @@ export const ConfigurationStatusPanel: React.FC = () => {
         name: 'Facebook Pixel',
         status: 'error',
         message: 'Erro na verificação',
-        details: error instanceof Error ? error.message : 'Erro desconhecido'
+        details: error instanceof Error ? error.message : 'Erro desconhecido',
       });
     }
 
@@ -76,7 +76,7 @@ export const ConfigurationStatusPanel: React.FC = () => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const hasUtmParams = ['utm_source', 'utm_medium', 'utm_campaign'].some(param => 
-        urlParams.has(param)
+        urlParams.has(param),
       );
       
       if (hasUtmParams) {
@@ -84,21 +84,21 @@ export const ConfigurationStatusPanel: React.FC = () => {
           name: 'Parâmetros UTM',
           status: 'active',
           message: 'Detectados na URL atual',
-          details: `Source: ${urlParams.get('utm_source') || 'N/A'}, Campaign: ${urlParams.get('utm_campaign') || 'N/A'}`
+          details: `Source: ${urlParams.get('utm_source') || 'N/A'}, Campaign: ${urlParams.get('utm_campaign') || 'N/A'}`,
         });
       } else {
         newStatuses.push({
           name: 'Parâmetros UTM',
           status: 'warning',
           message: 'Não detectados',
-          details: 'URL atual não contém parâmetros UTM'
+          details: 'URL atual não contém parâmetros UTM',
         });
       }
     } catch (error) {
       newStatuses.push({
         name: 'Parâmetros UTM',
         status: 'error',
-        message: 'Erro na verificação'
+        message: 'Erro na verificação',
       });
     }
 
@@ -109,13 +109,13 @@ export const ConfigurationStatusPanel: React.FC = () => {
         name: 'Webhook Hotmart',
         status: 'active',
         message: 'Configurado e ativo',
-        details: 'ID: agQzTLUehWUfhPzjhdwntVQz0JNT5E0216ae0d'
+        details: 'ID: agQzTLUehWUfhPzjhdwntVQz0JNT5E0216ae0d',
       });
     } catch (error) {
       newStatuses.push({
         name: 'Webhook Hotmart',
         status: 'error',
-        message: 'Erro na verificação'
+        message: 'Erro na verificação',
       });
     }
 
@@ -127,21 +127,21 @@ export const ConfigurationStatusPanel: React.FC = () => {
           name: 'Google Analytics',
           status: 'active',
           message: 'Detectado e funcionando',
-          details: 'Global Site Tag carregado'
+          details: 'Global Site Tag carregado',
         });
       } else {
         newStatuses.push({
           name: 'Google Analytics',
           status: 'warning',
           message: 'Não detectado',
-          details: 'Global Site Tag não encontrado'
+          details: 'Global Site Tag não encontrado',
         });
       }
     } catch (error) {
       newStatuses.push({
         name: 'Google Analytics',
         status: 'error',
-        message: 'Erro na verificação'
+        message: 'Erro na verificação',
       });
     }
 
@@ -155,21 +155,21 @@ export const ConfigurationStatusPanel: React.FC = () => {
           name: 'Domínio Personalizado',
           status: 'active',
           message: 'Configurado',
-          details: `Domínio: ${domain}`
+          details: `Domínio: ${domain}`,
         });
       } else {
         newStatuses.push({
           name: 'Domínio Personalizado',
           status: 'warning',
           message: 'Usando domínio temporário',
-          details: `Domínio atual: ${domain}`
+          details: `Domínio atual: ${domain}`,
         });
       }
     } catch (error) {
       newStatuses.push({
         name: 'Domínio Personalizado',
         status: 'error',
-        message: 'Erro na verificação'
+        message: 'Erro na verificação',
       });
     }
 
@@ -196,13 +196,13 @@ export const ConfigurationStatusPanel: React.FC = () => {
     const variants = {
       active: 'bg-green-100 text-green-800',
       warning: 'bg-yellow-100 text-yellow-800',
-      error: 'bg-red-100 text-red-800'
+      error: 'bg-red-100 text-red-800',
     };
 
     const labels = {
       active: 'Ativo',
       warning: 'Atenção',
-      error: 'Erro'
+      error: 'Erro',
     };
 
     return (

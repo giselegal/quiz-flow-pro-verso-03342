@@ -52,7 +52,7 @@ const ValueAnchoringBlock: React.FC<ValueAnchoringBlockProps> = ({
         getMarginClass(marginTop, 'top'),
         getMarginClass(marginBottom, 'bottom'),
         getMarginClass(marginLeft, 'left'),
-        getMarginClass(marginRight, 'right')
+        getMarginClass(marginRight, 'right'),
       )}
     >
       <div className="max-w-md mx-auto">

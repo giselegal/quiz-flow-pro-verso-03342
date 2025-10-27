@@ -128,7 +128,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
           ? 'opacity-45 cursor-not-allowed transition-opacity duration-300'
           : isDisabled
             ? 'opacity-50 cursor-not-allowed'
-            : ''
+            : '',
       )}
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
@@ -145,14 +145,14 @@ const QuizOption: React.FC<QuizOptionProps> = ({
           type === 'text' &&
             cn(
               'p-4 border transition-all duration-300',
-              isHovered && !isSelected && 'border-[#B89B7A] bg-[#B89B7A]/5 shadow-lg'
+              isHovered && !isSelected && 'border-[#B89B7A] bg-[#B89B7A]/5 shadow-lg',
             ),
 
           // Para opções de imagem - SEM borda na coluna
           type !== 'text' && 'border-0',
 
           // Fundo sólido sem transparência e adicionando sombra padrão
-          'bg-[#FEFEFE] shadow-sm hover:shadow-md transition-all duration-300'
+          'bg-[#FEFEFE] shadow-sm hover:shadow-md transition-all duration-300',
         )}
       >
         {type !== 'text' && option.imageUrl && (
@@ -172,14 +172,14 @@ const QuizOption: React.FC<QuizOptionProps> = ({
               ? cn(
                   'leading-tight font-medium py-1 px-2 mt-auto text-[#432818] relative',
                   isMobile ? 'text-[0.8rem]' : 'text-[0.7rem] sm:text-sm',
-                  isStrategicOption && 'text-[0.95rem] sm:text-base' // Maior para opções estratégicas
+                  isStrategicOption && 'text-[0.95rem] sm:text-base', // Maior para opções estratégicas
                 )
               : cn(
                   'leading-relaxed text-[#432818]',
                   isMobile ? 'text-[0.9rem]' : 'text-sm sm:text-base',
                   isStrategicOption && 'text-[1.1rem] sm:text-lg', // Maior para opções estratégicas texto
-                  !isStrategicOption && '.text-only-question & ' && 'text-[1rem] sm:text-lg' // Maior para opções só texto
-                )
+                  !isStrategicOption && '.text-only-question & ' && 'text-[1rem] sm:text-lg', // Maior para opções só texto
+                ),
           )}
         >
           {highlightStrategicWords(option.text)}

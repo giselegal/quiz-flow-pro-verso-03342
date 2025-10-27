@@ -103,7 +103,7 @@ const ResultPageHeaderBlock: React.FC<ResultPageHeaderBlockProps> = ({
         getMarginClass(block.properties?.marginTop ?? 0, 'top'),
         getMarginClass(block.properties?.marginBottom ?? 0, 'bottom'),
         getMarginClass(block.properties?.marginLeft ?? 0, 'left'),
-        getMarginClass(block.properties?.marginRight ?? 0, 'right')
+        getMarginClass(block.properties?.marginRight ?? 0, 'right'),
       )}
       onClick={onClick}
       style={{

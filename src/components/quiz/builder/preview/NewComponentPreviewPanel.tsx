@@ -45,7 +45,7 @@ export const NewComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
         <div
           className={cn(
             'min-h-full w-full max-w-4xl mx-auto',
-            isPreviewing ? 'pointer-events-none select-none' : ''
+            isPreviewing ? 'pointer-events-none select-none' : '',
           )}
         >
           {sortedComponents.length === 0 ? (

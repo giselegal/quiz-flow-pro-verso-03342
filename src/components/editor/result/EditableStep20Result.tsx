@@ -19,7 +19,7 @@ import {
   Edit3,
   RefreshCw,
   ArrowRight,
-  Share2
+  Share2,
 } from 'lucide-react';
 import { useQuizResultEditor } from '@/hooks/useQuizResultEditor';
 import { EditableText } from './EditableText';
@@ -36,9 +36,9 @@ interface EditableStep20ResultProps {
  * Componente Step 20 editável
  */
 export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
-  className = "",
+  className = '',
   isPreview = false,
-  enableEditing = true
+  enableEditing = true,
 }) => {
   const {
     currentResult,
@@ -52,7 +52,7 @@ export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
     toggleEditMode,
     resetCustomizations,
     getCustomText,
-    getCustomColor
+    getCustomColor,
   } = useQuizResultEditor();
 
   // Ícones dos estilos
@@ -77,7 +77,7 @@ export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
       return { 
         bg: `bg-[${customBg}]`, 
         border: `border-[${customBorder}]`, 
-        text: `text-[${customText}]` 
+        text: `text-[${customText}]`, 
       };
     }
 
@@ -100,7 +100,7 @@ export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
   const styleColors = getStyleColors(currentResult.primaryStyle.style);
 
   return (
-    <div className={cn("min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-200", className)}>
+    <div className={cn('min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-200', className)}>
       {/* Toolbar do editor (apenas no modo editor) */}
       {enableEditing && !isPreview && (
         <div className="bg-white border-b border-stone-200 px-4 py-3 flex items-center justify-between">
@@ -113,7 +113,7 @@ export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
                 onClick={() => setPreviewMode('single')}
                 className={cn(
                   'px-3 py-1 rounded text-sm transition-colors',
-                  previewMode === 'single' ? 'bg-primary text-white' : 'bg-stone-100 hover:bg-stone-200'
+                  previewMode === 'single' ? 'bg-primary text-white' : 'bg-stone-100 hover:bg-stone-200',
                 )}
               >
                 Único
@@ -122,7 +122,7 @@ export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
                 onClick={() => setPreviewMode('multiple')}
                 className={cn(
                   'px-3 py-1 rounded text-sm transition-colors',
-                  previewMode === 'multiple' ? 'bg-primary text-white' : 'bg-stone-100 hover:bg-stone-200'
+                  previewMode === 'multiple' ? 'bg-primary text-white' : 'bg-stone-100 hover:bg-stone-200',
                 )}
               >
                 Múltiplos
@@ -131,7 +131,7 @@ export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
                 onClick={() => setPreviewMode('comparison')}
                 className={cn(
                   'px-3 py-1 rounded text-sm transition-colors',
-                  previewMode === 'comparison' ? 'bg-primary text-white' : 'bg-stone-100 hover:bg-stone-200'
+                  previewMode === 'comparison' ? 'bg-primary text-white' : 'bg-stone-100 hover:bg-stone-200',
                 )}
               >
                 Comparação
@@ -200,7 +200,7 @@ export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
             <div className={cn(
               styleColors.bg, 
               styleColors.border, 
-              'border-2 rounded-2xl p-8 mb-8'
+              'border-2 rounded-2xl p-8 mb-8',
             )}>
               <div className="flex items-center justify-center mb-6">
                 {getStyleIcon(currentResult.primaryStyle.style)}
@@ -218,7 +218,7 @@ export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
                 <div className={cn(
                   'inline-flex items-center px-4 py-2 rounded-full border',
                   styleColors.bg,
-                  styleColors.border
+                  styleColors.border,
                 )}>
                   <span className={cn('text-lg font-medium', styleColors.text)}>
                     {currentResult.primaryStyle.percentage?.toFixed(0)}% de compatibilidade
@@ -299,7 +299,7 @@ export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
                 className="mb-4"
                 placeholder="Texto do CTA principal"
                 renderAs={(text, className) => (
-                  <Button size="lg" className={cn("px-8 py-4 text-lg font-semibold", className)}>
+                  <Button size="lg" className={cn('px-8 py-4 text-lg font-semibold', className)}>
                     <ArrowRight className="w-5 h-5 mr-2" />
                     {text}
                   </Button>
@@ -314,7 +314,7 @@ export const EditableStep20Result: React.FC<EditableStep20ResultProps> = ({
                   className=""
                   placeholder="Texto do CTA secundário"
                   renderAs={(text, className) => (
-                    <Button variant="outline" size="lg" className={cn("mr-4", className)}>
+                    <Button variant="outline" size="lg" className={cn('mr-4', className)}>
                       <Share2 className="w-4 h-4 mr-2" />
                       {text}
                     </Button>

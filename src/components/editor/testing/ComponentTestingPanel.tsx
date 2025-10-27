@@ -334,7 +334,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
       acc[comp.category].push(comp);
       return acc;
     },
-    {} as Record<string, typeof testComponents>
+    {} as Record<string, typeof testComponents>,
   );
 
   const getCategoryIcon = (category: string) => {

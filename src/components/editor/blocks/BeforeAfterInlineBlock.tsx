@@ -142,7 +142,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
             getMarginClass(marginTop, 'top'),
             getMarginClass(marginBottom, 'bottom'),
             getMarginClass(marginLeft, 'left'),
-            getMarginClass(marginRight, 'right')
+            getMarginClass(marginRight, 'right'),
           )}
         >
           <EyeOff className="w-4 h-4" />
@@ -154,7 +154,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
             'flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all',
             activeView === 'after'
               ? 'bg-green-500 text-white shadow-sm'
-              : 'text-gray-600 hover:text-gray-800'
+              : 'text-gray-600 hover:text-gray-800',
           )}
         >
           <Eye className="w-4 h-4" />
@@ -172,7 +172,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
         <div
           className={cn(
             'absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-semibold text-white',
-            activeView === 'before' ? 'bg-red-500' : 'bg-green-500'
+            activeView === 'before' ? 'bg-red-500' : 'bg-green-500',
           )}
         >
           {activeView === 'before' ? beforeLabel : afterLabel}
@@ -188,7 +188,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
         'bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg',
         isSelected && 'ring-2 ring-[#B89B7A] bg-[#B89B7A]/10',
         !disabled && 'cursor-pointer hover:bg-[#B89B7A]/10/80',
-        className
+        className,
       )}
       onClick={onClick}
     >

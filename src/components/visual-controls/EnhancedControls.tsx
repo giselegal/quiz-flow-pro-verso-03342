@@ -31,7 +31,7 @@ export const SpacingControl: React.FC<SpacingControlProps> = ({
   onChange,
   label = 'Espaçamento',
   sides = ['top', 'right', 'bottom', 'left'],
-  linkedByDefault = false
+  linkedByDefault = false,
 }) => {
   const [isLinked, setIsLinked] = useState(linkedByDefault);
 
@@ -39,7 +39,7 @@ export const SpacingControl: React.FC<SpacingControlProps> = ({
     top: 'Superior',
     right: 'Direita',
     bottom: 'Inferior',
-    left: 'Esquerda'
+    left: 'Esquerda',
   };
 
   const handleValueChange = (side: string, newValue: number) => {
@@ -61,8 +61,8 @@ export const SpacingControl: React.FC<SpacingControlProps> = ({
           variant="outline"
           onClick={() => setIsLinked(!isLinked)}
           className={cn(
-            "h-8 px-2 text-xs",
-            isLinked && "bg-blue-50 border-blue-200"
+            'h-8 px-2 text-xs',
+            isLinked && 'bg-blue-50 border-blue-200',
           )}
         >
           {isLinked ? '🔗' : '🔓'} {isLinked ? 'Vinculado' : 'Individual'}
@@ -118,7 +118,7 @@ interface GradientPickerProps {
 export const GradientPicker: React.FC<GradientPickerProps> = ({
   value,
   onChange,
-  label = 'Gradiente'
+  label = 'Gradiente',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -171,7 +171,7 @@ export const GradientPicker: React.FC<GradientPickerProps> = ({
                       'w-full h-12 rounded border-2 hover:scale-105 transition-transform',
                       value === gradient
                         ? 'border-blue-500 ring-2 ring-blue-200'
-                        : 'border-gray-300'
+                        : 'border-gray-300',
                     )}
                     style={{ background: gradient }}
                   />
@@ -220,7 +220,7 @@ export const FileUploadControl: React.FC<FileUploadControlProps> = ({
   label = 'Arquivo',
   accept = 'image/*',
   maxSize = '2MB',
-  showPreview = true
+  showPreview = true,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadMode, setUploadMode] = useState<'url' | 'upload'>('url');
@@ -284,8 +284,8 @@ export const FileUploadControl: React.FC<FileUploadControlProps> = ({
       ) : (
         <div
           className={cn(
-            "border-2 border-dashed rounded-lg p-4 text-center transition-colors",
-            isDragOver ? "border-blue-500 bg-blue-50" : "border-gray-300"
+            'border-2 border-dashed rounded-lg p-4 text-center transition-colors',
+            isDragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300',
           )}
           onDragOver={(e) => {
             e.preventDefault();
@@ -384,7 +384,7 @@ export const PositionControl: React.FC<PositionControlProps> = ({
   onChange,
   label = 'Posição',
   maxX = 100,
-  maxY = 100
+  maxY = 100,
 }) => {
   return (
     <div className="space-y-3">

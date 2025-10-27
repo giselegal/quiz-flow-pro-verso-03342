@@ -130,7 +130,7 @@ const QuizMultipleChoiceBlock: React.FC<QuizMultipleChoiceBlockProps> = ({
     if (onPropertyChange) {
       onPropertyChange(
         'selectedOptions',
-        selectedOptions.map(opt => opt.id)
+        selectedOptions.map(opt => opt.id),
       );
       onPropertyChange('correctAnswersSelected', allCorrect);
       onPropertyChange('partiallyCorrect', correctCount > 0 && !allCorrect);
@@ -143,7 +143,7 @@ const QuizMultipleChoiceBlock: React.FC<QuizMultipleChoiceBlockProps> = ({
       onPropertyChange('complete', true);
       onPropertyChange(
         'selectedOptions',
-        selectedOptions
+        selectedOptions,
       );
     }
   };

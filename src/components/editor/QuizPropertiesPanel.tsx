@@ -24,7 +24,7 @@ import {
     Minus,
     Settings,
     Eye,
-    EyeOff
+    EyeOff,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -55,7 +55,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
     onDuplicateStep,
     isPreviewMode = false,
     onTogglePreview,
-    className = ''
+    className = '',
 }) => {
     const [localProperties, setLocalProperties] = useState<any>({});
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -71,7 +71,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
     const handlePropertyChange = useCallback((key: string, value: any) => {
         setLocalProperties((prev: any) => ({
             ...prev,
-            [key]: value
+            [key]: value,
         }));
         setHasUnsavedChanges(true);
     }, []);
@@ -81,8 +81,8 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
             ...prev,
             [parentKey]: {
                 ...prev[parentKey],
-                [childKey]: value
-            }
+                [childKey]: value,
+            },
         }));
         setHasUnsavedChanges(true);
     }, []);
@@ -105,7 +105,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
         const currentOptions = localProperties[optionsKey] || [];
         const newOption = {
             id: `opt-${Date.now()}`,
-            text: 'Nova opção'
+            text: 'Nova opção',
         };
         handlePropertyChange(optionsKey, [...currentOptions, newOption]);
     }, [localProperties, handlePropertyChange]);
@@ -119,7 +119,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
     const handleOptionUpdate = useCallback((optionsKey: string, optionId: string, text: string) => {
         const currentOptions = localProperties[optionsKey] || [];
         const updatedOptions = currentOptions.map((opt: any) =>
-            opt.id === optionId ? { ...opt, text } : opt
+            opt.id === optionId ? { ...opt, text } : opt,
         );
         handlePropertyChange(optionsKey, updatedOptions);
     }, [localProperties, handlePropertyChange]);
@@ -149,7 +149,7 @@ export const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
         'transition': 'Transição',
         'transition-result': 'Transição com Resultado',
         'result': 'Resultado',
-        'offer': 'Oferta'
+        'offer': 'Oferta',
     };
 
     return (

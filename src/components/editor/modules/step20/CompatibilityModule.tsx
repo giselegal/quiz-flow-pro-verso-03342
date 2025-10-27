@@ -22,7 +22,7 @@ const CompatibilityModule: React.FC<CompatibilityModuleProps> = ({
   size = 'md',
   animated = true,
   className = '',
-  isSelected = false
+  isSelected = false,
 }) => {
   const { primaryStyle, isLoading } = useQuizData();
 
@@ -38,7 +38,7 @@ const CompatibilityModule: React.FC<CompatibilityModuleProps> = ({
   const sizeClasses = {
     sm: 'w-16 h-16 text-lg',
     md: 'w-20 h-20 text-xl', 
-    lg: 'w-24 h-24 text-2xl'
+    lg: 'w-24 h-24 text-2xl',
   };
 
   return (
@@ -46,7 +46,7 @@ const CompatibilityModule: React.FC<CompatibilityModuleProps> = ({
       className={cn(
         'text-center space-y-2',
         isSelected && 'ring-2 ring-primary ring-offset-2',
-        className
+        className,
       )}
     >
       {showLabel && (
@@ -60,12 +60,12 @@ const CompatibilityModule: React.FC<CompatibilityModuleProps> = ({
           className={cn(
             'rounded-full border-4 flex items-center justify-center font-bold',
             sizeClasses[size],
-            animated && 'animate-pulse'
+            animated && 'animate-pulse',
           )}
           style={{ 
             borderColor: progressColor,
             backgroundColor: `${progressColor}20`,
-            color: textColor
+            color: textColor,
           }}
         >
           {showPercentage && `${primaryStyle.percentage}%`}

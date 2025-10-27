@@ -31,7 +31,7 @@ export const SavingIndicator: React.FC<SavingIndicatorProps> = ({
   status,
   lastSaved,
   error,
-  className
+  className,
 }) => {
   const [showSaved, setShowSaved] = useState(false);
 

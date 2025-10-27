@@ -64,7 +64,7 @@ export const VirtualScrolling = <T extends any>({
   className = '',
   getItemId = (_item: T, index: number) => `item-${index}`, // Usar underscore para parâmetros não utilizados
   onScroll,
-  overscan = 3
+  overscan = 3,
 }: VirtualScrollingProps<T>) => {
   const logger = useLogger('VirtualScrolling');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -76,7 +76,7 @@ export const VirtualScrolling = <T extends any>({
     scrollTop: 0,
     visibleRange: { start: 0, end: 0 },
     itemHeights: new Map(),
-    totalHeight: 0
+    totalHeight: 0,
   });
 
   // ✅ CALCULAR ALTURA DOS ITENS
@@ -167,7 +167,7 @@ export const VirtualScrolling = <T extends any>({
     setState(prev => ({
       ...prev,
       scrollTop: newScrollTop,
-      visibleRange: newVisibleRange
+      visibleRange: newVisibleRange,
     }));
 
     // Callback opcional
@@ -178,7 +178,7 @@ export const VirtualScrolling = <T extends any>({
     logger.debug('Scroll updated', {
       scrollTop: newScrollTop,
       visibleRange: newVisibleRange,
-      visibleItems: newVisibleRange.end - newVisibleRange.start + 1
+      visibleItems: newVisibleRange.end - newVisibleRange.start + 1,
     });
   }, [getVisibleRange, onScroll, logger]);
 
@@ -192,7 +192,7 @@ export const VirtualScrolling = <T extends any>({
       'scroll',
       handleScroll,
       { passive: true },
-      componentId
+      componentId,
     );
 
     const { cleanupId: resizeCleanupId } = registerResizeObserver(
@@ -202,11 +202,11 @@ export const VirtualScrolling = <T extends any>({
           const newVisibleRange = getVisibleRange(state.scrollTop);
           setState(prev => ({
             ...prev,
-            visibleRange: newVisibleRange
+            visibleRange: newVisibleRange,
           }));
         }
       },
-      componentId
+      componentId,
     );
 
     // Calcular range inicial
@@ -217,7 +217,7 @@ export const VirtualScrolling = <T extends any>({
       totalHeight: Array.from(getItemPositions.values()).reduce((max, pos, i) => {
         const item = items[i];
         return item ? Math.max(max, pos + getItemHeight(item, i)) : max;
-      }, 0)
+      }, 0),
     }));
 
     return () => {
@@ -259,13 +259,13 @@ export const VirtualScrolling = <T extends any>({
         left: 0,
         right: 0,
         height,
-        width: '100%'
+        width: '100%',
       };
 
       rendered.push(
         <div key={itemId} style={style}>
           {renderItem(item, i, style)}
-        </div>
+        </div>,
       );
     }
 
@@ -281,7 +281,7 @@ export const VirtualScrolling = <T extends any>({
       totalItems: items.length,
       visibleItems: state.visibleRange.end - state.visibleRange.start + 1,
       totalHeight,
-      scrollTop: state.scrollTop
+      scrollTop: state.scrollTop,
     });
   }, [state.visibleRange, items.length, totalHeight, state.scrollTop, logger]);
 
@@ -292,7 +292,7 @@ export const VirtualScrolling = <T extends any>({
       style={{
         height: containerHeight,
         width: containerWidth,
-        position: 'relative'
+        position: 'relative',
       }}
     >
       {/* ✅ SPACER VIRTUAL PARA MANTER SCROLL HEIGHT */}
@@ -300,7 +300,7 @@ export const VirtualScrolling = <T extends any>({
         style={{
           height: totalHeight,
           width: '100%',
-          position: 'relative'
+          position: 'relative',
         }}
       >
         {visibleItems}
@@ -337,7 +337,7 @@ export const useVirtualBlockList = (blocks: any[], containerHeight: number) => {
     renderBlock: defaultRenderBlock,
     handleScroll,
     itemHeight: 50,
-    bufferSize: 5
+    bufferSize: 5,
   };
 };
 

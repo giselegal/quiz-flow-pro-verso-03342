@@ -65,7 +65,7 @@ const QuizModularProductionEditor: React.FC<IntegrationExampleProps> = ({
     OfferMap,
     funnelId,
     setSelectedStepIndex,
-    setSteps
+    setSteps,
 }) => {
     return (
         <LivePreviewProvider
@@ -121,8 +121,8 @@ const QuizModularProductionEditor: React.FC<IntegrationExampleProps> = ({
                                 updatedSteps[stepIndex] = {
                                     ...step,
                                     blocks: step.blocks.map((block: any, idx: number) =>
-                                        idx === blockIndex ? { ...block, ...updates } : block
-                                    )
+                                        idx === blockIndex ? { ...block, ...updates } : block,
+                                    ),
                                 };
                                 setSteps(updatedSteps);
                             }

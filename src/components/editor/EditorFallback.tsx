@@ -31,7 +31,7 @@ const EditorFallback: React.FC<{
             const editorPaths = [
                 '@/components/editor/EditorPro',
                 '@/legacy/editor/EditorPro',
-                '@/components/editor/SchemaDrivenEditorResponsive'
+                '@/components/editor/SchemaDrivenEditorResponsive',
             ];
 
             for (const editorPath of editorPaths) {

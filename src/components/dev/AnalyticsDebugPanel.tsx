@@ -56,7 +56,7 @@ export const AnalyticsDebugPanel: React.FC<AnalyticsDebugPanelProps> = ({ autoRe
             borderRadius: 6,
             zIndex: 9999,
             maxWidth: 360,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.4)'
+            boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }} onClick={() => setExpanded(e => !e)}>
                 <strong>Analytics Debug</strong>

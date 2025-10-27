@@ -20,7 +20,7 @@ import React, {
     useMemo,
     createContext,
     useContext,
-    ReactNode
+    ReactNode,
 } from 'react';
 import { appLogger } from '@/utils/logger';
 import { useEditorCore, useEditorElements, EditorElement } from '../core/EditorCore';
@@ -95,7 +95,7 @@ class WebSocketManager {
     constructor(
         private url: string,
         private onMessage: (event: CollaborationEvent) => void,
-        private onConnectionChange: (connected: boolean) => void
+        private onConnectionChange: (connected: boolean) => void,
     ) { }
 
     connect(): Promise<void> {
@@ -239,7 +239,7 @@ class OperationalTransform {
                 ...op1,
                 id: `merged_${op1.id}_${op2.id}`,
                 data: { ...op1.data, ...op2.data },
-                timestamp: new Date(Math.max(op1.timestamp.getTime(), op2.timestamp.getTime()))
+                timestamp: new Date(Math.max(op1.timestamp.getTime(), op2.timestamp.getTime())),
             };
             return { op1: mergedOp, op2: null };
         }
@@ -307,7 +307,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
     websocketUrl,
     sessionId: initialSessionId,
     enableOfflineSupport = true,
-    syncInterval = 5000
+    syncInterval = 5000,
 }) => {
     const { core } = useEditorCore();
     const { elements, updateElement, addElement, deleteElement } = useEditorElements();
@@ -362,7 +362,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             operationQueue.current.forEach(op => {
                 wsManager.current?.send({
                     type: 'operation',
-                    data: op
+                    data: op,
                 });
             });
             operationQueue.current = [];
@@ -373,7 +373,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
     const handleRemoteOperation = useCallback((remoteOp: Operation) => {
         // Check for conflicts with local operations
         const localOps = operations.filter(op =>
-            Math.abs(op.timestamp.getTime() - remoteOp.timestamp.getTime()) < 1000
+            Math.abs(op.timestamp.getTime() - remoteOp.timestamp.getTime()) < 1000,
         );
 
         let finalOperation = remoteOp;
@@ -416,13 +416,13 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
 
             case 'move':
                 updateElement(operation.elementId, {
-                    position: operation.data.position
+                    position: operation.data.position,
                 });
                 break;
 
             case 'resize':
                 updateElement(operation.elementId, {
-                    size: operation.data.size
+                    size: operation.data.size,
                 });
                 break;
         }
@@ -435,7 +435,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             ...opData,
             id: `op_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             userId: currentUser.id,
-            timestamp: new Date()
+            timestamp: new Date(),
         };
 
         // Apply locally first
@@ -446,7 +446,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         if (isConnected && wsManager.current) {
             wsManager.current.send({
                 type: 'operation',
-                data: operation
+                data: operation,
             });
         } else if (enableOfflineSupport) {
             operationQueue.current.push(operation);
@@ -463,7 +463,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             color: currentUser.color || '#3b82f6',
             isActive: true,
             lastUpdate: new Date(),
-            ...presenceUpdate
+            ...presenceUpdate,
         };
 
         presence.set(currentUser.id, newPresence);
@@ -471,7 +471,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         if (isConnected && wsManager.current) {
             wsManager.current.send({
                 type: 'presence-update',
-                data: newPresence
+                data: newPresence,
             });
         }
     }, [currentUser, presence, isConnected]);
@@ -492,7 +492,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         if (isConnected && wsManager.current) {
             wsManager.current.send({
                 type: 'conflict-resolution',
-                data: { conflictId, resolution }
+                data: { conflictId, resolution },
             });
         }
     }, [conflicts, applyOperation, isConnected]);
@@ -513,7 +513,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             if (isConnected && wsManager.current) {
                 wsManager.current.send({
                     type: 'update-permissions',
-                    data: { userId, permissions }
+                    data: { userId, permissions },
                 });
             }
         }
@@ -532,7 +532,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         // Request initial sync
         wsManager.current.send({
             type: 'sync-request',
-            data: { timestamp: new Date().toISOString() }
+            data: { timestamp: new Date().toISOString() },
         });
 
     }, [websocketUrl, handleWebSocketMessage, handleConnectionChange]);
@@ -560,7 +560,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         if (syncData.elements) {
             // Replace local elements with server state
             core.setState({
-                elements: syncData.elements
+                elements: syncData.elements,
             });
         }
 
@@ -583,7 +583,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
                 if (wsManager.current) {
                     wsManager.current.send({
                         type: 'sync-request',
-                        data: { timestamp: new Date().toISOString() }
+                        data: { timestamp: new Date().toISOString() },
                     });
                 }
             }, syncInterval);
@@ -602,9 +602,9 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         if (!operation || operation.userId !== currentUser?.id) return;
 
         // Create inverse operation
-        let inverseOp: Partial<Operation> = {
+        const inverseOp: Partial<Operation> = {
             type: operation.type,
-            elementId: operation.elementId
+            elementId: operation.elementId,
         };
 
         switch (operation.type) {
@@ -636,7 +636,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             sendOperation({
                 type: operation.type,
                 elementId: operation.elementId,
-                data: operation.data
+                data: operation.data,
             });
         }
     }, [operations, sendOperation]);
@@ -656,7 +656,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         conflicts,
         resolveConflict,
         hasPermission,
-        updateUserPermissions
+        updateUserPermissions,
     };
 
     return (
@@ -685,7 +685,7 @@ interface UserAvatarsProps {
 export const UserAvatars: React.FC<UserAvatarsProps> = ({
     maxVisible = 5,
     showOfflineUsers = false,
-    className = ''
+    className = '',
 }) => {
     const { users, currentUser } = useCollaboration();
 
@@ -719,7 +719,7 @@ export const UserAvatars: React.FC<UserAvatarsProps> = ({
                         fontWeight: 'bold',
                         border: `2px solid ${user.isOnline ? '#10b981' : '#6b7280'}`,
                         position: 'relative',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
                     }}
                     title={`${user.name} (${user.isOnline ? 'online' : 'offline'})`}
                 >
@@ -738,7 +738,7 @@ export const UserAvatars: React.FC<UserAvatarsProps> = ({
                                 height: '10px',
                                 backgroundColor: '#10b981',
                                 borderRadius: '50%',
-                                border: '2px solid white'
+                                border: '2px solid white',
                             }}
                         />
                     )}
@@ -757,7 +757,7 @@ export const UserAvatars: React.FC<UserAvatarsProps> = ({
                         justifyContent: 'center',
                         color: 'white',
                         fontSize: '11px',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
                     }}
                 >
                     +{remainingCount}
@@ -791,7 +791,7 @@ export const SharedCursors: React.FC = () => {
                             top: user.cursor.y,
                             pointerEvents: 'none',
                             zIndex: 10000,
-                            transform: 'translate(-2px, -2px)'
+                            transform: 'translate(-2px, -2px)',
                         }}
                     >
                         <svg width="20" height="20" viewBox="0 0 20 20">
@@ -811,7 +811,7 @@ export const SharedCursors: React.FC = () => {
                                 borderRadius: '4px',
                                 fontSize: '11px',
                                 fontWeight: 'bold',
-                                whiteSpace: 'nowrap'
+                                whiteSpace: 'nowrap',
                             }}
                         >
                             {presence.get(cursor.userId)?.name || 'Unknown'}
@@ -840,7 +840,7 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ classN
                     width: '8px',
                     height: '8px',
                     borderRadius: '50%',
-                    backgroundColor: isConnected ? '#10b981' : '#ef4444'
+                    backgroundColor: isConnected ? '#10b981' : '#ef4444',
                 }}
             />
             <span style={{ fontSize: '12px', color: '#6b7280' }}>
@@ -855,7 +855,7 @@ export const CollaborationStatus: React.FC<CollaborationStatusProps> = ({ classN
                         padding: '2px 6px',
                         borderRadius: '12px',
                         fontSize: '11px',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
                     }}
                 >
                     {conflicts.length} conflicts

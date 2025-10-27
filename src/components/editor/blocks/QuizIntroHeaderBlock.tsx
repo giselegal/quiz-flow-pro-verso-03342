@@ -36,7 +36,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   if (isDev && verbose) {
     // Evitar logar em todo render: usa raf para coalescer
     requestAnimationFrame(() => {
-      // eslint-disable-next-line no-console
+       
       appLogger.debug('🔍 [QuizIntroHeaderBlock] Propriedades recebidas', {
         properties: block.properties,
         id: block.id,
@@ -47,7 +47,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   // ✅ USAR useEffect para detectar mudanças nas propriedades
   React.useEffect(() => {
     if (isDev && verbose) {
-      // eslint-disable-next-line no-console
+       
       appLogger.debug('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
         blockId: block.id,
         logoUrl: block.properties.logoUrl,
@@ -163,7 +163,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         isStickyEffective ? 'sticky top-0 z-50' : '',
         enableAnimation ? 'transition-colors' : '',
         customCssClass,
-        className
+        className,
       )}
       style={mainContainerStyle}
     >
@@ -176,11 +176,11 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         {showBackButton && (
           <button
             className={cn(
-              "p-2 rounded-full hover:bg-gray-100/50",
-              enableAnimation ? "transition-colors" : "",
-              backButtonPosition === 'left' ? "absolute left-4 top-1/2 -translate-y-1/2" :
-                backButtonPosition === 'right' ? "absolute right-4 top-1/2 -translate-y-1/2" :
-                  "absolute left-4 top-1/2 -translate-y-1/2"
+              'p-2 rounded-full hover:bg-gray-100/50',
+              enableAnimation ? 'transition-colors' : '',
+              backButtonPosition === 'left' ? 'absolute left-4 top-1/2 -translate-y-1/2' :
+                backButtonPosition === 'right' ? 'absolute right-4 top-1/2 -translate-y-1/2' :
+                  'absolute left-4 top-1/2 -translate-y-1/2',
             )}
             style={{ backgroundColor: backgroundColor ? `${backgroundColor}dd` : '#E5DDD5' }}
             aria-label={backButtonText}
@@ -261,8 +261,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
               aria-valuemax={progressMax || 100}
               aria-valuenow={Math.min(progressValue || 0, progressMax || 100)}
               className={cn(
-                "relative w-full overflow-hidden rounded-full",
-                enableAnimation ? "transition-all duration-500" : ""
+                'relative w-full overflow-hidden rounded-full',
+                enableAnimation ? 'transition-all duration-500' : '',
               )}
               style={{
                 backgroundColor: progressBackgroundColor,
@@ -271,8 +271,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             >
               <div
                 className={cn(
-                  "h-full flex-1",
-                  enableAnimation ? "transition-all duration-500 ease-out" : ""
+                  'h-full flex-1',
+                  enableAnimation ? 'transition-all duration-500 ease-out' : '',
                 )}
                 style={{
                   width: `${Math.min(progressValue || 0, progressMax || 100)}%`,
@@ -288,8 +288,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
                 <div
                   key={index}
                   className={cn(
-                    "w-3 h-3 rounded-full",
-                    enableAnimation ? "transition-colors duration-300" : ""
+                    'w-3 h-3 rounded-full',
+                    enableAnimation ? 'transition-colors duration-300' : '',
                   )}
                   style={{
                     backgroundColor: index < (progressValue || 0) ? progressColor : progressBackgroundColor,
@@ -312,8 +312,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
                   />
                   <path
                     className={cn(
-                      "stroke-current",
-                      enableAnimation ? "transition-all duration-500" : ""
+                      'stroke-current',
+                      enableAnimation ? 'transition-all duration-500' : '',
                     )}
                     style={{ color: progressColor }}
                     strokeWidth="3"
@@ -351,7 +351,7 @@ const LogoImage: React.FC<LogoImageProps> = ({
   alt = 'Logo',
   width = 96,
   height = 96,
-  enableAnimation = true
+  enableAnimation = true,
 }) => {
   const { src: imageSrc, isLoading } = useImageWithFallback(src, {
     width,
@@ -368,9 +368,9 @@ const LogoImage: React.FC<LogoImageProps> = ({
       alt={alt}
       style={{ width: `${width}px`, height: `${height}px` }}
       className={cn(
-        "object-contain",
-        enableAnimation ? "transition-all duration-300" : "",
-        isLoading ? "opacity-75" : ""
+        'object-contain',
+        enableAnimation ? 'transition-all duration-300' : '',
+        isLoading ? 'opacity-75' : '',
       )}
     />
   );
@@ -400,8 +400,8 @@ const IntroImage: React.FC<IntroImageProps> = ({ src, alt, width, height }) => {
       width={width}
       height={height}
       className={cn(
-        "object-cover w-full max-w-lg h-auto rounded-xl shadow",
-        isLoading ? "opacity-75" : ""
+        'object-cover w-full max-w-lg h-auto rounded-xl shadow',
+        isLoading ? 'opacity-75' : '',
       )}
     />
   );
@@ -410,7 +410,7 @@ const IntroImage: React.FC<IntroImageProps> = ({ src, alt, width, height }) => {
 // Memoização com comparação customizada para evitar re-render quando apenas handlers mudam
 function areEqual(
   prev: Readonly<QuizIntroHeaderBlockProps>,
-  next: Readonly<QuizIntroHeaderBlockProps>
+  next: Readonly<QuizIntroHeaderBlockProps>,
 ) {
   const pb = prev.block as any;
   const nb = next.block as any;

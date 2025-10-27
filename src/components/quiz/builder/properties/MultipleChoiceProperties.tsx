@@ -42,7 +42,7 @@ export const MultipleChoiceProperties: React.FC<MultipleChoicePropertiesProps> =
           onChange={e =>
             handleUpdate(
               'options',
-              e.target.value.split('\n').filter(opt => opt.trim())
+              e.target.value.split('\n').filter(opt => opt.trim()),
             )
           }
           placeholder="Opção 1\nOpção 2\nOpção 3"

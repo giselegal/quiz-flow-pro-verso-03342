@@ -269,8 +269,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
         optionId,
         questionNumber,
         timestamp: Date.now(),
-        wasSelected
-      }
+        wasSelected,
+      },
     }));
 
     if (multipleSelection) {
@@ -282,8 +282,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
             optionId,
             questionNumber,
             remainingSelections: newSelections.length,
-            timestamp: Date.now()
-          }
+            timestamp: Date.now(),
+          },
         }));
       } else {
         newSelections = [...selectedOptionIds, optionId];
@@ -294,8 +294,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
             questionNumber,
             totalSelections: newSelections.length,
             isMultiple: true,
-            timestamp: Date.now()
-          }
+            timestamp: Date.now(),
+          },
         }));
       }
     } else {
@@ -307,8 +307,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           optionId,
           questionNumber,
           selectionMode: 'single',
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       }));
     }
 
@@ -326,8 +326,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           error,
           questionNumber,
           selectedCount: newSelections.length,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       }));
     } else {
       window.dispatchEvent(new CustomEvent('quiz-selection-validated', {
@@ -335,8 +335,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           questionNumber,
           selectedOptions: newSelections,
           totalSelected: newSelections.length,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       }));
     }
 
@@ -352,8 +352,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
             questionNumber,
             selectedOption: optionId,
             delay: autoAdvanceDelay,
-            timestamp: Date.now()
-          }
+            timestamp: Date.now(),
+          },
         }));
         onAnswer?.(newSelectedOptions);
         onNext?.();
@@ -376,8 +376,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           selectedCount: selectedOptionIds.length,
           requiredMin: minSelections,
           requiredMax: maxSelections,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       }));
       return;
     }
@@ -391,8 +391,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
         selectedOptions: selectedOptionIds,
         totalSelected: selectedOptionIds.length,
         multipleSelection,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     }));
 
     onAnswer?.(selectedOptions);
@@ -507,7 +507,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     deviceView || 'desktop',
     'tight',
     'full',
-    className
+    className,
   );
 
   return (

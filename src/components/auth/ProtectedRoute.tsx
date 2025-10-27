@@ -13,7 +13,7 @@ interface ProtectedRouteProps {
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   path,
   component: Component,
-  requireAuth = true
+  requireAuth = true,
 }) => {
   console.log('🔒 ProtectedRoute: INICIANDO para path:', path);
 

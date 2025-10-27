@@ -76,7 +76,7 @@ export interface EditablePropInfo {
  */
 export function createEditableStepProps(
     data: QuizStep,
-    overrides?: Partial<EditableStepProps>
+    overrides?: Partial<EditableStepProps>,
 ): EditableStepProps {
     return {
         data,
@@ -87,6 +87,6 @@ export function createEditableStepProps(
         canMoveUp: true,
         canMoveDown: true,
         canDelete: true,
-        ...overrides
+        ...overrides,
     };
 }

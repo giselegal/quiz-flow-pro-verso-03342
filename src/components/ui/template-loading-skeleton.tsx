@@ -8,10 +8,10 @@ interface TemplateLoadingSkeletonProps {
 
 export const TemplateLoadingSkeleton: React.FC<TemplateLoadingSkeletonProps> = ({ 
   className,
-  steps = 10
+  steps = 10,
 }) => {
   return (
-    <div className={cn("flex flex-col h-screen bg-background", className)}>
+    <div className={cn('flex flex-col h-screen bg-background', className)}>
       {/* Header Skeleton */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between">

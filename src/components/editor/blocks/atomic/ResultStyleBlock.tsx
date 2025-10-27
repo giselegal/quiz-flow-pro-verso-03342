@@ -11,7 +11,7 @@ import { useResult } from '@/contexts/ResultContext';
 export default function ResultStyleBlock({
     block,
     isSelected,
-    onClick
+    onClick,
 }: AtomicBlockProps) {
     // 🎯 Tentar usar context (modo production) ou fallback (modo editor)
     let calculations, styleConfig;
@@ -37,7 +37,7 @@ export default function ResultStyleBlock({
     const mockTopStyles = [
         { key: 'classico', displayKey: 'clássico', name: 'Clássico', percentage: 35, score: 15 },
         { key: 'elegante', displayKey: 'elegante', name: 'Elegante', percentage: 28, score: 12 },
-        { key: 'natural', displayKey: 'natural', name: 'Natural', percentage: 23, score: 10 }
+        { key: 'natural', displayKey: 'natural', name: 'Natural', percentage: 23, score: 10 },
     ];
 
     // Usar dados reais ou mock
@@ -85,7 +85,7 @@ export default function ResultStyleBlock({
                                         style={{
                                             backgroundColor: color,
                                             width: `${style.percentage}%`,
-                                            opacity: 1 - (index * 0.2) // Fade progressivo
+                                            opacity: 1 - (index * 0.2), // Fade progressivo
                                         }}
                                     />
                                 </div>

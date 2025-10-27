@@ -87,7 +87,7 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
       'text-right': textAlign === 'right',
     },
     isSelected && 'ring-2 ring-blue-500 ring-opacity-50 rounded-lg',
-    className
+    className,
   );
 
   const containerStyle = {
@@ -178,7 +178,7 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
                 {/* Decorative Element */}
                 <div
                   className="absolute bottom-0 left-0 w-full h-1"
-                  style={{ backgroundColor: accentColor + '20' }}
+                  style={{ backgroundColor: `${accentColor  }20` }}
                 ></div>
               </div>
             ))}
