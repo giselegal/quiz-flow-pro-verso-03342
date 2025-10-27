@@ -518,6 +518,34 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         return true; // habilitado por padrão
     }, []);
 
+    // Vista unificada de steps: quando Provider está presente, ler blocos diretamente do Provider (fonte única)
+    const providerStepsMap = editorCtx?.state?.stepBlocks as Record<string, any[]> | undefined;
+    const stepsView = useMemo(() => {
+        if (!providerStepsMap) return steps;
+        const adaptBlocks = (arr: any[]) => (arr || []).map(b => ({
+            id: b.id,
+            type: b.type,
+            content: b.content || {},
+            properties: b.properties || {},
+            order: b.order || 0,
+            parentId: b.parentId || null,
+        }));
+        if (!steps || steps.length === 0) {
+            const keys = Object.keys(providerStepsMap).sort();
+            return keys.map((key, idx) => ({
+                id: key,
+                type: 'question',
+                order: idx + 1,
+                blocks: adaptBlocks(providerStepsMap[key]),
+            })) as EditableQuizStep[];
+        }
+        return steps.map(s => ({
+            ...s,
+            blocks: adaptBlocks(providerStepsMap[s.id] || s.blocks || []),
+        }));
+    }, [providerStepsMap, steps]);
+    const navAnalysis = useMemo(() => buildNavigationMap(stepsView.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [stepsView]);
+
     // Componente de cabeçalho fixo
     const FixedProgressHeader: React.FC<{ config: any; steps: EditableQuizStep[]; currentStepId: string }> = ({ config, steps, currentStepId }) => {
         if (!config.showLogo && !config.progressEnabled) return null;
@@ -1024,33 +1052,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Layout responsivo (tabs legacy removidos)
 
     const [navOpen, setNavOpen] = useState(false);
-    // Vista unificada de steps: quando Provider está presente, ler blocos diretamente do Provider (fonte única)
-    const providerStepsMap = editorCtx?.state?.stepBlocks as Record<string, any[]> | undefined;
-    const stepsView = useMemo(() => {
-        if (!providerStepsMap) return steps;
-        const adaptBlocks = (arr: any[]) => (arr || []).map(b => ({
-            id: b.id,
-            type: b.type,
-            content: b.content || {},
-            properties: b.properties || {},
-            order: b.order || 0,
-            parentId: b.parentId || null,
-        }));
-        if (!steps || steps.length === 0) {
-            const keys = Object.keys(providerStepsMap).sort();
-            return keys.map((key, idx) => ({
-                id: key,
-                type: 'question',
-                order: idx + 1,
-                blocks: adaptBlocks(providerStepsMap[key]),
-            })) as EditableQuizStep[];
-        }
-        return steps.map(s => ({
-            ...s,
-            blocks: adaptBlocks(providerStepsMap[s.id] || s.blocks || []),
-        }));
-    }, [providerStepsMap, steps]);
-    const navAnalysis = useMemo(() => buildNavigationMap(stepsView.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [stepsView]);
 
     // ==========================
     // Gestão de Etapas (Add / Reorder / Delete)
