@@ -3331,11 +3331,11 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = React.memo(({ 
 
     // Debounce para não repintar runtime a cada digitação
     React.useEffect(() => {
-        const base = stepsView || steps;
+        const base = steps;
         if (debounceRef.current) window.clearTimeout(debounceRef.current);
         debounceRef.current = window.setTimeout(() => setDebouncedSteps(base), 400);
         return () => { if (debounceRef.current) window.clearTimeout(debounceRef.current); };
-    }, [stepsView, steps]);
+    }, [steps]);
 
     // Persistir preferência de modo
     React.useEffect(() => {
