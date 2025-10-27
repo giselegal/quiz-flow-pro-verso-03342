@@ -42,10 +42,12 @@ export function createLogger(options: LoggerOptions = {}) {
     };
 
     const base = {
-        debug: (msg: any, data?: any) => shouldLog('debug') && console.debug(format('debug', msg), data || ''),
-        info: (msg: any, data?: any) => shouldLog('info') && console.info(format('info', msg), data || ''),
-        warn: (msg: any, data?: any) => shouldLog('warn') && console.warn(format('warn', msg), data || ''),
-        error: (msg: any, data?: any) => console.error(format('error', msg), data || ''),
+        // Aceita argumentos adicionais para compatibilidade retroativa.
+        // Preferir usar (message: string, meta?: object) nos novos pontos de log.
+        debug: (msg: any, ...rest: any[]) => shouldLog('debug') && console.debug(format('debug', msg), ...rest),
+        info: (msg: any, ...rest: any[]) => shouldLog('info') && console.info(format('info', msg), ...rest),
+        warn: (msg: any, ...rest: any[]) => shouldLog('warn') && console.warn(format('warn', msg), ...rest),
+        error: (msg: any, ...rest: any[]) => console.error(format('error', msg), ...rest),
     };
 
     return base;
