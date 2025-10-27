@@ -22,6 +22,7 @@ import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
 import { TemplateRegistry } from '@/services/TemplateRegistry';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
+import blockAliasMap from '@/config/block-aliases.json';
 
 export type TemplateSource =
   | 'normalized-json'
@@ -207,66 +208,7 @@ export class TemplateLoader {
 
       if (rawBlocks.length) {
         // Caminho 1: JSON no formato blocks[]
-        const typeMap: Record<string, string> = {
-          // CTA e botões
-          CTAButton: 'cta-inline',
-          ctabutton: 'cta-inline',
-          'cta-section-inline': 'cta-inline',
-          // Títulos e textos
-          header: 'heading-inline',
-          title: 'heading-inline',
-          headline: 'heading-inline',
-          'headline-inline': 'heading-inline',
-          subtitle: 'text-inline',
-          description: 'text-inline',
-          paragraph: 'text-inline',
-          // Imagens
-          logo: 'image-inline',
-          'image-display': 'image-display-inline',
-          // Progresso/loader
-          progress: 'progress-inline',
-          'progress-bar': 'progress-inline',
-          loading: 'transition-loader',
-          spinner: 'transition-loader',
-          // Perguntas e opções
-          'options-grid': 'options-grid',
-          'options grid': 'options-grid',
-          'option-grid': 'options-grid',
-          options: 'options-grid',
-          question: 'question-text',
-          'quiz-question': 'question-text',
-          'quiz-options-grid': 'options-grid',
-          // Transição
-          transition: 'transition-title',
-          'transition-hero': 'transition-hero',
-          'transition-title': 'transition-title',
-          'transition-text': 'transition-text',
-          'transition-loader': 'transition-loader',
-          'transition-progress': 'transition-progress',
-          // Resultado/Oferta
-          'result-display': 'result-display',
-          'result-card-inline': 'result-card-inline',
-          'result.headline': 'result-header',
-          'result.secondaryList': 'result-secondary-styles',
-          'offer-hero-section': 'offer-hero',
-          'offer-header': 'offer-header',
-          offer: 'offer-header',
-          testimonials: 'offer-testimonials',
-          'testimonials-inline': 'offer-testimonials',
-          'testimonial-card': 'testimonial-card-inline',
-          // Preços/garantia/FAQ
-          price: 'offer-pricing-table',
-          'pricing-card': 'offer-pricing-table',
-          pricing: 'offer-pricing-table',
-          guarantee: 'guarantee',
-          faq: 'offer-faq-section',
-          // Forms/dados
-          survey: 'lead-form',
-          'quiz-demographic': 'lead-form',
-          'welcome-form-block': 'intro-form',
-          // Vídeo como imagem placeholder
-          video: 'image-display-inline',
-        };
+        const typeMap: Record<string, string> = blockAliasMap as Record<string, string>;
         blocks = rawBlocks.map((b: any, idx: number) => ({
           id: String(b.id || `${normalizedKey}-block-${idx}`),
           type: (typeMap[b.type] || b.type || 'text-inline') as any,
@@ -470,7 +412,7 @@ export class TemplateLoader {
               blocks = [
                 { id: `${normalizedKey}-transition-title`, type: 'transition-title', order: 0, properties: {}, content: { text: title } },
                 { id: `${normalizedKey}-transition-text`, type: 'transition-text', order: 1, properties: {}, content: { text } },
-                { id: `${normalizedKey}-transition-cta`, type: 'CTAButton', order: 2, properties: {}, content: { label: nextLabel, href: '#next', variant: 'primary', size: 'large' } },
+                { id: `${normalizedKey}-transition-cta`, type: 'cta-inline', order: 2, properties: {}, content: { label: nextLabel, href: '#next', variant: 'primary', size: 'large' } },
               ] as any[];
             }
           }

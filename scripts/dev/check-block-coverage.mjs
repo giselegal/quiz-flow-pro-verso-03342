@@ -158,6 +158,19 @@ function collectUniversalRendererTypes() {
   return Array.from(out).sort();
 }
 
+function loadAliasMap() {
+  try {
+    const p = path.join(ROOT, 'src', 'config', 'block-aliases.json');
+    if (fs.existsSync(p)) {
+      const txt = fs.readFileSync(p, 'utf8');
+      return JSON.parse(txt) || {};
+    }
+  } catch (e) {
+    console.warn('⚠️ Falha ao carregar block-aliases.json:', e);
+  }
+  return {};
+}
+
 function main() {
   const usedRaw = collectTemplateTypes();
 
@@ -293,6 +306,14 @@ function main() {
     'testimonials-component-real': 'testimonials',
     'value-stack-inline': 'benefits',
   };
+
+  // Mescla aliases centralizados (quando existir) para evitar drift
+  try {
+    const externalAliases = loadAliasMap();
+    Object.assign(BLOCK_TYPE_MAP, externalAliases);
+  } catch (e) {
+    console.warn('⚠️ Não foi possível mesclar block-aliases.json no BLOCK_TYPE_MAP:', e);
+  }
 
   const IGNORE_TYPES = new Set([
     // Palavras que aparecem como "type" em outras estruturas (não são block types)
