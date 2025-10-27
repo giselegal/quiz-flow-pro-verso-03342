@@ -65,6 +65,24 @@ const DropZoneBefore: React.FC<{ blockId: string; blockIndex: number; stepId: st
     );
 };
 
+/**
+ * 🎯 CONTAINER SLOT - Área droppable ao final da lista de filhos de um container
+ * Fornece um alvo explícito com id `container-slot:{parentId}` para aninhar novos itens
+ */
+const ContainerSlotDroppable: React.FC<{ parentId: string }> = ({ parentId }) => {
+    const id = `container-slot:${parentId}`;
+    const { setNodeRef, isOver } = useDroppable({ id, data: { parentId } });
+    return (
+        <div
+            ref={setNodeRef}
+            className={cn(
+                'h-3 w-full rounded-sm transition-colors',
+                isOver ? 'bg-blue-300/50' : 'bg-transparent hover:bg-blue-200/40',
+            )}
+        />
+    );
+};
+
 const Inner: React.FC<BlockRowProps> = (props) => {
     const { block, byBlock, selectedBlockId, isMultiSelected, handleBlockClick, renderBlockPreview, allBlocks, removeBlock, stepId, setBlockPendingDuplicate, setTargetStepId, setDuplicateModalOpen } = props;
     // Defensive defaults for optional props
@@ -163,6 +181,14 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                                     {allBlocks.filter(b => b.parentId === block.id).length === 0 && (
                                         <div className="text-[10px] text-slate-400 italic">Solte aqui para aninhar</div>
                                     )}
+                                    {/* Drop zone antes do primeiro filho, quando existir pelo menos um */}
+                                    {allBlocks.filter(b => b.parentId === block.id).length > 0 && (
+                                        <DropZoneBefore
+                                            blockId={allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order)[0].id}
+                                            blockIndex={allBlocks.findIndex(b => b.id === allBlocks.filter(c => c.parentId === block.id).sort((a, b) => a.order - b.order)[0].id)}
+                                            stepId={stepId}
+                                        />
+                                    )}
                                     {allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order).map(child => (
                                         <MemoBlockRow
                                             key={child.id}
@@ -184,7 +210,7 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                                             setHoverContainerId={setHoverContainerId}
                                         />
                                     ))}
-                                    <div id={`container-slot:${block.id}`} className="h-2 w-full" />
+                                    <ContainerSlotDroppable parentId={block.id} />
                                 </div>
                             </SortableContext>
                         </div>

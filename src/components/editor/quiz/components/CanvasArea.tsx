@@ -53,6 +53,9 @@ export interface CanvasAreaProps {
      * Padrão: true (compatibilidade)
      */
     enableInlinePreview?: boolean;
+    // Realce de container alvo durante DnD
+    hoverContainerId?: string | null;
+    setHoverContainerId?: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -79,6 +82,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     StyleResultCard,
     OfferMap,
     enableInlinePreview = true,
+    hoverContainerId,
+    setHoverContainerId,
 }) => {
     // Compat: sempre calcular virtualização dos blocos raiz (sem parentId)
     const rawBlocks = Array.isArray(selectedStep?.blocks) ? (selectedStep!.blocks as any[]) : [];
@@ -251,6 +256,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                             setBlockPendingDuplicate={setBlockPendingDuplicate || (() => { })}
                                             setTargetStepId={setTargetStepId || (() => { })}
                                             setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
+                                            hoverContainerId={hoverContainerId}
+                                            setHoverContainerId={setHoverContainerId}
                                         />
                                     ))}
                                     {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
