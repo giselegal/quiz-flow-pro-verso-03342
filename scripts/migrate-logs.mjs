@@ -1,13 +1,10 @@
 #!/usr/bin/env node
-/**
- * Migra console.log/warn/error para appLogger.debug/warn/error.
- * Uso:
- *   node scripts/migrate-logs.mjs [glob]
- * Ex.:
- *   node scripts/migrate-logs.mjs "src/components/editor/**/*.tsx"
- * Flags:
- *   --dry     Apenas exibe arquivos que seriam alterados
- */
+// Migra console.log/warn/error para appLogger.debug/warn/error.
+// Uso:
+//   node scripts/migrate-logs.mjs [glob]
+// Ex.: node scripts/migrate-logs.mjs src/components/editor/**/*.tsx
+// Flags:
+//   --dry     Apenas exibe arquivos que seriam alterados
 import fs from 'node:fs';
 import path from 'node:path';
 import { glob } from 'glob';
