@@ -10,7 +10,7 @@ import { BlockComponent, EditableQuizStep } from '../types';
 import { useEditorMode, usePreviewDevice } from '@/contexts/editor/EditorModeContext';
 import { UnifiedStepRenderer } from './UnifiedStepRenderer';
 import { smartMigration } from '@/utils/stepDataMigration';
-import BlockRow from './BlockRow';
+import MemoBlockRow from './BlockRow';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { Badge } from '@/components/ui/badge';
 
@@ -232,7 +232,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                             </div>
 
                             {/* Se BlockRow for fornecido, usar caminho de renderização virtualizado simples */}
-                            {BlockRow ? (
+                            {(virtualizationEnabled || BlockRow) ? (
                                 <div data-testid="canvas-legacy-virtualized">
                                     {virtualizationEnabled && (
                                         <div className="mb-2 text-xs text-muted-foreground">
@@ -240,26 +240,28 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                         </div>
                                     )}
                                     {vTopSpacer > 0 && <div style={{ height: vTopSpacer }} />}
-                                    {vVisible.map((block: any) => (
-                                        <BlockRow
-                                            key={block.id}
-                                            block={block}
-                                            allBlocks={rootBlocks}
-                                            // Defaults defensivos para compat com testes
-                                            byBlock={{}}
-                                            selectedBlockId={selectedBlockId || ''}
-                                            isMultiSelected={isMultiSelected || ((id: string) => false)}
-                                            handleBlockClick={handleBlockClick || ((e: any) => { })}
-                                            renderBlockPreview={renderBlockPreview || ((b: any) => null)}
-                                            removeBlock={removeBlock || (() => { })}
-                                            stepId={migratedStep.id}
-                                            setBlockPendingDuplicate={setBlockPendingDuplicate || (() => { })}
-                                            setTargetStepId={setTargetStepId || (() => { })}
-                                            setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
-                                            hoverContainerId={hoverContainerId}
-                                            setHoverContainerId={setHoverContainerId}
-                                        />
-                                    ))}
+                                    {vVisible.map((block: any) => {
+                                        const RowComp = (BlockRow as any) || (MemoBlockRow as any);
+                                        return (
+                                            <RowComp
+                                                key={block.id}
+                                                block={block}
+                                                allBlocks={rootBlocks}
+                                                // Defaults defensivos para compat com testes
+                                                byBlock={{}}
+                                                selectedBlockId={selectedBlockId || ''}
+                                                isMultiSelected={isMultiSelected || ((id: string) => false)}
+                                                handleBlockClick={handleBlockClick || ((e: any) => { })}
+                                                renderBlockPreview={renderBlockPreview || ((b: any) => null)}
+                                                removeBlock={removeBlock || (() => { })}
+                                                stepId={migratedStep.id}
+                                                setBlockPendingDuplicate={setBlockPendingDuplicate || (() => { })}
+                                                setTargetStepId={setTargetStepId || (() => { })}
+                                                setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
+                                                hoverContainerId={hoverContainerId}
+                                                setHoverContainerId={setHoverContainerId}
+                                            />);
+                                    })}
                                     {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
                                 </div>
                             ) : (

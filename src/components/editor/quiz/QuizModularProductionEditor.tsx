@@ -1631,7 +1631,14 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const children = getChildren(all, id);
         // Construir hash de dependências (alterações de dados relevantes invalidam cache)
         const expanded = type === 'container' ? (expandedContainers ? expandedContainers.has(id) : false) : false; // guarda defensiva
+        // Para containers, fingerprint hierárquico leve dos filhos (id, ordem, props, content)
         const childIds = type === 'container' ? children.map(c => c.id).join(',') : '';
+        const childHash = type === 'container' ? children.map(c => [
+            c.id,
+            String(c.order ?? 0),
+            shallowFingerprint(c.properties || {}),
+            shallowFingerprint(c.content || {}),
+        ].join(':')).join(';') : '';
         // Fingerprint leve do contexto dinâmico (evita serialização profunda)
         const dynamicContextHash = dynamicContextKey(id);
         const key = [
@@ -1641,6 +1648,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             block.parentId || '',
             expanded ? '1' : '0',
             childIds,
+            childHash,
             shallowFingerprint(properties || {}),
             shallowFingerprint(content || {}),
             dynamicContextHash,
