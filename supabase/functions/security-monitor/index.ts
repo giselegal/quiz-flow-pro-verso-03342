@@ -3,7 +3,7 @@
  * Monitora métricas de segurança e performance do sistema
  */
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -45,7 +45,7 @@ serve(async (req) => {
   try {
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
     const url = new URL(req.url);
@@ -72,8 +72,8 @@ serve(async (req) => {
           JSON.stringify({ error: 'Invalid action' }),
           { 
             status: 400, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+          },
         );
     }
 
@@ -82,12 +82,12 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : String(error)
+        message: error instanceof Error ? error.message : String(error),
       }),
       { 
         status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 });
@@ -115,15 +115,15 @@ async function handleHealthCheck(supabase: any) {
         database: {
           status: dbError ? 'critical' : 'healthy',
           latency: dbLatency,
-          error: dbError?.message
+          error: dbError?.message,
         },
         edge_functions: {
           status: funcError ? 'warning' : 'healthy',
           latency: funcLatency,
-          error: funcError?.message
-        }
+          error: funcError?.message,
+        },
       },
-      overall_status: (dbError || funcError) ? 'degraded' : 'healthy'
+      overall_status: (dbError || funcError) ? 'degraded' : 'healthy',
     };
 
     // Record health metrics
@@ -132,14 +132,14 @@ async function handleHealthCheck(supabase: any) {
       p_metric_name: 'database_latency',
       p_metric_value: dbLatency,
       p_metric_unit: 'ms',
-      p_status: status.services.database.status
+      p_status: status.services.database.status,
     });
 
     return new Response(
       JSON.stringify(status),
       { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
     );
 
   } catch (error) {
@@ -148,12 +148,12 @@ async function handleHealthCheck(supabase: any) {
       JSON.stringify({ 
         status: 'critical',
         error: error instanceof Error ? error.message : String(error),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -168,14 +168,14 @@ async function handleRecordMetric(req: Request, supabase: any) {
       p_metric_value: metric.metric_value,
       p_metric_unit: metric.metric_unit || 'ms',
       p_status: metric.status || 'healthy',
-      p_metadata: metric.metadata || {}
+      p_metadata: metric.metadata || {},
     });
 
     if (error) throw error;
 
     return new Response(
       JSON.stringify({ success: true, metric_id: data }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -184,8 +184,8 @@ async function handleRecordMetric(req: Request, supabase: any) {
       JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -197,14 +197,14 @@ async function handleLogSecurityEvent(req: Request, supabase: any) {
     const { data, error } = await supabase.rpc('log_security_event', {
       p_event_type: event.event_type,
       p_event_data: event.event_data || {},
-      p_severity: event.severity || 'medium'
+      p_severity: event.severity || 'medium',
     });
 
     if (error) throw error;
 
     return new Response(
       JSON.stringify({ success: true, event_id: data }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -213,8 +213,8 @@ async function handleLogSecurityEvent(req: Request, supabase: any) {
       JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -241,7 +241,7 @@ async function handleGetMetrics(req: Request, supabase: any) {
 
     return new Response(
       JSON.stringify({ metrics: data }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -250,8 +250,8 @@ async function handleGetMetrics(req: Request, supabase: any) {
       JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -298,15 +298,15 @@ async function handleSystemStatus(supabase: any) {
         warning_metrics: warningMetrics.length,
         security_events: events?.length || 0,
         critical_events: criticalEvents.length,
-        high_severity_events: highEvents.length
+        high_severity_events: highEvents.length,
       },
       recent_critical_metrics: criticalMetrics.slice(0, 5),
-      recent_critical_events: criticalEvents.slice(0, 5)
+      recent_critical_events: criticalEvents.slice(0, 5),
     };
 
     return new Response(
       JSON.stringify(status),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -315,8 +315,8 @@ async function handleSystemStatus(supabase: any) {
       JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }

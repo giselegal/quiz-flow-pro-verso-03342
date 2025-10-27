@@ -3,7 +3,7 @@
  * Sistema automatizado de backup de dados críticos
  */
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -31,7 +31,7 @@ const criticalTables = [
   'component_instances',
   'quiz_sessions',
   'quiz_results',
-  'security_audit_logs'
+  'security_audit_logs',
 ];
 
 // Tabelas opcionais (métricas, logs temporários)
@@ -39,7 +39,7 @@ const optionalTables = [
   'real_time_metrics',
   'system_health_metrics', 
   'user_behavior_patterns',
-  'ai_optimization_recommendations'
+  'ai_optimization_recommendations',
 ];
 
 serve(async (req) => {
@@ -51,7 +51,7 @@ serve(async (req) => {
   try {
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
     const url = new URL(req.url);
@@ -81,8 +81,8 @@ serve(async (req) => {
           JSON.stringify({ error: 'Invalid action' }),
           { 
             status: 400, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+          },
         );
     }
 
@@ -91,12 +91,12 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : String(error)
+        message: error instanceof Error ? error.message : String(error),
       }),
       { 
         status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 });
@@ -106,7 +106,7 @@ async function handleCreateBackup(req: Request, supabase: any) {
     type = 'full', 
     tables = [],
     user_id,
-    description 
+    description, 
   } = await req.json();
 
   let backupId: string;
@@ -129,7 +129,7 @@ async function handleCreateBackup(req: Request, supabase: any) {
         tables: tablesToBackup,
         user_id,
         description,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       });
 
     if (insertError) throw insertError;
@@ -143,7 +143,7 @@ async function handleCreateBackup(req: Request, supabase: any) {
       .from('backup_jobs')
       .update({ 
         status: 'running', 
-        started_at: new Date().toISOString() 
+        started_at: new Date().toISOString(), 
       })
       .eq('id', backupId);
 
@@ -194,7 +194,7 @@ async function handleCreateBackup(req: Request, supabase: any) {
         status: 'completed',
         completed_at: new Date().toISOString(),
         size_bytes: totalSize,
-        backup_data: backupData // Em produção, seria uma URL do storage
+        backup_data: backupData, // Em produção, seria uma URL do storage
       })
       .eq('id', backupId);
 
@@ -210,9 +210,9 @@ async function handleCreateBackup(req: Request, supabase: any) {
         type,
         tables_count: tablesToBackup.length,
         size_bytes: totalSize,
-        user_id
+        user_id,
       },
-      p_severity: 'low'
+      p_severity: 'low',
     });
 
     return new Response(
@@ -222,9 +222,9 @@ async function handleCreateBackup(req: Request, supabase: any) {
         type,
         tables: tablesToBackup,
         size_bytes: totalSize,
-        message: 'Backup created successfully'
+        message: 'Backup created successfully',
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -238,7 +238,7 @@ async function handleCreateBackup(req: Request, supabase: any) {
           .update({
             status: 'failed',
             completed_at: new Date().toISOString(),
-            error_message: error instanceof Error ? error.message : String(error)
+            error_message: error instanceof Error ? error.message : String(error),
           })
           .eq('id', backupId);
       } catch (updateError) {
@@ -249,12 +249,12 @@ async function handleCreateBackup(req: Request, supabase: any) {
     return new Response(
       JSON.stringify({ 
         error: 'Backup creation failed',
-        message: error instanceof Error ? error.message : String(error)
+        message: error instanceof Error ? error.message : String(error),
       }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -276,8 +276,8 @@ async function handleRestoreBackup(req: Request, supabase: any) {
         JSON.stringify({ error: 'Backup not found or incomplete' }),
         { 
           status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+        },
       );
     }
 
@@ -290,11 +290,11 @@ async function handleRestoreBackup(req: Request, supabase: any) {
             type: backup.type,
             created_at: backup.created_at,
             tables: backup.tables,
-            size_bytes: backup.size_bytes
+            size_bytes: backup.size_bytes,
           },
-          message: 'Set confirm=true to proceed with restore'
+          message: 'Set confirm=true to proceed with restore',
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 
@@ -303,9 +303,9 @@ async function handleRestoreBackup(req: Request, supabase: any) {
       p_event_type: 'backup_restore_started',
       p_event_data: {
         backup_id,
-        restore_tables: tables.length > 0 ? tables : backup.tables
+        restore_tables: tables.length > 0 ? tables : backup.tables,
       },
-      p_severity: 'high'
+      p_severity: 'high',
     });
 
     const restoredTables = [];
@@ -339,9 +339,9 @@ async function handleRestoreBackup(req: Request, supabase: any) {
         success: true,
         backup_id,
         restored_tables: restoredTables,
-        message: `Restored ${restoredTables.length} tables from backup`
+        message: `Restored ${restoredTables.length} tables from backup`,
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -349,12 +349,12 @@ async function handleRestoreBackup(req: Request, supabase: any) {
     return new Response(
       JSON.stringify({ 
         error: 'Backup restore failed',
-        message: error instanceof Error ? error.message : String(error)
+        message: error instanceof Error ? error.message : String(error),
       }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -381,7 +381,7 @@ async function handleListBackups(req: Request, supabase: any) {
 
     return new Response(
       JSON.stringify({ backups: data }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -390,8 +390,8 @@ async function handleListBackups(req: Request, supabase: any) {
       JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -411,7 +411,7 @@ async function handleBackupStatus(req: Request, supabase: any) {
 
     return new Response(
       JSON.stringify({ backup: data }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -420,8 +420,8 @@ async function handleBackupStatus(req: Request, supabase: any) {
       JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -435,9 +435,9 @@ async function handleScheduleBackup(req: Request, supabase: any) {
       message: 'Backup scheduling not implemented yet',
       received_schedule: schedule,
       type,
-      tables
+      tables,
     }),
-    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   );
 }
 
@@ -456,9 +456,9 @@ async function handleCleanupOldBackups(supabase: any) {
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: 'Old backups cleaned up successfully'
+        message: 'Old backups cleaned up successfully',
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -467,8 +467,8 @@ async function handleCleanupOldBackups(supabase: any) {
       JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }

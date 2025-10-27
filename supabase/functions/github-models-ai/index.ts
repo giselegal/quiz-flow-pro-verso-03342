@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts"
+import { serve } from 'https://deno.land/std@0.208.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
 
 const corsHeaders = {
@@ -61,12 +61,12 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: error instanceof Error ? error.message : String(error),
-        details: 'Failed to process AI request'
+        details: 'Failed to process AI request',
       }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
     )
   }
 })
@@ -75,7 +75,7 @@ async function handleGenerate(
   messages: AIRequest['messages'], 
   maxTokens: number, 
   temperature: number,
-  githubToken: string
+  githubToken: string,
 ): Promise<Response> {
   const response = await fetch('https://models.inference.ai.azure.com/chat/completions', {
     method: 'POST',
@@ -105,14 +105,14 @@ async function handleGenerate(
       promptTokens: data.usage.prompt_tokens,
       completionTokens: data.usage.completion_tokens,
       totalTokens: data.usage.total_tokens,
-    } : undefined
+    } : undefined,
   }
 
   console.log('✅ AI Response generated successfully')
 
   return new Response(
     JSON.stringify(aiResponse),
-    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   )
 }
 
@@ -152,7 +152,7 @@ Crie 5-8 etapas incluindo introdução, 3-5 perguntas e resultado final.
 
   const messages = [
     { role: 'system' as const, content: 'Você é um especialista em criação de quizzes. Sempre retorne JSON válido.' },
-    { role: 'user' as const, content: quizPrompt }
+    { role: 'user' as const, content: quizPrompt },
   ]
 
   const response = await fetch('https://models.inference.ai.azure.com/chat/completions', {
@@ -185,7 +185,7 @@ Crie 5-8 etapas incluindo introdução, 3-5 perguntas e resultado final.
     
     return new Response(
       JSON.stringify(quizData),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     )
   } catch (parseError) {
     console.error('❌ Failed to parse quiz JSON:', parseError, content)
@@ -223,7 +223,7 @@ Crie 5-8 etapas com perguntas relevantes para o contexto fornecido.
 
   const messages = [
     { role: 'system' as const, content: 'Você é um especialista em funis de conversão. Sempre retorne JSON válido.' },
-    { role: 'user' as const, content: funnelPrompt }
+    { role: 'user' as const, content: funnelPrompt },
   ]
 
   const response = await fetch('https://models.inference.ai.azure.com/chat/completions', {
@@ -256,7 +256,7 @@ Crie 5-8 etapas com perguntas relevantes para o contexto fornecido.
     
     return new Response(
       JSON.stringify(stepsData),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     )
   } catch (parseError) {
     console.error('❌ Failed to parse funnel JSON:', parseError, content)
@@ -275,7 +275,7 @@ Mantenha o tom e estilo adequados para o contexto fornecido.
 
   const messages = [
     { role: 'system' as const, content: 'Você é um especialista em copywriting. Melhore textos mantendo o contexto e tom.' },
-    { role: 'user' as const, content: improvePrompt }
+    { role: 'user' as const, content: improvePrompt },
   ]
 
   const response = await fetch('https://models.inference.ai.azure.com/chat/completions', {
@@ -303,6 +303,6 @@ Mantenha o tom e estilo adequados para o contexto fornecido.
 
   return new Response(
     JSON.stringify({ improvedText }),
-    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   )
 }

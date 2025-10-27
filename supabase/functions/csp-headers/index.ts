@@ -3,7 +3,7 @@
  * Configura Content Security Policy headers para segurança
  */
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,51 +17,51 @@ const cspDirectives = {
     "'self'",
     "'unsafe-inline'", // Permitido para React/Vite
     "'unsafe-eval'", // Permitido para desenvolvimento
-    "https://cdn.jsdelivr.net",
-    "https://unpkg.com",
-    "https://cdnjs.cloudflare.com",
-    "https://fonts.googleapis.com",
-    "https://www.google-analytics.com",
-    "https://www.googletagmanager.com"
+    'https://cdn.jsdelivr.net',
+    'https://unpkg.com',
+    'https://cdnjs.cloudflare.com',
+    'https://fonts.googleapis.com',
+    'https://www.google-analytics.com',
+    'https://www.googletagmanager.com',
   ],
   'style-src': [
     "'self'",
     "'unsafe-inline'",
-    "https://fonts.googleapis.com",
-    "https://cdn.jsdelivr.net",
-    "https://unpkg.com"
+    'https://fonts.googleapis.com',
+    'https://cdn.jsdelivr.net',
+    'https://unpkg.com',
   ],
   'img-src': [
     "'self'",
-    "data:",
-    "blob:",
-    "https:",
-    "http:"
+    'data:',
+    'blob:',
+    'https:',
+    'http:',
   ],
   'font-src': [
     "'self'",
-    "https://fonts.gstatic.com",
-    "https://cdn.jsdelivr.net"
+    'https://fonts.gstatic.com',
+    'https://cdn.jsdelivr.net',
   ],
   'connect-src': [
     "'self'",
-    "https://pwtjuuhchtbzttrzoutw.supabase.co",
-    "https://*.supabase.co",
-    "wss://*.supabase.co",
-    "https://api.github.com",
-    "https://api.openai.com"
+    'https://pwtjuuhchtbzttrzoutw.supabase.co',
+    'https://*.supabase.co',
+    'wss://*.supabase.co',
+    'https://api.github.com',
+    'https://api.openai.com',
   ],
   'media-src': [
     "'self'",
-    "https:",
-    "data:",
-    "blob:"
+    'https:',
+    'data:',
+    'blob:',
   ],
   'object-src': ["'none'"],
   'base-uri': ["'self'"],
   'form-action': ["'self'"],
   'frame-ancestors': ["'none'"],
-  'upgrade-insecure-requests': []
+  'upgrade-insecure-requests': [],
 };
 
 const securityHeaders = {
@@ -70,7 +70,7 @@ const securityHeaders = {
     .map(([directive, sources]) => 
       sources.length > 0 
         ? `${directive} ${sources.join(' ')}`
-        : directive
+        : directive,
     )
     .join('; '),
   
@@ -91,11 +91,11 @@ const securityHeaders = {
     'camera=()',
     'microphone=()',
     'geolocation=()',
-    'interest-cohort=()'
+    'interest-cohort=()',
   ].join(', '),
   
   // X-XSS-Protection (legacy but still useful)
-  'X-XSS-Protection': '1; mode=block'
+  'X-XSS-Protection': '1; mode=block',
 };
 
 serve(async (req) => {
@@ -123,8 +123,8 @@ serve(async (req) => {
           JSON.stringify({ error: 'Invalid action' }),
           { 
             status: 400, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+          },
         );
     }
 
@@ -133,12 +133,12 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : String(error)
+        message: error instanceof Error ? error.message : String(error),
       }),
       { 
         status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 });
@@ -147,15 +147,15 @@ function handleGetHeaders() {
   return new Response(
     JSON.stringify({ 
       headers: securityHeaders,
-      info: 'Security headers for production deployment'
+      info: 'Security headers for production deployment',
     }),
     { 
       headers: { 
         ...corsHeaders, 
         ...securityHeaders,
-        'Content-Type': 'application/json' 
-      } 
-    }
+        'Content-Type': 'application/json', 
+      }, 
+    },
   );
 }
 
@@ -170,8 +170,8 @@ async function handleValidateCSP(req: Request) {
     const urlObj = new URL(testUrl);
     const isAllowed = cspDirectives['connect-src'].some(src => 
       src === "'self'" || 
-      src === "https:" || 
-      testUrl.startsWith(src.replace('*', ''))
+      src === 'https:' || 
+      testUrl.startsWith(src.replace('*', '')),
     );
     
     if (!isAllowed) {
@@ -179,7 +179,7 @@ async function handleValidateCSP(req: Request) {
         directive: 'connect-src',
         blocked_uri: testUrl,
         line_number: null,
-        column_number: null
+        column_number: null,
       });
     }
     
@@ -188,21 +188,21 @@ async function handleValidateCSP(req: Request) {
         valid: violations.length === 0,
         violations,
         tested_url: testUrl,
-        user_agent: userAgent
+        user_agent: userAgent,
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
     return new Response(
       JSON.stringify({ 
         error: 'Validation failed',
-        message: error instanceof Error ? error.message : String(error)
+        message: error instanceof Error ? error.message : String(error),
       }),
       { 
         status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -218,7 +218,7 @@ async function handleCSPViolationReport(req: Request) {
       user_agent: req.headers.get('User-Agent'),
       ip_address: req.headers.get('CF-Connecting-IP') || 
                   req.headers.get('X-Forwarded-For') || 
-                  'unknown'
+                  'unknown',
     });
     
     // Aqui você poderia salvar no banco de dados ou enviar para um serviço de monitoramento
@@ -226,9 +226,9 @@ async function handleCSPViolationReport(req: Request) {
     return new Response(
       JSON.stringify({ 
         status: 'violation_logged',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -237,8 +237,8 @@ async function handleCSPViolationReport(req: Request) {
       JSON.stringify({ error: 'Failed to process report' }),
       { 
         status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }

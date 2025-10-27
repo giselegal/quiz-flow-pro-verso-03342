@@ -3,7 +3,7 @@
  * Sistema de controle de taxa de requisições para prevenir abuso
  */
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -46,7 +46,7 @@ serve(async (req) => {
   try {
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
     const url = new URL(req.url);
@@ -70,8 +70,8 @@ serve(async (req) => {
           JSON.stringify({ error: 'Invalid action' }),
           { 
             status: 400, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+          },
         );
     }
 
@@ -80,12 +80,12 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : String(error)
+        message: error instanceof Error ? error.message : String(error),
       }),
       { 
         status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 });
@@ -94,7 +94,7 @@ async function handleRateLimitCheck(req: Request, supabase: any) {
   const { 
     identifier, 
     endpoint, 
-    user_id 
+    user_id, 
   } = await req.json();
 
   try {
@@ -104,8 +104,8 @@ async function handleRateLimitCheck(req: Request, supabase: any) {
         JSON.stringify({ error: 'Unknown endpoint' }),
         { 
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+        },
       );
     }
 
@@ -145,9 +145,9 @@ async function handleRateLimitCheck(req: Request, supabase: any) {
           user_id,
           ip_address: req.headers.get('CF-Connecting-IP') || 
                       req.headers.get('X-Forwarded-For'),
-          user_agent: req.headers.get('User-Agent')
+          user_agent: req.headers.get('User-Agent'),
         },
-        p_severity: 'high'
+        p_severity: 'high',
       });
 
       return new Response(
@@ -157,7 +157,7 @@ async function handleRateLimitCheck(req: Request, supabase: any) {
           limit: config.limit,
           window: config.window,
           reset_time: resetTime,
-          retry_after: resetTime - now
+          retry_after: resetTime - now,
         }),
         { 
           status: 429,
@@ -167,9 +167,9 @@ async function handleRateLimitCheck(req: Request, supabase: any) {
             'Retry-After': (resetTime - now).toString(),
             'X-RateLimit-Limit': config.limit.toString(),
             'X-RateLimit-Remaining': Math.max(0, config.limit - current).toString(),
-            'X-RateLimit-Reset': resetTime.toString()
-          } 
-        }
+            'X-RateLimit-Reset': resetTime.toString(),
+          }, 
+        },
       );
     }
 
@@ -184,7 +184,7 @@ async function handleRateLimitCheck(req: Request, supabase: any) {
         window: config.window,
         reset_time: resetTime,
         last_request: now,
-        user_id
+        user_id,
       });
 
     if (upsertError) {
@@ -198,7 +198,7 @@ async function handleRateLimitCheck(req: Request, supabase: any) {
         limit: config.limit,
         window: config.window,
         reset_time: resetTime,
-        remaining: config.limit - current
+        remaining: config.limit - current,
       }),
       { 
         headers: { 
@@ -206,9 +206,9 @@ async function handleRateLimitCheck(req: Request, supabase: any) {
           'Content-Type': 'application/json',
           'X-RateLimit-Limit': config.limit.toString(),
           'X-RateLimit-Remaining': Math.max(0, config.limit - current).toString(),
-          'X-RateLimit-Reset': resetTime.toString()
-        } 
-      }
+          'X-RateLimit-Reset': resetTime.toString(),
+        }, 
+      },
     );
 
   } catch (error) {
@@ -217,12 +217,12 @@ async function handleRateLimitCheck(req: Request, supabase: any) {
       JSON.stringify({ 
         allowed: true, // Fail open para não quebrar funcionalidade
         error: 'Rate limit check failed',
-        message: error instanceof Error ? error.message : String(error)
+        message: error instanceof Error ? error.message : String(error),
       }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -243,12 +243,12 @@ async function handleRateLimitReset(req: Request, supabase: any) {
     await supabase.rpc('log_security_event', {
       p_event_type: 'rate_limit_reset',
       p_event_data: { identifier, endpoint },
-      p_severity: 'low'
+      p_severity: 'low',
     });
 
     return new Response(
       JSON.stringify({ success: true }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -257,8 +257,8 @@ async function handleRateLimitReset(req: Request, supabase: any) {
       JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -284,7 +284,7 @@ async function handleRateLimitStatus(req: Request, supabase: any) {
 
     return new Response(
       JSON.stringify({ rate_limits: data }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
 
   } catch (error) {
@@ -293,8 +293,8 @@ async function handleRateLimitStatus(req: Request, supabase: any) {
       JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+      },
     );
   }
 }
@@ -303,8 +303,8 @@ function handleRateLimitConfig() {
   return new Response(
     JSON.stringify({ 
       rate_limits: rateLimits,
-      info: 'Current rate limit configuration'
+      info: 'Current rate limit configuration',
     }),
-    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   );
 }
