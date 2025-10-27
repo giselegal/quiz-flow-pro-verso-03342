@@ -11,6 +11,7 @@ import { useLogger } from '@/utils/logger/SmartLogger';
 import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
 import OptionsGridBlock from './OptionsGridBlock';
 import TextInlineBlock from './TextInlineBlock';
+import QuestionNavigationBlock from '@/components/editor/blocks/atomic/QuestionNavigationBlock';
 import ButtonInlineBlock from './ButtonInlineBlock';
 import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
 import MentorSectionInlineBlock from './MentorSectionInlineBlock';
@@ -134,6 +135,11 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'quiz-title': QuizTitleBlock,
   'options-grid': OptionsGridBlock,
   'text-inline': TextInlineBlock,
+  // Navegação de perguntas (usado em steps de perguntas e como alias em alguns templates)
+  'question-navigation': QuestionNavigationBlock,
+  'quiz-navigation': QuestionNavigationBlock,
+  // Alias comum em templates antigos
+  'question-title': TextInlineBlock,
   'button-inline': ButtonInlineBlock,
   'form-input': FormInputBlock,
   'fashion-ai-generator': FashionAIGeneratorBlock,
