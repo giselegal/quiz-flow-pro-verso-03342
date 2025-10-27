@@ -715,10 +715,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     setSelectedStepIdUnified(built[0]?.id || 'step-01');
                                     setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                                     setIsLoading(false);
-                                    appLogger.debug('✅ Master JSON carregado e convertido com sucesso. Steps:', built.length);
+                                    appLogger.debug('✅ Master JSON carregado e convertido com sucesso.', { steps: built.length });
                                     return;
                                 } else {
-                                    appLogger.warn('⚠️ Falha ao carregar master JSON:', resp.status, resp.statusText);
+                                    appLogger.warn('⚠️ Falha ao carregar master JSON', { status: resp.status, statusText: resp.statusText });
                                 }
                             } catch (e) {
                                 appLogger.warn('⚠️ Erro ao carregar/usar master JSON, caindo no fallback enriquecido:', e);
@@ -900,7 +900,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam) || [];
                                         }
                                     } catch (e) {
-                                        appLogger.warn('⚠️ Falha ao construir blocks enriquecidos para', stepId, e);
+                                        appLogger.warn('⚠️ Falha ao construir blocks enriquecidos para', { stepId, error: e });
                                         const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
                                         blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam) || [];
                                     }
@@ -3418,7 +3418,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
 
     // ✅ FASE 1 (P0): Calcular runtimeMap usando transformação unificada
     const runtimeMap = React.useMemo(() => {
-        appLogger.debug(`🔄 [Render #${renderCountRef.current}] Recalculando runtimeMap com`, steps.length, 'steps');
+        appLogger.debug(`🔄 [Render #${renderCountRef.current}] Recalculando runtimeMap`, { steps: steps.length });
         return editorStepsToRuntimeMap(steps as any);
     }, [steps]);
 
