@@ -1203,21 +1203,36 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const addBlockToStep = useCallback((stepId: string, componentType: string) => {
         const component = COMPONENT_LIBRARY.find(c => c.type === componentType || c.blockType === componentType);
         if (!component) return;
-        addBlock(stepId, {
+        const newBlock = {
+            id: `${stepId}-${component.type}-${Date.now()}`,
             type: component.blockType || component.type,
+            order: 0,
+            parentId: null,
             properties: { ...component.defaultProps },
             content: { ...(component.defaultContent || {}) },
-        } as any);
-        // seleção do novo bloco: não temos id exato retornado; poderia ser aprimorado com retorno do hook
+        } as any;
+        if (editorCtx?.actions?.addBlockAtIndex) {
+            const current = steps.find(s => s.id === stepId);
+            const insertIndex = current ? (current.blocks?.length || 0) : 0;
+            editorCtx.actions.addBlockAtIndex(stepId, newBlock as any, insertIndex).then(() => {
+                setSelectedBlockIdUnified(newBlock.id);
+            });
+        } else {
+            addBlock(stepId, newBlock as any);
+        }
         setIsDirty(true);
         toastRef.current({ title: 'Componente adicionado', description: component.label });
-    }, [addBlock]);
+    }, [addBlock, editorCtx?.actions, steps]);
 
     // Remover bloco
     const removeBlock = useCallback((stepId: string, blockId: string) => {
-        removeBlockHook(stepId, blockId);
+        if (editorCtx?.actions?.removeBlock) {
+            editorCtx.actions.removeBlock(stepId, blockId);
+        } else {
+            removeBlockHook(stepId, blockId);
+        }
         if (effectiveSelectedBlockId === blockId) setSelectedBlockIdUnified('');
-    }, [removeBlockHook, effectiveSelectedBlockId, setSelectedBlockIdUnified]);
+    }, [removeBlockHook, effectiveSelectedBlockId, setSelectedBlockIdUnified, editorCtx?.actions]);
 
     // Duplicar bloco
     const duplicateBlock = useCallback((stepId: string, block: BlockComponent) => {
@@ -1246,13 +1261,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Atualizar propriedades do bloco
     const updateBlockProperties = useCallback((stepId: string, blockId: string, updates: Record<string, any>) => {
-        updateBlock(stepId, blockId, { properties: updates });
-    }, [updateBlock]);
+        if (editorCtx?.actions?.updateBlock) {
+            editorCtx.actions.updateBlock(stepId, blockId, { properties: updates });
+        } else {
+            updateBlock(stepId, blockId, { properties: updates });
+        }
+    }, [updateBlock, editorCtx?.actions]);
 
     // Atualizar conteúdo do bloco
     const updateBlockContent = useCallback((stepId: string, blockId: string, updates: Record<string, any>) => {
-        updateBlock(stepId, blockId, { content: updates });
-    }, [updateBlock]);
+        if (editorCtx?.actions?.updateBlock) {
+            editorCtx.actions.updateBlock(stepId, blockId, { content: updates });
+        } else {
+            updateBlock(stepId, blockId, { content: updates });
+        }
+    }, [updateBlock, editorCtx?.actions]);
 
     // Debounce de histórico removido.
     const scheduleHistoryPush = (next: EditableQuizStep[]) => { pushHistory(next); };
@@ -1392,24 +1415,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 }
             }
 
-            // Inserir bloco na posição
-            const updatedBlocks = [...currentStep.blocks];
-            updatedBlocks.splice(insertPosition, 0, newBlock);
-
-            // Reordenar todos os blocos
-            updatedBlocks.forEach((block, idx) => {
-                block.order = idx;
-            });
-
-            // Atualizar step
-            const updatedSteps = steps.map(step =>
-                step.id === curStepId
-                    ? { ...step, blocks: updatedBlocks }
-                    : step,
-            );
-
-            setSteps(updatedSteps);
-            pushHistory(updatedSteps);
+            // Inserir via Provider quando disponível; fallback local
+            if (editorCtx?.actions?.addBlockAtIndex) {
+                editorCtx.actions.addBlockAtIndex(curStepId, newBlock as any, insertPosition);
+            } else {
+                const updatedBlocks = [...currentStep.blocks];
+                updatedBlocks.splice(insertPosition, 0, newBlock as any);
+                updatedBlocks.forEach((block, idx) => { (block as any).order = idx; });
+                const updatedSteps = steps.map(step => step.id === curStepId ? { ...step, blocks: updatedBlocks } : step);
+                setSteps(updatedSteps);
+                pushHistory(updatedSteps);
+            }
             setSelectedBlockIdUnified(newBlockId);
             setIsDirty(true);
             toastRef.current({ title: 'Componente adicionado', description: `${component.label} inserido na posição ${insertPosition + 1}` });
