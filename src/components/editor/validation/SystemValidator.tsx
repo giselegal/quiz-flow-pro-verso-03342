@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
@@ -484,7 +485,7 @@ export const SystemValidator: React.FC<{
             setValidationResults(results);
             setHealthReport(health);
         } catch (error) {
-            console.error('Validation failed:', error);
+            appLogger.error('Validation failed:', error);
         } finally {
             setIsValidating(false);
         }

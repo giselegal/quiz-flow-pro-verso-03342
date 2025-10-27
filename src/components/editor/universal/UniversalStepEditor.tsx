@@ -11,6 +11,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE, FUNNEL_PERSISTENCE_SCHEMA } from '@/templates/quiz21StepsComplete';
 
 export interface UniversalStepEditorProps {
@@ -33,7 +34,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     showNavigation = true
 }) => {
     // 🚨 Console warning para desenvolvedores
-    console.warn(
+    appLogger.warn(
         '⚠️ DEPRECATED: UniversalStepEditor será removido em 01/nov/2025. ' +
         'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
     );
@@ -53,7 +54,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
         const loadStepData = () => {
             try {
                 setIsLoading(true);
-                console.log('🔍 Carregando dados para:', stepId, 'step number:', stepNumber);
+                appLogger.debug('🔍 Carregando dados para:', stepId, 'step number:', stepNumber);
 
                 // Buscar dados do step no template
                 const stepKey = `step-${stepNumber}`;
@@ -66,7 +67,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                         blocks: stepData
                     };
                     setCurrentStepData(stepInfo);
-                    console.log('✅ Dados do step carregados:', stepKey, {
+                    appLogger.debug('✅ Dados do step carregados:', stepKey, {
                         nome: stepInfo.name,
                         blocos: stepData.length,
                         primeiroBloco: stepData[0]
@@ -110,10 +111,10 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                     };
 
                     setCurrentStepData(fallbackData);
-                    console.warn('⚠️ Step não encontrado, usando fallback:', stepKey, fallbackData);
+                    appLogger.warn('⚠️ Step não encontrado, usando fallback:', stepKey, fallbackData);
                 }
             } catch (error) {
-                console.error('❌ Erro ao carregar step:', error);
+                appLogger.error('❌ Erro ao carregar step:', error);
                 setCurrentStepData({
                     blocks: [],
                     name: `Step ${stepNumber} (Erro)`,
@@ -232,18 +233,18 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
         // 🔍 Validar schema antes de salvar
         if (!validateFunnelSchema(saveData)) {
-            console.error('❌ Erro: Dados não seguem o FUNNEL_PERSISTENCE_SCHEMA');
+            appLogger.error('❌ Erro: Dados não seguem o FUNNEL_PERSISTENCE_SCHEMA');
             return;
         }
 
         onSave?.(stepId, saveData);
-        console.log('✅ Step salvo no formato FUNNEL_PERSISTENCE_SCHEMA:', saveData);
+        appLogger.debug('✅ Step salvo no formato FUNNEL_PERSISTENCE_SCHEMA:', saveData);
     };
 
     // 🔍 Função para validar se os dados seguem o FUNNEL_PERSISTENCE_SCHEMA
     const validateFunnelSchema = (data: any): boolean => {
         const schema = FUNNEL_PERSISTENCE_SCHEMA;
-        console.log('🔍 Validando dados contra FUNNEL_PERSISTENCE_SCHEMA:', {
+        appLogger.debug('🔍 Validando dados contra FUNNEL_PERSISTENCE_SCHEMA:', {
             schema: schema.persistence.dataStructure,
             data: data
         });
@@ -256,7 +257,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
             Array.isArray(data.funnel_data.blocks);
 
         if (!hasRequiredFields) {
-            console.warn('❌ Schema inválido: Campos obrigatórios ausentes');
+            appLogger.warn('❌ Schema inválido: Campos obrigatórios ausentes');
             setSchemaValidation({
                 isValid: false,
                 message: 'Schema inválido: Estrutura não conforme com FUNNEL_PERSISTENCE_SCHEMA'
@@ -264,7 +265,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
             return false;
         }
 
-        console.log('✅ Schema válido: Estrutura conforme FUNNEL_PERSISTENCE_SCHEMA');
+        appLogger.debug('✅ Schema válido: Estrutura conforme FUNNEL_PERSISTENCE_SCHEMA');
         setSchemaValidation({
             isValid: true,
             message: 'Schema válido: Conforme FUNNEL_PERSISTENCE_SCHEMA'
@@ -320,7 +321,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
             });
         }
 
-        console.log('🔄 Propriedade atualizada:', blockId, path, value);
+        appLogger.debug('🔄 Propriedade atualizada:', blockId, path, value);
         setHasUnsavedChanges(true);
     };
 
@@ -1255,7 +1256,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
         const autoSaveTimer = setTimeout(() => {
             handleSave();
             setHasUnsavedChanges(false);
-            console.log('💾 Auto-save executado');
+            appLogger.debug('💾 Auto-save executado');
         }, 2000); // Auto-save após 2 segundos de inatividade
 
         return () => clearTimeout(autoSaveTimer);
@@ -1269,7 +1270,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
         const handleBlockClick = () => {
             setSelectedBlockId(component.id);
             setSelectedBlockData(component);
-            console.log('🎯 Bloco selecionado:', component);
+            appLogger.debug('🎯 Bloco selecionado:', component);
         };
 
         const blockWrapper = (children: React.ReactNode) => (
@@ -1870,7 +1871,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
 
                             try {
                                 const componentData = JSON.parse(e.dataTransfer.getData('text/plain'));
-                                console.log('🎯 Componente solto:', componentData);
+                                appLogger.debug('🎯 Componente solto:', componentData);
 
                                 // Adicionar o novo componente à lista de blocos
                                 const newBlock = {
@@ -1884,9 +1885,9 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
                                 }));
 
                                 setHasUnsavedChanges(true);
-                                console.log('✅ Novo componente adicionado:', newBlock);
+                                appLogger.debug('✅ Novo componente adicionado:', newBlock);
                             } catch (error) {
-                                console.error('❌ Erro ao processar drop:', error);
+                                appLogger.error('❌ Erro ao processar drop:', error);
                             }
                         }}
                     >

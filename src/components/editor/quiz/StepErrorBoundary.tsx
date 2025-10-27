@@ -9,6 +9,7 @@
  */
 
 import React, { Component, ReactNode } from 'react';
+import { appLogger } from '@/utils/logger';
 import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -35,7 +36,7 @@ export class StepErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: any) {
-    console.error(`❌ Step ${this.props.stepId} crashed:`, error, errorInfo);
+    appLogger.error(`❌ Step ${this.props.stepId} crashed:`, error, errorInfo);
     this.setState({ errorInfo });
   }
 

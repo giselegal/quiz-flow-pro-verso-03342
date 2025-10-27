@@ -1,4 +1,5 @@
 import { useDroppable } from '@dnd-kit/core';
+import { appLogger } from '@/utils/logger';
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { generateUniqueId } from '@/utils/generateUniqueId';
@@ -46,7 +47,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       if (g.__DND_LOGS.has(key)) return;
       g.__DND_LOGS.add(key);
       // eslint-disable-next-line no-console
-      console.log('🎯 CanvasDropZone montado!', {
+      appLogger.debug('🎯 CanvasDropZone montado!', {
         id: droppableId,
         isEmpty,
         isOver,

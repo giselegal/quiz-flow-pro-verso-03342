@@ -7,6 +7,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import TransitionStep from '../../quiz/TransitionStep';
 import { EditableBlockWrapper } from './shared/EditableBlockWrapper';
 import { EditableStepProps } from './shared/EditableStepProps';
@@ -40,12 +41,12 @@ const EditableTransitionStep: React.FC<EditableTransitionStepProps> = ({
 
     // 🎪 Mock callback para onComplete (editor não deve avançar automaticamente)
     const mockOnComplete = useMemo(() => () => {
-        console.log('[Editor Mock] TransitionStep - Transição completada');
+        appLogger.debug('[Editor Mock] TransitionStep - Transição completada');
 
         if (isEditable) {
             // No editor, não fazemos transição automática
             // Apenas simulamos o comportamento para preview
-            console.log('[Editor Mock] Transição simulada (não avança automaticamente)');
+            appLogger.debug('[Editor Mock] Transição simulada (não avança automaticamente)');
             return;
         }
     }, [isEditable]);

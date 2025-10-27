@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useEditorReusableComponentsSimple } from '@/hooks/useEditorReusableComponents.simple';
 
 interface ReusableComponentsPanelProps {
@@ -36,10 +37,10 @@ const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = () => {
     components.filter(c => c.category === category);
   const getAvailableCategories = () => categories;
   const addReusableComponentToEditor = async (componentTypeKey: string, _stepNumber: number) => {
-    console.log('Adding component:', componentTypeKey);
+    appLogger.debug('Adding component:', componentTypeKey);
   };
   const applyComponentTemplate = (template: any) => {
-    console.log('Applying template:', template);
+    appLogger.debug('Applying template:', template);
   };
 
   const availableCategories = getAvailableCategories();
@@ -47,9 +48,9 @@ const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = () => {
   const handleAddComponent = async (componentTypeKey: string) => {
     try {
       await addReusableComponentToEditor(componentTypeKey, 1);
-      console.log('Component added:', componentTypeKey);
+      appLogger.debug('Component added:', componentTypeKey);
     } catch (error) {
-      console.error('Erro ao adicionar componente:', error);
+      appLogger.error('Erro ao adicionar componente:', error);
     }
   };
 

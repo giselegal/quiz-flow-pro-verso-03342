@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { appLogger } from '@/utils/logger';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -20,8 +21,8 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
   onUpdate,
 }) => {
   // ✅ Debug: Log das propriedades recebidas
-  console.log('🎛️ [IntroStepProperties] Propriedades recebidas:', properties);
-  console.log('🎛️ [IntroStepProperties] onUpdate função:', typeof onUpdate);
+  appLogger.debug('🎛️ [IntroStepProperties] Propriedades recebidas:', properties);
+  appLogger.debug('🎛️ [IntroStepProperties] onUpdate função:', typeof onUpdate);
   // ✅ Propriedades gerais do step
   const {
     title = 'Descubra Seu Estilo Predominante',

@@ -5,6 +5,7 @@
  */
 
 import { EditorPropertiesPanel } from '@/components/editor/unified/EditorPropertiesPanel';
+import { appLogger } from '@/utils/logger';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import React from 'react';
 
@@ -42,8 +43,8 @@ export const QuizPropertiesPanelModular: React.FC<QuizPropertiesPanelModularProp
             <EditorPropertiesPanel
               selectedBlock={selectedBlock}
               onBlockUpdate={onUpdate || (() => {})}
-              onBlockDelete={id => console.log('Delete:', id)}
-              onBlockDuplicate={id => console.log('Duplicate:', id)}
+              onBlockDelete={id => appLogger.debug('Delete:', id)}
+              onBlockDuplicate={id => appLogger.debug('Duplicate:', id)}
               previewMode={false}
             />
           ) : (

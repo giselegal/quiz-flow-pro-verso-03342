@@ -18,6 +18,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { SinglePropertiesPanel } from './SinglePropertiesPanel';
 import { UnifiedBlock } from '@/hooks/useUnifiedProperties';
 
@@ -93,11 +94,11 @@ export const PropertiesPanelDemo: React.FC<PropertiesPanelDemoProps> = ({
     };
 
     const handleDelete = () => {
-        console.log('🗑️ Deletar bloco:', selectedBlock.id);
+        appLogger.debug('🗑️ Deletar bloco:', selectedBlock.id);
     };
 
     const handleDuplicate = () => {
-        console.log('📋 Duplicar bloco:', selectedBlock.id);
+        appLogger.debug('📋 Duplicar bloco:', selectedBlock.id);
     };
 
     return (

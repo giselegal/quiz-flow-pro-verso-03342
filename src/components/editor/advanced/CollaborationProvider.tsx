@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Users, Wifi, WifiOff, Eye } from 'lucide-react';
@@ -108,12 +109,12 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
   }, []);
 
   const addComment = useCallback((blockId: string, content: string) => {
-    console.log('💬 Adding comment to block:', blockId, content);
+    appLogger.debug('💬 Adding comment to block:', blockId, content);
     // Implementation would handle real comments
   }, []);
 
   const resolveComment = useCallback((commentId: string) => {
-    console.log('✅ Resolving comment:', commentId);
+    appLogger.debug('✅ Resolving comment:', commentId);
     // Implementation would resolve comments
   }, []);
 

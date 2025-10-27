@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -212,7 +213,7 @@ export default function ModularQuestionStep({
             const asBlocks = blockComponentsToBlocks(comps);
             if (asBlocks.length) setFallbackBlocks(asBlocks as any);
         } catch (error) {
-            console.error(`❌ Erro ao carregar fallback blocks para ${stepKey}:`, error);
+            appLogger.error(`❌ Erro ao carregar fallback blocks para ${stepKey}:`, error);
         }
     }, [data?.id, blocks]);
 

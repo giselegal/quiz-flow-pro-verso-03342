@@ -1,4 +1,5 @@
 import React, { useEffect, useState, memo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { optimizedStorage, StorageOptimizer } from '@/utils/storageOptimization';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 import { devLog } from '@/utils/editorUtils';
@@ -57,7 +58,7 @@ const LocalStorageManager: React.FC<LocalStorageManagerProps> = memo(({
         });
       }
     } catch (error) {
-      console.error('Failed to get storage stats:', error);
+      appLogger.error('Failed to get storage stats:', error);
     }
   }, 5000);
 
@@ -75,7 +76,7 @@ const LocalStorageManager: React.FC<LocalStorageManagerProps> = memo(({
         setTimeout(updateStats, 1000);
       }
     } catch (error) {
-      console.error('Storage cleanup failed:', error);
+      appLogger.error('Storage cleanup failed:', error);
     } finally {
       setIsCleaningUp(false);
     }

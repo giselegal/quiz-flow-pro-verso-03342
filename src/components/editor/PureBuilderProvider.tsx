@@ -13,6 +13,7 @@
  */
 
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 // 🚀 BUILDER SYSTEM - Imports corrigidos para compatibilidade
 import type { Block } from '@/types/editor';
 import { getTemplateInfo } from '@/utils/funnelNormalizer';
@@ -128,12 +129,12 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
     totalSteps: number;
 }> => {
     if (!templateInfo) {
-        console.warn('⚠️ generateWithPureBuilder chamado sem templateInfo - retornando estrutura vazia');
+        appLogger.warn('⚠️ generateWithPureBuilder chamado sem templateInfo - retornando estrutura vazia');
         return { stepBlocks: {}, builderInstance: null, funnelConfig: { templateId: 'unknown', totalSteps: 0 }, totalSteps: 0 } as any;
     }
 
     if (!templateInfo.totalSteps || templateInfo.totalSteps <= 0) {
-        console.log('ℹ️ generateWithPureBuilder: totalSteps <= 0 (canvas vazio). Retornando estrutura vazia.');
+        appLogger.debug('ℹ️ generateWithPureBuilder: totalSteps <= 0 (canvas vazio). Retornando estrutura vazia.');
         return {
             stepBlocks: {},
             builderInstance: null,
@@ -149,7 +150,7 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
         };
     }
 
-    console.log('🏗️ Generating funnel with Pure Builder System...', {
+    appLogger.debug('🏗️ Generating funnel with Pure Builder System...', {
         funnelId,
         templateName: templateInfo.templateName,
         totalSteps: templateInfo.totalSteps
@@ -175,11 +176,11 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
         const safeTemplate = validTemplates.includes(templateName) ? templateName : 'quiz21StepsComplete'; // ⚡ Fallback para template completo
 
         if (safeTemplate !== templateName) {
-            console.warn(`⚠️ Template '${templateName}' não encontrado. Usando fallback: '${safeTemplate}'`);
+            appLogger.warn(`⚠️ Template '${templateName}' não encontrado. Usando fallback: '${safeTemplate}'`);
         }
 
         // 🚀 CARREGAMENTO OTIMIZADO COM AI-ENHANCED HYBRID TEMPLATE SERVICE
-        console.log(`🎯 Carregando ${totalSteps} templates usando AIEnhancedHybridTemplateService...`);
+        appLogger.debug(`🎯 Carregando ${totalSteps} templates usando AIEnhancedHybridTemplateService...`);
 
         const stepBlocks: Record<string, Block[]> = {};
 
@@ -203,14 +204,14 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
 
             // 🚀 CORREÇÃO CRÍTICA: Usar sistema funcional do /quiz-estilo
             // Carregar QUIZ_STYLE_21_STEPS_TEMPLATE diretamente
-            console.log('🎯 Carregando via sistema funcional (quiz-estilo)...');
+            appLogger.debug('🎯 Carregando via sistema funcional (quiz-estilo)...');
 
         } catch (aiError) {
-            console.warn('⚠️ Erro na inicialização da IA, usando fallback:', aiError);
+            appLogger.warn('⚠️ Erro na inicialização da IA, usando fallback:', aiError);
         }
 
         try {
-            console.log('✅ Template carregado com sucesso:', {
+            appLogger.debug('✅ Template carregado com sucesso:', {
                 availableSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE),
                 totalSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length
             });
@@ -219,7 +220,7 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
             Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).forEach(([stepKey, blocks]) => {
                 if (stepKey.startsWith('step-') && Array.isArray(blocks)) {
                     stepBlocks[stepKey] = blocks as Block[];
-                    console.log(`✅ Carregado ${stepKey}: ${blocks.length} blocos`);
+                    appLogger.debug(`✅ Carregado ${stepKey}: ${blocks.length} blocos`);
                 }
             });
 
@@ -244,7 +245,7 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
             }
 
         } catch (error) {
-            console.error('❌ Erro ao carregar QUIZ_STYLE_21_STEPS_TEMPLATE:', error);
+            appLogger.error('❌ Erro ao carregar QUIZ_STYLE_21_STEPS_TEMPLATE:', error);
 
             // Fallback completo em caso de erro
             for (let i = 1; i <= totalSteps; i++) {
@@ -265,7 +266,7 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
             }
         }
 
-        console.log(`✅ Templates carregados: ${Object.keys(stepBlocks).length}/${totalSteps} etapas`);
+        appLogger.debug(`✅ Templates carregados: ${Object.keys(stepBlocks).length}/${totalSteps} etapas`);
 
         // 🚀 CRIAR CONFIGURAÇÃO DINÂMICA
         const funnelConfig = {
@@ -286,7 +287,7 @@ const generateWithPureBuilder = async (funnelId: string, templateInfo: any): Pro
         };
 
     } catch (error) {
-        console.error('❌ Error with Pure Builder System:', error);
+        appLogger.error('❌ Error with Pure Builder System:', error);
         throw error;
     }
 };
@@ -341,7 +342,7 @@ export const PureBuilderProvider: React.FC<{
             if (!alreadyWarned && (import.meta as any).env?.DEV) {
                 (window as any).__PURE_BUILDER_DEPRECATED_WARNED__ = true;
                 // eslint-disable-next-line no-console
-                console.warn(
+                appLogger.warn(
                     '⚠️ PureBuilderProvider is deprecated and will be removed soon. Use SuperUnifiedProvider or usePureBuilderCompat.'
                 );
             }
@@ -351,7 +352,7 @@ export const PureBuilderProvider: React.FC<{
             if (!isInitialized.current) {
                 isInitialized.current = true;
 
-                console.log('🏗️ Initializing PureBuilderProvider with Builder System...', {
+                appLogger.debug('🏗️ Initializing PureBuilderProvider with Builder System...', {
                     providedFunnelId: funnelId
                 });
 
@@ -359,7 +360,7 @@ export const PureBuilderProvider: React.FC<{
 
                 // 🆕 CANVAS VAZIO: Se não há funnelId válido, inicializar canvas vazio
                 if (!funnelId || funnelId.trim() === '' || funnelId === 'undefined' || funnelId === 'null') {
-                    console.log('🆕 Canvas vazio: Iniciando editor sem template para criação do zero');
+                    appLogger.debug('🆕 Canvas vazio: Iniciando editor sem template para criação do zero');
 
                     // ✅ Configurar estado inicial vazio
                     setState(prev => ({
@@ -386,13 +387,13 @@ export const PureBuilderProvider: React.FC<{
                     }));
 
                     setTotalSteps(0);
-                    console.log('✅ Canvas vazio inicializado - usuário pode criar funil do zero');
+                    appLogger.debug('✅ Canvas vazio inicializado - usuário pode criar funil do zero');
                     return;
                 }
 
                 // ⚡ DINÂMICO: Se há funnelId válido, tentar primeiro API remota
                 const targetFunnelId = funnelId;
-                console.log('🎯 Usando targetFunnelId (API primeiro):', targetFunnelId);
+                appLogger.debug('🎯 Usando targetFunnelId (API primeiro):', targetFunnelId);
 
                 const abortController = new AbortController();
                 (window as any).__PURE_BUILDER_ABORT__ = abortController;
@@ -409,7 +410,7 @@ export const PureBuilderProvider: React.FC<{
                         setState(prev => ({ ...prev, apiStatus: 'loading', apiError: null }));
                         const normalized = await funnelApiClient.getFunnel(targetFunnelId, { signal: abortController.signal });
                         if (normalized.isEmpty) {
-                            console.log('ℹ️ API retornou funil vazio ou inexistente - tratar como canvas vazio');
+                            appLogger.debug('ℹ️ API retornou funil vazio ou inexistente - tratar como canvas vazio');
                             setState(prev => ({ ...prev, apiStatus: 'empty' }));
                             return { normalized, templateInfo: { baseId: 'empty-canvas', totalSteps: 0, templateName: 'Canvas Vazio (API)' }, totalSteps: 0, stepBlocks: {}, funnelConfig: normalized.funnelConfig };
                         }
@@ -422,7 +423,7 @@ export const PureBuilderProvider: React.FC<{
                             totalSteps: normalized.totalSteps
                         };
                     } catch (error: any) {
-                        console.warn('⚠️ Falha ao carregar via API, caindo para templates locais:', error);
+                        appLogger.warn('⚠️ Falha ao carregar via API, caindo para templates locais:', error);
                         setState(prev => ({ ...prev, apiStatus: 'error', apiError: error?.message || 'API error' }));
                         return {};
                     }
@@ -431,9 +432,9 @@ export const PureBuilderProvider: React.FC<{
                 const loadFromLocalTemplates = async () => {
                     return getTemplateInfo(targetFunnelId)
                         .then(templateInfo => {
-                            console.log('📋 Template info carregado (local fallback):', templateInfo);
+                            appLogger.debug('📋 Template info carregado (local fallback):', templateInfo);
                             if (!templateInfo || !templateInfo.totalSteps || templateInfo.totalSteps === 0) {
-                                console.log('🛡️ Template com zero steps - inicializando canvas vazio sem gerar (fallback local)');
+                                appLogger.debug('🛡️ Template com zero steps - inicializando canvas vazio sem gerar (fallback local)');
                                 return { stepBlocks: {}, builderInstance: null, funnelConfig: { templateId: templateInfo?.baseId || 'empty-canvas', totalSteps: 0, theme: 'modern-elegant', allowBackward: true, saveProgress: true, showProgress: false }, totalSteps: 0, templateInfo };
                             }
                             return generateWithPureBuilder(targetFunnelId, templateInfo).then(result => ({ ...result, templateInfo }));
@@ -455,7 +456,7 @@ export const PureBuilderProvider: React.FC<{
                             templateLoading: false,
                             loadedSteps: new Set(Array.from({ length: templateTotalSteps }, (_, i) => i + 1))
                         }));
-                        console.log(`✅ Pure Builder (API) initialized: ${templateTotalSteps} etapas`);
+                        appLogger.debug(`✅ Pure Builder (API) initialized: ${templateTotalSteps} etapas`);
                         return;
                     }
 
@@ -473,10 +474,10 @@ export const PureBuilderProvider: React.FC<{
                                 templateLoading: false,
                                 loadedSteps: new Set(Array.from({ length: templateTotalSteps }, (_, i) => i + 1))
                             }));
-                            console.log(`✅ Pure Builder (fallback local) initialized: ${templateTotalSteps} etapas`);
+                            appLogger.debug(`✅ Pure Builder (fallback local) initialized: ${templateTotalSteps} etapas`);
                         })
                         .catch(error => {
-                            console.error('❌ Error in local template fallback:', error);
+                            appLogger.error('❌ Error in local template fallback:', error);
                             setState(prev => ({
                                 ...prev,
                                 isLoading: false,
@@ -506,7 +507,7 @@ export const PureBuilderProvider: React.FC<{
         const actions: PureBuilderActions = {
             setCurrentStep: useCallback((step: number) => {
                 if (step < 1 || step > totalSteps) {
-                    console.warn(`⚠️ Tentativa de navegar para step inválido: ${step} (range válido: 1-${totalSteps})`);
+                    appLogger.warn(`⚠️ Tentativa de navegar para step inválido: ${step} (range válido: 1-${totalSteps})`);
                     return;
                 }
                 setState(prev => ({ ...prev, currentStep: step }));
@@ -558,7 +559,7 @@ export const PureBuilderProvider: React.FC<{
             // 🆕 AÇÃO PARA CRIAR PRIMEIRA ETAPA EM CANVAS VAZIO
             createFirstStep: useCallback(async () => {
                 if (totalSteps > 0) {
-                    console.warn('Canvas já possui etapas - use addStep para adicionar mais');
+                    appLogger.warn('Canvas já possui etapas - use addStep para adicionar mais');
                     return;
                 }
 
@@ -593,7 +594,7 @@ export const PureBuilderProvider: React.FC<{
                 }));
 
                 setTotalSteps(1);
-                console.log('✅ Primeira etapa criada no canvas vazio');
+                appLogger.debug('✅ Primeira etapa criada no canvas vazio');
             }, [totalSteps]),
 
             updateBlock: useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
@@ -643,7 +644,7 @@ export const PureBuilderProvider: React.FC<{
                     }));
                     if (data.totalSteps) setTotalSteps(data.totalSteps);
                 } catch (error) {
-                    console.error('❌ Error importing JSON:', error);
+                    appLogger.error('❌ Error importing JSON:', error);
                 }
             }, []),
 
@@ -772,7 +773,7 @@ export const PureBuilderProvider: React.FC<{
                         stack: ev.error?.stack,
                         capturedAt: Date.now()
                     };
-                    console.error('🛑 [GLOBAL_ERROR_CAPTURE] Primeiro erro global registrado:', (window as any).__FIRST_GLOBAL_ERROR__);
+                    appLogger.error('🛑 [GLOBAL_ERROR_CAPTURE] Primeiro erro global registrado:', (window as any).__FIRST_GLOBAL_ERROR__);
                 }
             };
             window.addEventListener('error', handler);
@@ -794,7 +795,7 @@ export const useBuilderEditor = usePureBuilder;
 
 // 🎯 ADAPTADOR MODERNO: Nova interface unificada
 export const useLegacyBuilderEditor = () => {
-    console.warn('⚠️ useLegacyBuilderEditor is deprecated. Use useEditor from EditorProviderMigrationAdapter instead.');
+    appLogger.warn('⚠️ useLegacyBuilderEditor is deprecated. Use useEditor from EditorProviderMigrationAdapter instead.');
     return usePureBuilder();
 };
 

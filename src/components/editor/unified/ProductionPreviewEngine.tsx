@@ -7,6 +7,7 @@
  */
 
 import React, { Suspense } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import Step20Result from '@/components/steps/Step20Result';
@@ -142,7 +143,7 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
               }
             }}
             onValidationChange={(blockId: string, isValid: boolean) => {
-              console.log(`🎯 Block ${blockId} validation: ${isValid}`);
+              appLogger.debug(`🎯 Block ${blockId} validation: ${isValid}`);
             }}
             enableValidation={true}
             enableAutoAdvance={isPreviewing || isProductionMode}

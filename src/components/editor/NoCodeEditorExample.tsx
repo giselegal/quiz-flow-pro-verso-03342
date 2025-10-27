@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -58,18 +59,18 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
 
   // Handlers
   const handleBlockUpdate = useCallback((updates: Record<string, any>) => {
-    console.log('🔄 Atualizando bloco:', selectedBlock?.id, updates);
+    appLogger.debug('🔄 Atualizando bloco:', selectedBlock?.id, updates);
     // Aqui você integraria com seu sistema de estado global
     // Ex: dispatch(updateBlock(selectedBlock.id, updates));
   }, [selectedBlock]);
 
   const handleBlockDuplicate = useCallback(() => {
-    console.log('📋 Duplicando bloco:', selectedBlock?.id);
+    appLogger.debug('📋 Duplicando bloco:', selectedBlock?.id);
     // Implementar lógica de duplicação
   }, [selectedBlock]);
 
   const handleBlockDelete = useCallback(() => {
-    console.log('🗑️ Deletando bloco:', selectedBlock?.id);
+    appLogger.debug('🗑️ Deletando bloco:', selectedBlock?.id);
     setSelectedBlock(null);
     // Implementar lógica de exclusão
   }, [selectedBlock]);
@@ -77,11 +78,11 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
   const handleStepChange = useCallback((step: number) => {
     setCurrentStep(step);
     setSelectedBlock(null);
-    console.log('📍 Mudando para etapa:', step);
+    appLogger.debug('📍 Mudando para etapa:', step);
   }, []);
 
   const handleComprehensiveBlockUpdate = useCallback((stepKey: string, blockId: string, updates: Record<string, any>) => {
-    console.log('🔄 Atualizando bloco comprehensive:', { stepKey, blockId, updates });
+    appLogger.debug('🔄 Atualizando bloco comprehensive:', { stepKey, blockId, updates });
     // Implementar atualização para navegação comprehensive
   }, []);
 
@@ -152,10 +153,10 @@ export const NoCodeEditorExample: React.FC<NoCodeEditorExampleProps> = () => {
           // Modo navegação completa das 21 etapas
           <ComprehensiveStepNavigation
             onBlockUpdate={handleComprehensiveBlockUpdate}
-            onBlockDuplicate={(stepKey, blockId) => console.log('Duplicate:', stepKey, blockId)}
-            onBlockDelete={(stepKey, blockId) => console.log('Delete:', stepKey, blockId)}
+            onBlockDuplicate={(stepKey, blockId) => appLogger.debug('Duplicate:', stepKey, blockId)}
+            onBlockDelete={(stepKey, blockId) => appLogger.debug('Delete:', stepKey, blockId)}
             onStepValidate={(stepKey) => {
-              console.log('Validate:', stepKey);
+              appLogger.debug('Validate:', stepKey);
               return true;
             }}
             className="w-full"

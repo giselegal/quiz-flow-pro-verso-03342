@@ -1,4 +1,5 @@
 import { InlineEditableText } from './InlineEditableText';
+import { appLogger } from '@/utils/logger';
 import { Button as UIButton } from '@/components/ui/button';
 import { MousePointer } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
@@ -91,13 +92,13 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
     }
 
     if (action === 'submit') {
-      console.log('Form submitted');
+      appLogger.debug('Form submitted');
     } else if (action === 'download') {
-      console.log('Download triggered');
+      appLogger.debug('Download triggered');
     } else if (buttonUrl && buttonUrl !== '#') {
       window.open(buttonUrl, '_blank');
     } else {
-      console.log('Button clicked');
+      appLogger.debug('Button clicked');
     }
   };
 

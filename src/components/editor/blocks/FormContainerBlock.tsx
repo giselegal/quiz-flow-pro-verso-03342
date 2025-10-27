@@ -1,4 +1,5 @@
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { appLogger } from '@/utils/logger';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
 import React, { useEffect } from 'react';
 import { useGlobalEventManager } from '@/hooks/useGlobalEventManager';
@@ -58,7 +59,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
 
         // Log apenas quando encontrar o botão
         if (btn) {
-          console.log(
+          appLogger.debug(
             `🔘 [FormContainerBlock] Button ${buttonId} ${disabled ? 'DISABLED' : 'ENABLED'}`
           );
         }
@@ -79,7 +80,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
 
       // Log apenas mudanças de estado importantes
       if (detail.enabled) {
-        console.log(`✅ [FormContainerBlock] Button ${detail.buttonId} ENABLED`);
+        appLogger.debug(`✅ [FormContainerBlock] Button ${detail.buttonId} ENABLED`);
       }
 
       applyDisabled(!detail.enabled, detail.buttonId);

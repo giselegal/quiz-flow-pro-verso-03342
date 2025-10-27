@@ -5,6 +5,7 @@
  */
 
 import { Badge } from '@/components/ui/badge';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { useMonitoring } from '@/services/MonitoringService';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
@@ -376,8 +377,8 @@ export const useEditorControls = (initialState?: Partial<EditorControlsState>) =
     },
     undo: () => setState(prev => ({ ...prev, canRedo: true, canUndo: false })),
     redo: () => setState(prev => ({ ...prev, canUndo: true, canRedo: false })),
-    exportTemplate: () => console.log('Export template'),
-    importTemplate: () => console.log('Import template'),
+    exportTemplate: () => appLogger.debug('Export template'),
+    importTemplate: () => appLogger.debug('Import template'),
   };
 
   const updateState = (updates: Partial<EditorControlsState>) => {

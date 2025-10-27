@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -34,12 +35,12 @@ export const NoCodeEditorIntegration: React.FC<NoCodeEditorIntegrationProps> = (
   const [viewMode, setViewMode] = useState<'simple' | 'advanced'>('simple');
 
   const handleUpdate = (blockId: string, updates: Record<string, any>) => {
-    console.log('🔄 NoCode Update:', { blockId, updates });
+    appLogger.debug('🔄 NoCode Update:', { blockId, updates });
     onUpdate(blockId, updates);
   };
 
   const handleReset = (blockId: string) => {
-    console.log('🔄 NoCode Reset:', blockId);
+    appLogger.debug('🔄 NoCode Reset:', blockId);
   };
 
   return (

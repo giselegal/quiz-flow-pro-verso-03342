@@ -10,6 +10,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { quizOrchestrator } from '@/orchestrators/QuizOrchestrator';
@@ -78,7 +79,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   enableRealExperience = false,
   realTimeUpdate = false // 🎯 NOVO: Sistema de atualização em tempo real
 }) => {
-  console.log('🎯 [DEBUG] InteractivePreviewEngine inicializado:', {
+  appLogger.debug('🎯 [DEBUG] InteractivePreviewEngine inicializado:', {
     mode,
     enableRealExperience,
     realTimeUpdate,
@@ -108,18 +109,18 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
 
   // 🎯 INICIALIZAR ORCHESTRATOR
   const orchestrator = useMemo(() => {
-    console.log('🎯 [DEBUG] InteractivePreviewEngine - Inicializando orchestrator:', {
+    appLogger.debug('🎯 [DEBUG] InteractivePreviewEngine - Inicializando orchestrator:', {
       enableRealExperience,
       funnelId,
       autoAdvanceEnabled: quizState.autoAdvanceEnabled
     });
 
     if (!enableRealExperience) {
-      console.log('🎯 [DEBUG] Orchestrator DESABILITADO - enableRealExperience = false');
+      appLogger.debug('🎯 [DEBUG] Orchestrator DESABILITADO - enableRealExperience = false');
       return null;
     }
 
-    console.log('🎯 [DEBUG] Orchestrator HABILITADO - Criando instância singleton');
+    appLogger.debug('🎯 [DEBUG] Orchestrator HABILITADO - Criando instância singleton');
 
     // Usar instância singleton com configuração para preview
     const instance = {
@@ -132,50 +133,50 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
 
       // Setup callbacks mockados para preview
       onStepChange: (step: number) => {
-        console.log('🎯 [DEBUG] Orchestrator.onStepChange:', step);
+        appLogger.debug('🎯 [DEBUG] Orchestrator.onStepChange:', step);
         setQuizState(prev => ({ ...prev, currentStep: step }));
       },
       onValidationChange: (blockId: string, isValid: boolean) => {
-        console.log('🎯 [DEBUG] Orchestrator.onValidationChange:', { blockId, isValid });
+        appLogger.debug('🎯 [DEBUG] Orchestrator.onValidationChange:', { blockId, isValid });
         setQuizState(prev => ({
           ...prev,
           validationStates: { ...prev.validationStates, [blockId]: isValid }
         }));
       },
       onSelectionChange: (stepId: string, selections: string[]) => {
-        console.log('🎯 [DEBUG] Orchestrator.onSelectionChange:', { stepId, selections });
+        appLogger.debug('🎯 [DEBUG] Orchestrator.onSelectionChange:', { stepId, selections });
         setQuizState(prev => ({
           ...prev,
           selections: { ...prev.selections, [stepId]: selections }
         }));
       },
       goToStep: (step: number) => {
-        console.log('🎯 [DEBUG] Orchestrator.goToStep:', step);
+        appLogger.debug('🎯 [DEBUG] Orchestrator.goToStep:', step);
         setQuizState(prev => ({ ...prev, currentStep: step }));
       },
       updateValidation: (blockId: string, isValid: boolean) => {
-        console.log('🎯 [DEBUG] Orchestrator.updateValidation:', { blockId, isValid });
+        appLogger.debug('🎯 [DEBUG] Orchestrator.updateValidation:', { blockId, isValid });
         setQuizState(prev => ({
           ...prev,
           validationStates: { ...prev.validationStates, [blockId]: isValid }
         }));
       },
       updateSelections: (stepId: string, selections: string[]) => {
-        console.log('🎯 [DEBUG] Orchestrator.updateSelections:', { stepId, selections });
+        appLogger.debug('🎯 [DEBUG] Orchestrator.updateSelections:', { stepId, selections });
         setQuizState(prev => ({
           ...prev,
           selections: { ...prev.selections, [stepId]: selections }
         }));
       },
       updateUserData: (data: any) => {
-        console.log('🎯 [DEBUG] Orchestrator.updateUserData:', data);
+        appLogger.debug('🎯 [DEBUG] Orchestrator.updateUserData:', data);
         if (data.name) {
           setQuizState(prev => ({ ...prev, userName: data.name }));
         }
       }
     };
 
-    console.log('🎯 [DEBUG] Orchestrator instance criada com sucesso');
+    appLogger.debug('🎯 [DEBUG] Orchestrator instance criada com sucesso');
     return instance;
   }, [funnelId, enableRealExperience, quizState.autoAdvanceEnabled]);
 
@@ -237,7 +238,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   // 🎯 SISTEMA DE ATUALIZAÇÃO EM TEMPO REAL (FASE 3)
   useEffect(() => {
     if (realTimeUpdate && debouncedBlocks.length > 0) {
-      console.log('⚡ [FASE 3] Preview atualizado em tempo real (debounced):', {
+      appLogger.debug('⚡ [FASE 3] Preview atualizado em tempo real (debounced):', {
         step: quizState.currentStep,
         blocksCount: debouncedBlocks.length,
         selectedBlock: selectedBlockId,
@@ -247,14 +248,14 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
 
       // Atualizar estado se necessário
       if (selectedBlockId) {
-        console.log('🎯 Bloco selecionado mudou para:', selectedBlockId);
+        appLogger.debug('🎯 Bloco selecionado mudou para:', selectedBlockId);
       }
 
       // Notificar sobre mudanças se callback disponível
       if (onBlockUpdate && selectedBlockId) {
         const updatedBlock = debouncedBlocks.find(b => b.id === selectedBlockId);
         if (updatedBlock) {
-          console.log('📝 Notificando mudança do bloco:', updatedBlock.id);
+          appLogger.debug('📝 Notificando mudança do bloco:', updatedBlock.id);
           // Trigger uma pequena atualização para forçar re-render
           onBlockUpdate(updatedBlock.id, { _lastUpdated: Date.now() });
         }
@@ -265,7 +266,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   // 🎯 SINCRONIZAÇÃO COM STEP EXTERNO
   useEffect(() => {
     if (initialStep !== quizState.currentStep) {
-      console.log('🔄 Sincronizando step externo:', {
+      appLogger.debug('🔄 Sincronizando step externo:', {
         from: quizState.currentStep,
         to: initialStep
       });
@@ -335,7 +336,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
             }));
           }
         } catch (error) {
-          console.error('Erro ao calcular resultado:', error);
+          appLogger.error('Erro ao calcular resultado:', error);
           setQuizState(prev => ({ ...prev, isCalculatingResult: false }));
         }
       }, 2000);
@@ -388,7 +389,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   );
 
   const handleDragStart = useCallback(() => {
-    console.log('🎯 Drag iniciado');
+    appLogger.debug('🎯 Drag iniciado');
   }, []);
 
   const handleDragEnd = useCallback((event: any) => {

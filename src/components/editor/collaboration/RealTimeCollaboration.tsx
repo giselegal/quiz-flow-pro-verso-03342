@@ -13,6 +13,7 @@
  */
 
 import React, {
+import { appLogger } from '@/utils/logger';
     useState,
     useEffect,
     useCallback,
@@ -116,7 +117,7 @@ class WebSocketManager {
                         const data = JSON.parse(event.data);
                         this.onMessage(data);
                     } catch (error) {
-                        console.error('Error parsing WebSocket message:', error);
+                        appLogger.error('Error parsing WebSocket message:', error);
                     }
                 };
 
@@ -128,7 +129,7 @@ class WebSocketManager {
                 };
 
                 this.ws.onerror = (error) => {
-                    console.error('WebSocket error:', error);
+                    appLogger.error('WebSocket error:', error);
                     reject(error);
                 };
 

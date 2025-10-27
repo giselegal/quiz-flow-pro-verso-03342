@@ -1,5 +1,6 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { getBlockSchema, BasePropertySchema } from '../schema/blockSchema';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -41,8 +42,8 @@ export const DynamicPropertiesForm: React.FC<DynamicPropertiesFormProps> = ({ ty
     const schema = modernSchema || legacySchema;
 
     // 🔍 DEBUG: Log para verificar values recebidos
-    console.log('🔍 DynamicPropertiesForm - type:', type);
-    console.log('🔍 DynamicPropertiesForm - values:', values);
+    appLogger.debug('🔍 DynamicPropertiesForm - type:', type);
+    appLogger.debug('🔍 DynamicPropertiesForm - values:', values);
 
     // Agrupamento de propriedades por grupos definidos no schema (com fallback)
     const groups = useMemo(() => {

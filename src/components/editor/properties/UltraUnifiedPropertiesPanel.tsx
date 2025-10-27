@@ -24,6 +24,7 @@
  */
 
 import React, { useState, useMemo, useCallback, useEffect, Suspense, lazy } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -298,7 +299,7 @@ const SpecializedEditorRenderer: React.FC<{
 
     // ✅ FALLBACK: Se não tiver editor especializado, retorna null para usar extração automática
     if (!editorType) {
-        console.log(`⚙️ [UltraUnified] Nenhum editor especializado para ${blockType}, usando fallback`);
+        appLogger.debug(`⚙️ [UltraUnified] Nenhum editor especializado para ${blockType}, usando fallback`);
         return null;
     }
 
@@ -611,7 +612,7 @@ export const UltraUnifiedPropertiesPanel: React.FC<UltraUnifiedPropertiesPanelPr
                 hasSpecializedEditor: hasSpecialized
             };
         } catch (error) {
-            console.warn('Erro ao extrair propriedades:', error);
+            appLogger.warn('Erro ao extrair propriedades:', error);
             return {
                 extractedProperties: [],
                 categorizedProperties: {} as any,

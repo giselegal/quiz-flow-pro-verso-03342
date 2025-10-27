@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { EditorContext } from '@/contexts';
+import { appLogger } from '@/utils/logger';
 import { ValidationResult } from '@/types/validation';
 import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 // import { InteractiveBlockRenderer } from './InteractiveBlockRenderer';
@@ -33,7 +34,7 @@ interface InteractiveQuizCanvasProps {
 export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
   ({ className = '', theme = 'default' }) => {
     // theme será usado quando os componentes estilizados forem implementados
-    console.log('Quiz theme:', theme);
+    appLogger.debug('Quiz theme:', theme);
 
     // Hook seguro para o Editor Context (pode não existir)
     const editorContext = useContext(EditorContext);
@@ -77,7 +78,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
         try {
           setQuizAnswers(JSON.parse(savedAnswers));
         } catch (error) {
-          console.error('❌ Erro ao carregar respostas salvas:', error);
+          appLogger.error('❌ Erro ao carregar respostas salvas:', error);
         }
       }
     }, []);
@@ -139,7 +140,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
       const m = String(activeStageId).match(/\d+/);
       const stepNum = m ? parseInt(m[0], 10) : 1;
       const nextStep = Math.min(stepNum + 1, 21);
-      console.log('➡️ Advancing to step:', nextStep);
+      appLogger.debug('➡️ Advancing to step:', nextStep);
     }, [activeStageId, canProceedToNext, isTestEnv, selectedOption, testCurrentStep]);
 
     // Navegar para etapa anterior
@@ -151,7 +152,7 @@ export const InteractiveQuizCanvas: React.FC<InteractiveQuizCanvasProps> = memo(
       const m = String(activeStageId).match(/\d+/);
       const stepNum = m ? parseInt(m[0], 10) : 1;
       const prevStep = Math.max(stepNum - 1, 1);
-      console.log('⬅️ Going back to step:', prevStep);
+      appLogger.debug('⬅️ Going back to step:', prevStep);
     }, [activeStageId, isTestEnv]);
 
     // Se não está em modo preview, retornar canvas normal (exceto em testes)

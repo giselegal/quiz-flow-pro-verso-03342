@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -162,8 +163,8 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
       },
     };
 
-    console.log('🔄 HeaderPropertyEditor - Updating property:', field, '=', value);
-    console.log('🔄 HeaderPropertyEditor - Full updates:', updates);
+    appLogger.debug('🔄 HeaderPropertyEditor - Updating property:', field, '=', value);
+    appLogger.debug('🔄 HeaderPropertyEditor - Full updates:', updates);
 
     onUpdate(updates);
   };

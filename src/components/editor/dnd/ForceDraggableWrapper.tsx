@@ -1,4 +1,5 @@
 import { useDraggable } from '@dnd-kit/core';
+import { appLogger } from '@/utils/logger';
 import { CSS } from '@dnd-kit/utilities';
 import React, { useEffect, useRef } from 'react';
 
@@ -35,17 +36,17 @@ export const ForceDraggableWrapper: React.FC<{
     if (!element || disabled) return;
 
     // Debug log
-    console.log('🔧 ForceDraggableWrapper montado para:', id);
+    appLogger.debug('🔧 ForceDraggableWrapper montado para:', id);
 
     // Force event listeners se os padrão não funcionarem
     let isForceListening = false;
 
     const handleMouseDown = (e: MouseEvent) => {
-      console.log('🖱️ FORCE MouseDown capturado:', id, e);
+      appLogger.debug('🖱️ FORCE MouseDown capturado:', id, e);
 
       // Se os listeners padrão não estão funcionando, tentar força bruta
       if (!isDragging && !isForceListening) {
-        console.log('🔄 Tentando força bruta para:', id);
+        appLogger.debug('🔄 Tentando força bruta para:', id);
         isForceListening = true;
 
         // Dispatch eventos customizados se necessário

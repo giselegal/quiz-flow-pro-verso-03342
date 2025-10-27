@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
@@ -52,7 +53,7 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
         onImageChange(temporaryUrl, file);
         toast.success('Imagem carregada com sucesso!');
       } catch (error) {
-        console.error('Erro ao processar imagem:', error);
+        appLogger.error('Erro ao processar imagem:', error);
         toast.error('Erro ao carregar imagem');
       } finally {
         setIsUploading(false);

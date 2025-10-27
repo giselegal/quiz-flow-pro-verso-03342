@@ -16,6 +16,7 @@
  */
 
 import React, { createContext, useContext, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useEditorStore } from '@/store/editorStore';
 import { useEditorConsolidated } from '@/hooks/useEditorConsolidated';
 import type { EditorStep } from '@/store/editorStore';
@@ -110,7 +111,7 @@ export const EditorProviderAdapter: React.FC<EditorProviderAdapterProps> = ({
   useEffect(() => {
     if (funnelId && enableSupabase && autoLoad) {
       // TODO: Implementar carregamento de funnel via service
-      console.log('📥 Loading funnel:', funnelId);
+      appLogger.debug('📥 Loading funnel:', funnelId);
     }
   }, [funnelId, enableSupabase, autoLoad]);
 

@@ -17,6 +17,7 @@
  */
 
 import React, { Suspense, useMemo, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { useEditor } from '@/hooks/useUnifiedEditor';
 import { logger } from '@/utils/debugLogger';
@@ -130,7 +131,7 @@ const ModeRenderer: React.FC<{
                   <UnifiedComponentsPanel
                     onAddComponent={(componentId, metadata) => {
                       // Handle component addition
-                      console.log('Adding component:', componentId, metadata);
+                      appLogger.debug('Adding component:', componentId, metadata);
                     }}
                     compactMode={true}
                   />

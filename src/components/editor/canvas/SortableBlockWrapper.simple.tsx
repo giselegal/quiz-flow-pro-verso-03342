@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
@@ -102,7 +103,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     try {
       const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
       if (g?.__DND_DEBUG) {
-        console.log('🖱️ onPointerDownCapture -> selecionar bloco', {
+        appLogger.debug('🖱️ onPointerDownCapture -> selecionar bloco', {
           step: numericStep,
           blockId: String(block.id),
           scopeId,
@@ -130,7 +131,7 @@ const SortableBlockWrapperBase: React.FC<SortableBlockWrapperProps> = ({
     try {
       const g: any = typeof globalThis !== 'undefined' ? (globalThis as any) : undefined;
       if (g?.__DND_DEBUG) {
-        console.log('🖱️ onClick -> selecionar bloco (fallback)', {
+        appLogger.debug('🖱️ onClick -> selecionar bloco (fallback)', {
           step: numericStep,
           blockId: String(block.id),
           scopeId,

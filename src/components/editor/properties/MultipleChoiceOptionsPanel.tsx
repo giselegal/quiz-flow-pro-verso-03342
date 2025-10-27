@@ -17,6 +17,7 @@
  */
 
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -383,17 +384,17 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
     const discoveredProperties = useMemo(() => {
         if (!selectedBlock) return [];
 
-        console.log('🔍 MultipleChoiceOptionsPanel: Discovering properties for block:', selectedBlock.type);
+        appLogger.debug('🔍 MultipleChoiceOptionsPanel: Discovering properties for block:', selectedBlock.type);
         const props = getPropertiesForComponentType(selectedBlock.type, selectedBlock);
-        console.log('📊 MultipleChoiceOptionsPanel: Found properties:', props.length);
-        console.log('📋 MultipleChoiceOptionsPanel: Properties list:', props.map(p => `${p.key}(${p.type})`));
+        appLogger.debug('📊 MultipleChoiceOptionsPanel: Found properties:', props.length);
+        appLogger.debug('📋 MultipleChoiceOptionsPanel: Properties list:', props.map(p => `${p.key}(${p.type})`));
         return props;
     }, [selectedBlock]);
 
     // Efeito para sincronizar propriedades descobertas com o estado interno
     useEffect(() => {
         if (discoveredProperties.length > 0) {
-            console.log('🔄 MultipleChoiceOptionsPanel: Syncing discovered properties to internal state');
+            appLogger.debug('🔄 MultipleChoiceOptionsPanel: Syncing discovered properties to internal state');
             // Atualizar dados internos baseado nas propriedades descobertas
             setData(currentData => {
                 const newData = { ...currentData };
@@ -401,15 +402,15 @@ export const MultipleChoiceOptionsPanel: React.FC<MultipleChoiceOptionsPanelProp
                 discoveredProperties.forEach(prop => {
                     if (prop.key === 'title' && prop.defaultValue) {
                         // Exemplo de sincronização de propriedade
-                        console.log('📝 Syncing title:', prop.defaultValue);
+                        appLogger.debug('📝 Syncing title:', prop.defaultValue);
                     }
                     if (prop.key === 'columns' && prop.defaultValue) {
                         newData.layout.columns = prop.defaultValue;
-                        console.log('📏 Syncing columns:', prop.defaultValue);
+                        appLogger.debug('📏 Syncing columns:', prop.defaultValue);
                     }
                     if (prop.key === 'multipleSelection' && prop.defaultValue !== undefined) {
                         newData.validation.multipleChoice = prop.defaultValue;
-                        console.log('✅ Syncing multipleSelection:', prop.defaultValue);
+                        appLogger.debug('✅ Syncing multipleSelection:', prop.defaultValue);
                     }
                     // Adicionar mais propriedades conforme necessário
                 });

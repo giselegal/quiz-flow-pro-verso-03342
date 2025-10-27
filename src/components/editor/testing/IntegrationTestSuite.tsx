@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -144,7 +145,7 @@ const ComponentTests = {
             throw new Error('FunnelId is required');
         }
 
-        console.log('✅ LiveCanvasPreview component test passed (props validation)');
+        appLogger.debug('✅ LiveCanvasPreview component test passed (props validation)');
     },
 
     // Teste do PreviewMigrationWrapper
@@ -166,7 +167,7 @@ const ComponentTests = {
             throw new Error('FunnelId is required');
         }
 
-        console.log('✅ PreviewMigrationWrapper component test passed (props validation)');
+        appLogger.debug('✅ PreviewMigrationWrapper component test passed (props validation)');
     },
 
     // Teste do PerformanceDashboard
@@ -187,7 +188,7 @@ const ComponentTests = {
             throw new Error('EnableExport must be a boolean');
         }
 
-        console.log('✅ PerformanceDashboard component test passed (props validation)');
+        appLogger.debug('✅ PerformanceDashboard component test passed (props validation)');
     }
 };
 
@@ -220,7 +221,7 @@ const HookTests = {
             // Isso é esperado no mock, mas validamos a interface
         }
 
-        console.log('✅ useAdvancedCache hook test passed');
+        appLogger.debug('✅ useAdvancedCache hook test passed');
     },
 
     // Teste do useLiveCanvasPreview
@@ -256,7 +257,7 @@ const HookTests = {
             throw new Error('isLoading should be a boolean');
         }
 
-        console.log('✅ useLiveCanvasPreview hook test passed');
+        appLogger.debug('✅ useLiveCanvasPreview hook test passed');
     },
 
     // Teste do useAdvancedWebSocket
@@ -285,7 +286,7 @@ const HookTests = {
             throw new Error('isConnected should be a boolean');
         }
 
-        console.log('✅ useAdvancedWebSocket hook test passed');
+        appLogger.debug('✅ useAdvancedWebSocket hook test passed');
     }
 };
 
@@ -312,7 +313,7 @@ const IntegrationTests = {
             throw new Error('FeatureFlagProvider structure missing');
         }
 
-        console.log('✅ Full integration test passed (structure validation)');
+        appLogger.debug('✅ Full integration test passed (structure validation)');
     },
 
     // Teste de performance básica
@@ -329,7 +330,7 @@ const IntegrationTests = {
             throw new Error(`Performance test failed: ${duration}ms > 100ms`);
         }
 
-        console.log(`✅ Performance baseline test passed (${duration.toFixed(2)}ms)`);
+        appLogger.debug(`✅ Performance baseline test passed (${duration.toFixed(2)}ms)`);
     },
 
     // Teste de memory leaks básico
@@ -348,7 +349,7 @@ const IntegrationTests = {
         const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
         const memoryDiff = finalMemory - initialMemory;
 
-        console.log(`✅ Memory usage test passed (diff: ${(memoryDiff / 1024 / 1024).toFixed(2)}MB)`);
+        appLogger.debug(`✅ Memory usage test passed (diff: ${(memoryDiff / 1024 / 1024).toFixed(2)}MB)`);
     }
 };
 

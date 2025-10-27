@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { appLogger } from '@/utils/logger';
 
 /**
  * Componente de debug que monitora o estado do DnD em tempo real
@@ -167,7 +168,7 @@ export const DnDMonitor: React.FC = () => {
         <button
           onClick={() => {
             (window as any).__DND_DEBUG = true;
-            console.log('🎯 Debug ativado!');
+            appLogger.debug('🎯 Debug ativado!');
           }}
           className="ml-2 px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"
           style={{ pointerEvents: 'auto' }}

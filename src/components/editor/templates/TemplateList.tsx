@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { appLogger } from '@/utils/logger';
 import { Card } from '@/components/ui/card';
 import { giseleStyleTemplate } from '@/services/templates/giseleStyleTemplate';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
@@ -39,7 +40,7 @@ export const TemplateList: React.FC<TemplateListProps> = ({ onSelectTemplate }) 
         onSelectTemplate();
       }
     } catch (error) {
-      console.error('Error applying template:', error);
+      appLogger.error('Error applying template:', error);
       toast({
         title: 'Erro ao aplicar template',
         description: 'Ocorreu um erro ao aplicar o template',

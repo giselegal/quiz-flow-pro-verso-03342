@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import InlineBaseWrapper from './base/InlineBaseWrapper';
 import InlineEditableText from './base/InlineEditableText';
@@ -158,7 +159,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
       }
       // Add more click actions here (modal, form, etc.)
     } catch (error) {
-      console.error('CTA click error:', error);
+      appLogger.error('CTA click error:', error);
     } finally {
       setTimeout(() => setIsLoading(false), 800);
     }

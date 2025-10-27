@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { useDndContext, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -351,7 +352,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
 
   const debugLog = React.useCallback((message: string, data?: any) => {
     if (isDebugEnabled) {
-      console.log(`🎯 ${message}`, data);
+      appLogger.debug(`🎯 ${message}`, data);
     }
   }, [isDebugEnabled]);
 
@@ -592,7 +593,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
             <EmptyCanvasInterface
               onCreateFirstStep={() => {
                 // Callback para após criar primeira etapa
-                console.log('✅ Primeira etapa criada via EmptyCanvasInterface');
+                appLogger.debug('✅ Primeira etapa criada via EmptyCanvasInterface');
               }}
             />
           ) : (

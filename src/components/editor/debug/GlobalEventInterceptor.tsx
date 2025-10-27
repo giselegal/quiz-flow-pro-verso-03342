@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 
 /**
  * Interceptador global para debugar eventos que podem estar interferindo no DnD
  */
 export const GlobalEventInterceptor = () => {
   useEffect(() => {
-    console.log('🕵️ GlobalEventInterceptor ATIVO - Monitorizando todos os eventos...');
+    appLogger.debug('🕵️ GlobalEventInterceptor ATIVO - Monitorizando todos os eventos...');
 
     const eventTypes = [
       'mousedown',
@@ -39,7 +40,7 @@ export const GlobalEventInterceptor = () => {
           target?.closest('.dnd-draggable-item') ||
           eventType.includes('drag')
         ) {
-          console.log(`🔍 ${eventType.toUpperCase()}:`, {
+          appLogger.debug(`🔍 ${eventType.toUpperCase()}:`, {
             type: eventType,
             target: target?.tagName,
             classes: target?.className,
@@ -58,7 +59,7 @@ export const GlobalEventInterceptor = () => {
 
         // Log crítico para eventos de drag
         if (eventType.includes('drag')) {
-          console.log(`🚨 EVENTO DRAG DETECTADO: ${eventType}`, {
+          appLogger.debug(`🚨 EVENTO DRAG DETECTADO: ${eventType}`, {
             target: target?.tagName,
             classes: target?.className,
             defaultPrevented: event.defaultPrevented,
@@ -83,7 +84,7 @@ export const GlobalEventInterceptor = () => {
         this.type.includes('mouse') ||
         this.type.includes('touch')
       ) {
-        console.log('🚫 preventDefault CHAMADO em:', {
+        appLogger.debug('🚫 preventDefault CHAMADO em:', {
           type: this.type,
           target: (this.target as HTMLElement)?.tagName,
           classes: (this.target as HTMLElement)?.className,
@@ -102,7 +103,7 @@ export const GlobalEventInterceptor = () => {
       // Restaurar preventDefault
       Event.prototype.preventDefault = originalPreventDefault;
 
-      console.log('🕵️ GlobalEventInterceptor DESATIVADO');
+      appLogger.debug('🕵️ GlobalEventInterceptor DESATIVADO');
     };
   }, []);
 

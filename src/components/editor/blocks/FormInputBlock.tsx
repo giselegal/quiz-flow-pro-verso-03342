@@ -1,4 +1,5 @@
 import type { BlockComponentProps } from '@/types/blocks';
+import { appLogger } from '@/utils/logger';
 import { TextCursorInput } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { userResponseService } from '@/services/userResponseService';
@@ -136,14 +137,14 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
       try {
         localStorage.setItem(storageKey, newSessionId);
       } catch (quotaError) {
-        console.warn('⚠️ LocalStorage quota exceeded, usando sessionID temporário');
+        appLogger.warn('⚠️ LocalStorage quota exceeded, usando sessionID temporário');
         // Usar sessionID temporário que não persiste
         return `temp_session_${Date.now()}`;
       }
 
       return newSessionId;
     } catch (error) {
-      console.warn('⚠️ Erro ao acessar localStorage, usando sessionID temporário');
+      appLogger.warn('⚠️ Erro ao acessar localStorage, usando sessionID temporário');
       return `temp_session_${Date.now()}`;
     }
   });
@@ -158,7 +159,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         setIsValid(true);
       }
     } catch (error) {
-      console.warn('⚠️ Erro ao carregar valor salvo do localStorage');
+      appLogger.warn('⚠️ Erro ao carregar valor salvo do localStorage');
       // Continuar sem valor salvo
     }
   }, [block?.id, effectiveFunnelId]);
@@ -224,9 +225,9 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
               timestamp: new Date().toISOString(),
             });
 
-            console.log('✅ [FormInputBlock] Nome salvo no Supabase:', newValue.trim());
+            appLogger.debug('✅ [FormInputBlock] Nome salvo no Supabase:', newValue.trim());
           } catch (error) {
-            console.error('❌ [FormInputBlock] Erro ao salvar no Supabase:', error);
+            appLogger.error('❌ [FormInputBlock] Erro ao salvar no Supabase:', error);
           }
 
           // Also save locally as fallback
@@ -250,7 +251,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           } catch { }
         }
 
-        console.log('📝 [FormInputBlock] Input change processed:', {
+        appLogger.debug('📝 [FormInputBlock] Input change processed:', {
           blockId: block?.id,
           sessionId: sessionId,
           value: newValue.trim(),
@@ -263,7 +264,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           onValueChange(newValue.trim());
         }
       } catch (error) {
-        console.error('❌ Erro ao salvar resposta:', error);
+        appLogger.error('❌ Erro ao salvar resposta:', error);
       }
     }
   };

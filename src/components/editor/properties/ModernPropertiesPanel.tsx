@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -168,7 +169,7 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
     case PropertyType.ARRAY:
       // Debug: verificar dados das opções
       if (process.env.NODE_ENV === 'development') {
-        console.log('🔍 DEBUG - Array/Options-list control:', {
+        appLogger.debug('🔍 DEBUG - Array/Options-list control:', {
           property: property.key,
           propertyType: property.type,
           value: value,
@@ -198,7 +199,7 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
                   points: currentArray.length + 1
                 };
                 const newArray = [...currentArray, newOption];
-                console.log('🔍 Adding new option:', newOption, 'New array:', newArray);
+                appLogger.debug('🔍 Adding new option:', newOption, 'New array:', newArray);
                 onChange(newArray);
               }}
               className="h-7 px-2"
@@ -220,7 +221,7 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
                       onChange={(e) => {
                         const newArray = [...(Array.isArray(value) ? value : [])];
                         newArray[index] = { ...option, text: e.target.value };
-                        console.log('🔍 Updating option text:', newArray[index]);
+                        appLogger.debug('🔍 Updating option text:', newArray[index]);
                         onChange(newArray);
                       }}
                       className="h-7 text-xs"
@@ -276,7 +277,7 @@ const PropertyControl: React.FC<PropertyControlProps> = ({ property, value, onCh
                     size="sm"
                     onClick={() => {
                       const newArray = Array.isArray(value) ? value.filter((_, i) => i !== index) : [];
-                      console.log('🔍 Removing option at index:', index, 'New array:', newArray);
+                      appLogger.debug('🔍 Removing option at index:', index, 'New array:', newArray);
                       onChange(newArray);
                     }}
                     className="h-7 w-7 p-0 text-destructive hover:text-destructive"
@@ -324,7 +325,7 @@ function getCurrentValue(propKey: string, currentBlock?: Block): any {
 
   // Debug para investigar o problema das opções
   if (propKey === 'options' && process.env.NODE_ENV === 'development') {
-    console.log('🔍 DEBUG - getCurrentValue for options:', {
+    appLogger.debug('🔍 DEBUG - getCurrentValue for options:', {
       propKey,
       currentBlock: {
         id: currentBlock.id,
@@ -365,7 +366,7 @@ function getCurrentValue(propKey: string, currentBlock?: Block): any {
 function organizePropertiesByCategory(properties: any[]) {
   // Debug: verificar propriedades recebidas
   if (process.env.NODE_ENV === 'development') {
-    console.log('🔍 DEBUG - organizePropertiesByCategory received:', {
+    appLogger.debug('🔍 DEBUG - organizePropertiesByCategory received:', {
       total: properties.length,
       propertyKeys: properties.map(p => p.key),
       arrayProperties: properties.filter(p => p.type === 'array' || p.type === PropertyType.ARRAY).map(p => p.key),
@@ -407,25 +408,25 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   const discoveredProperties = React.useMemo(() => {
     if (!selectedBlock) return [];
 
-    console.log('🔍 ModernPropertiesPanel: Discovering properties for block:', selectedBlock.type);
-    console.log('📦 Current block data:', selectedBlock);
+    appLogger.debug('🔍 ModernPropertiesPanel: Discovering properties for block:', selectedBlock.type);
+    appLogger.debug('📦 Current block data:', selectedBlock);
 
     const props = getPropertiesForComponentType(selectedBlock.type, selectedBlock);
-    console.log('📊 ModernPropertiesPanel: Found properties:', props.length);
+    appLogger.debug('📊 ModernPropertiesPanel: Found properties:', props.length);
 
     // Debug específico para options-grid
     if (selectedBlock.type === 'options-grid') {
-      console.log('🎯 OPTIONS-GRID DEBUG:');
-      console.log('   - Total properties found:', props.length);
+      appLogger.debug('🎯 OPTIONS-GRID DEBUG:');
+      appLogger.debug('   - Total properties found:', props.length);
       const optionsProperty = props.find(p => p.key === 'options');
       if (optionsProperty) {
-        console.log('   ✅ OPTIONS property found:', optionsProperty);
-        console.log('   - Type:', optionsProperty.type);
-        console.log('   - Default value:', optionsProperty.defaultValue);
-        console.log('   - Current value from block:', getCurrentValue('options', selectedBlock));
+        appLogger.debug('   ✅ OPTIONS property found:', optionsProperty);
+        appLogger.debug('   - Type:', optionsProperty.type);
+        appLogger.debug('   - Default value:', optionsProperty.defaultValue);
+        appLogger.debug('   - Current value from block:', getCurrentValue('options', selectedBlock));
       } else {
-        console.log('   ❌ OPTIONS property NOT found!');
-        console.log('   - Available properties:', props.map(p => p.key));
+        appLogger.debug('   ❌ OPTIONS property NOT found!');
+        appLogger.debug('   - Available properties:', props.map(p => p.key));
       }
     }
 
@@ -441,7 +442,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   const handlePropertyUpdate = React.useCallback((propKey: string, value: any) => {
     if (!selectedBlock) return;
 
-    console.log('📤 ModernPropertiesPanel updating property:', propKey, 'with value:', value);
+    appLogger.debug('📤 ModernPropertiesPanel updating property:', propKey, 'with value:', value);
 
     // Separar updates entre properties e content
     const propertyUpdates: any = {};
@@ -450,7 +451,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     // Caso especial: 'options' deve ser salvo em content.options
     if (propKey === 'options') {
       contentUpdates.options = value;
-      console.log('🎯 Special case: Saving options to content.options');
+      appLogger.debug('🎯 Special case: Saving options to content.options');
     } else if (propKey.startsWith('content.')) {
       const contentKey = propKey.substring(8);
       contentUpdates[contentKey] = value;
@@ -475,7 +476,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
       };
     }
 
-    console.log('🔄 Final updates to EditorContext:', finalUpdates);
+    appLogger.debug('🔄 Final updates to EditorContext:', finalUpdates);
 
     // Use onUpdate callback if provided, otherwise use EditorContext
     if (onUpdate) {

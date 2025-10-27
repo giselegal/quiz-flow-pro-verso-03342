@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ModularResultHeaderBlock } from '@/components/editor/modules';
@@ -188,7 +189,7 @@ export const Step20SystemSelector: React.FC<Step20SystemSelectorProps> = ({
                                 }}
                                 isSelected={false}
                                 onPropertyChange={(key, value) => {
-                                    console.log('Preview property changed:', key, value);
+                                    appLogger.debug('Preview property changed:', key, value);
                                 }}
                             />
                         )}

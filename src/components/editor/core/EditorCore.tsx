@@ -11,6 +11,7 @@
  */
 
 import React, {
+import { appLogger } from '@/utils/logger';
     createContext,
     useContext,
     useReducer,
@@ -373,7 +374,7 @@ export class PluginManager {
 
     register(plugin: EditorPlugin): void {
         if (this.plugins.has(plugin.id)) {
-            console.warn(`Plugin ${plugin.id} is already registered`);
+            appLogger.warn(`Plugin ${plugin.id} is already registered`);
             return;
         }
 

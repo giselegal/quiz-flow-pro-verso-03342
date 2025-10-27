@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { SafeIframe } from '@/components/security/SafeIframe';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -76,7 +77,7 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
       ];
 
       for (const { step, progress } of progressSteps) {
-        console.log(`📤 ${step}`);
+        appLogger.debug(`📤 ${step}`);
         setPublishingState(prev => ({ ...prev, publishProgress: progress }));
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
@@ -96,7 +97,7 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
       }
 
     } catch (error) {
-      console.error('❌ Erro durante a publicação:', error);
+      appLogger.error('❌ Erro durante a publicação:', error);
       setPublishingState(prev => ({
         ...prev,
         isPublishing: false,
@@ -110,7 +111,7 @@ export const PublishingEngine: React.FC<PublishingEngineProps> = ({
 
   const copyUrl = useCallback((url: string) => {
     navigator.clipboard.writeText(url);
-    console.log('📋 URL copiada para a área de transferência');
+    appLogger.debug('📋 URL copiada para a área de transferência');
   }, []);
 
   return (

@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -119,7 +120,7 @@ const QuizPropertiesPanel: React.FC<QuizPropertiesPanelProps> = ({
   }, [config.options, handleConfigChange]);
 
   const handleSave = useCallback(() => {
-    console.log('💾 Salvando configuração da etapa:', { stepNumber, config });
+    appLogger.debug('💾 Salvando configuração da etapa:', { stepNumber, config });
     setIsEditing(false);
     // Aqui será implementada a integração com o backend
   }, [stepNumber, config]);

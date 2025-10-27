@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -252,7 +253,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
       await onSave();
       setLastSaved(Date.now());
     } catch (error) {
-      console.error('Erro ao salvar:', error);
+      appLogger.error('Erro ao salvar:', error);
     } finally {
       setIsSaving(false);
     }

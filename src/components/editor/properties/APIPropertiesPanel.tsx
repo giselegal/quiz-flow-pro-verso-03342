@@ -10,6 +10,7 @@
  */
 
 import React, { memo, useCallback, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -98,7 +99,7 @@ const FunnelDataDisplay: React.FC<{
                 canSaveToDatabase: false
             };
         } catch (error) {
-            console.error('Erro ao buscar dados do funil:', error);
+            appLogger.error('Erro ao buscar dados do funil:', error);
             return null;
         }
     }, [builder, funnelsContext, blockId]);

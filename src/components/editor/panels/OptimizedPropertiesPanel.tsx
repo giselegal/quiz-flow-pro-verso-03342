@@ -6,6 +6,7 @@
  */
 
 import React, { useMemo, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 // import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter'; // Commented until interface is updated
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -41,8 +42,8 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
   // const { actions, state } = useEditor();
   // Mock data until interface is updated
   const selectedBlocks: string[] = [];
-  const updateBlock = async (id: string, updates: any) => { console.log('updateBlock', id, updates); };
-  const deleteBlock = async (id: string) => { console.log('deleteBlock', id); };
+  const updateBlock = async (id: string, updates: any) => { appLogger.debug('updateBlock', id, updates); };
+  const deleteBlock = async (id: string) => { appLogger.debug('deleteBlock', id); };
   const featureFlags = { useCleanArchitecture: true }; // Mock feature flags
 
   // 🎯 COMPUTED VALUES
@@ -70,7 +71,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
         [property]: value
       });
     } catch (error) {
-      console.error('❌ Erro ao atualizar propriedade:', error);
+      appLogger.error('❌ Erro ao atualizar propriedade:', error);
     }
   }, [updateBlock]);
 
@@ -80,7 +81,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
         selectedBlocks.map((blockId: string) => deleteBlock(blockId))
       );
     } catch (error) {
-      console.error('❌ Erro ao deletar blocos:', error);
+      appLogger.error('❌ Erro ao deletar blocos:', error);
     }
   }, [selectedBlocks, deleteBlock]);
 

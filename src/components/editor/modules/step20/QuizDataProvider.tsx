@@ -1,4 +1,5 @@
 import React, { createContext, useContext, ReactNode } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { getBestUserName } from '@/core/user/name';
 import { mapToFriendlyStyle } from '@/core/style/naming';
@@ -72,7 +73,7 @@ export const QuizDataProvider: React.FC<QuizDataProviderProps> = ({
 
   const setPreviewMode = (enabled: boolean) => {
     // Placeholder para modo de preview
-    console.log('Preview mode:', enabled);
+    appLogger.debug('Preview mode:', enabled);
   };
 
   const contextValue: QuizDataContextType = {

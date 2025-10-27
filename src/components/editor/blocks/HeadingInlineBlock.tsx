@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/utils/logger';
 import { Type, Settings } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
 
@@ -79,7 +80,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
 }) => {
   // 🛡️ VALIDAÇÃO DE SEGURANÇA
   if (!block) {
-    console.error('HeadingInlineBlock: block is undefined');
+    appLogger.error('HeadingInlineBlock: block is undefined');
     return <div className="p-4 text-destructive">Erro: bloco inválido</div>;
   }
 

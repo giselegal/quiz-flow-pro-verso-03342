@@ -9,6 +9,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { DndContext, closestCenter, useSensors, useSensor, PointerSensor, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -47,7 +48,7 @@ export default function ModularTransitionStep({
 
     // Handler para clique em blocos
     const handleBlockClick = React.useCallback((blockId: string) => {
-        console.log(`🎯 Bloco clicado: ${blockId}`);
+        appLogger.debug(`🎯 Bloco clicado: ${blockId}`);
 
         // 1. Notificar componente pai
         onBlockSelect(blockId);
@@ -73,11 +74,11 @@ export default function ModularTransitionStep({
     React.useEffect(() => {
         // Só autoload se não foram fornecidos blocos por props
         if ((Array.isArray(blocksProp) ? blocksProp.length === 0 : true) && blocks.length === 0 && editor?.actions?.ensureStepLoaded) {
-            console.log(`🔄 [ModularTransitionStep] Auto-loading ${stepKey} (blocks empty)`);
+            appLogger.debug(`🔄 [ModularTransitionStep] Auto-loading ${stepKey} (blocks empty)`);
             editor.actions.ensureStepLoaded(stepKey).then(() => {
-                console.log(`✅ [ModularTransitionStep] Loaded ${stepKey} successfully`);
+                appLogger.debug(`✅ [ModularTransitionStep] Loaded ${stepKey} successfully`);
             }).catch((err: Error) => {
-                console.error(`❌ [ModularTransitionStep] Failed to load ${stepKey}:`, err);
+                appLogger.error(`❌ [ModularTransitionStep] Failed to load ${stepKey}:`, err);
             });
         }
     }, [stepKey, blocksProp, blocks.length, editor?.actions]);
@@ -85,7 +86,7 @@ export default function ModularTransitionStep({
     // ✅ FASE 3: Debug logs apenas em DEV
     React.useEffect(() => {
         if (import.meta.env.DEV) {
-            console.log(`🔍 ModularTransitionStep [${stepKey}]:`, {
+            appLogger.debug(`🔍 ModularTransitionStep [${stepKey}]:`, {
                 blocksCount: blocks.length,
                 blockTypes: blocks.map((b: any) => b.type),
                 isEditable,
@@ -140,7 +141,7 @@ export default function ModularTransitionStep({
 
         // ✅ NOVO COMPONENTE DA BIBLIOTECA (lib:tipo-componente)
         if (activeIdStr.startsWith('lib:')) {
-            console.log('🎯 ModularTransitionStep: Novo componente arrastado da biblioteca', {
+            appLogger.debug('🎯 ModularTransitionStep: Novo componente arrastado da biblioteca', {
                 activeId: activeIdStr,
                 overId: over.id,
                 stepKey
@@ -158,7 +159,7 @@ export default function ModularTransitionStep({
                 }
             }
 
-            console.log(`✅ Inserindo ${componentType} na posição ${insertIndex}`);
+            appLogger.debug(`✅ Inserindo ${componentType} na posição ${insertIndex}`);
 
             // Criar novo bloco
             const newBlock: Block = {
@@ -172,7 +173,7 @@ export default function ModularTransitionStep({
             // Adicionar via editor actions
             if (editor?.actions?.addBlockAtIndex) {
                 editor.actions.addBlockAtIndex(stepKey, newBlock, insertIndex).catch((err: Error) => {
-                    console.error('❌ Erro ao adicionar bloco:', err);
+                    appLogger.error('❌ Erro ao adicionar bloco:', err);
                 });
             }
 

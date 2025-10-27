@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -73,7 +74,7 @@ export const ProjectWorkspace: React.FC = () => {
 
       setProjects(mockProjects);
     } catch (error) {
-      console.error('Erro ao carregar projetos:', error);
+      appLogger.error('Erro ao carregar projetos:', error);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 
 interface EditorLoadingWrapperProps {
     children: React.ReactNode;
@@ -26,10 +27,10 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
     const [startTime] = React.useState(Date.now());
 
     React.useEffect(() => {
-        console.log('🔄 [LOADING] Iniciando timeout de', timeout, 'ms');
+        appLogger.debug('🔄 [LOADING] Iniciando timeout de', timeout, 'ms');
 
         const timeoutId = setTimeout(() => {
-            console.warn('⏰ [LOADING] Timeout atingido após', timeout, 'ms');
+            appLogger.warn('⏰ [LOADING] Timeout atingido após', timeout, 'ms');
             setIsTimeout(true);
         }, timeout);
 
@@ -39,17 +40,17 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
     }, [timeout]);
 
     const handleRetry = () => {
-        console.log('🔄 [LOADING] Tentando novamente...');
+        appLogger.debug('🔄 [LOADING] Tentando novamente...');
         window.location.reload();
     };
 
     const handleGoBack = () => {
-        console.log('← [LOADING] Voltando para seleção de templates');
+        appLogger.debug('← [LOADING] Voltando para seleção de templates');
         window.location.href = '/admin/funis';
     };
 
     const handleResetStorage = () => {
-        console.log('🗑️ [LOADING] Limpando storage...');
+        appLogger.debug('🗑️ [LOADING] Limpando storage...');
         try {
             // Limpar dados do editor
             const keysToRemove = [];
@@ -61,11 +62,11 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
             }
 
             keysToRemove.forEach(key => localStorage.removeItem(key));
-            console.log('✅ [LOADING] Storage limpo');
+            appLogger.debug('✅ [LOADING] Storage limpo');
 
             handleRetry();
         } catch (error) {
-            console.error('❌ [LOADING] Erro ao limpar storage:', error);
+            appLogger.error('❌ [LOADING] Erro ao limpar storage:', error);
             handleRetry();
         }
     };

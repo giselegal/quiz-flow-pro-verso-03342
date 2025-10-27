@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useQuizState } from '@/hooks/useQuizState';
 import { UnifiedStepRenderer as ModularUnifiedStepRenderer } from '@/components/editor/quiz/components/UnifiedStepRenderer';
 import SharedProgressHeader from '@/components/shared/SharedProgressHeader';
@@ -78,10 +79,10 @@ export const ModularPreviewContainer: React.FC<ModularPreviewContainerProps> = (
             setCurrentStep(numeric);
             // Garante que templates/blocos modulares da etapa sejam carregados no provider
             ensureStepLoaded(current).catch((e: any) => {
-                console.warn('[ModularPreviewContainer] ensureStepLoaded falhou:', e?.message || e);
+                appLogger.warn('[ModularPreviewContainer] ensureStepLoaded falhou:', e?.message || e);
             });
         } catch (e) {
-            console.warn('[ModularPreviewContainer] sync step no provider falhou:', e);
+            appLogger.warn('[ModularPreviewContainer] sync step no provider falhou:', e);
         }
     }, [state.currentStep, setCurrentStep, ensureStepLoaded]);
 

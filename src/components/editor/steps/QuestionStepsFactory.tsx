@@ -1,4 +1,5 @@
 import { generateRealQuestionTemplates } from '@/data/realQuizTemplates';
+import { appLogger } from '@/utils/logger';
 
 /**
  * ETAPAS 2-11: QUESTÕES PRINCIPAIS (10 QUESTÕES)
@@ -10,7 +11,7 @@ export const createQuestionStep = (stepNumber: number) => {
   const questionTemplate = questionTemplates[questionIndex];
 
   if (!questionTemplate) {
-    console.error(`❌ Template da questão ${questionIndex + 1} não encontrado`);
+    appLogger.error(`❌ Template da questão ${questionIndex + 1} não encontrado`);
     return null;
   }
 

@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 
 export interface UniversalStepEditorProps {
     stepId: string;
@@ -31,7 +32,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
         // Simular carregamento
         const timer = setTimeout(() => {
             setIsLoading(false);
-            console.log('✅ UniversalStepEditor carregado:', { stepId, stepNumber, funnelId });
+            appLogger.debug('✅ UniversalStepEditor carregado:', { stepId, stepNumber, funnelId });
         }, 1000);
 
         return () => clearTimeout(timer);
@@ -54,7 +55,7 @@ const UniversalStepEditor: React.FC<UniversalStepEditorProps> = ({
     const handleSave = () => {
         const mockData = { stepId, stepNumber, timestamp: Date.now() };
         onSave?.(stepId, mockData);
-        console.log('✅ Step salvo:', mockData);
+        appLogger.debug('✅ Step salvo:', mockData);
     };
 
     if (isLoading) {

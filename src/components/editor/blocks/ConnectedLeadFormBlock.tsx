@@ -1,4 +1,5 @@
 import ConnectedLeadForm from '@/components/forms/ConnectedLeadForm';
+import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
@@ -64,7 +65,7 @@ const ConnectedLeadFormBlock: React.FC<ConnectedLeadFormBlockProps> = ({
   };
 
   const handleSubmit = (data: any) => {
-    console.log('✅ ConnectedLeadFormBlock: Dados capturados:', data);
+    appLogger.debug('✅ ConnectedLeadFormBlock: Dados capturados:', data);
 
     // Callback personalizado
     if (onFormSubmit) {
@@ -79,7 +80,7 @@ const ConnectedLeadFormBlock: React.FC<ConnectedLeadFormBlockProps> = ({
 
     // Navegação automática se configurada
     if (config.nextStep) {
-      console.log(`🚀 Navegando para: ${config.nextStep}`);
+      appLogger.debug(`🚀 Navegando para: ${config.nextStep}`);
       // Aqui você pode implementar a navegação
     }
   };

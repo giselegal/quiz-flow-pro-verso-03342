@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,7 +28,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({ block, isSelected, onClic
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Lead form submitted:', formData);
+    appLogger.debug('Lead form submitted:', formData);
     // Aqui seria enviado para o backend
   };
 

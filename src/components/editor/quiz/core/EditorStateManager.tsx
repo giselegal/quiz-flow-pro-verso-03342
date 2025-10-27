@@ -10,6 +10,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { HistoryManager } from '@/utils/historyManager';
 import type { EditableQuizStep } from '../types';
 
@@ -57,7 +58,7 @@ export function useEditorStateManager({
     if (!isDirty || !autoSaveInterval) return;
 
     const timer = setTimeout(() => {
-      console.log('🔄 Auto-save triggered');
+      appLogger.debug('🔄 Auto-save triggered');
       // onAutoSave?.();
       setIsDirty(false);
     }, autoSaveInterval);

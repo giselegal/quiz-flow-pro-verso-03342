@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Eye, Palette, Settings, Type } from 'lucide-react';
@@ -75,7 +76,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
   const getComponentProps = (componentId: string) => {
     // Debug para quiz-intro-header
     if (componentId === 'quiz-intro-header-test-1') {
-      console.log('getComponentProps for quiz-intro-header:', {
+      appLogger.debug('getComponentProps for quiz-intro-header:', {
         componentUpdates: componentUpdates?.[componentId],
         localProps: componentProperties[componentId],
       });
@@ -276,7 +277,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
             }}
             isEditing={selectedComponent === 'quiz-intro-header-test-1'}
             onUpdate={(_, updates: any) => {
-              console.log('QuizIntroHeaderBlock onUpdate:', updates);
+              appLogger.debug('QuizIntroHeaderBlock onUpdate:', updates);
               handlePropertyChange('quiz-intro-header-test-1', 'properties', updates);
             }}
           />
@@ -316,7 +317,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
             }}
             isEditing={selectedComponent === 'step01-header'}
             onUpdate={(_, updates: any) => {
-              console.log('Step01-header onUpdate:', updates);
+              appLogger.debug('Step01-header onUpdate:', updates);
               handlePropertyChange('step01-header', 'properties', updates);
             }}
           />

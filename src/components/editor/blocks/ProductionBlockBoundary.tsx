@@ -1,4 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { appLogger } from '@/utils/logger';
 import { AlertTriangle, RefreshCw, Bug } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StorageService } from '@/services/core/StorageService';
@@ -75,9 +76,9 @@ export class ProductionBlockBoundary extends Component<Props, State> {
     // Log para console em desenvolvimento
     if (process.env.NODE_ENV === 'development') {
       console.group('🚨 Block Error Caught');
-      console.error('Error:', error);
-      console.error('Error Info:', errorInfo);
-      console.error('Block Details:', {
+      appLogger.error('Error:', error);
+      appLogger.error('Error Info:', errorInfo);
+      appLogger.error('Block Details:', {
         type: this.props.blockType,
         id: this.props.blockId,
       });
@@ -106,7 +107,7 @@ export class ProductionBlockBoundary extends Component<Props, State> {
 
       StorageService.safeSetJSON('editor_errors', existingErrors);
     } catch (storageError) {
-      console.warn('Não foi possível salvar erro no localStorage:', storageError);
+      appLogger.warn('Não foi possível salvar erro no localStorage:', storageError);
     }
   };
 

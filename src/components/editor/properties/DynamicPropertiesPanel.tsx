@@ -6,6 +6,7 @@
  */
 
 import { useState, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useComponentConfiguration } from '@/hooks/useComponentConfiguration';
 import { PropertyCategory } from '@/hooks/useUnifiedProperties';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -161,7 +162,7 @@ export default function DynamicPropertiesPanel({
             await updateProperty(key, value);
             onPropertyChange?.(key, value);
         } catch (error) {
-            console.error(`Failed to update property ${key}:`, error);
+            appLogger.error(`Failed to update property ${key}:`, error);
         }
     };
 
@@ -170,7 +171,7 @@ export default function DynamicPropertiesPanel({
             await updateProperties(properties);
             onSave?.();
         } catch (error) {
-            console.error('Failed to save properties:', error);
+            appLogger.error('Failed to save properties:', error);
         }
     };
 
@@ -179,7 +180,7 @@ export default function DynamicPropertiesPanel({
             await resetToDefaults();
             onReset?.();
         } catch (error) {
-            console.error('Failed to reset properties:', error);
+            appLogger.error('Failed to reset properties:', error);
         }
     };
 

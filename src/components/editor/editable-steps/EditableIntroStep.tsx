@@ -7,6 +7,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import IntroStep from '../../quiz/IntroStep';
 import { EditableBlockWrapper } from './shared/EditableBlockWrapper';
 import { EditableStepProps } from './shared/EditableStepProps';
@@ -43,7 +44,7 @@ const EditableIntroStep: React.FC<EditableIntroStepProps> = ({
 
     // 🎪 Mock callback para onNameSubmit (editor não precisa submeter de verdade)
     const mockNameSubmit = useMemo(() => (name: string) => {
-        console.log('[Editor Mock] IntroStep - Nome submetido:', name);
+        appLogger.debug('[Editor Mock] IntroStep - Nome submetido:', name);
 
         // Em modo editável, podemos simular o comportamento sem side effects
         if (isEditable) {

@@ -30,7 +30,7 @@ import { TemplateLoader } from '@/services/editor/TemplateLoader';
 import EditorStateManager from '@/services/editor/EditorStateManager';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 import type { UnifiedStage, UnifiedFunnel } from '@/services/UnifiedCRUDService';
-import { createLogger } from '@/utils/logger';
+import { createLogger, appLogger } from '@/utils/logger';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -104,7 +104,7 @@ export function useEditor(options?: { optional?: boolean }): EditorContextValue 
     const context = useContext(EditorContext);
 
     if (!context && !options?.optional) {
-        console.error('❌ useEditor called outside EditorProviderUnified:', {
+        appLogger.error('❌ useEditor called outside EditorProviderUnified:', {
             location: typeof window !== 'undefined' ? window.location.href : 'ssr',
             timestamp: new Date().toISOString(),
         });
@@ -177,7 +177,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     try {
         unifiedCrud = useUnifiedCRUD();
     } catch (error) {
-        console.log('📝 UnifiedCRUD não disponível, usando modo local');
+        appLogger.debug('📝 UnifiedCRUD não disponível, usando modo local');
     }
 
     // ============================================================================
@@ -185,7 +185,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     // ============================================================================
 
     useEffect(() => {
-        console.log('🎯 EditorProviderUnified montado:', {
+        appLogger.debug('🎯 EditorProviderUnified montado:', {
             funnelId,
             quizId,
             enableSupabase,
@@ -332,7 +332,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 setState(prev => ({ ...prev, ...updates }));
             }
         } catch (error) {
-            console.error('❌ Erro ao carregar step:', error);
+            appLogger.error('❌ Erro ao carregar step:', error);
         }
     }, [stateManager, state]);
 
@@ -401,7 +401,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             const needsLoad = !stepBlocks || stepBlocks.length === 0;
 
             if (needsLoad) {
-                console.log(`🔄 [EditorProvider] Event-driven loading: ${normalizedKey}`);
+                appLogger.debug(`🔄 [EditorProvider] Event-driven loading: ${normalizedKey}`);
                 ensureStepLoaded(state.currentStep).finally(() => {
                     autoLoadedRef.current.add(normalizedKey);
                 });
@@ -440,7 +440,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     }, [state.currentStep, ensureStepLoaded]);
 
     const loadDefaultTemplate = useCallback(async () => {
-        console.log('🎨 Loading default template via TemplateLoader/Registry');
+        appLogger.debug('🎨 Loading default template via TemplateLoader/Registry');
         const newStepBlocks: Record<string, Block[]> = {};
         const newStepSources: Record<string, 'modular-json' | 'master-hydrated' | 'ts-template'> = {};
         let totalBlocks = 0;
@@ -458,7 +458,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 newStepSources[stepKey] = ensured.source;
                 totalBlocks += ensured.blocks.length;
             } catch (error) {
-                console.error(`❌ Error loading ${stepKey}:`, error);
+                appLogger.error(`❌ Error loading ${stepKey}:`, error);
                 newStepBlocks[stepKey] = [];
             }
         }
@@ -470,7 +470,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         });
 
         stateManager.clearHistory();
-        console.log(`✅ Template loaded (Registry-first): ${totalBlocks} blocos em ${Object.keys(newStepBlocks).length} steps`);
+        appLogger.debug(`✅ Template loaded (Registry-first): ${totalBlocks} blocos em ${Object.keys(newStepBlocks).length} steps`);
     }, [stateManager, enableSupabase, state]);
 
     // ============================================================================
@@ -480,7 +480,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
     const saveToSupabase = useCallback(async () => {
         const log = createLogger({ namespace: 'SaveToSupabase' });
         // Log explícito no console para facilitar diagnóstico em qualquer nível de logger
-        console.log('💾 [SaveToSupabase] called', {
+        appLogger.debug('💾 [SaveToSupabase] called', {
             enableSupabase,
             hasUnifiedCrud: !!unifiedCrud,
             funnelId,
@@ -493,7 +493,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 funnelId,
             });
             // Garantir visibilidade mesmo se nível do logger estiver alto
-            console.warn('⚠️ [SaveToSupabase] Supabase desabilitado ou UnifiedCRUD indisponível');
+            appLogger.warn('⚠️ [SaveToSupabase] Supabase desabilitado ou UnifiedCRUD indisponível');
             return;
         }
 
@@ -622,7 +622,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             }
 
         } catch (error) {
-            console.error('❌ [SaveToSupabase] Erro ao salvar:', {
+            appLogger.error('❌ [SaveToSupabase] Erro ao salvar:', {
                 error,
                 message: error instanceof Error ? error.message : 'Unknown error',
                 funnelId,
@@ -642,7 +642,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
         try {
             setState(prev => ({ ...prev, isLoading: true }));
-            console.log('📡 Carregando componentes do Supabase...');
+            appLogger.debug('📡 Carregando componentes do Supabase...');
 
             // Implementar carregamento do Supabase via UnifiedCRUD
             if (unifiedCrud?.loadFunnel) {
@@ -653,11 +653,11 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                         stepBlocks: funnelData.steps,
                         isLoading: false
                     }));
-                    console.log('✅ Componentes carregados do Supabase');
+                    appLogger.debug('✅ Componentes carregados do Supabase');
                 }
             }
         } catch (error) {
-            console.error('❌ Erro ao carregar do Supabase:', error);
+            appLogger.error('❌ Erro ao carregar do Supabase:', error);
             setState(prev => ({ ...prev, isLoading: false }));
         }
     }, [enableSupabase, funnelId, unifiedCrud]);
@@ -685,10 +685,10 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                     ...data.state
                 });
                 stateManager.clearHistory();
-                console.log('✅ JSON importado com sucesso');
+                appLogger.debug('✅ JSON importado com sucesso');
             }
         } catch (error) {
-            console.error('❌ Erro ao importar JSON:', error);
+            appLogger.error('❌ Erro ao importar JSON:', error);
         }
     }, [stateManager, enableSupabase]);
 

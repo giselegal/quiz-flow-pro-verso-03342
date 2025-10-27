@@ -6,6 +6,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
@@ -192,7 +193,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({
             localStorage.setItem('test_results', JSON.stringify(results));
             localStorage.setItem('user_assignments', JSON.stringify(userAssignments));
         } catch (error) {
-            console.warn('Failed to persist feature flag data:', error);
+            appLogger.warn('Failed to persist feature flag data:', error);
         }
     }, [flags, tests, results, userAssignments, persistToLocalStorage]);
 
@@ -210,7 +211,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({
             if (savedResults) setResults(JSON.parse(savedResults));
             if (savedAssignments) setUserAssignments(JSON.parse(savedAssignments));
         } catch (error) {
-            console.warn('Failed to load persisted feature flag data:', error);
+            appLogger.warn('Failed to load persisted feature flag data:', error);
         }
     }, [persistToLocalStorage]);
 

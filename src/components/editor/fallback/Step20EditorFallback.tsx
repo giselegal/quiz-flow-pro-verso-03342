@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import Step20FallbackTemplate from '@/components/quiz/Step20FallbackTemplate';
 import { ModularResultHeaderBlock } from '@/components/editor/modules';
@@ -56,7 +57,7 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
     const shouldUseModular = Boolean(hasValidResult && !error && primaryStyle);
 
     if (shouldShowFallback) {
-      console.log('🛡️ [Step20EditorFallback] Ativando fallback:', {
+      appLogger.debug('🛡️ [Step20EditorFallback] Ativando fallback:', {
         hasResultHeaderBlock,
         hasValidResult,
         isStillLoading,
@@ -68,7 +69,7 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
       setShowFallback(true);
       setUseModularSystem(shouldUseModular);
     } else {
-      console.log('✅ [Step20EditorFallback] Renderização normal:', {
+      appLogger.debug('✅ [Step20EditorFallback] Renderização normal:', {
         hasResultHeaderBlock,
         hasValidResult,
         blocksCount: blocks.length
@@ -163,7 +164,7 @@ export const Step20EditorFallback: React.FC<Step20EditorFallbackProps> = ({
           isSelected={false}
           onPropertyChange={onUpdateBlock ? (key, value) => {
             // Notificar o editor sobre mudanças nas propriedades
-            console.log('🔄 [Step20EditorFallback] Propriedade atualizada:', key, value);
+            appLogger.debug('🔄 [Step20EditorFallback] Propriedade atualizada:', key, value);
             onUpdateBlock?.('modular-result-fallback', { [key]: value });
           } : undefined}
           className="transition-all duration-500 opacity-100"

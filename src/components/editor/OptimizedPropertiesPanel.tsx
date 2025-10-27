@@ -12,6 +12,7 @@
  */
 
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
 
 // UI Components
@@ -260,7 +261,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
         : baseClasses;
 
       const handleChange = (newValue: any) => {
-        console.log('🎯 OptimizedPropertiesPanel handleChange:', { key, newValue });
+        appLogger.debug('🎯 OptimizedPropertiesPanel handleChange:', { key, newValue });
         updateProperty(key, newValue);
         // ✅ CORREÇÃO: Remover formUpdateProperty (dual update)
       };

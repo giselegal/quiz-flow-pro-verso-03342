@@ -5,6 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { appLogger } from '@/utils/logger';
 import { render, screen, waitFor } from '@testing-library/react';
 import { EditableBlock } from '../EditableBlock';
 import { PreviewBlock } from '../PreviewBlock';
@@ -159,7 +160,7 @@ describe('TK-CANVAS-09: Performance Tests', () => {
   describe('Memory Leak Detection', () => {
     it('should not increase memory significantly after multiple renders', () => {
       if (!('memory' in performance)) {
-        console.log('⚠️ Memory API not available, skipping test');
+        appLogger.debug('⚠️ Memory API not available, skipping test');
         return;
       }
       
@@ -263,7 +264,7 @@ describe('Performance Benchmarks', () => {
     const max = Math.max(...times);
     const min = Math.min(...times);
     
-    console.log(`📊 EditableBlock Benchmark:
+    appLogger.debug(`📊 EditableBlock Benchmark:
       Average: ${avg.toFixed(2)}ms
       Min: ${min.toFixed(2)}ms
       Max: ${max.toFixed(2)}ms

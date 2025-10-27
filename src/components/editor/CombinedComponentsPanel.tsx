@@ -1,4 +1,5 @@
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
+import { appLogger } from '@/utils/logger';
 import ReusableComponentsPanel from '@/components/editor/ReusableComponentsPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Grid3X3, Package } from 'lucide-react';
@@ -49,7 +50,7 @@ export const CombinedComponentsPanel: React.FC<CombinedComponentsPanelProps> = (
                 <ReusableComponentsPanel
                   currentStepNumber={currentStepNumber}
                   onComponentAdd={(type: string) => {
-                    console.log(`✅ Componente reutilizável ${type} adicionado!`);
+                    appLogger.debug(`✅ Componente reutilizável ${type} adicionado!`);
                   }}
                 />
               </div>

@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import QuizApp from '@/components/quiz/QuizApp';
 import ModularPreviewContainer from '@/components/editor/quiz/ModularPreviewContainer';
 import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';
@@ -63,7 +64,7 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
     // 🐛 DEBUG: Log quando externalStepsToUse muda
     useEffect(() => {
         const stepsArray = Array.isArray(externalStepsToUse) ? externalStepsToUse : [];
-        console.log('🎯 QuizProductionPreview: externalStepsToUse atualizado', {
+        appLogger.debug('🎯 QuizProductionPreview: externalStepsToUse atualizado', {
             fonte: editorSteps ? 'editorSteps' : (liveSteps ? 'liveSteps' : 'nenhum'),
             stepsCount: stepsArray.length,
             primeiroStepId: stepsArray[0]?.id,
@@ -100,7 +101,7 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
     useEffect(() => {
         if (editorSteps && editorSteps.length > 0) {
             setRefreshKey(prev => prev + 1);
-            console.log('🔄 QuizProductionPreview: editorSteps mudou, forçando refresh', {
+            appLogger.debug('🔄 QuizProductionPreview: editorSteps mudou, forçando refresh', {
                 stepsCount: editorSteps.length,
                 refreshKey: refreshKey + 1
             });
@@ -150,12 +151,12 @@ export const QuizProductionPreview: React.FC<QuizProductionPreviewProps> = ({
 
     const handleRefresh = useCallback(() => {
         setRefreshKey(prev => prev + 1);
-        console.log('🔄 Preview atualizado');
+        appLogger.debug('🔄 Preview atualizado');
     }, []);
 
     const handleReset = useCallback(() => {
         setRefreshKey(prev => prev + 1);
-        console.log('🔄 Preview reiniciado');
+        appLogger.debug('🔄 Preview reiniciado');
     }, []);
 
     const handleOpenProduction = useCallback(() => {

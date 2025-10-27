@@ -1,5 +1,6 @@
 // src/components/editor/StepEditorWrapper.tsx
 import React, { Suspense, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { SCHEMAS, migrateProps } from '@/schemas';
 import { normalizeByType } from '@/utils/normalizeByType';
 import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
@@ -55,7 +56,7 @@ const StepEditorWrapper: React.FC<Props> = ({ selectedStep, onUpdateSteps, pushH
             setIsDirty(true);
             toast({ title: 'Props aplicadas', description: 'Canvas atualizado a partir das propriedades' });
         } catch (e: any) {
-            console.error('Erro ao aplicar props → blocks', e);
+            appLogger.error('Erro ao aplicar props → blocks', e);
             toast({ title: 'Erro ao aplicar props', description: e?.message || 'Falha ao aplicar propriedades', variant: 'destructive' });
         }
     };

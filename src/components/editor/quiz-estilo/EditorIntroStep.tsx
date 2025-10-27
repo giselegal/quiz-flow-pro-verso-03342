@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 // Tipo any para compatibilidade - dados vêm do QuizFunnelEditorWYSIWYG
 import QuizEstiloWrapper from './QuizEstiloWrapper';
 
@@ -33,7 +34,7 @@ export default function EditorIntroStep({
         e?.preventDefault();
         if (nome.trim()) {
             // No editor, não avança automaticamente
-            console.log('Nome submetido:', nome.trim());
+            appLogger.debug('Nome submetido:', nome.trim());
         }
     };
 

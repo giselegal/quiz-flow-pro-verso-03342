@@ -3,6 +3,7 @@
 // =====================================================================
 
 import React, { useState, useCallback, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -100,7 +101,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   // 🎯 OBTER DEFINIÇÕES DAS ETAPAS DO STEPTEMPLATE SERVICE (FONTE ÚNICA)
   const serviceStepsReference = useMemo(() => {
     try {
-      console.log('📋 StepsPanel: Obtendo referência das etapas do stepTemplateService...');
+      appLogger.debug('📋 StepsPanel: Obtendo referência das etapas do stepTemplateService...');
       const allSteps = stepTemplateService.getAllSteps();
 
       if (allSteps && allSteps.length > 0) {
@@ -115,15 +116,15 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
           multiSelect: stepInfo.multiSelect,
         }));
 
-        console.log(`✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`);
-        console.log(
+        appLogger.debug(`✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`);
+        appLogger.debug(
           '📊 StepsPanel: Estatísticas dos templates:',
           stepTemplateService.getTemplateStats()
         );
         return serviceSteps;
       }
     } catch (error) {
-      console.error('❌ StepsPanel: Erro ao obter referência do stepTemplateService:', error);
+      appLogger.error('❌ StepsPanel: Erro ao obter referência do stepTemplateService:', error);
     }
 
     return [];

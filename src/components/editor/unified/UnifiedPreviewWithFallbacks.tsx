@@ -14,6 +14,7 @@
  */
 
 import React, { useMemo, useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 import { UnifiedPreviewEngine, UnifiedPreviewEngineProps } from './UnifiedPreviewEngine';
@@ -199,7 +200,7 @@ export const UnifiedPreviewWithFallbacks: React.FC<UnifiedPreviewWithFallbacksPr
       await new Promise(resolve => setTimeout(resolve, 1000));
       
     } catch (retryError) {
-      console.error('❌ Erro durante retry:', retryError);
+      appLogger.error('❌ Erro durante retry:', retryError);
       setError(retryError instanceof Error ? retryError.message : 'Erro desconhecido');
     } finally {
       setIsRecovering(false);
@@ -208,7 +209,7 @@ export const UnifiedPreviewWithFallbacks: React.FC<UnifiedPreviewWithFallbacksPr
 
   // Handler de erro do preview
   const handlePreviewError = useCallback((previewError: Error) => {
-    console.error('❌ Erro no preview:', previewError);
+    appLogger.error('❌ Erro no preview:', previewError);
     setError(previewError.message);
     
     if (enableErrorRecovery && retries < retryCount) {
@@ -252,7 +253,7 @@ export const UnifiedPreviewWithFallbacks: React.FC<UnifiedPreviewWithFallbacksPr
           onAddBlock={() => {
             // Callback para adicionar bloco se disponível
             if (previewProps.onBlockUpdate) {
-              console.log('📝 Solicitação para adicionar primeiro bloco');
+              appLogger.debug('📝 Solicitação para adicionar primeiro bloco');
             }
           }}
         />
@@ -294,7 +295,7 @@ export const UnifiedPreviewWithFallbacks: React.FC<UnifiedPreviewWithFallbacksPr
       </div>
     );
   } catch (renderError) {
-    console.error('❌ Erro ao renderizar preview:', renderError);
+    appLogger.error('❌ Erro ao renderizar preview:', renderError);
     
     // Fallback final
     return (

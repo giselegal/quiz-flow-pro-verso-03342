@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -148,7 +149,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
         })),
       };
 
-      console.log('💾 Salvando template no contexto MY_TEMPLATES:', templatePayload);
+      appLogger.debug('💾 Salvando template no contexto MY_TEMPLATES:', templatePayload);
 
       // Salvar usando o novo hook contextual
       const templateId = await saveTemplate(templatePayload);
@@ -167,7 +168,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
       onClose();
 
     } catch (error) {
-      console.error('❌ Erro ao salvar template:', error);
+      appLogger.error('❌ Erro ao salvar template:', error);
 
       toast({
         title: 'Erro',

@@ -14,6 +14,7 @@
  */
 
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { templatesCacheService } from '@/services/TemplatesCacheService';
 
@@ -116,7 +117,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
    * 🏗️ INICIALIZAR ETAPAS
    */
   const initializeStages = useCallback(async () => {
-    console.log('🚀 Inicializando realStages...');
+    appLogger.debug('🚀 Inicializando realStages...');
     setIsLoading(true);
     setError(null);
 
@@ -145,7 +146,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       }
 
       setRealStages(stages);
-      console.log(`✅ ${config.maxStages} etapas inicializadas`);
+      appLogger.debug(`✅ ${config.maxStages} etapas inicializadas`);
 
       // Carregar a primeira etapa
       if (enableCache) {
@@ -153,7 +154,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       }
 
     } catch (error) {
-      console.error('❌ Erro ao inicializar etapas:', error);
+      appLogger.error('❌ Erro ao inicializar etapas:', error);
       setError('Falha ao inicializar etapas');
     } finally {
       setIsLoading(false);
@@ -164,7 +165,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
    * 📥 CARREGAR DADOS DE UMA ETAPA
    */
   const loadStageData = useCallback(async (stageId: string): Promise<Block[]> => {
-    console.log(`🔄 Carregando dados para ${stageId}...`);
+    appLogger.debug(`🔄 Carregando dados para ${stageId}...`);
 
     try {
       const stepNumber = extractStepNumber(stageId);
@@ -196,12 +197,12 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       ));
 
       setLoadedStages(prev => new Set([...prev, stageId]));
-      console.log(`✅ ${stageId} carregado: ${blocks.length} blocos`);
+      appLogger.debug(`✅ ${stageId} carregado: ${blocks.length} blocos`);
 
       return blocks;
 
     } catch (error) {
-      console.error(`❌ Erro ao carregar ${stageId}:`, error);
+      appLogger.error(`❌ Erro ao carregar ${stageId}:`, error);
 
       // Atualizar status como erro
       setRealStages(prev => prev.map(stage =>
@@ -227,7 +228,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
    */
   const stageActions: StageActions = useMemo(() => ({
     setActiveStage: async (stageId: string) => {
-      console.log(`🎯 Mudando para etapa: ${stageId}`);
+      appLogger.debug(`🎯 Mudando para etapa: ${stageId}`);
 
       try {
         setIsLoading(true);
@@ -250,10 +251,10 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
           await stageActions.preloadAdjacentStages(stageId);
         }
 
-        console.log(`✅ Etapa ativa: ${stageId}`);
+        appLogger.debug(`✅ Etapa ativa: ${stageId}`);
 
       } catch (error) {
-        console.error(`❌ Erro ao mudar para ${stageId}:`, error);
+        appLogger.error(`❌ Erro ao mudar para ${stageId}:`, error);
         setError(`Falha ao carregar etapa ${stageId}`);
       } finally {
         setIsLoading(false);
@@ -285,7 +286,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       };
 
       setRealStages(prev => [...prev, newStage]);
-      console.log(`✅ Nova etapa adicionada: ${newStageId}`);
+      appLogger.debug(`✅ Nova etapa adicionada: ${newStageId}`);
 
       return newStageId;
     },
@@ -308,7 +309,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
         templatesCacheService.invalidateStep(stepNumber, config.funnelId);
       }
 
-      console.log(`✅ Etapa removida: ${stageId}`);
+      appLogger.debug(`✅ Etapa removida: ${stageId}`);
     },
 
     reorderStages: async (startIndex: number, endIndex: number) => {
@@ -324,7 +325,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       }));
 
       setRealStages(reorderedStages);
-      console.log(`✅ Etapas reordenadas: ${startIndex} → ${endIndex}`);
+      appLogger.debug(`✅ Etapas reordenadas: ${startIndex} → ${endIndex}`);
     },
 
     refreshStage: async (stageId: string) => {
@@ -341,7 +342,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
       });
 
       await loadStageData(stageId);
-      console.log(`✅ Etapa atualizada: ${stageId}`);
+      appLogger.debug(`✅ Etapa atualizada: ${stageId}`);
     },
 
     preloadAdjacentStages: async (currentStageId: string) => {
@@ -359,13 +360,13 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
           try {
             await loadStageData(stageId);
           } catch (error) {
-            console.warn(`⚠️ Preload falhou para ${stageId}:`, error);
+            appLogger.warn(`⚠️ Preload falhou para ${stageId}:`, error);
           }
         }
       });
 
       await Promise.all(preloadPromises);
-      console.log(`✅ Preload concluído para etapas adjacentes de ${currentStageId}`);
+      appLogger.debug(`✅ Preload concluído para etapas adjacentes de ${currentStageId}`);
     },
 
     validateStage: async (stageId: string) => {
@@ -390,7 +391,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
         await stageActions.updateStageBlocks(newStageId, sourceBlocks);
       }
 
-      console.log(`✅ Etapa duplicada: ${stageId} → ${newStageId}`);
+      appLogger.debug(`✅ Etapa duplicada: ${stageId} → ${newStageId}`);
       return newStageId;
     },
 
@@ -427,7 +428,7 @@ export const RealStagesProvider: React.FC<RealStagesProviderProps> = ({
           : stage
       ));
 
-      console.log(`✅ Blocos atualizados para ${stageId}: ${blocks.length} blocos`);
+      appLogger.debug(`✅ Blocos atualizados para ${stageId}: ${blocks.length} blocos`);
     },
 
   }), [realStages, loadedStages, config, enableCache, loadStageData]);
@@ -514,14 +515,14 @@ import { QUIZ_STYLE_21_STEPS_TEMPLATE as QUIZ_STYLE_21_STEPS_TEMPLATE_STATIC } f
 
 async function loadStepDirect(stepNumber: number): Promise<Block[]> {
   // Implementação direta sem cache (fallback)
-  console.log(`🔄 Carregamento direto para step ${stepNumber}`);
+  appLogger.debug(`🔄 Carregamento direto para step ${stepNumber}`);
 
   try {
     const stepKey = `step-${stepNumber}`;
     const stepBlocks = (QUIZ_STYLE_21_STEPS_TEMPLATE_STATIC as any)[stepKey] || [];
     return Array.isArray(stepBlocks) ? stepBlocks : [];
   } catch (error) {
-    console.error(`❌ Carregamento direto falhou para step ${stepNumber}:`, error);
+    appLogger.error(`❌ Carregamento direto falhou para step ${stepNumber}:`, error);
     return createFallbackBlocks(stepNumber);
   }
 }

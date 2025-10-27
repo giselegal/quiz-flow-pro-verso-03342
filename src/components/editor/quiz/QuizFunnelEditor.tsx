@@ -17,6 +17,7 @@
  */
 
 import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { appLogger } from '@/utils/logger';
 import { emitQuizEvent, setQuizAnalyticsNamespace } from '@/utils/quizAnalytics';
 import sanitizeHtml from '@/utils/sanitizeHtml';
 import { z } from 'zod';
@@ -255,7 +256,7 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
 const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateId }) => {
     // ⚠️ DEPRECATION WARNING
     useEffect(() => {
-        console.warn(
+        appLogger.warn(
             '⚠️⚠️⚠️ DEPRECATED: QuizFunnelEditor foi depreciado em 11/out/2025.\n' +
             '✅ Use QuizModularProductionEditor em vez disso.\n' +
             '📋 Guia de migração: MIGRATION_EDITOR.md\n' +
@@ -482,7 +483,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             };
             StorageService.safeSetJSON('quizResultPayload', payload);
         } catch (e) {
-            console.warn('Falha ao persistir quizResultPayload', e);
+            appLogger.warn('Falha ao persistir quizResultPayload', e);
         }
     }, [simState.resultStyle, simState.secondaryStyles, simState.userName, simActive]);
 
@@ -697,21 +698,21 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             // Validação antes de salvar
             const parsed = StepsArraySchema.safeParse(steps);
             if (!parsed.success) {
-                console.error('❌ Validação falhou ao salvar:', parsed.error.format());
+                appLogger.error('❌ Validação falhou ao salvar:', parsed.error.format());
                 alert('Falha de validação: ver console para detalhes.');
                 return;
             }
             // Checar ciclos antes de salvar
             const cycle = detectCycle(parsed.data as any);
             if (cycle.hasCycle) {
-                console.error('❌ Ciclo detectado ao salvar:', cycle);
+                appLogger.error('❌ Ciclo detectado ao salvar:', cycle);
                 alert('Não é possível salvar: ciclo detectado no fluxo.');
                 return;
             }
             (crud.currentFunnel as any).quizSteps = parsed.data;
             await crud.saveFunnel();
         } catch (e) {
-            console.error('Erro ao salvar quizSteps', e);
+            appLogger.error('Erro ao salvar quizSteps', e);
         } finally {
             setIsSaving(false);
         }
@@ -940,7 +941,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                     try {
                         StorageService.safeSetJSON('quizSelectedOffer', offer);
                     } catch (e) {
-                        console.warn('Falha ao persistir quizSelectedOffer', e);
+                        appLogger.warn('Falha ao persistir quizSelectedOffer', e);
                     }
                     emitQuizEvent({ type: 'offer_view', offerKey: primary || secondaries[0], hasImage: !!offer.image });
                 }
@@ -1081,13 +1082,13 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                             const parsed = StepsArraySchema.safeParse(steps);
                             if (!parsed.success) {
                                 alert('Export bloqueado: validação falhou. Ver console.');
-                                console.error(parsed.error.flatten());
+                                appLogger.error(parsed.error.flatten());
                                 return;
                             }
                             const cycle = detectCycle(parsed.data as any);
                             if (cycle.hasCycle) {
                                 alert('Export bloqueado: ciclo detectado. Ver console.');
-                                console.error('Ciclo detectado:', cycle);
+                                appLogger.error('Ciclo detectado:', cycle);
                                 return;
                             }
                             // Coletar metadados de blocos usados
@@ -1123,7 +1124,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                             const json = JSON.parse(String(ev.target?.result || '{}'));
                                             const parsed = ExportSchema.safeParse(json);
                                             if (!parsed.success) {
-                                                console.error('❌ Erros de validação no import:', parsed.error.flatten());
+                                                appLogger.error('❌ Erros de validação no import:', parsed.error.flatten());
                                                 alert('Falha de validação do JSON importado. Ver console.');
                                                 return;
                                             }
@@ -1132,7 +1133,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                 const available = new Set(blockRegistry.list.map(b => b.id));
                                                 const missingBlocks = (parsed.data.blockRegistry || []).filter(b => !available.has(b.id));
                                                 if (missingBlocks.length) {
-                                                    console.warn('⚠️ Blocos ausentes no registry atual:', missingBlocks.map(b => b.id));
+                                                    appLogger.warn('⚠️ Blocos ausentes no registry atual:', missingBlocks.map(b => b.id));
                                                 }
                                             } catch (e) { /* ignore */ }
                                             const importedSteps = parsed.data.steps;
@@ -1148,7 +1149,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                             // Segunda validação para garantir consistência após normalização de ID
                                             const second = StepsArraySchema.safeParse(normalized);
                                             if (!second.success) {
-                                                console.error('❌ Erro após normalização de IDs:', second.error.flatten());
+                                                appLogger.error('❌ Erro após normalização de IDs:', second.error.flatten());
                                                 alert('Import falhou após normalização de IDs.');
                                                 return;
                                             }

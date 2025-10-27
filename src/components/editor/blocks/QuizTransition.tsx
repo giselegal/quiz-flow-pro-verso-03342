@@ -1,3 +1,4 @@
+import { appLogger } from '@/utils/logger';
 interface QuizTransitionBlockProps {
   properties: {
     message?: string;
@@ -24,7 +25,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({ properties })
   const showButton = properties.showButton ?? false;
 
   const handleContinue = () => {
-    console.log('Transição: Continuar para próxima seção');
+    appLogger.debug('Transição: Continuar para próxima seção');
   };
 
   // Cores por variante

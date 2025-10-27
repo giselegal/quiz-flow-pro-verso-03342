@@ -9,6 +9,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { DndContext, closestCenter, useSensors, useSensor, PointerSensor, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -115,7 +116,7 @@ export default function ModularResultStep({
 
     // Handler para clique em blocos
     const handleBlockClick = React.useCallback((blockId: string) => {
-        console.log(`🎯 Bloco clicado: ${blockId}`);
+        appLogger.debug(`🎯 Bloco clicado: ${blockId}`);
 
         // 1. Notificar componente pai
         onBlockSelect(blockId);
@@ -161,11 +162,11 @@ export default function ModularResultStep({
     React.useEffect(() => {
         // Só autoload se não foram fornecidos blocos por props
         if ((Array.isArray(blocksProp) ? blocksProp.length === 0 : true) && sourceBlocks.length === 0 && editor?.actions?.ensureStepLoaded) {
-            console.log(`🔄 [ModularResultStep] Auto-loading ${stepKey} (blocks empty)`);
+            appLogger.debug(`🔄 [ModularResultStep] Auto-loading ${stepKey} (blocks empty)`);
             editor.actions.ensureStepLoaded(stepKey).then(() => {
-                console.log(`✅ [ModularResultStep] Loaded ${stepKey} successfully`);
+                appLogger.debug(`✅ [ModularResultStep] Loaded ${stepKey} successfully`);
             }).catch((err: Error) => {
-                console.error(`❌ [ModularResultStep] Failed to load ${stepKey}:`, err);
+                appLogger.error(`❌ [ModularResultStep] Failed to load ${stepKey}:`, err);
             });
         }
     }, [stepKey, blocksProp, sourceBlocks.length, editor?.actions]);
@@ -173,7 +174,7 @@ export default function ModularResultStep({
     // ✅ FASE 2: Debug logs apenas em DEV
     React.useEffect(() => {
         if (import.meta.env.DEV) {
-            console.log(`🔍 ModularResultStep [${stepKey}]:`, {
+            appLogger.debug(`🔍 ModularResultStep [${stepKey}]:`, {
                 blocksCount: blocks.length,
                 blockTypes: blocks.map((b: Block) => b.type),
                 blockIds: blocks.map((b: Block) => b.id),
@@ -216,7 +217,7 @@ export default function ModularResultStep({
 
         // ✅ NOVO COMPONENTE DA BIBLIOTECA (lib:tipo-componente)
         if (activeIdStr.startsWith('lib:')) {
-            console.log('🎯 ModularResultStep: Novo componente arrastado da biblioteca', {
+            appLogger.debug('🎯 ModularResultStep: Novo componente arrastado da biblioteca', {
                 activeId: activeIdStr,
                 overId: over.id,
                 stepKey
@@ -234,7 +235,7 @@ export default function ModularResultStep({
                 }
             }
 
-            console.log(`✅ Inserindo ${componentType} na posição ${insertIndex}`);
+            appLogger.debug(`✅ Inserindo ${componentType} na posição ${insertIndex}`);
 
             // Criar novo bloco
             const newBlock: Block = {
@@ -248,7 +249,7 @@ export default function ModularResultStep({
             // Adicionar via editor actions
             if (editor?.actions?.addBlockAtIndex) {
                 editor.actions.addBlockAtIndex(stepKey, newBlock, insertIndex).catch((err: Error) => {
-                    console.error('❌ Erro ao adicionar bloco:', err);
+                    appLogger.error('❌ Erro ao adicionar bloco:', err);
                 });
             }
 

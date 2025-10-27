@@ -1,5 +1,6 @@
 // Sistema de Validação e Feedback Avançado para o Editor
 import React, { useState, useCallback, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { AlertCircle, CheckCircle, AlertTriangle, Info } from 'lucide-react';
 import { Alert, AlertDescription } from '../../ui/alert';
 import { Badge } from '../../ui/badge';
@@ -199,7 +200,7 @@ export const useValidation = () => {
 
         setValidationResults(allResults);
       } catch (error) {
-        console.error('Validation error:', error);
+        appLogger.error('Validation error:', error);
       } finally {
         setIsValidating(false);
       }

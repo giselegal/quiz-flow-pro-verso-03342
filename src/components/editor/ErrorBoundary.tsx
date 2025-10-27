@@ -1,4 +1,5 @@
 import React, { Component, ReactNode } from 'react';
+import { appLogger } from '@/utils/logger';
 import { AlertTriangle, RefreshCw, Bug } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
@@ -44,9 +45,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.group('🚨 ErrorBoundary - Erro Capturado');
-    console.error('Error:', error);
-    console.error('Error Info:', errorInfo);
-    console.error('Component Stack:', errorInfo.componentStack);
+    appLogger.error('Error:', error);
+    appLogger.error('Error Info:', errorInfo);
+    appLogger.error('Component Stack:', errorInfo.componentStack);
     console.groupEnd();
 
     this.setState({

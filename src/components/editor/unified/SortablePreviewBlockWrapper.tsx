@@ -1,4 +1,5 @@
 import { Block } from '@/types/editor';
+import { appLogger } from '@/utils/logger';
 import { StyleResult } from '@/types/quiz';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -36,7 +37,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
   onSelect,
   children,
 }) => {
-  console.log(`🔄 SortablePreviewBlockWrapper renderizado: ${block.id} (${block.type})`);
+  appLogger.debug(`🔄 SortablePreviewBlockWrapper renderizado: ${block.id} (${block.type})`);
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -50,7 +51,7 @@ export const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperPr
     },
   });
 
-  console.log(`🔧 useSortable config para ${block.id}:`, {
+  appLogger.debug(`🔧 useSortable config para ${block.id}:`, {
     id: block.id,
     disabled: isPreviewing,
     hasListeners: !!listeners,

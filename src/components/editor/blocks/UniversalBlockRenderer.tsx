@@ -1,4 +1,5 @@
 import React, { memo, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
@@ -255,7 +256,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 
   // 🚨 DEPRECATION WARNING
   if (isPreviewing !== undefined && process.env.NODE_ENV === 'development') {
-    console.warn(
+    appLogger.warn(
       `⚠️ DEPRECATION WARNING: A prop 'isPreviewing' está deprecated.\n` +
       `Use EditableBlock para modo edição ou PreviewBlock para preview.\n` +
       `Block ID: ${block.id}, Type: ${block.type}`
@@ -484,7 +485,7 @@ class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error(`🚨 Erro ao renderizar componente ${this.props.blockType}:`, {
+    appLogger.error(`🚨 Erro ao renderizar componente ${this.props.blockType}:`, {
       blockType: this.props.blockType,
       blockId: this.props.blockId,
       error: error.message,
@@ -509,7 +510,7 @@ class ErrorBoundary extends React.Component<
           <button
             onClick={() => {
               this.setState({ hasError: false, error: undefined });
-              console.log('🔄 Tentando renderizar novamente:', this.props.blockType);
+              appLogger.debug('🔄 Tentando renderizar novamente:', this.props.blockType);
             }}
             className="mt-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200"
           >

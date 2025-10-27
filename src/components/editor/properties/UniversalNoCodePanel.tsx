@@ -10,6 +10,7 @@
  */
 
 import React, { useState, useMemo, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -72,7 +73,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
   // Extrair e categorizar propriedades
   const { extractedProperties, categorizedProperties } = useMemo(() => {
-    console.log('🔍 UniversalNoCodePanel - Extraindo propriedades:', {
+    appLogger.debug('🔍 UniversalNoCodePanel - Extraindo propriedades:', {
       hasSelectedBlock: !!selectedBlock,
       blockType: selectedBlock?.type,
       blockId: selectedBlock?.id
@@ -83,12 +84,12 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
     }
 
     const extracted = propertyExtractionService.extractAllProperties(selectedBlock);
-    console.log('🔍 Propriedades extraídas:', { count: extracted.length, properties: extracted.slice(0, 3) });
+    appLogger.debug('🔍 Propriedades extraídas:', { count: extracted.length, properties: extracted.slice(0, 3) });
 
     const withInterpolation = propertyExtractionService.identifyInterpolationFields(extracted);
     const categorized = propertyExtractionService.categorizeProperties(withInterpolation);
 
-    console.log('🏷️  Propriedades categorizadas:', Object.keys(categorized).map(cat => ({
+    appLogger.debug('🏷️  Propriedades categorizadas:', Object.keys(categorized).map(cat => ({
       category: cat,
       count: categorized[cat].length
     })));
@@ -102,7 +103,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
   // Categorias disponíveis e seleção inicial automática
   const availableCategories = useMemo(() => {
     const categories = Object.keys(categorizedProperties);
-    console.log('📂 Categorias disponíveis:', categories);
+    appLogger.debug('📂 Categorias disponíveis:', categories);
     return categories;
   }, [categorizedProperties]);
 
@@ -111,7 +112,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
     if (availableCategories.length > 0 && (!selectedCategory || !availableCategories.includes(selectedCategory))) {
       const preferredOrder = ['content', 'style', 'layout', 'behavior', 'validation', 'accessibility', 'advanced', 'metadata'];
       const firstAvailable = preferredOrder.find(cat => availableCategories.includes(cat)) || availableCategories[0];
-      console.log('🎯 Auto-selecionando categoria:', firstAvailable);
+      appLogger.debug('🎯 Auto-selecionando categoria:', firstAvailable);
       setSelectedCategory(firstAvailable);
     }
   }, [availableCategories, selectedCategory]);
@@ -136,7 +137,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
       }
     });
 
-    console.log('🔍 Propriedades filtradas por categoria:', Object.keys(filtered).map(cat => ({
+    appLogger.debug('🔍 Propriedades filtradas por categoria:', Object.keys(filtered).map(cat => ({
       category: cat,
       count: filtered[cat].length
     })));
@@ -146,7 +147,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
   // Debug para mudanças de categoria
   React.useEffect(() => {
-    console.log('📋 Categoria selecionada mudou:', {
+    appLogger.debug('📋 Categoria selecionada mudou:', {
       selectedCategory,
       availableCategories,
       hasPropertiesInCategory: !!(filteredProperties[selectedCategory] && filteredProperties[selectedCategory].length > 0)
@@ -155,7 +156,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
   // Debug para renderização das tabs
   React.useEffect(() => {
-    console.log('🎮 Renderizando Tabs:', {
+    appLogger.debug('🎮 Renderizando Tabs:', {
       selectedCategory,
       availableCategories,
       filteredCategories: Object.keys(filteredProperties),
@@ -207,7 +208,7 @@ export const UniversalNoCodePanel: React.FC<UniversalNoCodePanelProps> = ({
 
   // Handler para mudança de categoria com debug
   const handleCategoryChange = useCallback((newCategory: string) => {
-    console.log('🔄 Mudando categoria:', { from: selectedCategory, to: newCategory, availableCategories });
+    appLogger.debug('🔄 Mudando categoria:', { from: selectedCategory, to: newCategory, availableCategories });
     setSelectedCategory(newCategory);
   }, [selectedCategory, availableCategories]);
 

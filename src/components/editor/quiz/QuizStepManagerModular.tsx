@@ -5,6 +5,7 @@
  */
 
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { getStepInfo, isValidStep, loadStepBlocks } from '@/utils/quiz21StepsRenderer';
 import React, { useMemo } from 'react';
@@ -25,7 +26,7 @@ export const QuizStepManagerModular: React.FC<QuizStepManagerProps> = ({ childre
   // Carregar dados reais da etapa usando o novo sistema
   const stepBlocks = useMemo(() => {
     if (!isValidStep(currentStepNumber)) {
-      console.warn(`❌ Etapa ${currentStepNumber} é inválida`);
+      appLogger.warn(`❌ Etapa ${currentStepNumber} é inválida`);
       return [];
     }
 
@@ -60,7 +61,7 @@ export const QuizStepManagerModular: React.FC<QuizStepManagerProps> = ({ childre
   };
 
   // Log para debug
-  console.log(`🎯 QuizStepManagerModular - Etapa ${currentStepNumber}:`, {
+  appLogger.debug(`🎯 QuizStepManagerModular - Etapa ${currentStepNumber}:`, {
     stepData: currentStepData,
     blocksCount: stepBlocks.length,
     isValid: isStepValid,

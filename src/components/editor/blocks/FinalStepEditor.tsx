@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { appLogger } from '@/utils/logger';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -24,7 +25,7 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({ stepConfig, onChange 
   const [activeTab, setActiveTab] = useState('general');
 
   // ✅ CORREÇÃO: Validação e valores padrão mais robustos
-  console.log('🎯 FinalStepEditor recebeu:', { stepConfig, onChange: !!onChange });
+  appLogger.debug('🎯 FinalStepEditor recebeu:', { stepConfig, onChange: !!onChange });
 
   const safeStepConfig = stepConfig || {};
   const {
@@ -40,7 +41,7 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({ stepConfig, onChange 
 
   // ✅ CORREÇÃO: Função para atualizar com validação
   const updateConfig = (updates: Partial<FinalStepEditorProps['stepConfig']>) => {
-    console.log('🚀 FinalStepEditor.updateConfig chamado:', {
+    appLogger.debug('🚀 FinalStepEditor.updateConfig chamado:', {
       updates,
       currentConfig: safeStepConfig,
     });
@@ -52,7 +53,7 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({ stepConfig, onChange 
       };
       onChange(newConfig);
     } else {
-      console.warn('⚠️ FinalStepEditor: onChange não foi fornecido');
+      appLogger.warn('⚠️ FinalStepEditor: onChange não foi fornecido');
     }
   };
 

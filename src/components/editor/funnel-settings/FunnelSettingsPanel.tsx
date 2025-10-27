@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -43,7 +44,7 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
         description: 'Todas as configurações foram salvas com sucesso.',
       });
     } catch (error) {
-      console.error('Erro ao salvar configurações:', error);
+      appLogger.error('Erro ao salvar configurações:', error);
       toast({
         title: 'Erro ao salvar',
         description: 'Não foi possível salvar as configurações.',

@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/utils/logger';
 import { Sparkles, Edit3 } from 'lucide-react';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import { getStyleConfig } from '@/config/styleConfig';
@@ -27,7 +28,7 @@ const getSafeStyleConfig = (styleLabel: string) => {
   try {
     const config = getStyleConfig(styleLabel);
     if (!config || typeof config !== 'object') {
-      console.warn(`getStyleConfig retornou um valor inválido para: ${styleLabel}`);
+      appLogger.warn(`getStyleConfig retornou um valor inválido para: ${styleLabel}`);
       return {
         keywords: [],
         colors: [],
@@ -38,7 +39,7 @@ const getSafeStyleConfig = (styleLabel: string) => {
     }
     return config;
   } catch (error) {
-    console.error(`Erro ao obter configuração do estilo ${styleLabel}:`, error);
+    appLogger.error(`Erro ao obter configuração do estilo ${styleLabel}:`, error);
     return {
       keywords: [],
       colors: [],
@@ -67,7 +68,7 @@ const StyleCardInlineBlock: React.FC<any> = ({
   const { primaryStyle } = useQuizResult();
 
   // Adicionar log para depuração
-  console.log('StyleCardInlineBlock - primaryStyle:', primaryStyle);
+  appLogger.debug('StyleCardInlineBlock - primaryStyle:', primaryStyle);
 
   // Se não houver estilo, exibir mensagem ou estado de carregamento
   if (!primaryStyle) {
@@ -90,10 +91,10 @@ const StyleCardInlineBlock: React.FC<any> = ({
   // Resolver dados do estilo a partir do resultado
   const rawStyle = (primaryStyle?.style || primaryStyle?.category || '').trim();
   const styleLabel = mapToFriendlyStyle(rawStyle);
-  console.log('StyleCardInlineBlock - styleLabel:', styleLabel);
+  appLogger.debug('StyleCardInlineBlock - styleLabel:', styleLabel);
 
   const resolved = styleLabel ? getSafeStyleConfig(styleLabel) : null;
-  console.log('StyleCardInlineBlock - resolved:', resolved);
+  appLogger.debug('StyleCardInlineBlock - resolved:', resolved);
 
   // Montar variáveis de placeholders com valores padrão
   const vars = {

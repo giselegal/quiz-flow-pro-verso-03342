@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/utils/logger';
 import { Star, Quote } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
 
@@ -70,7 +71,7 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
   }
 
   // Debug das propriedades recebidas
-  console.log('🔍 [SocialProofBlock] Propriedades recebidas:', block.properties);
+  appLogger.debug('🔍 [SocialProofBlock] Propriedades recebidas:', block.properties);
 
   const { title = 'Depoimentos Reais de Quem Transformou o Guarda-Roupa', showTitle = true } =
     block?.properties || {};

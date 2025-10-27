@@ -5,6 +5,7 @@
  */
 
 import React, { useEffect, useState, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useUnifiedCRUD } from '@/contexts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -75,7 +76,7 @@ function createBlankStep(type: QuizStep['type']): EditableQuizStep {
 
 const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateId }) => {
     // 🚨 Console warning para desenvolvedores
-    console.warn(
+    appLogger.warn(
         '⚠️ DEPRECATED: QuizFunnelEditorSimplified será removido em 01/nov/2025. ' +
         'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
     );
@@ -160,7 +161,7 @@ const QuizFunnelEditorSimplified: React.FC<QuizFunnelEditorProps> = ({ funnelId,
             (crud.currentFunnel as any).quizSteps = steps;
             await crud.saveFunnel();
         } catch (e) {
-            console.error('Erro ao salvar quizSteps', e);
+            appLogger.error('Erro ao salvar quizSteps', e);
         } finally {
             setIsSaving(false);
         }

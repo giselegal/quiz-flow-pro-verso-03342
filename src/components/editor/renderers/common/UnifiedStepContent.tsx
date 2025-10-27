@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, memo, useMemo, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { EditableQuizStep } from '@/components/editor/quiz/types';
 import { adaptStepData } from '@/utils/StepDataAdapter';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
@@ -301,7 +302,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                 }
             })();
         } catch (err) {
-            console.warn('Falha ao aplicar reordenação no provider, seguirá apenas metadata:', err);
+            appLogger.warn('Falha ao aplicar reordenação no provider, seguirá apenas metadata:', err);
         }
     };
 

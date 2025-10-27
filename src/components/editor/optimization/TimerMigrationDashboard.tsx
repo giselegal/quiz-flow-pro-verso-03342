@@ -5,6 +5,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -62,7 +63,7 @@ export const TimerMigrationDashboard: React.FC<TimerMigrationDashboardProps> = (
       await onMigrateFile?.(filePath);
       setMigrationStatus(getMigrationStatus());
     } catch (error) {
-      console.error('Erro ao migrar arquivo:', error);
+      appLogger.error('Erro ao migrar arquivo:', error);
     }
   };
 

@@ -13,6 +13,7 @@
  */
 
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { 
   unifiedCRUDService, 
@@ -156,7 +157,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
 
     autoSaveTimeoutRef.current = setTimeout(async () => {
       if (state.isDirty && state.activeFunnel && !state.isSaving) {
-        console.log('🔄 Auto-save triggered');
+        appLogger.debug('🔄 Auto-save triggered');
         await saveFunnel();
       }
     }, autoSaveInterval);
@@ -186,7 +187,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           await templatesCacheService.preloadFunnel(funnelId);
         }
 
-        console.log(`✅ Funnel carregado: ${funnelId}`);
+        appLogger.debug(`✅ Funnel carregado: ${funnelId}`);
       } else {
         throw new Error(result.error || 'Falha ao carregar funnel');
       }
@@ -197,13 +198,13 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
         error: errorMessage,
       });
       
-      console.error('❌ Erro ao carregar funnel:', errorMessage);
+      appLogger.error('❌ Erro ao carregar funnel:', errorMessage);
     }
   }, [enableCache, updateState, updateMetrics]);
 
   const saveFunnel = useCallback(async (): Promise<boolean> => {
     if (!state.activeFunnel) {
-      console.warn('⚠️ Nenhum funnel para salvar');
+      appLogger.warn('⚠️ Nenhum funnel para salvar');
       return false;
     }
 
@@ -224,7 +225,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           await templatesCacheService.invalidateFunnel(state.activeFunnel.id);
         }
 
-        console.log('✅ Funnel salvo com sucesso');
+        appLogger.debug('✅ Funnel salvo com sucesso');
         return true;
       } else {
         throw new Error(result.error || 'Falha ao salvar funnel');
@@ -236,7 +237,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
         error: errorMessage,
       });
       
-      console.error('❌ Erro ao salvar funnel:', errorMessage);
+      appLogger.error('❌ Erro ao salvar funnel:', errorMessage);
       return false;
     }
   }, [state.activeFunnel, enableCache, updateState, updateMetrics]);
@@ -294,7 +295,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           isDirty: false,
         });
 
-        console.log(`✅ Funnel criado: ${result.data.id}`);
+        appLogger.debug(`✅ Funnel criado: ${result.data.id}`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao criar funnel');
@@ -331,7 +332,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           templatesCacheService.clearFunnel(funnelId);
         }
 
-        console.log(`✅ Funnel excluído: ${funnelId}`);
+        appLogger.debug(`✅ Funnel excluído: ${funnelId}`);
         return true;
       } else {
         throw new Error(result.error || 'Falha ao excluir funnel');
@@ -340,7 +341,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
       const errorMessage = error instanceof Error ? error.message : 'Erro ao excluir';
       updateState({ error: errorMessage });
       
-      console.error('❌ Erro ao excluir funnel:', errorMessage);
+      appLogger.error('❌ Erro ao excluir funnel:', errorMessage);
       return false;
     }
   }, [state.activeFunnel?.id, enableCache, updateState, updateMetrics]);
@@ -355,7 +356,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
       if (result.success && result.data) {
         updateState({ isLoading: false });
         
-        console.log(`✅ Funnel duplicado: ${funnelId} -> ${result.data.id}`);
+        appLogger.debug(`✅ Funnel duplicado: ${funnelId} -> ${result.data.id}`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao duplicar funnel');
@@ -399,7 +400,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           isDirty: true,
         });
 
-        console.log(`✅ Stage adicionado: ${result.data.id}`);
+        appLogger.debug(`✅ Stage adicionado: ${result.data.id}`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao adicionar stage');
@@ -428,7 +429,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           isDirty: true,
         });
 
-        console.log(`✅ Stage atualizado: ${stageId}`);
+        appLogger.debug(`✅ Stage atualizado: ${stageId}`);
       } else {
         throw new Error(result.error || 'Falha ao atualizar stage');
       }
@@ -464,7 +465,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           isDirty: true,
         });
 
-        console.log(`✅ Stage excluído: ${stageId}`);
+        appLogger.debug(`✅ Stage excluído: ${stageId}`);
       } else {
         throw new Error(result.error || 'Falha ao excluir stage');
       }
@@ -492,7 +493,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           isDirty: true,
         });
 
-        console.log(`✅ Stages reordenados: ${startIndex} -> ${endIndex}`);
+        appLogger.debug(`✅ Stages reordenados: ${startIndex} -> ${endIndex}`);
       } else {
         throw new Error(result.error || 'Falha ao reordenar stages');
       }
@@ -537,7 +538,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           isDirty: true,
         });
 
-        console.log(`✅ Stage duplicado: ${stageId} -> ${result.data.id}`);
+        appLogger.debug(`✅ Stage duplicado: ${stageId} -> ${result.data.id}`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao duplicar stage');
@@ -577,7 +578,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           isDirty: true,
         });
 
-        console.log(`✅ Block adicionado: ${result.data.id} (${type})`);
+        appLogger.debug(`✅ Block adicionado: ${result.data.id} (${type})`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao adicionar block');
@@ -609,7 +610,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
         // Agendar auto-save
         scheduleAutoSave();
 
-        console.log(`✅ Block atualizado: ${blockId}`);
+        appLogger.debug(`✅ Block atualizado: ${blockId}`);
       } else {
         throw new Error(result.error || 'Falha ao atualizar block');
       }
@@ -637,7 +638,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           isDirty: true,
         });
 
-        console.log(`✅ Block excluído: ${blockId}`);
+        appLogger.debug(`✅ Block excluído: ${blockId}`);
       } else {
         throw new Error(result.error || 'Falha ao excluir block');
       }
@@ -665,7 +666,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           isDirty: true,
         });
 
-        console.log(`✅ Block duplicado: ${blockId} -> ${result.data.id}`);
+        appLogger.debug(`✅ Block duplicado: ${blockId} -> ${result.data.id}`);
         return result.data.id;
       } else {
         throw new Error(result.error || 'Falha ao duplicar block');
@@ -694,7 +695,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
           isDirty: true,
         });
 
-        console.log(`✅ Blocks reordenados: ${startIndex} -> ${endIndex}`);
+        appLogger.debug(`✅ Blocks reordenados: ${startIndex} -> ${endIndex}`);
       } else {
         throw new Error(result.error || 'Falha ao reordenar blocks');
       }
@@ -715,9 +716,9 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
 
     try {
       await templatesCacheService.refreshCache();
-      console.log('✅ Cache atualizado');
+      appLogger.debug('✅ Cache atualizado');
     } catch (error) {
-      console.warn('⚠️ Erro ao atualizar cache:', error);
+      appLogger.warn('⚠️ Erro ao atualizar cache:', error);
     }
   }, [enableCache]);
 
@@ -726,7 +727,7 @@ export const CRUDIntegrationProvider: React.FC<CRUDIntegrationProviderProps> = (
 
     templatesCacheService.clearCache();
     unifiedCRUDService.clearCache();
-    console.log('🧹 Cache limpo');
+    appLogger.debug('🧹 Cache limpo');
   }, [enableCache]);
 
   const getCacheStats = useCallback(() => {

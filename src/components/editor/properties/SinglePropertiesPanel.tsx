@@ -10,6 +10,7 @@
  */
 
 import React, { useCallback, useMemo, useId, memo, lazy, Suspense } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -448,7 +449,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
     const uniqueId = useId();
 
     // 🔍 DEBUG DETALHADO: Investigar desconexão do painel
-    console.log('🔍 SinglePropertiesPanel - selectedBlock recebido:', {
+    appLogger.debug('🔍 SinglePropertiesPanel - selectedBlock recebido:', {
         hasBlock: !!selectedBlock,
         blockId: selectedBlock?.id,
         blockType: selectedBlock?.type,
@@ -457,7 +458,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
         fullBlock: selectedBlock
     });
 
-    console.log('🔍 DEBUG CRÍTICO - Análise detalhada do selectedBlock:', {
+    appLogger.debug('🔍 DEBUG CRÍTICO - Análise detalhada do selectedBlock:', {
         selectedBlockExists: selectedBlock !== null && selectedBlock !== undefined,
         selectedBlockType: typeof selectedBlock,
         selectedBlockKeys: selectedBlock ? Object.keys(selectedBlock) : 'N/A',
@@ -477,7 +478,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
         blockId: selectedBlock?.id,
         currentBlock: selectedBlock,
         onUpdate: onUpdate ? (_blockId: string, updates: any) => {
-            console.log('🔄 SinglePropertiesPanel - enviando updates:', updates);
+            appLogger.debug('🔄 SinglePropertiesPanel - enviando updates:', updates);
             // Adaptar para o formato esperado pelo editor atual
             onUpdate(updates.properties || updates);
         } : undefined
@@ -508,12 +509,12 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
 
     // Handlers otimizados com debouncing
     const handlePropertyUpdate = useCallback((key: string, value: any) => {
-        console.log('🚀 SinglePropertiesPanel handlePropertyUpdate:', { key, value });
+        appLogger.debug('🚀 SinglePropertiesPanel handlePropertyUpdate:', { key, value });
         debouncedUpdateProperty(key, value);
     }, [debouncedUpdateProperty]);
 
     const handleContentUpdate = useCallback((key: string, value: any) => {
-        console.log('🚀 SinglePropertiesPanel handleContentUpdate:', { key, value });
+        appLogger.debug('🚀 SinglePropertiesPanel handleContentUpdate:', { key, value });
         // Para conteúdo, usar o mesmo update mas com indicação de categoria
         debouncedUpdateProperty(key, value);
     }, [debouncedUpdateProperty]);

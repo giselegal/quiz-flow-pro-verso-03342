@@ -15,6 +15,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useUnifiedVersioning } from '@/hooks/core/useUnifiedVersioning';
 import { UnifiedFunnel } from '@/services/UnifiedCRUDService';
 import { VersionSnapshot, VersionComparison } from '@/services/VersioningService';
@@ -84,7 +85,7 @@ export const VersioningPanel: React.FC<VersioningPanelProps> = ({
       const snapshot = await versioning.createSnapshot(type, description);
       onSnapshotCreated?.(snapshot);
     } catch (error) {
-      console.error('Erro ao criar snapshot:', error);
+      appLogger.error('Erro ao criar snapshot:', error);
     }
   };
 
@@ -95,7 +96,7 @@ export const VersioningPanel: React.FC<VersioningPanelProps> = ({
         onRestore?.(restoredFunnel);
       }
     } catch (error) {
-      console.error('Erro ao restaurar snapshot:', error);
+      appLogger.error('Erro ao restaurar snapshot:', error);
     }
   };
 
@@ -103,7 +104,7 @@ export const VersioningPanel: React.FC<VersioningPanelProps> = ({
     try {
       await versioning.deleteSnapshot(snapshotId);
     } catch (error) {
-      console.error('Erro ao excluir snapshot:', error);
+      appLogger.error('Erro ao excluir snapshot:', error);
     }
   };
 

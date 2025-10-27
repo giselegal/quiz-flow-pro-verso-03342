@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { SinglePropertiesPanel } from './SinglePropertiesPanel';
@@ -24,7 +25,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 }) => {
   // Debug logs
   React.useEffect(() => {
-    console.log('🏗️  PropertiesColumn renderizado:', {
+    appLogger.debug('🏗️  PropertiesColumn renderizado:', {
       hasSelectedBlock: !!selectedBlock,
       selectedBlockType: selectedBlock?.type,
       selectedBlockId: selectedBlock?.id
@@ -32,17 +33,17 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   }, [selectedBlock]);
 
   const handleUpdate = React.useCallback((updates: Record<string, any>) => {
-    console.log('🔄 PropertiesColumn -> SinglePropertiesPanel update:', updates);
+    appLogger.debug('🔄 PropertiesColumn -> SinglePropertiesPanel update:', updates);
     onUpdate(updates);
   }, [onUpdate]);
 
   const handleDelete = React.useCallback(() => {
-    console.log('🗑️  PropertiesColumn -> Delete selected block');
+    appLogger.debug('🗑️  PropertiesColumn -> Delete selected block');
     onDelete();
   }, [onDelete]);
 
   const handleDuplicate = React.useCallback(() => {
-    console.log('📋 PropertiesColumn -> Duplicate selected block');
+    appLogger.debug('📋 PropertiesColumn -> Duplicate selected block');
     onDuplicate?.();
   }, [onDuplicate]);
 

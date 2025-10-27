@@ -4,6 +4,7 @@
  */
 
 import React, { memo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useUnifiedCRUD } from '@/contexts';
 
 // 🔥 NOVO: Hook central de estado
@@ -37,7 +38,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
     templateId
 }) => {
     // 🚨 Console warning para desenvolvedores
-    console.warn(
+    appLogger.warn(
         '⚠️ DEPRECATED: QuizFunnelEditorWYSIWYG_Refactored será removido em 01/nov/2025. ' +
         'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
     );
@@ -97,7 +98,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
                 await crud.saveFunnel(updatedFunnel);
             }
         } catch (error) {
-            console.error('Erro ao salvar:', error);
+            appLogger.error('Erro ao salvar:', error);
         } finally {
             setIsSaving(false);
         }
@@ -247,7 +248,7 @@ const QuizFunnelEditorWYSIWYG: React.FC<QuizFunnelEditorProps> = memo(({
                             }
                         }
                     } catch (error) {
-                        console.error('Erro ao importar:', error);
+                        appLogger.error('Erro ao importar:', error);
                         alert('Erro ao importar arquivo. Verifique se o formato está correto.');
                     }
                 };

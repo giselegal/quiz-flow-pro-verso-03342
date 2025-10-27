@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { generateId } from '@/types/unified-schema';
 import { toast } from '@/hooks/use-toast';
 import { getFunnelIdFromEnvOrStorage, saveFunnelIdToStorage } from '@/utils/funnelIdentity';
@@ -61,7 +62,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
   const loadFunnels = useCallback(async () => {
     try {
       setLoading(true);
-      console.log(`🔄 Carregando lista de funis do contexto ${context}...`);
+      appLogger.debug(`🔄 Carregando lista de funis do contexto ${context}...`);
 
       // 🎯 Usar serviço contextual para isolamento
       const funnelList = await contextualFunnelService.listFunnels();
@@ -99,9 +100,9 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
       }
 
       setFunnels(mappedFunnels);
-      console.log(`✅ Funis carregados do contexto ${context}:`, mappedFunnels.length);
+      appLogger.debug(`✅ Funis carregados do contexto ${context}:`, mappedFunnels.length);
     } catch (error) {
-      console.error('❌ Erro ao carregar funis:', error);
+      appLogger.error('❌ Erro ao carregar funis:', error);
       toast({
         title: 'Erro ao carregar funis',
         description: 'Não foi possível carregar a lista de funis',
@@ -130,7 +131,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
 
     try {
       setCreating(true);
-      console.log(`🆕 Criando novo funil no contexto ${context}:`, newFunnelName);
+      appLogger.debug(`🆕 Criando novo funil no contexto ${context}:`, newFunnelName);
 
       // 🎯 Usar serviço contextual para criar funil isolado
       const newFunnelData = {
@@ -143,7 +144,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
 
       await contextualFunnelService.saveFunnel(newFunnelData);
 
-      console.log(`✅ Funil criado com sucesso no contexto ${context}:`, newFunnelData.id);
+      appLogger.debug(`✅ Funil criado com sucesso no contexto ${context}:`, newFunnelData.id);
 
       toast({
         title: 'Funil criado',
@@ -164,7 +165,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
       setNewFunnelName('');
       setShowCreateForm(false);
     } catch (error) {
-      console.error('❌ Erro ao criar funil:', error);
+      appLogger.error('❌ Erro ao criar funil:', error);
       toast({
         title: 'Erro ao criar funil',
         description: 'Não foi possível criar o novo funil',
@@ -177,7 +178,7 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
 
   // 🎯 Selecionar funil
   const handleSelectFunnel = (funnelId: string) => {
-    console.log('🎯 Selecionando funil:', funnelId);
+    appLogger.debug('🎯 Selecionando funil:', funnelId);
 
     // 💾 Salvar no localStorage
     saveFunnelIdToStorage(funnelId);

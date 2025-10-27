@@ -1,4 +1,5 @@
 import React, { Suspense, useMemo, useState, useCallback, useRef } from 'react';
+import { appLogger } from '@/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { useNotification } from '@/components/ui/Notification';
 import { useEditor } from '@/hooks/useUnifiedEditor';
@@ -64,7 +65,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     // Dados do step atual
     const currentStepData = useMemo(() => {
         const blocks = getBlocksForStep(safeCurrentStep, state.stepBlocks) || [];
-        console.log('📊 currentStepData recalculado:', {
+        appLogger.debug('📊 currentStepData recalculado:', {
             safeCurrentStep,
             blocksCount: blocks.length,
             blocks: blocks.map(b => ({ id: b.id, type: b.type, properties: Object.keys(b.properties || {}) })),
@@ -94,7 +95,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     const selectedBlockId = state.selectedBlockId;
     const selectedBlock = useMemo(() => {
         const block = currentStepData.find((b: any) => b.id === selectedBlockId);
-        console.log('🎯 selectedBlock recalculado:', {
+        appLogger.debug('🎯 selectedBlock recalculado:', {
             selectedBlockId,
             foundBlock: block ? {
                 id: block.id,
@@ -111,7 +112,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
     // Debug logs para seleção de bloco
     React.useEffect(() => {
-        console.log('🎯 Estado de seleção de bloco:', {
+        appLogger.debug('🎯 Estado de seleção de bloco:', {
             selectedBlockId,
             selectedBlock: selectedBlock ? { id: selectedBlock.id, type: selectedBlock.type } : null,
             currentStepData: currentStepData.length,
@@ -147,7 +148,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     }, [actionsSetCurrentStep, ensureStepLoaded, onStepChange]);
 
     const handleUpdateBlock = useCallback((updates: any) => {
-        console.log('🔄 handleUpdateBlock chamado:', {
+        appLogger.debug('🔄 handleUpdateBlock chamado:', {
             selectedBlockId,
             updates,
             currentStepKey,
@@ -159,18 +160,18 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         });
 
         if (selectedBlockId) {
-            console.log('🚀 Chamando actions.updateBlock:', { currentStepKey, selectedBlockId, updates });
+            appLogger.debug('🚀 Chamando actions.updateBlock:', { currentStepKey, selectedBlockId, updates });
             actions.updateBlock(currentStepKey, selectedBlockId, updates);
 
             // Verificar se o estado foi atualizado
             setTimeout(() => {
-                console.log('⏰ Estado após updateBlock (1s delay):', {
+                appLogger.debug('⏰ Estado após updateBlock (1s delay):', {
                     newStepBlocks: state.stepBlocks,
                     currentStepAfterUpdate: state.stepBlocks?.[currentStepKey]
                 });
             }, 100);
         } else {
-            console.warn('⚠️  Nenhum bloco selecionado para atualizar');
+            appLogger.warn('⚠️  Nenhum bloco selecionado para atualizar');
         }
     }, [actions, currentStepKey, selectedBlockId, selectedBlock, state.stepBlocks]);
 

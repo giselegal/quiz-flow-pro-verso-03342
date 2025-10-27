@@ -23,6 +23,7 @@
 
 // @ts-nocheck
 import React, { useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 
 interface ComponentRendererProps {
   component: any;
@@ -39,7 +40,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
 }) => {
   // ⚠️ DEPRECATION WARNING
   useEffect(() => {
-    console.warn(
+    appLogger.warn(
       '⚠️ DEPRECATED: ComponentRenderer (editor/components) será removido em 21/out/2025. ' +
       'Migre para UniversalBlockRenderer. Ver ANALISE_RENDERERS.md'
     );

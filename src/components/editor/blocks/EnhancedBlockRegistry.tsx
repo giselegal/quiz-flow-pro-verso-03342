@@ -5,6 +5,7 @@
  * Todos os componentes devem ser importados daqui.
  */
 import { lazy, type ComponentType } from 'react';
+import { appLogger } from '@/utils/logger';
 // Importações estáticas essenciais para renderização imediata dos blocos principais
 import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
 import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
@@ -275,19 +276,19 @@ export const getEnhancedBlockComponent = (type: string) => {
     const isValidReactComponent = (value: any) =>
         typeof value === 'function' || (typeof value === 'object' && value !== null && '$$typeof' in value);
 
-    console.log(`🔍 getEnhancedBlockComponent chamado para tipo: "${type}"`);
+    appLogger.debug(`🔍 getEnhancedBlockComponent chamado para tipo: "${type}"`);
 
     // 🧪 TESTE: Verificar se o registry está populado
     const registryKeys = Object.keys(ENHANCED_BLOCK_REGISTRY);
-    console.log(`📊 Registry tem ${registryKeys.length} chaves:`, registryKeys.slice(0, 10));
+    appLogger.debug(`📊 Registry tem ${registryKeys.length} chaves:`, registryKeys.slice(0, 10));
 
     // 🧪 TESTE CRÍTICO: Verificar se a chave específica existe
     const hasExactKey = Object.prototype.hasOwnProperty.call(ENHANCED_BLOCK_REGISTRY, type);
-    console.log(`🔑 Registry.hasOwnProperty("${type}"):`, hasExactKey);
+    appLogger.debug(`🔑 Registry.hasOwnProperty("${type}"):`, hasExactKey);
 
     if (hasExactKey) {
         const component = ENHANCED_BLOCK_REGISTRY[type];
-        console.log(`🎯 Componente encontrado para "${type}":`, {
+        appLogger.debug(`🎯 Componente encontrado para "${type}":`, {
             exists: !!component,
             type: typeof component,
             name: (component as any)?.name || (component as any)?.displayName || 'Sem nome'
@@ -295,26 +296,26 @@ export const getEnhancedBlockComponent = (type: string) => {
         if (isValidReactComponent(component)) {
             return component;
         }
-        console.error(`❌ Componente inválido registrado para "${type}". Aplicando fallback TextInlineBlock.`);
+        appLogger.error(`❌ Componente inválido registrado para "${type}". Aplicando fallback TextInlineBlock.`);
         return TextInlineBlock;
     }
 
     if (!type) {
-        console.warn('getEnhancedBlockComponent: tipo não fornecido, usando fallback');
+        appLogger.warn('getEnhancedBlockComponent: tipo não fornecido, usando fallback');
         return TextInlineBlock;
     }
 
-    console.log(`🔎 Verificando tipo exato no registry: "${type}"`);
+    appLogger.debug(`🔎 Verificando tipo exato no registry: "${type}"`);
 
     // Verificar se o tipo existe diretamente no registro
     if (ENHANCED_BLOCK_REGISTRY[type]) {
-        console.log(`✅ Tipo exato encontrado no registry: "${type}"`);
+        appLogger.debug(`✅ Tipo exato encontrado no registry: "${type}"`);
         const comp = ENHANCED_BLOCK_REGISTRY[type];
         return isValidReactComponent(comp) ? comp : TextInlineBlock;
     }    // Verificar se há um alias exato para o tipo
     const normalizedType = type.toLowerCase().replace(/[^a-z0-9-]/g, '-');
     if (ENHANCED_BLOCK_REGISTRY[normalizedType]) {
-        console.log(`🎨 Alias: ${type} → ${normalizedType}`);
+        appLogger.debug(`🎨 Alias: ${type} → ${normalizedType}`);
         const comp = ENHANCED_BLOCK_REGISTRY[normalizedType];
         return isValidReactComponent(comp) ? comp : TextInlineBlock;
     }
@@ -324,7 +325,7 @@ export const getEnhancedBlockComponent = (type: string) => {
     const fallbackKey = `${prefix}-*`;
     if (ENHANCED_BLOCK_REGISTRY[fallbackKey]) {
         const comp = ENHANCED_BLOCK_REGISTRY[fallbackKey];
-        console.log(`🎨 Fallback: ${type} → ${fallbackKey} (${(comp as any).name || 'component'})`);
+        appLogger.debug(`🎨 Fallback: ${type} → ${fallbackKey} (${(comp as any).name || 'component'})`);
         return isValidReactComponent(comp) ? comp : TextInlineBlock;
     }
 
@@ -332,37 +333,37 @@ export const getEnhancedBlockComponent = (type: string) => {
     const suffix = type.split('-').pop();
     const suffixFallbackKey = `*-${suffix}`;
     if (ENHANCED_BLOCK_REGISTRY[suffixFallbackKey]) {
-        console.log(`🎨 Fallback: ${type} → ${suffixFallbackKey}`);
+        appLogger.debug(`🎨 Fallback: ${type} → ${suffixFallbackKey}`);
         const comp = ENHANCED_BLOCK_REGISTRY[suffixFallbackKey];
         return isValidReactComponent(comp) ? comp : TextInlineBlock;
     }
 
     // Verificar se é um tipo de quiz
     if (type.includes('quiz')) {
-        console.log(`🎨 Fallback: ${type} → quiz-* (TextInlineBlock)`);
+        appLogger.debug(`🎨 Fallback: ${type} → quiz-* (TextInlineBlock)`);
         return TextInlineBlock;
     }
 
     // Verificar se é um tipo de texto
     if (type.includes('text') || type.includes('paragraph') || type.includes('heading')) {
-        console.log(`🎨 Fallback: ${type} → text (TextInlineBlock)`);
+        appLogger.debug(`🎨 Fallback: ${type} → text (TextInlineBlock)`);
         return TextInlineBlock;
     }
 
     // Verificar se é um tipo de botão
     if (type.includes('button') || type.includes('cta')) {
-        console.log(`🎨 Fallback: ${type} → button (ButtonInlineBlock)`);
+        appLogger.debug(`🎨 Fallback: ${type} → button (ButtonInlineBlock)`);
         return ButtonInlineBlock;
     }
 
     // Verificar se é um tipo de imagem
     if (type.includes('image') || type.includes('img') || type.includes('photo')) {
-        console.log(`🎨 Fallback: ${type} → image (ImageInlineBlock)`);
+        appLogger.debug(`🎨 Fallback: ${type} → image (ImageInlineBlock)`);
         return ImageInlineBlock;
     }
 
     // Fallback final para tipos desconhecidos
-    console.log(`🎨 Fallback: ${type} → style-card-inline (StyleCardInlineBlock)`);
+    appLogger.debug(`🎨 Fallback: ${type} → style-card-inline (StyleCardInlineBlock)`);
     const finalComp = ENHANCED_BLOCK_REGISTRY['style-card-inline'];
     return isValidReactComponent(finalComp) ? finalComp : TextInlineBlock;
 };
@@ -548,7 +549,7 @@ export const AVAILABLE_COMPONENTS = [
  * Retorna o bloco completo com propriedades normalizadas
  */
 export const normalizeBlockProperties = (block: any) => {
-    console.log(`🔧 normalizeBlockProperties chamado para bloco:`, {
+    appLogger.debug(`🔧 normalizeBlockProperties chamado para bloco:`, {
         blockId: block?.id,
         originalType: block?.type,
         hasType: !!block?.type,

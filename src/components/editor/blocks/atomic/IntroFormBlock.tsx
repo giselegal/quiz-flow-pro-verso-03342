@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { Block } from '@/types/editor';
 
@@ -93,7 +94,7 @@ export default function IntroFormBlock({
       }));
 
       onNameSubmit?.(trimmedName);
-      console.log('Nome enviado:', trimmedName);
+      appLogger.debug('Nome enviado:', trimmedName);
     }
   };
 

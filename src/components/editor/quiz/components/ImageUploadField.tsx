@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Upload, X, ExternalLink, Crop, Image as ImageIcon } from 'lucide-react';
@@ -96,7 +97,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
             setTimeout(() => setUploadProgress(0), 2000);
 
         } catch (error: any) {
-            console.error('Erro ao fazer upload:', error);
+            appLogger.error('Erro ao fazer upload:', error);
 
             // Mensagens de erro amigáveis
             let errorMessage = 'Erro ao fazer upload. Tente novamente.';

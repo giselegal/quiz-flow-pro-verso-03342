@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState, createContext, useContext } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Badge } from '../../ui/badge';
 import { Button } from '../../ui/button';
@@ -265,10 +266,10 @@ export const AutoIntegrationProvider: React.FC<{
             }));
 
             if (config.debugMode) {
-                console.log('🔍 Component Detection Results:', detected);
+                appLogger.debug('🔍 Component Detection Results:', detected);
             }
         } catch (error) {
-            console.error('Detection failed:', error);
+            appLogger.error('Detection failed:', error);
         }
     };
 
@@ -293,10 +294,10 @@ export const AutoIntegrationProvider: React.FC<{
             }));
 
             if (config.debugMode) {
-                console.log('✅ Optimizations Applied:', optimizations);
+                appLogger.debug('✅ Optimizations Applied:', optimizations);
             }
         } catch (error) {
-            console.error('Optimization failed:', error);
+            appLogger.error('Optimization failed:', error);
         }
     };
 
@@ -309,7 +310,7 @@ export const AutoIntegrationProvider: React.FC<{
         }));
 
         if (config.debugMode) {
-            console.log('🔄 Rolled back to original state');
+            appLogger.debug('🔄 Rolled back to original state');
         }
     };
 

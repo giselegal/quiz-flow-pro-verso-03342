@@ -40,6 +40,7 @@
  */
 
 import * as React from 'react';
+import { appLogger } from '@/utils/logger';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { useUnifiedCRUD } from '@/contexts';
 import { Block, BlockType } from '@/types/editor';
@@ -208,7 +209,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
 }) => {
     // 🚨 Console warning para desenvolvedores
     React.useEffect(() => {
-        console.warn(
+        appLogger.warn(
             '⚠️ DEPRECATED: OptimizedEditorProvider (497 linhas) será removido em 01/nov/2025. ' +
             'Migre para EditorProviderUnified (605 linhas). ' +
             'Ver ANALISE_EDITOR_PROVIDERS.md'
@@ -403,7 +404,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
 
     const saveToSupabase = useCallback(async () => {
         if (!currentFunnel) {
-            console.warn('⚠️ No funnel to save');
+            appLogger.warn('⚠️ No funnel to save');
             return;
         }
 
@@ -420,10 +421,10 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
                     currentStep: state.currentStep
                 }
             }; await saveFunnel(funnelData);
-            console.log('✅ Saved to Supabase successfully');
+            appLogger.debug('✅ Saved to Supabase successfully');
 
         } catch (error) {
-            console.error('❌ Error saving to Supabase:', error);
+            appLogger.error('❌ Error saving to Supabase:', error);
         } finally {
             setState(prev => ({ ...prev, isLoading: false }));
         }
@@ -450,7 +451,7 @@ export const OptimizedEditorProvider: React.FC<OptimizedEditorProviderProps> = (
                 history.clear();
             }
         } catch (error) {
-            console.error('❌ Error importing JSON:', error);
+            appLogger.error('❌ Error importing JSON:', error);
         }
     }, [updateStateWithHistory, history]);
 

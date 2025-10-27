@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Button } from '@/components/ui/button';
+import { appLogger } from '@/utils/logger';
 import { useMemo } from 'react';
 import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 
@@ -82,7 +83,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponen
             variant="outline"
             className="w-full justify-start text-left h-auto p-3 hover:bg-green-50 border-green-200"
             onClick={() => {
-              console.log('🎯 ComponentsSidebar: Selecionando componente:', component.type);
+              appLogger.debug('🎯 ComponentsSidebar: Selecionando componente:', component.type);
               onComponentSelect(component.type);
             }}
           >

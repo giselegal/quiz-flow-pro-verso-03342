@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { X, Palette, Image as ImageIcon, Save, RefreshCw, Eye, Copy, Upload, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -108,7 +109,7 @@ export function BrandKitAdvancedSidebar({ onClose }: BrandKitAdvancedSidebarProp
             setHasUnsavedChanges(false);
             trackEvent('brand_applied_to_browser', { brandName: brandKit.name });
         } catch (error) {
-            console.error('Erro ao aplicar brand kit:', error);
+            appLogger.error('Erro ao aplicar brand kit:', error);
         } finally {
             setIsApplying(false);
         }

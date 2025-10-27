@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { InteractivePreviewEngine } from '../interactive/InteractivePreviewEngine';
 import { CollaborationProvider, CollaborationStatus } from './CollaborationProvider';
@@ -43,7 +44,7 @@ export const MasterEditorWorkspace: React.FC<MasterEditorWorkspaceProps> = ({
   className,
 }) => {
   // 🚨 Console warning para desenvolvedores
-  console.warn(
+  appLogger.warn(
     '⚠️ DEPRECATED: MasterEditorWorkspace será removido em 01/nov/2025. ' +
     'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
   );

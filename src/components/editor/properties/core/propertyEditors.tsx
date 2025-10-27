@@ -1,4 +1,5 @@
 import { Input } from '@/components/ui/input';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -30,7 +31,7 @@ const CanvasContainerWrapper: React.FC<PropertyEditorProps> = () => {
 
   const handleUpdate = (updates: { [key: string]: any }) => {
     updateStyles(updates); // Conecta às fontes de dados reais
-    console.log('CanvasContainer updates aplicados:', updates);
+    appLogger.debug('CanvasContainer updates aplicados:', updates);
   };
 
   return (

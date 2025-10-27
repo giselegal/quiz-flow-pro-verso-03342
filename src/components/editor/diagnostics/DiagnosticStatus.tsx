@@ -4,6 +4,7 @@
  */
 
 import { Badge } from '@/components/ui/badge';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useEditorDiagnostics } from '@/hooks/useEditorDiagnostics';
@@ -281,7 +282,7 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
             size="sm"
             onClick={() => {
               const report = diagnostic.generateReport();
-              console.log(report);
+              appLogger.debug(report);
 
               // Criar modal ou download do relatório
               const blob = new Blob([report], { type: 'text/plain' });

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -76,7 +77,7 @@ const StepNoCodeConnections: React.FC<StepNoCodeConnectionsProps> = ({ onClose }
                 const parsed = JSON.parse(savedConfig);
                 setFlowConfig(parsed);
             } catch (error) {
-                console.warn('Erro ao carregar configuração de conexões:', error);
+                appLogger.warn('Erro ao carregar configuração de conexões:', error);
             }
         } else {
             // Criar fluxo linear padrão

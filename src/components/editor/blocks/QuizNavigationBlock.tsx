@@ -1,4 +1,5 @@
 import QuizNavigation from '@/components/quiz/QuizNavigation';
+import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
@@ -77,7 +78,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   };
 
   const handleNext = () => {
-    console.log('🚀 QuizNavigationBlock: Próxima etapa');
+    appLogger.debug('🚀 QuizNavigationBlock: Próxima etapa');
 
     // Atualizar propriedades
     if (onPropertyChange) {
@@ -105,7 +106,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   };
 
   const handleBack = () => {
-    console.log('🔙 QuizNavigationBlock: Etapa anterior');
+    appLogger.debug('🔙 QuizNavigationBlock: Etapa anterior');
 
     // Atualizar propriedades
     if (onPropertyChange) {

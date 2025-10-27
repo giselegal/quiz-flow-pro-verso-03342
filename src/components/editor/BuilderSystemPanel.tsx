@@ -9,6 +9,7 @@
  */
 
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useBuilderSystem } from '@/hooks/useBuilderSystem';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -44,7 +45,7 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({ onQuizCr
       const result = await applyPreset(presetName);
       onQuizCreated?.(result);
     } catch (error) {
-      console.error('Erro ao aplicar preset:', error);
+      appLogger.error('Erro ao aplicar preset:', error);
     }
   };
 
@@ -56,7 +57,7 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({ onQuizCr
       onQuizCreated?.(result);
       setAiPrompt('');
     } catch (error) {
-      console.error('Erro ao gerar com IA:', error);
+      appLogger.error('Erro ao gerar com IA:', error);
     }
   };
 
@@ -73,7 +74,7 @@ export const BuilderSystemPanel: React.FC<BuilderSystemPanelProps> = ({ onQuizCr
       onQuizCreated?.(result);
       setCustomName('');
     } catch (error) {
-      console.error('Erro ao criar template:', error);
+      appLogger.error('Erro ao criar template:', error);
     }
   };
 

@@ -9,6 +9,7 @@
  */
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -463,7 +464,7 @@ export const EnhancedValidationSystem: React.FC<EnhancedValidationSystemProps> =
             });
           }
         } catch (error) {
-          console.warn(`Erro na validação ${rule.id}:`, error);
+          appLogger.warn(`Erro na validação ${rule.id}:`, error);
         }
       });
     });

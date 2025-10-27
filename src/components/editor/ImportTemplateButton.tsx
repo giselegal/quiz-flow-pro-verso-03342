@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, FileJson, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
@@ -46,7 +47,7 @@ export function ImportTemplateButton({ onImportSuccess, onImportError }: ImportT
                 templates[json.metadata.id] = json;
             }
 
-            console.log(`📥 Importando ${Object.keys(templates).length} template(s)...`);
+            appLogger.debug(`📥 Importando ${Object.keys(templates).length} template(s)...`);
 
             // Importar para o editor
             const funnel = await quizEditorBridge.importAllJSONv3Templates(
@@ -67,7 +68,7 @@ export function ImportTemplateButton({ onImportSuccess, onImportError }: ImportT
             }, 2000);
 
         } catch (error) {
-            console.error('❌ Erro ao importar templates:', error);
+            appLogger.error('❌ Erro ao importar templates:', error);
             setStatus('error');
             setMessage(error instanceof Error ? error.message : 'Erro desconhecido ao importar');
 

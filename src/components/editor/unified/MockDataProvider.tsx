@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 
 export interface MockQuizState {
   userName: string;
@@ -154,7 +155,7 @@ export const useMockData = (): MockDataContextType => {
   
   if (!context) {
     // Fallback case - retorna dados padrão se usado fora do provider
-    console.warn('useMockData usado fora do MockDataProvider, retornando dados padrão');
+    appLogger.warn('useMockData usado fora do MockDataProvider, retornando dados padrão');
     
     return {
       quizState: {

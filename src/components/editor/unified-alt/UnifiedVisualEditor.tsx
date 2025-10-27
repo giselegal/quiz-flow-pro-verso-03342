@@ -6,6 +6,7 @@
 export type EditorTab = 'quiz' | 'result' | 'sales';
 
 import { StyleResult } from '@/types/quiz';
+import { appLogger } from '@/utils/logger';
 
 interface UnifiedVisualEditorProps {
   primaryStyle?: StyleResult;
@@ -17,7 +18,7 @@ export const UnifiedVisualEditor: React.FC<UnifiedVisualEditorProps> = ({
   initialActiveTab = 'quiz',
 }) => {
   // 🚨 Console warning para desenvolvedores
-  console.warn(
+  appLogger.warn(
     '⚠️ DEPRECATED: UnifiedVisualEditor será removido em 01/nov/2025. ' +
     'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
   );

@@ -9,6 +9,7 @@
  */
 
 import React, { useEffect, useCallback, useRef } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -153,7 +154,7 @@ class SystemDiagnostics {
 
     // Auto-fixes
     async fixSupabaseErrors(): Promise<void> {
-        console.log('🔧 Implementando correções para erros Supabase...');
+        appLogger.debug('🔧 Implementando correções para erros Supabase...');
 
         // Implementar cache local para evitar requisições desnecessárias
         const cacheConfig = {
@@ -170,11 +171,11 @@ class SystemDiagnostics {
         this.setupSupabaseInterceptor();
 
         await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log('✅ Correções Supabase aplicadas');
+        appLogger.debug('✅ Correções Supabase aplicadas');
     }
 
     async fixExcessiveRenders(): Promise<void> {
-        console.log('🔧 Otimizando renderizações excessivas...');
+        appLogger.debug('🔧 Otimizando renderizações excessivas...');
 
         // Implementar debounce para atualizações
         const debounceConfig = {
@@ -191,11 +192,11 @@ class SystemDiagnostics {
         this.renderHistory = [];
 
         await new Promise(resolve => setTimeout(resolve, 500));
-        console.log('✅ Otimizações de renderização aplicadas');
+        appLogger.debug('✅ Otimizações de renderização aplicadas');
     }
 
     async fixMemoryUsage(): Promise<void> {
-        console.log('🔧 Limpando uso de memória...');
+        appLogger.debug('🔧 Limpando uso de memória...');
 
         // Forçar garbage collection se disponível
         if ('gc' in window) {
@@ -209,11 +210,11 @@ class SystemDiagnostics {
         this.metrics.memoryUsage = (performance as any).memory?.usedJSHeapSize || 0;
 
         await new Promise(resolve => setTimeout(resolve, 800));
-        console.log('✅ Limpeza de memória concluída');
+        appLogger.debug('✅ Limpeza de memória concluída');
     }
 
     async fixConfigTimeout(configName: string): Promise<void> {
-        console.log(`🔧 Corrigindo timeout para ${configName}...`);
+        appLogger.debug(`🔧 Corrigindo timeout para ${configName}...`);
 
         // Implementar valores padrão robustos
         const defaultConfigs = {
@@ -231,7 +232,7 @@ class SystemDiagnostics {
         }
 
         await new Promise(resolve => setTimeout(resolve, 300));
-        console.log(`✅ Timeout ${configName} corrigido com valores padrão`);
+        appLogger.debug(`✅ Timeout ${configName} corrigido com valores padrão`);
     }
 
     // Utility methods
@@ -244,7 +245,7 @@ class SystemDiagnostics {
 
             // Verificar se é uma requisição Supabase problemática
             if (url.includes('supabase.co') && (url.includes('quiz_drafts') || url.includes('quiz_production'))) {
-                console.log(`🚫 Interceptando requisição problemática: ${url}`);
+                appLogger.debug(`🚫 Interceptando requisição problemática: ${url}`);
 
                 // Retornar dados mockados em vez de fazer a requisição
                 return new Response(JSON.stringify({ data: [], error: null }), {
@@ -269,7 +270,7 @@ class SystemDiagnostics {
 
         keysToRemove.forEach(key => localStorage.removeItem(key));
 
-        console.log(`🧹 Removidas ${keysToRemove.length} entradas de cache antigas`);
+        appLogger.debug(`🧹 Removidas ${keysToRemove.length} entradas de cache antigas`);
     }
 
     // Public methods para atualizar métricas
@@ -361,7 +362,7 @@ export const SystemDiagnosticsPanel: React.FC<{
                 )
             );
         } catch (error) {
-            console.error(`Erro ao aplicar correção ${diagnosticId}:`, error);
+            appLogger.error(`Erro ao aplicar correção ${diagnosticId}:`, error);
 
             // Marcar como falhado
             setDiagnostics(prev =>

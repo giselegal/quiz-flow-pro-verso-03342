@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -146,18 +147,18 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                             <div className="p-4 space-y-6">
                                 {/* 🔍 DEBUG: Log para verificar estrutura do bloco */}
                                 {(() => {
-                                    console.log('🔍 PropertiesPanel - selectedBlock:', selectedBlock);
-                                    console.log('🔍 PropertiesPanel - properties:', selectedBlock.properties);
-                                    console.log('🔍 PropertiesPanel - content:', selectedBlock.content);
-                                    console.log('🔍 PropertiesPanel - merged values:', { ...selectedBlock.properties, ...selectedBlock.content });
+                                    appLogger.debug('🔍 PropertiesPanel - selectedBlock:', selectedBlock);
+                                    appLogger.debug('🔍 PropertiesPanel - properties:', selectedBlock.properties);
+                                    appLogger.debug('🔍 PropertiesPanel - content:', selectedBlock.content);
+                                    appLogger.debug('🔍 PropertiesPanel - merged values:', { ...selectedBlock.properties, ...selectedBlock.content });
 
                                     // Se for quiz-options ou options-grid, mostrar options em detalhe
                                     if (selectedBlock.type === 'quiz-options' || selectedBlock.type === 'options-grid') {
                                         const options = selectedBlock.content?.options || selectedBlock.properties?.options || [];
-                                        console.log('🎯 OPTIONS ARRAY:', options);
+                                        appLogger.debug('🎯 OPTIONS ARRAY:', options);
                                         if (options.length > 0) {
-                                            console.log('🎯 PRIMEIRA OPÇÃO:', options[0]);
-                                            console.log('🎯 Campos:', {
+                                            appLogger.debug('🎯 PRIMEIRA OPÇÃO:', options[0]);
+                                            appLogger.debug('🎯 Campos:', {
                                                 hasImageUrl: 'imageUrl' in options[0],
                                                 hasPoints: 'points' in options[0],
                                                 hasCategory: 'category' in options[0],
@@ -174,19 +175,19 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                 <button
                                     onClick={() => {
                                         console.clear();
-                                        console.log('=== TESTE COMPLETO DO BLOCO ===');
-                                        console.log('Tipo:', selectedBlock.type);
-                                        console.log('ID:', selectedBlock.id);
-                                        console.log('\n📦 PROPERTIES:');
-                                        console.log(JSON.stringify(selectedBlock.properties, null, 2));
-                                        console.log('\n📦 CONTENT:');
-                                        console.log(JSON.stringify(selectedBlock.content, null, 2));
+                                        appLogger.debug('=== TESTE COMPLETO DO BLOCO ===');
+                                        appLogger.debug('Tipo:', selectedBlock.type);
+                                        appLogger.debug('ID:', selectedBlock.id);
+                                        appLogger.debug('\n📦 PROPERTIES:');
+                                        appLogger.debug(JSON.stringify(selectedBlock.properties, null, 2));
+                                        appLogger.debug('\n📦 CONTENT:');
+                                        appLogger.debug(JSON.stringify(selectedBlock.content, null, 2));
 
                                         if (selectedBlock.content?.options || selectedBlock.properties?.options) {
                                             const opts = selectedBlock.content?.options || selectedBlock.properties?.options;
-                                            console.log('\n🎯 OPTIONS DETALHADAS:');
+                                            appLogger.debug('\n🎯 OPTIONS DETALHADAS:');
                                             opts.forEach((opt: any, idx: number) => {
-                                                console.log(`\nOpção ${idx + 1}:`, {
+                                                appLogger.debug(`\nOpção ${idx + 1}:`, {
                                                     id: opt.id,
                                                     text: opt.text,
                                                     imageUrl: opt.imageUrl || opt.image || '❌ AUSENTE',

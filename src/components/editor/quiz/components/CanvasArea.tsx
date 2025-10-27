@@ -1,4 +1,5 @@
 import React, { Suspense, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent } from '@/components/ui/card';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -107,11 +108,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     } = useEditorMode();
     const { previewDevice, setPreviewDevice } = useEditorMode();
 
-    console.log('🔍 CanvasArea render - selectedStep:', selectedStep?.id, 'viewMode:', viewMode);
+    appLogger.debug('🔍 CanvasArea render - selectedStep:', selectedStep?.id, 'viewMode:', viewMode);
 
     // 🚨 DEPRECATION WARNING para activeTab/onTabChange
     if (activeTab !== undefined && process.env.NODE_ENV === 'development') {
-        console.warn(
+        appLogger.warn(
             '⚠️ DEPRECATION: activeTab/onTabChange estão deprecated.\n' +
             'Use EditorModeContext (viewMode) ao invés.'
         );
@@ -125,7 +126,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         return smartMigration(base);
     }, [selectedStep, steps]);
 
-    console.log('🔍 CanvasArea - migratedStep:', migratedStep?.id, 'type:', migratedStep?.type);
+    appLogger.debug('🔍 CanvasArea - migratedStep:', migratedStep?.id, 'type:', migratedStep?.type);
 
     // 🔗 Integrar com EditorProvider: pegar blocos do estado para o step atual
     const editor = useEditor({ optional: true } as any);

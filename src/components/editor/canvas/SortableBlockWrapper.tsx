@@ -1,4 +1,5 @@
 import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { usePreview } from '@/contexts';
@@ -89,7 +90,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     block.properties
   );
 
-  console.log('🔧 SortableBlockWrapper - processedProperties:', {
+  appLogger.debug('🔧 SortableBlockWrapper - processedProperties:', {
     blockId: block.id,
     blockType: block.type,
     originalProperties: block.properties,
@@ -126,7 +127,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 
   // Debug: verificar se o sortable está sendo configurado
   React.useEffect(() => {
-    console.log('🔧 SortableBlockWrapper configurado:', {
+    appLogger.debug('🔧 SortableBlockWrapper configurado:', {
       id: block.id,
       blockType: block.type,
       isDragging,

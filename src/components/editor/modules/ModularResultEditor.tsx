@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Editor, Frame, Element, useEditor } from '@craftjs/core';
 import { Layers } from '@craftjs/layers';
 import { cn } from '@/lib/utils';
@@ -71,7 +72,7 @@ const Toolbar: React.FC = () => {
                     size="sm"
                     onClick={() => {
                         const json = query.serialize();
-                        console.log('Estado serializado:', json);
+                        appLogger.debug('Estado serializado:', json);
                     }}
                 >
                     💾 Salvar
@@ -263,7 +264,7 @@ const EditableContainer: React.FC = () => {
 // Componente principal do editor
 export const ModularResultEditor: React.FC = () => {
     // 🚨 Console warning para desenvolvedores
-    console.warn(
+    appLogger.warn(
         '⚠️ DEPRECATED: ModularResultEditor será removido em 01/nov/2025. ' +
         'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
     );

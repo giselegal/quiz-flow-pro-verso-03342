@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowLeft } from 'lucide-react';
 import React from 'react';
@@ -36,7 +37,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     // Evitar logar em todo render: usa raf para coalescer
     requestAnimationFrame(() => {
       // eslint-disable-next-line no-console
-      console.log('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties, 'ID:', block.id);
+      appLogger.debug('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties, 'ID:', block.id);
     });
   }
 
@@ -44,7 +45,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   React.useEffect(() => {
     if (isDev && verbose) {
       // eslint-disable-next-line no-console
-      console.log('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
+      appLogger.debug('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
         blockId: block.id,
         logoUrl: block.properties.logoUrl,
         logoWidth: block.properties.logoWidth,

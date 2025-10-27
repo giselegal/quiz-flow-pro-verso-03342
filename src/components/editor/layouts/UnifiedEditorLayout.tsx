@@ -1,4 +1,5 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { appLogger } from '@/utils/logger';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EditorProvider } from '../EditorProviderMigrationAdapter';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
@@ -18,18 +19,18 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
   const { resultPageConfig } = useResultPageConfig('Natural');
 
   const handleComponentSelect = (type: string) => {
-    console.log('Component selected:', type);
+    appLogger.debug('Component selected:', type);
   };
 
   const handleBlockUpdate = (updates: any) => {
     if (selectedBlockId) {
-      console.log('Block updated:', selectedBlockId, updates);
+      appLogger.debug('Block updated:', selectedBlockId, updates);
     }
   };
 
   const handleBlockDelete = () => {
     if (selectedBlockId) {
-      console.log('Block deleted:', selectedBlockId);
+      appLogger.debug('Block deleted:', selectedBlockId);
       setSelectedBlockId(null);
     }
   };

@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -89,7 +90,7 @@ const FunnelTypeDetector: React.FC<FunnelDetectorProps> = ({
             setLoading(true);
             setError(null);
 
-            console.log('🔍 Detectando tipo de funil para ID:', funnelId);
+            appLogger.debug('🔍 Detectando tipo de funil para ID:', funnelId);
 
             let typeId: string;
 
@@ -97,29 +98,29 @@ const FunnelTypeDetector: React.FC<FunnelDetectorProps> = ({
             if (isPredefinedFunnel(funnelId)) {
                 const predefined = getPredefinedFunnelConfig(funnelId);
                 typeId = predefined!.typeId;
-                console.log('✅ Funil predefinido detectado:', typeId);
+                appLogger.debug('✅ Funil predefinido detectado:', typeId);
             }
             // 2. Detectar por padrões no ID
             else if (funnelId.includes('quiz') || funnelId.includes('estilo')) {
                 typeId = 'quiz-estilo-21-steps';
-                console.log('✅ Quiz detectado por padrão no ID');
+                appLogger.debug('✅ Quiz detectado por padrão no ID');
             }
             else if (funnelId.includes('landing')) {
                 typeId = 'landing-page';
-                console.log('✅ Landing page detectada por padrão no ID');
+                appLogger.debug('✅ Landing page detectada por padrão no ID');
             }
             else if (funnelId.includes('sales') || funnelId.includes('vendas')) {
                 typeId = 'sales-funnel';
-                console.log('✅ Funil de vendas detectado por padrão no ID');
+                appLogger.debug('✅ Funil de vendas detectado por padrão no ID');
             }
             else if (funnelId.includes('lead')) {
                 typeId = 'lead-magnet';
-                console.log('✅ Lead magnet detectado por padrão no ID');
+                appLogger.debug('✅ Lead magnet detectado por padrão no ID');
             }
             // 3. Default para quiz se não conseguir detectar
             else {
                 typeId = 'quiz-estilo-21-steps';
-                console.log('⚠️ Tipo não detectado, usando quiz como padrão');
+                appLogger.debug('⚠️ Tipo não detectado, usando quiz como padrão');
             }
 
             // Obter configuração do tipo
@@ -129,7 +130,7 @@ const FunnelTypeDetector: React.FC<FunnelDetectorProps> = ({
             }
 
             // Carregar configuração do funil
-            console.log('📖 Carregando configuração do funil...');
+            appLogger.debug('📖 Carregando configuração do funil...');
             const funnelConfig = await loadFunnelConfig(funnelId, typeId);
 
             const detected: DetectedFunnel = {
@@ -151,7 +152,7 @@ const FunnelTypeDetector: React.FC<FunnelDetectorProps> = ({
             });
 
         } catch (error) {
-            console.error('❌ Erro na detecção do funil:', error);
+            appLogger.error('❌ Erro na detecção do funil:', error);
             setError(error instanceof Error ? error.message : 'Erro desconhecido');
 
             toast({

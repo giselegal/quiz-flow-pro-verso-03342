@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { PropertyHighlighter } from './PropertyHighlighter';
 import { LiveEditControls } from './LiveEditControls';
 import { EditableStepProps } from './EditableStepProps';
@@ -123,7 +124,7 @@ export const EditableBlockWrapper: React.FC<EditableBlockWrapperProps> = ({
                 onMoveDown={onMoveDown}
                 onSettings={() => {
                     // Abrir configurações avançadas
-                    console.log('[EditableBlockWrapper] Configurações avançadas');
+                    appLogger.debug('[EditableBlockWrapper] Configurações avançadas');
                 }}
                 canMoveUp={canMoveUp}
                 canMoveDown={canMoveDown}

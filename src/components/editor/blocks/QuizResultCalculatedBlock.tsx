@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import { StorageService } from '@/services/core/StorageService';
 
@@ -86,13 +87,13 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
       if (quizResult && quizResult.primaryStyle) {
         setResults(quizResult);
         setIsLoading(false);
-        console.log('📊 Quiz results loaded from storage:', quizResult);
+        appLogger.debug('📊 Quiz results loaded from storage:', quizResult);
       } else {
         // If no results, keep loading state - calculation may still be in progress
-        console.log('⏳ No quiz results found in storage yet');
+        appLogger.debug('⏳ No quiz results found in storage yet');
       }
     } catch (error) {
-      console.error('❌ Error loading quiz results:', error);
+      appLogger.error('❌ Error loading quiz results:', error);
       setIsLoading(false);
     }
   };
@@ -103,7 +104,7 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
     
     // Listen for quiz result updates
     const handleResultUpdate = () => {
-      console.log('🔄 Quiz result updated event received');
+      appLogger.debug('🔄 Quiz result updated event received');
       loadResults();
     };
 

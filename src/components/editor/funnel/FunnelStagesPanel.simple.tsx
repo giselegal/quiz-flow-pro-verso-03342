@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 
@@ -16,7 +17,7 @@ const FunnelStagesPanel: React.FC = () => {
   const activeStageId = `step-${state.currentStep}`;
   const stageActions = { setActiveStage: (id: string) => actions.setCurrentStep(parseInt(id.replace('step-', ''))) };
 
-  console.log('🏗️ FunnelStagesPanel: Renderizando painel', {
+  appLogger.debug('🏗️ FunnelStagesPanel: Renderizando painel', {
     stagesCount: stages.length,
     activeStageId,
     stages: stages.map(s => ({ id: s.id, name: s.name })),
@@ -42,7 +43,7 @@ const FunnelStagesPanel: React.FC = () => {
               variant={activeStageId === stage.id ? 'default' : 'outline'}
               className="w-full justify-start text-left h-auto p-3 border"
               onClick={() => {
-                console.log('🔄 FunnelStagesPanel: Mudando para etapa:', stage.id);
+                appLogger.debug('🔄 FunnelStagesPanel: Mudando para etapa:', stage.id);
                 stageActions.setActiveStage(stage.id);
               }}
             >

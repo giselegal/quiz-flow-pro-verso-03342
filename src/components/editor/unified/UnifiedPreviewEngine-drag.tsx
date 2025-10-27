@@ -5,6 +5,7 @@
  */
 
 import { useMonitoring } from '@/services/MonitoringService';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
@@ -110,7 +111,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     setPreviewErrors(errors);
 
     if (errors.length > 0 && mode === 'editor') {
-      console.warn('Preview errors detected:', errors);
+      appLogger.warn('Preview errors detected:', errors);
     }
   }, [blocks, mode]);
 
@@ -133,7 +134,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   // Propagamos os eventos de reordenação para o componente pai
   useEffect(() => {
     if (onBlocksReordered) {
-      console.log('🔄 UnifiedPreviewEngine-drag: Registrando handler para reordenação de blocos');
+      appLogger.debug('🔄 UnifiedPreviewEngine-drag: Registrando handler para reordenação de blocos');
     }
   }, [onBlocksReordered]);
 

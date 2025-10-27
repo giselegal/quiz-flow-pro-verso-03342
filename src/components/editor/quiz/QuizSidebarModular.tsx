@@ -5,6 +5,7 @@
  */
 
 import { Button } from '@/components/ui/button';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Grid3X3, Image, Navigation, Plus, Type, X } from 'lucide-react';
@@ -74,7 +75,7 @@ export const QuizSidebarModular: React.FC<QuizSidebarModularProps> = ({ onClose 
 
   const handleComponentAdd = (componentId: string) => {
     // TODO: Implement component addition logic
-    console.log('Adding component:', componentId);
+    appLogger.debug('Adding component:', componentId);
   };
 
   return (

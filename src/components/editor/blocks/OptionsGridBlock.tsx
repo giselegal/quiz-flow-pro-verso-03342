@@ -1,4 +1,5 @@
 import type { BlockComponentProps } from '@/types/blocks';
+import { appLogger } from '@/utils/logger';
 import React from 'react';
 import useOptimizedScheduler from '@/hooks/useOptimizedScheduler';
 import { computeSelectionValidity, getEffectiveRequiredSelections, isScoringPhase } from '@/lib/quiz/selectionRules';
@@ -246,7 +247,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       const stepNum = Number(currentStepFromEditor ?? NaN);
       // Logar apenas para as primeiras etapas para não poluir
       if (Number.isFinite(stepNum) && stepNum <= 3 && block?.type === 'options-grid') {
-        console.log('🔎 OptionsGridBlock: resolução de opções', {
+        appLogger.debug('🔎 OptionsGridBlock: resolução de opções', {
           stepNum,
           fromProperties: Array.isArray(propOptions) ? propOptions.length : 'n/a',
           fromContent: Array.isArray(contentOptions) ? contentOptions.length : 'n/a',
@@ -277,7 +278,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             ? (rawStep as any).sections
             : ensureArray((rawStep as any)?.blocks) || ensureArray((rawStep as any)?.sections) || [];
       if (import.meta?.env?.DEV) {
-        console.log('🔎 OptionsGridBlock:getStepBehavior components shape', {
+        appLogger.debug('🔎 OptionsGridBlock:getStepBehavior components shape', {
           // stepNumber is available conceptually; logged via surrounding scope
           rawType: typeof rawStep,
           hasBlocks: !!(rawStep as any)?.blocks,
@@ -359,7 +360,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // 🔧 Debug logs para desenvolvimento
   React.useEffect(() => {
     if (import.meta?.env?.DEV) {
-      console.log('🔧 OptionsGridBlock: Debug info', {
+      appLogger.debug('🔧 OptionsGridBlock: Debug info', {
         isPreviewMode,
         multipleSelection: multipleSelectionCompat,
         optionsCount: options?.length || 0,
@@ -387,7 +388,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       // Verificar se temos a configuração do step atual pelo hook
       if (stepConfig && stepConfig.metadata.stepNumber === stepNumber) {
-        console.log(`✅ OptionsGridBlock: Usando configuração do hook para step ${stepNumber}`, stepConfig);
+        appLogger.debug(`✅ OptionsGridBlock: Usando configuração do hook para step ${stepNumber}`, stepConfig);
 
         return {
           requiresValidInput: stepConfig.validation.type === 'input' && stepConfig.validation.required,
@@ -410,7 +411,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
       // Se não tiver o step no template, retornar fallback
       if (!rawStep) {
-        console.warn(`⚠️ OptionsGridBlock: Step ${stepId} não encontrado no template`);
+        appLogger.warn(`⚠️ OptionsGridBlock: Step ${stepId} não encontrado no template`);
         return getHardcodedStepBehavior(stepNumber);
       }
 
@@ -465,7 +466,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         }
       };
 
-      console.log(`🔄 OptionsGridBlock: Configuração extraída do template para step ${stepNumber}:`, tempConfig);
+      appLogger.debug(`🔄 OptionsGridBlock: Configuração extraída do template para step ${stepNumber}:`, tempConfig);
 
       return {
         requiresValidInput: tempConfig.validation.type === 'input' && tempConfig.validation.required,
@@ -479,7 +480,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         showProgress: tempConfig.behavior.showProgress
       };
     } catch (error) {
-      console.error(`❌ OptionsGridBlock: Erro ao carregar configuração para step ${stepNumber}:`, error);
+      appLogger.error(`❌ OptionsGridBlock: Erro ao carregar configuração para step ${stepNumber}:`, error);
       try {
         // Log detalhado para depuração sem quebrar execução
         const template = getQuiz21StepsTemplate();
@@ -647,12 +648,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
     if (!hasImages) {
       // Apenas texto: sempre 1 coluna
-      console.log('🎯 OptionsGridBlock: Detectado apenas texto → usando 1 coluna');
+      appLogger.debug('🎯 OptionsGridBlock: Detectado apenas texto → usando 1 coluna');
       return 'grid-cols-1';
     }
 
     // Com imagens: aplicar lógica original
-    console.log('🎯 OptionsGridBlock: Detectado imagens → usando 2 colunas responsivas');
+    appLogger.debug('🎯 OptionsGridBlock: Detectado imagens → usando 2 colunas responsivas');
     const raw = typeof columns === 'string' ? parseInt(columns, 10) : columns;
     const colNum = isNaN(Number(raw)) ? 2 : Math.max(1, Math.min(Number(raw), 2));
 
@@ -679,7 +680,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Mantemos somente o efeito acima com short-circuit para o step 1
 
   const handleOptionSelect = (optionId: string) => {
-    console.log('🔍 OptionsGridBlock: handleOptionSelect called', {
+    appLogger.debug('🔍 OptionsGridBlock: handleOptionSelect called', {
       optionId,
       isPreviewMode,
       multipleSelection: multipleSelectionCompat,
@@ -718,7 +719,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         }
       }
 
-      console.log('✅ Preview mode: new selections', newSelections);
+      appLogger.debug('✅ Preview mode: new selections', newSelections);
       setPreviewSelections(newSelections);
 
       // Persistir seleções para validação centralizada e pontuação
@@ -794,7 +795,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       });
 
       if (isScoringPhase(step) && hasRequiredSelections && onNextCb) {
-        console.log('🚀 OptionsGrid (preview): Auto-advancing after selection', newSelections);
+        appLogger.debug('🚀 OptionsGrid (preview): Auto-advancing after selection', newSelections);
 
         if (onStepComplete) {
           onStepComplete({
@@ -836,12 +837,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }
     } else {
       // Editor mode: Update properties and emit validation event for editor UX
-      console.log('🎯 Editor mode: processing selection');
+      appLogger.debug('🎯 Editor mode: processing selection');
 
       let newSelections: string[];
       if (multipleSelection) {
         const currentSelections = selectedOptions || [];
-        console.log('📊 Current selections in editor:', currentSelections);
+        appLogger.debug('📊 Current selections in editor:', currentSelections);
 
         if (currentSelections.includes(optionId)) {
           newSelections = allowDeselection
@@ -856,11 +857,11 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           }
         }
 
-        console.log('✅ New selections (multiple):', newSelections);
+        appLogger.debug('✅ New selections (multiple):', newSelections);
         onPropertyChange?.('selectedOptions', newSelections);
       } else {
         newSelections = [optionId];
-        console.log('✅ New selection (single):', newSelections);
+        appLogger.debug('✅ New selection (single):', newSelections);
         onPropertyChange?.('selectedOption', optionId);
       }
 
@@ -913,7 +914,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         const nextStep = Math.min(currentStep + 1, 21);
         const delayMs = stepBehavior.autoAdvanceDelay ?? 1000;
 
-        console.log('🚀 Auto-avanço ativado para etapa', currentStep, '→', nextStep);
+        appLogger.debug('🚀 Auto-avanço ativado para etapa', currentStep, '→', nextStep);
 
         cancel('options-grid-editor-auto-advance');
         schedule('options-grid-editor-auto-advance', () => {
@@ -1025,7 +1026,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               }}
               className={`rounded-lg p-4 transition-all duration-200 cursor-pointer bg-white ${cardLayoutClass}`}
               onClick={(e) => {
-                console.log('🖱️ Option clicked!', {
+                appLogger.debug('🖱️ Option clicked!', {
                   optionId: opt.id,
                   event: e,
                   currentTarget: e.currentTarget,
@@ -1042,7 +1043,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
                 // Garantir que o elemento está visível e interativo
                 const element = e.currentTarget as HTMLElement;
-                console.log('🔍 Element state:', {
+                appLogger.debug('🔍 Element state:', {
                   pointerEvents: window.getComputedStyle(element).pointerEvents,
                   cursor: window.getComputedStyle(element).cursor,
                   zIndex: window.getComputedStyle(element).zIndex,
@@ -1058,22 +1059,22 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                 }, 200);
 
                 // Executar seleção com diferentes estratégias
-                console.log('⚡ Executing handleOptionSelect for:', opt.id);
+                appLogger.debug('⚡ Executing handleOptionSelect for:', opt.id);
 
                 // Estratégia 1: Imediato
                 try {
                   handleOptionSelect(opt.id);
-                  console.log('✅ Immediate execution successful');
+                  appLogger.debug('✅ Immediate execution successful');
                 } catch (error) {
-                  console.error('❌ Immediate execution failed:', error);
+                  appLogger.error('❌ Immediate execution failed:', error);
 
                   // Estratégia 2: Com delay
                   setTimeout(() => {
                     try {
                       handleOptionSelect(opt.id);
-                      console.log('✅ Delayed execution successful');
+                      appLogger.debug('✅ Delayed execution successful');
                     } catch (delayedError) {
-                      console.error('❌ Delayed execution failed:', delayedError);
+                      appLogger.error('❌ Delayed execution failed:', delayedError);
                     }
                   }, 10);
                 }

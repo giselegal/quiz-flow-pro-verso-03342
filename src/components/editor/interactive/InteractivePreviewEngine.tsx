@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { ProductionPreviewEngine } from '../unified/ProductionPreviewEngine';
 import { InlineEditableBlock } from './InlineEditableBlock';
@@ -51,13 +52,13 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
 
   const handleSaveChanges = () => {
     // In a real app, this would sync to backend
-    console.log('🔄 Saving changes to backend...');
+    appLogger.debug('🔄 Saving changes to backend...');
     setHasUnsavedChanges(false);
   };
 
   const handleResetChanges = () => {
     // In a real app, this would reload from backend
-    console.log('🔄 Resetting changes...');
+    appLogger.debug('🔄 Resetting changes...');
     setHasUnsavedChanges(false);
   };
 

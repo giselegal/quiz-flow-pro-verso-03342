@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useLogger } from '@/utils/logger/SmartLogger';
 import { cacheManager } from '@/utils/cache/LRUCache';
 
@@ -51,7 +52,7 @@ const saveToLocalStorage = (properties: BlockProperty[]) => {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(properties));
     } catch (error) {
-        console.warn('Falha ao salvar propriedades no localStorage:', error);
+        appLogger.warn('Falha ao salvar propriedades no localStorage:', error);
     }
 };
 
@@ -60,7 +61,7 @@ const loadFromLocalStorage = (): BlockProperty[] => {
         const stored = localStorage.getItem(STORAGE_KEY);
         return stored ? JSON.parse(stored) : [];
     } catch (error) {
-        console.warn('Falha ao carregar propriedades do localStorage:', error);
+        appLogger.warn('Falha ao carregar propriedades do localStorage:', error);
         return [];
     }
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
 import { toast } from '@/hooks/use-toast';
 
@@ -61,7 +62,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
 
     try {
       setSaveStatus('saving');
-      console.log('💾 Iniciando salvamento manual para funil:', currentFunnelId);
+      appLogger.debug('💾 Iniciando salvamento manual para funil:', currentFunnelId);
 
       // Se há um callback customizado, usar ele
       if (onManualSave) {
@@ -85,7 +86,7 @@ export const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
         variant: 'default'
       });
     } catch (error) {
-      console.error('❌ Erro no salvamento manual:', error);
+      appLogger.error('❌ Erro no salvamento manual:', error);
       setSaveStatus('error');
 
       toast({

@@ -1,4 +1,5 @@
 import type { BlockComponentProps } from '@/types/blocks';
+import { appLogger } from '@/utils/logger';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
@@ -65,7 +66,7 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   }
 
   // Debug: Log das propriedades recebidas
-  console.log('🔍 [LegalNoticeInlineBlock] Propriedades:', block.properties);
+  appLogger.debug('🔍 [LegalNoticeInlineBlock] Propriedades:', block.properties);
 
   const {
     // Configurações de conteúdo

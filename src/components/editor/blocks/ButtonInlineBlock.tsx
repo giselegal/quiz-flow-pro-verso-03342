@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from 'lucide-react';
 import React, { useEffect, useState, useMemo } from 'react';
@@ -193,7 +194,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   const finalAutoAdvanceOnComplete = stepRule?.behavior.autoAdvance || autoAdvanceOnComplete;
   const finalAutoAdvanceDelay = stepRule?.behavior.autoAdvanceDelay || autoAdvanceDelay;
 
-  console.log('🎯 ButtonInlineBlock - Configurações aplicadas:', {
+  appLogger.debug('🎯 ButtonInlineBlock - Configurações aplicadas:', {
     currentStep,
     stepRule: stepRule ? {
       type: stepRule.type,
@@ -267,7 +268,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         const selectedCount = e.detail?.selectedCount || e.detail?.count || 0;
         const isValid = selectedCount >= requiredSelections;
 
-        console.log('🎯 ButtonInlineBlock - Validação de seleção:', {
+        appLogger.debug('🎯 ButtonInlineBlock - Validação de seleção:', {
           currentStep,
           requiredSelections,
           selectedCount,
@@ -366,14 +367,14 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         quizId: 'default-funnel',
       });
       if (start.success) {
-        console.log('✅ Sessão Supabase iniciada:', start.sessionId);
+        appLogger.debug('✅ Sessão Supabase iniciada:', start.sessionId);
         // Após obter UUID, tentar flush de respostas pendentes
         await userResponseService.flushPending();
       } else {
-        console.log('⚠️ Usando sessão local sem UUID, permaneceremos offline-first');
+        appLogger.debug('⚠️ Usando sessão local sem UUID, permaneceremos offline-first');
       }
     } catch (error) {
-      console.error('❌ Erro ao inicializar quiz no Supabase:', error);
+      appLogger.error('❌ Erro ao inicializar quiz no Supabase:', error);
     }
   };
 
@@ -647,7 +648,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
             if (text && text.includes('Descobrir meu Estilo')) {
               const userName =
                 (await userResponseService.getResponse('intro-name-input')) || 'Anônimo';
-              console.log('🚀 Iniciando tracking do quiz para:', userName);
+              appLogger.debug('🚀 Iniciando tracking do quiz para:', userName);
 
               // Initialize quiz with Supabase
               await initializeQuizWithSupabase(userName);

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -170,7 +171,7 @@ export const GlobalConfigPanel: React.FC = () => {
                 const parsed = JSON.parse(savedConfig);
                 setConfig({ ...defaultConfig, ...parsed });
             } catch (error) {
-                console.error('Erro ao carregar configuração:', error);
+                appLogger.error('Erro ao carregar configuração:', error);
             }
         }
     }, []);
@@ -201,7 +202,7 @@ export const GlobalConfigPanel: React.FC = () => {
             setHasChanges(false);
             setTimeout(() => setSaved(false), 3000);
         } catch (error) {
-            console.error('Erro ao salvar configuração:', error);
+            appLogger.error('Erro ao salvar configuração:', error);
         } finally {
             setIsLoading(false);
         }
@@ -227,7 +228,7 @@ export const GlobalConfigPanel: React.FC = () => {
                     const imported = JSON.parse(e.target?.result as string);
                     setConfig({ ...defaultConfig, ...imported });
                 } catch (error) {
-                    console.error('Erro ao importar configuração:', error);
+                    appLogger.error('Erro ao importar configuração:', error);
                 }
             };
             reader.readAsText(file);

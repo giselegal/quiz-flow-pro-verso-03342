@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -43,7 +44,7 @@ export function PublicationSettingsButton({
 
     const handlePublish = async () => {
         try {
-            console.log('🚀 PublicationButton: Iniciando publicação com sincronização...');
+            appLogger.debug('🚀 PublicationButton: Iniciando publicação com sincronização...');
 
             // 1. Buscar dados atuais do funil
             const currentFunnel = await UnifiedDataService.getFunnel(funnelId);
@@ -66,12 +67,12 @@ export function PublicationSettingsButton({
 
             if (syncSuccess) {
                 setShowDialog(false);
-                console.log('✅ Funil publicado e sincronizado com dashboard!', generatePreviewUrl());
+                appLogger.debug('✅ Funil publicado e sincronizado com dashboard!', generatePreviewUrl());
             } else {
                 throw new Error('Falha na sincronização com dashboard');
             }
         } catch (error) {
-            console.error('❌ Erro ao publicar funil:', error);
+            appLogger.error('❌ Erro ao publicar funil:', error);
             // EditorDashboardSyncService já mostra notificações de erro
         }
     };
@@ -230,7 +231,7 @@ export function QuickPublishButton({
             await publishFunnel();
             // Notificação de sucesso
         } catch (error) {
-            console.error('Erro na publicação rápida:', error);
+            appLogger.error('Erro na publicação rápida:', error);
             // Notificação de erro
         }
     };

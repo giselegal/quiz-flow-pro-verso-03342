@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import { Edit3, Eye, Move, Copy, Trash2, MoreHorizontal } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
@@ -149,7 +150,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   useEffect(() => {
     if (trackingData && isSelected) {
       // Track component view
-      console.log('📊 Component View:', {
+      appLogger.debug('📊 Component View:', {
         blockId: block.id,
         componentName: trackingData.componentName,
         category: trackingData.category,
@@ -166,7 +167,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
     // 5. TRACKING: Event tracking
     if (trackingData) {
-      console.log('📊 Component Edit:', {
+      appLogger.debug('📊 Component Edit:', {
         blockId: block.id,
         componentName: trackingData.componentName,
         action: 'edit_start',
@@ -184,7 +185,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
     // 5. TRACKING: Duplicate event
     if (trackingData) {
-      console.log('📊 Component Duplicate:', {
+      appLogger.debug('📊 Component Duplicate:', {
         blockId: block.id,
         componentName: trackingData.componentName,
         timestamp: Date.now(),
@@ -202,7 +203,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
       // 5. TRACKING: Delete event
       if (trackingData) {
-        console.log('📊 Component Delete:', {
+        appLogger.debug('📊 Component Delete:', {
           blockId: block.id,
           componentName: trackingData.componentName,
           timestamp: Date.now(),

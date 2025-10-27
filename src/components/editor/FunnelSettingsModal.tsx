@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -117,7 +118,7 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
 
     const loadSettings = async () => {
         try {
-            console.log('📋 Carregando configurações do funil:', funnelId);
+            appLogger.debug('📋 Carregando configurações do funil:', funnelId);
 
             // Tentar carregar do localStorage primeiro
             const savedSettings = localStorage.getItem(`funnel-settings-${funnelId}`);
@@ -127,10 +128,10 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
                 if (parsed.domain) setDomainSettings(parsed.domain);
                 if (parsed.pixel) setPixelSettings(parsed.pixel);
                 if (parsed.funnel) setFunnelSettings(parsed.funnel);
-                console.log('✅ Configurações carregadas do localStorage');
+                appLogger.debug('✅ Configurações carregadas do localStorage');
             }
         } catch (error) {
-            console.error('❌ Erro ao carregar configurações:', error);
+            appLogger.error('❌ Erro ao carregar configurações:', error);
         }
     };
 
@@ -150,13 +151,13 @@ export const FunnelSettingsModal: React.FC<FunnelSettingsModalProps> = ({
             localStorage.setItem(`funnel-settings-${funnelId}`, JSON.stringify(allSettings));
 
             // TODO: Implementar salvamento no Supabase
-            console.log('💾 Configurações salvas:', { section, funnelId, settings: allSettings });
+            appLogger.debug('💾 Configurações salvas:', { section, funnelId, settings: allSettings });
 
             // Feedback visual
             alert(`✅ Configurações ${section ? `de ${section}` : ''} salvas com sucesso!`);
 
         } catch (error) {
-            console.error('❌ Erro ao salvar configurações:', error);
+            appLogger.error('❌ Erro ao salvar configurações:', error);
             alert('❌ Erro ao salvar configurações. Tente novamente.');
         } finally {
             setSaving(false);

@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useRef } from 'react';
+import { appLogger } from '@/utils/logger';
 
 export interface QuizDataManagerProps {
   quizData: Record<string, any>;
@@ -37,10 +38,10 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
         if (savedData) {
           const parsedData = JSON.parse(savedData);
           onDataChange(parsedData);
-          console.log('🔄 QuizDataManager: Dados carregados do localStorage');
+          appLogger.debug('🔄 QuizDataManager: Dados carregados do localStorage');
         }
       } catch (error) {
-        console.warn('⚠️ QuizDataManager: Erro ao carregar dados:', error);
+        appLogger.warn('⚠️ QuizDataManager: Erro ao carregar dados:', error);
       }
     }
   }, [storageKey, onDataChange]);
@@ -59,9 +60,9 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
       try {
         localStorage.setItem(storageKey, JSON.stringify(quizData));
         lastSaveRef.current = Date.now();
-        console.log('💾 QuizDataManager: Auto-save realizado');
+        appLogger.debug('💾 QuizDataManager: Auto-save realizado');
       } catch (error) {
-        console.warn('⚠️ QuizDataManager: Erro no auto-save:', error);
+        appLogger.warn('⚠️ QuizDataManager: Erro no auto-save:', error);
       }
     }, autoSaveInterval);
 
@@ -107,10 +108,10 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
         const importedData = JSON.parse(e.target?.result as string);
         if (importedData.quizData) {
           onDataChange(importedData.quizData);
-          console.log('📥 QuizDataManager: Dados importados com sucesso');
+          appLogger.debug('📥 QuizDataManager: Dados importados com sucesso');
         }
       } catch (error) {
-        console.error('❌ QuizDataManager: Erro ao importar dados:', error);
+        appLogger.error('❌ QuizDataManager: Erro ao importar dados:', error);
         alert('Erro ao importar dados. Verifique se o arquivo está no formato correto.');
       }
     };
@@ -126,7 +127,7 @@ export const QuizDataManager: React.FC<QuizDataManagerProps> = ({
     ) {
       onDataChange({});
       localStorage.removeItem(storageKey);
-      console.log('🗑️ QuizDataManager: Todos os dados foram limpos');
+      appLogger.debug('🗑️ QuizDataManager: Todos os dados foram limpos');
     }
   };
 

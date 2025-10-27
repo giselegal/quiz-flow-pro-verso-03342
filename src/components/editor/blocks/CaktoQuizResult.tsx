@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { useQuizResult } from '@/hooks/useQuizResult';
 import Step20Result from '@/components/steps/Step20Result';
 
@@ -20,7 +21,7 @@ const CaktoQuizResult: React.FC<CaktoQuizResultProps> = (props) => {
 
   // Log para debugging
   React.useEffect(() => {
-    console.log('🎯 [CaktoQuizResult] Status:', { hasResult, isLoading, error });
+    appLogger.debug('🎯 [CaktoQuizResult] Status:', { hasResult, isLoading, error });
   }, [hasResult, isLoading, error]);
 
   // Usar Step20Result diretamente

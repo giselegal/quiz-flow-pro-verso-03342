@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -38,7 +39,7 @@ interface EditorConfig {
 
 const SimpleEditor: React.FC = () => {
   // 🚨 Console warning para desenvolvedores
-  console.warn(
+  appLogger.warn(
     '⚠️ DEPRECATED: SimpleEditor será removido em 01/nov/2025. ' +
     'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
   );

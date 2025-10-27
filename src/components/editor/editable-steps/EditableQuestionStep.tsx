@@ -7,6 +7,7 @@
  */
 
 import React, { useMemo, useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import QuestionStep from '../../quiz/QuestionStep';
 import { EditableBlockWrapper } from './shared/EditableBlockWrapper';
 import { EditableStepProps } from './shared/EditableStepProps';
@@ -51,7 +52,7 @@ const EditableQuestionStep: React.FC<EditableQuestionStepProps> = ({
 
     // 🎪 Mock callback para onAnswersChange
     const mockAnswersChange = useMemo(() => (answers: string[]) => {
-        console.log('[Editor Mock] QuestionStep - Respostas alteradas:', answers);
+        appLogger.debug('[Editor Mock] QuestionStep - Respostas alteradas:', answers);
 
         if (isEditable) {
             // Atualizar state mock para preview

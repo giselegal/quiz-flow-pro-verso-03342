@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
@@ -85,7 +86,7 @@ export const Step20ComponentsButton: React.FC = () => {
       };
       await actions.addBlock(stepKey, newBlock);
     } catch (error) {
-      console.error('Erro ao adicionar componente Step 20:', error);
+      appLogger.error('Erro ao adicionar componente Step 20:', error);
     }
   };
 
@@ -101,7 +102,7 @@ export const Step20ComponentsButton: React.FC = () => {
       };
       await actions.addBlock(stepKey, templateBlock);
     } catch (error) {
-      console.error('Erro ao adicionar template completo Step 20:', error);
+      appLogger.error('Erro ao adicionar template completo Step 20:', error);
     }
   };
 

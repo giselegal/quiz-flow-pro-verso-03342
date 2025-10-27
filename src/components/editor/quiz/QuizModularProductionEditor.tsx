@@ -133,7 +133,7 @@ import { validateEditorFunnelSteps } from '@/services/canonical/EditorFunnelVali
 // Persistência Supabase manual (P1)
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { useUnifiedCRUD } from '@/contexts';
-import { createLogger } from '@/utils/logger';
+import { createLogger, appLogger } from '@/utils/logger';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -580,12 +580,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Evita loop infinito de carregamento: finaliza o loading após mount
     useEffect(() => {
         // Carregamento inicial: se houver ?template=, construir steps default
-        console.log('🎯 EDITOR: useEffect inicial disparado');
+        appLogger.debug('🎯 EDITOR: useEffect inicial disparado');
         try {
             const sp = new URLSearchParams(typeof window !== 'undefined' && window.location ? window.location.search : '');
             const templateId = sp.get('template');
             const funnelParam = sp.get('funnel') || undefined;
-            console.log('🔍 PARAMETROS:', { templateId, funnelParam, stepsExistentes: steps?.length || 0 });
+            appLogger.debug('🔍 PARAMETROS:', { templateId, funnelParam, stepsExistentes: steps?.length || 0 });
 
             // 0) Se vier um funnelId, tentar carregar rascunho existente primeiro
             if (funnelParam && !steps?.length) {
@@ -606,11 +606,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             return; // sucesso – não continuar fallback
                         } else {
                             // ✅ FASE 4: FALLBACK - Funnel não encontrado, carregar template padrão
-                            console.warn(`⚠️ Funnel ${funnelParam} não encontrado ou vazio, carregando template padrão quiz21StepsComplete`);
+                            appLogger.warn(`⚠️ Funnel ${funnelParam} não encontrado ou vazio, carregando template padrão quiz21StepsComplete`);
                             throw new Error('Funnel not found, using template fallback');
                         }
                     } catch (e) {
-                        console.warn('🔄 Falha ao carregar funnel, usando template quiz21StepsComplete como fallback', e);
+                        appLogger.warn('🔄 Falha ao carregar funnel, usando template quiz21StepsComplete como fallback', e);
 
                         // Forçar carregamento do template como fallback
                         const initial: EditorEditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
@@ -639,7 +639,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             };
                         });
 
-                        console.log(`✅ Template fallback carregado: ${initial.length} steps, ${initial.reduce((sum, s) => sum + s.blocks.length, 0)} blocos totais`);
+                        appLogger.debug(`✅ Template fallback carregado: ${initial.length} steps, ${initial.reduce((sum, s) => sum + s.blocks.length, 0)} blocos totais`);
                         setSteps(initial);
                         setSelectedStepIdUnified(initial[0]?.id || '');
                         setIsLoading(false);
@@ -656,7 +656,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         setIsLoading(false);
                     } else if (templateId === 'quiz21StepsComplete' || templateId === 'quiz-estilo-21-steps') {
                         // 🎯 Novo caminho primário: usar JSON público consolidado (quiz21-complete.json) como master
-                        console.log('🎯 Carregando template público consolidado (master) com hidratação:', templateId);
+                        appLogger.debug('🎯 Carregando template público consolidado (master) com hidratação:', templateId);
                         const buildStepType = (idx: number): EditableQuizStep['type'] => {
                             if (idx === 0) return 'intro';
                             if (idx >= 1 && idx <= 10) return 'question';
@@ -703,25 +703,25 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                                     // Converter Block[] (editor) → BlockComponent[] (editor UI)
                                                     const asComponents = blocksToBlockComponents(staticBlocks as any);
                                                     built[i] = { ...s, blocks: asComponents };
-                                                    console.log(`✅ Substituído por JSON estático rico: ${s.id} (${asComponents.length} blocos)`);
+                                                    appLogger.debug(`✅ Substituído por JSON estático rico: ${s.id} (${asComponents.length} blocos)`);
                                                 }
                                             }
                                         });
                                     } catch (e) {
-                                        console.warn('⚠️ Falha ao aplicar substituição por JSON estático (12/19/20):', e);
+                                        appLogger.warn('⚠️ Falha ao aplicar substituição por JSON estático (12/19/20):', e);
                                     }
 
                                     setSteps(built);
                                     setSelectedStepIdUnified(built[0]?.id || 'step-01');
                                     setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                                     setIsLoading(false);
-                                    console.log('✅ Master JSON carregado e convertido com sucesso. Steps:', built.length);
+                                    appLogger.debug('✅ Master JSON carregado e convertido com sucesso. Steps:', built.length);
                                     return;
                                 } else {
-                                    console.warn('⚠️ Falha ao carregar master JSON:', resp.status, resp.statusText);
+                                    appLogger.warn('⚠️ Falha ao carregar master JSON:', resp.status, resp.statusText);
                                 }
                             } catch (e) {
-                                console.warn('⚠️ Erro ao carregar/usar master JSON, caindo no fallback enriquecido:', e);
+                                appLogger.warn('⚠️ Erro ao carregar/usar master JSON, caindo no fallback enriquecido:', e);
                             }
                         })();
 
@@ -790,7 +790,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     // ✅ MODULAR: Carregar blocos de JSON estático para Steps 12, 19
                                     const stepNumber = parseInt(stepId.split('-')[1]);
                                     if (stepNumber === 12 || stepNumber === 19) {
-                                        console.log(`✅ Carregando blocos modulares para ${stepId} (transition)`);
+                                        appLogger.debug(`✅ Carregando blocos modulares para ${stepId} (transition)`);
                                         const templateBlocks = await loadStepTemplate(stepId);
                                         if (templateBlocks && templateBlocks.length > 0) {
                                             return templateBlocks.map((block: any, idx: number) => ({
@@ -829,7 +829,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     // ✅ MODULAR: Carregar blocos de JSON estático para Step 20
                                     const stepNumber = parseInt(stepId.split('-')[1]);
                                     if (stepNumber === 20) {
-                                        console.log(`✅ Carregando blocos modulares para ${stepId} (result)`);
+                                        appLogger.debug(`✅ Carregando blocos modulares para ${stepId} (result)`);
                                         const templateBlocks = await loadStepTemplate(stepId);
                                         if (templateBlocks && templateBlocks.length > 0) {
                                             return templateBlocks.map((block: any, idx: number) => ({
@@ -900,7 +900,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam) || [];
                                         }
                                     } catch (e) {
-                                        console.warn('⚠️ Falha ao construir blocks enriquecidos para', stepId, e);
+                                        appLogger.warn('⚠️ Falha ao construir blocks enriquecidos para', stepId, e);
                                         const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
                                         blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam) || [];
                                     }
@@ -919,9 +919,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 setSelectedStepIdUnified(enriched[0]?.id || '');
                                 setFunnelId(funnelParam || `funnel-${templateId}-${Date.now()}`);
                                 setIsLoading(false);
-                                console.log('✅ Fallback enriquecido concluído! Total de steps:', enriched.length);
+                                appLogger.debug('✅ Fallback enriquecido concluído! Total de steps:', enriched.length);
                             } catch (err) {
-                                console.error('❌ Erro ao carregar steps lazy:', err);
+                                appLogger.error('❌ Erro ao carregar steps lazy:', err);
                                 setIsLoading(false);
                             }
                         })();
@@ -929,7 +929,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 }
             }
         } catch (err) {
-            console.error('❌ Erro no useEffect:', err);
+            appLogger.error('❌ Erro no useEffect:', err);
         }
         // Se não houver parâmetros de template ou funnel e ainda não carregamos steps,
         // finalize o loading para permitir que o fallback vazio seja exibido em /editor
@@ -940,11 +940,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const noParams = !templateId && !funnelParam;
             const noSteps = !steps || steps.length === 0;
             if (noParams && noSteps) {
-                console.warn('⚠️ Nenhum template/funnel informado. Encerrando loading e exibindo fallback vazio.');
+                appLogger.warn('⚠️ Nenhum template/funnel informado. Encerrando loading e exibindo fallback vazio.');
                 setIsLoading(false);
             }
         } catch {/* ignore */ }
-        console.log('🏁 Finalizando useEffect (loading avaliado)');
+        appLogger.debug('🏁 Finalizando useEffect (loading avaliado)');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -957,7 +957,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
         if (stepKeys.length === 0) return;
 
-        console.log('🔄 Sincronizando EditorProvider.stepBlocks → QuizModularProductionEditor.steps', {
+        appLogger.debug('🔄 Sincronizando EditorProvider.stepBlocks → QuizModularProductionEditor.steps', {
             stepsKeys: stepKeys,
             currentStepsCount: steps.length
         });
@@ -970,7 +970,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
                 // Se há novos blocos para este step, atualizar
                 if (newBlocks && Array.isArray(newBlocks)) {
-                    console.log(`✅ Atualizando ${stepKey} com ${newBlocks.length} blocos`);
+                    appLogger.debug(`✅ Atualizando ${stepKey} com ${newBlocks.length} blocos`);
                     return {
                         ...step,
                         blocks: newBlocks.map((block: any) => ({
@@ -995,8 +995,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // ✅ FASE 3: FALLBACK Empty State - Mostrar mensagem se nenhum step foi carregado
     useEffect(() => {
         if (!isLoading && (!steps || steps.length === 0)) {
-            console.error('❌ EDITOR VAZIO: Nenhuma etapa carregada após useEffect inicial!');
-            console.log('📊 Debug info:', {
+            appLogger.error('❌ EDITOR VAZIO: Nenhuma etapa carregada após useEffect inicial!');
+            appLogger.debug('📊 Debug info:', {
                 hasSteps: !!steps,
                 stepsLength: steps?.length,
                 isLoading,
@@ -1037,7 +1037,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
             setSteps([fallbackStep]);
             setSelectedStepIdUnified('step-01');
-            console.log('✅ Fallback step criado para evitar editor vazio');
+            appLogger.debug('✅ Fallback step criado para evitar editor vazio');
         }
     }, [isLoading, steps]);
 
@@ -1294,15 +1294,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             // 🎯 NOVO: Detectar drop zones (drop-before-{blockId})
             if (over.id && String(over.id).startsWith('drop-before-')) {
                 const targetBlockId = String(over.id).replace('drop-before-', '');
-                console.log('🎯 DROP ZONE detectado:', { targetBlockId, allBlocks: currentStep.blocks.map(b => ({ id: b.id, order: b.order })) });
+                appLogger.debug('🎯 DROP ZONE detectado:', { targetBlockId, allBlocks: currentStep.blocks.map(b => ({ id: b.id, order: b.order })) });
 
                 // Remover filtro parentId - buscar pelo ID real
                 const targetBlockIndex = currentStep.blocks.findIndex(b => b.id === targetBlockId);
                 if (targetBlockIndex >= 0) {
                     insertPosition = targetBlockIndex; // Inserir ANTES do bloco
-                    console.log(`✅ Inserindo ANTES do bloco "${targetBlockId}" na posição ${insertPosition}`);
+                    appLogger.debug(`✅ Inserindo ANTES do bloco "${targetBlockId}" na posição ${insertPosition}`);
                 } else {
-                    console.warn('❌ Bloco alvo não encontrado:', targetBlockId);
+                    appLogger.warn('❌ Bloco alvo não encontrado:', targetBlockId);
                 }
             } else if (over.id && over.id !== 'canvas-end' && !String(over.id).startsWith('container-slot:')) {
                 // Dropped sobre outro bloco - inserir APÓS ele
@@ -2543,7 +2543,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Handler para quando um quiz é criado pelo Builder System
     const handleBuilderQuizCreated = useCallback((quizData: any) => {
-        console.log('🎯 Quiz criado pelo Builder System:', quizData);
+        appLogger.debug('🎯 Quiz criado pelo Builder System:', quizData);
 
         try {
             // Converter FunnelConfig para EditableQuizStep[]
@@ -2574,7 +2574,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 description: `${convertedSteps.length} etapas geradas pelo Builder System`,
             });
         } catch (error) {
-            console.error('❌ Erro ao converter quiz do builder:', error);
+            appLogger.error('❌ Erro ao converter quiz do builder:', error);
             toast({
                 title: 'Erro',
                 description: 'Falha ao converter quiz gerado',
@@ -2644,7 +2644,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             if (currentBlocks) {
                 // Garantir ordenação consistente
                 const sorted = [...currentBlocks].sort((a, b) => (a.order || 0) - (b.order || 0));
-                console.log('📐 Ordem de blocos:', sorted.map(b => ({ id: b.id, type: b.type, order: b.order })));
+                appLogger.debug('📐 Ordem de blocos:', sorted.map(b => ({ id: b.id, type: b.type, order: b.order })));
             }
         }
     }, [steps, editorCtx, effectiveSelectedStepId, selectedStepId, selectedStep?.id]);
@@ -2916,7 +2916,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                             setIsDirty(true);
                                             toast({ title: 'Props aplicadas', description: 'Canvas atualizado a partir das propriedades' });
                                         } catch (e: any) {
-                                            console.error('Erro ao aplicar props → blocks', e);
+                                            appLogger.error('Erro ao aplicar props → blocks', e);
                                             toast({ title: 'Erro ao aplicar props', description: e?.message || 'Falha de validação', variant: 'destructive' } as any);
                                         }
                                     }}
@@ -3289,7 +3289,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     setIsDirty(true);
                                     toast({ title: 'Props aplicadas', description: 'Canvas atualizado a partir das propriedades' });
                                 } catch (e: any) {
-                                    console.error('Erro ao aplicar props → blocks', e);
+                                    appLogger.error('Erro ao aplicar props → blocks', e);
                                     toast({ title: 'Erro ao aplicar props', description: e?.message || 'Falha de validação', variant: 'destructive' } as any);
                                 }
                             }}
@@ -3404,7 +3404,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
     const [registryReady, setRegistryReady] = React.useState(false);
 
     // 🐛 DEBUG: Log de renderização crítico
-    console.log(`🎨 LiveRuntimePreview RENDERIZADO`, {
+    appLogger.debug(`🎨 LiveRuntimePreview RENDERIZADO`, {
         stepsCount: steps.length,
         funnelId,
         selectedStepId,
@@ -3418,7 +3418,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
 
     // ✅ FASE 1 (P0): Calcular runtimeMap usando transformação unificada
     const runtimeMap = React.useMemo(() => {
-        console.log(`🔄 [Render #${renderCountRef.current}] Recalculando runtimeMap com`, steps.length, 'steps');
+        appLogger.debug(`🔄 [Render #${renderCountRef.current}] Recalculando runtimeMap com`, steps.length, 'steps');
         return editorStepsToRuntimeMap(steps as any);
     }, [steps]);
 
@@ -3431,7 +3431,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
     React.useEffect(() => {
         setSyncStatus('syncing');
 
-        console.log(`🔍 [Update Check #${updateCountRef.current}]`, {
+        appLogger.debug(`🔍 [Update Check #${updateCountRef.current}]`, {
             runtimeVersion,
             lastVersion: lastVersionRef.current,
             willUpdate: runtimeVersion !== lastVersionRef.current,
@@ -3444,7 +3444,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
 
             // ✅ FASE 2 (P1): Ao invés de abortar, resetar contador após delay
             if (updateCountRef.current > 10) {
-                console.warn('⚠️ LOOP DETECTADO! Resetando contador em 2s...');
+                appLogger.warn('⚠️ LOOP DETECTADO! Resetando contador em 2s...');
 
                 // Resetar contador após 2s de inatividade
                 if (loopResetTimerRef.current) {
@@ -3452,7 +3452,7 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
                 }
 
                 loopResetTimerRef.current = setTimeout(() => {
-                    console.log('🔄 Reset de loop counter');
+                    appLogger.debug('🔄 Reset de loop counter');
                     updateCountRef.current = 0;
                 }, 2000);
 
@@ -3460,13 +3460,13 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
                 return;
             }
 
-            console.log(`✅ [Update #${updateCountRef.current}] Atualizando Live preview registry`);
+            appLogger.debug(`✅ [Update #${updateCountRef.current}] Atualizando Live preview registry`);
             lastVersionRef.current = runtimeVersion;
             setSteps(runtimeMap);
             setRegistryReady(true);
             setSyncStatus('synced');
         } else {
-            console.log('⏭️ Skip update - conteúdo idêntico');
+            appLogger.debug('⏭️ Skip update - conteúdo idêntico');
             setRegistryReady(true);
             setSyncStatus('synced');
         }

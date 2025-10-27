@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { getFunnelIdFromEnvOrStorage } from '@/utils/funnelIdentity';
 import { schemaDrivenFunnelService, type SchemaDrivenFunnelData } from '@/services/schemaDrivenFunnelService';
 import { FunnelManager } from './FunnelManager';
@@ -57,7 +58,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
 
       try {
         setLoading(true);
-        console.log('📋 Carregando informações do funil:', currentFunnelId);
+        appLogger.debug('📋 Carregando informações do funil:', currentFunnelId);
 
         // Para funis do template, usar informações hardcoded
         if (currentFunnelId === 'quiz-estilo-completo') {
@@ -80,7 +81,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
           if (funnelData) {
             setCurrentFunnel(funnelData);
           } else {
-            console.warn('⚠️ Funil não encontrado:', currentFunnelId);
+            appLogger.warn('⚠️ Funil não encontrado:', currentFunnelId);
             setCurrentFunnel({
               id: currentFunnelId,
               name: 'Funil Desconhecido',
@@ -97,7 +98,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
           }
         }
       } catch (error) {
-        console.error('❌ Erro ao carregar informações do funil:', error);
+        appLogger.error('❌ Erro ao carregar informações do funil:', error);
         setCurrentFunnel(null);
       } finally {
         setLoading(false);

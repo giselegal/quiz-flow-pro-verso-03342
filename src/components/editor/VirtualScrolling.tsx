@@ -14,6 +14,7 @@
  */
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useLogger } from '@/utils/logger/SmartLogger';
 import { cacheManager } from '@/utils/cache/LRUCache';
 import { cleanupManager, registerEventListener, registerResizeObserver } from '@/utils/cleanup/AutoCleanupSystem';
@@ -324,7 +325,7 @@ export const useVirtualBlockList = (blocks: any[], containerHeight: number) => {
 
   const handleScroll = useCallback((scrollTop: number) => {
     // Lógica de scroll para blocks
-    console.log('Block scroll:', scrollTop);
+    appLogger.debug('Block scroll:', scrollTop);
   }, []);
 
   return {

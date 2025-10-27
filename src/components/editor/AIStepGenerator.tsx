@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useCallback } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -54,13 +55,13 @@ Gere 5-8 etapas incluindo:
 Cada pergunta deve ter 3-4 opções com categorias para cálculo.
 `.trim();
 
-        console.log('🤖 AIStepGenerator: Gerando funil com prompt:', fullPrompt);
+        appLogger.debug('🤖 AIStepGenerator: Gerando funil com prompt:', fullPrompt);
 
         try {
             const generatedSteps = await generateFunnel(fullPrompt);
 
             if (generatedSteps) {
-                console.log('✅ AIStepGenerator: Steps gerados pela IA:', generatedSteps);
+                appLogger.debug('✅ AIStepGenerator: Steps gerados pela IA:', generatedSteps);
 
                 // Aplicar steps no PureBuilder usando o método disponível
                 // Como não temos applyAISteps, vamos usar os métodos básicos
@@ -81,7 +82,7 @@ Cada pergunta deve ter 3-4 opções com categorias para cálculo.
                     actions.setCurrentStep(1);
 
                 } catch (error) {
-                    console.error('❌ Error applying AI steps:', error);
+                    appLogger.error('❌ Error applying AI steps:', error);
                     addNotification('❌ Erro ao aplicar etapas geradas pela IA');
                 }
 
@@ -90,7 +91,7 @@ Cada pergunta deve ter 3-4 opções com categorias para cálculo.
                 addNotification('❌ Erro ao gerar funil. Tente novamente.');
             }
         } catch (error) {
-            console.error('❌ AIStepGenerator error:', error);
+            appLogger.error('❌ AIStepGenerator error:', error);
             addNotification('❌ Erro ao conectar com IA. Verifique sua configuração.');
         }
     }, [prompt, businessType, targetAudience, generateFunnel, actions, addNotification, onClose]);

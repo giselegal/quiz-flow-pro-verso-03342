@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { X, Palette, Eye, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,7 +34,7 @@ export const BrandKitSidebar: React.FC<BrandKitSidebarProps> = ({ onClose }) => 
 
     // Analytics tracking fallback for compatibility
     const trackEvent = (event: string, data?: any) => {
-        console.log('📊 Brand Kit Event:', event, data);
+        appLogger.debug('📊 Brand Kit Event:', event, data);
     };
 
     const [activeTab, setActiveTab] = useState('colors');

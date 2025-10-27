@@ -11,6 +11,7 @@
  */
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -50,7 +51,7 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
     className
 }) => {
     // 🚨 Console warning para desenvolvedores
-    console.warn(
+    appLogger.warn(
         '⚠️ DEPRECATED: QuizProductionEditor será removido em 01/nov/2025. ' +
         'Migre para QuizModularProductionEditor. Ver MIGRATION_EDITOR.md'
     );
@@ -95,14 +96,14 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
             setFunnelId(funnel.id);
             setSelectedStepId(editableSteps[0]?.id || '');
 
-            console.log('✅ Funil carregado:', funnel.name, editableSteps.length, 'etapas');
+            appLogger.debug('✅ Funil carregado:', funnel.name, editableSteps.length, 'etapas');
 
             toast({
                 title: 'Funil carregado',
                 description: `${editableSteps.length} etapas prontas para edição`,
             });
         } catch (error) {
-            console.error('❌ Erro ao carregar:', error);
+            appLogger.error('❌ Erro ao carregar:', error);
             toast({
                 title: 'Erro',
                 description: 'Falha ao carregar o funil',
@@ -161,9 +162,9 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
                 description: `Rascunho ${savedId} salvo`,
             });
 
-            console.log('✅ Rascunho salvo:', savedId);
+            appLogger.debug('✅ Rascunho salvo:', savedId);
         } catch (error) {
-            console.error('❌ Erro ao salvar:', error);
+            appLogger.error('❌ Erro ao salvar:', error);
             toast({
                 title: 'Erro ao salvar',
                 description: String(error),
@@ -212,14 +213,14 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
                 description: 'O funil está agora em produção',
             });
 
-            console.log('✅ Publicado para produção');
+            appLogger.debug('✅ Publicado para produção');
 
             // Redirecionar para produção
             setTimeout(() => {
                 window.open('/quiz-estilo', '_blank');
             }, 1500);
         } catch (error) {
-            console.error('❌ Erro ao publicar:', error);
+            appLogger.error('❌ Erro ao publicar:', error);
             toast({
                 title: 'Erro ao publicar',
                 description: String(error),

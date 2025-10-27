@@ -1,3 +1,4 @@
+import { appLogger } from '@/utils/logger';
 interface QuizNavigationIntegrationProps {
   properties: {
     showPrevious?: boolean;
@@ -29,11 +30,11 @@ const QuizNavigationIntegration: React.FC<QuizNavigationIntegrationProps> = ({
     (isLastQuestion ? (isStrategic ? 'Finalizar' : 'Próxima etapa') : 'Próxima');
 
   const handlePrevious = () => {
-    console.log('Navegação: Voltar');
+    appLogger.debug('Navegação: Voltar');
   };
 
   const handleNext = () => {
-    console.log('Navegação: Avançar');
+    appLogger.debug('Navegação: Avançar');
   };
 
   return (

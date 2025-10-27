@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/utils/logger';
 import type { BlockComponentProps } from '@/types/blocks';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { interpolate } from '@/utils/interpolate';
@@ -307,7 +308,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         if (!g.__TEXT_INLINE_LOGS.has(hash)) {
           g.__TEXT_INLINE_LOGS.add(hash);
           // eslint-disable-next-line no-console
-          console.log('� TextInlineBlock DEBUG COMPLETO:', {
+          appLogger.debug('� TextInlineBlock DEBUG COMPLETO:', {
             blockId: block?.id,
             rawContent: personalizedContent,
             contentLength: personalizedContent?.length,

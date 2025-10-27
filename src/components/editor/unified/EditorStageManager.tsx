@@ -6,6 +6,7 @@
  */
 
 import { Button } from '@/components/ui/button';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -99,7 +100,7 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
       // Propagar para o editor externo, se houver
       onStepSelect?.(target);
       if (import.meta.env.DEV) {
-        console.log(
+        appLogger.debug(
           '➡️ EditorStageManager: navegação por evento',
           e.detail?.stepId,
           '→',

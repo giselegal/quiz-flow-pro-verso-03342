@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { EditorLoadingWrapper } from './EditorLoadingWrapper';
 
 /**
@@ -20,7 +21,7 @@ const EditorFallback: React.FC<{
     const [attempts, setAttempts] = React.useState(0);
 
     const loadEditor = React.useCallback(async (attempt = 0) => {
-        console.log(`🔄 [FALLBACK] Tentativa ${attempt + 1} de carregar editor`);
+        appLogger.debug(`🔄 [FALLBACK] Tentativa ${attempt + 1} de carregar editor`);
 
         try {
             setIsLoading(true);
@@ -35,18 +36,18 @@ const EditorFallback: React.FC<{
 
             for (const editorPath of editorPaths) {
                 try {
-                    console.log(`🔄 [FALLBACK] Tentando carregar: ${editorPath}`);
+                    appLogger.debug(`🔄 [FALLBACK] Tentando carregar: ${editorPath}`);
                     const mod = await import(editorPath);
                     const Component = mod.default || mod.EditorPro || mod.SchemaDrivenEditorResponsive;
 
                     if (Component) {
-                        console.log(`✅ [FALLBACK] Editor carregado: ${editorPath}`);
+                        appLogger.debug(`✅ [FALLBACK] Editor carregado: ${editorPath}`);
                         setEditorComponent(() => Component);
                         setIsLoading(false);
                         return;
                     }
                 } catch (editorError) {
-                    console.warn(`⚠️ [FALLBACK] Falha ao carregar ${editorPath}:`, editorError);
+                    appLogger.warn(`⚠️ [FALLBACK] Falha ao carregar ${editorPath}:`, editorError);
                     continue;
                 }
             }
@@ -55,7 +56,7 @@ const EditorFallback: React.FC<{
             throw new Error('Nenhum editor disponível');
 
         } catch (error) {
-            console.error(`❌ [FALLBACK] Erro na tentativa ${attempt + 1}:`, error);
+            appLogger.error(`❌ [FALLBACK] Erro na tentativa ${attempt + 1}:`, error);
 
             if (attempt < 2) {
                 // Tentar novamente até 3 vezes
@@ -75,7 +76,7 @@ const EditorFallback: React.FC<{
     }, [loadEditor, attempts]);
 
     const handleRetry = () => {
-        console.log('🔄 [FALLBACK] Reiniciando carregamento...');
+        appLogger.debug('🔄 [FALLBACK] Reiniciando carregamento...');
         setAttempts(0);
         setError(null);
         loadEditor(0);
@@ -155,7 +156,7 @@ const EditorFallback: React.FC<{
     // Success - render editor
     if (editorComponent) {
         const EditorComponent = editorComponent;
-        console.log('🎯 [FALLBACK] Renderizando editor com sucesso');
+        appLogger.debug('🎯 [FALLBACK] Renderizando editor com sucesso');
 
         return (
             <div>

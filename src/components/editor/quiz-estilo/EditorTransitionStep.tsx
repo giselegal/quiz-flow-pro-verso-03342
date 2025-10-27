@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import QuizEstiloWrapper from './QuizEstiloWrapper';
 
 interface EditorTransitionStepProps {
@@ -32,7 +33,7 @@ export default function EditorTransitionStep({
         // Auto-advance após 3 segundos (no editor isso é só visual)
         const timer = setTimeout(() => {
             if (onComplete) {
-                console.log('Transição completa (demo)');
+                appLogger.debug('Transição completa (demo)');
             }
         }, 3000);
 

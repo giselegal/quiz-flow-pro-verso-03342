@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Download, FileJson, CheckCircle, XCircle } from 'lucide-react';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
@@ -31,13 +32,13 @@ export function ExportTemplateButton({
         setMessage('');
 
         try {
-            console.log('📤 Exportando funil:', funnelId);
+            appLogger.debug('📤 Exportando funil:', funnelId);
 
             // Exportar via QuizEditorBridge
             const templates = await quizEditorBridge.exportToJSONv3(funnelId);
 
             const stepCount = Object.keys(templates).length;
-            console.log(`✅ ${stepCount} steps exportados`);
+            appLogger.debug(`✅ ${stepCount} steps exportados`);
 
             // Criar arquivos para download
             for (const [stepId, template] of Object.entries(templates)) {
@@ -68,7 +69,7 @@ export function ExportTemplateButton({
             }, 3000);
 
         } catch (error) {
-            console.error('❌ Erro ao exportar:', error);
+            appLogger.error('❌ Erro ao exportar:', error);
             setStatus('error');
             setMessage(error instanceof Error ? error.message : 'Erro desconhecido ao exportar');
 

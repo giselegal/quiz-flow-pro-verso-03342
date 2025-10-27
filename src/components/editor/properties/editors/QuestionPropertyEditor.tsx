@@ -11,6 +11,7 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -177,9 +178,9 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
 
   // 🔍 DEBUG: Verificar dados recebidos
   console.group('🔍 DEBUG QuestionPropertyEditor');
-  console.log('block:', block);
-  console.log('block.properties:', block.properties);
-  console.log('properties.options:', properties.options);
+  appLogger.debug('block:', block);
+  appLogger.debug('block.properties:', block.properties);
+  appLogger.debug('properties.options:', properties.options);
   console.groupEnd();
 
   // Estado local para opções com drag & drop (futuro)
@@ -188,7 +189,7 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
   );
 
   useEffect(() => {
-    console.log('🔍 useEffect - Atualizando localOptions com:', properties.options);
+    appLogger.debug('🔍 useEffect - Atualizando localOptions com:', properties.options);
     setLocalOptions(properties.options || []);
   }, [properties.options]);
 
@@ -206,11 +207,11 @@ export const QuestionPropertyEditor: React.FC<QuestionPropertyEditorProps> = ({
   }, [onUpdate, onValidate, properties]);
 
   const handleOptionUpdate = useCallback((index: number, updates: Partial<QuestionOption>) => {
-    console.log('🔍 handleOptionUpdate chamado:', { index, updates });
+    appLogger.debug('🔍 handleOptionUpdate chamado:', { index, updates });
     const newOptions = [...localOptions];
     newOptions[index] = { ...newOptions[index], ...updates };
     setLocalOptions(newOptions);
-    console.log('🔍 Atualizando options para:', newOptions);
+    appLogger.debug('🔍 Atualizando options para:', newOptions);
     handlePropertyChange('options', newOptions);
   }, [localOptions, handlePropertyChange]);
 

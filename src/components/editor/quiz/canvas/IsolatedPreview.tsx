@@ -9,6 +9,7 @@
  */
 
 import React, { Suspense, useMemo, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import { PreviewProvider } from '@/contexts/ui/PreviewContext';
 import { QuizFlowProvider } from '@/contexts/quiz/QuizFlowProvider';
@@ -75,7 +76,7 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
   const editorCtx = useEditor({ optional: true } as any);
   const selectedBlockId = editorCtx?.state?.selectedBlockId;
 
-  console.log('🔍 IsolatedPreview render:', {
+  appLogger.debug('🔍 IsolatedPreview render:', {
     blocksCount: blocks.length,
     funnelId,
     selectedBlockId,
@@ -84,7 +85,7 @@ export const IsolatedPreview: React.FC<IsolatedPreviewProps> = ({
 
   // 🎯 FASE 3: REAGIR a mudanças nos blocos (com debounce implícito via useEffect)
   useEffect(() => {
-    console.log('⚡ Preview atualizado:', {
+    appLogger.debug('⚡ Preview atualizado:', {
       blocksCount: blocks.length,
       selectedBlock: selectedBlockId,
       timestamp: Date.now()

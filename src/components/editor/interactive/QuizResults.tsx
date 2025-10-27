@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { appLogger } from '@/utils/logger';
 import {
   Award,
   ChevronDown,
@@ -90,7 +91,7 @@ Faça você também: [link do quiz]`;
         setCopiedToClipboard(true);
         setTimeout(() => setCopiedToClipboard(false), 2000);
       } catch (err) {
-        console.error('Erro ao copiar:', err);
+        appLogger.error('Erro ao copiar:', err);
       }
     }, [primaryResult]);
 

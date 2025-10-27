@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/ui/logo';
 import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
@@ -26,9 +27,9 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '' }) 
 
   const handleSave = async () => {
     try {
-      console.log('✅ Salvando projeto...');
+      appLogger.debug('✅ Salvando projeto...');
     } catch (error) {
-      console.error('❌ Erro ao salvar:', error);
+      appLogger.error('❌ Erro ao salvar:', error);
     }
   };
 

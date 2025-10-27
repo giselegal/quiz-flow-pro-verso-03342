@@ -1,5 +1,6 @@
 // 📋 Template Gallery - Sistema de Gerenciamento de Templates (Versão Otimizada)
 import { Button } from '@/components/ui/button';
+import { appLogger } from '@/utils/logger';
 import {
     Dialog,
     DialogContent,
@@ -418,7 +419,7 @@ const TemplateGallery: React.FC<TemplateGalleryProps> = ({ onApplyTemplate, curr
                         onToggleFavorite={toggleFavorite}
                         onPreview={(template) => {
                             // Implementar modal de preview se necessário
-                            console.log('Preview template:', template.id);
+                            appLogger.debug('Preview template:', template.id);
                         }}
                     />
                 ))}

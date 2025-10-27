@@ -1,4 +1,5 @@
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Plus, Zap, Wand2 } from 'lucide-react';
 import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
@@ -30,7 +31,7 @@ export const EmptyCanvasInterface: React.FC<EmptyCanvasInterfaceProps> = ({
             // Callback opcional para componente pai
             onCreateFirstStep?.();
         } catch (error) {
-            console.error('❌ Erro ao criar primeira etapa:', error);
+            appLogger.error('❌ Erro ao criar primeira etapa:', error);
             addNotification('❌ Erro ao criar primeira etapa. Tente novamente.', 'error');
         }
     };

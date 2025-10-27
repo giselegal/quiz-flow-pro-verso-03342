@@ -1,4 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
+import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import { CheckCircle, Clock, AlertCircle, Zap } from 'lucide-react';
 import { useOptimizedScheduler } from '@/hooks/useOptimizedScheduler';
@@ -249,7 +250,7 @@ const TimerMigrationStatus: React.FC<TimerMigrationStatusProps> = memo(({
             <button 
               className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
               onClick={() => {
-                console.log('Timer Migration Status:', { stats, files });
+                appLogger.debug('Timer Migration Status:', { stats, files });
               }}
             >
               Log Status

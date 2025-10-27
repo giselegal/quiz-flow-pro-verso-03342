@@ -2,6 +2,7 @@
 // Este arquivo implementa correções diretas para problemas de renderização
 
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { useDndContext, useDroppable } from '@dnd-kit/core';
@@ -45,7 +46,7 @@ const useCanvasPerformance = () => {
             setLastRenderTime(prev => {
                 const timeDiff = now - prev;
                 if (PERFORMANCE_CONFIG.ENABLE_PERF_LOGGING && timeDiff < 16.67) {
-                    console.warn(`⚠️ Render rápido: ${timeDiff.toFixed(2)}ms`);
+                    appLogger.warn(`⚠️ Render rápido: ${timeDiff.toFixed(2)}ms`);
                 }
                 return now;
             });
@@ -176,7 +177,7 @@ const OptimizedCanvasDropZone: React.FC<OptimizedCanvasProps> = React.memo(({
     // 📊 Logging de Performance
     React.useEffect(() => {
         if (PERFORMANCE_CONFIG.ENABLE_PERF_LOGGING) {
-            console.log(`🎯 Canvas Render #${renderCount} | Blocks: ${visibleBlocks.length}/${blocks.length}`);
+            appLogger.debug(`🎯 Canvas Render #${renderCount} | Blocks: ${visibleBlocks.length}/${blocks.length}`);
         }
     }, [renderCount, visibleBlocks.length, blocks.length]);
 
@@ -332,7 +333,7 @@ export const applyGlobalCanvasOptimizations = () => {
   `;
 
     document.head.appendChild(style);
-    console.log('✅ Canvas performance optimizations applied');
+    appLogger.debug('✅ Canvas performance optimizations applied');
 };
 
 // 🚀 Auto-apply optimizations on import

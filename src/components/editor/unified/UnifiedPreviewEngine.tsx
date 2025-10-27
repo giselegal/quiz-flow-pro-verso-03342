@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { appLogger } from '@/utils/logger';
 import { StyleResult } from '@/types/quiz';
 import { Block } from '@/types/editor';
 
@@ -56,7 +57,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   realTimeUpdate = false,
   debugInfo = {}
 }) => {
-  console.log('🎯 [DEBUG] UnifiedPreviewEngine recebeu props:', {
+  appLogger.debug('🎯 [DEBUG] UnifiedPreviewEngine recebeu props:', {
     mode,
     enableProductionMode,
     realTimeUpdate,
@@ -69,7 +70,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   // 🎯 FASE 3: PREVIEW EM TEMPO REAL com debounce implícito
   React.useEffect(() => {
     if (realTimeUpdate && blocks.length > 0) {
-      console.log('⚡ [FASE 3] Preview atualizado em tempo real:', {
+      appLogger.debug('⚡ [FASE 3] Preview atualizado em tempo real:', {
         step: currentStep,
         blocksCount: blocks.length,
         selectedBlock: selectedBlockId,
@@ -87,7 +88,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
     import('./InteractivePreviewEngine').then(module => {
       setInteractivePreviewEngine(() => module.InteractivePreviewEngine);
     }).catch(error => {
-      console.error('❌ Erro ao carregar InteractivePreviewEngine:', error);
+      appLogger.error('❌ Erro ao carregar InteractivePreviewEngine:', error);
     });
   }, []);
 

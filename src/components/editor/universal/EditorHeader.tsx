@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/theme-provider';
 import EditorNoCodePanel from '../EditorNoCodePanel';
@@ -55,7 +56,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                 notification?.success?.(`Publicadas ${published} etapas com conteúdo.`);
             });
         } catch (err) {
-            console.error('Falha ao publicar todas as etapas:', err);
+            appLogger.error('Falha ao publicar todas as etapas:', err);
             notification?.error?.('Erro ao publicar todas as etapas');
         }
     };
@@ -310,7 +311,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                                         notification?.success?.('Etapa publicada localmente!');
                                     }
                                 } catch (err) {
-                                    console.error('Falha ao salvar/publicar etapa:', err);
+                                    appLogger.error('Falha ao salvar/publicar etapa:', err);
                                     notification?.error?.('Erro ao salvar/publicar etapa');
                                 }
                             }}
@@ -343,7 +344,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
                                         notification?.info?.('Publicação local da etapa removida.');
                                     }
                                 } catch (err) {
-                                    console.error('Falha ao despublicar etapa:', err);
+                                    appLogger.error('Falha ao despublicar etapa:', err);
                                     notification?.error?.('Erro ao despublicar etapa');
                                 }
                             }}
