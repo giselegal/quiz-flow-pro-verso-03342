@@ -30,7 +30,7 @@ export function useTemplateEditor() {
                 success: false,
                 message: error instanceof Error ? error.message : 'Erro desconhecido',
                 stepId,
-                error
+                error,
             };
             setLastSaveResult(errorResult);
             return errorResult;
@@ -62,14 +62,14 @@ export function useTemplateEditor() {
             console.log('✅ Template exportado com sucesso');
             return {
                 success: true,
-                message: 'Template exportado com sucesso'
+                message: 'Template exportado com sucesso',
             };
         } catch (error) {
             console.error('❌ Erro ao exportar:', error);
             return {
                 success: false,
                 message: error instanceof Error ? error.message : 'Erro ao exportar',
-                error
+                error,
             };
         } finally {
             setExporting(false);
@@ -92,7 +92,7 @@ export function useTemplateEditor() {
             const errorResult: SaveResult = {
                 success: false,
                 message: error instanceof Error ? error.message : 'Erro ao importar',
-                error
+                error,
             };
             setLastSaveResult(errorResult);
             return errorResult;
@@ -150,7 +150,7 @@ export function useTemplateEditor() {
         validateAll,
         clearStorage,
         hasStorageData,
-        clearLastResult
+        clearLastResult,
     };
 }
 

@@ -49,7 +49,7 @@ export const FUNNEL_CONFIG: FunnelConfig = {
     baseUrl: 'https://exemplo.com',
     title: 'Quiz de Estilo | Descubra seu perfil',
     description: 'Responda algumas perguntas e receba seu perfil de estilo com dicas personalizadas.',
-    ogImage: undefined
+    ogImage: undefined,
   },
   analytics: {
     pixels: [
@@ -57,13 +57,13 @@ export const FUNNEL_CONFIG: FunnelConfig = {
     ],
     utmDefaults: {
       utm_medium: 'quiz',
-      utm_campaign: 'style-profile'
+      utm_campaign: 'style-profile',
     },
     events: {
       step_view: { name: 'Step View' },
       option_select: { name: 'Option Select' },
       result_view: { name: 'Result View' },
-    }
+    },
   },
   abTests: [
     // {
@@ -76,6 +76,6 @@ export const FUNNEL_CONFIG: FunnelConfig = {
   ],
   ctas: {
     primary: { label: 'Quero meu plano', url: 'https://exemplo.com/checkout' },
-    secondary: { label: 'Ver página de vendas', url: 'https://exemplo.com/vendas' }
-  }
+    secondary: { label: 'Ver página de vendas', url: 'https://exemplo.com/vendas' },
+  },
 };

@@ -170,7 +170,7 @@ export const funnelComponentsService = {
     // Validação: mesmo tamanho e conjunto exato de IDs
     if (currentIds.length !== newIds.length) {
       throw new Error(
-        `Reordenação inválida: quantidade diferente (atual: ${currentIds.length}, nova: ${newIds.length})`
+        `Reordenação inválida: quantidade diferente (atual: ${currentIds.length}, nova: ${newIds.length})`,
       );
     }
 

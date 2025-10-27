@@ -42,7 +42,7 @@ export const getOptimizedContainerClasses = (
   deviceView: 'mobile' | 'tablet' | 'desktop' = 'desktop',
   spacing: 'tight' | 'normal' | 'loose' = 'tight',
   maxWidth: 'full' | 'content' | 'narrow' = 'full',
-  customClasses?: string
+  customClasses?: string,
 ): string => {
   const config = containerConfig;
 
@@ -70,7 +70,7 @@ export const getEditorContainerClasses = (customClasses?: string): string => {
  * Container responsivo com padding mínimo
  */
 export const getResponsiveContainerClasses = (
-  deviceView: 'mobile' | 'tablet' | 'desktop' = 'desktop'
+  deviceView: 'mobile' | 'tablet' | 'desktop' = 'desktop',
 ): string => {
   return `
     w-full mx-auto

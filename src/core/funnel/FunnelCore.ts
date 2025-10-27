@@ -15,7 +15,7 @@ import {
     NavigationState,
     ValidationState,
     ValidationError,
-    StepCondition
+    StepCondition,
 } from './types';
 
 // ============================================================================
@@ -50,7 +50,7 @@ export class FunnelCore {
             currentStepIndex: Math.max(0, currentStepIndex),
             totalSteps,
             completedSteps,
-            percentage: Math.round(percentage)
+            percentage: Math.round(percentage),
         };
     }
 
@@ -120,7 +120,7 @@ export class FunnelCore {
                 return this.evaluateFieldCondition(
                     userData[condition.field],
                     condition.operator || 'equals',
-                    condition.value
+                    condition.value,
                 );
 
             case 'unless':
@@ -128,7 +128,7 @@ export class FunnelCore {
                 return !this.evaluateFieldCondition(
                     userData[condition.field],
                     condition.operator || 'equals',
-                    condition.value
+                    condition.value,
                 );
 
             default:
@@ -181,7 +181,7 @@ export class FunnelCore {
             nextStep: this.getNextStep(state) || undefined,
             previousStep: this.getPreviousStep(state) || undefined,
             history: [...state.navigation.history],
-            direction: state.navigation.direction || undefined
+            direction: state.navigation.direction || undefined,
         };
     }
 
@@ -212,7 +212,7 @@ export class FunnelCore {
                 stepId: step.id,
                 field: 'step',
                 message: `O passo "${step.name}" é obrigatório`,
-                type: 'required'
+                type: 'required',
             });
         }
 
@@ -234,7 +234,7 @@ export class FunnelCore {
             isValid: errors.length === 0,
             errors,
             warnings: [],
-            currentStepValid: errors.length === 0
+            currentStepValid: errors.length === 0,
         };
     }
 
@@ -244,7 +244,7 @@ export class FunnelCore {
     private validateComponent(
         component: FunnelComponent,
         step: FunnelStep,
-        state: FunnelState
+        state: FunnelState,
     ): ValidationError[] {
         const errors: ValidationError[] = [];
 
@@ -279,7 +279,7 @@ export class FunnelCore {
     private validateQuestionComponent(
         component: FunnelComponent,
         step: FunnelStep,
-        state: FunnelState
+        state: FunnelState,
     ): ValidationError[] {
         const errors: ValidationError[] = [];
         const questionId = component.properties?.questionId;
@@ -299,7 +299,7 @@ export class FunnelCore {
                 componentId: component.id,
                 field: questionId,
                 message: `Selecione pelo menos ${minSelections} opção(ões)`,
-                type: 'minSelections'
+                type: 'minSelections',
             });
         }
 
@@ -310,7 +310,7 @@ export class FunnelCore {
                 componentId: component.id,
                 field: questionId,
                 message: `Selecione no máximo ${maxSelections} opção(ões)`,
-                type: 'maxSelections'
+                type: 'maxSelections',
             });
         }
 
@@ -323,7 +323,7 @@ export class FunnelCore {
     private validateInputComponent(
         component: FunnelComponent,
         step: FunnelStep,
-        state: FunnelState
+        state: FunnelState,
     ): ValidationError[] {
         const errors: ValidationError[] = [];
         const fieldName = component.properties?.name || component.id;
@@ -337,7 +337,7 @@ export class FunnelCore {
                 componentId: component.id,
                 field: fieldName,
                 message: `O campo "${component.properties?.label || fieldName}" é obrigatório`,
-                type: 'required'
+                type: 'required',
             });
         }
 
@@ -434,7 +434,7 @@ export class FunnelCore {
     mergeUserData(currentData: Record<string, any>, newData: Record<string, any>): Record<string, any> {
         return {
             ...currentData,
-            ...newData
+            ...newData,
         };
     }
 
@@ -521,9 +521,9 @@ export const FunnelUtils = {
             questionSteps,
             formSteps,
             completedSteps,
-            completionRate: Math.round(completionRate)
+            completionRate: Math.round(completionRate),
         };
-    }
+    },
 };
 
 // Exportar instância singleton

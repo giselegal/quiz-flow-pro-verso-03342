@@ -108,15 +108,15 @@ export class GitHubModelsAI {
                 "correctAnswer": "string (opcional)"
               }
             ]
-          }`
+          }`,
                 },
                 {
                     role: 'user',
-                    content: prompt
-                }
+                    content: prompt,
+                },
             ],
             temperature: 0.8,
-            maxTokens: 2000
+            maxTokens: 2000,
         };
 
         const response = await this.generateContent(request);
@@ -154,15 +154,15 @@ export class GitHubModelsAI {
                 }
               ]
             }
-          ]`
+          ]`,
                 },
                 {
                     role: 'user',
-                    content: prompt
-                }
+                    content: prompt,
+                },
             ],
             temperature: 0.7,
-            maxTokens: 3000
+            maxTokens: 3000,
         };
 
         const response = await this.generateContent(request);
@@ -186,15 +186,15 @@ export class GitHubModelsAI {
                     content: `Você é um copywriter especialista em conversão.
           Melhore o texto fornecido tornando-o mais persuasivo e envolvente.
           ${context ? `Contexto: ${context}` : ''}
-          Retorne apenas o texto melhorado, sem explicações.`
+          Retorne apenas o texto melhorado, sem explicações.`,
                 },
                 {
                     role: 'user',
-                    content: text
-                }
+                    content: text,
+                },
             ],
             temperature: 0.6,
-            maxTokens: 1000
+            maxTokens: 1000,
         };
 
         const response = await this.generateContent(request);
@@ -225,15 +225,15 @@ export class GitHubModelsAI {
               "borderRadius": "px",
               "shadow": "shadow css"
             }
-          }`
+          }`,
                 },
                 {
                     role: 'user',
-                    content: `Tema: ${theme}`
-                }
+                    content: `Tema: ${theme}`,
+                },
             ],
             temperature: 0.5,
-            maxTokens: 1000
+            maxTokens: 1000,
         };
 
         const response = await this.generateContent(request);

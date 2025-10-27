@@ -80,7 +80,7 @@ export class TemplateBlockConverter {
   static async convertStepTemplate(
     stepNumber: number,
     templateFunction?: (userData?: any) => any[],
-    userData?: any
+    userData?: any,
   ): Promise<Block[]> {
     if (!templateFunction) {
       console.warn(`Template function não encontrada para etapa ${stepNumber}`);

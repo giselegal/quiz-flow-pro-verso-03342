@@ -11,7 +11,7 @@
  */
 export function shallowEqual<T extends Record<string, any>>(
   objA: T | null | undefined,
-  objB: T | null | undefined
+  objB: T | null | undefined,
 ): boolean {
   // Fast path: mesma referência ou ambos null/undefined
   if (objA === objB) return true;
@@ -158,7 +158,7 @@ export function smartEqual(objA: any, objB: any, maxDepth = 2): boolean {
  */
 export function blockPropsAreEqual<T extends { block: any }>(
   prevProps: T,
-  nextProps: T
+  nextProps: T,
 ): boolean {
   const prev = prevProps.block;
   const next = nextProps.block;

@@ -47,12 +47,12 @@ class ImageOptimizationManager {
             quality: {
                 webp: 85,
                 avif: 80, // AVIF pode usar qualidade menor mantendo a mesma percepção
-                jpeg: 85
+                jpeg: 85,
             },
             formats: ['avif', 'webp', 'jpeg'],
             breakpoints: [640, 768, 1024, 1280, 1536], // Tailwind breakpoints
             enableLazyLoading: true,
-            compressionLevel: 'auto'
+            compressionLevel: 'auto',
         };
     }
 
@@ -86,14 +86,14 @@ class ImageOptimizationManager {
             this.updateConfig({
                 quality: { webp: 70, avif: 65, jpeg: 70 },
                 formats: ['webp', 'jpeg'], // Remove AVIF para conexões lentas
-                compressionLevel: 'high'
+                compressionLevel: 'high',
             });
             console.log('🐌 Slow connection detected, using aggressive compression');
         } else if (effectiveType === '4g' && downlink > 10) {
             this.updateConfig({
                 quality: { webp: 90, avif: 85, jpeg: 90 },
                 formats: ['avif', 'webp', 'jpeg'],
-                compressionLevel: 'low'
+                compressionLevel: 'low',
             });
             console.log('🚀 Fast connection detected, using high quality');
         }
@@ -106,7 +106,7 @@ class ImageOptimizationManager {
     async generateResponsiveImages(
         imageSrc: string,
         baseWidth: number,
-        aspectRatio: number = 16 / 9
+        aspectRatio: number = 16 / 9,
     ): Promise<{ [key: string]: string }> {
         const results: { [key: string]: string } = {};
 
@@ -126,7 +126,7 @@ class ImageOptimizationManager {
                         width,
                         height,
                         format,
-                        quality
+                        quality,
                     });
                 }
             }
@@ -145,7 +145,7 @@ class ImageOptimizationManager {
      */
     private async processImage(
         src: string,
-        options: { width: number; height: number; format: string; quality: number }
+        options: { width: number; height: number; format: string; quality: number },
     ): Promise<string> {
         const cacheKey = `${src}_${options.width}x${options.height}_${options.format}_q${options.quality}`;
 
@@ -179,7 +179,7 @@ class ImageOptimizationManager {
                 compressionRatio: 0, // Seria calculado
                 loadTime: processTime,
                 format: options.format,
-                cached: false
+                cached: false,
             });
 
             return optimizedUrl;
@@ -194,7 +194,7 @@ class ImageOptimizationManager {
      * Simula o processamento real que seria feito via Canvas/Worker
      */
     private async simulateImageProcessing(
-        options: { width: number; height: number; format: string; quality: number }
+        options: { width: number; height: number; format: string; quality: number },
     ): Promise<Blob> {
         // Em produção, aqui seria:
         // 1. Carregar imagem via fetch
@@ -275,7 +275,7 @@ class ImageOptimizationManager {
             cacheHitRate: Math.round(cacheHitRate * 100), // %
             formatBreakdown,
             cacheSize: this.cache.size,
-            config: this.config
+            config: this.config,
         };
     }
 
@@ -310,7 +310,7 @@ class ImageOptimizationManager {
 export const useResponsiveOptimization = (
     src: string,
     baseWidth: number,
-    aspectRatio?: number
+    aspectRatio?: number,
 ) => {
     const [optimizedImages, setOptimizedImages] = useState<{ [key: string]: string }>({});
     const [isLoading, setIsLoading] = useState(true);

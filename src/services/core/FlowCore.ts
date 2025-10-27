@@ -13,7 +13,7 @@ export const FlowCore = {
       isValid: boolean;
       stepConfig?: { autoAdvanceOnComplete?: boolean; autoAdvanceDelay?: number } | undefined;
       blockConfig?: { autoAdvanceOnComplete?: boolean; autoAdvanceDelay?: number } | undefined;
-    }
+    },
   ): { proceed: boolean; delay: number } {
     const { isValid, stepConfig, blockConfig } = params;
     const enabled = (blockConfig?.autoAdvanceOnComplete ?? stepConfig?.autoAdvanceOnComplete) ?? false;

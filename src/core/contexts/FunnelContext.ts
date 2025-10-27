@@ -43,7 +43,7 @@ export interface ContextualService {
  */
 export const generateContextualId = (
     context: FunnelContext,
-    baseId?: string
+    baseId?: string,
 ): string => {
     const timestamp = Date.now();
     const random = Math.floor(Math.random() * 1000);
@@ -80,7 +80,7 @@ export const extractBaseId = (contextualId: string): string => {
 export const generateContextualStorageKey = (
     context: FunnelContext,
     keyType: string,
-    identifier?: string
+    identifier?: string,
 ): string => {
     const baseKey = `${context}-${keyType}`;
     return identifier ? `${baseKey}-${identifier}` : baseKey;
@@ -91,7 +91,7 @@ export const generateContextualStorageKey = (
  */
 export const validateContextualId = (
     id: string,
-    expectedContext: FunnelContext
+    expectedContext: FunnelContext,
 ): boolean => {
     const actualContext = extractContextFromId(id);
     return actualContext === expectedContext;
@@ -104,7 +104,7 @@ export const migrateDataBetweenContexts = (
     fromContext: FunnelContext,
     toContext: FunnelContext,
     dataType: string,
-    identifier?: string
+    identifier?: string,
 ): boolean => {
     if (typeof window === 'undefined') return false;
 

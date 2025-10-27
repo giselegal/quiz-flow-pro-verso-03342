@@ -27,7 +27,7 @@ describe('SharedProgressHeader', () => {
                 setUserName: () => { },
                 addAnswer: () => { },
                 addStrategicAnswer: () => { },
-                getOfferKey: () => 'MockOffer'
+                getOfferKey: () => 'MockOffer',
             } as any;
         });
 
@@ -62,7 +62,7 @@ describe('SharedProgressHeader', () => {
                 setUserName: () => { },
                 addAnswer: () => { },
                 addStrategicAnswer: () => { },
-                getOfferKey: () => 'MockOffer'
+                getOfferKey: () => 'MockOffer',
             } as any;
         });
 

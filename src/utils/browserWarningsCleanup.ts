@@ -185,7 +185,7 @@ export const suppressKnownWarnings = (): void => {
       } else {
         // Log suppressed warning in development
         if (process.env.NODE_ENV === 'development') {
-          console.log('🔕 Suppressed warning:', message.substring(0, 100) + '...');
+          console.log('🔕 Suppressed warning:', `${message.substring(0, 100)  }...`);
         }
       }
     };

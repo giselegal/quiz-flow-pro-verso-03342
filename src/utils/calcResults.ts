@@ -129,7 +129,7 @@ export class CalculationEngine {
    */
   public computeResult(
     quizDefinition: QuizDefinition, 
-    userResponses: UserResponses
+    userResponses: UserResponses,
   ): AggregateResult {
     try {
       // Step 1: Validate inputs
@@ -144,7 +144,7 @@ export class CalculationEngine {
       // Step 3: Process answers and calculate scores
       const { scores, breakdown } = this.calculateScores(
         userResponses.responses,
-        quizDefinition
+        quizDefinition,
       );
 
       // Step 4: Convert to StyleResult array and rank
@@ -154,13 +154,13 @@ export class CalculationEngine {
       const matchedOutcome = this.matchOutcome(
         styleResults,
         scores,
-        quizDefinition.outcomes
+        quizDefinition.outcomes,
       );
 
       // Step 6: Calculate quality metrics
       const quality = this.calculateQualityMetrics(
         userResponses.responses,
-        breakdown
+        breakdown,
       );
 
       // Step 7: Build final result
@@ -187,7 +187,7 @@ export class CalculationEngine {
         matchedOutcome,
 
         // Quality metrics
-        quality
+        quality,
       };
 
       return result;
@@ -227,7 +227,7 @@ export class CalculationEngine {
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   }
 
@@ -241,7 +241,7 @@ export class CalculationEngine {
       title: `Outcome ${outcomeId}`,
       description: 'Template description',
       recommendations: ['Default recommendation'],
-      metadata: {}
+      metadata: {},
     };
   }
 
@@ -249,7 +249,7 @@ export class CalculationEngine {
 
   private validateInputs(
     quizDefinition: QuizDefinition,
-    userResponses: UserResponses
+    userResponses: UserResponses,
   ): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
@@ -271,7 +271,7 @@ export class CalculationEngine {
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   }
 
@@ -287,7 +287,7 @@ export class CalculationEngine {
 
   private calculateScores(
     responses: QuizAnswer[],
-    quizDefinition: QuizDefinition
+    quizDefinition: QuizDefinition,
   ): {
     scores: Record<string, number>;
     breakdown: AggregateResult['breakdown'];
@@ -309,7 +309,7 @@ export class CalculationEngine {
       styleDistribution[style] = {
         score: 0,
         percentage: 0,
-        responseCount: 0
+        responseCount: 0,
       };
     });
 
@@ -352,8 +352,8 @@ export class CalculationEngine {
         totalResponses: responses.length,
         validResponses,
         invalidResponses,
-        styleDistribution
-      }
+        styleDistribution,
+      },
     };
   }
 
@@ -367,7 +367,7 @@ export class CalculationEngine {
         score,
         percentage: totalScore > 0 ? Math.round((score / totalScore) * 100) : 0,
         points: score,
-        rank: 0
+        rank: 0,
       }))
       .sort((a, b) => b.score - a.score)
       .map((result, index) => ({ ...result, rank: index + 1 }));
@@ -378,7 +378,7 @@ export class CalculationEngine {
   private matchOutcome(
     styleResults: StyleResult[],
     scores: Record<string, number>,
-    outcomes: OutcomeDefinition[]
+    outcomes: OutcomeDefinition[],
   ): AggregateResult['matchedOutcome'] | undefined {
     if (!outcomes || outcomes.length === 0) {
       return undefined;
@@ -392,7 +392,7 @@ export class CalculationEngine {
           name: outcome.name,
           description: outcome.description,
           confidence: this.calculateOutcomeConfidence(outcome, styleResults),
-          recommendations: outcome.template.recommendations
+          recommendations: outcome.template.recommendations,
         };
       }
     }
@@ -403,7 +403,7 @@ export class CalculationEngine {
   private evaluateOutcomeConditions(
     conditions: OutcomeCondition[],
     _styleResults: StyleResult[],
-    scores: Record<string, number>
+    scores: Record<string, number>,
   ): boolean {
     return conditions.every(condition => {
       switch (condition.type) {
@@ -424,7 +424,7 @@ export class CalculationEngine {
   private evaluateCondition(
     value: number,
     operator: OutcomeCondition['operator'],
-    target: number | [number, number]
+    target: number | [number, number],
   ): boolean {
     switch (operator) {
       case 'gte':
@@ -443,7 +443,7 @@ export class CalculationEngine {
 
   private calculateOutcomeConfidence(
     _outcome: OutcomeDefinition,
-    styleResults: StyleResult[]
+    styleResults: StyleResult[],
   ): number {
     // Simple confidence calculation based on primary style score
     const primaryPercentage = styleResults[0]?.percentage || 0;
@@ -452,7 +452,7 @@ export class CalculationEngine {
 
   private calculateQualityMetrics(
     _responses: QuizAnswer[],
-    breakdown: AggregateResult['breakdown']
+    breakdown: AggregateResult['breakdown'],
   ): AggregateResult['quality'] {
     const completeness = breakdown.totalResponses > 0 
       ? Math.round((breakdown.validResponses / breakdown.totalResponses) * 100)
@@ -464,13 +464,13 @@ export class CalculationEngine {
     // Confidence based on number of responses and validity
     const confidence = Math.min(100, 
       (breakdown.validResponses * 10) + 
-      (completeness * 0.5)
+      (completeness * 0.5),
     );
 
     return {
       completeness,
       consistency,
-      confidence: Math.round(confidence)
+      confidence: Math.round(confidence),
     };
   }
 
@@ -523,7 +523,7 @@ export class CalculationEngine {
           score,
           percentage: totalScore > 0 ? Math.round((score / totalScore) * 100) : 0,
           points: score,
-          rank: 0
+          rank: 0,
         }))
         .sort((a, b) => (b.score || 0) - (a.score || 0))
         .map((result, index) => ({ ...result, rank: index + 1 }));
@@ -544,13 +544,13 @@ export class CalculationEngine {
         totalResponses: responses.length,
         validResponses: responses.length,
         invalidResponses: 0,
-        styleDistribution: {}
+        styleDistribution: {},
       },
       quality: {
         completeness: 75,
         consistency: 50,
-        confidence: 25
-      }
+        confidence: 25,
+      },
     };
   }
 }
@@ -565,7 +565,7 @@ export const calculationEngine = new CalculationEngine();
  */
 export function calculateQuizResults(
   quizDefinition: QuizDefinition,
-  userResponses: UserResponses
+  userResponses: UserResponses,
 ): AggregateResult {
   return calculationEngine.computeResult(quizDefinition, userResponses);
 }
@@ -575,7 +575,7 @@ export function calculateQuizResults(
  */
 export function validateQuizData(
   quizDefinition: QuizDefinition,
-  userResponses: UserResponses
+  userResponses: UserResponses,
 ): ValidationResult {
   return calculationEngine['validateInputs'](quizDefinition, userResponses);
 }
@@ -585,5 +585,5 @@ export default {
   calculationEngine,
   calculateQuizResults,
   validateQuizData,
-  ENGINE_VERSION
+  ENGINE_VERSION,
 };

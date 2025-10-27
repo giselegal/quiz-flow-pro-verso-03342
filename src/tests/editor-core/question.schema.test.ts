@@ -5,7 +5,7 @@ describe('QuestionStepSchema', () => {
   it('accepts minimal valid question', () => {
     const obj = QuestionStepSchema.parse({
       question: 'Pergunta?',
-      options: [{ label: 'A' }]
+      options: [{ label: 'A' }],
     });
     expect(obj.question).toBe('Pergunta?');
     expect(obj.options.length).toBe(1);
@@ -16,7 +16,7 @@ describe('QuestionStepSchema', () => {
       question: 'Pergunta?',
       requiredSelections: 2,
       maxSelections: 1,
-      options: [{ label: 'A' }]
+      options: [{ label: 'A' }],
     })).toThrow();
   });
 });

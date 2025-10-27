@@ -86,7 +86,7 @@ export const convertLegacyHeader = (block: Block): HeaderProperties => {
 };
 
 export const createHeaderBlock = (
-  stageId: string
+  stageId: string,
 ): Omit<Block, 'stageId'> & { stageId: string } => {
   return {
     id: `${stageId}-header`,

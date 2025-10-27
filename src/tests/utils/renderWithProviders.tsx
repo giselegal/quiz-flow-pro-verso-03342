@@ -29,7 +29,7 @@ export function renderWithProviders(ui: ReactElement, { path = '/' }: Options = 
                     </SecurityProvider>
                 </AuthProvider>
             </CustomThemeProvider>
-        </HelmetProvider>
+        </HelmetProvider>,
     );
 }
 

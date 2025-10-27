@@ -15,7 +15,7 @@ import {
   QuizFilters,
   QuizSortOptions,
   PaginationOptions,
-  PaginatedResult
+  PaginatedResult,
 } from '@/core/domains';
 
 interface SupabaseFunnel {
@@ -59,8 +59,8 @@ export class SupabaseQuizRepository implements QuizRepository {
           category: quiz.metadata.category,
           tags: quiz.metadata.tags,
           difficulty: quiz.metadata.difficulty,
-          estimatedDuration: quiz.metadata.estimatedDuration
-        }
+          estimatedDuration: quiz.metadata.estimatedDuration,
+        },
       };
 
       const { data, error } = await supabase
@@ -109,7 +109,7 @@ export class SupabaseQuizRepository implements QuizRepository {
   async findAll(
     filters?: QuizFilters,
     sort?: QuizSortOptions,
-    pagination?: PaginationOptions
+    pagination?: PaginationOptions,
   ): Promise<PaginatedResult<Quiz>> {
     try {
       let query = supabase
@@ -161,7 +161,7 @@ export class SupabaseQuizRepository implements QuizRepository {
             .order('page_order');
 
           return this.mapToQuizEntity(funnelData, pagesData || []);
-        })
+        }),
       );
 
       return {
@@ -169,7 +169,7 @@ export class SupabaseQuizRepository implements QuizRepository {
         total: count || 0,
         page: pagination?.page || 1,
         limit: pagination?.limit || 10,
-        totalPages: Math.ceil((count || 0) / (pagination?.limit || 10))
+        totalPages: Math.ceil((count || 0) / (pagination?.limit || 10)),
       };
     } catch (error) {
       console.error('Error finding all quizzes:', error);
@@ -199,8 +199,8 @@ export class SupabaseQuizRepository implements QuizRepository {
           ...(updates.settings || {}),
           branding: {
             ...currentData?.settings?.branding,
-            ...(updates.branding || {})
-          }
+            ...(updates.branding || {}),
+          },
         };
       }
 
@@ -318,8 +318,8 @@ export class SupabaseQuizRepository implements QuizRepository {
         page_order: question.metadata.order,
         blocks: [this.mapQuestionToBlock(question)],
         metadata: {
-          questionData: question.toJSON()
-        }
+          questionData: question.toJSON(),
+        },
       });
 
     return updatedQuiz;
@@ -356,8 +356,8 @@ export class SupabaseQuizRepository implements QuizRepository {
           .from('funnel_pages')
           .update({ page_order: index + 1 })
           .eq('id', questionId)
-          .eq('funnel_id', quizId)
-      )
+          .eq('funnel_id', quizId),
+      ),
     );
 
     const quiz = await this.findById(quizId);
@@ -398,8 +398,8 @@ export class SupabaseQuizRepository implements QuizRepository {
         page_order: 999, // Results at the end
         blocks: [this.mapResultToBlock(resultProfile)],
         metadata: {
-          resultData: resultProfile.toJSON()
-        }
+          resultData: resultProfile.toJSON(),
+        },
       });
 
     return updatedQuiz;
@@ -506,7 +506,7 @@ export class SupabaseQuizRepository implements QuizRepository {
         averageScore,
         averageTimeSpent,
         mostSelectedAnswers,
-        resultDistribution
+        resultDistribution,
       };
     } catch (error) {
       console.error('Error getting quiz stats:', error);
@@ -537,7 +537,7 @@ export class SupabaseQuizRepository implements QuizRepository {
             .order('page_order');
 
           return this.mapToQuizEntity(funnelData, pagesData || []);
-        })
+        }),
       );
     } catch (error) {
       console.error('Error getting most popular quizzes:', error);
@@ -549,7 +549,7 @@ export class SupabaseQuizRepository implements QuizRepository {
     const result = await this.findAll(
       undefined,
       { field: 'createdAt', direction: 'desc' },
-      { page: 1, limit }
+      { page: 1, limit },
     );
     return result.items;
   }
@@ -587,7 +587,7 @@ export class SupabaseQuizRepository implements QuizRepository {
           return this.save(quiz);
         }
         throw new Error(`Quiz ${id} not found`);
-      })
+      }),
     );
   }
 
@@ -618,7 +618,7 @@ export class SupabaseQuizRepository implements QuizRepository {
         isPublished: funnelData.is_published,
         publishedAt: funnelData.is_published ? new Date(funnelData.updated_at) : undefined,
         createdAt: new Date(funnelData.created_at),
-        updatedAt: new Date(funnelData.updated_at)
+        updatedAt: new Date(funnelData.updated_at),
       },
       {
         allowRestart: settings.allowRestart ?? true,
@@ -628,15 +628,15 @@ export class SupabaseQuizRepository implements QuizRepository {
         passingScore: settings.passingScore,
         maxAttempts: settings.maxAttempts,
         collectEmail: settings.collectEmail ?? true,
-        collectPhone: settings.collectPhone ?? false
+        collectPhone: settings.collectPhone ?? false,
       },
       settings.branding || {
         primaryColor: '#3B82F6',
         secondaryColor: '#1E40AF',
-        fontFamily: 'Inter, sans-serif'
+        fontFamily: 'Inter, sans-serif',
       },
       pagesData.filter(p => p.page_type === 'quiz-question').map(p => p.id),
-      pagesData.filter(p => p.page_type === 'quiz-result').map(p => p.id)
+      pagesData.filter(p => p.page_type === 'quiz-result').map(p => p.id),
     );
   }
 
@@ -646,7 +646,7 @@ export class SupabaseQuizRepository implements QuizRepository {
       'createdAt': 'created_at',
       'updatedAt': 'updated_at',
       'category': 'settings->category',
-      'difficulty': 'settings->difficulty'
+      'difficulty': 'settings->difficulty',
     };
     return fieldMap[field] || 'created_at';
   }
@@ -658,11 +658,11 @@ export class SupabaseQuizRepository implements QuizRepository {
       content: {
         title: question.title,
         description: question.description,
-        options: question.options
+        options: question.options,
       },
       questionType: question.type,
       validation: question.validation,
-      logic: question.logic
+      logic: question.logic,
     };
   }
 
@@ -672,7 +672,7 @@ export class SupabaseQuizRepository implements QuizRepository {
       type: 'quiz-result',
       content: resultProfile.content,
       visuals: resultProfile.visuals,
-      actions: resultProfile.actions
+      actions: resultProfile.actions,
     };
   }
 
@@ -696,8 +696,8 @@ export class SupabaseQuizRepository implements QuizRepository {
       {
         order: page.page_order,
         createdAt: new Date(page.created_at),
-        updatedAt: new Date(page.updated_at)
-      }
+        updatedAt: new Date(page.updated_at),
+      },
     );
   }
 
@@ -715,7 +715,7 @@ export class SupabaseQuizRepository implements QuizRepository {
       block?.content?.title || 'Result',
       block?.content?.description || 'Your result',
       0,
-      100
+      100,
     );
   }
 }

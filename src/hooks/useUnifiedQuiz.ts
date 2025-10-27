@@ -47,7 +47,7 @@ export function useUnifiedQuiz(stepId?: string) {
     reload: () => {
       unifiedQuizBridge.clearCache();
       setIsLoading(true);
-    }
+    },
   };
 }
 

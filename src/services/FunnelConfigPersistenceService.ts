@@ -73,28 +73,28 @@ const VALIDATION_RULES = {
         descriptionMinLength: 120,
         descriptionMaxLength: 160,
         keywordsMinCount: 3,
-        keywordsMaxCount: 10
+        keywordsMaxCount: 10,
     },
 
     // Tracking Validation
     tracking: {
         facebookPixelPattern: /^\d{15,16}$/,
         googleAnalyticsPattern: /^G-[A-Z0-9]{10}$/,
-        googleTagManagerPattern: /^GTM-[A-Z0-9]+$/
+        googleTagManagerPattern: /^GTM-[A-Z0-9]+$/,
     },
 
     // UTM Validation
     utm: {
         sourceMaxLength: 50,
         mediumMaxLength: 50,
-        campaignMaxLength: 100
+        campaignMaxLength: 100,
     },
 
     // Webhooks Validation
     webhooks: {
         urlPattern: /^https?:\/\/.+/,
-        maxRetryAttempts: 5
-    }
+        maxRetryAttempts: 5,
+    },
 };
 
 // ============================================================================
@@ -127,11 +127,11 @@ export class FunnelConfigPersistenceService {
     async saveConfig(
         funnelId: string,
         config: FunnelConfig,
-        options: SaveConfigOptions = {}
+        options: SaveConfigOptions = {},
     ): Promise<ConfigPersistenceData> {
         const {
             validate = true,
-            updateCache = true
+            updateCache = true,
         } = options;
 
         console.log(`💾 Salvando configuração para funil: ${funnelId}`);
@@ -179,7 +179,7 @@ export class FunnelConfigPersistenceService {
      */
     async loadConfig(
         funnelId: string,
-        options: LoadConfigOptions = {}
+        options: LoadConfigOptions = {},
     ): Promise<ConfigPersistenceData | null> {
         const { fromCache = true } = options;
 
@@ -263,7 +263,7 @@ export class FunnelConfigPersistenceService {
             errors,
             warnings,
             score: Math.max(0, score),
-            recommendations
+            recommendations,
         };
 
         // Cache resultado
@@ -372,7 +372,7 @@ export class FunnelConfigPersistenceService {
     private async saveToLocalStorage(
         funnelId: string,
         config: FunnelConfig,
-        options: SaveConfigOptions
+        options: SaveConfigOptions,
     ): Promise<ConfigPersistenceData> {
         const data: ConfigPersistenceData = {
             id: `${funnelId}-local-${Date.now()}`,
@@ -389,8 +389,8 @@ export class FunnelConfigPersistenceService {
             metadata: {
                 source: options.source || 'manual',
                 category: config.funnel.category || 'other',
-                lastValidatedAt: new Date()
-            }
+                lastValidatedAt: new Date(),
+            },
         };
 
         localStorage.setItem(`funnel_config_${funnelId}`, JSON.stringify(data));
@@ -409,8 +409,8 @@ export class FunnelConfigPersistenceService {
                 updatedAt: new Date(data.updatedAt),
                 metadata: {
                     ...data.metadata,
-                    lastValidatedAt: new Date(data.metadata.lastValidatedAt)
-                }
+                    lastValidatedAt: new Date(data.metadata.lastValidatedAt),
+                },
             };
         } catch (error) {
             console.error('Erro ao carregar do localStorage:', error);
@@ -443,7 +443,7 @@ export const funnelConfigPersistenceService = FunnelConfigPersistenceService.get
 export async function saveFunnelConfig(
     funnelId: string,
     config: FunnelConfig,
-    options?: SaveConfigOptions
+    options?: SaveConfigOptions,
 ): Promise<ConfigPersistenceData> {
     return funnelConfigPersistenceService.saveConfig(funnelId, config, options);
 }
@@ -453,7 +453,7 @@ export async function saveFunnelConfig(
  */
 export async function loadFunnelConfig(
     funnelId: string,
-    options?: LoadConfigOptions
+    options?: LoadConfigOptions,
 ): Promise<ConfigPersistenceData | null> {
     return funnelConfigPersistenceService.loadConfig(funnelId, options);
 }

@@ -106,7 +106,7 @@ class RealTimeAnalytics {
                 device_info: this.getDeviceInfo(),
                 funnel_id: 'quiz-21-steps', // Default funnel ID
                 quiz_user_id: this.sessionId, // Usar session ID como user ID temporário
-                status: 'active'
+                status: 'active',
             };
 
             await supabase
@@ -239,7 +239,7 @@ class RealTimeAnalytics {
         console.log('🎉 Analytics: Quiz completed', {
             sessionId: this.sessionId,
             result: result.primaryStyle?.category,
-            timeSpent: totalTimeSpent
+            timeSpent: totalTimeSpent,
         });
     }
 

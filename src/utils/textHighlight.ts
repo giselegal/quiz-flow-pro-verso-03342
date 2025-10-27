@@ -84,7 +84,7 @@ export const highlightStrategicWords = (text: string): React.ReactNode => {
           key: index,
           className: 'highlight-strategic font-medium', // Usando a classe highlight-strategic
         },
-        part
+        part,
       );
     }
     return part;

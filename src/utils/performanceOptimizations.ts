@@ -8,7 +8,7 @@ import { lazy, ComponentType, LazyExoticComponent } from 'react';
 // Lazy loading com retry
 export function lazyWithRetry<T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
-  retries = 3
+  retries = 3,
 ): LazyExoticComponent<T> {
   return lazy(async () => {
     for (let i = 0; i < retries; i++) {
@@ -25,7 +25,7 @@ export function lazyWithRetry<T extends ComponentType<any>>(
 
 // Preload de componentes
 export function preloadComponent<T extends ComponentType<any>>(
-  lazyComponent: LazyExoticComponent<T>
+  lazyComponent: LazyExoticComponent<T>,
 ): void {
   // @ts-ignore
   const preload = lazyComponent._ctor;
@@ -35,7 +35,7 @@ export function preloadComponent<T extends ComponentType<any>>(
 // Debounce
 export function debounce<T extends (...args: any[]) => any>(
   fn: T,
-  delay: number
+  delay: number,
 ): (...args: Parameters<T>) => void {
   let timeoutId: NodeJS.Timeout;
   return function debouncedFn(...args: Parameters<T>) {
@@ -47,7 +47,7 @@ export function debounce<T extends (...args: any[]) => any>(
 // Throttle
 export function throttle<T extends (...args: any[]) => any>(
   fn: T,
-  limit: number
+  limit: number,
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
   return function throttledFn(...args: Parameters<T>) {
@@ -80,7 +80,7 @@ export function calculateVisibleRange(
   containerHeight: number,
   itemHeight: number,
   totalItems: number,
-  overscan = 3
+  overscan = 3,
 ): { start: number; end: number } {
   const start = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
   const visibleItems = Math.ceil(containerHeight / itemHeight);
@@ -91,7 +91,7 @@ export function calculateVisibleRange(
 // Performance measurement
 export async function measurePerformance<T>(
   name: string,
-  fn: () => T | Promise<T>
+  fn: () => T | Promise<T>,
 ): Promise<T> {
   const start = performance.now();
   try {

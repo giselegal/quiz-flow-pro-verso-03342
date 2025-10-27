@@ -55,7 +55,7 @@ interface UnifiedEditorCoreProps {
 
 export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   funnelId,
-  isPreview = false
+  isPreview = false,
 }) => {
   return (
     <ErrorBoundary>

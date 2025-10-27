@@ -25,7 +25,7 @@ export class FunnelError extends Error {
 export const FunnelErrorCode = {
     STORAGE_FULL: 'STORAGE_FULL',
     NOT_FOUND: 'NOT_FOUND',
-    INVALID_DATA: 'INVALID_DATA'
+    INVALID_DATA: 'INVALID_DATA',
 } as const;
 
 export const FunnelErrorFactory = {
@@ -42,7 +42,7 @@ export const FunnelErrorFactory = {
     validationError: (message: string) => {
         const error = createValidationError('SCHEMA_VALIDATION_FAILED', message);
         return new FunnelError(error.code, error.message);
-    }
+    },
 };
 
 export const handleFunnelError = async (error: FunnelError, context?: any) => {
@@ -54,17 +54,17 @@ export const handleFunnelError = async (error: FunnelError, context?: any) => {
         if (error.code === 'FUNNEL_NOT_FOUND') {
             newError = createStorageError('STORAGE_NOT_AVAILABLE', error.message, {
                 ...error.context,
-                ...context
+                ...context,
             });
         } else if (error.code.includes('STORAGE')) {
             newError = createStorageError('STORAGE_NOT_AVAILABLE', error.message, {
                 ...error.context,
-                ...context
+                ...context,
             });
         } else {
             newError = createValidationError('SCHEMA_VALIDATION_FAILED', error.message, {
                 ...error.context,
-                ...context
+                ...context,
             });
         }
 

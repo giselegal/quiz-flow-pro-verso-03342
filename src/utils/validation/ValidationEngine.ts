@@ -20,7 +20,7 @@ import {
     ValidationOptions,
     ValidationRule,
     ValidationContext,
-    createErrorResult
+    createErrorResult,
 } from '@/types/core';
 
 // =============================================
@@ -49,7 +49,7 @@ export class ValidationEngine {
     async validate(
         data: any,
         context: ValidationContext,
-        options: ValidationOptions = {}
+        options: ValidationOptions = {},
     ): Promise<UnifiedValidationResult> {
         const startTime = performance.now();
 
@@ -74,7 +74,7 @@ export class ValidationEngine {
                     endTime: performance.now(),
                     duration: performance.now() - startTime,
                     rulesApplied: rules.length,
-                    fieldsChecked: this.countFields(data)
+                    fieldsChecked: this.countFields(data),
                 };
             }
 
@@ -85,7 +85,7 @@ export class ValidationEngine {
 
         } catch (error) {
             return createErrorResult([
-                `Validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+                `Validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
             ]);
         }
     }
@@ -96,10 +96,10 @@ export class ValidationEngine {
      */
     async validateBatch(
         items: Array<{ data: any; context: ValidationContext; options?: ValidationOptions }>,
-        globalOptions: ValidationOptions = {}
+        globalOptions: ValidationOptions = {},
     ): Promise<UnifiedValidationResult[]> {
         const promises = items.map(item =>
-            this.validate(item.data, item.context, { ...globalOptions, ...item.options })
+            this.validate(item.data, item.context, { ...globalOptions, ...item.options }),
         );
 
         return Promise.all(promises);
@@ -136,7 +136,7 @@ export class ValidationEngine {
 
     private async getRulesForContext(
         context: ValidationContext,
-        options: ValidationOptions
+        options: ValidationOptions,
     ): Promise<ValidationRule[]> {
         const baseRules = this.getBaseRulesForContext(context);
         const customRules = options.customRules || [];
@@ -155,7 +155,7 @@ export class ValidationEngine {
             [ValidationContext.TEMPLATE_DATA]: this.getTemplateValidationRules(),
             [ValidationContext.USER_INPUT]: this.getUserInputValidationRules(),
             [ValidationContext.DATA_SYNC]: this.getDataSyncValidationRules(),
-            [ValidationContext.CUSTOM]: []
+            [ValidationContext.CUSTOM]: [],
         };
 
         return baseRules[context] || [];
@@ -164,7 +164,7 @@ export class ValidationEngine {
     private async executeValidation(
         data: any,
         rules: ValidationRule[],
-        options: ValidationOptions
+        options: ValidationOptions,
     ): Promise<UnifiedValidationResult> {
         const errors: string[] = [];
         const warnings: string[] = [];
@@ -222,7 +222,7 @@ export class ValidationEngine {
             info: info.length > 0 ? info : undefined,
             sanitized,
             validatedAt: new Date(),
-            validationType: options.context
+            validationType: options.context,
         };
 
         return result;
@@ -272,20 +272,20 @@ export class ValidationEngine {
                 name: 'required-id',
                 field: 'id',
                 validate: (value) => !!value || 'Block ID is required',
-                severity: 'error'
+                severity: 'error',
             },
             {
                 name: 'required-type',
                 field: 'type',
                 validate: (value) => !!value || 'Block type is required',
-                severity: 'error'
+                severity: 'error',
             },
             {
                 name: 'valid-order',
                 field: 'order',
                 validate: (value) => (typeof value === 'number' && value >= 0) || 'Order must be a non-negative number',
-                severity: 'warning'
-            }
+                severity: 'warning',
+            },
         ];
     }
 
@@ -294,8 +294,8 @@ export class ValidationEngine {
             {
                 name: 'object-structure',
                 validate: (value) => (typeof value === 'object' && value !== null) || 'Value must be an object',
-                severity: 'error'
-            }
+                severity: 'error',
+            },
         ];
     }
 
@@ -305,8 +305,8 @@ export class ValidationEngine {
                 name: 'has-questions',
                 field: 'questions',
                 validate: (value) => (Array.isArray(value) && value.length > 0) || 'Quiz must have at least one question',
-                severity: 'error'
-            }
+                severity: 'error',
+            },
         ];
     }
 
@@ -316,8 +316,8 @@ export class ValidationEngine {
                 name: 'has-blocks',
                 field: 'blocks',
                 validate: (value) => Array.isArray(value) || 'Page must have blocks array',
-                severity: 'error'
-            }
+                severity: 'error',
+            },
         ];
     }
 
@@ -330,8 +330,8 @@ export class ValidationEngine {
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                     return emailRegex.test(value) || 'Invalid email format';
                 },
-                severity: 'warning'
-            }
+                severity: 'warning',
+            },
         ];
     }
 
@@ -341,8 +341,8 @@ export class ValidationEngine {
                 name: 'has-name',
                 field: 'name',
                 validate: (value) => !!value || 'Template must have a name',
-                severity: 'error'
-            }
+                severity: 'error',
+            },
         ];
     }
 
@@ -354,8 +354,8 @@ export class ValidationEngine {
                     if (typeof value !== 'string') return true;
                     return !/<script|javascript:/i.test(value) || 'Potentially unsafe content detected';
                 },
-                severity: 'error'
-            }
+                severity: 'error',
+            },
         ];
     }
 
@@ -369,8 +369,8 @@ export class ValidationEngine {
                     const date = new Date(value);
                     return !isNaN(date.getTime()) || 'Invalid timestamp';
                 },
-                severity: 'warning'
-            }
+                severity: 'warning',
+            },
         ];
     }
 }
@@ -385,7 +385,7 @@ export class ValidationEngine {
 export async function validateData(
     data: any,
     context: ValidationContext = ValidationContext.CUSTOM,
-    options: ValidationOptions = {}
+    options: ValidationOptions = {},
 ): Promise<UnifiedValidationResult> {
     return ValidationEngine.getInstance().validate(data, context, options);
 }
@@ -395,7 +395,7 @@ export async function validateData(
  */
 export async function validateBlockProperties(
     properties: Record<string, any>,
-    options: ValidationOptions = {}
+    options: ValidationOptions = {},
 ): Promise<UnifiedValidationResult> {
     return validateData(properties, ValidationContext.BLOCK_PROPERTIES, options);
 }
@@ -405,7 +405,7 @@ export async function validateBlockProperties(
  */
 export async function validateQuizData(
     quizData: any,
-    options: ValidationOptions = {}
+    options: ValidationOptions = {},
 ): Promise<UnifiedValidationResult> {
     return validateData(quizData, ValidationContext.QUIZ_DATA, options);
 }
@@ -415,7 +415,7 @@ export async function validateQuizData(
  */
 export async function validateFunnelPage(
     page: any,
-    options: ValidationOptions = {}
+    options: ValidationOptions = {},
 ): Promise<UnifiedValidationResult> {
     return validateData(page, ValidationContext.FUNNEL_PAGE, options);
 }

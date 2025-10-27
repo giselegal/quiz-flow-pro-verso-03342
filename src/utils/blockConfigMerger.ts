@@ -40,7 +40,7 @@ export function normalizeOption(opt: any): { id: string; text: string; image?: s
   return {
     id: String(opt.id ?? opt.key ?? opt.value ?? `opt-${Date.now()}`),
     text: String(opt.text ?? opt.label ?? 'Opção'),
-    image: opt.image ?? opt.imageUrl ?? opt.src ?? undefined
+    image: opt.image ?? opt.imageUrl ?? opt.src ?? undefined,
   };
 }
 

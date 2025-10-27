@@ -10,7 +10,7 @@ describe('Cobertura de Schemas de Blocos', () => {
           const req: any = { onerror: null, onsuccess: null, result: {} };
           setTimeout(() => req.onsuccess && req.onsuccess({ target: { result: {} } }), 0);
           return req;
-        }
+        },
       };
     }
     const { ENHANCED_BLOCK_REGISTRY } = await import('@/components/editor/blocks/EnhancedBlockRegistry');

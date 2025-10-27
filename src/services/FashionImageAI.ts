@@ -74,7 +74,7 @@ export class FashionImageAI {
                 success: false,
                 error: error instanceof Error ? error.message : 'Erro desconhecido',
                 prompt: request.prompt,
-                provider: this.config.provider
+                provider: this.config.provider,
             };
         }
     }
@@ -87,16 +87,16 @@ export class FashionImageAI {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${this.config.apiKey}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 model: 'dall-e-3',
-                prompt: prompt,
+                prompt,
                 n: 1,
                 size: this.config.size || '1024x1024',
                 quality: this.config.quality || 'hd',
-                style: this.config.style === 'artistic' ? 'vivid' : 'natural'
-            })
+                style: this.config.style === 'artistic' ? 'vivid' : 'natural',
+            }),
         });
 
         if (!response.ok) {
@@ -113,8 +113,8 @@ export class FashionImageAI {
                 width: parseInt(this.config.size?.split('x')[0] || '1024'),
                 height: parseInt(this.config.size?.split('x')[1] || '1024'),
                 style: this.config.style || 'realistic',
-                cost: 0.04 // $0.040 per image (1024×1024, HD)
-            }
+                cost: 0.04, // $0.040 per image (1024×1024, HD)
+            },
         };
     }
 
@@ -128,19 +128,19 @@ export class FashionImageAI {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'x-goog-api-key': this.config.apiKey
+                'x-goog-api-key': this.config.apiKey,
             },
             body: JSON.stringify({
                 contents: [{
                     parts: [{
-                        text: `Generate a detailed description for fashion image: ${prompt}`
-                    }]
+                        text: `Generate a detailed description for fashion image: ${prompt}`,
+                    }],
                 }],
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: 1024
-                }
-            })
+                    maxOutputTokens: 1024,
+                },
+            }),
         });
 
         if (!response.ok) {
@@ -153,7 +153,7 @@ export class FashionImageAI {
             success: false,
             error: 'Gemini image generation ainda não disponível. Use DALL-E 3 ou Stable Diffusion.',
             prompt,
-            provider: 'gemini'
+            provider: 'gemini',
         };
     }
 
@@ -165,18 +165,18 @@ export class FashionImageAI {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${this.config.apiKey}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 inputs: prompt,
                 parameters: {
-                    negative_prompt: "blurry, low quality, distorted, ugly, bad anatomy",
+                    negative_prompt: 'blurry, low quality, distorted, ugly, bad anatomy',
                     num_inference_steps: 50,
                     guidance_scale: 7.5,
                     width: 512,
-                    height: 512
-                }
-            })
+                    height: 512,
+                },
+            }),
         });
 
         if (!response.ok) {
@@ -195,8 +195,8 @@ export class FashionImageAI {
                 width: 512,
                 height: 512,
                 style: this.config.style || 'realistic',
-                cost: 0 // Gratuito via Hugging Face (com limitações)
-            }
+                cost: 0, // Gratuito via Hugging Face (com limitações)
+            },
         };
     }
 
@@ -208,7 +208,7 @@ export class FashionImageAI {
             success: false,
             error: 'Midjourney integration ainda não implementado. Use DALL-E 3.',
             prompt,
-            provider: 'midjourney'
+            provider: 'midjourney',
         };
     }
 
@@ -226,7 +226,7 @@ export class FashionImageAI {
             request.age && `${request.age} model`,
             request.season && `${request.season} collection`,
             request.budget && `${request.budget}-end fashion`,
-            'professional fashion photography, high quality, detailed, realistic, well-lit, modern'
+            'professional fashion photography, high quality, detailed, realistic, well-lit, modern',
         ].filter(Boolean);
 
         return parts.join(', ');
@@ -242,7 +242,7 @@ export class FashionImageAI {
         const variationPrompts = [
             `${basePrompt}, variation 1, different accessories`,
             `${basePrompt}, variation 2, different colors`,
-            `${basePrompt}, variation 3, different styling`
+            `${basePrompt}, variation 3, different styling`,
         ];
 
         for (let i = 0; i < Math.min(count, variationPrompts.length); i++) {
@@ -269,31 +269,31 @@ export class FashionImageAI {
                 available: true,
                 cost: '$0.040 por imagem (1024x1024 HD)',
                 quality: 'Excelente - Melhor para moda',
-                speed: '10-20 segundos'
+                speed: '10-20 segundos',
             },
             'gemini': {
                 available: false,
                 cost: 'Gratuito (quando disponível)',
                 quality: 'Boa - Multimodal',
-                speed: '5-15 segundos'
+                speed: '5-15 segundos',
             },
             'stable-diffusion': {
                 available: true,
                 cost: 'Gratuito (Hugging Face)',
                 quality: 'Boa - Customizável',
-                speed: '15-30 segundos'
+                speed: '15-30 segundos',
             },
             'midjourney': {
                 available: false,
                 cost: '$10/mês (plano básico)',
                 quality: 'Excelente - Mais artístico',
-                speed: '30-60 segundos'
-            }
+                speed: '30-60 segundos',
+            },
         };
 
         return {
             provider: this.config.provider,
-            ...providers[this.config.provider]
+            ...providers[this.config.provider],
         };
     }
 }

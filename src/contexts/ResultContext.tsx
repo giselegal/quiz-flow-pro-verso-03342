@@ -88,7 +88,7 @@ export const ResultProvider: React.FC<ResultProviderProps> = ({
     userProfile,
     scores,
     offerUrl = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
-    offerPrice = 97
+    offerPrice = 97,
 }) => {
     // 🧮 EXECUTAR CÁLCULOS (memoizados)
     const calculations = useResultCalculations(scores, userProfile);
@@ -133,7 +133,7 @@ export const ResultProvider: React.FC<ResultProviderProps> = ({
             (window as any).gtag('event', 'checkout_initiated', {
                 'event_category': 'ecommerce',
                 'event_label': `CTA_Click_${userProfile.resultStyle}`,
-                'value': offerPrice
+                'value': offerPrice,
             });
         }
 
@@ -146,34 +146,34 @@ export const ResultProvider: React.FC<ResultProviderProps> = ({
         features: [
             { icon: '✅', label: '31 Aulas Online (Acesso Imediato)', value: 'R$ 297,00' },
             { icon: '✅', label: 'Bônus: Guia de Visagismo Facial (PDF)', value: 'R$ 67,00' },
-            { icon: '✅', label: 'Bônus: Peças-Chave + Inventário', value: 'R$ 83,00' }
+            { icon: '✅', label: 'Bônus: Peças-Chave + Inventário', value: 'R$ 83,00' },
         ],
         pricing: {
             current: offerPrice,
             original: 447,
             installments: { quantity: 8, value: 14.11 },
-            discount: 78
+            discount: 78,
         },
         testimonials: [
             {
-                name: "Maria Silva",
-                role: "Advogada",
-                quote: "Finalmente descobri como me vestir com elegância e profissionalismo. Meu guarda-roupa nunca fez tanto sentido!",
-                rating: 5
+                name: 'Maria Silva',
+                role: 'Advogada',
+                quote: 'Finalmente descobri como me vestir com elegância e profissionalismo. Meu guarda-roupa nunca fez tanto sentido!',
+                rating: 5,
             },
             {
-                name: "Ana Costa",
-                role: "Empresária",
-                quote: "O guia me ajudou a encontrar meu estilo pessoal. Agora me sinto confiante em qualquer ocasião.",
-                rating: 5
+                name: 'Ana Costa',
+                role: 'Empresária',
+                quote: 'O guia me ajudou a encontrar meu estilo pessoal. Agora me sinto confiante em qualquer ocasião.',
+                rating: 5,
             },
             {
-                name: "Julia Santos",
-                role: "Designer",
-                quote: "Economizei muito dinheiro parando de comprar peças que não combinam comigo. Recomendo!",
-                rating: 5
-            }
-        ]
+                name: 'Julia Santos',
+                role: 'Designer',
+                quote: 'Economizei muito dinheiro parando de comprar peças que não combinam comigo. Recomendo!',
+                rating: 5,
+            },
+        ],
     }), [offerPrice]);
 
     const value: ResultContextValue = {
@@ -205,10 +205,10 @@ export const ResultProvider: React.FC<ResultProviderProps> = ({
                 comp1Image: comp1?.imageUrl,
                 comp2Image: comp2?.imageUrl,
                 calculations,
-                styleConfig
+                styleConfig,
             };
             return interpolateUtil(template, ctx);
-        }
+        },
     };
 
     return (

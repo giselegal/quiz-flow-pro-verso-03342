@@ -42,7 +42,7 @@ export function useOptimizedScheduler() {
       key: string,
       fn: () => void,
       delay = 0,
-      type: TaskType = 'timeout'
+      type: TaskType = 'timeout',
     ) => {
       // cancela tarefa anterior com a mesma chave
       cancel(key);
@@ -72,7 +72,7 @@ export function useOptimizedScheduler() {
       tasksRef.current.set(key, { key, type: 'timeout', cancel: () => clearTimeout(id), id } as any);
       return () => cancel(key);
     },
-    [cancel]
+    [cancel],
   );
 
   const debounce = useCallback(
@@ -90,7 +90,7 @@ export function useOptimizedScheduler() {
         debouncedRef.current.delete(key);
       };
     },
-    []
+    [],
   );
 
   const throttle = useCallback(
@@ -112,7 +112,7 @@ export function useOptimizedScheduler() {
       throttledRef.current.set(key, rec);
       return () => clearTimeout(rec.timeout);
     },
-    []
+    [],
   );
 
   useEffect(() => cancelAll, [cancelAll]);

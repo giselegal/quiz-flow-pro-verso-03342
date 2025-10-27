@@ -7,7 +7,7 @@
 
 export const UnifiedTemplateManager = {
   isEnabled: false,
-  reason: 'Module conflicts - will be re-enabled in future release'
+  reason: 'Module conflicts - will be re-enabled in future release',
 };
 
 export default UnifiedTemplateManager;

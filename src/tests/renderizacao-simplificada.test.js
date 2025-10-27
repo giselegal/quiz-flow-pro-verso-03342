@@ -12,7 +12,7 @@ const mockComponent = (name, props = {}) => {
     return React.createElement('div', {
         'data-testid': `mock-${name.toLowerCase()}`,
         'data-component': name,
-        ...props
+        ...props,
     }, `Mock ${name} Component`);
 };
 
@@ -23,7 +23,7 @@ describe('🧪 Validação de Estrutura dos Componentes', () => {
         const componentFiles = [
             'PureBuilderProvider.tsx',
             'ModernUnifiedEditor.tsx',
-            'UnifiedTemplateService.ts'
+            'UnifiedTemplateService.ts',
         ];
 
         componentFiles.forEach(file => {
@@ -39,7 +39,7 @@ describe('🧪 Validação de Estrutura dos Componentes', () => {
             'import React',
             'export default',
             'useState',
-            'useEffect'
+            'useEffect',
         ];
 
         reactPatterns.forEach(pattern => {
@@ -51,14 +51,14 @@ describe('🧪 Validação de Estrutura dos Componentes', () => {
         // Mock da renderização
         const mockProps = {
             funnelId: 'test-funnel-123',
-            children: 'Test children'
+            children: 'Test children',
         };
 
         const mockRender = () => ({
             component: 'PureBuilderProvider',
             props: mockProps,
             rendered: true,
-            testId: 'pure-builder-provider'
+            testId: 'pure-builder-provider',
         });
 
         const result = mockRender();
@@ -71,14 +71,14 @@ describe('🧪 Validação de Estrutura dos Componentes', () => {
         const mockProps = {
             funnelId: 'editor-test',
             templateId: 'template-123',
-            mode: 'visual'
+            mode: 'visual',
         };
 
         const mockRender = () => ({
             component: 'ModernUnifiedEditor',
             props: mockProps,
             rendered: true,
-            testId: 'modern-unified-editor'
+            testId: 'modern-unified-editor',
         });
 
         const result = mockRender();
@@ -95,7 +95,7 @@ describe('🧪 Validação de Props e Estados', () => {
             'landing-page-produto',
             'campanha-email-123',
             'step-1-formulario',
-            'template-vendas-avancado'
+            'template-vendas-avancado',
         ];
 
         funnelTypes.forEach(funnelId => {
@@ -111,9 +111,9 @@ describe('🧪 Validação de Props e Estados', () => {
             name: 'Template de Teste',
             blocks: [
                 { id: 'block-1', type: 'text', properties: { text: 'Teste' } },
-                { id: 'block-2', type: 'button', properties: { label: 'Clique' } }
+                { id: 'block-2', type: 'button', properties: { label: 'Clique' } },
             ],
-            metadata: { version: '1.0.0', generated: false }
+            metadata: { version: '1.0.0', generated: false },
         };
 
         expect(mockTemplate.id).toBeDefined();
@@ -127,9 +127,9 @@ describe('🧪 Validação de Props e Estados', () => {
 
         editorModes.forEach(mode => {
             const mockEditorConfig = {
-                mode: mode,
+                mode,
                 active: true,
-                supported: ['visual', 'code', 'preview', 'split'].includes(mode)
+                supported: ['visual', 'code', 'preview', 'split'].includes(mode),
             };
 
             expect(mockEditorConfig.supported).toBe(true);
@@ -165,7 +165,7 @@ describe('🧪 Validação de Performance', () => {
             renderCount++;
             return {
                 count: renderCount,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
         };
 
@@ -187,7 +187,7 @@ describe('🧪 Validação de Acessibilidade', () => {
             'data-testid': 'accessible-component',
             'role': 'main',
             'aria-label': 'Editor de funis',
-            'tabIndex': 0
+            'tabIndex': 0,
         };
 
         expect(mockAccessibleComponent['data-testid']).toBeDefined();
@@ -200,7 +200,7 @@ describe('🧪 Validação de Acessibilidade', () => {
             heading: { tag: 'h1', text: 'Editor de Funis' },
             nav: { tag: 'nav', items: ['Início', 'Editor', 'Configurações'] },
             main: { tag: 'main', content: 'Conteúdo principal' },
-            button: { tag: 'button', text: 'Criar Funil', type: 'button' }
+            button: { tag: 'button', text: 'Criar Funil', type: 'button' },
         };
 
         Object.values(mockSemanticStructure).forEach(element => {
@@ -218,7 +218,7 @@ describe('🧪 Validação de Estados de Erro', () => {
                 hasError: true,
                 errorMessage: error.message,
                 fallbackComponent: 'ErrorBoundary',
-                recovered: true
+                recovered: true,
             };
         };
 
@@ -234,7 +234,7 @@ describe('🧪 Validação de Estados de Erro', () => {
         const loadingStates = [
             { loading: true, error: null, data: null },
             { loading: false, error: null, data: { id: 'test' } },
-            { loading: false, error: new Error('Test error'), data: null }
+            { loading: false, error: new Error('Test error'), data: null },
         ];
 
         loadingStates.forEach((state, index) => {

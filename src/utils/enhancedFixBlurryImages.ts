@@ -15,7 +15,7 @@ interface FixedImage {
  */
 export function fixBlurryIntroQuizImages(
   rootElement?: HTMLElement,
-  opts?: FixBlurryImagesOptions
+  opts?: FixBlurryImagesOptions,
 ): HTMLImageElement[] {
   const options = {
     quality: 85,
@@ -79,7 +79,7 @@ export function fixBlurryIntroQuizImages(
         fixedImages.push(img);
 
         if (options.debug) {
-          console.log(`[fixBlurryIntroQuizImages] Imagem otimizada:`, {
+          console.log('[fixBlurryIntroQuizImages] Imagem otimizada:', {
             original: originalSrc,
             optimized: newSrc,
           });

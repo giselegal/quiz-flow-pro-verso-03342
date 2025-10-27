@@ -7,7 +7,7 @@ import { useCallback, useRef } from 'react';
 export const useOptimizedDebounce = <T extends (...args: any[]) => any>(
   callback: T,
   delay: number,
-  useIdleCallback = true
+  useIdleCallback = true,
 ): T => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const idleCallbackRef = useRef<number | null>(null);
@@ -36,7 +36,7 @@ export const useOptimizedDebounce = <T extends (...args: any[]) => any>(
         timeoutRef.current = setTimeout(execute, delay);
       }
     },
-    [callback, delay, useIdleCallback]
+    [callback, delay, useIdleCallback],
   ) as T;
 
   return debouncedCallback;
@@ -48,7 +48,7 @@ export const useOptimizedDebounce = <T extends (...args: any[]) => any>(
  */
 export const useOptimizedThrottle = <T extends (...args: any[]) => any>(
   callback: T,
-  fps = 60
+  fps = 60,
 ): T => {
   const rafRef = useRef<number | null>(null);
   const lastCallTime = useRef<number>(0);
@@ -73,7 +73,7 @@ export const useOptimizedThrottle = <T extends (...args: any[]) => any>(
         });
       }
     },
-    [callback, frameTime]
+    [callback, frameTime],
   ) as T;
 
   return throttledCallback;
@@ -89,7 +89,7 @@ export const useOptimizedHeavyOperation = () => {
       items: T[],
       processor: (item: T) => void,
       chunkSize = 50,
-      delayBetweenChunks = 16 // ~1 frame
+      delayBetweenChunks = 16, // ~1 frame
     ) => {
       for (let i = 0; i < items.length; i += chunkSize) {
         const chunk = items.slice(i, i + chunkSize);
@@ -108,7 +108,7 @@ export const useOptimizedHeavyOperation = () => {
         }
       }
     },
-    []
+    [],
   );
 
   return { executeInChunks };

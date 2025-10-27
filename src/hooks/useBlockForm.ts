@@ -41,7 +41,7 @@ interface UseBlockFormReturn {
  */
 export function useBlockForm(
   block: Block | null,
-  options: UseBlockFormOptions = {}
+  options: UseBlockFormOptions = {},
 ): UseBlockFormReturn {
   const { onUpdate, debounceMs = 300, validateOnChange = true } = options;
 
@@ -85,7 +85,7 @@ export function useBlockForm(
           }
         },
         debounceMs,
-        strategy
+        strategy,
       );
     });
 
@@ -100,7 +100,7 @@ export function useBlockForm(
         shouldDirty: true,
       });
     },
-    [setValue, validateOnChange]
+    [setValue, validateOnChange],
   );
 
   // Função para atualizar múltiplas propriedades
@@ -113,7 +113,7 @@ export function useBlockForm(
         });
       });
     },
-    [setValue, validateOnChange]
+    [setValue, validateOnChange],
   );
 
   // Função para validar o bloco manualmente
@@ -133,7 +133,7 @@ export function useBlockForm(
       }
       return acc;
     },
-    {} as Record<string, string>
+    {} as Record<string, string>,
   );
 
   return {
@@ -157,7 +157,7 @@ export function useArrayFieldForm<T extends Record<string, any>>(
   options: {
     onUpdate?: (updates: { items: T[] }) => void;
     debounceMs?: number;
-  } = {}
+  } = {},
 ) {
   const { onUpdate, debounceMs = 300 } = options;
 
@@ -188,7 +188,7 @@ export function useArrayFieldForm<T extends Record<string, any>>(
           }
         },
         debounceMs,
-        strategy
+        strategy,
       );
     });
 
@@ -203,7 +203,7 @@ export function useArrayFieldForm<T extends Record<string, any>>(
         shouldDirty: true,
       });
     },
-    [setValue, getValues]
+    [setValue, getValues],
   );
 
   const removeItem = useCallback(
@@ -215,24 +215,24 @@ export function useArrayFieldForm<T extends Record<string, any>>(
         {
           shouldValidate: true,
           shouldDirty: true,
-        }
+        },
       );
     },
-    [setValue, getValues]
+    [setValue, getValues],
   );
 
   const updateItem = useCallback(
     (index: number, updates: Partial<T>) => {
       const currentItems = getValues('items');
       const updatedItems = currentItems.map((item, i) =>
-        i === index ? { ...item, ...updates } : item
+        i === index ? { ...item, ...updates } : item,
       );
       setValue('items', updatedItems, {
         shouldValidate: true,
         shouldDirty: true,
       });
     },
-    [setValue, getValues]
+    [setValue, getValues],
   );
 
   const moveItem = useCallback(
@@ -247,7 +247,7 @@ export function useArrayFieldForm<T extends Record<string, any>>(
         shouldDirty: true,
       });
     },
-    [setValue, getValues]
+    [setValue, getValues],
   );
 
   return {

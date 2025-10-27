@@ -10,7 +10,7 @@ describe('Validation outcomes', () => {
         // outcomes base criados no template: substituímos por ranges com gap
         agg.draft.outcomes = [
             { id: 'o1', minScore: 0, maxScore: 10, template: 'A' },
-            { id: 'o2', minScore: 20, maxScore: 30, template: 'B' } // gap 11-19
+            { id: 'o2', minScore: 20, maxScore: 30, template: 'B' }, // gap 11-19
         ];
         templateRepo.save(agg);
         let error: any = null;

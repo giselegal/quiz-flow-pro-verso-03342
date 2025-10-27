@@ -25,7 +25,7 @@ interface UseImageWithFallbackResult {
  */
 export const useImageWithFallback = (
     originalSrc: string | undefined,
-    options: UseImageWithFallbackOptions = {}
+    options: UseImageWithFallbackOptions = {},
 ): UseImageWithFallbackResult => {
     const {
         width = 300,
@@ -51,7 +51,7 @@ export const useImageWithFallback = (
                 height,
                 fallbackText,
                 fallbackBgColor,
-                fallbackTextColor
+                fallbackTextColor,
             );
             setSrc(placeholderSrc);
             setIsFallback(true);
@@ -172,7 +172,7 @@ export const useImageWithFallback = (
         height,
         retryCount,
         retryDelay,
-        createFallbackImage
+        createFallbackImage,
     ]);
 
     // Função para retry manual
@@ -213,7 +213,7 @@ export const usePlaceholder = (
         text?: string;
         backgroundColor?: string;
         textColor?: string;
-    }
+    },
 ) => {
     const [src, setSrc] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
@@ -228,32 +228,32 @@ export const usePlaceholder = (
                 switch (type) {
                     case 'logo':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            96, 96, '', 'transparent', 'transparent'
+                            96, 96, '', 'transparent', 'transparent',
                         );
                         break;
                     case 'image':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            300, 200, '', 'transparent', 'transparent'
+                            300, 200, '', 'transparent', 'transparent',
                         );
                         break;
                     case 'quiz-elegant':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            300, 200, '', 'transparent', 'transparent'
+                            300, 200, '', 'transparent', 'transparent',
                         );
                         break;
                     case 'quiz-casual':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            300, 200, '', 'transparent', 'transparent'
+                            300, 200, '', 'transparent', 'transparent',
                         );
                         break;
                     case 'loading':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            400, 300, '', 'transparent', 'transparent'
+                            400, 300, '', 'transparent', 'transparent',
                         );
                         break;
                     case 'error':
                         placeholderSrc = await imageCache.getOrCreatePlaceholder(
-                            400, 300, '', 'transparent', 'transparent'
+                            400, 300, '', 'transparent', 'transparent',
                         );
                         break;
                     case 'custom':
@@ -263,7 +263,7 @@ export const usePlaceholder = (
                             customOptions?.height || 200,
                             '',
                             'transparent',
-                            'transparent'
+                            'transparent',
                         );
                         break;
                 }

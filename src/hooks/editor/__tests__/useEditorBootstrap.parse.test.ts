@@ -10,7 +10,7 @@ function withLocation(url: string, fn: () => void) {
         href: newUrl.href,
         pathname: newUrl.pathname,
         search: newUrl.search,
-        hash: newUrl.hash
+        hash: newUrl.hash,
     });
     try { fn(); } finally {
         // @ts-ignore revert

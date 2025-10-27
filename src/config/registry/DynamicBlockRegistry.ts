@@ -375,7 +375,7 @@ export class DynamicBlockRegistry {
     const promises = types.map(type => 
       this.getBlock(type).catch(err => {
         console.warn(`[DynamicBlockRegistry] Failed to preload ${type}:`, err);
-      })
+      }),
     );
     
     await Promise.all(promises);
@@ -409,7 +409,7 @@ export class DynamicBlockRegistry {
       cached: this.cache.size,
       loading: this.loadingPromises.size,
       maxSize: this.maxCacheSize,
-      metadata: this.metadata.size
+      metadata: this.metadata.size,
     };
   }
 }

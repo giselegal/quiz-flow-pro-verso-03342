@@ -10,7 +10,7 @@ import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 // Mock implementation for useQuizRuntimeRegistry
 const useQuizRuntimeRegistry = () => ({
     setSteps: (steps: any) => { console.log('Mock setSteps called with:', steps); },
-    version: '1.0.0'
+    version: '1.0.0',
 });
 
 // ============================================================================
@@ -64,7 +64,7 @@ const DEFAULT_OPTIONS: Required<LivePreviewOptions> = {
     cacheTTL: 30000, // 30s
     enableDebug: false,
     maxUpdatesPerSecond: 10,
-    isolatePreviewState: true
+    isolatePreviewState: true,
 };
 
 // ============================================================================
@@ -105,7 +105,7 @@ function useRateLimiter(maxCallsPerSecond: number) {
         
         // Remove timestamps antigos
         callTimestamps.current = callTimestamps.current.filter(
-            timestamp => timestamp > oneSecondAgo
+            timestamp => timestamp > oneSecondAgo,
         );
         
         return callTimestamps.current.length < maxCallsPerSecond;
@@ -159,7 +159,7 @@ function useCache<T>(ttl: number, enabled: boolean = true) {
         cache.current.set(key, {
             data,
             timestamp: Date.now(),
-            hits: 0
+            hits: 0,
         });
     }, [enabled]);
 
@@ -172,7 +172,7 @@ function useCache<T>(ttl: number, enabled: boolean = true) {
         return {
             size: cache.current.size,
             ...stats.current,
-            efficiency: stats.current.hits / (stats.current.hits + stats.current.misses) || 0
+            efficiency: stats.current.hits / (stats.current.hits + stats.current.misses) || 0,
         };
     }, []);
 
@@ -186,12 +186,12 @@ function useCache<T>(ttl: number, enabled: boolean = true) {
 export function useLiveCanvasPreview(
     steps: any[],
     selectedStepId: string | undefined,
-    userOptions: LivePreviewOptions = {}
+    userOptions: LivePreviewOptions = {},
 ) {
     // ===== CONFIGURATION =====
     const options = useMemo(() => ({
         ...DEFAULT_OPTIONS,
-        ...userOptions
+        ...userOptions,
     }), [userOptions]);
 
     // ===== STATE =====
@@ -202,7 +202,7 @@ export function useLiveCanvasPreview(
         updateCount: 0,
         errorCount: 0,
         cacheHits: 0,
-        cacheMisses: 0
+        cacheMisses: 0,
     });
 
     // ===== UTILITIES =====
@@ -212,7 +212,7 @@ export function useLiveCanvasPreview(
     const { canCall: canUpdate, recordCall: recordUpdate } = useRateLimiter(options.maxUpdatesPerSecond);
     const { get: getFromCache, set: setInCache, getStats: getCacheStats } = useCache(
         options.cacheTTL, 
-        options.enableCache
+        options.enableCache,
     );
 
     // ===== REGISTRY =====
@@ -251,7 +251,7 @@ export function useLiveCanvasPreview(
             return {
                 ...prev,
                 isActive: newActive,
-                isUpdating: newActive ? prev.isUpdating : false
+                isUpdating: newActive ? prev.isUpdating : false,
             };
         });
     }, [options.enableDebug]);
@@ -270,7 +270,7 @@ export function useLiveCanvasPreview(
                 ...prev,
                 isUpdating: false,
                 lastUpdate: Date.now(),
-                updateCount: prev.updateCount + 1
+                updateCount: prev.updateCount + 1,
             }));
 
             if (options.enableDebug) {
@@ -281,7 +281,7 @@ export function useLiveCanvasPreview(
                 ...prev,
                 isUpdating: false,
                 errorCount: prev.errorCount + 1,
-                lastError: error instanceof Error ? error.message : 'Unknown error'
+                lastError: error instanceof Error ? error.message : 'Unknown error',
             }));
 
             if (options.enableDebug) {
@@ -296,7 +296,7 @@ export function useLiveCanvasPreview(
 
         const stepsHash = JSON.stringify({
             steps: debouncedSteps,
-            selectedStepId: debouncedSelectedStepId
+            selectedStepId: debouncedSelectedStepId,
         });
 
         // Skip se não houve mudanças
@@ -316,7 +316,7 @@ export function useLiveCanvasPreview(
             setState(prev => ({
                 ...prev,
                 cacheHits: prev.cacheHits + 1,
-                lastUpdate: Date.now()
+                lastUpdate: Date.now(),
             }));
             
             if (options.enableDebug) {
@@ -337,7 +337,7 @@ export function useLiveCanvasPreview(
                 isolatedStateRef.current = {
                     steps: { ...runtimeMap },
                     selectedStep: debouncedSelectedStepId,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 };
             }
             
@@ -366,18 +366,18 @@ export function useLiveCanvasPreview(
                 isUpdating: false,
                 lastUpdate: Date.now(),
                 updateCount: prev.updateCount + 1,
-                lastError: undefined
+                lastError: undefined,
             }));
 
             if (options.enableDebug) {
-                console.log('🎭 Auto preview update completed in', updateTime + 'ms');
+                console.log('🎭 Auto preview update completed in', `${updateTime  }ms`);
             }
         } catch (error) {
             setState(prev => ({
                 ...prev,
                 isUpdating: false,
                 errorCount: prev.errorCount + 1,
-                lastError: error instanceof Error ? error.message : 'Unknown error'
+                lastError: error instanceof Error ? error.message : 'Unknown error',
             }));
 
             if (options.enableDebug) {
@@ -395,7 +395,7 @@ export function useLiveCanvasPreview(
         setRegistrySteps,
         options.enableCache,
         options.isolatePreviewState,
-        options.enableDebug
+        options.enableDebug,
     ]);
 
     // ===== METRICS CALCULATION =====
@@ -419,7 +419,7 @@ export function useLiveCanvasPreview(
             averageUpdateTime: avgUpdateTime,
             cacheEfficiency: cacheStats.efficiency,
             errorRate,
-            updatesPerSecond
+            updatesPerSecond,
         };
     }, [state, getCacheStats]);
 
@@ -450,7 +450,7 @@ export function useLiveCanvasPreview(
         isActive: state.isActive,
         isUpdating: state.isUpdating,
         hasError: !!state.lastError,
-        errorMessage: state.lastError
+        errorMessage: state.lastError,
     };
 }
 
@@ -472,7 +472,7 @@ function convertStepsToRuntimeMap(steps: any[]): Record<string, any> {
             options: step.options || [],
             blocks: step.blocks || [],
             timestamp: Date.now(),
-            ...step
+            ...step,
         };
     });
     

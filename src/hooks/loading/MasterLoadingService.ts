@@ -114,7 +114,7 @@ export class MasterLoadingService {
         error: null,
         priority: 'normal',
         category: 'global',
-        timestamp: new Date()
+        timestamp: new Date(),
     };
 
     // Component states registry
@@ -132,7 +132,7 @@ export class MasterLoadingService {
         totalLoadings: 0,
         averageLoadingTime: 0,
         errorCount: 0,
-        longestLoadingTime: 0
+        longestLoadingTime: 0,
     };
 
     private constructor() {
@@ -158,7 +158,7 @@ export class MasterLoadingService {
         loading: boolean,
         message?: string,
         progress?: number,
-        options?: Partial<LoadingOptions>
+        options?: Partial<LoadingOptions>,
     ): void {
         const updates: Partial<UnifiedLoadingState> = {
             isLoading: loading,
@@ -168,7 +168,7 @@ export class MasterLoadingService {
             priority: options?.priority || 'normal',
             timestamp: new Date(),
             operationName: options?.operationName,
-            metadata: options ? { options } : undefined
+            metadata: options ? { options } : undefined,
         };
 
         if (!loading) {
@@ -192,7 +192,7 @@ export class MasterLoadingService {
         this.updateGlobalState({
             progress,
             message: message || this.globalState.message,
-            timestamp: new Date()
+            timestamp: new Date(),
         });
         this.notifyListeners();
     }
@@ -205,7 +205,7 @@ export class MasterLoadingService {
         this.updateGlobalState({
             isLoading: false,
             error,
-            timestamp: new Date()
+            timestamp: new Date(),
         });
         this.performanceMetrics.errorCount++;
         this.notifyListeners();
@@ -221,7 +221,7 @@ export class MasterLoadingService {
             error: null,
             priority: 'normal',
             category: 'global',
-            timestamp: new Date()
+            timestamp: new Date(),
         };
         this.notifyListeners();
     }
@@ -243,7 +243,7 @@ export class MasterLoadingService {
             componentId,
             operationName: options?.operationName,
             timestamp: new Date(),
-            metadata: options ? { options } : undefined
+            metadata: options ? { options } : undefined,
         };
 
         this.componentStates.set(componentId, initialState);
@@ -289,7 +289,7 @@ export class MasterLoadingService {
             hasError: () => {
                 const state = this.componentStates.get(componentId);
                 return !!state?.error;
-            }
+            },
         };
     }
 
@@ -299,7 +299,7 @@ export class MasterLoadingService {
     private setComponentLoading(
         componentId: string,
         loading: boolean,
-        options?: Partial<LoadingOptions>
+        options?: Partial<LoadingOptions>,
     ): void {
         const currentState = this.componentStates.get(componentId);
         if (!currentState) return;
@@ -307,7 +307,7 @@ export class MasterLoadingService {
         const updates: Partial<UnifiedLoadingState> = {
             isLoading: loading,
             timestamp: new Date(),
-            operationName: options?.operationName || currentState.operationName
+            operationName: options?.operationName || currentState.operationName,
         };
 
         if (!loading) {
@@ -334,7 +334,7 @@ export class MasterLoadingService {
         this.updateComponentState(componentId, {
             error,
             isLoading: error ? false : undefined, // Stop loading if error
-            timestamp: new Date()
+            timestamp: new Date(),
         });
 
         if (error) {
@@ -348,7 +348,7 @@ export class MasterLoadingService {
     private setComponentLoadingWithTimeout(
         componentId: string,
         loading: boolean,
-        timeoutMs?: number
+        timeoutMs?: number,
     ): void {
         this.setComponentLoading(componentId, loading);
 
@@ -366,7 +366,7 @@ export class MasterLoadingService {
         this.updateComponentState(componentId, {
             progress,
             message,
-            timestamp: new Date()
+            timestamp: new Date(),
         });
     }
 
@@ -376,7 +376,7 @@ export class MasterLoadingService {
     private updateComponentMessage(componentId: string, message: string): void {
         this.updateComponentState(componentId, {
             message,
-            timestamp: new Date()
+            timestamp: new Date(),
         });
     }
 
@@ -388,7 +388,7 @@ export class MasterLoadingService {
             this.pendingUpdates.set(componentId, {
                 ...this.pendingUpdates.get(componentId),
                 ...updates,
-                timestamp: new Date()
+                timestamp: new Date(),
             });
             return;
         }
@@ -459,7 +459,7 @@ export class MasterLoadingService {
                     category: highestPriority.category || state.category,
                     priority: highestPriority.priority || state.priority,
                     componentId: highestPriority.componentId,
-                    operationName: highestPriority.operationName
+                    operationName: highestPriority.operationName,
                 };
             }
         }
@@ -516,7 +516,7 @@ export class MasterLoadingService {
             totalLoadings: 0,
             averageLoadingTime: 0,
             errorCount: 0,
-            longestLoadingTime: 0
+            longestLoadingTime: 0,
         };
     }
 

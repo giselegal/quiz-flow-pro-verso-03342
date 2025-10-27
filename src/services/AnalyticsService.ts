@@ -63,7 +63,7 @@ export class AnalyticsService {
         value: number,
         unit: string,
         category: Metric['category'],
-        tags: Record<string, string> = {}
+        tags: Record<string, string> = {},
     ): Promise<Metric> {
         const metric: Metric = {
             id: `metric_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -72,7 +72,7 @@ export class AnalyticsService {
             unit,
             timestamp: new Date(),
             category,
-            tags
+            tags,
         };
 
         const categoryMetrics = this.metrics.get(category) || [];
@@ -88,7 +88,7 @@ export class AnalyticsService {
         type: string,
         userId: string,
         funnelId: string,
-        properties: Record<string, any> = {}
+        properties: Record<string, any> = {},
     ): Promise<AnalyticsEvent> {
         const event: AnalyticsEvent = {
             id: `event_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -102,8 +102,8 @@ export class AnalyticsService {
                 url: window.location.href,
                 referrer: document.referrer,
                 screenResolution: `${screen.width}x${screen.height}`,
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-            }
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            },
         };
 
         this.events.push(event);
@@ -155,7 +155,7 @@ export class AnalyticsService {
                 metrics: Array.from(this.metrics.entries()).map(([cat, arr]) => [cat, arr]),
                 events: this.events,
                 sessionMetrics: this.sessionMetrics,
-                ts: Date.now()
+                ts: Date.now(),
             };
             localStorage.setItem(this.storageKey, JSON.stringify(payload));
         } catch (e) {
@@ -223,7 +223,7 @@ export class AnalyticsService {
             renderTime: performance.now(),
             memoryUsage: (performance as any).memory?.usedJSHeapSize || 0,
             fps: 60,
-            loadTime: performance.timing?.loadEventEnd - performance.timing?.navigationStart || 0
+            loadTime: performance.timing?.loadEventEnd - performance.timing?.navigationStart || 0,
         };
     }
 
@@ -235,7 +235,7 @@ export class AnalyticsService {
             activeUsers: 0,
             totalChanges: 0,
             conflictCount: 0,
-            resolutionTime: 0
+            resolutionTime: 0,
         };
     }
 
@@ -247,7 +247,7 @@ export class AnalyticsService {
             totalVersions: 0,
             snapshotSize: 0,
             rollbackCount: 0,
-            branchCount: 0
+            branchCount: 0,
         };
     }
 
@@ -259,7 +259,7 @@ export class AnalyticsService {
             dailyActiveUsers: 0,
             sessionDuration: 0,
             featureUsage: 0,
-            errorRate: 0
+            errorRate: 0,
         };
     }
 
@@ -272,7 +272,7 @@ export class AnalyticsService {
         title: string,
         message: string,
         threshold: number,
-        currentValue: number
+        currentValue: number,
     ): Promise<Alert> {
         const alert: Alert = {
             id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -283,7 +283,7 @@ export class AnalyticsService {
             threshold,
             currentValue,
             timestamp: new Date(),
-            resolved: false
+            resolved: false,
         };
 
         this.alerts.push(alert);

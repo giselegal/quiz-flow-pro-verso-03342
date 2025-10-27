@@ -17,7 +17,7 @@ const ValidationContext = createContext<ValidationContextType | null>(null);
 
 export function ValidationProvider({ children }: { children: React.ReactNode }) {
   const [errors, setErrors] = useState<Record<string, Array<{ path: string; message: string }>>>(
-    {}
+    {},
   );
 
   const validateField = useCallback(
@@ -101,14 +101,14 @@ export function ValidationProvider({ children }: { children: React.ReactNode }) 
         errors: fieldErrors,
       };
     },
-    []
+    [],
   );
 
   const getFieldErrors = useCallback(
     (fieldId: string) => {
       return errors[fieldId] || [];
     },
-    [errors]
+    [errors],
   );
 
   const clearFieldErrors = useCallback((fieldId: string) => {

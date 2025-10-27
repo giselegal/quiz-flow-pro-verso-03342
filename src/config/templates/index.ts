@@ -45,13 +45,13 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
             'Analytics e tracking integrado',
             'Cache otimizado para performance',
             'Múltiplos tipos de questão',
-            'Resultados personalizados'
+            'Resultados personalizados',
         ],
         isActive: true,
         templatePath: '/src/templates/quiz21StepsComplete.ts',
         editorUrl: '/editor?template=quiz21StepsComplete',
         rating: 4.9,
-        downloads: 12450
+        downloads: 12450,
     },
 
     // === FASHION STYLE 21 (PT-BR) – NOVO TEMPLATE ===
@@ -69,13 +69,13 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
             'Intro + 10 perguntas principais',
             '6 perguntas estratégicas',
             'Resultado e Oferta',
-            'Compatível com editor modular'
+            'Compatível com editor modular',
         ],
         isActive: true,
         templatePath: '/src/templates/fashionStyle21PtBR.ts',
         editorUrl: '/editor?template=fashionStyle21PtBR',
         rating: 4.7,
-        downloads: 145
+        downloads: 145,
     },
 
     // === LEAD MAGNET FASHION ===
@@ -95,13 +95,13 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
             'Design responsivo premium',
             'Validação inteligente',
             'Integração com email marketing',
-            'Analytics de conversão'
+            'Analytics de conversão',
         ],
         isActive: true,
         templatePath: '/templates/funnels/lead-magnet-fashion/master.json',
         editorUrl: '/editor?template=lead-magnet-fashion',
         rating: 4.6,
-        downloads: 5672
+        downloads: 5672,
     },
 
     // === TEMPLATES ADICIONAIS BASEADOS NOS EXISTENTES ===
@@ -119,13 +119,13 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
             'Resultados em tempo real',
             'Compartilhamento social',
             'Captura de leads integrada',
-            'Analytics detalhado'
+            'Analytics detalhado',
         ],
         isActive: true,
         templatePath: '/public/templates/quiz-steps/', // Baseado nos step templates existentes
         editorUrl: '/editor?template=quiz-personalidade',
         rating: 4.7,
-        downloads: 8934
+        downloads: 8934,
     },
 
     {
@@ -142,13 +142,13 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
             'Cálculos personalizados em tempo real',
             'Relatórios em PDF automáticos',
             'Integração com CRM/pipelines',
-            'Análise comparativa de cenários'
+            'Análise comparativa de cenários',
         ],
         isActive: true,
         templatePath: '/templates/calculadora-roi.json',
         editorUrl: '/editor?template=calculadora-roi',
         rating: 4.9,
-        downloads: 1834
+        downloads: 1834,
     },
 
     {
@@ -165,13 +165,13 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
             'Cálculo automático do NPS',
             'Segmentação de respostas',
             'Dashboards visuais interativos',
-            'Alertas automáticos para detratores'
+            'Alertas automáticos para detratores',
         ],
         isActive: true,
         templatePath: '/templates/pesquisa-nps.json',
         editorUrl: '/editor?template=pesquisa-nps',
         rating: 4.5,
-        downloads: 4123
+        downloads: 4123,
     },
 
     {
@@ -188,14 +188,14 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
             'Progresso visual intuitivo',
             'Checkpoints interativos',
             'Recursos contextuais',
-            'Suporte integrado'
+            'Suporte integrado',
         ],
         isActive: true,
         templatePath: '/templates/onboarding-clientes.json',
         editorUrl: '/editor?template=onboarding-clientes',
         rating: 4.8,
-        downloads: 2891
-    }
+        downloads: 2891,
+    },
 ];
 
 /**
@@ -222,7 +222,7 @@ export class TemplateService {
     static getTemplatesByCategory(category: string): TemplateConfig[] {
         if (category === 'Todos') return this.getActiveTemplates();
         return AVAILABLE_TEMPLATES.filter(t =>
-            t.isActive && t.category === category
+            t.isActive && t.category === category,
         );
     }
 
@@ -232,7 +232,7 @@ export class TemplateService {
     static getTemplatesBySegment(segment: string): TemplateConfig[] {
         if (segment === 'Todos') return this.getActiveTemplates();
         return AVAILABLE_TEMPLATES.filter(t =>
-            t.isActive && t.segment === segment
+            t.isActive && t.segment === segment,
         );
     }
 
@@ -248,7 +248,7 @@ export class TemplateService {
                 t.name.toLowerCase().includes(term) ||
                 t.description.toLowerCase().includes(term) ||
                 t.tags.some(tag => tag.toLowerCase().includes(term))
-            )
+            ),
         );
     }
 
@@ -302,7 +302,7 @@ export const QUIZ21_EDITOR_CONFIG = {
         'Sistema de pontuação inteligente',
         'Personalização automática por funil',
         'Analytics e tracking integrado',
-        'Cache otimizado para performance'
+        'Cache otimizado para performance',
     ],
 
     // Configurações técnicas
@@ -311,8 +311,8 @@ export const QUIZ21_EDITOR_CONFIG = {
         fileSize: '3.668 linhas',
         cacheEnabled: true,
         lazyLoading: true,
-        compressionEnabled: true
-    }
+        compressionEnabled: true,
+    },
 };
 
 export default AVAILABLE_TEMPLATES;

@@ -30,7 +30,7 @@ describe('ResultHeaderInlineBlock', () => {
                 block={mkBlock() as any}
                 isSelected={false}
                 onPropertyChange={() => { }}
-            />
+            />,
         );
 
         await waitFor(() => {

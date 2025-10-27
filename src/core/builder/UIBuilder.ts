@@ -225,8 +225,8 @@ export const LAYOUT_TEMPLATES = {
             columns: 1,
             gap: '2rem',
             padding: '1rem',
-            maxWidth: '600px'
-        }
+            maxWidth: '600px',
+        },
     },
 
     'quiz-split': {
@@ -236,8 +236,8 @@ export const LAYOUT_TEMPLATES = {
             columns: 2,
             gap: '3rem',
             padding: '2rem',
-            maxWidth: '1200px'
-        }
+            maxWidth: '1200px',
+        },
     },
 
     'landing-hero': {
@@ -247,8 +247,8 @@ export const LAYOUT_TEMPLATES = {
             columns: 1,
             gap: '0',
             padding: '0',
-            maxWidth: '100%'
-        }
+            maxWidth: '100%',
+        },
     },
 
     'dashboard-grid': {
@@ -258,9 +258,9 @@ export const LAYOUT_TEMPLATES = {
             columns: 12,
             gap: '1rem',
             padding: '1rem',
-            autoFlow: 'dense'
-        }
-    }
+            autoFlow: 'dense',
+        },
+    },
 } as const;
 
 // ✨ TEMAS PREDEFINIDOS
@@ -278,9 +278,9 @@ export const THEME_PRESETS = {
                 600: '#2563eb',
                 700: '#1d4ed8',
                 800: '#1e40af',
-                900: '#1e3a8a'
-            }
-        }
+                900: '#1e3a8a',
+            },
+        },
     },
 
     'warm-orange': {
@@ -296,9 +296,9 @@ export const THEME_PRESETS = {
                 600: '#ea580c',
                 700: '#c2410c',
                 800: '#9a3412',
-                900: '#7c2d12'
-            }
-        }
+                900: '#7c2d12',
+            },
+        },
     },
 
     'minimal-gray': {
@@ -314,10 +314,10 @@ export const THEME_PRESETS = {
                 600: '#4b5563',
                 700: '#374151',
                 800: '#1f2937',
-                900: '#111827'
-            }
-        }
-    }
+                900: '#111827',
+            },
+        },
+    },
 } as const;
 
 /**
@@ -335,17 +335,17 @@ export class UIBuilder {
                 mobile: 480,
                 tablet: 768,
                 desktop: 1024,
-                ultrawide: 1440
+                ultrawide: 1440,
             },
             grid: {
                 columns: type === 'single-column' ? 1 : 12,
                 gap: '1rem',
-                padding: '1rem'
+                padding: '1rem',
             },
             components: [],
             theme: this.getDefaultTheme(),
             animations: [],
-            accessibility: this.getDefaultAccessibility()
+            accessibility: this.getDefaultAccessibility(),
         };
     }
 
@@ -391,8 +391,8 @@ export class UIBuilder {
             name: preset.name,
             colors: {
                 ...this.config.theme.colors,
-                ...preset.colors
-            }
+                ...preset.colors,
+            },
         };
         return this;
     }
@@ -403,7 +403,7 @@ export class UIBuilder {
     withColors(colors: Partial<ColorPalette>): UIBuilder {
         this.config.theme.colors = {
             ...this.config.theme.colors,
-            ...colors
+            ...colors,
         };
         return this;
     }
@@ -414,7 +414,7 @@ export class UIBuilder {
     withTypography(typography: Partial<TypographyConfig>): UIBuilder {
         this.config.theme.typography = {
             ...this.config.theme.typography,
-            ...typography
+            ...typography,
         };
         return this;
     }
@@ -435,13 +435,13 @@ export class UIBuilder {
     addComponent(
         component: ComponentConfig,
         position?: ComponentPosition,
-        responsive?: ResponsiveSettings
+        responsive?: ResponsiveSettings,
     ): UIBuilder {
         this.config.components.push({
             component,
             position: position || this.getDefaultPosition(),
             responsive: responsive || {},
-            order: this.config.components.length
+            order: this.config.components.length,
         });
         return this;
     }
@@ -453,11 +453,11 @@ export class UIBuilder {
         component: ComponentConfig,
         column: string,
         row?: string,
-        responsive?: ResponsiveSettings
+        responsive?: ResponsiveSettings,
     ): UIBuilder {
         return this.addComponent(component, {
             gridColumn: column,
-            gridRow: row
+            gridRow: row,
         }, responsive);
     }
 
@@ -469,13 +469,13 @@ export class UIBuilder {
         x: number,
         y: number,
         width?: string,
-        height?: string
+        height?: string,
     ): UIBuilder {
         return this.addComponent(component, {
             x,
             y,
             width,
-            height
+            height,
         });
     }
 
@@ -507,7 +507,7 @@ export class UIBuilder {
     withAnimation(animation: Omit<AnimationConfig, 'id'>): UIBuilder {
         this.config.animations.push({
             ...animation,
-            id: this.generateId()
+            id: this.generateId(),
         });
         return this;
     }
@@ -518,7 +518,7 @@ export class UIBuilder {
     withEntranceAnimation(
         type: AnimationType = 'fade',
         duration: number = 300,
-        delay: number = 0
+        delay: number = 0,
     ): UIBuilder {
         return this.withAnimation({
             name: `entrance-${type}`,
@@ -526,7 +526,7 @@ export class UIBuilder {
             trigger: 'load',
             duration,
             delay,
-            properties: this.getAnimationProperties(type, 'in')
+            properties: this.getAnimationProperties(type, 'in'),
         });
     }
 
@@ -543,8 +543,8 @@ export class UIBuilder {
                 delay: index * 100,
                 properties: [
                     { property: 'opacity', from: '0', to: '1' },
-                    { property: 'transform', from: 'translateY(20px)', to: 'translateY(0)' }
-                ]
+                    { property: 'transform', from: 'translateY(20px)', to: 'translateY(0)' },
+                ],
             });
         });
         return this;
@@ -558,7 +558,7 @@ export class UIBuilder {
     withAccessibility(config: Partial<AccessibilityConfig>): UIBuilder {
         this.config.accessibility = {
             ...this.config.accessibility,
-            ...config
+            ...config,
         };
         return this;
     }
@@ -574,7 +574,7 @@ export class UIBuilder {
             screenReader: {
                 skipLinks: true,
                 landmarks: true,
-                descriptions: true
+                descriptions: true,
             },
             keyboard: {
                 navigation: true,
@@ -582,9 +582,9 @@ export class UIBuilder {
                     { key: 'Tab', action: 'next-element', description: 'Próximo elemento' },
                     { key: 'Shift+Tab', action: 'prev-element', description: 'Elemento anterior' },
                     { key: 'Enter', action: 'activate', description: 'Ativar elemento' },
-                    { key: 'Escape', action: 'close', description: 'Fechar modal/dropdown' }
-                ]
-            }
+                    { key: 'Escape', action: 'close', description: 'Fechar modal/dropdown' },
+                ],
+            },
         });
     }
 
@@ -645,7 +645,7 @@ export class UIBuilder {
 
         // Reduzir animações no mobile
         this.config.animations = this.config.animations.filter(anim =>
-            anim.type === 'fade' || anim.duration <= 300
+            anim.type === 'fade' || anim.duration <= 300,
         );
 
         return this;
@@ -665,14 +665,14 @@ export class UIBuilder {
                     success: '#10b981',
                     warning: '#f59e0b',
                     error: '#ef4444',
-                    info: '#3b82f6'
-                }
+                    info: '#3b82f6',
+                },
             },
             typography: {
                 fontFamily: {
                     primary: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
                     secondary: 'Poppins, sans-serif',
-                    mono: 'JetBrains Mono, monospace'
+                    mono: 'JetBrains Mono, monospace',
                 },
                 fontSize: {
                     xs: '0.75rem',
@@ -682,44 +682,44 @@ export class UIBuilder {
                     xl: '1.25rem',
                     '2xl': '1.5rem',
                     '3xl': '1.875rem',
-                    '4xl': '2.25rem'
+                    '4xl': '2.25rem',
                 },
                 lineHeight: {
                     tight: '1.25',
                     normal: '1.5',
-                    relaxed: '1.75'
+                    relaxed: '1.75',
                 },
                 fontWeight: {
                     light: 300,
                     normal: 400,
                     medium: 500,
                     semibold: 600,
-                    bold: 700
-                }
+                    bold: 700,
+                },
             },
             spacing: {
                 unit: 4,
-                scale: [0, 1, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96]
+                scale: [0, 1, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96],
             },
             shadows: {
                 sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
                 md: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                 lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-                xl: '0 20px 25px -5px rgb(0 0 0 / 0.1)'
+                xl: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
             },
             borders: {
                 radius: {
                     sm: '0.25rem',
                     md: '0.5rem',
                     lg: '0.75rem',
-                    full: '9999px'
+                    full: '9999px',
                 },
                 width: {
                     thin: '1px',
                     medium: '2px',
-                    thick: '4px'
-                }
-            }
+                    thick: '4px',
+                },
+            },
         };
     }
 
@@ -731,12 +731,12 @@ export class UIBuilder {
             screenReader: {
                 skipLinks: false,
                 landmarks: false,
-                descriptions: false
+                descriptions: false,
             },
             keyboard: {
                 navigation: true,
-                shortcuts: []
-            }
+                shortcuts: [],
+            },
         };
     }
 
@@ -747,23 +747,23 @@ export class UIBuilder {
     private getAnimationProperties(type: AnimationType, direction: 'in' | 'out'): AnimationProperty[] {
         const properties: Record<AnimationType, AnimationProperty[]> = {
             fade: [
-                { property: 'opacity', from: direction === 'in' ? '0' : '1', to: direction === 'in' ? '1' : '0' }
+                { property: 'opacity', from: direction === 'in' ? '0' : '1', to: direction === 'in' ? '1' : '0' },
             ],
             slide: [
-                { property: 'transform', from: direction === 'in' ? 'translateX(-100%)' : 'translateX(0)', to: direction === 'in' ? 'translateX(0)' : 'translateX(100%)' }
+                { property: 'transform', from: direction === 'in' ? 'translateX(-100%)' : 'translateX(0)', to: direction === 'in' ? 'translateX(0)' : 'translateX(100%)' },
             ],
             scale: [
                 { property: 'transform', from: direction === 'in' ? 'scale(0.8)' : 'scale(1)', to: direction === 'in' ? 'scale(1)' : 'scale(0.8)' },
-                { property: 'opacity', from: direction === 'in' ? '0' : '1', to: direction === 'in' ? '1' : '0' }
+                { property: 'opacity', from: direction === 'in' ? '0' : '1', to: direction === 'in' ? '1' : '0' },
             ],
             rotate: [
-                { property: 'transform', from: direction === 'in' ? 'rotate(-180deg)' : 'rotate(0deg)', to: direction === 'in' ? 'rotate(0deg)' : 'rotate(180deg)' }
+                { property: 'transform', from: direction === 'in' ? 'rotate(-180deg)' : 'rotate(0deg)', to: direction === 'in' ? 'rotate(0deg)' : 'rotate(180deg)' },
             ],
             bounce: [
                 { property: 'transform', from: 'translateY(-30px)', to: 'translateY(0px)' },
-                { property: 'opacity', from: '0', to: '1' }
+                { property: 'opacity', from: '0', to: '1' },
             ],
-            custom: []
+            custom: [],
         };
 
         return properties[type] || properties.fade;

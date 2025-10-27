@@ -9,7 +9,7 @@ import { ImageOptimizationOptions } from './types';
  */
 export const optimizeCloudinaryUrl = (
   url: string,
-  options: ImageOptimizationOptions = {}
+  options: ImageOptimizationOptions = {},
 ): string => {
   if (!url || !url.includes('cloudinary.com')) return url;
 
@@ -113,7 +113,7 @@ export const getOptimizedImageUrl = (url: string, width: number, height?: number
  */
 export const getResponsiveImageSources = (
   url: string,
-  widths: number[] = [640, 768, 1024, 1280, 1536]
+  widths: number[] = [640, 768, 1024, 1280, 1536],
 ): Array<{ srcset: string; width: number }> => {
   return widths.map(width => ({
     srcset: getOptimizedImageUrl(url, width),

@@ -22,8 +22,8 @@ vi.mock('@/integrations/supabase/client', () => {
                                 return { data: found || null };
                             }
                             return { data: null };
-                        }
-                    })
+                        },
+                    }),
                 }),
                 upsert: (data: any) => {
                     if (table === 'quiz_funnels_drafts') {
@@ -37,12 +37,12 @@ vi.mock('@/integrations/supabase/client', () => {
                 eq: (col: string, value: string) => ({
                     order: () => ({
                         limit: () => ({
-                            single: () => ({ data: production.find(p => (p as any)[col] === value) || null })
-                        })
-                    })
-                })
-            })
-        }
+                            single: () => ({ data: production.find(p => (p as any)[col] === value) || null }),
+                        }),
+                    }),
+                }),
+            }),
+        },
     };
 });
 
@@ -57,7 +57,7 @@ function makeNumericFunnel() {
             order: i + 1,
             type: 'question',
             options: ['classico', 'natural', 'contemporâneo', 'elegante', 'romântico', 'sexy', 'dramático', 'criativo'].map((sid, idx) => ({ id: sid, text: `Opção ${idx + 1}`, image: 'x.png' })),
-            nextStep: next
+            nextStep: next,
         });
     }
     return steps;
@@ -72,7 +72,7 @@ describe('publishToProduction normaliza IDs numéricos', () => {
             slug: 'quiz-estilo',
             steps: makeNumericFunnel(),
             isPublished: false,
-            version: 1
+            version: 1,
         };
 
         // Salvar draft
@@ -86,7 +86,7 @@ describe('publishToProduction normaliza IDs numéricos', () => {
             slug: funnelDraft.slug,
             steps: funnelDraft.steps,
             isPublished: false,
-            version: 2
+            version: 2,
         });
 
         await quizEditorBridge.publishToProduction(draftId);

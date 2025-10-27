@@ -25,14 +25,14 @@ export const useBlockOperations = () => {
 
       return newBlock.id;
     },
-    [blocks]
+    [blocks],
   );
 
   const handleUpdateBlock = useCallback((id: string, content: any) => {
     setBlocks(prev =>
       prev.map(block =>
-        block.id === id ? { ...block, content: { ...block.content, ...content } } : block
-      )
+        block.id === id ? { ...block, content: { ...block.content, ...content } } : block,
+      ),
     );
   }, []);
 

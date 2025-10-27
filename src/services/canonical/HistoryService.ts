@@ -285,7 +285,7 @@ export class HistoryService extends BaseCanonicalService {
       const historyEntry: HistoryEntry<T> = {
         ...entry,
         id: this.generateId(),
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.historyEntries.push(historyEntry);
@@ -307,7 +307,7 @@ export class HistoryService extends BaseCanonicalService {
       this.error('Record history error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Record history failed')
+        error: error instanceof Error ? error : new Error('Record history failed'),
       };
     }
   }
@@ -347,7 +347,7 @@ export class HistoryService extends BaseCanonicalService {
       this.error('Get history error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get history failed')
+        error: error instanceof Error ? error : new Error('Get history failed'),
       };
     }
   }
@@ -379,7 +379,7 @@ export class HistoryService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Clear history failed')
+        error: error instanceof Error ? error : new Error('Clear history failed'),
       };
     }
   }
@@ -396,7 +396,7 @@ export class HistoryService extends BaseCanonicalService {
       const cmd: Command<T> = {
         ...command,
         id: this.generateId(),
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       // Execute the command
@@ -420,7 +420,7 @@ export class HistoryService extends BaseCanonicalService {
       this.error('Execute command error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Execute command failed')
+        error: error instanceof Error ? error : new Error('Execute command failed'),
       };
     }
   }
@@ -435,7 +435,7 @@ export class HistoryService extends BaseCanonicalService {
       if (!command) {
         return {
           success: false,
-          error: new Error('Nothing to undo')
+          error: new Error('Nothing to undo'),
         };
       }
 
@@ -452,7 +452,7 @@ export class HistoryService extends BaseCanonicalService {
       this.error('Undo error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Undo failed')
+        error: error instanceof Error ? error : new Error('Undo failed'),
       };
     }
   }
@@ -467,7 +467,7 @@ export class HistoryService extends BaseCanonicalService {
       if (!command) {
         return {
           success: false,
-          error: new Error('Nothing to redo')
+          error: new Error('Nothing to redo'),
         };
       }
 
@@ -484,7 +484,7 @@ export class HistoryService extends BaseCanonicalService {
       this.error('Redo error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Redo failed')
+        error: error instanceof Error ? error : new Error('Redo failed'),
       };
     }
   }
@@ -515,7 +515,7 @@ export class HistoryService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Clear undo/redo failed')
+        error: error instanceof Error ? error : new Error('Clear undo/redo failed'),
       };
     }
   }
@@ -530,7 +530,7 @@ export class HistoryService extends BaseCanonicalService {
   createVersion<T>(
     entityKey: string,
     data: T,
-    options: { message?: string; tags?: string[]; userId?: string; userName?: string } = {}
+    options: { message?: string; tags?: string[]; userId?: string; userName?: string } = {},
   ): ServiceResult<Version<T>> {
     try {
       const versions = this.versions.get(entityKey) || [];
@@ -545,7 +545,7 @@ export class HistoryService extends BaseCanonicalService {
         message: options.message,
         data,
         tags: options.tags,
-        metadata: {}
+        metadata: {},
       };
 
       versions.push(version);
@@ -564,7 +564,7 @@ export class HistoryService extends BaseCanonicalService {
       this.error('Create version error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Create version failed')
+        error: error instanceof Error ? error : new Error('Create version failed'),
       };
     }
   }
@@ -579,7 +579,7 @@ export class HistoryService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get versions failed')
+        error: error instanceof Error ? error : new Error('Get versions failed'),
       };
     }
   }
@@ -595,7 +595,7 @@ export class HistoryService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get version failed')
+        error: error instanceof Error ? error : new Error('Get version failed'),
       };
     }
   }
@@ -611,7 +611,7 @@ export class HistoryService extends BaseCanonicalService {
       if (!found) {
         return {
           success: false,
-          error: new Error(`Version ${version} not found`)
+          error: new Error(`Version ${version} not found`),
         };
       }
 
@@ -621,7 +621,7 @@ export class HistoryService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Restore version failed')
+        error: error instanceof Error ? error : new Error('Restore version failed'),
       };
     }
   }
@@ -636,7 +636,7 @@ export class HistoryService extends BaseCanonicalService {
   trackChanges<T extends Record<string, any>>(
     oldState: T,
     newState: T,
-    path: string = ''
+    path: string = '',
   ): ServiceResult<ChangeRecord[]> {
     try {
       const changes: ChangeRecord[] = [];
@@ -649,14 +649,14 @@ export class HistoryService extends BaseCanonicalService {
           changes.push({
             path: fullPath,
             type: 'added',
-            newValue: newState[key]
+            newValue: newState[key],
           });
         } else if (JSON.stringify(oldState[key]) !== JSON.stringify(newState[key])) {
           changes.push({
             path: fullPath,
             type: 'modified',
             oldValue: oldState[key],
-            newValue: newState[key]
+            newValue: newState[key],
           });
         }
       }
@@ -668,7 +668,7 @@ export class HistoryService extends BaseCanonicalService {
           changes.push({
             path: fullPath,
             type: 'deleted',
-            oldValue: oldState[key]
+            oldValue: oldState[key],
           });
         }
       }
@@ -678,7 +678,7 @@ export class HistoryService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Track changes failed')
+        error: error instanceof Error ? error : new Error('Track changes failed'),
       };
     }
   }
@@ -695,7 +695,7 @@ export class HistoryService extends BaseCanonicalService {
       const auditEntry: AuditLogEntry = {
         ...entry,
         id: this.generateId(),
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.auditLog.push(auditEntry);
@@ -712,7 +712,7 @@ export class HistoryService extends BaseCanonicalService {
       this.error('Log audit error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Log audit failed')
+        error: error instanceof Error ? error : new Error('Log audit failed'),
       };
     }
   }
@@ -755,7 +755,7 @@ export class HistoryService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get audit log failed')
+        error: error instanceof Error ? error : new Error('Get audit log failed'),
       };
     }
   }
@@ -774,7 +774,7 @@ export class HistoryService extends BaseCanonicalService {
         timestamp: new Date(),
         label,
         state,
-        metadata: {}
+        metadata: {},
       };
 
       const snapshots = this.snapshots.get(key) || [];
@@ -793,7 +793,7 @@ export class HistoryService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Create snapshot failed')
+        error: error instanceof Error ? error : new Error('Create snapshot failed'),
       };
     }
   }
@@ -808,7 +808,7 @@ export class HistoryService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get snapshots failed')
+        error: error instanceof Error ? error : new Error('Get snapshots failed'),
       };
     }
   }
@@ -824,7 +824,7 @@ export class HistoryService extends BaseCanonicalService {
       if (!snapshot) {
         return {
           success: false,
-          error: new Error('Snapshot not found')
+          error: new Error('Snapshot not found'),
         };
       }
 
@@ -834,7 +834,7 @@ export class HistoryService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Restore snapshot failed')
+        error: error instanceof Error ? error : new Error('Restore snapshot failed'),
       };
     }
   }
@@ -852,7 +852,7 @@ export class HistoryService extends BaseCanonicalService {
     redo: this.redo.bind(this),
     canUndo: this.canUndo.bind(this),
     canRedo: this.canRedo.bind(this),
-    clear: this.clearUndoRedo.bind(this)
+    clear: this.clearUndoRedo.bind(this),
   };
 
   /**
@@ -862,7 +862,7 @@ export class HistoryService extends BaseCanonicalService {
     create: this.createVersion.bind(this),
     getAll: this.getVersions.bind(this),
     get: this.getVersion.bind(this),
-    restore: this.restoreVersion.bind(this)
+    restore: this.restoreVersion.bind(this),
   };
 
   /**
@@ -870,14 +870,14 @@ export class HistoryService extends BaseCanonicalService {
    */
   readonly audit = {
     log: this.logAudit.bind(this),
-    get: this.getAuditLog.bind(this)
+    get: this.getAuditLog.bind(this),
   };
 
   /**
    * Changes API
    */
   readonly changes = {
-    track: this.trackChanges.bind(this)
+    track: this.trackChanges.bind(this),
   };
 
   /**
@@ -886,7 +886,7 @@ export class HistoryService extends BaseCanonicalService {
   readonly snapshotsApi = {
     create: this.createSnapshot.bind(this),
     getAll: this.getSnapshots.bind(this),
-    restore: this.restoreSnapshot.bind(this)
+    restore: this.restoreSnapshot.bind(this),
   };
 
   // ============================================================================
@@ -919,7 +919,7 @@ export class HistoryService extends BaseCanonicalService {
 
       const data = {
         history: this.historyEntries.slice(-this.maxHistorySize),
-        audit: this.auditLog.slice(-10000)
+        audit: this.auditLog.slice(-10000),
       };
 
       localStorage.setItem(this.storageKey, JSON.stringify(data));

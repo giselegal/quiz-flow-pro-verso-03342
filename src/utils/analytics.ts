@@ -41,7 +41,7 @@ export const trackCustomEvent = (
   category: string,
   action: string,
   label: string,
-  value?: number
+  value?: number,
 ): void => {
   const eventData: CustomEventData = { category, action, label, value };
 
@@ -49,7 +49,7 @@ export const trackCustomEvent = (
     window.gtag('event', action, {
       event_category: category,
       event_label: label,
-      value: value,
+      value,
     });
   }
   appLogger.info('Analytics Custom Event', eventData);
@@ -63,7 +63,7 @@ export const trackTiming = (category: string, variable: string, value: number, l
     window.gtag('event', 'timing_complete', {
       event_category: category,
       name: variable,
-      value: value,
+      value,
       event_label: label,
     });
   }
@@ -74,8 +74,8 @@ export const trackTiming = (category: string, variable: string, value: number, l
 export const trackException = (description: string, fatal: boolean = false) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'exception', {
-      description: description,
-      fatal: fatal,
+      description,
+      fatal,
     });
   }
   console.log(`[Analytics] Exception: ${description} - Fatal: ${fatal}`);
@@ -86,7 +86,7 @@ export const setUserProperties = (properties: object) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('set', 'user_properties', properties);
   }
-  console.log(`[Analytics] User Properties:`, properties);
+  console.log('[Analytics] User Properties:', properties);
 };
 
 // Function to track a page view
@@ -119,7 +119,7 @@ export const trackQuizAnswer = (questionId: string, answer: string) => {
     window.gtag('event', 'quiz_answer', {
       event_category: 'engagement',
       question_id: questionId,
-      answer: answer,
+      answer,
     });
   }
   console.log('[Analytics] Quiz Answer:', { questionId, answer });
@@ -197,9 +197,9 @@ export const trackSocialInteraction = (network: string, action: string, target: 
 export const trackRefund = (transaction_id: string, value?: number, currency?: string) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'refund', {
-      transaction_id: transaction_id,
-      value: value,
-      currency: currency,
+      transaction_id,
+      value,
+      currency,
     });
   }
   console.log(`[Analytics] Refund: ${transaction_id} - ${value} - ${currency}`);
@@ -246,7 +246,7 @@ export const trackProductDetailView = (product: object) => {
       items: [product],
     });
   }
-  console.log(`[Analytics] Product Detail View`, product);
+  console.log('[Analytics] Product Detail View', product);
 };
 
 // Function to track adding a product to the cart
@@ -256,7 +256,7 @@ export const trackAddToCart = (product: object) => {
       items: [product],
     });
   }
-  console.log(`[Analytics] Add to Cart`, product);
+  console.log('[Analytics] Add to Cart', product);
 };
 
 // Function to track removing a product from the cart
@@ -266,7 +266,7 @@ export const trackRemoveFromCart = (product: object) => {
       items: [product],
     });
   }
-  console.log(`[Analytics] Remove from Cart`, product);
+  console.log('[Analytics] Remove from Cart', product);
 };
 
 // Function to track starting a checkout process
@@ -274,20 +274,20 @@ export const trackBeginCheckout = (products: object[], coupon?: string) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'begin_checkout', {
       items: products,
-      coupon: coupon,
+      coupon,
     });
   }
-  console.log(`[Analytics] Begin Checkout`, products, coupon);
+  console.log('[Analytics] Begin Checkout', products, coupon);
 };
 
 // Function to track adding payment information
 export const trackAddPaymentInfo = (payment_type: string) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'add_payment_info', {
-      payment_type: payment_type,
+      payment_type,
     });
   }
-  console.log(`[Analytics] Add Payment Info`, payment_type);
+  console.log('[Analytics] Add Payment Info', payment_type);
 };
 
 // Function to track a purchase
@@ -298,28 +298,28 @@ export const trackPurchase = (
   products: object[],
   coupon?: string,
   shipping?: number,
-  tax?: number
+  tax?: number,
 ) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'purchase', {
-      transaction_id: transaction_id,
-      value: value,
-      currency: currency,
+      transaction_id,
+      value,
+      currency,
       items: products,
-      coupon: coupon,
-      shipping: shipping,
-      tax: tax,
+      coupon,
+      shipping,
+      tax,
     });
   }
   console.log(
-    `[Analytics] Purchase`,
+    '[Analytics] Purchase',
     transaction_id,
     value,
     currency,
     products,
     coupon,
     shipping,
-    tax
+    tax,
   );
 };
 
@@ -391,7 +391,7 @@ export const trackButtonClick = (buttonId: string, buttonText?: string, location
 export const trackSaleConversion = (
   value: number,
   currency: string = 'BRL',
-  productName?: string
+  productName?: string,
 ) => {
   if (typeof window === 'undefined') return;
 

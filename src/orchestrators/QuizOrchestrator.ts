@@ -179,7 +179,7 @@ class QuizOrchestrator {
 
       console.log('🧭 QuizOrchestrator: Navegando para etapa', { 
         from: this.state.currentStep, 
-        to: targetStep 
+        to: targetStep, 
       });
 
       // 1. Validar se pode navegar

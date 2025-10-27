@@ -13,7 +13,7 @@ import type {
 } from '@/services/WhatsAppCartRecoveryAgent';
 import {
   initializeWhatsAppAgent,
-  getWhatsAppAgent
+  getWhatsAppAgent,
 } from '@/services/WhatsAppCartRecoveryAgent';
 
 // Mock interfaces for compatibility
@@ -71,8 +71,8 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
       totalContacted: 0,
       totalRecovered: 0,
       recoveryRate: 0,
-      revenueRecovered: 0
-    }
+      revenueRecovered: 0,
+    },
   });
 
   /**
@@ -89,8 +89,8 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
           totalContacted: stats.totalContacted || 0,
           totalRecovered: stats.totalRecovered || stats.recoveredSales,
           recoveryRate: stats.recoveryRate,
-          revenueRecovered: stats.revenueRecovered
-        }
+          revenueRecovered: stats.revenueRecovered,
+        },
       }));
     }
   }, []);
@@ -116,9 +116,9 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
         `https://graph.facebook.com/${config.apiVersion || 'v18.0'}/${config.phoneNumberId}`,
         {
           headers: {
-            'Authorization': `Bearer ${config.accessToken || config.token}`
-          }
-        }
+            'Authorization': `Bearer ${config.accessToken || config.token}`,
+          },
+        },
       );
 
       if (!testConnection.ok) {
@@ -134,7 +134,7 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
         ...prev,
         isConfigured: true,
         loading: false,
-        error: null
+        error: null,
       }));
 
       // Mock recent activity
@@ -144,20 +144,20 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
           type: 'abandoned' as const,
           buyerName: 'João Silva',
           productName: 'Quiz de Estilo Premium',
-          timestamp: new Date(Date.now() - 5 * 60 * 1000)
+          timestamp: new Date(Date.now() - 5 * 60 * 1000),
         },
         {
           id: '2',
           type: 'contacted' as const,
           buyerName: 'Maria Santos',
           productName: 'Quiz de Estilo Premium',
-          timestamp: new Date(Date.now() - 15 * 60 * 1000)
-        }
+          timestamp: new Date(Date.now() - 15 * 60 * 1000),
+        },
       ];
 
       setState(prev => ({
         ...prev,
-        recentActivity: mockActivity
+        recentActivity: mockActivity,
       }));
 
       return true;
@@ -168,7 +168,7 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
         ...prev,
         loading: false,
         error: error instanceof Error ? error.message : 'Erro desconhecido',
-        isConfigured: false
+        isConfigured: false,
       }));
       return false;
     }
@@ -183,7 +183,7 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
       setState(prev => ({
         ...prev,
         isActive: true,
-        error: null
+        error: null,
       }));
       
       console.log('✅ WhatsApp Cart Recovery iniciado');
@@ -198,7 +198,7 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
       agent.stop();
       setState(prev => ({
         ...prev,
-        isActive: false
+        isActive: false,
       }));
       
       console.log('⏹️ WhatsApp Cart Recovery parado');
@@ -225,7 +225,7 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
       setState(prev => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error.message : 'Erro ao enviar mensagem'
+        error: error instanceof Error ? error.message : 'Erro ao enviar mensagem',
       }));
       return false;
     }
@@ -287,7 +287,7 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
         const mockAbandonment: CartAbandonmentData = {
           buyerId: `buyer_${Date.now()}`,
           productId: 'quiz-style-premium',
-          value: 97.00
+          value: 97.00,
         };
 
         // Add to recent activity
@@ -296,12 +296,12 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
           type: 'abandoned' as const,
           buyerName: `Cliente ${Math.floor(Math.random() * 1000)}`,
           productName: 'Quiz de Estilo Premium',
-          timestamp: new Date()
+          timestamp: new Date(),
         };
 
         setState(prev => ({
           ...prev,
-          recentActivity: [newActivity, ...prev.recentActivity.slice(0, 9)]
+          recentActivity: [newActivity, ...prev.recentActivity.slice(0, 9)],
         }));
 
         console.log('🛒 Carrinho abandonado detectado (simulado):', mockAbandonment);
@@ -320,12 +320,12 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
         totalContacted: 89,
         totalRecovered: 23,
         recoveryRate: 15.6,
-        revenueRecovered: 2231.00
+        revenueRecovered: 2231.00,
       };
 
       setState(prev => ({
         ...prev,
-        stats: mockStats
+        stats: mockStats,
       }));
     }
   }, [state.isConfigured, agent]);
@@ -341,9 +341,9 @@ export function useWhatsAppCartRecovery(): UseWhatsAppCartRecoveryReturn {
       refreshStats,
       clearError,
       isPhoneValid,
-      formatPhone
+      formatPhone,
     },
-    agent
+    agent,
   };
 }
 

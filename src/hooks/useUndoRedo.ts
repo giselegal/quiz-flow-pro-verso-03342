@@ -61,7 +61,7 @@ export const useUndoRedo = (maxHistorySize: number = 50) => {
         };
       });
     },
-    [maxHistorySize]
+    [maxHistorySize],
   );
 
   // 🔄 Desfazer última ação
@@ -129,15 +129,15 @@ export const useUndoRedo = (maxHistorySize: number = 50) => {
 
     switch (action.type) {
       case 'add':
-        return `Adicionar bloco`;
+        return 'Adicionar bloco';
       case 'delete':
         return `Excluir bloco${action.data.blockIds && action.data.blockIds.length > 1 ? 's' : ''}`;
       case 'move':
         return `Mover bloco${action.data.blockIds && action.data.blockIds.length > 1 ? 's' : ''}`;
       case 'edit':
-        return `Editar bloco`;
+        return 'Editar bloco';
       case 'bulk':
-        return `Ação em lote`;
+        return 'Ação em lote';
       default:
         return 'Ação desconhecida';
     }
@@ -153,15 +153,15 @@ export const useUndoRedo = (maxHistorySize: number = 50) => {
 
     switch (action.type) {
       case 'add':
-        return `Refazer: Adicionar bloco`;
+        return 'Refazer: Adicionar bloco';
       case 'delete':
         return `Refazer: Excluir bloco${action.data.blockIds && action.data.blockIds.length > 1 ? 's' : ''}`;
       case 'move':
         return `Refazer: Mover bloco${action.data.blockIds && action.data.blockIds.length > 1 ? 's' : ''}`;
       case 'edit':
-        return `Refazer: Editar bloco`;
+        return 'Refazer: Editar bloco';
       case 'bulk':
-        return `Refazer: Ação em lote`;
+        return 'Refazer: Ação em lote';
       default:
         return 'Refazer: Ação desconhecida';
     }

@@ -167,7 +167,7 @@ export type DesignTokens = typeof DesignTokens;
 // Helper para acessar tokens de forma type-safe
 export const getToken = <K extends keyof DesignTokens>(
     category: K,
-    key: keyof DesignTokens[K]
+    key: keyof DesignTokens[K],
 ): DesignTokens[K][typeof key] => {
     return DesignTokens[category][key];
 };

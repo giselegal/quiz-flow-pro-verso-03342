@@ -23,7 +23,7 @@ function extractLegacyStep(stepId: string): any | null {
     let brace = 1; let j = i + 1;
     while (j < source.length && brace > 0) { const c = source[j]; if (c === '{') brace++; else if (c === '}') brace--; j++; }
     const objText = source.slice(i, j);
-    try { return eval('(' + objText + ')'); } catch { return null; }
+    try { return eval(`(${  objText  })`); } catch { return null; }
 }
 
 describe('Normalized Steps Pilot Expandido (steps 01-05)', () => {

@@ -36,7 +36,7 @@ export class LRUCache<T> {
     private stats = {
         hits: 0,
         misses: 0,
-        evictions: 0
+        evictions: 0,
     };
 
     constructor(capacity = 100) {
@@ -96,7 +96,7 @@ export class LRUCache<T> {
         const entry: CacheEntry<T> = {
             value,
             timestamp: Date.now(),
-            accessCount: 1
+            accessCount: 1,
         };
 
         this.cache.set(key, entry);
@@ -137,7 +137,7 @@ export class LRUCache<T> {
             hits: this.stats.hits,
             misses: this.stats.misses,
             evictions: this.stats.evictions,
-            hitRate: Math.round(hitRate * 100) / 100
+            hitRate: Math.round(hitRate * 100) / 100,
         };
     }
 
@@ -148,7 +148,7 @@ export class LRUCache<T> {
         this.stats = {
             hits: 0,
             misses: 0,
-            evictions: 0
+            evictions: 0,
         };
     }
 
@@ -207,7 +207,7 @@ export class LRUCache<T> {
             key,
             accessCount: entry.accessCount,
             age: now - entry.timestamp,
-            lastAccess: new Date(entry.timestamp).toISOString()
+            lastAccess: new Date(entry.timestamp).toISOString(),
         }));
     }
 
@@ -242,7 +242,7 @@ export class LRUCache<T> {
                 } catch (error) {
                     console.warn(`Prefetch failed for key "${key}":`, error);
                 }
-            })
+            }),
         ).then(() => { });
     }
 }
@@ -324,7 +324,7 @@ export class CacheManager {
             totalCaches: stats.length,
             totalEntries,
             averageHitRate: Math.round(averageHitRate * 100) / 100,
-            totalEvictions
+            totalEvictions,
         };
     }
 }

@@ -84,14 +84,14 @@ export const useNavigation = () => {
             'editor': 'Editor',
             'templates': 'Templates',
             'quiz': 'Quiz',
-            'resultado': 'Resultado'
+            'resultado': 'Resultado',
         };
 
         return segments.map((segment, index) => ({
             label: breadcrumbLabels[segment] || segment.charAt(0).toUpperCase() + segment.slice(1),
-            path: '/' + segments.slice(0, index + 1).join('/'),
+            path: `/${  segments.slice(0, index + 1).join('/')}`,
             isLast: index === segments.length - 1,
-            isActive: index === segments.length - 1
+            isActive: index === segments.length - 1,
         }));
     }, [location]);
 
@@ -127,7 +127,7 @@ export const useNavigation = () => {
         const entry = {
             path,
             timestamp: Date.now(),
-            title: document.title
+            title: document.title,
         };
         
         // Adicionar no início da lista
@@ -149,6 +149,6 @@ export const useNavigation = () => {
         navigateWithTransition,
         getNavigationHistory,
         addToHistory,
-        currentLocation: location
+        currentLocation: location,
     };
 };

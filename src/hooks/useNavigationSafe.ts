@@ -39,7 +39,7 @@ export const useNavigationSafe = () => {
         }
       }
     },
-    [setLocation]
+    [setLocation],
   );
 
   const navigateToEditor = useCallback(() => {
@@ -76,7 +76,7 @@ export const useNavigationSafe = () => {
         navigateTo(path);
       }
     },
-    [navigateTo]
+    [navigateTo],
   );
 
   return {

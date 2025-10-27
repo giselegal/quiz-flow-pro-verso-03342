@@ -343,7 +343,7 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
                         { name: 'C', score: 60 },
                         { name: 'D', score: 50 },
                         { name: 'E', score: 40 },
-                    ]
+                    ],
                 },
             });
             const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;
@@ -642,7 +642,7 @@ describe('PropertiesPanel → Result blocks quick edit', () => {
                     styles: [
                         { name: 'Clássico', percentage: '40%' },
                         { name: 'Romântico', percentage: '35%' },
-                    ], backgroundColor: '#FFFFFF', borderColor: '#E5D5C3'
+                    ], backgroundColor: '#FFFFFF', borderColor: '#E5D5C3',
                 },
             });
             const step = { id: 's20', type: 'result', order: 20, blocks: [block] } as any;

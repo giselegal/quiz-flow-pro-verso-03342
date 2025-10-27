@@ -28,7 +28,7 @@ class TemplateDebugger {
     blocks: any[],
     loadTime: number,
     error?: string,
-    metadata?: any
+    metadata?: any,
   ): void {
     const debugInfo: TemplateDebugInfo = {
       templateId,
@@ -37,7 +37,7 @@ class TemplateDebugger {
       blockCount: Array.isArray(blocks) ? blocks.length : 0,
       loadTime,
       error,
-      metadata
+      metadata,
     };
 
     this.debugLog.unshift(debugInfo);
@@ -89,7 +89,7 @@ class TemplateDebugger {
       emptyLoads,
       averageLoadTime,
       sourceBreakdown,
-      recentLogs: this.debugLog.slice(0, 10)
+      recentLogs: this.debugLog.slice(0, 10),
     };
   }
 
@@ -126,7 +126,7 @@ class TemplateDebugger {
       console.log('🎯 [TemplateDebugger] Template principal verificado:', {
         available: availableTemplates.length,
         missing: missingTemplates.length,
-        empty: emptyTemplates.length
+        empty: emptyTemplates.length,
       });
 
     } catch (error) {
@@ -151,7 +151,7 @@ class TemplateDebugger {
       availableTemplates,
       missingTemplates,
       emptyTemplates,
-      recommendations
+      recommendations,
     };
   }
 
@@ -197,7 +197,7 @@ class TemplateDebugger {
     return JSON.stringify({
       timestamp: new Date().toISOString(),
       report: this.getDebugReport(),
-      fullLogs: this.debugLog
+      fullLogs: this.debugLog,
     }, null, 2);
   }
 }

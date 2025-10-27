@@ -74,7 +74,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
     funnelId,
     autoLoad = true,
     debug = false,
-    context = FunnelContext.EDITOR
+    context = FunnelContext.EDITOR,
 }) => {
     console.log('🔧 UnifiedCRUDProvider: Rendering', { funnelId, autoLoad, debug, context });
     
@@ -105,7 +105,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                 category: options.category || 'outros',
                 context: options.context ?? context,
                 templateId: options.templateId,
-                ...options
+                ...options,
             });
 
             // Atualizar listas e estado
@@ -122,7 +122,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                 error: err,
                 stack: err instanceof Error ? err.stack : 'N/A',
                 funcName: 'createFunnel',
-                params: { name, options }
+                params: { name, options },
             });
 
             setError(`Erro ao criar funil: ${errorMessage}`);
@@ -213,8 +213,8 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                     name: targetFunnel.name,
                     description: targetFunnel.description,
                     settings: targetFunnel.settings,
-                    pages: targetFunnel.pages
-                }
+                    pages: targetFunnel.pages,
+                },
             );
 
             // Atualizar estado
@@ -372,8 +372,8 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         legacy: {
             funnelsProvider: null,
             pureBuilderProvider: null,
-            unifiedFunnelProvider: null
-        }
+            unifiedFunnelProvider: null,
+        },
     };
 
     // ========================================================================
@@ -424,7 +424,7 @@ export const useLegacyFunnelsProvider = () => {
         createFunnel: crudContext.createFunnel,
         updateFunnel: crudContext.saveFunnel,
         deleteFunnel: crudContext.deleteFunnel,
-        loadFunnel: crudContext.loadFunnel
+        loadFunnel: crudContext.loadFunnel,
     };
 };
 

@@ -94,7 +94,7 @@ export const useQuizLogic = () => {
       // TODO: Integrar com analytics/Supabase para métricas
       // trackStrategicInteraction(strategicAnswer);
     },
-    []
+    [],
   );
 
   const goToNextQuestion = useCallback(() => {
@@ -139,7 +139,7 @@ export const useQuizLogic = () => {
       percentage: totalPoints > 0 ? Math.round((score / totalPoints) * 100) : 0,
       style: category.toLowerCase(),
       points: score,
-      rank: 1
+      rank: 1,
     });
 
   const calculateResults = useCallback(
@@ -166,13 +166,13 @@ export const useQuizLogic = () => {
           tieBreakStrategy: config?.globalScoringConfig?.algorithm?.tieBreaker === 'first_selection'
             ? 'first-answer'
             : 'highest-score',
-          debug: process.env.NODE_ENV === 'development'
+          debug: process.env.NODE_ENV === 'development',
         });
 
         // Mapear resultado do engine para interface esperada pelo useQuizLogic
         const primaryStyleData = engineResult.scores.find((s: any) => s.style === engineResult.primaryStyle);
         const secondaryStylesData = engineResult.scores.filter((s: any) =>
-          engineResult.secondaryStyles.includes(s.style)
+          engineResult.secondaryStyles.includes(s.style),
         );
         const totalScore = engineResult.scores.reduce((sum: number, s: any) => sum + (s.points || 0), 0);
 
@@ -188,7 +188,7 @@ export const useQuizLogic = () => {
             percentage: primaryStyleData?.percentage || 0,
             style: (engineResult.primaryStyle || 'natural').toLowerCase(),
             points: primaryStyleData?.points || 0,
-            rank: 1
+            rank: 1,
           }),
           secondaryStyles: secondaryStylesData.map((styleData: any, index: number) =>
             mapToStyleResult({
@@ -198,23 +198,23 @@ export const useQuizLogic = () => {
               style: styleData.style.toLowerCase(),
               points: styleData.points,
               rank: index + 2,
-            })
+            }),
           ),
           totalQuestions: engineResult.totalQuestions,
           styleScores: Object.fromEntries(
-            engineResult.scores.map((s: any) => [s.style, s.points])
+            engineResult.scores.map((s: any) => [s.style, s.points]),
           ),
           // Dados de compatibilidade
           predominantStyle: engineResult.primaryStyle,
           complementaryStyles: engineResult.secondaryStyles,
-          userData: engineResult.userData
+          userData: engineResult.userData,
         };
 
         console.log('✅ useQuizLogic: Resultado calculado via UnifiedCalculationEngine:', {
           primaryStyle: mappedResult.primaryStyle?.category || mappedResult.primaryStyle?.name,
           percentage: mappedResult.primaryStyle?.percentage,
           totalQuestions: mappedResult.totalQuestions,
-          usingCentralizedConfig: !!config
+          usingCentralizedConfig: !!config,
         });
 
         return mappedResult;
@@ -225,7 +225,7 @@ export const useQuizLogic = () => {
         const styleScores = calculateStyleScores(answers);
 
         const sortedStyles = Object.entries(styleScores).sort(
-          ([, scoreA], [, scoreB]) => scoreB - scoreA
+          ([, scoreA], [, scoreB]) => scoreB - scoreA,
         );
         const topStyle = sortedStyles[0]?.[0] || 'Natural';
 
@@ -260,7 +260,7 @@ export const useQuizLogic = () => {
         return result;
       }
     },
-    [userName, strategicAnswers.length]
+    [userName, strategicAnswers.length],
   );
 
   const completeQuiz = useCallback(async () => {

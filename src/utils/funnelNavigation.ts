@@ -37,7 +37,7 @@ export function buildNavigationMap(raw: NavStep[]): NavigationAnalysis {
         if (s.order !== maxOrder && (s.nextStep === undefined || s.nextStep === null)) {
             issues.push({
                 type: 'MISSING_NEXT_STEP', stepId: s.id,
-                message: `Step ${s.id} sem nextStep (exceto último).`, severity: 'error'
+                message: `Step ${s.id} sem nextStep (exceto último).`, severity: 'error',
             });
         }
     });

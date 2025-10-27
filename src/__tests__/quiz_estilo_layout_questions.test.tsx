@@ -30,7 +30,7 @@ describe('Layout responsivo QuestionStep', () => {
                 setUserName: () => { },
                 addAnswer: () => { },
                 addStrategicAnswer: () => { },
-                getOfferKey: () => 'Montar looks com mais facilidade e confiança'
+                getOfferKey: () => 'Montar looks com mais facilidade e confiança',
             } as any;
         });
 
@@ -64,7 +64,7 @@ describe('Layout responsivo QuestionStep', () => {
                 setUserName: () => { },
                 addAnswer: () => { },
                 addStrategicAnswer: () => { },
-                getOfferKey: () => 'Montar looks com mais facilidade e confiança'
+                getOfferKey: () => 'Montar looks com mais facilidade e confiança',
             } as any;
         });
 

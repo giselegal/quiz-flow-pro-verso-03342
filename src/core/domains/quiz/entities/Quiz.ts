@@ -45,7 +45,7 @@ export class Quiz {
     public settings: QuizSettings,
     public branding: QuizBranding,
     public questionIds: string[] = [],
-    public resultProfileIds: string[] = []
+    public resultProfileIds: string[] = [],
   ) {}
 
   // 🔍 Business Rules - Quiz Validation
@@ -99,12 +99,12 @@ export class Quiz {
       {
         ...this.metadata,
         isPublished: true,
-        publishedAt: new Date()
+        publishedAt: new Date(),
       },
       this.settings,
       this.branding,
       this.questionIds,
-      this.resultProfileIds
+      this.resultProfileIds,
     );
   }
 
@@ -114,12 +114,12 @@ export class Quiz {
       {
         ...this.metadata,
         isPublished: false,
-        publishedAt: undefined
+        publishedAt: undefined,
       },
       this.settings,
       this.branding,
       this.questionIds,
-      this.resultProfileIds
+      this.resultProfileIds,
     );
   }
 
@@ -135,7 +135,7 @@ export class Quiz {
       this.settings,
       this.branding,
       [...this.questionIds, questionId],
-      this.resultProfileIds
+      this.resultProfileIds,
     );
   }
 
@@ -152,7 +152,7 @@ export class Quiz {
       this.settings,
       this.branding,
       newQuestionIds,
-      this.resultProfileIds
+      this.resultProfileIds,
     );
   }
 
@@ -168,7 +168,7 @@ export class Quiz {
       this.settings,
       this.branding,
       this.questionIds,
-      [...this.resultProfileIds, resultProfileId]
+      [...this.resultProfileIds, resultProfileId],
     );
   }
 
@@ -182,12 +182,12 @@ export class Quiz {
         isPublished: false,
         publishedAt: undefined,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       { ...this.settings },
       { ...this.branding },
       [...this.questionIds],
-      [...this.resultProfileIds]
+      [...this.resultProfileIds],
     );
   }
 
@@ -198,7 +198,7 @@ export class Quiz {
       settings: this.settings,
       branding: this.branding,
       questionIds: this.questionIds,
-      resultProfileIds: this.resultProfileIds
+      resultProfileIds: this.resultProfileIds,
     };
   }
 
@@ -209,7 +209,7 @@ export class Quiz {
       data.settings,
       data.branding,
       data.questionIds || [],
-      data.resultProfileIds || []
+      data.resultProfileIds || [],
     );
   }
 }

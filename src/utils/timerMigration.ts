@@ -22,7 +22,7 @@ export const TIMER_MIGRATION_LIST = [
   // Normal (baixa prioridade)
   'src/components/debug/ImageDiagnosticDebugger.tsx',
   'src/components/debug/QuickFixButton.tsx',
-  'src/components/editor/EditorNotification.tsx'
+  'src/components/editor/EditorNotification.tsx',
 ];
 
 // Função para detectar timers não otimizados
@@ -31,7 +31,7 @@ export const detectLegacyTimers = (fileContent: string): boolean => {
     /setTimeout\s*\(/g,
     /setInterval\s*\(/g,
     /clearTimeout\s*\(/g,
-    /clearInterval\s*\(/g
+    /clearInterval\s*\(/g,
   ];
   
   return legacyPatterns.some(pattern => pattern.test(fileContent));
@@ -41,7 +41,7 @@ export const detectLegacyTimers = (fileContent: string): boolean => {
 export const generateMigratedTimer = (
   type: 'timeout' | 'interval',
   callback: string,
-  delay: string | number
+  delay: string | number,
 ): string => {
   const hookUsage = `const { schedule${type === 'timeout' ? 'Once' : 'Recurring'} } = useOptimizedScheduler();`;
   const scheduleCall = type === 'timeout' 
@@ -74,7 +74,7 @@ export const getMigrationStatus = (): MigrationStatus => {
   const completed = [
     'src/components/blocks/quiz/LoadingTransitionBlock.tsx',
     'src/components/editor/EditorProvider.tsx',
-    'src/components/editor/blocks/ButtonInlineBlock.tsx'
+    'src/components/editor/blocks/ButtonInlineBlock.tsx',
   ];
   
   const remaining = TIMER_MIGRATION_LIST.filter(file => !completed.includes(file));
@@ -83,7 +83,7 @@ export const getMigrationStatus = (): MigrationStatus => {
     total: TIMER_MIGRATION_LIST.length,
     completed: completed.length,
     remaining,
-    progress: Math.round((completed.length / TIMER_MIGRATION_LIST.length) * 100)
+    progress: Math.round((completed.length / TIMER_MIGRATION_LIST.length) * 100),
   };
 };
 

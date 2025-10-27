@@ -53,7 +53,7 @@ class SupabaseErrorInterceptor {
                     
                     return response;
                 } catch (error) {
-                    console.warn(`⚠️ Erro na requisição Supabase, usando fallback:`, error);
+                    console.warn('⚠️ Erro na requisição Supabase, usando fallback:', error);
                     return this.createFallbackResponse(url);
                 }
             }
@@ -113,20 +113,20 @@ class SupabaseErrorInterceptor {
                     type: 'intro',
                     title: 'Descubra seu Estilo Pessoal',
                     order: 1,
-                    blocks: []
+                    blocks: [],
                 },
                 {
                     id: 'step-2',
                     type: 'question',
                     title: 'Qual é seu estilo preferido?',
                     order: 2,
-                    blocks: []
-                }
+                    blocks: [],
+                },
             ],
             version: 1,
             is_published: false,
             created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
         });
 
         // Quiz production fallback
@@ -135,24 +135,24 @@ class SupabaseErrorInterceptor {
             steps: [],
             runtime: {
                 totalSteps: 21,
-                currentVersion: '1.0.0'
+                currentVersion: '1.0.0',
             },
             results: {
-                profiles: ['casual', 'elegante', 'boho', 'moderno']
+                profiles: ['casual', 'elegante', 'boho', 'moderno'],
             },
             ui: {
                 theme: 'default',
                 colors: {
                     primary: '#B89B7A',
-                    secondary: '#432818'
-                }
+                    secondary: '#432818',
+                },
             },
             settings: {
                 showProgress: true,
-                allowBack: true
+                allowBack: true,
             },
             version: 1,
-            published_at: new Date().toISOString()
+            published_at: new Date().toISOString(),
         });
     }
 
@@ -174,7 +174,7 @@ class SupabaseErrorInterceptor {
             responseData = { 
                 data: [], 
                 message: 'Local fallback response',
-                error: null 
+                error: null, 
             };
         }
 
@@ -184,8 +184,8 @@ class SupabaseErrorInterceptor {
             headers: {
                 'Content-Type': 'application/json',
                 'X-Fallback': 'true',
-                'X-Fallback-Source': 'supabase-interceptor'
-            }
+                'X-Fallback-Source': 'supabase-interceptor',
+            },
         });
     }
 
@@ -203,7 +203,7 @@ class SupabaseErrorInterceptor {
         return {
             active: this.isActive,
             fallbackCount: this.fallbackData.size,
-            fallbackKeys: Array.from(this.fallbackData.keys())
+            fallbackKeys: Array.from(this.fallbackData.keys()),
         };
     }
 }

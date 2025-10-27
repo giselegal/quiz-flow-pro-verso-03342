@@ -101,7 +101,7 @@ export const useGlobalEventManager = (): GlobalEventManager => {
     return {
         addEventListener,
         removeEventListener,
-        removeAllListeners
+        removeAllListeners,
     };
 };
 

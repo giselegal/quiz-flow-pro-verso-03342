@@ -61,7 +61,7 @@ export class MonitoringService {
       category,
       message,
       data: data ? this.sanitizeData(data) : undefined,
-      stack: level === 'error' || level === 'critical' ? new Error().stack : undefined
+      stack: level === 'error' || level === 'critical' ? new Error().stack : undefined,
     };
 
     this.logs.push(entry);
@@ -92,7 +92,7 @@ export class MonitoringService {
       value,
       unit,
       timestamp: new Date().toISOString(),
-      context: context ? this.sanitizeData(context) : undefined
+      context: context ? this.sanitizeData(context) : undefined,
     };
 
     this.metrics.push(metric);
@@ -122,16 +122,16 @@ export class MonitoringService {
         metrics: {
           activeEngines: engineStats.activeEngines,
           successRate: engineStats.successRate,
-          averageExecutionTime: engineStats.averageExecutionTime
+          averageExecutionTime: engineStats.averageExecutionTime,
         },
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       });
     } catch (error) {
       results.push({
         component: 'Engine Registry',
         healthy: false,
         message: `Erro ao verificar engines: ${error}`,
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       });
     }
 
@@ -145,16 +145,16 @@ export class MonitoringService {
         metrics: {
           validEntries: cacheStats.validEntries,
           expiredEntries: cacheStats.expiredEntries,
-          cacheSizeKB: Math.round(cacheStats.cacheSize / 1024)
+          cacheSizeKB: Math.round(cacheStats.cacheSize / 1024),
         },
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       });
     } catch (error) {
       results.push({
         component: 'Result Cache',
         healthy: false,
         message: `Erro ao verificar cache: ${error}`,
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       });
     }
 
@@ -170,16 +170,16 @@ export class MonitoringService {
         metrics: {
           totalKeys: storageStats.totalKeys,
           legacyKeys: storageStats.legacyKeys,
-          totalSizeKB: Math.round(storageStats.totalSize / 1024)
+          totalSizeKB: Math.round(storageStats.totalSize / 1024),
         },
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       });
     } catch (error) {
       results.push({
         component: 'Storage',
         healthy: false,
         message: `Erro ao verificar storage: ${error}`,
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       });
     }
 
@@ -193,9 +193,9 @@ export class MonitoringService {
         metrics: {
           usedHeapMB: Math.round(memory.usedJSHeapSize / 1024 / 1024),
           totalHeapMB: Math.round(memory.totalJSHeapSize / 1024 / 1024),
-          heapLimitMB: Math.round(memory.jsHeapSizeLimit / 1024 / 1024)
+          heapLimitMB: Math.round(memory.jsHeapSizeLimit / 1024 / 1024),
         },
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       });
     }
 
@@ -203,7 +203,7 @@ export class MonitoringService {
     const unhealthyComponents = results.filter(r => !r.healthy);
     if (unhealthyComponents.length > 0) {
       this.log('warn', 'HealthCheck', `${unhealthyComponents.length} componentes não saudáveis`, {
-        unhealthy: unhealthyComponents.map(c => c.component)
+        unhealthy: unhealthyComponents.map(c => c.component),
       });
     } else {
       this.log('info', 'HealthCheck', 'Todos os componentes saudáveis');
@@ -247,7 +247,7 @@ export class MonitoringService {
 
     return {
       hasConflicts: conflicts.length > 0,
-      conflicts
+      conflicts,
     };
   }
 
@@ -268,26 +268,26 @@ export class MonitoringService {
       summary: {
         systemHealth: healthChecks.every(h => h.healthy) ? 'healthy' : 'degraded',
         totalIssues: healthChecks.filter(h => !h.healthy).length + engineConflicts.conflicts.length,
-        uptime: this.calculateUptime()
+        uptime: this.calculateUptime(),
       },
       healthChecks,
       engineConflicts,
       performance: {
         recentMetrics: performanceMetrics,
         averageExecutionTime: this.calculateAverageMetric('execution_time'),
-        cacheHitRate: this.calculateAverageMetric('cache_hit_rate')
+        cacheHitRate: this.calculateAverageMetric('cache_hit_rate'),
       },
       logs: {
         recentErrors: recentLogs,
         logCounts: this.getLogCounts(),
-        topCategories: this.getTopLogCategories()
+        topCategories: this.getTopLogCategories(),
       },
-      recommendations: this.generateRecommendations(healthChecks, engineConflicts)
+      recommendations: this.generateRecommendations(healthChecks, engineConflicts),
     };
 
     this.log('info', 'DiagnosticReport', 'Relatório de diagnóstico gerado', {
       systemHealth: report.summary.systemHealth,
-      totalIssues: report.summary.totalIssues
+      totalIssues: report.summary.totalIssues,
     });
 
     return report;
@@ -340,13 +340,13 @@ export class MonitoringService {
           message: event.message,
           filename: event.filename,
           lineno: event.lineno,
-          colno: event.colno
+          colno: event.colno,
         });
       });
 
       window.addEventListener('unhandledrejection', (event) => {
         this.log('error', 'UnhandledPromise', 'Promise rejeitada não tratada', {
-          reason: event.reason
+          reason: event.reason,
         });
       });
     }
@@ -358,7 +358,7 @@ export class MonitoringService {
       this.log('warn', 'Performance', 'Execução muito lenta detectada', {
         metric: metric.name,
         value: metric.value,
-        unit: metric.unit
+        unit: metric.unit,
       });
     }
 
@@ -367,7 +367,7 @@ export class MonitoringService {
       this.log('warn', 'Performance', 'Taxa de cache hits baixa', {
         metric: metric.name,
         value: metric.value,
-        unit: metric.unit
+        unit: metric.unit,
       });
     }
   }
@@ -384,7 +384,7 @@ export class MonitoringService {
       // Remover dados sensíveis e limitar tamanho
       const sanitized = JSON.parse(JSON.stringify(data));
       const str = JSON.stringify(sanitized);
-      return str.length > 1000 ? JSON.parse(str.substring(0, 1000) + '..."}') : sanitized;
+      return str.length > 1000 ? JSON.parse(`${str.substring(0, 1000)  }..."}`) : sanitized;
     } catch {
       return '[Dados não serializáveis]';
     }
@@ -414,7 +414,7 @@ export class MonitoringService {
 
   private getLogCounts(): Record<LogLevel, number> {
     const counts: Record<LogLevel, number> = {
-      debug: 0, info: 0, warn: 0, error: 0, critical: 0
+      debug: 0, info: 0, warn: 0, error: 0, critical: 0,
     };
     
     this.logs.forEach(log => {
@@ -439,7 +439,7 @@ export class MonitoringService {
 
   private generateRecommendations(
     healthChecks: HealthCheckResult[], 
-    engineConflicts: { hasConflicts: boolean; conflicts: string[] }
+    engineConflicts: { hasConflicts: boolean; conflicts: string[] },
   ): string[] {
     const recommendations: string[] = [];
     

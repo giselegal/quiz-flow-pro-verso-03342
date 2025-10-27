@@ -13,7 +13,7 @@ export function initTelemetry(rawClient?: any) {
     client = rawClient ?? (window as any).__lovableClient ?? null;
   } catch (err) {
     // não propagar
-    // eslint-disable-next-line no-console
+     
     console.warn('telemetry init failed (ignored):', err);
     client = null;
   }

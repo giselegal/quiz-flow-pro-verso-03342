@@ -84,14 +84,14 @@ class HealthCheckService {
           frontend: { status: 'up', lastCheck: new Date().toISOString(), responseTime: 50 },
           supabase: { status: 'up', lastCheck: new Date().toISOString(), responseTime: 100 },
           analytics: { status: 'up', lastCheck: new Date().toISOString(), responseTime: 75 },
-          storage: { status: 'up', lastCheck: new Date().toISOString(), responseTime: 80 }
+          storage: { status: 'up', lastCheck: new Date().toISOString(), responseTime: 80 },
         },
         metrics: {
           responseTime: 76,
           memoryUsage: 45,
           errorRate: 0,
-          uptime: Date.now()
-        }
+          uptime: Date.now(),
+        },
       };
     }
 
@@ -101,7 +101,7 @@ class HealthCheckService {
       this.checkFrontend(),
       this.checkSupabase(),
       this.checkAnalytics(),
-      this.checkStorage()
+      this.checkStorage(),
     ]);
 
     const responseTime = performance.now() - startTime;
@@ -110,7 +110,7 @@ class HealthCheckService {
       frontend: frontend.status === 'fulfilled' ? frontend.value : { status: 'down' as const, lastCheck: new Date().toISOString(), error: 'Check failed' },
       supabase: supabase.status === 'fulfilled' ? supabase.value : { status: 'down' as const, lastCheck: new Date().toISOString(), error: 'Check failed' },
       analytics: analytics.status === 'fulfilled' ? analytics.value : { status: 'down' as const, lastCheck: new Date().toISOString(), error: 'Check failed' },
-      storage: storage.status === 'fulfilled' ? storage.value : { status: 'down' as const, lastCheck: new Date().toISOString(), error: 'Check failed' }
+      storage: storage.status === 'fulfilled' ? storage.value : { status: 'down' as const, lastCheck: new Date().toISOString(), error: 'Check failed' },
     };
 
     const overallStatus = this.calculateOverallStatus(services);
@@ -123,8 +123,8 @@ class HealthCheckService {
         responseTime: Math.round(responseTime),
         memoryUsage: this.getMemoryUsage(),
         errorRate: this.getErrorRate(),
-        uptime: this.getUptime()
-      }
+        uptime: this.getUptime(),
+      },
     };
   }
 
@@ -141,13 +141,13 @@ class HealthCheckService {
       return {
         status: hasErrors ? 'degraded' : 'up',
         responseTime: Math.round(responseTime),
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       };
     } catch (error) {
       return {
         status: 'down',
         lastCheck: new Date().toISOString(),
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
@@ -161,14 +161,14 @@ class HealthCheckService {
     try {
       // Usar edge function para health check real
       const response = await fetch(
-        `https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/security-monitor/health-check`,
+        'https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/security-monitor/health-check',
         {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-            'Content-Type': 'application/json'
-          }
-        }
+            'Content-Type': 'application/json',
+          },
+        },
       );
 
       const responseTime = performance.now() - startTime;
@@ -183,13 +183,13 @@ class HealthCheckService {
         status: healthData.overall_status === 'healthy' ? 'up' : 
                 healthData.overall_status === 'degraded' ? 'degraded' : 'down',
         responseTime: Math.round(responseTime),
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       };
     } catch (error) {
       return {
         status: 'down',
         lastCheck: new Date().toISOString(),
-        error: error instanceof Error ? error.message : 'Connection failed'
+        error: error instanceof Error ? error.message : 'Connection failed',
       };
     }
   }
@@ -203,13 +203,13 @@ class HealthCheckService {
       
       return {
         status: hasGtag ? 'up' : 'degraded',
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       };
     } catch (error) {
       return {
         status: 'down',
         lastCheck: new Date().toISOString(),
-        error: 'Analytics not loaded'
+        error: 'Analytics not loaded',
       };
     }
   }
@@ -226,13 +226,13 @@ class HealthCheckService {
 
       return {
         status: value === 'test' ? 'up' : 'down',
-        lastCheck: new Date().toISOString()
+        lastCheck: new Date().toISOString(),
       };
     } catch (error) {
       return {
         status: 'down',
         lastCheck: new Date().toISOString(),
-        error: 'Storage unavailable'
+        error: 'Storage unavailable',
       };
     }
   }

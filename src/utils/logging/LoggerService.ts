@@ -89,7 +89,7 @@ class LoggerService {
             name: error.name,
             message: error.message,
             stack: error.stack,
-            ...(error as any).cause && { cause: (error as any).cause }
+            ...(error as any).cause && { cause: (error as any).cause },
         } : error;
 
         this.log('ERROR', context, message, logData);
@@ -114,7 +114,7 @@ class LoggerService {
             this.info('editor', 'Project saved', { funnelId, blockCount, saveTime, action: 'save_project' }),
 
         errorOccurred: (operation: string, error: Error) =>
-            this.error('editor', `Editor error during ${operation}`, error)
+            this.error('editor', `Editor error during ${operation}`, error),
     };
 
     storage = {
@@ -131,7 +131,7 @@ class LoggerService {
             this.trace('storage', 'Cache miss', { key, namespace, action: 'cache_miss' }),
 
         fallbackUsed: (operation: string, reason: string) =>
-            this.warn('storage', 'Fallback storage used', { operation, reason, action: 'fallback_used' })
+            this.warn('storage', 'Fallback storage used', { operation, reason, action: 'fallback_used' }),
     };
 
     performance = {
@@ -140,14 +140,14 @@ class LoggerService {
                 componentName,
                 renderTime,
                 threshold: 16.67,
-                action: 'slow_render'
+                action: 'slow_render',
             }),
 
         heavyComputation: (operation: string, duration: number) =>
             this.info('performance', 'Heavy computation completed', { operation, duration, action: 'heavy_computation' }),
 
         memoryUsage: (component: string, heapUsed: number) =>
-            this.debug('performance', 'Memory usage recorded', { component, heapUsed, action: 'memory_usage' })
+            this.debug('performance', 'Memory usage recorded', { component, heapUsed, action: 'memory_usage' }),
     };
 
     // Core logging method
@@ -155,7 +155,7 @@ class LoggerService {
         level: keyof LogLevel,
         context: string,
         message: string,
-        data?: any
+        data?: any,
     ): Promise<void> {
         const entry: LogEntry = {
             timestamp: new Date().toISOString(),
@@ -166,7 +166,7 @@ class LoggerService {
             sessionId: this.sessionId,
             userId: this.getCurrentUserId(),
             stackTrace: this.shouldIncludeStackTrace(level) ? this.getStackTrace() : undefined,
-            performance: this.collectPerformanceData()
+            performance: this.collectPerformanceData(),
         };
 
         // Apply filters
@@ -241,7 +241,7 @@ class LoggerService {
         try {
             return {
                 memory: (performance as any).memory?.usedJSHeapSize,
-                duration: performance.now()
+                duration: performance.now(),
             };
         } catch {
             return undefined;

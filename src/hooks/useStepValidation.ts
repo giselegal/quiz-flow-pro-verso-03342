@@ -16,7 +16,7 @@ const stepValidationSchemas = {
       .trim()
       .min(2, 'Nome deve ter pelo menos 2 caracteres')
       .max(100, 'Nome deve ter no máximo 100 caracteres')
-      .regex(/^[a-zA-ZÀ-ÿ\s]+$/, 'Nome deve conter apenas letras e espaços')
+      .regex(/^[a-zA-ZÀ-ÿ\s]+$/, 'Nome deve conter apenas letras e espaços'),
   }),
   
   // Steps 2-11 - Questões pontuadas (3 seleções obrigatórias)
@@ -26,9 +26,9 @@ const stepValidationSchemas = {
       z.object({
         selectedOptions: z.array(z.string())
           .min(3, 'Selecione exatamente 3 opções')
-          .max(3, 'Selecione exatamente 3 opções')
-      })
-    ])
+          .max(3, 'Selecione exatamente 3 opções'),
+      }),
+    ]),
   ),
   
   // Steps 13-18 - Questões estratégicas (1 seleção obrigatória)
@@ -38,9 +38,9 @@ const stepValidationSchemas = {
       z.object({
         selectedOptions: z.array(z.string())
           .min(1, 'Selecione uma opção')
-          .max(1, 'Selecione apenas uma opção')
-      })
-    ])
+          .max(1, 'Selecione apenas uma opção'),
+      }),
+    ]),
   ),
 };
 
@@ -91,7 +91,7 @@ export const useStepValidation = (config: StepValidationConfig): ValidationHookR
   const [validationResult, setValidationResult] = useState<ValidationResult>({
     isValid: false,
     state: 'none',
-    errors: []
+    errors: [],
   });
   const [isValidating, setIsValidating] = useState(false);
   const [timeToAutoAdvance, setTimeToAutoAdvance] = useState(0);
@@ -109,7 +109,7 @@ export const useStepValidation = (config: StepValidationConfig): ValidationHookR
       return {
         isValid: true,
         state: 'valid',
-        errors: []
+        errors: [],
       };
     }
 
@@ -118,7 +118,7 @@ export const useStepValidation = (config: StepValidationConfig): ValidationHookR
       return {
         isValid: true,
         state: 'valid',
-        errors: []
+        errors: [],
       };
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -127,7 +127,7 @@ export const useStepValidation = (config: StepValidationConfig): ValidationHookR
           isValid: false,
           state: 'invalid',
           message: errors[0], // Primeira mensagem de erro
-          errors
+          errors,
         };
       }
       
@@ -135,7 +135,7 @@ export const useStepValidation = (config: StepValidationConfig): ValidationHookR
         isValid: false,
         state: 'invalid',
         message: 'Erro de validação',
-        errors: ['Erro de validação desconhecido']
+        errors: ['Erro de validação desconhecido'],
       };
     }
   }, [stepNumber, getStepSchema]);
@@ -158,7 +158,7 @@ export const useStepValidation = (config: StepValidationConfig): ValidationHookR
     setValidationResult({
       isValid: false,
       state: 'none',
-      errors: []
+      errors: [],
     });
     setTimeToAutoAdvance(0);
   }, []);
@@ -179,8 +179,8 @@ export const useStepValidation = (config: StepValidationConfig): ValidationHookR
               detail: { 
                 fromStep: stepNumber,
                 toStep: stepNumber + 1,
-                source: 'validation-auto-advance'
-              }
+                source: 'validation-auto-advance',
+              },
             }));
             return 0;
           }
@@ -233,7 +233,7 @@ export const useStepValidation = (config: StepValidationConfig): ValidationHookR
     canAutoAdvance,
     timeToAutoAdvance,
     getFieldError,
-    isFieldValid
+    isFieldValid,
   };
 };
 
@@ -250,7 +250,7 @@ export const useFieldValidation = (fieldName: string, value: any, stepNumber: nu
   return {
     isValid: validation.isFieldValid(fieldName),
     error: validation.getFieldError(fieldName),
-    state: validation.validationResult.state
+    state: validation.validationResult.state,
   };
 };
 

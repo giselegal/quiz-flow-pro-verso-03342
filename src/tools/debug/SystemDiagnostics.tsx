@@ -44,7 +44,7 @@ export const SystemDiagnostics: React.FC = () => {
     editor: 'healthy',
     database: 'healthy',
     performance: 'healthy',
-    security: 'healthy'
+    security: 'healthy',
   });
   
   const [diagnosticData, setDiagnosticData] = useState<DiagnosticData | null>(null);
@@ -62,15 +62,15 @@ export const SystemDiagnostics: React.FC = () => {
       performance: {
         memory: performance.memoryUsage,
         renderTime: 0, // Would need to be measured
-        cacheSize: performance.cacheSize
+        cacheSize: performance.cacheSize,
       },
       editor: {
         currentFunnel: editorState.currentFunnel?.id || null,
         currentStep: editorState.currentStep,
         blocksCount: Object.values(editorState.stepBlocks).flat().length,
-        isDirty: performance.isDirty
+        isDirty: performance.isDirty,
       },
-      errors: []
+      errors: [],
     };
 
     setDiagnosticData(data);
@@ -86,7 +86,7 @@ export const SystemDiagnostics: React.FC = () => {
       editor: 'healthy',
       database: 'healthy',
       performance: 'healthy',
-      security: 'healthy'
+      security: 'healthy',
     };
 
     try {
@@ -128,11 +128,11 @@ export const SystemDiagnostics: React.FC = () => {
       systemStatus,
       diagnosticData,
       logs: logs.slice(0, 100),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: 'application/json'
+      type: 'application/json',
     });
     
     const url = URL.createObjectURL(blob);

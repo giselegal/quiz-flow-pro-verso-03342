@@ -46,7 +46,7 @@ export function useFunnelAI(): UseFunnelAIReturn {
         loading: false,
         error: null,
         hasService: false,
-        config: {}
+        config: {},
     });
 
     // 📊 Atualizar status da IA
@@ -58,13 +58,13 @@ export function useFunnelAI(): UseFunnelAIReturn {
                 loading: false,
                 error: null,
                 hasService: status.hasService,
-                config: status.config
+                config: status.config,
             });
         } catch (error) {
             setAIStatus(prev => ({
                 ...prev,
                 loading: false,
-                error: error instanceof Error ? error.message : 'Erro desconhecido'
+                error: error instanceof Error ? error.message : 'Erro desconhecido',
             }));
         }
     }, []);
@@ -80,7 +80,7 @@ export function useFunnelAI(): UseFunnelAIReturn {
             setAIStatus(prev => ({
                 ...prev,
                 loading: false,
-                error: error instanceof Error ? error.message : 'Erro ao ativar IA'
+                error: error instanceof Error ? error.message : 'Erro ao ativar IA',
             }));
         }
     }, [refreshStatus]);
@@ -93,7 +93,7 @@ export function useFunnelAI(): UseFunnelAIReturn {
         } catch (error) {
             setAIStatus(prev => ({
                 ...prev,
-                error: error instanceof Error ? error.message : 'Erro ao desativar IA'
+                error: error instanceof Error ? error.message : 'Erro ao desativar IA',
             }));
         }
     }, [refreshStatus]);
@@ -134,7 +134,7 @@ export function useFunnelAI(): UseFunnelAIReturn {
         setAIContext,
         getAIOptimizedStep,
         isAIEnabled: aiStatus.enabled,
-        canUseAI: aiStatus.enabled && aiStatus.hasService && !aiStatus.loading
+        canUseAI: aiStatus.enabled && aiStatus.hasService && !aiStatus.loading,
     };
 }
 
@@ -161,7 +161,7 @@ export function useAIQuizStep(stepNumber: number) {
                 quizType: 'estilo-pessoal',
                 platform: 'web',
                 timestamp: new Date().toISOString(),
-                ...userContext
+                ...userContext,
             };
 
             const config = await getAIOptimizedStep(stepNumber, quizContext);
@@ -182,7 +182,7 @@ export function useAIQuizStep(stepNumber: number) {
         loading,
         error,
         loadStep,
-        setAIContext
+        setAIContext,
     };
 }
 

@@ -71,13 +71,13 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
               imageAlt: 'Quiz',
               type: 'website' as const,
               url: '',
-              siteName: 'Quiz'
+              siteName: 'Quiz',
             },
             twitter: {
               card: 'summary' as const,
               title: 'Quiz',
               description: 'Quiz interativo',
-              image: ''
+              image: '',
             },
             structuredData: {
               '@type': 'Quiz' as const,
@@ -87,12 +87,12 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
                 '@type': 'Organization' as const,
                 name: 'Quiz Provider',
                 url: '',
-                logo: ''
+                logo: '',
               },
               category: ['quiz'],
               dateCreated: new Date().toISOString(),
-              dateModified: new Date().toISOString()
-            }
+              dateModified: new Date().toISOString(),
+            },
           },
           analytics: {
             enabled: false,
@@ -100,15 +100,15 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
             utm: {
               source: '',
               medium: '',
-              campaign: ''
-            }
+              campaign: '',
+            },
           },
           branding: {
             logo: {
               primary: '',
               secondary: '',
               favicon: '',
-              appleTouchIcon: ''
+              appleTouchIcon: '',
             },
             colors: {
               primary: '#007bff',
@@ -119,17 +119,17 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
               text: {
                 primary: '#212529',
                 secondary: '#6c757d',
-                disabled: '#adb5bd'
+                disabled: '#adb5bd',
               },
               error: '#dc3545',
               warning: '#ffc107',
-              success: '#28a745'
+              success: '#28a745',
             },
             typography: {
               fontFamily: {
                 primary: 'Inter',
                 secondary: 'Inter',
-                monospace: 'Monaco'
+                monospace: 'Monaco',
               },
               fontSizes: {
                 xs: '0.75rem',
@@ -139,20 +139,20 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
                 xl: '1.25rem',
                 '2xl': '1.5rem',
                 '3xl': '1.875rem',
-                '4xl': '2.25rem'
+                '4xl': '2.25rem',
               },
               fontWeights: {
                 light: 300,
                 normal: 400,
                 medium: 500,
                 semibold: 600,
-                bold: 700
+                bold: 700,
               },
               lineHeight: {
                 tight: 1.25,
                 normal: 1.5,
-                relaxed: 1.75
-              }
+                relaxed: 1.75,
+              },
             },
             spacing: {
               xs: '0.25rem',
@@ -160,7 +160,7 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
               md: '1rem',
               lg: '1.5rem',
               xl: '3rem',
-              '2xl': '4rem'
+              '2xl': '4rem',
             },
             borderRadius: {
               none: '0',
@@ -168,14 +168,14 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
               md: '0.375rem',
               lg: '0.5rem',
               xl: '0.75rem',
-              full: '9999px'
+              full: '9999px',
             },
             shadows: {
               sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
               md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
               lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-              xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
-            }
+              xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+            },
           },
           persistence: {
             enabled: true,
@@ -184,55 +184,55 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
             autoSaveInterval: 30000,
             compression: false,
             encryption: false,
-            backupEnabled: false
+            backupEnabled: false,
           },
           integrations: {
             email: undefined,
             crm: undefined,
             payment: undefined,
-            webhooks: []
+            webhooks: [],
           },
           performance: {
             cache: {
               enabled: true,
               strategy: 'stale-while-revalidate',
-              ttl: 3600
+              ttl: 3600,
             },
             lazyLoading: {
               images: true,
               components: true,
-              threshold: 100
+              threshold: 100,
             },
             preload: {
               criticalResources: [],
-              nextStep: true
+              nextStep: true,
             },
             compression: {
               images: true,
               scripts: true,
-              styles: true
-            }
+              styles: true,
+            },
           },
           legal: {
             privacy: {
               enabled: false,
               policyUrl: '',
               consentRequired: false,
-              cookieNotice: false
+              cookieNotice: false,
             },
             terms: {
               enabled: false,
               termsUrl: '',
-              acceptanceRequired: false
+              acceptanceRequired: false,
             },
             dataProcessing: {
               purpose: [],
               legalBasis: 'consent',
               retentionPeriod: 365,
               rightToDelete: true,
-              rightToPortability: true
-            }
-          }
+              rightToPortability: true,
+            },
+          },
         },
         steps,
         publication: {
@@ -244,11 +244,11 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
           version: '1.0.0',
           changelog: [],
           accessControl: {
-            public: true
+            public: true,
           },
           cdn: {
-            enabled: false
-          }
+            enabled: false,
+          },
         },
         editorMeta: {
           lastModified: new Date().toISOString(),
@@ -258,7 +258,7 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
             autoSave: true,
             previewMode: 'desktop' as const,
             showGrid: false,
-            snapToGrid: false
+            snapToGrid: false,
           },
           tags: [],
           variations: [],
@@ -267,9 +267,9 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
           stats: {
             totalBlocks: 0,
             totalSteps: steps.length,
-            estimatedCompletionTime: 5
-          }
-        }
+            estimatedCompletionTime: 5,
+          },
+        },
       };
 
       setSchema(loadedSchema);
@@ -306,7 +306,7 @@ export const HeadlessEditorProvider: React.FC<HeadlessEditorProviderProps> = ({ 
     },
     resetChanges: () => {
       if (schemaId) loadSchema(schemaId);
-    }
+    },
   };
 
   return (

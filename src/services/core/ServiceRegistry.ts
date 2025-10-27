@@ -48,7 +48,7 @@ export const ESSENTIAL_SERVICES = {
   PERFORMANCE: 'ConsolidatedPerformanceService',
 
   // 12. Development & Debug
-  DEBUG: 'ConsolidatedDebugService'
+  DEBUG: 'ConsolidatedDebugService',
 } as const;
 
 // ============================================================================
@@ -99,7 +99,7 @@ export const DEPRECATED_SERVICES = [
   'mediaUploadService',
   'publishService',
   'reportService',
-  'versioningService'
+  'versioningService',
 ] as const;
 
 // ============================================================================
@@ -191,7 +191,7 @@ export class ServiceRegistry {
       essential: Object.keys(ESSENTIAL_SERVICES).length,
       deprecated: DEPRECATED_SERVICES.length,
       performance,
-      log: this.migrationLog
+      log: this.migrationLog,
     };
   }
 
@@ -209,7 +209,7 @@ export class ServiceRegistry {
     return {
       serviceManager: serviceManager.getPerformanceSummary(),
       templates: consolidatedTemplateService.getCacheStats(),
-      funnels: consolidatedFunnelService.getCacheStats()
+      funnels: consolidatedFunnelService.getCacheStats(),
     };
   }
 
@@ -239,7 +239,7 @@ export class ServiceRegistry {
       deprecatedServices: DEPRECATED_SERVICES,
       migrationLog: this.migrationLog,
       performance: this.getPerformanceMetrics(),
-      registeredServices: Array.from(serviceManager['services'].keys())
+      registeredServices: Array.from(serviceManager['services'].keys()),
     };
   }
 }

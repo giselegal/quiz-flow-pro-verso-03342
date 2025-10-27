@@ -28,14 +28,14 @@ export const useQuizLogicSimplified = (questions: QuizQuestion[]) => {
           score: 85,
           percentage: 85,
           points: 85,
-          rank: 1
+          rank: 1,
         }),
         primaryStyle: mapToStyleResult({
           category: 'natural',
           score: 85,
           percentage: 85,
           points: 85,
-          rank: 1
+          rank: 1,
         }),
         secondaryStyles: [
           mapToStyleResult({
@@ -43,9 +43,9 @@ export const useQuizLogicSimplified = (questions: QuizQuestion[]) => {
             score: 70,
             percentage: 70,
             points: 70,
-            rank: 2
-          })
-        ]
+            rank: 2,
+          }),
+        ],
       };
 
       setResult(mockResult);
@@ -62,7 +62,7 @@ export const useQuizLogicSimplified = (questions: QuizQuestion[]) => {
     isComplete,
     submitAnswer,
     currentQuestion: questions[currentQuestionIndex],
-    progress: (currentQuestionIndex / questions.length) * 100
+    progress: (currentQuestionIndex / questions.length) * 100,
   };
 };
 

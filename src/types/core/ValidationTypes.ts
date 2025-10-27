@@ -161,7 +161,7 @@ export type QuizValidationResult = UnifiedValidationResult;
  */
 export function createSuccessResult(
     sanitized?: Record<string, any>,
-    warnings: string[] = []
+    warnings: string[] = [],
 ): UnifiedValidationResult {
     return {
         isValid: true,
@@ -177,7 +177,7 @@ export function createSuccessResult(
  */
 export function createErrorResult(
     errors: string[],
-    warnings: string[] = []
+    warnings: string[] = [],
 ): UnifiedValidationResult {
     return {
         isValid: false,
@@ -191,7 +191,7 @@ export function createErrorResult(
  * Combines multiple validation results
  */
 export function combineValidationResults(
-    results: UnifiedValidationResult[]
+    results: UnifiedValidationResult[],
 ): UnifiedValidationResult {
     const combined: UnifiedValidationResult = {
         isValid: results.every(r => r.isValid),
@@ -216,7 +216,7 @@ export function combineValidationResults(
  * Converts legacy SchemaValidationError[] to UnifiedValidationResult
  */
 export function convertLegacyErrors(
-    legacyErrors: DetailedValidationError[]
+    legacyErrors: DetailedValidationError[],
 ): UnifiedValidationResult {
     const errors = legacyErrors.filter(e => e.severity === 'error').map(e => e.message);
     const warnings = legacyErrors.filter(e => e.severity === 'warning').map(e => e.message);
@@ -235,7 +235,7 @@ export function convertLegacyErrors(
  * Type guard to check if result has detailed errors
  */
 export function hasDetailedErrors(
-    result: UnifiedValidationResult
+    result: UnifiedValidationResult,
 ): result is DetailedValidationResult {
     return 'detailedErrors' in result;
 }

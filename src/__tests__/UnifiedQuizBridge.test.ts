@@ -102,13 +102,13 @@ describe('UnifiedQuizBridge', () => {
           metadata: {
             id: 'step-01',
             name: 'Test Step',
-            category: 'intro'
+            category: 'intro',
           },
           sections: [
-            { type: 'text-block', id: 'block-1', content: { text: 'Test' } }
+            { type: 'text-block', id: 'block-1', content: { text: 'Test' } },
           ],
-          navigation: { nextStep: 'step-02' }
-        }
+          navigation: { nextStep: 'step-02' },
+        },
       };
 
       const funnel = await bridge.importFromJSONv3(mockTemplates);

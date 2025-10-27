@@ -58,7 +58,7 @@ export class AutoCleanupManager {
       'interval': 0,
       'observer': 0,
       'subscription': 0,
-      'custom': 0
+      'custom': 0,
     },
     totalCleaned: 0,
     cleanedByType: {
@@ -67,10 +67,10 @@ export class AutoCleanupManager {
       'interval': 0,
       'observer': 0,
       'subscription': 0,
-      'custom': 0
+      'custom': 0,
     },
     memoryFreed: 0,
-    lastCleanup: 0
+    lastCleanup: 0,
   };
 
   static getInstance(): AutoCleanupManager {
@@ -89,18 +89,18 @@ export class AutoCleanupManager {
     const fullResource: CleanupResource = {
       ...resource,
       id,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
 
     this.resources.set(id, fullResource);
     this.stats.totalResources++;
     this.stats.resourcesByType[resource.type]++;
 
-    console.debug(`🧹 Resource registered:`, {
+    console.debug('🧹 Resource registered:', {
       id,
       type: resource.type,
       name: resource.name,
-      componentId: resource.componentId
+      componentId: resource.componentId,
     });
 
     return id;
@@ -126,11 +126,11 @@ export class AutoCleanupManager {
       this.stats.cleanedByType[resource.type]++;
       this.stats.lastCleanup = Date.now();
 
-      console.debug(`✅ Resource cleaned:`, {
+      console.debug('✅ Resource cleaned:', {
         id: resourceId,
         type: resource.type,
         name: resource.name,
-        age: Date.now() - resource.createdAt
+        age: Date.now() - resource.createdAt,
       });
 
       return true;
@@ -155,9 +155,9 @@ export class AutoCleanupManager {
       }
     }
 
-    console.info(`🧹 Component cleanup completed:`, {
+    console.info('🧹 Component cleanup completed:', {
       componentId,
-      resourcesCleaned: cleanedCount
+      resourcesCleaned: cleanedCount,
     });
 
     return cleanedCount;
@@ -178,9 +178,9 @@ export class AutoCleanupManager {
       }
     }
 
-    console.info(`🧹 Type cleanup completed:`, {
+    console.info('🧹 Type cleanup completed:', {
       type,
-      resourcesCleaned: cleanedCount
+      resourcesCleaned: cleanedCount,
     });
 
     return cleanedCount;
@@ -203,9 +203,9 @@ export class AutoCleanupManager {
     }
 
     if (cleanedCount > 0) {
-      console.info(`🧹 Age-based cleanup completed:`, {
+      console.info('🧹 Age-based cleanup completed:', {
         maxAgeMs,
-        resourcesCleaned: cleanedCount
+        resourcesCleaned: cleanedCount,
       });
     }
 
@@ -225,8 +225,8 @@ export class AutoCleanupManager {
       }
     }
 
-    console.info(`🧹 Complete cleanup finished:`, {
-      resourcesCleaned: cleanedCount
+    console.info('🧹 Complete cleanup finished:', {
+      resourcesCleaned: cleanedCount,
     });
 
     return cleanedCount;
@@ -238,7 +238,7 @@ export class AutoCleanupManager {
   getStats(): CleanupStats {
     return {
       ...this.stats,
-      totalResources: this.resources.size
+      totalResources: this.resources.size,
     };
   }
 
@@ -270,7 +270,7 @@ export const registerEventListener = (
   event: string,
   handler: EventListener,
   options?: AddEventListenerOptions,
-  componentId?: string
+  componentId?: string,
 ): string => {
   element.addEventListener(event, handler, options);
 
@@ -281,7 +281,7 @@ export const registerEventListener = (
     metadata: { event, options },
     cleanup: () => {
       element.removeEventListener(event, handler, options);
-    }
+    },
   });
 };
 
@@ -291,7 +291,7 @@ export const registerEventListener = (
 export const registerTimer = (
   callback: () => void,
   delay: number,
-  componentId?: string
+  componentId?: string,
 ): string => {
   const timerId = setTimeout(callback, delay);
 
@@ -302,7 +302,7 @@ export const registerTimer = (
     metadata: { delay },
     cleanup: () => {
       clearTimeout(timerId);
-    }
+    },
   });
 };
 
@@ -312,7 +312,7 @@ export const registerTimer = (
 export const registerInterval = (
   callback: () => void,
   interval: number,
-  componentId?: string
+  componentId?: string,
 ): string => {
   const intervalId = setInterval(callback, interval);
 
@@ -323,7 +323,7 @@ export const registerInterval = (
     metadata: { interval },
     cleanup: () => {
       clearInterval(intervalId);
-    }
+    },
   });
 };
 
@@ -333,7 +333,7 @@ export const registerInterval = (
 export const registerIntersectionObserver = (
   callback: IntersectionObserverCallback,
   options?: IntersectionObserverInit,
-  componentId?: string
+  componentId?: string,
 ): { observer: IntersectionObserver; cleanupId: string } => {
   const observer = new IntersectionObserver(callback, options);
 
@@ -344,7 +344,7 @@ export const registerIntersectionObserver = (
     metadata: { options },
     cleanup: () => {
       observer.disconnect();
-    }
+    },
   });
 
   return { observer, cleanupId };
@@ -355,7 +355,7 @@ export const registerIntersectionObserver = (
  */
 export const registerResizeObserver = (
   callback: ResizeObserverCallback,
-  componentId?: string
+  componentId?: string,
 ): { observer: ResizeObserver; cleanupId: string } => {
   const observer = new ResizeObserver(callback);
 
@@ -366,7 +366,7 @@ export const registerResizeObserver = (
     metadata: {},
     cleanup: () => {
       observer.disconnect();
-    }
+    },
   });
 
   return { observer, cleanupId };
@@ -378,7 +378,7 @@ export const registerResizeObserver = (
 export const registerMutationObserver = (
   callback: MutationCallback,
   options?: MutationObserverInit,
-  componentId?: string
+  componentId?: string,
 ): { observer: MutationObserver; cleanupId: string } => {
   const observer = new MutationObserver(callback);
 
@@ -389,7 +389,7 @@ export const registerMutationObserver = (
     metadata: { options },
     cleanup: () => {
       observer.disconnect();
-    }
+    },
   });
 
   return { observer, cleanupId };
@@ -417,7 +417,7 @@ export const stopAutoCleanup = (): void => {
   if (autoCleanupTimer) {
     clearInterval(autoCleanupTimer);
     autoCleanupTimer = null;
-    console.info(`🧹 Auto-cleanup stopped`);
+    console.info('🧹 Auto-cleanup stopped');
   }
 };
 

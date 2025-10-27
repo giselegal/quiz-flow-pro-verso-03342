@@ -12,6 +12,6 @@ export function useAdapterValidation(draft?: { id: string }) {
         queryFn: async () => {
             // Placeholder: sem endpoint dedicado, apenas retorna warnings informativos se inexistente
             return { errors: [], warnings: [{ code: 'CLIENT_SIDE_PLACEHOLDER', message: 'Validação detalhada será fornecida ao publicar.', severity: 'warning' }] };
-        }
+        },
     });
 }

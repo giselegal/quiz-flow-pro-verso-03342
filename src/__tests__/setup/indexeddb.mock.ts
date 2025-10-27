@@ -70,7 +70,7 @@ class MockObjectStore {
 class MockIDBDatabase implements IDBDatabase {
     name = 'QuizQuestFunnelDB';
     version = 1;
-    objectStoreNames = { contains: (n: string) => !!this.stores[n], length: 0, item: () => null, [Symbol.iterator]: function* () { } } as any;
+    objectStoreNames = { contains: (n: string) => !!this.stores[n], length: 0, item: () => null, *[Symbol.iterator] () { } } as any;
     stores: Record<string, MockObjectStore> = {};
     close(): void { /* noop */ }
     addEventListener(): any { /* noop */ }
@@ -118,6 +118,6 @@ if (!(global.indexedDB && (global.indexedDB as any).__qqcvMock)) {
             db.createObjectStore('metadata', { keyPath: 'key' });
             setTimeout(() => { req.result = db as any; req.readyState = 'done'; req.onsuccess && req.onsuccess(new Event('success')); }, 0);
             return req as any;
-        }
+        },
     } as any;
 }

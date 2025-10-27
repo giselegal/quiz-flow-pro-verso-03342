@@ -34,7 +34,7 @@ const optionsGridSchema = z.object({
         text: z.string(),
         value: z.string(),
         image: z.string().optional(),
-      })
+      }),
     )
     .min(1, 'Pelo menos uma opção é necessária'),
   columns: z.number().min(1).max(4).optional(),

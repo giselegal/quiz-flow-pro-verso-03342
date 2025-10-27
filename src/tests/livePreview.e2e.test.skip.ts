@@ -50,8 +50,8 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
         useAdvancedCache({
           maxSize: 100,
           ttl: 5000,
-          strategy: 'lru'
-        })
+          strategy: 'lru',
+        }),
       );
 
       act(() => {
@@ -71,15 +71,15 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
     it('useRenderOptimization - Otimização de renderização ativa', () => {
       const mockSteps = [
         { id: 'step1', type: 'question', title: 'Test Step 1' },
-        { id: 'step2', type: 'result', title: 'Test Step 2' }
+        { id: 'step2', type: 'result', title: 'Test Step 2' },
       ];
 
       const { result } = renderHook(() => 
         useRenderOptimization({
           enableVirtualization: true,
           enableMemoization: true,
-          enableRenderProfiling: true
-        })
+          enableRenderProfiling: true,
+        }),
       );
 
       act(() => {
@@ -101,8 +101,8 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
         useAdvancedWebSocket('ws://localhost:3001', {
           enableCompression: true,
           enableHeartbeat: true,
-          maxRetries: 3
-        })
+          maxRetries: 3,
+        }),
       );
 
       // Verificar estado inicial
@@ -125,7 +125,7 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
     it('useLiveCanvasPreview - Sistema completo funcional', () => {
       const mockSteps = [
         { id: 'step1', type: 'question', title: 'Test Question' },
-        { id: 'step2', type: 'result', title: 'Test Result' }
+        { id: 'step2', type: 'result', title: 'Test Result' },
       ];
 
       const { result } = renderHook(() => 
@@ -134,8 +134,8 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
           selectedStepId: 'step1',
           enablePerformanceOptimization: true,
           enableWebSocketSync: true,
-          debounceMs: 300
-        })
+          debounceMs: 300,
+        }),
       );
 
       // Verificar estado inicial
@@ -165,7 +165,7 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
           steps: [],
           selectedStepId: null,
           enablePerformanceOptimization: true,
-          enableWebSocketSync: true
+          enableWebSocketSync: true,
         });
 
         return { cache, websocket, preview };
@@ -192,7 +192,7 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
   describe('✅ 4. Validação de Performance', () => {
     it('Sistema de cache - Performance adequada', () => {
       const { result } = renderHook(() => 
-        useAdvancedCache({ maxSize: 1000, ttl: 10000 })
+        useAdvancedCache({ maxSize: 1000, ttl: 10000 }),
       );
 
       const startTime = performance.now();
@@ -225,14 +225,14 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
       const { result, unmount } = renderHook(() => 
         useRenderOptimization({
           enableVirtualization: true,
-          enableMemoization: true
-        })
+          enableMemoization: true,
+        }),
       );
 
       act(() => {
         const largeDataSet = Array.from({ length: 1000 }, (_, i) => ({
           id: `item-${i}`,
-          data: `Large data item ${i}`
+          data: `Large data item ${i}`,
         }));
         
         result.current.optimizeRender(largeDataSet);
@@ -252,11 +252,11 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
         const preview = useLiveCanvasPreview({
           steps: [
             { id: 'q1', type: 'question', title: 'Question 1' },
-            { id: 'r1', type: 'result', title: 'Result 1' }
+            { id: 'r1', type: 'result', title: 'Result 1' },
           ],
           selectedStepId: 'q1',
           enablePerformanceOptimization: true,
-          enableWebSocketSync: true
+          enableWebSocketSync: true,
         });
 
         return { cache, renderOpt, websocket, preview };
@@ -266,19 +266,19 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
       act(() => {
         // Cache uma renderização otimizada
         const optimizedData = result.current.renderOpt.optimizeRender([
-          { id: 'test', data: 'optimization' }
+          { id: 'test', data: 'optimization' },
         ]);
         result.current.cache.set('optimized-render', optimizedData);
 
         // Sincronizar via WebSocket
         result.current.websocket.sendMessage({
           type: 'render-update',
-          data: optimizedData
+          data: optimizedData,
         });
 
         // Atualizar preview
         result.current.preview.updateSteps?.([
-          { id: 'q1', type: 'question', title: 'Updated Question 1' }
+          { id: 'q1', type: 'question', title: 'Updated Question 1' },
         ]);
       });
 
@@ -297,8 +297,8 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
           // Configurações que simulam sistema legado
           enablePerformanceOptimization: false,
           enableWebSocketSync: false,
-          debounceMs: 0
-        })
+          debounceMs: 0,
+        }),
       );
 
       // Sistema deve funcionar mesmo com otimizações desabilitadas
@@ -316,15 +316,15 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
           steps: [],
           selectedStepId: null,
           enablePerformanceOptimization: true,
-          debounceMs: 100
-        })
+          debounceMs: 100,
+        }),
       );
 
       // Simular muitas atualizações rápidas
       act(() => {
         for (let i = 0; i < 100; i++) {
           result.current.updateSteps?.([
-            { id: `step-${i}`, type: 'question', title: `Step ${i}` }
+            { id: `step-${i}`, type: 'question', title: `Step ${i}` },
           ]);
         }
       });
@@ -340,7 +340,7 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
         send: vi.fn(() => { throw new Error('Connection lost'); }),
         addEventListener: vi.fn(),
         removeEventListener: vi.fn(),
-        readyState: 3 // CLOSED
+        readyState: 3, // CLOSED
       };
 
       global.WebSocket = vi.fn(() => mockWebSocket);
@@ -348,8 +348,8 @@ describe('🧪 E2E - Sistema de Preview ao Vivo', () => {
       const { result } = renderHook(() => 
         useAdvancedWebSocket('ws://localhost:3001', {
           enableAutoReconnect: true,
-          maxRetries: 3
-        })
+          maxRetries: 3,
+        }),
       );
 
       // Sistema deve lidar com erros graciosamente

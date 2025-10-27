@@ -11,10 +11,10 @@ export const convertToCSV = (data: any[]): string => {
     ...data.map(row =>
       headers.map(header => {
         const value = row[header];
-        const escaped = ('' + value).replace(/"/g, '""');
+        const escaped = (`${  value}`).replace(/"/g, '""');
         return `"${escaped}"`;
-      }).join(',')
-    )
+      }).join(','),
+    ),
   ];
 
   return csvRows.join('\n');

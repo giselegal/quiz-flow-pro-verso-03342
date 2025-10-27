@@ -42,13 +42,13 @@ export abstract class BaseUnifiedService extends EventEmitter {
       callCount: 0,
       avgResponseTime: 0,
       errorRate: 0,
-      lastUsed: new Date()
+      lastUsed: new Date(),
     };
   }
 
   protected async executeWithMetrics<T>(
     operation: () => Promise<T>,
-    operationName: string
+    operationName: string,
   ): Promise<T> {
     const startTime = performance.now();
     this.metrics.callCount++;
@@ -215,7 +215,7 @@ export class UnifiedServiceManager extends EventEmitter {
       totalServices: values.length,
       avgResponseTime: values.reduce((sum, m) => sum + m.avgResponseTime, 0) / values.length,
       totalCalls: values.reduce((sum, m) => sum + m.callCount, 0),
-      avgErrorRate: values.reduce((sum, m) => sum + m.errorRate, 0) / values.length
+      avgErrorRate: values.reduce((sum, m) => sum + m.errorRate, 0) / values.length,
     };
   }
 }

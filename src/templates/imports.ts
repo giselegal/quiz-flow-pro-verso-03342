@@ -156,7 +156,7 @@ export const loadTemplate = async (templateId: string) => {
               // Marcar como tentado para evitar spam de 404; novo build/refresh limpa este estado.
               w.__jsonV3Attempts.add(stepId);
             }
-          })()
+          })(),
         );
       }
       // Aguarda a primeira tentativa quando chamado inline; ignora o resultado.
@@ -210,7 +210,7 @@ try {
   }
 
   console.log(`✅ TemplateRegistry registrado: ${registered} steps`);
-  console.log(`📋 Steps registrados:`, registeredKeys.sort());
+  console.log('📋 Steps registrados:', registeredKeys.sort());
 } catch (err) {
   console.error('❌ Erro ao registrar templates no TemplateRegistry:', err);
 }
@@ -275,12 +275,12 @@ if (typeof window !== 'undefined') {
                   } finally {
                     w.__jsonV3Attempts.add(id);
                   }
-                })()
+                })(),
               );
             }
             try { await w.__jsonV3InFlight.get(id); } catch { }
             w.__jsonV3InFlight.delete(id);
-          })
+          }),
         );
       } catch {
         // silencioso

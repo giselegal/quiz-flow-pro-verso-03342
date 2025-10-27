@@ -84,7 +84,7 @@ const PreviewHeader: React.FC<PreviewHeaderProps> = ({
   onModeChange,
   currentStep,
   totalSteps,
-  onStepChange
+  onStepChange,
 }) => {
   return (
     <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
@@ -100,7 +100,7 @@ const PreviewHeader: React.FC<PreviewHeaderProps> = ({
           {[
             { id: 'desktop', label: 'Desktop', icon: 'Monitor' },
             { id: 'tablet', label: 'Tablet', icon: 'Tablet' },
-            { id: 'mobile', label: 'Mobile', icon: 'Phone' }
+            { id: 'mobile', label: 'Mobile', icon: 'Phone' },
           ].map(({ id, label, icon }) => (
             <button
               key={id}
@@ -147,7 +147,7 @@ const PreviewFrame: React.FC<PreviewFrameProps> = ({
   currentStep,
   totalSteps,
   onNext,
-  onPrevious
+  onPrevious,
 }) => {
   if (!step) {
     return (
@@ -227,7 +227,7 @@ const PreviewControls: React.FC<PreviewControlsProps> = ({
   onNext,
   onPrevious,
   canGoNext,
-  canGoPrevious
+  canGoPrevious,
 }) => {
   return (
     <div className="bg-white border-t border-gray-200 p-4 flex items-center justify-center space-x-4">

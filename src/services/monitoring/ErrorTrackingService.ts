@@ -71,8 +71,8 @@ class ErrorTrackingService {
         metadata: {
           filename: event.filename,
           lineno: event.lineno,
-          colno: event.colno
-        }
+          colno: event.colno,
+        },
       });
     });
 
@@ -82,8 +82,8 @@ class ErrorTrackingService {
         event.reason instanceof Error ? event.reason : new Error(String(event.reason)),
         {
           component: 'global',
-          action: 'unhandled_promise'
-        }
+          action: 'unhandled_promise',
+        },
       );
     });
 
@@ -95,8 +95,8 @@ class ErrorTrackingService {
           action: 'load_error',
           metadata: {
             resourceType: (event.target as any).tagName,
-            resourceUrl: (event.target as any).src || (event.target as any).href
-          }
+            resourceUrl: (event.target as any).src || (event.target as any).href,
+          },
         });
       }
     }, true);
@@ -123,10 +123,10 @@ class ErrorTrackingService {
         sessionId: this.sessionId,
         component: context?.component,
         action: context?.action,
-        userId: context?.userId
+        userId: context?.userId,
       },
       metadata: context?.metadata,
-      fingerprint: this.generateFingerprint(errorObj, context?.component)
+      fingerprint: this.generateFingerprint(errorObj, context?.component),
     };
 
     this.addError(report);
@@ -138,7 +138,7 @@ class ErrorTrackingService {
       component: context?.component,
       action: context?.action,
       stack: errorObj.stack,
-      metadata: context?.metadata
+      metadata: context?.metadata,
     });
 
     return report.id;
@@ -202,7 +202,7 @@ class ErrorTrackingService {
     const fingerprintCounts = this.errors.reduce((acc, error) => {
       acc[error.fingerprint] = {
         count: (acc[error.fingerprint]?.count || 0) + 1,
-        message: error.message
+        message: error.message,
       };
       return acc;
     }, {} as Record<string, { count: number; message: string }>);
@@ -217,7 +217,7 @@ class ErrorTrackingService {
       byLevel,
       byComponent,
       recentErrors: this.errors.slice(0, 20),
-      topErrors
+      topErrors,
     };
   }
 
@@ -354,7 +354,7 @@ class ErrorTrackingService {
       error.level,
       error.message.replace(/"/g, '""'),
       error.context.component || '',
-      error.context.url
+      error.context.url,
     ]);
 
     return [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');

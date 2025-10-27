@@ -309,7 +309,7 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
     enableAnalytics = true,
     enableAutosave = true,
     enableHistory = true,
-    showMetrics: _showMetrics = false
+    showMetrics: _showMetrics = false,
 }) => {
     const [funnel, setFunnel] = useState<UniversalFunnel>(initialFunnel);
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -332,14 +332,14 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
                 return false;
             },
             interval: 2000,
-            enabled: !readOnly
+            enabled: !readOnly,
         });
     }
 
     if (enableHistory) {
         useHistory({
             maxHistorySize: 50,
-            initialState: funnel
+            initialState: funnel,
         });
     }
 
@@ -349,7 +349,7 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
             analytics.trackEvent('universal-editor-open', {
                 page: `/universal-editor/${funnel.type}/${funnel.id}`,
                 funnelType: funnel.type,
-                funnelId: funnel.id
+                funnelId: funnel.id,
             });
         }
     }, [analytics, funnel.id, funnel.type]);
@@ -374,12 +374,12 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
         const newStep: UniversalStep = {
             id: `step-${Date.now()}`,
             name: `Nova Etapa ${funnel.steps.length + 1}`,
-            blocks: []
+            blocks: [],
         };
 
         setFunnel(prev => ({
             ...prev,
-            steps: [...prev.steps, newStep]
+            steps: [...prev.steps, newStep],
         }));
     }, [funnel.steps.length]);
 
@@ -388,7 +388,7 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
         const newBlock: UniversalBlock = {
             id: `block-${Date.now()}`,
             type,
-            content: getDefaultContentForType(type)
+            content: getDefaultContentForType(type),
         };
 
         setFunnel(prev => ({
@@ -396,8 +396,8 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
             steps: prev.steps.map((step, index) =>
                 index === currentStepIndex
                     ? { ...step, blocks: [...step.blocks, newBlock] }
-                    : step
-            )
+                    : step,
+            ),
         }));
 
         setSelectedBlockId(newBlock.id);
@@ -412,11 +412,11 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
                     ? {
                         ...step,
                         blocks: step.blocks.map(block =>
-                            block.id === blockId ? { ...block, ...updates } : block
-                        )
+                            block.id === blockId ? { ...block, ...updates } : block,
+                        ),
                     }
-                    : step
-            )
+                    : step,
+            ),
         }));
     }, [currentStepIndex]);
 
@@ -428,10 +428,10 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
                 index === currentStepIndex
                     ? {
                         ...step,
-                        blocks: step.blocks.filter(block => block.id !== blockId)
+                        blocks: step.blocks.filter(block => block.id !== blockId),
                     }
-                    : step
-            )
+                    : step,
+            ),
         }));
 
         if (selectedBlockId === blockId) {
@@ -456,7 +456,7 @@ export const UniversalFunnelEditor: React.FC<UniversalFunnelEditorProps> = ({
         { type: 'text', label: '💬 Texto', icon: '💬' },
         { type: 'question', label: '❓ Pergunta', icon: '❓' },
         { type: 'image', label: '🖼️ Imagem', icon: '🖼️' },
-        { type: 'button', label: '🔘 Botão', icon: '🔘' }
+        { type: 'button', label: '🔘 Botão', icon: '🔘' },
     ];
 
     return (
@@ -641,8 +641,8 @@ function getDefaultContentForType(type: string): any {
                 question: 'Nova pergunta?',
                 options: [
                     { text: 'Opção A', value: 'a' },
-                    { text: 'Opção B', value: 'b' }
-                ]
+                    { text: 'Opção B', value: 'b' },
+                ],
             };
         case 'image':
             return { src: '', alt: 'Nova imagem' };

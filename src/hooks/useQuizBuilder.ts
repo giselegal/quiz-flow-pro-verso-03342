@@ -17,7 +17,7 @@ export const useQuizBuilder = () => {
     addStage,
     updateStage,
     removeStage: deleteStage,
-    goToStage: setActiveStage
+    goToStage: setActiveStage,
   } = useQuizStages();
 
   // Add missing methods for compatibility
@@ -94,7 +94,7 @@ export const useQuizBuilder = () => {
           JSON.stringify({
             components,
             stages,
-          })
+          }),
         );
       } catch (error) {
         console.error('Error saving quiz data:', error);
@@ -114,7 +114,7 @@ export const useQuizBuilder = () => {
         JSON.stringify({
           components,
           stages,
-        })
+        }),
       );
       return true;
     } catch (error) {

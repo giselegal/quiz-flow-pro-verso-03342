@@ -7,7 +7,7 @@ import { globSync } from 'glob';
  * Exceções: arquivos dentro de src/components/editor/** e testes.
  */
 
-const FORBIDDEN_PATTERN = "@/components/editor/";
+const FORBIDDEN_PATTERN = '@/components/editor/';
 const PROD_GLOBS = [
   'src/components/**/*.tsx',
   'src/components/**/*.ts',

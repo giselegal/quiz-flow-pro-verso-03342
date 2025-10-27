@@ -14,7 +14,7 @@ interface Recommendation {
 export const usePersonalizedRecommendations = (
   primaryStyle: StyleResult,
   secondaryStyles: StyleResult[],
-  userName?: string
+  userName?: string,
 ) => {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [isLoading, setIsLoading] = useState(true);

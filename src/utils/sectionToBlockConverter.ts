@@ -29,12 +29,12 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             fontWeight: 'semibold',
             textAlign: 'center',
             color: section.props?.colors?.greeting || 'text',
-            animation: section.props?.celebrationAnimation || 'bounce'
+            animation: section.props?.celebrationAnimation || 'bounce',
           },
           content: {
             text: section.props?.greetingFormat || 'Olá, {userName}!',
-            emoji: section.props?.celebrationEmoji || '🎉'
-          }
+            emoji: section.props?.celebrationEmoji || '🎉',
+          },
         });
         
         // Título principal → result-header
@@ -46,9 +46,9 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             title: section.props?.titleFormat || 'Seu Estilo Predominante é:',
             fontSize: '3xl',
             fontWeight: 'bold',
-            textAlign: 'center'
+            textAlign: 'center',
           },
-          content: {}
+          content: {},
         });
         
         // Nome do estilo → result-main
@@ -62,9 +62,9 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             showGradient: true,
             fontSize: '5xl',
             fontWeight: 'bold',
-            textAlign: 'center'
+            textAlign: 'center',
           },
-          content: {}
+          content: {},
         });
         break;
       }
@@ -80,12 +80,12 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
               aspectRatio: section.props?.styleImage?.aspectRatio || '4/5',
               borderRadius: '8px',
               maxWidth: '400px',
-              showDecorations: section.props?.styleImage?.showDecorations ?? true
+              showDecorations: section.props?.styleImage?.showDecorations ?? true,
             },
             content: {
               url: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d',
-              alt: 'Estilo {resultStyle}'
-            }
+              alt: 'Estilo {resultStyle}',
+            },
           });
         }
         
@@ -98,11 +98,11 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             properties: {
               fontSize: 'lg',
               textAlign: 'center',
-              maxWidth: '700px'
+              maxWidth: '700px',
             },
             content: {
-              text: section.props.introText.text
-            }
+              text: section.props.introText.text,
+            },
           });
         }
         
@@ -114,11 +114,11 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             order: section.order * 10 + 2,
             properties: {
               fontSize: 'base',
-              textAlign: 'left'
+              textAlign: 'left',
             },
             content: {
-              text: '{styleDescription}' // Será substituído dinamicamente
-            }
+              text: '{styleDescription}', // Será substituído dinamicamente
+            },
           });
         }
         
@@ -131,11 +131,11 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             properties: {
               fontSize: 'lg',
               textAlign: 'center',
-              maxWidth: '700px'
+              maxWidth: '700px',
             },
             content: {
-              text: section.props.transitionText
-            }
+              text: section.props.transitionText,
+            },
           });
         }
         
@@ -149,11 +149,11 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
               showTop: section.props.progressBars?.topCount || 3,
               showPercentage: section.props.progressBars?.showPercentage ?? true,
               animationDelay: section.props.progressBars?.animationDelay || 200,
-              title: section.props.progressBars?.titleFormat || 'Além do {primaryStyle}, você também tem traços de:'
+              title: section.props.progressBars?.titleFormat || 'Além do {primaryStyle}, você também tem traços de:',
             },
             content: {
-              scores: [] // Será preenchido dinamicamente
-            }
+              scores: [], // Será preenchido dinamicamente
+            },
           });
         }
         
@@ -165,17 +165,17 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             order: section.order * 10 + 5,
             properties: {
               title: section.props.keywords?.title || 'Palavras que te definem:',
-              items: [] // Será preenchido dinamicamente
+              items: [], // Será preenchido dinamicamente
             },
-            content: {}
+            content: {},
           });
         }
         
         // Perguntas persuasivas → result-description
         if (section.props?.showPersuasiveQuestions) {
           const questions = section.props.persuasiveQuestions?.questions || [];
-          const questionText = (section.props.persuasiveQuestions?.title || '💭 Você já se perguntou...') + 
-            '\n\n' + questions.join('\n');
+          const questionText = `${section.props.persuasiveQuestions?.title || '💭 Você já se perguntou...'  
+            }\n\n${  questions.join('\n')}`;
           
           blocks.push({
             id: `${section.id}-questions`,
@@ -184,11 +184,11 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             properties: {
               fontSize: 'base',
               textAlign: 'left',
-              maxWidth: '700px'
+              maxWidth: '700px',
             },
             content: {
-              text: questionText
-            }
+              text: questionText,
+            },
           });
         }
         
@@ -201,11 +201,11 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             properties: {
               fontSize: 'lg',
               textAlign: section.props.closingMessage.textAlign || 'center',
-              maxWidth: '700px'
+              maxWidth: '700px',
             },
             content: {
-              text: section.props.closingMessage.text
-            }
+              text: section.props.closingMessage.text,
+            },
           });
         }
         
@@ -219,12 +219,12 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
               aspectRatio: section.props.guideImage?.aspectRatio || '4/5',
               maxWidth: section.props.guideImage?.maxWidth || '28rem',
               centered: section.props.guideImage?.centered ?? true,
-              borderRadius: '8px'
+              borderRadius: '8px',
             },
             content: {
               url: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp',
-              alt: 'Guia de Imagem e Estilo'
-            }
+              alt: 'Guia de Imagem e Estilo',
+            },
           });
         }
         break;
@@ -244,12 +244,12 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
               size: section.props?.size || 'large',
               fullWidthMobile: section.props?.fullWidthMobile ?? true,
               gradientFrom: section.props?.colors?.from || 'primary',
-              gradientTo: section.props?.colors?.to || 'accent'
+              gradientTo: section.props?.colors?.to || 'accent',
             },
             content: {
               url: '#checkout',
-              transition: section.props?.transition
-            }
+              transition: section.props?.transition,
+            },
           });
         }
         break;
@@ -265,9 +265,9 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             title: section.props?.mainTitle || 'Transformação',
             subtitle: section.props?.subtitle,
             fontSize: '3xl',
-            textAlign: 'center'
+            textAlign: 'center',
           },
-          content: {}
+          content: {},
         });
         
         // Benefits/Features → result-characteristics
@@ -279,10 +279,10 @@ export function convertSectionsToBlocks(sections: any[]): Block[] {
             properties: {
               title: 'Benefícios',
               items: section.props.benefits.map((b: any) => 
-                `${b.icon || '✨'} ${b.text}${b.description ? ': ' + b.description : ''}`
-              )
+                `${b.icon || '✨'} ${b.text}${b.description ? `: ${  b.description}` : ''}`,
+              ),
             },
-            content: {}
+            content: {},
           });
         }
         break;

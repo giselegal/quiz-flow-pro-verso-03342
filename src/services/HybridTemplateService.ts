@@ -60,7 +60,7 @@ class HybridTemplateService {
     if (!this.warned && typeof console !== 'undefined') {
       this.warned = true;
       // Aviso de depreciação padronizado
-      console.warn(`\n⚠️ DEPRECATED: HybridTemplateService está descontinuado.\nUse: import { templateService } from '@/services/canonical/TemplateService'\nSerá removido em: v2.0.0\n`);
+      console.warn('\n⚠️ DEPRECATED: HybridTemplateService está descontinuado.\nUse: import { templateService } from \'@/services/canonical/TemplateService\'\nSerá removido em: v2.0.0\n');
     }
   }
 
@@ -83,7 +83,7 @@ class HybridTemplateService {
         stepsResult.data.map(async (s) => {
           const r = await templateService.getStep(s.id);
           return [s.id, r.success ? r.data : []] as const;
-        })
+        }),
       );
       const obj = Object.fromEntries(entries) as any;
       // Anexar metadado de origem para compatibilidade com testes e depuração
@@ -147,7 +147,7 @@ class HybridTemplateService {
         const n = parseInt(s.id.replace(/\D/g, ''), 10);
         const cfg = await this.getStepConfig(n);
         return [s.id, cfg] as const;
-      })
+      }),
     );
     const master: MasterTemplate & { _source?: string } = {
       templateVersion: '3.0',

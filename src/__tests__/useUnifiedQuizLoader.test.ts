@@ -12,8 +12,8 @@ import { QUIZ_STEPS } from '@/data/quizSteps';
 // Mock do Supabase
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
-    from: vi.fn()
-  }
+    from: vi.fn(),
+  },
 }));
 
 describe('useUnifiedQuizLoader', () => {
@@ -25,7 +25,7 @@ describe('useUnifiedQuizLoader', () => {
   describe('Hardcoded source', () => {
     it('deve carregar step individual do QUIZ_STEPS', async () => {
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'hardcoded' })
+        useUnifiedQuizLoader({ source: 'hardcoded' }),
       );
 
       await waitFor(() => {
@@ -42,7 +42,7 @@ describe('useUnifiedQuizLoader', () => {
 
     it('deve carregar todos os steps (1-21)', async () => {
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'hardcoded' })
+        useUnifiedQuizLoader({ source: 'hardcoded' }),
       );
 
       await waitFor(() => {
@@ -56,7 +56,7 @@ describe('useUnifiedQuizLoader', () => {
 
     it('deve retornar null para step inexistente', async () => {
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'hardcoded' })
+        useUnifiedQuizLoader({ source: 'hardcoded' }),
       );
 
       const step = await result.current.loadStep('step-99');
@@ -72,12 +72,12 @@ describe('useUnifiedQuizLoader', () => {
           templateVersion: '3.0',
           metadata: { id: 'step-01', name: 'Test', category: 'intro' },
           sections: [],
-          navigation: { nextStep: 'step-02' }
-        })
+          navigation: { nextStep: 'step-02' },
+        }),
       });
 
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'templates' })
+        useUnifiedQuizLoader({ source: 'templates' }),
       );
 
       const step = await result.current.loadStep('step-01');
@@ -89,11 +89,11 @@ describe('useUnifiedQuizLoader', () => {
 
     it('deve retornar null se template não existir', async () => {
       global.fetch = vi.fn().mockResolvedValue({
-        ok: false
+        ok: false,
       });
 
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'templates' })
+        useUnifiedQuizLoader({ source: 'templates' }),
       );
 
       const step = await result.current.loadStep('step-99');
@@ -104,7 +104,7 @@ describe('useUnifiedQuizLoader', () => {
   describe('Cache behavior', () => {
     it('deve usar cache em segunda chamada', async () => {
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'hardcoded', enableCache: true })
+        useUnifiedQuizLoader({ source: 'hardcoded', enableCache: true }),
       );
 
       // Primeira chamada
@@ -118,7 +118,7 @@ describe('useUnifiedQuizLoader', () => {
 
     it('deve pular cache quando enableCache = false', async () => {
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'hardcoded', enableCache: false })
+        useUnifiedQuizLoader({ source: 'hardcoded', enableCache: false }),
       );
 
       const step1 = await result.current.loadStep('step-01');
@@ -131,7 +131,7 @@ describe('useUnifiedQuizLoader', () => {
 
     it('deve limpar cache ao recarregar', async () => {
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'hardcoded', enableCache: true })
+        useUnifiedQuizLoader({ source: 'hardcoded', enableCache: true }),
       );
 
       await result.current.loadStep('step-01');
@@ -146,7 +146,7 @@ describe('useUnifiedQuizLoader', () => {
   describe('Loading states', () => {
     it('deve ter isLoading = true durante carregamento', async () => {
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'hardcoded' })
+        useUnifiedQuizLoader({ source: 'hardcoded' }),
       );
 
       // Inicialmente true
@@ -161,7 +161,7 @@ describe('useUnifiedQuizLoader', () => {
       global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
 
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'templates' })
+        useUnifiedQuizLoader({ source: 'templates' }),
       );
 
       await result.current.loadStep('step-01');
@@ -175,7 +175,7 @@ describe('useUnifiedQuizLoader', () => {
   describe('Auto-load on mount', () => {
     it('deve carregar steps automaticamente', async () => {
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'hardcoded' })
+        useUnifiedQuizLoader({ source: 'hardcoded' }),
       );
 
       await waitFor(() => {
@@ -188,7 +188,7 @@ describe('useUnifiedQuizLoader', () => {
   describe('Multiple step loading', () => {
     it('deve carregar múltiplos steps em sequência', async () => {
       const { result } = renderHook(() =>
-        useUnifiedQuizLoader({ source: 'hardcoded' })
+        useUnifiedQuizLoader({ source: 'hardcoded' }),
       );
 
       await waitFor(() => {
@@ -210,8 +210,8 @@ describe('useUnifiedQuizLoader', () => {
       const { result } = renderHook(() =>
         useUnifiedQuizLoader({ 
           source: 'database',
-          funnelId: 'test-funnel'
-        })
+          funnelId: 'test-funnel',
+        }),
       );
 
       await waitFor(() => {

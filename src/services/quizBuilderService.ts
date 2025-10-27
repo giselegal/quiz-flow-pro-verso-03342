@@ -75,7 +75,7 @@ export const createBuilderStateFromQuiz = (
   quizQuestions: any[],
   title: string = 'Quiz de Estilo Pessoal',
   subtitle: string = 'Descubra seu estilo predominante',
-  resultTitle: string = 'Seu Resultado de Estilo Pessoal'
+  resultTitle: string = 'Seu Resultado de Estilo Pessoal',
 ) => {
   // Create stages
   const welcomeStage: QuizStage = {

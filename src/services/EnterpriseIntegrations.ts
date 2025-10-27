@@ -42,22 +42,22 @@ export class EnterpriseIntegrations {
   // 🔌 CRM INTEGRATIONS
   async integrateHubSpot(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: 'hubspot-' + Date.now(),
+      id: `hubspot-${  Date.now()}`,
       name: 'HubSpot CRM',
       type: 'crm',
       status: 'configuring',
       credentials: {
         apiKey: config.apiKey,
-        portalId: config.portalId
+        portalId: config.portalId,
       },
       settings: {
         syncContacts: true,
         syncDeals: true,
         syncProperties: config.customProperties || [],
-        webhookUrl: config.webhookUrl
+        webhookUrl: config.webhookUrl,
       },
       lastSync: new Date(),
-      syncStatus: { success: 0, errors: 0, totalRecords: 0 }
+      syncStatus: { success: 0, errors: 0, totalRecords: 0 },
     };
 
     // Simulate API connection test
@@ -68,7 +68,7 @@ export class EnterpriseIntegrations {
       console.log('✅ HubSpot integration active:', {
         portalId: config.portalId,
         features: ['contacts', 'deals', 'analytics'],
-        expectedROI: '$2k-6k/mês'
+        expectedROI: '$2k-6k/mês',
       });
     } catch (error) {
       integration.status = 'error';
@@ -81,7 +81,7 @@ export class EnterpriseIntegrations {
 
   async integrateSalesforce(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: 'salesforce-' + Date.now(),
+      id: `salesforce-${  Date.now()}`,
       name: 'Salesforce CRM',
       type: 'crm',
       status: 'configuring',
@@ -89,15 +89,15 @@ export class EnterpriseIntegrations {
         clientId: config.clientId,
         clientSecret: config.clientSecret,
         username: config.username,
-        securityToken: config.securityToken
+        securityToken: config.securityToken,
       },
       settings: {
         sandbox: config.sandbox || false,
         objects: ['Lead', 'Contact', 'Opportunity'],
-        customFields: config.customFields || []
+        customFields: config.customFields || [],
       },
       lastSync: new Date(),
-      syncStatus: { success: 0, errors: 0, totalRecords: 0 }
+      syncStatus: { success: 0, errors: 0, totalRecords: 0 },
     };
 
     this.integrations.set(integration.id, integration);
@@ -107,21 +107,21 @@ export class EnterpriseIntegrations {
   // 📧 EMAIL MARKETING INTEGRATIONS
   async integrateMailchimp(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: 'mailchimp-' + Date.now(),
+      id: `mailchimp-${  Date.now()}`,
       name: 'Mailchimp',
       type: 'email',
       status: 'active',
       credentials: {
         apiKey: config.apiKey,
-        serverPrefix: config.serverPrefix
+        serverPrefix: config.serverPrefix,
       },
       settings: {
         defaultList: config.defaultList,
         tags: config.tags || ['quiz-lead'],
-        automationTriggers: true
+        automationTriggers: true,
       },
       lastSync: new Date(),
-      syncStatus: { success: 0, errors: 0, totalRecords: 0 }
+      syncStatus: { success: 0, errors: 0, totalRecords: 0 },
     };
 
     this.integrations.set(integration.id, integration);
@@ -130,20 +130,20 @@ export class EnterpriseIntegrations {
 
   async integrateKlaviyo(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: 'klaviyo-' + Date.now(),
+      id: `klaviyo-${  Date.now()}`,
       name: 'Klaviyo',
       type: 'email',
       status: 'active',
       credentials: {
-        apiKey: config.apiKey
+        apiKey: config.apiKey,
       },
       settings: {
         trackEvents: true,
         segmentSync: true,
-        personalizedContent: true
+        personalizedContent: true,
       },
       lastSync: new Date(),
-      syncStatus: { success: 0, errors: 0, totalRecords: 0 }
+      syncStatus: { success: 0, errors: 0, totalRecords: 0 },
     };
 
     this.integrations.set(integration.id, integration);
@@ -153,22 +153,22 @@ export class EnterpriseIntegrations {
   // 🛒 ECOMMERCE INTEGRATIONS
   async integrateShopify(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: 'shopify-' + Date.now(),
+      id: `shopify-${  Date.now()}`,
       name: 'Shopify',
       type: 'ecommerce',
       status: 'active',
       credentials: {
         storeUrl: config.storeUrl,
-        accessToken: config.accessToken
+        accessToken: config.accessToken,
       },
       settings: {
         syncProducts: true,
         syncOrders: true,
         webhooks: ['orders/create', 'orders/paid', 'customers/create'],
-        personalizedRecommendations: true
+        personalizedRecommendations: true,
       },
       lastSync: new Date(),
-      syncStatus: { success: 0, errors: 0, totalRecords: 0 }
+      syncStatus: { success: 0, errors: 0, totalRecords: 0 },
     };
 
     this.integrations.set(integration.id, integration);
@@ -178,22 +178,22 @@ export class EnterpriseIntegrations {
   // 💳 PAYMENT INTEGRATIONS
   async integrateStripe(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: 'stripe-' + Date.now(),
+      id: `stripe-${  Date.now()}`,
       name: 'Stripe',
       type: 'payment',
       status: 'active',
       credentials: {
         publishableKey: config.publishableKey,
         secretKey: config.secretKey,
-        webhookSecret: config.webhookSecret
+        webhookSecret: config.webhookSecret,
       },
       settings: {
         trackPurchases: true,
         revenueAttribution: true,
-        subscriptionTracking: true
+        subscriptionTracking: true,
       },
       lastSync: new Date(),
-      syncStatus: { success: 0, errors: 0, totalRecords: 0 }
+      syncStatus: { success: 0, errors: 0, totalRecords: 0 },
     };
 
     this.integrations.set(integration.id, integration);
@@ -203,22 +203,22 @@ export class EnterpriseIntegrations {
   // 📊 ANALYTICS INTEGRATIONS
   async integrateGoogleAnalytics(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: 'ga4-' + Date.now(),
+      id: `ga4-${  Date.now()}`,
       name: 'Google Analytics 4',
       type: 'analytics',
       status: 'active',
       credentials: {
         measurementId: config.measurementId,
-        apiSecret: config.apiSecret
+        apiSecret: config.apiSecret,
       },
       settings: {
         enhancedEcommerce: true,
         customEvents: true,
         audienceSync: true,
-        conversionTracking: true
+        conversionTracking: true,
       },
       lastSync: new Date(),
-      syncStatus: { success: 0, errors: 0, totalRecords: 0 }
+      syncStatus: { success: 0, errors: 0, totalRecords: 0 },
     };
 
     this.integrations.set(integration.id, integration);
@@ -228,19 +228,19 @@ export class EnterpriseIntegrations {
   // 🤖 AUTOMATION INTEGRATIONS
   async integrateZapier(config: any): Promise<IntegrationConfig> {
     const integration: IntegrationConfig = {
-      id: 'zapier-' + Date.now(),
+      id: `zapier-${  Date.now()}`,
       name: 'Zapier',
       type: 'automation',
       status: 'active',
       credentials: {
-        webhookUrl: config.webhookUrl
+        webhookUrl: config.webhookUrl,
       },
       settings: {
         triggers: ['quiz_completed', 'lead_scored', 'conversion'],
-        dataMapping: config.dataMapping || {}
+        dataMapping: config.dataMapping || {},
       },
       lastSync: new Date(),
-      syncStatus: { success: 0, errors: 0, totalRecords: 0 }
+      syncStatus: { success: 0, errors: 0, totalRecords: 0 },
     };
 
     this.integrations.set(integration.id, integration);
@@ -292,7 +292,7 @@ export class EnterpriseIntegrations {
         integration: integration.name,
         processed: successCount,
         duration: `${duration}ms`,
-        nextSync
+        nextSync,
       });
 
       return {
@@ -300,7 +300,7 @@ export class EnterpriseIntegrations {
         recordsProcessed: successCount,
         errors,
         duration,
-        nextSync
+        nextSync,
       };
 
     } catch (error) {
@@ -312,7 +312,7 @@ export class EnterpriseIntegrations {
         recordsProcessed: 0,
         errors,
         duration: Date.now() - startTime,
-        nextSync: new Date(Date.now() + (60 * 60 * 1000))
+        nextSync: new Date(Date.now() + (60 * 60 * 1000)),
       };
     }
   }
@@ -335,7 +335,7 @@ export class EnterpriseIntegrations {
         automation: integrations.filter(i => i.type === 'automation').length,
       },
       revenueImpact: this.calculateRevenueImpact(integrations),
-      healthScore: this.calculateHealthScore(integrations)
+      healthScore: this.calculateHealthScore(integrations),
     };
   }
 
@@ -384,7 +384,7 @@ export class EnterpriseIntegrations {
         ecommerce: 3200, // R$ 3.2k/mês por ecommerce
         analytics: 1200, // R$ 1.2k/mês por analytics
         payment: 2000,   // R$ 2k/mês por payment
-        automation: 1500 // R$ 1.5k/mês por automation
+        automation: 1500, // R$ 1.5k/mês por automation
       };
       return total + (baseImpact[integration.type] || 1000);
     }, 0);
@@ -397,7 +397,7 @@ export class EnterpriseIntegrations {
     
     const healthyIntegrations = integrations.filter(i => 
       i.status === 'active' && 
-      i.syncStatus.errors < i.syncStatus.success * 0.1
+      i.syncStatus.errors < i.syncStatus.success * 0.1,
     ).length;
     
     return Math.round((healthyIntegrations / integrations.length) * 100);

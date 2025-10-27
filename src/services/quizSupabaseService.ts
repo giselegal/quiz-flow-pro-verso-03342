@@ -189,7 +189,7 @@ export const quizSupabaseService = {
       score?: number;
       completedAt?: Date;
       metadata?: any;
-    }
+    },
   ): Promise<boolean> {
     try {
       const updateData: any = {};
@@ -462,7 +462,7 @@ export const saveUserSession = async (sessionData: any) => {
     return { success: true, userId: user.id, sessionId: session.id };
   } catch (error) {
     console.error('Erro ao salvar sessão:', error);
-    return { success: false, error: error };
+    return { success: false, error };
   }
 };
 
@@ -472,7 +472,7 @@ export const saveQuizResponse = async (responseData: any) => {
     return { success: true };
   } catch (error) {
     console.error('Erro ao salvar resposta:', error);
-    return { success: false, error: error };
+    return { success: false, error };
   }
 };
 

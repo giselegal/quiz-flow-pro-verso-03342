@@ -41,7 +41,7 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
         initialProperties = {},
         onPropertyChange,
         enableValidation = true,
-        enableTransformation = true
+        enableTransformation = true,
     } = options;
 
     // State
@@ -73,7 +73,7 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
                         console.log(`🔗 useBlockProperties carregou dados reais para ${blockType}:`, {
                             blockId,
                             defaults,
-                            currentProperties: properties
+                            currentProperties: properties,
                         });
                     }
                 }
@@ -101,7 +101,7 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
             if (event.blockId === blockId) {
                 setProperties(prev => ({
                     ...prev,
-                    [event.property]: event.newValue
+                    [event.property]: event.newValue,
                 }));
             }
         });
@@ -130,7 +130,7 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
 
             setProperties(prev => ({
                 ...prev,
-                [key]: processedValue
+                [key]: processedValue,
             }));
 
             // 💾 Save to real funnel data if valid
@@ -186,7 +186,7 @@ export const useBlockProperties = (options: UseBlockPropertiesOptions): UseBlock
         error,
         updateProperty,
         resetToDefaults,
-        validateProperty
+        validateProperty,
     };
 };
 
@@ -214,7 +214,7 @@ export const useBlockDefinition = (blockType: string) => {
  */
 export const usePropertyChangeListener = (
     blockId: string,
-    callback: (event: PropertyChangeEvent) => void
+    callback: (event: PropertyChangeEvent) => void,
 ) => {
     useEffect(() => {
         const unsubscribe = blockPropertiesAPI.subscribe(event => {

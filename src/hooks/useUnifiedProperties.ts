@@ -115,7 +115,7 @@ const createProperty = (
   type: PropertyType,
   label: string,
   category: PropertyCategory,
-  options?: any
+  options?: any,
 ): UnifiedProperty => ({
   key,
   value,
@@ -169,7 +169,7 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     true,
     PropertyType.SWITCH,
     'Habilitar Cabeçalho',
-    PropertyCategory.CONTENT
+    PropertyCategory.CONTENT,
   ),
   createProperty('showLogo', true, PropertyType.SWITCH, 'Mostrar Logo', PropertyCategory.CONTENT),
   createProperty(
@@ -177,7 +177,7 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     false,
     PropertyType.SWITCH,
     'Barra Decorativa',
-    PropertyCategory.CONTENT
+    PropertyCategory.CONTENT,
   ),
 
   // 1. Margens externas (4 direções)
@@ -193,7 +193,7 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     PropertyType.RANGE,
     'Margem Inferior',
     PropertyCategory.LAYOUT,
-    { min: 0, max: 100, step: 2, unit: 'px' }
+    { min: 0, max: 100, step: 2, unit: 'px' },
   ),
   createProperty('marginLeft', 0, PropertyType.RANGE, 'Margem Esquerda', PropertyCategory.LAYOUT, {
     min: 0,
@@ -221,7 +221,7 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     PropertyType.RANGE,
     'Padding Inferior',
     PropertyCategory.LAYOUT,
-    { min: 0, max: 100, step: 2, unit: 'px' }
+    { min: 0, max: 100, step: 2, unit: 'px' },
   ),
   createProperty(
     'paddingLeft',
@@ -234,7 +234,7 @@ const getUniversalProperties = (): UnifiedProperty[] => [
       max: 100,
       step: 2,
       unit: 'px',
-    }
+    },
   ),
   createProperty(
     'paddingRight',
@@ -247,15 +247,15 @@ const getUniversalProperties = (): UnifiedProperty[] => [
       max: 100,
       step: 2,
       unit: 'px',
-    }
+    },
   ),
 
   // Box Model Compostos (para editor visual avançado)
   createProperty('margin', { top: 0, right: 0, bottom: 0, left: 0 }, PropertyType.OBJECT, 'Margens', PropertyCategory.LAYOUT, {
-    description: 'Controle visual avançado de margens externas'
+    description: 'Controle visual avançado de margens externas',
   }),
   createProperty('padding', { top: 0, right: 0, bottom: 0, left: 0 }, PropertyType.OBJECT, 'Paddings', PropertyCategory.LAYOUT, {
-    description: 'Controle visual avançado de espaçamento interno'
+    description: 'Controle visual avançado de espaçamento interno',
   }),
 
   // Animações
@@ -266,9 +266,9 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     timing: 'ease',
     direction: 'normal',
     iteration: 1,
-    trigger: 'load'
+    trigger: 'load',
   }, PropertyType.OBJECT, 'Animação', PropertyCategory.STYLE, {
-    description: 'Configuração visual de animação CSS com preview'
+    description: 'Configuração visual de animação CSS com preview',
   }),
 
   // 3. Escala geral (tamanho)
@@ -286,21 +286,21 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     'transparent',
     PropertyType.COLOR,
     'Cor de Fundo do Componente',
-    PropertyCategory.STYLE
+    PropertyCategory.STYLE,
   ),
   createProperty(
     'containerBackgroundColor',
     'transparent',
     PropertyType.COLOR,
     'Cor de Fundo do Container',
-    PropertyCategory.STYLE
+    PropertyCategory.STYLE,
   ),
   createProperty(
     'canvasBackgroundColor',
     'transparent',
     PropertyType.COLOR,
     'Cor de Fundo do Canvas',
-    PropertyCategory.STYLE
+    PropertyCategory.STYLE,
   ),
 
   // 5. Alinhamento
@@ -316,7 +316,7 @@ const getUniversalProperties = (): UnifiedProperty[] => [
         { value: 'center', label: 'Centro' },
         { value: 'right', label: 'Direita' },
       ],
-    }
+    },
   ),
 
   // 6. Largura do texto
@@ -333,7 +333,7 @@ const getUniversalProperties = (): UnifiedProperty[] => [
         { value: '80%', label: '80%' },
         { value: '60%', label: '60%' },
       ],
-    }
+    },
   ),
 ];
 
@@ -346,7 +346,7 @@ const getTextProperties = (): UnifiedProperty[] => [
     'Digite seu texto aqui...',
     PropertyType.TEXT,
     'Texto',
-    PropertyCategory.CONTENT
+    PropertyCategory.CONTENT,
   ),
   createProperty('fontSize', 16, PropertyType.RANGE, 'Tamanho da Fonte', PropertyCategory.STYLE, {
     min: 10,
@@ -368,14 +368,14 @@ const getTextProperties = (): UnifiedProperty[] => [
         { value: '600', label: 'Semi-negrito (600)' },
         { value: '700', label: 'Negrito (700)' },
       ]),
-    }
+    },
   ),
   createProperty(
     'textColor',
     BRAND_COLORS.text,
     PropertyType.COLOR,
     'Cor do Texto',
-    PropertyCategory.STYLE
+    PropertyCategory.STYLE,
   ),
 ];
 
@@ -386,7 +386,7 @@ export const useUnifiedProperties = (
   blockType: string,
   blockId?: string,
   block?: UnifiedBlock | null,
-  onUpdateExternal?: (blockId: string, updates: Partial<UnifiedBlock>) => void
+  onUpdateExternal?: (blockId: string, updates: Partial<UnifiedBlock>) => void,
 ): UseUnifiedPropertiesReturn => {
   const currentBlock = block;
 
@@ -415,8 +415,8 @@ export const useUnifiedProperties = (
               step: s.step,
               unit: s.unit,
               options: s.options,
-            }
-          )
+            },
+          ),
         );
 
         // Acrescenta propriedades universais de container/layout para editabilidade consistente
@@ -434,8 +434,8 @@ export const useUnifiedProperties = (
                 { value: 'large', label: 'Largo (max-w-4xl)' },
                 { value: 'medium', label: 'Médio (max-w-2xl)' },
                 { value: 'small', label: 'Pequeno (max-w-md)' },
-              ]
-            }
+              ],
+            },
           ),
           createProperty(
             'containerPosition',
@@ -448,8 +448,8 @@ export const useUnifiedProperties = (
                 { value: 'left', label: 'Esquerda' },
                 { value: 'center', label: 'Centro' },
                 { value: 'right', label: 'Direita' },
-              ]
-            }
+              ],
+            },
           ),
           createProperty(
             'spacing',
@@ -471,8 +471,8 @@ export const useUnifiedProperties = (
                 { value: 'comfortable-horizontal', label: 'Confortável (horizontal)' },
                 { value: 'spacious', label: 'Espaçoso' },
                 { value: 'spacious-horizontal', label: 'Espaçoso (horizontal)' },
-              ]
-            }
+              ],
+            },
           ),
           createProperty(
             'gridColumns',
@@ -485,8 +485,8 @@ export const useUnifiedProperties = (
                 { value: 'full', label: '100% (linha inteira)' },
                 { value: 'half', label: '50% (duas colunas)' },
                 { value: 'auto', label: 'Automática' },
-              ]
-            }
+              ],
+            },
           ),
           createProperty(
             'backgroundColor',
@@ -500,8 +500,8 @@ export const useUnifiedProperties = (
                 { value: 'white', label: 'Branco' },
                 { value: 'gray-50', label: 'Cinza 50' },
                 { value: 'brand-light', label: 'Marca (claro)' },
-              ]
-            }
+              ],
+            },
           ),
           createProperty('marginTop', v.marginTop ?? 0, PropertyType.RANGE, 'Margem Superior', PropertyCategory.LAYOUT, { min: -40, max: 100, step: 2, unit: 'px' }),
           createProperty('marginBottom', v.marginBottom ?? 0, PropertyType.RANGE, 'Margem Inferior', PropertyCategory.LAYOUT, { min: -40, max: 100, step: 2, unit: 'px' }),
@@ -533,7 +533,7 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.showLogo ?? true,
             PropertyType.SWITCH,
             'Mostrar Logo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'logoUrl',
@@ -543,7 +543,7 @@ export const useUnifiedProperties = (
             PropertyType.URL,
             'URL do Logo',
             PropertyCategory.CONTENT,
-            { placeholder: 'https://...' }
+            { placeholder: 'https://...' },
           ),
           createProperty(
             'logoAlt',
@@ -551,7 +551,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Texto Alternativo do Logo',
             PropertyCategory.ACCESSIBILITY,
-            { placeholder: 'Descrição do logo' }
+            { placeholder: 'Descrição do logo' },
           ),
           createProperty(
             'logoScale',
@@ -559,7 +559,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Escala do Logo',
             PropertyCategory.LAYOUT,
-            { min: 0.5, max: 3, step: 0.1, unit: 'x' }
+            { min: 0.5, max: 3, step: 0.1, unit: 'x' },
           ),
 
           // 🎯 BARRA DE PROGRESSO
@@ -568,7 +568,7 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.enableProgressBar ?? false,
             PropertyType.SWITCH,
             'Mostrar Barra de Progresso',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'progressValue',
@@ -576,7 +576,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Porcentagem do Progresso',
             PropertyCategory.BEHAVIOR,
-            { min: 0, max: 100, step: 1, unit: '%' }
+            { min: 0, max: 100, step: 1, unit: '%' },
           ),
           createProperty(
             'progressMax',
@@ -584,7 +584,7 @@ export const useUnifiedProperties = (
             PropertyType.NUMBER,
             'Valor Máximo do Progresso',
             PropertyCategory.BEHAVIOR,
-            { min: 1, placeholder: '100' }
+            { min: 1, placeholder: '100' },
           ),
           createProperty(
             'progressBarThickness',
@@ -592,7 +592,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Espessura da Barra de Progresso',
             PropertyCategory.STYLE,
-            { min: 1, max: 20, step: 1, unit: 'px' }
+            { min: 1, max: 20, step: 1, unit: 'px' },
           ),
           createProperty(
             'progressHeight',
@@ -605,8 +605,8 @@ export const useUnifiedProperties = (
               max: 20,
               step: 1,
               unit: 'px',
-              description: 'Altura em pixels da barra de progresso quando habilitada'
-            }
+              description: 'Altura em pixels da barra de progresso quando habilitada',
+            },
           ),
 
           // 🎯 NAVEGAÇÃO (SETAS DISCRETAS)
@@ -615,14 +615,14 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.showBackButton ?? false,
             PropertyType.SWITCH,
             'Mostrar Seta Voltar',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'showForwardButton',
             currentBlock?.properties?.showForwardButton ?? false,
             PropertyType.SWITCH,
             'Mostrar Seta Avançar',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
 
           // 🎯 CONTROLES DE EXIBIÇÃO
@@ -631,14 +631,14 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.showTitle ?? true,
             PropertyType.SWITCH,
             'Mostrar Título',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'showUserName',
             currentBlock?.properties?.showUserName ?? true,
             PropertyType.SWITCH,
             'Mostrar Nome do Usuário',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
 
           // 🎯 TÍTULOS E CONTEÚDO
@@ -650,7 +650,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Título',
             PropertyCategory.CONTENT,
-            { placeholder: 'Digite o título... (use {userName} para nome dinâmico)' }
+            { placeholder: 'Digite o título... (use {userName} para nome dinâmico)' },
           ),
           createProperty(
             'subtitle',
@@ -658,7 +658,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Subtítulo',
             PropertyCategory.CONTENT,
-            { placeholder: 'Subtítulo opcional...' }
+            { placeholder: 'Subtítulo opcional...' },
           ),
           createProperty(
             'userName',
@@ -666,7 +666,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Nome do Usuário (Fallback)',
             PropertyCategory.CONTENT,
-            { placeholder: 'Nome de fallback (usado se não encontrado dinamicamente)' }
+            { placeholder: 'Nome de fallback (usado se não encontrado dinamicamente)' },
           ),
 
           // 🎯 ESCALA E DIMENSÕES DO CONTAINER
@@ -676,7 +676,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Escala do Container',
             PropertyCategory.LAYOUT,
-            { min: 0.5, max: 2, step: 0.1, unit: 'x' }
+            { min: 0.5, max: 2, step: 0.1, unit: 'x' },
           ),
           createProperty(
             'contentMaxWidth',
@@ -692,8 +692,8 @@ export const useUnifiedProperties = (
                 { value: '1200px', label: '1200px (Extra Largo)' },
                 { value: '100%', label: '100% (Tela Cheia)' },
               ],
-              description: 'Define a largura máxima do container de conteúdo do header'
-            }
+              description: 'Define a largura máxima do container de conteúdo do header',
+            },
           ),
 
           // 🎯 MARGENS EXTERNAS
@@ -703,7 +703,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Externa Superior',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 100, step: 4, unit: 'px' }
+            { min: 0, max: 100, step: 4, unit: 'px' },
           ),
           createProperty(
             'marginBottom',
@@ -711,7 +711,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Externa Inferior',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 100, step: 4, unit: 'px' }
+            { min: 0, max: 100, step: 4, unit: 'px' },
           ),
           createProperty(
             'marginLeft',
@@ -719,7 +719,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Externa Esquerda',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 100, step: 4, unit: 'px' }
+            { min: 0, max: 100, step: 4, unit: 'px' },
           ),
           createProperty(
             'marginRight',
@@ -727,7 +727,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Externa Direita',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 100, step: 4, unit: 'px' }
+            { min: 0, max: 100, step: 4, unit: 'px' },
           ),
 
           // 🎯 MARGENS INTERNAS (PADDING)
@@ -737,7 +737,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Interna Superior',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 80, step: 4, unit: 'px' }
+            { min: 0, max: 80, step: 4, unit: 'px' },
           ),
           createProperty(
             'paddingBottom',
@@ -745,7 +745,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Interna Inferior',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 80, step: 4, unit: 'px' }
+            { min: 0, max: 80, step: 4, unit: 'px' },
           ),
           createProperty(
             'paddingLeft',
@@ -753,7 +753,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Interna Esquerda',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 80, step: 4, unit: 'px' }
+            { min: 0, max: 80, step: 4, unit: 'px' },
           ),
           createProperty(
             'paddingRight',
@@ -761,7 +761,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Interna Direita',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 80, step: 4, unit: 'px' }
+            { min: 0, max: 80, step: 4, unit: 'px' },
           ),
 
           // 🎯 CORES E ESTILO
@@ -770,21 +770,21 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.backgroundColor || '#ffffff',
             PropertyType.COLOR,
             'Cor de Fundo do Componente',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'containerBackgroundColor',
             currentBlock?.properties?.containerBackgroundColor || 'transparent',
             PropertyType.COLOR,
             'Cor de Fundo do Container',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'textColor',
             currentBlock?.properties?.textColor || '#432818',
             PropertyType.COLOR,
             'Cor do Texto',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'textAlign',
@@ -798,7 +798,7 @@ export const useUnifiedProperties = (
                 { value: 'center', label: 'Centro' },
                 { value: 'right', label: 'Direita' },
               ],
-            }
+            },
           ),
 
           // 🎯 LAYOUT E POSICIONAMENTO
@@ -807,7 +807,7 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.isSticky ?? false,
             PropertyType.SWITCH,
             'Header Fixo',
-            PropertyCategory.LAYOUT
+            PropertyCategory.LAYOUT,
           ),
 
           // ✅ ESTILOS - ESTILO PREDOMINANTE
@@ -818,8 +818,8 @@ export const useUnifiedProperties = (
             'Mostrar Nome do Estilo Predominante',
             PropertyCategory.BEHAVIOR,
             {
-              description: 'Exibe o nome do estilo calculado (ex: "Romântico Clássico") no header do resultado'
-            }
+              description: 'Exibe o nome do estilo calculado (ex: "Romântico Clássico") no header do resultado',
+            },
           ),
           createProperty(
             'showPrimaryStyleDescription',
@@ -828,8 +828,8 @@ export const useUnifiedProperties = (
             'Mostrar Descrição do Estilo Predominante',
             PropertyCategory.BEHAVIOR,
             {
-              description: 'Exibe uma descrição detalhada do estilo predominante calculado'
-            }
+              description: 'Exibe uma descrição detalhada do estilo predominante calculado',
+            },
           ),
           createProperty(
             'showPrimaryStyleProgress',
@@ -838,8 +838,8 @@ export const useUnifiedProperties = (
             'Mostrar Barra de Progresso do Estilo Predominante',
             PropertyCategory.BEHAVIOR,
             {
-              description: 'Exibe uma barra de progresso com a porcentagem de afinidade ao estilo'
-            }
+              description: 'Exibe uma barra de progresso com a porcentagem de afinidade ao estilo',
+            },
           ),
           createProperty(
             'showPrimaryStyleImage',
@@ -848,8 +848,8 @@ export const useUnifiedProperties = (
             'Mostrar Imagem do Estilo Predominante',
             PropertyCategory.BEHAVIOR,
             {
-              description: 'Exibe a imagem representativa do estilo predominante ao lado do título'
-            }
+              description: 'Exibe a imagem representativa do estilo predominante ao lado do título',
+            },
           ),
           createProperty(
             'showPrimaryStyleGuide',
@@ -858,8 +858,8 @@ export const useUnifiedProperties = (
             'Mostrar Guia do Estilo Predominante',
             PropertyCategory.BEHAVIOR,
             {
-              description: 'Exibe um guia detalhado de como usar o estilo predominante'
-            }
+              description: 'Exibe um guia detalhado de como usar o estilo predominante',
+            },
           ),
 
           // ✅ ESTILOS - ESTILOS SECUNDÁRIOS
@@ -868,28 +868,28 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.showSecondaryStyleName ?? false,
             PropertyType.SWITCH,
             'Mostrar Nome do 2º Estilo',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'showSecondaryStyleProgress',
             currentBlock?.properties?.showSecondaryStyleProgress ?? false,
             PropertyType.SWITCH,
             'Mostrar Barra do 2º Estilo',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'showThirdStyleName',
             currentBlock?.properties?.showThirdStyleName ?? false,
             PropertyType.SWITCH,
             'Mostrar Nome do 3º Estilo',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'showThirdStyleProgress',
             currentBlock?.properties?.showThirdStyleProgress ?? false,
             PropertyType.SWITCH,
             'Mostrar Barra do 3º Estilo',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
 
           // 🎯 IMAGEM HERO (Para Offer Headers)
@@ -898,7 +898,7 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.showImage ?? false,
             PropertyType.SWITCH,
             'Mostrar Imagem Hero',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'heroImage',
@@ -909,7 +909,7 @@ export const useUnifiedProperties = (
             {
               placeholder: 'https://...',
               conditional: { key: 'showImage', value: true },
-            }
+            },
           ),
         ];
 
@@ -924,7 +924,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXTAREA,
             'Conteúdo',
             PropertyCategory.CONTENT,
-            { rows: 4 }
+            { rows: 4 },
           ),
 
           // Tipografia
@@ -944,7 +944,7 @@ export const useUnifiedProperties = (
                 { value: '2xl', label: '2XL' },
                 { value: '3xl', label: '3XL' },
               ],
-            }
+            },
           ),
           createProperty(
             'fontWeight',
@@ -960,7 +960,7 @@ export const useUnifiedProperties = (
                 { value: 'semibold', label: 'Semi-negrito' },
                 { value: 'bold', label: 'Negrito' },
               ],
-            }
+            },
           ),
           createProperty(
             'lineHeight',
@@ -977,7 +977,7 @@ export const useUnifiedProperties = (
                 { value: 'leading-relaxed', label: 'Relaxada' },
                 { value: 'leading-loose', label: 'Solta' },
               ],
-            }
+            },
           ),
 
           // Cores
@@ -986,14 +986,14 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.color ?? BRAND_COLORS.text,
             PropertyType.COLOR,
             'Cor do Texto',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'backgroundColor',
             currentBlock?.properties?.backgroundColor ?? 'transparent',
             PropertyType.COLOR,
             'Cor de Fundo',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
 
           // Layout
@@ -1010,7 +1010,7 @@ export const useUnifiedProperties = (
                 { value: 'right', label: 'Direita' },
                 { value: 'justify', label: 'Justificado' },
               ],
-            }
+            },
           ),
           createProperty(
             'gridColumns',
@@ -1024,7 +1024,7 @@ export const useUnifiedProperties = (
                 { value: 'half', label: '50% (duas colunas)' },
                 { value: 'auto', label: 'Automática' },
               ],
-            }
+            },
           ),
           createProperty(
             'maxWidth',
@@ -1039,7 +1039,7 @@ export const useUnifiedProperties = (
                 { value: '40rem', label: '40rem (~640px)' },
                 { value: '48rem', label: '48rem (~768px)' },
               ],
-            }
+            },
           ),
           createProperty(
             'spacing',
@@ -1053,7 +1053,7 @@ export const useUnifiedProperties = (
                 { value: 'normal', label: 'Normal' },
                 { value: 'loose', label: 'Solto' },
               ],
-            }
+            },
           ),
 
           // Margens
@@ -1063,7 +1063,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Superior',
             PropertyCategory.LAYOUT,
-            { min: -40, max: 100, step: 2, unit: 'px' }
+            { min: -40, max: 100, step: 2, unit: 'px' },
           ),
           createProperty(
             'marginBottom',
@@ -1071,7 +1071,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Inferior',
             PropertyCategory.LAYOUT,
-            { min: -40, max: 100, step: 2, unit: 'px' }
+            { min: -40, max: 100, step: 2, unit: 'px' },
           ),
           createProperty(
             'marginLeft',
@@ -1079,7 +1079,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Esquerda',
             PropertyCategory.LAYOUT,
-            { min: -40, max: 100, step: 2, unit: 'px' }
+            { min: -40, max: 100, step: 2, unit: 'px' },
           ),
           createProperty(
             'marginRight',
@@ -1087,7 +1087,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Direita',
             PropertyCategory.LAYOUT,
-            { min: -40, max: 100, step: 2, unit: 'px' }
+            { min: -40, max: 100, step: 2, unit: 'px' },
           ),
         ];
 
@@ -1104,14 +1104,14 @@ export const useUnifiedProperties = (
             headerProps.logoUrl,
             PropertyType.URL,
             'URL da Logo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'logoAlt',
             headerProps.logoAlt,
             PropertyType.TEXT,
             'Texto Alternativo',
-            PropertyCategory.ACCESSIBILITY
+            PropertyCategory.ACCESSIBILITY,
           ),
           createProperty(
             'logoScale',
@@ -1119,7 +1119,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Escala da Logo',
             PropertyCategory.STYLE,
-            { min: 0.5, max: 3, step: 0.1, unit: 'x' }
+            { min: 0.5, max: 3, step: 0.1, unit: 'x' },
           ),
 
           // Estilo
@@ -1128,7 +1128,7 @@ export const useUnifiedProperties = (
             headerProps.backgroundColor,
             PropertyType.COLOR,
             'Cor de Fundo',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
 
           // Layout
@@ -1138,7 +1138,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Superior',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 100, step: 4 }
+            { min: 0, max: 100, step: 4 },
           ),
           createProperty(
             'marginBottom',
@@ -1146,7 +1146,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Margem Inferior',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 100, step: 4 }
+            { min: 0, max: 100, step: 4 },
           ),
         ];
 
@@ -1161,14 +1161,14 @@ export const useUnifiedProperties = (
             'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             PropertyType.URL,
             'URL da Logo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'logoAlt',
             currentBlock?.properties?.logoAlt || 'Logo da Marca',
             PropertyType.TEXT,
             'Texto Alternativo da Logo',
-            PropertyCategory.ACCESSIBILITY
+            PropertyCategory.ACCESSIBILITY,
           ),
           createProperty(
             'logoScale',
@@ -1176,21 +1176,21 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Escala da Logo',
             PropertyCategory.STYLE,
-            { min: 0.5, max: 2.5, step: 0.1, unit: 'x' }
+            { min: 0.5, max: 2.5, step: 0.1, unit: 'x' },
           ),
           createProperty(
             'mainTitle',
             currentBlock?.properties?.mainTitle || 'Descubra Seu Estilo',
             PropertyType.TEXT,
             'Título Principal',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'subtitle',
             currentBlock?.properties?.subtitle || 'Único e Autêntico',
             PropertyType.TEXT,
             'Subtítulo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'description',
@@ -1199,7 +1199,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXTAREA,
             'Descrição',
             PropertyCategory.CONTENT,
-            { rows: 3 }
+            { rows: 3 },
           ),
 
           // Form Properties
@@ -1208,28 +1208,28 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.inputLabel || 'Como posso te chamar?',
             PropertyType.TEXT,
             'Rótulo do Campo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'inputPlaceholder',
             currentBlock?.properties?.inputPlaceholder || 'Digite seu primeiro nome aqui...',
             PropertyType.TEXT,
             'Placeholder do Campo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'buttonText',
             currentBlock?.properties?.buttonText || 'Quero Descobrir meu Estilo Agora!',
             PropertyType.TEXT,
             'Texto do Botão',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'requiredFieldMessage',
             currentBlock?.properties?.requiredFieldMessage || 'Digite seu nome para continuar',
             PropertyType.TEXT,
             'Mensagem de Campo Obrigatório',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'minNameLength',
@@ -1237,7 +1237,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Tamanho Mínimo do Nome',
             PropertyCategory.BEHAVIOR,
-            { min: 1, max: 10, step: 1 }
+            { min: 1, max: 10, step: 1 },
           ),
 
           // Style Properties
@@ -1246,21 +1246,21 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.backgroundColor || 'transparent',
             PropertyType.COLOR,
             'Cor de Fundo',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'primaryColor',
             currentBlock?.properties?.primaryColor || BRAND_COLORS.primary,
             PropertyType.COLOR,
             'Cor Primária',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'textColor',
             currentBlock?.properties?.textColor || BRAND_COLORS.text,
             PropertyType.COLOR,
             'Cor do Texto',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
 
           // Layout Properties
@@ -1276,28 +1276,28 @@ export const useUnifiedProperties = (
                 { value: 'compact', label: 'Compacto' },
                 { value: 'minimal', label: 'Minimalista' },
               ],
-            }
+            },
           ),
           createProperty(
             'showProgress',
             currentBlock?.properties?.showProgress !== false,
             PropertyType.SWITCH,
             'Mostrar Progresso',
-            PropertyCategory.LAYOUT
+            PropertyCategory.LAYOUT,
           ),
           createProperty(
             'showStylePreviews',
             currentBlock?.properties?.showStylePreviews !== false,
             PropertyType.SWITCH,
             'Mostrar Pré-visualização dos Estilos',
-            PropertyCategory.LAYOUT
+            PropertyCategory.LAYOUT,
           ),
           createProperty(
             'showBenefits',
             currentBlock?.properties?.showBenefits !== false,
             PropertyType.SWITCH,
             'Mostrar Seção de Benefícios',
-            PropertyCategory.LAYOUT
+            PropertyCategory.LAYOUT,
           ),
         ];
 
@@ -1309,28 +1309,28 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.src || '',
             PropertyType.UPLOAD,
             'Imagem',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'alt',
             currentBlock?.properties?.alt || '',
             PropertyType.TEXT,
             'Texto Alternativo',
-            PropertyCategory.ACCESSIBILITY
+            PropertyCategory.ACCESSIBILITY,
           ),
           createProperty(
             'width',
             currentBlock?.properties?.width || 'auto',
             PropertyType.TEXT,
             'Largura',
-            PropertyCategory.LAYOUT
+            PropertyCategory.LAYOUT,
           ),
           createProperty(
             'height',
             currentBlock?.properties?.height || 'auto',
             PropertyType.TEXT,
             'Altura',
-            PropertyCategory.LAYOUT
+            PropertyCategory.LAYOUT,
           ),
           createProperty(
             'borderRadius',
@@ -1338,14 +1338,14 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Arredondamento',
             PropertyCategory.STYLE,
-            { min: 0, max: 50, step: 2, unit: 'px' }
+            { min: 0, max: 50, step: 2, unit: 'px' },
           ),
           createProperty(
             'shadow',
             currentBlock?.properties?.shadow !== false,
             PropertyType.SWITCH,
             'Sombra',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
         ];
 
@@ -1359,7 +1359,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Rótulo do Campo',
             PropertyCategory.CONTENT,
-            { placeholder: 'Texto que aparece acima do campo...' }
+            { placeholder: 'Texto que aparece acima do campo...' },
           ),
           createProperty(
             'placeholder',
@@ -1367,7 +1367,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Texto de Placeholder',
             PropertyCategory.CONTENT,
-            { placeholder: 'Texto que aparece dentro do campo vazio...' }
+            { placeholder: 'Texto que aparece dentro do campo vazio...' },
           ),
           createProperty(
             'name',
@@ -1375,7 +1375,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Nome do Campo (Supabase)',
             PropertyCategory.BEHAVIOR,
-            { placeholder: 'userName, email, phone - usado para salvamento' }
+            { placeholder: 'userName, email, phone - usado para salvamento' },
           ),
 
           // 🎯 VALIDATION PROPERTIES
@@ -1394,14 +1394,14 @@ export const useUnifiedProperties = (
                 { value: 'password', label: 'Senha' },
                 { value: 'url', label: 'URL' },
               ],
-            }
+            },
           ),
           createProperty(
             'required',
             currentBlock?.properties?.required === true,
             PropertyType.SWITCH,
             'Campo Obrigatório',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'minLength',
@@ -1409,7 +1409,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Mínimo de Caracteres',
             PropertyCategory.BEHAVIOR,
-            { min: 0, max: 50, step: 1 }
+            { min: 0, max: 50, step: 1 },
           ),
           createProperty(
             'maxLength',
@@ -1417,7 +1417,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Máximo de Caracteres',
             PropertyCategory.BEHAVIOR,
-            { min: 10, max: 500, step: 10 }
+            { min: 10, max: 500, step: 10 },
           ),
           createProperty(
             'validationPattern',
@@ -1425,7 +1425,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Padrão de Validação (RegEx)',
             PropertyCategory.ADVANCED,
-            { placeholder: 'Ex: ^[A-Za-z\\s]+$ para apenas letras' }
+            { placeholder: 'Ex: ^[A-Za-z\\s]+$ para apenas letras' },
           ),
 
           // 🎯 SUPABASE INTEGRATION
@@ -1434,7 +1434,7 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.saveToSupabase ?? true,
             PropertyType.SWITCH,
             'Salvar no Supabase',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'supabaseTable',
@@ -1448,7 +1448,7 @@ export const useUnifiedProperties = (
                 { value: 'quiz_step_responses', label: 'Respostas das Etapas' },
                 { value: 'profiles', label: 'Perfis de Usuário' },
               ],
-            }
+            },
           ),
           createProperty(
             'supabaseColumn',
@@ -1463,7 +1463,7 @@ export const useUnifiedProperties = (
                 { value: 'phone', label: 'Telefone' },
                 { value: 'session_id', label: 'ID da Sessão' },
               ],
-            }
+            },
           ),
 
           // 🎯 NOVAS PROPRIEDADES ADICIONADAS
@@ -1474,8 +1474,8 @@ export const useUnifiedProperties = (
             'Armazenar como Nome do Usuário',
             PropertyCategory.BEHAVIOR,
             {
-              description: 'Define este valor como o nome oficial do usuário na sessão para personalização'
-            }
+              description: 'Define este valor como o nome oficial do usuário na sessão para personalização',
+            },
           ),
           createProperty(
             'resultDisplayKey',
@@ -1485,8 +1485,8 @@ export const useUnifiedProperties = (
             PropertyCategory.ADVANCED,
             {
               placeholder: 'userName, userEmail, etc',
-              description: 'Campo que será usado para personalizar resultados futuros e templates'
-            }
+              description: 'Campo que será usado para personalizar resultados futuros e templates',
+            },
           ),
 
           // 🎯 STYLE PROPERTIES
@@ -1495,28 +1495,28 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.backgroundColor || '#FFFFFF',
             PropertyType.COLOR,
             'Cor de Fundo',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'borderColor',
             currentBlock?.properties?.borderColor || BRAND_COLORS.primary,
             PropertyType.COLOR,
             'Cor da Borda',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'textColor',
             currentBlock?.properties?.textColor || '#432818',
             PropertyType.COLOR,
             'Cor do Texto',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'labelColor',
             currentBlock?.properties?.labelColor || '#432818',
             PropertyType.COLOR,
             'Cor do Rótulo',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'fontSize',
@@ -1524,7 +1524,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Tamanho da Fonte',
             PropertyCategory.STYLE,
-            { min: 12, max: 24, step: 1, unit: 'px' }
+            { min: 12, max: 24, step: 1, unit: 'px' },
           ),
           createProperty(
             'fontFamily',
@@ -1540,7 +1540,7 @@ export const useUnifiedProperties = (
                 { value: 'Arial', label: 'Arial' },
                 { value: 'Georgia', label: 'Georgia' },
               ],
-            }
+            },
           ),
           createProperty(
             'fontWeight',
@@ -1556,7 +1556,7 @@ export const useUnifiedProperties = (
                 { value: '600', label: 'Semi-Bold (600)' },
                 { value: '700', label: 'Bold (700)' },
               ],
-            }
+            },
           ),
           createProperty(
             'borderRadius',
@@ -1564,14 +1564,14 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Bordas Arredondadas',
             PropertyCategory.STYLE,
-            { min: 0, max: 25, step: 1, unit: 'px' }
+            { min: 0, max: 25, step: 1, unit: 'px' },
           ),
           createProperty(
             'fullWidth',
             currentBlock?.properties?.fullWidth ?? true,
             PropertyType.SWITCH,
             'Largura Total',
-            PropertyCategory.LAYOUT
+            PropertyCategory.LAYOUT,
           ),
           // 🔹 CONFIGURAÇÕES DE NAVEGAÇÃO
           createProperty(
@@ -1587,7 +1587,7 @@ export const useUnifiedProperties = (
                 { value: 'url', label: 'Abrir URL' },
                 { value: 'submit', label: 'Enviar Formulário' },
               ],
-            }
+            },
           ),
           createProperty(
             'specificStep',
@@ -1610,14 +1610,14 @@ export const useUnifiedProperties = (
                 { value: 'results', label: 'Resultados' },
                 { value: 'thank-you', label: 'Página de Agradecimento' },
               ],
-            }
+            },
           ),
           createProperty(
             'targetUrl',
             currentBlock?.properties?.targetUrl || '',
             PropertyType.URL,
             'URL de Destino',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           // 🔹 CONFIGURAÇÕES AVANÇADAS
           createProperty(
@@ -1626,14 +1626,14 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Padrão de Validação (RegEx)',
             PropertyCategory.ADVANCED,
-            { placeholder: 'Ex: ^[A-Za-z\\s]+$ para apenas letras' }
+            { placeholder: 'Ex: ^[A-Za-z\\s]+$ para apenas letras' },
           ),
           createProperty(
             'errorMessage',
             currentBlock?.properties?.errorMessage || 'Por favor, preencha este campo',
             PropertyType.TEXT,
             'Mensagem de Erro',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
         ];
 
@@ -1645,14 +1645,14 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.elementId || 'quiz-form',
             PropertyType.TEXT,
             'ID do Elemento',
-            PropertyCategory.ADVANCED
+            PropertyCategory.ADVANCED,
           ),
           createProperty(
             'className',
             currentBlock?.properties?.className || '',
             PropertyType.TEXT,
             'Classe CSS',
-            PropertyCategory.ADVANCED
+            PropertyCategory.ADVANCED,
           ),
           createProperty(
             'backgroundColor',
@@ -1661,7 +1661,7 @@ export const useUnifiedProperties = (
             'transparent',
             PropertyType.COLOR,
             'Cor de Fundo',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           // 🔒 Regras de ativação do botão por Nome (Step01)
           createProperty(
@@ -1669,28 +1669,28 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.requireNameToEnableButton === true,
             PropertyType.SWITCH,
             'Exigir nome para ativar botão',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'nameInputId',
             currentBlock?.properties?.nameInputId || 'name-input-modular',
             PropertyType.TEXT,
             'ID do Campo de Nome',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'targetButtonId',
             currentBlock?.properties?.targetButtonId || 'cta-button-modular',
             PropertyType.TEXT,
             'ID do Botão a Ativar',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'visuallyDisableButton',
             currentBlock?.properties?.visuallyDisableButton !== false,
             PropertyType.SWITCH,
             'Desabilitar visualmente até validar',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
         ];
       case 'button-inline':
@@ -1713,7 +1713,7 @@ export const useUnifiedProperties = (
                 { value: 'outline', label: 'Contorno' },
                 { value: 'ghost', label: 'Fantasma' },
               ],
-            }
+            },
           ),
           createProperty(
             'size',
@@ -1728,7 +1728,7 @@ export const useUnifiedProperties = (
                 { value: 'large', label: 'Grande' },
                 { value: 'full', label: 'Largura Total (Responsivo)' },
               ],
-            }
+            },
           ),
           // 🔹 SISTEMA DE NAVEGAÇÃO AVANÇADO
           createProperty(
@@ -1746,7 +1746,7 @@ export const useUnifiedProperties = (
                 { value: 'submit', label: 'Enviar Formulário' },
                 { value: 'download', label: 'Download de Arquivo' },
               ],
-            }
+            },
           ),
           createProperty(
             'specificStep',
@@ -1769,28 +1769,28 @@ export const useUnifiedProperties = (
                 { value: 'results', label: 'Resultados' },
                 { value: 'thank-you', label: 'Página de Agradecimento' },
               ],
-            }
+            },
           ),
           createProperty(
             'url',
             currentBlock?.properties?.url || '',
             PropertyType.URL,
             'URL de Destino',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'downloadUrl',
             currentBlock?.properties?.downloadUrl || '',
             PropertyType.URL,
             'URL do Arquivo para Download',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'openInNewTab',
             currentBlock?.properties?.openInNewTab !== false,
             PropertyType.SWITCH,
             'Abrir em Nova Aba',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           // 🔹 CONFIGURAÇÕES VISUAIS AVANÇADAS
           createProperty(
@@ -1798,7 +1798,7 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.icon || '',
             PropertyType.TEXT,
             'Ícone (Nome ou SVG)',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'iconPosition',
@@ -1813,21 +1813,21 @@ export const useUnifiedProperties = (
                 { value: 'top', label: 'Acima' },
                 { value: 'bottom', label: 'Abaixo' },
               ],
-            }
+            },
           ),
           createProperty(
             'loading',
             currentBlock?.properties?.loading === true,
             PropertyType.SWITCH,
             'Estado de Carregamento',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'disabled',
             currentBlock?.properties?.disabled === true,
             PropertyType.SWITCH,
             'Botão Desabilitado',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           // 🔹 SISTEMA DE VALIDAÇÃO CONDICIONAL
           createProperty(
@@ -1835,35 +1835,35 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.requiresValidInput === true,
             PropertyType.SWITCH,
             'Ativar Apenas com Input Válido',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'requiresValidSelection',
             currentBlock?.properties?.requiresValidSelection === true,
             PropertyType.SWITCH,
             'Ativar Apenas com Seleção Válida',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'watchInputId',
             currentBlock?.properties?.watchInputId || '',
             PropertyType.TEXT,
             'ID do Input para Observar',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'disabledText',
             currentBlock?.properties?.disabledText || 'Preencha os campos obrigatórios',
             PropertyType.TEXT,
             'Texto Quando Desabilitado',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'showDisabledState',
             currentBlock?.properties?.showDisabledState !== false,
             PropertyType.SWITCH,
             'Mostrar Estado Desabilitado Visualmente',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           // 🔹 NAVEGAÇÃO ESPECÍFICA PARA VALIDAÇÃO
           createProperty(
@@ -1887,14 +1887,14 @@ export const useUnifiedProperties = (
                 { value: 'results', label: 'Resultados' },
                 { value: 'thank-you', label: 'Página de Agradecimento' },
               ],
-            }
+            },
           ),
           createProperty(
             'nextStepUrl',
             currentBlock?.properties?.nextStepUrl || '',
             PropertyType.URL,
             'URL da Próxima Etapa (Validação)',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
 
           // 🎯 NOVAS PROPRIEDADES ADICIONADAS
@@ -1909,8 +1909,8 @@ export const useUnifiedProperties = (
               max: 1,
               step: 0.1,
               unit: 'x',
-              description: 'Define a transparência do botão quando está desabilitado'
-            }
+              description: 'Define a transparência do botão quando está desabilitado',
+            },
           ),
           createProperty(
             'effectType',
@@ -1926,8 +1926,8 @@ export const useUnifiedProperties = (
                 { value: 'shake', label: 'Tremor' },
                 { value: 'bounce', label: 'Salto' },
               ],
-              description: 'Efeito visual especial aplicado ao botão'
-            }
+              description: 'Efeito visual especial aplicado ao botão',
+            },
           ),
           createProperty(
             'shadowType',
@@ -1943,8 +1943,8 @@ export const useUnifiedProperties = (
                 { value: 'strong', label: 'Forte' },
                 { value: 'glow', label: 'Brilho Colorido' },
               ],
-              description: 'Tipo de sombra a ser aplicada no botão'
-            }
+              description: 'Tipo de sombra a ser aplicada no botão',
+            },
           ),
         ];
 
@@ -1966,7 +1966,7 @@ export const useUnifiedProperties = (
                 { value: '300px', label: 'Fixa 300px' },
                 { value: '500px', label: 'Fixa 500px' },
               ]),
-            }
+            },
           ),
           createProperty(
             'height',
@@ -1974,14 +1974,14 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Altura',
             PropertyCategory.LAYOUT,
-            { min: 1, max: 20, step: 1, unit: 'px' }
+            { min: 1, max: 20, step: 1, unit: 'px' },
           ),
           createProperty(
             'color',
             currentBlock?.properties?.color || BRAND_COLORS.primary,
             PropertyType.COLOR,
             'Cor Principal',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'gradientColors',
@@ -1990,11 +1990,11 @@ export const useUnifiedProperties = (
                 BRAND_COLORS.primary,
                 '#D4C2A8',
                 BRAND_COLORS.primary,
-              ]
+              ],
             ),
             PropertyType.TEXTAREA,
             'Cores do Gradiente (JSON)',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'borderRadius',
@@ -2002,14 +2002,14 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Arredondamento',
             PropertyCategory.STYLE,
-            { min: 0, max: 20, step: 1, unit: 'px' }
+            { min: 0, max: 20, step: 1, unit: 'px' },
           ),
           createProperty(
             'showShadow',
             currentBlock?.properties?.showShadow !== false,
             PropertyType.SWITCH,
             'Mostrar Sombra',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
         ];
 
@@ -2022,21 +2022,21 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.privacyText || 'Política de Privacidade',
             PropertyType.TEXT,
             'Texto Política de Privacidade',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'copyrightText',
             currentBlock?.properties?.copyrightText || '© 2025 Gisele Galvão Consultoria',
             PropertyType.TEXT,
             'Texto de Copyright',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'termsText',
             currentBlock?.properties?.termsText || 'Termos de Uso',
             PropertyType.TEXT,
             'Texto Termos de Uso',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'fontFamily',
@@ -2052,21 +2052,21 @@ export const useUnifiedProperties = (
                 { value: 'Open Sans', label: 'Open Sans' },
                 { value: 'Playfair Display', label: 'Playfair Display' },
               ]),
-            }
+            },
           ),
           createProperty(
             'linkColor',
             currentBlock?.properties?.linkColor || BRAND_COLORS.accent,
             PropertyType.COLOR,
             'Cor dos Links',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'separatorText',
             currentBlock?.properties?.separatorText || ' | ',
             PropertyType.TEXT,
             'Separador',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
         ];
 
@@ -2091,7 +2091,7 @@ export const useUnifiedProperties = (
                 { value: 3, label: '3 Colunas' },
                 { value: 4, label: '4 Colunas' },
               ],
-            }
+            },
           ),
           createProperty(
             'gridGap',
@@ -2099,7 +2099,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Espaçamento (Gap)',
             PropertyCategory.LAYOUT,
-            { min: 0, max: 48, step: 4 }
+            { min: 0, max: 48, step: 4 },
           ),
 
           // Imagens
@@ -2108,7 +2108,7 @@ export const useUnifiedProperties = (
             gridProps.showImages,
             PropertyType.SWITCH,
             'Mostrar Imagens',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'imageSize',
@@ -2122,7 +2122,7 @@ export const useUnifiedProperties = (
                 { value: 'medium', label: 'Média (256x256)' },
                 { value: 'large', label: 'Grande (300x300)' },
               ],
-            }
+            },
           ),
           createProperty(
             'imagePosition',
@@ -2137,7 +2137,7 @@ export const useUnifiedProperties = (
                 { value: 'right', label: 'Direita' },
                 { value: 'bottom', label: 'Inferior' },
               ],
-            }
+            },
           ),
 
           // Comportamento
@@ -2146,7 +2146,7 @@ export const useUnifiedProperties = (
             gridProps.multipleSelection,
             PropertyType.SWITCH,
             'Múltipla Seleção',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
           createProperty(
             'maxSelections',
@@ -2154,7 +2154,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Máximo de Seleções',
             PropertyCategory.BEHAVIOR,
-            { min: 1, max: 10, step: 1 }
+            { min: 1, max: 10, step: 1 },
           ),
           createProperty(
             'minSelections',
@@ -2162,7 +2162,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Mínimo de Seleções',
             PropertyCategory.BEHAVIOR,
-            { min: 1, max: 10, step: 1 }
+            { min: 1, max: 10, step: 1 },
           ),
 
           // Estilo
@@ -2171,21 +2171,21 @@ export const useUnifiedProperties = (
             gridProps.backgroundColor,
             PropertyType.COLOR,
             'Cor de Fundo',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'selectedColor',
             gridProps.selectedColor,
             PropertyType.COLOR,
             'Cor de Seleção',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'hoverColor',
             gridProps.hoverColor,
             PropertyType.COLOR,
             'Cor de Hover',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'borderRadius',
@@ -2193,7 +2193,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Borda Arredondada',
             PropertyCategory.STYLE,
-            { min: 0, max: 24, step: 2 }
+            { min: 0, max: 24, step: 2 },
           ),
 
           // Opções
@@ -2202,7 +2202,7 @@ export const useUnifiedProperties = (
             gridProps.options,
             PropertyType.ARRAY,
             'Lista de Opções',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
 
           // 🎯 PROPRIEDADES FALTANTES ADICIONADAS
@@ -2214,8 +2214,8 @@ export const useUnifiedProperties = (
             PropertyCategory.ADVANCED,
             {
               description: 'Identificador único da questão para referência e tracking',
-              placeholder: 'question-1, step-2-fashion, etc.'
-            }
+              placeholder: 'question-1, step-2-fashion, etc.',
+            },
           ),
           createProperty(
             'scoreValues',
@@ -2224,8 +2224,8 @@ export const useUnifiedProperties = (
             'Configuração de Pontuação',
             PropertyCategory.ADVANCED,
             {
-              description: 'Define os valores de pontuação para cada estilo baseado nas respostas'
-            }
+              description: 'Define os valores de pontuação para cada estilo baseado nas respostas',
+            },
           ),
           createProperty(
             'animationType',
@@ -2241,8 +2241,8 @@ export const useUnifiedProperties = (
                 { value: 'scaleIn', label: 'Scale In' },
                 { value: 'bounceIn', label: 'Bounce In' },
               ],
-              description: 'Animação de entrada das opções quando carregam'
-            }
+              description: 'Animação de entrada das opções quando carregam',
+            },
           ),
           createProperty(
             'responsiveColumns',
@@ -2251,8 +2251,8 @@ export const useUnifiedProperties = (
             'Colunas Responsivas',
             PropertyCategory.LAYOUT,
             {
-              description: 'Define quantas colunas usar em cada breakpoint (mobile/tablet/desktop)'
-            }
+              description: 'Define quantas colunas usar em cada breakpoint (mobile/tablet/desktop)',
+            },
           ),
         ];
 
@@ -2266,14 +2266,14 @@ export const useUnifiedProperties = (
             'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             PropertyType.URL,
             'URL da Logo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'logoAlt',
             currentBlock?.properties?.logoAlt || 'Logo',
             PropertyType.TEXT,
             'Texto Alternativo',
-            PropertyCategory.ACCESSIBILITY
+            PropertyCategory.ACCESSIBILITY,
           ),
           createProperty(
             'logoHeight',
@@ -2281,21 +2281,21 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Altura da Logo',
             PropertyCategory.STYLE,
-            { min: 20, max: 200, step: 5 }
+            { min: 20, max: 200, step: 5 },
           ),
           createProperty(
             'userName',
             currentBlock?.properties?.userName || '',
             PropertyType.TEXT,
             'Nome do Usuário',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'showUserName',
             currentBlock?.properties?.showUserName ?? true,
             PropertyType.SWITCH,
             'Exibir Nome do Usuário',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
         ];
 
@@ -2307,14 +2307,14 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.title || 'Seu Estilo {styleCategory} foi Revelado! ✨',
             PropertyType.TEXT,
             'Título',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'subtitle',
             currentBlock?.properties?.subtitle || '',
             PropertyType.TEXTAREA,
             'Subtítulo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'styleCategory',
@@ -2333,28 +2333,28 @@ export const useUnifiedProperties = (
                 { value: 'Dramático', label: 'Dramático' },
                 { value: 'Criativo', label: 'Criativo' },
               ],
-            }
+            },
           ),
           createProperty(
             'ctaText',
             currentBlock?.properties?.ctaText || 'Quero Transformar Minha Imagem',
             PropertyType.TEXT,
             'Texto do Botão',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'ctaUrl',
             currentBlock?.properties?.ctaUrl || '',
             PropertyType.URL,
             'URL do Botão',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'showCTA',
             currentBlock?.properties?.showCTA ?? true,
             PropertyType.SWITCH,
             'Exibir Botão CTA',
-            PropertyCategory.BEHAVIOR
+            PropertyCategory.BEHAVIOR,
           ),
         ];
 
@@ -2366,56 +2366,56 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.title || 'Vista-se de Você — na Prática',
             PropertyType.TEXT,
             'Título',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'subtitle',
             currentBlock?.properties?.subtitle || '',
             PropertyType.TEXTAREA,
             'Subtítulo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'description',
             currentBlock?.properties?.description || '',
             PropertyType.TEXTAREA,
             'Descrição',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'originalPrice',
             currentBlock?.properties?.originalPrice || 175,
             PropertyType.NUMBER,
             'Preço Original',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'currentPrice',
             currentBlock?.properties?.currentPrice || 39,
             PropertyType.NUMBER,
             'Preço Atual',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'installments',
             currentBlock?.properties?.installments || '5x de R$ 8,83',
             PropertyType.TEXT,
             'Parcelamento',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'ctaText',
             currentBlock?.properties?.ctaText || 'GARANTIR MEU GUIA PERSONALIZADO AGORA',
             PropertyType.TEXT,
             'Texto do Botão',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'ctaUrl',
             currentBlock?.properties?.ctaUrl || '',
             PropertyType.URL,
             'URL do Botão',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
         ];
 
@@ -2428,14 +2428,14 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.title || '📋 Próximos Passos:',
             PropertyType.TEXT,
             'Título',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'steps',
             currentBlock?.properties?.steps || [],
             PropertyType.ARRAY,
             'Lista de Passos',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
         ];
 
@@ -2447,14 +2447,14 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.message || '💕 Obrigada por confiar em mim!',
             PropertyType.TEXTAREA,
             'Mensagem',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'author',
             currentBlock?.properties?.author || 'Com carinho, Gisele Galvão',
             PropertyType.TEXT,
             'Assinatura',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'fontStyle',
@@ -2467,7 +2467,7 @@ export const useUnifiedProperties = (
                 { value: 'normal', label: 'Normal' },
                 { value: 'italic', label: 'Itálico' },
               ],
-            }
+            },
           ),
         ];
 
@@ -2487,28 +2487,28 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.title || '',
             PropertyType.TEXT,
             'Título',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'subtitle',
             currentBlock?.properties?.subtitle || '',
             PropertyType.TEXTAREA,
             'Subtítulo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'backgroundColor',
             currentBlock?.properties?.backgroundColor || '#ffffff',
             PropertyType.COLOR,
             'Cor de Fundo',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'accentColor',
             currentBlock?.properties?.accentColor || '#B89B7A',
             PropertyType.COLOR,
             'Cor de Destaque',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
         ];
 
@@ -2523,28 +2523,28 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Altura da Barra',
             PropertyCategory.STYLE,
-            { min: 1, max: 20, step: 1, unit: 'px' }
+            { min: 1, max: 20, step: 1, unit: 'px' },
           ),
           createProperty(
             'backgroundColor',
             currentBlock?.properties?.backgroundColor || '#B89B7A',
             PropertyType.COLOR,
             'Cor de Fundo',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'gradientFrom',
             currentBlock?.properties?.gradientFrom || '#B89B7A',
             PropertyType.COLOR,
             'Cor Inicial do Gradiente',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'gradientTo',
             currentBlock?.properties?.gradientTo || '#D4C2A8',
             PropertyType.COLOR,
             'Cor Final do Gradiente',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'borderRadius',
@@ -2552,7 +2552,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Bordas Arredondadas',
             PropertyCategory.STYLE,
-            { min: 0, max: 20, step: 1, unit: 'px' }
+            { min: 0, max: 20, step: 1, unit: 'px' },
           ),
           createProperty(
             'width',
@@ -2567,7 +2567,7 @@ export const useUnifiedProperties = (
                 { value: '75%', label: '75%' },
                 { value: '100%', label: '100%' },
               ],
-            }
+            },
           ),
           createProperty(
             'opacity',
@@ -2575,7 +2575,7 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Opacidade',
             PropertyCategory.STYLE,
-            { min: 0.1, max: 1, step: 0.1 }
+            { min: 0.1, max: 1, step: 0.1 },
           ),
         ];
 
@@ -2589,35 +2589,35 @@ export const useUnifiedProperties = (
             PropertyType.TEXTAREA,
             'Conteúdo do Aviso',
             PropertyCategory.CONTENT,
-            { placeholder: 'Digite o texto do aviso legal...' }
+            { placeholder: 'Digite o texto do aviso legal...' },
           ),
           createProperty(
             'showPrivacyLink',
             currentBlock?.properties?.showPrivacyLink ?? true,
             PropertyType.SWITCH,
             'Mostrar Link de Privacidade',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'showTermsLink',
             currentBlock?.properties?.showTermsLink ?? true,
             PropertyType.SWITCH,
             'Mostrar Link de Termos',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'privacyUrl',
             currentBlock?.properties?.privacyUrl || '/privacidade',
             PropertyType.URL,
             'URL da Política de Privacidade',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           createProperty(
             'termsUrl',
             currentBlock?.properties?.termsUrl || '/termos',
             PropertyType.URL,
             'URL dos Termos de Uso',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
           ),
           // 🎯 STYLE PROPERTIES
           createProperty(
@@ -2633,7 +2633,7 @@ export const useUnifiedProperties = (
                 { value: 'text-base', label: 'Médio' },
                 { value: 'text-lg', label: 'Grande' },
               ],
-            }
+            },
           ),
           createProperty(
             'textAlign',
@@ -2647,21 +2647,21 @@ export const useUnifiedProperties = (
                 { value: 'text-center', label: 'Centro' },
                 { value: 'text-right', label: 'Direita' },
               ],
-            }
+            },
           ),
           createProperty(
             'color',
             currentBlock?.properties?.color || '#9CA3AF',
             PropertyType.COLOR,
             'Cor do Texto',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
           createProperty(
             'linkColor',
             currentBlock?.properties?.linkColor || '#B89B7A',
             PropertyType.COLOR,
             'Cor dos Links',
-            PropertyCategory.STYLE
+            PropertyCategory.STYLE,
           ),
         ];
 
@@ -2675,7 +2675,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Seletor do Destino',
             PropertyCategory.ACCESSIBILITY,
-            { placeholder: '#main, #content, .quiz-form' }
+            { placeholder: '#main, #content, .quiz-form' },
           ),
           createProperty(
             'text',
@@ -2683,7 +2683,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Texto do Link',
             PropertyCategory.ACCESSIBILITY,
-            { placeholder: 'Texto que aparece quando focado...' }
+            { placeholder: 'Texto que aparece quando focado...' },
           ),
           createProperty(
             'className',
@@ -2691,7 +2691,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Classes CSS',
             PropertyCategory.ADVANCED,
-            { placeholder: 'Classes de estilo e acessibilidade...' }
+            { placeholder: 'Classes de estilo e acessibilidade...' },
           ),
           createProperty(
             'position',
@@ -2705,7 +2705,7 @@ export const useUnifiedProperties = (
                 { value: 'top-center', label: 'Superior Centro' },
                 { value: 'top-right', label: 'Superior Direita' },
               ],
-            }
+            },
           ),
         ];
 
@@ -2719,7 +2719,7 @@ export const useUnifiedProperties = (
             PropertyType.URL,
             'URL da Imagem',
             PropertyCategory.CONTENT,
-            { placeholder: 'https://exemplo.com/imagem.jpg' }
+            { placeholder: 'https://exemplo.com/imagem.jpg' },
           ),
           createProperty(
             'alt',
@@ -2727,7 +2727,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Texto Alternativo',
             PropertyCategory.ACCESSIBILITY,
-            { placeholder: 'Descrição da imagem para acessibilidade...' }
+            { placeholder: 'Descrição da imagem para acessibilidade...' },
           ),
           createProperty(
             'width',
@@ -2735,7 +2735,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Largura',
             PropertyCategory.LAYOUT,
-            { placeholder: 'auto, 400px, 100%' }
+            { placeholder: 'auto, 400px, 100%' },
           ),
           createProperty(
             'height',
@@ -2743,7 +2743,7 @@ export const useUnifiedProperties = (
             PropertyType.TEXT,
             'Altura',
             PropertyCategory.LAYOUT,
-            { placeholder: 'auto, 300px, 100%' }
+            { placeholder: 'auto, 300px, 100%' },
           ),
           createProperty(
             'aspectRatio',
@@ -2759,7 +2759,7 @@ export const useUnifiedProperties = (
                 { value: '16/9', label: 'Widescreen (16:9)' },
                 { value: '3/2', label: 'Fotografia (3:2)' },
               ],
-            }
+            },
           ),
           createProperty(
             'objectFit',
@@ -2774,7 +2774,7 @@ export const useUnifiedProperties = (
                 { value: 'fill', label: 'Preencher (Fill)' },
                 { value: 'scale-down', label: 'Reduzir (Scale Down)' },
               ],
-            }
+            },
           ),
           createProperty(
             'borderRadius',
@@ -2782,14 +2782,14 @@ export const useUnifiedProperties = (
             PropertyType.RANGE,
             'Bordas Arredondadas',
             PropertyCategory.STYLE,
-            { min: 0, max: 50, step: 2, unit: 'px' }
+            { min: 0, max: 50, step: 2, unit: 'px' },
           ),
           createProperty(
             'priority',
             currentBlock?.properties?.priority ?? false,
             PropertyType.SWITCH,
             'Carregamento Prioritário',
-            PropertyCategory.ADVANCED
+            PropertyCategory.ADVANCED,
           ),
           createProperty(
             'loading',
@@ -2802,13 +2802,13 @@ export const useUnifiedProperties = (
                 { value: 'lazy', label: 'Lazy (Sob demanda)' },
                 { value: 'eager', label: 'Eager (Imediato)' },
               ],
-            }
+            },
           ),
         ];
 
       default:
         console.warn(
-          `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas.`
+          `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas.`,
         );
         return getUniversalProperties();
     }
@@ -2852,7 +2852,7 @@ export const useUnifiedProperties = (
         });
       }
     },
-    [onUpdateExternal, block]
+    [onUpdateExternal, block],
   );
 
   const resetProperties = useCallback(() => {
@@ -2902,7 +2902,7 @@ export const useUnifiedProperties = (
     (key: string) => {
       return properties.find(prop => prop.key === key);
     },
-    [properties]
+    [properties],
   );
 
   const getPropertiesByCategory = useCallback(
@@ -2912,7 +2912,7 @@ export const useUnifiedProperties = (
       }
       return properties.filter(prop => prop.category === category);
     },
-    [properties]
+    [properties],
   );
 
   const exportProperties = useCallback(() => {
@@ -2921,7 +2921,7 @@ export const useUnifiedProperties = (
         acc[prop.key] = prop.value;
         return acc;
       },
-      {} as Record<string, any>
+      {} as Record<string, any>,
     );
   }, [properties]);
 
@@ -2942,7 +2942,7 @@ export const useUnifiedProperties = (
           }
         }
         return prop;
-      })
+      }),
     );
 
     if (onUpdateExternal && block) {
@@ -2963,7 +2963,7 @@ export const useUnifiedProperties = (
           }
           return acc;
         },
-        {} as Record<string, any>
+        {} as Record<string, any>,
       );
       onUpdateExternal(block.id, { properties: updatedProps });
     }

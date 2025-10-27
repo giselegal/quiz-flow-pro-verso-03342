@@ -58,12 +58,12 @@ async function testEditorSystem() {
         // Relatório de validação
         console.log('📊 RELATÓRIO DE VALIDAÇÃO:');
         console.log('==========================');
-        console.log(`✅ Interfaces definidas e funcionais`);
-        console.log(`✅ Implementações mock operacionais`);
-        console.log(`✅ Criação de dados estruturados`);
-        console.log(`✅ Operações CRUD funcionando`);
-        console.log(`✅ Sistema completamente desacoplado`);
-        console.log(`✅ Pronto para integração e testes`);
+        console.log('✅ Interfaces definidas e funcionais');
+        console.log('✅ Implementações mock operacionais');
+        console.log('✅ Criação de dados estruturados');
+        console.log('✅ Operações CRUD funcionando');
+        console.log('✅ Sistema completamente desacoplado');
+        console.log('✅ Pronto para integração e testes');
 
         return true;
 

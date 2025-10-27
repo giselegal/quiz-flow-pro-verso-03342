@@ -229,7 +229,7 @@ export const useStepNavigationStore = create<StepNavigationStore>()(
             version: '1.0.0',
           },
           null,
-          2
+          2,
         );
       },
 
@@ -250,8 +250,8 @@ export const useStepNavigationStore = create<StepNavigationStore>()(
     {
       name: 'step-navigation-configs',
       version: 1,
-    }
-  )
+    },
+  ),
 );
 
 /**
@@ -294,11 +294,11 @@ export const useNavigationConfigStats = () => {
     const totalSteps = Object.keys(configs).length;
 
     const autoAdvanceSteps = Object.values(configs).filter(
-      config => config.autoAdvanceOnComplete
+      config => config.autoAdvanceOnComplete,
     ).length;
 
     const multipleSelectionSteps = Object.values(configs).filter(
-      config => config.multipleSelection
+      config => config.multipleSelection,
     ).length;
 
     const avgDelay =

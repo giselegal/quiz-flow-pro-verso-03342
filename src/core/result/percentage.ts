@@ -5,7 +5,7 @@ export interface ScoreLike { score?: number; percentage?: number; }
 export const computeEffectivePrimaryPercentage = (
     primary: ScoreLike | undefined,
     secondaries: ScoreLike[] | undefined,
-    fallbackPercentage: number | undefined
+    fallbackPercentage: number | undefined,
 ) => {
     const pct = typeof fallbackPercentage === 'number' && !Number.isNaN(fallbackPercentage)
         ? fallbackPercentage

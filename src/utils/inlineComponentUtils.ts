@@ -3,7 +3,7 @@ export const getPersonalizedText = (
   text: string,
   pattern: string,
   username: string,
-  useUsername: boolean
+  useUsername: boolean,
 ): string => {
   if (!useUsername || !username) return text;
   return pattern.replace('{{username}}', username);
@@ -22,7 +22,7 @@ export const trackComponentClick = (componentId: string, componentType: string, 
 export const trackComponentConversion = (
   componentId: string,
   componentType: string,
-  value: number
+  value: number,
 ) => {
   // Conversion tracking implementation
   console.log(`Component conversion: ${componentType} (${componentId}) - Value: ${value}`);

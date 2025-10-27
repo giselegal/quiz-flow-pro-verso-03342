@@ -61,7 +61,7 @@ export const useSecurityMonitor = () => {
       }
 
       const { data, error } = await supabase.functions.invoke('security-monitor/record-metric', {
-        body: metric
+        body: metric,
       });
 
       if (error) throw error;
@@ -80,7 +80,7 @@ export const useSecurityMonitor = () => {
       }
 
       const { data, error } = await supabase.functions.invoke('security-monitor/log-security-event', {
-        body: event
+        body: event,
       });
 
       if (error) throw error;
@@ -156,7 +156,7 @@ export const useSecurityMonitor = () => {
       params.append('hours', hours.toString());
 
       const { data, error } = await supabase.functions.invoke(
-        `security-monitor/get-metrics?${params.toString()}`
+        `security-monitor/get-metrics?${params.toString()}`,
       );
 
       if (error) throw error;
@@ -207,6 +207,6 @@ export const useSecurityMonitor = () => {
     // Computed
     isSystemHealthy,
     hasCriticalIssues,
-    hasWarnings
+    hasWarnings,
   };
 };

@@ -105,7 +105,7 @@ export function useEditorFieldValidation() {
         errors: fieldErrors,
       };
     },
-    []
+    [],
   );
 
   // Validar um bloco inteiro
@@ -113,7 +113,7 @@ export function useEditorFieldValidation() {
     (
       blockId: string,
       values: Record<string, unknown>,
-      validations: Record<string, ValidationProps[]>
+      validations: Record<string, ValidationProps[]>,
     ) => {
       const blockErrors: Record<string, Array<{ path: string; message: string }>> = {};
       let isValid = true;
@@ -133,7 +133,7 @@ export function useEditorFieldValidation() {
         errors: blockErrors,
       };
     },
-    [validateField]
+    [validateField],
   );
 
   // Limpar erros de um campo
@@ -153,7 +153,7 @@ export function useEditorFieldValidation() {
     (fieldId: string) => {
       return validationState.errors[fieldId] || [];
     },
-    [validationState.errors]
+    [validationState.errors],
   );
 
   // Verificar se um campo foi tocado
@@ -161,7 +161,7 @@ export function useEditorFieldValidation() {
     (fieldId: string) => {
       return validationState.touched.has(fieldId);
     },
-    [validationState.touched]
+    [validationState.touched],
   );
 
   // Verificar se há algum erro

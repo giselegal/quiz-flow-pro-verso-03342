@@ -33,7 +33,7 @@ describe('Properties Panel - Atomic blocks editability (SchemaAPI)', () => {
 
             let lastPatch: Record<string, any> | null = null;
             const { unmount } = render(
-                <DynamicPropertiesForm type={type} values={values} onChange={(patch) => { lastPatch = patch; }} />
+                <DynamicPropertiesForm type={type} values={values} onChange={(patch) => { lastPatch = patch; }} />,
             );
 
             const first = props[0];

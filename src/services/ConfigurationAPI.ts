@@ -50,7 +50,7 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                 const params = new URLSearchParams();
                 if (funnelId) params.set('funnelId', funnelId);
                 const res = await fetch(`${this.baseUrl}/api/components/${encodeURIComponent(componentId)}/configuration?${params.toString()}`, {
-                    method: 'GET'
+                    method: 'GET',
                 });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const json = await res.json();
@@ -111,7 +111,7 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                 const res = await fetch(`${this.baseUrl}/api/components/${encodeURIComponent(componentId)}/configuration?${params.toString()}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(properties)
+                    body: JSON.stringify(properties),
                 });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
             } else {
@@ -124,8 +124,8 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                     lastModified: new Date(),
                     createdBy: 'api-user',
                     metadata: {
-                        source: 'api'
-                    }
+                        source: 'api',
+                    },
                 });
             }
 
@@ -150,7 +150,7 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
             // Atualizar propriedade específica
             const updatedConfig = {
                 ...currentConfig,
-                [propertyKey]: value
+                [propertyKey]: value,
             };
 
             // Salvar configuração atualizada
@@ -178,7 +178,7 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
             return {
                 totalConfigurations: stats.totalConfigurations,
                 byComponent: stats.byComponent,
-                lastModified: stats.lastModified.toISOString()
+                lastModified: stats.lastModified.toISOString(),
             };
 
         } catch (error) {
@@ -186,7 +186,7 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
             return {
                 totalConfigurations: 0,
                 byComponent: {},
-                lastModified: new Date().toISOString()
+                lastModified: new Date().toISOString(),
             };
         }
     }
@@ -203,7 +203,7 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                 version: '2.0',
                 timestamp: new Date().toISOString(),
                 funnelId,
-                configurations: backup
+                configurations: backup,
             };
 
             return JSON.stringify(exportData, null, 2);
@@ -281,18 +281,18 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                 defaultProperties: {
                     primaryColor: '#B89B7A',
                     secondaryColor: '#432818',
-                    fontFamily: 'Inter, sans-serif'
+                    fontFamily: 'Inter, sans-serif',
                 },
                 editorConfig: {
                     propertiesPanelTitle: 'Configurações Globais',
                     previewComponent: 'QuizGlobalPreview',
-                    categories: ['visual' as any, 'advanced' as any]
+                    categories: ['visual' as any, 'advanced' as any],
                 },
                 properties: [
                     { key: 'primaryColor', label: 'Primary Color', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#B89B7A', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
                     { key: 'secondaryColor', label: 'Secondary Color', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#432818', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
-                    { key: 'fontFamily', label: 'Font Family', type: PropertyType.FONT_FAMILY, category: 'visual' as any, editor: { component: 'FontSelector' }, defaultValue: 'Inter, sans-serif', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } }
-                ]
+                    { key: 'fontFamily', label: 'Font Family', type: PropertyType.FONT_FAMILY, category: 'visual' as any, editor: { component: 'FontSelector' }, defaultValue: 'Inter, sans-serif', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                ],
             },
                         'quiz-theme-config': {
                 id: 'quiz-theme-config',
@@ -307,20 +307,20 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                     buttonColor: '#B89B7A',
                     buttonTextColor: '#ffffff',
                     cardShadow: 'sm',
-                    fontWeight: 'normal'
+                    fontWeight: 'normal',
                 },
                 editorConfig: {
                     propertiesPanelTitle: 'Configurações de Tema',
                     previewComponent: 'QuizThemePreview',
-                    categories: ['visual' as any]
+                    categories: ['visual' as any],
                 },
                 properties: [
                     { key: 'backgroundColor', label: 'Cor de Fundo', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#fefefe', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
                     { key: 'textColor', label: 'Cor do Texto', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#5b4135', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
                     { key: 'borderRadius', label: 'Raio da Borda', type: PropertyType.RANGE, category: 'visual' as any, editor: { component: 'RangeSlider' }, defaultValue: 8, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
                     { key: 'buttonColor', label: 'Cor do Botão', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#B89B7A', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
-                    { key: 'buttonTextColor', label: 'Cor do Texto do Botão', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#ffffff', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } }
-                ]
+                    { key: 'buttonTextColor', label: 'Cor do Texto do Botão', type: PropertyType.COLOR, category: 'visual' as any, editor: { component: 'ColorPicker' }, defaultValue: '#ffffff', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                ],
             },
             'quiz-step-1': {
                 id: 'quiz-step-1',
@@ -333,19 +333,19 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                     subtitle: 'Descubra seu perfil em alguns passos simples',
                     buttonText: 'Começar Quiz',
                     showAnimation: true,
-                    backgroundColor: '#ffffff'
+                    backgroundColor: '#ffffff',
                 },
                 editorConfig: {
                     propertiesPanelTitle: 'Configurações do Step 1',
                     previewComponent: 'QuizStep1Preview',
-                    categories: ['content' as any, 'visual' as any]
+                    categories: ['content' as any, 'visual' as any],
                 },
                 properties: [
                     { key: 'title', label: 'Título', type: PropertyType.TEXT, category: 'content' as any, editor: { component: 'TextInput' }, defaultValue: 'Bem-vindo ao Quiz!', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
                     { key: 'subtitle', label: 'Subtítulo', type: PropertyType.TEXT, category: 'content' as any, editor: { component: 'TextInput' }, defaultValue: 'Descubra seu perfil em alguns passos simples', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
                     { key: 'buttonText', label: 'Texto do Botão', type: PropertyType.TEXT, category: 'content' as any, editor: { component: 'TextInput' }, defaultValue: 'Começar Quiz', apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
-                    { key: 'showAnimation', label: 'Animação', type: PropertyType.BOOLEAN, category: 'visual' as any, editor: { component: 'Switch' }, defaultValue: true, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } }
-                ]
+                    { key: 'showAnimation', label: 'Animação', type: PropertyType.BOOLEAN, category: 'visual' as any, editor: { component: 'Switch' }, defaultValue: true, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                ],
             },
             'quiz-options-grid': {
                 id: 'quiz-options-grid',
@@ -357,20 +357,20 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
                     imageSize: 256,
                     columns: 2,
                     gridGap: 16,
-                    showShadows: true
+                    showShadows: true,
                 },
                 editorConfig: {
                     propertiesPanelTitle: 'Configurações do Grid',
                     previewComponent: 'QuizOptionsGridPreview',
-                    categories: ['layout' as any, 'visual' as any]
+                    categories: ['layout' as any, 'visual' as any],
                 },
                 properties: [
                     { key: 'imageSize', label: 'Image Size', type: PropertyType.RANGE, category: 'visual' as any, editor: { component: 'RangeSlider' }, defaultValue: 256, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true }, validation: { min: 100, max: 500 } as any },
                     { key: 'columns', label: 'Columns', type: PropertyType.COLUMNS, category: 'layout' as any, editor: { component: 'NumberInput' }, defaultValue: 2, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
                     { key: 'gridGap', label: 'Grid Gap', type: PropertyType.SPACING, category: 'layout' as any, editor: { component: 'NumberInput' }, defaultValue: 16, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
-                    { key: 'showShadows', label: 'Show Shadows', type: PropertyType.BOOLEAN, category: 'visual' as any, editor: { component: 'Switch' }, defaultValue: true, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } }
-                ]
-            }
+                    { key: 'showShadows', label: 'Show Shadows', type: PropertyType.BOOLEAN, category: 'visual' as any, editor: { component: 'Switch' }, defaultValue: true, apiConfig: { endpoint: '/api/config', syncRealTime: true, cacheable: true, versionable: true } },
+                ],
+            },
         };
 
         return definitions[componentId] || {
@@ -382,9 +382,9 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
             defaultProperties: {},
             editorConfig: {
                 propertiesPanelTitle: 'Configurações Gerais',
-                categories: ['general' as any]
+                categories: ['general' as any],
             },
-            properties: []
+            properties: [],
         };
     }
 
@@ -443,7 +443,7 @@ export class ConfigurationAPI implements ComponentConfigurationAPI {
     getCacheStats(): { size: number; entries: string[] } {
         return {
             size: this.cache.size,
-            entries: Array.from(this.cache.keys())
+            entries: Array.from(this.cache.keys()),
         };
     }
 }
@@ -491,7 +491,7 @@ export const configurationApiRoutes = {
     // POST /api/components/:componentId/reset
     resetToDefaults: async (componentId: string, funnelId?: string) => {
         return ConfigurationAPI.getInstance().resetToDefaults(componentId, funnelId);
-    }
+    },
 };
 
 export default ConfigurationAPI;

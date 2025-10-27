@@ -52,7 +52,7 @@ function handleDragEndSimulation(
   event: DragEvent,
   steps: Step[],
   currentStepId: string,
-  COMPONENT_LIBRARY: Array<{ type: string; blockType?: string; defaultProps?: any; defaultContent?: any }>
+  COMPONENT_LIBRARY: Array<{ type: string; blockType?: string; defaultProps?: any; defaultContent?: any }>,
 ): Step[] {
   const { active, over } = event;
   
@@ -76,7 +76,7 @@ function handleDragEndSimulation(
       order: 0,
       properties: { ...component.defaultProps },
       content: { ...(component.defaultContent || {}) },
-      parentId: null
+      parentId: null,
     };
 
     // Determinar posição de inserção
@@ -110,7 +110,7 @@ function handleDragEndSimulation(
     return steps.map(step =>
       step.id === currentStepId
         ? { ...step, blocks: updatedBlocks }
-        : step
+        : step,
     );
   }
 
@@ -132,7 +132,7 @@ const MOCK_COMPONENT_LIBRARY = [
   { type: 'heading', blockType: 'heading', defaultProps: { level: 2 }, defaultContent: { text: 'Título' } },
   { type: 'paragraph', blockType: 'paragraph', defaultProps: {}, defaultContent: { text: 'Texto' } },
   { type: 'image', blockType: 'image', defaultProps: {}, defaultContent: { url: 'https://example.com/img.jpg' } },
-  { type: 'button', blockType: 'button', defaultProps: {}, defaultContent: { text: 'Clique aqui' } }
+  { type: 'button', blockType: 'button', defaultProps: {}, defaultContent: { text: 'Clique aqui' } },
 ];
 
 function createMockStep(stepId: string, blockCount: number = 3): Step {
@@ -143,8 +143,8 @@ function createMockStep(stepId: string, blockCount: number = 3): Step {
       id: `block-${i + 1}`,
       type: i % 2 === 0 ? 'heading' : 'paragraph',
       order: i,
-      parentId: null
-    }))
+      parentId: null,
+    })),
   };
 }
 
@@ -165,7 +165,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve detectar drop zone "before" corretamente', () => {
       const event: DragEvent = {
         active: { id: 'lib:image' },
-        over: { id: 'drop-before-block-2' }
+        over: { id: 'drop-before-block-2' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -186,7 +186,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve inserir no início quando drop zone é do primeiro bloco', () => {
       const event: DragEvent = {
         active: { id: 'lib:button' },
-        over: { id: 'drop-before-block-1' }
+        over: { id: 'drop-before-block-1' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -200,7 +200,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve inserir antes do último bloco quando drop zone é dele', () => {
       const event: DragEvent = {
         active: { id: 'lib:paragraph' },
-        over: { id: 'drop-before-block-3' }
+        over: { id: 'drop-before-block-3' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -215,7 +215,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve inserir no meio da lista mantendo ordem correta', () => {
       const event: DragEvent = {
         active: { id: 'lib:heading' },
-        over: { id: 'drop-before-block-2' }
+        over: { id: 'drop-before-block-2' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -233,7 +233,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve inserir no final quando drop zone é "canvas-end"', () => {
       const event: DragEvent = {
         active: { id: 'lib:image' },
-        over: { id: 'canvas-end' }
+        over: { id: 'canvas-end' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -252,7 +252,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
         { active: { id: 'lib:heading' }, over: { id: 'drop-before-block-2' } },
         result,
         currentStepId,
-        MOCK_COMPONENT_LIBRARY
+        MOCK_COMPONENT_LIBRARY,
       );
 
       // Inserir image antes do novo heading
@@ -261,7 +261,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
         { active: { id: 'lib:image' }, over: { id: `drop-before-${newHeadingId}` } },
         result,
         currentStepId,
-        MOCK_COMPONENT_LIBRARY
+        MOCK_COMPONENT_LIBRARY,
       );
 
       const step = result.find(s => s.id === currentStepId)!;
@@ -274,7 +274,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve reordenar todos os blocos após inserção', () => {
       const event: DragEvent = {
         active: { id: 'lib:button' },
-        over: { id: 'drop-before-block-2' }
+        over: { id: 'drop-before-block-2' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -295,7 +295,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
       const insertions = [
         { active: { id: 'lib:heading' }, over: { id: 'drop-before-block-1' } },
         { active: { id: 'lib:paragraph' }, over: { id: 'drop-before-block-2' } },
-        { active: { id: 'lib:image' }, over: { id: 'canvas-end' } }
+        { active: { id: 'lib:image' }, over: { id: 'canvas-end' } },
       ];
 
       insertions.forEach(event => {
@@ -327,8 +327,8 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
           { id: 'parent-1', type: 'container', order: 0, parentId: null },
           { id: 'child-1', type: 'heading', order: 0, parentId: 'parent-1' },
           { id: 'parent-2', type: 'container', order: 1, parentId: null },
-          { id: 'child-2', type: 'paragraph', order: 0, parentId: 'parent-2' }
-        ]
+          { id: 'child-2', type: 'paragraph', order: 0, parentId: 'parent-2' },
+        ],
       };
 
       expect(getBlockIndex(stepWithChildren.blocks, 'parent-1')).toBe(0);
@@ -341,7 +341,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve retornar steps inalterado quando over é null', () => {
       const event: DragEvent = {
         active: { id: 'lib:heading' },
-        over: null
+        over: null,
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -351,7 +351,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve retornar steps inalterado quando componente não existe', () => {
       const event: DragEvent = {
         active: { id: 'lib:nonexistent' },
-        over: { id: 'drop-before-block-1' }
+        over: { id: 'drop-before-block-1' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -361,7 +361,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve retornar steps inalterado quando step não existe', () => {
       const event: DragEvent = {
         active: { id: 'lib:heading' },
-        over: { id: 'drop-before-block-1' }
+        over: { id: 'drop-before-block-1' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, 'nonexistent-step', MOCK_COMPONENT_LIBRARY);
@@ -371,7 +371,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve tratar drop-before com blockId inválido', () => {
       const event: DragEvent = {
         active: { id: 'lib:heading' },
-        over: { id: 'drop-before-nonexistent-block' }
+        over: { id: 'drop-before-nonexistent-block' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -387,7 +387,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve criar bloco com ID único baseado em timestamp', () => {
       const event: DragEvent = {
         active: { id: 'lib:heading' },
-        over: { id: 'drop-before-block-1' }
+        over: { id: 'drop-before-block-1' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -402,7 +402,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve copiar defaultProps do componente para o novo bloco', () => {
       const event: DragEvent = {
         active: { id: 'lib:heading' },
-        over: { id: 'drop-before-block-1' }
+        over: { id: 'drop-before-block-1' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -415,7 +415,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve copiar defaultContent do componente para o novo bloco', () => {
       const event: DragEvent = {
         active: { id: 'lib:heading' },
-        over: { id: 'drop-before-block-1' }
+        over: { id: 'drop-before-block-1' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -428,7 +428,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
     it('deve definir parentId como null para blocos top-level', () => {
       const event: DragEvent = {
         active: { id: 'lib:button' },
-        over: { id: 'drop-before-block-2' }
+        over: { id: 'drop-before-block-2' },
       };
 
       const result = handleDragEndSimulation(event, mockSteps, currentStepId, MOCK_COMPONENT_LIBRARY);
@@ -446,7 +446,7 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
 
       const event: DragEvent = {
         active: { id: 'lib:heading' },
-        over: { id: 'canvas-end' }
+        over: { id: 'canvas-end' },
       };
 
       const result = handleDragEndSimulation(event, steps, 'empty-step', MOCK_COMPONENT_LIBRARY);
@@ -460,12 +460,12 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
       const singleBlockStep: Step = {
         id: 'single',
         type: 'question',
-        blocks: [{ id: 'only-block', type: 'heading', order: 0, parentId: null }]
+        blocks: [{ id: 'only-block', type: 'heading', order: 0, parentId: null }],
       };
 
       const event: DragEvent = {
         active: { id: 'lib:paragraph' },
-        over: { id: 'drop-before-only-block' }
+        over: { id: 'drop-before-only-block' },
       };
 
       const result = handleDragEndSimulation(event, [singleBlockStep], 'single', MOCK_COMPONENT_LIBRARY);
@@ -483,13 +483,13 @@ describe('🎯 Drag & Drop entre Blocos no Canvas', () => {
         blocks: [
           { id: 'container-1', type: 'container', order: 0, parentId: null },
           { id: 'child-1', type: 'heading', order: 0, parentId: 'container-1' },
-          { id: 'container-2', type: 'container', order: 1, parentId: null }
-        ]
+          { id: 'container-2', type: 'container', order: 1, parentId: null },
+        ],
       };
 
       const event: DragEvent = {
         active: { id: 'lib:button' },
-        over: { id: 'drop-before-container-2' }
+        over: { id: 'drop-before-container-2' },
       };
 
       const result = handleDragEndSimulation(event, [stepWithContainers], 'step-containers', MOCK_COMPONENT_LIBRARY);

@@ -7,7 +7,7 @@ export const createSimpleBlockData = (
   id: string,
   type: string,
   properties: any,
-  order: number = 0
+  order: number = 0,
 ): BlockData => ({
   id,
   type,

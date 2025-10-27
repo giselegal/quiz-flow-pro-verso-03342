@@ -82,7 +82,7 @@ export const useAdvancedShortcuts = ({
         }
       }
     },
-    [enabled]
+    [enabled],
   );
 
   useEffect(() => {

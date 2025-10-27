@@ -75,7 +75,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
         enabled: includePerformance && isVisible,
         onAlert: (alert) => {
             addLog('warn', `Performance Alert: ${alert.message}`, alert);
-        }
+        },
     });
 
     // Refs
@@ -89,7 +89,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
             level,
             message,
             data,
-            component
+            component,
         };
 
         setLogs(prev => [...prev.slice(-99), newLog]); // Manter apenas os últimos 100 logs
@@ -112,7 +112,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                 id: requestId,
                 url,
                 method,
-                timestamp: startTime
+                timestamp: startTime,
             };
 
             setNetworkRequests(prev => [...prev.slice(-49), request]);
@@ -125,15 +125,15 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                     prev.map(req =>
                         req.id === requestId
                             ? { ...req, status: response.status, duration: endTime - startTime }
-                            : req
-                    )
+                            : req,
+                    ),
                 );
 
                 addLog('info', `Network: ${method} ${url} - ${response.status}`, {
                     url,
                     method,
                     status: response.status,
-                    duration: endTime - startTime
+                    duration: endTime - startTime,
                 });
 
                 return response;
@@ -144,8 +144,8 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                     prev.map(req =>
                         req.id === requestId
                             ? { ...req, status: 0, duration: endTime - startTime }
-                            : req
-                    )
+                            : req,
+                    ),
                 );
 
                 const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -159,7 +159,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
             log: console.log,
             warn: console.warn,
             error: console.error,
-            debug: console.debug
+            debug: console.debug,
         };
 
         console.log = (...args) => {
@@ -224,7 +224,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                     width: '48px',
                     height: '48px',
                     cursor: 'pointer',
-                    fontSize: '18px'
+                    fontSize: '18px',
                 }}
             >
                 🐛
@@ -249,7 +249,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
         flexDirection: 'column',
         overflow: 'hidden',
         boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
-        resize: 'both'
+        resize: 'both',
     };
 
     return (
@@ -262,7 +262,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                 padding: '8px 12px',
                 borderBottom: '1px solid #374151',
                 background: '#111827',
-                userSelect: 'none'
+                userSelect: 'none',
             }}>
                 <span style={{ fontWeight: 'bold' }}>
                     🐛 Debug Panel - {component}
@@ -276,7 +276,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                 border: 'none',
                                 color: '#9ca3af',
                                 cursor: 'pointer',
-                                marginRight: '8px'
+                                marginRight: '8px',
                             }}
                         >
                             {isMinimized ? '🔼' : '🔽'}
@@ -288,7 +288,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                             background: 'none',
                             border: 'none',
                             color: '#ef4444',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
                         }}
                     >
                         ✕
@@ -303,7 +303,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                     <div style={{
                         display: 'flex',
                         background: '#111827',
-                        borderBottom: '1px solid #374151'
+                        borderBottom: '1px solid #374151',
                     }}>
                         {['logs', 'performance', 'network', 'state', 'storage'].map(tab => (
                             <button
@@ -316,7 +316,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                     padding: '8px 12px',
                                     cursor: 'pointer',
                                     textTransform: 'capitalize',
-                                    fontSize: '11px'
+                                    fontSize: '11px',
                                 }}
                             >
                                 {tab}
@@ -338,7 +338,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                             padding: '4px 8px',
                                             borderRadius: '4px',
                                             cursor: 'pointer',
-                                            fontSize: '10px'
+                                            fontSize: '10px',
                                         }}
                                     >
                                         Clear
@@ -365,7 +365,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                                 }`,
                                             background: '#374151',
                                             borderRadius: '0 4px 4px 0',
-                                            fontSize: '10px'
+                                            fontSize: '10px',
                                         }}
                                     >
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
@@ -377,7 +377,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                                     log.level === 'warn' ? '#f59e0b' :
                                                         log.level === 'debug' ? '#8b5cf6' : '#10b981',
                                                 textTransform: 'uppercase',
-                                                fontWeight: 'bold'
+                                                fontWeight: 'bold',
                                             }}>
                                                 {log.level}
                                             </span>
@@ -437,7 +437,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                                     padding: '4px 8px',
                                                     borderRadius: '4px',
                                                     marginBottom: '2px',
-                                                    fontSize: '10px'
+                                                    fontSize: '10px',
                                                 }}
                                             >
                                                 {alert.message}
@@ -461,14 +461,14 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                             padding: '6px 8px',
                                             marginBottom: '2px',
                                             borderRadius: '4px',
-                                            fontSize: '10px'
+                                            fontSize: '10px',
                                         }}
                                     >
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <span style={{
                                                 color: request.status === undefined ? '#9ca3af' :
                                                     request.status >= 400 ? '#ef4444' :
-                                                        request.status >= 300 ? '#f59e0b' : '#10b981'
+                                                        request.status >= 300 ? '#f59e0b' : '#10b981',
                                             }}>
                                                 {request.method}
                                             </span>
@@ -478,7 +478,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                                         request.status >= 300 ? '#92400e' : '#065f46',
                                                 padding: '2px 6px',
                                                 borderRadius: '2px',
-                                                fontSize: '9px'
+                                                fontSize: '9px',
                                             }}>
                                                 {request.status || 'PENDING'}
                                             </span>
@@ -506,7 +506,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                     padding: '8px',
                                     borderRadius: '4px',
                                     fontSize: '10px',
-                                    overflow: 'auto'
+                                    overflow: 'auto',
                                 }}>
                                     {JSON.stringify({ ...debugData, performanceMetrics: performanceTest.metrics }, null, 2)}
                                 </pre>

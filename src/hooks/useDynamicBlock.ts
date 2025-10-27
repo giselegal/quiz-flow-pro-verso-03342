@@ -16,7 +16,7 @@ export interface UseDynamicBlockOptions {
  */
 export function useDynamicBlock(
   type: BlockType,
-  options: UseDynamicBlockOptions = {}
+  options: UseDynamicBlockOptions = {},
 ): ComponentType<any> {
   const { preload = false } = options;
 
@@ -30,7 +30,7 @@ export function useDynamicBlock(
   // Return lazy component
   return useMemo(
     () => dynamicBlockRegistry.getLazyBlock(type),
-    [type]
+    [type],
   );
 }
 

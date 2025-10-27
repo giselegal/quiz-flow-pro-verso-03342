@@ -64,14 +64,14 @@ export class UnifiedQuizStepAdapter {
       type: block.type as any,
       order: block.position || index,
       content: block.properties || {},
-      properties: block.properties || {}
+      properties: block.properties || {},
     }));
     
     // Extrair sections dos blocks
     const sections = blocks.map((block: Block) => ({
       type: block.type as string,
       content: block.content || {},
-      style: (block.content as any)?.style
+      style: (block.content as any)?.style,
     }));
     
     return {
@@ -81,12 +81,12 @@ export class UnifiedQuizStepAdapter {
       sections,
       metadata: {
         version: '1.0',
-        source: 'quizstep' as const
+        source: 'quizstep' as const,
       },
       raw: {
         quizStep,
-        blocks
-      }
+        blocks,
+      },
     };
   }
   
@@ -97,7 +97,7 @@ export class UnifiedQuizStepAdapter {
     const sections = blocks.map((block: Block) => ({
       type: block.type as string,
       content: block.content || block.properties || {},
-      style: (block.content as any)?.style || (block.properties as any)?.style
+      style: (block.content as any)?.style || (block.properties as any)?.style,
     }));
     
     // Inferir type do step baseado nos blocks
@@ -110,11 +110,11 @@ export class UnifiedQuizStepAdapter {
       sections,
       metadata: {
         version: '1.0',
-        source: 'blocks' as const
+        source: 'blocks' as const,
       },
       raw: {
-        blocks
-      }
+        blocks,
+      },
     };
   }
   
@@ -128,7 +128,7 @@ export class UnifiedQuizStepAdapter {
     const sections = json.sections.map((section: any) => ({
       type: section.type,
       content: section.content,
-      style: section.style
+      style: section.style,
     }));
     
     // Inferir tipo baseado na categoria
@@ -142,12 +142,12 @@ export class UnifiedQuizStepAdapter {
       metadata: {
         version: json.templateVersion,
         source: 'json' as const,
-        ...json.metadata
+        ...json.metadata,
       },
       raw: {
         json,
-        blocks
-      }
+        blocks,
+      },
     };
   }
   
@@ -231,7 +231,7 @@ export class UnifiedQuizStepAdapter {
       type: section.type as any,
       order: index,
       content: section.content,
-      properties: section.content
+      properties: section.content,
     }));
   }
 }

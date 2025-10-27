@@ -8,7 +8,7 @@ import { useState, useEffect, useCallback } from 'react';
 import FacebookMetricsService, {
     FunnelFacebookMetrics,
     FunnelTrackingConfig,
-    FacebookMetricDetailed
+    FacebookMetricDetailed,
 } from '@/services/FacebookMetricsService';
 
 export interface UseFacebookMetricsOptions {
@@ -34,7 +34,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
         funnelId,
         period = '30d',
         autoRefresh = false,
-        refreshInterval = 60000 // 1 minuto
+        refreshInterval = 60000, // 1 minuto
     } = options;
 
     const [state, setState] = useState<FacebookMetricsState>({
@@ -45,7 +45,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
         isLoading: true,
         isRefreshing: false,
         error: null,
-        lastUpdated: null
+        lastUpdated: null,
     });
 
     // ============================================================================
@@ -74,7 +74,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
                 const [metrics, config, detailed] = await Promise.all([
                     FacebookMetricsService.getFunnelMetrics(funnelId, startDateStr, endDateStr),
                     FacebookMetricsService.getFunnelTrackingConfig(funnelId),
-                    FacebookMetricsService.getFunnelDetailedMetrics(funnelId, startDateStr, endDateStr)
+                    FacebookMetricsService.getFunnelDetailedMetrics(funnelId, startDateStr, endDateStr),
                 ]);
 
                 setState(prev => ({
@@ -85,7 +85,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
                     detailedMetrics: detailed,
                     isLoading: false,
                     isRefreshing: false,
-                    lastUpdated: new Date()
+                    lastUpdated: new Date(),
                 }));
             } else {
                 // Métricas de todos os funis
@@ -99,7 +99,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
                     detailedMetrics: [],
                     isLoading: false,
                     isRefreshing: false,
-                    lastUpdated: new Date()
+                    lastUpdated: new Date(),
                 }));
             }
 
@@ -109,7 +109,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
                 ...prev,
                 isLoading: false,
                 isRefreshing: false,
-                error: 'Erro ao carregar métricas do Facebook'
+                error: 'Erro ao carregar métricas do Facebook',
             }));
         }
     }, [funnelId, period]);
@@ -136,7 +136,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
                 setState(prev => ({
                     ...prev,
                     error: result.message,
-                    isRefreshing: false
+                    isRefreshing: false,
                 }));
                 return false;
             }
@@ -145,7 +145,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
             setState(prev => ({
                 ...prev,
                 error: 'Erro ao sincronizar métricas',
-                isRefreshing: false
+                isRefreshing: false,
             }));
             return false;
         }
@@ -160,7 +160,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
                 const updatedConfig = await FacebookMetricsService.getFunnelTrackingConfig(funnelId);
                 setState(prev => ({
                     ...prev,
-                    trackingConfig: updatedConfig
+                    trackingConfig: updatedConfig,
                 }));
             }
 
@@ -202,7 +202,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
             spend: acc.spend + metric.total_spend,
             conversions: acc.conversions + metric.total_conversions,
             quiz_starts: acc.quiz_starts + metric.total_quiz_starts,
-            leads: acc.leads + metric.total_leads
+            leads: acc.leads + metric.total_leads,
         }),
         {
             impressions: 0,
@@ -210,8 +210,8 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
             spend: 0,
             conversions: 0,
             quiz_starts: 0,
-            leads: 0
-        }
+            leads: 0,
+        },
     );
 
     const averages = {
@@ -223,7 +223,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
             : 0,
         roas: state.metrics.length > 0
             ? state.metrics.reduce((acc, m) => acc + m.roas, 0) / state.metrics.length
-            : 0
+            : 0,
     };
 
     // ============================================================================
@@ -246,7 +246,7 @@ export const useFacebookMetrics = (options: UseFacebookMetricsOptions = {}) => {
         // Utilitários
         hasMetrics: state.metrics.length > 0,
         isConfigured: state.trackingConfig?.facebook_enabled === true,
-        isEmpty: !state.isLoading && state.metrics.length === 0
+        isEmpty: !state.isLoading && state.metrics.length === 0,
     };
 };
 
@@ -284,7 +284,7 @@ export const useFacebookTrackingConfig = (funnelId: string) => {
             setIsSaving(true);
             const success = await FacebookMetricsService.saveFunnelTrackingConfig({
                 ...newConfig,
-                funnel_id: funnelId
+                funnel_id: funnelId,
             });
 
             if (success) {
@@ -311,7 +311,7 @@ export const useFacebookTrackingConfig = (funnelId: string) => {
         isLoading,
         isSaving,
         saveConfig,
-        reloadConfig: loadConfig
+        reloadConfig: loadConfig,
     };
 };
 

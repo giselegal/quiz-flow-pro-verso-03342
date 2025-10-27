@@ -75,7 +75,7 @@ export const fixBlurryIntroQuizImages = (): number => {
 
   // Usar seletores específicos e limitar escopo para melhor desempenho
   const quizIntroImages = document.querySelectorAll<HTMLImageElement>(
-    '.quiz-intro img, [data-section="intro"] img, .quiz-intro-image'
+    '.quiz-intro img, [data-section="intro"] img, .quiz-intro-image',
   );
   let count = 0;
 
@@ -87,7 +87,7 @@ export const fixBlurryIntroQuizImages = (): number => {
   const processImageBatch = (
     images: NodeListOf<HTMLImageElement>,
     startIdx: number,
-    batchSize: number
+    batchSize: number,
   ): void => {
     const endIdx = Math.min(startIdx + batchSize, images.length);
 
@@ -165,7 +165,7 @@ export const initializeImageFixer = (): void => {
           () => {
             fixBlurryIntroQuizImages();
           },
-          { timeout: 3000 }
+          { timeout: 3000 },
         );
       } else {
         setTimeout(fixBlurryIntroQuizImages, 2000);

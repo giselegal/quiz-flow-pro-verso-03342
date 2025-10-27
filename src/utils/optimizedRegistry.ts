@@ -81,7 +81,7 @@ const createEmergencyFallback = (type: string): React.ComponentType<any> => {
     return React.createElement(VisualBlockFallback, {
       blockType: type,
       blockId: block?.id || 'unknown',
-      block: block
+      block,
     });
   };
   EmergencyFallback.displayName = `EmergencyFallback(${type})`;
@@ -170,7 +170,7 @@ export const getOptimizedBlockComponent = (type: string): React.ComponentType<an
     return React.createElement(VisualBlockFallback, {
       blockType: type,
       blockId: block?.id || 'unknown',
-      block: block,
+      block,
       message: `Erro crítico ao carregar componente '${type}'`,
       showDetails: true,
     });
@@ -215,7 +215,7 @@ export const getOptimizedRegistryStats = () => {
       'Fallback inteligente por categoria',
       'Normalização automática de propriedades',
       'Sistema de busca aprimorado',
-      'Cobertura de 150+ componentes'
+      'Cobertura de 150+ componentes',
     ],
     usage: {
       cacheSize: COMPONENT_CACHE.size,

@@ -28,12 +28,12 @@ export interface UseSyncValidatorOptions {
 export function useSyncValidator(
   canvasData: any,
   previewData: any,
-  options: UseSyncValidatorOptions = {}
+  options: UseSyncValidatorOptions = {},
 ): SyncValidationResult {
   const {
     enabled = true,
     debounceMs = 500,
-    logDifferences = process.env.NODE_ENV === 'development'
+    logDifferences = process.env.NODE_ENV === 'development',
   } = options;
 
   const [result, setResult] = useState<SyncValidationResult>({
@@ -41,7 +41,7 @@ export function useSyncValidator(
     differences: [],
     canvasChecksum: '',
     previewChecksum: '',
-    lastCheck: 0
+    lastCheck: 0,
   });
 
   const timeoutRef = useRef<NodeJS.Timeout>();
@@ -63,7 +63,7 @@ export function useSyncValidator(
         console.warn('🔍 Sync Validator: Diferenças detectadas', {
           differences: validation.differences,
           canvasChecksum: validation.canvasChecksum,
-          previewChecksum: validation.previewChecksum
+          previewChecksum: validation.previewChecksum,
         });
       }
 
@@ -130,7 +130,7 @@ function validateSync(canvasData: any, previewData: any): SyncValidationResult {
     differences,
     canvasChecksum,
     previewChecksum,
-    lastCheck: Date.now()
+    lastCheck: Date.now(),
   };
 }
 
@@ -151,7 +151,7 @@ function normalizeForComparison(data: any): Record<string, any> {
       return {
         id: block.id,
         type: block.type,
-        config
+        config,
       };
     });
   }

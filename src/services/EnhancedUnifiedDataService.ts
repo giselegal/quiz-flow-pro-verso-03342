@@ -81,7 +81,7 @@ export class EnhancedUnifiedDataService {
 
       const totalRevenue = revenueData?.reduce(
         (sum, item) => sum + (Number(item.conversion_value) || 0),
-        0
+        0,
       ) || 0;
 
       // Analytics agregados (fallback para dados mockados se não houver)
@@ -164,7 +164,7 @@ export class EnhancedUnifiedDataService {
     description: string,
     entityType?: string,
     entityId?: string,
-    metadata?: any
+    metadata?: any,
   ): Promise<void> {
     try {
       const { error } = await supabase
@@ -200,7 +200,7 @@ export class EnhancedUnifiedDataService {
       total_revenue: number;
       unique_users: number;
       bounce_rate: number;
-    }>
+    }>,
   ): Promise<void> {
     try {
       const { error } = await supabase

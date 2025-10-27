@@ -63,7 +63,7 @@ export const useBuilderSystem = () => {
       },
       isGenerating: false,
       isOptimizing: false,
-      currentTemplate: undefined
+      currentTemplate: undefined,
     };
   }
   return context;

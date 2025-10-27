@@ -19,7 +19,7 @@ export const UnifiedConfigProvider: React.FC<{ initial?: UnifiedConfigState; chi
     const value = useMemo<UnifiedConfigContextValue>(() => ({
         ...state,
         setUnifiedConfig: (patch) => setState(prev => ({ ...prev, ...patch })),
-        resetUnifiedConfig: () => setState({})
+        resetUnifiedConfig: () => setState({}),
     }), [state]);
     return (
         <UnifiedConfigContext.Provider value={value}>{children}</UnifiedConfigContext.Provider>

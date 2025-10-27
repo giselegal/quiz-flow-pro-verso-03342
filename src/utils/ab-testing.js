@@ -66,6 +66,6 @@ export const trackTestConversion = (testId, conversionType, extraData = {}) => {
   }
 
   console.log(
-    `[AB Testing] Conversão registrada para teste ${testId}, variante ${variant}, tipo ${conversionType}`
+    `[AB Testing] Conversão registrada para teste ${testId}, variante ${variant}, tipo ${conversionType}`,
   );
 };

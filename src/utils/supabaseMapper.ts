@@ -26,7 +26,7 @@ export const mapBlockToSupabaseComponent = (
   block: Block,
   stepNumber: number,
   funnelId?: string,
-  quizId?: string
+  quizId?: string,
 ): Partial<SupabaseComponent> => {
   return {
     component_type_key: block.type,
@@ -51,7 +51,7 @@ export const mapBlockToSupabaseComponent = (
  * Implementação otimizada com ordenação automática
  */
 export const groupSupabaseComponentsByStep = (
-  components: SupabaseComponent[]
+  components: SupabaseComponent[],
 ): Record<string, Block[]> => {
   console.log('🔄 Grouping Supabase components by step:', components.length);
 

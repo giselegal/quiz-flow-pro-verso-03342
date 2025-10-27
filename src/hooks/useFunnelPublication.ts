@@ -10,7 +10,7 @@ import { useState, useCallback, useEffect } from 'react';
 import type {
     FunnelPublicationSettings,
     ResultConfiguration,
-    KeywordResultMapping
+    KeywordResultMapping,
 } from '@/components/editor/publication/FunnelPublicationPanel';
 
 // ============================================================================
@@ -57,7 +57,7 @@ export interface UseFunnelPublicationReturn {
 const DEFAULT_SETTINGS: FunnelPublicationSettings = {
     domain: {
         slug: '',
-        seoFriendlyUrl: true
+        seoFriendlyUrl: true,
     },
     results: {
         primary: {
@@ -67,18 +67,18 @@ const DEFAULT_SETTINGS: FunnelPublicationSettings = {
             description: '',
             percentage: 0,
             primaryFunction: '',
-            images: {}
+            images: {},
         },
         secondary: [],
-        keywords: []
+        keywords: [],
     },
     seo: {
-        robots: 'index,follow'
+        robots: 'index,follow',
     },
     tracking: {
-        utmParameters: {}
+        utmParameters: {},
     },
-    security: {}
+    security: {},
 };
 
 // ============================================================================
@@ -87,7 +87,7 @@ const DEFAULT_SETTINGS: FunnelPublicationSettings = {
 
 export function useFunnelPublication(
     funnelId: string,
-    options: UseFunnelPublicationOptions = {}
+    options: UseFunnelPublicationOptions = {},
 ): UseFunnelPublicationReturn {
 
     const [settings, setSettings] = useState<FunnelPublicationSettings>(DEFAULT_SETTINGS);
@@ -117,8 +117,8 @@ export function useFunnelPublication(
                     ...DEFAULT_SETTINGS,
                     domain: {
                         ...DEFAULT_SETTINGS.domain,
-                        slug: generateSlugFromFunnelId(funnelId)
-                    }
+                        slug: generateSlugFromFunnelId(funnelId),
+                    },
                 });
             }
         } catch (err) {
@@ -135,42 +135,42 @@ export function useFunnelPublication(
     const updateSettings = useCallback((updates: Partial<FunnelPublicationSettings>) => {
         setSettings(prev => ({
             ...prev,
-            ...updates
+            ...updates,
         }));
     }, []);
 
     const updateDomain = useCallback((domain: Partial<FunnelPublicationSettings['domain']>) => {
         setSettings(prev => ({
             ...prev,
-            domain: { ...prev.domain, ...domain }
+            domain: { ...prev.domain, ...domain },
         }));
     }, []);
 
     const updateResults = useCallback((results: Partial<FunnelPublicationSettings['results']>) => {
         setSettings(prev => ({
             ...prev,
-            results: { ...prev.results, ...results }
+            results: { ...prev.results, ...results },
         }));
     }, []);
 
     const updateSEO = useCallback((seo: Partial<FunnelPublicationSettings['seo']>) => {
         setSettings(prev => ({
             ...prev,
-            seo: { ...prev.seo, ...seo }
+            seo: { ...prev.seo, ...seo },
         }));
     }, []);
 
     const updateTracking = useCallback((tracking: Partial<FunnelPublicationSettings['tracking']>) => {
         setSettings(prev => ({
             ...prev,
-            tracking: { ...prev.tracking, ...tracking }
+            tracking: { ...prev.tracking, ...tracking },
         }));
     }, []);
 
     const updateSecurity = useCallback((security: Partial<FunnelPublicationSettings['security']>) => {
         setSettings(prev => ({
             ...prev,
-            security: { ...prev.security, ...security }
+            security: { ...prev.security, ...security },
         }));
     }, []);
 
@@ -220,7 +220,7 @@ export function useFunnelPublication(
                 console.log('🚀 Publicando funil:', {
                     funnelId,
                     url: generatePreviewUrl(),
-                    settings
+                    settings,
                 });
             }
         } catch (err) {
@@ -284,7 +284,7 @@ export function useFunnelPublication(
 
         return {
             isValid: errors.length === 0,
-            errors
+            errors,
         };
     }, [settings]);
 
@@ -347,7 +347,7 @@ export function useFunnelPublication(
         // Utilitários
         generatePreviewUrl,
         validateSettings,
-        getPublicationStatus
+        getPublicationStatus,
     };
 }
 
@@ -369,29 +369,29 @@ export function useFunnelResults(funnelId: string) {
             description: '',
             percentage: 0,
             primaryFunction: '',
-            images: {}
+            images: {},
         };
 
         updateResults({
-            secondary: [...(settings.results.secondary || []), newResult]
+            secondary: [...(settings.results.secondary || []), newResult],
         });
     }, [settings.results.secondary, updateResults]);
 
     const removeSecondaryResult = useCallback((resultId: string) => {
         updateResults({
-            secondary: settings.results.secondary?.filter(r => r.id !== resultId)
+            secondary: settings.results.secondary?.filter(r => r.id !== resultId),
         });
     }, [settings.results.secondary, updateResults]);
 
     const updatePrimaryResult = useCallback((updates: Partial<ResultConfiguration>) => {
         updateResults({
-            primary: { ...settings.results.primary, ...updates }
+            primary: { ...settings.results.primary, ...updates },
         });
     }, [settings.results.primary, updateResults]);
 
     const addKeywordMapping = useCallback((mapping: KeywordResultMapping) => {
         updateResults({
-            keywords: [...settings.results.keywords, mapping]
+            keywords: [...settings.results.keywords, mapping],
         });
     }, [settings.results.keywords, updateResults]);
 
@@ -401,7 +401,7 @@ export function useFunnelResults(funnelId: string) {
         removeSecondaryResult,
         updatePrimaryResult,
         addKeywordMapping,
-        save: saveSettings
+        save: saveSettings,
     };
 }
 
@@ -415,7 +415,7 @@ export function useFunnelSEO(funnelId: string) {
         updateSEO({
             title: `${funnelTitle} - Quiz Personalizado`,
             description: `Descubra ${funnelTitle.toLowerCase()} com nosso quiz personalizado e gratuito.`,
-            keywords: funnelTitle.toLowerCase().split(' ')
+            keywords: funnelTitle.toLowerCase().split(' '),
         });
     }, [updateSEO]);
 
@@ -424,7 +424,7 @@ export function useFunnelSEO(funnelId: string) {
         updateSEO,
         generateAutoSEO,
         previewUrl: generatePreviewUrl(),
-        save: saveSettings
+        save: saveSettings,
     };
 }
 

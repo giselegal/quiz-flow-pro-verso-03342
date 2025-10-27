@@ -77,7 +77,7 @@ export class CacheService extends BaseCanonicalService {
   set<T = any>(
     key: string,
     value: T,
-    options: CacheSetOptions = {}
+    options: CacheSetOptions = {},
   ): ServiceResult<void> {
     try {
       const store = options.store || 'generic';
@@ -102,7 +102,7 @@ export class CacheService extends BaseCanonicalService {
    */
   get<T = any>(
     key: string,
-    store: CacheStore = 'generic'
+    store: CacheStore = 'generic',
   ): ServiceResult<T | null> {
     try {
       const value = unifiedCache.get<T>(store, key);
@@ -149,7 +149,7 @@ export class CacheService extends BaseCanonicalService {
    */
   invalidateByPrefix(
     prefix: string,
-    store: CacheStore = 'generic'
+    store: CacheStore = 'generic',
   ): ServiceResult<number> {
     try {
       const count = unifiedCache.invalidateByPrefix(store, prefix);
@@ -197,7 +197,7 @@ export class CacheService extends BaseCanonicalService {
         totalHits: stats.hits,
         totalMisses: stats.misses,
         memoryUsage: stats.memoryUsage,
-        entriesCount: stats.size
+        entriesCount: stats.size,
       });
     } catch (error) {
       this.error('getStoreStats failed:', error);
@@ -219,7 +219,7 @@ export class CacheService extends BaseCanonicalService {
           totalHits: stats.hits,
           totalMisses: stats.misses,
           memoryUsage: stats.memoryUsage,
-          entriesCount: stats.size
+          entriesCount: stats.size,
         };
       }
       
@@ -266,7 +266,7 @@ export class CacheService extends BaseCanonicalService {
       this.delete(key, 'templates'),
     
     invalidateStep: (stepId: string) => 
-      this.invalidateByPrefix(stepId, 'templates')
+      this.invalidateByPrefix(stepId, 'templates'),
   };
 
   /**
@@ -280,7 +280,7 @@ export class CacheService extends BaseCanonicalService {
       this.get<T>(key, 'funnels'),
     
     invalidate: (funnelId: string) => 
-      this.invalidateByPrefix(funnelId, 'funnels')
+      this.invalidateByPrefix(funnelId, 'funnels'),
   };
 
   /**
@@ -294,7 +294,7 @@ export class CacheService extends BaseCanonicalService {
       this.get<T>(key, 'configs'),
     
     invalidate: (key: string) => 
-      this.delete(key, 'configs')
+      this.delete(key, 'configs'),
   };
 
   /**
@@ -308,7 +308,7 @@ export class CacheService extends BaseCanonicalService {
       this.get<T>(key, 'blocks'),
     
     invalidate: (blockId: string) => 
-      this.delete(blockId, 'blocks')
+      this.delete(blockId, 'blocks'),
   };
 
   // ==================== HEALTH CHECK ====================

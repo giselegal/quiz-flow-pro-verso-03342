@@ -56,7 +56,7 @@ class OptimizedGlobalEventManager {
             'editor-block-selected',
             'editor-state-changed',
             'resize',
-            'scroll'
+            'scroll',
         ];
 
         globalEvents.forEach(eventType => {
@@ -118,7 +118,7 @@ class OptimizedGlobalEventManager {
             debounceMs?: number;
             componentId?: string;
             priority?: 'high' | 'normal' | 'low';
-        } = {}
+        } = {},
     ): EventCleanup {
 
         const subscriptionId = `${eventType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -131,7 +131,7 @@ class OptimizedGlobalEventManager {
             id: subscriptionId,
             callback,
             debounceMs: options.debounceMs || 0,
-            lastCalled: 0
+            lastCalled: 0,
         };
 
         this.listeners.get(eventType)!.set(subscriptionId, subscription);
@@ -167,7 +167,7 @@ class OptimizedGlobalEventManager {
         const event = new CustomEvent(eventType, {
             detail: data,
             bubbles: false, // Não precisamos de bubbling
-            cancelable: false // Não precisamos de cancelamento
+            cancelable: false, // Não precisamos de cancelamento
         });
 
         window.dispatchEvent(event);
@@ -180,11 +180,11 @@ class OptimizedGlobalEventManager {
         const addListener = (
             eventType: string,
             callback: EventCallback,
-            options?: { debounceMs?: number }
+            options?: { debounceMs?: number },
         ) => {
             const cleanup = this.subscribe(eventType, callback, {
                 ...options,
-                componentId
+                componentId,
             });
             cleanupFunctions.push(cleanup);
             return cleanup;
@@ -203,7 +203,7 @@ class OptimizedGlobalEventManager {
         const stats = {
             totalEventTypes: this.listeners.size,
             totalSubscriptions: 0,
-            eventTypes: {} as Record<string, number>
+            eventTypes: {} as Record<string, number>,
         };
 
         this.listeners.forEach((subscribers, eventType) => {
@@ -239,7 +239,7 @@ export const useGlobalEventManager = (componentId?: string) => {
     const managerRef = useRef(
         componentId
             ? GlobalEventManager.createComponentManager(componentId)
-            : null
+            : null,
     );
 
     useEffect(() => {
@@ -254,7 +254,7 @@ export const useGlobalEventManager = (componentId?: string) => {
     return {
         addEventListener: managerRef.current?.addListener || GlobalEventManager.subscribe.bind(GlobalEventManager),
         emit: GlobalEventManager.emit.bind(GlobalEventManager),
-        getStats: GlobalEventManager.getStats.bind(GlobalEventManager)
+        getStats: GlobalEventManager.getStats.bind(GlobalEventManager),
     };
 };
 

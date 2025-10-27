@@ -39,7 +39,7 @@ export function normalizeUserName(name: string): string {
  */
 export function computeResults(
   answers: QuizAnswer[],
-  knownStyles?: string[]
+  knownStyles?: string[],
 ): ComputedResult {
   const defaultStyles = ['Clássico', 'Romântico', 'Dramático', 'Natural', 'Criativo'];
   const styles = knownStyles || defaultStyles;
@@ -80,7 +80,7 @@ export function computeResults(
       style,
       category: style,
       score,
-      percentage: totalScore > 0 ? Math.round((score / Math.max(totalScore, 1)) * 100) : 0
+      percentage: totalScore > 0 ? Math.round((score / Math.max(totalScore, 1)) * 100) : 0,
     }))
     .sort((a, b) => b.score - a.score);
 
@@ -93,7 +93,7 @@ export function computeResults(
     secondaryStyles,
     scores,
     totalQuestions: answers.length,
-    version: 'v1'
+    version: 'v1',
   };
 }
 
@@ -102,7 +102,7 @@ export function computeResults(
  */
 export function interpolateTemplate(
   template: string,
-  variables: Record<string, any>
+  variables: Record<string, any>,
 ): string {
   if (!template || typeof template !== 'string') return '';
   
@@ -122,5 +122,5 @@ export function interpolateTemplate(
 export default {
   normalizeUserName,
   computeResults,
-  interpolateTemplate
+  interpolateTemplate,
 };

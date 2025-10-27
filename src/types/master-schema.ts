@@ -122,7 +122,7 @@ export const UnifiedPropertySchema = z.object({
       z.object({
         label: z.string(),
         value: z.any(),
-      })
+      }),
     )
     .optional(),
 
@@ -354,7 +354,7 @@ export class ValidationService {
       source: string;
       fallback?: T;
       logErrors?: boolean;
-    }
+    },
   ): { success: true; data: T } | { success: false; error: string; fallback?: T } {
     try {
       const result = schema.safeParse(data);

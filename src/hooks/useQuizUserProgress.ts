@@ -127,7 +127,7 @@ export const useQuizUserProgress = ({
         ...prev,
         answers: newAnswers,
         totalPoints: prev.totalPoints + pointsDelta,
-        lastUpdatedAt: Date.now()
+        lastUpdatedAt: Date.now(),
       };
     });
   }, []);
@@ -137,7 +137,7 @@ export const useQuizUserProgress = ({
     setProgress(prev => ({
       ...prev,
       currentStepIndex: prev.currentStepIndex + 1,
-      lastUpdatedAt: Date.now()
+      lastUpdatedAt: Date.now(),
     }));
   }, []);
 
@@ -146,7 +146,7 @@ export const useQuizUserProgress = ({
     setProgress(prev => ({
       ...prev,
       currentStepIndex: Math.max(0, prev.currentStepIndex - 1),
-      lastUpdatedAt: Date.now()
+      lastUpdatedAt: Date.now(),
     }));
   }, []);
 
@@ -155,7 +155,7 @@ export const useQuizUserProgress = ({
     setProgress(prev => ({
       ...prev,
       currentStepIndex: Math.max(0, stepIndex),
-      lastUpdatedAt: Date.now()
+      lastUpdatedAt: Date.now(),
     }));
   }, []);
 
@@ -164,7 +164,7 @@ export const useQuizUserProgress = ({
     setProgress(prev => ({
       ...prev,
       completedAt: Date.now(),
-      lastUpdatedAt: Date.now()
+      lastUpdatedAt: Date.now(),
     }));
   }, []);
 

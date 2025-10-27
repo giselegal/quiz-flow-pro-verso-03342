@@ -105,7 +105,7 @@ export class BlocksToJSONv3Adapter {
             metadata: {
                 id: stepId,
                 name: metadata?.name || `Step ${stepId}`,
-                description: metadata?.description || `Generated from editor`,
+                description: metadata?.description || 'Generated from editor',
                 category,
                 tags: metadata?.tags || [category],
                 createdAt: new Date().toISOString(),

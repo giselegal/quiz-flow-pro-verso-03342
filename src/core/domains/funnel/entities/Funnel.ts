@@ -73,8 +73,8 @@ export class Funnel {
       exitRate: 0,
       topTrafficSources: {},
       deviceBreakdown: {},
-      locationBreakdown: {}
-    }
+      locationBreakdown: {},
+    },
   ) {}
 
   // 🔍 Business Rules - Funnel Validation
@@ -108,12 +108,12 @@ export class Funnel {
         ...this.metadata,
         isPublished: true,
         publishedAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       this.settings,
       this.branding,
       this.pageIds,
-      this.analytics
+      this.analytics,
     );
   }
 
@@ -124,12 +124,12 @@ export class Funnel {
         ...this.metadata,
         isPublished: false,
         publishedAt: undefined,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       this.settings,
       this.branding,
       this.pageIds,
-      this.analytics
+      this.analytics,
     );
   }
 
@@ -153,7 +153,7 @@ export class Funnel {
       this.settings,
       this.branding,
       newPageIds,
-      this.analytics
+      this.analytics,
     );
   }
 
@@ -174,7 +174,7 @@ export class Funnel {
       this.settings,
       this.branding,
       newPageIds,
-      this.analytics
+      this.analytics,
     );
   }
 
@@ -195,7 +195,7 @@ export class Funnel {
       this.settings,
       this.branding,
       newPageIds,
-      this.analytics
+      this.analytics,
     );
   }
 
@@ -207,14 +207,14 @@ export class Funnel {
       this.settings,
       this.branding,
       this.pageIds,
-      { ...this.analytics, ...newAnalytics }
+      { ...this.analytics, ...newAnalytics },
     );
   }
 
   incrementViews(isUnique: boolean = false): Funnel {
     const updatedAnalytics = {
       ...this.analytics,
-      totalViews: this.analytics.totalViews + 1
+      totalViews: this.analytics.totalViews + 1,
     };
 
     if (isUnique) {
@@ -227,7 +227,7 @@ export class Funnel {
       this.settings,
       this.branding,
       this.pageIds,
-      updatedAnalytics
+      updatedAnalytics,
     );
   }
 
@@ -307,7 +307,7 @@ export class Funnel {
         isPublished: false,
         publishedAt: undefined,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       { ...this.settings },
       { ...this.branding },
@@ -320,8 +320,8 @@ export class Funnel {
         exitRate: 0,
         topTrafficSources: {},
         deviceBreakdown: {},
-        locationBreakdown: {}
-      }
+        locationBreakdown: {},
+      },
     );
   }
 
@@ -335,7 +335,7 @@ export class Funnel {
         isPublished: false,
         publishedAt: undefined,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       { ...this.settings },
       { ...this.branding },
@@ -348,8 +348,8 @@ export class Funnel {
         exitRate: 0,
         topTrafficSources: {},
         deviceBreakdown: {},
-        locationBreakdown: {}
-      }
+        locationBreakdown: {},
+      },
     );
   }
 
@@ -360,7 +360,7 @@ export class Funnel {
       settings: this.settings,
       branding: this.branding,
       pageIds: this.pageIds,
-      analytics: this.analytics
+      analytics: this.analytics,
     };
   }
 
@@ -379,8 +379,8 @@ export class Funnel {
         exitRate: 0,
         topTrafficSources: {},
         deviceBreakdown: {},
-        locationBreakdown: {}
-      }
+        locationBreakdown: {},
+      },
     );
   }
 
@@ -389,7 +389,7 @@ export class Funnel {
     id: string,
     name: string,
     createdBy: string,
-    category: string = 'quiz'
+    category: string = 'quiz',
   ): Funnel {
     return new Funnel(
       id,
@@ -402,7 +402,7 @@ export class Funnel {
         isPublished: false,
         createdAt: new Date(),
         updatedAt: new Date(),
-        createdBy
+        createdBy,
       },
       {
         allowAnonymous: true,
@@ -411,15 +411,15 @@ export class Funnel {
         requireEmailVerification: false,
         enableAnalytics: true,
         enableABTesting: false,
-        conversionGoals: ['completion', 'email_capture']
+        conversionGoals: ['completion', 'email_capture'],
       },
       {
         primaryColor: '#3B82F6',
         secondaryColor: '#1E40AF',
         accentColor: '#F59E0B',
         fontFamily: 'Inter, sans-serif',
-        theme: 'light'
-      }
+        theme: 'light',
+      },
     );
   }
 }

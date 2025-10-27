@@ -22,7 +22,7 @@ import {
   unifiedCRUDService, 
   UnifiedFunnel, 
   UnifiedStage, 
-  CRUDResult 
+  CRUDResult, 
 } from '@/services/UnifiedCRUDService';
 import { templatesCacheService } from '@/services/TemplatesCacheService';
 
@@ -124,7 +124,7 @@ export const useUnifiedEditorProduction = (
     autoSaveInterval?: number;
     enableCache?: boolean;
     enablePerformanceTracking?: boolean;
-  } = {}
+  } = {},
 ): ProductionEditorReturn => {
   
   const {

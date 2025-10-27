@@ -106,7 +106,7 @@ export function useMemoryLeakDetector(componentName: string): void {
       // Warning se cresceu mais de 10MB
       if (diffMB > 10 && process.env.NODE_ENV === 'development') {
         console.warn(
-          `🚨 Possible memory leak in ${componentName}: +${diffMB.toFixed(2)}MB`
+          `🚨 Possible memory leak in ${componentName}: +${diffMB.toFixed(2)}MB`,
         );
       }
     }

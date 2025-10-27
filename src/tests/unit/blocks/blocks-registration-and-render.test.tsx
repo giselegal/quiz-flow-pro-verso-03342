@@ -35,7 +35,7 @@ describe('Blocos por etapa - registro e renderização', () => {
             // Step 20 (Resultado)
             'result-main',
             // Step 21 (Oferta)
-            'urgency-timer-inline', 'offer-hero'
+            'urgency-timer-inline', 'offer-hero',
         ];
 
         for (const type of essentialTypes) {

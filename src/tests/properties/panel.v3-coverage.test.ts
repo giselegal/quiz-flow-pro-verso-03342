@@ -105,7 +105,7 @@ describe('Cobertura do Properties Panel para componentes do JSON v3', () => {
       }
     }
     if (advisories.length > 0) {
-      console.warn('Avisos de cobertura de estilo (recomendado mapear no schema):\n' + advisories.join('\n'));
+      console.warn(`Avisos de cobertura de estilo (recomendado mapear no schema):\n${  advisories.join('\n')}`);
     }
     expect(true).toBe(true);
   });

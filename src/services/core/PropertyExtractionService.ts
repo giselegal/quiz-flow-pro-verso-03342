@@ -42,7 +42,7 @@ class PropertyExtractionService {
       unit: prop.unit,
       required: prop.required,
       placeholder: prop.placeholder,
-      when: prop.when
+      when: prop.when,
     }));
   }
 
@@ -99,7 +99,7 @@ class PropertyExtractionService {
       label: 'Nome do Usuário (Dinâmico)',
       description: 'Nome obtido automaticamente do quiz',
       value: block.properties?.dynamicUserName || 'Carregando...',
-      required: false
+      required: false,
     });
 
     return enhanced;
@@ -125,8 +125,8 @@ class PropertyExtractionService {
         { value: 'romantic', label: 'Imagens - Estilo Romântico' },
         { value: 'dramatic', label: 'Imagens - Estilo Dramático' },
         { value: 'natural', label: 'Imagens - Estilo Natural' },
-        { value: 'custom', label: 'Personalizada' }
-      ]
+        { value: 'custom', label: 'Personalizada' },
+      ],
     });
 
     return enhanced;
@@ -145,7 +145,7 @@ class PropertyExtractionService {
       category: 'behavior',
       label: 'Usar Variáveis Dinâmicas',
       description: 'Substitui {userName} e {style} automaticamente',
-      value: block.properties?.dynamicVariables ?? true
+      value: block.properties?.dynamicVariables ?? true,
     });
 
     return enhanced;
@@ -168,7 +168,7 @@ class PropertyExtractionService {
       min: 500,
       max: 5000,
       step: 100,
-      unit: 'ms'
+      unit: 'ms',
     });
 
     enhanced.push({
@@ -181,7 +181,7 @@ class PropertyExtractionService {
       min: 0,
       max: 3000,
       step: 100,
-      unit: 'ms'
+      unit: 'ms',
     });
 
     return enhanced;
@@ -200,7 +200,7 @@ class PropertyExtractionService {
       category: 'layout',
       label: 'Colunas Responsivas',
       description: 'Ajusta automaticamente em dispositivos móveis',
-      value: block.properties?.responsiveColumns ?? true
+      value: block.properties?.responsiveColumns ?? true,
     });
 
     enhanced.push({
@@ -212,8 +212,8 @@ class PropertyExtractionService {
       options: [
         { value: 'horizontal', label: 'Horizontal' },
         { value: 'vertical', label: 'Vertical' },
-        { value: 'compact', label: 'Compacto' }
-      ]
+        { value: 'compact', label: 'Compacto' },
+      ],
     });
 
     return enhanced;
@@ -235,8 +235,8 @@ class PropertyExtractionService {
       options: [
         { value: 'url', label: 'Abrir URL' },
         { value: 'next-step', label: 'Próximo Passo' },
-        { value: 'custom', label: 'Ação Personalizada' }
-      ]
+        { value: 'custom', label: 'Ação Personalizada' },
+      ],
     });
 
     // Configurações de compartilhamento
@@ -246,7 +246,7 @@ class PropertyExtractionService {
       category: 'behavior',
       label: 'Incluir Resultado no Compartilhamento',
       description: 'Inclui o estilo descoberto no texto de compartilhamento',
-      value: block.properties?.shareIncludesResult ?? true
+      value: block.properties?.shareIncludesResult ?? true,
     });
 
     return enhanced;
@@ -262,21 +262,21 @@ class PropertyExtractionService {
         { value: 'star', label: '⭐ Estrela' },
         { value: 'heart', label: '💖 Coração' },
         { value: 'award', label: '🥇 Medalha' },
-        { value: 'crown', label: '👑 Coroa' }
+        { value: 'crown', label: '👑 Coroa' },
       ],
       colors: [
         { value: '#B89B7A', label: 'Bronze Elegante' },
         { value: '#aa6b5d', label: 'Terracota' },
         { value: '#432818', label: 'Marrom Escuro' },
         { value: '#F3E8E6', label: 'Rosa Suave' },
-        { value: '#8F7A6A', label: 'Bege Neutro' }
+        { value: '#8F7A6A', label: 'Bege Neutro' },
       ],
       images: [
         { value: 'classic', label: 'Clássico - Elegância atemporal' },
         { value: 'romantic', label: 'Romântico - Suavidade e feminilidade' },
         { value: 'dramatic', label: 'Dramático - Intensidade e contraste' },
-        { value: 'natural', label: 'Natural - Simplicidade e autenticidade' }
-      ]
+        { value: 'natural', label: 'Natural - Simplicidade e autenticidade' },
+      ],
     };
 
     return styleOptions[category as keyof typeof styleOptions] || [];
@@ -312,7 +312,7 @@ class PropertyExtractionService {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 }

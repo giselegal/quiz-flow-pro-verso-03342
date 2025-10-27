@@ -94,25 +94,25 @@ export const FUNNEL_TEMPLATES = {
         steps: [
             {
                 name: 'Boas-vindas',
-                components: ['hero-section']
+                components: ['hero-section'],
             },
             {
                 name: 'Perfil básico',
-                components: ['simple-question', 'simple-question']
+                components: ['simple-question', 'simple-question'],
             },
             {
                 name: 'Interesses',
-                components: ['multiple-choice']
+                components: ['multiple-choice'],
             },
             {
                 name: 'Captura de dados',
-                components: ['full-lead-capture']
+                components: ['full-lead-capture'],
             },
             {
                 name: 'Obrigado',
-                components: ['hero-section']
-            }
-        ]
+                components: ['hero-section'],
+            },
+        ],
     },
 
     'product-quiz': {
@@ -121,25 +121,25 @@ export const FUNNEL_TEMPLATES = {
         steps: [
             {
                 name: 'Introdução',
-                components: ['hero-section']
+                components: ['hero-section'],
             },
             {
                 name: 'Necessidades',
-                components: ['simple-question', 'simple-question', 'simple-question']
+                components: ['simple-question', 'simple-question', 'simple-question'],
             },
             {
                 name: 'Preferências',
-                components: ['multiple-choice', 'simple-question']
+                components: ['multiple-choice', 'simple-question'],
             },
             {
                 name: 'Dados para envio',
-                components: ['email-capture']
+                components: ['email-capture'],
             },
             {
                 name: 'Resultados',
-                components: ['info-card', 'hero-section']
-            }
-        ]
+                components: ['info-card', 'hero-section'],
+            },
+        ],
     },
 
     'customer-satisfaction': {
@@ -148,25 +148,25 @@ export const FUNNEL_TEMPLATES = {
         steps: [
             {
                 name: 'Introdução',
-                components: ['hero-section']
+                components: ['hero-section'],
             },
             {
                 name: 'Avaliação geral',
-                components: ['simple-question']
+                components: ['simple-question'],
             },
             {
                 name: 'Detalhes da experiência',
-                components: ['multiple-choice', 'text-input']
+                components: ['multiple-choice', 'text-input'],
             },
             {
                 name: 'Sugestões',
-                components: ['text-input']
+                components: ['text-input'],
             },
             {
                 name: 'Finalização',
-                components: ['hero-section']
-            }
-        ]
+                components: ['hero-section'],
+            },
+        ],
     },
 
     // 🎯 QUIZ 21 ETAPAS COMPLETO - MODELO DISPONÍVEL, DUPLICÁVEL E PERSONALIZÁVEL
@@ -176,90 +176,90 @@ export const FUNNEL_TEMPLATES = {
         steps: [
             {
                 name: 'Coleta do Nome',
-                components: ['quiz-intro-header', 'name-input-section']
+                components: ['quiz-intro-header', 'name-input-section'],
             },
             {
                 name: 'Questão 1 - Ocasiões Sociais',
-                components: ['quiz-question-header', 'multiple-choice-quiz']
+                components: ['quiz-question-header', 'multiple-choice-quiz'],
             },
             {
                 name: 'Questão 2 - Estilo Trabalho',
-                components: ['quiz-question-header', 'multiple-choice-quiz']
+                components: ['quiz-question-header', 'multiple-choice-quiz'],
             },
             {
                 name: 'Questão 3 - Cores Favoritas',
-                components: ['quiz-question-header', 'multiple-choice-quiz']
+                components: ['quiz-question-header', 'multiple-choice-quiz'],
             },
             {
                 name: 'Questão 4 - Peças Essenciais',
-                components: ['quiz-question-header', 'multiple-choice-quiz']
+                components: ['quiz-question-header', 'multiple-choice-quiz'],
             },
             {
                 name: 'Questão 5 - Inspiração',
-                components: ['quiz-question-header', 'multiple-choice-quiz']
+                components: ['quiz-question-header', 'multiple-choice-quiz'],
             },
             {
                 name: 'Questão 6 - Acessórios',
-                components: ['quiz-question-header', 'multiple-choice-quiz']
+                components: ['quiz-question-header', 'multiple-choice-quiz'],
             },
             {
                 name: 'Questão 7 - Estação do Ano',
-                components: ['quiz-question-header', 'multiple-choice-quiz']
+                components: ['quiz-question-header', 'multiple-choice-quiz'],
             },
             {
                 name: 'Questão 8 - Estilo Fim de Semana',
-                components: ['quiz-question-header', 'multiple-choice-quiz']
+                components: ['quiz-question-header', 'multiple-choice-quiz'],
             },
             {
                 name: 'Questão 9 - Padrões e Texturas',
-                components: ['quiz-question-header', 'multiple-choice-quiz']
+                components: ['quiz-question-header', 'multiple-choice-quiz'],
             },
             {
                 name: 'Questão 10 - Estilo de Vida',
-                components: ['quiz-question-header', 'multiple-choice-quiz']
+                components: ['quiz-question-header', 'multiple-choice-quiz'],
             },
             {
                 name: 'Transição - Questões Estratégicas',
-                components: ['transition-section', 'progress-indicator']
+                components: ['transition-section', 'progress-indicator'],
             },
             {
                 name: 'Estratégica 1 - Investimento',
-                components: ['quiz-question-header', 'single-choice-strategic']
+                components: ['quiz-question-header', 'single-choice-strategic'],
             },
             {
                 name: 'Estratégica 2 - Urgência',
-                components: ['quiz-question-header', 'single-choice-strategic']
+                components: ['quiz-question-header', 'single-choice-strategic'],
             },
             {
                 name: 'Estratégica 3 - Desafios',
-                components: ['quiz-question-header', 'single-choice-strategic']
+                components: ['quiz-question-header', 'single-choice-strategic'],
             },
             {
                 name: 'Estratégica 4 - Sonho',
-                components: ['quiz-question-header', 'single-choice-strategic']
+                components: ['quiz-question-header', 'single-choice-strategic'],
             },
             {
                 name: 'Estratégica 5 - Prioridade',
-                components: ['quiz-question-header', 'single-choice-strategic']
+                components: ['quiz-question-header', 'single-choice-strategic'],
             },
             {
                 name: 'Estratégica 6 - Confiança',
-                components: ['quiz-question-header', 'single-choice-strategic']
+                components: ['quiz-question-header', 'single-choice-strategic'],
             },
             {
                 name: 'Transição - Preparando Resultado',
-                components: ['loading-section', 'result-preparation']
+                components: ['loading-section', 'result-preparation'],
             },
             {
                 name: 'Página de Resultado',
-                components: ['result-header', 'style-analysis', 'recommendations', 'cta-section']
+                components: ['result-header', 'style-analysis', 'recommendations', 'cta-section'],
             },
             {
                 name: 'Página de Oferta',
-                components: ['offer-header', 'offer-benefits', 'pricing-section', 'testimonials', 'guarantee', 'checkout-form']
-            }
-        ]
-    }
+                components: ['offer-header', 'offer-benefits', 'pricing-section', 'testimonials', 'guarantee', 'checkout-form'],
+            },
+        ],
+    },
 } as const;
 
 /**
@@ -282,18 +282,18 @@ export class FunnelBuilder {
                 showProgress: true,
                 progressStyle: 'bar',
                 autoAdvance: false,
-                timeouts: {}
+                timeouts: {},
             },
             analytics: {
                 trackingEnabled: true,
                 events: ['step_start', 'step_complete', 'funnel_complete'],
-                goals: []
+                goals: [],
             },
             metadata: {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
-                version: '1.0.0'
-            }
+                version: '1.0.0',
+            },
         };
     }
 
@@ -352,8 +352,8 @@ export class FunnelBuilder {
             transitions: [],
             metadata: {
                 order: this.currentStepOrder++,
-                isRequired: true
-            }
+                isRequired: true,
+            },
         };
 
         this.config.steps.push(step);
@@ -410,7 +410,7 @@ export class FunnelBuilder {
                 id: uuidv4(),
                 targetStepId: nextStep.id,
                 condition: { type: 'always' },
-                label: 'Próximo'
+                label: 'Próximo',
             });
         }
 
@@ -421,7 +421,7 @@ export class FunnelBuilder {
                 id: uuidv4(),
                 targetStepId: 'END',
                 condition: { type: 'always' },
-                label: 'Finalizar'
+                label: 'Finalizar',
             });
         }
 
@@ -434,7 +434,7 @@ export class FunnelBuilder {
     addConditionalFlow(
         fromStepName: string,
         toStepName: string,
-        condition: TransitionCondition
+        condition: TransitionCondition,
     ): FunnelBuilder {
         const fromStep = this.config.steps.find(s => s.name === fromStepName);
         const toStep = this.config.steps.find(s => s.name === toStepName);
@@ -444,7 +444,7 @@ export class FunnelBuilder {
                 id: uuidv4(),
                 targetStepId: toStep.id,
                 condition,
-                label: `Se ${condition.field} ${condition.operator} ${condition.value}`
+                label: `Se ${condition.field} ${condition.operator} ${condition.value}`,
             });
         }
 
@@ -477,7 +477,7 @@ export class FunnelBuilder {
                 id: uuidv4(),
                 name: 'Completion Rate',
                 type: 'completion',
-                triggerCondition: { type: 'funnel_complete' }
+                triggerCondition: { type: 'funnel_complete' },
             });
         }
 
@@ -526,20 +526,20 @@ export class FunnelBuilder {
             errors.push({
                 field: 'steps',
                 message: 'Funil deve ter pelo menos uma etapa',
-                severity: 'error'
+                severity: 'error',
             });
         }
 
         // Validar fluxo
         const hasOrphanSteps = this.config.steps.some(step =>
-            step.transitions.length === 0 && step !== this.config.steps[this.config.steps.length - 1]
+            step.transitions.length === 0 && step !== this.config.steps[this.config.steps.length - 1],
         );
 
         if (hasOrphanSteps) {
             warnings.push({
                 field: 'flow',
                 message: 'Algumas etapas não têm transições definidas',
-                suggestion: 'Use autoConnect() ou defina transições manualmente'
+                suggestion: 'Use autoConnect() ou defina transições manualmente',
             });
         }
 
@@ -549,7 +549,7 @@ export class FunnelBuilder {
                 warnings.push({
                     field: `step_${step.id}`,
                     message: `Etapa '${step.name}' está vazia`,
-                    suggestion: 'Adicione pelo menos um componente'
+                    suggestion: 'Adicione pelo menos um componente',
                 });
             }
         });
@@ -557,7 +557,7 @@ export class FunnelBuilder {
         return {
             isValid: errors.length === 0,
             errors,
-            warnings
+            warnings,
         };
     }
 
@@ -588,7 +588,7 @@ export class FunnelBuilder {
 export class StepBuilder {
     constructor(
         private step: FunnelStep,
-        private funnelBuilder: FunnelBuilder
+        private funnelBuilder: FunnelBuilder,
     ) { }
 
     /**
@@ -608,7 +608,7 @@ export class StepBuilder {
     addComponentFromTemplate(templateName: string): StepBuilder {
         const context: BuilderContext = {
             stepId: this.step.id,
-            isTemplate: true
+            isTemplate: true,
         };
 
         // Usar ComponentBuilder para criar o componente
@@ -664,7 +664,7 @@ export class StepBuilder {
             id: uuidv4(),
             targetStepId: targetStepName, // Será resolvido depois
             condition: condition || { type: 'always' },
-            label: condition ? 'Condicional' : 'Próximo'
+            label: condition ? 'Condicional' : 'Próximo',
         });
         return this;
     }
@@ -690,7 +690,7 @@ export function createFunnel(name: string): FunnelBuilder {
  * Cria um funil a partir de template
  */
 export function createFunnelFromTemplate(
-    templateName: keyof typeof FUNNEL_TEMPLATES
+    templateName: keyof typeof FUNNEL_TEMPLATES,
 ): FunnelBuilder {
     const template = FUNNEL_TEMPLATES[templateName];
     return new FunnelBuilder(template.name).fromTemplate(templateName);

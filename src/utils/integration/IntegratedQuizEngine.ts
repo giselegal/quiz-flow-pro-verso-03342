@@ -94,20 +94,20 @@ const mockLogger: Logger = {
     debug: (message: string, data?: any) => console.log(`[DEBUG] ${message}`, data),
     info: (message: string, data?: any) => console.log(`[INFO] ${message}`, data),
     warn: (message: string, data?: any) => console.warn(`[WARN] ${message}`, data),
-    error: (message: string, data?: any) => console.error(`[ERROR] ${message}`, data)
+    error: (message: string, data?: any) => console.error(`[ERROR] ${message}`, data),
 };
 
 const unifiedIDGenerator: UnifiedIDGenerator = {
-    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
 };
 
 const personalizationEngine: PersonalizationEngine = {
-    personalizeContent: (content: string, _context: UserPersonalizationContext, _options?: any) => content
+    personalizeContent: (content: string, _context: UserPersonalizationContext, _options?: any) => content,
 };
 
 const enhancedStepManager: EnhancedStepManager = {
     processStep: async (_stepId: string, _context: UserPersonalizationContext) => ({ success: true }),
-    createEnhancedStep: (_config: any) => ({ enhanced: true })
+    createEnhancedStep: (_config: any) => ({ enhanced: true }),
 };
 
 const realAnalyticsEngine: RealAnalyticsEngine = {
@@ -118,14 +118,14 @@ const realAnalyticsEngine: RealAnalyticsEngine = {
     trackError: (_error: Error, _context?: any) => { },
     track: (_category: string, _action: string, _label: string, _data?: any) => { },
     generateReport: (_type: string, _timeRange: any, _options?: any) => ({ report: 'mock' }),
-    getRealTimeMetrics: () => ({ metrics: 'mock' })
+    getRealTimeMetrics: () => ({ metrics: 'mock' }),
 };
 
 const mockCacheManager = {
     getCache: <T>(_name: string, _size: number): CacheManager<T> => ({
         get: (_key: string) => null,
         set: (_key: string, _value: T) => { },
-    })
+    }),
 };
 
 const cacheManager = mockCacheManager as typeof mockCacheManager;
@@ -197,7 +197,7 @@ export class IntegratedQuizEngine {
     async initializeQuizSession(
         templateId: string,
         userId?: string,
-        config: Partial<QuizSystemConfig> = {}
+        config: Partial<QuizSystemConfig> = {},
     ): Promise<IntegratedQuizSystem> {
 
         const sessionId = unifiedIDGenerator.generateID('quiz_session');
@@ -211,21 +211,21 @@ export class IntegratedQuizEngine {
             cacheStrategy: 'hybrid',
             performanceMonitoring: true,
             realTimeUpdates: true,
-            ...config
+            ...config,
         };
 
         // Inicializar analytics se habilitado
         if (fullConfig.enableAnalytics) {
             realAnalyticsEngine.initialize({
                 enableRealTime: fullConfig.realTimeUpdates,
-                enablePerformanceMonitoring: fullConfig.performanceMonitoring
+                enablePerformanceMonitoring: fullConfig.performanceMonitoring,
             });
 
             // Registrar início da sessão
             realAnalyticsEngine.trackUserSession(userId || 'anonymous', {
                 templateId,
                 sessionId,
-                funnelId
+                funnelId,
             });
         }
 
@@ -251,9 +251,9 @@ export class IntegratedQuizEngine {
                 personalizations: {},
                 analytics: {
                     events: [],
-                    metrics: {}
-                }
-            }
+                    metrics: {},
+                },
+            },
         };
 
         // Registrar sessão ativa
@@ -268,7 +268,7 @@ export class IntegratedQuizEngine {
             sessionId,
             funnelId,
             userId,
-            config: fullConfig
+            config: fullConfig,
         });
 
         return integratedSystem;
@@ -285,7 +285,7 @@ export class IntegratedQuizEngine {
             title: string;
             content?: any;
             metadata?: Record<string, any>;
-        }
+        },
     ): Promise<ProcessedStepResult> {
 
         const session = this.activeSessions.get(sessionId);
@@ -302,13 +302,13 @@ export class IntegratedQuizEngine {
                 type: stepData.stepType,
                 templateId: stepData.templateId,
                 funnelId: session.funnelId,
-                metadata: stepData.metadata
+                metadata: stepData.metadata,
             });
 
             // 2. Processar step com personalização
             const processedResult = await enhancedStepManager.processStep(
                 enhancedStep.id,
-                session.userContext
+                session.userContext,
             );
 
             // 3. Aplicar personalização adicional se habilitada
@@ -316,7 +316,7 @@ export class IntegratedQuizEngine {
                 const personalizedContent = personalizationEngine.personalizeContent(
                     JSON.stringify(processedResult.presentationData),
                     session.userContext,
-                    { cacheResult: true, useAI: false }
+                    { cacheResult: true, useAI: false },
                 );
                 processedResult.presentationData = JSON.parse(personalizedContent);
 
@@ -334,8 +334,8 @@ export class IntegratedQuizEngine {
                         stepType: stepData.stepType,
                         processingTime: Date.now() - startTime,
                         sessionId: session.sessionId,
-                        funnelId: session.funnelId
-                    }
+                        funnelId: session.funnelId,
+                    },
                 );
 
                 session.sessionData.analytics.events.push(eventId);
@@ -349,13 +349,13 @@ export class IntegratedQuizEngine {
                 sessionId: session.sessionId,
                 totalProcessingTime: Date.now() - startTime,
                 appliedPersonalizations: Object.keys(session.sessionData.personalizations).length,
-                analyticsEvents: session.sessionData.analytics.events.length
+                analyticsEvents: session.sessionData.analytics.events.length,
             };
 
             this.logger.debug('Step processed successfully', {
                 sessionId,
                 stepId: enhancedStep.id,
-                processingTime: result.totalProcessingTime
+                processingTime: result.totalProcessingTime,
             });
 
             return result;
@@ -366,14 +366,14 @@ export class IntegratedQuizEngine {
                 realAnalyticsEngine.trackError(error as Error, {
                     component: 'IntegratedQuizEngine',
                     action: 'processStep',
-                    metadata: { sessionId, stepData }
+                    metadata: { sessionId, stepData },
                 });
             }
 
             this.logger.error('Step processing failed', {
                 sessionId,
                 error: (error as Error).message,
-                stepData
+                stepData,
             });
 
             throw error;
@@ -387,7 +387,7 @@ export class IntegratedQuizEngine {
         sessionId: string,
         stepId: string,
         answer: any,
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ): Promise<AnswerResult> {
 
         const session = this.activeSessions.get(sessionId);
@@ -399,7 +399,7 @@ export class IntegratedQuizEngine {
         session.sessionData.answers[stepId] = {
             value: answer,
             timestamp: new Date(),
-            metadata: metadata || {}
+            metadata: metadata || {},
         };
 
         // Executar cálculos personalizados se existirem
@@ -415,14 +415,14 @@ export class IntegratedQuizEngine {
                     answerType: typeof answer,
                     hasMetadata: !!metadata,
                     sessionId,
-                    calculationsTriggered: session.userContext.customCalculations?.length || 0
-                }
+                    calculationsTriggered: session.userContext.customCalculations?.length || 0,
+                },
             });
 
             // Atualizar métricas de progresso
             realAnalyticsEngine.trackStepInteraction(stepId, 'complete', {
                 answer,
-                processingTime: Date.now() - session.sessionData.lastActivity.getTime()
+                processingTime: Date.now() - session.sessionData.lastActivity.getTime(),
             });
         }
 
@@ -434,7 +434,7 @@ export class IntegratedQuizEngine {
             stepId,
             calculatedValues: session.sessionData.calculations,
             recommendations: await this.generateStepRecommendations(session, stepId),
-            nextStepSuggestions: await this.calculateNextSteps(session)
+            nextStepSuggestions: await this.calculateNextSteps(session),
         };
 
         return result;
@@ -454,12 +454,12 @@ export class IntegratedQuizEngine {
         if (session.config.enableAnalytics) {
             const timeRange = {
                 start: session.sessionData.startedAt,
-                end: new Date()
+                end: new Date(),
             };
 
             analyticsReport = realAnalyticsEngine.generateReport('overview', timeRange, {
                 sessionId: session.sessionId,
-                funnelId: session.funnelId
+                funnelId: session.funnelId,
             });
         }
 
@@ -496,7 +496,7 @@ export class IntegratedQuizEngine {
 
             // Metadados
             generatedAt: new Date(),
-            config: session.config
+            config: session.config,
         };
 
         return report;
@@ -518,8 +518,8 @@ export class IntegratedQuizEngine {
                 value: Object.keys(session.sessionData.answers).length,
                 metadata: {
                     duration: new Date().getTime() - session.sessionData.startedAt.getTime(),
-                    completionRate: Object.keys(session.sessionData.answers).length / session.totalSteps
-                }
+                    completionRate: Object.keys(session.sessionData.answers).length / session.totalSteps,
+                },
             });
         }
 
@@ -530,7 +530,7 @@ export class IntegratedQuizEngine {
             userId: session.userId,
             completedAt: new Date(),
             answers: session.sessionData.answers,
-            calculations: session.sessionData.calculations
+            calculations: session.sessionData.calculations,
         });
 
         // Remover da memória ativa
@@ -539,7 +539,7 @@ export class IntegratedQuizEngine {
         this.logger.info('Quiz session finalized', {
             sessionId,
             duration: new Date().getTime() - session.sessionData.startedAt.getTime(),
-            completedSteps: Object.keys(session.sessionData.answers).length
+            completedSteps: Object.keys(session.sessionData.answers).length,
         });
     }
 
@@ -557,13 +557,13 @@ export class IntegratedQuizEngine {
                 ids: { size: 0, hits: 0, misses: 0 },
                 personalization: { size: 0, hits: 0, misses: 0 },
                 steps: { size: 0, hits: 0, misses: 0 },
-                analytics: { size: 0, hits: 0, misses: 0 }
+                analytics: { size: 0, hits: 0, misses: 0 },
             },
 
             // Analytics stats
             analyticsStats: realAnalyticsEngine.getRealTimeMetrics(),
 
-            timestamp: new Date()
+            timestamp: new Date(),
         };
     }
 
@@ -577,7 +577,7 @@ export class IntegratedQuizEngine {
                 id: userId || 'anonymous',
                 joinedAt: new Date(),
                 lastActiveAt: new Date(),
-                preferences: {}
+                preferences: {},
             },
             history: {
                 completedSteps: [],
@@ -587,7 +587,7 @@ export class IntegratedQuizEngine {
                 timeSpentByStep: {},
                 clickPatterns: [],
                 deviceUsage: [],
-                sessionTimes: []
+                sessionTimes: [],
             },
             session: {
                 id: sessionId || '',
@@ -597,9 +597,9 @@ export class IntegratedQuizEngine {
                 currentStep: 0,
                 progress: 0,
                 answers: {},
-                metadata: {}
+                metadata: {},
             },
-            customCalculations: []
+            customCalculations: [],
         };
     }
 
@@ -617,7 +617,7 @@ export class IntegratedQuizEngine {
     private async executeCustomCalculations(
         session: IntegratedQuizSystem,
         stepId: string,
-        answer: any
+        answer: any,
     ): Promise<void> {
         for (const calc of session.userContext.customCalculations || []) {
             if (calc.inputs.includes(stepId) || calc.inputs.includes('*')) {
@@ -626,7 +626,7 @@ export class IntegratedQuizEngine {
                     const result = this.calculateCustomFormula(calc.formula, {
                         [stepId]: answer,
                         ...session.sessionData.answers,
-                        ...session.sessionData.calculations
+                        ...session.sessionData.calculations,
                     });
 
                     session.sessionData.calculations[calc.name] = result;
@@ -636,7 +636,7 @@ export class IntegratedQuizEngine {
                 } catch (error) {
                     this.logger.warn('Custom calculation failed', {
                         calcId: calc.id,
-                        error: (error as Error).message
+                        error: (error as Error).message,
                     });
                 }
             }
@@ -655,7 +655,7 @@ export class IntegratedQuizEngine {
 
     private async generateStepRecommendations(
         _session: IntegratedQuizSystem,
-        _stepId: string
+        _stepId: string,
     ): Promise<string[]> {
         // Implementar geração de recomendações
         return ['Continue para próximo step', 'Considere revisar resposta'];
@@ -672,8 +672,8 @@ export class IntegratedQuizEngine {
             {
                 type: 'content_personalization',
                 effectiveness: 0.85,
-                description: 'Personalização de conteúdo foi bem recebida'
-            }
+                description: 'Personalização de conteúdo foi bem recebida',
+            },
         ];
     }
 
@@ -787,7 +787,7 @@ export function useIntegratedQuiz(templateId: string, userId?: string) {
         processStep,
         recordAnswer,
         finalizeSession,
-        systemStats: integratedQuizEngine.getSystemStats()
+        systemStats: integratedQuizEngine.getSystemStats(),
     };
 }
 

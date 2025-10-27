@@ -80,7 +80,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
     autoApply = false,
     interval = 60000, // 1 minuto
     editorMode = 'visual',
-    userPreferences = {}
+    userPreferences = {},
   } = options;
 
   const { metrics: perfMetrics } = usePerformanceMonitor();
@@ -104,7 +104,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
       networkLatency: 80 + Math.random() * 40,
       userInteractionLatency: 45 + Math.random() * 30,
       errorRate: Math.random() * 3,
-      userEngagement: 65 + Math.random() * 30
+      userEngagement: 65 + Math.random() * 30,
     };
   }, [perfMetrics]);
 
@@ -118,7 +118,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
         avgDuration: 800 + Math.random() * 500,
         successRate: 88 + Math.random() * 10,
         dropOffPoints: Math.random() > 0.7 ? ['Complex components', 'Multiple targets'] : [],
-        optimizationPotential: Math.floor(Math.random() * 30)
+        optimizationPotential: Math.floor(Math.random() * 30),
       },
       {
         action: 'Properties Editing',
@@ -126,7 +126,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
         avgDuration: 600 + Math.random() * 400,
         successRate: 92 + Math.random() * 7,
         dropOffPoints: Math.random() > 0.8 ? ['Complex validation'] : [],
-        optimizationPotential: Math.floor(Math.random() * 20)
+        optimizationPotential: Math.floor(Math.random() * 20),
       },
       {
         action: 'Step Navigation',
@@ -134,7 +134,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
         avgDuration: 300 + Math.random() * 200,
         successRate: 96 + Math.random() * 4,
         dropOffPoints: [],
-        optimizationPotential: Math.floor(Math.random() * 15)
+        optimizationPotential: Math.floor(Math.random() * 15),
       },
       {
         action: 'Template Usage',
@@ -142,8 +142,8 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
         avgDuration: 2000 + Math.random() * 1000,
         successRate: 85 + Math.random() * 10,
         dropOffPoints: Math.random() > 0.6 ? ['Template selection', 'Initial customization'] : [],
-        optimizationPotential: Math.floor(10 + Math.random() * 25)
-      }
+        optimizationPotential: Math.floor(10 + Math.random() * 25),
+      },
     ];
   }, []);
 
@@ -156,7 +156,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
       logger.info('🧠 Requesting AI optimization analysis', {
         metrics: Object.keys(metrics),
         patternsCount: patterns.length,
-        editorMode
+        editorMode,
       });
 
       const { data, error } = await supabase.functions.invoke('ai-optimization-engine', {
@@ -164,8 +164,8 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
           metrics,
           behaviorPatterns: patterns,
           editorMode,
-          userPreferences
-        }
+          userPreferences,
+        },
       });
 
       if (error) {
@@ -176,7 +176,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
       trackEvent('ai_analysis_completed', {
         recommendationsCount: data.recommendations?.length || 0,
         performanceScore: data.metadata?.performanceScore || 0,
-        fallback: data.metadata?.fallback || false
+        fallback: data.metadata?.fallback || false,
       });
 
       return data as AIOptimizationResult;
@@ -206,7 +206,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
         type: recommendation.type,
         priority: recommendation.priority,
         expectedImprovement: recommendation.expectedImprovement,
-        effort: recommendation.effort
+        effort: recommendation.effort,
       });
 
       logger.info('✅ Optimization applied successfully:', recommendation.title);
@@ -236,7 +236,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
           const autoApplicableRecs = analysis.recommendations.filter(r => 
             r.autoApplicable && 
             r.priority !== 'low' &&
-            !appliedOptimizations.includes(r.title)
+            !appliedOptimizations.includes(r.title),
           );
 
           for (const rec of autoApplicableRecs.slice(0, 2)) { // Máximo 2 por vez
@@ -247,7 +247,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
         logger.info('🎯 AI Analysis completed', {
           recommendationsCount: analysis.recommendations.length,
           performanceScore: analysis.metadata.performanceScore,
-          autoApplied: autoApply ? 'enabled' : 'disabled'
+          autoApplied: autoApply ? 'enabled' : 'disabled',
         });
       }
     } catch (error) {
@@ -288,7 +288,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
     autoApplicableCount: recommendations.filter(r => r.autoApplicable).length,
     appliedCount: appliedOptimizations.length,
     performanceScore: lastAnalysis?.metadata.performanceScore || 0,
-    lastAnalyzedAt: lastAnalysis?.metadata.analyzedAt || null
+    lastAnalyzedAt: lastAnalysis?.metadata.analyzedAt || null,
   };
 
   return {
@@ -306,7 +306,7 @@ export const useAIOptimization = (options: UseAIOptimizationOptions = {}) => {
     
     // Utilitários
     collectMetrics,
-    collectBehaviorPatterns
+    collectBehaviorPatterns,
   };
 };
 

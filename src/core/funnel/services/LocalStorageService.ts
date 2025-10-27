@@ -46,7 +46,7 @@ const STORAGE_KEYS = {
     SETTINGS: (id: string) => `${STORAGE_PREFIX}-settings-${id}`,
     CACHE: (key: string) => `${STORAGE_PREFIX}-cache-${key}`,
     METADATA: 'funnel-core-metadata',
-    INDEX: 'funnel-core-index'
+    INDEX: 'funnel-core-index',
 } as const;
 
 // ============================================================================
@@ -129,7 +129,7 @@ export class LocalStorageService {
     private setItem<T>(
         key: string,
         data: T,
-        options: CacheOptions = {}
+        options: CacheOptions = {},
     ): boolean {
         if (!this.isAvailable) return false;
 
@@ -138,7 +138,7 @@ export class LocalStorageService {
                 data,
                 timestamp: Date.now(),
                 ttl: options.ttl || DEFAULT_TTL,
-                version: CURRENT_VERSION
+                version: CURRENT_VERSION,
             };
 
             const serialized = JSON.stringify(item);
@@ -161,7 +161,7 @@ export class LocalStorageService {
                         data,
                         timestamp: Date.now(),
                         ttl: options.ttl || DEFAULT_TTL,
-                        version: CURRENT_VERSION
+                        version: CURRENT_VERSION,
                     });
                     window.localStorage.setItem(key, serialized);
                     return true;
@@ -398,7 +398,7 @@ export class LocalStorageService {
             funnelItems: 0,
             settingsItems: 0,
             oldestItem: new Date(),
-            newestItem: new Date(0)
+            newestItem: new Date(0),
         };
 
         if (!this.isAvailable) return stats;
@@ -477,7 +477,7 @@ export class LocalStorageService {
 
             indexData[key] = {
                 size,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             this.setItem(STORAGE_KEYS.INDEX, indexData);

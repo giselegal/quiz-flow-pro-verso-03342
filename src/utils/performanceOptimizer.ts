@@ -84,7 +84,7 @@ class SmartTimeout {
   static schedule(
     callback: () => void,
     delay: number = 0,
-    strategy: 'animation' | 'message' | 'timeout' = 'animation'
+    strategy: 'animation' | 'message' | 'timeout' = 'animation',
   ): number {
     switch (strategy) {
       case 'animation':
@@ -110,7 +110,7 @@ class SmartTimeout {
   static scheduleInterval(
     callback: () => void,
     delay: number,
-    strategy: 'animation' | 'timeout' = 'animation'
+    strategy: 'animation' | 'timeout' = 'animation',
   ): number {
     // IMPORTANTE: Sempre retornar um ID cancelável para evitar vazamentos.
     // Mesmo quando a estratégia sugerir 'animation', preferimos setInterval
@@ -128,7 +128,7 @@ class OptimizedDebounce {
   static create<T extends (...args: any[]) => any>(
     fn: T,
     delay: number,
-    key?: string
+    key?: string,
   ): T & { cancel: () => void } {
     const uniqueKey = key || `debounce-${Math.random()}`;
 
@@ -149,7 +149,7 @@ class OptimizedDebounce {
             fn(...args);
           },
           delay,
-          'timeout'
+          'timeout',
         );
 
         this.timers.set(uniqueKey, timerId);
@@ -208,7 +208,7 @@ export const PerformanceOptimizer = {
     callback: () => void,
     delay: number = 0,
     strategy: 'animation' | 'message' | 'timeout' = 'animation',
-    options?: { cancelOnNav?: boolean; label?: string }
+    options?: { cancelOnNav?: boolean; label?: string },
   ) => {
     try {
       const id = SmartTimeout.schedule(callback, delay, strategy);
@@ -231,7 +231,7 @@ export const PerformanceOptimizer = {
     callback: () => void,
     delay: number,
     strategy: 'animation' | 'timeout' = 'animation',
-    options?: { cancelOnNav?: boolean; label?: string }
+    options?: { cancelOnNav?: boolean; label?: string },
   ) => {
     try {
       const id = SmartTimeout.scheduleInterval(callback, delay, strategy);
@@ -272,7 +272,7 @@ export const PerformanceOptimizer = {
   isHighFrequencyUpdate: (delay: number) => delay < 100,
   getSuggestedStrategy: (
     delay: number,
-    isUIUpdate = false
+    isUIUpdate = false,
   ): 'animation' | 'message' | 'timeout' => {
     if (isUIUpdate || delay < 16) return 'animation';
     if (delay < 100) return 'message';

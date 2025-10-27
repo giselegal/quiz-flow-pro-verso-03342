@@ -57,7 +57,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
           ...item,
           funnel_id: item.funnel_id || null,
           quiz_id: null, // Legacy field for backward compatibility
-        }))
+        })),
       );
       console.log('✅ Componentes carregados do Supabase:', data?.length || 0);
     } catch (err: any) {
@@ -80,7 +80,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
       componentTypeKey: string,
       stepNumber: number,
       properties: any = {},
-      orderIndex?: number
+      orderIndex?: number,
     ) => {
       if (!funnelId && !quizId) return null;
 
@@ -145,7 +145,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
         setIsLoading(false);
       }
     },
-    [funnelId, quizId, components.length]
+    [funnelId, quizId, components.length],
   );
 
   // Update component in Supabase
@@ -157,7 +157,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
       try {
         // Clean the updates object to remove null values that aren't allowed by Supabase
         const cleanedUpdates = Object.fromEntries(
-          Object.entries(updates).filter(([_, value]) => value !== null)
+          Object.entries(updates).filter(([_, value]) => value !== null),
         );
 
         const { data, error: updateError } = await supabase
@@ -181,7 +181,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
         };
 
         setComponents(prev =>
-          prev.map(comp => (comp.id === componentId ? updatedComponent : comp))
+          prev.map(comp => (comp.id === componentId ? updatedComponent : comp)),
         );
 
         console.log('✅ Componente atualizado no Supabase:', componentId);
@@ -200,7 +200,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
         setIsLoading(false);
       }
     },
-    []
+    [],
   );
 
   // Delete component from Supabase
@@ -287,7 +287,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
         setIsLoading(false);
       }
     },
-    [components]
+    [components],
   );
 
   // Initialize component loading

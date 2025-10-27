@@ -21,7 +21,7 @@ import {
     EditorProps,
     EditorMode,
     EditorState,
-    EditorMetricsProvider
+    EditorMetricsProvider,
 } from '../interfaces/EditorInterfaces';
 
 // Importar provider de métricas
@@ -32,7 +32,7 @@ import {
     EditorPagePanel,
     EditorPropertiesPanel,
     EditorCanvas,
-    EditorToolbar
+    EditorToolbar,
 } from './EditorComponents';
 
 // ============================================================================
@@ -49,22 +49,22 @@ const initialState: EditorState = {
         saving: false,
         lastSaved: null,
         hasChanges: false,
-        autoSaveEnabled: true
+        autoSaveEnabled: true,
     },
     history: {
         past: [],
         present: null as any,
         future: [],
         canUndo: false,
-        canRedo: false
+        canRedo: false,
     },
     validation: {
         valid: true,
         errors: [],
-        warnings: []
+        warnings: [],
     },
     loading: false,
-    error: null
+    error: null,
 };
 
 function editorReducer(state: EditorState, action: EditorAction): EditorState {
@@ -73,7 +73,7 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
             return {
                 ...state,
                 loading: true,
-                error: null
+                error: null,
             };
 
         case 'LOAD_FUNNEL_SUCCESS':
@@ -86,22 +86,22 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
                 saveStatus: {
                     ...state.saveStatus,
                     saved: true,
-                    hasChanges: false
+                    hasChanges: false,
                 },
                 history: {
                     past: [],
                     present: action.payload.funnel,
                     future: [],
                     canUndo: false,
-                    canRedo: false
-                }
+                    canRedo: false,
+                },
             };
 
         case 'LOAD_FUNNEL_ERROR':
             return {
                 ...state,
                 loading: false,
-                error: action.payload.error
+                error: action.payload.error,
             };
 
         case 'SAVE_FUNNEL':
@@ -109,8 +109,8 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
                 ...state,
                 saveStatus: {
                     ...state.saveStatus,
-                    saving: true
-                }
+                    saving: true,
+                },
             };
 
         case 'SAVE_FUNNEL_SUCCESS':
@@ -121,8 +121,8 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
                     saved: true,
                     saving: false,
                     lastSaved: action.payload.result.timestamp,
-                    hasChanges: false
-                }
+                    hasChanges: false,
+                },
             };
 
         case 'SAVE_FUNNEL_ERROR':
@@ -131,8 +131,8 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
                 error: action.payload.error,
                 saveStatus: {
                     ...state.saveStatus,
-                    saving: false
-                }
+                    saving: false,
+                },
             };
 
         case 'UPDATE_FUNNEL':
@@ -146,34 +146,34 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
                 saveStatus: {
                     ...state.saveStatus,
                     hasChanges: true,
-                    saved: false
+                    saved: false,
                 },
                 history: {
                     past: [...state.history.past.slice(-49), state.history.present],
                     present: updatedFunnel,
                     future: [],
                     canUndo: true,
-                    canRedo: false
-                }
+                    canRedo: false,
+                },
             };
 
         case 'SELECT_PAGE':
             return {
                 ...state,
                 selectedPageId: action.payload.pageId,
-                selectedBlockId: null
+                selectedBlockId: null,
             };
 
         case 'SELECT_BLOCK':
             return {
                 ...state,
-                selectedBlockId: action.payload.blockId
+                selectedBlockId: action.payload.blockId,
             };
 
         case 'SET_MODE':
             return {
                 ...state,
-                mode: action.payload.mode
+                mode: action.payload.mode,
             };
 
         case 'UNDO':
@@ -190,13 +190,13 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
                     present: previous,
                     future: [state.history.present, ...state.history.future],
                     canUndo: newPast.length > 0,
-                    canRedo: true
+                    canRedo: true,
                 },
                 saveStatus: {
                     ...state.saveStatus,
                     hasChanges: true,
-                    saved: false
-                }
+                    saved: false,
+                },
             };
 
         case 'REDO':
@@ -213,19 +213,19 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
                     present: next,
                     future: newFuture,
                     canUndo: true,
-                    canRedo: newFuture.length > 0
+                    canRedo: newFuture.length > 0,
                 },
                 saveStatus: {
                     ...state.saveStatus,
                     hasChanges: true,
-                    saved: false
-                }
+                    saved: false,
+                },
             };
 
         case 'VALIDATE':
             return {
                 ...state,
-                validation: action.payload.result
+                validation: action.payload.result,
             };
 
         default:
@@ -249,7 +249,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
     onSave,
     onChange,
     onError,
-    onModeChange
+    onModeChange,
 }) => {
     const [state, dispatch] = useReducer(editorReducer, initialState);
 
@@ -283,7 +283,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                 timestamp: new Date(),
                 funnelId: state.funnel?.id,
                 sessionId: metrics.sessionId,
-                metadata
+                metadata,
             });
 
             delete performanceRef.current[operation];
@@ -299,7 +299,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             timestamp: new Date(),
             funnelId: state.funnel?.id,
             sessionId: metrics.sessionId,
-            metadata: { error, ...metadata }
+            metadata: { error, ...metadata },
         });
     }, [metrics, state.funnel?.id]);
 
@@ -312,7 +312,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             timestamp: new Date(),
             funnelId: state.funnel?.id,
             sessionId: metrics.sessionId,
-            metadata
+            metadata,
         });
     }, [metrics, state.funnel?.id]);
 
@@ -335,7 +335,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                     renderTime: performanceRef.current.render || 0,
                     bundleSize: 0, // Seria calculado em produção
                     hasErrors: state.validation.errors.length > 0,
-                    errorCount: state.validation.errors.length
+                    errorCount: state.validation.errors.length,
                 });
             }
         }, 30000); // A cada 30 segundos
@@ -388,13 +388,13 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                     errors: result.errors,
                     warnings: result.warnings,
                     success: result.isValid,
-                    timestamp: new Date()
+                    timestamp: new Date(),
                 });
 
                 const validationStatus = {
                     valid: result.isValid,
                     errors: result.errors,
-                    warnings: result.warnings
+                    warnings: result.warnings,
                 };
 
                 dispatch({ type: 'VALIDATE', payload: { result: validationStatus } });
@@ -452,7 +452,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                     cacheHit: false, // Seria determinado pelo provider
                     fallbackUsed: false,
                     retryCount: 0,
-                    dataSize: JSON.stringify(funnel).length
+                    dataSize: JSON.stringify(funnel).length,
                 });
 
                 recordSuccess('load_funnel', { funnelId: id, duration });
@@ -477,7 +477,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                 fallbackAction: 'graceful_degradation',
                 success: false,
                 timestamp: new Date(),
-                funnelId: id
+                funnelId: id,
             });
         }
     }, [dataProvider, eventHandler, metrics, startPerformanceTimer, endPerformanceTimer, recordError, recordSuccess]);
@@ -496,7 +496,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                 endPerformanceTimer('validate_before_save');
 
                 if (!validationResult.isValid) {
-                    const errorMessage = 'Validation failed: ' + validationResult.errors.join(', ');
+                    const errorMessage = `Validation failed: ${  validationResult.errors.join(', ')}`;
                     throw new Error(errorMessage);
                 }
             }
@@ -508,7 +508,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             recordSuccess('save_funnel', {
                 funnelId: state.funnel.id,
                 version: result.version,
-                timestamp: result.timestamp
+                timestamp: result.timestamp,
             });
 
             if (onSave) {
@@ -535,7 +535,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
                 fallbackAction: 'retry',
                 success: false,
                 timestamp: new Date(),
-                funnelId: state.funnel.id
+                funnelId: state.funnel.id,
             });
         }
     }, [state.funnel, dataProvider, validator, config, onSave, eventHandler, metrics, startPerformanceTimer, endPerformanceTimer, recordError, recordSuccess]);
@@ -565,7 +565,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             timestamp: new Date(),
             pageId,
             funnelId: state.funnel?.id,
-            sessionId: metrics.sessionId
+            sessionId: metrics.sessionId,
         });
     }, [metrics, state.funnel?.id, startPerformanceTimer, endPerformanceTimer]);
 
@@ -582,7 +582,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             timestamp: new Date(),
             blockId,
             funnelId: state.funnel?.id,
-            sessionId: metrics.sessionId
+            sessionId: metrics.sessionId,
         });
     }, [metrics, state.funnel?.id, startPerformanceTimer, endPerformanceTimer]);
 
@@ -628,7 +628,7 @@ export const FunnelEditor: React.FC<EditorProps> = ({
             title: `New ${type} Page`,
             type,
             order: state.funnel.pages.length,
-            blocks: []
+            blocks: [],
         };
 
         const updatedPages = [...state.funnel.pages, newPage];

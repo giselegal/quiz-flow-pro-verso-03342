@@ -105,13 +105,13 @@ class OptimizedImageStorage {
 
     async optimizeImage(
         file: File | Blob,
-        options: ImageOptions = {}
+        options: ImageOptions = {},
     ): Promise<{ blob: Blob; metadata: ImageData['metadata'] }> {
         const {
             maxWidth = 800,
             maxHeight = 600,
             quality = 0.8,
-            format = 'webp'
+            format = 'webp',
         } = options;
 
         return new Promise((resolve, reject) => {
@@ -130,7 +130,7 @@ class OptimizedImageStorage {
                     img.width,
                     img.height,
                     maxWidth,
-                    maxHeight
+                    maxHeight,
                 );
 
                 // Configurar canvas
@@ -161,12 +161,12 @@ class OptimizedImageStorage {
                             metadata: {
                                 originalSize,
                                 compressionRatio: Math.round(compressionRatio * 100) / 100,
-                                format: format as 'webp' | 'png' | 'jpeg'
-                            }
+                                format: format as 'webp' | 'png' | 'jpeg',
+                            },
                         });
                     },
                     this.getMimeType(format),
-                    quality
+                    quality,
                 );
             };
 
@@ -188,7 +188,7 @@ class OptimizedImageStorage {
     async storeImage(
         url: string,
         file: File | Blob,
-        options: ImageOptions = {}
+        options: ImageOptions = {},
     ): Promise<string> {
         if (!this.db) {
             await this.initialize();
@@ -222,7 +222,7 @@ class OptimizedImageStorage {
                 optimized: true,
                 quality: options.quality || 0.8,
                 timestamp: Date.now(),
-                metadata
+                metadata,
             };
 
             // Verificar limite de espaço
@@ -236,7 +236,7 @@ class OptimizedImageStorage {
                 originalSize: metadata.originalSize,
                 optimizedSize: blob.size,
                 compressionRatio: metadata.compressionRatio,
-                format: metadata.format
+                format: metadata.format,
             });
 
             return URL.createObjectURL(blob);
@@ -295,7 +295,7 @@ class OptimizedImageStorage {
     async getCachedImage(
         url: string,
         fallback?: () => Promise<File | Blob>,
-        options: ImageOptions = {}
+        options: ImageOptions = {},
     ): Promise<string> {
         const id = this.generateImageId(url);
 
@@ -376,7 +376,7 @@ class OptimizedImageStorage {
 
                 resolve({
                     count: images.length,
-                    totalSize
+                    totalSize,
                 });
             };
 
@@ -392,7 +392,7 @@ class OptimizedImageStorage {
         originalWidth: number,
         originalHeight: number,
         maxWidth: number,
-        maxHeight: number
+        maxHeight: number,
     ): { width: number; height: number } {
         const aspectRatio = originalWidth / originalHeight;
 
@@ -411,7 +411,7 @@ class OptimizedImageStorage {
 
         return {
             width: Math.round(newWidth),
-            height: Math.round(newHeight)
+            height: Math.round(newHeight),
         };
     }
 
@@ -419,7 +419,7 @@ class OptimizedImageStorage {
         const mimeTypes = {
             webp: 'image/webp',
             png: 'image/png',
-            jpeg: 'image/jpeg'
+            jpeg: 'image/jpeg',
         };
         return mimeTypes[format as keyof typeof mimeTypes] || mimeTypes.webp;
     }
@@ -511,7 +511,7 @@ class OptimizedImageStorage {
                 totalSize: '0 MB',
                 averageCompression: 0,
                 oldestImage: 0,
-                newestImage: 0
+                newestImage: 0,
             };
         }
 
@@ -524,7 +524,7 @@ class OptimizedImageStorage {
             totalSize: `${(totalSize / (1024 * 1024)).toFixed(2)} MB`,
             averageCompression: Math.round(averageCompression * 100) / 100,
             oldestImage: Math.min(...timestamps),
-            newestImage: Math.max(...timestamps)
+            newestImage: Math.max(...timestamps),
         };
     }
 }
@@ -543,7 +543,7 @@ import { useState, useEffect } from 'react';
 
 export function useOptimizedImage(
     url: string,
-    options: ImageOptions = {}
+    options: ImageOptions = {},
 ): {
     imageUrl: string | null;
     loading: boolean;
@@ -579,7 +579,7 @@ export function useOptimizedImage(
         imageUrl,
         loading,
         error,
-        reload: loadImage
+        reload: loadImage,
     };
 }
 

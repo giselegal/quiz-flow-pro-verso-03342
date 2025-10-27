@@ -103,7 +103,7 @@ export class SensitiveDataFilter implements LogFilter {
     getPatternCount(): { default: number; custom: number } {
         return {
             default: this.sensitivePatterns.length,
-            custom: this.customPatterns.length
+            custom: this.customPatterns.length,
         };
     }
 }

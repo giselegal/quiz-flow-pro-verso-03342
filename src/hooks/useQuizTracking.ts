@@ -36,14 +36,14 @@ export const useQuizTracking = (questionIndex?: number) => {
       optionId: string,
       optionText: string,
       questionId: string,
-      elementPosition?: { x: number; y: number }
+      elementPosition?: { x: number; y: number },
     ) => {
       trackClick('quiz_option', optionId, optionText, elementPosition, questionIndex, {
         questionId,
         selectionOrder: Date.now(),
       });
     },
-    [trackClick, questionIndex]
+    [trackClick, questionIndex],
   );
 
   // Função para rastrear submissão de resposta
@@ -53,7 +53,7 @@ export const useQuizTracking = (questionIndex?: number) => {
       questionText: string,
       selectedOptions: string[],
       optionTexts: string[],
-      stylePoints: Record<string, number>
+      stylePoints: Record<string, number>,
     ) => {
       const responseTime = Date.now() - questionStartTime.current;
 
@@ -67,7 +67,7 @@ export const useQuizTracking = (questionIndex?: number) => {
       // Track evento de submissão
       trackClick(
         'answer_submit',
-        'submit_' + questionId,
+        `submit_${  questionId}`,
         `Submitted ${selectedOptions.length} options`,
         undefined,
         questionIndex,
@@ -75,10 +75,10 @@ export const useQuizTracking = (questionIndex?: number) => {
           questionId,
           responseTime,
           selectedOptionsCount: selectedOptions.length,
-        }
+        },
       );
     },
-    [addAnswer, trackClick, questionIndex]
+    [addAnswer, trackClick, questionIndex],
   );
 
   // Função para rastrear navegação
@@ -94,10 +94,10 @@ export const useQuizTracking = (questionIndex?: number) => {
           direction,
           fromQuestion,
           toQuestion,
-        }
+        },
       );
     },
-    [trackClick]
+    [trackClick],
   );
 
   // Função para rastrear botões de CTA
@@ -113,7 +113,7 @@ export const useQuizTracking = (questionIndex?: number) => {
         timing: 'during_quiz',
       });
     },
-    [trackClick, questionIndex]
+    [trackClick, questionIndex],
   );
 
   // Função para rastrear elementos de interface
@@ -124,7 +124,7 @@ export const useQuizTracking = (questionIndex?: number) => {
         ...metadata,
       });
     },
-    [trackClick, questionIndex]
+    [trackClick, questionIndex],
   );
 
   // Função para rastrear finalização do quiz
@@ -135,7 +135,7 @@ export const useQuizTracking = (questionIndex?: number) => {
       }
       finishSession(result);
     },
-    [finishSession]
+    [finishSession],
   );
 
   // Função para rastrear progresso de scroll
@@ -155,10 +155,10 @@ export const useQuizTracking = (questionIndex?: number) => {
         {
           loadingType,
           duration,
-        }
+        },
       );
     },
-    [trackClick, questionIndex]
+    [trackClick, questionIndex],
   );
 
   return {
@@ -206,7 +206,7 @@ export const useAutoClickTracking = (enabled: boolean = true) => {
               ...acc,
               [attr.name]: attr.value,
             }),
-            {}
+            {},
           ),
       });
     };

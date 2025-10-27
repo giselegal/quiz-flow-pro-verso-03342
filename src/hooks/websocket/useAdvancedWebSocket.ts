@@ -111,7 +111,7 @@ class RateLimiter {
         
         // Remove timestamps antigas
         this.timestamps = this.timestamps.filter(
-            timestamp => now - timestamp < this.windowMs
+            timestamp => now - timestamp < this.windowMs,
         );
         
         return this.timestamps.length < this.maxMessages;
@@ -124,12 +124,12 @@ class RateLimiter {
     getStats(): { count: number; remaining: number } {
         const now = Date.now();
         this.timestamps = this.timestamps.filter(
-            timestamp => now - timestamp < this.windowMs
+            timestamp => now - timestamp < this.windowMs,
         );
         
         return {
             count: this.timestamps.length,
-            remaining: this.maxMessages - this.timestamps.length
+            remaining: this.maxMessages - this.timestamps.length,
         };
     }
 }
@@ -158,10 +158,10 @@ class AdvancedWebSocket {
             enableCompression: true,
             rateLimit: {
                 maxMessages: 100,
-                windowMs: 60000 // 1 minuto
+                windowMs: 60000, // 1 minuto
             },
             debug: process.env.NODE_ENV === 'development',
-            ...config
+            ...config,
         };
         
         this.state = {
@@ -170,12 +170,12 @@ class AdvancedWebSocket {
             reconnectAttempts: 0,
             lastError: null,
             messageQueue: [],
-            latency: 0
+            latency: 0,
         };
         
         this.rateLimiter = new RateLimiter(
             this.config.rateLimit.maxMessages,
-            this.config.rateLimit.windowMs
+            this.config.rateLimit.windowMs,
         );
     }
     
@@ -353,7 +353,7 @@ class AdvancedWebSocket {
                 payload,
                 timestamp: Date.now(),
                 userId: options.userId,
-                sessionId: options.sessionId
+                sessionId: options.sessionId,
             };
             
             // Comprimir se necessário
@@ -398,7 +398,7 @@ class AdvancedWebSocket {
             payload,
             timestamp: Date.now(),
             userId: options.userId,
-            sessionId: options.sessionId
+            sessionId: options.sessionId,
         };
         
         this.state.messageQueue.push(message);
@@ -419,7 +419,7 @@ class AdvancedWebSocket {
         queue.forEach(message => {
             this.send(message.type, message.payload, {
                 userId: message.userId,
-                sessionId: message.sessionId
+                sessionId: message.sessionId,
             }).catch(error => {
                 this.log('Error sending queued message:', error);
             });
@@ -448,7 +448,7 @@ class AdvancedWebSocket {
         
         const delay = Math.min(
             this.config.reconnectInterval * Math.pow(2, this.state.reconnectAttempts - 1),
-            30000 // Max 30 segundos
+            30000, // Max 30 segundos
         );
         
         this.log(`Reconnecting in ${delay}ms (attempt ${this.state.reconnectAttempts})`);
@@ -521,7 +521,7 @@ class AdvancedWebSocket {
 // ============================================================================
 
 export const useAdvancedWebSocket = (
-    config: Partial<WebSocketConfig> = {}
+    config: Partial<WebSocketConfig> = {},
 ) => {
     const wsRef = useRef<AdvancedWebSocket>();
     const [state, setState] = useState<WebSocketState>({
@@ -530,7 +530,7 @@ export const useAdvancedWebSocket = (
         reconnectAttempts: 0,
         lastError: null,
         messageQueue: [],
-        latency: 0
+        latency: 0,
     });
     
     // Inicializar WebSocket
@@ -568,7 +568,7 @@ export const useAdvancedWebSocket = (
     const send = useCallback((
         type: string, 
         payload: any, 
-        options?: Parameters<AdvancedWebSocket['send']>[2]
+        options?: Parameters<AdvancedWebSocket['send']>[2],
     ) => {
         return wsRef.current?.send(type, payload, options) || Promise.resolve();
     }, []);
@@ -587,7 +587,7 @@ export const useAdvancedWebSocket = (
         disconnect,
         send,
         subscribe,
-        getRateLimitStats: () => wsRef.current?.getRateLimitStats()
+        getRateLimitStats: () => wsRef.current?.getRateLimitStats(),
     };
 };
 
@@ -598,10 +598,10 @@ export const useAdvancedWebSocket = (
 export const useRealtimeSync = (
     funnelId: string,
     userId: string,
-    onDataChange?: (data: SyncData) => void
+    onDataChange?: (data: SyncData) => void,
 ) => {
     const { state, send, subscribe } = useAdvancedWebSocket({
-        url: `wss://localhost:8080/sync/${funnelId}`
+        url: `wss://localhost:8080/sync/${funnelId}`,
     });
     
     // Subscribe to sync updates
@@ -621,7 +621,7 @@ export const useRealtimeSync = (
     const syncUpdate = useCallback((
         stepId: string,
         data: any,
-        operation: SyncData['operation'] = 'update'
+        operation: SyncData['operation'] = 'update',
     ) => {
         const syncData: SyncData = {
             funnelId,
@@ -629,7 +629,7 @@ export const useRealtimeSync = (
             data,
             operation,
             timestamp: Date.now(),
-            userId
+            userId,
         };
         
         return send('sync_update', syncData);
@@ -643,7 +643,7 @@ export const useRealtimeSync = (
         isConnected: state.isConnected,
         syncUpdate,
         syncSelect,
-        latency: state.latency
+        latency: state.latency,
     };
 };
 

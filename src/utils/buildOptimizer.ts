@@ -22,7 +22,7 @@ class BuildOptimizer {
     optimizeImages: true,
     minifyCSS: true,
     enableGzip: true,
-    splitChunks: true
+    splitChunks: true,
   };
 
   /**
@@ -91,8 +91,8 @@ class BuildOptimizer {
         vendor: '~400KB',
         main: '~300KB',
         ui: '~200KB',
-        utils: '~100KB'
-      }
+        utils: '~100KB',
+      },
     };
   }
 
@@ -103,7 +103,7 @@ class BuildOptimizer {
     return {
       optimizations: this.optimizations,
       buildMode: process.env.NODE_ENV,
-      performance: performanceManager.getStats()
+      performance: performanceManager.getStats(),
     };
   }
 }

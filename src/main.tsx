@@ -110,7 +110,7 @@ if (typeof window !== 'undefined') {
               status: 200,
               headers: { 'Content-Type': 'application/json' },
             })
-            : new Response(null, { status: 204 })
+            : new Response(null, { status: 204 }),
         );
       }
       return originalFetch(input as any, init);
@@ -204,6 +204,6 @@ try { installDeprecationGuards(); } catch { }
 createRoot(document.getElementById('root')!).render(
   <ClientLayout>
     <App />
-  </ClientLayout>
+  </ClientLayout>,
 );
 console.log('✅ DEBUG: App renderizado com sucesso');

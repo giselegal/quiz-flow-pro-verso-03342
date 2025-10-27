@@ -28,7 +28,7 @@ const DebugLeadForm: React.FC = () => {
     window.dispatchEvent(
       new CustomEvent('debug-test-lead-form', {
         detail: mockBlock,
-      })
+      }),
     );
   };
 

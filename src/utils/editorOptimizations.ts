@@ -93,12 +93,12 @@ export function calculateVisibleBlocks<T>(
   scrollTop: number,
   containerHeight: number,
   itemHeight: number = 100,
-  overscan: number = 3
+  overscan: number = 3,
 ): { visibleBlocks: T[]; startIndex: number; endIndex: number } {
   const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
   const endIndex = Math.min(
     blocks.length,
-    Math.ceil((scrollTop + containerHeight) / itemHeight) + overscan
+    Math.ceil((scrollTop + containerHeight) / itemHeight) + overscan,
   );
 
   return {

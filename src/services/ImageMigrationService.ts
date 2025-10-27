@@ -76,14 +76,14 @@ class ImageMigrationService {
                 url: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
                 stepId: 'step-1',
                 type: 'logo',
-                options: { quality: 0.95, format: 'webp' as const, maxWidth: 200, maxHeight: 80 }
+                options: { quality: 0.95, format: 'webp' as const, maxWidth: 200, maxHeight: 80 },
             },
             // Imagem de introdução
             {
                 url: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
                 stepId: 'step-1',
                 type: 'intro',
-                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 }
+                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 },
             },
             // Imagens dos 8 estilos (questões)
             {
@@ -91,57 +91,57 @@ class ImageMigrationService {
                 stepId: 'step-2',
                 type: 'style',
                 style: 'natural',
-                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 }
+                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 },
             },
             {
                 url: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
                 stepId: 'step-2',
                 type: 'style',
                 style: 'classico',
-                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 }
+                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 },
             },
             {
                 url: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp',
                 stepId: 'step-2',
                 type: 'style',
                 style: 'contemporaneo',
-                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 }
+                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 },
             },
             {
                 url: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp',
                 stepId: 'step-2',
                 type: 'style',
                 style: 'elegante',
-                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 }
+                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 },
             },
             {
                 url: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp',
                 stepId: 'step-2',
                 type: 'style',
                 style: 'romantico',
-                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 }
+                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 },
             },
             {
                 url: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp',
                 stepId: 'step-2',
                 type: 'style',
                 style: 'sexy',
-                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 }
+                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 },
             },
             {
                 url: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp',
                 stepId: 'step-2',
                 type: 'style',
                 style: 'dramatico',
-                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 }
+                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 },
             },
             {
                 url: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp',
                 stepId: 'step-2',
                 type: 'style',
                 style: 'criativo',
-                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 }
-            }
+                options: { quality: 0.85, format: 'webp' as const, maxWidth: 400, maxHeight: 300 },
+            },
         ];
 
         const details: Array<{
@@ -170,13 +170,13 @@ class ImageMigrationService {
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
                         return await response.blob();
                     },
-                    image.options
+                    image.options,
                 );
 
                 details.push({
                     imageUrl: image.url,
                     stepId: image.stepId,
-                    success: true
+                    success: true,
                 });
 
                 migrated++;
@@ -189,7 +189,7 @@ class ImageMigrationService {
                     imageUrl: image.url,
                     stepId: image.stepId,
                     success: false,
-                    error: errorMessage
+                    error: errorMessage,
                 });
 
                 failed++;
@@ -210,9 +210,9 @@ class ImageMigrationService {
                 migrated,
                 failed,
                 spaceSaved,
-                compressionRatio: Math.round(compressionRatio * 100) / 100
+                compressionRatio: Math.round(compressionRatio * 100) / 100,
             },
-            details
+            details,
         };
 
         console.log('🏁 Migração do Quiz-Estilo concluída:', result.stats);
@@ -240,7 +240,7 @@ class ImageMigrationService {
             successful: 0,
             failed: 0,
             spaceSaved: 0,
-            compressionRatio: 0
+            compressionRatio: 0,
         };
 
         // Processar templates em lotes para não sobrecarregar
@@ -269,7 +269,7 @@ class ImageMigrationService {
                         templateId: template.id,
                         thumbnailResult: null,
                         imageResult: null,
-                        errors: [result.reason?.message || 'Erro desconhecido']
+                        errors: [result.reason?.message || 'Erro desconhecido'],
                     });
                 }
             });
@@ -299,7 +299,7 @@ class ImageMigrationService {
             templateId: template.id,
             thumbnailResult: null,
             imageResult: null,
-            errors: []
+            errors: [],
         };
 
         try {
@@ -315,8 +315,8 @@ class ImageMigrationService {
                             maxWidth: 400,
                             maxHeight: 300,
                             quality: 0.8,
-                            format: 'webp'
-                        }
+                            format: 'webp',
+                        },
                     );
                     console.log(`✅ Thumbnail migrado: ${template.id}`);
                 } catch (error) {
@@ -336,8 +336,8 @@ class ImageMigrationService {
                             maxWidth: 800,
                             maxHeight: 600,
                             quality: 0.85,
-                            format: 'webp'
-                        }
+                            format: 'webp',
+                        },
                     );
                     console.log(`✅ Imagem principal migrada: ${template.id}`);
                 } catch (error) {
@@ -395,7 +395,7 @@ class ImageMigrationService {
     async retryFailedMigrations(templates: TemplateMigrationData[]): Promise<MigrationStats> {
         const failedResults = this.getFailedMigrations();
         const failedTemplates = templates.filter(template =>
-            failedResults.some(result => result.templateId === template.id)
+            failedResults.some(result => result.templateId === template.id),
         );
 
         if (failedTemplates.length === 0) {
@@ -405,7 +405,7 @@ class ImageMigrationService {
                 successful: 0,
                 failed: 0,
                 spaceSaved: 0,
-                compressionRatio: 0
+                compressionRatio: 0,
             };
         }
 
@@ -445,7 +445,7 @@ class ImageMigrationService {
             usage: stats.totalSize,
             count: stats.count,
             averageCompression: stats.averageCompression,
-            recommendedActions: recommendations
+            recommendedActions: recommendations,
         };
     }
 }
@@ -465,7 +465,7 @@ export async function migrateCurrentTemplates(): Promise<MigrationStats> {
             name: template.name,
             thumbnailUrl: template.thumbnail as string,
             imageUrl: template.thumbnail as string,
-            category: template.category
+            category: template.category,
         }));
 
     const migrationService = new ImageMigrationService();
@@ -517,7 +517,7 @@ export function useMigrationStatus() {
         stats,
         error,
         startMigration,
-        clearCache
+        clearCache,
     };
 }
 
@@ -571,12 +571,12 @@ export const getImageCacheStats = async () => {
         const stats = await optimizedImageStorage.getStorageUsage();
         return {
             success: true,
-            ...stats
+            ...stats,
         };
     } catch (error) {
         return {
             success: false,
-            error: error instanceof Error ? error.message : 'Erro desconhecido'
+            error: error instanceof Error ? error.message : 'Erro desconhecido',
         };
     }
 };

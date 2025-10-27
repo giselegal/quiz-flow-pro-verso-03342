@@ -24,7 +24,7 @@ export function initPhase5() {
                 users: data.users?.length || 0,
                 sessions: data.sessions?.length || 0,
                 responses: data.responses?.length || 0,
-                results: data.results?.length || 0
+                results: data.results?.length || 0,
             });
             return data;
         }

@@ -141,7 +141,7 @@ export function useTemplateEngine(templateSlug?: string) {
   const createTemplate = useCallback(async (
     name: string,
     slug: string,
-    description?: string
+    description?: string,
   ) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();

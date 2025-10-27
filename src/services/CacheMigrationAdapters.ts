@@ -119,7 +119,7 @@ export function createTemplateCacheAdapter() {
     
     get size(): number {
       return cacheService.getStoreStats('templates').size;
-    }
+    },
   };
 }
 
@@ -154,6 +154,6 @@ export function createFunnelCacheAdapter() {
     
     get size(): number {
       return cacheService.getStoreStats('funnels').size;
-    }
+    },
   };
 }

@@ -111,7 +111,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
     initialContext = FunnelContext.EDITOR,
     initialTemplate,
     enableAutoSaveInitial = true,
-    debugMode = false
+    debugMode = false,
 }) => {
     const { toast } = useToast();
 
@@ -134,7 +134,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
         current: null,
         available: [],
         loading: false,
-        error: null
+        error: null,
     });
 
     // Persistence state
@@ -143,7 +143,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
         isLoading: false,
         lastSaved: null,
         context: currentContext,
-        autoSaveEnabled: enableAutoSaveInitial
+        autoSaveEnabled: enableAutoSaveInitial,
     });
 
     // UI state
@@ -152,14 +152,14 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
         activePanel: 'components',
         viewMode: 'desktop',
         previewMode: false,
-        fullscreen: false
+        fullscreen: false,
     });
 
     // Navigation state
     const [navigation, setNavigation] = useState<UnifiedContextState['navigation']>({
         currentRoute: window.location.pathname,
         canNavigateAway: true,
-        hasUnsavedChanges: false
+        hasUnsavedChanges: false,
     });
 
     // ========================================================================
@@ -192,7 +192,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             toast({
                 title: 'Erro ao carregar template',
                 description: errorMessage,
-                variant: 'destructive'
+                variant: 'destructive',
             });
         }
     }, [debugMode, toast]);
@@ -221,7 +221,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
 
                 toast({
                     title: 'Funil criado com sucesso',
-                    description: `Funil "${name || 'Novo Funil'}" criado a partir do template.`
+                    description: `Funil "${name || 'Novo Funil'}" criado a partir do template.`,
                 });
             }
 
@@ -233,7 +233,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             toast({
                 title: 'Erro ao criar funil',
                 description: errorMessage,
-                variant: 'destructive'
+                variant: 'destructive',
             });
 
             return null;
@@ -260,7 +260,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
                 description: description || `Template criado a partir do funil "${editor.funnel.name || 'Sem nome'}"`,
                 category: 'custom',
                 funnel: editor.funnel,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
             };
 
             // Aqui seria implementada a criação real do template com os dados completos
@@ -269,7 +269,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             if (templateId) {
                 toast({
                     title: 'Template salvo',
-                    description: `Template "${name}" criado com sucesso.${description ? ` Descrição: ${description}` : ''}`
+                    description: `Template "${name}" criado com sucesso.${description ? ` Descrição: ${description}` : ''}`,
                 });
             }
 
@@ -281,7 +281,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             toast({
                 title: 'Erro ao salvar template',
                 description: errorMessage,
-                variant: 'destructive'
+                variant: 'destructive',
             });
 
             return null;
@@ -305,7 +305,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             setPersistence(prev => ({
                 ...prev,
                 isSaving: false,
-                lastSaved: result.success ? new Date() : prev.lastSaved
+                lastSaved: result.success ? new Date() : prev.lastSaved,
             }));
 
             if (result.success) {
@@ -351,7 +351,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             toast({
                 title: 'Erro ao carregar funil',
                 description: errorMessage,
-                variant: 'destructive'
+                variant: 'destructive',
             });
         }
     }, [debugMode, toast, editor]);
@@ -414,7 +414,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
         if (!editor.isDirty) return true;
 
         const confirmed = window.confirm(
-            'Você tem alterações não salvas. Deseja sair mesmo assim?'
+            'Você tem alterações não salvas. Deseja sair mesmo assim?',
         );
 
         if (confirmed) {
@@ -506,7 +506,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
         // Navigation actions
         navigateTo,
         checkUnsavedChanges,
-        confirmNavigation
+        confirmNavigation,
     }), [
         editor,
         templates,
@@ -527,7 +527,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
         toggleFullscreen,
         navigateTo,
         checkUnsavedChanges,
-        confirmNavigation
+        confirmNavigation,
     ]);
 
     // ========================================================================
@@ -541,7 +541,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
                 templatesAvailable: templates.available.length,
                 currentTemplate: templates.current?.name,
                 isDirty: editor.isDirty,
-                context: currentContext
+                context: currentContext,
             });
         }
     }, [debugMode, editor.funnel, editor.isDirty, templates, currentContext]);
@@ -585,14 +585,14 @@ export const useEditorLegacy = () => {
             currentStep: 1, // Placeholder
             selectedBlockId: unified.editor.selectedBlockId,
             isLoading: unified.persistence.isLoading,
-            isSaving: unified.persistence.isSaving
+            isSaving: unified.persistence.isSaving,
         },
         actions: {
             addBlock: unified.editor.legacy.addBlock,
             updateBlock: unified.editor.legacy.updateBlock,
             deleteBlock: unified.editor.legacy.deleteBlock,
-            save: unified.save
-        }
+            save: unified.save,
+        },
     };
 };
 

@@ -92,7 +92,7 @@ export interface NormalizedTemplateMaster {
 }
 
 export function assertUnifiedStep(step: UnifiedStep): void {
-    if (!step.id.startsWith('step-')) throw new Error('Step id inválido: ' + step.id);
-    if (!Array.isArray(step.blocks) || !step.blocks.length) throw new Error('Step sem blocks: ' + step.id);
-    if (step.templateVersion !== '3.0') throw new Error('Versão incorreta no step ' + step.id);
+    if (!step.id.startsWith('step-')) throw new Error(`Step id inválido: ${  step.id}`);
+    if (!Array.isArray(step.blocks) || !step.blocks.length) throw new Error(`Step sem blocks: ${  step.id}`);
+    if (step.templateVersion !== '3.0') throw new Error(`Versão incorreta no step ${  step.id}`);
 }

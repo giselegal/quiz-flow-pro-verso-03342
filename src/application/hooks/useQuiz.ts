@@ -65,7 +65,7 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
     session: null,
     analytics: null,
     isLoading: false,
-    error: null
+    error: null,
   });
 
   // 🔍 Internal state updaters
@@ -85,7 +85,7 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
   const createQuiz = useCallback(async (
     name: string, 
     description: string, 
-    options: any = {}
+    options: any = {},
   ) => {
     try {
       setLoading(true);
@@ -139,7 +139,7 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
           quiz: null, 
           questions: [], 
           resultProfiles: [],
-          error: null 
+          error: null, 
         });
       } else {
         setError('Failed to delete quiz');
@@ -200,7 +200,7 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
   const addQuestion = useCallback(async (
     type: string, 
     text: string, 
-    options: any[]
+    options: any[],
   ) => {
     if (!state.quiz) {
       setError('No quiz loaded');
@@ -212,7 +212,7 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
       const question = await quizService.addQuestion(state.quiz.id, type, text, options);
       updateState({ 
         questions: [...state.questions, question],
-        error: null 
+        error: null, 
       });
     } catch (error) {
       setError(`Failed to add question: ${error}`);
@@ -221,7 +221,7 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
 
   const updateQuestion = useCallback(async (
     questionId: string, 
-    updates: Partial<Question>
+    updates: Partial<Question>,
   ) => {
     if (!state.quiz) {
       setError('No quiz loaded');
@@ -233,11 +233,11 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
       const updatedQuestion = await quizService.updateQuestion(
         state.quiz.id, 
         questionId, 
-        updates
+        updates,
       );
       
       const updatedQuestions = state.questions.map(q => 
-        q.id === questionId ? updatedQuestion : q
+        q.id === questionId ? updatedQuestion : q,
       );
       
       updateState({ questions: updatedQuestions, error: null });
@@ -282,7 +282,7 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
   const addResultProfile = useCallback(async (
     title: string,
     description: string,
-    scoreRange: any
+    scoreRange: any,
   ) => {
     if (!state.quiz) {
       setError('No quiz loaded');
@@ -295,11 +295,11 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
         state.quiz.id, 
         title, 
         description, 
-        scoreRange
+        scoreRange,
       );
       updateState({ 
         resultProfiles: [...state.resultProfiles, resultProfile],
-        error: null 
+        error: null, 
       });
     } catch (error) {
       setError(`Failed to add result profile: ${error}`);
@@ -308,7 +308,7 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
 
   const updateResultProfile = useCallback(async (
     resultProfileId: string,
-    updates: Partial<ResultProfile>
+    updates: Partial<ResultProfile>,
   ) => {
     if (!state.quiz) {
       setError('No quiz loaded');
@@ -320,11 +320,11 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
       const updatedResultProfile = await quizService.updateResultProfile(
         state.quiz.id,
         resultProfileId,
-        updates
+        updates,
       );
       
       const updatedResultProfiles = state.resultProfiles.map(rp =>
-        rp.id === resultProfileId ? updatedResultProfile : rp
+        rp.id === resultProfileId ? updatedResultProfile : rp,
       );
       
       updateState({ resultProfiles: updatedResultProfiles, error: null });
@@ -392,7 +392,7 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
       const updatedSession = await quizService.submitAnswer(
         state.session.id,
         questionId,
-        answer
+        answer,
       );
       updateState({ session: updatedSession, error: null });
     } catch (error) {
@@ -455,7 +455,7 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
       session: null,
       analytics: null,
       isLoading: false,
-      error: null
+      error: null,
     });
   }, []);
 
@@ -505,6 +505,6 @@ export function useQuiz(quizId?: string): UseQuizState & UseQuizActions {
     loadAnalytics,
     
     clearError,
-    reset
+    reset,
   };
 }

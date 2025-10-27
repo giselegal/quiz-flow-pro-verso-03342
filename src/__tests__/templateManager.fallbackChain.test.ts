@@ -45,7 +45,7 @@ describe('TemplateManager fallback chain', () => {
         unifiedTemplateService.unpublishStep(stepId);
         // Mock para simular template real retornando blocos específicos
         unifiedTemplateService.loadStepBlocks = vi.fn(async () => [
-            { id: 'tmpl-real-1', type: 'text-inline', order: 0, properties: { content: 'Real Template' }, content: { content: 'Real Template' } }
+            { id: 'tmpl-real-1', type: 'text-inline', order: 0, properties: { content: 'Real Template' }, content: { content: 'Real Template' } },
         ]);
         const loaded = await TemplateManager.loadStepBlocks(stepId);
         expect(loaded.length).toBe(1);

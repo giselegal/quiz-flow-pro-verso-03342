@@ -7,7 +7,7 @@ export class PerformanceMonitor {
     cacheHits: 0,
     cacheMisses: 0,
     apiCalls: 0,
-    renderTime: 0
+    renderTime: 0,
   };
   
   static recordCacheHit(): void {
@@ -29,7 +29,7 @@ export class PerformanceMonitor {
     const hitRate = this.metrics.cacheHits / (this.metrics.cacheHits + this.metrics.cacheMisses) * 100;
     return {
       ...this.metrics,
-      hitRate: isNaN(hitRate) ? 0 : hitRate.toFixed(1) + '%'
+      hitRate: isNaN(hitRate) ? 0 : `${hitRate.toFixed(1)  }%`,
     };
   }
 }

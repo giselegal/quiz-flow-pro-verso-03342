@@ -144,53 +144,53 @@ export const DEFAULT_ROUTES: RouteDefinition[] = [
     {
         path: '/',
         name: 'home',
-        meta: { title: 'Quiz Quest - Home' }
+        meta: { title: 'Quiz Quest - Home' },
     },
     {
         path: '/quiz',
         name: 'quiz',
-        meta: { title: 'Quiz Quest - Quiz' }
+        meta: { title: 'Quiz Quest - Quiz' },
     },
     {
         path: '/quiz/:step',
         name: 'quiz-step',
-        meta: { title: 'Quiz Quest - Step' }
+        meta: { title: 'Quiz Quest - Step' },
     },
     {
         path: '/editor',
         name: 'editor',
         guards: ['unsaved-changes'],
-        meta: { title: 'Quiz Quest - Editor' }
+        meta: { title: 'Quiz Quest - Editor' },
     },
     {
         path: '/editor/:funnelId',
         name: 'editor-funnel',
         guards: ['unsaved-changes'],
-        meta: { title: 'Quiz Quest - Editor' }
+        meta: { title: 'Quiz Quest - Editor' },
     },
     {
         path: '/editor-main',
         name: 'editor-main',
         middleware: ['redirect-to-editor'], // Redirect to /editor
-        meta: { title: 'Quiz Quest - Editor (Redirected)' }
+        meta: { title: 'Quiz Quest - Editor (Redirected)' },
     },
     {
         path: '/headless-editor/:funnelId?',
         name: 'headless-editor',
-        meta: { title: 'Quiz Quest - Headless Editor' }
+        meta: { title: 'Quiz Quest - Headless Editor' },
     },
     {
         path: '/admin',
         name: 'admin',
         guards: ['auth-required'],
-        meta: { title: 'Quiz Quest - Admin Dashboard' }
+        meta: { title: 'Quiz Quest - Admin Dashboard' },
     },
     {
         path: '/admin/:section',
         name: 'admin-section',
         guards: ['auth-required'],
-        meta: { title: 'Quiz Quest - Admin' }
-    }
+        meta: { title: 'Quiz Quest - Admin' },
+    },
 ];
 
 // =============================================================================
@@ -211,7 +211,7 @@ export const DEFAULT_GUARDS: NavigationGuard[] = [
         },
         onAllow: (_targetPath) => {
             StorageService.safeRemove('editor-unsaved-changes');
-        }
+        },
     },
     {
         id: 'auth-required',
@@ -223,9 +223,9 @@ export const DEFAULT_GUARDS: NavigationGuard[] = [
         message: 'Authentication required to access this page.',
         onBlock: (targetPath) => {
             // Redirect to auth page
-            window.location.href = '/auth?redirect=' + encodeURIComponent(targetPath);
-        }
-    }
+            window.location.href = `/auth?redirect=${  encodeURIComponent(targetPath)}`;
+        },
+    },
 ];
 
 // =============================================================================
@@ -239,7 +239,7 @@ export const DEFAULT_MIDDLEWARE: NavigationMiddleware[] = [
         handler: (_path) => {
             console.log('Redirecting /editor-main to /editor');
             return '/editor'; // Redirect to /editor
-        }
+        },
     },
     {
         id: 'normalize-paths',
@@ -247,8 +247,8 @@ export const DEFAULT_MIDDLEWARE: NavigationMiddleware[] = [
         handler: (path) => {
             // Remove trailing slash
             return path.slice(0, -1);
-        }
-    }
+        },
+    },
 ];
 
 // =============================================================================
@@ -325,7 +325,7 @@ export const useNavigation = () => {
         blockedNavigation: null,
         guards: new Map(DEFAULT_GUARDS.map(guard => [guard.id, guard])),
         middleware: new Map(DEFAULT_MIDDLEWARE.map(mw => [mw.id, mw])),
-        routes: new Map(DEFAULT_ROUTES.map(route => [route.name, route]))
+        routes: new Map(DEFAULT_ROUTES.map(route => [route.name, route])),
     });
 
     const navigationTimeoutRef = useRef<NodeJS.Timeout>();
@@ -337,7 +337,7 @@ export const useNavigation = () => {
             const newHistory = prev.currentPath !== location
                 ? [...prev.history, {
                     path: prev.currentPath,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 }].slice(-50) // Keep last 50 entries
                 : prev.history;
 
@@ -345,7 +345,7 @@ export const useNavigation = () => {
                 ...prev,
                 previousPath: prev.currentPath !== location ? prev.currentPath : prev.previousPath,
                 currentPath: location,
-                history: newHistory
+                history: newHistory,
             };
         });
     }, [location]);
@@ -405,7 +405,7 @@ export const useNavigation = () => {
     // Navigate to a path
     const navigate = useCallback(async (
         path: string,
-        options: NavigationOptions = {}
+        options: NavigationOptions = {},
     ): Promise<boolean> => {
         if (state.isNavigating) {
             console.warn('Navigation already in progress');
@@ -632,13 +632,13 @@ export const useNavigation = () => {
         canNavigate,
         getHistory,
         clearHistory,
-        getHistoryEntry
+        getHistoryEntry,
     }), [
         navigate, goBack, goForward, replace, reload,
         registerRoute, unregisterRoute, getRoute,
         addGuard, removeGuard, addMiddleware, removeMiddleware,
         buildPath, parseParams, isCurrentPath, canNavigate,
-        getHistory, clearHistory, getHistoryEntry
+        getHistory, clearHistory, getHistoryEntry,
     ]);
 
     return {
@@ -652,7 +652,7 @@ export const useNavigation = () => {
         currentParams: parseParams(state.currentPath),
 
         // Actions
-        ...actions
+        ...actions,
     };
 };
 

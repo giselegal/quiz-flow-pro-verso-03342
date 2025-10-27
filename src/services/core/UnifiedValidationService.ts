@@ -8,7 +8,7 @@ export const getUnifiedValidationService = () => ({
   validateBlock: () => ({ isValid: true, errors: [] }),
   validateFunnel: () => ({ isValid: true, errors: [] }),
   cleanup: () => { },
-  getStats: () => ({})
+  getStats: () => ({}),
 });
 
 export default getUnifiedValidationService;

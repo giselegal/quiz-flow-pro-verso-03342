@@ -59,8 +59,8 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
   const inlineEditor = useInlineEditor((blockId: string, changes: Partial<Block>) => {
     updateStepBlocks(
       currentStepBlocks.map((block: Block) => 
-        block.id === blockId ? { ...block, ...changes } : block
-      )
+        block.id === blockId ? { ...block, ...changes } : block,
+      ),
     );
     setIntegrationState(prev => ({ ...prev, hasUnsavedChanges: true }));
   });
@@ -73,14 +73,14 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
   const toggleInteractiveMode = useCallback(() => {
     setIntegrationState(prev => ({
       ...prev,
-      isInteractiveMode: !prev.isInteractiveMode
+      isInteractiveMode: !prev.isInteractiveMode,
     }));
   }, []);
 
   const toggleDraftMode = useCallback(() => {
     setIntegrationState(prev => ({
       ...prev,
-      isDraftMode: !prev.isDraftMode
+      isDraftMode: !prev.isDraftMode,
     }));
   }, []);
 
@@ -90,7 +90,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
     setIntegrationState(prev => ({ 
       ...prev, 
       hasUnsavedChanges: true,
-      syncStatus: 'idle'
+      syncStatus: 'idle',
     }));
   }, []);
 
@@ -121,7 +121,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
         ...prev, 
         hasUnsavedChanges: false,
         lastSaved: new Date(),
-        syncStatus: 'success'
+        syncStatus: 'success',
       }));
 
       // Reset sync status after 2 seconds
@@ -139,7 +139,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
     
     setIntegrationState(prev => ({ 
       ...prev, 
-      isDraftMode: false 
+      isDraftMode: false, 
     }));
     
     console.log('🚀 Publishing changes to production...');
@@ -150,7 +150,7 @@ export const useEditorIntegration = (): UseEditorIntegrationReturn => {
     setIntegrationState(prev => ({ 
       ...prev, 
       hasUnsavedChanges: false,
-      syncStatus: 'idle'
+      syncStatus: 'idle',
     }));
     
     console.log('🔄 Resetting to last saved state...');

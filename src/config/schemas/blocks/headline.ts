@@ -14,7 +14,7 @@ export const headlineSchema = templates
   .icon('Type')
   .addFields(
     titleField('content'),
-    subtitleField('content')
+    subtitleField('content'),
   )
   .addFields(...colorFields('style'))
   .addFields(...typographyFields('style'))

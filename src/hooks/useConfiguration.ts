@@ -10,7 +10,7 @@ import {
     configurationService,
     type MergedConfiguration,
     type ConfigurationContext,
-    getCurrentFunnelConfiguration
+    getCurrentFunnelConfiguration,
 } from '@/services/ConfigurationService';
 
 // ============================================================================
@@ -60,7 +60,7 @@ export function useConfiguration(options: UseConfigurationOptions = {}): UseConf
                 const context: ConfigurationContext = {
                     funnelId: options.funnelId,
                     environment: options.environment || 'development',
-                    overrides: overrides
+                    overrides,
                 };
                 loadedConfig = await configurationService.getConfiguration(context);
             } else {
@@ -79,7 +79,7 @@ export function useConfiguration(options: UseConfigurationOptions = {}): UseConf
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido ao carregar configuração';
             setError(errorMessage);
-            console.error(`❌ [useConfiguration] Erro ao carregar configuração:`, err);
+            console.error('❌ [useConfiguration] Erro ao carregar configuração:', err);
         } finally {
             setIsLoading(false);
         }
@@ -117,7 +117,7 @@ export function useConfiguration(options: UseConfigurationOptions = {}): UseConf
         error,
         refresh: loadConfiguration,
         updateOverrides,
-        validate
+        validate,
     };
 }
 
@@ -137,7 +137,7 @@ export function useSEOConfiguration(funnelId?: string) {
         seo: config?.seo || null,
         metaTags,
         isLoading,
-        error
+        error,
     };
 }
 
@@ -154,7 +154,7 @@ export function useTrackingConfiguration(funnelId?: string) {
         utm: config?.utm || null,
         trackingConfig,
         isLoading,
-        error
+        error,
     };
 }
 
@@ -169,12 +169,12 @@ export function useThemeConfiguration(funnelId?: string) {
         colors: config?.branding ? {
             primary: config.branding.primaryColor,
             secondary: config.branding.secondaryColor,
-            accent: config.branding.accentColor
+            accent: config.branding.accentColor,
         } : null,
         fonts: config?.branding?.fontFamily || null,
         logo: config?.branding?.logoUrl || null,
         isLoading,
-        error
+        error,
     };
 }
 
@@ -189,7 +189,7 @@ export function useFunnelBehavior(funnelId?: string) {
         results: config?.results || null,
         webhooks: config?.webhooks || null,
         isLoading,
-        error
+        error,
     };
 }
 
@@ -210,7 +210,7 @@ export function useGlobalConfiguration() {
         config: null,
         funnelId: 'unknown',
         isLoading: true,
-        error: null
+        error: null,
     });
 
     const loadGlobalConfig = useCallback(async (funnelId?: string) => {
@@ -220,7 +220,7 @@ export function useGlobalConfiguration() {
             const config = funnelId
                 ? await configurationService.getConfiguration({
                     funnelId,
-                    environment: 'development'
+                    environment: 'development',
                 })
                 : await getCurrentFunnelConfiguration();
 
@@ -228,21 +228,21 @@ export function useGlobalConfiguration() {
                 config,
                 funnelId: config.funnel.id,
                 isLoading: false,
-                error: null
+                error: null,
             });
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar configuração global';
             setGlobalState(prev => ({
                 ...prev,
                 isLoading: false,
-                error: errorMessage
+                error: errorMessage,
             }));
         }
     }, []);
 
     return {
         ...globalState,
-        loadGlobalConfig
+        loadGlobalConfig,
     };
 }
 
@@ -262,7 +262,7 @@ export function useConfigurationDebug(funnelId?: string) {
         hasGlobalSEO: !!config.seo.defaultTitle,
         hasTracking: !!config.analytics.googleAnalytics.enabled,
         hasUTM: !!(config.utm.source && config.utm.medium),
-        validation: validate()
+        validation: validate(),
     } : null;
 
     return {
@@ -270,7 +270,7 @@ export function useConfigurationDebug(funnelId?: string) {
         debugInfo,
         isLoading,
         error,
-        validate
+        validate,
     };
 }
 

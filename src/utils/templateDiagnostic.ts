@@ -19,7 +19,7 @@ if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
             console.log('📝 [DIAGNOSTIC] Primeiro bloco:', {
                 id: firstStepBlocks[0]?.id,
                 type: firstStepBlocks[0]?.type,
-                hasContent: !!firstStepBlocks[0]?.content
+                hasContent: !!firstStepBlocks[0]?.content,
             });
         }
     }
@@ -37,11 +37,11 @@ if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
         }
     });
 
-    console.log(`📈 [DIAGNOSTIC] Estatísticas:`, {
+    console.log('📈 [DIAGNOSTIC] Estatísticas:', {
         totalSteps: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length,
         emptySteps,
         totalBlocks,
-        averageBlocksPerStep: totalBlocks / Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length
+        averageBlocksPerStep: totalBlocks / Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length,
     });
 
 } else {
@@ -59,6 +59,6 @@ export default function runTemplateDiagnostic() {
     return {
         templateLoaded: !!QUIZ_STYLE_21_STEPS_TEMPLATE,
         stepCount: Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE || {}).length,
-        template: QUIZ_STYLE_21_STEPS_TEMPLATE
+        template: QUIZ_STYLE_21_STEPS_TEMPLATE,
     };
 }

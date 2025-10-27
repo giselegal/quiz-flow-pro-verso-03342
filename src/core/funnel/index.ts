@@ -18,7 +18,7 @@ export {
     useFunnelNavigation,
     useFunnelValidation,
     useFunnelData,
-    useFunnelProgress
+    useFunnelProgress,
 } from './hooks/useFunnel';
 
 export {
@@ -26,27 +26,27 @@ export {
     useFunnelPersistence,
     useFunnelHistory,
     useFunnelAnalytics,
-    useFunnelComparison
+    useFunnelComparison,
 } from './hooks/useFunnelState';
 
 export {
-    useFunnelTemplates
+    useFunnelTemplates,
 } from './hooks/useFunnelTemplates';
 
 // Hook types
 export type {
     UseFunnelOptions,
-    UseFunnelReturn
+    UseFunnelReturn,
 } from './hooks/useFunnel';
 
 export type {
     UseFunnelStateOptions,
-    UseFunnelStateReturn
+    UseFunnelStateReturn,
 } from './hooks/useFunnelState';
 
 export type {
     UseFunnelTemplatesOptions,
-    UseFunnelTemplatesReturn
+    UseFunnelTemplatesReturn,
 } from './hooks/useFunnelTemplates';
 
 // Re-export commonly used types
@@ -61,7 +61,7 @@ export type {
     NavigationState,
     ValidationState,
     FunnelSettings,
-    FunnelMetadata
+    FunnelMetadata,
 } from './types';
 
 // Utility constants
@@ -71,7 +71,7 @@ export const FUNNEL_DEFAULTS = {
     AUTO_SAVE_INTERVAL: 30000, // 30 segundos
     MAX_HISTORY_SIZE: 50,
     VALIDATION_DEBOUNCE: 500, // 500ms
-    NAVIGATION_TIMEOUT: 5000 // 5 segundos
+    NAVIGATION_TIMEOUT: 5000, // 5 segundos
 } as const;
 
 // Common funnel configurations
@@ -81,27 +81,27 @@ export const FUNNEL_PRESETS = {
         autoAdvance: false,
         progressTracking: true,
         allowBackward: true,
-        showProgress: true
+        showProgress: true,
     },
     ONBOARDING_FLOW: {
         autoSave: true,
         autoAdvance: true,
         progressTracking: true,
         allowBackward: false,
-        showProgress: true
+        showProgress: true,
     },
     SURVEY_FORM: {
         autoSave: true,
         autoAdvance: false,
         progressTracking: true,
         allowBackward: true,
-        showProgress: false
+        showProgress: false,
     },
     PRODUCT_CONFIGURATOR: {
         autoSave: true,
         autoAdvance: false,
         progressTracking: true,
         allowBackward: true,
-        showProgress: true
-    }
+        showProgress: true,
+    },
 } as const;

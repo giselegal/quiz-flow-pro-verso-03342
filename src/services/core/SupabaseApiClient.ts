@@ -67,7 +67,7 @@ class SupabaseApiClient {
         this.cache.set(key, {
             data,
             timestamp: Date.now(),
-            ttl
+            ttl,
         });
     }
 
@@ -447,7 +447,7 @@ class SupabaseApiClient {
     getCacheStats(): { size: number; keys: string[] } {
         return {
             size: this.cache.size,
-            keys: Array.from(this.cache.keys())
+            keys: Array.from(this.cache.keys()),
         };
     }
 

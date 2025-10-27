@@ -19,12 +19,12 @@ describe('template validation integra componentes', () => {
                     version: '1.0.0',
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
-                    props: { title: 'Pergunta inválida', options: [{ id: 'o1', label: 'Só uma' }] }
-                }
+                    props: { title: 'Pergunta inválida', options: [{ id: 'o1', label: 'Só uma' }] },
+                },
             },
             logic: { scoring: { mode: 'sum', weights: {}, normalization: { percent: true } }, branching: [] },
             outcomes: [{ id: 'out', minScore: 0, maxScore: 10, template: 'X' }],
-            status: 'draft', history: [], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), draftVersion: 1
+            status: 'draft', history: [], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), draftVersion: 1,
         };
         const aggregate: TemplateAggregate = { draft } as any;
         const report = validateTemplate(aggregate);

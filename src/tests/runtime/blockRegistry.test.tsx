@@ -22,7 +22,7 @@ describe('BlockRegistry', () => {
             label: 'Teste',
             schema: z.object({ value: z.string().default('x') }),
             defaultConfig: { value: 'x' },
-            render: ({ config }) => React.createElement('div', null, config.value)
+            render: ({ config }) => React.createElement('div', null, config.value),
         });
         const wrapCustom: React.FC<{ children: React.ReactNode }> = ({ children }) => (
             <BlockRegistryProvider definitions={[...DEFAULT_BLOCK_DEFINITIONS, Custom]}>{children}</BlockRegistryProvider>

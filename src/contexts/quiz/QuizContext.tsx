@@ -33,9 +33,9 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (warnedRef.current) return;
     warnedRef.current = true;
     if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
-      // eslint-disable-next-line no-console
+       
       console.warn(
-        '[Deprecation] QuizProvider está obsoleto. Migre para QuizFlowProvider e use os hooks/serviços de resultado atuais.'
+        '[Deprecation] QuizProvider está obsoleto. Migre para QuizFlowProvider e use os hooks/serviços de resultado atuais.',
       );
     }
   }, []);
@@ -56,7 +56,7 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const submitAnswers = async (
-    answers: Array<{ questionId: string; optionId: string; points: number }>
+    answers: Array<{ questionId: string; optionId: string; points: number }>,
   ) => {
     try {
       console.log('Submitting answers:', answers);
@@ -160,7 +160,7 @@ export const useQuiz = () => {
     },
 
     submitAnswers: async (
-      answers: Array<{ questionId: string; optionId: string; points: number }>
+      answers: Array<{ questionId: string; optionId: string; points: number }>,
     ) => {
       try {
         console.log('Submitting answers:', answers);

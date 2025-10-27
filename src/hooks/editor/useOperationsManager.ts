@@ -42,13 +42,13 @@ export function useOperationsManager(): UseOperationsManagerResult {
         runningRef.current.add(key);
         setStatuses(prev => ({
             ...prev,
-            [key]: { key, running: true, startedAt, error: null, progress: { value: 0 } }
+            [key]: { key, running: true, startedAt, error: null, progress: { value: 0 } },
         }));
 
         const setProgress = (value: number, label?: string) => {
             setStatuses(prev => ({
                 ...prev,
-                [key]: { ...prev[key], progress: { value: Math.min(100, Math.max(0, value)), label } }
+                [key]: { ...prev[key], progress: { value: Math.min(100, Math.max(0, value)), label } },
             }));
             options?.onProgress?.(value, label);
         };
@@ -58,7 +58,7 @@ export function useOperationsManager(): UseOperationsManagerResult {
             const finishedAt = performance.now();
             setStatuses(prev => ({
                 ...prev,
-                [key]: { ...prev[key], running: false, finishedAt, progress: { value: 100, label: prev[key].progress?.label }, error: null }
+                [key]: { ...prev[key], running: false, finishedAt, progress: { value: 100, label: prev[key].progress?.label }, error: null },
             }));
             runningRef.current.delete(key);
             editorEvents.emit('EDITOR_OPERATION_END', { key, durationMs: finishedAt - startedAt });
@@ -69,7 +69,7 @@ export function useOperationsManager(): UseOperationsManagerResult {
             const finishedAt = performance.now();
             setStatuses(prev => ({
                 ...prev,
-                [key]: { ...prev[key], running: false, finishedAt, error }
+                [key]: { ...prev[key], running: false, finishedAt, error },
             }));
             runningRef.current.delete(key);
             editorEvents.emit('EDITOR_OPERATION_END', { key, durationMs: finishedAt - startedAt, error: error.message });
@@ -81,7 +81,7 @@ export function useOperationsManager(): UseOperationsManagerResult {
         statuses,
         isRunning,
         runOperation,
-        lastError: lastErrorRef.current
+        lastError: lastErrorRef.current,
     };
 }
 

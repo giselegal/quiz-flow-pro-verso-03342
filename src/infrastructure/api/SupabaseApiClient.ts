@@ -38,20 +38,20 @@ export class SupabaseApiClient {
         email,
         password,
         options: {
-          data: metadata
-        }
+          data: metadata,
+        },
       });
 
       return {
         data: data.user,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Sign up failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -60,19 +60,19 @@ export class SupabaseApiClient {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       });
 
       return {
         data: data.session,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Sign in failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -84,13 +84,13 @@ export class SupabaseApiClient {
       return {
         data: null,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Sign out failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -102,13 +102,13 @@ export class SupabaseApiClient {
       return {
         data: user,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Get user failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -120,13 +120,13 @@ export class SupabaseApiClient {
       return {
         data: session,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Get session failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -143,13 +143,13 @@ export class SupabaseApiClient {
       return {
         data: data as T,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Find by ID failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -202,7 +202,7 @@ export class SupabaseApiClient {
       // Apply ordering
       if (options?.orderBy) {
         query = query.order(options.orderBy.column, { 
-          ascending: options.orderBy.ascending ?? true 
+          ascending: options.orderBy.ascending ?? true, 
         });
       }
 
@@ -223,7 +223,7 @@ export class SupabaseApiClient {
         count: count || 0,
         page: options?.offset ? Math.floor(options.offset / (options.limit || 10)) + 1 : 1,
         limit: options?.limit || 10,
-        hasMore: count ? (options?.offset || 0) + (options?.limit || 10) < count : false
+        hasMore: count ? (options?.offset || 0) + (options?.limit || 10) < count : false,
       };
     } catch (error) {
       return {
@@ -233,7 +233,7 @@ export class SupabaseApiClient {
         count: 0,
         page: 1,
         limit: 10,
-        hasMore: false
+        hasMore: false,
       };
     }
   }
@@ -249,13 +249,13 @@ export class SupabaseApiClient {
       return {
         data: result as T,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Create failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -272,13 +272,13 @@ export class SupabaseApiClient {
       return {
         data: result as T,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Update failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -294,13 +294,13 @@ export class SupabaseApiClient {
       return {
         data: result as T,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Upsert failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -315,13 +315,13 @@ export class SupabaseApiClient {
       return {
         data: null,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Delete failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -337,13 +337,13 @@ export class SupabaseApiClient {
       return {
         data: data as T[],
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Bulk create failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -358,13 +358,13 @@ export class SupabaseApiClient {
       return {
         data: data as T[],
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Bulk update failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -379,13 +379,13 @@ export class SupabaseApiClient {
       return {
         data: null,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Bulk delete failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -395,19 +395,19 @@ export class SupabaseApiClient {
     try {
       const { data, error } = await (supabase as any).rpc('execute_query', {
         query_sql: query.sql,
-        query_params: query.params || []
+        query_params: query.params || [],
       });
 
       return {
         data: (data as T[]) || [],
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: [],
         error: `Query execution failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -419,13 +419,13 @@ export class SupabaseApiClient {
       return {
         data: data as T,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Function call failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -434,21 +434,21 @@ export class SupabaseApiClient {
   subscribeToTable<T>(
     table: string,
     callback: (payload: { eventType: string; new: T; old: T }) => void,
-    filter?: string
+    filter?: string,
   ) {
     const subscription = (supabase as any)
       .channel(`${table}_changes`)
       .on('postgres_changes' as any, {
         event: '*',
         schema: 'public',
-        table: table,
-        filter: filter
+        table,
+        filter,
       }, callback);
 
     subscription.subscribe();
 
     return {
-      unsubscribe: () => subscription.unsubscribe()
+      unsubscribe: () => subscription.unsubscribe(),
     };
   }
 
@@ -462,19 +462,19 @@ export class SupabaseApiClient {
           event_data: eventData,
           session_id: sessionId,
           funnel_id: eventData.funnelId || null,
-          user_id: (await this.getCurrentUser()).data?.id || null
+          user_id: (await this.getCurrentUser()).data?.id || null,
         });
 
       return {
         data: null,
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Track event failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -500,13 +500,13 @@ export class SupabaseApiClient {
       return {
         data: data || [],
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Get analytics failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }
@@ -522,16 +522,16 @@ export class SupabaseApiClient {
       return {
         data: {
           status: 'healthy',
-          timestamp: Date.now()
+          timestamp: Date.now(),
         },
         error: error?.message || null,
-        success: !error
+        success: !error,
       };
     } catch (error) {
       return {
         data: null,
         error: `Health check failed: ${error}`,
-        success: false
+        success: false,
       };
     }
   }

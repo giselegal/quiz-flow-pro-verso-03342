@@ -47,13 +47,13 @@ export const useBlockManager = (initialBlocks: Block[] = []): UseBlockManagerRet
         setSelectedBlock(null);
       }
     },
-    [selectedBlock]
+    [selectedBlock],
   );
 
   // Update otimizado com spread mínimo
   const updateBlock = useCallback((blockId: string, updates: Partial<Block>) => {
     setBlocksState(prev =>
-      prev.map(block => (block.id === blockId ? { ...block, ...updates } : block))
+      prev.map(block => (block.id === blockId ? { ...block, ...updates } : block)),
     );
   }, []);
 
@@ -66,7 +66,7 @@ export const useBlockManager = (initialBlocks: Block[] = []): UseBlockManagerRet
         setSelectedBlock(null);
       }
     },
-    [selectedBlock]
+    [selectedBlock],
   );
 
   // Add otimizado com order automática
@@ -81,7 +81,7 @@ export const useBlockManager = (initialBlocks: Block[] = []): UseBlockManagerRet
       setBlocksState(prev => [...prev, newBlock]);
       return newBlock.id;
     },
-    [blocks.length]
+    [blocks.length],
   );
 
   // Duplicação otimizada
@@ -107,7 +107,7 @@ export const useBlockManager = (initialBlocks: Block[] = []): UseBlockManagerRet
 
       return duplicatedBlock.id;
     },
-    [blocks]
+    [blocks],
   );
 
   // Reordenação otimizada

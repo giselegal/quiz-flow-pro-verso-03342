@@ -19,12 +19,12 @@ export interface DebounceOptions {
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number,
-  options: Partial<DebounceOptions> = {}
+  options: Partial<DebounceOptions> = {},
 ): T & { cancel: () => void; flush: () => ReturnType<T> | undefined } {
   const {
     leading = false,
     trailing = true,
-    maxWait
+    maxWait,
   } = options;
 
   let timeoutId: number | undefined;
@@ -148,7 +148,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number,
   options?: Partial<DebounceOptions>,
-  deps: React.DependencyList = []
+  deps: React.DependencyList = [],
 ): T & { cancel: () => void; flush: () => ReturnType<T> | undefined } {
   const funcRef = React.useRef(func);
   const debouncedRef = React.useRef<ReturnType<typeof debounce>>();
@@ -167,7 +167,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
     debouncedRef.current = debounce(
       (...args: Parameters<T>) => funcRef.current(...args),
       wait,
-      options
+      options,
     );
   }, [wait, options?.leading, options?.trailing, options?.maxWait]);
 

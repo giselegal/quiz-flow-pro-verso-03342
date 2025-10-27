@@ -56,7 +56,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
       priority: 1,
       cacheTTL: 300000, // 5 minutes
       retryAttempts: 3,
-      timeout: 10000
+      timeout: 10000,
     });
   }
 
@@ -168,7 +168,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         }
 
         const lastSession = funnelSessions.sort((a, b) => 
-          new Date(b.started_at).getTime() - new Date(a.started_at).getTime()
+          new Date(b.started_at).getTime() - new Date(a.started_at).getTime(),
         )[0];
 
         return {
@@ -181,7 +181,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
           averageTime,
           lastActivity: lastSession?.started_at,
           status: funnel.is_published ? 
-            (funnelSessions.length > 0 ? 'active' : 'inactive') : 'draft'
+            (funnelSessions.length > 0 ? 'active' : 'inactive') : 'draft',
         };
       });
 
@@ -225,7 +225,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
 
       const deviceBreakdown = Array.from(deviceCounts.entries()).map(([device, count]) => ({
         device,
-        count
+        count,
       }));
 
       // Daily activity (last 7 days)
@@ -237,11 +237,11 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
 
       const dailyActivity = last7Days.map(date => {
         const daySessions = sessionsData.filter(s => 
-          s.started_at.startsWith(date)
+          s.started_at.startsWith(date),
         );
         return {
           date: date.split('-').slice(1).reverse().join('/'), // MM/DD format
-          sessions: daySessions.length
+          sessions: daySessions.length,
         };
       });
 
@@ -252,7 +252,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         abandonment: abandonedSessions.length,
         averageSteps,
         deviceBreakdown,
-        dailyActivity
+        dailyActivity,
       };
 
       this.setCached(cacheKey, analytics, 300000);
@@ -270,7 +270,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
       const funnelData = {
         ...data,
         created_at: now,
-        updated_at: now
+        updated_at: now,
       };
 
       const { data: result, error } = await supabase
@@ -296,7 +296,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         .from('funnels')
         .update({
           ...updates,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', id)
         .select()
@@ -348,7 +348,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
 
       const [funnels, { data: sessions }] = await Promise.all([
         this.getAllFunnels(),
-        supabase.from('quiz_sessions').select('status, funnel_id')
+        supabase.from('quiz_sessions').select('status, funnel_id'),
       ]);
 
       const activeFunnels = funnels.filter(f => f.is_published).length;
@@ -367,7 +367,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
         draftFunnels,
         totalSessions,
         totalCompletions,
-        averageConversionRate
+        averageConversionRate,
       };
 
       this.setCached(cacheKey, summary, 180000); // 3 minutes
@@ -382,7 +382,7 @@ export class ConsolidatedFunnelService extends BaseUnifiedService {
   getCacheStats(): { size: number; hitRate: number } {
     return {
       size: this.cache.size,
-      hitRate: 85 // Mock hit rate for now
+      hitRate: 85, // Mock hit rate for now
     };
   }
 }

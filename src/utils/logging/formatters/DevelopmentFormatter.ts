@@ -48,7 +48,7 @@ export class DevelopmentFormatter implements LogFormatter {
             INFO: 'ℹ️',
             WARN: '⚠️',
             ERROR: '❌',
-            FATAL: '💥'
+            FATAL: '💥',
         };
         return emojis[level];
     }

@@ -45,7 +45,7 @@ export class Quiz21StepsAdapter {
                 blocks.push({
                     id: `title-${step.id}`,
                     type: 'heading',
-                    content: { text: step.titulo }
+                    content: { text: step.titulo },
                 });
             }
 
@@ -59,9 +59,9 @@ export class Quiz21StepsAdapter {
                         options: step.opcoes.map((opcao) => ({
                             text: opcao.texto,
                             value: opcao.valor,
-                            nextStep: opcao.proximoStep
-                        }))
-                    }
+                            nextStep: opcao.proximoStep,
+                        })),
+                    },
                 });
             }
 
@@ -71,8 +71,8 @@ export class Quiz21StepsAdapter {
                 blocks,
                 metadata: {
                     type: step.tipo,
-                    originalConfig: step.configuracoes
-                }
+                    originalConfig: step.configuracoes,
+                },
             };
         });
 
@@ -83,13 +83,13 @@ export class Quiz21StepsAdapter {
             steps: universalSteps,
             config: {
                 theme: quiz21Data.tema,
-                originalConfig: quiz21Data.configuracoes
+                originalConfig: quiz21Data.configuracoes,
             },
             metadata: {
                 originalType: 'quiz21Steps',
                 created: new Date().toISOString(),
-                version: '1.0'
-            }
+                version: '1.0',
+            },
         };
     }
 
@@ -107,7 +107,7 @@ export class Quiz21StepsAdapter {
                 pergunta: questionBlock?.content?.question || '',
                 opcoes: questionBlock?.content?.options || [],
                 tipo: step.metadata?.type,
-                configuracoes: step.metadata?.originalConfig
+                configuracoes: step.metadata?.originalConfig,
             };
         });
 
@@ -116,7 +116,7 @@ export class Quiz21StepsAdapter {
             nome: universalFunnel.name,
             steps: quiz21Steps,
             configuracoes: universalFunnel.config?.originalConfig,
-            tema: universalFunnel.config?.theme
+            tema: universalFunnel.config?.theme,
         };
     }
 }
@@ -162,7 +162,7 @@ export class LeadMagnetAdapter {
                 blocks.push({
                     id: `headline-${step.id}`,
                     type: 'heading',
-                    content: { text: step.content.headline }
+                    content: { text: step.content.headline },
                 });
             }
 
@@ -171,7 +171,7 @@ export class LeadMagnetAdapter {
                 blocks.push({
                     id: `desc-${step.id}`,
                     type: 'text',
-                    content: { text: step.content.description }
+                    content: { text: step.content.description },
                 });
             }
 
@@ -185,8 +185,8 @@ export class LeadMagnetAdapter {
                             fieldType: field.type,
                             name: field.name,
                             placeholder: field.placeholder,
-                            required: field.required
-                        }
+                            required: field.required,
+                        },
                     });
                 });
             }
@@ -196,7 +196,7 @@ export class LeadMagnetAdapter {
                 blocks.push({
                     id: `cta-${step.id}`,
                     type: 'button',
-                    content: { text: step.content.cta }
+                    content: { text: step.content.cta },
                 });
             }
 
@@ -207,8 +207,8 @@ export class LeadMagnetAdapter {
                 metadata: {
                     type: step.type,
                     originalContent: step.content,
-                    design: step.design
-                }
+                    design: step.design,
+                },
             };
         });
 
@@ -219,13 +219,13 @@ export class LeadMagnetAdapter {
             steps: universalSteps,
             config: {
                 description: leadMagnetData.description,
-                settings: leadMagnetData.settings
+                settings: leadMagnetData.settings,
             },
             metadata: {
                 originalType: 'leadMagnet',
                 created: new Date().toISOString(),
-                version: '1.0'
-            }
+                version: '1.0',
+            },
         };
     }
 
@@ -247,11 +247,11 @@ export class LeadMagnetAdapter {
                         name: field.content?.name || '',
                         type: field.content?.fieldType || 'text',
                         required: field.content?.required || false,
-                        placeholder: field.content?.placeholder || ''
+                        placeholder: field.content?.placeholder || '',
                     })),
-                    ...step.metadata?.originalContent
+                    ...step.metadata?.originalContent,
                 },
-                design: step.metadata?.design
+                design: step.metadata?.design,
             };
         });
 
@@ -260,7 +260,7 @@ export class LeadMagnetAdapter {
             name: universalFunnel.name,
             description: universalFunnel.config?.description || '',
             steps: leadMagnetSteps,
-            settings: universalFunnel.config?.settings || {}
+            settings: universalFunnel.config?.settings || {},
         };
     }
 }
@@ -311,7 +311,7 @@ export class PersonalBrandingAdapter {
                 blocks.push({
                     id: `title-${step.id}`,
                     type: 'heading',
-                    content: { text: step.content.title }
+                    content: { text: step.content.title },
                 });
             }
 
@@ -320,7 +320,7 @@ export class PersonalBrandingAdapter {
                 blocks.push({
                     id: `subtitle-${step.id}`,
                     type: 'text',
-                    content: { text: step.content.subtitle }
+                    content: { text: step.content.subtitle },
                 });
             }
 
@@ -329,7 +329,7 @@ export class PersonalBrandingAdapter {
                 blocks.push({
                     id: `desc-${step.id}`,
                     type: 'text',
-                    content: { text: step.content.description }
+                    content: { text: step.content.description },
                 });
             }
 
@@ -338,7 +338,7 @@ export class PersonalBrandingAdapter {
                 blocks.push({
                     id: `image-${step.id}`,
                     type: 'image',
-                    content: { src: step.content.image }
+                    content: { src: step.content.image },
                 });
             }
 
@@ -351,8 +351,8 @@ export class PersonalBrandingAdapter {
                         title: item.title,
                         description: item.description,
                         image: item.image,
-                        link: item.link
-                    }
+                        link: item.link,
+                    },
                 });
             });
 
@@ -363,8 +363,8 @@ export class PersonalBrandingAdapter {
                 metadata: {
                     section: step.section,
                     layout: step.layout,
-                    styling: step.styling
-                }
+                    styling: step.styling,
+                },
             };
         });
 
@@ -375,13 +375,13 @@ export class PersonalBrandingAdapter {
             steps: universalSteps,
             config: {
                 profile: pbData.profile,
-                theme: pbData.theme
+                theme: pbData.theme,
             },
             metadata: {
                 originalType: 'personalBranding',
                 created: new Date().toISOString(),
-                version: '1.0'
-            }
+                version: '1.0',
+            },
         };
     }
 
@@ -404,11 +404,11 @@ export class PersonalBrandingAdapter {
                         title: card.content?.title || '',
                         description: card.content?.description || '',
                         image: card.content?.image,
-                        link: card.content?.link
-                    }))
+                        link: card.content?.link,
+                    })),
                 },
                 layout: step.metadata?.layout,
-                styling: step.metadata?.styling
+                styling: step.metadata?.styling,
             };
         });
 
@@ -419,10 +419,10 @@ export class PersonalBrandingAdapter {
                 name: '',
                 title: '',
                 bio: '',
-                avatar: ''
+                avatar: '',
             },
             steps: pbSteps,
-            theme: universalFunnel.config?.theme || {}
+            theme: universalFunnel.config?.theme || {},
         };
     }
 }
@@ -435,7 +435,7 @@ export class FunnelAdapterFactory {
     private static adapters = {
         'quiz21Steps': Quiz21StepsAdapter,
         'leadMagnet': LeadMagnetAdapter,
-        'personalBranding': PersonalBrandingAdapter
+        'personalBranding': PersonalBrandingAdapter,
     };
 
     /**
@@ -505,7 +505,7 @@ function getStepName(type: string): string {
         'landing': 'Página de Captura',
         'form': 'Formulário',
         'thank-you': 'Obrigado',
-        'download': 'Download'
+        'download': 'Download',
     };
     return names[type as keyof typeof names] || type;
 }
@@ -517,7 +517,7 @@ function getSectionName(section: string): string {
         'services': 'Serviços',
         'portfolio': 'Portfolio',
         'testimonials': 'Depoimentos',
-        'contact': 'Contato'
+        'contact': 'Contato',
     };
     return names[section as keyof typeof names] || section;
 }

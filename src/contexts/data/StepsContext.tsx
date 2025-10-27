@@ -303,7 +303,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setSelectedStepId(steps[newSelectedIndex].id);
       }
     },
-    [steps, selectedStepId]
+    [steps, selectedStepId],
   );
 
   // Duplicar etapa
@@ -321,7 +321,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setSteps(prev => [...prev, newStep]);
       }
     },
-    [steps]
+    [steps],
   );
 
   // Reordenar etapas
@@ -344,7 +344,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       setSteps(updatedSteps);
     },
-    [steps]
+    [steps],
   );
 
   // Popular etapa com blocos padrão (implementação simplificada)
@@ -358,8 +358,8 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       prev.map(step =>
         step.id === stepId
           ? { ...step, blocksCount: step.blocksCount + 3 } // Suponha que adicionamos 3 blocos
-          : step
-      )
+          : step,
+      ),
     );
   }, []);
 
@@ -368,7 +368,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     (stepId: string) => {
       return steps.find(step => step.id === stepId);
     },
-    [steps]
+    [steps],
   );
 
   return (

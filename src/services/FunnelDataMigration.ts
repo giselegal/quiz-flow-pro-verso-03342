@@ -37,7 +37,7 @@ const logger = {
     },
     warn: (message: string, data?: any, context?: string) => {
         console.warn(`[${context || 'Migration'}] WARN: ${message}`, data || '');
-    }
+    },
 };
 
 // ============================================================================
@@ -70,7 +70,7 @@ class FunnelDataMigrationService {
             logger.info('Checking migration status', {
                 currentVersion,
                 requiredVersion: CURRENT_MIGRATION_VERSION,
-                hasLegacyData
+                hasLegacyData,
             }, 'Migration');
 
             return currentVersion < CURRENT_MIGRATION_VERSION && hasLegacyData;
@@ -118,7 +118,7 @@ class FunnelDataMigrationService {
         try {
             logger.info('Starting funnel data migration', {
                 fromVersion: this.getCurrentMigrationVersion(),
-                toVersion: CURRENT_MIGRATION_VERSION
+                toVersion: CURRENT_MIGRATION_VERSION,
             }, 'Migration');
 
             // Step 1: Backup existing localStorage data
@@ -144,7 +144,7 @@ class FunnelDataMigrationService {
             logger.info('Migration completed successfully', {
                 migratedFunnels: result.migratedFunnels,
                 migratedSettings: result.migratedSettings,
-                duration: result.duration
+                duration: result.duration,
             }, 'Migration');
 
         } catch (error) {
@@ -160,10 +160,10 @@ class FunnelDataMigrationService {
                     appState: {
                         migratedFunnels: result.migratedFunnels,
                         migratedSettings: result.migratedSettings,
-                        duration: result.duration
+                        duration: result.duration,
                     },
-                    stackTrace: error instanceof Error ? error.stack : undefined
-                }
+                    stackTrace: error instanceof Error ? error.stack : undefined,
+                },
             );
             globalFunnelErrorHandler.handleError(migrationError);
 
@@ -171,7 +171,7 @@ class FunnelDataMigrationService {
                 error,
                 duration: result.duration,
                 migratedFunnels: result.migratedFunnels,
-                migratedSettings: result.migratedSettings
+                migratedSettings: result.migratedSettings,
             }, 'Migration');
 
             // Attempt rollback
@@ -200,7 +200,7 @@ class FunnelDataMigrationService {
 
             localStorage.setItem(LEGACY_BACKUP_KEY, JSON.stringify(backup));
             logger.info('Legacy data backup created', {
-                settingsCount: Object.keys(backup.settings).length
+                settingsCount: Object.keys(backup.settings).length,
             }, 'Migration');
 
         } catch (error) {
@@ -238,7 +238,7 @@ class FunnelDataMigrationService {
                 } catch (error) {
                     logger.warn('Failed to migrate individual funnel', {
                         funnelId: legacyFunnel.id,
-                        error
+                        error,
                     }, 'Migration');
                 }
             }
@@ -276,7 +276,7 @@ class FunnelDataMigrationService {
             } catch (error) {
                 logger.warn('Failed to migrate settings for funnel', {
                     funnelId: funnel.id,
-                    error
+                    error,
                 }, 'Migration');
             }
         }
@@ -308,7 +308,7 @@ class FunnelDataMigrationService {
             }
 
             logger.info('Migration verification passed', {
-                verifiedFunnels: originalFunnels.length
+                verifiedFunnels: originalFunnels.length,
             }, 'Migration');
 
         } catch (error) {
@@ -402,7 +402,7 @@ class FunnelDataMigrationService {
             logger.info('Full backup created', {
                 funnels: funnels.length,
                 settings: Object.keys(settings).length,
-                size: backupString.length
+                size: backupString.length,
             }, 'Migration');
 
             return backupString;
@@ -414,8 +414,8 @@ class FunnelDataMigrationService {
                 {
                     operation: 'createFullBackup',
                     component: 'FunnelDataMigrationService',
-                    stackTrace: error instanceof Error ? error.stack : undefined
-                }
+                    stackTrace: error instanceof Error ? error.stack : undefined,
+                },
             );
             globalFunnelErrorHandler.handleError(backupError);
             logger.error('Failed to create backup', { error }, 'Migration');
@@ -442,7 +442,7 @@ class FunnelDataMigrationService {
 
             logger.info('Starting restore from backup', {
                 backupDate: backup.timestamp,
-                funnelsToRestore: backup.funnels.length
+                funnelsToRestore: backup.funnels.length,
             }, 'Migration');
 
             // Clear existing data
@@ -476,11 +476,11 @@ class FunnelDataMigrationService {
                     operation: 'restoreFromBackup',
                     component: 'FunnelDataMigrationService',
                     appState: {
-                        result: result,
-                        backupSize: backupString.length
+                        result,
+                        backupSize: backupString.length,
                     },
-                    stackTrace: error instanceof Error ? error.stack : undefined
-                }
+                    stackTrace: error instanceof Error ? error.stack : undefined,
+                },
             );
             globalFunnelErrorHandler.handleError(restoreError);
             logger.error('Restore failed', { error, result }, 'Migration');

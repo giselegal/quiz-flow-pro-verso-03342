@@ -91,7 +91,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
     prefetchNextSteps,
     isLoading: isLoadingTemplate,
     error: templateError,
-    clearCache
+    clearCache,
   } = useTemplateLoader();  // 🎯 NOVO: Carregar steps do bridge se tiver funnelId
   useEffect(() => {
     if (funnelId && !externalSteps) {
@@ -194,8 +194,8 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       ...prev,
       userProfile: {
         ...prev.userProfile,
-        userName: userName.trim()
-      }
+        userName: userName.trim(),
+      },
     }));
   }, []);
 
@@ -216,14 +216,14 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       userProfile: {
         ...prev.userProfile,
         resultStyle: primaryStyle?.id || primaryStyleId,
-        secondaryStyles: secondaryStylesObjects.map(s => s.id)
-      }
+        secondaryStyles: secondaryStylesObjects.map(s => s.id),
+      },
     }));
 
     return {
-      primaryStyle: primaryStyle,
+      primaryStyle,
       secondaryStyles: secondaryStylesObjects,
-      scores
+      scores,
     };
   }, [state.answers]);
 
@@ -239,8 +239,8 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       ...prev,
       answers: {
         ...prev.answers,
-        [stepId]: selections
-      }
+        [stepId]: selections,
+      },
     }));
 
   const sourceStep = (externalSteps || loadedSteps || QUIZ_STEPS)[stepId];
@@ -269,9 +269,9 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
         ...prev.userProfile,
         strategicAnswers: {
           ...prev.userProfile.strategicAnswers,
-          [question]: answer
-        }
-      }
+          [question]: answer,
+        },
+      },
     }));
   }, []);
 
@@ -293,7 +293,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       'answer1': 'Montar looks com mais facilidade e confiança',
       'answer2': 'Usar o que já tenho e me sentir estilosa',
       'answer3': 'Ser admirada pela imagem que transmito',
-      'answer4': 'Comprar com mais consciência e sem culpa'
+      'answer4': 'Comprar com mais consciência e sem culpa',
     };
 
     return answerToKey[strategicAnswer] || 'Montar looks com mais facilidade e confiança';

@@ -23,12 +23,12 @@ const mockBlock: Block = {
     subtitle: 'Seu estilo é {resultStyle}',
     fontSize: 'text-xl',
     color: '#B89B7A',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   content: {
     htmlContent: '<p>Conteúdo com <strong>{userName}</strong> - {resultPercentage}% de afinidade</p>',
-    text: 'Texto simples aqui'
-  }
+    text: 'Texto simples aqui',
+  },
 };
 
 export default function TestQuizBuilderPage() {
@@ -41,7 +41,7 @@ export default function TestQuizBuilderPage() {
     if (selectedBlock && selectedBlock.id === blockId) {
       setSelectedBlock({
         ...selectedBlock,
-        ...updates
+        ...updates,
       });
     }
   };
@@ -69,7 +69,7 @@ export default function TestQuizBuilderPage() {
           <CardContent>
             <div className="flex gap-2 mb-4">
               <Button 
-                variant={selectedBlock ? "default" : "outline"}
+                variant={selectedBlock ? 'default' : 'outline'}
                 onClick={() => setSelectedBlock(mockBlock)}
               >
                 Selecionar Bloco de Teste
@@ -128,7 +128,7 @@ export default function TestQuizBuilderPage() {
                       <div 
                         className="mt-2"
                         dangerouslySetInnerHTML={{ 
-                          __html: selectedBlock.content?.htmlContent || selectedBlock.content?.text || 'Conteúdo não definido'
+                          __html: selectedBlock.content?.htmlContent || selectedBlock.content?.text || 'Conteúdo não definido',
                         }}
                       />
                     </div>

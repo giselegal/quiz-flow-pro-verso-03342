@@ -37,17 +37,17 @@ export const useStep01Validation = ({
       window.dispatchEvent(
         new CustomEvent('quiz-button-state-change', {
           detail: { buttonId, enabled, disabled: !enabled },
-        })
+        }),
       );
       // Compatibilidade com implementação anterior
       window.dispatchEvent(
         new CustomEvent('step01-button-state-change', {
           detail: { buttonId, enabled, disabled: !enabled },
-        })
+        }),
       );
       if (onButtonStateChange) onButtonStateChange(enabled);
     },
-    [buttonId, onButtonStateChange]
+    [buttonId, onButtonStateChange],
   );
 
   const handleNameValidation = useCallback(
@@ -70,7 +70,7 @@ export const useStep01Validation = ({
       const stepId = resolveCurrentStep();
       if (actions?.setStepValid) actions.setStepValid(stepId, isValid);
     },
-    [actions, emitButtonState, inputId, onNameValid, validateName]
+    [actions, emitButtonState, inputId, onNameValid, validateName],
   );
 
   const handleFormComplete = useCallback(
@@ -85,7 +85,7 @@ export const useStep01Validation = ({
       const stepId = resolveCurrentStep();
       if (actions?.setStepValid) actions.setStepValid(stepId, isValid);
     },
-    [actions, emitButtonState, onFormComplete, validateName]
+    [actions, emitButtonState, onFormComplete, validateName],
   );
 
   useEffect(() => {
@@ -103,10 +103,10 @@ export const useStep01Validation = ({
       window.dispatchEvent(
         new CustomEvent('quiz-input-change', {
           detail: { blockId: inputId, field: 'name', value: name, valid: isValid },
-        })
+        }),
       );
     },
-    [inputId, validateName]
+    [inputId, validateName],
   );
 
   return { validateName, dispatchNameValidation };

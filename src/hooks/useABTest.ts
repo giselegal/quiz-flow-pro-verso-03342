@@ -54,7 +54,7 @@ export const useABTest = (type: 'result' | 'sales') => {
             test.isActive &&
             test.type === type &&
             new Date(test.startDate) <= new Date() &&
-            (!test.endDate || new Date(test.endDate) >= new Date())
+            (!test.endDate || new Date(test.endDate) >= new Date()),
         );
 
         if (activeTests.length === 0) {
@@ -69,7 +69,7 @@ export const useABTest = (type: 'result' | 'sales') => {
         // Verificar se há correspondência de domínio
         const currentDomain = window.location.hostname;
         const domainMatch = test.variations.find(
-          variation => variation.domain && currentDomain.includes(variation.domain)
+          variation => variation.domain && currentDomain.includes(variation.domain),
         );
 
         if (domainMatch) {
@@ -133,7 +133,7 @@ export const useABTest = (type: 'result' | 'sales') => {
       localStorage.setItem(timestampKey, JSON.stringify(timestamps));
 
       console.log(
-        `Conversão registrada para teste ${activeTest.id}, variação ${currentVariation.id}`
+        `Conversão registrada para teste ${activeTest.id}, variação ${currentVariation.id}`,
       );
     } catch (error) {
       console.error('Erro ao registrar conversão:', error);

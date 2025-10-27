@@ -50,14 +50,14 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
           JSON.stringify({
             ...data,
             savedAt: new Date().toISOString(),
-          })
+          }),
         );
       } catch (error) {
         console.error('Erro ao salvar no localStorage:', error);
         setSaveError('Erro ao salvar localmente');
       }
     },
-    [localKey, persistToLocal]
+    [localKey, persistToLocal],
   );
 
   // Salvar dados no sessionStorage
@@ -71,14 +71,14 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
           JSON.stringify({
             ...data,
             savedAt: new Date().toISOString(),
-          })
+          }),
         );
       } catch (error) {
         console.error('Erro ao salvar no sessionStorage:', error);
         setSaveError('Erro ao salvar na sessão');
       }
     },
-    [sessionKey, persistToSession]
+    [sessionKey, persistToSession],
   );
 
   // Carregar dados do localStorage
@@ -132,7 +132,7 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
         setIsSaving(false);
       }
     },
-    [saveToLocal, saveToSession]
+    [saveToLocal, saveToSession],
   );
 
   // Carregar dados (principal)
@@ -196,7 +196,7 @@ export const useStorage = (quizId: string, options: StorageOptions = {}) => {
       if (!autoSave) return;
       debounce(`storage:${quizId}:autosave`, () => saveData(data), saveInterval);
     },
-    [autoSave, debounce, quizId, saveData, saveInterval]
+    [autoSave, debounce, quizId, saveData, saveInterval],
   );
 
   // Cleanup do timeout

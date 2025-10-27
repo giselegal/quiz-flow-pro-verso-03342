@@ -25,7 +25,7 @@ export class TemplateToQuizAdapter {
   private static createStepFromStage(
     stage: StageShared,
     component: ComponentSharedBase | null,
-    index: number
+    index: number,
   ): QuizStep {
     const stepId = stage.id.replace('stage-', '');
     const kind = component?.kind || component?.type || 'custom';

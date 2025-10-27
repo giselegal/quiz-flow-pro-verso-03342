@@ -38,12 +38,12 @@ export function startPeriodicVersionCheck(intervalMs = 120000) {
         onNewVersion: () => {
             console.info('[VersionCheck] Nova versão detectada, recarregando para sincronizar chunks.');
             window.location.reload();
-        }
+        },
     });
     return setInterval(() => checkBuildVersion({
         onNewVersion: () => {
             console.info('[VersionCheck] Nova versão detectada (interval), recarregando.');
             window.location.reload();
-        }
+        },
     }), intervalMs);
 }

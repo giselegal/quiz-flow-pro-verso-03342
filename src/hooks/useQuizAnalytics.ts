@@ -85,7 +85,7 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
         value: parseInt(stepId.replace('step-', ''), 10),
       });
     },
-    [trackEvent]
+    [trackEvent],
   );
 
   // Track when a step is completed
@@ -127,7 +127,7 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
         }
       }
     },
-    [stepStartTimes, trackEvent]
+    [stepStartTimes, trackEvent],
   );
 
   // Track when the entire quiz is completed
@@ -201,7 +201,7 @@ export const useQuizAnalytics = (): QuizAnalyticsHook => {
         }
       }
     },
-    [sessionStartTime, trackEvent]
+    [sessionStartTime, trackEvent],
   );
 
   // Get current analytics data

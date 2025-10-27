@@ -13,7 +13,7 @@ import {
   validateFunnelId,
   parseStepNumber,
   normalizeStageId,
-  generateInstanceKey
+  generateInstanceKey,
 } from './idValidation';
 
 /**
@@ -109,7 +109,7 @@ export const normalizeStageIdLabel = (stageId: string | null | undefined): strin
  */
 export const generateUniqueInstanceKey = (
   componentType: string,
-  stepNumber: number
+  stepNumber: number,
 ): string => {
   return generateInstanceKey(componentType, stepNumber);
 };

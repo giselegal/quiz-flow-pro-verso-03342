@@ -7,7 +7,7 @@ const keys = {
     list: () => [...keys.all, 'list'] as const,
     detail: (id: string) => [...keys.all, 'detail', id] as const,
     validate: (id: string) => [...keys.all, 'validate', id] as const,
-    history: (id: string) => [...keys.all, 'history', id] as const
+    history: (id: string) => [...keys.all, 'history', id] as const,
 };
 
 export function useTemplatesList() {
@@ -22,7 +22,7 @@ export function useCreateTemplate() {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: ({ name, slug }: { name: string; slug: string }) => templatesApi.create(name, slug),
-        onSuccess: () => { qc.invalidateQueries({ queryKey: keys.list() }); }
+        onSuccess: () => { qc.invalidateQueries({ queryKey: keys.list() }); },
     });
 }
 
@@ -33,7 +33,7 @@ export function useUpdateMeta(id: string) {
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: keys.detail(id) });
             qc.invalidateQueries({ queryKey: keys.list() });
-        }
+        },
     });
 }
 
@@ -41,7 +41,7 @@ export function useAddStage(id: string) {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (params: { type: string; afterStageId?: string; label?: string }) => templatesApi.addStage(id, params),
-        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) })
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) }),
     });
 }
 
@@ -49,7 +49,7 @@ export function useReorderStages(id: string) {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (orderedIds: string[]) => templatesApi.reorderStages(id, orderedIds),
-        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) })
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) }),
     });
 }
 
@@ -58,7 +58,7 @@ export function useAddStageComponent(templateId: string, stageId: string) {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (payload: { componentId?: string; component?: { type: string; props?: any; styleTokens?: any }; position?: number }) => templatesApi.addStageComponent(templateId, stageId, payload),
-        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(templateId) })
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(templateId) }),
     });
 }
 
@@ -66,7 +66,7 @@ export function useReorderStageComponents(templateId: string, stageId: string) {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (orderedIds: string[]) => templatesApi.reorderStageComponents(templateId, stageId, orderedIds),
-        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(templateId) })
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(templateId) }),
     });
 }
 
@@ -74,7 +74,7 @@ export function useRemoveStageComponent(templateId: string, stageId: string) {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (componentId: string) => templatesApi.removeStageComponent(templateId, stageId, componentId),
-        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(templateId) })
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(templateId) }),
     });
 }
 
@@ -82,7 +82,7 @@ export function useSetOutcomes(id: string) {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (outcomes: TemplateDraftShared['outcomes']) => templatesApi.setOutcomes(id, outcomes),
-        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) })
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) }),
     });
 }
 
@@ -90,7 +90,7 @@ export function useSetScoring(id: string) {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (scoring: Partial<TemplateDraftShared['logic']['scoring']>) => templatesApi.setScoring(id, scoring),
-        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) })
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) }),
     });
 }
 
@@ -98,7 +98,7 @@ export function useSetBranching(id: string) {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (rules: TemplateDraftShared['logic']['branching']) => templatesApi.setBranching(id, rules),
-        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) })
+        onSuccess: () => qc.invalidateQueries({ queryKey: keys.detail(id) }),
     });
 }
 
@@ -113,7 +113,7 @@ export function usePublish(id: string) {
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: keys.detail(id) });
             qc.invalidateQueries({ queryKey: keys.list() });
-        }
+        },
     });
 }
 
@@ -135,6 +135,6 @@ export function useUpdateComponentProps(componentId: string, templateId?: string
         mutationFn: (patch: Record<string, any>) => componentsApi.patch(componentId, patch),
         onSuccess: () => {
             if (templateId) qc.invalidateQueries({ queryKey: ['templates', 'detail', templateId] });
-        }
+        },
     });
 }

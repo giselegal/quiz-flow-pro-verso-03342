@@ -73,7 +73,7 @@ const minimalRegistry: Record<string, BlockDefinition> = {
             subtitle: 'Responda algumas perguntas e veja o resultado',
             showLogo: true,
             logoUrl: '',
-            textAlign: 'center'
+            textAlign: 'center',
         },
         propsSchema: [
             prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Descubra seu estilo' }),
@@ -84,9 +84,9 @@ const minimalRegistry: Record<string, BlockDefinition> = {
                 { value: 'left', label: 'Esquerda' },
                 { value: 'center', label: 'Centro' },
                 { value: 'right', label: 'Direita' },
-            ], { category: 'layout', default: 'center' })
-        ]
-    }
+            ], { category: 'layout', default: 'center' }),
+        ],
+    },
 };
 
 export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_ENV === 'test' ? minimalRegistry : {
@@ -110,7 +110,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             textColor: '#432818',
             iconColor: '#B89B7A',
             borderRadius: '0px',
-            padding: '16px'
+            padding: '16px',
         },
         propsSchema: [
             prop({ key: 'showCelebration', kind: 'switch', label: 'Mostrar Comemoração', category: 'content', default: true }),
@@ -122,24 +122,24 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                 { value: 'star', label: '⭐ Estrela' },
                 { value: 'heart', label: '💖 Coração' },
                 { value: 'award', label: '🥇 Medalha' },
-                { value: 'none', label: 'Nenhum' }
+                { value: 'none', label: 'Nenhum' },
             ], { category: 'style', default: 'trophy' }),
             select('iconSize', 'Tamanho do Ícone', [
                 { value: 'sm', label: 'Pequeno' },
                 { value: 'md', label: 'Médio' },
                 { value: 'lg', label: 'Grande' },
-                { value: 'xl', label: 'Extra Grande' }
+                { value: 'xl', label: 'Extra Grande' },
             ], { category: 'style', default: 'lg' }),
             prop({ key: 'showIcon', kind: 'switch', label: 'Mostrar Ícone', category: 'content', default: true }),
             select('alignment', 'Alinhamento', [
                 { value: 'left', label: 'Esquerda' },
                 { value: 'center', label: 'Centro' },
-                { value: 'right', label: 'Direita' }
+                { value: 'right', label: 'Direita' },
             ], { category: 'layout', default: 'center' }),
             prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#432818' }),
             prop({ key: 'iconColor', kind: 'color', label: 'Cor do Ícone', category: 'style', default: '#B89B7A' }),
             prop({ key: 'backgroundColor', kind: 'color', label: 'Cor de Fundo', category: 'style', default: 'transparent' }),
-        ]
+        ],
     },
     'step20-style-reveal': {
         type: 'step20-style-reveal',
@@ -162,7 +162,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             accentColor: '#B89B7A',
             borderRadius: 16,
             padding: 24,
-            animateReveal: true
+            animateReveal: true,
         },
         propsSchema: [
             prop({ key: 'showStyleName', kind: 'switch', label: 'Mostrar Nome do Estilo', category: 'content', default: true }),
@@ -171,7 +171,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             select('layout', 'Layout', [
                 { value: 'horizontal', label: 'Horizontal' },
                 { value: 'vertical', label: 'Vertical' },
-                { value: 'card', label: 'Card' }
+                { value: 'card', label: 'Card' },
             ], { category: 'layout', default: 'card' }),
             prop({ key: 'showImage', kind: 'switch', label: 'Mostrar Imagem', category: 'content', default: true }),
             prop({ key: 'imageUrl', kind: 'url', label: 'URL da Imagem', category: 'content', default: '' }),
@@ -181,8 +181,8 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'borderColor', kind: 'color', label: 'Cor da Borda', category: 'style', default: '#B89B7A' }),
             prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#432818' }),
             prop({ key: 'accentColor', kind: 'color', label: 'Cor de Destaque', category: 'style', default: '#B89B7A' }),
-            prop({ key: 'animateReveal', kind: 'switch', label: 'Animar Revelação', category: 'animation', default: true })
-        ]
+            prop({ key: 'animateReveal', kind: 'switch', label: 'Animar Revelação', category: 'animation', default: true }),
+        ],
     },
     'step20-user-greeting': {
         type: 'step20-user-greeting',
@@ -204,7 +204,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             nameColor: '#B89B7A',
             fontSize: 18,
             nameSize: 'larger',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
         },
         propsSchema: [
             prop({ key: 'greetingText', kind: 'text', label: 'Texto de Saudação', category: 'content', default: 'Parabéns' }),
@@ -218,16 +218,16 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             select('layout', 'Layout', [
                 { value: 'horizontal', label: 'Horizontal' },
                 { value: 'vertical', label: 'Vertical' },
-                { value: 'inline', label: 'Inline' }
+                { value: 'inline', label: 'Inline' },
             ], { category: 'layout', default: 'horizontal' }),
             select('alignment', 'Alinhamento', [
                 { value: 'left', label: 'Esquerda' },
                 { value: 'center', label: 'Centro' },
-                { value: 'right', label: 'Direita' }
+                { value: 'right', label: 'Direita' },
             ], { category: 'layout', default: 'center' }),
             prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#432818' }),
-            prop({ key: 'nameColor', kind: 'color', label: 'Cor do Nome', category: 'style', default: '#B89B7A' })
-        ]
+            prop({ key: 'nameColor', kind: 'color', label: 'Cor do Nome', category: 'style', default: '#B89B7A' }),
+        ],
     },
     'step20-compatibility': {
         type: 'step20-compatibility',
@@ -248,7 +248,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             trackColor: '#E5E7EB',
             layout: 'vertical',
             alignment: 'center',
-            showGlow: true
+            showGlow: true,
         },
         propsSchema: [
             prop({ key: 'showLabel', kind: 'switch', label: 'Mostrar Rótulo', category: 'content', default: true }),
@@ -257,20 +257,20 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'showProgressBar', kind: 'switch', label: 'Mostrar Barra de Progresso', category: 'content', default: true }),
             select('progressType', 'Tipo de Progresso', [
                 { value: 'circle', label: 'Circular' },
-                { value: 'linear', label: 'Linear' }
+                { value: 'linear', label: 'Linear' },
             ], { category: 'style', default: 'circle' }),
             select('size', 'Tamanho', [
                 { value: 'sm', label: 'Pequeno' },
                 { value: 'md', label: 'Médio' },
                 { value: 'lg', label: 'Grande' },
-                { value: 'xl', label: 'Extra Grande' }
+                { value: 'xl', label: 'Extra Grande' },
             ], { category: 'style', default: 'md' }),
             prop({ key: 'animated', kind: 'switch', label: 'Animado', category: 'animation', default: true }),
             prop({ key: 'countUp', kind: 'switch', label: 'Animação de Contagem', category: 'animation', default: true }),
             prop({ key: 'progressColor', kind: 'color', label: 'Cor do Progresso', category: 'style', default: '#B89B7A' }),
             prop({ key: 'textColor', kind: 'color', label: 'Cor do Texto', category: 'style', default: '#432818' }),
-            prop({ key: 'showGlow', kind: 'switch', label: 'Efeito Brilho', category: 'style', default: true })
-        ]
+            prop({ key: 'showGlow', kind: 'switch', label: 'Efeito Brilho', category: 'style', default: true }),
+        ],
     },
     'step20-secondary-styles': {
         type: 'step20-secondary-styles',
@@ -290,7 +290,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             cardBorder: '#E5E7EB',
             titleColor: '#432818',
             textColor: '#6B4F43',
-            percentageColor: '#B89B7A'
+            percentageColor: '#B89B7A',
         },
         propsSchema: [
             prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Estilos Complementares' }),
@@ -302,13 +302,13 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             select('gap', 'Espaçamento', [
                 { value: 'sm', label: 'Pequeno' },
                 { value: 'md', label: 'Médio' },
-                { value: 'lg', label: 'Grande' }
+                { value: 'lg', label: 'Grande' },
             ], { category: 'layout', default: 'md' }),
             prop({ key: 'showPercentage', kind: 'switch', label: 'Mostrar Porcentagem', category: 'content', default: true }),
             prop({ key: 'cardBackground', kind: 'color', label: 'Fundo do Card', category: 'style', default: '#FFFFFF' }),
             prop({ key: 'titleColor', kind: 'color', label: 'Cor do Título', category: 'style', default: '#432818' }),
-            prop({ key: 'percentageColor', kind: 'color', label: 'Cor da Porcentagem', category: 'style', default: '#B89B7A' })
-        ]
+            prop({ key: 'percentageColor', kind: 'color', label: 'Cor da Porcentagem', category: 'style', default: '#B89B7A' }),
+        ],
     },
     'step20-personalized-offer': {
         type: 'step20-personalized-offer',
@@ -331,7 +331,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             gradientTo: '#aa6b5d',
             ctaColor: '#B89B7A',
             ctaTextColor: '#FFFFFF',
-            textAlign: 'center'
+            textAlign: 'center',
         },
         propsSchema: [
             prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Pronto para Transformar Sua Imagem?' }),
@@ -347,18 +347,18 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                 { value: 'vertical', label: 'Vertical' },
                 { value: 'horizontal', label: 'Horizontal' },
                 { value: 'card', label: 'Card' },
-                { value: 'banner', label: 'Banner' }
+                { value: 'banner', label: 'Banner' },
             ], { category: 'layout', default: 'vertical' }),
             select('backgroundType', 'Tipo de Fundo', [
                 { value: 'solid', label: 'Cor Sólida' },
                 { value: 'gradient', label: 'Gradiente' },
-                { value: 'image', label: 'Imagem' }
+                { value: 'image', label: 'Imagem' },
             ], { category: 'style', default: 'gradient' }),
             prop({ key: 'gradientFrom', kind: 'color', label: 'Gradiente - Início', category: 'style', default: '#B89B7A' }),
             prop({ key: 'gradientTo', kind: 'color', label: 'Gradiente - Fim', category: 'style', default: '#aa6b5d' }),
             prop({ key: 'ctaColor', kind: 'color', label: 'Cor do Botão', category: 'style', default: '#B89B7A' }),
-            prop({ key: 'ctaTextColor', kind: 'color', label: 'Cor do Texto do Botão', category: 'style', default: '#FFFFFF' })
-        ]
+            prop({ key: 'ctaTextColor', kind: 'color', label: 'Cor do Texto do Botão', category: 'style', default: '#FFFFFF' }),
+        ],
     },
     'quiz-intro-header': {
         type: 'quiz-intro-header',
@@ -455,7 +455,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                     imageUrl: 'https://via.placeholder.com/256x256',
                     value: 'a',
                     category: 'Categoria A',
-                    points: 1
+                    points: 1,
                 },
                 {
                     id: 'option-2',
@@ -464,7 +464,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                     imageUrl: 'https://via.placeholder.com/256x256',
                     value: 'b',
                     category: 'Categoria B',
-                    points: 2
+                    points: 2,
                 },
             ],
 
@@ -992,8 +992,8 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'showAlert', kind: 'switch', label: 'Exibir Alerta', category: 'behavior', default: true }),
             prop({
                 key: 'spacing', kind: 'select', label: 'Espaçamento', category: 'layout', options: [
-                    { value: 'sm', label: 'Pequeno' }, { value: 'md', label: 'Médio' }, { value: 'lg', label: 'Grande' }
-                ], default: 'md'
+                    { value: 'sm', label: 'Pequeno' }, { value: 'md', label: 'Médio' }, { value: 'lg', label: 'Grande' },
+                ], default: 'md',
             }),
         ],
     },
@@ -1167,20 +1167,20 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                     id: 'opt-1',
                     text: 'Opção A',
                     imageUrl: '',
-                    value: 'a'
+                    value: 'a',
                 },
                 {
                     id: 'opt-2',
                     text: 'Opção B',
                     imageUrl: '',
-                    value: 'b'
-                }
+                    value: 'b',
+                },
             ],
             columns: 2,
             gridGap: 16,
             multipleSelection: false,
             showImages: true,
-            imagePosition: 'top'
+            imagePosition: 'top',
         },
         propsSchema: [
             prop({ key: 'title', kind: 'text', label: 'Título da Pergunta', category: 'content', default: 'Qual é a sua pergunta?' }),
@@ -1194,9 +1194,9 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                 key: 'imagePosition', kind: 'select', label: 'Posição da Imagem', category: 'layout', options: [
                     { value: 'top', label: 'Acima' },
                     { value: 'left', label: 'Esquerda' },
-                    { value: 'right', label: 'Direita' }
-                ], default: 'top'
-            })
+                    { value: 'right', label: 'Direita' },
+                ], default: 'top',
+            }),
         ],
     },
     'quiz-question-inline': {
@@ -1211,16 +1211,16 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                 {
                     id: 'opt-1',
                     text: 'Sim',
-                    value: 'yes'
+                    value: 'yes',
                 },
                 {
                     id: 'opt-2',
                     text: 'Não',
-                    value: 'no'
-                }
+                    value: 'no',
+                },
             ],
             layout: 'horizontal',
-            showImages: false
+            showImages: false,
         },
         propsSchema: [
             prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Pergunta inline?' }),
@@ -1229,10 +1229,10 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({
                 key: 'layout', kind: 'select', label: 'Layout', category: 'layout', options: [
                     { value: 'horizontal', label: 'Horizontal' },
-                    { value: 'vertical', label: 'Vertical' }
-                ], default: 'horizontal'
+                    { value: 'vertical', label: 'Vertical' },
+                ], default: 'horizontal',
             }),
-            prop({ key: 'showImages', kind: 'switch', label: 'Mostrar Imagens', category: 'content', default: false })
+            prop({ key: 'showImages', kind: 'switch', label: 'Mostrar Imagens', category: 'content', default: false }),
         ],
     },
 
@@ -1250,7 +1250,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             marginTop: 0,
             marginBottom: 0,
             marginLeft: 0,
-            marginRight: 0
+            marginRight: 0,
         },
         propsSchema: [
             prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'Conheça sua Mentora' }),
@@ -1260,7 +1260,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'marginTop', kind: 'number', label: 'Margem Superior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
             prop({ key: 'marginBottom', kind: 'number', label: 'Margem Inferior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
             prop({ key: 'marginLeft', kind: 'number', label: 'Margem Esquerda', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
-            prop({ key: 'marginRight', kind: 'number', label: 'Margem Direita', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 })
+            prop({ key: 'marginRight', kind: 'number', label: 'Margem Direita', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
         ],
     },
 
@@ -1280,7 +1280,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             marginTop: 0,
             marginBottom: 0,
             marginLeft: 0,
-            marginRight: 0
+            marginRight: 0,
         },
         propsSchema: [
             select('testimonialType', 'Tipo de Depoimento', [
@@ -1288,13 +1288,13 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
                 { value: 'sonia', label: 'Sonia Spier' },
                 { value: 'ana', label: 'Ana Carolina' },
                 { value: 'patricia', label: 'Patricia Lima' },
-                { value: 'custom', label: 'Customizado' }
+                { value: 'custom', label: 'Customizado' },
             ], { category: 'content', default: 'mariangela' }),
             select('cardStyle', 'Estilo do Card', [
                 { value: 'elegant', label: 'Elegante' },
                 { value: 'modern', label: 'Moderno' },
                 { value: 'minimal', label: 'Minimalista' },
-                { value: 'luxury', label: 'Luxuoso' }
+                { value: 'luxury', label: 'Luxuoso' },
             ], { category: 'style', default: 'elegant' }),
             prop({ key: 'showPhoto', kind: 'switch', label: 'Mostrar Foto', category: 'content', default: true }),
             prop({ key: 'showRating', kind: 'switch', label: 'Mostrar Avaliação', category: 'content', default: true }),
@@ -1304,7 +1304,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             prop({ key: 'marginTop', kind: 'number', label: 'Margem Superior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
             prop({ key: 'marginBottom', kind: 'number', label: 'Margem Inferior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
             prop({ key: 'marginLeft', kind: 'number', label: 'Margem Esquerda', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
-            prop({ key: 'marginRight', kind: 'number', label: 'Margem Direita', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 })
+            prop({ key: 'marginRight', kind: 'number', label: 'Margem Direita', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
         ],
     },
 
@@ -1326,7 +1326,7 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             marginTop: 0,
             marginBottom: 0,
             marginLeft: 0,
-            marginRight: 0
+            marginRight: 0,
         },
         propsSchema: [
             prop({ key: 'title', kind: 'text', label: 'Título', category: 'content', default: 'O que nossas clientes dizem' }),
@@ -1338,14 +1338,14 @@ export const blocksRegistry: Record<string, BlockDefinition> = process.env.NODE_
             select('layout', 'Layout', [
                 { value: 'cards', label: 'Cards' },
                 { value: 'list', label: 'Lista' },
-                { value: 'grid', label: 'Grade' }
+                { value: 'grid', label: 'Grade' },
             ], { category: 'layout', default: 'cards' }),
             prop({ key: 'backgroundColor', kind: 'color', label: 'Cor de Fundo', category: 'style', default: '#ffffff' }),
             prop({ key: 'accentColor', kind: 'color', label: 'Cor de Destaque', category: 'style', default: '#ec4899' }),
             prop({ key: 'marginTop', kind: 'number', label: 'Margem Superior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
             prop({ key: 'marginBottom', kind: 'number', label: 'Margem Inferior', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
             prop({ key: 'marginLeft', kind: 'number', label: 'Margem Esquerda', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
-            prop({ key: 'marginRight', kind: 'number', label: 'Margem Direita', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 })
+            prop({ key: 'marginRight', kind: 'number', label: 'Margem Direita', category: 'layout', min: 0, max: 200, step: 4, unit: 'px', default: 0 }),
         ],
     },
 };

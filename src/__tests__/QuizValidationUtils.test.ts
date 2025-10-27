@@ -11,7 +11,7 @@ import {
     validateCompleteFunnel,
     getValidStyleIds,
     getValidNextSteps,
-    OFFER_MAP_KEYS
+    OFFER_MAP_KEYS,
 } from '@/utils/quizValidationUtils';
 import { QUIZ_STEPS } from '@/data/quizSteps';
 
@@ -40,8 +40,8 @@ describe('🛡️ Quiz Validation Utils', () => {
                 questionText: 'Teste',
                 options: [
                     { id: 'invalido', text: 'Opção 1', value: 'invalido' },
-                    { id: 'clássico', text: 'Opção 2', value: 'clássico', image: 'test.jpg' }
-                ]
+                    { id: 'clássico', text: 'Opção 2', value: 'clássico', image: 'test.jpg' },
+                ],
             };
 
             const result = validateStyleIds(step);
@@ -57,8 +57,8 @@ describe('🛡️ Quiz Validation Utils', () => {
                 type: 'question' as const,
                 questionText: 'Teste',
                 options: [
-                    { id: 'clássico', text: 'Opção 1', value: 'clássico' } // Sem imagem
-                ]
+                    { id: 'clássico', text: 'Opção 1', value: 'clássico' }, // Sem imagem
+                ],
             };
 
             const result = validateStyleIds(step);
@@ -91,7 +91,7 @@ describe('🛡️ Quiz Validation Utils', () => {
                 id: 'step-01',
                 type: 'intro' as const,
                 title: 'Teste',
-                nextStep: 'step-99' // Não existe
+                nextStep: 'step-99', // Não existe
             };
 
             const result = validateNextStep(step);
@@ -105,7 +105,7 @@ describe('🛡️ Quiz Validation Utils', () => {
             const step21 = {
                 id: 'step-21',
                 type: 'offer' as const,
-                nextStep: null
+                nextStep: null,
             };
 
             const result21 = validateNextStep(step21 as any);
@@ -115,7 +115,7 @@ describe('🛡️ Quiz Validation Utils', () => {
             const step01 = {
                 id: 'step-01',
                 type: 'intro' as const,
-                nextStep: undefined
+                nextStep: undefined,
             };
 
             const result01 = validateNextStep(step01 as any);
@@ -127,7 +127,7 @@ describe('🛡️ Quiz Validation Utils', () => {
                 id: 'step-01',
                 type: 'intro' as const,
                 title: 'Teste',
-                nextStep: 'step-05' // Pula etapas
+                nextStep: 'step-05', // Pula etapas
             };
 
             const result = validateNextStep(step);
@@ -182,10 +182,10 @@ describe('🛡️ Quiz Validation Utils', () => {
                         title: 'Teste',
                         description: 'Teste',
                         buttonText: 'Teste',
-                        testimonial: { quote: 'Teste', author: 'Teste' }
-                    }
+                        testimonial: { quote: 'Teste', author: 'Teste' },
+                    },
                     // Faltam 3 chaves
-                }
+                },
             };
 
             const result = validateOfferMap(step);
@@ -203,27 +203,27 @@ describe('🛡️ Quiz Validation Utils', () => {
                         title: '', // Vazio
                         description: 'Teste',
                         buttonText: '', // Vazio
-                        testimonial: { quote: '', author: '' } // Vazio
+                        testimonial: { quote: '', author: '' }, // Vazio
                     },
                     'Usar o que já tenho e me sentir estilosa': {
                         title: 'Teste',
                         description: 'Teste',
                         buttonText: 'Teste',
-                        testimonial: { quote: 'Teste', author: 'Teste' }
+                        testimonial: { quote: 'Teste', author: 'Teste' },
                     },
                     'Comprar com mais consciência e sem culpa': {
                         title: 'Teste',
                         description: 'Teste',
                         buttonText: 'Teste',
-                        testimonial: { quote: 'Teste', author: 'Teste' }
+                        testimonial: { quote: 'Teste', author: 'Teste' },
                     },
                     'Ser admirada pela imagem que transmito': {
                         title: 'Teste',
                         description: 'Teste',
                         buttonText: 'Teste',
-                        testimonial: { quote: 'Teste', author: 'Teste' }
-                    }
-                }
+                        testimonial: { quote: 'Teste', author: 'Teste' },
+                    },
+                },
             };
 
             const result = validateOfferMap(step);
@@ -241,27 +241,27 @@ describe('🛡️ Quiz Validation Utils', () => {
                         title: 'Título sem variável', // Sem {userName}
                         description: 'Teste',
                         buttonText: 'Teste',
-                        testimonial: { quote: 'Teste', author: 'Teste' }
+                        testimonial: { quote: 'Teste', author: 'Teste' },
                     },
                     'Usar o que já tenho e me sentir estilosa': {
                         title: 'Teste',
                         description: 'Teste',
                         buttonText: 'Teste',
-                        testimonial: { quote: 'Teste', author: 'Teste' }
+                        testimonial: { quote: 'Teste', author: 'Teste' },
                     },
                     'Comprar com mais consciência e sem culpa': {
                         title: 'Teste',
                         description: 'Teste',
                         buttonText: 'Teste',
-                        testimonial: { quote: 'Teste', author: 'Teste' }
+                        testimonial: { quote: 'Teste', author: 'Teste' },
                     },
                     'Ser admirada pela imagem que transmito': {
                         title: 'Teste',
                         description: 'Teste',
                         buttonText: 'Teste',
-                        testimonial: { quote: 'Teste', author: 'Teste' }
-                    }
-                }
+                        testimonial: { quote: 'Teste', author: 'Teste' },
+                    },
+                },
             };
 
             const result = validateOfferMap(step);
@@ -291,7 +291,7 @@ describe('🛡️ Quiz Validation Utils', () => {
                 id: 'step-01',
                 type: 'intro' as const,
                 placeholder: 'Digite seu nome',
-                buttonText: 'Começar'
+                buttonText: 'Começar',
                 // formQuestion ausente
             };
 
@@ -306,7 +306,7 @@ describe('🛡️ Quiz Validation Utils', () => {
                 id: 'step-01',
                 type: 'intro' as const,
                 formQuestion: 'Qual é seu nome?',
-                buttonText: 'Começar'
+                buttonText: 'Começar',
                 // placeholder ausente
             };
 
@@ -321,7 +321,7 @@ describe('🛡️ Quiz Validation Utils', () => {
                 id: 'step-01',
                 type: 'intro' as const,
                 formQuestion: 'Qual é seu nome?',
-                placeholder: 'Digite seu nome'
+                placeholder: 'Digite seu nome',
                 // buttonText ausente
             };
 
@@ -350,7 +350,7 @@ describe('🛡️ Quiz Validation Utils', () => {
             // Os erros podem ser de warnings como falta de imagens
             const criticalErrors = result.errors.filter(e =>
                 !e.message.includes('não tem imagem') &&
-                !e.message.includes('padrão é 8 opções')
+                !e.message.includes('padrão é 8 opções'),
             );
 
             // Se ainda tiver erros críticos, falhar
@@ -365,7 +365,7 @@ describe('🛡️ Quiz Validation Utils', () => {
         }); it('deve detectar funnel incompleto', () => {
             const incompleteFunnel = {
                 'step-01': QUIZ_STEPS['step-01'],
-                'step-02': QUIZ_STEPS['step-02']
+                'step-02': QUIZ_STEPS['step-02'],
                 // Faltam 19 etapas
             };
 
@@ -385,13 +385,13 @@ describe('🛡️ Quiz Validation Utils', () => {
                     type: 'question' as const,
                     questionText: 'Teste',
                     options: [
-                        { id: 'invalido', text: 'Teste', value: 'invalido' } // ID inválido
-                    ]
+                        { id: 'invalido', text: 'Teste', value: 'invalido' }, // ID inválido
+                    ],
                 },
                 'step-21': {
                     type: 'offer' as const,
                     // offerMap ausente
-                }
+                },
             };
 
             const result = validateCompleteFunnel(faultyFunnel);

@@ -196,7 +196,7 @@ export const unpublishFunnel = async (funnelId: string): Promise<boolean> => {
  * Verifica se um funil está publicado
  */
 export const checkFunnelStatus = async (
-  funnelId: string
+  funnelId: string,
 ): Promise<{
   isPublished: boolean;
   publicUrl?: string;

@@ -62,42 +62,42 @@ export function useEditorConsolidated() {
     (type: BlockType, properties?: any) => {
       return store.addBlock(type, properties);
     },
-    [store]
+    [store],
   );
 
   const updateBlock = useCallback(
     (blockId: string, updates: any) => {
       store.updateBlock(blockId, updates);
     },
-    [store]
+    [store],
   );
 
   const removeBlock = useCallback(
     (blockId: string) => {
       store.removeBlock(blockId);
     },
-    [store]
+    [store],
   );
 
   const duplicateBlock = useCallback(
     (blockId: string) => {
       store.duplicateBlock(blockId);
     },
-    [store]
+    [store],
   );
 
   const reorderBlocks = useCallback(
     (startIndex: number, endIndex: number) => {
       store.reorderBlocks(startIndex, endIndex);
     },
-    [store]
+    [store],
   );
 
   const selectBlock = useCallback(
     (blockId: string | null) => {
       store.setSelectedBlock(blockId);
     },
-    [store]
+    [store],
   );
 
   // ============================================================================
@@ -108,21 +108,21 @@ export function useEditorConsolidated() {
     (name: string, position?: number) => {
       store.addStep(name, position);
     },
-    [store]
+    [store],
   );
 
   const removeStep = useCallback(
     (stepId: string) => {
       store.removeStep(stepId);
     },
-    [store]
+    [store],
   );
 
   const goToStep = useCallback(
     (stepId: string) => {
       store.setCurrentStep(stepId);
     },
-    [store]
+    [store],
   );
 
   const nextStep = useCallback(() => {
@@ -143,7 +143,7 @@ export function useEditorConsolidated() {
     (startIndex: number, endIndex: number) => {
       store.reorderSteps(startIndex, endIndex);
     },
-    [store]
+    [store],
   );
 
   // ============================================================================

@@ -75,20 +75,20 @@ describe('Editor Performance - Step Loading', () => {
                 stepId,
                 type: quizStep.type,
                 blocks,
-                time: stepEnd - stepStart
+                time: stepEnd - stepStart,
             };
         });
 
         const end = performance.now();
         const totalDuration = end - start;
 
-        console.log(`\n📊 Block Building Performance:`);
+        console.log('\n📊 Block Building Performance:');
         console.log(`Total time: ${totalDuration.toFixed(2)}ms`);
         console.log(`Average per step: ${(totalDuration / 21).toFixed(2)}ms`);
 
         const slowSteps = enrichedSteps.filter(s => s.time > 1);
         if (slowSteps.length > 0) {
-            console.log(`\n⚠️ Slow steps (>1ms):`);
+            console.log('\n⚠️ Slow steps (>1ms):');
             slowSteps.forEach(s => {
                 console.log(`  - ${s.stepId} (${s.type}): ${s.time.toFixed(2)}ms, ${s.blocks.length} blocks`);
             });
@@ -106,7 +106,7 @@ describe('Editor Performance - Step Loading', () => {
             return {
                 id: stepId,
                 type: quizStep?.type,
-                meta: quizStep
+                meta: quizStep,
             };
         });
 
@@ -116,7 +116,7 @@ describe('Editor Performance - Step Loading', () => {
 
         const totalEnd = performance.now();
 
-        console.log(`\n📊 Serialization Performance:`);
+        console.log('\n📊 Serialization Performance:');
         console.log(`Data preparation: ${(jsonStart - start).toFixed(2)}ms`);
         console.log(`JSON.stringify: ${(jsonEnd - jsonStart).toFixed(2)}ms`);
         console.log(`JSON size: ${(json.length / 1024).toFixed(2)}KB`);
@@ -145,7 +145,7 @@ describe('Editor Performance - Step Loading', () => {
         const memoryEnd = (performance as any).memory?.usedJSHeapSize || 0;
         const memoryDelta = memoryEnd - memoryStart;
 
-        console.log(`\n📊 Memory Impact:`);
+        console.log('\n📊 Memory Impact:');
         console.log(`Time: ${(end - start).toFixed(2)}ms`);
         if (memoryDelta > 0) {
             console.log(`Memory delta: ${(memoryDelta / 1024 / 1024).toFixed(2)}MB`);
@@ -169,14 +169,14 @@ describe('Editor Performance - Step Loading', () => {
             const state = {
                 id: stepId,
                 type: quizStep?.type,
-                blocks: []
+                blocks: [],
             };
 
             // Simular construção de blocks (como no useEffect)
             if (quizStep?.type === 'question') {
                 (state.blocks as any) = [
                     { type: 'heading', content: { text: quizStep.questionText } },
-                    { type: 'quiz-options', content: { options: quizStep.options || [] } }
+                    { type: 'quiz-options', content: { options: quizStep.options || [] } },
                 ];
             }
 
@@ -189,7 +189,7 @@ describe('Editor Performance - Step Loading', () => {
         const avg = mountTimes.reduce((a, b) => a + b, 0) / mountTimes.length;
         const max = Math.max(...mountTimes);
 
-        console.log(`\n📊 Component Mount Simulation:`);
+        console.log('\n📊 Component Mount Simulation:');
         console.log(`Total: ${total.toFixed(2)}ms`);
         console.log(`Average per step: ${avg.toFixed(2)}ms`);
         console.log(`Max single step: ${max.toFixed(2)}ms`);
@@ -211,12 +211,12 @@ describe('Editor Performance - Block Rendering', () => {
             id: step.id || 'unknown',
             type: step.type,
             optionsCount: step.options?.length || 0,
-            hasImages: step.options?.some((opt: any) => opt.image) || false
+            hasImages: step.options?.some((opt: any) => opt.image) || false,
         }));
 
         const end = performance.now();
 
-        console.log(`\n📊 Quiz Options Complexity:`);
+        console.log('\n📊 Quiz Options Complexity:');
         console.log(`Question steps: ${questionSteps.length}`);
         console.log(`Time to analyze: ${(end - start).toFixed(2)}ms`);
 
@@ -239,7 +239,7 @@ describe('Editor Performance - Block Rendering', () => {
             stepsWithImages: 0,
             stepsWithHTML: 0,
             stepsWithManyOptions: 0,
-            totalBlocks: 0
+            totalBlocks: 0,
         };
 
         STEP_ORDER.forEach(stepId => {
@@ -274,7 +274,7 @@ describe('Editor Performance - Block Rendering', () => {
             analysis.totalBlocks += blockCount;
         });
 
-        console.log(`\n📊 Render Complexity Analysis:`);
+        console.log('\n📊 Render Complexity Analysis:');
         console.log(`Total blocks: ${analysis.totalBlocks}`);
         console.log(`Avg blocks per step: ${(analysis.totalBlocks / 21).toFixed(1)}`);
         console.log(`Steps with images: ${analysis.stepsWithImages}`);

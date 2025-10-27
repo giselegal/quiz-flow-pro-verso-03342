@@ -19,13 +19,13 @@ export function validateBlockProperties(
     options?: {
         relatedBlocks?: any[];
         context?: Record<string, any>;
-    }
+    },
 ): ValidationResult {
     if (!properties) {
         return {
             isValid: false,
             errors: ['Propriedades não fornecidas'],
-            warnings: []
+            warnings: [],
         };
     }
 
@@ -34,7 +34,7 @@ export function validateBlockProperties(
         return {
             isValid: false,
             errors: ['Tipo de bloco não reconhecido'],
-            warnings: []
+            warnings: [],
         };
     }
 
@@ -43,7 +43,7 @@ export function validateBlockProperties(
         return {
             isValid: false,
             errors: ['Propriedades contêm referência circular'],
-            warnings: []
+            warnings: [],
         };
     }
 
@@ -56,7 +56,7 @@ export function validateBlockProperties(
  */
 export function getDefaultPropertiesForBlock(
     _blockType: BlockType,
-    context?: Record<string, any>
+    context?: Record<string, any>,
 ): Record<string, any> {
     const baseDefaults = getBaseDefaultProperties();
 
@@ -72,7 +72,7 @@ export function getDefaultPropertiesForBlock(
  */
 export function sanitizeBlockProperties(
     // validateBlockType: unused parameter
-    properties: Record<string, any>
+    properties: Record<string, any>,
 ): Record<string, any> {
     const sanitized = { ...properties };
 
@@ -144,7 +144,7 @@ function getValidatorForBlockType(blockType: BlockType) {
         // GERAIS
         'image-inline': validateImageInline,
         'spacer-inline': validateSpacerInline,
-        'legal-notice-inline': validateLegalNotice
+        'legal-notice-inline': validateLegalNotice,
     };
 
     return validators[blockType] || validateGeneric;
@@ -401,7 +401,7 @@ function isValidBlockType(blockType: string): blockType is BlockType {
         'step20-compatibility', 'step20-secondary-styles', 'step20-personalized-offer',
         'urgency-timer-inline', 'before-after-inline', 'bonus',
         'secure-purchase', 'value-anchoring', 'mentor-section-inline',
-        'image-inline', 'spacer-inline', 'legal-notice-inline'
+        'image-inline', 'spacer-inline', 'legal-notice-inline',
     ];
     return validTypes.includes(blockType as BlockType);
 }
@@ -508,7 +508,7 @@ function getBaseDefaultProperties(/* blockType: BlockType */): Record<string, an
     return {};
 }
 
-function applyContextualDefaults(baseDefaults: Record<string, any>, /* context: Record<string, any> */) {
+function applyContextualDefaults(baseDefaults: Record<string, any> /* context: Record<string, any> */) {
     // Aplicar contexto específico às propriedades padrão
     return { ...baseDefaults };
 }

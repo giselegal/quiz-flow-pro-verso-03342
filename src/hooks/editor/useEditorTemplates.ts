@@ -5,7 +5,7 @@ import { StorageService } from '@/services/core/StorageService';
 
 export const useEditorTemplates = (
   config: EditorConfig,
-  setConfig: (config: EditorConfig) => void
+  setConfig: (config: EditorConfig) => void,
 ): EditorTemplateActions => {
   const saveAsTemplate = useCallback(
     (name: string) => {
@@ -17,7 +17,7 @@ export const useEditorTemplates = (
         console.error('Error saving template:', error);
       }
     },
-    [config]
+    [config],
   );
 
   const loadTemplate = useCallback(
@@ -34,7 +34,7 @@ export const useEditorTemplates = (
         return false;
       }
     },
-    [setConfig]
+    [setConfig],
   );
 
   return {

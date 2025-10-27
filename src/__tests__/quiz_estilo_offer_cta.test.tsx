@@ -19,10 +19,10 @@ describe('CTA da oferta (step-21)', () => {
                     userName: 'Maria',
                     answers: {},
                     strategicAnswers: {
-                        'Qual desses resultados você mais gostaria de alcançar?': 'montar-looks-facilidade'
+                        'Qual desses resultados você mais gostaria de alcançar?': 'montar-looks-facilidade',
                     },
                     resultStyle: 'classico',
-                    secondaryStyles: []
+                    secondaryStyles: [],
                 } as any}
                 stepProps={{
                     type: 'offer',
@@ -31,11 +31,11 @@ describe('CTA da oferta (step-21)', () => {
                             title: '{userName}, solução para montar looks',
                             description: 'Oferta teste',
                             buttonText: 'Quero combinar minhas peças',
-                            testimonial: { quote: 'Ok', author: 'Tester' }
-                        }
-                    }
+                            testimonial: { quote: 'Ok', author: 'Tester' },
+                        },
+                    },
                 }}
-            />
+            />,
         );
 
         await waitFor(() => {

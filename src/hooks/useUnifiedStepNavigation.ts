@@ -105,7 +105,7 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
                     stepId: `step-${targetStep.toString().padStart(2, '0')}`,
                     hasBlocks: (stepBlocks[`step-${targetStep.toString().padStart(2, '0')}`]?.length
                         || stepBlocks[`step-${targetStep}`]?.length
-                        || 0)
+                        || 0),
                 });
             }
         }
@@ -149,7 +149,7 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
         // Dados do step atual
         currentStepBlocks,
         isCurrentStepValid,
-        isStepLoading: isLoading
+        isStepLoading: isLoading,
     };
 };
 

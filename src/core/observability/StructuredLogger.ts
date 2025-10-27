@@ -42,7 +42,7 @@ class StructuredLogger {
       enableRemote: !import.meta.env.DEV,
       maxBufferSize: 100,
       flushInterval: 30000, // 30s
-      ...config
+      ...config,
     };
 
     this.sessionId = this.generateSessionId();
@@ -73,7 +73,7 @@ class StructuredLogger {
   private createLogEntry(
     level: LogLevel, 
     message: string, 
-    context: Record<string, any> = {}
+    context: Record<string, any> = {},
   ): LogEntry {
     return {
       timestamp: Date.now(),
@@ -82,11 +82,11 @@ class StructuredLogger {
       context: {
         url: typeof window !== 'undefined' ? window.location.href : '',
         userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
-        ...context
+        ...context,
       },
       stack: level >= LogLevel.ERROR ? new Error().stack : undefined,
       userId: context.userId,
-      sessionId: this.sessionId
+      sessionId: this.sessionId,
     };
   }
 
@@ -196,7 +196,7 @@ class StructuredLogger {
         headers: {
           'Content-Type': 'application/json',
         },
-        body
+        body,
       });
     }
   }
@@ -232,7 +232,7 @@ export const useLogger = (component: string) => {
     error: (message: string, context = {}) => 
       structuredLogger.error(message, { component, ...context }),
     critical: (message: string, context = {}) => 
-      structuredLogger.critical(message, { component, ...context })
+      structuredLogger.critical(message, { component, ...context }),
   };
 };
 

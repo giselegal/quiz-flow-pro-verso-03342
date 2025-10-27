@@ -38,7 +38,7 @@ export const runImageUrlAnalysis = () => {
 
     // Resumo para visualização rápida
     console.table({
-      URL: url.substring(0, 50) + '...',
+      URL: `${url.substring(0, 50)  }...`,
       'É Cloudinary': analysis.isCloudinary ? '✅' : '❌',
       Formato: analysis.format,
       Qualidade: analysis.quality,

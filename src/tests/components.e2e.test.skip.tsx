@@ -20,21 +20,21 @@ vi.mock('@/components/ui/card', () => ({
     Card: ({ children, className }: any) => <div className={className} data-testid="card">{children}</div>,
     CardContent: ({ children, className }: any) => <div className={className} data-testid="card-content">{children}</div>,
     CardHeader: ({ children, className }: any) => <div className={className} data-testid="card-header">{children}</div>,
-    CardTitle: ({ children, className }: any) => <h3 className={className} data-testid="card-title">{children}</h3>
+    CardTitle: ({ children, className }: any) => <h3 className={className} data-testid="card-title">{children}</h3>,
 }));
 
 vi.mock('@/components/ui/button', () => ({
     Button: ({ children, onClick, className, ...props }: any) =>
-        <button onClick={onClick} className={className} {...props} data-testid="button">{children}</button>
+        <button onClick={onClick} className={className} {...props} data-testid="button">{children}</button>,
 }));
 
 vi.mock('@/components/ui/badge', () => ({
-    Badge: ({ children, className }: any) => <span className={className} data-testid="badge">{children}</span>
+    Badge: ({ children, className }: any) => <span className={className} data-testid="badge">{children}</span>,
 }));
 
 vi.mock('@/components/ui/alert', () => ({
     Alert: ({ children, className }: any) => <div className={className} data-testid="alert">{children}</div>,
-    AlertDescription: ({ children, className }: any) => <div className={className} data-testid="alert-description">{children}</div>
+    AlertDescription: ({ children, className }: any) => <div className={className} data-testid="alert-description">{children}</div>,
 }));
 
 vi.mock('@/components/ui/tabs', () => ({
@@ -44,7 +44,7 @@ vi.mock('@/components/ui/tabs', () => ({
     TabsTrigger: ({ children, value, className }: any) =>
         <button className={className} data-testid={`tab-${value}`} data-value={value}>{children}</button>,
     TabsContent: ({ children, value, className }: any) =>
-        <div className={className} data-testid={`tab-content-${value}`}>{children}</div>
+        <div className={className} data-testid={`tab-content-${value}`}>{children}</div>,
 }));
 
 // Mock dos hooks
@@ -54,19 +54,19 @@ vi.mock('@/hooks/canvas/useLiveCanvasPreview', () => ({
             isLoading: false,
             updateCount: 5,
             lastUpdate: Date.now(),
-            error: null
+            error: null,
         },
         debouncedSteps: [
-            { id: 'step1', type: 'question', title: 'Test Question' }
+            { id: 'step1', type: 'question', title: 'Test Question' },
         ],
         debouncedSelectedStepId: 'step1',
         updateSteps: vi.fn(),
         getPerformanceMetrics: () => ({
             renderTime: 45,
             cacheHitRate: 0.85,
-            websocketLatency: 120
-        })
-    })
+            websocketLatency: 120,
+        }),
+    }),
 }));
 
 vi.mock('@/hooks/performance/useAdvancedCache', () => ({
@@ -77,37 +77,37 @@ vi.mock('@/hooks/performance/useAdvancedCache', () => ({
         getMetrics: () => ({
             hitRate: 0.85,
             size: 42,
-            maxSize: 100
-        })
-    })
+            maxSize: 100,
+        }),
+    }),
 }));
 
 vi.mock('@/hooks/performance/useRenderOptimization', () => ({
     useRenderOptimization: () => ({
         config: {
             enableRenderProfiling: true,
-            enableVirtualization: true
+            enableVirtualization: true,
         },
         optimizeRender: vi.fn(),
         getProfile: () => ({
             renderCount: 15,
-            averageRenderTime: 45
-        })
-    })
+            averageRenderTime: 45,
+        }),
+    }),
 }));
 
 vi.mock('@/hooks/websocket/useAdvancedWebSocket', () => ({
     useAdvancedWebSocket: () => ({
         connectionState: {
             isConnected: true,
-            retryCount: 0
+            retryCount: 0,
         },
         sendMessage: vi.fn(),
         getMetrics: () => ({
             messagesSent: 25,
-            bytesTransferred: 1024
-        })
-    })
+            bytesTransferred: 1024,
+        }),
+    }),
 }));
 
 // Mock dos ícones Lucide
@@ -122,7 +122,7 @@ vi.mock('lucide-react', () => ({
     XCircle: () => <div data-testid="icon-x">❌</div>,
     AlertTriangle: () => <div data-testid="icon-alert">⚠️</div>,
     TrendingUp: () => <div data-testid="icon-trending-up">📈</div>,
-    TrendingDown: () => <div data-testid="icon-trending-down">📉</div>
+    TrendingDown: () => <div data-testid="icon-trending-down">📉</div>,
 }));
 
 describe('🧪 E2E - Componentes React do Sistema', () => {
@@ -141,11 +141,11 @@ describe('🧪 E2E - Componentes React do Sistema', () => {
 
             const mockProps = {
                 steps: [
-                    { id: 'step1', type: 'question', title: 'Test Question' }
+                    { id: 'step1', type: 'question', title: 'Test Question' },
                 ],
                 selectedStepId: 'step1',
                 onStepSelect: vi.fn(),
-                className: 'test-preview'
+                className: 'test-preview',
             };
 
             expect(() => {
@@ -357,7 +357,7 @@ describe('🧪 E2E - Componentes React do Sistema', () => {
             // Simular muitos dados
             const largeDataSet = Array.from({ length: 100 }, (_, i) => ({
                 id: i,
-                value: Math.random() * 100
+                value: Math.random() * 100,
             }));
 
             expect(() => {

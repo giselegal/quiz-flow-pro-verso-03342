@@ -129,8 +129,8 @@ export const usePureBuilderCompat = () => {
             },
             loadDefaultTemplate: () => {
                 console.log('🔄 usePureBuilderCompat: loadDefaultTemplate');
-            }
-        }
+            },
+        },
     };
 };
 

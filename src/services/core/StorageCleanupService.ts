@@ -58,7 +58,7 @@ class StorageCleanupService {
       migratedData: false,
       errors: [],
       sizeBefore: 0,
-      sizeAfter: 0
+      sizeAfter: 0,
     };
 
     try {
@@ -90,7 +90,7 @@ class StorageCleanupService {
         removedKeys: stats.removedKeys.length,
         preservedKeys: stats.preservedKeys.length,
         savedSpace: `${(savedSpace / 1024).toFixed(2)}KB`,
-        dryRun
+        dryRun,
       });
 
     } catch (error) {
@@ -244,7 +244,7 @@ class StorageCleanupService {
     try {
       const unifiedData = unifiedQuizStorage.loadData();
       const hasLegacyData = this.LEGACY_KEYS.some(key => 
-        StorageService.safeGetJSON(key) !== null
+        StorageService.safeGetJSON(key) !== null,
       );
       
       const hasUnifiedData = 
@@ -301,7 +301,7 @@ class StorageCleanupService {
       legacyKeys: 0,
       criticalKeys: 0,
       totalSize: 0,
-      keyDetails: [] as Array<{ key: string; size: number; type: 'legacy' | 'critical' | 'other' }>
+      keyDetails: [] as Array<{ key: string; size: number; type: 'legacy' | 'critical' | 'other' }>,
     };
 
     try {

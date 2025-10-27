@@ -14,10 +14,10 @@ export const simpleTestTemplate = {
   config: {
     globalConfig: {
       theme: {
-        primaryColor: "#0066CC",
-        secondaryColor: "#FF6B35"
-      }
-    }
+        primaryColor: '#0066CC',
+        secondaryColor: '#FF6B35',
+      },
+    },
   },
   
   steps: [
@@ -31,10 +31,10 @@ export const simpleTestTemplate = {
           id: 'intro-block-1',
           type: 'text',
           content: {
-            text: 'Olá! Este é um template de teste.'
-          }
-        }
-      ]
+            text: 'Olá! Este é um template de teste.',
+          },
+        },
+      ],
     },
     {
       stepNumber: 2,
@@ -45,12 +45,12 @@ export const simpleTestTemplate = {
           id: 'question-block-1',
           type: 'text',
           content: {
-            text: 'Esta é uma pergunta de teste?'
-          }
-        }
-      ]
-    }
-  ]
+            text: 'Esta é uma pergunta de teste?',
+          },
+        },
+      ],
+    },
+  ],
 };
 
 export default simpleTestTemplate;

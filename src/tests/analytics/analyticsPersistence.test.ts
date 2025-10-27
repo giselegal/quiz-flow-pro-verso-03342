@@ -9,7 +9,7 @@ if (!g.localStorage) {
         getItem: (k: string) => store[k] || null,
         setItem: (k: string, v: string) => { store[k] = v; },
         removeItem: (k: string) => { delete store[k]; },
-        clear: () => { Object.keys(store).forEach(k => delete store[k]); }
+        clear: () => { Object.keys(store).forEach(k => delete store[k]); },
     };
 }
 
@@ -29,7 +29,7 @@ describe('AnalyticsService persistence', () => {
 
     it('executa prune quando excede limite de eventos', async () => {
         for (let i = 0; i < 250; i++) {
-            await analyticsService.recordEvent('evt_' + i, 'u', 'f', {});
+            await analyticsService.recordEvent(`evt_${  i}`, 'u', 'f', {});
         }
         const stored = JSON.parse(localStorage.getItem('analytics.v1') || '{}');
         expect(stored.events.length).toBeLessThanOrEqual(200);

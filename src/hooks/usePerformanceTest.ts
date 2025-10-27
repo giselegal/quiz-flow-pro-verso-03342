@@ -87,12 +87,12 @@ const DEFAULT_THRESHOLDS: PerformanceThresholds = {
     memoryUsage: 70,  // %
     networkLatency: 300, // ms
     userInteractionLatency: 50, // ms
-    errorRate: 1 // %
+    errorRate: 1, // %
 };
 
 export function usePerformanceTest(
     componentName: string,
-    options: UsePerformanceTestOptions = {}
+    options: UsePerformanceTestOptions = {},
 ): PerformanceTestResult {
 
     const {
@@ -101,7 +101,7 @@ export function usePerformanceTest(
         thresholds = {},
         onAlert,
         trackMemoryLeaks = true,
-        trackNetworkCalls = true
+        trackNetworkCalls = true,
     } = options;
 
     // Estados
@@ -117,7 +117,7 @@ export function usePerformanceTest(
         bundleSize: 0,
         chunkLoadTime: 0,
         errorRate: 0,
-        errorCount: 0
+        errorCount: 0,
     });
 
     const [alerts, setAlerts] = useState<PerformanceAlert[]>([]);
@@ -146,7 +146,7 @@ export function usePerformanceTest(
             setMetrics(prev => ({
                 ...prev,
                 renderTime,
-                reRenderCount: renderCountRef.current
+                reRenderCount: renderCountRef.current,
             }));
         }
 
@@ -223,7 +223,7 @@ export function usePerformanceTest(
                 bundleSize,
                 chunkLoadTime,
                 errorRate,
-                errorCount
+                errorCount,
             };
 
             setMetrics(newMetrics);
@@ -253,7 +253,7 @@ export function usePerformanceTest(
                     value,
                     threshold,
                     message: `${metricKey} (${value.toFixed(2)}) exceeds threshold (${threshold})`,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 });
             }
         });
@@ -320,7 +320,7 @@ export function usePerformanceTest(
             bundleSize: 0,
             chunkLoadTime: 0,
             errorRate: 0,
-            errorCount: 0
+            errorCount: 0,
         });
         setAlerts([]);
         renderCountRef.current = 0;
@@ -336,7 +336,7 @@ export function usePerformanceTest(
             renderTime: Math.max(0, 100 - (metrics.renderTime / finalThresholds.renderTime) * 100),
             memoryUsage: Math.max(0, 100 - (metrics.memoryUsage / finalThresholds.memoryUsage) * 100),
             networkLatency: Math.max(0, 100 - (metrics.networkLatency / finalThresholds.networkLatency) * 100),
-            errorRate: Math.max(0, 100 - (metrics.errorRate / finalThresholds.errorRate) * 100)
+            errorRate: Math.max(0, 100 - (metrics.errorRate / finalThresholds.errorRate) * 100),
         };
 
         const overallScore = Object.values(scores).reduce((sum, score) => sum + score, 0) / Object.keys(scores).length;
@@ -349,12 +349,12 @@ export function usePerformanceTest(
                 overallScore: Math.round(overallScore),
                 testDuration,
                 totalAlerts: alerts.length,
-                criticalIssues: criticalAlerts.length
+                criticalIssues: criticalAlerts.length,
             },
             metrics,
             alerts,
             recommendations,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         };
     }, [alerts, testStartTime, metrics, finalThresholds]);
 
@@ -393,7 +393,7 @@ export function usePerformanceTest(
     // 💡 Gerar recomendações
     const generateRecommendations = useCallback((
         metrics: PerformanceMetrics,
-        alerts: PerformanceAlert[]
+        alerts: PerformanceAlert[],
     ): string[] => {
         const recommendations: string[] = [];
 
@@ -452,7 +452,7 @@ export function usePerformanceTest(
         startTest,
         stopTest,
         resetMetrics,
-        generateReport
+        generateReport,
     };
 }
 
@@ -461,5 +461,5 @@ export type {
     PerformanceAlert,
     PerformanceTestResult,
     PerformanceReport,
-    UsePerformanceTestOptions
+    UsePerformanceTestOptions,
 };

@@ -38,7 +38,7 @@ export const useSyncedScroll = ({ source, enabled = true }: UseSyncedScrollOptio
         syncScroll(source, lastScrollTop.current);
       });
     },
-    [enabled, isScrolling, source, syncScroll]
+    [enabled, isScrolling, source, syncScroll],
   );
 
   const scrollRef = getScrollRef();

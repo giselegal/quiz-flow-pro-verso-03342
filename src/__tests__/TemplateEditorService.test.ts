@@ -29,17 +29,17 @@ describe('TemplateEditorService', () => {
                 metadata: {
                     id: stepId,
                     name: 'Step 1 Modificado',
-                    description: 'Descrição teste'
+                    description: 'Descrição teste',
                 },
                 theme: {
-                    primaryColor: '#FF5722'
+                    primaryColor: '#FF5722',
                 },
                 sections: [
                     {
                         type: 'hero',
-                        blocks: []
-                    }
-                ]
+                        blocks: [],
+                    },
+                ],
             };
 
             const result = await TemplateEditorService.saveStepChanges(stepId, stepData);
@@ -53,7 +53,7 @@ describe('TemplateEditorService', () => {
             const stepId = 'step-01';
             const invalidStep = {
                 // Faltando campos obrigatórios
-                metadata: {}
+                metadata: {},
             };
 
             const result = await TemplateEditorService.saveStepChanges(stepId, invalidStep);
@@ -66,7 +66,7 @@ describe('TemplateEditorService', () => {
             const stepId = 'step-01';
             const stepData = {
                 metadata: { id: stepId, name: 'Test' },
-                sections: []
+                sections: [],
             };
 
             await TemplateEditorService.saveStepChanges(stepId, stepData);
@@ -86,9 +86,9 @@ describe('TemplateEditorService', () => {
             const validStep = {
                 metadata: {
                     id: 'step-01',
-                    name: 'Step válido'
+                    name: 'Step válido',
                 },
-                sections: []
+                sections: [],
             };
 
             // Método privado, testamos através do saveStepChanges
@@ -99,7 +99,7 @@ describe('TemplateEditorService', () => {
 
         it('deve rejeitar step sem metadata', () => {
             const invalidStep: any = {
-                sections: []
+                sections: [],
             };
 
             expect(invalidStep.metadata).toBeUndefined();
@@ -146,9 +146,9 @@ describe('TemplateEditorService', () => {
                 steps: {
                     'step-01': {
                         metadata: { id: 'step-01', name: 'Test' },
-                        sections: []
-                    }
-                }
+                        sections: [],
+                    },
+                },
             });
 
             const result = await TemplateEditorService.importMasterTemplate(validJson);
@@ -166,7 +166,7 @@ describe('TemplateEditorService', () => {
         }); it('deve rejeitar JSON sem templateVersion', async () => {
             const noVersionJson = JSON.stringify({
                 globalConfig: {},
-                steps: {}
+                steps: {},
             });
 
             const result = await TemplateEditorService.importMasterTemplate(noVersionJson);
@@ -259,7 +259,7 @@ describe('TemplateEditorService', () => {
         it('saveStepChanges deve completar em < 1s', async () => {
             const stepData = {
                 metadata: { id: 'step-01', name: 'Test' },
-                sections: []
+                sections: [],
             };
 
             const start = performance.now();
@@ -291,7 +291,7 @@ describe('TemplateEditorService', () => {
         it('deve recarregar HybridTemplateService após salvar', async () => {
             const stepData = {
                 metadata: { id: 'step-01', name: 'Test' },
-                sections: []
+                sections: [],
             };
 
             const result = await TemplateEditorService.saveStepChanges('step-01', stepData);

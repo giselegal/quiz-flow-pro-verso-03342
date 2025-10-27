@@ -45,7 +45,7 @@ export const analyzeImageUrl = (url: string) => {
           const qualityNum = parseInt(results.quality as string);
           if (qualityNum > 85) {
             results.suggestions.push(
-              'Consider using q_auto or reducing quality to 85 for better performance'
+              'Consider using q_auto or reducing quality to 85 for better performance',
             );
           }
         }
@@ -71,7 +71,7 @@ export const analyzeImageUrl = (url: string) => {
     } else {
       results.issues.push('No transformations found in Cloudinary URL');
       results.suggestions.push(
-        'Add optimization parameters like f_auto,q_auto,w_[appropriate width]'
+        'Add optimization parameters like f_auto,q_auto,w_[appropriate width]',
       );
     }
   } else {
@@ -111,7 +111,7 @@ export const checkRenderedImages = () => {
     const dpr = window.devicePixelRatio || 1;
     if (naturalWidth > displayWidth * 1.5 * dpr && displayWidth > 0) {
       issues.push(
-        `Oversized: ${naturalWidth}x${naturalHeight} natural size for ${displayWidth}x${displayHeight} display size`
+        `Oversized: ${naturalWidth}x${naturalHeight} natural size for ${displayWidth}x${displayHeight} display size`,
       );
     }
 

@@ -29,7 +29,7 @@ export function useComponentEditingState<TPatch extends Record<string, any> = Re
     componentId,
     serverProps,
     updateMutation,
-    debounceMs = 700
+    debounceMs = 700,
 }: UseComponentEditingStateParams<TPatch>): ComponentEditingState<TPatch> {
     const [localProps, setLocalProps] = useState<Record<string, any>>({});
     const [dirtyKeys, setDirtyKeys] = useState<Set<string>>(new Set());
@@ -74,7 +74,7 @@ export function useComponentEditingState<TPatch extends Record<string, any> = Re
             onSuccess: () => {
                 setLastSavedAt(Date.now());
                 setDirtyKeys(new Set());
-            }
+            },
         });
         if (now && debounceRef.current) {
             clearTimeout(debounceRef.current);
@@ -113,6 +113,6 @@ export function useComponentEditingState<TPatch extends Record<string, any> = Re
         markChange,
         flush,
         revertChanges,
-        buildPatch
+        buildPatch,
     };
 }

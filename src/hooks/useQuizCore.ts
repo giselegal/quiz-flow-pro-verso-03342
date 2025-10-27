@@ -98,11 +98,11 @@ const DEFAULT_CONFIGURATION: QuizConfiguration = {
     resultCategories: [
         { name: 'Iniciante', minScore: 0, maxScore: 40, description: 'Você está começando', recommendation: 'Continue praticando' },
         { name: 'Intermediário', minScore: 41, maxScore: 70, description: 'Bom conhecimento', recommendation: 'Aprofunde alguns tópicos' },
-        { name: 'Avançado', minScore: 71, maxScore: 100, description: 'Excelente conhecimento', recommendation: 'Você domina o assunto' }
+        { name: 'Avançado', minScore: 71, maxScore: 100, description: 'Excelente conhecimento', recommendation: 'Você domina o assunto' },
     ],
     passingScore: 60,
     allowRetry: true,
-    showScore: true
+    showScore: true,
 };
 
 export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuizCoreReturn => {
@@ -120,8 +120,8 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
             totalAnswers: 0,
             averageTimePerQuestion: 0,
             completionRate: 0,
-            abandonmentPoints: []
-        }
+            abandonmentPoints: [],
+        },
     }));
 
     // Calcular score atual
@@ -148,7 +148,7 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
     // Determinar categoria do resultado
     const determineResultCategory = useCallback((score: number) => {
         const category = state.configuration.resultCategories.find(cat =>
-            score >= cat.minScore && score <= cat.maxScore
+            score >= cat.minScore && score <= cat.maxScore,
         );
         return category || state.configuration.resultCategories[0];
     }, [state.configuration.resultCategories]);
@@ -161,20 +161,20 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
                 const newAnswers = new Map(prev.answers);
                 const fullAnswer: QuizAnswer = {
                     ...answerData,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 };
                 newAnswers.set(answerData.questionId, fullAnswer);
 
                 // Atualizar analytics
                 const newAnalytics = {
                     ...prev.analytics,
-                    totalAnswers: newAnswers.size
+                    totalAnswers: newAnswers.size,
                 };
 
                 return {
                     ...prev,
                     answers: newAnswers,
-                    analytics: newAnalytics
+                    analytics: newAnalytics,
                 };
             });
         }, []),
@@ -202,8 +202,8 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
                     answers: newAnswers,
                     analytics: {
                         ...prev.analytics,
-                        totalAnswers: newAnswers.size
-                    }
+                        totalAnswers: newAnswers.size,
+                    },
                 };
             });
         }, []),
@@ -216,8 +216,8 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
                 result: null,
                 analytics: {
                     ...prev.analytics,
-                    totalAnswers: 0
-                }
+                    totalAnswers: 0,
+                },
             }));
         }, []),
 
@@ -228,7 +228,7 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
                 endTime: null,
                 isCompleted: false,
                 result: null,
-                answers: new Map()
+                answers: new Map(),
             }));
         }, []),
 
@@ -243,7 +243,7 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
                 category: category.name,
                 recommendation: category.recommendation,
                 completedSteps: state.answers.size,
-                timeSpent: Math.round(timeSpent / 1000) // Convert to seconds
+                timeSpent: Math.round(timeSpent / 1000), // Convert to seconds
             };
 
             setState(prev => ({
@@ -254,8 +254,8 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
                 analytics: {
                     ...prev.analytics,
                     completionRate: 100,
-                    averageTimePerQuestion: prev.answers.size > 0 ? timeSpent / prev.answers.size / 1000 : 0
-                }
+                    averageTimePerQuestion: prev.answers.size > 0 ? timeSpent / prev.answers.size / 1000 : 0,
+                },
             }));
 
             return result;
@@ -274,15 +274,15 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
                     totalAnswers: 0,
                     averageTimePerQuestion: 0,
                     completionRate: 0,
-                    abandonmentPoints: []
-                }
+                    abandonmentPoints: [],
+                },
             }));
         }, []),
 
         updateConfiguration: useCallback((config: Partial<QuizConfiguration>) => {
             setState(prev => ({
                 ...prev,
-                configuration: { ...prev.configuration, ...config }
+                configuration: { ...prev.configuration, ...config },
             }));
         }, []),
 
@@ -311,7 +311,7 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
             // Validar se todas as etapas obrigatórias foram respondidas
             // Por agora, validação simples
             return state.answers.size >= 1; // Pelo menos 1 resposta
-        }, [state.answers.size])
+        }, [state.answers.size]),
     };
 
     // Atualizar score derivado no estado
@@ -319,7 +319,7 @@ export const useQuizCore = (initialConfig?: Partial<QuizConfiguration>): UseQuiz
         setState(prev => ({ ...prev, currentScore }));
     }, [currentScore]); return {
         ...state,
-        actions
+        actions,
     };
 };
 

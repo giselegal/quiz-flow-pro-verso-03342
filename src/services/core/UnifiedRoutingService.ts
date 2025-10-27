@@ -39,7 +39,7 @@ class UnifiedRoutingServiceImpl {
             description: 'Visão geral das métricas e KPIs',
             icon: 'BarChart3',
             protected: true,
-            breadcrumbs: [{ label: 'Admin', path: '/admin/dashboard' }]
+            breadcrumbs: [{ label: 'Admin', path: '/admin/dashboard' }],
         },
 
         '/admin/funnels': {
@@ -51,8 +51,8 @@ class UnifiedRoutingServiceImpl {
             protected: true,
             breadcrumbs: [
                 { label: 'Admin', path: '/admin/dashboard' },
-                { label: 'Funis', path: '/admin/funnels' }
-            ]
+                { label: 'Funis', path: '/admin/funnels' },
+            ],
         },
 
         '/admin/funnels/:id/edit': {
@@ -65,8 +65,8 @@ class UnifiedRoutingServiceImpl {
             breadcrumbs: [
                 { label: 'Admin', path: '/admin/dashboard' },
                 { label: 'Funis', path: '/admin/funnels' },
-                { label: 'Editar', path: '#' }
-            ]
+                { label: 'Editar', path: '#' },
+            ],
         },
 
         '/admin/analytics': {
@@ -78,8 +78,8 @@ class UnifiedRoutingServiceImpl {
             protected: true,
             breadcrumbs: [
                 { label: 'Admin', path: '/admin/dashboard' },
-                { label: 'Analytics', path: '/admin/analytics' }
-            ]
+                { label: 'Analytics', path: '/admin/analytics' },
+            ],
         },
 
         // STANDALONE EDITOR ROUTES
@@ -89,7 +89,7 @@ class UnifiedRoutingServiceImpl {
             title: 'Editor Visual',
             description: 'Editor visual independente',
             icon: 'Layout',
-            breadcrumbs: [{ label: 'Editor', path: '/editor' }]
+            breadcrumbs: [{ label: 'Editor', path: '/editor' }],
         },
 
         '/editor/:id': {
@@ -100,9 +100,9 @@ class UnifiedRoutingServiceImpl {
             icon: 'Edit',
             breadcrumbs: [
                 { label: 'Editor', path: '/editor' },
-                { label: 'Funil', path: '#' }
-            ]
-        }
+                { label: 'Funil', path: '#' },
+            ],
+        },
     };
 
     // ========================================================================
@@ -132,7 +132,7 @@ class UnifiedRoutingServiceImpl {
             currentRoute: path,
             previousRoute: this.getCurrentRoute(),
             returnTo,
-            params
+            params,
         };
 
         // Executar navegação (SPA) e notificar o router (wouter escuta 'popstate')
@@ -162,7 +162,7 @@ class UnifiedRoutingServiceImpl {
 
         this.navigate(editorPath, {
             returnTo: returnToAdmin ? '/admin/funnels' : undefined,
-            params: { funnelId, mode: 'admin-integrated' }
+            params: { funnelId, mode: 'admin-integrated' },
         });
     }
 

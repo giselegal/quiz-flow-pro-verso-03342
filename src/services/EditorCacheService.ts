@@ -73,7 +73,7 @@ export class EditorCacheService {
     const stats = cacheService.getStats();
     return {
       size: stats.stores.blocks.size,
-      keys: [] // LRU não expõe keys diretamente
+      keys: [], // LRU não expõe keys diretamente
     };
   }
 

@@ -27,7 +27,7 @@ export {
     validateData,
     validateBlockProperties,
     validateQuizData,
-    validateFunnelPage
+    validateFunnelPage,
 } from './ValidationEngine';
 
 // =============================================
@@ -56,7 +56,7 @@ export {
 
     // Validation helpers
     isValidColor,
-    isValidFontSize
+    isValidFontSize,
 } from './SanitizationUtils';
 
 // =============================================
@@ -69,7 +69,7 @@ export type {
     DetailedValidationError,
     ValidationOptions,
     ValidationRule,
-    ValidationPerformance
+    ValidationPerformance,
 } from '@/types/core';
 
 export {
@@ -77,7 +77,7 @@ export {
     createSuccessResult,
     createErrorResult,
     combineValidationResults,
-    convertLegacyErrors
+    convertLegacyErrors,
 } from '@/types/core';
 
 // =============================================
@@ -93,14 +93,14 @@ export {
 export async function validateBlockProperties_legacy(
     blockType: string,
     properties: Record<string, any> | null,
-    options?: { relatedBlocks?: any[]; context?: Record<string, any> }
+    options?: { relatedBlocks?: any[]; context?: Record<string, any> },
 ): Promise<import('@/types/core').UnifiedValidationResult> {
     const { validateBlockProperties } = await import('./ValidationEngine');
     const { ValidationContext } = await import('@/types/core');
 
     return validateBlockProperties(properties || {}, {
         context: ValidationContext.BLOCK_PROPERTIES,
-        relatedData: { blockType, ...options }
+        relatedData: { blockType, ...options },
     });
 }
 
@@ -116,7 +116,7 @@ export async function validateFunnelPage_legacy(page: any): Promise<import('@/ty
         errors.push({
             field: 'unknown',
             message: error,
-            severity: 'error'
+            severity: 'error',
         });
     });
 
@@ -124,7 +124,7 @@ export async function validateFunnelPage_legacy(page: any): Promise<import('@/ty
         errors.push({
             field: 'unknown',
             message: warning,
-            severity: 'warning'
+            severity: 'warning',
         });
     });
 
@@ -142,7 +142,7 @@ export async function validateQuizData_legacy(quizData: any): Promise<import('@/
         errors.push({
             field: 'questions',
             message: error,
-            severity: 'error'
+            severity: 'error',
         });
     });
 
@@ -171,7 +171,7 @@ export const quickValidate = {
         return {
             isValid: result.isValid,
             sanitized,
-            errors: result.errors
+            errors: result.errors,
         };
     },
 
@@ -185,7 +185,7 @@ export const quickValidate = {
         return {
             isValid: sanitized !== '',
             sanitized,
-            errors: sanitized === '' ? ['Invalid email format'] : []
+            errors: sanitized === '' ? ['Invalid email format'] : [],
         };
     },
 
@@ -199,7 +199,7 @@ export const quickValidate = {
         return {
             isValid: sanitized !== '',
             sanitized,
-            errors: sanitized === '' ? ['Invalid or unsafe URL'] : []
+            errors: sanitized === '' ? ['Invalid or unsafe URL'] : [],
         };
     },
 
@@ -215,9 +215,9 @@ export const quickValidate = {
         return {
             isValid,
             value: color,
-            errors: isValid ? [] : ['Invalid color format']
+            errors: isValid ? [] : ['Invalid color format'],
         };
-    }
+    },
 };
 
 // =============================================
@@ -236,7 +236,7 @@ export const migrationHelpers = {
             isValid: oldResult.isValid,
             errors: oldResult.errors,
             warnings: oldResult.warnings || [],
-            validatedAt: new Date()
+            validatedAt: new Date(),
         };
     },
 
@@ -247,8 +247,8 @@ export const migrationHelpers = {
         strict,
         sanitize,
         stopOnFirstError: strict,
-        measurePerformance: false
-    })
+        measurePerformance: false,
+    }),
 };
 
 // =============================================
@@ -264,7 +264,7 @@ export const VALIDATION_SYSTEM_INFO = {
         'src/utils/blockValidation.ts',
         'src/utils/schemaValidator.ts',
         'src/utils/calcResults.ts (validation parts)',
-        'src/utils/validateDataSync.ts'
+        'src/utils/validateDataSync.ts',
     ],
     features: [
         'Unified validation interface',
@@ -272,13 +272,13 @@ export const VALIDATION_SYSTEM_INFO = {
         'Performance optimization with caching',
         'Extensible rule system',
         'Legacy compatibility layer',
-        'Type-safe validation contexts'
+        'Type-safe validation contexts',
     ],
     benefits: [
         'Consistent validation across entire application',
         'Reduced code duplication (~500 lines consolidated)',
         'Improved security with centralized sanitization',
         'Better performance with intelligent caching',
-        'Easier testing and maintenance'
-    ]
+        'Easier testing and maintenance',
+    ],
 } as const;

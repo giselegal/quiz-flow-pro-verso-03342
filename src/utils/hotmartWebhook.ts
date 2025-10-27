@@ -177,7 +177,7 @@ export class HotmartWebhookManager {
         window.fbq('track', 'Purchase', purchaseEventData);
         console.log(
           '[Hotmart Webhook] Evento Purchase enviado ao Facebook Pixel:',
-          purchaseEventData
+          purchaseEventData,
         );
       }
 
@@ -204,7 +204,7 @@ export class HotmartWebhookManager {
       trackSaleConversion(
         data.data.purchase.price.value,
         data.data.purchase.price.currency_value,
-        data.data.purchase.product.name
+        data.data.purchase.product.name,
       );
 
       // Notificar outros sistemas se necessário
@@ -338,7 +338,7 @@ export class HotmartWebhookManager {
   // Notificar sistemas externos (CRM, etc.)
   private async notifyExternalSystems(
     data: HotmartWebhookData,
-    userData?: UserAnalyticsData | undefined
+    userData?: UserAnalyticsData | undefined,
   ): Promise<void> {
     try {
       // Aqui você pode adicionar integrações com CRM, Email Marketing, etc.
@@ -411,7 +411,7 @@ export const simulateHotmartWebhook = (email: string, transactionId?: string) =>
     event: 'PURCHASE_COMPLETE',
     data: {
       buyer: {
-        email: email,
+        email,
         name: 'Cliente Teste',
         document: '12345678900',
       },

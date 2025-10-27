@@ -99,7 +99,7 @@ export const useQuizQuestion = ({
 
       console.log('🎯 useQuizQuestion: Seleção adicionada:', { questionId, optionId, value });
     },
-    [questionId, currentStep, effectiveMaxSelections, saveAnswer]
+    [questionId, currentStep, effectiveMaxSelections, saveAnswer],
   );
 
   // Remover seleção
@@ -118,7 +118,7 @@ export const useQuizQuestion = ({
 
       console.log('🎯 useQuizQuestion: Seleção removida:', { questionId, optionId });
     },
-    [questionId, currentStepSelections, updateStepSelections]
+    [questionId, currentStepSelections, updateStepSelections],
   );
 
   // Limpar todas as seleções

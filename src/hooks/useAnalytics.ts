@@ -12,7 +12,7 @@ export const useAnalytics = () => {
     apiResponseTimes: { avg: 0, p95: 0, p99: 0, average: 0, history: [] },  
     memoryUsage: { current: 0, peak: 0, average: 0 },
     bundleSizes: { js: 0, css: 0, total: 0, perRoute: {} },
-    updatedAt: new Date()
+    updatedAt: new Date(),
   });
   const [isLoadingPerformance, setIsLoadingPerformance] = useState(false);
 
@@ -60,7 +60,7 @@ export const useAnalytics = () => {
     performanceMetrics,
     isLoadingPerformance,
     refreshPerformanceMetrics,
-    trackPerformanceMetric
+    trackPerformanceMetric,
   };
 };
 
@@ -75,7 +75,7 @@ export const useFunnelAnalytics = (funnelId?: string, userId?: string) => {
     uniqueUsers: 0,
     averageTimeToComplete: 0,
     dropoffRate: 0,
-    deviceBreakdown: { desktop: 0, mobile: 0, tablet: 0 }
+    deviceBreakdown: { desktop: 0, mobile: 0, tablet: 0 },
   });
   const [isLoadingMetrics, setIsLoadingMetrics] = useState(false);
   
@@ -94,7 +94,7 @@ export const useFunnelAnalytics = (funnelId?: string, userId?: string) => {
     funnelMetrics,
     isLoadingMetrics,
     trackFunnelStep,
-    refreshMetrics
+    refreshMetrics,
   };
 };
 
@@ -123,7 +123,7 @@ export const useABTest = (testId?: string, userId?: string) => {
     getVariant,
     trackConversion,
     trackEvent,
-    variant
+    variant,
   };
 };
 

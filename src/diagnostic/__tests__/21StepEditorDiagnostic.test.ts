@@ -14,15 +14,15 @@ const mockWindow: any = {
   __DISABLE_EDITOR_PERSISTENCE__: false,
   __REACT_DEVTOOLS_GLOBAL_HOOK__: true,
   __EDITOR_DIAGNOSTIC_RESULTS__: undefined,
-  run21StepDiagnostic: undefined
+  run21StepDiagnostic: undefined,
 };
 
 // Mock DOM methods
 const mockDocument = {
   querySelectorAll: (selector: string) => ({
-    length: selector.includes('editor') || selector.includes('Editor') ? 1 : 0
+    length: selector.includes('editor') || selector.includes('Editor') ? 1 : 0,
   }),
-  querySelector: (selector: string) => selector.includes('canvas') || selector.includes('Canvas')
+  querySelector: (selector: string) => selector.includes('canvas') || selector.includes('Canvas'),
 };
 
 describe('21-Step Editor Diagnostic System', () => {
@@ -56,7 +56,7 @@ describe('21-Step Editor Diagnostic System', () => {
     mockWindow.__EDITOR_CONTEXT_ERROR__ = {
       timestamp: new Date().toISOString(),
       location: 'test',
-      stackTrace: 'mock-stack'
+      stackTrace: 'mock-stack',
     };
 
     const results = run21StepDiagnostic();
@@ -74,7 +74,7 @@ describe('21-Step Editor Diagnostic System', () => {
       { requestedStep: 'invalid', timestamp: new Date() },
       { requestedStep: null, timestamp: new Date() },
       { requestedStep: undefined, timestamp: new Date() },
-      { requestedStep: 999, timestamp: new Date() } // 6 invalid attempts
+      { requestedStep: 999, timestamp: new Date() }, // 6 invalid attempts
     ];
 
     const results = run21StepDiagnostic();
@@ -104,7 +104,7 @@ describe('21-Step Editor Diagnostic System', () => {
     mockWindow.__EDITOR_STEP_ANALYSIS__ = {
       stepsWithBlocks: [1, 2, 3, 4, 5],
       stepsWithoutBlocks: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
-      stepHasBlocksMap: {}
+      stepHasBlocksMap: {},
     };
 
     results = run21StepDiagnostic();
@@ -117,7 +117,7 @@ describe('21-Step Editor Diagnostic System', () => {
     mockWindow.__EDITOR_STEP_ANALYSIS__ = {
       stepsWithBlocks: [1],
       stepsWithoutBlocks: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
-      stepHasBlocksMap: {}
+      stepHasBlocksMap: {},
     };
 
     results = run21StepDiagnostic();
@@ -143,7 +143,7 @@ describe('21-Step Editor Diagnostic System', () => {
       { rawStepId: 'invalid', timestamp: new Date() },
       { rawStepId: -1, timestamp: new Date() },
       { rawStepId: null, timestamp: new Date() },
-      { rawStepId: 999, timestamp: new Date() } // 4 invalid events
+      { rawStepId: 999, timestamp: new Date() }, // 4 invalid events
     ];
 
     const results = run21StepDiagnostic();

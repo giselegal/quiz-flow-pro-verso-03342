@@ -67,10 +67,10 @@ async function loadQuiz21StepsTemplate(): Promise<FullTemplate> {
       type: 'quiz',
       tags: ['fashion', 'personality', 'style', 'quiz', 'conversion'],
       author: 'Quiz Quest Team',
-      created: '2024-01-01'
+      created: '2024-01-01',
     },
     steps,
-    totalSteps
+    totalSteps,
   };
 
   console.log(`✅ [TemplateRegistry] Template carregado: ${totalSteps} etapas`);
@@ -91,14 +91,14 @@ async function loadTestTemplate(): Promise<FullTemplate> {
       type: 'quiz',
       tags: ['test'],
       author: 'Dev Team',
-      created: '2024-01-01'
+      created: '2024-01-01',
     },
     steps: {
       'step-1': [{ id: 'test-1', type: 'headline', content: { text: 'Teste 1' }, properties: {}, order: 1 }],
       'step-2': [{ id: 'test-2', type: 'headline', content: { text: 'Teste 2' }, properties: {}, order: 1 }],
-      'step-3': [{ id: 'test-3', type: 'headline', content: { text: 'Teste 3' }, properties: {}, order: 1 }]
+      'step-3': [{ id: 'test-3', type: 'headline', content: { text: 'Teste 3' }, properties: {}, order: 1 }],
     },
-    totalSteps: 3
+    totalSteps: 3,
   };
 }
 
@@ -115,10 +115,10 @@ async function loadLeadMagnetTemplate(): Promise<FullTemplate> {
       type: 'funnel',
       tags: ['lead-magnet', 'fashion'],
       author: 'Marketing Team',
-      created: '2024-01-01'
+      created: '2024-01-01',
     },
     steps: {},
-    totalSteps: 5
+    totalSteps: 5,
   };
 }
 
@@ -135,10 +135,10 @@ async function loadWebinarTemplate(): Promise<FullTemplate> {
       type: 'funnel',
       tags: ['webinar', 'signup'],
       author: 'Marketing Team',
-      created: '2024-01-01'
+      created: '2024-01-01',
     },
     steps: {},
-    totalSteps: 4
+    totalSteps: 4,
   };
 }
 
@@ -155,10 +155,10 @@ async function loadNPSTemplate(): Promise<FullTemplate> {
       type: 'survey',
       tags: ['nps', 'survey'],
       author: 'Analytics Team',
-      created: '2024-01-01'
+      created: '2024-01-01',
     },
     steps: {},
-    totalSteps: 6
+    totalSteps: 6,
   };
 }
 
@@ -175,10 +175,10 @@ async function loadROITemplate(): Promise<FullTemplate> {
       type: 'funnel',
       tags: ['calculator', 'roi'],
       author: 'Business Team',
-      created: '2024-01-01'
+      created: '2024-01-01',
     },
     steps: {},
-    totalSteps: 8
+    totalSteps: 8,
   };
 }
 
@@ -218,7 +218,7 @@ export function convertTemplateToEditorFormat(template: FullTemplate): any {
     id: template.id,
     name: template.name,
     steps: template.steps,
-    metadata: template.metadata
+    metadata: template.metadata,
   };
 }
 

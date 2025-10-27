@@ -12,17 +12,17 @@ export { EditorService } from './services/EditorService';
 
 export type {
   QuizAnalytics,
-  QuizSession
+  QuizSession,
 } from './services/QuizService';
 
 export type {
   FunnelAnalytics,
-  FunnelSession
+  FunnelSession,
 } from './services/FunnelService';
 
 export type {
   EditorHistory,
-  EditorSession
+  EditorSession,
 } from './services/EditorService';
 
 // Hooks
@@ -32,12 +32,12 @@ export { useFunnel } from './hooks/useFunnel';
 
 export type {
   UseQuizState,
-  UseQuizActions
+  UseQuizActions,
 } from './hooks/useQuiz';
 
 export type {
   UseFunnelState,
-  UseFunnelActions
+  UseFunnelActions,
 } from './hooks/useFunnel';
 
 // Note: UseEditor types removed - use EditorProvider types instead
@@ -87,7 +87,7 @@ export class ApplicationMonitor {
 
   async trackOperation<T>(
     operationName: string,
-    operation: () => Promise<T>
+    operation: () => Promise<T>,
   ): Promise<T> {
     const startTime = performance.now();
 
@@ -124,7 +124,7 @@ export class ApplicationMonitor {
         averageTime: data.calls > 0 ? data.totalTime / data.calls : 0,
         totalTime: data.totalTime,
         errors: data.errors,
-        errorRate: data.calls > 0 ? data.errors / data.calls : 0
+        errorRate: data.calls > 0 ? data.errors / data.calls : 0,
       };
     });
 
@@ -142,7 +142,7 @@ export class ApplicationError extends Error {
     message: string,
     public readonly service: string,
     public readonly operation: string,
-    public readonly originalError?: any
+    public readonly originalError?: any,
   ) {
     super(message);
     this.name = 'ApplicationError';
@@ -158,7 +158,7 @@ export const handleApplicationError = (error: any, context: string): Application
     error.message || 'An unexpected error occurred',
     context.split('.')[0],
     context.split('.')[1] || 'unknown',
-    error
+    error,
   );
 };
 
@@ -184,18 +184,18 @@ export interface ApplicationConfig {
 export const defaultApplicationConfig: ApplicationConfig = {
   autoSave: {
     enabled: true,
-    intervalMs: 30000 // 30 seconds
+    intervalMs: 30000, // 30 seconds
   },
   cache: {
     enabled: true,
-    ttlMs: 300000 // 5 minutes
+    ttlMs: 300000, // 5 minutes
   },
   analytics: {
-    enabled: true
+    enabled: true,
   },
   validation: {
-    strictMode: false
-  }
+    strictMode: false,
+  },
 };
 
 export class ApplicationConfigManager {
@@ -208,7 +208,7 @@ export class ApplicationConfigManager {
   static updateConfig(updates: Partial<ApplicationConfig>): void {
     ApplicationConfigManager.config = {
       ...ApplicationConfigManager.config,
-      ...updates
+      ...updates,
     };
   }
 
@@ -235,7 +235,7 @@ export const defaultFeatureFlags: FeatureFlags = {
   advancedAnalytics: true,
   aiAssistant: false,
   collaborativeEditing: false,
-  templateMarketplace: false
+  templateMarketplace: false,
 };
 
 export class FeatureFlagManager {
@@ -252,7 +252,7 @@ export class FeatureFlagManager {
   static updateFlags(updates: Partial<FeatureFlags>): void {
     FeatureFlagManager.flags = {
       ...FeatureFlagManager.flags,
-      ...updates
+      ...updates,
     };
   }
 

@@ -23,10 +23,10 @@ export const useOptimizedQuizFlow = () => {
     name: 'useOptimizedQuizFlow',
     replacement: 'useEditor from @/components/editor/EditorProviderUnified',
     removalDate: '2025-11-01',
-    migrationGuide: 'docs/QUICK_WIN_SERVICE_CONSOLIDATION.md'
+    migrationGuide: 'docs/QUICK_WIN_SERVICE_CONSOLIDATION.md',
   });
 
   throw new Error(
-    'useOptimizedQuizFlow is deprecated. Use useEditor() from @/components/editor/EditorProviderUnified instead.'
+    'useOptimizedQuizFlow is deprecated. Use useEditor() from @/components/editor/EditorProviderUnified instead.',
   );
 };

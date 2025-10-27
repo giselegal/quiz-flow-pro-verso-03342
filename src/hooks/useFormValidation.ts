@@ -85,7 +85,7 @@ export const useFormValidation = (formData: Record<string, string>) => {
     (fieldName: string, value: string) => {
       return validateField(fieldName, value);
     },
-    [validateField]
+    [validateField],
   );
 
   // Obter mensagem de validação de um campo
@@ -93,7 +93,7 @@ export const useFormValidation = (formData: Record<string, string>) => {
     (fieldName: string): ValidationResult => {
       return validationState[fieldName] || { isValid: false, message: '' };
     },
-    [validationState]
+    [validationState],
   );
 
   // Verificar se um campo específico é válido
@@ -101,7 +101,7 @@ export const useFormValidation = (formData: Record<string, string>) => {
     (fieldName: string): boolean => {
       return validationState[fieldName]?.isValid || false;
     },
-    [validationState]
+    [validationState],
   );
 
   // Obter resumo da validação

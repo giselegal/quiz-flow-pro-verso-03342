@@ -15,7 +15,7 @@ export const textInlineSchema = templates
     type: 'boolean',
     group: 'logic',
     default: false,
-    description: 'Quando ativado, permite interpolar placeholders como {userName} usando o contexto do funil.'
+    description: 'Quando ativado, permite interpolar placeholders como {userName} usando o contexto do funil.',
   } as BlockFieldSchema<boolean>)
   .version('2.0.0')
   .build();

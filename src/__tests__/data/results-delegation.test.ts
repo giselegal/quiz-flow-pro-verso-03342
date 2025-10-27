@@ -14,7 +14,7 @@ describe('DataService → ResultDataService delegation', () => {
 
   it('delegates saveQuizResult', async () => {
     const fake = {
-      id: 'r1', sessionId: 's1', funnelId: 'f1', userId: 'u1', score: 10, maxScore: 100, percentage: 10, answers: [], completedAt: new Date()
+      id: 'r1', sessionId: 's1', funnelId: 'f1', userId: 'u1', score: 10, maxScore: 100, percentage: 10, answers: [], completedAt: new Date(),
     };
     const spy = vi.spyOn(resultDataService, 'saveQuizResult').mockResolvedValue({ success: true, data: fake });
     const res = await dataService.saveQuizResult({ sessionId: 's1', funnelId: 'f1', userId: 'u1', score: 10, maxScore: 100, answers: [] });

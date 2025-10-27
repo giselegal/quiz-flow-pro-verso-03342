@@ -10,7 +10,7 @@ const isBrowser = typeof window !== 'undefined';
 function isValidUUID(value: string | null | undefined): value is string {
   if (!value) return false;
   return /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i.test(
-    value
+    value,
   );
 }
 
@@ -159,7 +159,7 @@ export const userResponseService = {
     if (!isValidUUID(response.sessionId)) {
       console.warn(
         '⚠️ Supabase disabled for this response: session_id is not a valid UUID, using local fallback.',
-        response.sessionId
+        response.sessionId,
       );
       const fallbackResponse: UserResponse = {
         id: `response_${Date.now()}`,
@@ -249,7 +249,7 @@ export const userResponseService = {
       try {
         StorageService.safeSetJSON(
           `quiz_response_${fallbackResponse.id}`,
-          fallbackResponse
+          fallbackResponse,
         );
         const componentKey =
           (response.data && (response.data.componentId || response.data.fieldName)) || undefined;
@@ -417,7 +417,7 @@ export const userResponseService = {
 
       return data.map(item => ({
         id: item.id,
-        userId: userId,
+        userId,
         sessionId: (item as any).session_id,
         step: `step-${item.step_number}`,
         data: (item as any).metadata || item.answer_text || item.answer_value || '',

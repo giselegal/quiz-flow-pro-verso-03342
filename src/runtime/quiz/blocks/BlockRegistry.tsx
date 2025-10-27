@@ -39,7 +39,7 @@ export const BlockRegistryProvider: React.FC<BlockRegistryProviderProps> = ({ de
         return {
             blocks: map,
             list: definitions.slice().sort((a, b) => a.label.localeCompare(b.label)),
-            get: (id: string) => map[id]
+            get: (id: string) => map[id],
         };
     }, [definitions]);
     return <BlockRegistryContext.Provider value={value}>{children}</BlockRegistryContext.Provider>;
@@ -69,7 +69,7 @@ export const ResultHeadlineBlock = defineBlock({
     schema: z.object({
         prefix: z.string().default('Seu estilo é'),
         highlight: z.string().default('{primaryStyle}'),
-        showSecondary: z.boolean().default(true)
+        showSecondary: z.boolean().default(true),
     }),
     defaultConfig: { prefix: 'Seu estilo é', highlight: '{primaryStyle}', showSecondary: true },
     render: ({ config }) => (
@@ -79,7 +79,7 @@ export const ResultHeadlineBlock = defineBlock({
             </h2>
             {config.showSecondary && <p className="text-xs opacity-70">Exploraremos também seus estilos secundários…</p>}
         </div>
-    )
+    ),
 });
 
 export const OfferCoreBlock = defineBlock({
@@ -91,7 +91,7 @@ export const OfferCoreBlock = defineBlock({
         description: z.string().default('Descrição da oferta personalizada.'),
         ctaLabel: z.string().default('Quero Acessar'),
         ctaUrl: z.string().url().default('https://exemplo.com'),
-        accent: z.string().default('#B89B7A')
+        accent: z.string().default('#B89B7A'),
     }),
     defaultConfig: { title: 'Oferta Especial', description: 'Descrição da oferta personalizada.', ctaLabel: 'Quero Acessar', ctaUrl: 'https://exemplo.com', accent: '#B89B7A' },
     render: ({ config }) => (
@@ -100,7 +100,7 @@ export const OfferCoreBlock = defineBlock({
             <p className="text-sm mb-2">{config.description}</p>
             <a href={config.ctaUrl} target="_blank" className="inline-block bg-primary text-primary-foreground text-xs px-3 py-1 rounded hover:opacity-90">{config.ctaLabel}</a>
         </div>
-    )
+    ),
 });
 
 // Lista de estilos secundários
@@ -112,7 +112,7 @@ export const ResultSecondaryListBlock = defineBlock({
         title: z.string().default('Outros estilos que combinam com você:'),
         bulletPrefix: z.string().default('•'),
         emptyText: z.string().default('Nenhum estilo secundário calculado'),
-        max: z.number().int().positive().max(10).default(3)
+        max: z.number().int().positive().max(10).default(3),
     }),
     defaultConfig: { title: 'Outros estilos que combinam com você:', bulletPrefix: '•', emptyText: 'Nenhum estilo secundário calculado', max: 3 },
     render: ({ config, state }) => {
@@ -127,7 +127,7 @@ export const ResultSecondaryListBlock = defineBlock({
                 ) : <p className="text-xs italic text-muted-foreground text-center">{config.emptyText}</p>}
             </div>
         );
-    }
+    },
 });
 
 // Urgência / Contagem regressiva simples (client-side)
@@ -139,7 +139,7 @@ export const OfferUrgencyBlock = defineBlock({
         deadlineISO: z.string().default(() => new Date(Date.now() + 3600_000).toISOString()),
         headline: z.string().default('Oferta expira em:'),
         expiredText: z.string().default('Oferta expirada'),
-        accent: z.string().default('#bd0000')
+        accent: z.string().default('#bd0000'),
     }),
     defaultConfig: { deadlineISO: new Date(Date.now() + 3600_000).toISOString(), headline: 'Oferta expira em:', expiredText: 'Oferta expirada', accent: '#bd0000' },
     render: ({ config }) => {
@@ -160,7 +160,7 @@ export const OfferUrgencyBlock = defineBlock({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 // Testimonial / Depoimento simples
@@ -171,7 +171,7 @@ export const OfferTestimonialBlock = defineBlock({
     schema: z.object({
         quote: z.string().default('Esse programa transformou minha relação com meu guarda-roupa!'),
         author: z.string().default('Aluna satisfeita'),
-        accent: z.string().default('#432818')
+        accent: z.string().default('#432818'),
     }),
     defaultConfig: { quote: 'Esse programa transformou minha relação com meu guarda-roupa!', author: 'Aluna satisfeita', accent: '#432818' },
     render: ({ config }) => (
@@ -181,7 +181,7 @@ export const OfferTestimonialBlock = defineBlock({
             </blockquote>
             <figcaption className="text-xs opacity-80">— {config.author}</figcaption>
         </figure>
-    )
+    ),
 });
 
 // ================= BLOCOS NORMALIZED (Fase de Migração) =================
@@ -195,7 +195,7 @@ export const HeroBlock = defineBlock({
         imageUrl: z.string().url().optional(),
         imageAlt: z.string().optional(),
         logoUrl: z.string().url().optional(),
-        logoAlt: z.string().optional()
+        logoAlt: z.string().optional(),
     }),
     defaultConfig: { titleHtml: '<strong>Bem-vinda</strong>' },
     render: ({ config }) => (
@@ -211,7 +211,7 @@ export const HeroBlock = defineBlock({
                 </div>
             )}
         </div>
-    )
+    ),
 });
 
 export const WelcomeFormBlock = defineBlock({
@@ -222,7 +222,7 @@ export const WelcomeFormBlock = defineBlock({
         questionLabel: z.string().default('Como posso te chamar?'),
         placeholder: z.string().default('Digite seu nome...'),
         buttonText: z.string().default('Começar'),
-        required: z.boolean().default(true)
+        required: z.boolean().default(true),
     }),
     defaultConfig: { questionLabel: 'Como posso te chamar?', placeholder: 'Digite seu nome...', buttonText: 'Começar', required: true },
     render: ({ config, state }) => {
@@ -253,7 +253,7 @@ export const WelcomeFormBlock = defineBlock({
                 </button>
             </form>
         );
-    }
+    },
 });
 
 export const QuestionBlock = defineBlock({
@@ -264,7 +264,7 @@ export const QuestionBlock = defineBlock({
         questionNumber: z.string().optional(),
         questionText: z.string().default('Pergunta'),
         requiredSelections: z.number().int().positive().default(1),
-        options: z.array(z.object({ id: z.string(), text: z.string(), image: z.string().optional() })).default([])
+        options: z.array(z.object({ id: z.string(), text: z.string(), image: z.string().optional() })).default([]),
     }),
     defaultConfig: { questionText: 'Pergunta', requiredSelections: 1, options: [] },
     render: ({ config, state }) => {
@@ -310,7 +310,7 @@ export const QuestionBlock = defineBlock({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 // Bloco de transição para avançar ao próximo passo/resultado
@@ -323,7 +323,7 @@ export const TransitionNextBlock = defineBlock({
         message: z.string().default('Pronta para ver seu resultado?'),
         paragraphs: z.array(z.string()).default([]),
         buttonLabel: z.string().default('Ver resultado'),
-        autoAdvanceMs: z.number().int().nonnegative().default(0)
+        autoAdvanceMs: z.number().int().nonnegative().default(0),
     }),
     defaultConfig: { title: 'Quase lá!', message: 'Pronta para ver seu resultado?', paragraphs: [], buttonLabel: 'Ver resultado', autoAdvanceMs: 0 },
     render: ({ config, state }) => {
@@ -359,7 +359,7 @@ export const TransitionNextBlock = defineBlock({
                 </button>
             </div>
         );
-    }
+    },
 });
 
 export const DEFAULT_BLOCK_DEFINITIONS: BlockDefinition<any>[] = [
@@ -373,7 +373,7 @@ export const DEFAULT_BLOCK_DEFINITIONS: BlockDefinition<any>[] = [
     ResultSecondaryListBlock,
     OfferCoreBlock,
     OfferUrgencyBlock,
-    OfferTestimonialBlock
+    OfferTestimonialBlock,
 ];
 
 // =============== REGISTROS COMPLEMENTARES (paridade com Canvas) ===============
@@ -386,7 +386,7 @@ export const ResultHeaderInlineBlock = defineBlock({
     category: 'resultado',
     schema: z.object({
         title: z.string().default('Seu Resultado:'),
-        subtitle: z.string().optional()
+        subtitle: z.string().optional(),
     }),
     defaultConfig: { title: 'Seu Resultado:' },
     render: ({ config }) => (
@@ -394,7 +394,7 @@ export const ResultHeaderInlineBlock = defineBlock({
             <h2 className="text-2xl font-bold text-slate-800">{config.title}</h2>
             {config.subtitle && <p className="text-sm text-slate-600">{config.subtitle}</p>}
         </div>
-    )
+    ),
 });
 
 export const StyleCardInlineBlock = defineBlock({
@@ -405,7 +405,7 @@ export const StyleCardInlineBlock = defineBlock({
         styleId: z.string().optional(),
         styleName: z.string().default('Seu Estilo'),
         image: z.string().url().optional(),
-        description: z.string().default('Descrição do estilo')
+        description: z.string().default('Descrição do estilo'),
     }),
     defaultConfig: { styleName: 'Seu Estilo', description: 'Descrição do estilo' },
     render: ({ config }) => (
@@ -414,7 +414,7 @@ export const StyleCardInlineBlock = defineBlock({
             {config.image && <img src={config.image} alt={config.styleName} className="w-full h-48 object-cover rounded-lg mb-3" />}
             <p className="text-sm text-slate-600">{config.description}</p>
         </div>
-    )
+    ),
 });
 
 export const SecondaryStylesInlineBlock = defineBlock({
@@ -423,7 +423,7 @@ export const SecondaryStylesInlineBlock = defineBlock({
     category: 'resultado',
     schema: z.object({
         styles: z.array(z.object({ id: z.string().optional(), name: z.string().optional(), score: z.number().optional() })).default([]),
-        max: z.number().default(2)
+        max: z.number().default(2),
     }),
     defaultConfig: { styles: [], max: 2 },
     render: ({ config, state }) => {
@@ -445,7 +445,7 @@ export const SecondaryStylesInlineBlock = defineBlock({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 export const QuizOfferCtaInlineBlock = defineBlock({
@@ -458,7 +458,7 @@ export const QuizOfferCtaInlineBlock = defineBlock({
         buttonText: z.string().default('Quero Aproveitar'),
         buttonUrl: z.string().url().default('#'),
         image: z.string().url().optional(),
-        offerKey: z.string().optional()
+        offerKey: z.string().optional(),
     }),
     defaultConfig: { title: 'Oferta Especial', description: 'Conteúdo exclusivo liberado', buttonText: 'Quero Aproveitar', buttonUrl: '#' },
     render: ({ config }) => (
@@ -472,7 +472,7 @@ export const QuizOfferCtaInlineBlock = defineBlock({
                 </button>
             </a>
         </div>
-    )
+    ),
 });
 
 export const ConversionInlineBlock = defineBlock({
@@ -482,7 +482,7 @@ export const ConversionInlineBlock = defineBlock({
     schema: z.object({
         headline: z.string().default('Pronta para transformar seu estilo?'),
         subheadline: z.string().default('Conheça nosso programa completo.'),
-        ctaText: z.string().default('Quero participar')
+        ctaText: z.string().default('Quero participar'),
     }),
     defaultConfig: { headline: 'Pronta para transformar seu estilo?', subheadline: 'Conheça nosso programa completo.', ctaText: 'Quero participar' },
     render: ({ config }) => (
@@ -491,7 +491,7 @@ export const ConversionInlineBlock = defineBlock({
             <p className="text-sm text-slate-600 mb-4">{config.subheadline}</p>
             <button type="button" className="px-6 py-3 rounded-md bg-[#B89B7A] text-white font-semibold">{config.ctaText}</button>
         </div>
-    )
+    ),
 });
 
 export const UrgencyTimerInlineBlock = defineBlock({
@@ -505,7 +505,7 @@ export const UrgencyTimerInlineBlock = defineBlock({
             <div className="text-sm font-medium text-red-700 mb-2">⏰ Oferta Expira em:</div>
             <div className="text-2xl font-bold text-red-600 font-mono">00:15:00</div>
         </div>
-    )
+    ),
 });
 
 export const GuaranteeInlineBlock = defineBlock({
@@ -519,7 +519,7 @@ export const GuaranteeInlineBlock = defineBlock({
             <div className="text-lg font-bold text-green-700 mb-2">✓ {config.title}</div>
             <p className="text-sm text-green-600">{config.description}</p>
         </div>
-    )
+    ),
 });
 
 export const BonusInlineBlock = defineBlock({
@@ -533,7 +533,7 @@ export const BonusInlineBlock = defineBlock({
             <div className="text-lg font-bold text-yellow-700 mb-2">🎁 {config.title}</div>
             <p className="text-sm text-yellow-600">{config.description}</p>
         </div>
-    )
+    ),
 });
 
 export const BenefitsInlineBlock = defineBlock({
@@ -554,7 +554,7 @@ export const BenefitsInlineBlock = defineBlock({
                 <div className="text-xs text-slate-400 italic">Nenhum benefício adicionado</div>
             )}
         </div>
-    )
+    ),
 });
 
 export const SecurePurchaseInlineBlock = defineBlock({
@@ -568,7 +568,7 @@ export const SecurePurchaseInlineBlock = defineBlock({
             <span>🔒</span>
             <span>{config.text}</span>
         </div>
-    )
+    ),
 });
 
 export const ValueAnchoringInlineBlock = defineBlock({
@@ -583,7 +583,7 @@ export const ValueAnchoringInlineBlock = defineBlock({
             <div className="text-3xl font-bold text-green-600">{config.newPrice}</div>
             <div className="text-sm text-red-600 font-medium">{config.discount}</div>
         </div>
-    )
+    ),
 });
 
 export const BeforeAfterInlineBlock = defineBlock({
@@ -605,7 +605,7 @@ export const BeforeAfterInlineBlock = defineBlock({
                 <p className="text-xs text-slate-700 mt-2">{config.afterText}</p>
             </div>
         </div>
-    )
+    ),
 });
 
 export const MentorSectionInlineBlock = defineBlock({
@@ -622,7 +622,7 @@ export const MentorSectionInlineBlock = defineBlock({
                 <p className="text-xs text-slate-600">{config.mentorBio}</p>
             </div>
         </div>
-    )
+    ),
 });
 
 // Estender a lista padrão com os registros complementares

@@ -123,7 +123,7 @@ export const useFunnelNavigation = () => {
       const blocksForStep = modern?.state?.stepBlocks?.[makeStepKey(digits)] || [];
       return Array.isArray(blocksForStep) && blocksForStep.length > 0;
     },
-    [modern?.state?.stepBlocks]
+    [modern?.state?.stepBlocks],
   );
 
   // Navegação para etapa específica
@@ -151,13 +151,13 @@ export const useFunnelNavigation = () => {
         window.dispatchEvent(
           new CustomEvent('funnel-navigation-change', {
             detail: { stepNumber, stageId: targetStageId, stepName: getStepName(stepNumber) },
-          })
+          }),
         );
       } catch (error) {
         console.error(`❌ Erro na navegação para etapa ${stepNumber}:`, error);
       }
     },
-    [setActiveStage, loadTemplateByStep, isLoadingTemplate, validateStepContent]
+    [setActiveStage, loadTemplateByStep, isLoadingTemplate, validateStepContent],
   );
 
   // Próxima etapa
@@ -191,7 +191,7 @@ export const useFunnelNavigation = () => {
           stageId: activeStageId,
           blocks: currentBlocks,
           timestamp: Date.now(),
-        })
+        }),
       );
 
       console.log(`✅ Etapa ${currentStepNumber} salva com sucesso`);

@@ -19,7 +19,7 @@ export const generateUniqueId = (context: IdContext): string => {
     stepNumber = 'default',
     blockId,
     type = 'block',
-    position
+    position,
   } = context;
 
   const step = String(stepNumber);
@@ -49,7 +49,7 @@ export const parseUniqueId = (id: string): IdContext | null => {
   return {
     stepNumber: step,
     type: type as 'block' | 'dropzone' | 'slot',
-    blockId: rest.join('-') || undefined
+    blockId: rest.join('-') || undefined,
   };
 };
 

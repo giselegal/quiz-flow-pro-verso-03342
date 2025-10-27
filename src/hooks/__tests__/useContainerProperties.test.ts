@@ -8,12 +8,12 @@ describe('useContainerProperties', () => {
       const properties = {
         containerWidth: 'medium' as const,
         spacing: 'normal' as const,
-        backgroundColor: 'white' as const
+        backgroundColor: 'white' as const,
       };
 
       const { result, rerender } = renderHook(
         (props) => useContainerProperties(props),
-        { initialProps: properties }
+        { initialProps: properties },
       );
 
       const firstResult = result.current;
@@ -49,7 +49,7 @@ describe('useContainerProperties', () => {
         containerPosition: 'left' as const,
         spacing: 'comfortable' as const,
         backgroundColor: 'gray-50' as const,
-        marginTop: 16
+        marginTop: 16,
       };
 
       const { result } = renderHook(() => useContainerProperties(properties));
@@ -64,7 +64,7 @@ describe('useContainerProperties', () => {
     it('should handle negative margins correctly', () => {
       const properties = {
         marginTop: -16,
-        marginBottom: -8
+        marginBottom: -8,
       };
 
       const { result } = renderHook(() => useContainerProperties(properties));
@@ -80,12 +80,12 @@ describe('useContainerProperties', () => {
       
       const properties = {
         containerWidth: 'medium' as const,
-        spacing: 'normal' as const
+        spacing: 'normal' as const,
       };
 
       const { rerender } = renderHook(
         (props) => useContainerProperties(props),
-        { initialProps: properties }
+        { initialProps: properties },
       );
 
       // Re-render with same properties multiple times

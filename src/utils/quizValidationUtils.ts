@@ -60,7 +60,7 @@ export function validateStyleIds(step: QuizStep & { id: string }): ValidationRes
             stepId: step.id,
             field: 'options',
             message: 'Pergunta não tem opções definidas',
-            severity: 'error'
+            severity: 'error',
         });
         return { isValid: false, errors, warnings };
     }
@@ -76,7 +76,7 @@ export function validateStyleIds(step: QuizStep & { id: string }): ValidationRes
                 stepId: step.id,
                 field: `options[${index}].id`,
                 message: `ID de opção inválido: "${option.id}". Deve ser um dos estilos válidos: ${validStyleIds.join(', ')}`,
-                severity: 'error'
+                severity: 'error',
             });
         }
 
@@ -86,7 +86,7 @@ export function validateStyleIds(step: QuizStep & { id: string }): ValidationRes
                 stepId: step.id,
                 field: `options[${index}].image`,
                 message: `Opção "${option.text}" não tem imagem. Perguntas principais devem ter imagens.`,
-                severity: 'warning'
+                severity: 'warning',
             });
         }
     });
@@ -97,14 +97,14 @@ export function validateStyleIds(step: QuizStep & { id: string }): ValidationRes
             stepId: step.id,
             field: 'options',
             message: `Pergunta tem ${step.options.length} opções. O padrão é 8 opções (uma para cada estilo).`,
-            severity: 'warning'
+            severity: 'warning',
         });
     }
 
     return {
         isValid: errors.length === 0,
         errors,
-        warnings
+        warnings,
     };
 }
 
@@ -114,7 +114,7 @@ export function validateStyleIds(step: QuizStep & { id: string }): ValidationRes
 export function getValidStyleIds(): Array<{ value: StyleId; label: string }> {
     return Object.entries(styleMapping).map(([id, style]) => ({
         value: id as StyleId,
-        label: style.name
+        label: style.name,
     }));
 }
 
@@ -142,7 +142,7 @@ export function validateNextStep(step: QuizStep & { id: string }, allStepIds?: s
                 stepId: step.id,
                 field: 'nextStep',
                 message: `Última etapa (${lastId}) deve ter nextStep = null`,
-                severity: 'error'
+                severity: 'error',
             });
         }
         return { isValid: errors.length === 0, errors, warnings };
@@ -154,7 +154,7 @@ export function validateNextStep(step: QuizStep & { id: string }, allStepIds?: s
             stepId: step.id,
             field: 'nextStep',
             message: 'nextStep é obrigatório (exceto na última etapa)',
-            severity: 'error'
+            severity: 'error',
         });
         return { isValid: false, errors, warnings };
     }
@@ -167,7 +167,7 @@ export function validateNextStep(step: QuizStep & { id: string }, allStepIds?: s
             stepId: step.id,
             field: 'nextStep',
             message: `nextStep "${step.nextStep}" não existe. Etapas válidas: ${ids.join(', ')}`,
-            severity: 'error'
+            severity: 'error',
         });
         return { isValid: false, errors, warnings };
     }
@@ -183,7 +183,7 @@ export function validateNextStep(step: QuizStep & { id: string }, allStepIds?: s
                 stepId: step.id,
                 field: 'nextStep',
                 message: `nextStep "${step.nextStep}" não segue a ordem sequencial. Esperado: "${ids[currentIndex + 1]}"`,
-                severity: 'warning'
+                severity: 'warning',
             });
         }
     }
@@ -191,7 +191,7 @@ export function validateNextStep(step: QuizStep & { id: string }, allStepIds?: s
     return {
         isValid: errors.length === 0,
         errors,
-        warnings
+        warnings,
     };
 }
 
@@ -209,7 +209,7 @@ export function getValidNextSteps(currentStepId: string): Array<{ value: string;
     // Retornar todas as etapas após a atual
     return STEP_ORDER.slice(currentIndex + 1).map(stepId => ({
         value: stepId,
-        label: `${stepId} (${QUIZ_STEPS[stepId]?.type || 'desconhecido'})`
+        label: `${stepId} (${QUIZ_STEPS[stepId]?.type || 'desconhecido'})`,
     }));
 }
 
@@ -224,7 +224,7 @@ export const OFFER_MAP_KEYS = [
     'Montar looks com mais facilidade e confiança',
     'Usar o que já tenho e me sentir estilosa',
     'Comprar com mais consciência e sem culpa',
-    'Ser admirada pela imagem que transmito'
+    'Ser admirada pela imagem que transmito',
 ];
 
 /**
@@ -247,7 +247,7 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
             stepId: step.id,
             field: 'offerMap',
             message: `offerMap é obrigatório para última etapa (${step.id})`,
-            severity: 'error'
+            severity: 'error',
         });
         return { isValid: false, errors, warnings };
     }
@@ -259,7 +259,7 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
                 stepId: step.id,
                 field: 'offerMap',
                 message: `Falta oferta para a chave: "${key}"`,
-                severity: 'error'
+                severity: 'error',
             });
         } else {
             // Verificar se a oferta está completa
@@ -270,7 +270,7 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
                     stepId: step.id,
                     field: `offerMap['${key}'].title`,
                     message: `Oferta "${key}" não tem título`,
-                    severity: 'error'
+                    severity: 'error',
                 });
             }
 
@@ -279,7 +279,7 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
                     stepId: step.id,
                     field: `offerMap['${key}'].description`,
                     message: `Oferta "${key}" não tem descrição`,
-                    severity: 'warning'
+                    severity: 'warning',
                 });
             }
 
@@ -288,7 +288,7 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
                     stepId: step.id,
                     field: `offerMap['${key}'].buttonText`,
                     message: `Oferta "${key}" não tem texto do botão`,
-                    severity: 'error'
+                    severity: 'error',
                 });
             }
 
@@ -298,7 +298,7 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
                     stepId: step.id,
                     field: `offerMap['${key}'].testimonial`,
                     message: `Oferta "${key}" não tem depoimento (testimonial)`,
-                    severity: 'warning'
+                    severity: 'warning',
                 });
             } else {
                 if (!offer.testimonial.quote) {
@@ -306,7 +306,7 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
                         stepId: step.id,
                         field: `offerMap['${key}'].testimonial.quote`,
                         message: `Depoimento da oferta "${key}" não tem citação (quote)`,
-                        severity: 'warning'
+                        severity: 'warning',
                     });
                 }
 
@@ -315,7 +315,7 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
                         stepId: step.id,
                         field: `offerMap['${key}'].testimonial.author`,
                         message: `Depoimento da oferta "${key}" não tem autor`,
-                        severity: 'warning'
+                        severity: 'warning',
                     });
                 }
             }
@@ -326,7 +326,7 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
                     stepId: step.id,
                     field: `offerMap['${key}'].title`,
                     message: `Título da oferta "${key}" não contém variável {userName} para personalização`,
-                    severity: 'warning'
+                    severity: 'warning',
                 });
             }
         }
@@ -335,7 +335,7 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
     return {
         isValid: errors.length === 0,
         errors,
-        warnings
+        warnings,
     };
 }
 
@@ -364,7 +364,7 @@ export function validateFormInput(step: QuizStep & { id: string }): ValidationRe
             stepId: step.id,
             field: 'formQuestion',
             message: 'formQuestion ausente – valor padrão aplicado (editar se necessário)',
-            severity: 'warning'
+            severity: 'warning',
         });
         defaulted.push('formQuestion');
     }
@@ -374,7 +374,7 @@ export function validateFormInput(step: QuizStep & { id: string }): ValidationRe
             stepId: step.id,
             field: 'placeholder',
             message: 'placeholder ausente – valor padrão aplicado',
-            severity: 'warning'
+            severity: 'warning',
         });
         defaulted.push('placeholder');
     }
@@ -384,7 +384,7 @@ export function validateFormInput(step: QuizStep & { id: string }): ValidationRe
             stepId: step.id,
             field: 'buttonText',
             message: 'buttonText ausente – valor padrão aplicado',
-            severity: 'warning'
+            severity: 'warning',
         });
         defaulted.push('buttonText');
     }
@@ -395,14 +395,14 @@ export function validateFormInput(step: QuizStep & { id: string }): ValidationRe
             stepId: step.id,
             field: 'title',
             message: 'Título é recomendado para a página inicial',
-            severity: 'warning'
+            severity: 'warning',
         });
     }
 
     return {
         isValid: errors.length === 0,
         errors,
-        warnings
+        warnings,
     };
 }
 
@@ -446,7 +446,7 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
             stepId: 'global',
             field: 'ids',
             message: 'IDs numéricos detectados e normalizados para formato step-XX',
-            severity: 'warning'
+            severity: 'warning',
         });
     }
     // Permitir agora funil de 20 ou 21 etapas (tornando step-21 opcional)
@@ -455,7 +455,7 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
             stepId: 'global',
             field: 'steps',
             message: `Funil deve ter ao menos 20 etapas. Encontradas: ${stepIds.length}`,
-            severity: 'error'
+            severity: 'error',
         });
     }
 
@@ -493,7 +493,7 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
                 stepId: 'global',
                 field: 'steps',
                 message: `Etapas obrigatórias faltando: ${missing.join(', ')}`,
-                severity: 'error'
+                severity: 'error',
             });
         }
     }
@@ -501,7 +501,7 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
     return {
         isValid: allErrors.length === 0,
         errors: allErrors,
-        warnings: allWarnings
+        warnings: allWarnings,
     };
 }
 

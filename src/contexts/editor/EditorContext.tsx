@@ -173,7 +173,7 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
       return {
         ...state,
         blocks: state.blocks.map(block =>
-          block.id === action.payload.id ? { ...block, ...action.payload.updates } : block
+          block.id === action.payload.id ? { ...block, ...action.payload.updates } : block,
         ),
       };
     case 'DELETE_BLOCK':
@@ -246,7 +246,7 @@ export const EditorProvider: React.FC<{
       console.log('🔗 Block created with funnelId:', currentFunnelId);
       return newBlock.id;
     },
-    [state.blocks.length, currentFunnelId]
+    [state.blocks.length, currentFunnelId],
   );
 
   const updateBlock = useCallback(async (id: string, content: any): Promise<void> => {
@@ -263,7 +263,7 @@ export const EditorProvider: React.FC<{
     const normalized = sorted.map((b, i) => ({ ...b, order: i }));
     console.log(
       '🧩 replaceBlocks ->',
-      normalized.map(b => ({ id: b.id, type: b.type, order: b.order }))
+      normalized.map(b => ({ id: b.id, type: b.type, order: b.order })),
     );
     dispatch({ type: 'SET_BLOCKS', payload: normalized });
   }, []);
@@ -313,12 +313,12 @@ export const EditorProvider: React.FC<{
 
       console.log(
         '✅ Blocos reordenados com sucesso:',
-        reorderedBlocks.map(b => ({ id: b.id, order: b.order }))
+        reorderedBlocks.map(b => ({ id: b.id, order: b.order })),
       );
 
       dispatch({ type: 'SET_BLOCKS', payload: reorderedBlocks });
     },
-    [state.blocks]
+    [state.blocks],
   );
 
   const setSelectedBlockId = useCallback((id: string | null) => {
@@ -337,14 +337,14 @@ export const EditorProvider: React.FC<{
     (id: string | null) => {
       setSelectedBlockId(id);
     },
-    [setSelectedBlockId]
+    [setSelectedBlockId],
   );
 
   const togglePreview = useCallback(
     (preview?: boolean) => {
       setIsPreviewing(preview !== undefined ? preview : !state.isPreviewing);
     },
-    [state.isPreviewing, setIsPreviewing]
+    [state.isPreviewing, setIsPreviewing],
   );
 
   const save = useCallback(async () => {
@@ -499,8 +499,8 @@ export const EditorProvider: React.FC<{
                     isCompleted: editorBlocks.length > 0,
                     questions: stage.questions ?? [],
                   }
-                  : stage
-              )
+                  : stage,
+              ),
             );
 
             // Prefetch leve da próxima etapa para navegação suave
@@ -533,7 +533,7 @@ export const EditorProvider: React.FC<{
       },
       isLoadingStage,
     }),
-    [dispatch, setIsLoadingStage, stages.length, currentFunnelId, isLoadingStage]
+    [dispatch, setIsLoadingStage, stages.length, currentFunnelId, isLoadingStage],
   );
 
   // Block actions object
@@ -549,7 +549,7 @@ export const EditorProvider: React.FC<{
       replaceBlocks,
       reorderBlocks,
     }),
-    [setSelectedBlockId, addBlock, updateBlock, deleteBlock, replaceBlocks, reorderBlocks]
+    [setSelectedBlockId, addBlock, updateBlock, deleteBlock, replaceBlocks, reorderBlocks],
   );
 
   // Computed properties
@@ -560,7 +560,7 @@ export const EditorProvider: React.FC<{
       stageCount: stages.length,
       totalBlocks: state.blocks.length,
     }),
-    [state.blocks, state.selectedBlockId, stages.length]
+    [state.blocks, state.selectedBlockId, stages.length],
   );
 
   // UI state object
@@ -574,7 +574,7 @@ export const EditorProvider: React.FC<{
         console.log('Setting viewport size:', size);
       },
     }),
-    [state.isPreviewing, state.isGlobalStylesOpen, setIsPreviewing]
+    [state.isPreviewing, state.isGlobalStylesOpen, setIsPreviewing],
   );
 
   // Quiz state
@@ -591,12 +591,12 @@ export const EditorProvider: React.FC<{
         questionId: string,
         optionId: string,
         category: string,
-        type: string
+        type: string,
       ) => {
         console.log('Strategic answer:', { questionId, optionId, category, type });
       },
     }),
-    []
+    [],
   );
 
   // Template actions
@@ -644,7 +644,7 @@ export const EditorProvider: React.FC<{
       },
       isLoadingTemplate: isLoadingStage,
     }),
-    [dispatch, currentFunnelId, isLoadingStage]
+    [dispatch, currentFunnelId, isLoadingStage],
   );
 
   // Persistence actions
@@ -661,7 +661,7 @@ export const EditorProvider: React.FC<{
         await save();
       },
     }),
-    [save, currentFunnelId]
+    [save, currentFunnelId],
   );
 
   // Integrar sistema de validação
@@ -755,7 +755,7 @@ export const useEditor = (): EditorContextType => {
       // Logs de diagnóstico mínimos (sem spam em produção)
       if (typeof window !== 'undefined' && (import.meta as any)?.env?.DEV) {
         console.warn(
-          '⚠️ useEditor chamado fora de um EditorProvider (legacy). Retornando fallback no-op para evitar quebra. Garanta que o componente esteja embrulhado por <EditorProvider>.'
+          '⚠️ useEditor chamado fora de um EditorProvider (legacy). Retornando fallback no-op para evitar quebra. Garanta que o componente esteja embrulhado por <EditorProvider>.',
         );
       }
     } catch { }

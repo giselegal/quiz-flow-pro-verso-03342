@@ -18,7 +18,7 @@ const supabaseAny = supabase as AnySupabase;
 import {
     convertStepToBlocks,
     convertBlocksToStep,
-    validateRoundTrip
+    validateRoundTrip,
 } from '@/utils/quizConversionUtils';
 
 // ✅ FASE 5: Validações de integridade testadas (550+ linhas, 22 testes)
@@ -27,7 +27,7 @@ import {
     validateStyleIds,
     validateNextStep,
     validateOfferMap,
-    validateFormInput
+    validateFormInput,
 } from '@/utils/quizValidationUtils';
 
 // ✅ FASE 7: Adaptador bidirecional Blocks ↔ JSON v3.0
@@ -89,7 +89,7 @@ class QuizEditorBridge {
             return {
                 id: stepId,
                 order: index + 1,
-                ...stepData
+                ...stepData,
             };
         });
 
@@ -99,7 +99,7 @@ class QuizEditorBridge {
             slug: this.PRODUCTION_SLUG,
             steps,
             isPublished: true,
-            version: 1
+            version: 1,
         };
     }
 
@@ -333,7 +333,7 @@ class QuizEditorBridge {
             for (const step of data.steps) {
                 if (Array.isArray(step.blocks)) {
                     const quizOptionsBlock = step.blocks.find((b: any) =>
-                        b.type === 'quiz-options' || b.type === 'options-grid'
+                        b.type === 'quiz-options' || b.type === 'options-grid',
                     );
                     if (quizOptionsBlock) {
                         console.log('🎯 Primeiro bloco quiz-options encontrado:');
@@ -436,7 +436,7 @@ class QuizEditorBridge {
             ...production,
             id: draftId,
             name: `${production.name} - Rascunho`,
-            isPublished: false
+            isPublished: false,
         };
     }
 
@@ -500,7 +500,7 @@ class QuizEditorBridge {
                     type: b.type,
                     order: b.order ?? idx,
                     properties: b.properties || {},
-                    content: b.content || {}
+                    content: b.content || {},
                 }));
 
                 // Inferir tipo do step baseado no stepId ou usar fallback
@@ -514,7 +514,7 @@ class QuizEditorBridge {
                 steps[stepId] = {
                     ...fallbackStep,
                     ...stepData,
-                    type: stepType // garantir type definido
+                    type: stepType, // garantir type definido
                 } as QuizStep;
 
                 console.log(`✅ Template ${stepId} carregado do JSON v3.0`);
@@ -596,13 +596,13 @@ class QuizEditorBridge {
         console.log('✅ Validação completa:', {
             valid: validation.isValid,
             errors: errors.length,
-            warnings: warnings.length
+            warnings: warnings.length,
         });
 
         return {
             valid: validation.isValid,
             errors,
-            warnings
+            warnings,
         };
     }
 
@@ -625,8 +625,8 @@ class QuizEditorBridge {
                     step.id,
                     {
                         name: step.title || step.id,
-                        description: `Exported from editor`,
-                    }
+                        description: 'Exported from editor',
+                    },
                 );
 
                 templates[step.id] = jsonTemplate;
@@ -659,7 +659,7 @@ class QuizEditorBridge {
             'strategic': 'strategic-question',
             'transition': 'transition',
             'result': 'result',
-            'offer': 'offer'
+            'offer': 'offer',
         };
 
         const stepType = categoryMap[json.metadata.category] || 'question';
@@ -702,7 +702,7 @@ class QuizEditorBridge {
 
         if (references.length > 0) {
             errors.push(
-                `Step ${stepId} está referenciado por ${references.length} step(s): ${references.join(', ')}`
+                `Step ${stepId} está referenciado por ${references.length} step(s): ${references.join(', ')}`,
             );
             errors.push('Atualize os nextStep antes de deletar.');
         }

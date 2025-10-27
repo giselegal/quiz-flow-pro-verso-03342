@@ -62,8 +62,8 @@ describe('Performance Tests - Consolidação', () => {
       // Simula lazy loading do componente AI
       const LazyAIFeatures = lazy(() =>
         Promise.resolve({
-          default: () => null as any // Componente React válido
-        })
+          default: () => null as any, // Componente React válido
+        }),
       );
 
       expect(lazy).toHaveBeenCalled();
@@ -140,14 +140,14 @@ describe('Performance Tests - Consolidação', () => {
       const essentialModules = [
         'EditorProUnified',
         'ModularEditorPro',
-        'EditorProvider'
+        'EditorProvider',
       ];
 
       // Módulos opcionais que devem ser lazy
       const lazyModules = [
         'OptimizedAIFeatures',
         'AICache',
-        'TemplateGenerator'
+        'TemplateGenerator',
       ];
 
       // Relaxado para <= pois listas podem ficar equivalentes dependendo da refatoração.

@@ -273,10 +273,10 @@ export const useQuizStore = create<QuizStore>()(
           answers: state.answers,
           isStarted: state.isStarted,
         }),
-      }
+      },
     ),
-    { name: 'QuizStore' }
-  )
+    { name: 'QuizStore' },
+  ),
 );
 
 // ============================================================================

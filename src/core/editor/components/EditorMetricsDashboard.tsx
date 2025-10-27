@@ -16,7 +16,7 @@ import {
     EditorValidationMetrics,
     EditorLoadingMetrics,
     EditorFallbackMetrics,
-    EditorUsageMetrics
+    EditorUsageMetrics,
 } from '../interfaces/EditorInterfaces';
 
 // ============================================================================
@@ -59,14 +59,14 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
     refreshInterval = 30000, // 30 segundos
     showRealTimeData = true,
     showPerformanceChart = true,
-    showErrorAnalysis = true
+    showErrorAnalysis = true,
 }) => {
     const [state, setState] = useState<DashboardState>({
         metrics: [],
         performanceReport: null,
         isLoading: false,
         error: null,
-        lastUpdated: null
+        lastUpdated: null,
     });
 
     // ============================================================================
@@ -80,9 +80,9 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
             const [metrics, performanceReport] = await Promise.all([
                 metricsProvider.getMetrics({
                     funnelId,
-                    from: new Date(Date.now() - 24 * 60 * 60 * 1000) // últimas 24h
+                    from: new Date(Date.now() - 24 * 60 * 60 * 1000), // últimas 24h
                 }),
-                metricsProvider.getPerformanceReport(funnelId)
+                metricsProvider.getPerformanceReport(funnelId),
             ]);
 
             setState(prev => ({
@@ -90,13 +90,13 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
                 metrics,
                 performanceReport,
                 isLoading: false,
-                lastUpdated: new Date()
+                lastUpdated: new Date(),
             }));
         } catch (error) {
             setState(prev => ({
                 ...prev,
                 isLoading: false,
-                error: error instanceof Error ? error.message : 'Failed to fetch metrics'
+                error: error instanceof Error ? error.message : 'Failed to fetch metrics',
             }));
         }
     }, [metricsProvider, funnelId]);
@@ -125,7 +125,7 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
                 unit: 'ms',
                 color: state.performanceReport.averageLoadTime > 2000 ? 'red' :
                     state.performanceReport.averageLoadTime > 1000 ? 'yellow' : 'green',
-                description: 'Tempo médio para carregar funis'
+                description: 'Tempo médio para carregar funis',
             },
             {
                 title: 'Tempo Médio de Salvamento',
@@ -133,7 +133,7 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
                 unit: 'ms',
                 color: state.performanceReport.averageSaveTime > 1000 ? 'red' :
                     state.performanceReport.averageSaveTime > 500 ? 'yellow' : 'green',
-                description: 'Tempo médio para salvar alterações'
+                description: 'Tempo médio para salvar alterações',
             },
             {
                 title: 'Tempo de Validação',
@@ -141,7 +141,7 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
                 unit: 'ms',
                 color: state.performanceReport.averageValidationTime > 500 ? 'red' :
                     state.performanceReport.averageValidationTime > 200 ? 'yellow' : 'green',
-                description: 'Tempo médio para validar conteúdo'
+                description: 'Tempo médio para validar conteúdo',
             },
             {
                 title: 'Taxa de Erro',
@@ -149,7 +149,7 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
                 unit: '%',
                 color: state.performanceReport.errorRate > 0.05 ? 'red' :
                     state.performanceReport.errorRate > 0.02 ? 'yellow' : 'green',
-                description: 'Percentage de operações que falharam'
+                description: 'Percentage de operações que falharam',
             },
             {
                 title: 'Taxa de Fallback',
@@ -157,7 +157,7 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
                 unit: '%',
                 color: state.performanceReport.fallbackRate > 0.02 ? 'red' :
                     state.performanceReport.fallbackRate > 0.01 ? 'yellow' : 'green',
-                description: 'Frequência de uso de sistemas de fallback'
+                description: 'Frequência de uso de sistemas de fallback',
             },
             {
                 title: 'Score de Performance',
@@ -165,8 +165,8 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
                 unit: '/100',
                 color: state.performanceReport.performanceScore < 70 ? 'red' :
                     state.performanceReport.performanceScore < 85 ? 'yellow' : 'green',
-                description: 'Score geral de performance do editor'
-            }
+                description: 'Score geral de performance do editor',
+            },
         ];
     }, [state.performanceReport]);
 
@@ -176,10 +176,10 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
 
     const getRecentTrends = useCallback(() => {
         const last1h = state.metrics.filter(m =>
-            m.timestamp > new Date(Date.now() - 60 * 60 * 1000)
+            m.timestamp > new Date(Date.now() - 60 * 60 * 1000),
         );
         const last24h = state.metrics.filter(m =>
-            m.timestamp > new Date(Date.now() - 24 * 60 * 60 * 1000)
+            m.timestamp > new Date(Date.now() - 24 * 60 * 60 * 1000),
         );
 
         return {
@@ -188,7 +188,7 @@ export const EditorMetricsDashboard: React.FC<MetricsDashboardProps> = ({
             errors: last24h.filter(m => m.type === 'error_count').length,
             avgLoadTime: last24h.filter(m => m.type === 'load_time')
                 .reduce((acc, m, _, arr) => acc + m.value / arr.length, 0),
-            topOperations: this.getMostFrequentOperations(last24h)
+            topOperations: this.getMostFrequentOperations(last24h),
         };
     }, [state.metrics]);
 
@@ -376,20 +376,20 @@ const MetricCardComponent: React.FC<MetricCard> = ({
     value,
     unit,
     color = 'blue',
-    description
+    description,
 }) => {
     const colorClasses = {
         green: 'border-green-200 bg-green-50',
         yellow: 'border-yellow-200 bg-yellow-50',
         red: 'border-red-200 bg-red-50',
-        blue: 'border-blue-200 bg-blue-50'
+        blue: 'border-blue-200 bg-blue-50',
     };
 
     const valueColorClasses = {
         green: 'text-green-600',
         yellow: 'text-yellow-600',
         red: 'text-red-600',
-        blue: 'text-blue-600'
+        blue: 'text-blue-600',
     };
 
     return (
@@ -422,7 +422,7 @@ export const EditorMetricsDashboardSimple: React.FC<{
         const fetchData = async () => {
             const [metricsData, reportData] = await Promise.all([
                 metricsProvider.getMetrics({ funnelId }),
-                metricsProvider.getPerformanceReport(funnelId)
+                metricsProvider.getPerformanceReport(funnelId),
             ]);
             setMetrics(metricsData);
             setReport(reportData);

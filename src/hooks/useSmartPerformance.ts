@@ -22,7 +22,7 @@ export const useSmartPerformance = (
     enableLazyLoading?: boolean;
     enableMemoization?: boolean;
     trackMetrics?: boolean;
-  }
+  },
 ) => {
   const {
     debounceTime: customDebounceTime,
@@ -121,7 +121,7 @@ export const useSmartPerformance = (
       {
         threshold: 0.1,
         rootMargin: `${deviceOptimizations.lazyLoadThreshold}px`,
-      }
+      },
     );
 
     observer.observe(intersectionRef.current);
@@ -136,7 +136,7 @@ export const useSmartPerformance = (
 
       return useMemo(() => value, dependencies);
     },
-    [enableMemoization]
+    [enableMemoization],
   );
 
   // 🚀 Função para aplicar otimizações CSS
@@ -173,7 +173,7 @@ export const useSmartPerformance = (
 
       return props;
     },
-    [enableMemoization, isLowPerformance]
+    [enableMemoization, isLowPerformance],
   );
 
   return {
@@ -216,7 +216,7 @@ export const useOptimizedQuizStep = (
     preloadNext?: boolean;
     trackProgress?: boolean;
     enableAnimations?: boolean;
-  }
+  },
 ) => {
   const { preloadNext = true, trackProgress = true, enableAnimations = true } = options || {};
 
@@ -239,7 +239,7 @@ export const useOptimizedQuizStep = (
       try {
         // Simular preload (aqui você pode implementar o preload real) - OTIMIZADO
         await new Promise<void>(resolve =>
-          PerformanceOptimizer.schedule(() => resolve(), 100, 'message')
+          PerformanceOptimizer.schedule(() => resolve(), 100, 'message'),
         );
         setPreloadComplete(true);
       } catch (error) {
@@ -321,7 +321,7 @@ export const useOptimizedInlineComponent = (componentType: string) => {
         className: `${props.className || ''} ${smartPerf.optimizedClasses}`.trim(),
       });
     },
-    [smartPerf]
+    [smartPerf],
   );
 
   return {

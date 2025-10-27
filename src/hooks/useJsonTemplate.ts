@@ -22,7 +22,7 @@ interface UseJsonTemplateReturn {
  */
 export const useJsonTemplate = (
   initialStepId?: string,
-  options: UseJsonTemplateOptions = {}
+  options: UseJsonTemplateOptions = {},
 ): UseJsonTemplateReturn => {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [loading, setLoading] = useState(false);
@@ -61,7 +61,7 @@ export const useJsonTemplate = (
         setLoading(false);
       }
     },
-    [fallback, onLoad, onError]
+    [fallback, onLoad, onError],
   );
 
   /**
@@ -125,7 +125,7 @@ export const useMultiJsonTemplate = (stepIds: string[]) => {
           const error = err instanceof Error ? err : new Error(String(err));
           errors[stepId] = error;
         }
-      })
+      }),
     );
 
     setTemplatesData(results);

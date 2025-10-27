@@ -133,7 +133,7 @@ export function useQuizRulesConfig() {
                 type: stepRule.type,
                 validation: stepRule.validation,
                 behavior: stepRule.behavior,
-                hasScoring: !!stepRule.scoring
+                hasScoring: !!stepRule.scoring,
             });
 
             return stepRule;
@@ -377,7 +377,7 @@ export function useQuizRulesConfig() {
 
         // Metadados
         version: config.meta.version,
-        lastUpdated: config.meta.lastUpdated
+        lastUpdated: config.meta.lastUpdated,
     };
 }
 
@@ -398,7 +398,7 @@ export function useStepValidation() {
                     requiresValidSelection: false,
                     validationMessage: 'Erro: configuração não encontrada',
                     shouldAutoAdvance: false,
-                    autoAdvanceDelay: 1000
+                    autoAdvanceDelay: 1000,
                 };
             }
 
@@ -410,12 +410,12 @@ export function useStepValidation() {
                 requiresValidSelection,
                 validationMessage: stepRule.validation.message,
                 shouldAutoAdvance: stepRule.behavior.autoAdvance,
-                autoAdvanceDelay: stepRule.behavior.autoAdvanceDelay || 1000
+                autoAdvanceDelay: stepRule.behavior.autoAdvanceDelay || 1000,
             };
         };
     }, [getStepRules]);
 
     return {
-        getStepBehavior
+        getStepBehavior,
     };
 }

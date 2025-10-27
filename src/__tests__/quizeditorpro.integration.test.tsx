@@ -44,7 +44,7 @@ describe('QuizEditorPro integration: reorder and insert between blocks', () => {
       <ProviderHarness>
         <EditorActionsProbe onReady={c => (ctxRef = c)} />
         <EditorStateProbe onUpdate={s => (lastState = s)} />
-      </ProviderHarness>
+      </ProviderHarness>,
     );
     // aguardar ciclo de efeitos
     await act(async () => { });

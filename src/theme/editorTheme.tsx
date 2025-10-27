@@ -14,11 +14,11 @@ export const defaultTokens: DesignTokens = {
         bg: '#FFFFFF',
         surface: '#F8F9FA',
         border: '#E2E8F0',
-        text: '#1F2937'
+        text: '#1F2937',
     },
     spacing: { none: '0', xs: '4px', sm: '8px', md: '16px', lg: '24px', xl: '32px' },
     radius: { none: '0', sm: '4px', md: '8px', lg: '12px', pill: '999px' },
-    fontScale: { xs: '12px', sm: '14px', base: '16px', lg: '18px', xl: '20px', '2xl': '24px' }
+    fontScale: { xs: '12px', sm: '14px', base: '16px', lg: '18px', xl: '20px', '2xl': '24px' },
 };
 
 interface ThemeContextValue {
@@ -32,7 +32,7 @@ export const EditorThemeProvider: React.FC<{ tokens?: Partial<DesignTokens>; chi
         colors: { ...defaultTokens.colors, ...(tokens?.colors || {}) },
         spacing: { ...defaultTokens.spacing, ...(tokens?.spacing || {}) },
         radius: { ...defaultTokens.radius, ...(tokens?.radius || {}) },
-        fontScale: { ...defaultTokens.fontScale, ...(tokens?.fontScale || {}) }
+        fontScale: { ...defaultTokens.fontScale, ...(tokens?.fontScale || {}) },
     }), [tokens]);
 
     return (

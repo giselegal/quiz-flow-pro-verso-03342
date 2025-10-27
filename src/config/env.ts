@@ -1,13 +1,13 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-const toBool = (v: unknown) => String(v).toLowerCase() === "true";
+const toBool = (v: unknown) => String(v).toLowerCase() === 'true';
 const toNumber = (v: unknown, fallback?: number) => {
   const n = Number(v);
   return Number.isFinite(n) ? n : fallback;
 };
 
 const EnvSchema = z.object({
-  MODE: z.string().default("development"),
+  MODE: z.string().default('development'),
   DEV: z.boolean().default(false),
   PROD: z.boolean().default(false),
 
@@ -100,8 +100,8 @@ const raw = {
 const parsed = EnvSchema.safeParse(raw);
 if (!parsed.success) {
   if ((import.meta as any)?.env?.DEV) {
-    // eslint-disable-next-line no-console
-    console.warn("Env validation warnings:", parsed.error.flatten());
+     
+    console.warn('Env validation warnings:', parsed.error.flatten());
   }
 }
 
@@ -110,5 +110,5 @@ export const env = (parsed.success ? parsed.data : (raw as any)) as z.infer<
 >;
 export const isDev = !!env.DEV;
 export const isProd = !!env.PROD;
-export const mode = env.MODE || "development";
+export const mode = env.MODE || 'development';
 export default env;

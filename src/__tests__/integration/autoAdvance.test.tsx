@@ -7,7 +7,7 @@ const TEST_STEPS: Record<string, any> = {
     'step-01': { id: 'step-01', type: 'intro', nextStep: 'step-02' },
     'step-02': { id: 'step-02', type: 'question', requiredSelections: 1, nextStep: 'step-03', options: [{ id: 'classico' }] },
     'step-03': { id: 'step-03', type: 'question', requiredSelections: 1, nextStep: 'step-04', options: [{ id: 'natural' }] },
-    'step-04': { id: 'step-04', type: 'result' }
+    'step-04': { id: 'step-04', type: 'result' },
 };
 
 // Use fake timers

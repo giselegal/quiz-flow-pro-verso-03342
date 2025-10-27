@@ -52,7 +52,7 @@ export const DEFAULT_AI_CONFIG: AIConfig = {
             enabled: false,
             priority: 1,
             maxRequestsPerMinute: 5,
-            timeout: 30000
+            timeout: 30000,
         },
         gemini: {
             name: 'Google Gemini',
@@ -60,7 +60,7 @@ export const DEFAULT_AI_CONFIG: AIConfig = {
             enabled: false,
             priority: 2,
             maxRequestsPerMinute: 10,
-            timeout: 25000
+            timeout: 25000,
         },
         'stable-diffusion': {
             name: 'Stable Diffusion',
@@ -68,7 +68,7 @@ export const DEFAULT_AI_CONFIG: AIConfig = {
             enabled: false,
             priority: 3,
             maxRequestsPerMinute: 15,
-            timeout: 20000
+            timeout: 20000,
         },
         midjourney: {
             name: 'Midjourney',
@@ -76,26 +76,26 @@ export const DEFAULT_AI_CONFIG: AIConfig = {
             enabled: false,
             priority: 4,
             maxRequestsPerMinute: 3,
-            timeout: 60000
-        }
+            timeout: 60000,
+        },
     },
     quiz: {
         autoGenerate: true,
         imageCount: 3,
         imageSize: '1024x1024',
-        cacheEnabled: true
+        cacheEnabled: true,
     },
     limits: {
         maxRequestsPerMinute: 10,
         maxRequestsPerHour: 50,
         timeout: 30000,
-        retryAttempts: 2
+        retryAttempts: 2,
     },
     features: {
         usageTracking: true,
         errorReporting: true,
-        rateLimitEnabled: true
-    }
+        rateLimitEnabled: true,
+    },
 };
 
 /**
@@ -197,7 +197,7 @@ export function checkAIStatus(): {
         enabled: config.enabled && availableProviders.length > 0,
         availableProviders,
         primaryProvider,
-        issues
+        issues,
     };
 }
 
@@ -215,7 +215,7 @@ export function useAIConfig() {
         primaryProvider: status.primaryProvider,
         availableProviders: status.availableProviders,
         hasIssues: status.issues.length > 0,
-        issues: status.issues
+        issues: status.issues,
     };
 }
 
@@ -226,7 +226,7 @@ export function logAIUsage(
     provider: string,
     action: string,
     success: boolean,
-    details?: any
+    details?: any,
 ) {
     const config = loadAIConfig();
 
@@ -238,7 +238,7 @@ export function logAIUsage(
         action,
         success,
         details,
-        userAgent: navigator.userAgent
+        userAgent: navigator.userAgent,
     };
 
     console.log('🤖 AI Usage:', logData);
@@ -253,7 +253,7 @@ export function logAIUsage(
 export function reportAIError(
     provider: string,
     error: Error,
-    context?: any
+    context?: any,
 ) {
     const config = loadAIConfig();
 
@@ -265,10 +265,10 @@ export function reportAIError(
         error: {
             message: error.message,
             stack: error.stack,
-            name: error.name
+            name: error.name,
         },
         context,
-        userAgent: navigator.userAgent
+        userAgent: navigator.userAgent,
     };
 
     console.error('🚨 AI Error:', errorData);

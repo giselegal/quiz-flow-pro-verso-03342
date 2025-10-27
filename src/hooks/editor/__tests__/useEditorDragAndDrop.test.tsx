@@ -38,7 +38,7 @@ describe('useEditorDragAndDrop', () => {
                 currentStepKey="step-1"
                 actions={actions}
                 notification={notification}
-            />
+            />,
         );
 
         const { handleDragEnd } = (window as any).__dndHook;
@@ -59,7 +59,7 @@ describe('useEditorDragAndDrop', () => {
                 currentStepKey="step-1"
                 actions={actions}
                 notification={notification}
-            />
+            />,
         );
 
         const { handleDragEnd } = (window as any).__dndHook;
@@ -85,7 +85,7 @@ describe('useEditorDragAndDrop', () => {
                 currentStepKey="step-1"
                 actions={actions}
                 notification={notification}
-            />
+            />,
         );
 
         const { handleDragEnd } = (window as any).__dndHook;

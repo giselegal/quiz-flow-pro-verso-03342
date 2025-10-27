@@ -37,7 +37,7 @@ export class TemplateManager {
       order: (b?.order ?? idx) as number,
       properties: (b?.properties ?? {}),
       content: (b?.content ?? {}),
-      parentId: (b?.parentId ?? null)
+      parentId: (b?.parentId ?? null),
     }));
     return normalized;
   }
@@ -66,7 +66,7 @@ export class TemplateManager {
       order: (b?.order ?? idx) as number,
       properties: (b?.properties ?? {}),
       content: (b?.content ?? {}),
-      parentId: (b?.parentId ?? null)
+      parentId: (b?.parentId ?? null),
     }));
     return normalized;
   }

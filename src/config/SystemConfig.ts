@@ -185,7 +185,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
         Object.values(CACHE_CONFIG.STORAGE_KEYS).map(key => [
           key,
           localStorage.getItem(key) || sessionStorage.getItem(key),
-        ])
+        ]),
       ),
     }),
   };

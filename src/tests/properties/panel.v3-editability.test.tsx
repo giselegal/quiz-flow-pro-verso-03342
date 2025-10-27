@@ -94,7 +94,7 @@ describe('Properties Panel v3 - Editabilidade prática', () => {
             const onChange = (patch: Record<string, any>) => { lastPatch = patch; };
 
             const { unmount } = render(
-                <DynamicPropertiesForm type={type} values={initialValues} onChange={onChange} />
+                <DynamicPropertiesForm type={type} values={initialValues} onChange={onChange} />,
             );
 
             // Aguarda o lazy-load do schema moderno refletir no formulário

@@ -33,7 +33,7 @@ export function activateFunnelAI() {
 
         // Definir contexto inicial inteligente
         AIEnhancedHybridTemplateService.setAIContext({
-            userId: 'user_' + Date.now(),
+            userId: `user_${  Date.now()}`,
             userName: 'Usuário',
             previousAnswers: {},
             userSegment: 'quiz_estilo_pessoal',
@@ -41,13 +41,13 @@ export function activateFunnelAI() {
                 startTime: new Date().toISOString(),
                 source: 'web',
                 language: 'pt-BR',
-                region: 'Brasil'
+                region: 'Brasil',
             },
             performanceData: {
                 stepCompletionTimes: [],
                 dropOffPoints: [],
-                conversionRate: 0
-            }
+                conversionRate: 0,
+            },
         });
 
         // Verificar status
@@ -60,7 +60,7 @@ export function activateFunnelAI() {
             'Personalização': status.config.personalizationEnabled ? '✅' : '❌',
             'Otimização': status.config.optimizationEnabled ? '✅' : '❌',
             'Geração de conteúdo': status.config.contentGenerationEnabled ? '✅' : '❌',
-            'Fallback': status.config.fallbackEnabled ? '✅' : '❌'
+            'Fallback': status.config.fallbackEnabled ? '✅' : '❌',
         });
 
         console.log('🎯 FUNCIONALIDADES ATIVAS:');
@@ -125,5 +125,5 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
 export default {
     activateFunnelAI,
     checkFunnelAIStatus,
-    OPTIMAL_AI_CONFIG
+    OPTIMAL_AI_CONFIG,
 };

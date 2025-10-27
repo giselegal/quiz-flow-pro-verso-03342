@@ -164,7 +164,7 @@ class UnifiedQuizStorageService {
       completedSteps: data.metadata.completedSteps.length,
       hasResult: Boolean(data.result),
       lastUpdated: data.metadata.lastUpdated,
-      dataSize: JSON.stringify(data).length
+      dataSize: JSON.stringify(data).length,
     };
   }
 
@@ -204,8 +204,8 @@ class UnifiedQuizStorageService {
         }).filter(step => step > 0),
         startedAt: new Date().toISOString(),
         lastUpdated: new Date().toISOString(),
-        version: '2.0'
-      }
+        version: '2.0',
+      },
     };
 
     // Salvar dados migrados
@@ -213,7 +213,7 @@ class UnifiedQuizStorageService {
 
     console.log('✅ UnifiedQuizStorage: Migração concluída', {
       selections: Object.keys(unified.selections).length,
-      formData: Object.keys(unified.formData).length
+      formData: Object.keys(unified.formData).length,
     });
 
     return unified;

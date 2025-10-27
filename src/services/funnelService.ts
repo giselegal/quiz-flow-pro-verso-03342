@@ -354,7 +354,7 @@ class FunnelService {
           page.type === 'question' ||
           page.type === 'intro' ||
           page.type === 'main-transition' ||
-          page.type === 'strategic'
+          page.type === 'strategic',
       );
 
       const syncPromises = quizPages.map(async page => {

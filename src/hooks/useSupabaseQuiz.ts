@@ -142,7 +142,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         setIsLoading(false);
       }
     },
-    [questions.length, session, toast]
+    [questions.length, session, toast],
   );
 
   // Salvar resposta - nova assinatura para suportar weights
@@ -187,7 +187,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           questionId: answer.questionId,
           selectedOptions: [answer.optionId],
           value: answer.optionId,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
         const newResponses = [...session.responses, newAnswer];
 
@@ -212,7 +212,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         return false;
       }
     },
-    [session, questions, toast]
+    [session, questions, toast],
   );
 
   // Calcular e salvar resultado final
@@ -256,7 +256,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
                 percentage:
                   Math.max(
                     0,
-                    Math.min(100, Math.round(fullResults.styleProfile.confidence * 100))
+                    Math.min(100, Math.round(fullResults.styleProfile.confidence * 100)),
                   ) || 50,
               },
             ]
@@ -360,7 +360,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         return false;
       }
     },
-    [session.id]
+    [session.id],
   );
 
   // Reiniciar o quiz

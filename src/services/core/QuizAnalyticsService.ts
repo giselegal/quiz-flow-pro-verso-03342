@@ -56,7 +56,7 @@ export class QuizAnalyticsService {
   private static getSessionId(): string {
     let sessionId = sessionStorage.getItem('quiz_session_id');
     if (!sessionId) {
-      sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      sessionId = `session_${  Date.now()  }_${  Math.random().toString(36).substr(2, 9)}`;
       sessionStorage.setItem('quiz_session_id', sessionId);
     }
     return sessionId;

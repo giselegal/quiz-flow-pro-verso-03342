@@ -16,7 +16,7 @@ export function scanDuplicateQuestionIds(allSteps: Record<string, BlockLike[]>) 
         const duplicates = Array.from(map.entries()).filter(([, refs]) => refs.length > 1);
         (window as any).__EDITOR_DUP_QID__ = duplicates;
         if (process.env.NODE_ENV === 'development' && duplicates.length) {
-            // eslint-disable-next-line no-console
+             
             console.warn('[duplicateQuestionScanner] Duplicates found:', duplicates.slice(0, 5));
         }
         return duplicates;

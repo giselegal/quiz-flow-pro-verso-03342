@@ -199,7 +199,7 @@ describe('Sistema Modular de Schemas', () => {
       const validTypes = [
         'string', 'richtext', 'number', 'boolean', 
         'color', 'select', 'enum', 'options-list', 
-        'array', 'object', 'json'
+        'array', 'object', 'json',
       ];
 
       const schemas = await Promise.all([

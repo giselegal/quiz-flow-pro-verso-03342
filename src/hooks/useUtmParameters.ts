@@ -172,7 +172,7 @@ export const useUtmParameters = () => {
     medium: string = 'social',
     campaign: string = 'brand',
     content?: string,
-    term?: string
+    term?: string,
   ): string => {
     let baseUrl = `https://${domainBase}`;
     if (path && !path.startsWith('/')) {

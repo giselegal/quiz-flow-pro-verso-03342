@@ -198,7 +198,7 @@ export class HistoryManager {
     entityId: string,
     description: string,
     changes: VersionChange[] = [],
-    metadata: Partial<HistoryEntry['metadata']> = {}
+    metadata: Partial<HistoryEntry['metadata']> = {},
   ): Promise<HistoryEntry> {
     try {
       const entryId = `entry-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -255,7 +255,7 @@ export class HistoryManager {
     if (filter.dateRange) {
       entries = entries.filter(entry => 
         entry.timestamp >= filter.dateRange!.start && 
-        entry.timestamp <= filter.dateRange!.end
+        entry.timestamp <= filter.dateRange!.end,
       );
     }
 
@@ -269,20 +269,20 @@ export class HistoryManager {
 
     if (filter.authors && filter.authors.length > 0) {
       entries = entries.filter(entry => 
-        entry.metadata.author && filter.authors!.includes(entry.metadata.author)
+        entry.metadata.author && filter.authors!.includes(entry.metadata.author),
       );
     }
 
     if (filter.importance && filter.importance.length > 0) {
       entries = entries.filter(entry => 
-        filter.importance!.includes(entry.metadata.importance)
+        filter.importance!.includes(entry.metadata.importance),
       );
     }
 
     if (filter.tags && filter.tags.length > 0) {
       entries = entries.filter(entry => 
         entry.metadata.tags && 
-        entry.metadata.tags.some(tag => filter.tags!.includes(tag))
+        entry.metadata.tags.some(tag => filter.tags!.includes(tag)),
       );
     }
 
@@ -292,8 +292,8 @@ export class HistoryManager {
         entry.description.toLowerCase().includes(searchLower) ||
         entry.entityId.toLowerCase().includes(searchLower) ||
         entry.changes.some(change => 
-          change.description?.toLowerCase().includes(searchLower)
-        )
+          change.description?.toLowerCase().includes(searchLower),
+        ),
       );
     }
 
@@ -311,8 +311,8 @@ export class HistoryManager {
         entry.description.toLowerCase().includes(queryLower) ||
         entry.entityId.toLowerCase().includes(queryLower) ||
         entry.changes.some(change => 
-          change.description?.toLowerCase().includes(queryLower)
-        )
+          change.description?.toLowerCase().includes(queryLower),
+        ),
       )
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
       .slice(0, limit);
@@ -379,7 +379,7 @@ export class HistoryManager {
       const current = entityChangeCounts.get(key) || { 
         entityId: entry.entityId, 
         entityType: entry.entity, 
-        count: 0 
+        count: 0, 
       };
       current.count += entry.changes.length;
       entityChangeCounts.set(key, current);
@@ -391,7 +391,7 @@ export class HistoryManager {
       .map(item => ({
         entityId: item.entityId,
         entityType: item.entityType,
-        changeCount: item.count
+        changeCount: item.count,
       }));
 
     return {
@@ -470,7 +470,7 @@ export class HistoryManager {
     entity: 'funnel' | 'stage' | 'block',
     entityId: string,
     changes: VersionChange[],
-    description?: string
+    description?: string,
   ): Promise<void> {
     const importance = this.calculateImportance(operation, entity, changes);
     
@@ -483,7 +483,7 @@ export class HistoryManager {
       {
         importance,
         tags: this.generateTags(operation, entity),
-      }
+      },
     );
   }
 
@@ -493,7 +493,7 @@ export class HistoryManager {
   private calculateImportance(
     operation: string,
     entity: string,
-    changes: VersionChange[]
+    changes: VersionChange[],
   ): 'low' | 'medium' | 'high' | 'critical' {
     if (operation === 'delete') return 'high';
     if (entity === 'funnel') return 'critical';
@@ -508,7 +508,7 @@ export class HistoryManager {
   private generateDescription(
     operation: string,
     entity: string,
-    entityId: string
+    entityId: string,
   ): string {
     const operations = {
       create: 'Criado',

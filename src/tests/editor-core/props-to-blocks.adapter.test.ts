@@ -7,7 +7,7 @@ describe('PropsToBlocksAdapter.applyPropsToBlocks', () => {
       id: 'step-02',
       type: 'question',
       meta: { props: { question: 'Qual cor?', options: [{ label: 'Azul' }, { label: 'Vermelho' }] } },
-      blocks: []
+      blocks: [],
     };
     const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
     expect(converted.blocks).toBeDefined();

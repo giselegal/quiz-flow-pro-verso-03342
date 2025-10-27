@@ -63,7 +63,7 @@ export class UnifiedCacheService {
       ttl: 5 * 60 * 1000,         // 5 minutos
       maxSize: 10_000_000,        // 10MB
       sizeCalculation: (value) => JSON.stringify(value).length,
-      updateAgeOnGet: true
+      updateAgeOnGet: true,
     }),
     
     funnels: new LRUCache<string, any>({
@@ -71,7 +71,7 @@ export class UnifiedCacheService {
       ttl: 10 * 60 * 1000,        // 10 minutos
       maxSize: 5_000_000,         // 5MB
       sizeCalculation: (value) => JSON.stringify(value).length,
-      updateAgeOnGet: true
+      updateAgeOnGet: true,
     }),
     
     configs: new LRUCache<string, any>({
@@ -79,7 +79,7 @@ export class UnifiedCacheService {
       ttl: 2 * 60 * 1000,         // 2 minutos
       maxSize: 1_000_000,         // 1MB
       sizeCalculation: (value) => JSON.stringify(value).length,
-      updateAgeOnGet: true
+      updateAgeOnGet: true,
     }),
     
     blocks: new LRUCache<string, any>({
@@ -87,7 +87,7 @@ export class UnifiedCacheService {
       ttl: 5 * 60 * 1000,         // 5 minutos
       maxSize: 5_000_000,         // 5MB
       sizeCalculation: (value) => JSON.stringify(value).length,
-      updateAgeOnGet: true
+      updateAgeOnGet: true,
     }),
     
     validation: new LRUCache<string, any>({
@@ -95,7 +95,7 @@ export class UnifiedCacheService {
       ttl: 1 * 60 * 1000,         // 1 minuto
       maxSize: 500_000,           // 500KB
       sizeCalculation: (value) => JSON.stringify(value).length,
-      updateAgeOnGet: false       // Não atualizar idade (validações expiram rápido)
+      updateAgeOnGet: false,       // Não atualizar idade (validações expiram rápido)
     }),
     
     registry: new LRUCache<string, any>({
@@ -103,7 +103,7 @@ export class UnifiedCacheService {
       ttl: 30 * 60 * 1000,        // 30 minutos
       maxSize: 2_000_000,         // 2MB
       sizeCalculation: (value) => JSON.stringify(value).length,
-      updateAgeOnGet: true
+      updateAgeOnGet: true,
     }),
     
     generic: new LRUCache<string, any>({
@@ -111,8 +111,8 @@ export class UnifiedCacheService {
       ttl: 5 * 60 * 1000,         // 5 minutos
       maxSize: 2_000_000,         // 2MB
       sizeCalculation: (value) => JSON.stringify(value).length,
-      updateAgeOnGet: true
-    })
+      updateAgeOnGet: true,
+    }),
   };
   
   // Métricas por store
@@ -123,7 +123,7 @@ export class UnifiedCacheService {
     blocks: { hits: 0, misses: 0 },
     validation: { hits: 0, misses: 0 },
     registry: { hits: 0, misses: 0 },
-    generic: { hits: 0, misses: 0 }
+    generic: { hits: 0, misses: 0 },
   };
 
   private constructor() {
@@ -240,7 +240,7 @@ export class UnifiedCacheService {
       hitRate,
       hits: stat.hits,
       misses: stat.misses,
-      memoryUsage
+      memoryUsage,
     };
   }
 
@@ -261,7 +261,7 @@ export class UnifiedCacheService {
     
     return {
       stores,
-      total: { size: totalSize, memoryUsage: totalMemory }
+      total: { size: totalSize, memoryUsage: totalMemory },
     };
   }
 
@@ -314,7 +314,7 @@ export class UnifiedCacheService {
     
     const avgHitRate = storeCount > 0 ? totalHitRate / storeCount : 0;
     
-    console.log(`\n📈 GLOBAL:`);
+    console.log('\n📈 GLOBAL:');
     console.log(`  Average Hit Rate: ${avgHitRate.toFixed(1)}%`);
     console.log(`  Total Memory: ${(allStats.total.memoryUsage / 1024).toFixed(1)} KB`);
     console.log(`  Total Entries: ${allStats.total.size}`);

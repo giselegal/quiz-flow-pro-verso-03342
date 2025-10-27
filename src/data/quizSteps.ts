@@ -257,7 +257,7 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'desconectada', text: 'Me sinto desconectada da mulher que sou hoje' },
             { id: 'duvidas', text: 'Tenho dúvidas sobre o que realmente me valoriza' },
             { id: 'as-vezes-acerto', text: 'Às vezes acerto, às vezes erro' },
-            { id: 'segura-evoluir', text: 'Me sinto segura, mas sei que posso evoluir' }
+            { id: 'segura-evoluir', text: 'Me sinto segura, mas sei que posso evoluir' },
         ],
         nextStep: 'step-14',
     },
@@ -269,7 +269,7 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'combinar-pecas', text: 'Tenho peças, mas não sei como combiná-las' },
             { id: 'comprar-impulso', text: 'Compro por impulso e me arrependo depois' },
             { id: 'imagem-nao-reflete', text: 'Minha imagem não reflete quem eu sou' },
-            { id: 'perco-tempo', text: 'Perco tempo e acabo usando sempre os mesmos looks' }
+            { id: 'perco-tempo', text: 'Perco tempo e acabo usando sempre os mesmos looks' },
         ],
         nextStep: 'step-15',
     },
@@ -281,7 +281,7 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'quase-todos-dias', text: 'Quase todos os dias — é sempre uma indecisão' },
             { id: 'compromissos-importantes', text: 'Sempre que tenho um compromisso importante' },
             { id: 'as-vezes-limitada', text: 'Às vezes, mas me sinto limitada nas escolhas' },
-            { id: 'raramente-segura', text: 'Raramente — já me sinto segura ao me vestir' }
+            { id: 'raramente-segura', text: 'Raramente — já me sinto segura ao me vestir' },
         ],
         nextStep: 'step-16',
     },
@@ -293,7 +293,7 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'sim-quero', text: 'Sim! Se existisse algo assim, eu quero' },
             { id: 'sim-momento-certo', text: 'Sim, mas teria que ser no momento certo' },
             { id: 'tenho-duvidas', text: 'Tenho dúvidas se funcionaria pra mim' },
-            { id: 'nao-prefiro-continuar', text: 'Não, prefiro continuar como estou' }
+            { id: 'nao-prefiro-continuar', text: 'Não, prefiro continuar como estou' },
         ],
         nextStep: 'step-17',
     },
@@ -305,7 +305,7 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'sim-vale-muito', text: 'Sim! Por esse resultado, vale muito' },
             { id: 'sim-se-certeza', text: 'Sim, mas só se eu tiver certeza de que funciona pra mim' },
             { id: 'talvez-depende', text: 'Talvez — depende do que está incluso' },
-            { id: 'nao-nao-pronta', text: 'Não, ainda não estou pronta para investir' }
+            { id: 'nao-nao-pronta', text: 'Não, ainda não estou pronta para investir' },
         ],
         nextStep: 'step-18',
     },
@@ -317,7 +317,7 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
             { id: 'montar-looks-facilidade', text: 'Montar looks com mais facilidade e confiança' },
             { id: 'usar-que-tenho', text: 'Usar o que já tenho e me sentir estilosa' },
             { id: 'comprar-consciencia', text: 'Comprar com mais consciência e sem culpa' },
-            { id: 'ser-admirada', text: 'Ser admirada pela imagem que transmito' }
+            { id: 'ser-admirada', text: 'Ser admirada pela imagem que transmito' },
         ],
         nextStep: 'step-19',
     },
@@ -339,43 +339,43 @@ export const QUIZ_STEPS: Record<string, QuizStep> = {
         image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/offer_image_main_jkldsd.webp',
         offerMap: {
             'Montar looks com mais facilidade e confiança': {
-                title: `{userName}, encontramos a solução para **combinar as suas peças com confiança!**`,
-                description: `Chega de incertezas. Liberamos uma oferta especial que vai te guiar passo a passo para criar looks harmoniosos e incríveis, usando o que você já tem.`,
-                buttonText: `Quero aprender a combinar as minhas peças agora!`,
+                title: '{userName}, encontramos a solução para **combinar as suas peças com confiança!**',
+                description: 'Chega de incertezas. Liberamos uma oferta especial que vai te guiar passo a passo para criar looks harmoniosos e incríveis, usando o que você já tem.',
+                buttonText: 'Quero aprender a combinar as minhas peças agora!',
                 testimonial: {
-                    quote: "Finalmente entendi o meu estilo e parei de gastar dinheiro com roupas que não combinavam comigo. Agora consigo montar looks com mais facilidade.",
-                    author: "Márcia Silva, 38 anos, Advogada"
-                }
+                    quote: 'Finalmente entendi o meu estilo e parei de gastar dinheiro com roupas que não combinavam comigo. Agora consigo montar looks com mais facilidade.',
+                    author: 'Márcia Silva, 38 anos, Advogada',
+                },
             },
             'Usar o que já tenho e me sentir estilosa': {
-                title: `{userName}, encontramos a solução para **se sentir estilosa com o que já tem!**`,
-                description: `Descubra o potencial escondido no seu próprio guarda-roupa. Esta oferta vai te ensinar a resgatar e transformar as peças esquecidas em looks incríveis, cheios de estilo e personalidade.`,
-                buttonText: `Quero me sentir mais estilosa com o que já tenho!`,
+                title: '{userName}, encontramos a solução para **se sentir estilosa com o que já tem!**',
+                description: 'Descubra o potencial escondido no seu próprio guarda-roupa. Esta oferta vai te ensinar a resgatar e transformar as peças esquecidas em looks incríveis, cheios de estilo e personalidade.',
+                buttonText: 'Quero me sentir mais estilosa com o que já tenho!',
                 testimonial: {
-                    quote: "Economizei muito dinheiro depois que aprendi a combinar e usar as minhas roupas de formas que nunca imaginei. É incrível a liberdade de ter um guarda-roupa que funciona para mim.",
-                    author: "Ana G., 29 anos, Designer"
-                }
+                    quote: 'Economizei muito dinheiro depois que aprendi a combinar e usar as minhas roupas de formas que nunca imaginei. É incrível a liberdade de ter um guarda-roupa que funciona para mim.',
+                    author: 'Ana G., 29 anos, Designer',
+                },
             },
             'Comprar com mais consciência e sem culpa': {
-                title: `{userName}, a solução para você **comprar com consciência e sem culpa!**`,
-                description: `Pare de desperdiçar dinheiro com peças que não usa. A nossa oferta vai te ensinar a identificar exatamente o que te valoriza, transformando a sua forma de comprar para sempre.`,
-                buttonText: `Quero fazer compras inteligentes!`,
+                title: '{userName}, a solução para você **comprar com consciência e sem culpa!**',
+                description: 'Pare de desperdiçar dinheiro com peças que não usa. A nossa oferta vai te ensinar a identificar exatamente o que te valoriza, transformando a sua forma de comprar para sempre.',
+                buttonText: 'Quero fazer compras inteligentes!',
                 testimonial: {
-                    quote: "Economizei muito dinheiro depois que aprendi a comprar apenas o que realmente combina com o meu estilo.",
-                    author: "Carolina Mendes, 42 anos, Empresária"
-                }
+                    quote: 'Economizei muito dinheiro depois que aprendi a comprar apenas o que realmente combina com o meu estilo.',
+                    author: 'Carolina Mendes, 42 anos, Empresária',
+                },
             },
             'Ser admirada pela imagem que transmito': {
-                title: `{userName}, a chave para você **alinhar a sua imagem à sua essência!**`,
-                description: `A sua imagem é a sua maior ferramenta de comunicação. Esta oferta vai te ajudar a construir um estilo que não apenas te veste, mas que te representa, com autenticidade e propósito.`,
-                buttonText: `Quero que a minha imagem me represente!`,
+                title: '{userName}, a chave para você **alinhar a sua imagem à sua essência!**',
+                description: 'A sua imagem é a sua maior ferramenta de comunicação. Esta oferta vai te ajudar a construir um estilo que não apenas te veste, mas que te representa, com autenticidade e propósito.',
+                buttonText: 'Quero que a minha imagem me represente!',
                 testimonial: {
-                    quote: "Hoje visto-me com mais confiança e praticidade, sem perder tempo a pensar no que vestir. A minha imagem agora reflete a pessoa que sou de verdade.",
-                    author: "Juliana Costa, 35 anos, Professora"
-                }
-            }
+                    quote: 'Hoje visto-me com mais confiança e praticidade, sem perder tempo a pensar no que vestir. A minha imagem agora reflete a pessoa que sou de verdade.',
+                    author: 'Juliana Costa, 35 anos, Professora',
+                },
+            },
         },
-    }
+    },
 };
 
 // Helper para obter etapa por ID
@@ -398,7 +398,7 @@ export const getNextStep = (currentStepId: string): string | undefined => {
 export const STEP_ORDER = [
     'step-01', 'step-02', 'step-03', 'step-04', 'step-05', 'step-06', 'step-07',
     'step-08', 'step-09', 'step-10', 'step-11', 'step-12', 'step-13', 'step-14',
-    'step-15', 'step-16', 'step-17', 'step-18', 'step-19', 'step-20', 'step-21'
+    'step-15', 'step-16', 'step-17', 'step-18', 'step-19', 'step-20', 'step-21',
 ];
 
 // Mapear resposta da pergunta estratégica final para chave da oferta
@@ -406,5 +406,5 @@ export const STRATEGIC_ANSWER_TO_OFFER_KEY = {
     'montar-looks-facilidade': 'Montar looks com mais facilidade e confiança',
     'usar-que-tenho': 'Usar o que já tenho e me sentir estilosa',
     'comprar-consciencia': 'Comprar com mais consciência e sem culpa',
-    'ser-admirada': 'Ser admirada pela imagem que transmito'
+    'ser-admirada': 'Ser admirada pela imagem que transmito',
 } as const;

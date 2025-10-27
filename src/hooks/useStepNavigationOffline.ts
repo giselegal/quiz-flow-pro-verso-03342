@@ -49,7 +49,7 @@ export const useStepNavigationOffline = (initialStep: number = 1) => {
       setLocation(`/step/${stepNumber}`);
       console.log(`🚀 Navegação offline para etapa ${stepNumber}`);
     },
-    [setLocation, goTo]
+    [setLocation, goTo],
   );
 
   // Próxima etapa

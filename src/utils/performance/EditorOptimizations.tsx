@@ -28,13 +28,13 @@ export const PERFORMANCE_CONFIG = {
         preload_delay: 1000,      // 1s para preload de componentes
         retry_attempts: 3,        // 3 tentativas de retry
         timeout: 15000,          // 15s timeout
-    }
+    },
 };
 
 // HOC para otimizar componentes do editor
 export function withEditorOptimizations<T extends Record<string, any>>(
     Component: React.ComponentType<T>,
-    displayName: string
+    displayName: string,
 ) {
     const OptimizedComponent = React.memo(Component, (prevProps, nextProps) => {
         // Comparação shallow customizada para props do editor
@@ -78,7 +78,7 @@ export function useEditorDebounce<T>(value: T, delay: number): T {
 // Hook para throttle de eventos de drag & drop
 export function useEditorThrottle<T extends (...args: any[]) => void>(
     callback: T,
-    delay: number
+    delay: number,
 ): T {
     const lastRun = React.useRef(Date.now());
 
@@ -89,7 +89,7 @@ export function useEditorThrottle<T extends (...args: any[]) => void>(
                 lastRun.current = Date.now();
             }
         }) as T,
-        [callback, delay]
+        [callback, delay],
     );
 }
 
@@ -114,7 +114,7 @@ export const DND_OPTIMIZATIONS = {
 // Utilitário para lazy loading de componentes pesados
 export function createOptimizedLazy<T extends React.ComponentType<any>>(
     importFn: () => Promise<{ default: T }>,
-    fallback?: React.ComponentType
+    fallback?: React.ComponentType,
 ) {
     const LazyComponent = React.lazy(importFn);
 

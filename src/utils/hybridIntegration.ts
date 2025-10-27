@@ -94,7 +94,7 @@ export const getTemplateStatus = async () => {
             templateLoaded: !!template,
             templateSteps: template ? Object.keys(template).length : 0,
             fallbackAvailable: !!QUIZ_STYLE_21_STEPS_TEMPLATE,
-            directTemplateSteps: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length : 0
+            directTemplateSteps: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length : 0,
         };
     } catch (error) {
         return {
@@ -103,7 +103,7 @@ export const getTemplateStatus = async () => {
             templateSteps: 0,
             error: error instanceof Error ? error.message : 'Erro desconhecido',
             fallbackAvailable: !!QUIZ_STYLE_21_STEPS_TEMPLATE,
-            directTemplateSteps: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length : 0
+            directTemplateSteps: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length : 0,
         };
     }
 };
@@ -113,6 +113,6 @@ if (typeof window !== 'undefined') {
     (window as any).__HYBRID_TEMPLATE_SERVICE__ = {
         initialize: initializeHybridTemplateService,
         getStatus: getTemplateStatus,
-        createFunnel: createIntegratedFunnel
+        createFunnel: createIntegratedFunnel,
     };
 }

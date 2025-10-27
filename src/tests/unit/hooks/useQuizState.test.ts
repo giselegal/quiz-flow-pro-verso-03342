@@ -98,7 +98,7 @@ describe('useQuizState', () => {
         romantico: 0,
         sexy: 0,
         dramatico: 0,
-        criativo: 0
+        criativo: 0,
       };
       
       expect(hook.current.scores).toEqual(expectedScores);

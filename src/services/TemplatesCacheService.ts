@@ -163,7 +163,7 @@ export class TemplatesCacheService {
       return this.createDefaultTemplate(stepNumber);
 
     } catch (error) {
-      console.error(`❌ Erro ao carregar via TemplateManager:`, error);
+      console.error('❌ Erro ao carregar via TemplateManager:', error);
       return this.createFallbackBlocks(stepNumber);
     }
   }
@@ -231,11 +231,11 @@ export class TemplatesCacheService {
             multipleSelection: false,
             required: true,
           },
-        }]])
+        }]]),
       ),
 
       21: [{
-        id: `step-21-result`,
+        id: 'step-21-result',
         type: 'quiz-result-inline',
         order: 0,
         content: {
@@ -411,7 +411,7 @@ export class TemplatesCacheService {
         } catch (error) {
           console.warn(`⚠️ Preload falhou para step ${step}:`, error);
         }
-      })
+      }),
     );
   }
 
@@ -432,7 +432,7 @@ export class TemplatesCacheService {
 
   public invalidateFunnel(funnelId: string): void {
     const keysToDelete = Array.from(this.cache.keys()).filter(key => 
-      key.includes(funnelId)
+      key.includes(funnelId),
     );
     keysToDelete.forEach(key => this.cache.delete(key));
     console.log(`🗑️ Cache invalidado para funil ${funnelId}`);

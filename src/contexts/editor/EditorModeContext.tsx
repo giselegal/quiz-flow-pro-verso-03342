@@ -74,8 +74,8 @@ export const useEditorMode = create<EditorModeState>()(
         set(state => ({
           previewSessionData: {
             ...state.previewSessionData,
-            [key]: value
-          }
+            [key]: value,
+          },
         }));
       },
       
@@ -91,8 +91,8 @@ export const useEditorMode = create<EditorModeState>()(
     {
       name: 'editor-mode-store',
       enabled: process.env.NODE_ENV === 'development',
-    }
-  )
+    },
+  ),
 );
 
 /**

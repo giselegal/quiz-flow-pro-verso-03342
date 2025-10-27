@@ -6,7 +6,7 @@ describe('Outcome interpolation', () => {
     it('substitui {{score}} no outcome final', () => {
         const agg = templateService.createBase('Interp', 'interp-slug');
         agg.draft.outcomes = [
-            { id: 'out_all', minScore: 0, maxScore: 9999, template: 'Seu score foi {{score}} pontos' }
+            { id: 'out_all', minScore: 0, maxScore: 9999, template: 'Seu score foi {{score}} pontos' },
         ];
         agg.draft.logic.scoring.weights['stage_q1:optA'] = 42;
         templateRepo.save(agg);

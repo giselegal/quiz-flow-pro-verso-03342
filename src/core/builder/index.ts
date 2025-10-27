@@ -12,15 +12,15 @@ import { UIBuilder } from './UIBuilder';
 export type {
     ValidationResult,
     ValidationError,  
-    ValidationWarning
+    ValidationWarning,
 } from './ComponentBuilder';
 
 export type {
-    FunnelConfig
+    FunnelConfig,
 } from './FunnelBuilder';
 
 export type {
-    LayoutConfig
+    LayoutConfig,
 } from './UIBuilder';
 
 // ✨ FACTORY FUNCTIONS ATIVAS (apenas as utilizadas)
@@ -128,14 +128,14 @@ export class BuilderValidator {
 
         // Verificar se o layout suporta o número de componentes
         const maxComponentsPerStep = Math.max(
-            ...funnel.steps.map(step => step.components.length)
+            ...funnel.steps.map(step => step.components.length),
         );
 
         if (layout.type === 'single-column' && maxComponentsPerStep > 3) {
             warnings.push({
                 field: 'layout',
                 message: 'Layout de coluna única pode ficar sobrecarregado com muitos componentes',
-                suggestion: 'Considere usar layout de duas colunas ou grid'
+                suggestion: 'Considere usar layout de duas colunas ou grid',
             });
         }
 
@@ -144,7 +144,7 @@ export class BuilderValidator {
             warnings.push({
                 field: 'theme',
                 message: 'Tema do funil não coincide com tema do layout',
-                suggestion: 'Sincronize os temas para consistência visual'
+                suggestion: 'Sincronize os temas para consistência visual',
             });
         }
 
@@ -153,14 +153,14 @@ export class BuilderValidator {
             warnings.push({
                 field: 'accessibility',
                 message: 'Funil complexo sem configurações de acessibilidade',
-                suggestion: 'Habilite suporte a movimento reduzido'
+                suggestion: 'Habilite suporte a movimento reduzido',
             });
         }
 
         return {
             isValid: errors.length === 0,
             errors,
-            warnings
+            warnings,
         };
     }
 
@@ -213,11 +213,11 @@ export const BUILDER_PRESETS = {
 
         return { funnel, layout, css: QuizBuilderFacade.generateCSS(layout) };
     },
-    'landing-page-hero': () => QuizBuilderFacade.createLandingPage('Landing Page Principal')
+    'landing-page-hero': () => QuizBuilderFacade.createLandingPage('Landing Page Principal'),
 };
 
 export default {
     QuizBuilderFacade,
     BuilderValidator,
-    BUILDER_PRESETS
+    BUILDER_PRESETS,
 };

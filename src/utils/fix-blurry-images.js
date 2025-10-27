@@ -217,7 +217,7 @@ function getSimplifiedCloudinaryUrl(url) {
     const urlParts = url.split('/upload/');
     if (urlParts.length !== 2) return url;
 
-    const baseUrl = urlParts[0] + '/upload/';
+    const baseUrl = `${urlParts[0]  }/upload/`;
     const path = urlParts[1];
 
     // Extrai a versão, se existir
@@ -226,7 +226,7 @@ function getSimplifiedCloudinaryUrl(url) {
     let finalPath = path;
 
     if (versionMatch) {
-      version = versionMatch[1] + '/';
+      version = `${versionMatch[1]  }/`;
       finalPath = path.substring(version.length);
     }
 
@@ -284,7 +284,7 @@ function preventBlurryPlaceholders() {
 
     // Substituir pelo nosso método que melhora as URLs
     Object.defineProperty(Image.prototype, 'src', {
-      set: function (url) {
+      set (url) {
         // Aplicar a URL melhorada
         originalSet.call(this, getHighQualityUrl(url));
       },
@@ -293,11 +293,11 @@ function preventBlurryPlaceholders() {
     // Interceptar também o atributo srcset para imagens responsivas
     const originalSrcsetSet = Object.getOwnPropertyDescriptor(
       HTMLImageElement.prototype,
-      'srcset'
+      'srcset',
     )?.set;
     if (originalSrcsetSet) {
       Object.defineProperty(HTMLImageElement.prototype, 'srcset', {
-        set: function (srcset) {
+        set (srcset) {
           if (srcset && typeof srcset === 'string') {
             // Melhorar cada URL no srcset
             const newSrcset = srcset
@@ -344,7 +344,7 @@ function preventBlurryPlaceholders() {
     const preventionActive = preventBlurryPlaceholders();
     if (DEBUG_MODE) {
       console.log(
-        `🛡️ Prevenção de placeholders embaçados ${preventionActive ? 'ativada' : 'falhou'}`
+        `🛡️ Prevenção de placeholders embaçados ${preventionActive ? 'ativada' : 'falhou'}`,
       );
     }
 

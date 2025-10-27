@@ -98,7 +98,7 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
   const saveStepResponse = useCallback(async (
     stepNumber: number,
     questionId: string,
-    response: any
+    response: any,
   ) => {
     if (!sessionId) return;
 
@@ -161,7 +161,7 @@ export const useQuizBackendIntegration = (funnelId?: string) => {
   // 🎯 FASE 5: ANALYTICS EM TEMPO REAL
   const trackQuizEvent = useCallback(async (
     eventType: string,
-    eventData?: Record<string, any>
+    eventData?: Record<string, any>,
   ) => {
     if (!sessionId || !funnelId) return;
 

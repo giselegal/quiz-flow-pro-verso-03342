@@ -72,7 +72,7 @@ class BlockPropertiesCache {
                 defaultValue: prop.default,
                 options: prop.options?.map(opt => opt.value),
                 validation: undefined, // Can be enhanced later
-                transform: undefined   // Can be enhanced later
+                transform: undefined,   // Can be enhanced later
             };
 
             properties[prop.key] = blockSchema;
@@ -118,7 +118,7 @@ class BlockPropertiesCache {
                 category: registryDef.category || 'Other',
                 properties: this.convertPropsSchemaToProperties(registryDef.propsSchema || []),
                 defaultContent: registryDef.defaultProps || {},
-                icon: registryDef.icon
+                icon: registryDef.icon,
             };
 
             this.cache.set(blockType, definition);
@@ -172,16 +172,16 @@ export class BlockPropertiesAPI {
                     indexes: [
                         { name: 'blockId', keyPath: 'blockId' },
                         { name: 'funnelId', keyPath: 'funnelId' },
-                        { name: 'timestamp', keyPath: 'metadata.timestamp' }
-                    ]
+                        { name: 'timestamp', keyPath: 'metadata.timestamp' },
+                    ],
                 }, {
                     name: 'blockDrafts',
                     keyPath: 'id',
                     indexes: [
                         { name: 'blockId', keyPath: 'blockId' },
-                        { name: 'lastModified', keyPath: 'lastModified' }
-                    ]
-                }]
+                        { name: 'lastModified', keyPath: 'lastModified' },
+                    ],
+                }],
             };
 
             this.storageService = IndexedDBStorageService.getInstance(config);
@@ -233,7 +233,7 @@ export class BlockPropertiesAPI {
             totalBlocks,
             blockTypesFound: Array.from(blockTypes),
             isGeneric: true,
-            supportsAnyStructure: true
+            supportsAnyStructure: true,
         });
     }
 
@@ -257,7 +257,7 @@ export class BlockPropertiesAPI {
             // Incluir metadados do funil
             _funnelId: this.funnelDataProvider.getFunnelId(),
             _currentStep: this.funnelDataProvider.getCurrentStep(),
-            _isSupabaseEnabled: this.funnelDataProvider.isSupabaseEnabled()
+            _isSupabaseEnabled: this.funnelDataProvider.isSupabaseEnabled(),
         };
     }
 
@@ -342,7 +342,7 @@ export class BlockPropertiesAPI {
             stepKey,
             blocksCount: stepData.length,
             blockTypes: stepData.map(block => block.type),
-            hasRealContent: stepData.length > 0
+            hasRealContent: stepData.length > 0,
         });
 
         return stepData;
@@ -367,7 +367,7 @@ export class BlockPropertiesAPI {
                     hasContent: !!block.content,
                     hasProperties: !!block.properties,
                     contentKeys: Object.keys(block.content || {}),
-                    propertiesKeys: Object.keys(block.properties || {})
+                    propertiesKeys: Object.keys(block.properties || {}),
                 });
                 return block;
             }
@@ -386,14 +386,14 @@ export class BlockPropertiesAPI {
                 console.log(`✅ Usando dados REAIS para bloco ${blockId}:`, {
                     type: realBlock.type,
                     content: realBlock.content,
-                    properties: realBlock.properties
+                    properties: realBlock.properties,
                 });
                 return {
                     ...realBlock.properties || {},
                     ...realBlock.content || {},
                     _fromRealTemplate: true,
                     _blockId: blockId,
-                    _blockType: realBlock.type
+                    _blockType: realBlock.type,
                 };
             }
         }
@@ -420,7 +420,7 @@ export class BlockPropertiesAPI {
                 console.log(`🔗 Mesclando propriedades reais do funil para ${blockType}:`, {
                     registryDefaults,
                     realProperties,
-                    merged: { ...registryDefaults, ...realProperties }
+                    merged: { ...registryDefaults, ...realProperties },
                 });
 
                 return { ...registryDefaults, ...realProperties };
@@ -447,7 +447,7 @@ export class BlockPropertiesAPI {
             // Metadados genéricos
             _blockType: blockType,
             _isGeneric: true,
-            _createdAt: new Date().toISOString()
+            _createdAt: new Date().toISOString(),
         };
 
         console.log(`🌐 Usando propriedades genéricas para tipo desconhecido '${blockType}':`, genericProperties);
@@ -474,7 +474,7 @@ export class BlockPropertiesAPI {
                 property: propertyKey,
                 value,
                 funnelId: currentFunnelId,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             const storageKey = `${currentFunnelId}_${blockId}_${propertyKey}`;
@@ -486,7 +486,7 @@ export class BlockPropertiesAPI {
                 type: 'text' as any,
                 properties: { [propertyKey]: value },
                 content: { text: '' } as any,
-                order: 0
+                order: 0,
             }]);
 
             // 4️⃣ ATUALIZAR CACHE E NOTIFICAR
@@ -503,7 +503,7 @@ export class BlockPropertiesAPI {
                 localStorage.setItem(fallbackKey, JSON.stringify({
                     value,
                     timestamp: Date.now(),
-                    funnelId: this.getCurrentFunnelId() || 'unknown'
+                    funnelId: this.getCurrentFunnelId() || 'unknown',
                 }));
                 console.log('📦 Property saved to localStorage fallback');
                 return true;
@@ -520,7 +520,7 @@ export class BlockPropertiesAPI {
         blockType: string,
         property: string,
         oldValue: any,
-        newValue: any
+        newValue: any,
     ): void {
         const event: PropertyChangeEvent = {
             blockId,
@@ -528,7 +528,7 @@ export class BlockPropertiesAPI {
             property,
             oldValue,
             newValue,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         };
 
         this.cache.notify(event);
@@ -554,7 +554,7 @@ export class BlockPropertiesAPI {
         component: any,
         stepId: string,
         position?: number,
-        funnelId?: string
+        funnelId?: string,
     ): Promise<boolean> {
         if (!this.storageService) {
             await this.initializeStorage();
@@ -578,8 +578,8 @@ export class BlockPropertiesAPI {
                     userId: this.getCurrentUserId(),
                     context: 'new-component',
                     namespace: 'components',
-                    timestamp: Date.now()
-                }
+                    timestamp: Date.now(),
+                },
             };
 
             // Salvar no IndexedDB
@@ -591,7 +591,7 @@ export class BlockPropertiesAPI {
                 type: component.type || 'text' as any,
                 properties: component,
                 content: component.content || { text: '' } as any,
-                order: position ?? 0
+                order: position ?? 0,
             }]);
 
             console.log(`🆕 New component saved to step ${stepId}:`, component);
@@ -616,7 +616,7 @@ export class BlockPropertiesAPI {
             // Buscar propriedades no IndexedDB usando query
             const allProperties = await this.storageService?.query('blockProperties', {
                 index: 'blockId',
-                key: blockId
+                key: blockId,
             }) || [];
 
             const result: Record<string, any> = {};

@@ -143,7 +143,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
                 'montar-looks-facilidade',
                 'usar-que-tenho',
                 'comprar-consciencia',
-                'ser-admirada'
+                'ser-admirada',
             ];
 
             const optionIds = step.options?.map((o: QuizOption) => o.id) || [];
@@ -175,7 +175,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
                 'Montar looks com mais facilidade e confiança',
                 'Usar o que já tenho e me sentir estilosa',
                 'Comprar com mais consciência e sem culpa',
-                'Ser admirada pela imagem que transmito'
+                'Ser admirada pela imagem que transmito',
             ];
 
             expectedKeys.forEach(key => {
@@ -343,7 +343,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
                 'montar-looks-facilidade': 'Montar looks com mais facilidade e confiança',
                 'usar-que-tenho': 'Usar o que já tenho e me sentir estilosa',
                 'comprar-consciencia': 'Comprar com mais consciência e sem culpa',
-                'ser-admirada': 'Ser admirada pela imagem que transmito'
+                'ser-admirada': 'Ser admirada pela imagem que transmito',
             };
 
             // Validar que IDs da pergunta 18 mapeiam para chaves do offerMap
@@ -408,7 +408,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
             // IDs usados nas opções de quiz (sem acento)
             const quizOptionIds = [
                 'natural', 'classico', 'contemporaneo', 'elegante',
-                'romantico', 'sexy', 'dramatico', 'criativo'
+                'romantico', 'sexy', 'dramatico', 'criativo',
             ];
 
             // Verificar que os IDs usados nas opções do quiz são válidos
@@ -491,7 +491,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
                     type: 'heading',
                     order: 0,
                     properties: { level: 3, textAlign: 'center' },
-                    content: { text: 'QUAL O SEU TIPO DE ROUPA FAVORITA?' }
+                    content: { text: 'QUAL O SEU TIPO DE ROUPA FAVORITA?' },
                 },
                 {
                     id: 'block-2',
@@ -500,10 +500,10 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
                     properties: { maxSelections: 3, showImages: true },
                     content: {
                         options: [
-                            { id: 'natural', text: 'Conforto...', image: 'https://...' }
-                        ]
-                    }
-                }
+                            { id: 'natural', text: 'Conforto...', image: 'https://...' },
+                        ],
+                    },
+                },
             ];
 
             // Deve gerar QuizStep válido:
@@ -595,7 +595,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
             const alta = gaps.filter(g => g.prioridade === 'ALTA').length;
             const media = gaps.filter(g => g.prioridade === 'MÉDIA').length;
 
-            console.log(`\n📊 RESUMO:`);
+            console.log('\n📊 RESUMO:');
             console.log(`   Total de Gaps: ${gaps.length}`);
             console.log(`   Prioridade ALTA: ${alta} (${Math.round(alta / gaps.length * 100)}%)`);
             console.log(`   Prioridade MÉDIA: ${media} (${Math.round(media / gaps.length * 100)}%)`);
@@ -613,7 +613,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
                 13, 14, 15, 16, 17, 18, // steps 13-18: parcial (falta validação offerMap)
                 19, // step-19: ok
                 20, // step-20: NÃO (falta style-result-card)
-                21  // step-21: NÃO (falta offer-map, testimonial)
+                21,  // step-21: NÃO (falta offer-map, testimonial)
             ];
 
             // Etapas 100% editáveis: apenas step-19
@@ -631,7 +631,7 @@ describe('🔍 ANÁLISE: Estrutura Real do /quiz-estilo', () => {
                 (etapasNao * 20)
             ) / totalEtapas;
 
-            console.log(`\n📈 COBERTURA DO EDITOR:`);
+            console.log('\n📈 COBERTURA DO EDITOR:');
             console.log(`   Etapas 100% editáveis: ${etapas100}/${totalEtapas} (${Math.round(etapas100 / totalEtapas * 100)}%)`);
             console.log(`   Etapas parcialmente editáveis: ${etapasParciais}/${totalEtapas} (${Math.round(etapasParciais / totalEtapas * 100)}%)`);
             console.log(`   Etapas não editáveis: ${etapasNao}/${totalEtapas} (${Math.round(etapasNao / totalEtapas * 100)}%)`);

@@ -20,7 +20,7 @@ class TemplateCache {
   private stats = {
     hits: 0,
     misses: 0,
-    evictions: 0
+    evictions: 0,
   };
 
   constructor(maxSize = 50) {
@@ -67,7 +67,7 @@ class TemplateCache {
     this.cache.set(key, {
       value,
       timestamp: Date.now(),
-      hits: 0
+      hits: 0,
     });
 
     if (import.meta.env.DEV) {
@@ -113,7 +113,7 @@ class TemplateCache {
       ...this.stats,
       size: this.cache.size,
       maxSize: this.maxSize,
-      hitRate: Math.round(hitRate * 100) / 100
+      hitRate: Math.round(hitRate * 100) / 100,
     };
   }
 

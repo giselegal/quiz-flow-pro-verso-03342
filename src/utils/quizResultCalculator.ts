@@ -52,7 +52,7 @@ export const calculateAndSaveQuizResult = async () => {
     console.log('📊 Dados coletados:', {
       userSelections: Object.keys(userSelections).length,
       userName: Boolean(userName),
-      source: Object.keys(unifiedData.selections).length > 0 ? 'unified' : 'legacy'
+      source: Object.keys(unifiedData.selections).length > 0 ? 'unified' : 'legacy',
     });
 
     // 3. Validar se há dados suficientes (gating)
@@ -95,13 +95,13 @@ export const calculateAndSaveQuizResult = async () => {
     const result = await ResultOrchestrator.run({
       selectionsByQuestion: userSelections,
       userName: userName || 'Usuário',
-      persistToSupabase: false // Para etapa 20, não precisa persistir no Supabase
+      persistToSupabase: false, // Para etapa 20, não precisa persistir no Supabase
     });
 
     console.log('✅ Resultado calculado com sucesso:', {
       primaryStyle: result.payload.primaryStyle,
       total: result.total,
-      selectionCount
+      selectionCount,
     });
 
     // 🎯 FASE 1: Armazenar no cache para futuras consultas
@@ -179,7 +179,7 @@ export const validateQuizData = () => {
 
   return {
     isValid: hasEnoughData && errors.length === 0,
-    errors
+    errors,
   };
 };
 

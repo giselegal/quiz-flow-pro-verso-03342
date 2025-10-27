@@ -66,7 +66,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Nome coletado no formulário inicial',
     currentValue: 'Ana Silva',
     context: ['all'],
-    example: 'Olá, {userName}!'
+    example: 'Olá, {userName}!',
   },
   {
     key: 'resultStyle',
@@ -74,7 +74,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Estilo calculado baseado nas respostas',
     currentValue: 'Clássico Elegante',
     context: ['result', 'final', 'offer'],
-    example: 'Seu estilo é {resultStyle}'
+    example: 'Seu estilo é {resultStyle}',
   },
   {
     key: 'quizStep',
@@ -82,7 +82,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Número da etapa atual do quiz',
     currentValue: '1',
     context: ['all'],
-    example: 'Etapa {quizStep} de 21'
+    example: 'Etapa {quizStep} de 21',
   },
   {
     key: 'offerPrice',
@@ -90,7 +90,7 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Valor da oferta especial',
     currentValue: 'R$ 197',
     context: ['offer', 'checkout'],
-    example: 'Apenas {offerPrice} hoje!'
+    example: 'Apenas {offerPrice} hoje!',
   },
   {
     key: 'resultPercentage',
@@ -98,8 +98,8 @@ export const AVAILABLE_VARIABLES: DynamicVariable[] = [
     description: 'Percentual de afinidade com o estilo',
     currentValue: '87%',
     context: ['result', 'final'],
-    example: '{resultPercentage} de afinidade'
-  }
+    example: '{resultPercentage} de afinidade',
+  },
 ];
 
 export class PropertyExtractionService {
@@ -137,7 +137,7 @@ export class PropertyExtractionService {
         value: block.id,
         supportsInterpolation: false,
         description: 'Identificador único do bloco',
-        isAdvanced: true
+        isAdvanced: true,
       },
       {
         key: 'type',
@@ -147,8 +147,8 @@ export class PropertyExtractionService {
         value: block.type,
         supportsInterpolation: false,
         description: 'Tipo do componente',
-        isAdvanced: true
-      }
+        isAdvanced: true,
+      },
     );
 
     // 4. Propriedades específicas por tipo
@@ -194,7 +194,7 @@ export class PropertyExtractionService {
           ...prop,
           supportsInterpolation,
           type: supportsInterpolation ? 'interpolated-text' : prop.type,
-          availableVariables: supportsInterpolation ? this.getAvailableVariables(prop.key) : undefined
+          availableVariables: supportsInterpolation ? this.getAvailableVariables(prop.key) : undefined,
         };
       }
       return prop;
@@ -208,11 +208,11 @@ export class PropertyExtractionService {
     const interpolatableFields = [
       'title', 'subtitle', 'text', 'content', 'label', 'placeholder',
       'description', 'buttonText', 'heading', 'subheading', 'message',
-      'content.title', 'content.subtitle', 'content.text', 'content.description'
+      'content.title', 'content.subtitle', 'content.text', 'content.description',
     ];
 
     return interpolatableFields.some(field =>
-      key.includes(field) || key.toLowerCase().includes('text') || key.toLowerCase().includes('title')
+      key.includes(field) || key.toLowerCase().includes('text') || key.toLowerCase().includes('title'),
     );
   }
 
@@ -223,14 +223,14 @@ export class PropertyExtractionService {
     // Para campos de resultado, mostrar variáveis de resultado
     if (fieldKey.includes('result') || fieldKey.includes('final')) {
       return AVAILABLE_VARIABLES.filter(v =>
-        v.context.includes('result') || v.context.includes('all')
+        v.context.includes('result') || v.context.includes('all'),
       );
     }
 
     // Para campos de oferta, mostrar variáveis de oferta
     if (fieldKey.includes('offer') || fieldKey.includes('price')) {
       return AVAILABLE_VARIABLES.filter(v =>
-        v.context.includes('offer') || v.context.includes('all')
+        v.context.includes('offer') || v.context.includes('all'),
       );
     }
 
@@ -257,7 +257,7 @@ export class PropertyExtractionService {
       isRequired: this.isRequiredField(key),
       isAdvanced: this.isAdvancedField(key),
       placeholder: this.generatePlaceholder(key, type),
-      ...this.getTypeSpecificConfig(type, key)
+      ...this.getTypeSpecificConfig(type, key),
     };
   }
 
@@ -313,7 +313,7 @@ export class PropertyExtractionService {
       'id': 'advanced',
       'className': 'advanced',
       'style': 'advanced',
-      'data': 'advanced'
+      'data': 'advanced',
     };
 
     // Buscar por padrões na chave
@@ -368,7 +368,7 @@ export class PropertyExtractionService {
       'backgroundColor': 'Cor de fundo',
       'fontSize': 'Tamanho da fonte',
       'width': 'Largura do elemento',
-      'height': 'Altura do elemento'
+      'height': 'Altura do elemento',
     };
 
     return descriptions[key] || `Configura ${this.generateLabel(key).toLowerCase()} do ${blockType}`;
@@ -412,12 +412,12 @@ export class PropertyExtractionService {
         return {
           min: key.includes('percentage') ? 0 : undefined,
           max: key.includes('percentage') ? 100 : undefined,
-          step: key.includes('percentage') ? 1 : undefined
+          step: key.includes('percentage') ? 1 : undefined,
         };
 
       case 'select':
         return {
-          options: this.getSelectOptions(key)
+          options: this.getSelectOptions(key),
         };
 
       default:
@@ -434,7 +434,7 @@ export class PropertyExtractionService {
       'fontWeight': ['font-light', 'font-normal', 'font-medium', 'font-semibold', 'font-bold'],
       'textAlign': ['text-left', 'text-center', 'text-right', 'text-justify'],
       'variant': ['primary', 'secondary', 'outline', 'ghost', 'destructive'],
-      'size': ['sm', 'default', 'lg', 'xl']
+      'size': ['sm', 'default', 'lg', 'xl'],
     };
 
     return optionsMap[key] || [];
@@ -470,8 +470,8 @@ export class PropertyExtractionService {
             supportsInterpolation: true,
             availableVariables: AVAILABLE_VARIABLES,
             description: 'Conteúdo HTML com suporte a variáveis dinâmicas',
-            isRequired: true
-          }
+            isRequired: true,
+          },
         );
         break;
 
@@ -486,8 +486,8 @@ export class PropertyExtractionService {
             supportsInterpolation: true,
             availableVariables: AVAILABLE_VARIABLES,
             description: 'Texto exibido no botão',
-            isRequired: true
-          }
+            isRequired: true,
+          },
         );
         break;
 
@@ -502,8 +502,8 @@ export class PropertyExtractionService {
             supportsInterpolation: false,
             description: 'URL da imagem a ser exibida',
             placeholder: 'https://exemplo.com/imagem.jpg',
-            isRequired: true
-          }
+            isRequired: true,
+          },
         );
         break;
 
@@ -519,7 +519,7 @@ export class PropertyExtractionService {
             supportsInterpolation: true,
             availableVariables: AVAILABLE_VARIABLES,
             description: 'Pergunta principal exibida acima das opções',
-            isRequired: true
+            isRequired: true,
           },
           {
             key: 'description',
@@ -528,7 +528,7 @@ export class PropertyExtractionService {
             category: 'content',
             value: block.properties?.description || '',
             supportsInterpolation: false,
-            description: 'Texto adicional explicativo (opcional)'
+            description: 'Texto adicional explicativo (opcional)',
           },
           {
             key: 'options',
@@ -537,8 +537,8 @@ export class PropertyExtractionService {
             category: 'content',
             value: block.properties?.options || [],
             supportsInterpolation: false,
-            description: 'Configure todas as opções disponíveis para seleção'
-          }
+            description: 'Configure todas as opções disponíveis para seleção',
+          },
         );
 
         // === LAYOUT ===
@@ -553,7 +553,7 @@ export class PropertyExtractionService {
             max: 4,
             step: 1,
             supportsInterpolation: false,
-            description: 'Quantas colunas terá o grid de opções'
+            description: 'Quantas colunas terá o grid de opções',
           },
           {
             key: 'gridGap',
@@ -565,7 +565,7 @@ export class PropertyExtractionService {
             max: 48,
             step: 2,
             supportsInterpolation: false,
-            description: 'Distância entre cada opção no grid'
+            description: 'Distância entre cada opção no grid',
           },
           {
             key: 'layoutOrientation',
@@ -575,10 +575,10 @@ export class PropertyExtractionService {
             value: block.properties?.layoutOrientation || 'vertical',
             options: [
               { label: 'Vertical', value: 'vertical' },
-              { label: 'Horizontal', value: 'horizontal' }
+              { label: 'Horizontal', value: 'horizontal' },
             ],
-            supportsInterpolation: false
-          }
+            supportsInterpolation: false,
+          },
         );
 
         // === COMPORTAMENTO ===
@@ -590,7 +590,7 @@ export class PropertyExtractionService {
             category: 'behavior',
             value: block.properties?.multipleSelection || false,
             supportsInterpolation: false,
-            description: 'Permitir selecionar várias opções simultaneamente'
+            description: 'Permitir selecionar várias opções simultaneamente',
           },
           {
             key: 'minSelections',
@@ -602,7 +602,7 @@ export class PropertyExtractionService {
             max: 10,
             step: 1,
             supportsInterpolation: false,
-            description: 'Número mínimo de opções que devem ser selecionadas'
+            description: 'Número mínimo de opções que devem ser selecionadas',
           },
           {
             key: 'maxSelections',
@@ -614,7 +614,7 @@ export class PropertyExtractionService {
             max: 10,
             step: 1,
             supportsInterpolation: false,
-            description: 'Número máximo de opções que podem ser selecionadas'
+            description: 'Número máximo de opções que podem ser selecionadas',
           },
           {
             key: 'autoAdvanceOnComplete',
@@ -623,7 +623,7 @@ export class PropertyExtractionService {
             category: 'behavior',
             value: block.properties?.autoAdvanceOnComplete || false,
             supportsInterpolation: false,
-            description: 'Avançar automaticamente quando atingir seleções obrigatórias'
+            description: 'Avançar automaticamente quando atingir seleções obrigatórias',
           },
           {
             key: 'autoAdvanceDelay',
@@ -635,8 +635,8 @@ export class PropertyExtractionService {
             max: 5000,
             step: 100,
             supportsInterpolation: false,
-            description: 'Tempo de espera antes do auto avanço'
-          }
+            description: 'Tempo de espera antes do auto avanço',
+          },
         );
 
         // === ESTILO ===
@@ -648,7 +648,7 @@ export class PropertyExtractionService {
             category: 'style',
             value: block.properties?.showImages !== false,
             supportsInterpolation: false,
-            description: 'Ativar/desativar imagens nas opções'
+            description: 'Ativar/desativar imagens nas opções',
           },
           {
             key: 'contentMode',
@@ -659,10 +659,10 @@ export class PropertyExtractionService {
             options: [
               { label: '🖼️ Imagem + Texto', value: 'text-and-image' },
               { label: '📷 Apenas Imagem', value: 'image-only' },
-              { label: '📝 Apenas Texto', value: 'text-only' }
+              { label: '📝 Apenas Texto', value: 'text-only' },
             ],
             supportsInterpolation: false,
-            description: 'Que tipo de conteúdo exibir nas opções'
+            description: 'Que tipo de conteúdo exibir nas opções',
           },
           {
             key: 'imageSize',
@@ -674,7 +674,7 @@ export class PropertyExtractionService {
             max: 400,
             step: 10,
             supportsInterpolation: false,
-            description: 'Tamanho padrão das imagens'
+            description: 'Tamanho padrão das imagens',
           },
           {
             key: 'backgroundColor',
@@ -683,7 +683,7 @@ export class PropertyExtractionService {
             category: 'style',
             value: block.properties?.backgroundColor || '#FFFFFF',
             supportsInterpolation: false,
-            description: 'Cor de fundo das opções não selecionadas'
+            description: 'Cor de fundo das opções não selecionadas',
           },
           {
             key: 'selectedColor',
@@ -692,8 +692,8 @@ export class PropertyExtractionService {
             category: 'style',
             value: block.properties?.selectedColor || '#B89B7A',
             supportsInterpolation: false,
-            description: 'Cor de fundo quando a opção está selecionada'
-          }
+            description: 'Cor de fundo quando a opção está selecionada',
+          },
         );
 
         // === VALIDAÇÃO ===
@@ -705,7 +705,7 @@ export class PropertyExtractionService {
             category: 'validation',
             value: block.properties?.enableValidation !== false,
             supportsInterpolation: false,
-            description: 'Verificar se seleções são válidas antes de prosseguir'
+            description: 'Verificar se seleções são válidas antes de prosseguir',
           },
           {
             key: 'validationMessage',
@@ -714,8 +714,8 @@ export class PropertyExtractionService {
             category: 'validation',
             value: block.properties?.validationMessage || 'Selecione pelo menos uma opção para continuar',
             supportsInterpolation: false,
-            description: 'Mensagem exibida quando seleção é inválida'
-          }
+            description: 'Mensagem exibida quando seleção é inválida',
+          },
         );
         break;
     }

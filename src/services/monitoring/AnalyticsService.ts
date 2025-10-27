@@ -39,7 +39,7 @@ class AnalyticsService {
       templatesUsed: [],
       timeSpent: 0,
       errorsEncountered: 0,
-      completionRate: 0
+      completionRate: 0,
     };
   }
 
@@ -77,8 +77,8 @@ class AnalyticsService {
         page_location: window.location.href,
         custom_map: {
           custom_parameter_1: 'session_id',
-          custom_parameter_2: 'editor_mode'
-        }
+          custom_parameter_2: 'editor_mode',
+        },
       });
     }
 
@@ -105,7 +105,7 @@ class AnalyticsService {
         value: event.value,
         session_id: this.sessionId,
         timestamp: new Date().toISOString(),
-        ...event.custom_parameters
+        ...event.custom_parameters,
       });
     }
 
@@ -124,8 +124,8 @@ class AnalyticsService {
         page_name: pageName,
         url: window.location.href,
         referrer: document.referrer,
-        ...additionalData
-      }
+        ...additionalData,
+      },
     });
   }
 
@@ -157,8 +157,8 @@ class AnalyticsService {
       custom_parameters: {
         action,
         session_metrics: this.editorMetrics,
-        ...details
-      }
+        ...details,
+      },
     });
   }
 
@@ -175,8 +175,8 @@ class AnalyticsService {
         metric,
         value,
         unit,
-        url: window.location.href
-      }
+        url: window.location.href,
+      },
     });
   }
 
@@ -231,8 +231,8 @@ class AnalyticsService {
         error_stack: error.stack,
         context,
         url: window.location.href,
-        session_metrics: this.editorMetrics
-      }
+        session_metrics: this.editorMetrics,
+      },
     });
   }
 
@@ -247,8 +247,8 @@ class AnalyticsService {
       value,
       custom_parameters: {
         goal_name: goalName,
-        session_metrics: this.editorMetrics
-      }
+        session_metrics: this.editorMetrics,
+      },
     });
   }
 
@@ -265,8 +265,8 @@ class AnalyticsService {
       event_label: 'session_complete',
       value: this.editorMetrics.timeSpent,
       custom_parameters: {
-        final_metrics: this.editorMetrics
-      }
+        final_metrics: this.editorMetrics,
+      },
     });
   }
 
@@ -276,7 +276,7 @@ class AnalyticsService {
   getSessionMetrics(): EditorMetrics {
     return {
       ...this.editorMetrics,
-      timeSpent: Date.now() - this.sessionStart
+      timeSpent: Date.now() - this.sessionStart,
     };
   }
 
@@ -299,8 +299,8 @@ class AnalyticsService {
         session_id: this.sessionId,
         user_agent: navigator.userAgent,
         screen_resolution: `${screen.width}x${screen.height}`,
-        language: navigator.language
-      }
+        language: navigator.language,
+      },
     });
   }
 

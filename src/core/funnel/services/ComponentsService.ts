@@ -100,7 +100,7 @@ export class ComponentsService {
             componentTypeKey,
             orderIndex,
             properties = {},
-            stageId = null
+            stageId = null,
         } = input;
 
         console.log(`➕ Adicionando componente: ${componentTypeKey} na etapa ${stepNumber}`);
@@ -119,7 +119,7 @@ export class ComponentsService {
                     properties,
                     is_active: true,
                     created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString()
+                    updated_at: new Date().toISOString(),
                 };
             }
 
@@ -133,7 +133,7 @@ export class ComponentsService {
                     step_number: stepNumber,
                     order_index: orderIndex,
                     properties,
-                    is_active: true
+                    is_active: true,
                 }])
                 .select()
                 .single();
@@ -169,7 +169,7 @@ export class ComponentsService {
                 .from('component_instances')
                 .update({
                     ...updates,
-                    updated_at: new Date().toISOString()
+                    updated_at: new Date().toISOString(),
                 })
                 .eq('id', id)
                 .select()
@@ -242,11 +242,11 @@ export class ComponentsService {
                     .from('component_instances')
                     .update({
                         order_index: index,
-                        updated_at: new Date().toISOString()
+                        updated_at: new Date().toISOString(),
                     })
                     .eq('id', id)
                     .eq('funnel_id', funnelId)
-                    .eq('step_number', stepNumber)
+                    .eq('step_number', stepNumber),
             );
 
             const results = await Promise.all(updates);
@@ -257,7 +257,7 @@ export class ComponentsService {
                 return false;
             }
 
-            console.log(`✅ Componentes reordenados com sucesso`);
+            console.log('✅ Componentes reordenados com sucesso');
             return true;
         } catch (error) {
             console.error('Error in reorderComponents:', error);
@@ -277,7 +277,7 @@ export class ComponentsService {
             content: instance.properties || {},
             properties: instance.properties || {},
             styling: instance.custom_styling || {},
-            conditions: []
+            conditions: [],
         };
     }
 
@@ -288,7 +288,7 @@ export class ComponentsService {
         component: FunnelComponent,
         funnelId: string,
         stepNumber: number,
-        instanceKey?: string
+        instanceKey?: string,
     ): AddComponentInput {
         return {
             funnelId,
@@ -298,8 +298,8 @@ export class ComponentsService {
             orderIndex: component.order,
             properties: {
                 ...component.content,
-                ...component.properties
-            }
+                ...component.properties,
+            },
         };
     }
 

@@ -63,7 +63,7 @@ const detectActiveEditorContext = (): UnifiedEditorContext | null => {
         if (unifiedContext) {
             return {
                 ...unifiedContext,
-                legacy: {}
+                legacy: {},
             };
         }
     } catch (error) {
@@ -80,8 +80,8 @@ const detectActiveEditorContext = (): UnifiedEditorContext | null => {
                 legacy: {
                     rawState: originalContext.state,
                     setState: originalContext.actions?.setState,
-                    storageReady: true
-                }
+                    storageReady: true,
+                },
             };
         }
     } catch (error) {
@@ -99,8 +99,8 @@ const detectActiveEditorContext = (): UnifiedEditorContext | null => {
                     funnelId: migrationContext.legacy?.funnelId,
                     setFunnelId: migrationContext.legacy?.setFunnelId,
                     isPreviewing: migrationContext.legacy?.isPreviewing,
-                    setIsPreviewing: migrationContext.legacy?.setIsPreviewing
-                }
+                    setIsPreviewing: migrationContext.legacy?.setIsPreviewing,
+                },
             };
         }
     } catch (error) {
@@ -119,7 +119,7 @@ const detectActiveEditorContext = (): UnifiedEditorContext | null => {
                     stepValidation: {},
                     isLoading: false,
                     databaseMode: 'supabase' as const,
-                    isSupabaseEnabled: true
+                    isSupabaseEnabled: true,
                 },
                 actions: {
                     setCurrentStep: () => { },
@@ -140,14 +140,14 @@ const detectActiveEditorContext = (): UnifiedEditorContext | null => {
                     canRedo: false,
                     exportJSON: () => '{}',
                     importJSON: () => { },
-                    saveToSupabase: async () => { }
+                    saveToSupabase: async () => { },
                 },
                 legacy: {
                     core: coreContext.core,
                     elements: coreContext.elements,
                     selection: coreContext.selection,
-                    viewport: coreContext.viewport
-                }
+                    viewport: coreContext.viewport,
+                },
             };
         }
     } catch (error) {
@@ -184,8 +184,8 @@ export const useEditor = (): UnifiedEditorContext => {
             suggestions: [
                 'Verifique se o componente está dentro de um EditorProvider',
                 'Use OptimizedEditorProvider para melhor performance',
-                'Considere usar useEditorOptional se o contexto é opcional'
-            ]
+                'Considere usar useEditorOptional se o contexto é opcional',
+            ],
         };
 
         // Tentar detectar provedores disponíveis
@@ -201,12 +201,12 @@ export const useEditor = (): UnifiedEditorContext => {
         console.error('🚨 useEditor: Nenhum EditorProvider encontrado', errorDetails);
 
         throw new Error(
-            `🚨 useEditor must be used within an EditorProvider\n\n` +
-            `Providers suportados:\n` +
-            `✅ OptimizedEditorProvider (recomendado)\n` +
-            `⚠️  EditorProvider (legacy)\n` +
-            `⚠️  EditorProviderMigrationAdapter (legacy)\n\n` +
-            `Debug info: ${JSON.stringify(errorDetails, null, 2)}`
+            '🚨 useEditor must be used within an EditorProvider\n\n' +
+            'Providers suportados:\n' +
+            '✅ OptimizedEditorProvider (recomendado)\n' +
+            '⚠️  EditorProvider (legacy)\n' +
+            '⚠️  EditorProviderMigrationAdapter (legacy)\n\n' +
+            `Debug info: ${JSON.stringify(errorDetails, null, 2)}`,
         );
     }
 

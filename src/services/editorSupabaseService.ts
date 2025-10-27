@@ -74,7 +74,7 @@ export const fetchComponents = async (
     filters?: ComponentFilters;
     sort?: ComponentSortOptions;
     pagination?: PaginationOptions;
-  } = {}
+  } = {},
 ): Promise<ComponentQueryResult> => {
   try {
     const { filters = {}, sort = { field: 'order_index', direction: 'asc' }, pagination } = options;
@@ -160,7 +160,7 @@ export const addComponent = async (componentData: any): Promise<SupabaseComponen
  */
 export const updateComponent = async (
   id: string,
-  updates: Partial<SupabaseComponent>
+  updates: Partial<SupabaseComponent>,
 ): Promise<SupabaseComponent> => {
   try {
     const normalizedUpdates = normalizeComponentData(updates);
@@ -207,7 +207,7 @@ export const deleteComponent = async (id: string): Promise<void> => {
  */
 export const reorderComponents = async (
   funnelId: string,
-  componentIds: string[]
+  componentIds: string[],
 ): Promise<SupabaseComponent[]> => {
   try {
     if (!funnelId) {

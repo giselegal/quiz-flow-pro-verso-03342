@@ -64,7 +64,7 @@ export const useStepWithContainer = (props: StepWithContainerProps) => {
       ...containerProps,
       ...mobileOptimizations,
     }),
-    [containerProps, mobileOptimizations]
+    [containerProps, mobileOptimizations],
   );
 
   const { containerClasses, inlineStyles } = useContainerProperties(optimizedContainerProps);
@@ -106,7 +106,7 @@ export const useStepWithContainer = (props: StepWithContainerProps) => {
       totalOptimizations:
         Object.keys(mobileOptimizations).length + Object.keys(performanceOptimizations).length,
     }),
-    [stepId, isMobile, optimizedContainerProps, mobileOptimizations, performanceOptimizations]
+    [stepId, isMobile, optimizedContainerProps, mobileOptimizations, performanceOptimizations],
   );
 
   return {
@@ -136,7 +136,7 @@ export const useStepWithContainer = (props: StepWithContainerProps) => {
  */
 export const useQuizStepContainer = (
   stepId: number,
-  customProps?: Partial<StepWithContainerProps>
+  customProps?: Partial<StepWithContainerProps>,
 ) => {
   // Configurações padrão otimizadas para steps de quiz
   const defaultQuizStepProps: StepWithContainerProps = {

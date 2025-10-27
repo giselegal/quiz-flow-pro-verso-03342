@@ -32,7 +32,7 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
         '/workspaces/quiz-flow-pro-verso/src/hooks/canvas/useLiveCanvasPreview.ts',
         '/workspaces/quiz-flow-pro-verso/src/hooks/performance/useAdvancedCache.ts',
         '/workspaces/quiz-flow-pro-verso/src/hooks/performance/useRenderOptimization.ts',
-        '/workspaces/quiz-flow-pro-verso/src/hooks/websocket/useAdvancedWebSocket.ts'
+        '/workspaces/quiz-flow-pro-verso/src/hooks/websocket/useAdvancedWebSocket.ts',
       ];
 
       for (const file of files) {
@@ -53,7 +53,7 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
         '/workspaces/quiz-flow-pro-verso/src/components/editor/canvas/LiveCanvasPreview.tsx',
         '/workspaces/quiz-flow-pro-verso/src/components/editor/dashboard/PerformanceDashboard.tsx',
         '/workspaces/quiz-flow-pro-verso/src/components/editor/validation/SystemValidator.tsx',
-        '/workspaces/quiz-flow-pro-verso/src/components/editor/testing/FeatureFlagSystem.tsx'
+        '/workspaces/quiz-flow-pro-verso/src/components/editor/testing/FeatureFlagSystem.tsx',
       ];
 
       for (const component of components) {
@@ -73,7 +73,7 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
       const docs = [
         '/workspaces/quiz-flow-pro-verso/LIVE_PREVIEW_OPTIMIZATION_GUIDE.md',
         '/workspaces/quiz-flow-pro-verso/MIGRATION_GUIDE_PREVIEW_OPTIMIZATION.md',
-        '/workspaces/quiz-flow-pro-verso/PERFORMANCE_OPTIMIZATION_IMPLEMENTATION.md'
+        '/workspaces/quiz-flow-pro-verso/PERFORMANCE_OPTIMIZATION_IMPLEMENTATION.md',
       ];
 
       for (const doc of docs) {
@@ -98,7 +98,7 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
         'src/hooks/canvas/useLiveCanvasPreview.ts',
         'src/hooks/performance/useAdvancedCache.ts', 
         'src/hooks/performance/useRenderOptimization.ts',
-        'src/hooks/websocket/useAdvancedWebSocket.ts'
+        'src/hooks/websocket/useAdvancedWebSocket.ts',
       ];
 
       for (const file of hookFiles) {
@@ -106,7 +106,7 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
           // Tentar compilar cada arquivo individualmente
           const result = execSync(
             `cd /workspaces/quiz-flow-pro-verso && npx tsc --jsx react-jsx --esModuleInterop --skipLibCheck --noEmit ${file}`,
-            { encoding: 'utf-8', timeout: 10000 }
+            { encoding: 'utf-8', timeout: 10000 },
           );
           console.log(`✅ ${file} - Compilação OK`);
         } catch (error: any) {
@@ -127,7 +127,7 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
         "import { useLiveCanvasPreview } from '@/hooks/canvas/useLiveCanvasPreview';",
         "import { useAdvancedCache } from '@/hooks/performance/useAdvancedCache';",
         "import { useRenderOptimization } from '@/hooks/performance/useRenderOptimization';",
-        "import { useAdvancedWebSocket } from '@/hooks/websocket/useAdvancedWebSocket';"
+        "import { useAdvancedWebSocket } from '@/hooks/websocket/useAdvancedWebSocket';",
       ];
 
       // Criar arquivo temporário para testar imports
@@ -148,8 +148,8 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
         
         const { execSync } = await import('child_process');
         execSync(
-          `cd /workspaces/quiz-flow-pro-verso && npx tsc --jsx react-jsx --esModuleInterop --skipLibCheck --noEmit test-imports-temp.ts`,
-          { encoding: 'utf-8', timeout: 5000 }
+          'cd /workspaces/quiz-flow-pro-verso && npx tsc --jsx react-jsx --esModuleInterop --skipLibCheck --noEmit test-imports-temp.ts',
+          { encoding: 'utf-8', timeout: 5000 },
         );
         
         console.log('✅ Sistema de imports funcionando');
@@ -224,7 +224,7 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
         
         const response = await fetch('http://localhost:5173/', {
           method: 'GET',
-          signal: controller.signal
+          signal: controller.signal,
         });
         
         clearTimeout(timeoutId);
@@ -245,7 +245,7 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
         // Tentar fazer um dry-run do build
         const result = execSync(
           'cd /workspaces/quiz-flow-pro-verso && npm run build --dry-run',
-          { encoding: 'utf-8', timeout: 30000 }
+          { encoding: 'utf-8', timeout: 30000 },
         );
         
         console.log('✅ Build verificado com sucesso');
@@ -276,7 +276,7 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
           '✅ SystemValidator - Validador de sistema',
           '✅ FeatureFlagSystem - Sistema A/B testing',
           '✅ AutoIntegrationSystem - Sistema de migração',
-          '✅ IntegrationTestSuite - Suite de testes'
+          '✅ IntegrationTestSuite - Suite de testes',
         ],
         features: [
           '🚀 Preview ao vivo com debouncing',
@@ -288,7 +288,7 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
           '✅ Validação automática de saúde',
           '🎯 Renderização otimizada',
           '📈 Métricas em tempo real',
-          '🛡️ Sistema robusto de errors'
+          '🛡️ Sistema robusto de errors',
         ],
         testResults: {
           filesImplemented: '✅ PASS',
@@ -296,9 +296,9 @@ describe('🧪 E2E - Integração Completa do Sistema', () => {
           importSystem: '✅ PASS',
           functionality: '✅ PASS',
           serverStatus: '⚠️ CONDITIONAL',
-          buildVerification: '⚠️ CONDITIONAL'
+          buildVerification: '⚠️ CONDITIONAL',
         },
-        conclusion: 'Sistema de Preview ao Vivo Otimizado completamente implementado e funcional'
+        conclusion: 'Sistema de Preview ao Vivo Otimizado completamente implementado e funcional',
       };
 
       console.log('\\n🎉 ====== RELATÓRIO E2E FINAL ======');

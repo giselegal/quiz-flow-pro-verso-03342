@@ -22,32 +22,32 @@ export { PublishingService, publishingService } from './PublishingService';
 export type {
     AddComponentInput,
     UpdateComponentInput,
-    ComponentInstance
+    ComponentInstance,
 } from './ComponentsService';
 
 export type {
     FunnelPersistenceData,
     SaveFunnelOptions,
     LoadFunnelOptions,
-    FunnelListItem
+    FunnelListItem,
 } from './PersistenceService';
 
 export type {
     DefaultSettingsOptions,
-    SettingsValidationResult
+    SettingsValidationResult,
 } from './SettingsService';
 
 export type {
     CacheOptions,
     StorageItem,
-    StorageStats
+    StorageStats,
 } from './LocalStorageService';
 
 export type {
     PublishOptions,
     PublishResult,
     DeploymentInfo,
-    PublishingStats
+    PublishingStats,
 } from './PublishingService';
 
 // ============================================================================
@@ -72,7 +72,7 @@ export const funnelServices: FunnelCoreServices = {
     persistence: persistenceService,
     settings: settingsService,
     localStorage: localStorageService,
-    publishing: publishingService
+    publishing: publishingService,
 };
 
 // ============================================================================

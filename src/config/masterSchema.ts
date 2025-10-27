@@ -205,7 +205,7 @@ export const universalProperties: MasterPropertySchema[] = [
     required: true,
     defaultValue: '',
     description: 'Identificador único do bloco',
-    hidden: true // Hidden in UI but required internally
+    hidden: true, // Hidden in UI but required internally
   },
   {
     key: 'className',
@@ -214,7 +214,7 @@ export const universalProperties: MasterPropertySchema[] = [
     category: PropertyCategory.ADVANCED,
     defaultValue: '',
     description: 'Classes CSS customizadas',
-    placeholder: 'ex: my-custom-class'
+    placeholder: 'ex: my-custom-class',
   },
   {
     key: 'scale',
@@ -226,7 +226,7 @@ export const universalProperties: MasterPropertySchema[] = [
     step: 1,
     defaultValue: 100,
     description: 'Tamanho uniforme do bloco. 100% = tamanho natural.',
-    validation: z.number().min(10).max(300)
+    validation: z.number().min(10).max(300),
   },
   {
     key: 'marginTop',
@@ -237,7 +237,7 @@ export const universalProperties: MasterPropertySchema[] = [
     max: 100,
     step: 2,
     defaultValue: 0,
-    description: 'Espaçamento superior em pixels'
+    description: 'Espaçamento superior em pixels',
   },
   {
     key: 'marginBottom',
@@ -248,7 +248,7 @@ export const universalProperties: MasterPropertySchema[] = [
     max: 100,
     step: 2,
     defaultValue: 0,
-    description: 'Espaçamento inferior em pixels'
+    description: 'Espaçamento inferior em pixels',
   },
   {
     key: 'hidden',
@@ -256,7 +256,7 @@ export const universalProperties: MasterPropertySchema[] = [
     type: UnifiedPropertyType.SWITCH,
     category: PropertyCategory.BEHAVIOR,
     defaultValue: false,
-    description: 'Ocultar este bloco na renderização'
+    description: 'Ocultar este bloco na renderização',
   },
   {
     key: 'locked',
@@ -264,8 +264,8 @@ export const universalProperties: MasterPropertySchema[] = [
     type: UnifiedPropertyType.SWITCH,
     category: PropertyCategory.BEHAVIOR,
     defaultValue: false,
-    description: 'Impedir edição deste bloco'
-  }
+    description: 'Impedir edição deste bloco',
+  },
 ];
 
 // =============================================================================
@@ -300,7 +300,7 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
         defaultValue: 'Título Principal',
         placeholder: 'Digite o título...',
         description: 'Texto do título',
-        validation: commonValidationSchemas.title
+        validation: commonValidationSchemas.title,
       },
       {
         key: 'level',
@@ -316,7 +316,7 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
           { value: 'h5', label: 'Título 5 (H5)' },
           { value: 'h6', label: 'Título 6 (H6)' },
         ],
-        validation: z.enum(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+        validation: z.enum(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
       },
       {
         key: 'textAlign',
@@ -329,8 +329,8 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
           { value: 'center', label: 'Centro' },
           { value: 'right', label: 'Direita' },
         ],
-        validation: commonValidationSchemas.textAlign
-      }
+        validation: commonValidationSchemas.textAlign,
+      },
     ],
 
     defaultProperties: {
@@ -342,11 +342,11 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
     validationSchema: z.object({
       content: commonValidationSchemas.title,
       level: z.enum(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
-      textAlign: commonValidationSchemas.textAlign
+      textAlign: commonValidationSchemas.textAlign,
     }),
 
     tags: ['título', 'heading', 'h1', 'h2', 'h3'],
-    searchTerms: ['título', 'cabeçalho', 'heading']
+    searchTerms: ['título', 'cabeçalho', 'heading'],
   },
 
   'text-inline': {
@@ -368,7 +368,7 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
         defaultValue: 'Digite seu texto aqui...',
         placeholder: 'Digite o texto...',
         description: 'Texto do componente (suporte HTML)',
-        validation: commonValidationSchemas.content
+        validation: commonValidationSchemas.content,
       },
       {
         key: 'fontSize',
@@ -384,7 +384,7 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
           { value: 'text-xl', label: 'Extra Grande' },
           { value: 'text-2xl', label: 'Muito Grande' },
         ],
-        validation: z.enum(['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl'])
+        validation: z.enum(['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl']),
       },
       {
         key: 'textAlign',
@@ -398,8 +398,8 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
           { value: 'right', label: 'Direita' },
           { value: 'justify', label: 'Justificado' },
         ],
-        validation: commonValidationSchemas.textAlign
-      }
+        validation: commonValidationSchemas.textAlign,
+      },
     ],
 
     defaultProperties: {
@@ -411,11 +411,11 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
     validationSchema: z.object({
       content: commonValidationSchemas.content,
       fontSize: z.enum(['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl']),
-      textAlign: commonValidationSchemas.textAlign
+      textAlign: commonValidationSchemas.textAlign,
     }),
 
     tags: ['texto', 'paragraph', 'content'],
-    searchTerms: ['texto', 'parágrafo', 'conteúdo']
+    searchTerms: ['texto', 'parágrafo', 'conteúdo'],
   },
 
   // =============================================================================
@@ -442,8 +442,8 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
         max: 200,
         step: 5,
         description: 'Altura do espaçamento em pixels',
-        validation: z.number().min(10).max(200)
-      }
+        validation: z.number().min(10).max(200),
+      },
     ],
 
     defaultProperties: {
@@ -451,11 +451,11 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
     },
 
     validationSchema: z.object({
-      height: z.number().min(10).max(200)
+      height: z.number().min(10).max(200),
     }),
 
     tags: ['espaço', 'spacing', 'layout'],
-    searchTerms: ['espaçador', 'espaço', 'margem']
+    searchTerms: ['espaçador', 'espaço', 'margem'],
   },
 
   // =============================================================================
@@ -481,7 +481,7 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
         defaultValue: 'Bem-vindo ao Quiz',
         placeholder: 'Digite o título do quiz...',
         description: 'Título principal do quiz',
-        validation: commonValidationSchemas.title
+        validation: commonValidationSchemas.title,
       },
       {
         key: 'subtitle',
@@ -491,8 +491,8 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
         defaultValue: 'Descubra qual é o melhor para você',
         placeholder: 'Digite o subtítulo...',
         description: 'Subtítulo explicativo',
-        validation: z.string().optional()
-      }
+        validation: z.string().optional(),
+      },
     ],
 
     defaultProperties: {
@@ -502,12 +502,12 @@ export const MASTER_BLOCK_REGISTRY: Record<string, MasterBlockDefinition> = {
 
     validationSchema: z.object({
       title: commonValidationSchemas.title,
-      subtitle: z.string().optional()
+      subtitle: z.string().optional(),
     }),
 
     tags: ['quiz', 'header', 'intro'],
-    searchTerms: ['quiz', 'cabeçalho', 'introdução']
-  }
+    searchTerms: ['quiz', 'cabeçalho', 'introdução'],
+  },
 };
 
 // =============================================================================
@@ -536,7 +536,7 @@ export function getAllPropertiesForBlock(type: string): MasterPropertySchema[] {
  */
 export function getPropertiesByCategory(
   type: string,
-  category: PropertyCategory
+  category: PropertyCategory,
 ): MasterPropertySchema[] {
   const allProperties = getAllPropertiesForBlock(type);
   return allProperties.filter(prop => prop.category === category);
@@ -558,7 +558,7 @@ export function validateBlockData(type: string, data: any): { success: boolean; 
     if (error instanceof z.ZodError) {
       return {
         success: false,
-        errors: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+        errors: error.errors.map(e => `${e.path.join('.')}: ${e.message}`),
       };
     }
     return { success: false, errors: ['Unknown validation error'] };
@@ -581,7 +581,7 @@ export function searchBlocks(query: string): MasterBlockDefinition[] {
     block.name.toLowerCase().includes(lowercaseQuery) ||
     block.description.toLowerCase().includes(lowercaseQuery) ||
     block.searchTerms?.some(term => term.toLowerCase().includes(lowercaseQuery)) ||
-    block.tags?.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+    block.tags?.some(tag => tag.toLowerCase().includes(lowercaseQuery)),
   );
 }
 
@@ -592,14 +592,14 @@ export function getBlockDefaultProperties(type: string): Record<string, any> {
   const blockDef = getMasterBlockDefinition(type);
   const universalDefaults = universalProperties.reduce((acc, prop) => ({
     ...acc,
-    [prop.key]: prop.defaultValue
+    [prop.key]: prop.defaultValue,
   }), {});
 
   if (!blockDef) return universalDefaults;
 
   return {
     ...universalDefaults,
-    ...blockDef.defaultProperties
+    ...blockDef.defaultProperties,
   };
 }
 

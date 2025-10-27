@@ -38,7 +38,7 @@ export class LocalStorageAdapter implements StorageAdapter {
       ttl: 3600, // 1 hora por padrão
       maxSize: 100, // Máximo 100 entradas
       compress: false,
-      ...defaultOptions
+      ...defaultOptions,
     };
   }
 
@@ -94,7 +94,7 @@ export class LocalStorageAdapter implements StorageAdapter {
         data,
         timestamp: Date.now(),
         ttl: opts.ttl,
-        compressed
+        compressed,
       };
 
       localStorage.setItem(fullKey, JSON.stringify(entry));
@@ -108,7 +108,7 @@ export class LocalStorageAdapter implements StorageAdapter {
         const entry: CacheEntry<T> = {
           data: value,
           timestamp: Date.now(),
-          ttl: options?.ttl || this.defaultOptions.ttl
+          ttl: options?.ttl || this.defaultOptions.ttl,
         };
         localStorage.setItem(fullKey, JSON.stringify(entry));
         return true;
@@ -203,8 +203,8 @@ export class LocalStorageAdapter implements StorageAdapter {
         metadata: {
           timestamp: entry.timestamp,
           ttl: entry.ttl,
-          size: item.length
-        }
+          size: item.length,
+        },
       };
     } catch (error) {
       console.error('Error getting with metadata:', error);
@@ -299,7 +299,7 @@ export class LocalStorageAdapter implements StorageAdapter {
       totalSize,
       expiredKeys,
       oldestEntry: oldestTimestamp,
-      newestEntry: newestTimestamp
+      newestEntry: newestTimestamp,
     };
   }
 
@@ -413,7 +413,7 @@ export class EditorStorageAdapter extends LocalStorageAdapter {
     super('editor_', {
       ttl: 7200, // 2 horas
       maxSize: 50,
-      compress: true
+      compress: true,
     });
   }
 
@@ -445,7 +445,7 @@ export class QuizStorageAdapter extends LocalStorageAdapter {
     super('quiz_', {
       ttl: 1800, // 30 minutos
       maxSize: 20,
-      compress: false
+      compress: false,
     });
   }
 
@@ -479,7 +479,7 @@ export class FunnelStorageAdapter extends LocalStorageAdapter {
     super('funnel_', {
       ttl: 3600, // 1 hora
       maxSize: 30,
-      compress: true
+      compress: true,
     });
   }
 

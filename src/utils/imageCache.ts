@@ -80,7 +80,7 @@ class ImageCacheManager {
         height: number = 200,
         text: string = 'Imagem',
         backgroundColor: string = '#f1f5f9',
-        textColor: string = '#64748b'
+        textColor: string = '#64748b',
     ): Blob {
         const svgContent = `
       <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
@@ -106,7 +106,7 @@ class ImageCacheManager {
     async storeImage(
         url: string,
         blob: Blob,
-        metadata?: CachedImage['metadata']
+        metadata?: CachedImage['metadata'],
     ): Promise<string> {
         try {
             const db = await this.ensureDB();
@@ -146,7 +146,7 @@ class ImageCacheManager {
     async getImage(
         url: string,
         width?: number,
-        height?: number
+        height?: number,
     ): Promise<string | null> {
         try {
             const id = this.generateImageId(url, width, height);
@@ -222,7 +222,7 @@ class ImageCacheManager {
         height: number = 200,
         text: string = 'Imagem',
         backgroundColor: string = '#f1f5f9',
-        textColor: string = '#64748b'
+        textColor: string = '#64748b',
     ): Promise<string> {
         const placeholderUrl = `placeholder://${width}x${height}/${text}/${backgroundColor}/${textColor}`;
 

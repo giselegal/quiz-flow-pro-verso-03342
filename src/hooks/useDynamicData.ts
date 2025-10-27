@@ -179,7 +179,7 @@ function generateProductRecommendations(primaryStyle: any): Product[] {
 
 function generateStyleRecommendations(
   primaryStyle: any,
-  secondaryStyles: any[]
+  secondaryStyles: any[],
 ): StyleRecommendation[] {
   return [
     {

@@ -82,29 +82,29 @@ export class AdvancedStorageManager {
                 indexes: [
                     { name: 'namespace', keyPath: 'metadata.namespace' },
                     { name: 'timestamp', keyPath: 'timestamp' },
-                    { name: 'expiresAt', keyPath: 'expiresAt' }
-                ]
+                    { name: 'expiresAt', keyPath: 'expiresAt' },
+                ],
             },
             {
                 name: 'funnelData',
                 keyPath: 'key',
                 indexes: [
                     { name: 'funnelId', keyPath: 'metadata.funnelId' },
-                    { name: 'pageId', keyPath: 'metadata.pageId' }
-                ]
+                    { name: 'pageId', keyPath: 'metadata.pageId' },
+                ],
             },
             {
                 name: 'userPreferences',
-                keyPath: 'key'
+                keyPath: 'key',
             },
             {
                 name: 'cache',
                 keyPath: 'key',
                 indexes: [
-                    { name: 'expiresAt', keyPath: 'expiresAt' }
-                ]
-            }
-        ]
+                    { name: 'expiresAt', keyPath: 'expiresAt' },
+                ],
+            },
+        ],
     };
 
     private constructor(config?: Partial<StorageConfig>) {
@@ -149,7 +149,7 @@ export class AdvancedStorageManager {
                 this.config.stores.forEach(store => {
                     if (!db.objectStoreNames.contains(store.name)) {
                         const objectStore = db.createObjectStore(store.name,
-                            store.keyPath ? { keyPath: store.keyPath } : { autoIncrement: true }
+                            store.keyPath ? { keyPath: store.keyPath } : { autoIncrement: true },
                         );
 
                         // Criar índices
@@ -174,7 +174,7 @@ export class AdvancedStorageManager {
             compress?: boolean;
             tags?: string[];
             storeName?: string;
-        } = {}
+        } = {},
     ): Promise<boolean> {
         try {
             const {
@@ -182,7 +182,7 @@ export class AdvancedStorageManager {
                 ttl,
                 compress = true,
                 tags = [],
-                storeName = 'editorState'
+                storeName = 'editorState',
             } = options;
 
             await this.ensureReady();
@@ -211,8 +211,8 @@ export class AdvancedStorageManager {
                     namespace,
                     tags,
                     compressed,
-                    originalSize: compressed ? originalSize : undefined
-                }
+                    originalSize: compressed ? originalSize : undefined,
+                },
             };
 
             const transaction = this.db!.transaction([storeName], 'readwrite');
@@ -228,13 +228,13 @@ export class AdvancedStorageManager {
                 type: 'set',
                 key: item.key,
                 namespace,
-                timestamp: item.timestamp
+                timestamp: item.timestamp,
             });
 
             devLog(`Item salvo: ${key} (${namespace})`, {
                 originalSize,
                 compressed,
-                savings: compressed ? Math.round((1 - finalValue.length / originalSize) * 100) : 0
+                savings: compressed ? Math.round((1 - finalValue.length / originalSize) * 100) : 0,
             });
 
             return true;
@@ -250,7 +250,7 @@ export class AdvancedStorageManager {
     async getItem<T>(
         key: string,
         namespace: string = 'default',
-        storeName: string = 'editorState'
+        storeName: string = 'editorState',
     ): Promise<T | null> {
         try {
             const namespacedKey = this.buildNamespacedKey(key, namespace);
@@ -302,7 +302,7 @@ export class AdvancedStorageManager {
     async deleteItem(
         key: string,
         namespace: string = 'default',
-        storeName: string = 'editorState'
+        storeName: string = 'editorState',
     ): Promise<boolean> {
         try {
             const namespacedKey = this.buildNamespacedKey(key, namespace);
@@ -322,7 +322,7 @@ export class AdvancedStorageManager {
                 type: 'delete',
                 key: namespacedKey,
                 namespace,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             });
 
             return true;
@@ -337,7 +337,7 @@ export class AdvancedStorageManager {
      */
     async listItems(
         namespace: string = 'default',
-        storeName: string = 'editorState'
+        storeName: string = 'editorState',
     ): Promise<Array<{ key: string; timestamp: number; tags?: string[] }>> {
         try {
             await this.ensureReady();
@@ -354,7 +354,7 @@ export class AdvancedStorageManager {
                 .map(item => ({
                     key: this.extractOriginalKey(item.key, namespace),
                     timestamp: item.timestamp,
-                    tags: item.metadata?.tags
+                    tags: item.metadata?.tags,
                 }));
         } catch (error) {
             console.error('Erro ao listar items:', error);
@@ -376,7 +376,7 @@ export class AdvancedStorageManager {
                 maxAge = 7 * 24 * 60 * 60 * 1000, // 7 dias
                 maxItems = 1000, // TODO: implementar lógica de limpeza por quantidade
                 namespace,
-                preserveEssential = true
+                preserveEssential = true,
             } = options;
 
             appLogger.debug('Cleaning storage', { maxAge, maxItems, namespace });
@@ -485,7 +485,7 @@ export class AdvancedStorageManager {
                 totalSize,
                 namespaces,
                 expiredItems,
-                compressionSavings
+                compressionSavings,
             };
         } catch (error) {
             console.error('Erro ao obter métricas:', error);
@@ -494,7 +494,7 @@ export class AdvancedStorageManager {
                 totalSize: 0,
                 namespaces: {},
                 expiredItems: 0,
-                compressionSavings: 0
+                compressionSavings: 0,
             };
         }
     }
@@ -504,7 +504,7 @@ export class AdvancedStorageManager {
      */
     async migrateFromLocalStorage(
         patterns: string[] = ['editor_', 'funnel_', 'quiz_'],
-        deleteOriginal: boolean = true
+        deleteOriginal: boolean = true,
     ): Promise<number> {
         let migrated = 0;
 
@@ -577,7 +577,7 @@ export class AdvancedStorageManager {
         const essentialPatterns = ['user', 'auth', 'session', 'critical'];
         return essentialPatterns.some(pattern =>
             item.key.toLowerCase().includes(pattern) ||
-            item.metadata?.tags?.includes('essential')
+            item.metadata?.tags?.includes('essential'),
         );
     }
 
@@ -680,7 +680,7 @@ export const advancedStorage = {
     migrateFromLocalStorage: (patterns?: string[], deleteOriginal?: boolean) =>
         getStorageManager().migrateFromLocalStorage(patterns, deleteOriginal),
     onStorageChange: (callback: (event: StorageChangeEvent) => void) =>
-        getStorageManager().onStorageChange(callback)
+        getStorageManager().onStorageChange(callback),
 };
 
 export default AdvancedStorageManager;

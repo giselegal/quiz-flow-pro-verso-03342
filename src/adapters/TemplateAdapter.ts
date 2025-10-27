@@ -41,23 +41,23 @@ export class TemplateAdapter {
 
         if (version) {
             // v3.0
-            if (version === "3.0" || version === "3") {
-                return "3.0";
+            if (version === '3.0' || version === '3') {
+                return '3.0';
             }
 
             // v2.1
-            if (version === "2.1") {
-                return "2.1";
+            if (version === '2.1') {
+                return '2.1';
             }
 
             // v2.0
-            if (version === "2.0" || version === "2") {
-                return "2.0";
+            if (version === '2.0' || version === '2') {
+                return '2.0';
             }
 
             // v1.0
-            if (version === "1.0" || version === "1") {
-                return "1.0";
+            if (version === '1.0' || version === '1') {
+                return '1.0';
             }
         }
 
@@ -75,22 +75,22 @@ export class TemplateAdapter {
     private static detectVersionByStructure(template: any): TemplateVersion {
         // v3.0 tem: sections, theme, offer
         if (template.sections && template.theme && template.offer) {
-            return "3.0";
+            return '3.0';
         }
 
         // v2.x tem: blocks, metadata, layout
         if (template.blocks && template.metadata) {
-            return "2.0";
+            return '2.0';
         }
 
         // v1.0 tem apenas blocks
         if (template.blocks) {
-            return "1.0";
+            return '1.0';
         }
 
         // Fallback para v2.0
         console.warn('Não foi possível detectar versão do template, assumindo v2.0');
-        return "2.0";
+        return '2.0';
     }
 
     /**
@@ -107,7 +107,7 @@ export class TemplateAdapter {
      * ```
      */
     static isV3(template: any): template is TemplateV3 {
-        return this.detectVersion(template) === "3.0";
+        return this.detectVersion(template) === '3.0';
     }
 
     /**
@@ -118,7 +118,7 @@ export class TemplateAdapter {
      */
     static isV2(template: any): template is TemplateV2 {
         const version = this.detectVersion(template);
-        return version === "2.0" || version === "2.1";
+        return version === '2.0' || version === '2.1';
     }
 
     /**
@@ -140,7 +140,7 @@ export class TemplateAdapter {
     static normalize(template: any): AnyTemplate {
         const version = this.detectVersion(template);
 
-        if (version === "3.0") {
+        if (version === '3.0') {
             return this.validateV3(template);
         } else {
             return this.validateV2(template);
@@ -159,7 +159,7 @@ export class TemplateAdapter {
         const errors: string[] = [];
 
         // Validar campos obrigatórios
-        if (!template.templateVersion || template.templateVersion !== "3.0") {
+        if (!template.templateVersion || template.templateVersion !== '3.0') {
             errors.push('templateVersion deve ser "3.0"');
         }
 
@@ -233,7 +233,7 @@ export class TemplateAdapter {
         // Lançar erro se houver problemas
         if (errors.length > 0) {
             throw new Error(
-                `Template v3.0 inválido:\n${errors.map(e => `  - ${e}`).join('\n')}`
+                `Template v3.0 inválido:\n${errors.map(e => `  - ${e}`).join('\n')}`,
             );
         }
 
@@ -261,7 +261,7 @@ export class TemplateAdapter {
 
         if (errors.length > 0) {
             console.warn(
-                `Template v2.0 com problemas:\n${errors.map(e => `  - ${e}`).join('\n')}`
+                `Template v2.0 com problemas:\n${errors.map(e => `  - ${e}`).join('\n')}`,
             );
         }
 
@@ -280,7 +280,7 @@ export class TemplateAdapter {
     static convertV2ToV3(templateV2: TemplateV2): TemplateV3 {
         throw new Error(
             'Conversão v2→v3 ainda não implementada. ' +
-            'Use templates nativos v3.0 ou aguarde próxima versão.'
+            'Use templates nativos v3.0 ou aguarde próxima versão.',
         );
     }
 
@@ -345,7 +345,7 @@ export class TemplateAdapter {
             return info;
         } catch (error) {
             return {
-                version: "2.0",
+                version: '2.0',
                 isValid: false,
                 hasTheme: false,
                 hasOffer: false,

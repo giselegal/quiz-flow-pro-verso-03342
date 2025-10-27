@@ -45,28 +45,28 @@ describe('FASE 3A - Registro de Componentes no UniversalBlockRenderer', () => {
 
         it('deve incluir 2 componentes inline', () => {
             const inlineComponents = fase3aComponentTypes.filter(t =>
-                t === 'image-display-inline' || t === 'decorative-bar-inline'
+                t === 'image-display-inline' || t === 'decorative-bar-inline',
             );
             expect(inlineComponents.length).toBe(2);
         });
 
         it('deve incluir 3 componentes de formulário/resultado', () => {
             const formResultComponents = fase3aComponentTypes.filter(t =>
-                t.includes('lead-form') || t.includes('result')
+                t.includes('lead-form') || t.includes('result'),
             );
             expect(formResultComponents.length).toBe(3);
         });
 
         it('deve incluir 2 componentes de loading', () => {
             const loadingComponents = fase3aComponentTypes.filter(t =>
-                t.includes('loading') || t.includes('spinner')
+                t.includes('loading') || t.includes('spinner'),
             );
             expect(loadingComponents.length).toBe(2);
         });
 
         it('deve incluir 7 componentes de offer', () => {
             const offerComponents = fase3aComponentTypes.filter(t =>
-                t.startsWith('offer-')
+                t.startsWith('offer-'),
             );
             expect(offerComponents.length).toBe(7);
         });
@@ -120,7 +120,7 @@ describe('FASE 3A - Registro de Componentes no UniversalBlockRenderer', () => {
 
             fase3aTypes.forEach(type => {
                 const matchesPattern = patternsValidos.some(pattern =>
-                    pattern.test(type)
+                    pattern.test(type),
                 );
                 expect(matchesPattern, `${type} deve seguir um dos padrões válidos`).toBe(true);
             });

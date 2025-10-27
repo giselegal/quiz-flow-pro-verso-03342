@@ -52,7 +52,7 @@ export const QUIZ_21_COMPLETE_DATA: QuizFunnelData = {
             primaryColor: '#B89B7A',
             secondaryColor: '#F8F9FA',
             backgroundColor: '#FFFFFF',
-            textColor: '#374151'
+            textColor: '#374151',
         },
         quiz_config: {
             totalQuestions: 10,
@@ -62,13 +62,13 @@ export const QUIZ_21_COMPLETE_DATA: QuizFunnelData = {
             showProgress: true,
             multipleSelection: true,
             requiredSelections: 3,
-            maxSelections: 3
+            maxSelections: 3,
         },
         seo: {
             title: 'Descubra Seu Estilo Pessoal - Quiz Interativo',
             description: 'Descubra seu estilo predominante através do nosso quiz personalizado',
-            keywords: 'estilo pessoal, consultoria de imagem, quiz de estilo, moda feminina'
-        }
+            keywords: 'estilo pessoal, consultoria de imagem, quiz de estilo, moda feminina',
+        },
     },
     pages: [
         // Etapa 1 - Coleta do Nome
@@ -426,7 +426,7 @@ export async function createQuiz21CompleteViaService(): Promise<string | null> {
                 ...QUIZ_21_COMPLETE_DATA.settings,
                 theme: QUIZ_21_COMPLETE_DATA.settings.theme,
                 branding: QUIZ_21_COMPLETE_DATA.settings.theme,
-                seo: QUIZ_21_COMPLETE_DATA.settings.seo
+                seo: QUIZ_21_COMPLETE_DATA.settings.seo,
             },
             context: {
                 currentStepId: QUIZ_21_COMPLETE_DATA.pages[0]?.id || 'step-1',
@@ -434,10 +434,10 @@ export async function createQuiz21CompleteViaService(): Promise<string | null> {
                 completedSteps: 0,
                 userProgress: {},
                 createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
+                updatedAt: new Date().toISOString(),
             } as any,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
         };
 
         const createdFunnel = await funnelService.createFunnel(unifiedFunnelData);
@@ -450,8 +450,8 @@ export async function createQuiz21CompleteViaService(): Promise<string | null> {
                 order: page.page_order,
                 title: page.title,
                 blocks: page.blocks,
-                metadata: page.metadata || {}
-            }))
+                metadata: page.metadata || {},
+            })),
         }, user?.id || 'anonymous');
 
         console.log(`✅ Quiz 21 Complete criado: ${createdFunnel.id}`);

@@ -32,7 +32,7 @@ export const darkTheme: Theme = {
         detailsMinor: '#d85dfb',
         glowEffect: '#dee5ff',
         buttons: '#687ef7',
-        accent: '#d85dfb'
+        accent: '#d85dfb',
     },
     effects: {
         glow: `
@@ -59,8 +59,8 @@ export const darkTheme: Theme = {
                 0 0 30px rgba(222, 229, 255, 0.1),
                 inset 0 0 20px rgba(216, 93, 251, 0.05);
             backdrop-filter: blur(20px);
-        `
-    }
+        `,
+    },
 };
 
 // Versão 2 - Fundo Claro
@@ -72,7 +72,7 @@ export const lightTheme: Theme = {
         detailsMinor: '#d85dfb',
         glowEffect: '#dee5ff',
         buttons: '#687ef7',
-        accent: '#d85dfb'
+        accent: '#d85dfb',
     },
     effects: {
         glow: `
@@ -99,8 +99,8 @@ export const lightTheme: Theme = {
                 0 0 30px rgba(222, 229, 255, 0.15),
                 inset 0 0 20px rgba(216, 93, 251, 0.03);
             backdrop-filter: blur(20px);
-        `
-    }
+        `,
+    },
 };
 
 // CSS personalizado para efeitos
@@ -202,7 +202,7 @@ export const themeStyles = {
                 box-shadow: 0 0 20px rgba(216, 93, 251, 0.8), 0 0 30px rgba(222, 229, 255, 0.5);
             }
         }
-    `
+    `,
 };
 
 // Hook para usar o tema

@@ -106,13 +106,13 @@ export class FunnelErrorHandler {
             enableAlerting: true,
             alertThresholds: {
                 errorRate: 10, // 10 erros por minuto
-                criticalErrorCount: 3
+                criticalErrorCount: 3,
             },
             showErrorToasts: true,
             showErrorBoundary: true,
             isDevelopment: process.env.NODE_ENV === 'development',
             debugMode: process.env.NODE_ENV === 'development',
-            ...config
+            ...config,
         };
 
         this.context = this.initializeContext();
@@ -128,7 +128,7 @@ export class FunnelErrorHandler {
      */
     async handleError(
         error: Error | FunnelError,
-        additionalContext: Record<string, any> = {}
+        additionalContext: Record<string, any> = {},
     ): Promise<ErrorHandlingResult> {
 
         // Converter para FunnelError se necessário
@@ -145,7 +145,7 @@ export class FunnelErrorHandler {
             this.logError(funnelError),
             this.sendAnalytics(funnelError),
             this.checkAlertThresholds(funnelError),
-            this.attemptRecovery(funnelError)
+            this.attemptRecovery(funnelError),
         ]);
 
         // Notificar listeners
@@ -157,7 +157,7 @@ export class FunnelErrorHandler {
             recovered: results[3].status === 'fulfilled' && results[3].value,
             retryScheduled: this.isRetryScheduled(funnelError),
             userNotified: this.shouldNotifyUser(funnelError),
-            loggedRemotely: results[0].status === 'fulfilled'
+            loggedRemotely: results[0].status === 'fulfilled',
         };
 
         return result;
@@ -201,7 +201,7 @@ export class FunnelErrorHandler {
         const now = Date.now();
         const oneMinuteAgo = now - 60000;
         const recentErrors = this.errorHistory.filter(
-            error => error.occurredAt.getTime() > oneMinuteAgo
+            error => error.occurredAt.getTime() > oneMinuteAgo,
         );
 
         // Contadores
@@ -234,7 +234,7 @@ export class FunnelErrorHandler {
             bySeverity,
             byCategory,
             errorRate: recentErrors.length, // erros por minuto
-            averageResolutionTime: resolvedCount > 0 ? totalResolutionTime / resolvedCount : 0
+            averageResolutionTime: resolvedCount > 0 ? totalResolutionTime / resolvedCount : 0,
         };
     }
 
@@ -291,7 +291,7 @@ export class FunnelErrorHandler {
         const now = Date.now();
         const oneMinuteAgo = now - 60000;
         const recentErrors = this.errorHistory.filter(
-            e => e.occurredAt.getTime() > oneMinuteAgo
+            e => e.occurredAt.getTime() > oneMinuteAgo,
         );
         this.context.errorRate = recentErrors.length + 1; // +1 para o erro atual
 
@@ -317,8 +317,8 @@ export class FunnelErrorHandler {
             environment: {
                 isDevelopment: this.config.isDevelopment,
                 userAgent: this.context.userAgent,
-                url: this.context.url
-            }
+                url: this.context.url,
+            },
         };
 
         // Log local (console)
@@ -333,7 +333,7 @@ export class FunnelErrorHandler {
                 await fetch(this.config.logEndpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(logData)
+                    body: JSON.stringify(logData),
                 });
                 return true;
             } catch (logError) {
@@ -361,7 +361,7 @@ export class FunnelErrorHandler {
             session_id: this.context.sessionId,
             retry_count: error.retryCount,
             tags: error.metadata.tags,
-            timestamp: error.occurredAt.toISOString()
+            timestamp: error.occurredAt.toISOString(),
         };
 
         if (this.config.analyticsEndpoint) {
@@ -369,7 +369,7 @@ export class FunnelErrorHandler {
                 await fetch(this.config.analyticsEndpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(analyticsData)
+                    body: JSON.stringify(analyticsData),
                 });
             } catch (analyticsError) {
                 console.warn('Failed to send error analytics:', analyticsError);
@@ -380,7 +380,7 @@ export class FunnelErrorHandler {
         if (typeof gtag !== 'undefined') {
             gtag('event', 'exception', {
                 description: error.code,
-                fatal: error.isCritical()
+                fatal: error.isCritical(),
             });
         }
     }
@@ -399,19 +399,19 @@ export class FunnelErrorHandler {
             this.triggerAlert('HIGH_ERROR_RATE', {
                 currentRate: stats.errorRate,
                 threshold: errorRate,
-                timeWindow: '1 minute'
+                timeWindow: '1 minute',
             });
         }
 
         // Alert por muitos erros críticos
         const criticalErrors = this.errorHistory.filter(
-            e => e.metadata.severity === ErrorSeverity.CRITICAL
+            e => e.metadata.severity === ErrorSeverity.CRITICAL,
         );
 
         if (criticalErrors.length > criticalErrorCount) {
             this.triggerAlert('CRITICAL_ERROR_THRESHOLD', {
                 criticalErrorCount: criticalErrors.length,
-                threshold: criticalErrorCount
+                threshold: criticalErrorCount,
             });
         }
 
@@ -420,7 +420,7 @@ export class FunnelErrorHandler {
             this.triggerAlert('CRITICAL_ERROR', {
                 errorCode: error.code,
                 errorMessage: error.message,
-                context: error.context
+                context: error.context,
             });
         }
     }
@@ -537,7 +537,7 @@ export class FunnelErrorHandler {
 
         // Broadcast evento de modo offline
         window.dispatchEvent(new CustomEvent('funnelOfflineMode', {
-            detail: { reason: error.code }
+            detail: { reason: error.code },
         }));
 
         return true;
@@ -596,7 +596,7 @@ export class FunnelErrorHandler {
             url: typeof window !== 'undefined' ? window.location.href : 'Unknown',
             timestamp: new Date().toISOString(),
             errorCount: 0,
-            errorRate: 0
+            errorRate: 0,
         };
     }
 
@@ -618,7 +618,7 @@ export class FunnelErrorHandler {
             this.handleError(event.error || new Error(event.message), {
                 filename: event.filename,
                 lineno: event.lineno,
-                colno: event.colno
+                colno: event.colno,
             });
         });
 
@@ -626,7 +626,7 @@ export class FunnelErrorHandler {
         window.addEventListener('unhandledrejection', (event) => {
             this.handleError(
                 event.reason instanceof Error ? event.reason : new Error(String(event.reason)),
-                { type: 'unhandledrejection' }
+                { type: 'unhandledrejection' },
             );
         });
     }
@@ -682,7 +682,7 @@ export class FunnelErrorHandler {
             // Em desenvolvimento, mostrar alert visual
             if (typeof window !== 'undefined') {
                 window.dispatchEvent(new CustomEvent('funnelErrorAlert', {
-                    detail: { type, data }
+                    detail: { type, data },
                 }));
             }
         }
@@ -703,7 +703,7 @@ export const globalFunnelErrorHandler = new FunnelErrorHandler();
  */
 export const handleFunnelError = (
     error: Error | FunnelError,
-    context?: Record<string, any>
+    context?: Record<string, any>,
 ): Promise<ErrorHandlingResult> => {
     return globalFunnelErrorHandler.handleError(error, context);
 };

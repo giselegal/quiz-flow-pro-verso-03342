@@ -70,7 +70,7 @@ export const useQuizCRUD = () => {
             blocks,
             page_order
           )
-        `
+        `,
         )
         .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
@@ -130,7 +130,7 @@ export const useQuizCRUD = () => {
   // ===== SALVAR QUIZ COMPLETO =====
   const saveQuiz = async (
     metadata: QuizMetadata,
-    questions: QuizQuestion[]
+    questions: QuizQuestion[],
   ): Promise<string | null> => {
     if (!user) {
       toast({
@@ -251,7 +251,7 @@ export const useQuizCRUD = () => {
             blocks,
             page_order
           )
-        `
+        `,
         )
         .eq('id', quizId)
         .single();
@@ -273,7 +273,7 @@ export const useQuizCRUD = () => {
                 options: block.properties?.options || [],
                 multiSelect: block.properties?.multiSelect || 1,
                 required: block.properties?.required || false,
-                order: questions.length
+                order: questions.length,
               });
             }
           });

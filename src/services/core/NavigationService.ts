@@ -15,7 +15,7 @@ import {
     RouteDefinition,
     NavigationContext,
     GuardResult,
-    MiddlewareResult
+    MiddlewareResult,
 } from '@/hooks/core/useNavigation';
 
 // Tipos para o serviço de navegação
@@ -86,9 +86,9 @@ export class NavigationService {
                 params: {},
                 query: {},
                 hash: null,
-                metadata: {}
+                metadata: {},
             },
-            transactions: new Map()
+            transactions: new Map(),
         };
 
         this.initializeDefaultRoutes();
@@ -109,7 +109,7 @@ export class NavigationService {
             query?: Record<string, string>;
             metadata?: Record<string, any>;
             force?: boolean;
-        } = {}
+        } = {},
     ): Promise<boolean> {
         const transactionId = this.generateTransactionId();
 
@@ -123,7 +123,7 @@ export class NavigationService {
             status: 'pending',
             timestamp: Date.now(),
             guards: [],
-            middleware: []
+            middleware: [],
         };
 
         this.cache.transactions.set(transactionId, transaction);
@@ -167,14 +167,14 @@ export class NavigationService {
                 params: options.params || {},
                 query: options.query || {},
                 hash: this.extractHash(path),
-                metadata: options.metadata || {}
+                metadata: options.metadata || {},
             };
 
             // Adiciona ao histórico
             this.addToHistory({
                 path,
                 timestamp: Date.now(),
-                metadata: options.metadata
+                metadata: options.metadata,
             });
 
             // Atualiza URL do navegador
@@ -282,7 +282,7 @@ export class NavigationService {
      */
     private async executeGuards(
         path: string,
-        transaction: NavigationTransaction
+        transaction: NavigationTransaction,
     ): Promise<GuardResult> {
         const route = this.getRoute(path);
         const guards = route?.guards || [];
@@ -295,11 +295,11 @@ export class NavigationService {
                 const context: NavigationContext = {
                     from: transaction.from,
                     to: transaction.to,
-                    path: path,
+                    path,
                     params: transaction.params || {},
                     query: transaction.query || {},
                     metadata: transaction.metadata || {},
-                    user: this.getCurrentUser()
+                    user: this.getCurrentUser(),
                 };
 
                 const result = guard.check ? await guard.check(context) :
@@ -334,7 +334,7 @@ export class NavigationService {
      */
     private async executeMiddleware(
         path: string,
-        transaction: NavigationTransaction
+        transaction: NavigationTransaction,
     ): Promise<MiddlewareResult> {
         const route = this.getRoute(path);
         const middlewares = route?.middleware || [];
@@ -347,11 +347,11 @@ export class NavigationService {
                 const context: NavigationContext = {
                     from: transaction.from,
                     to: transaction.to,
-                    path: path,
+                    path,
                     params: transaction.params || {},
                     query: transaction.query || {},
                     metadata: transaction.metadata || {},
-                    user: this.getCurrentUser()
+                    user: this.getCurrentUser(),
                 };
 
                 const result = middleware.handle ? await middleware.handle(context) :
@@ -452,7 +452,7 @@ export class NavigationService {
     private async confirmUnsavedChanges(): Promise<boolean> {
         return new Promise((resolve) => {
             const confirmed = window.confirm(
-                'Você tem alterações não salvas. Deseja realmente sair?'
+                'Você tem alterações não salvas. Deseja realmente sair?',
             );
             resolve(confirmed);
         });
@@ -465,7 +465,7 @@ export class NavigationService {
      */
     addEventListener(
         type: string,
-        callback: (event: NavigationEvent) => void
+        callback: (event: NavigationEvent) => void,
     ): () => void {
         if (!this.listeners.has(type)) {
             this.listeners.set(type, []);
@@ -492,7 +492,7 @@ export class NavigationService {
         const event: NavigationEvent = {
             type: type as NavigationEvent['type'],
             data,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         };
 
         const callbacks = this.listeners.get(type) || [];
@@ -508,26 +508,26 @@ export class NavigationService {
                 path: '/',
                 name: 'home',
                 guards: [],
-                middleware: ['analytics']
+                middleware: ['analytics'],
             },
             {
                 path: '/editor/:funnelId',
                 name: 'editor',
                 guards: ['auth'],
-                middleware: ['analytics', 'loadFunnel']
+                middleware: ['analytics', 'loadFunnel'],
             },
             {
                 path: '/editor/:funnelId/step/:stepId',
                 name: 'editorStep',
                 guards: ['auth'],
-                middleware: ['analytics', 'loadFunnel', 'validateStep']
+                middleware: ['analytics', 'loadFunnel', 'validateStep'],
             },
             {
                 path: '/preview/:funnelId',
                 name: 'preview',
                 guards: [],
-                middleware: ['analytics', 'loadFunnel']
-            }
+                middleware: ['analytics', 'loadFunnel'],
+            },
         ];
 
         defaultRoutes.forEach(route => this.registerRoute(route));
@@ -547,12 +547,12 @@ export class NavigationService {
                         allow: false,
                         allowed: false,
                         reason: 'Usuário não autenticado',
-                        redirectTo: '/login'
+                        redirectTo: '/login',
                     };
                 }
 
                 return { allow: true, allowed: true };
-            }
+            },
         });
 
         // Guard de permissões
@@ -569,12 +569,12 @@ export class NavigationService {
                         allow: false,
                         allowed: false,
                         reason: 'Permissão insuficiente',
-                        redirectTo: '/unauthorized'
+                        redirectTo: '/unauthorized',
                     };
                 }
 
                 return { allow: true, allowed: true };
-            }
+            },
         });
 
         // Middleware de analytics
@@ -587,12 +587,12 @@ export class NavigationService {
                 if (typeof window !== 'undefined' && (window as any).gtag) {
                     (window as any).gtag('event', 'page_view', {
                         page_path: context.to,
-                        page_title: document.title
+                        page_title: document.title,
                     });
                 }
 
                 return { continue: true };
-            }
+            },
         });
 
         // Middleware de carregamento de funnel
@@ -608,12 +608,12 @@ export class NavigationService {
                     context.metadata = {
                         ...context.metadata,
                         funnelLoaded: true,
-                        funnelId
+                        funnelId,
                     };
                 }
 
                 return { continue: true };
-            }
+            },
         });
     }
 
@@ -625,7 +625,7 @@ export class NavigationService {
                 this.emitEvent('navigate', {
                     transaction: null,
                     newState: event.state,
-                    source: 'browser'
+                    source: 'browser',
                 });
             }
         });
@@ -645,7 +645,7 @@ export class NavigationService {
         // TODO: Integrar com sistema de autenticação
         return {
             isAuthenticated: false,
-            permissions: []
+            permissions: [],
         };
     }
 
@@ -672,7 +672,7 @@ export class NavigationService {
             activeTransactions: this.cache.transactions.size,
             currentPath: this.cache.state.currentPath,
             hasUnsavedChanges: this.unsavedChanges,
-            listeners: this.listeners.size
+            listeners: this.listeners.size,
         };
     }
 

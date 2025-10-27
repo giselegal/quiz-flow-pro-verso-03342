@@ -157,7 +157,7 @@ export class StorageTransport implements LogTransport {
         return {
             entryCount: entries.length,
             sizeBytes,
-            oldestEntry
+            oldestEntry,
         };
     }
 

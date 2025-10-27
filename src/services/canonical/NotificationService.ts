@@ -193,7 +193,7 @@ export class NotificationService extends BaseCanonicalService {
         read: false,
         createdAt: new Date(),
         action: params.action,
-        metadata: params.metadata
+        metadata: params.metadata,
       };
 
       if (params.expiresInMinutes) {
@@ -214,7 +214,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to create notification')
+        error: error instanceof Error ? error : new Error('Failed to create notification'),
       };
     }
   }
@@ -226,36 +226,36 @@ export class NotificationService extends BaseCanonicalService {
     type: CollaborationType,
     funnelId: string,
     targetUserId: string,
-    data: Record<string, any>
+    data: Record<string, any>,
   ): ServiceResult<Notification> {
     const templates: Record<CollaborationType, { title: string; message: string }> = {
       user_joined: {
         title: 'Novo colaborador',
-        message: `${data.userName} entrou na sessão de colaboração`
+        message: `${data.userName} entrou na sessão de colaboração`,
       },
       user_left: {
         title: 'Colaborador saiu',
-        message: `${data.userName} saiu da sessão de colaboração`
+        message: `${data.userName} saiu da sessão de colaboração`,
       },
       change_made: {
         title: 'Mudança detectada',
-        message: `${data.userName} fez uma alteração em ${data.entityType}`
+        message: `${data.userName} fez uma alteração em ${data.entityType}`,
       },
       conflict_detected: {
         title: 'Conflito detectado',
-        message: 'Foi detectado um conflito que requer sua atenção'
+        message: 'Foi detectado um conflito que requer sua atenção',
       },
       invitation_sent: {
         title: 'Convite enviado',
-        message: `Convite enviado para ${data.email}`
-      }
+        message: `Convite enviado para ${data.email}`,
+      },
     };
 
     const template = templates[type];
     if (!template) {
       return {
         success: false,
-        error: new Error(`Unknown collaboration type: ${type}`)
+        error: new Error(`Unknown collaboration type: ${type}`),
       };
     }
 
@@ -265,7 +265,7 @@ export class NotificationService extends BaseCanonicalService {
       message: template.message,
       userId: targetUserId,
       funnelId,
-      metadata: data
+      metadata: data,
     });
   }
 
@@ -287,7 +287,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get notifications')
+        error: error instanceof Error ? error : new Error('Failed to get notifications'),
       };
     }
   }
@@ -300,7 +300,7 @@ export class NotificationService extends BaseCanonicalService {
     if (!notification) {
       return {
         success: false,
-        error: new Error('Notification not found')
+        error: new Error('Notification not found'),
       };
     }
 
@@ -334,7 +334,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to mark notifications as read')
+        error: error instanceof Error ? error : new Error('Failed to mark notifications as read'),
       };
     }
   }
@@ -347,7 +347,7 @@ export class NotificationService extends BaseCanonicalService {
     if (!deleted) {
       return {
         success: false,
-        error: new Error('Notification not found')
+        error: new Error('Notification not found'),
       };
     }
 
@@ -382,7 +382,7 @@ export class NotificationService extends BaseCanonicalService {
         edited: false,
         replyTo: params.replyTo,
         mentions: this.extractMentions(params.message),
-        reactions: []
+        reactions: [],
       };
 
       const funnelMessages = this.chatMessageList.get(params.funnelId) || [];
@@ -402,7 +402,7 @@ export class NotificationService extends BaseCanonicalService {
             message: `${params.userName} mencionou você no chat`,
             userId: mentionedUserId,
             funnelId: params.funnelId,
-            metadata: { messageId: chatMessage.id, userName: params.userName }
+            metadata: { messageId: chatMessage.id, userName: params.userName },
           });
         }
       }
@@ -415,7 +415,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to send message')
+        error: error instanceof Error ? error : new Error('Failed to send message'),
       };
     }
   }
@@ -434,7 +434,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get messages')
+        error: error instanceof Error ? error : new Error('Failed to get messages'),
       };
     }
   }
@@ -447,7 +447,7 @@ export class NotificationService extends BaseCanonicalService {
     if (!messages) {
       return {
         success: false,
-        error: new Error('Funnel not found')
+        error: new Error('Funnel not found'),
       };
     }
 
@@ -455,19 +455,19 @@ export class NotificationService extends BaseCanonicalService {
     if (!message) {
       return {
         success: false,
-        error: new Error('Message not found')
+        error: new Error('Message not found'),
       };
     }
 
     // Check if user already reacted with this emoji
     const existingReaction = message.reactions?.find(
-      r => r.emoji === emoji && r.userId === userId
+      r => r.emoji === emoji && r.userId === userId,
     );
 
     if (existingReaction) {
       return {
         success: false,
-        error: new Error('User already reacted with this emoji')
+        error: new Error('User already reacted with this emoji'),
       };
     }
 
@@ -478,7 +478,7 @@ export class NotificationService extends BaseCanonicalService {
     message.reactions.push({
       emoji,
       userId,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     this.emit('reaction_added', { messageId, emoji, userId });
@@ -515,7 +515,7 @@ export class NotificationService extends BaseCanonicalService {
         timestamp: new Date(),
         edited: false,
         resolved: false,
-        replies: []
+        replies: [],
       };
 
       const funnelComments = this.commentList.get(params.funnelId) || [];
@@ -534,7 +534,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to add comment')
+        error: error instanceof Error ? error : new Error('Failed to add comment'),
       };
     }
   }
@@ -558,7 +558,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get comments')
+        error: error instanceof Error ? error : new Error('Failed to get comments'),
       };
     }
   }
@@ -586,7 +586,7 @@ export class NotificationService extends BaseCanonicalService {
 
     return {
       success: false,
-      error: new Error('Comment not found')
+      error: new Error('Comment not found'),
     };
   }
 
@@ -609,7 +609,7 @@ export class NotificationService extends BaseCanonicalService {
 
     return {
       success: false,
-      error: new Error('Comment not found')
+      error: new Error('Comment not found'),
     };
   }
 
@@ -634,7 +634,7 @@ export class NotificationService extends BaseCanonicalService {
         userAvatar: params.userAvatar,
         isOnline: params.isOnline,
         lastSeen: new Date(),
-        cursor: params.cursor
+        cursor: params.cursor,
       };
 
       this.presenceList.set(params.userId, presence);
@@ -650,7 +650,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to update presence')
+        error: error instanceof Error ? error : new Error('Failed to update presence'),
       };
     }
   }
@@ -668,7 +668,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get online users')
+        error: error instanceof Error ? error : new Error('Failed to get online users'),
       };
     }
   }
@@ -683,7 +683,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get user presence')
+        error: error instanceof Error ? error : new Error('Failed to get user presence'),
       };
     }
   }
@@ -746,7 +746,7 @@ export class NotificationService extends BaseCanonicalService {
         totalChatMessages: 0,
         totalComments: 0,
         unresolvedComments: 0,
-        activeUsers: 0
+        activeUsers: 0,
       };
 
       // Notifications
@@ -787,7 +787,7 @@ export class NotificationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get stats')
+        error: error instanceof Error ? error : new Error('Failed to get stats'),
       };
     }
   }
@@ -804,7 +804,7 @@ export class NotificationService extends BaseCanonicalService {
       type: CollaborationType,
       funnelId: string,
       targetUserId: string,
-      data: Record<string, any>
+      data: Record<string, any>,
     ) => this.sendCollaborationNotification(type, funnelId, targetUserId, data),
     
     get: (userId: string, funnelId?: string) => 
@@ -817,7 +817,7 @@ export class NotificationService extends BaseCanonicalService {
       this.markAllAsRead(userId, funnelId),
     
     delete: (notificationId: string) => 
-      this.deleteNotification(notificationId)
+      this.deleteNotification(notificationId),
   };
 
   readonly chat = {
@@ -828,7 +828,7 @@ export class NotificationService extends BaseCanonicalService {
       this.getMessages(funnelId, limit),
     
     addReaction: (messageId: string, funnelId: string, emoji: string, userId: string) => 
-      this.addReaction(messageId, funnelId, emoji, userId)
+      this.addReaction(messageId, funnelId, emoji, userId),
   };
 
   readonly comments = {
@@ -842,7 +842,7 @@ export class NotificationService extends BaseCanonicalService {
       this.resolveComment(commentId, resolvedBy),
     
     edit: (commentId: string, newContent: string) => 
-      this.editComment(commentId, newContent)
+      this.editComment(commentId, newContent),
   };
 
   readonly presence = {
@@ -853,12 +853,12 @@ export class NotificationService extends BaseCanonicalService {
       this.getOnlineUsers(),
     
     getUser: (userId: string) => 
-      this.getUserPresence(userId)
+      this.getUserPresence(userId),
   };
 
   readonly stats = {
     get: (funnelId?: string) => 
-      this.getStats(funnelId)
+      this.getStats(funnelId),
   };
 
   // ============================================================================

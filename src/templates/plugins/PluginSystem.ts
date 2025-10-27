@@ -115,7 +115,7 @@ class PluginSystem {
 
         templateEventSystem.emit('plugin:installed', {
             pluginId: plugin.id,
-            name: plugin.name
+            name: plugin.name,
         }, 'system');
 
         console.log(`🔌 Plugin ${plugin.name} instalado com sucesso`);
@@ -149,7 +149,7 @@ class PluginSystem {
                 this.validators.set(validator.id, validator);
                 dynamicValidationSystem.registerCustomValidator(
                     validator.id,
-                    validator.validator
+                    validator.validator,
                 );
             });
         }
@@ -173,7 +173,7 @@ class PluginSystem {
 
         templateEventSystem.emit('plugin:activated', {
             pluginId,
-            name: plugin.name
+            name: plugin.name,
         }, templateId);
 
         console.log(`✅ Plugin ${plugin.name} ativado`);
@@ -222,7 +222,7 @@ class PluginSystem {
 
         templateEventSystem.emit('plugin:deactivated', {
             pluginId,
-            name: plugin.name
+            name: plugin.name,
         }, templateId);
 
         console.log(`❌ Plugin ${plugin.name} desativado`);
@@ -251,7 +251,7 @@ class PluginSystem {
 
         templateEventSystem.emit('plugin:uninstalled', {
             pluginId,
-            name: plugin.name
+            name: plugin.name,
         }, templateId);
 
         console.log(`🗑️ Plugin ${plugin.name} desinstalado`);
@@ -315,7 +315,7 @@ class PluginSystem {
             templateId,
             eventSystem: templateEventSystem,
             validationSystem: dynamicValidationSystem,
-            api: this.createPluginAPI(templateId)
+            api: this.createPluginAPI(templateId),
         };
     }
 
@@ -334,7 +334,7 @@ class PluginSystem {
                 this.validators.set(validator.id, validator);
                 dynamicValidationSystem.registerCustomValidator(
                     validator.id,
-                    validator.validator
+                    validator.validator,
                 );
             },
             registerTemplate: (template) => {
@@ -343,20 +343,20 @@ class PluginSystem {
             showNotification: (message, type = 'info') => {
                 templateEventSystem.emit('notification:show', {
                     message,
-                    type
+                    type,
                 }, templateId);
             },
             updateFormData: (path, value) => {
                 templateEventSystem.emit('form:update', {
                     path,
-                    value
+                    value,
                 }, templateId);
             },
             navigateToStep: (stepIndex) => {
                 templateEventSystem.emit('navigation:step', {
-                    stepIndex
+                    stepIndex,
                 }, templateId);
-            }
+            },
         };
     }
 }
@@ -387,7 +387,7 @@ export function usePluginSystem(templateId: string) {
             templateEventSystem.addEventListener('plugin:activated', updateState),
             templateEventSystem.addEventListener('plugin:deactivated', updateState),
             templateEventSystem.addEventListener('plugin:installed', updateState),
-            templateEventSystem.addEventListener('plugin:uninstalled', updateState)
+            templateEventSystem.addEventListener('plugin:uninstalled', updateState),
         ];
 
         return () => {
@@ -401,6 +401,6 @@ export function usePluginSystem(templateId: string) {
         availableTemplates: pluginSystem.getAvailableTemplates(),
         availableActions: pluginSystem.getAvailableActions(),
         activatePlugin: (pluginId: string) => pluginSystem.activate(pluginId, templateId),
-        deactivatePlugin: (pluginId: string) => pluginSystem.deactivate(pluginId, templateId)
+        deactivatePlugin: (pluginId: string) => pluginSystem.deactivate(pluginId, templateId),
     };
 }

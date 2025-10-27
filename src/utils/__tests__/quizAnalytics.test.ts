@@ -46,7 +46,7 @@ describe('quizAnalytics', () => {
             store: {} as Record<string, string>,
             getItem(k: string) { return this.store[k] || null; },
             setItem(k: string, v: string) { this.store[k] = v; },
-            removeItem(k: string) { delete this.store[k]; }
+            removeItem(k: string) { delete this.store[k]; },
         };
         localStorage.setItem('userProfile', JSON.stringify({ userId: 'user-123' }));
         emitQuizEvent({ type: 'step_view', stepId: 'a', stepType: 'intro', position: 0 });
@@ -61,7 +61,7 @@ describe('quizAnalytics', () => {
 
     it('flush com retry/backoff envia batches mesmo após falhas iniciais', async () => {
         clearQuizEvents();
-        for (let i = 0; i < 3; i++) emitQuizEvent({ type: 'step_view', stepId: 's' + i, stepType: 'q', position: i });
+        for (let i = 0; i < 3; i++) emitQuizEvent({ type: 'step_view', stepId: `s${  i}`, stepType: 'q', position: i });
         let call = 0;
         // @ts-ignore
         global.fetch = async () => {

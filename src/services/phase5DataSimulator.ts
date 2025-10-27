@@ -108,7 +108,7 @@ export const simulatedData: SimulatedDataStructure = {
             description: 'Um quiz completo para descobrir seu estilo pessoal único',
             is_published: true,
             created_at: '2024-11-01T10:00:00Z',
-            settings: { theme: 'modern', collectEmail: true }
+            settings: { theme: 'modern', collectEmail: true },
         },
         {
             id: 'funnel-carreira-ideal-2',
@@ -116,7 +116,7 @@ export const simulatedData: SimulatedDataStructure = {
             description: 'Descubra qual carreira combina melhor com seu perfil',
             is_published: true,
             created_at: '2024-11-05T14:30:00Z',
-            settings: { theme: 'professional', collectEmail: true }
+            settings: { theme: 'professional', collectEmail: true },
         },
         {
             id: 'funnel-personalidade-3',
@@ -124,7 +124,7 @@ export const simulatedData: SimulatedDataStructure = {
             description: 'Conheça melhor sua personalidade com nosso teste completo',
             is_published: true,
             created_at: '2024-11-10T09:15:00Z',
-            settings: { theme: 'colorful', collectEmail: false }
+            settings: { theme: 'colorful', collectEmail: false },
         },
         {
             id: 'funnel-empreendedor-4',
@@ -132,7 +132,7 @@ export const simulatedData: SimulatedDataStructure = {
             description: 'Avalie seu potencial empreendedor',
             is_published: false,
             created_at: '2024-11-12T16:45:00Z',
-            settings: { theme: 'business', collectEmail: true }
+            settings: { theme: 'business', collectEmail: true },
         },
         {
             id: 'funnel-lifestyle-5',
@@ -140,8 +140,8 @@ export const simulatedData: SimulatedDataStructure = {
             description: 'Descubra qual estilo de vida combina com você',
             is_published: true,
             created_at: '2024-11-15T11:20:00Z',
-            settings: { theme: 'lifestyle', collectEmail: false }
-        }
+            settings: { theme: 'lifestyle', collectEmail: false },
+        },
     ],
 
     users: Array.from({ length: 30 }, (_, i) => ({
@@ -150,15 +150,15 @@ export const simulatedData: SimulatedDataStructure = {
             'Ana Silva', 'João Santos', 'Maria Oliveira', 'Pedro Costa', 'Julia Ferreira',
             'Carlos Pereira', 'Luciana Lima', 'Felipe Rodrigues', 'Beatriz Almeida', 'Ricardo Moreira',
             'Patricia Cardoso', 'Gustavo Barbosa', 'Camila Nascimento', 'Rafael Ribeiro', 'Fernanda Campos',
-            'Thiago Monteiro', 'Amanda Vieira', 'Bruno Machado', 'Isabela Ramos', 'Lucas Araújo'
+            'Thiago Monteiro', 'Amanda Vieira', 'Bruno Machado', 'Isabela Ramos', 'Lucas Araújo',
         ][i % 20],
         email: i % 3 === 0 ? null : `user${i + 1}@example.com`,
-        created_at: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString()
+        created_at: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
     })),
 
     sessions: null, // Will be generated
     responses: null, // Will be generated  
-    results: null // Will be generated
+    results: null, // Will be generated
 };
 
 // Generate dynamic sessions based on users and funnels
@@ -195,8 +195,8 @@ export function generateSessions(): SimulatedSession[] {
                 metadata: {
                     device: Math.random() > 0.6 ? 'mobile' : (Math.random() > 0.5 ? 'desktop' : 'tablet'),
                     browser: Math.random() > 0.5 ? 'Chrome' : (Math.random() > 0.5 ? 'Safari' : 'Firefox'),
-                    referrer: Math.random() > 0.5 ? 'https://google.com' : 'direct'
-                }
+                    referrer: Math.random() > 0.5 ? 'https://google.com' : 'direct',
+                },
             });
         }
     });
@@ -219,13 +219,13 @@ export function generateResponses(): SimulatedResponse[] {
         'Que tipo de música você escuta?',
         'Como você se diverte?',
         'Qual seu hobby favorito?',
-        'Que tipo de viagem prefere?'
+        'Que tipo de viagem prefere?',
     ];
 
     const answers: { [key: string]: string[] } = {
         'Qual é seu estilo preferido?': ['Clássico', 'Moderno', 'Boho', 'Minimalista'],
         'Como você se veste para trabalhar?': ['Formal', 'Casual', 'Smart Casual', 'Criativo'],
-        'Qual cor mais combina com você?': ['Azul', 'Preto', 'Branco', 'Vermelho', 'Verde']
+        'Qual cor mais combina com você?': ['Azul', 'Preto', 'Branco', 'Vermelho', 'Verde'],
     };
 
     const responses: SimulatedResponse[] = [];
@@ -250,8 +250,8 @@ export function generateResponses(): SimulatedResponse[] {
                     score_earned: Math.floor(Math.random() * 10) + 1,
                     response_time_ms: Math.floor(Math.random() * 15000) + 2000,
                     responded_at: new Date(
-                        new Date(session.started_at).getTime() + i * (Math.random() * 60000 + 30000)
-                    ).toISOString()
+                        new Date(session.started_at).getTime() + i * (Math.random() * 60000 + 30000),
+                    ).toISOString(),
                 });
             }
         });
@@ -270,7 +270,7 @@ export function generateResults(): SimulatedResult[] {
         'Estilo Moderno',
         'Estilo Boho',
         'Estilo Minimalista',
-        'Estilo Criativo'
+        'Estilo Criativo',
     ];
 
     const descriptions: { [key: string]: string } = {
@@ -278,7 +278,7 @@ export function generateResults(): SimulatedResult[] {
         'Estilo Moderno': 'Você está sempre em sintonia com as últimas tendências e gosta de inovar.',
         'Estilo Boho': 'Seu estilo é livre e artístico. Você valoriza a individualidade e expressão pessoal.',
         'Estilo Minimalista': 'Você acredita que menos é mais. Prefere simplicidade e funcionalidade.',
-        'Estilo Criativo': 'Você não tem medo de ousar e experimentar. Seu estilo é único e autêntico.'
+        'Estilo Criativo': 'Você não tem medo de ousar e experimentar. Seu estilo é único e autêntico.',
     };
 
     const results = simulatedData.sessions
@@ -297,16 +297,16 @@ export function generateResults(): SimulatedResult[] {
                     primary_style: resultType,
                     secondary_styles: resultTypes.filter(t => t !== resultType).slice(0, 2),
                     confidence_score: Math.floor(Math.random() * 30) + 70,
-                    characteristics: ['Autêntico', 'Elegante', 'Versátil'].slice(0, Math.floor(Math.random() * 3) + 1)
+                    characteristics: ['Autêntico', 'Elegante', 'Versátil'].slice(0, Math.floor(Math.random() * 3) + 1),
                 },
                 next_steps: {
                     actions: [
                         'Explore nosso catálogo de produtos',
                         'Faça uma consultoria personalizada',
-                        'Siga nossas dicas no Instagram'
-                    ]
+                        'Siga nossas dicas no Instagram',
+                    ],
                 },
-                created_at: session.completed_at
+                created_at: session.completed_at,
             };
         });
 
@@ -331,7 +331,7 @@ export function initializePhase5Data(): SimulatedDataStructure {
         users: simulatedData.users.length,
         sessions: simulatedData.sessions?.length ?? 0,
         responses: simulatedData.responses?.length ?? 0,
-        results: simulatedData.results?.length ?? 0
+        results: simulatedData.results?.length ?? 0,
     });
 
     return simulatedData;

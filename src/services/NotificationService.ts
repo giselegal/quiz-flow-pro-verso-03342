@@ -115,7 +115,7 @@ class NotificationService {
     funnelId: string,
     action?: NotificationAction,
     metadata?: Record<string, any>,
-    expiresInMinutes?: number
+    expiresInMinutes?: number,
   ): Promise<Notification> {
     const notification: Notification = {
       id: `notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -127,7 +127,7 @@ class NotificationService {
       read: false,
       createdAt: new Date(),
       action,
-      metadata
+      metadata,
     };
 
     if (expiresInMinutes) {
@@ -150,29 +150,29 @@ class NotificationService {
     type: 'user_joined' | 'user_left' | 'change_made' | 'conflict_detected' | 'invitation_sent',
     funnelId: string,
     targetUserId: string,
-    data: Record<string, any>
+    data: Record<string, any>,
   ): Promise<void> {
     const notifications = {
       user_joined: {
         title: 'Novo colaborador',
-        message: `${data.userName} entrou na sessão de colaboração`
+        message: `${data.userName} entrou na sessão de colaboração`,
       },
       user_left: {
         title: 'Colaborador saiu',
-        message: `${data.userName} saiu da sessão de colaboração`
+        message: `${data.userName} saiu da sessão de colaboração`,
       },
       change_made: {
         title: 'Mudança detectada',
-        message: `${data.userName} fez uma alteração em ${data.entityType}`
+        message: `${data.userName} fez uma alteração em ${data.entityType}`,
       },
       conflict_detected: {
         title: 'Conflito detectado',
-        message: 'Foi detectado um conflito que requer sua atenção'
+        message: 'Foi detectado um conflito que requer sua atenção',
       },
       invitation_sent: {
         title: 'Convite enviado',
-        message: `Convite enviado para ${data.email}`
-      }
+        message: `Convite enviado para ${data.email}`,
+      },
     };
 
     const notifData = notifications[type];
@@ -184,7 +184,7 @@ class NotificationService {
         targetUserId,
         funnelId,
         undefined,
-        data
+        data,
       );
     }
   }
@@ -198,7 +198,7 @@ class NotificationService {
     userName: string,
     userAvatar: string | undefined,
     message: string,
-    replyTo?: string
+    replyTo?: string,
   ): Promise<ChatMessage> {
     const chatMessage: ChatMessage = {
       id: `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -211,7 +211,7 @@ class NotificationService {
       edited: false,
       replyTo,
       mentions: this.extractMentions(message),
-      reactions: []
+      reactions: [],
     };
 
     const funnelMessages = this.chatMessages.get(funnelId) || [];
@@ -231,7 +231,7 @@ class NotificationService {
           mentionedUserId,
           funnelId,
           undefined,
-          { messageId: chatMessage.id, userName }
+          { messageId: chatMessage.id, userName },
         );
       }
     }
@@ -250,7 +250,7 @@ class NotificationService {
     userId: string,
     userName: string,
     userAvatar: string | undefined,
-    content: string
+    content: string,
   ): Promise<Comment> {
     const comment: Comment = {
       id: `comment_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -264,7 +264,7 @@ class NotificationService {
       timestamp: new Date(),
       edited: false,
       resolved: false,
-      replies: []
+      replies: [],
     };
 
     const funnelComments = this.comments.get(funnelId) || [];
@@ -283,7 +283,7 @@ class NotificationService {
    */
   async resolveComment(
     commentId: string,
-    resolvedBy: string
+    resolvedBy: string,
   ): Promise<boolean> {
     for (const [funnelId, comments] of this.comments) {
       const comment = comments.find(c => c.id === commentId);
@@ -311,7 +311,7 @@ class NotificationService {
     userName: string,
     userAvatar: string | undefined,
     isOnline: boolean,
-    cursor?: PresenceUpdate['cursor']
+    cursor?: PresenceUpdate['cursor'],
   ): Promise<void> {
     const presence: PresenceUpdate = {
       userId,
@@ -319,7 +319,7 @@ class NotificationService {
       userAvatar,
       isOnline,
       lastSeen: new Date(),
-      cursor
+      cursor,
     };
 
     this.presence.set(userId, presence);
@@ -469,7 +469,7 @@ class NotificationService {
       unreadNotifications: 0,
       totalChatMessages: 0,
       totalComments: 0,
-      activeUsers: 0
+      activeUsers: 0,
     };
 
     // Notificações

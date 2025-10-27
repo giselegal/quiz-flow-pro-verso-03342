@@ -48,7 +48,7 @@ class CustomTemplateService {
                     ...template.userMetadata,
                     createdAt: new Date().toISOString(),
                     lastModified: new Date().toISOString(),
-                }
+                },
             };
 
             customTemplates.push(newTemplate);
@@ -105,7 +105,7 @@ class CustomTemplateService {
                 userMetadata: {
                     ...templates[index].userMetadata,
                     lastModified: new Date().toISOString(),
-                }
+                },
             };
 
             localStorage.setItem(CUSTOM_TEMPLATES_KEY, JSON.stringify(templates));
@@ -144,7 +144,7 @@ class CustomTemplateService {
     duplicateAsCustomTemplate(
         originalTemplate: UnifiedTemplate,
         customizations: CustomTemplate['customizations'],
-        userMetadata: Partial<CustomTemplate['userMetadata']>
+        userMetadata: Partial<CustomTemplate['userMetadata']>,
     ): string {
         const customTemplate: Omit<CustomTemplate, 'id' | 'createdAt' | 'updatedAt'> = {
             ...originalTemplate,
@@ -160,7 +160,7 @@ class CustomTemplateService {
                 lastModified: new Date().toISOString(),
                 version: userMetadata.version || '1.0.0',
                 notes: userMetadata.notes || '',
-            }
+            },
         };
 
         return this.saveCustomTemplate(customTemplate);
@@ -177,11 +177,11 @@ class CustomTemplateService {
             totalCustomTemplates: templates.length,
             categoriesUsed: categories.size,
             mostRecentTemplate: templates.sort((a, b) =>
-                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
             )[0],
             oldestTemplate: templates.sort((a, b) =>
-                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-            )[0]
+                new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+            )[0],
         };
     }
 
@@ -198,7 +198,7 @@ class CustomTemplateService {
             template.category.toLowerCase().includes(searchTerm) ||
             template.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
             (template.customizations.personalizedName &&
-                template.customizations.personalizedName.toLowerCase().includes(searchTerm))
+                template.customizations.personalizedName.toLowerCase().includes(searchTerm)),
         );
     }
 
@@ -223,7 +223,7 @@ class CustomTemplateService {
                     totalUses: 0,
                     lastUsed: today,
                     type,
-                    usageHistory: []
+                    usageHistory: [],
                 };
             }
 
@@ -271,7 +271,7 @@ class CustomTemplateService {
             const exportData = {
                 template,
                 exportedAt: new Date().toISOString(),
-                version: '1.0.0'
+                version: '1.0.0',
             };
 
             return JSON.stringify(exportData, null, 2);
@@ -300,7 +300,7 @@ class CustomTemplateService {
                     ...data.template.userMetadata,
                     createdAt: new Date().toISOString(),
                     lastModified: new Date().toISOString(),
-                }
+                },
             };
 
             delete template.id; // Forçar geração de novo ID
@@ -375,7 +375,7 @@ class CustomTemplateService {
             .map(template => ({
                 ...template,
                 score: (usage[template.id]?.totalUses || 0) * 2 +
-                    (new Date(template.userMetadata.lastModified).getTime() / 1000000)
+                    (new Date(template.userMetadata.lastModified).getTime() / 1000000),
             }))
             .sort((a, b) => b.score - a.score)
             .slice(0, 5);

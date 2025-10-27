@@ -97,7 +97,7 @@ export class FacebookMetricsService {
     static async getFunnelMetrics(
         funnelId: string,
         dateStart?: string,
-        dateEnd?: string
+        dateEnd?: string,
     ): Promise<FunnelFacebookMetrics | null> {
         try {
             console.log(`🔍 Buscando métricas do funil: ${funnelId}`);
@@ -109,7 +109,7 @@ export class FacebookMetricsService {
             const { data, error } = await (supabase as any).rpc('get_funnel_facebook_summary', {
                 funnel_id_param: funnelId,
                 date_start_param: startDate,
-                date_end_param: endDate
+                date_end_param: endDate,
             });
 
             if (error) {
@@ -131,7 +131,7 @@ export class FacebookMetricsService {
     static async getFunnelDetailedMetrics(
         funnelId: string,
         dateStart?: string,
-        dateEnd?: string
+        dateEnd?: string,
     ): Promise<FacebookMetricDetailed[]> {
         try {
             const startDate = dateStart || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -191,7 +191,7 @@ export class FacebookMetricsService {
                 .from('funnel_tracking_config')
                 .upsert(config, {
                     onConflict: 'funnel_id',
-                    ignoreDuplicates: false
+                    ignoreDuplicates: false,
                 });
 
             if (error) {
@@ -254,14 +254,14 @@ export class FacebookMetricsService {
 
             // Buscar métricas para cada funil
             const metricsPromises = (funnels || []).map(funnel =>
-                this.getFunnelMetrics(funnel.id, startDate, endDate)
+                this.getFunnelMetrics(funnel.id, startDate, endDate),
             );
 
             const metrics = await Promise.all(metricsPromises);
 
             // Filtrar apenas funis com métricas
             return metrics.filter(metric =>
-                metric !== null && metric.total_impressions > 0
+                metric !== null && metric.total_impressions > 0,
             ) as FunnelFacebookMetrics[];
 
         } catch (error) {
@@ -283,14 +283,14 @@ export class FacebookMetricsService {
 
             return {
                 success: true,
-                message: 'Métricas sincronizadas com sucesso (simulado)'
+                message: 'Métricas sincronizadas com sucesso (simulado)',
             };
 
         } catch (error) {
             console.error('❌ Erro na sincronização:', error);
             return {
                 success: false,
-                message: 'Erro ao sincronizar métricas'
+                message: 'Erro ao sincronizar métricas',
             };
         }
     }
@@ -318,13 +318,13 @@ export class FacebookMetricsService {
                 this.getFunnelMetrics(
                     funnelId,
                     currentStart.toISOString().split('T')[0],
-                    currentEnd.toISOString().split('T')[0]
+                    currentEnd.toISOString().split('T')[0],
                 ),
                 this.getFunnelMetrics(
                     funnelId,
                     previousStart.toISOString().split('T')[0],
-                    currentStart.toISOString().split('T')[0]
-                )
+                    currentStart.toISOString().split('T')[0],
+                ),
             ]);
 
             // Calcular crescimento percentual
@@ -336,24 +336,24 @@ export class FacebookMetricsService {
             const growth = {
                 impressions: calculateGrowth(
                     current?.total_impressions || 0,
-                    previous?.total_impressions || 0
+                    previous?.total_impressions || 0,
                 ),
                 clicks: calculateGrowth(
                     current?.total_clicks || 0,
-                    previous?.total_clicks || 0
+                    previous?.total_clicks || 0,
                 ),
                 spend: calculateGrowth(
                     current?.total_spend || 0,
-                    previous?.total_spend || 0
+                    previous?.total_spend || 0,
                 ),
                 conversions: calculateGrowth(
                     current?.total_conversions || 0,
-                    previous?.total_conversions || 0
+                    previous?.total_conversions || 0,
                 ),
                 leads: calculateGrowth(
                     current?.total_leads || 0,
-                    previous?.total_leads || 0
-                )
+                    previous?.total_leads || 0,
+                ),
             };
 
             return { current, previous, growth };
@@ -368,8 +368,8 @@ export class FacebookMetricsService {
                     clicks: 0,
                     spend: 0,
                     conversions: 0,
-                    leads: 0
-                }
+                    leads: 0,
+                },
             };
         }
     }

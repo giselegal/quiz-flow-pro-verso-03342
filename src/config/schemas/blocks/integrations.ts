@@ -8,7 +8,7 @@ import {
   utmCampaignField,
   eventNameField,
   webhookUrlField,
-  webhookSecretField
+  webhookSecretField,
 } from '../base/presets';
 
 export const trackingConfigSchema = templates

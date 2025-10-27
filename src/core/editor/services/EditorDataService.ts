@@ -87,7 +87,7 @@ class EditorDataService {
             return loadedSteps;
 
         } catch (error) {
-            console.error(`❌ [EditorDataService] Erro ao carregar schema:`, error);
+            console.error('❌ [EditorDataService] Erro ao carregar schema:', error);
             return null;
         }
     }
@@ -123,19 +123,19 @@ class EditorDataService {
                     allowSkip: false,
                     trackTimeOnStep: false,
                     trackInteractions: false,
-                    customEvents: []
+                    customEvents: [],
                 },
                 blocks: jsonData.blocks || [],
                 navigation: {
                     nextStep: stepNumber < TOTAL_STEPS ? String(stepNumber + 1) : undefined,
                     prevStep: stepNumber > 1 ? String(stepNumber - 1) : undefined,
                     conditions: [],
-                    actions: []
+                    actions: [],
                 },
                 validation: jsonData.validation || {
                     required: true,
-                    rules: []
-                }
+                    rules: [],
+                },
             };
 
             return step;
@@ -189,7 +189,7 @@ class EditorDataService {
 
             return false;
         } catch (error) {
-            console.error(`❌ [EditorDataService] Erro ao atualizar schema:`, error);
+            console.error('❌ [EditorDataService] Erro ao atualizar schema:', error);
             return false;
         }
     }

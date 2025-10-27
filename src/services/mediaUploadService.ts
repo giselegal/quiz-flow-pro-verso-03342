@@ -110,7 +110,7 @@ export class MediaUploadService {
       folder?: string;
       prefix?: string;
       onProgress?: (progress: UploadProgress) => void;
-    } = {}
+    } = {},
   ): Promise<UploadResult> {
     try {
       // Validar arquivo
@@ -205,7 +205,7 @@ export class MediaUploadService {
       prefix?: string;
       onProgress?: (fileIndex: number, progress: UploadProgress) => void;
       onFileComplete?: (fileIndex: number, result: UploadResult) => void;
-    } = {}
+    } = {},
   ): Promise<UploadResult[]> {
     const results: UploadResult[] = [];
     const fileArray = Array.from(files);
@@ -226,7 +226,7 @@ export class MediaUploadService {
     }
 
     console.log(
-      `✅ [Upload] Batch upload complete. Success: ${results.filter(r => r.success).length}/${results.length}`
+      `✅ [Upload] Batch upload complete. Success: ${results.filter(r => r.success).length}/${results.length}`,
     );
     return results;
   }
@@ -244,7 +244,7 @@ export class MediaUploadService {
       maxHeight?: number;
       quality?: number;
       onProgress?: (progress: UploadProgress) => void;
-    } = {}
+    } = {},
   ): Promise<UploadResult> {
     try {
       // Verificar se é imagem
@@ -290,7 +290,7 @@ export class MediaUploadService {
       maxWidth: number;
       maxHeight: number;
       quality: number;
-    }
+    },
   ): Promise<File> {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement('canvas');
@@ -331,7 +331,7 @@ export class MediaUploadService {
             }
           },
           file.type,
-          options.quality
+          options.quality,
         );
       };
 
@@ -369,7 +369,7 @@ export class MediaUploadService {
   // =============================================================================
 
   static async listFiles(
-    folder: string = ''
+    folder: string = '',
   ): Promise<{ success: boolean; files?: any[]; error?: string }> {
     try {
       const { data, error } = await supabase.storage.from(STORAGE_BUCKET).list(folder);

@@ -44,7 +44,7 @@ const FunnelsContext = createContext<FunnelsContextType | undefined>(undefined);
 const LEGACY_TEMPLATE_MAPPING: Record<string, string> = {
   'quiz-estilo-completo': 'quiz-estilo-21-steps',
   'quiz-estilo': 'quiz-estilo-otimizado',
-  'quiz-vazio': 'quiz-style-basic' // Fallback
+  'quiz-vazio': 'quiz-style-basic', // Fallback
 };
 
 // ✅ FUNÇÃO HELPER: Determinar tipo do step baseado no template (não hardcoded)
@@ -55,7 +55,7 @@ const LEGACY_TEMPLATE_MAPPING: Record<string, string> = {
 const inferStepTypeFromTemplate = (
   stepId: string,
   stepNumber: number,
-  template: any[]
+  template: any[],
 ): string => {
   // Se não há template ou está vazio, usar fallback baseado em número (temporário)
   if (!template || template.length === 0) {
@@ -113,7 +113,7 @@ const extractQuestionTextFromTemplateSections = (sections: any[]): string => {
   if (qTextSection) return String(qTextSection.content.text);
 
   const heroSection = sections.find(
-    (s: any) => s?.type === 'question-hero' && (s?.content?.questionText || s?.content?.text)
+    (s: any) => s?.type === 'question-hero' && (s?.content?.questionText || s?.content?.text),
   );
   if (heroSection) return String(heroSection.content.questionText || heroSection.content.text);
 
@@ -125,7 +125,7 @@ const extractQuestionTextFromTemplateSections = (sections: any[]): string => {
 
 // 🔧 Helper: construir defaultSteps a partir das seções v3 com opções de descrição
 const buildDefaultStepsFromSections = (
-  options?: { useGeneratedDescription?: boolean }
+  options?: { useGeneratedDescription?: boolean },
 ) => {
   const useGeneratedDescription = !!options?.useGeneratedDescription;
 
@@ -159,7 +159,7 @@ const buildDeterministicBlocks = (
   originalBlocks: any[],
   funnelId: string,
   templateId: string,
-  stepId: string
+  stepId: string,
 ) => {
   const cloned = (originalBlocks || []).map((block: any, index: number) => {
     const baseId = block?.id ? String(block.id) : `block-${index}`;
@@ -178,7 +178,7 @@ const buildDeterministicBlocks = (
         templateId,
         stepId,
         // timestamp removido para estabilidade
-      }
+      },
     };
   });
   return cloned;
@@ -191,7 +191,7 @@ const buildDeterministicBlocks = (
 const generateStepDescription = (
   stepType: string,
   stepNumber: number,
-  questionText: string
+  questionText: string,
 ): string => {
   switch (stepType) {
     case 'lead-collection':
@@ -221,7 +221,7 @@ const getTemplateWithFallback = (templateId: string) => {
     console.log(`✅ Template unificado encontrado: ${templateId} -> ${mappedId}`);
     return {
       unified: unifiedTemplate,
-      legacy: FUNNEL_TEMPLATES[templateId] || null
+      legacy: FUNNEL_TEMPLATES[templateId] || null,
     };
   }
 
@@ -231,7 +231,7 @@ const getTemplateWithFallback = (templateId: string) => {
     console.log(`⚠️ Usando template legacy: ${templateId}`);
     return {
       unified: null,
-      legacy: legacyTemplate
+      legacy: legacyTemplate,
     };
   }
 
@@ -614,7 +614,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     const initialTemplate = legacy || {
       name: 'Template Padrão',
       description: 'Template padrão de inicialização',
-      defaultSteps: []
+      defaultSteps: [],
     };
 
     console.log('� FunnelsContext: Inicialização com template unificado');
@@ -653,7 +653,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
         name: 'Default Template',
         description: 'Default description',
         // Manter compatibilidade com estrutura legacy para defaultSteps
-        defaultSteps: legacy?.defaultSteps || []
+        defaultSteps: legacy?.defaultSteps || [],
       };
     }
 
@@ -666,7 +666,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     return FUNNEL_TEMPLATES['quiz-vazio'] || {
       name: 'Template Básico',
       description: 'Template básico de fallback',
-      defaultSteps: []
+      defaultSteps: [],
     };
   }, []);
 
@@ -700,7 +700,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
     // Para outros templates, retorna array vazio (implementação futura)
     console.warn(
-      `⚠️ [${currentFunnelId}] Template não suportado: ${templateId}, retornando array vazio para etapa ${stepId}`
+      `⚠️ [${currentFunnelId}] Template não suportado: ${templateId}, retornando array vazio para etapa ${stepId}`,
     );
     return [];
   }, []);
@@ -723,10 +723,10 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
     if (debug) {
       console.log(`🔍 [${timestamp}] FunnelsContext Debug Completo:`);
-      console.log(`📂 currentFunnelId:`, currentFunnelId);
+      console.log('📂 currentFunnelId:', currentFunnelId);
       if (verbose) {
-        try { console.log(`📊 FUNNEL_TEMPLATES keys:`, Object.keys(safeFunnelTemplates)); } catch { console.warn('⚠️ Não foi possível ler keys de FUNNEL_TEMPLATES'); }
-        try { console.log(`📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:`, Object.keys(safeQuizTemplate)); } catch { console.warn('⚠️ Não foi possível ler keys de QUIZ_STYLE_21_STEPS_TEMPLATE'); }
+        try { console.log('📊 FUNNEL_TEMPLATES keys:', Object.keys(safeFunnelTemplates)); } catch { console.warn('⚠️ Não foi possível ler keys de FUNNEL_TEMPLATES'); }
+        try { console.log('📋 QUIZ_STYLE_21_STEPS_TEMPLATE keys:', Object.keys(safeQuizTemplate)); } catch { console.warn('⚠️ Não foi possível ler keys de QUIZ_STYLE_21_STEPS_TEMPLATE'); }
       }
     }
     // Resolver ID base quando for sessão ad-hoc (ex.: funnel-quiz21StepsComplete-<timestamp>)
@@ -739,7 +739,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
         const map: Record<string, string> = {
           'quiz21StepsComplete': 'quiz21StepsComplete',
           'fashionStyle21PtBR': 'funil-21-etapas',
-          'quiz-estilo-completo': 'quiz-estilo-completo'
+          'quiz-estilo-completo': 'quiz-estilo-completo',
         };
         const baseId = map[templateFromUrl] || 'funil-21-etapas';
         if (debug) console.log('🧭 FunnelsContext: Resolvendo sessão ad-hoc', { currentFunnelId, templateFromUrl, resolvedBase: baseId });
@@ -747,7 +747,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       }
     } catch { /* ignore */ }
 
-    if (debug) console.log(`🎯 Template existe?`, !!safeFunnelTemplates[resolvedId]);
+    if (debug) console.log('🎯 Template existe?', !!safeFunnelTemplates[resolvedId]);
 
     if (safeFunnelTemplates[resolvedId]) {
       const template = safeFunnelTemplates[resolvedId];
@@ -768,7 +768,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
         console.log(`📊 [${timestamp}] Steps disponíveis:`, template.defaultSteps.length);
         console.log(
           `🎯 [${timestamp}] Dados das steps:`,
-          template.defaultSteps.map(s => `${s.id}: ${s.name}`)
+          template.defaultSteps.map(s => `${s.id}: ${s.name}`),
         );
       }
     } else if (currentFunnelId) {
@@ -805,7 +805,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
         });
       });
     },
-    [currentFunnelId]
+    [currentFunnelId],
   );
 
   const addStepBlock = useCallback((stepId: string, _blockData: any) => {
@@ -841,7 +841,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
           // ✅ CORREÇÃO: Incluir context nos settings para compatibilidade com listagem
           settings: {
             theme: funnelData.theme || 'default',
-            context: 'MY_FUNNELS' // Context para "Meus Funis"
+            context: 'MY_FUNNELS', // Context para "Meus Funis"
           },
           user_id: userId, // ✅ CORREÇÃO: Usar ID do usuário real
           updated_at: new Date().toISOString(),
@@ -864,7 +864,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
         setLoading(false);
       }
     },
-    [currentFunnelId]
+    [currentFunnelId],
   );
 
   // Wrap do setSteps para sempre marcar _source

@@ -64,7 +64,7 @@ export class StorageMigrationManager {
                 keyTransform: (key) => key.replace('editor_', ''),
                 ttl: 24 * 60 * 60 * 1000, // 24h
                 compression: true,
-                tags: ['config', 'editor']
+                tags: ['config', 'editor'],
             },
 
             // Dados de funil
@@ -74,7 +74,7 @@ export class StorageMigrationManager {
                 keyTransform: (key) => key.replace('funnel_', ''),
                 ttl: 7 * 24 * 60 * 60 * 1000, // 7 dias
                 compression: true,
-                tags: ['funnel', 'data']
+                tags: ['funnel', 'data'],
             },
 
             // Configurações de funil específicas
@@ -84,7 +84,7 @@ export class StorageMigrationManager {
                 keyTransform: (key) => key.replace('funnel-settings-', ''),
                 ttl: 30 * 24 * 60 * 60 * 1000, // 30 dias
                 compression: true,
-                tags: ['settings', 'persistent']
+                tags: ['settings', 'persistent'],
             },
 
             // Dados de usuário
@@ -93,7 +93,7 @@ export class StorageMigrationManager {
                 namespace: 'user',
                 keyTransform: (key) => key.replace(/^user_/, '').replace('userName', 'name'),
                 ttl: 30 * 24 * 60 * 60 * 1000, // 30 dias
-                tags: ['user', 'essential']
+                tags: ['user', 'essential'],
             },
 
             // Resultados de quiz
@@ -102,7 +102,7 @@ export class StorageMigrationManager {
                 namespace: 'quiz',
                 keyTransform: (key) => key.replace(/^quiz_/, ''),
                 ttl: 7 * 24 * 60 * 60 * 1000, // 7 dias
-                tags: ['quiz', 'results']
+                tags: ['quiz', 'results'],
             },
 
             // Cache temporário
@@ -111,7 +111,7 @@ export class StorageMigrationManager {
                 namespace: 'cache',
                 keyTransform: (key) => key.replace(/^(cache_|temp_)/, ''),
                 ttl: 60 * 60 * 1000, // 1h
-                tags: ['cache', 'temporary']
+                tags: ['cache', 'temporary'],
             },
 
             // Configurações de página
@@ -121,7 +121,7 @@ export class StorageMigrationManager {
                 keyTransform: (key) => key.replace('page-config-', ''),
                 ttl: 7 * 24 * 60 * 60 * 1000, // 7 dias
                 compression: true,
-                tags: ['page', 'config']
+                tags: ['page', 'config'],
             },
 
             // Dados de A/B testing
@@ -130,7 +130,7 @@ export class StorageMigrationManager {
                 namespace: 'ab-test',
                 keyTransform: (key) => key.replace('ab_test_', ''),
                 ttl: 30 * 24 * 60 * 60 * 1000, // 30 dias
-                tags: ['ab-test', 'analytics']
+                tags: ['ab-test', 'analytics'],
             },
 
             // Tema e preferências
@@ -139,8 +139,8 @@ export class StorageMigrationManager {
                 namespace: 'user-preferences',
                 keyTransform: () => 'theme',
                 ttl: 365 * 24 * 60 * 60 * 1000, // 1 ano
-                tags: ['preferences', 'ui']
-            }
+                tags: ['preferences', 'ui'],
+            },
         ];
     }
 
@@ -162,7 +162,7 @@ export class StorageMigrationManager {
             migratedItems: 0,
             skippedItems: 0,
             errors: [],
-            duration: 0
+            duration: 0,
         };
 
         const {
@@ -170,7 +170,7 @@ export class StorageMigrationManager {
             delay = 100,
             preserveOriginal = true,
             dryRun = false,
-            logProgress = true
+            logProgress = true,
         } = config;
 
         try {
@@ -206,10 +206,10 @@ export class StorageMigrationManager {
                         } catch (error) {
                             result.errors.push({
                                 key,
-                                error: error instanceof Error ? error.message : 'Erro desconhecido'
+                                error: error instanceof Error ? error.message : 'Erro desconhecido',
                             });
                         }
-                    })
+                    }),
                 );
 
                 // Delay entre lotes para não bloquear UI
@@ -229,7 +229,7 @@ export class StorageMigrationManager {
             result.success = false;
             result.errors.push({
                 key: 'MIGRATION_ERROR',
-                error: error instanceof Error ? error.message : 'Erro geral de migração'
+                error: error instanceof Error ? error.message : 'Erro geral de migração',
             });
         }
 
@@ -267,7 +267,7 @@ export class StorageMigrationManager {
                 namespace: rule.namespace,
                 ttl: rule.ttl,
                 compress: rule.compression,
-                tags: rule.tags
+                tags: rule.tags,
             });
 
             // Remover do localStorage se não preservar
@@ -308,7 +308,7 @@ export class StorageMigrationManager {
             totalSize: 0,
             namespaceBreakdown: {} as Record<string, number>,
             ruleMatches: {} as Record<string, number>,
-            unmatched: [] as string[]
+            unmatched: [] as string[],
         };
 
         for (let i = 0; i < localStorage.length; i++) {
@@ -347,7 +347,7 @@ export class StorageMigrationManager {
         const validation = {
             valid: true,
             issues: [] as string[],
-            comparison: [] as any[]
+            comparison: [] as any[],
         };
 
         for (let i = 0; i < localStorage.length; i++) {
@@ -371,7 +371,7 @@ export class StorageMigrationManager {
                     namespace: rule.namespace,
                     original,
                     migrated,
-                    match
+                    match,
                 });
 
                 if (!match) {
@@ -395,7 +395,7 @@ export class StorageMigrationManager {
         let cleaned = 0;
         const keysToPreserve = [
             'theme', // Preservar tema por compatibilidade
-            ...whitelist
+            ...whitelist,
         ];
 
         for (let i = localStorage.length - 1; i >= 0; i--) {
@@ -435,13 +435,13 @@ export const migrationManager = StorageMigrationManager.getInstance();
  */
 export const quickMigrate = async (
     preserveOriginal: boolean = true,
-    logProgress: boolean = true
+    logProgress: boolean = true,
 ): Promise<MigrationResult> => {
     return migrationManager.migrate({
         preserveOriginal,
         logProgress,
         batchSize: 15,
-        delay: 50
+        delay: 50,
     });
 };
 
@@ -490,5 +490,5 @@ export default {
     migrationManager,
     quickMigrate,
     analyzeMigration,
-    safeMigrate
+    safeMigrate,
 };

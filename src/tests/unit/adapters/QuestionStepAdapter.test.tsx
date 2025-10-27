@@ -29,7 +29,7 @@ vi.mock('@/components/quiz/QuestionStep', () => ({
             ))}
             <div data-testid="answers">{currentAnswers.join(',')}</div>
         </div>
-    )
+    ),
 }));
 
 let QuestionStepAdapter: any;
@@ -94,7 +94,7 @@ describe('QuestionStepAdapter', () => {
                     { id: 'd', text: 'D' },
                 ]}
                 onNext={onNext}
-            />
+            />,
         );
 
         // Seleciona menos que o necessário
@@ -118,10 +118,10 @@ describe('QuestionStepAdapter', () => {
                 requiredSelections={1}
                 options={[
                     { id: 'x', text: 'X' },
-                    { id: 'y', text: 'Y' }
+                    { id: 'y', text: 'Y' },
                 ]}
                 onNext={onNext}
-            />
+            />,
         );
 
         fireEvent.click(getByTestId('opt-x'));

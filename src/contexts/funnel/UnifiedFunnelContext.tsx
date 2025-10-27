@@ -71,7 +71,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
     funnelId,
     userId,
     context = FunnelContext.EDITOR,
-    debugMode = false
+    debugMode = false,
 }) => {
     // Estados locais
     const [funnel, setFunnel] = useState<UnifiedFunnelData | null>(null);
@@ -81,7 +81,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         canRead: false,
         canEdit: false,
         canDelete: false,
-        isOwner: false
+        isOwner: false,
     });
 
     // ========================================================================
@@ -99,7 +99,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                 canRead: false,
                 canEdit: false,
                 canDelete: false,
-                isOwner: false
+                isOwner: false,
             });
         }
     }, [funnelId, userId]);
@@ -184,7 +184,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                 name,
                 context,
                 userId,
-                ...options
+                ...options,
             });
 
             setFunnel(newFunnel);
@@ -194,7 +194,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                 canRead: true,
                 canEdit: true,
                 canDelete: true,
-                isOwner: true
+                isOwner: true,
             });
 
             console.log('✅ Funil criado:', newFunnel);
@@ -282,7 +282,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                     canRead: false,
                     canEdit: false,
                     canDelete: false,
-                    isOwner: false
+                    isOwner: false,
                 });
                 console.log('✅ Funil deletado');
             }
@@ -365,8 +365,8 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             funnelId,
             userId,
             context,
-            serviceCache: 'FunnelUnifiedService'
-        } : null
+            serviceCache: 'FunnelUnifiedService',
+        } : null,
     };
 
     if (debugMode) {

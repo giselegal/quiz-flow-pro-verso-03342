@@ -13,7 +13,7 @@ interface HeadlessVisualEditorProps {
 
 export const HeadlessVisualEditor: React.FC<HeadlessVisualEditorProps> = ({
   funnelId,
-  templateId
+  templateId,
 }) => {
   const [activeView, setActiveView] = useState<EditorView>('canvas');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -69,7 +69,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
   activeView,
   onViewChange,
   sidebarCollapsed: _sidebarCollapsed,
-  onToggleSidebar
+  onToggleSidebar,
 }) => {
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-50 relative">
@@ -93,7 +93,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
         {[
           { id: 'canvas', label: 'Editor', icon: 'Edit' },
           { id: 'preview', label: 'Preview', icon: 'Eye' },
-          { id: 'publish', label: 'Publicar', icon: 'Upload' }
+          { id: 'publish', label: 'Publicar', icon: 'Upload' },
         ].map(({ id, label, icon }) => (
           <button
             key={id}

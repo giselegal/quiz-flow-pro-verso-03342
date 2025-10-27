@@ -26,7 +26,7 @@ export class QuizToTemplateAdapter {
   static convert(
     quizSteps: Record<string, QuizStep> | QuizStep[],
     stepOrder: string[],
-    meta: { name: string; slug: string; description?: string }
+    meta: { name: string; slug: string; description?: string },
   ): TemplateDraftShared {
     const stages: StageShared[] = [];
     const components: Record<string, ComponentSharedBase> = {};

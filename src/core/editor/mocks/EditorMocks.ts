@@ -37,7 +37,7 @@ import {
     EditorValidationMetrics,
     EditorLoadingMetrics,
     EditorFallbackMetrics,
-    EditorUsageMetrics
+    EditorUsageMetrics,
 } from '../interfaces/EditorInterfaces';
 
 // ============================================================================
@@ -62,11 +62,11 @@ export class MockEditorDataProvider implements EditorMockDataProvider {
                 pages: [
                     this.createSamplePage('intro', 'Welcome'),
                     this.createSamplePage('question', 'Question 1'),
-                    this.createSamplePage('result', 'Results')
+                    this.createSamplePage('result', 'Results'),
                 ],
                 settings: this.getDefaultSettings(),
-                metadata: this.getDefaultMetadata()
-            }
+                metadata: this.getDefaultMetadata(),
+            },
         ];
     }
 
@@ -86,9 +86,9 @@ export class MockEditorDataProvider implements EditorMockDataProvider {
                     order: 1,
                     metadata: {
                         createdAt: new Date(),
-                        updatedAt: new Date()
-                    }
-                }
+                        updatedAt: new Date(),
+                    },
+                },
             ],
             settings: {
                 title: name,
@@ -98,15 +98,15 @@ export class MockEditorDataProvider implements EditorMockDataProvider {
                 autoAdvance: false,
                 background: {
                     type: 'color',
-                    value: '#ffffff'
-                }
+                    value: '#ffffff',
+                },
             },
             transitions: {},
             metadata: {
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                order: 1
-            }
+                order: 1,
+            },
         };
     }
 
@@ -119,16 +119,16 @@ export class MockEditorDataProvider implements EditorMockDataProvider {
                 textColor: '#212529',
                 fontFamily: 'Inter, sans-serif',
                 borderRadius: '8px',
-                spacing: 'normal'
+                spacing: 'normal',
             },
             navigation: {
                 showProgress: true,
                 showStepNumbers: true,
                 allowBackward: true,
-                autoAdvance: false
+                autoAdvance: false,
             },
             autoSave: true,
-            previewMode: false
+            previewMode: false,
         };
     }
 
@@ -139,12 +139,12 @@ export class MockEditorDataProvider implements EditorMockDataProvider {
             version: 1,
             isPublished: false,
             tags: ['sample', 'test'],
-            category: 'general'
+            category: 'general',
         };
     }
 
     private generateId(): string {
-        return 'mock-' + Math.random().toString(36).substr(2, 9);
+        return `mock-${  Math.random().toString(36).substr(2, 9)}`;
     }
 
     private async simulateDelayInternal(operation: keyof EditorDataProvider) {
@@ -178,8 +178,8 @@ export class MockEditorDataProvider implements EditorMockDataProvider {
             metadata: {
                 ...data.metadata,
                 updatedAt: new Date(),
-                version: data.metadata.version + 1
-            }
+                version: data.metadata.version + 1,
+            },
         };
 
         if (existingIndex >= 0) {
@@ -191,7 +191,7 @@ export class MockEditorDataProvider implements EditorMockDataProvider {
         return {
             success: true,
             timestamp: new Date(),
-            version: updatedData.metadata.version
+            version: updatedData.metadata.version,
         };
     }
 
@@ -238,7 +238,7 @@ export class MockEditorDataProvider implements EditorMockDataProvider {
             createdAt: f.metadata.createdAt,
             updatedAt: f.metadata.updatedAt,
             category: f.metadata.category,
-            tags: f.metadata.tags
+            tags: f.metadata.tags,
         }));
     }
 
@@ -252,7 +252,7 @@ export class MockEditorDataProvider implements EditorMockDataProvider {
             description: data.description || '',
             pages: data.pages || [],
             settings: data.settings || this.getDefaultSettings(),
-            metadata: data.metadata || this.getDefaultMetadata()
+            metadata: data.metadata || this.getDefaultMetadata(),
         };
 
         this.mockFunnels.push(newFunnel);
@@ -285,8 +285,8 @@ export class MockEditorDataProvider implements EditorMockDataProvider {
             name: newName,
             metadata: {
                 ...original.metadata,
-                isPublished: false
-            }
+                isPublished: false,
+            },
         });
     }
 
@@ -323,9 +323,9 @@ export class MockEditorTemplateProvider implements EditorTemplateProvider {
             data: {
                 name: 'Basic Quiz',
                 description: 'A simple quiz template',
-                pages: []
-            }
-        }
+                pages: [],
+            },
+        },
     ];
 
     async getAvailableTemplates(category?: string): Promise<EditorTemplate[]> {
@@ -351,12 +351,12 @@ export class MockEditorTemplateProvider implements EditorTemplateProvider {
             description: template.data.description || '',
             pages: template.data.pages || [],
             settings: template.data.settings || this.getDefaultSettings(),
-            metadata: this.getDefaultMetadata()
+            metadata: this.getDefaultMetadata(),
         };
     }
 
     private generateId(): string {
-        return 'template-' + Math.random().toString(36).substr(2, 9);
+        return `template-${  Math.random().toString(36).substr(2, 9)}`;
     }
 
     private getDefaultSettings(): EditorFunnelSettings {
@@ -368,16 +368,16 @@ export class MockEditorTemplateProvider implements EditorTemplateProvider {
                 textColor: '#212529',
                 fontFamily: 'Inter, sans-serif',
                 borderRadius: '8px',
-                spacing: 'normal'
+                spacing: 'normal',
             },
             navigation: {
                 showProgress: true,
                 showStepNumbers: true,
                 allowBackward: true,
-                autoAdvance: false
+                autoAdvance: false,
             },
             autoSave: true,
-            previewMode: false
+            previewMode: false,
         };
     }
 
@@ -388,7 +388,7 @@ export class MockEditorTemplateProvider implements EditorTemplateProvider {
             version: 1,
             isPublished: false,
             tags: [],
-            category: 'general'
+            category: 'general',
         };
     }
 }
@@ -417,7 +417,7 @@ export class MockEditorValidator implements EditorValidator {
 
         return {
             isValid: errors.length === 0,
-            errors
+            errors,
         };
     }
 
@@ -440,7 +440,7 @@ export class MockEditorValidator implements EditorValidator {
 
         return {
             isValid: errors.length === 0,
-            errors
+            errors,
         };
     }
 
@@ -457,7 +457,7 @@ export class MockEditorValidator implements EditorValidator {
 
         return {
             isValid: errors.length === 0,
-            errors
+            errors,
         };
     }
 }
@@ -514,7 +514,7 @@ export class MockEditorEventHandler implements EditorEventHandler {
 
 export class MockEditorUtils implements EditorUtils {
     generateId(): string {
-        return 'mock-' + Math.random().toString(36).substr(2, 9);
+        return `mock-${  Math.random().toString(36).substr(2, 9)}`;
     }
 
     isValidFunnelData(data: any): data is EditorFunnelData {
@@ -541,16 +541,16 @@ export class MockEditorUtils implements EditorUtils {
                     textColor: '#212529',
                     fontFamily: 'Inter, sans-serif',
                     borderRadius: '8px',
-                    spacing: 'normal'
+                    spacing: 'normal',
                 },
                 navigation: {
                     showProgress: true,
                     showStepNumbers: true,
                     allowBackward: true,
-                    autoAdvance: false
+                    autoAdvance: false,
                 },
                 autoSave: true,
-                previewMode: false
+                previewMode: false,
             },
             metadata: {
                 createdAt: new Date(),
@@ -558,8 +558,8 @@ export class MockEditorUtils implements EditorUtils {
                 version: 1,
                 isPublished: false,
                 tags: [],
-                category: 'general'
-            }
+                category: 'general',
+            },
         };
     }
 
@@ -577,15 +577,15 @@ export class MockEditorUtils implements EditorUtils {
                 autoAdvance: false,
                 background: {
                     type: 'color',
-                    value: '#ffffff'
-                }
+                    value: '#ffffff',
+                },
             },
             transitions: {},
             metadata: {
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                order: 1
-            }
+                order: 1,
+            },
         };
     }
 
@@ -600,8 +600,8 @@ export class MockEditorUtils implements EditorUtils {
             order: 1,
             metadata: {
                 createdAt: new Date(),
-                updatedAt: new Date()
-            }
+                updatedAt: new Date(),
+            },
         };
     }
 
@@ -616,8 +616,8 @@ export class MockEditorUtils implements EditorUtils {
             order: 1,
             metadata: {
                 createdAt: new Date(),
-                updatedAt: new Date()
-            }
+                updatedAt: new Date(),
+            },
         };
     }
 
@@ -629,8 +629,8 @@ export class MockEditorUtils implements EditorUtils {
                 question: {
                     text: question,
                     type,
-                    required: false
-                }
+                    required: false,
+                },
             },
             style: {},
             position: { x: 0, y: 0 },
@@ -638,8 +638,8 @@ export class MockEditorUtils implements EditorUtils {
             order: 1,
             metadata: {
                 createdAt: new Date(),
-                updatedAt: new Date()
-            }
+                updatedAt: new Date(),
+            },
         };
     }
 
@@ -675,7 +675,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
         this.metrics.push({
             ...metric,
             sessionId: this.sessionId,
-            timestamp: metric.timestamp || new Date()
+            timestamp: metric.timestamp || new Date(),
         });
 
         // Simular alertas para métricas críticas
@@ -701,13 +701,13 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
     }
 
     recordValidationMetrics(metrics: EditorValidationMetrics): void {
-        console.log('Mock Metrics - Validation:', metrics.operation, metrics.validationTime + 'ms',
-            metrics.errorCount + ' errors');
+        console.log('Mock Metrics - Validation:', metrics.operation, `${metrics.validationTime  }ms`,
+            `${metrics.errorCount  } errors`);
         this.validationMetrics.push(metrics);
     }
 
     recordLoadingMetrics(metrics: EditorLoadingMetrics): void {
-        console.log('Mock Metrics - Loading:', metrics.operation, metrics.duration + 'ms',
+        console.log('Mock Metrics - Loading:', metrics.operation, `${metrics.duration  }ms`,
             'Success:', metrics.success, 'Fallback:', metrics.fallbackUsed);
         this.loadingMetrics.push(metrics);
     }
@@ -720,7 +720,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
 
     recordUsageMetrics(metrics: EditorUsageMetrics): void {
         console.log('Mock Metrics - Usage Session:', metrics.sessionId,
-            'Duration:', metrics.duration + 'ms', 'Operations:', metrics.operationCounts);
+            'Duration:', `${metrics.duration  }ms`, 'Operations:', metrics.operationCounts);
         this.usageMetrics.push(metrics);
     }
 
@@ -772,7 +772,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
             fallbackRate: Math.random() * 0.02, // 0-2%
             performanceScore: 85 + Math.random() * 15, // 85-100
             issues: this.generateMockIssues(),
-            recommendations: this.generateMockRecommendations()
+            recommendations: this.generateMockRecommendations(),
         };
 
         console.log('Mock Metrics - Performance Report:', report);
@@ -788,7 +788,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
             fallbackMetrics: this.fallbackMetrics,
             usageMetrics: this.usageMetrics,
             sessionId: this.sessionId,
-            exportedAt: new Date()
+            exportedAt: new Date(),
         };
 
         if (format === 'json') {
@@ -805,7 +805,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
                 metric.operation,
                 metric.value.toString(),
                 metric.unit,
-                metric.timestamp.toISOString()
+                metric.timestamp.toISOString(),
             ].join(','));
         });
 
@@ -834,7 +834,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
             validationMetrics: this.validationMetrics,
             loadingMetrics: this.loadingMetrics,
             fallbackMetrics: this.fallbackMetrics,
-            usageMetrics: this.usageMetrics
+            usageMetrics: this.usageMetrics,
         };
     }
 
@@ -846,7 +846,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
                 value: delay + Math.random() * 1000,
                 unit: 'ms',
                 timestamp: new Date(),
-                sessionId: this.sessionId
+                sessionId: this.sessionId,
             });
         }, 100);
     }
@@ -859,7 +859,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
             unit: 'count',
             timestamp: new Date(),
             sessionId: this.sessionId,
-            metadata: { error }
+            metadata: { error },
         });
     }
 
@@ -869,7 +869,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
             'Memory usage showing upward trend',
             'Error rate increased in last hour',
             'Slow network response detected',
-            'Cache hit rate below optimal'
+            'Cache hit rate below optimal',
         ];
 
         const issueCount = Math.floor(Math.random() * 3);
@@ -882,7 +882,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
             'Review validation logic for optimization opportunities',
             'Implement progressive loading for large funnels',
             'Add retry logic for network operations',
-            'Consider using Web Workers for heavy computations'
+            'Consider using Web Workers for heavy computations',
         ];
 
         const recommendationCount = Math.floor(Math.random() * 3) + 1;
@@ -920,7 +920,7 @@ export class EditorMockProvider {
             validator,
             eventHandler,
             utils,
-            metricsProvider
+            metricsProvider,
         };
     }
 
@@ -932,7 +932,7 @@ export class EditorMockProvider {
         return {
             dataProvider,
             utils,
-            metricsProvider
+            metricsProvider,
         };
     }
 
@@ -953,14 +953,14 @@ export class EditorMockProvider {
                 renderTime: 45,
                 bundleSize: 0,
                 hasErrors: false,
-                errorCount: 0
+                errorCount: 0,
             });
         }, 1000);
 
         return {
             metricsProvider,
             dataProvider: new MockEditorDataProvider(),
-            utils: new MockEditorUtils()
+            utils: new MockEditorUtils(),
         };
     }
 }

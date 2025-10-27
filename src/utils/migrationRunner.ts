@@ -1,7 +1,7 @@
 import {
     checkForLegacyData,
     executeMigrationWithConfirmation,
-    cleanupLegacyData as migrationCleanup
+    cleanupLegacyData as migrationCleanup,
 } from '@/utils/dataMigration';
 
 /**
@@ -34,7 +34,7 @@ export const runDataMigration = async () => {
             success: false,
             migratedItems: 0,
             errors: [error instanceof Error ? error.message : 'Erro desconhecido'],
-            details: []
+            details: [],
         };
     }
 };
@@ -70,7 +70,7 @@ export const autoMigration = async () => {
             migratedItems: 0,
             errors: [],
             details: ['Nenhum dado legado para migrar'],
-            alreadyMigrated: true
+            alreadyMigrated: true,
         };
     }
 };

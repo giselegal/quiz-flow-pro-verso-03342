@@ -34,7 +34,7 @@ export const useSupabaseQuizEditor = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'error'>(
-    'checking'
+    'checking',
   );
 
   // Testar conexão com Supabase

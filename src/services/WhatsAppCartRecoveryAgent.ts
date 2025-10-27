@@ -61,7 +61,7 @@ export class WhatsAppCartRecoveryAgent {
   
   constructor(
     whatsappToken: string,
-    phoneNumberId: string
+    phoneNumberId: string,
   ) {
     this.whatsappAPI = new WhatsAppBusinessAPI(whatsappToken, phoneNumberId);
     this.analyticsService = new AnalyticsService();
@@ -94,7 +94,7 @@ export class WhatsAppCartRecoveryAgent {
         productPrice: data.purchase?.price || 97.00,
         abandonedAt: new Date(),
         recoveryAttempts: 0,
-        status: 'pending'
+        status: 'pending',
       };
 
       // Salvar abandono para tracking
@@ -108,14 +108,14 @@ export class WhatsAppCartRecoveryAgent {
       console.log('🛒 Carrinho abandonado detectado:', {
         buyer: data.buyer?.name,
         product: 'Quiz de Estilo Premium',
-        value: data.purchase?.price
+        value: data.purchase?.price,
       });
 
       // Analytics
       this.analyticsService.trackEvent('cart_abandoned', {
         buyerId: data.buyer?.id,
         productName: 'Quiz de Estilo Premium',
-        value: data.purchase?.price
+        value: data.purchase?.price,
       });
 
     } catch (error) {
@@ -140,14 +140,14 @@ export class WhatsAppCartRecoveryAgent {
             recoveryId,
             buyer: recovery.buyerName,
             product: recovery.productName,
-            value: recovery.productPrice
+            value: recovery.productPrice,
           });
 
           // Analytics de conversão
           this.analyticsService.trackEvent('cart_recovered', {
             recoveryId,
             timToConversion: Date.now() - recovery.abandonedAt.getTime(),
-            recoveryAttempts: recovery.recoveryAttempts
+            recoveryAttempts: recovery.recoveryAttempts,
           });
 
           break;
@@ -194,7 +194,7 @@ export class WhatsAppCartRecoveryAgent {
   async sendRecoveryMessage(
     recoveryId: string, 
     message: RecoveryMessage,
-    sequenceStep: number
+    sequenceStep: number,
   ): Promise<void> {
     try {
       const recovery = this.activeRecoveries.get(recoveryId);
@@ -204,19 +204,19 @@ export class WhatsAppCartRecoveryAgent {
       const personalizedMessage: RecoveryMessage = {
         name: message.name || 'cart_recovery_template',
         language: message.language || { code: 'pt_BR' },
-        components: message.components || []
+        components: message.components || [],
       };
 
       // Enviar via WhatsApp Business API
       const result = await this.whatsappAPI.sendTemplateMessage(
         recovery.buyerPhone,
-        personalizedMessage
+        personalizedMessage,
       );
 
       console.log(`📤 Mensagem ${sequenceStep + 1} enviada para ${recovery.buyerName}:`, {
         phone: recovery.buyerPhone,
         template: message.name,
-        result
+        result,
       });
 
       // Analytics
@@ -224,7 +224,7 @@ export class WhatsAppCartRecoveryAgent {
         recoveryId,
         sequenceStep,
         template: message.name,
-        phone: recovery.buyerPhone
+        phone: recovery.buyerPhone,
       });
 
     } catch (error) {
@@ -306,7 +306,7 @@ export class WhatsAppCartRecoveryAgent {
       const interactive: InteractiveMessage = {
         type: 'button',
         body: {
-          text: `Ótimo, ${recovery.buyerName}! 🎉\n\nSeu Quiz de Estilo Premium está te esperando por apenas R$ ${recovery.productPrice}.\n\n✨ Oferta especial: 20% de desconto válido por mais 2 horas!\n\nFinalizar agora e descobrir seu estilo único?`
+          text: `Ótimo, ${recovery.buyerName}! 🎉\n\nSeu Quiz de Estilo Premium está te esperando por apenas R$ ${recovery.productPrice}.\n\n✨ Oferta especial: 20% de desconto válido por mais 2 horas!\n\nFinalizar agora e descobrir seu estilo único?`,
         },
         action: {
           buttons: [
@@ -314,16 +314,16 @@ export class WhatsAppCartRecoveryAgent {
               type: 'reply',
               reply: {
                 id: 'checkout_now',
-                title: '🛒 Finalizar Compra'
-              }
-            }
-          ]
-        }
+                title: '🛒 Finalizar Compra',
+              },
+            },
+          ],
+        },
       };
 
       await this.whatsappAPI.sendInteractiveMessage(
         recovery.buyerPhone,
-        interactive
+        interactive,
       );
 
     } catch (error) {
@@ -347,7 +347,7 @@ export class WhatsAppCartRecoveryAgent {
       recoveryRate: totalAbandoned > 0 ? (converted.length / totalAbandoned) * 100 : 0,
       revenueRecovered: converted.reduce((sum, r) => sum + r.productPrice, 0),
       totalContacted: contacted.length,
-      totalRecovered: converted.length
+      totalRecovered: converted.length,
     };
   }
 
@@ -368,7 +368,7 @@ export class WhatsAppCartRecoveryAgent {
   }
   async getRecoveryAnalytics(
     startDate: Date = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 dias atrás
-    endDate: Date = new Date()
+    endDate: Date = new Date(),
   ): Promise<RecoveryAnalytics> {
     try {
       const recoveries = Array.from(this.activeRecoveries.values())
@@ -383,7 +383,7 @@ export class WhatsAppCartRecoveryAgent {
         messagesSent,
         recoveredSales: converted.length,
         recoveryRate: totalAbandoned > 0 ? (converted.length / totalAbandoned) * 100 : 0,
-        revenueRecovered: converted.reduce((sum, r) => sum + r.productPrice, 0)
+        revenueRecovered: converted.reduce((sum, r) => sum + r.productPrice, 0),
       };
 
     } catch (error) {
@@ -393,7 +393,7 @@ export class WhatsAppCartRecoveryAgent {
         messagesSent: 0,
         recoveredSales: 0,
         recoveryRate: 0,
-        revenueRecovered: 0
+        revenueRecovered: 0,
       };
     }
   }
@@ -413,10 +413,10 @@ export class WhatsAppCartRecoveryAgent {
               type: 'body',
               parameters: [
                 { type: 'text', text: '{{buyer_name}}' },
-                { type: 'text', text: 'Quiz de Estilo Premium' }
-              ]
-            }
-          ]
+                { type: 'text', text: 'Quiz de Estilo Premium' },
+              ],
+            },
+          ],
         },
         {
           name: 'cart_recovery_2_discount',
@@ -426,14 +426,14 @@ export class WhatsAppCartRecoveryAgent {
               type: 'body',
               parameters: [
                 { type: 'text', text: '20%' },
-                { type: 'text', text: '2 horas' }
-              ]
-            }
-          ]
-        }
+                { type: 'text', text: '2 horas' },
+              ],
+            },
+          ],
+        },
       ],
       delays: [0, 3600], // 0s, 1 hora
-      conditions: ['always', 'no_response']
+      conditions: ['always', 'no_response'],
     };
 
     this.recoverySequences.set('quiz_style', quizStyleSequence);
@@ -447,7 +447,7 @@ export class WhatsAppCartRecoveryAgent {
     return this.recoverySequences.get('quiz_style') || {
       messages: [],
       delays: [],
-      conditions: []
+      conditions: [],
     };
   }
 

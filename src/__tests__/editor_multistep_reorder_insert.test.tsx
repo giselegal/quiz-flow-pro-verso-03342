@@ -35,7 +35,7 @@ describe('EditorProvider: multi-step reorder/insert isolation', () => {
             <ProviderHarness initial={{ currentStep: 1, stepBlocks: { 'step-2': [], 'step-3': [] } }}>
                 <EditorActionsProbe onReady={(c) => (ctxRef = c)} />
                 <EditorStateProbe onUpdate={(s) => (last = s)} />
-            </ProviderHarness>
+            </ProviderHarness>,
         );
 
         expect(ctxRef).toBeTruthy();
@@ -86,7 +86,7 @@ describe('EditorProvider: multi-step reorder/insert isolation', () => {
             <ProviderHarness initial={{ currentStep: 1, stepBlocks: { 'step-1': [], 'step-4': [] } }}>
                 <EditorActionsProbe onReady={(c) => (ctxRef = c)} />
                 <EditorStateProbe onUpdate={(s) => (last = s)} />
-            </ProviderHarness>
+            </ProviderHarness>,
         );
 
         expect(ctxRef).toBeTruthy();
@@ -123,7 +123,7 @@ describe('EditorProvider: multi-step reorder/insert isolation', () => {
             <ProviderHarness initial={{ currentStep: 1 }}>
                 <EditorActionsProbe onReady={(c) => (ctxRef = c)} />
                 <EditorStateProbe onUpdate={(s) => (last = s)} />
-            </ProviderHarness>
+            </ProviderHarness>,
         );
 
         expect(ctxRef).toBeTruthy();

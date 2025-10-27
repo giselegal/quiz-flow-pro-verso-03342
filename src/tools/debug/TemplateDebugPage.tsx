@@ -22,8 +22,8 @@ const TemplateDebugPage: React.FC = () => {
             sampleEntries: QUIZ_STYLE_21_STEPS_TEMPLATE ?
                 Object.entries(QUIZ_STYLE_21_STEPS_TEMPLATE).slice(0, 3).map(([k, v]) => [
                     k,
-                    Array.isArray(v) ? `Array[${v.length}]` : typeof v
-                ]) : []
+                    Array.isArray(v) ? `Array[${v.length}]` : typeof v,
+                ]) : [],
         };
 
         console.log('📦 Raw template data:', templateData);
@@ -36,7 +36,7 @@ const TemplateDebugPage: React.FC = () => {
                 normalizedKeys: Object.keys(normalized),
                 keyCount: Object.keys(normalized).length,
                 stepBlocks: Object.entries(normalized).map(([k, v]) => [k, v.length]),
-                specificSteps: {}
+                specificSteps: {},
             };
 
             // Teste steps específicos
@@ -46,7 +46,7 @@ const TemplateDebugPage: React.FC = () => {
                 (normalizedData.specificSteps as any)[i] = {
                     hasBlocks: !!blocks,
                     count: blocks?.length || 0,
-                    types: blocks?.slice(0, 3).map(b => b.type) || []
+                    types: blocks?.slice(0, 3).map(b => b.type) || [],
                 };
             }
 

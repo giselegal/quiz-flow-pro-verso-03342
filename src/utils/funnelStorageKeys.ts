@@ -11,7 +11,7 @@
 export const generateFunnelStorageKey = (
     dataType: 'session' | 'step' | 'response' | 'user' | 'progress' | 'config',
     funnelId: string,
-    identifier?: string
+    identifier?: string,
 ): string => {
     const baseKey = `funnel_${dataType}_${funnelId}`;
     return identifier ? `${baseKey}_${identifier}` : baseKey;
@@ -65,7 +65,7 @@ export const getFunnelConfigKey = (funnelId: string): string => {
 export const listFunnelKeys = (funnelId: string): string[] => {
     if (typeof window === 'undefined') return [];
 
-    const funnelPrefix = `funnel_`;
+    const funnelPrefix = 'funnel_';
     const funnelKeys: string[] = [];
 
     for (let i = 0; i < localStorage.length; i++) {
@@ -103,7 +103,7 @@ export const migrateLegacyData = (funnelId: string): void => {
         'quiz_step_',
         'quiz_response_',
         'quiz_user_name_',
-        'quiz_progress'
+        'quiz_progress',
     ];
 
     const migratedKeys: string[] = [];

@@ -35,7 +35,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
             missingFields.push({
               blockType: blockDef.type,
               property: propKey,
-              location: 'content'
+              location: 'content',
             });
           }
         });
@@ -50,7 +50,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
       
       expect(
         missingFields,
-        `❌ ${missingFields.length} propriedades content sem campo no schema`
+        `❌ ${missingFields.length} propriedades content sem campo no schema`,
       ).toHaveLength(0);
     });
   });
@@ -75,7 +75,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         'onClick',
         'onMouseEnter',
         'onMouseLeave',
-        'data-testid'
+        'data-testid',
       ];
       
       BLOCK_DEFINITIONS.forEach((blockDef: BlockDefinition) => {
@@ -93,7 +93,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
             missingFields.push({
               blockType: blockDef.type,
               property: propKey,
-              location: 'properties'
+              location: 'properties',
             });
           }
         });
@@ -108,7 +108,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
       
       expect(
         missingFields,
-        `❌ ${missingFields.length} propriedades properties sem campo no schema`
+        `❌ ${missingFields.length} propriedades properties sem campo no schema`,
       ).toHaveLength(0);
     });
   });
@@ -132,15 +132,15 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         const schemaFieldKeys = schema.fields.map((f: any) => f.key);
         const allProps = {
           ...(blockDef.defaultProps.content || {}),
-          ...(blockDef.defaultProps.properties || {})
+          ...(blockDef.defaultProps.properties || {}),
         };
         
         const propKeys = Object.keys(allProps);
         const coveredProps = propKeys.filter(key => 
-          schemaFieldKeys.includes(key)
+          schemaFieldKeys.includes(key),
         );
         const missingProps = propKeys.filter(key => 
-          !schemaFieldKeys.includes(key)
+          !schemaFieldKeys.includes(key),
         );
         
         const coverage = propKeys.length > 0 
@@ -153,7 +153,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
           totalProps: propKeys.length,
           coveredProps: coveredProps.length,
           coverage: Math.round(coverage),
-          missingProps
+          missingProps,
         });
       });
       
@@ -186,7 +186,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
       // Espera pelo menos 95% de cobertura média
       expect(
         avgCoverage,
-        `❌ Cobertura média abaixo de 95%: ${avgCoverage.toFixed(2)}%`
+        `❌ Cobertura média abaixo de 95%: ${avgCoverage.toFixed(2)}%`,
       ).toBeGreaterThanOrEqual(95);
     });
   });
@@ -207,7 +207,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         'advanced',
         'design',
         'visibility',
-        'navigation'
+        'navigation',
       ];
       
   const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
@@ -219,7 +219,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
             invalidGroups.push({
               schema: schemaType,
               field: field.key,
-              group: field.group
+              group: field.group,
             });
           }
         });
@@ -234,7 +234,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
       
       expect(
         invalidGroups,
-        `❌ ${invalidGroups.length} campos com grupos inválidos`
+        `❌ ${invalidGroups.length} campos com grupos inválidos`,
       ).toHaveLength(0);
     });
 
@@ -244,7 +244,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         'options-grid',
         'lead-form',
         'button-inline',
-        'quiz-intro-header'
+        'quiz-intro-header',
       ];
       
       const withoutGroups: string[] = [];
@@ -254,7 +254,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         if (!schema) return;
         
         const groups = new Set(
-          schema.fields.map((f: any) => f.group).filter(Boolean)
+          schema.fields.map((f: any) => f.group).filter(Boolean),
         );
         
         if (groups.size < 2) {
@@ -264,7 +264,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
       
       expect(
         withoutGroups,
-        `❌ Componentes complexos sem organização em grupos: ${withoutGroups.join(', ')}`
+        `❌ Componentes complexos sem organização em grupos: ${withoutGroups.join(', ')}`,
       ).toHaveLength(0);
     });
   });
@@ -284,7 +284,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
             missingDescriptions.push({
               schema: schemaType,
               field: field.key,
-              type: field.type
+              type: field.type,
             });
           }
         });
@@ -318,7 +318,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
             missingDefaults.push({
               schema: schemaType,
               field: field.key,
-              type: field.type
+              type: field.type,
             });
           }
         });
@@ -354,14 +354,14 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
         
         const allProps = {
           ...(blockDef.defaultProps.content || {}),
-          ...(blockDef.defaultProps.properties || {})
+          ...(blockDef.defaultProps.properties || {}),
         };
         
         schema.fields.forEach((field: any) => {
           if (field.required && !(field.key in allProps)) {
             issues.push({
               schema: blockDef.type,
-              field: field.key
+              field: field.key,
             });
           }
         });
@@ -376,7 +376,7 @@ describe('🎯 Cobertura de DefaultProps -> Schemas', () => {
       
       expect(
         issues,
-        `❌ ${issues.length} campos required sem valor padrão`
+        `❌ ${issues.length} campos required sem valor padrão`,
       ).toHaveLength(0);
     });
   });

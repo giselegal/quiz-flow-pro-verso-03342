@@ -51,7 +51,7 @@ export function generateSemanticId(config: SemanticIdConfig): string {
 export function generateQuizComponentId(
   context: string,
   componentType: string,
-  index?: number
+  index?: number,
 ): string {
   return generateSemanticId({
     context: `quiz-${context}`,
@@ -74,7 +74,7 @@ export function generateQuestionId(questionNumber: number, questionType: string 
 export function generateOptionId(
   questionNumber: number,
   optionType: string,
-  optionIndex?: number
+  optionIndex?: number,
 ): string {
   const identifier = optionIndex
     ? `q${questionNumber}-${optionType}-${optionIndex}`
@@ -181,7 +181,7 @@ export function convertTimestampToSemantic(timestampId: string, config: Semantic
  */
 export function migrateIdMapping(
   oldMapping: Record<string, any>,
-  contextPrefix: string
+  contextPrefix: string,
 ): Record<string, any> {
   const newMapping: Record<string, any> = {};
 

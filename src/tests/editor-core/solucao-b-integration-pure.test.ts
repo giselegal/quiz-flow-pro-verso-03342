@@ -24,8 +24,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 options: [
                     { label: 'Clássico' },
                     { label: 'Moderno' },
-                    { label: 'Boho' }
-                ]
+                    { label: 'Boho' },
+                ],
             };
 
             // 2. Validar com Zod
@@ -43,7 +43,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 question: 'Q?',
                 requiredSelections: 5,
                 maxSelections: 2,
-                options: [{ label: 'A' }]
+                options: [{ label: 'A' }],
             };
 
             const schema = SCHEMAS['question'];
@@ -55,8 +55,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 question: 'Q?',
                 options: [
                     { label: 'Meu Estilo Clássico' },
-                    { label: 'Bem Moderno' }
-                ]
+                    { label: 'Bem Moderno' },
+                ],
             };
 
             const schema = SCHEMAS['question'];
@@ -77,8 +77,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 question: 'Q?',
                 options: [
                     { label: 'A', points: 10, metadata: { category: 'natural' } },
-                    { label: 'B', points: 20, metadata: { category: 'elegante' } }
-                ]
+                    { label: 'B', points: 20, metadata: { category: 'elegante' } },
+                ],
             };
 
             const schema = SCHEMAS['question'];
@@ -99,7 +99,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 title: 'Bem-vindo',
                 subtitle: 'ao Quiz',
                 cta: 'Começar',
-                layout: 'centered'
+                layout: 'centered',
             };
 
             const schema = SCHEMAS['intro'];
@@ -114,7 +114,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
             const props = {
                 title: 'Título',
                 logoUrl: 'https://example.com/logo.png',
-                backgroundImage: 'https://example.com/bg.jpg'
+                backgroundImage: 'https://example.com/bg.jpg',
             };
 
             const schema = SCHEMAS['intro'];
@@ -125,7 +125,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
         it('deve rejeitar URLs inválidas em intro', () => {
             const props = {
                 title: 'Título',
-                logoUrl: 'not-a-valid-url'
+                logoUrl: 'not-a-valid-url',
             };
 
             const schema = SCHEMAS['intro'];
@@ -141,7 +141,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 showPrimaryStyleCard: true,
                 primaryStyleId: 'natural',
                 showSecondaryStyles: true,
-                secondaryStylesCount: 2
+                secondaryStylesCount: 2,
             };
 
             const schema = SCHEMAS['result'];
@@ -154,7 +154,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
         it('deve validar offersToShow como array de strings', () => {
             const props = {
                 titleTemplate: 'Resultado',
-                offersToShow: ['offer-1', 'offer-2', 'offer-3']
+                offersToShow: ['offer-1', 'offer-2', 'offer-3'],
             };
 
             const schema = SCHEMAS['result'];
@@ -172,15 +172,15 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                         title: 'Guia de Estilos',
                         description: 'Aprenda',
                         price: 49.90,
-                        ctaLabel: 'Comprar'
+                        ctaLabel: 'Comprar',
                     },
                     offer2: {
                         title: 'Consultoria',
                         description: 'Sessão 1:1',
                         price: 199.00,
-                        ctaLabel: 'Agendar'
-                    }
-                }
+                        ctaLabel: 'Agendar',
+                    },
+                },
             };
 
             const schema = SCHEMAS['offer'];
@@ -197,9 +197,9 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                     offer1: {
                         title: 'Oferta',
                         price: -50,
-                        ctaLabel: 'Comprar'
-                    }
-                }
+                        ctaLabel: 'Comprar',
+                    },
+                },
             };
 
             const schema = SCHEMAS['offer'];
@@ -214,7 +214,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 title: 'Quase lá!',
                 text: 'Falta pouco',
                 showContinueButton: true,
-                continueButtonText: 'Ver Resultado'
+                continueButtonText: 'Ver Resultado',
             };
 
             const schema = SCHEMAS['transition'];
@@ -232,8 +232,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 question: 'Pergunta estratégica?',
                 options: [
                     { label: 'Opção 1' },
-                    { label: 'Opção 2' }
-                ]
+                    { label: 'Opção 2' },
+                ],
             };
 
             const schema = SCHEMAS['strategic-question'];
@@ -255,7 +255,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
         it('deve preservar schemaVersion após parsing', () => {
             const props = {
                 question: 'Q?',
-                options: [{ label: 'A' }]
+                options: [{ label: 'A' }],
             };
 
             const schema = SCHEMAS['question'];
@@ -268,7 +268,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
             const props = {
                 question: 'Q?',
                 options: [{ label: 'A' }],
-                schemaVersion: 1
+                schemaVersion: 1,
             };
 
             const schema = SCHEMAS['question'];
@@ -284,11 +284,11 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
         it('deve gerar slugs idênticos para labels idênticos', () => {
             const props1 = {
                 question: 'Q?',
-                options: [{ label: 'Meu Estilo Natural' }]
+                options: [{ label: 'Meu Estilo Natural' }],
             };
             const props2 = {
                 question: 'Q?',
-                options: [{ label: 'Meu Estilo Natural' }]
+                options: [{ label: 'Meu Estilo Natural' }],
             };
 
             const schema = SCHEMAS['question'];
@@ -305,8 +305,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 options: [
                     { label: 'A' },
                     { label: 'B' },
-                    { label: 'C' }
-                ]
+                    { label: 'C' },
+                ],
             };
 
             const schema = SCHEMAS['question'];
@@ -323,8 +323,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 options: [
                     { label: 'Estilo "Premium" (Exclusivo)' },
                     { label: 'Com Acentuação: Açúcar & Mel' },
-                    { label: '  Espaços  Extras  ' }
-                ]
+                    { label: '  Espaços  Extras  ' },
+                ],
             };
 
             const schema = SCHEMAS['question'];
@@ -344,8 +344,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 requiredSelections: 10,
                 options: [
                     { label: 'A' },
-                    { label: 'B' }
-                ]
+                    { label: 'B' },
+                ],
             };
 
             const schema = SCHEMAS['question'];
@@ -358,8 +358,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
                 maxSelections: 10,
                 options: [
                     { label: 'A' },
-                    { label: 'B' }
-                ]
+                    { label: 'B' },
+                ],
             };
 
             const schema = SCHEMAS['question'];
@@ -372,7 +372,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
         it('deve rejeitar options vazias', () => {
             const props = {
                 question: 'Q?',
-                options: []
+                options: [],
             };
 
             const schema = SCHEMAS['question'];
@@ -382,7 +382,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
         it('deve aceitar question sem layout explícito', () => {
             const props = {
                 question: 'Q?',
-                options: [{ label: 'A' }]
+                options: [{ label: 'A' }],
             };
 
             const schema = SCHEMAS['question'];
@@ -395,7 +395,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
             for (let i = 1; i <= 10; i++) {
                 offerMap[`offer${i}`] = {
                     title: `Oferta ${i}`,
-                    ctaLabel: 'Comprar'
+                    ctaLabel: 'Comprar',
                 };
             }
 
@@ -410,8 +410,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B - LÓGICA PURA', () => {
             const props = {
                 offerMap: {
                     offer1: { title: 'Oferta 1', ctaLabel: 'Comprar' },
-                    offer2: { title: 'Oferta 2', ctaLabel: 'Comprar' }
-                }
+                    offer2: { title: 'Oferta 2', ctaLabel: 'Comprar' },
+                },
             };
 
             const schema = SCHEMAS['offer'];

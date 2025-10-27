@@ -12,18 +12,18 @@
 // Re-export from unified core types for backward compatibility
 export type {
   UnifiedBlockComponentProps as BlockComponentProps,
-  BlockComponent
+  BlockComponent,
 } from './core';
 
 export {
   asBlockComponent,
-  createBlockComponent
+  createBlockComponent,
 } from './core';
 
 // Legacy warning for developers
 if (process.env.NODE_ENV === 'development') {
   console.warn(
     '⚠️ DEPRECATION WARNING: src/types/blockComponentProps.ts is deprecated. ' +
-    'Please import from "@/types/core" instead.'
+    'Please import from "@/types/core" instead.',
   );
 }

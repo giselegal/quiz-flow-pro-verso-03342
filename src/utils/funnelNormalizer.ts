@@ -21,7 +21,7 @@ export const normalizeFunnelId = (funnelId: string | null | undefined): Normaliz
     return {
       baseId: 'default-funnel',
       originalId: funnelId || 'default-funnel',
-      isTemplate: false
+      isTemplate: false,
     };
   }
 
@@ -33,7 +33,7 @@ export const normalizeFunnelId = (funnelId: string | null | undefined): Normaliz
       baseId: funnelId.replace('template-', ''),
       originalId,
       isTemplate: true,
-      templateId: funnelId.replace('template-', '')
+      templateId: funnelId.replace('template-', ''),
     };
   }
 
@@ -49,7 +49,7 @@ export const normalizeFunnelId = (funnelId: string | null | undefined): Normaliz
     return {
       baseId: 'empty-canvas',
       originalId,
-      isTemplate: false
+      isTemplate: false,
     };
   }
 
@@ -67,7 +67,7 @@ export const normalizeFunnelId = (funnelId: string | null | undefined): Normaliz
   return {
     baseId,
     originalId,
-    isTemplate: false
+    isTemplate: false,
   };
 };
 
@@ -87,7 +87,7 @@ export const getTemplateInfo = async (funnelId: string) => {
       ...normalized,
       template: null,
       totalSteps: 0,
-      templateName: 'Canvas Vazio'
+      templateName: 'Canvas Vazio',
     };
   }
 
@@ -102,7 +102,7 @@ export const getTemplateInfo = async (funnelId: string) => {
         ...normalized,
         template,
         totalSteps: template.stepCount || 1,
-        templateName: template.name || normalized.baseId
+        templateName: template.name || normalized.baseId,
       };
     }
   } catch (error) {
@@ -120,7 +120,7 @@ export const getTemplateInfo = async (funnelId: string) => {
         ...normalized,
         template,
         totalSteps: Object.keys(template.steps || {}).length || 1,
-        templateName: template.name || normalized.baseId
+        templateName: template.name || normalized.baseId,
       };
     }
   } catch (error) {
@@ -133,7 +133,7 @@ export const getTemplateInfo = async (funnelId: string) => {
     ...normalized,
     template: null,
     totalSteps: 1,
-    templateName: normalized.baseId
+    templateName: normalized.baseId,
   };
 };
 

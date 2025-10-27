@@ -20,13 +20,13 @@ export function normalizeTemplateBlocks(template: any): any {
     if (Array.isArray(step?.blocks)) {
       step.blocks = step.blocks.map((b: any) => ({
         ...b,
-        type: normalizeBlockType(b?.type)
+        type: normalizeBlockType(b?.type),
       }));
     }
     if (Array.isArray(step?.sections)) {
       step.sections = step.sections.map((s: any) => ({
         ...s,
-        type: normalizeBlockType(s?.type)
+        type: normalizeBlockType(s?.type),
       }));
     }
   });

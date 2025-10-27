@@ -84,13 +84,13 @@ export abstract class BaseCanonicalService implements ICanonicalService {
   constructor(
     public readonly name: string,
     public readonly version: string,
-    options: ServiceOptions = {}
+    options: ServiceOptions = {},
   ) {
     this.options = {
       debug: false,
       timeout: 30000,
       retry: { maxAttempts: 3, backoff: 1000 },
-      ...options
+      ...options,
     };
   }
 

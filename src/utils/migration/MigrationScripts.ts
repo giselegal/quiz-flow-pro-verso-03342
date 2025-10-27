@@ -57,7 +57,7 @@ export async function performFullMigration() {
         console.log('\n🧪 Executando simulação (dry run)...');
         const dryRun = await migrationManager.migrate({
             dryRun: true,
-            logProgress: true
+            logProgress: true,
         });
 
         if (!dryRun.success) {
@@ -101,7 +101,7 @@ export async function performFullMigration() {
             analysis,
             migration,
             validation,
-            metrics
+            metrics,
         };
 
     } catch (error) {
@@ -132,7 +132,7 @@ export async function performSafeCleanup(preserveKeys: string[] = []) {
             'user_preferences', // Preferências globais
             'auth_token', // Token de autenticação
             'last_visit', // Última visita
-            ...preserveKeys
+            ...preserveKeys,
         ];
 
         console.log(`🛡️ Preservando: ${defaultPreserve.join(', ')}`);
@@ -144,7 +144,7 @@ export async function performSafeCleanup(preserveKeys: string[] = []) {
 
         // Verificar localStorage final
         const remaining = Object.keys(localStorage).filter(key =>
-            !defaultPreserve.includes(key)
+            !defaultPreserve.includes(key),
         );
 
         if (remaining.length > 0) {
@@ -155,7 +155,7 @@ export async function performSafeCleanup(preserveKeys: string[] = []) {
             success: true,
             cleaned,
             remaining,
-            preserved: defaultPreserve
+            preserved: defaultPreserve,
         };
 
     } catch (error) {
@@ -173,7 +173,7 @@ export async function emergencyRollback() {
     try {
         // Verificar se há backup no localStorage original
         const backupKeys = Object.keys(localStorage).filter(key =>
-            key.startsWith('MIGRATED_')
+            key.startsWith('MIGRATED_'),
         );
 
         if (backupKeys.length === 0) {
@@ -207,7 +207,7 @@ export async function emergencyRollback() {
 
         return {
             success: true,
-            restored
+            restored,
         };
 
     } catch (error) {
@@ -227,7 +227,7 @@ export async function runIntegrityTest() {
             storageTest: false,
             migrationTest: false,
             contextTest: false,
-            cleanupTest: false
+            cleanupTest: false,
         };
 
         // Teste 1: Storage básico
@@ -301,7 +301,7 @@ export async function runCompleteMigrationWorkflow() {
         console.log('\n5️⃣ TESTE FINAL');
         const finalTest = await runIntegrityTest();
 
-        console.log('\n' + '='.repeat(50));
+        console.log(`\n${  '='.repeat(50)}`);
         console.log('🏁 WORKFLOW CONCLUÍDO');
         console.log(`  • Itens analisados: ${analysis.totalItems}`);
         console.log(`  • Itens migrados: ${migration.migration?.migratedItems || 0}`);
@@ -313,7 +313,7 @@ export async function runCompleteMigrationWorkflow() {
             analysis,
             migration,
             cleanup,
-            finalTest
+            finalTest,
         };
 
     } catch (error) {

@@ -96,7 +96,7 @@ export const useQuizFlow = ({
         onStepChange?.(step);
       }
     },
-    [onStepChange]
+    [onStepChange],
   );
 
   // Salvar nome na etapa 1
@@ -109,7 +109,7 @@ export const useQuizFlow = ({
       setStepValidation(prev => ({ ...prev, 1: !!name?.trim() }));
       nextStep();
     },
-    [nextStep, setUserNameFromInput]
+    [nextStep, setUserNameFromInput],
   );
 
   // Responder pergunta com pontuação
@@ -125,7 +125,7 @@ export const useQuizFlow = ({
         schedule('quizflow-ux-next', nextStep, cfg.autoAdvanceDelay ?? 500, 'timeout');
       }
     },
-    [answerQuestion, nextStep, currentStep, stepNavStore, cancel, schedule]
+    [answerQuestion, nextStep, currentStep, stepNavStore, cancel, schedule],
   );
 
   // Responder pergunta estratégica
@@ -139,7 +139,7 @@ export const useQuizFlow = ({
         schedule('quizflow-ux-next', nextStep, cfg.autoAdvanceDelay ?? 500, 'timeout');
       }
     },
-    [answerStrategicQuestion, nextStep, currentStep, stepNavStore, cancel, schedule]
+    [answerStrategicQuestion, nextStep, currentStep, stepNavStore, cancel, schedule],
   );
 
   // Auto-avançar na etapa 19 (processamento)
@@ -182,7 +182,7 @@ export const useQuizFlow = ({
           }
         },
         600,
-        'timeout'
+        'timeout',
       );
       return () => cancel('quizflow-step19');
     }
@@ -259,12 +259,12 @@ export const useQuizFlow = ({
 
   const getStepInfo = useCallback(
     (step?: number) => coreGetStepInfo(step ?? currentStep),
-    [currentStep]
+    [currentStep],
   );
 
   const getStepConfig = useCallback(
     (step?: number) => QuizDataService.getStepConfig(step ?? currentStep),
-    [currentStep]
+    [currentStep],
   );
 
   const preloadTemplates = useCallback(async () => {

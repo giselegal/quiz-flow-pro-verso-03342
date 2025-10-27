@@ -15,12 +15,12 @@ vi.mock('@/integrations/supabase/customClient', () => ({
       select: vi.fn(() => ({ data: [], error: null })),
       upsert: vi.fn(() => ({ data: null, error: null })),
       eq: vi.fn(() => ({ data: [], error: null })),
-      single: vi.fn(() => ({ data: null, error: null }))
+      single: vi.fn(() => ({ data: null, error: null })),
     })),
     auth: {
-      getUser: vi.fn(() => ({ data: { user: { id: 'test-user-id' } }, error: null }))
-    }
-  }
+      getUser: vi.fn(() => ({ data: { user: { id: 'test-user-id' } }, error: null })),
+    },
+  },
 }));
 
 describe('🔗 Integração com Backend Supabase', () => {
@@ -40,7 +40,7 @@ describe('🔗 Integração com Backend Supabase', () => {
     it('deve criar perfil de usuário quiz', async () => {
       const mockInsert = vi.fn().mockResolvedValue({ data: { id: mockUserId }, error: null });
       (supabase.from as any).mockReturnValue({
-        insert: mockInsert
+        insert: mockInsert,
       });
 
       const userData = {
@@ -51,7 +51,7 @@ describe('🔗 Integração com Backend Supabase', () => {
         user_agent: 'Test Browser',
         utm_source: 'google',
         utm_medium: 'cpc',
-        utm_campaign: 'quiz-campaign'
+        utm_campaign: 'quiz-campaign',
       };
 
       await supabase.from('quiz_users').insert(userData);
@@ -64,7 +64,7 @@ describe('🔗 Integração com Backend Supabase', () => {
     it('deve criar nova sessão de quiz', async () => {
       const mockInsert = vi.fn().mockResolvedValue({ data: { id: mockSessionId }, error: null });
       (supabase.from as any).mockReturnValue({
-        insert: mockInsert
+        insert: mockInsert,
       });
 
       const sessionData = {
@@ -75,8 +75,8 @@ describe('🔗 Integração com Backend Supabase', () => {
         total_steps: 21,
         metadata: {
           userAgent: 'Test Browser',
-          startTime: new Date().toISOString()
-        }
+          startTime: new Date().toISOString(),
+        },
       };
 
       await supabase.from('quiz_sessions').insert(sessionData);
@@ -89,7 +89,7 @@ describe('🔗 Integração com Backend Supabase', () => {
     it('deve salvar resposta individual', async () => {
       const mockInsert = vi.fn().mockResolvedValue({ data: { id: 'response-id' }, error: null });
       (supabase.from as any).mockReturnValue({
-        insert: mockInsert
+        insert: mockInsert,
       });
 
       const responseData = {
@@ -103,8 +103,8 @@ describe('🔗 Integração com Backend Supabase', () => {
         question_text: 'Qual seu estilo preferido?',
         metadata: {
           selectedOptions: ['elegante-option'],
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       };
 
       await supabase.from('quiz_step_responses').insert(responseData);
@@ -115,7 +115,7 @@ describe('🔗 Integração com Backend Supabase', () => {
     it('deve salvar múltiplas respostas em lote', async () => {
       const mockInsert = vi.fn().mockResolvedValue({ data: [], error: null });
       (supabase.from as any).mockReturnValue({
-        insert: mockInsert
+        insert: mockInsert,
       });
 
       const responses = [
@@ -124,15 +124,15 @@ describe('🔗 Integração com Backend Supabase', () => {
           question_id: 'step-2',
           step_number: 2,
           answer_value: 'elegante-option',
-          score_earned: 3
+          score_earned: 3,
         },
         {
           session_id: mockSessionId,
           question_id: 'step-3',
           step_number: 3,
           answer_value: 'romantico-option',
-          score_earned: 2
-        }
+          score_earned: 2,
+        },
       ];
 
       await supabase.from('quiz_step_responses').insert(responses);
@@ -145,7 +145,7 @@ describe('🔗 Integração com Backend Supabase', () => {
     it('deve salvar resultado final', async () => {
       const mockInsert = vi.fn().mockResolvedValue({ data: { id: 'result-id' }, error: null });
       (supabase.from as any).mockReturnValue({
-        insert: mockInsert
+        insert: mockInsert,
       });
 
       const resultData = {
@@ -160,15 +160,15 @@ describe('🔗 Integração com Backend Supabase', () => {
           scores: {
             elegante: 28,
             romantico: 22,
-            classico: 18
+            classico: 18,
           },
-          personalizedOfferKey: 'elegante-business-premium'
+          personalizedOfferKey: 'elegante-business-premium',
         },
         next_steps: [
           'Identifique peças-chave para seu guarda-roupa',
           'Aprenda a combinar cores e texturas',
-          'Descubra seu tom de pele ideal'
-        ]
+          'Descubra seu tom de pele ideal',
+        ],
       };
 
       await supabase.from('quiz_results').insert(resultData);
@@ -181,7 +181,7 @@ describe('🔗 Integração com Backend Supabase', () => {
     it('deve registrar evento de analytics', async () => {
       const mockInsert = vi.fn().mockResolvedValue({ data: { id: 'analytics-id' }, error: null });
       (supabase.from as any).mockReturnValue({
-        insert: mockInsert
+        insert: mockInsert,
       });
 
       const analyticsData = {
@@ -193,8 +193,8 @@ describe('🔗 Integração com Backend Supabase', () => {
           stepNumber: 5,
           timeSpent: 15000,
           answer: 'elegante-option',
-          score: 3
-        }
+          score: 3,
+        },
       };
 
       await supabase.from('quiz_analytics').insert(analyticsData);
@@ -207,7 +207,7 @@ describe('🔗 Integração com Backend Supabase', () => {
     it('deve registrar conversão', async () => {
       const mockInsert = vi.fn().mockResolvedValue({ data: { id: 'conversion-id' }, error: null });
       (supabase.from as any).mockReturnValue({
-        insert: mockInsert
+        insert: mockInsert,
       });
 
       const conversionData = {
@@ -222,8 +222,8 @@ describe('🔗 Integração com Backend Supabase', () => {
         conversion_data: {
           offerKey: 'elegante-business-premium',
           source: 'quiz_result',
-          campaign: 'quiz-campaign'
-        }
+          campaign: 'quiz-campaign',
+        },
       };
 
       await supabase.from('quiz_conversions').insert(conversionData);
@@ -236,14 +236,14 @@ describe('🔗 Integração com Backend Supabase', () => {
     it('deve lidar com erros de conexão', async () => {
       const mockInsert = vi.fn().mockRejectedValue(new Error('Conexão perdida'));
       (supabase.from as any).mockReturnValue({
-        insert: mockInsert
+        insert: mockInsert,
       });
 
       await expect(
         supabase.from('quiz_sessions').insert({ 
           funnel_id: mockFunnelId, 
-          quiz_user_id: mockUserId 
-        })
+          quiz_user_id: mockUserId, 
+        }),
       ).rejects.toThrow('Conexão perdida');
     });
   });

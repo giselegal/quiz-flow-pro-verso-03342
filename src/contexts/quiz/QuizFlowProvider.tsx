@@ -45,7 +45,7 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
   const [canProceed, setCanProceed] = useState<boolean>(false);
   const progress = useMemo(
     () => Math.round((currentStep / (totalSteps || 1)) * 100),
-    [currentStep, totalSteps]
+    [currentStep, totalSteps],
   );
 
   // manter sync quando initialStep muda (ex.: mudança de rota externa)
@@ -79,11 +79,11 @@ export const QuizFlowProvider: React.FC<QuizFlowProviderProps> = ({
               stepId: `step-${String(clamped).padStart(2, '0')}`,
               source: 'quiz-flow-provider',
             },
-          })
+          }),
         );
       } catch { }
     },
-    [currentStep, onNavigate, safeClamp]
+    [currentStep, onNavigate, safeClamp],
   );
 
   const next = useCallback(() => {

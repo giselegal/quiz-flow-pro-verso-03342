@@ -62,7 +62,7 @@ class ResultCacheService {
     selectionsByQuestion: Record<string, string[]>, 
     result: any, 
     userName?: string,
-    options: CacheOptions = {}
+    options: CacheOptions = {},
   ): boolean {
     try {
       const cache = this.loadCache();
@@ -73,7 +73,7 @@ class ResultCacheService {
         result,
         timestamp: Date.now(),
         selectionsHash,
-        userName
+        userName,
       };
 
       cache[cacheKey] = entry;
@@ -138,7 +138,7 @@ class ResultCacheService {
       const now = Date.now();
       
       const validEntries = entries.filter(
-        entry => now - entry.timestamp <= this.DEFAULT_TTL
+        entry => now - entry.timestamp <= this.DEFAULT_TTL,
       );
 
       return {
@@ -151,7 +151,7 @@ class ResultCacheService {
           : null,
         newestEntry: entries.length > 0 
           ? Math.max(...entries.map(e => e.timestamp))
-          : null
+          : null,
       };
     } catch (error) {
       console.warn('⚠️ Erro ao obter estatísticas do cache:', error);
@@ -161,7 +161,7 @@ class ResultCacheService {
         expiredEntries: 0,
         cacheSize: 0,
         oldestEntry: null,
-        newestEntry: null
+        newestEntry: null,
       };
     }
   }
@@ -211,7 +211,7 @@ class ResultCacheService {
     const remainingEntries = Object.entries(cache);
     if (remainingEntries.length > maxSize) {
       const sortedByAge = remainingEntries.sort(
-        ([, a], [, b]) => a.timestamp - b.timestamp
+        ([, a], [, b]) => a.timestamp - b.timestamp,
       );
       
       const toRemove = sortedByAge.slice(0, remainingEntries.length - maxSize);

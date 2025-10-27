@@ -78,7 +78,7 @@ export class Page {
       pixelEvents: {},
       conversionGoals: [],
       heatmapEnabled: false,
-      recordingEnabled: false
+      recordingEnabled: false,
     },
     public analytics: PageAnalytics = {
       views: 0,
@@ -88,7 +88,7 @@ export class Page {
       conversionRate: 0,
       interactions: {},
       topExitElements: [],
-      deviceBreakdown: {}
+      deviceBreakdown: {},
     },
     public metadata: {
       order: number;
@@ -99,8 +99,8 @@ export class Page {
       order: 0,
       version: 1,
       createdAt: new Date(),
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   ) {}
 
   // 🔍 Business Rules - Page Validation
@@ -165,7 +165,7 @@ export class Page {
       this.seo,
       this.tracking,
       this.analytics,
-      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 }
+      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 },
     );
   }
 
@@ -187,7 +187,7 @@ export class Page {
       this.seo,
       this.tracking,
       this.analytics,
-      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 }
+      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 },
     );
   }
 
@@ -213,7 +213,7 @@ export class Page {
       this.seo,
       this.tracking,
       this.analytics,
-      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 }
+      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 },
     );
   }
 
@@ -221,7 +221,7 @@ export class Page {
   incrementViews(isUnique: boolean = false): Page {
     const updatedAnalytics = {
       ...this.analytics,
-      views: this.analytics.views + 1
+      views: this.analytics.views + 1,
     };
 
     if (isUnique) {
@@ -239,7 +239,7 @@ export class Page {
       this.seo,
       this.tracking,
       updatedAnalytics,
-      this.metadata
+      this.metadata,
     );
   }
 
@@ -248,8 +248,8 @@ export class Page {
       ...this.analytics,
       interactions: {
         ...this.analytics.interactions,
-        [elementId]: (this.analytics.interactions[elementId] || 0) + 1
-      }
+        [elementId]: (this.analytics.interactions[elementId] || 0) + 1,
+      },
     };
 
     return new Page(
@@ -263,7 +263,7 @@ export class Page {
       this.seo,
       this.tracking,
       updatedAnalytics,
-      this.metadata
+      this.metadata,
     );
   }
 
@@ -291,7 +291,7 @@ export class Page {
       updatedSEO,
       this.tracking,
       this.analytics,
-      { ...this.metadata, updatedAt: new Date() }
+      { ...this.metadata, updatedAt: new Date() },
     );
   }
 
@@ -370,7 +370,7 @@ export class Page {
       [...this.blockIds],
       {
         ...this.settings,
-        slug: `${this.settings.slug}-copy`
+        slug: `${this.settings.slug}-copy`,
       },
       { ...this.seo },
       { ...this.tracking },
@@ -382,14 +382,14 @@ export class Page {
         conversionRate: 0,
         interactions: {},
         topExitElements: [],
-        deviceBreakdown: {}
+        deviceBreakdown: {},
       },
       {
         order: this.metadata.order,
         version: 1,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 
@@ -405,7 +405,7 @@ export class Page {
       seo: this.seo,
       tracking: this.tracking,
       analytics: this.analytics,
-      metadata: this.metadata
+      metadata: this.metadata,
     };
   }
 
@@ -423,7 +423,7 @@ export class Page {
         pixelEvents: {},
         conversionGoals: [],
         heatmapEnabled: false,
-        recordingEnabled: false
+        recordingEnabled: false,
       },
       data.analytics || {
         views: 0,
@@ -433,14 +433,14 @@ export class Page {
         conversionRate: 0,
         interactions: {},
         topExitElements: [],
-        deviceBreakdown: {}
+        deviceBreakdown: {},
       },
       data.metadata || {
         order: 0,
         version: 1,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 }

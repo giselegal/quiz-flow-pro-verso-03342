@@ -37,7 +37,7 @@ describe('editorStepsToRuntimeMap', () => {
     it('ignora steps sem id', () => {
         const steps: any[] = [
             { id: '', type: 'intro' },
-            { id: 'valid', type: 'question', options: [] }
+            { id: 'valid', type: 'question', options: [] },
         ];
         const map = editorStepsToRuntimeMap(steps as any);
         expect(Object.keys(map)).toEqual(['valid']);

@@ -18,10 +18,10 @@ describe('Fallback de resultStyle inexistente', () => {
                     answers: {},
                     strategicAnswers: {},
                     resultStyle: 'inexistente-total',
-                    secondaryStyles: []
+                    secondaryStyles: [],
                 } as any}
                 stepProps={{ title: '{userName}, seu estilo predominante é:' }}
-            />
+            />,
         );
         // Aguarda lazy load
         await waitFor(() => {

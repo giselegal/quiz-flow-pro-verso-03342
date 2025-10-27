@@ -19,7 +19,7 @@ export async function testTemplateFix() {
         console.log(`✅ ${templateId} carregado:`, {
           name: template.name,
           steps: template.steps?.length || 0,
-          hasConfig: !!template.config
+          hasConfig: !!template.config,
         });
       } else {
         console.error(`❌ ${templateId} retornou null`);

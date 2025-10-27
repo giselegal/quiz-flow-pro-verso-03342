@@ -24,7 +24,7 @@ export class Answer {
     public readonly questionId: string,
     public readonly participantId: string,
     public readonly value: AnswerValue,
-    public readonly metadata: AnswerMetadata
+    public readonly metadata: AnswerMetadata,
   ) {}
 
   // 🔍 Business Rules - Answer Validation
@@ -257,8 +257,8 @@ export class Answer {
       {
         ...this.metadata,
         submittedAt: new Date(),
-        attemptNumber: this.metadata.attemptNumber + 1
-      }
+        attemptNumber: this.metadata.attemptNumber + 1,
+      },
     );
   }
 
@@ -268,7 +268,7 @@ export class Answer {
       questionId: this.questionId,
       participantId: this.participantId,
       value: this.value,
-      metadata: this.metadata
+      metadata: this.metadata,
     };
   }
 
@@ -278,7 +278,7 @@ export class Answer {
       data.questionId,
       data.participantId,
       data.value,
-      data.metadata
+      data.metadata,
     );
   }
 
@@ -288,7 +288,7 @@ export class Answer {
     questionId: string,
     participantId: string,
     text: string,
-    timeSpent: number
+    timeSpent: number,
   ): Answer {
     return new Answer(
       id,
@@ -298,8 +298,8 @@ export class Answer {
       {
         submittedAt: new Date(),
         timeSpent,
-        attemptNumber: 1
-      }
+        attemptNumber: 1,
+      },
     );
   }
 
@@ -308,7 +308,7 @@ export class Answer {
     questionId: string,
     participantId: string,
     optionId: string,
-    timeSpent: number
+    timeSpent: number,
   ): Answer {
     return new Answer(
       id,
@@ -318,8 +318,8 @@ export class Answer {
       {
         submittedAt: new Date(),
         timeSpent,
-        attemptNumber: 1
-      }
+        attemptNumber: 1,
+      },
     );
   }
 
@@ -328,7 +328,7 @@ export class Answer {
     questionId: string,
     participantId: string,
     optionIds: string[],
-    timeSpent: number
+    timeSpent: number,
   ): Answer {
     return new Answer(
       id,
@@ -338,8 +338,8 @@ export class Answer {
       {
         submittedAt: new Date(),
         timeSpent,
-        attemptNumber: 1
-      }
+        attemptNumber: 1,
+      },
     );
   }
 
@@ -348,7 +348,7 @@ export class Answer {
     questionId: string,
     participantId: string,
     rating: number,
-    timeSpent: number
+    timeSpent: number,
   ): Answer {
     return new Answer(
       id,
@@ -358,8 +358,8 @@ export class Answer {
       {
         submittedAt: new Date(),
         timeSpent,
-        attemptNumber: 1
-      }
+        attemptNumber: 1,
+      },
     );
   }
 }

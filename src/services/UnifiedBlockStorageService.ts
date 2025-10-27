@@ -62,7 +62,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
     funnelId: string,
     pageId: string,
     blocks: BlockData[],
-    metadata?: BlockMetadata[]
+    metadata?: BlockMetadata[],
   ): Promise<boolean> {
     try {
       // 1. Save blocks to funnel_pages.blocks (primary storage)
@@ -137,7 +137,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
    */
   async loadBlocks(
     funnelId: string,
-    pageId: string
+    pageId: string,
   ): Promise<{ blocks: BlockData[]; metadata: BlockMetadata[] } | null> {
     try {
       // 1. Load blocks from funnel_pages (primary source)
@@ -165,7 +165,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
 
       const metadata: BlockMetadata[] = blocks.map(block => {
         const instance = (instances as any[] | undefined)?.find(
-          (inst: any) => inst.instance_key === block.id
+          (inst: any) => inst.instance_key === block.id,
         );
         if (instance) {
           return {
@@ -198,7 +198,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
     pageId: string,
     blockId: string,
     blockData: BlockData,
-    metadata: BlockMetadata
+    metadata: BlockMetadata,
   ): Promise<boolean> {
     try {
       // Load current blocks
@@ -237,7 +237,7 @@ export class UnifiedBlockStorageService implements UnifiedBlockStorageReturn {
       // Remove the block
       const filteredBlocks = current.blocks.filter(b => b.id !== blockId);
       const filteredMetadata = current.metadata.filter(
-        (_, index) => current.blocks[index]?.id !== blockId
+        (_, index) => current.blocks[index]?.id !== blockId,
       );
 
       // Save updated blocks

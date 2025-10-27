@@ -15,7 +15,7 @@ describe('🧪 Validação de Integração - Sistema Universal', () => {
         const arquivosCriticos = [
             'src/services/UnifiedTemplateService.ts',
             'src/components/editor/PureBuilderProvider.tsx',
-            'src/pages/editor/ModernUnifiedEditor.tsx'
+            'src/pages/editor/ModernUnifiedEditor.tsx',
         ];
 
         const resultados = arquivosCriticos.map(arquivo => {
@@ -34,7 +34,7 @@ describe('🧪 Validação de Integração - Sistema Universal', () => {
                 arquivo,
                 existe,
                 linhas,
-                temConteudo: conteudo && conteudo.length > 0
+                temConteudo: conteudo && conteudo.length > 0,
             };
         });
 
@@ -62,7 +62,7 @@ describe('🧪 Validação de Integração - Sistema Universal', () => {
                 'getTemplate',
                 'loadFromDatabase',
                 'generateFallbackTemplate',
-                'preloadCriticalTemplates'
+                'preloadCriticalTemplates',
             ];
 
             console.log('\n🔧 VALIDAÇÃO DO UnifiedTemplateService:');
@@ -79,7 +79,7 @@ describe('🧪 Validação de Integração - Sistema Universal', () => {
             const importsEssenciais = [
                 'supabase',
                 'cache',
-                'Map'
+                'Map',
             ];
 
             importsEssenciais.forEach(importItem => {
@@ -103,7 +103,7 @@ describe('🧪 Validação de Integração - Sistema Universal', () => {
                 'export default',
                 'useState',
                 'useEffect',
-                'funnelId'
+                'funnelId',
             ];
 
             console.log('\n⚛️ VALIDAÇÃO DO PureBuilderProvider:');
@@ -134,7 +134,7 @@ describe('🧪 Validação de Integração - Sistema Universal', () => {
             const componentesImportados = [
                 'PureBuilderProvider',
                 'EditorProUnified',
-                'lazy'
+                'lazy',
             ];
 
             console.log('\n🏗️ VALIDAÇÃO DO ModernUnifiedEditor:');
@@ -170,22 +170,22 @@ describe('🧪 Teste de Funcionamento do Sistema', () => {
                     id: 'intro',
                     type: 'text',
                     properties: {
-                        text: 'Bem-vindo ao funil dinâmico!'
-                    }
+                        text: 'Bem-vindo ao funil dinâmico!',
+                    },
                 },
                 {
                     id: 'form',
                     type: 'form',
                     properties: {
-                        fields: ['email', 'nome']
-                    }
-                }
+                        fields: ['email', 'nome'],
+                    },
+                },
             ],
             metadata: {
                 version: '2.0.0',
                 generated: false,
-                dynamic: true
-            }
+                dynamic: true,
+            },
         };
 
         // Simular processo de carregamento
@@ -197,7 +197,7 @@ describe('🧪 Teste de Funcionamento do Sistema', () => {
                 return template.id &&
                     template.blocks &&
                     template.blocks.length > 0;
-            }
+            },
         };
 
         console.log('\n🔄 SIMULAÇÃO DE CARREGAMENTO DINÂMICO:');
@@ -225,26 +225,26 @@ describe('🧪 Teste de Funcionamento do Sistema', () => {
                 id: 'quiz-personalizado',
                 tipo: 'quiz',
                 passos: 3,
-                valido: true
+                valido: true,
             },
             {
                 id: 'landing-page-produto',
                 tipo: 'landing',
                 passos: 1,
-                valido: true
+                valido: true,
             },
             {
                 id: 'campanha-email-automation',
                 tipo: 'email',
                 passos: 5,
-                valido: true
+                valido: true,
             },
             {
                 id: 'template-vendas-b2b',
                 tipo: 'vendas',
                 passos: 4,
-                valido: true
-            }
+                valido: true,
+            },
         ];
 
         console.log('\n🎯 VALIDAÇÃO DE TIPOS DE FUNIS:');
@@ -275,23 +275,23 @@ describe('🧪 Teste de Robustez do Sistema', () => {
             {
                 nome: 'ID de funil inválido',
                 input: '',
-                expectativa: 'gerar ID automático'
+                expectativa: 'gerar ID automático',
             },
             {
                 nome: 'Template não encontrado',
                 input: 'template-inexistente-xyz',
-                expectativa: 'usar fallback'
+                expectativa: 'usar fallback',
             },
             {
                 nome: 'Erro de conectividade',
                 input: 'network-error',
-                expectativa: 'usar cache ou fallback'
+                expectativa: 'usar cache ou fallback',
             },
             {
                 nome: 'Dados corrompidos',
                 input: 'corrupted-data',
-                expectativa: 'regenerar template'
-            }
+                expectativa: 'regenerar template',
+            },
         ];
 
         console.log('\n🛡️ TESTE DE ROBUSTEZ:');
@@ -302,7 +302,7 @@ describe('🧪 Teste de Robustez do Sistema', () => {
             const tratamento = {
                 temInput: cenario.input && cenario.input.length > 0,
                 temFallback: cenario.expectativa.includes('fallback'),
-                temRecuperacao: true
+                temRecuperacao: true,
             };
 
             const status = tratamento.temRecuperacao ? '✅' : '❌';
@@ -318,7 +318,7 @@ describe('🧪 Teste de Robustez do Sistema', () => {
             carregamentoInicial: () => Math.random() * 50 + 10, // 10-60ms
             renderizacaoComponente: () => Math.random() * 30 + 5, // 5-35ms
             atualizacaoProps: () => Math.random() * 20 + 2, // 2-22ms
-            navegacaoRota: () => Math.random() * 100 + 20 // 20-120ms
+            navegacaoRota: () => Math.random() * 100 + 20, // 20-120ms
         };
 
         console.log('\n⚡ TESTE DE PERFORMANCE:');

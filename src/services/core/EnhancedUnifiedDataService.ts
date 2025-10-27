@@ -131,21 +131,21 @@ class EnhancedUnifiedDataServiceImpl {
                     { name: 'Chrome', percentage: 68 },
                     { name: 'Safari', percentage: 20 },
                     { name: 'Firefox', percentage: 8 },
-                    { name: 'Edge', percentage: 4 }
+                    { name: 'Edge', percentage: 4 },
                 ],
                 topDevices: [
                     { name: 'Desktop', percentage: 60 },
                     { name: 'Mobile', percentage: 35 },
-                    { name: 'Tablet', percentage: 5 }
+                    { name: 'Tablet', percentage: 5 },
                 ],
                 geographicData: [
                     { country: 'Brasil', users: 1250 },
                     { country: 'Portugal', users: 89 },
-                    { country: 'Estados Unidos', users: 67 }
+                    { country: 'Estados Unidos', users: 67 },
                 ],
                 revenueToday,
                 revenueThisMonth,
-                conversionsByHour: this.generateHourlyConversions()
+                conversionsByHour: this.generateHourlyConversions(),
             };
 
             console.log('✅ Real-time metrics loaded:', enhancedMetrics);
@@ -223,7 +223,7 @@ class EnhancedUnifiedDataServiceImpl {
                 stepName: `Step ${step}`,
                 views: data.views,
                 dropoffRate: data.views > 0 ? ((data.views - data.completed) / data.views) * 100 : 0,
-                averageTime: 45 // Mock - would calculate from step responses
+                averageTime: 45, // Mock - would calculate from step responses
             })).sort((a, b) => a.step - b.step);
 
             // Traffic sources analysis
@@ -245,7 +245,7 @@ class EnhancedUnifiedDataServiceImpl {
                     medium,
                     users: data.users,
                     conversions: data.conversions,
-                    conversionRate: data.users > 0 ? (data.conversions / data.users) * 100 : 0
+                    conversionRate: data.users > 0 ? (data.conversions / data.users) * 100 : 0,
                 };
             }).sort((a, b) => b.users - a.users);
 
@@ -260,19 +260,19 @@ class EnhancedUnifiedDataServiceImpl {
                 dropoffByStep,
                 userSegments: [
                     { segment: 'Novos Usuários', users: Math.floor(uniqueViews * 0.7), conversionRate: conversionRate * 0.9 },
-                    { segment: 'Usuários Recorrentes', users: Math.floor(uniqueViews * 0.3), conversionRate: conversionRate * 1.2 }
+                    { segment: 'Usuários Recorrentes', users: Math.floor(uniqueViews * 0.3), conversionRate: conversionRate * 1.2 },
                 ],
                 trafficSources,
                 deviceBreakdown: [
                     { device: 'Desktop', users: Math.floor(totalViews * 0.6), conversionRate: conversionRate * 1.1 },
                     { device: 'Mobile', users: Math.floor(totalViews * 0.35), conversionRate: conversionRate * 0.9 },
-                    { device: 'Tablet', users: Math.floor(totalViews * 0.05), conversionRate: conversionRate * 0.8 }
+                    { device: 'Tablet', users: Math.floor(totalViews * 0.05), conversionRate: conversionRate * 0.8 },
                 ],
                 revenueData: {
                     total: totalConversions * 45,
                     perConversion: 45,
-                    currency: 'BRL'
-                }
+                    currency: 'BRL',
+                },
             };
 
             console.log('✅ Enhanced funnel analytics loaded:', analytics);
@@ -295,7 +295,7 @@ class EnhancedUnifiedDataServiceImpl {
                 activeUsers: Math.floor(Math.random() * 50) + 20,
                 systemLoad: 0.65,
                 memoryUsage: 0.72,
-                lastUpdated: new Date().toISOString()
+                lastUpdated: new Date().toISOString(),
             };
 
             return metrics;
@@ -371,8 +371,8 @@ class EnhancedUnifiedDataServiceImpl {
                 activeUsersNow: Math.floor(current.activeUsersNow * 0.95),
                 topPerformingFunnels: current.topPerformingFunnels.map(f => ({
                     ...f,
-                    conversions: Math.floor(f.conversions * 0.85)
-                }))
+                    conversions: Math.floor(f.conversions * 0.85),
+                })),
             };
 
             // Calculate growth percentages
@@ -383,7 +383,7 @@ class EnhancedUnifiedDataServiceImpl {
                 completedSessions: this.calculateGrowth(current.completedSessions, previous.completedSessions),
                 conversionRate: this.calculateGrowth(current.conversionRate, previous.conversionRate),
                 totalRevenue: this.calculateGrowth(current.totalRevenue, previous.totalRevenue),
-                activeUsersNow: this.calculateGrowth(current.activeUsersNow, previous.activeUsersNow)
+                activeUsersNow: this.calculateGrowth(current.activeUsersNow, previous.activeUsersNow),
             };
 
             return { current, previous, growth };
@@ -406,7 +406,7 @@ class EnhancedUnifiedDataServiceImpl {
     private generateHourlyConversions(): Array<{ hour: number; conversions: number }> {
         return Array.from({ length: 24 }, (_, hour) => ({
             hour,
-            conversions: Math.floor(Math.random() * 20) + (hour >= 9 && hour <= 18 ? 10 : 2)
+            conversions: Math.floor(Math.random() * 20) + (hour >= 9 && hour <= 18 ? 10 : 2),
         }));
     }
 
@@ -427,22 +427,22 @@ class EnhancedUnifiedDataServiceImpl {
                 { name: 'Chrome', percentage: 68 },
                 { name: 'Safari', percentage: 20 },
                 { name: 'Firefox', percentage: 8 },
-                { name: 'Edge', percentage: 4 }
+                { name: 'Edge', percentage: 4 },
             ],
             topDevices: [
                 { name: 'Desktop', percentage: 60 },
                 { name: 'Mobile', percentage: 35 },
-                { name: 'Tablet', percentage: 5 }
+                { name: 'Tablet', percentage: 5 },
             ],
             geographicData: [
                 { country: 'Brasil', users: 1250 },
                 { country: 'Portugal', users: 89 },
-                { country: 'Estados Unidos', users: 67 }
+                { country: 'Estados Unidos', users: 67 },
             ],
             revenueToday: 2340,
             revenueThisMonth: 52020,
             conversionsByHour: this.generateHourlyConversions(),
-            topPerformingFunnels: []
+            topPerformingFunnels: [],
         };
     }
 
@@ -460,7 +460,7 @@ class EnhancedUnifiedDataServiceImpl {
         await Promise.all([
             this.getRealTimeMetrics(),
             UnifiedDataService.getFunnels(),
-            UnifiedDataService.getDashboardMetrics()
+            UnifiedDataService.getDashboardMetrics(),
         ]);
         console.log('🔄 All data force refreshed');
     }

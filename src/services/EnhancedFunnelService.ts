@@ -27,7 +27,7 @@ export class EnhancedFunnelService {
   async getFunnelWithFallback(
     funnelId: string,
     fallback?: any,
-    context: FunnelContext = FunnelContext.EDITOR
+    context: FunnelContext = FunnelContext.EDITOR,
   ): Promise<UnifiedFunnelData | null> {
     try {
       // Try to get funnel
@@ -47,7 +47,7 @@ export class EnhancedFunnelService {
    */
   async createFallbackFunnel(
     funnelId: string,
-    context: FunnelContext = FunnelContext.EDITOR
+    context: FunnelContext = FunnelContext.EDITOR,
   ): Promise<UnifiedFunnelData | null> {
     try {
       const created = await this.funnelService.createFunnel({
@@ -56,7 +56,7 @@ export class EnhancedFunnelService {
         category: 'quiz',
         context,
         userId: 'anonymous',
-        autoPublish: false
+        autoPublish: false,
       });
 
       return created;

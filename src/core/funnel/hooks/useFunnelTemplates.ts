@@ -39,7 +39,7 @@ export interface UseFunnelTemplatesReturn {
 }
 
 export function useFunnelTemplates(
-  options: UseFunnelTemplatesOptions = {}
+  options: UseFunnelTemplatesOptions = {},
 ): UseFunnelTemplatesReturn {
   const { category, autoLoad = true } = options;
   const [templates, setTemplates] = useState<FunnelTemplate[]>([]);
@@ -61,8 +61,8 @@ export function useFunnelTemplates(
       conversionRate: 85.4,
       image: '/api/placeholder/300/200',
       createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-15T00:00:00Z'
-    }
+      updatedAt: '2024-01-15T00:00:00Z',
+    },
   ], []);
 
   const loadTemplates = useCallback(async () => {
@@ -89,7 +89,7 @@ export function useFunnelTemplates(
       ...template,
       id: `template-${Date.now()}`,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     setTemplates(prev => [...prev, newTemplate]);
@@ -100,7 +100,7 @@ export function useFunnelTemplates(
     setTemplates(prev => prev.map(template => 
       template.id === id 
         ? { ...template, ...updates, updatedAt: new Date().toISOString() }
-        : template
+        : template,
     ));
   }, []);
 
@@ -129,7 +129,7 @@ export function useFunnelTemplates(
     filterByCategory,
     createTemplate,
     updateTemplate,
-    deleteTemplate
+    deleteTemplate,
   };
 }
 

@@ -184,7 +184,7 @@ export const EditorBlockSchema = z.object({
     ],
     {
       errorMap: () => ({ message: 'Invalid block type' }),
-    }
+    },
   ),
   properties: z.record(z.any()).default({}),
   styling: z.record(z.any()).optional(),
@@ -194,7 +194,7 @@ export const EditorBlockSchema = z.object({
 // Runtime validation functions with better error handling
 export const safeValidate = <T>(
   schema: z.ZodSchema<T>,
-  data: unknown
+  data: unknown,
 ): {
   success: boolean;
   data?: T;
@@ -274,7 +274,7 @@ export const generateId = (): string => {
 
 // Enhanced validation functions with proper error handling
 export const validateFunnel = (
-  data: unknown
+  data: unknown,
 ): { valid: boolean; data?: Funnel; errors?: string[] } => {
   const result = safeValidate(FunnelSchema, data);
   if (result.success) {
@@ -284,7 +284,7 @@ export const validateFunnel = (
 };
 
 export const validateFunnelPage = (
-  data: unknown
+  data: unknown,
 ): { valid: boolean; data?: FunnelPage; errors?: string[] } => {
   const result = safeValidate(FunnelPageSchema, data);
   if (result.success) {
@@ -294,7 +294,7 @@ export const validateFunnelPage = (
 };
 
 export const validateQuizUser = (
-  data: unknown
+  data: unknown,
 ): { valid: boolean; data?: QuizUser; errors?: string[] } => {
   const result = safeValidate(QuizUserSchema, data);
   if (result.success) {
@@ -304,7 +304,7 @@ export const validateQuizUser = (
 };
 
 export const validateQuizSession = (
-  data: unknown
+  data: unknown,
 ): { valid: boolean; data?: QuizSession; errors?: string[] } => {
   const result = safeValidate(QuizSessionSchema, data);
   if (result.success) {
@@ -314,7 +314,7 @@ export const validateQuizSession = (
 };
 
 export const validateEditorBlock = (
-  data: unknown
+  data: unknown,
 ): { valid: boolean; data?: EditorBlock; errors?: string[] } => {
   const result = safeValidate(EditorBlockSchema, data);
   if (result.success) {

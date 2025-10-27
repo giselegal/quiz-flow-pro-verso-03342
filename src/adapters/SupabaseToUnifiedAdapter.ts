@@ -142,13 +142,13 @@ export const migrateFromSupabaseToUnified = {
 
     if (supabaseResult.currentStep !== unifiedResult.currentStep) {
       differences.push(
-        `currentStep: ${supabaseResult.currentStep} vs ${unifiedResult.currentStep}`
+        `currentStep: ${supabaseResult.currentStep} vs ${unifiedResult.currentStep}`,
       );
     }
 
     if (supabaseResult.isCompleted !== unifiedResult.isCompleted) {
       differences.push(
-        `isCompleted: ${supabaseResult.isCompleted} vs ${unifiedResult.isCompleted}`
+        `isCompleted: ${supabaseResult.isCompleted} vs ${unifiedResult.isCompleted}`,
       );
     }
 

@@ -67,16 +67,16 @@ const DEFAULT_EMPTY: NormalizedFunnel = {
         theme: 'modern-elegant',
         allowBackward: true,
         saveProgress: true,
-        showProgress: false
+        showProgress: false,
     },
     raw: {
         id: null,
         status: 'new',
         steps: [],
         blocks: {},
-        isEmptyCanvas: true
+        isEmptyCanvas: true,
     },
-    isEmpty: true
+    isEmpty: true,
 };
 
 function normalize(dto: FunnelDto): NormalizedFunnel {
@@ -97,7 +97,7 @@ function normalize(dto: FunnelDto): NormalizedFunnel {
                 id: b.id,
                 type: b.type,
                 content: b.content || {},
-                properties: b.properties || {}
+                properties: b.properties || {},
             });
         });
         if (!stepBlocks[stepKey]) stepBlocks[stepKey] = []; // garante chave
@@ -113,10 +113,10 @@ function normalize(dto: FunnelDto): NormalizedFunnel {
             theme: dto.settings?.theme?.primary || 'modern-elegant',
             allowBackward: true,
             saveProgress: true,
-            showProgress: ordered.length > 1
+            showProgress: ordered.length > 1,
         },
         raw: dto,
-        isEmpty: ordered.length === 0
+        isEmpty: ordered.length === 0,
     };
 }
 
@@ -176,7 +176,7 @@ export class FunnelApiClient {
             (window as any).__FUNNEL_API_METRICS__ = {
                 lastFetchMs: Math.round(elapsed),
                 lastId: id,
-                ts: Date.now()
+                ts: Date.now(),
             };
         }
 

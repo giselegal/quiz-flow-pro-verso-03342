@@ -208,8 +208,8 @@ class StepTemplateService {
     const stepNumber = typeof stepId === 'string' ? parseInt(stepId.replace(/\D/g, '')) : stepId;
 
     console.log(`🔍 [StepTemplateService] Buscando template para etapa ${stepNumber}`);
-    console.log(`🧪 [DEBUG] stepId original:`, stepId);
-    console.log(`🧪 [DEBUG] stepNumber convertido:`, stepNumber);
+    console.log('🧪 [DEBUG] stepId original:', stepId);
+    console.log('🧪 [DEBUG] stepNumber convertido:', stepNumber);
 
     // ✅ USAR TEMPLATE JSON v3 SÍNCRONO
     try {
@@ -218,7 +218,7 @@ class StepTemplateService {
 
       if (syncTemplate && Array.isArray(syncTemplate) && syncTemplate.length > 0) {
         console.log(`✅ Template v3 SYNC carregado para etapa ${stepNumber}: ${syncTemplate.length} blocos`);
-        console.log(`🧱 [DEBUG] Tipos de blocos:`, syncTemplate.map((b: any) => b.type));
+        console.log('🧱 [DEBUG] Tipos de blocos:', syncTemplate.map((b: any) => b.type));
         return syncTemplate;
       }
 

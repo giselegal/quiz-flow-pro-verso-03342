@@ -23,9 +23,9 @@ async function http<T>(url: string, options: RequestInit = {}): Promise<T> {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                ...(options.headers || {})
+                ...(options.headers || {}),
             },
-            ...options
+            ...options,
         });
     } catch (networkErr: any) {
         // Erro antes de chegar a uma resposta HTTP (queda de backend, CORS, DNS, abort, etc.)
@@ -45,7 +45,7 @@ async function http<T>(url: string, options: RequestInit = {}): Promise<T> {
             `${baseMsg} | status=${res.status} | ct=${contentType || 'n/a'} | body: ${bodySnippet}`,
             code,
             res.status,
-            bodySnippet
+            bodySnippet,
         );
     };
 
@@ -102,11 +102,11 @@ export const templatesApi = {
     async answerPreview(id: string, payload: { sessionId: string; stageId: string; optionIds: string[] }) {
         return http(`${BASE}/${id}/runtime/preview/answer`, { method: 'POST', body: JSON.stringify(payload) });
     },
-    async history(id: string) { return http(`${BASE}/${id}/history`); }
+    async history(id: string) { return http(`${BASE}/${id}/history`); },
 };
 
 // Client específico para componentes (painel de propriedades)
 export const componentsApi = {
     async get(id: string) { return http(`/api/components/${id}`); },
-    async patch(id: string, propsPatch: Record<string, any>) { return http(`/api/components/${id}`, { method: 'PATCH', body: JSON.stringify({ props: propsPatch }) }); }
+    async patch(id: string, propsPatch: Record<string, any>) { return http(`/api/components/${id}`, { method: 'PATCH', body: JSON.stringify({ props: propsPatch }) }); },
 };

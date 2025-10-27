@@ -140,7 +140,7 @@ export const useReusableComponents = (quizId?: string) => {
         setLoading(false);
       }
     },
-    [quizId, ensureClient]
+    [quizId, ensureClient],
   );
 
   // ============================================================================
@@ -194,7 +194,7 @@ export const useReusableComponents = (quizId?: string) => {
       componentTypeKey: string,
       stepNumber: number,
       properties: Record<string, any> = {},
-      orderIndex?: number
+      orderIndex?: number,
     ) => {
       if (!quizId) throw new Error('Quiz ID é obrigatório');
 
@@ -236,7 +236,7 @@ export const useReusableComponents = (quizId?: string) => {
         setLoading(false);
       }
     },
-    [quizId, stepComponents, loadStepComponents, ensureClient]
+    [quizId, stepComponents, loadStepComponents, ensureClient],
   );
 
   // ============================================================================
@@ -246,7 +246,7 @@ export const useReusableComponents = (quizId?: string) => {
   const updateComponent = useCallback(
     async (
       instanceId: string,
-      updates: Partial<Pick<ComponentInstance, 'properties' | 'custom_styling' | 'is_active'>>
+      updates: Partial<Pick<ComponentInstance, 'properties' | 'custom_styling' | 'is_active'>>,
     ) => {
       try {
         setLoading(true);
@@ -276,7 +276,7 @@ export const useReusableComponents = (quizId?: string) => {
         setLoading(false);
       }
     },
-    [loadStepComponents, ensureClient]
+    [loadStepComponents, ensureClient],
   );
 
   // ============================================================================
@@ -309,7 +309,7 @@ export const useReusableComponents = (quizId?: string) => {
         setLoading(false);
       }
     },
-    [loadStepComponents, ensureClient]
+    [loadStepComponents, ensureClient],
   );
 
   // ============================================================================
@@ -346,7 +346,7 @@ export const useReusableComponents = (quizId?: string) => {
         setLoading(false);
       }
     },
-    [loadStepComponents, ensureClient]
+    [loadStepComponents, ensureClient],
   );
 
   // ============================================================================
@@ -401,7 +401,7 @@ export const useReusableComponents = (quizId?: string) => {
         setLoading(false);
       }
     },
-    [stepComponents, loadStepComponents, ensureClient]
+    [stepComponents, loadStepComponents, ensureClient],
   );
 
   // ============================================================================

@@ -62,7 +62,7 @@ export class PersistenceService {
      */
     async saveFunnel(
         state: FunnelState,
-        options: SaveFunnelOptions = {}
+        options: SaveFunnelOptions = {},
     ): Promise<FunnelPersistenceData> {
         console.log(`💾 Salvando funil: ${state.id}`);
 
@@ -80,7 +80,7 @@ export class PersistenceService {
                 user_id: options.userId || null,
                 settings: state as any, // Armazenar o estado completo no campo settings
                 updated_at: new Date().toISOString(),
-                created_at: new Date().toISOString()
+                created_at: new Date().toISOString(),
             };
 
             // Verificar se o funil já existe
@@ -131,7 +131,7 @@ export class PersistenceService {
      */
     async loadFunnel(
         funnelId: string,
-        options: LoadFunnelOptions = {}
+        options: LoadFunnelOptions = {},
     ): Promise<FunnelState | null> {
         console.log(`📖 Carregando funil: ${funnelId}`);
 
@@ -177,7 +177,7 @@ export class PersistenceService {
      */
     async listFunnels(
         userId?: string,
-        options: LoadFunnelOptions = {}
+        options: LoadFunnelOptions = {},
     ): Promise<FunnelListItem[]> {
         console.log(`📋 Listando funis do usuário: ${userId}`);
 
@@ -226,7 +226,7 @@ export class PersistenceService {
                 created_at: item.created_at,
                 updated_at: item.updated_at,
                 step_count: item.funnel_data?.steps?.length || 0,
-                usage_count: 0 // TODO: Implementar contagem de uso
+                usage_count: 0, // TODO: Implementar contagem de uso
             }));
 
             console.log(`✅ Encontrados ${funnelList.length} funis`);
@@ -292,7 +292,7 @@ export class PersistenceService {
                 .from('funnels')
                 .update({
                     is_published: isPublished,
-                    updated_at: new Date().toISOString()
+                    updated_at: new Date().toISOString(),
                 })
                 .eq('id', funnelId);
 
@@ -329,7 +329,7 @@ export class PersistenceService {
             funnel_data: state,
             is_published: options.autoPublish || state.metadata.isPublished,
             created_at: state.metadata.createdAt,
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
         };
 
         localStorage.setItem(`funnel-${state.id}`, JSON.stringify(data));
@@ -346,7 +346,7 @@ export class PersistenceService {
             is_published: data.is_published,
             created_at: data.created_at,
             updated_at: data.updated_at,
-            step_count: state.steps.length
+            step_count: state.steps.length,
         };
 
         if (existingIndex >= 0) {
@@ -438,7 +438,7 @@ export class PersistenceService {
      */
     private convertToFunnelPersistenceData(
         supabaseData: any,
-        funnelState: FunnelState
+        funnelState: FunnelState,
     ): FunnelPersistenceData {
         return {
             id: supabaseData.id,
@@ -449,7 +449,7 @@ export class PersistenceService {
             is_published: supabaseData.is_published || false,
             user_id: supabaseData.user_id,
             created_at: supabaseData.created_at,
-            updated_at: supabaseData.updated_at
+            updated_at: supabaseData.updated_at,
         };
     }
 

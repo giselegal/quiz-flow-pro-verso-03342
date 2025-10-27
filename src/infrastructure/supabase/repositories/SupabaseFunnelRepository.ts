@@ -70,8 +70,8 @@ export class SupabaseFunnelRepository implements FunnelRepository {
           tags: funnel.metadata.tags,
           language: funnel.metadata.language,
           isTemplate: funnel.metadata.isTemplate,
-          analytics: funnel.analytics
-        }
+          analytics: funnel.analytics,
+        },
       };
 
       const { error } = await supabase
@@ -138,7 +138,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
             .order('page_order');
 
           return this.mapToFunnelEntity(funnelData as any, pagesData || []);
-        })
+        }),
       );
 
       return funnels;
@@ -167,7 +167,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
             .order('page_order');
 
           return this.mapToFunnelEntity(funnelData as any, pagesData || []);
-        })
+        }),
       );
 
       return funnels;
@@ -222,8 +222,8 @@ export class SupabaseFunnelRepository implements FunnelRepository {
           seo: page.seo,
           tracking: page.tracking,
           analytics: page.analytics,
-          version: page.metadata.version
-        }
+          version: page.metadata.version,
+        },
       };
 
       const { error } = await supabase
@@ -294,11 +294,11 @@ export class SupabaseFunnelRepository implements FunnelRepository {
           content: block.content,
           styles: block.styles,
           settings: block.settings,
-          metadata: block.metadata
+          metadata: block.metadata,
         },
         custom_styling: block.styles,
         is_active: block.settings.isVisible,
-        is_template: block.metadata.isTemplate
+        is_template: block.metadata.isTemplate,
       }));
 
       const { error } = await supabase
@@ -361,7 +361,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
         title: `Page ${index + 1}`,
         page_order: index + 1,
         blocks: [],
-        metadata: {}
+        metadata: {},
       }));
 
       await supabase
@@ -387,7 +387,7 @@ export class SupabaseFunnelRepository implements FunnelRepository {
         publishedAt: funnelData.is_published ? new Date(funnelData.updated_at) : undefined,
         createdAt: new Date(funnelData.created_at),
         updatedAt: new Date(funnelData.updated_at),
-        createdBy: funnelData.user_id
+        createdBy: funnelData.user_id,
       },
       {
         allowAnonymous: settings.allowAnonymous ?? true,
@@ -401,14 +401,14 @@ export class SupabaseFunnelRepository implements FunnelRepository {
         seoDescription: settings.seoDescription,
         seoKeywords: settings.seoKeywords || [],
         pixelId: settings.pixelId,
-        conversionGoals: settings.conversionGoals || []
+        conversionGoals: settings.conversionGoals || [],
       },
       settings.branding || {
         primaryColor: '#3B82F6',
         secondaryColor: '#1E40AF',
         accentColor: '#F59E0B',
         fontFamily: 'Inter, sans-serif',
-        theme: 'light'
+        theme: 'light',
       },
       pagesData.map(p => p.id),
       settings.analytics || {
@@ -419,8 +419,8 @@ export class SupabaseFunnelRepository implements FunnelRepository {
         exitRate: 0,
         topTrafficSources: {},
         deviceBreakdown: {},
-        locationBreakdown: {}
-      }
+        locationBreakdown: {},
+      },
     );
   }
 
@@ -439,18 +439,18 @@ export class SupabaseFunnelRepository implements FunnelRepository {
         isActive: true,
         requireAuth: false,
         allowBack: true,
-        showProgress: true
+        showProgress: true,
       },
       metadata.seo || {
         title: pageData.title || '',
         description: metadata.description || '',
-        keywords: []
+        keywords: [],
       },
       metadata.tracking || {
         pixelEvents: {},
         conversionGoals: [],
         heatmapEnabled: false,
-        recordingEnabled: false
+        recordingEnabled: false,
       },
       metadata.analytics || {
         views: 0,
@@ -460,14 +460,14 @@ export class SupabaseFunnelRepository implements FunnelRepository {
         conversionRate: 0,
         interactions: {},
         topExitElements: [],
-        deviceBreakdown: {}
+        deviceBreakdown: {},
       },
       {
         order: pageData.page_order,
         version: metadata.version || 1,
         createdAt: new Date(pageData.created_at),
-        updatedAt: new Date(pageData.updated_at)
-      }
+        updatedAt: new Date(pageData.updated_at),
+      },
     );
   }
 
@@ -481,26 +481,26 @@ export class SupabaseFunnelRepository implements FunnelRepository {
       properties.content || {},
       {
         ...componentData.custom_styling,
-        ...properties.styles
+        ...properties.styles,
       },
       {
         isVisible: componentData.is_active,
-        ...properties.settings
+        ...properties.settings,
       },
       {
         impressions: 0,
         clicks: 0,
         interactions: 0,
         conversionRate: 0,
-        averageViewTime: 0
+        averageViewTime: 0,
       },
       {
         order: componentData.order_index,
         version: 1,
         isTemplate: componentData.is_template,
         createdAt: new Date(componentData.created_at),
-        updatedAt: new Date(componentData.updated_at)
-      }
+        updatedAt: new Date(componentData.updated_at),
+      },
     );
   }
 }

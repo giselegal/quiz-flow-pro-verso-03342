@@ -49,7 +49,7 @@ export const useStyleCalculations = (primaryStyle: StyleResult, secondaryStyles:
       const baseScore = primaryStyle.percentage || 0;
       const secondaryInfluence = secondaryStyles.reduce(
         (acc, style) => acc + (style.percentage || 0) * 0.3,
-        0
+        0,
       );
       return Math.min((baseScore + secondaryInfluence) / 100, 10);
     };

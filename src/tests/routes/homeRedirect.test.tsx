@@ -13,7 +13,7 @@ describe('Redirect /home → /', () => {
         return render(
             <Router>
                 <App />
-            </Router>
+            </Router>,
         );
     };
 

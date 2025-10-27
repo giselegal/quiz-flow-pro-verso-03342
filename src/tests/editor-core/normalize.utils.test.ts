@@ -16,7 +16,7 @@ describe('normalize utils', () => {
   it('normalizeOfferMap keys by entry id', () => {
     const out = normalizeOfferMap({
       a: { title: 'Oferta A', ctaLabel: 'Comprar' },
-      b: { id: 'fixo', title: 'Oferta B' }
+      b: { id: 'fixo', title: 'Oferta B' },
     });
     expect(out['fixo']).toBeDefined();
     const ids = Object.keys(out);

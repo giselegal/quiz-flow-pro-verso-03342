@@ -50,8 +50,8 @@ export class RemoteTransport implements LogTransport {
                 version: import.meta.env.VITE_APP_VERSION || '1.0.0',
                 timestamp: new Date().toISOString(),
                 userAgent: navigator.userAgent,
-                url: window.location.href
-            }
+                url: window.location.href,
+            },
         };
 
         try {
@@ -89,10 +89,10 @@ export class RemoteTransport implements LogTransport {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    ...this.config.remoteHeaders
+                    ...this.config.remoteHeaders,
                 },
                 body: JSON.stringify(payload),
-                signal: controller.signal
+                signal: controller.signal,
             });
 
             clearTimeout(timeoutId);
@@ -156,7 +156,7 @@ export class RemoteTransport implements LogTransport {
         return {
             count: this.buffer.length,
             oldestEntry,
-            isOnline: this.isOnline
+            isOnline: this.isOnline,
         };
     }
 

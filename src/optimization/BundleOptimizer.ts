@@ -37,15 +37,15 @@ const CHUNK_REGISTRY: Record<string, ChunkConfig> = {
   'editor-core': {
     priority: ChunkPriority.CRITICAL,
     estimatedSize: '120KB',
-    dependencies: ['react', 'react-dom']
+    dependencies: ['react', 'react-dom'],
   },
   'quiz-renderer': {
     priority: ChunkPriority.CRITICAL,
-    estimatedSize: '80KB'
+    estimatedSize: '80KB',
   },
   'unified-registry': {
     priority: ChunkPriority.CRITICAL,
-    estimatedSize: '60KB'
+    estimatedSize: '60KB',
   },
 
   // ⚡ HIGH PRIORITY - Preload after critical
@@ -53,42 +53,42 @@ const CHUNK_REGISTRY: Record<string, ChunkConfig> = {
     priority: ChunkPriority.HIGH,
     preload: true,
     estimatedSize: '200KB',
-    dependencies: ['editor-core']
+    dependencies: ['editor-core'],
   },
   'quiz-steps-1-5': {
     priority: ChunkPriority.HIGH,
     preload: true,
-    estimatedSize: '150KB'
+    estimatedSize: '150KB',
   },
   'step20-modules': {
     priority: ChunkPriority.HIGH,
     prefetch: true,
-    estimatedSize: '180KB'
+    estimatedSize: '180KB',
   },
 
   // 📦 MEDIUM PRIORITY - Load on demand
   'quiz-steps-6-15': {
     priority: ChunkPriority.MEDIUM,
-    estimatedSize: '300KB'
+    estimatedSize: '300KB',
   },
   'admin-panels': {
     priority: ChunkPriority.MEDIUM,
-    estimatedSize: '250KB'
+    estimatedSize: '250KB',
   },
   'analytics-charts': {
     priority: ChunkPriority.MEDIUM,
-    estimatedSize: '180KB'
+    estimatedSize: '180KB',
   },
 
   // 🐌 LOW PRIORITY - Load when idle
   'debug-tools': {
     priority: ChunkPriority.LOW,
-    estimatedSize: '100KB'
+    estimatedSize: '100KB',
   },
   'legacy-components': {
     priority: ChunkPriority.LOW,
-    estimatedSize: '200KB'
-  }
+    estimatedSize: '200KB',
+  },
 };
 
 class BundleOptimizer {
@@ -98,7 +98,7 @@ class BundleOptimizer {
     totalSize: 0,
     loadedSize: 0,
     criticalLoaded: false,
-    highPriorityLoaded: false
+    highPriorityLoaded: false,
   };
 
   /**
@@ -107,7 +107,7 @@ class BundleOptimizer {
   createLazyComponent<T extends ComponentType<any>>(
     importFn: () => Promise<{ default: T }>,
     chunkName: string,
-    fallback?: React.ComponentType
+    fallback?: React.ComponentType,
   ): ComponentType<any> {
     const config = CHUNK_REGISTRY[chunkName];
     
@@ -139,7 +139,7 @@ class BundleOptimizer {
     return (props: any) => React.createElement(
       Suspense,
       { fallback: this.createLoadingFallback(chunkName, fallback) },
-      React.createElement(LazyComponent, props)
+      React.createElement(LazyComponent, props),
     );
   }
 
@@ -154,7 +154,7 @@ class BundleOptimizer {
       .map(([chunkName]) => chunkName);
 
     const preloadPromises = highPriorityChunks.map(chunkName => 
-      this.preloadChunk(chunkName)
+      this.preloadChunk(chunkName),
     );
 
     await Promise.allSettled(preloadPromises);
@@ -196,15 +196,15 @@ class BundleOptimizer {
     const estimatedSize = config?.estimatedSize || 'Unknown';
     
     return React.createElement('div', 
-      { className: "flex items-center justify-center h-32 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200" },
-      React.createElement('div', { className: "text-center" }, [
+      { className: 'flex items-center justify-center h-32 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200' },
+      React.createElement('div', { className: 'text-center' }, [
         React.createElement('div', { 
           key: 'spinner',
-          className: "animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2" 
+          className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2', 
         }),
-        React.createElement('p', { key: 'title', className: "text-sm text-gray-600" }, `Loading ${chunkName}`),
-        React.createElement('p', { key: 'size', className: "text-xs text-gray-400" }, estimatedSize)
-      ])
+        React.createElement('p', { key: 'title', className: 'text-sm text-gray-600' }, `Loading ${chunkName}`),
+        React.createElement('p', { key: 'size', className: 'text-xs text-gray-400' }, estimatedSize),
+      ]),
     );
   }
 
@@ -220,11 +220,11 @@ class BundleOptimizer {
 
     // Check if critical chunks are loaded
     const criticalChunks = Object.keys(CHUNK_REGISTRY).filter(
-      key => CHUNK_REGISTRY[key].priority === ChunkPriority.CRITICAL
+      key => CHUNK_REGISTRY[key].priority === ChunkPriority.CRITICAL,
     );
     
     this.bundleStats.criticalLoaded = criticalChunks.every(
-      chunk => this.loadedChunks.has(chunk)
+      chunk => this.loadedChunks.has(chunk),
     );
   }
 
@@ -242,7 +242,7 @@ class BundleOptimizer {
       loadingProgress: `${((loadedChunksArray.length / totalChunks) * 100).toFixed(1)}%`,
       preloadingChunks: Array.from(this.preloadingChunks),
       estimatedTotalSize: this.estimateTotalBundleSize(),
-      compressionRatio: this.calculateCompressionRatio()
+      compressionRatio: this.calculateCompressionRatio(),
     };
   }
 
@@ -313,7 +313,7 @@ if (typeof window !== 'undefined') {
 export const createOptimizedLazyComponent = <T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   chunkName: string,
-  fallback?: React.ComponentType
+  fallback?: React.ComponentType,
 ) => {
   return bundleOptimizer.createLazyComponent(importFn, chunkName, fallback);
 };

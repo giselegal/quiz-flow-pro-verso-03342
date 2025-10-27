@@ -69,8 +69,8 @@ export class UnifiedQuizBridge {
       version: 1,
       metadata: {
         createdAt: new Date().toISOString(),
-        author: 'System'
-      }
+        author: 'System',
+      },
     };
 
     this.cache.set(cacheKey, funnel);
@@ -143,7 +143,7 @@ export class UnifiedQuizBridge {
       slug: 'imported-funnel',
       steps,
       isPublished: false,
-      version: 1
+      version: 1,
     };
   }
 
@@ -182,12 +182,12 @@ export class UnifiedQuizBridge {
 
       return {
         valid: errors.length === 0,
-        errors
+        errors,
       };
     } catch (error) {
       return {
         valid: false,
-        errors: [error instanceof Error ? error.message : 'Unknown error']
+        errors: [error instanceof Error ? error.message : 'Unknown error'],
       };
     }
   }

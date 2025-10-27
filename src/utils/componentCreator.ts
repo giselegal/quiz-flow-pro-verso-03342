@@ -10,7 +10,7 @@ export interface ComponentTemplate {
 export const createComponent = (
   template: ComponentTemplate,
   stageId: string,
-  order: number
+  order: number,
 ): QuizComponentData => {
   return {
     id: generateId(),

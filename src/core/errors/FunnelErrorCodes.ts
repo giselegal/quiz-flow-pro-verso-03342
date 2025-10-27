@@ -135,7 +135,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Voltar à lista de funis', 'Verificar link', 'Contactar suporte'],
         logLevel: 'warn',
         category: 'access',
-        tags: ['not-found', 'navigation']
+        tags: ['not-found', 'navigation'],
     },
 
     [FunnelErrorCode.NO_PERMISSION]: {
@@ -150,7 +150,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Solicitar acesso', 'Fazer login', 'Contactar proprietário'],
         logLevel: 'warn',
         category: 'permissions',
-        tags: ['security', 'access-control']
+        tags: ['security', 'access-control'],
     },
 
     [FunnelErrorCode.AUTHENTICATION_REQUIRED]: {
@@ -165,7 +165,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Fazer login', 'Criar conta'],
         logLevel: 'info',
         category: 'auth',
-        tags: ['authentication', 'security']
+        tags: ['authentication', 'security'],
     },
 
     // 🌐 ERROS DE REDE/CONECTIVIDADE
@@ -181,7 +181,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Verificar conexão', 'Tentar novamente', 'Trabalhar offline'],
         logLevel: 'error',
         category: 'network',
-        tags: ['connectivity', 'retry']
+        tags: ['connectivity', 'retry'],
     },
 
     [FunnelErrorCode.TIMEOUT]: {
@@ -196,7 +196,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Tentar novamente', 'Verificar conexão'],
         logLevel: 'warn',
         category: 'network',
-        tags: ['timeout', 'performance', 'retry']
+        tags: ['timeout', 'performance', 'retry'],
     },
 
     [FunnelErrorCode.OFFLINE]: {
@@ -211,7 +211,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Conectar à internet', 'Continuar offline'],
         logLevel: 'info',
         category: 'network',
-        tags: ['offline', 'connectivity']
+        tags: ['offline', 'connectivity'],
     },
 
     [FunnelErrorCode.RATE_LIMITED]: {
@@ -226,7 +226,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Aguardar e tentar novamente'],
         logLevel: 'warn',
         category: 'network',
-        tags: ['rate-limit', 'throttling']
+        tags: ['rate-limit', 'throttling'],
     },
 
     // 💾 ERROS DE ARMAZENAMENTO
@@ -242,7 +242,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Limpar dados antigos', 'Aumentar quota', 'Usar cloud storage'],
         logLevel: 'error',
         category: 'storage',
-        tags: ['quota', 'capacity']
+        tags: ['quota', 'capacity'],
     },
 
     [FunnelErrorCode.STORAGE_ERROR]: {
@@ -257,7 +257,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Tentar novamente', 'Verificar navegador'],
         logLevel: 'error',
         category: 'storage',
-        tags: ['persistence', 'fallback']
+        tags: ['persistence', 'fallback'],
     },
 
     [FunnelErrorCode.INDEXEDDB_NOT_SUPPORTED]: {
@@ -272,7 +272,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Atualizar navegador', 'Continuar em modo limitado'],
         logLevel: 'warn',
         category: 'storage',
-        tags: ['compatibility', 'browser-support']
+        tags: ['compatibility', 'browser-support'],
     },
 
     [FunnelErrorCode.QUOTA_EXCEEDED]: {
@@ -287,7 +287,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Limpar dados', 'Exportar funis antigos'],
         logLevel: 'error',
         category: 'storage',
-        tags: ['quota', 'cleanup']
+        tags: ['quota', 'cleanup'],
     },
 
     // 📊 ERROS DE DADOS/VALIDAÇÃO
@@ -303,7 +303,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Corrigir dados', 'Recriar funil', 'Restaurar backup'],
         logLevel: 'error',
         category: 'validation',
-        tags: ['data-integrity', 'validation']
+        tags: ['data-integrity', 'validation'],
     },
 
     [FunnelErrorCode.VALIDATION_ERROR]: {
@@ -318,7 +318,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Corrigir campos destacados', 'Verificar dados obrigatórios'],
         logLevel: 'warn',
         category: 'validation',
-        tags: ['form-validation', 'user-input']
+        tags: ['form-validation', 'user-input'],
     },
 
     [FunnelErrorCode.CORRUPTED_DATA]: {
@@ -333,7 +333,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Restaurar backup', 'Contactar suporte'],
         logLevel: 'error',
         category: 'data-integrity',
-        tags: ['corruption', 'recovery', 'critical']
+        tags: ['corruption', 'recovery', 'critical'],
     },
 
     [FunnelErrorCode.VERSION_MISMATCH]: {
@@ -348,7 +348,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Atualizar página', 'Aceitar sincronização'],
         logLevel: 'warn',
         category: 'versioning',
-        tags: ['sync', 'versioning']
+        tags: ['sync', 'versioning'],
     },
 
     // 🔄 ERROS DE SINCRONIZAÇÃO
@@ -364,7 +364,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Manter local', 'Usar servidor', 'Mesclar alterações'],
         logLevel: 'warn',
         category: 'sync',
-        tags: ['conflict-resolution', 'merge']
+        tags: ['conflict-resolution', 'merge'],
     },
 
     [FunnelErrorCode.SYNC_FAILED]: {
@@ -379,7 +379,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Tentar sincronizar', 'Continuar offline'],
         logLevel: 'warn',
         category: 'sync',
-        tags: ['synchronization', 'offline']
+        tags: ['synchronization', 'offline'],
     },
 
     [FunnelErrorCode.MERGE_CONFLICT]: {
@@ -394,7 +394,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Revisar alterações', 'Aceitar todas', 'Resolver manualmente'],
         logLevel: 'warn',
         category: 'sync',
-        tags: ['merge-conflict', 'manual-resolution']
+        tags: ['merge-conflict', 'manual-resolution'],
     },
 
     [FunnelErrorCode.CONCURRENT_EDIT]: {
@@ -409,7 +409,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Continuar editando', 'Ver alterações'],
         logLevel: 'info',
         category: 'collaboration',
-        tags: ['concurrent-editing', 'real-time']
+        tags: ['concurrent-editing', 'real-time'],
     },
 
     // 🔄 ERROS DE MIGRAÇÃO
@@ -425,7 +425,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Contactar suporte', 'Tentar restaurar backup'],
         logLevel: 'error',
         category: 'migration',
-        tags: ['migration', 'critical', 'support']
+        tags: ['migration', 'critical', 'support'],
     },
 
     [FunnelErrorCode.MIGRATION_INTERRUPTED]: {
@@ -440,7 +440,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Continuar migração', 'Cancelar e usar versão anterior'],
         logLevel: 'error',
         category: 'migration',
-        tags: ['interruption', 'recovery']
+        tags: ['interruption', 'recovery'],
     },
 
     [FunnelErrorCode.BACKUP_FAILED]: {
@@ -455,7 +455,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Tentar backup manual', 'Continuar sem backup'],
         logLevel: 'warn',
         category: 'backup',
-        tags: ['backup', 'data-protection']
+        tags: ['backup', 'data-protection'],
     },
 
     [FunnelErrorCode.ROLLBACK_FAILED]: {
@@ -470,7 +470,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Contactar suporte urgente', 'Não fazer alterações'],
         logLevel: 'error',
         category: 'rollback',
-        tags: ['rollback', 'critical', 'urgent']
+        tags: ['rollback', 'critical', 'urgent'],
     },
 
     // 🖥️ ERROS DE SERVIDOR
@@ -486,7 +486,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Aguardar e tentar novamente', 'Trabalhar offline'],
         logLevel: 'error',
         category: 'server',
-        tags: ['server-error', 'retry']
+        tags: ['server-error', 'retry'],
     },
 
     [FunnelErrorCode.SERVICE_UNAVAILABLE]: {
@@ -501,7 +501,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Trabalhar offline', 'Tentar mais tarde'],
         logLevel: 'error',
         category: 'server',
-        tags: ['service-unavailable', 'maintenance']
+        tags: ['service-unavailable', 'maintenance'],
     },
 
     [FunnelErrorCode.BAD_REQUEST]: {
@@ -516,7 +516,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Verificar dados', 'Contactar suporte'],
         logLevel: 'error',
         category: 'server',
-        tags: ['bad-request', 'validation']
+        tags: ['bad-request', 'validation'],
     },
 
     [FunnelErrorCode.UNAUTHORIZED]: {
@@ -531,7 +531,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Fazer login', 'Renovar sessão'],
         logLevel: 'warn',
         category: 'auth',
-        tags: ['unauthorized', 'session']
+        tags: ['unauthorized', 'session'],
     },
 
     [FunnelErrorCode.FORBIDDEN]: {
@@ -546,7 +546,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Solicitar permissão', 'Contactar administrador'],
         logLevel: 'warn',
         category: 'permissions',
-        tags: ['forbidden', 'access-control']
+        tags: ['forbidden', 'access-control'],
     },
 
     // ⚙️ ERROS DE CONFIGURAÇÃO
@@ -562,7 +562,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Recarregar página', 'Resetar configurações'],
         logLevel: 'error',
         category: 'config',
-        tags: ['configuration', 'setup']
+        tags: ['configuration', 'setup'],
     },
 
     [FunnelErrorCode.TEMPLATE_NOT_FOUND]: {
@@ -577,7 +577,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Escolher outro template', 'Usar padrão'],
         logLevel: 'warn',
         category: 'templates',
-        tags: ['template', 'fallback']
+        tags: ['template', 'fallback'],
     },
 
     [FunnelErrorCode.PLUGIN_ERROR]: {
@@ -592,7 +592,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Desativar plugin', 'Continuar sem plugin'],
         logLevel: 'warn',
         category: 'plugins',
-        tags: ['plugin', 'addon']
+        tags: ['plugin', 'addon'],
     },
 
     [FunnelErrorCode.DEPENDENCY_ERROR]: {
@@ -607,7 +607,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Recarregar página', 'Contactar suporte'],
         logLevel: 'error',
         category: 'dependencies',
-        tags: ['dependency', 'missing']
+        tags: ['dependency', 'missing'],
     },
 
     // 🔧 ERROS INTERNOS
@@ -623,7 +623,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Recarregar página', 'Contactar suporte'],
         logLevel: 'error',
         category: 'internal',
-        tags: ['internal', 'unexpected', 'critical']
+        tags: ['internal', 'unexpected', 'critical'],
     },
 
     [FunnelErrorCode.MEMORY_ERROR]: {
@@ -638,7 +638,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Fechar abas', 'Recarregar página', 'Reiniciar navegador'],
         logLevel: 'error',
         category: 'performance',
-        tags: ['memory', 'performance']
+        tags: ['memory', 'performance'],
     },
 
     [FunnelErrorCode.BROWSER_NOT_SUPPORTED]: {
@@ -653,7 +653,7 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Atualizar navegador', 'Usar navegador suportado'],
         logLevel: 'warn',
         category: 'compatibility',
-        tags: ['browser', 'compatibility']
+        tags: ['browser', 'compatibility'],
     },
 
     [FunnelErrorCode.FEATURE_NOT_AVAILABLE]: {
@@ -668,8 +668,8 @@ export const FUNNEL_ERROR_DEFINITIONS: Record<FunnelErrorCode, FunnelErrorDefini
         userActions: ['Fazer upgrade', 'Ver alternativas'],
         logLevel: 'info',
         category: 'features',
-        tags: ['feature', 'plan', 'upgrade']
-    }
+        tags: ['feature', 'plan', 'upgrade'],
+    },
 };
 
 // ============================================================================

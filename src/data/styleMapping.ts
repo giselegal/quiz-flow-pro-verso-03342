@@ -30,7 +30,7 @@ export const createQuizOption = (
   optionLetter: string,
   text: string,
   imageUrl?: string,
-  weight: number = 1
+  weight: number = 1,
 ): QuizOption => {
   const style = OPTION_TO_STYLE_MAPPING[optionLetter.toUpperCase()];
 

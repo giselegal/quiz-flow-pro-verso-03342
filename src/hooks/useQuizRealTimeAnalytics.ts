@@ -49,7 +49,7 @@ export const useQuizRealTimeAnalytics = (sessionId?: string, funnelId?: string) 
   const startStepTimer = useCallback((stepNumber: number) => {
     setStepTimes(prev => ({
       ...prev,
-      [stepNumber]: { start: Date.now() }
+      [stepNumber]: { start: Date.now() },
     }));
   }, []);
 
@@ -60,7 +60,7 @@ export const useQuizRealTimeAnalytics = (sessionId?: string, funnelId?: string) 
       
       return {
         ...prev,
-        [stepNumber]: { ...current, end: Date.now() }
+        [stepNumber]: { ...current, end: Date.now() },
       };
     });
   }, []);
@@ -177,8 +177,8 @@ export const useQuizRealTimeAnalytics = (sessionId?: string, funnelId?: string) 
             stepTimes: Object.fromEntries(
               Object.entries(stepTimes).map(([step, times]) => [
                 step, 
-                times.end ? times.end - times.start : null
-              ])
+                times.end ? times.end - times.start : null,
+              ]),
             ),
             timestamp: Date.now(),
           } as any,

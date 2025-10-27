@@ -88,7 +88,7 @@ class SmartLogger {
             enabledContexts: [],
             // Disable noisy contexts by default
             disabledContexts: isDevelopment && !hasDebugParam ? ['cache', 'render'] : [],
-            ...config
+            ...config,
         };
 
         this.startFlushTimer();
@@ -122,7 +122,7 @@ class SmartLogger {
             context,
             data,
             timestamp: Date.now(),
-            stack: level >= LogLevel.ERROR ? new Error().stack : undefined
+            stack: level >= LogLevel.ERROR ? new Error().stack : undefined,
         };
 
         // Add to buffer
@@ -204,7 +204,7 @@ class SmartLogger {
                 await fetch(this.config.remoteEndpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ entries })
+                    body: JSON.stringify({ entries }),
                 });
             }
         } catch (error) {
@@ -307,7 +307,7 @@ class SmartLogger {
     slowRender(componentName: string, duration: number, props?: any): void {
         this.warn(`🐌 Slow render: ${componentName}`, {
             duration: `${duration.toFixed(2)}ms`,
-            props
+            props,
         }, 'render');
     }
 
@@ -385,7 +385,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
         logger.updateConfig({ 
             minLevel: LogLevel.DEBUG, 
             enableConsole: true,
-            disabledContexts: [] // Enable all contexts
+            disabledContexts: [], // Enable all contexts
         });
         console.info('🐛 Debug logs enabled! Add ?debug=true to URL for full verbosity');
     };
@@ -393,7 +393,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
         logger.updateConfig({ 
             minLevel: LogLevel.WARN, 
             enableConsole: false,
-            disabledContexts: ['cache', 'render']
+            disabledContexts: ['cache', 'render'],
         });
         console.info('🔇 Debug logs disabled');
     };

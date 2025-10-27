@@ -41,7 +41,7 @@ export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuesti
       percentage: Math.round(
         ((styleScores[predominantStyle] || 0) /
           Object.values(styleScores).reduce((a, b) => a + b, 1)) *
-          100
+          100,
       ),
       style: predominantStyle,
       points: styleScores[predominantStyle] || 0,
@@ -61,7 +61,7 @@ export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuesti
       percentage: Math.round(
         ((styleScores[predominantStyle] || 0) /
           Object.values(styleScores).reduce((a, b) => a + b, 1)) *
-          100
+          100,
       ),
       style: predominantStyle,
       points: styleScores[predominantStyle] || 0,
@@ -79,7 +79,7 @@ export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuesti
       images: [],
       category: style,
       percentage: Math.round(
-        ((styleScores[style] || 0) / Object.values(styleScores).reduce((a, b) => a + b, 1)) * 100
+        ((styleScores[style] || 0) / Object.values(styleScores).reduce((a, b) => a + b, 1)) * 100,
       ),
       style,
       points: styleScores[style] || 0,

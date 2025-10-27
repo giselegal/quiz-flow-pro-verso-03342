@@ -29,13 +29,13 @@ export interface UseOptimizedImageResult {
  */
 export const useOptimizedImage = (
     originalSrc: string,
-    options: UseOptimizedImageOptions = {}
+    options: UseOptimizedImageOptions = {},
 ): UseOptimizedImageResult => {
     const {
         quality = 0.8,
         format = 'webp',
         maxWidth,
-        maxHeight
+        maxHeight,
     } = options;
 
     const [optimizedSrc, setOptimizedSrc] = useState<string | null>(null);
@@ -63,8 +63,8 @@ export const useOptimizedImage = (
                     quality,
                     format,
                     maxWidth,
-                    maxHeight
-                }
+                    maxHeight,
+                },
             );
 
             setOptimizedSrc(optimizedUrl);
@@ -90,7 +90,7 @@ export const useOptimizedImage = (
         error,
         compressionRatio,
         fileSize,
-        reload: optimizeImage
+        reload: optimizeImage,
     };
 };
 
@@ -98,7 +98,7 @@ export const useOptimizedImage = (
  * Hook para gerenciar múltiplas imagens otimizadas
  */
 export const useOptimizedImages = (
-    images: Array<{ id: string; src: string; options?: UseOptimizedImageOptions }>
+    images: Array<{ id: string; src: string; options?: UseOptimizedImageOptions }>,
 ) => {
     const [results, setResults] = useState<Record<string, UseOptimizedImageResult>>({});
     const [globalLoading, setGlobalLoading] = useState(false);
@@ -117,7 +117,7 @@ export const useOptimizedImages = (
                             if (!response.ok) throw new Error('Falha ao baixar imagem');
                             return await response.blob();
                         },
-                        image.options || {}
+                        image.options || {},
                     );
                     newResults[image.id] = {
                         optimizedSrc: optimizedUrl,
@@ -125,7 +125,7 @@ export const useOptimizedImages = (
                         error: null,
                         compressionRatio: 0,
                         fileSize: '',
-                        reload: () => { } // Implementar se necessário
+                        reload: () => { }, // Implementar se necessário
                     };
                 } catch (err) {
                     newResults[image.id] = {
@@ -134,7 +134,7 @@ export const useOptimizedImages = (
                         error: err instanceof Error ? err.message : 'Erro ao otimizar',
                         compressionRatio: 0,
                         fileSize: '',
-                        reload: () => { }
+                        reload: () => { },
                     };
                 }
             }
@@ -152,7 +152,7 @@ export const useOptimizedImages = (
         results,
         isLoading: globalLoading,
         totalImages: images.length,
-        optimizedImages: Object.keys(results).length
+        optimizedImages: Object.keys(results).length,
     };
 };
 
@@ -179,7 +179,7 @@ export const useImageCacheStats = () => {
                 count: cacheStats.count,
                 averageCompression: cacheStats.averageCompression,
                 oldestEntry: cacheStats.oldestImage ? new Date(cacheStats.oldestImage) : null,
-                newestEntry: cacheStats.newestImage ? new Date(cacheStats.newestImage) : null
+                newestEntry: cacheStats.newestImage ? new Date(cacheStats.newestImage) : null,
             });
         } catch (err) {
             console.error('❌ Erro ao carregar estatísticas:', err);
@@ -207,7 +207,7 @@ export const useImageCacheStats = () => {
         stats,
         isLoading,
         loadStats,
-        clearCache
+        clearCache,
     };
 };
 
@@ -219,7 +219,7 @@ export const useImagePreloader = () => {
 
     const preloadImage = useCallback(async (
         src: string,
-        options: UseOptimizedImageOptions = {}
+        options: UseOptimizedImageOptions = {},
     ) => {
         if (loadingImages.has(src)) return;
 
@@ -236,8 +236,8 @@ export const useImagePreloader = () => {
                 {
                     quality: 0.7, // Qualidade mais baixa para preload
                     format: 'webp',
-                    ...options
-                }
+                    ...options,
+                },
             );
         } catch (err) {
             console.warn('⚠️ Erro no preload da imagem:', src, err);
@@ -251,7 +251,7 @@ export const useImagePreloader = () => {
     }, [loadingImages]);
 
     const preloadImages = useCallback(async (
-        images: Array<{ src: string; options?: UseOptimizedImageOptions }>
+        images: Array<{ src: string; options?: UseOptimizedImageOptions }>,
     ) => {
         const promises = images.map(img => preloadImage(img.src, img.options));
         await Promise.allSettled(promises);
@@ -261,7 +261,7 @@ export const useImagePreloader = () => {
         preloadImage,
         preloadImages,
         isPreloading: loadingImages.size > 0,
-        preloadingCount: loadingImages.size
+        preloadingCount: loadingImages.size,
     };
 };
 
@@ -274,7 +274,7 @@ export const useImageFormatConverter = () => {
     const convertImage = useCallback(async (
         src: string,
         targetFormat: 'webp' | 'png' | 'jpeg',
-        quality: number = 0.8
+        quality: number = 0.8,
     ): Promise<string> => {
         setIsConverting(true);
         try {
@@ -287,8 +287,8 @@ export const useImageFormatConverter = () => {
                 },
                 {
                     format: targetFormat,
-                    quality
-                }
+                    quality,
+                },
             );
             return result;
         } finally {
@@ -310,7 +310,7 @@ export const useImageFormatConverter = () => {
         convertToWebP,
         convertToPNG,
         convertToJPEG,
-        isConverting
+        isConverting,
     };
 };
 
@@ -327,7 +327,7 @@ export const useImagePerformanceMonitor = () => {
 
     const measureImageLoad = useCallback(async (
         src: string,
-        options: UseOptimizedImageOptions = {}
+        options: UseOptimizedImageOptions = {},
     ) => {
         const startTime = performance.now();
 
@@ -339,7 +339,7 @@ export const useImagePerformanceMonitor = () => {
                     if (!response.ok) throw new Error('Falha ao baixar imagem');
                     return await response.blob();
                 },
-                options
+                options,
             );
             const endTime = performance.now();
 
@@ -347,7 +347,7 @@ export const useImagePerformanceMonitor = () => {
                 loadTime: endTime - startTime,
                 transferSize: 0, // Não temos acesso ao tamanho com getCachedImage
                 compressionRatio: 0, // Não temos acesso à compressão com getCachedImage
-                cacheHit: false // Não temos informação de cache hit
+                cacheHit: false, // Não temos informação de cache hit
             });
 
             return result;
@@ -359,7 +359,7 @@ export const useImagePerformanceMonitor = () => {
 
     return {
         metrics,
-        measureImageLoad
+        measureImageLoad,
     };
 };
 
@@ -370,5 +370,5 @@ export default {
     useImageCacheStats,
     useImagePreloader,
     useImageFormatConverter,
-    useImagePerformanceMonitor
+    useImagePerformanceMonitor,
 };

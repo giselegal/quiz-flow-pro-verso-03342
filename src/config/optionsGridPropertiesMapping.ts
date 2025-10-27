@@ -133,7 +133,7 @@ export const optionsGridUtils = {
   // Mescla props personalizadas com preset
   mergeWithPreset: (
     presetName: keyof typeof optionsGridPresets,
-    customProps: Partial<OptionsGridProperties>
+    customProps: Partial<OptionsGridProperties>,
   ): OptionsGridProperties => {
     const preset = optionsGridPresets[presetName];
     return {
@@ -146,7 +146,7 @@ export const optionsGridUtils = {
   // Otimização para dispositivo
   getDeviceOptimizedProps: (
     device: 'mobile' | 'tablet' | 'desktop',
-    props: OptionsGridProperties
+    props: OptionsGridProperties,
   ): Partial<OptionsGridProperties> => {
     switch (device) {
       case 'mobile':

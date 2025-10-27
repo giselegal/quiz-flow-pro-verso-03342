@@ -21,10 +21,10 @@ describe('Step-12 (Transição Estratégica) - botão manual de continuar', () =
                     text: 'Mensagem de teste',
                     showContinueButton: true,
                     continueButtonText: 'Continuar',
-                    nextStep: 'step-13'
+                    nextStep: 'step-13',
                 }}
                 onNext={onNext}
-            />
+            />,
         );
 
         // Esperar carregamento do componente real (lazy)

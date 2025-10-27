@@ -215,7 +215,7 @@ export class StorageService extends BaseCanonicalService {
       'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
       'video/mp4', 'video/webm',
       'application/pdf',
-      'text/plain'
+      'text/plain',
     ];
     this.browserStoragePrefix = options.browserStoragePrefix || 'qfp_';
     this.indexedDBName = options.indexedDBName || 'QuizFlowProStorage';
@@ -299,7 +299,7 @@ export class StorageService extends BaseCanonicalService {
       if (fileSize > this.maxUploadSize) {
         return {
           success: false,
-          error: new Error(`File size exceeds maximum allowed (${this.maxUploadSize} bytes)`)
+          error: new Error(`File size exceeds maximum allowed (${this.maxUploadSize} bytes)`),
         };
       }
 
@@ -308,7 +308,7 @@ export class StorageService extends BaseCanonicalService {
       if (this.allowedMimeTypes.length > 0 && !this.allowedMimeTypes.includes(mimeType)) {
         return {
           success: false,
-          error: new Error(`File type not allowed: ${mimeType}`)
+          error: new Error(`File type not allowed: ${mimeType}`),
         };
       }
 
@@ -318,13 +318,13 @@ export class StorageService extends BaseCanonicalService {
         .upload(params.path, params.file, {
           cacheControl: params.cacheControl || this.defaultCacheControl,
           contentType: params.contentType,
-          upsert: params.upsert ?? false
+          upsert: params.upsert ?? false,
         });
 
       if (error) {
         return {
           success: false,
-          error: new Error(`Upload failed: ${error.message}`)
+          error: new Error(`Upload failed: ${error.message}`),
         };
       }
 
@@ -341,7 +341,7 @@ export class StorageService extends BaseCanonicalService {
         publicUrl,
         size: fileSize,
         mimeType,
-        uploadedAt: new Date()
+        uploadedAt: new Date(),
       };
 
       this.log('File uploaded successfully:', result.path);
@@ -351,7 +351,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Upload file error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Upload failed')
+        error: error instanceof Error ? error : new Error('Upload failed'),
       };
     }
   }
@@ -370,7 +370,7 @@ export class StorageService extends BaseCanonicalService {
       if (error) {
         return {
           success: false,
-          error: new Error(`Download failed: ${error.message}`)
+          error: new Error(`Download failed: ${error.message}`),
         };
       }
 
@@ -381,7 +381,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Download file error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Download failed')
+        error: error instanceof Error ? error : new Error('Download failed'),
       };
     }
   }
@@ -400,7 +400,7 @@ export class StorageService extends BaseCanonicalService {
       if (error) {
         return {
           success: false,
-          error: new Error(`Delete failed: ${error.message}`)
+          error: new Error(`Delete failed: ${error.message}`),
         };
       }
 
@@ -414,7 +414,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Delete file error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Delete failed')
+        error: error instanceof Error ? error : new Error('Delete failed'),
       };
     }
   }
@@ -432,13 +432,13 @@ export class StorageService extends BaseCanonicalService {
         .list(path, {
           limit: params.limit,
           offset: params.offset,
-          sortBy: { column: params.sortBy || 'name', order: params.order || 'asc' }
+          sortBy: { column: params.sortBy || 'name', order: params.order || 'asc' },
         });
 
       if (error) {
         return {
           success: false,
-          error: new Error(`List files failed: ${error.message}`)
+          error: new Error(`List files failed: ${error.message}`),
         };
       }
 
@@ -449,7 +449,7 @@ export class StorageService extends BaseCanonicalService {
         mimeType: file.metadata?.mimetype || 'application/octet-stream',
         createdAt: new Date(file.created_at),
         updatedAt: new Date(file.updated_at),
-        publicUrl: this.getCachedPublicUrl(file.name) || undefined
+        publicUrl: this.getCachedPublicUrl(file.name) || undefined,
       }));
 
       return { success: true, data: files };
@@ -458,7 +458,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('List files error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('List files failed')
+        error: error instanceof Error ? error : new Error('List files failed'),
       };
     }
   }
@@ -489,7 +489,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Get public URL error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get public URL failed')
+        error: error instanceof Error ? error : new Error('Get public URL failed'),
       };
     }
   }
@@ -508,7 +508,7 @@ export class StorageService extends BaseCanonicalService {
       if (error) {
         return {
           success: false,
-          error: new Error(`Delete files failed: ${error.message}`)
+          error: new Error(`Delete files failed: ${error.message}`),
         };
       }
 
@@ -522,7 +522,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Delete files error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Delete files failed')
+        error: error instanceof Error ? error : new Error('Delete files failed'),
       };
     }
   }
@@ -536,13 +536,13 @@ export class StorageService extends BaseCanonicalService {
    */
   async optimizeImage(
     file: File | Blob,
-    options: ImageOptimizationOptions = {}
+    options: ImageOptimizationOptions = {},
   ): Promise<ServiceResult<OptimizedImage>> {
     try {
       if (!this.enableImageOptimization) {
         return {
           success: false,
-          error: new Error('Image optimization is disabled')
+          error: new Error('Image optimization is disabled'),
         };
       }
 
@@ -572,7 +572,7 @@ export class StorageService extends BaseCanonicalService {
       if (!ctx) {
         return {
           success: false,
-          error: new Error('Failed to get canvas context')
+          error: new Error('Failed to get canvas context'),
         };
       }
 
@@ -591,7 +591,7 @@ export class StorageService extends BaseCanonicalService {
             else reject(new Error('Failed to create blob'));
           },
           mimeType,
-          quality
+          quality,
         );
       });
 
@@ -605,13 +605,13 @@ export class StorageService extends BaseCanonicalService {
         height,
         size: optimizedSize,
         format,
-        compressionRatio
+        compressionRatio,
       };
 
       this.log('Image optimized:', {
         originalSize: `${(originalSize / 1024).toFixed(2)} KB`,
         optimizedSize: `${(optimizedSize / 1024).toFixed(2)} KB`,
-        compressionRatio: `${(compressionRatio * 100).toFixed(1)}%`
+        compressionRatio: `${(compressionRatio * 100).toFixed(1)}%`,
       });
 
       return { success: true, data: result };
@@ -620,7 +620,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Optimize image error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Image optimization failed')
+        error: error instanceof Error ? error : new Error('Image optimization failed'),
       };
     }
   }
@@ -631,7 +631,7 @@ export class StorageService extends BaseCanonicalService {
   async uploadOptimizedImage(
     file: File,
     path: string,
-    options: ImageOptimizationOptions & { bucket?: string } = {}
+    options: ImageOptimizationOptions & { bucket?: string } = {},
   ): Promise<ServiceResult<UploadResult>> {
     try {
       // Optimize the image
@@ -646,7 +646,7 @@ export class StorageService extends BaseCanonicalService {
         file: optimizeResult.data.blob,
         path,
         bucket: options.bucket,
-        contentType: `image/${optimizeResult.data.format}`
+        contentType: `image/${optimizeResult.data.format}`,
       });
 
       return uploadResult;
@@ -655,7 +655,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Upload optimized image error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Upload optimized image failed')
+        error: error instanceof Error ? error : new Error('Upload optimized image failed'),
       };
     }
   }
@@ -672,7 +672,7 @@ export class StorageService extends BaseCanonicalService {
       if (typeof window === 'undefined') {
         return {
           success: false,
-          error: new Error('Browser storage not available')
+          error: new Error('Browser storage not available'),
         };
       }
 
@@ -680,7 +680,7 @@ export class StorageService extends BaseCanonicalService {
         key,
         value,
         createdAt: Date.now(),
-        expiresAt: expiresIn ? Date.now() + expiresIn : undefined
+        expiresAt: expiresIn ? Date.now() + expiresIn : undefined,
       };
 
       const prefixedKey = this.browserStoragePrefix + key;
@@ -692,7 +692,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Set item error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Set item failed')
+        error: error instanceof Error ? error : new Error('Set item failed'),
       };
     }
   }
@@ -727,7 +727,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Get item error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get item failed')
+        error: error instanceof Error ? error : new Error('Get item failed'),
       };
     }
   }
@@ -750,7 +750,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Remove item error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Remove item failed')
+        error: error instanceof Error ? error : new Error('Remove item failed'),
       };
     }
   }
@@ -782,7 +782,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Clear all error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Clear all failed')
+        error: error instanceof Error ? error : new Error('Clear all failed'),
       };
     }
   }
@@ -795,7 +795,7 @@ export class StorageService extends BaseCanonicalService {
       if (typeof navigator === 'undefined' || !navigator.storage || !navigator.storage.estimate) {
         return {
           success: false,
-          error: new Error('Storage quota API not available')
+          error: new Error('Storage quota API not available'),
         };
       }
 
@@ -809,7 +809,7 @@ export class StorageService extends BaseCanonicalService {
         usage,
         quota,
         available,
-        percentage
+        percentage,
       };
 
       return { success: true, data: result };
@@ -818,7 +818,7 @@ export class StorageService extends BaseCanonicalService {
       this.error('Get quota error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get quota failed')
+        error: error instanceof Error ? error : new Error('Get quota failed'),
       };
     }
   }
@@ -836,7 +836,7 @@ export class StorageService extends BaseCanonicalService {
     delete: this.deleteFile.bind(this),
     deleteMany: this.deleteFiles.bind(this),
     list: this.listFiles.bind(this),
-    getPublicUrl: this.getPublicUrl.bind(this)
+    getPublicUrl: this.getPublicUrl.bind(this),
   };
 
   /**
@@ -844,7 +844,7 @@ export class StorageService extends BaseCanonicalService {
    */
   readonly images = {
     optimize: this.optimizeImage.bind(this),
-    upload: this.uploadOptimizedImage.bind(this)
+    upload: this.uploadOptimizedImage.bind(this),
   };
 
   /**
@@ -855,7 +855,7 @@ export class StorageService extends BaseCanonicalService {
     get: this.getItem.bind(this),
     remove: this.removeItem.bind(this),
     clear: this.clearAll.bind(this),
-    getQuota: this.getQuota.bind(this)
+    getQuota: this.getQuota.bind(this),
   };
 
   // ============================================================================
@@ -865,7 +865,7 @@ export class StorageService extends BaseCanonicalService {
   private cachePublicUrl(path: string, url: string): void {
     this.urlCache.set(path, {
       url,
-      expiresAt: Date.now() + this.URL_CACHE_TTL
+      expiresAt: Date.now() + this.URL_CACHE_TTL,
     });
   }
 

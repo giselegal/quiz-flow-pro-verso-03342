@@ -438,7 +438,7 @@ class QuizResultsService {
    */
   private generateRecommendations(
     profile: StyleProfile,
-    analysis: any
+    analysis: any,
   ): PersonalizedRecommendations {
     console.log('🎨 Gerando recomendações para:', profile.primaryStyle);
 
@@ -649,7 +649,7 @@ class QuizResultsService {
 
     if (profile.secondaryStyle) {
       tips.push(
-        `Complemente com elementos do estilo ${profile.secondaryStyle} para mais versatilidade`
+        `Complemente com elementos do estilo ${profile.secondaryStyle} para mais versatilidade`,
       );
     }
 
@@ -787,7 +787,7 @@ class QuizResultsService {
           confidence: data.predominant_percentage / 100,
           styleScores: data.style_scores || {},
         },
-        {}
+        {},
       ),
       completionScore: 100,
       calculatedAt: data.created_at,

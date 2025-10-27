@@ -40,8 +40,8 @@ export class ResultDataService extends BaseCanonicalService {
           percentage,
           answers: data.answers,
           userId: data.userId,
-          ...data.metadata
-        }
+          ...data.metadata,
+        },
       };
 
       const { data: row, error } = await supabase

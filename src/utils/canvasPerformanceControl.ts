@@ -42,5 +42,5 @@ export const disableCanvasDebug = () => {
 
 export default {
     enableCanvasDebug,
-    disableCanvasDebug
+    disableCanvasDebug,
 };

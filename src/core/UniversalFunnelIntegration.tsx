@@ -33,7 +33,7 @@ export const UniversalFunnelIntegration: React.FC<UniversalFunnelIntegrationProp
     onSave,
     onCancel,
     onPreview,
-    readOnly = false
+    readOnly = false,
 }) => {
     const [universalFunnel, setUniversalFunnel] = useState<UniversalFunnel | null>(null);
     const [_originalData, _setOriginalData] = useState<any>(null);
@@ -71,7 +71,7 @@ export const UniversalFunnelIntegration: React.FC<UniversalFunnelIntegrationProp
             console.error('Erro ao carregar funil:', error);
             setLoadingState({
                 isLoading: false,
-                error: `Erro ao carregar funil: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
+                error: `Erro ao carregar funil: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
             });
         }
     };
@@ -93,14 +93,14 @@ export const UniversalFunnelIntegration: React.FC<UniversalFunnelIntegrationProp
             _setOriginalData(originalFormat);
             setLoadingState({
                 isLoading: false,
-                success: 'Funil salvo com sucesso!'
+                success: 'Funil salvo com sucesso!',
             });
 
         } catch (error) {
             console.error('Erro ao salvar funil:', error);
             setLoadingState({
                 isLoading: false,
-                error: `Erro ao salvar: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
+                error: `Erro ao salvar: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
             });
         }
     }, [onSave]);
@@ -124,12 +124,12 @@ export const UniversalFunnelIntegration: React.FC<UniversalFunnelIntegrationProp
             metadata: {
                 exportedAt: new Date().toISOString(),
                 exportedBy: 'UniversalFunnelEditor',
-                originalType: detectedType
-            }
+                originalType: detectedType,
+            },
         };
 
         const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-            type: 'application/json'
+            type: 'application/json',
         });
 
         const url = URL.createObjectURL(blob);
@@ -318,8 +318,8 @@ function generateExampleQuiz21(): any {
                 opcoes: [
                     { texto: 'Crescer profissionalmente', valor: 'carreira', proximoStep: 2 },
                     { texto: 'Melhorar relacionamentos', valor: 'relacionamento', proximoStep: 3 },
-                    { texto: 'Ter mais saúde', valor: 'saude', proximoStep: 4 }
-                ]
+                    { texto: 'Ter mais saúde', valor: 'saude', proximoStep: 4 },
+                ],
             },
             {
                 id: 2,
@@ -328,8 +328,8 @@ function generateExampleQuiz21(): any {
                 opcoes: [
                     { texto: 'Tecnologia', valor: 'tech', proximoStep: 5 },
                     { texto: 'Marketing', valor: 'marketing', proximoStep: 6 },
-                    { texto: 'Vendas', valor: 'sales', proximoStep: 7 }
-                ]
+                    { texto: 'Vendas', valor: 'sales', proximoStep: 7 },
+                ],
             },
             // Adicionar mais steps conforme necessário...
         ],
@@ -337,9 +337,9 @@ function generateExampleQuiz21(): any {
             tema: 'modern',
             cores: {
                 primary: '#3B82F6',
-                secondary: '#1E40AF'
-            }
-        }
+                secondary: '#1E40AF',
+            },
+        },
     };
 }
 
@@ -374,7 +374,7 @@ export const QuickEditButton: React.FC<QuickEditButtonProps> = ({
     funnelId,
     funnelType,
     className = '',
-    children = 'Editar Funil'
+    children = 'Editar Funil',
 }) => {
     const [isEditorOpen, setIsEditorOpen] = useState(false);
 

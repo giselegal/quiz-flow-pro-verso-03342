@@ -113,8 +113,8 @@ export const useStepNavigation = (initialStep: number = 1) => {
         const isQuizStep =
           template.templateData?.steps?.some((step: any) =>
             step.blocks?.some((block: any) =>
-              ['multiple-choice', 'single-choice', 'text-input', 'rating'].includes(block.type)
-            )
+              ['multiple-choice', 'single-choice', 'text-input', 'rating'].includes(block.type),
+            ),
           ) || false;
 
         const data: StepData = {
@@ -138,7 +138,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
         throw error;
       }
     },
-    [session]
+    [session],
   );
 
   // ===== NAVEGAR PARA ETAPA ESPECÍFICA =====
@@ -185,7 +185,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
         });
       }
     },
-    [session, loadStepData, setLocation, goTo]
+    [session, loadStepData, setLocation, goTo],
   );
 
   // ===== PRÓXIMA ETAPA =====
@@ -229,7 +229,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
                 ...prev,
                 responses: updatedResponses,
               }
-            : null
+            : null,
         );
 
         // Validar se pode avançar
@@ -252,7 +252,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
         });
       }
     },
-    [session, currentStep, stepData]
+    [session, currentStep, stepData],
   );
 
   // ===== VALIDAÇÃO DE RESPOSTAS =====
@@ -268,7 +268,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
 
       return hasAnswers;
     },
-    []
+    [],
   );
 
   // ===== FINALIZAR QUIZ =====
@@ -326,7 +326,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
           id: session.id,
           session_id: session.session_id || session.id,
           quiz_user_id: session.quiz_user_id,
-          responses: responses,
+          responses,
           current_step: session.current_step,
         };
 
@@ -427,7 +427,7 @@ export const useStepNavigation = (initialStep: number = 1) => {
         };
       }
     },
-    [session]
+    [session],
   );
 
   // ===== EXTRAIR PREFERÊNCIAS DE ESTILO =====

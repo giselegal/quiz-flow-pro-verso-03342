@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Crown, Bot, Target, Activity } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Crown, Bot, Target, Activity } from 'lucide-react';
 import { UniversalFunnelEditor } from './UniversalFunnelEditor';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import type { UniversalFunnel } from './UniversalFunnelEditor';
@@ -29,7 +29,7 @@ export const UniversalBuilderEditor: React.FC<UniversalBuilderEditorProps> = ({
     onSave,
     enableAI = true,
     enableAnalytics = true,
-    readOnly = false
+    readOnly = false,
 }) => {
     const [funnel, setFunnel] = useState<UniversalFunnel>(initialFunnel);
     const analytics = useAnalytics();
@@ -41,7 +41,7 @@ export const UniversalBuilderEditor: React.FC<UniversalBuilderEditorProps> = ({
         if (enableAnalytics) {
             analytics.trackEvent('funnel_modified', {
                 funnelId: funnel.id,
-                stepCount: funnel.steps.length
+                stepCount: funnel.steps.length,
             });
         }
     }, [funnel, onFunnelChange, enableAnalytics, analytics]);

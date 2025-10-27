@@ -71,8 +71,8 @@ export const QuizAnalyticsPlugin: TemplatePlugin = {
                     trackClicks: true,
                     trackTime: true,
                     trackAnswers: true,
-                    trackProgress: true
-                }
+                    trackProgress: true,
+                },
             };
         }
 
@@ -105,20 +105,20 @@ export const QuizAnalyticsPlugin: TemplatePlugin = {
             id: 'analytics-dashboard',
             name: 'Analytics Dashboard',
             category: 'custom',
-            component: AnalyticsDashboard
+            component: AnalyticsDashboard,
         },
         {
             id: 'click-heatmap',
             name: 'Click Heatmap',
             category: 'custom',
-            component: ClickHeatmap
+            component: ClickHeatmap,
         },
         {
             id: 'progress-analytics',
             name: 'Progress Analytics',
             category: 'custom',
-            component: ProgressAnalytics
-        }
+            component: ProgressAnalytics,
+        },
     ],
 
     // Validadores customizados
@@ -126,13 +126,13 @@ export const QuizAnalyticsPlugin: TemplatePlugin = {
         {
             id: 'analytics-completion',
             name: 'Analytics Completion Validator',
-            validator: async (_data: any) => true
+            validator: async (_data: any) => true,
         },
         {
             id: 'tracking-setup',
             name: 'Tracking Setup Validator',
-            validator: async (_data: any) => true
-        }
+            validator: async (_data: any) => true,
+        },
     ],
 
     // Hook de desinstalação
@@ -144,7 +144,7 @@ export const QuizAnalyticsPlugin: TemplatePlugin = {
         }
 
         context.api.showNotification('Quiz Analytics desinstalado', 'info');
-    }
+    },
 };
 
 // Funções auxiliares
@@ -158,7 +158,7 @@ function trackQuizEvent(eventType: string, data: any) {
         type: eventType,
         timestamp: Date.now(),
         data,
-        sessionId: getOrCreateSessionId()
+        sessionId: getOrCreateSessionId(),
     };
 
     analytics.events.push(event);

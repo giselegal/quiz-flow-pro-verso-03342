@@ -73,14 +73,14 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
             const mockBlock = {
                 id: '1',
                 type: 'text',
-                properties: { text: 'Original' }
+                properties: { text: 'Original' },
             };
 
             render(
                 <PropertiesPanel
                     selectedBlock={mockBlock}
                     onUpdate={mockUpdate}
-                />
+                />,
             );
 
             const input = screen.getByTestId('text-input') as HTMLInputElement;
@@ -118,14 +118,14 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
             const mockBlock = {
                 id: '1',
                 type: 'text',
-                properties: { color: '#000000', fontSize: 16 }
+                properties: { color: '#000000', fontSize: 16 },
             };
 
             render(
                 <PropertiesPanel
                     selectedBlock={mockBlock}
                     onUpdate={mockUpdate}
-                />
+                />,
             );
 
             const colorInput = screen.getByTestId('color-input');
@@ -160,7 +160,7 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
                 <PropertiesPanel
                     selectedBlock={mockBlock}
                     onDelete={mockDelete}
-                />
+                />,
             );
 
             expect(screen.getByText(/deletar/i)).toBeDefined();
@@ -184,7 +184,7 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
                 <PropertiesPanel
                     selectedBlock={mockBlock}
                     onDelete={mockDelete}
-                />
+                />,
             );
 
             const deleteBtn = screen.getByTestId('delete-btn');
@@ -209,7 +209,7 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
                 <PropertiesPanel
                     selectedBlock={mockBlock}
                     onDuplicate={mockDuplicate}
-                />
+                />,
             );
 
             expect(screen.getByText(/duplicar/i)).toBeDefined();
@@ -236,7 +236,7 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
             const mockBlock = {
                 id: '1',
                 type: 'text',
-                properties: undefined
+                properties: undefined,
             };
 
             render(<PropertiesPanel selectedBlock={mockBlock} />);
@@ -254,7 +254,7 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
             const mockBlock = {
                 id: '1',
                 type: 'text',
-                properties: { text: '' }
+                properties: { text: '' },
             };
 
             render(<PropertiesPanel selectedBlock={mockBlock} />);
@@ -275,7 +275,7 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
             const mockBlock = {
                 id: '1',
                 type: 'text',
-                properties: { fontSize: 16 }
+                properties: { fontSize: 16 },
             };
 
             render(<PropertiesPanel selectedBlock={mockBlock} />);
@@ -319,8 +319,8 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
                     options: [
                         { id: '1', text: 'Azul' },
                         { id: '2', text: 'Vermelho' },
-                    ]
-                }
+                    ],
+                },
             };
 
             render(<PropertiesPanel selectedBlock={mockBlock} />);
@@ -354,14 +354,14 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
             const mockBlock = {
                 id: '1',
                 type: 'quiz-question',
-                properties: { multipleSelection: false }
+                properties: { multipleSelection: false },
             };
 
             render(
                 <PropertiesPanel
                     selectedBlock={mockBlock}
                     onUpdate={mockUpdate}
-                />
+                />,
             );
 
             const checkbox = screen.getByTestId('multiple-selection');
@@ -377,7 +377,7 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
                 const addOption = () => {
                     const newOptions = [
                         ...(selectedBlock.properties?.options || []),
-                        { id: Date.now().toString(), text: 'Nova opção' }
+                        { id: Date.now().toString(), text: 'Nova opção' },
                     ];
                     onUpdate({ options: newOptions });
                 };
@@ -397,14 +397,14 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
             const mockBlock = {
                 id: '1',
                 type: 'quiz-question',
-                properties: { options: [{ id: '1', text: 'Opção 1' }] }
+                properties: { options: [{ id: '1', text: 'Opção 1' }] },
             };
 
             render(
                 <PropertiesPanel
                     selectedBlock={mockBlock}
                     onUpdate={mockUpdate}
-                />
+                />,
             );
 
             const addBtn = screen.getByTestId('add-option');
@@ -458,7 +458,7 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
                 <PropertiesPanel
                     selectedBlock={mockBlock}
                     onUpdate={mockUpdate}
-                />
+                />,
             );
 
             const btn = screen.getByTestId('update-btn');
@@ -573,11 +573,11 @@ describe('🎛️ Painel de Propriedades do Editor - Teste Específico', () => {
 // SUMÁRIO FINAL
 // ============================================
 
-console.log('\n' + '='.repeat(60));
+console.log(`\n${  '='.repeat(60)}`);
 console.log('🧪 TESTE COMPLETO DO PAINEL DE PROPRIEDADES');
 console.log('='.repeat(60));
 console.log('📦 Grupos de Teste: 7');
 console.log('🎯 Casos de Teste: 24+');
 console.log('✅ Status: Funcional e Executável');
 console.log('📈 Cobertura Esperada: 100%');
-console.log('='.repeat(60) + '\n');
+console.log(`${'='.repeat(60)  }\n`);

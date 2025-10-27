@@ -135,7 +135,7 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
                 try {
                     const serialized = JSON.stringify(toPersist);
                     if (serialized.length < 100_000) { // Reduced threshold for localStorage fallback
-                        localStorage.setItem(storageKey + '_fallback', serialized);
+                        localStorage.setItem(`${storageKey  }_fallback`, serialized);
                         console.warn('⚠️ Used localStorage fallback for history state');
                     } else {
                         console.warn('⚠️ History state too large for localStorage fallback, skipping persistence');
@@ -225,7 +225,7 @@ export const useHistoryStateIndexedDB = <T>(initialState: T, options: UseHistory
         reset,
         canUndo,
         canRedo,
-        history: history,
+        history,
         // Additional utilities
         storageReady: !!storageManager,
         clearHistory: useCallback(() => {

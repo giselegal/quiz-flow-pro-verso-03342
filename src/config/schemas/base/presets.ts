@@ -366,7 +366,7 @@ export const urlField = (key: string, label: string, group = 'integration'): Blo
   inputType: 'url',
   format: 'url',
   placeholder: 'https://exemplo.com',
-  pattern: '^(https?:\\/\\/).+' // começa com http(s)://
+  pattern: '^(https?:\\/\\/).+', // começa com http(s)://
 });
 
 export const tokenField = (key: string, label: string, group = 'integration'): BlockFieldSchema<string> => ({
@@ -377,7 +377,7 @@ export const tokenField = (key: string, label: string, group = 'integration'): B
   inputType: 'password',
   format: 'token',
   secret: true,
-  placeholder: 'xxxx-xxxx-xxxx'
+  placeholder: 'xxxx-xxxx-xxxx',
 });
 
 export const pixelIdField = (key: string, label: string, group = 'integration'): BlockFieldSchema<string> => ({
@@ -386,7 +386,7 @@ export const pixelIdField = (key: string, label: string, group = 'integration'):
   type: 'string',
   group,
   format: 'pixel',
-  placeholder: 'ex.: 123456789012345' // Facebook Pixel ID
+  placeholder: 'ex.: 123456789012345', // Facebook Pixel ID
 });
 
 export const utmSourceField = (group = 'integration'): BlockFieldSchema<string> => ({
@@ -419,7 +419,7 @@ export const eventNameField = (key = 'eventName', label = 'Nome do Evento', grou
   type: 'string',
   group,
   format: 'event',
-  placeholder: 'ex.: LeadCaptured'
+  placeholder: 'ex.: LeadCaptured',
 });
 
 export const webhookUrlField = (key = 'webhookUrl', label = 'Webhook URL', group = 'integration'): BlockFieldSchema<string> => ({
@@ -430,7 +430,7 @@ export const webhookUrlField = (key = 'webhookUrl', label = 'Webhook URL', group
   inputType: 'url',
   format: 'webhook',
   placeholder: 'https://api.hotmart.com/...',
-  pattern: '^(https?:\\/\\/).+'
+  pattern: '^(https?:\\/\\/).+',
 });
 
 export const webhookSecretField = (key = 'webhookSecret', label = 'Webhook Secret', group = 'integration'): BlockFieldSchema<string> => ({

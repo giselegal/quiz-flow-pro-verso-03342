@@ -52,15 +52,15 @@ describe('UnifiedQuizStepAdapter', () => {
           type: 'text-inline' as any,
           order: 0,
           content: { text: 'Hello' },
-          properties: {}
+          properties: {},
         },
         {
           id: 'block-2',
           type: 'form-input' as any,
           order: 1,
           content: { label: 'Name' },
-          properties: {}
-        }
+          properties: {},
+        },
       ];
 
       const unified = UnifiedQuizStepAdapter.fromBlocks(blocks, 'step-test');
@@ -78,8 +78,8 @@ describe('UnifiedQuizStepAdapter', () => {
           type: 'options-grid' as any,
           order: 0,
           content: {},
-          properties: {}
-        }
+          properties: {},
+        },
       ];
 
       const unified = UnifiedQuizStepAdapter.fromBlocks(questionBlocks, 'step-test');
@@ -93,8 +93,8 @@ describe('UnifiedQuizStepAdapter', () => {
           type: 'form-input' as any,
           order: 0,
           content: {},
-          properties: {}
-        }
+          properties: {},
+        },
       ];
 
       const unified = UnifiedQuizStepAdapter.fromBlocks(introBlocks, 'step-test');
@@ -118,8 +118,8 @@ describe('UnifiedQuizStepAdapter', () => {
           type: 'text-inline' as any,
           order: 0,
           content: { text: 'Test' },
-          properties: {}
-        }
+          properties: {},
+        },
       ];
 
       const unified = UnifiedQuizStepAdapter.fromBlocks(blocks, 'step-test');
@@ -138,8 +138,8 @@ describe('UnifiedQuizStepAdapter', () => {
           type: 'text-inline' as any,
           order: 0,
           content: {},
-          properties: {}
-        }
+          properties: {},
+        },
       ];
 
       const unified = UnifiedQuizStepAdapter.fromBlocks(blocks, 'step-test');
@@ -154,10 +154,10 @@ describe('UnifiedQuizStepAdapter', () => {
         stepNumber: 1,
         type: 'intro',
         sections: [
-          { type: 'text-block', content: { text: 'Hello' } }
+          { type: 'text-block', content: { text: 'Hello' } },
         ],
         metadata: { version: '1.0', source: 'blocks' },
-        raw: {}
+        raw: {},
       };
 
       const blocks = UnifiedQuizStepAdapter.toBlocks(unified);
@@ -183,8 +183,8 @@ describe('UnifiedQuizStepAdapter', () => {
           type: 'text-inline' as any,
           order: 0,
           content: { text: 'Test' },
-          properties: { style: 'bold' }
-        }
+          properties: { style: 'bold' },
+        },
       ];
 
       const unified = UnifiedQuizStepAdapter.fromBlocks(original, 'step-test');
@@ -200,7 +200,7 @@ describe('UnifiedQuizStepAdapter', () => {
         { id: 'step-01', expected: 1 },
         { id: 'step-10', expected: 10 },
         { id: 'step-21', expected: 21 },
-        { id: 'step1', expected: 1 }
+        { id: 'step1', expected: 1 },
       ];
 
       tests.forEach(({ id, expected }) => {

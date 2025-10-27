@@ -15,14 +15,14 @@ const cleanupBrowserWarnings = () => {
 
   unsupportedFeatures.forEach(feature => {
     const metaTags = document.querySelectorAll(
-      `meta[name*="${feature}"], meta[content*="${feature}"]`
+      `meta[name*="${feature}"], meta[content*="${feature}"]`,
     );
     metaTags.forEach(tag => tag.remove());
   });
 
   // Remove ou ajusta iframes com sandbox inseguro
   const iframes = document.querySelectorAll(
-    'iframe[sandbox*="allow-scripts"][sandbox*="allow-same-origin"]'
+    'iframe[sandbox*="allow-scripts"][sandbox*="allow-same-origin"]',
   );
   iframes.forEach(iframe => {
     console.warn('⚠️ Iframe sandbox potentially insecure:', iframe);

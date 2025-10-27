@@ -172,7 +172,7 @@ class CoreWebVitalsMonitor {
       rating,
       delta: 0, // Could be calculated from previous measurements
       id: this.generateId(),
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -182,7 +182,7 @@ class CoreWebVitalsMonitor {
       FID: { good: 100, poor: 300 },
       CLS: { good: 0.1, poor: 0.25 },
       FCP: { good: 1800, poor: 3000 },
-      TTFB: { good: 800, poor: 1800 }
+      TTFB: { good: 800, poor: 1800 },
     };
 
     const threshold = thresholds[name as keyof typeof thresholds];
@@ -205,7 +205,7 @@ class CoreWebVitalsMonitor {
       value: metric.value,
       rating: metric.rating,
       id: metric.id,
-      category: 'performance'
+      category: 'performance',
     });
 
     // Send to analytics if available
@@ -216,7 +216,7 @@ class CoreWebVitalsMonitor {
           event_category: 'Web Vitals',
           value: Math.round(metric.value),
           custom_parameter_1: metric.rating,
-          non_interaction: true
+          non_interaction: true,
         });
       }
     }
@@ -234,7 +234,7 @@ class CoreWebVitalsMonitor {
       hasGoodFID: metrics.fid?.rating === 'good',
       hasGoodCLS: metrics.cls?.rating === 'good',
       overallScore: this.calculateOverallScore(),
-      recommendations: this.getRecommendations()
+      recommendations: this.getRecommendations(),
     };
   }
 

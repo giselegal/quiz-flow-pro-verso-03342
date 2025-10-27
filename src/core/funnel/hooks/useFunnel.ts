@@ -12,7 +12,7 @@ import {
     FunnelEvent,
     FunnelProgress,
     NavigationState,
-    ValidationState
+    ValidationState,
 } from '../types';
 import { funnelEngine, FunnelActions } from '../FunnelEngine';
 import { funnelCore } from '../FunnelCore';
@@ -71,10 +71,10 @@ export interface UseFunnelReturn {
  */
 export function useFunnel(
     initialState: FunnelState,
-    options: UseFunnelOptions = {}
+    options: UseFunnelOptions = {},
 ): UseFunnelReturn {
     const [state, setState] = useState<FunnelState>(() =>
-        funnelEngine.initializeFunnel(initialState)
+        funnelEngine.initializeFunnel(initialState),
     );
 
     const optionsRef = useRef(options);
@@ -91,7 +91,7 @@ export function useFunnel(
         isValid: false,
         errors: [],
         warnings: [],
-        currentStepValid: false
+        currentStepValid: false,
     };
 
     const isLoading = state.isLoading || false;
@@ -264,7 +264,7 @@ export function useFunnel(
         // Validação
         validateCurrentStep,
         canAdvance,
-        canGoBack
+        canGoBack,
     };
 }
 
@@ -284,7 +284,7 @@ export function useFunnelNavigation(state: FunnelState) {
         progress,
         currentStepIndex: progress.currentStepIndex,
         totalSteps: progress.totalSteps,
-        percentage: progress.percentage
+        percentage: progress.percentage,
     };
 }
 
@@ -297,7 +297,7 @@ export function useFunnelValidation(state: FunnelState) {
         isValid: false,
         errors: [],
         warnings: [],
-        currentStepValid: false
+        currentStepValid: false,
     };
 
     return {
@@ -308,7 +308,7 @@ export function useFunnelValidation(state: FunnelState) {
         },
         hasErrors: validation.errors.length > 0,
         hasWarnings: validation.warnings.length > 0,
-        isCurrentStepValid: validation.currentStepValid
+        isCurrentStepValid: validation.currentStepValid,
     };
 }
 
@@ -321,7 +321,7 @@ export function useFunnelData(state: FunnelState) {
         getFieldValue: (field: string) => state.userData[field],
         hasData: Object.keys(state.userData).length > 0,
         dataKeys: Object.keys(state.userData),
-        isEmpty: Object.keys(state.userData).length === 0
+        isEmpty: Object.keys(state.userData).length === 0,
     };
 }
 
@@ -336,7 +336,7 @@ export function useFunnelProgress(state: FunnelState) {
         isComplete: progress.percentage === 100,
         isStarted: progress.completedSteps > 0,
         remainingSteps: progress.totalSteps - progress.completedSteps,
-        completionRate: progress.percentage / 100
+        completionRate: progress.percentage / 100,
     };
 }
 
@@ -354,7 +354,7 @@ function saveProgressToStorage(state: FunnelState) {
             currentStep: state.currentStep,
             completedSteps: state.completedSteps,
             userData: state.userData,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         };
         localStorage.setItem(key, JSON.stringify(data));
     } catch (error) {

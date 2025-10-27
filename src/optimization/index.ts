@@ -14,7 +14,7 @@ export const OptimizationSystem = {
   // Placeholder exports for compatibility
   BundleOptimizer: { isEnabled: false },
   LazyLoadingSystem: { isEnabled: false },
-  TreeShakingAnalyzer: { isEnabled: false }
+  TreeShakingAnalyzer: { isEnabled: false },
 };
 
 export default OptimizationSystem;

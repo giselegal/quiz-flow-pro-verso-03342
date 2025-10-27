@@ -30,7 +30,7 @@ export const useDynamicEditorData = (): DynamicEditorDataReturn => {
       setBlocks(prev => [...prev, newBlock]);
       return newBlock.id;
     },
-    [blocks.length]
+    [blocks.length],
   );
 
   const updateBlock = useCallback((id: string, updates: Partial<Block>) => {
@@ -44,7 +44,7 @@ export const useDynamicEditorData = (): DynamicEditorDataReturn => {
         setSelectedBlockId(null);
       }
     },
-    [selectedBlockId]
+    [selectedBlockId],
   );
 
   const selectBlock = useCallback((id: string | null) => {

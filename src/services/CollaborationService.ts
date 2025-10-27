@@ -99,7 +99,7 @@ class CollaborationService {
       ownerId,
       isActive: true,
       createdAt: new Date(),
-      lastActivity: new Date()
+      lastActivity: new Date(),
     };
 
     this.sessions.set(session.id, session);
@@ -116,7 +116,7 @@ class CollaborationService {
             owner_id: ownerId,
             is_active: true,
             created_at: session.createdAt.toISOString(),
-            last_activity: session.lastActivity.toISOString()
+            last_activity: session.lastActivity.toISOString(),
           });
 
         if (error) throw error;
@@ -135,7 +135,7 @@ class CollaborationService {
   async addUserToSession(
     sessionId: string,
     user: Omit<CollaborationUser, 'isOnline' | 'lastSeen' | 'cursor'>,
-    role: 'owner' | 'editor' | 'viewer' = 'editor'
+    role: 'owner' | 'editor' | 'viewer' = 'editor',
   ): Promise<boolean> {
     const session = this.sessions.get(sessionId);
     if (!session) {
@@ -148,7 +148,7 @@ class CollaborationService {
       role,
       isOnline: true,
       lastSeen: new Date(),
-      cursor: undefined
+      cursor: undefined,
     };
 
     session.users.push(collaborationUser);
@@ -189,7 +189,7 @@ class CollaborationService {
     type: CollaborationChange['type'],
     entityType: CollaborationChange['entityType'],
     entityId: string,
-    changes: Record<string, any>
+    changes: Record<string, any>,
   ): Promise<CollaborationChange> {
     const change: CollaborationChange = {
       id: `change_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -200,7 +200,7 @@ class CollaborationService {
       entityId,
       changes,
       timestamp: new Date(),
-      resolved: false
+      resolved: false,
     };
 
     this.changeQueue.push(change);
@@ -234,7 +234,7 @@ class CollaborationService {
       c.entityId === change.entityId &&
       c.id !== change.id &&
       !c.resolved &&
-      Math.abs(c.timestamp.getTime() - change.timestamp.getTime()) < 5000 // 5 segundos
+      Math.abs(c.timestamp.getTime() - change.timestamp.getTime()) < 5000, // 5 segundos
     );
 
     for (const recentChange of recentChanges) {
@@ -245,7 +245,7 @@ class CollaborationService {
         conflictingChangeId: recentChange.id,
         entityType: change.entityType,
         entityId: change.entityId,
-        resolution: 'pending'
+        resolution: 'pending',
       };
 
       conflicts.push(conflict);
@@ -321,7 +321,7 @@ class CollaborationService {
   async updateUserCursor(
     sessionId: string,
     userId: string,
-    cursor: CollaborationUser['cursor']
+    cursor: CollaborationUser['cursor'],
   ): Promise<void> {
     const user = this.activeUsers.get(userId);
     if (user) {
@@ -339,7 +339,7 @@ class CollaborationService {
   private async broadcastCursorUpdate(
     sessionId: string,
     userId: string,
-    cursor: CollaborationUser['cursor']
+    cursor: CollaborationUser['cursor'],
   ): Promise<void> {
     console.log(`📡 Broadcasting cursor update for user ${userId}`);
   }
@@ -363,9 +363,9 @@ class CollaborationService {
       onlineUsers: session.users.filter(u => u.isOnline).length,
       totalChanges: this.changeQueue.filter(c => c.sessionId === sessionId).length,
       pendingConflicts: this.changeQueue.filter(c =>
-        c.sessionId === sessionId && !c.resolved
+        c.sessionId === sessionId && !c.resolved,
       ).length,
-      lastActivity: session.lastActivity
+      lastActivity: session.lastActivity,
     };
   }
 
@@ -395,7 +395,7 @@ class ConflictResolver {
    */
   async resolve(
     change: CollaborationChange,
-    conflict: CollaborationConflict
+    conflict: CollaborationConflict,
   ): Promise<{ resolved: boolean; strategy?: string }> {
 
     // Estratégias de resolução automática
@@ -403,7 +403,7 @@ class ConflictResolver {
       this.resolveByTimestamp,
       this.resolveByUserRole,
       this.resolveByChangeType,
-      this.resolveByMerge
+      this.resolveByMerge,
     ];
 
     for (const strategy of strategies) {
@@ -425,7 +425,7 @@ class ConflictResolver {
    */
   private async resolveByTimestamp(
     change: CollaborationChange,
-    conflict: CollaborationConflict
+    conflict: CollaborationConflict,
   ): Promise<{ resolved: boolean; strategy?: string }> {
     // Implementação simplificada - em produção seria mais complexa
     return { resolved: true, strategy: 'timestamp' };
@@ -436,7 +436,7 @@ class ConflictResolver {
    */
   private async resolveByUserRole(
     change: CollaborationChange,
-    conflict: CollaborationConflict
+    conflict: CollaborationConflict,
   ): Promise<{ resolved: boolean; strategy?: string }> {
     // Owner > Editor > Viewer
     return { resolved: false };
@@ -447,7 +447,7 @@ class ConflictResolver {
    */
   private async resolveByChangeType(
     change: CollaborationChange,
-    conflict: CollaborationConflict
+    conflict: CollaborationConflict,
   ): Promise<{ resolved: boolean; strategy?: string }> {
     // Delete > Update > Create
     return { resolved: false };
@@ -458,7 +458,7 @@ class ConflictResolver {
    */
   private async resolveByMerge(
     change: CollaborationChange,
-    conflict: CollaborationConflict
+    conflict: CollaborationConflict,
   ): Promise<{ resolved: boolean; strategy?: string }> {
     // Tentar fazer merge das mudanças
     return { resolved: false };

@@ -20,7 +20,7 @@ import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
 // Helper: Converter Record para Array
 const QUIZ_STEPS_ARRAY = Object.entries(QUIZ_STEPS).map(([id, step]) => ({
     ...step,
-    id
+    id,
 }));
 
 describe('Quiz Editor E2E Tests - Full Workflow', () => {
@@ -129,7 +129,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
             // Simular adição de opção
             const newOption = {
                 id: 'novo-estilo',
-                text: 'Novo estilo adicionado pelo usuário'
+                text: 'Novo estilo adicionado pelo usuário',
             };
 
             step03.options = [...(step03.options || []), newOption];
@@ -401,7 +401,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
             for (let i = 0; i < 1000; i++) {
                 tempStep = {
                     ...tempStep,
-                    title: `Edição #${i}`
+                    title: `Edição #${i}`,
                 };
             }
 
@@ -493,7 +493,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
             stepsToEdit.forEach(id => {
                 editedSteps[id] = {
                     ...QUIZ_STEPS[id],
-                    title: `${id} - EDITADO`
+                    title: `${id} - EDITADO`,
                 };
             });
 
@@ -505,7 +505,7 @@ describe('Quiz Editor E2E Tests - Full Workflow', () => {
             // 4. Publicar (merge com original)
             const published = {
                 ...QUIZ_STEPS,
-                ...editedSteps
+                ...editedSteps,
             };
 
             expect(published['step-01'].title).toContain('EDITADO');

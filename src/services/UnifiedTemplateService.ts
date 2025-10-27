@@ -15,7 +15,7 @@ export class UnifiedTemplateService {
   private static warnOnce() {
     if (!this.warned) {
       this.warned = true;
-      console.warn(`\n⚠️ DEPRECATED: UnifiedTemplateService está descontinuado.\nUse: import { templateService } from '@/services/canonical/TemplateService'\nSerá removido em: v2.0.0\n`);
+      console.warn('\n⚠️ DEPRECATED: UnifiedTemplateService está descontinuado.\nUse: import { templateService } from \'@/services/canonical/TemplateService\'\nSerá removido em: v2.0.0\n');
     }
   }
 

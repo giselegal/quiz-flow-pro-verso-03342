@@ -23,7 +23,7 @@ import { dynamicBlockRegistry, BlockType } from '@/config/registry/DynamicBlockR
 import { 
   ENHANCED_BLOCK_REGISTRY, 
   getEnhancedBlockComponent as getEnhancedBlockComponentOriginal,
-  AVAILABLE_COMPONENTS 
+  AVAILABLE_COMPONENTS, 
 } from '@/components/editor/blocks/EnhancedBlockRegistry';
 
 // ============================================================================
@@ -55,7 +55,7 @@ function shouldUseDynamicLoading(type: BlockType): boolean {
     'options-grid',
     'quiz-intro-header',
     'decorative-bar-inline',
-    'legal-notice-inline'
+    'legal-notice-inline',
   ];
 
   if (criticalBlocks.includes(type)) {
@@ -201,7 +201,7 @@ export class HybridBlockRegistry implements BlockRegistryAdapter {
     const existing = this.performanceMetrics.get(type) || {
       loads: 0,
       avgLoadTime: 0,
-      errors: 0
+      errors: 0,
     };
 
     existing.loads += 1;
@@ -224,14 +224,14 @@ export class HybridBlockRegistry implements BlockRegistryAdapter {
         loads: metric.loads,
         avgLoadTime: Math.round(metric.avgLoadTime * 100) / 100,
         errors: metric.errors,
-        errorRate: Math.round((metric.errors / metric.loads) * 100)
+        errorRate: Math.round((metric.errors / metric.loads) * 100),
       };
     });
 
     return {
       blocks: stats,
       dynamicCache: dynamicBlockRegistry.getCacheStats(),
-      staticBlocks: Object.keys(ENHANCED_BLOCK_REGISTRY).length
+      staticBlocks: Object.keys(ENHANCED_BLOCK_REGISTRY).length,
     };
   }
 }

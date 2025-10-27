@@ -6,7 +6,7 @@ import QuizModularProductionEditor from '@/components/editor/quiz/QuizModularPro
 
 // Mock toast (usado dentro do editor)
 vi.mock('@/components/ui/use-toast', () => ({
-    useToast: () => ({ toast: vi.fn() })
+    useToast: () => ({ toast: vi.fn() }),
 }));
 
 // Mock do quizEditorBridge.saveDraft
@@ -24,9 +24,9 @@ vi.spyOn(BridgeModule, 'quizEditorBridge', 'get').mockReturnValue({
             { id: 'step-03', order: 3, type: 'question', nextStep: undefined, blocks: [] },
         ],
         isPublished: false,
-        version: 1
+        version: 1,
     }),
-    loadForRuntime: vi.fn()
+    loadForRuntime: vi.fn(),
 } as any);
 
 // Simplificar animações/dnd - mock mínimo necessário

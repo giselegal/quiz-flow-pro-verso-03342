@@ -13,7 +13,7 @@
 export const loadRecharts = async () => {
   const [
     { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell },
-    { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer }
+    { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer },
   ] = await Promise.all([
     import('recharts').then(m => ({
       LineChart: m.LineChart,
@@ -31,12 +31,12 @@ export const loadRecharts = async () => {
       Tooltip: m.Tooltip,
       Legend: m.Legend,
       ResponsiveContainer: m.ResponsiveContainer,
-    }))
+    })),
   ]);
 
   return {
     LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
-    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   };
 };
 
@@ -50,12 +50,12 @@ export const loadLucideIcons = async (iconNames: string[]) => {
   await Promise.all(
     iconNames.map(async (iconName) => {
       try {
-        const icon = await import(`lucide-react`).then(m => m[iconName]);
+        const icon = await import('lucide-react').then(m => m[iconName]);
         icons[iconName] = icon;
       } catch (error) {
         console.warn(`Icon ${iconName} not found in lucide-react`);
       }
-    })
+    }),
   );
 
   return icons;
@@ -88,7 +88,7 @@ const importCache = new Map<string, any>();
 
 export const getCachedImport = async <T>(
   key: string,
-  importFn: () => Promise<T>
+  importFn: () => Promise<T>,
 ): Promise<T> => {
   if (importCache.has(key)) {
     return importCache.get(key);

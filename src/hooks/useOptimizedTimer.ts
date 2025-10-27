@@ -67,7 +67,7 @@ export const useOptimizedTimer = () => {
         scheduleOptimized(() => fn(...args), delay);
       }) as T;
     },
-    [scheduleOptimized]
+    [scheduleOptimized],
   );
 
   // Cleanup automático

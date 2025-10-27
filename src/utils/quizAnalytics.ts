@@ -22,35 +22,35 @@ const baseSchema = z.object({
     ts: z.string().optional(),
     sessionId: z.string().optional(),
     userId: z.string().optional(),
-    type: z.enum(['step_view', 'result_compute', 'offer_view', 'cta_click'])
+    type: z.enum(['step_view', 'result_compute', 'offer_view', 'cta_click']),
 });
 
 const stepViewSchema = baseSchema.extend({
     type: z.literal('step_view'),
     stepId: z.string(),
     stepType: z.string(),
-    position: z.number().int().nonnegative()
+    position: z.number().int().nonnegative(),
 });
 const resultComputeSchema = baseSchema.extend({
     type: z.literal('result_compute'),
     primary: z.string().optional(),
     secondary: z.array(z.string()).optional(),
-    answersCount: z.number().int().nonnegative()
+    answersCount: z.number().int().nonnegative(),
 });
 const offerViewSchema = baseSchema.extend({
     type: z.literal('offer_view'),
     offerKey: z.string().optional(),
-    hasImage: z.boolean().optional()
+    hasImage: z.boolean().optional(),
 });
 const ctaClickSchema = baseSchema.extend({
     type: z.literal('cta_click'),
     offerKey: z.string().optional(),
-    url: z.string().url().optional()
+    url: z.string().url().optional(),
 });
 
 const anyEventSchema = z.discriminatedUnion('type', [stepViewSchema, resultComputeSchema, offerViewSchema, ctaClickSchema]);
 
-function uuid() { try { return crypto.randomUUID(); } catch { return 'sess-' + Math.random().toString(36).slice(2); } }
+function uuid() { try { return crypto.randomUUID(); } catch { return `sess-${  Math.random().toString(36).slice(2)}`; } }
 
 let sessionId = (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('quizSessionId')) || '';
 if (!sessionId && typeof sessionStorage !== 'undefined') {
@@ -159,7 +159,7 @@ export function getQuizMetrics(filter: MetricsFilter = {}): QuizMetrics {
         distinctUsers: users.size,
         avgAnswersPerResult: Number(avgAnswers.toFixed(2)),
         conversionRateOfferPerResult: Number(conversion.toFixed(3)),
-        ctaClickThroughPerOffer: Number(ctaRate.toFixed(3))
+        ctaClickThroughPerOffer: Number(ctaRate.toFixed(3)),
     };
 }
 
@@ -177,7 +177,7 @@ export async function flushQuizEvents(opts: FlushOptions) {
             await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ events: slice })
+                body: JSON.stringify({ events: slice }),
             });
             flushed += slice.length;
         } catch (err) {
@@ -225,9 +225,9 @@ export async function flushQuizEventsWithRetry(opts: RetryFlushOptions) {
                 const res = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ events: slice, batch: batchIndex, totalBatches: batchTotal, attempt })
+                    body: JSON.stringify({ events: slice, batch: batchIndex, totalBatches: batchTotal, attempt }),
                 });
-                if (!res.ok) throw new Error('Status ' + res.status);
+                if (!res.ok) throw new Error(`Status ${  res.status}`);
                 flushed += slice.length;
                 sent = true;
                 onProgress?.({ batchIndex, batchTotal, attempt, success: true, flushedSoFar: flushed });

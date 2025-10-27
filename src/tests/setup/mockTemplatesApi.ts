@@ -26,7 +26,7 @@ if (!g.__TEMPLATES_API_MOCK_INSTALLED__) {
 
             // POST /api/templates -> cria template base
             if (method === 'POST' && parts.length === 2) {
-                const id = 'tpl_' + Date.now();
+                const id = `tpl_${  Date.now()}`;
                 const tpl: DraftTemplate = { id, slug: id, stages: [], components: {} };
                 db.templates.push(tpl);
                 return jsonResponse({ draft: { id: tpl.id, slug: tpl.slug, stages: [], components: {} } });
@@ -46,7 +46,7 @@ if (!g.__TEMPLATES_API_MOCK_INSTALLED__) {
                 // POST /api/templates/:id/components
                 if (parts.length === 4 && parts[3] === 'components' && method === 'POST') {
                     const body = init?.body ? JSON.parse(init.body as string) : {};
-                    const id = 'cmp_' + Date.now();
+                    const id = `cmp_${  Date.now()}`;
                     const comp = { id, type: body.type || 'generic', props: body.props || {} };
                     tpl.components[id] = comp;
                     return jsonResponse(comp, { status: 201 });

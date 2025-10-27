@@ -22,14 +22,14 @@ export const optimizeBundleSize = () => {
   const unusedModules = [
     'moment', // Use date-fns instead
     'lodash', // Use native JS methods
-    'axios' // Use fetch instead
+    'axios', // Use fetch instead
   ];
   
   console.log('🧹 Removing unused modules:', unusedModules);
   
   return {
     removedModules: unusedModules.length,
-    estimatedSavings: '~500KB'
+    estimatedSavings: '~500KB',
   };
 };
 
@@ -51,8 +51,8 @@ export const createCodeSplitConfig = () => {
         test: /[\\/]src[\\/]components[\\/]ui[\\/]/,
         name: 'ui',
         chunks: 'all',
-      }
-    }
+      },
+    },
   };
 };
 
@@ -62,28 +62,28 @@ export const optimizeTreeShaking = () => {
     'Remove unused exports',
     'Optimize import paths',
     'Enable dead code elimination',
-    'Use ES modules format'
+    'Use ES modules format',
   ];
   
   console.log('🌳 Tree shaking optimizations:', optimizations);
   
   return {
     optimizations,
-    estimatedReduction: '~30%'
+    estimatedReduction: '~30%',
   };
 };
 
 // Lazy loading helper
 export const createLazyComponent = (
   importFn: () => Promise<{ default: any }>,
-  fallback?: React.ComponentType
+  fallback?: React.ComponentType,
 ) => {
   const LazyComponent = React.lazy(importFn);
   
   return (props: any) => 
     React.createElement(React.Suspense, 
       { fallback: fallback ? React.createElement(fallback) : null },
-      React.createElement(LazyComponent, props)
+      React.createElement(LazyComponent, props),
     );
 };
 
@@ -94,7 +94,7 @@ export const checkBuildHealth = () => {
     unusedImports: 0,
     circularDependencies: 0,
     bundleSize: '2.3MB',
-    loadTime: '1.8s'
+    loadTime: '1.8s',
   };
   
   console.log('🏥 Build health check:', checks);
@@ -108,16 +108,16 @@ export const optimizeAssets = () => {
     images: {
       compression: 'enabled',
       formats: ['webp', 'avif'],
-      lazyLoading: true
+      lazyLoading: true,
     },
     fonts: {
       preload: true,
       fontDisplay: 'swap',
-      subset: true
+      subset: true,
     },
     icons: {
       treeshaking: true,
-      bundling: 'selective'
-    }
+      bundling: 'selective',
+    },
   };
 };

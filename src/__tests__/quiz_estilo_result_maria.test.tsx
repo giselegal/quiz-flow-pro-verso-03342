@@ -8,7 +8,7 @@ import { UnifiedStepRenderer } from '@/components/editor/unified';
 // Mock Helmet para evitar necessidade de provider no ambiente de teste
 vi.mock('react-helmet-async', () => ({
     Helmet: ({ children }: any) => <>{children}</>,
-    HelmetProvider: ({ children }: any) => <>{children}</>
+    HelmetProvider: ({ children }: any) => <>{children}</>,
 }));
 
 // Mock UnifiedStepRenderer para controlar exatamente o que é exibido
@@ -36,8 +36,8 @@ const makeResultState = (userName: string, resultStyle: string) => ({
         userName,
         resultStyle,
         secondaryStyles: ['natural', 'clássico'],
-        strategicAnswers: {}
-    }
+        strategicAnswers: {},
+    },
 });
 
 describe('Rota /quiz-estilo - exibição de resultado com nome Maria', () => {

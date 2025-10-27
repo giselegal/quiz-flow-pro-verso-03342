@@ -97,7 +97,7 @@ function trackABTestAssignment(testName: string, variant: ABTestVariant) {
 export function trackABTestConversion(
   testName: string,
   conversionType: string,
-  additionalData?: Record<string, any>
+  additionalData?: Record<string, any>,
 ) {
   try {
     const variant = localStorage.getItem(`ab_test_${testName}_variant`) as ABTestVariant;
@@ -106,11 +106,11 @@ export function trackABTestConversion(
       trackButtonClick(
         `ab_test_${testName}_conversion_${conversionType}`,
         `AB Test Conversion ${conversionType}`,
-        testName
+        testName,
       );
 
       console.log(
-        `🎯 A/B Test Conversion: ${conversionType} para variante ${variant} do teste ${testName}`
+        `🎯 A/B Test Conversion: ${conversionType} para variante ${variant} do teste ${testName}`,
       );
     }
   } catch (error) {
@@ -164,14 +164,14 @@ export function clearForcedABTestVariant(testName: string) {
 export const logABTestView = (
   testName: string,
   variant: ABTestVariant,
-  page: string = 'unknown'
+  page: string = 'unknown',
 ) => {
   try {
     const logEntry = {
       test_name: testName,
-      variant: variant,
+      variant,
       timestamp: new Date().toISOString(),
-      page: page,
+      page,
     };
 
     const existingLogs = StorageService.safeGetString('ab_test_views') || '[]';
@@ -187,15 +187,15 @@ export const logABTestConversion = (
   testName: string,
   variant: ABTestVariant,
   conversionType: string,
-  page: string = 'unknown'
+  page: string = 'unknown',
 ) => {
   try {
     const logEntry = {
       test_name: testName,
-      variant: variant,
+      variant,
       conversion_type: conversionType,
       timestamp: new Date().toISOString(),
-      page: page,
+      page,
     };
 
     const existingLogs = StorageService.safeGetString('ab_test_conversions') || '[]';

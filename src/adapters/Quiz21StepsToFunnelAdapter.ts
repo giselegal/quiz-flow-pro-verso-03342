@@ -18,7 +18,7 @@ import {
     FunnelComponent,
     FunnelState,
     FunnelMetadata,
-    StepSettings
+    StepSettings,
 } from '@/core/funnel/types';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 import type { FunnelSettings } from '@/core/funnel/types';
@@ -72,7 +72,7 @@ const BLOCK_TO_COMPONENT_TYPE_MAP: Record<string, string> = {
     'header-section': 'header-section',
     'user-info-section': 'user-info',
     'progress-section': 'progress',
-    'main-image-section': 'image'
+    'main-image-section': 'image',
 };
 
 // ============================================================================
@@ -88,7 +88,7 @@ export class Quiz21StepsToFunnelAdapter {
         const components = this.convertBlocksToComponents(originalBlocks, {
             stepId,
             stepNumber,
-            originalBlocks
+            originalBlocks,
         });
 
         return {
@@ -100,7 +100,7 @@ export class Quiz21StepsToFunnelAdapter {
             isRequired: this.isStepRequired(stepNumber),
             isVisible: true,
             components,
-            settings: this.createStepSettings()
+            settings: this.createStepSettings(),
         };
     }
 
@@ -143,21 +143,21 @@ export class Quiz21StepsToFunnelAdapter {
                 currentStepIndex: 0,
                 totalSteps: 21,
                 completedSteps: 0,
-                percentage: 0
+                percentage: 0,
             },
             navigation: {
                 canGoForward: true,
                 canGoBackward: false,
                 nextStep: 'step-2',
-                history: []
+                history: [],
             },
             validation: {
                 isValid: true,
                 currentStepValid: true,
                 errors: [],
-                warnings: []
+                warnings: [],
             },
-            status: 'active'
+            status: 'active',
         };
 
         return {
@@ -165,7 +165,7 @@ export class Quiz21StepsToFunnelAdapter {
             metadata: this.createFunnelMetadata(),
             stepMappings,
             totalComponents,
-            conversionWarnings
+            conversionWarnings,
         };
     }
 
@@ -185,7 +185,7 @@ export class Quiz21StepsToFunnelAdapter {
             isVisible: true,
             content: this.mapBlockContent(block.content || {}),
             properties: this.mapBlockProperties(block.properties || {}),
-            styling: {}
+            styling: {},
         };
     }
 
@@ -198,7 +198,7 @@ export class Quiz21StepsToFunnelAdapter {
             text: content.text || content.label || content.title || '',
             value: content.value || '',
             options: content.options || [],
-            ...content
+            ...content,
         };
     }
 
@@ -207,7 +207,7 @@ export class Quiz21StepsToFunnelAdapter {
             required: properties.required === true,
             placeholder: properties.placeholder || '',
             validation: properties.validation || {},
-            ...properties
+            ...properties,
         };
     }
 
@@ -222,8 +222,8 @@ export class Quiz21StepsToFunnelAdapter {
             showProgress: true,
             allowSkip: false,
             validation: {
-                required: false
-            }
+                required: false,
+            },
         };
     }
 
@@ -239,20 +239,20 @@ export class Quiz21StepsToFunnelAdapter {
                 fontFamily: 'Inter, sans-serif',
                 borderRadius: '8px',
                 spacing: '16px',
-                layout: 'centered'
+                layout: 'centered',
             },
             navigation: {
                 showProgress: true,
                 showStepNumbers: true,
                 allowBackward: true,
                 showNavigationButtons: true,
-                autoAdvanceDelay: 0
+                autoAdvanceDelay: 0,
             },
             validation: {
                 strictMode: false,
                 requiredFields: [],
-                customValidators: {}
-            }
+                customValidators: {},
+            },
         };
     }
 
@@ -267,7 +267,7 @@ export class Quiz21StepsToFunnelAdapter {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             isPublished: true,
-            isOfficial: true
+            isOfficial: true,
         };
     }
 
@@ -297,7 +297,7 @@ export class Quiz21StepsToFunnelAdapter {
             18: 'Estratégica: Ocasião',
             19: 'Estratégica: Compras',
             20: 'Resultado: Personalidade',
-            21: 'Captura de Contato'
+            21: 'Captura de Contato',
         };
 
         return stepNames[stepNumber] || `Step ${stepNumber}`;

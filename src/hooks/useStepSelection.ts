@@ -16,7 +16,7 @@ interface UseStepSelectionProps {
 export const useStepSelection = ({
   stepNumber,
   onSelectBlock,
-  debounceMs = 100 // ✅ OTIMIZAÇÃO: Aumentado para 100ms para melhor performance (menos calls)
+  debounceMs = 100, // ✅ OTIMIZAÇÃO: Aumentado para 100ms para melhor performance (menos calls)
 }: UseStepSelectionProps) => {
   const { debounce } = useOptimizedScheduler();
   const lastSelectedRef = useRef<string | null>(null);
@@ -47,7 +47,7 @@ export const useStepSelection = ({
       const cleanup = debounce(
         stepKeyRef.current,
         () => onSelectBlock(blockId),
-        debounceMs + 50 // Debounce extra para clicks rápidos
+        debounceMs + 50, // Debounce extra para clicks rápidos
       );
       return cleanup;
     }
@@ -59,7 +59,7 @@ export const useStepSelection = ({
     const cleanup = debounce(
       stepKeyRef.current,
       () => onSelectBlock(blockId),
-      debounceMs
+      debounceMs,
     );
 
     return cleanup;
@@ -74,6 +74,6 @@ export const useStepSelection = ({
   return {
     handleBlockSelection,
     clearSelection,
-    lastSelected: lastSelectedRef.current
+    lastSelected: lastSelectedRef.current,
   };
 };

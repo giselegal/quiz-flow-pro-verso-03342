@@ -121,7 +121,7 @@ export const asBlockComponent = (component: any): BlockComponent => component as
 
 // Factory function for creating block components with proper typing
 export function createBlockComponent<T extends UnifiedBlockComponentProps = UnifiedBlockComponentProps>(
-    component: React.ComponentType<T>
+    component: React.ComponentType<T>,
 ): BlockComponent {
     return component as BlockComponent;
 }

@@ -27,8 +27,8 @@ import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
 vi.mock('@/services/QuizEditorBridge');
 vi.mock('@/hooks/use-toast', () => ({
     useToast: () => ({
-        toast: vi.fn()
-    })
+        toast: vi.fn(),
+    }),
 }));
 
 describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () => {
@@ -52,16 +52,16 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
                             type: 'heading',
                             order: 0,
                             properties: { level: 2, textAlign: 'center' },
-                            content: { text: 'Descubra seu estilo' }
+                            content: { text: 'Descubra seu estilo' },
                         },
                         {
                             id: 'step-01-button',
                             type: 'button',
                             order: 1,
                             properties: { backgroundColor: '#B89B7A' },
-                            content: { text: 'Começar' }
-                        }
-                    ]
+                            content: { text: 'Começar' },
+                        },
+                    ],
                 },
                 {
                     id: 'step-02',
@@ -73,7 +73,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
                             type: 'heading',
                             order: 0,
                             properties: { level: 3 },
-                            content: { text: 'Qual seu tipo de roupa favorita?' }
+                            content: { text: 'Qual seu tipo de roupa favorita?' },
                         },
                         {
                             id: 'step-02-options',
@@ -83,15 +83,15 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
                             content: {
                                 options: [
                                     { id: 'natural', text: 'Conforto e praticidade' },
-                                    { id: 'classico', text: 'Discrição clássica' }
-                                ]
-                            }
-                        }
-                    ]
-                }
+                                    { id: 'classico', text: 'Discrição clássica' },
+                                ],
+                            },
+                        },
+                    ],
+                },
             ],
             isPublished: true,
-            version: 1
+            version: 1,
         };
 
         // Mock das funções do bridge
@@ -104,7 +104,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
         vi.mocked(quizEditorBridge.validateFunnel).mockReturnValue({
             valid: true,
             errors: [],
-            warnings: []
+            warnings: [],
         });
     });
 
@@ -529,8 +529,8 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
                 'step-01': {
                     type: 'intro',
                     title: 'Título Editado no Editor',
-                    buttonText: 'Botão Editado'
-                }
+                    buttonText: 'Botão Editado',
+                },
             };
 
             vi.mocked(quizEditorBridge.loadForRuntime).mockResolvedValue(mockSteps as any);
@@ -551,8 +551,8 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
             const mockPublishedSteps = {
                 'step-01': {
                     type: 'intro',
-                    title: 'Publicado e Atualizado'
-                }
+                    title: 'Publicado e Atualizado',
+                },
             };
 
             vi.mocked(quizEditorBridge.loadForRuntime).mockResolvedValue(mockPublishedSteps as any);
@@ -581,7 +581,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
             vi.mocked(quizEditorBridge.validateFunnel).mockReturnValue({
                 valid: false,
                 errors: ['Etapa 1 deve ser tipo intro'],
-                warnings: []
+                warnings: [],
             });
 
             await user.click(publicarButton!);
@@ -630,7 +630,7 @@ describe('QuizModularProductionEditor - Edição Completa do /quiz-estilo', () =
             vi.mocked(quizEditorBridge.validateFunnel).mockReturnValue({
                 valid: true,
                 errors: [],
-                warnings: []
+                warnings: [],
             });
 
             render(<QuizModularProductionEditor funnelId={savedDraftId!} />);

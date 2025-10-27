@@ -171,7 +171,7 @@ export class MonitoringService extends BaseCanonicalService {
     error: Error | string,
     component?: string,
     context?: Record<string, any>,
-    severity: ErrorReport['severity'] = 'medium'
+    severity: ErrorReport['severity'] = 'medium',
   ): ServiceResult<ErrorReport> {
     try {
       const errorMessage = error instanceof Error ? error.message : error;
@@ -185,7 +185,7 @@ export class MonitoringService extends BaseCanonicalService {
         component,
         context,
         severity,
-        resolved: false
+        resolved: false,
       };
 
       this.errorReports.push(report);
@@ -203,7 +203,7 @@ export class MonitoringService extends BaseCanonicalService {
           type: 'error',
           severity,
           title: `${severity.toUpperCase()} Error in ${component || 'System'}`,
-          message: errorMessage
+          message: errorMessage,
         });
       }
 
@@ -211,7 +211,7 @@ export class MonitoringService extends BaseCanonicalService {
     } catch (err) {
       return {
         success: false,
-        error: err instanceof Error ? err : new Error('Failed to track error')
+        error: err instanceof Error ? err : new Error('Failed to track error'),
       };
     }
   }
@@ -248,7 +248,7 @@ export class MonitoringService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get errors')
+        error: error instanceof Error ? error : new Error('Failed to get errors'),
       };
     }
   }
@@ -264,7 +264,7 @@ export class MonitoringService extends BaseCanonicalService {
     }
     return {
       success: false,
-      error: new Error('Error not found')
+      error: new Error('Error not found'),
     };
   }
 
@@ -287,7 +287,7 @@ export class MonitoringService extends BaseCanonicalService {
     value: number,
     unit: string,
     category: PerformanceMetric['category'] = 'custom',
-    tags?: Record<string, string>
+    tags?: Record<string, string>,
   ): ServiceResult<PerformanceMetric> {
     try {
       const metric: PerformanceMetric = {
@@ -297,7 +297,7 @@ export class MonitoringService extends BaseCanonicalService {
         unit,
         timestamp: new Date(),
         category,
-        tags
+        tags,
       };
 
       this.performanceMetrics.push(metric);
@@ -311,7 +311,7 @@ export class MonitoringService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to track metric')
+        error: error instanceof Error ? error : new Error('Failed to track metric'),
       };
     }
   }
@@ -343,7 +343,7 @@ export class MonitoringService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get metrics')
+        error: error instanceof Error ? error : new Error('Failed to get metrics'),
       };
     }
   }
@@ -355,7 +355,7 @@ export class MonitoringService extends BaseCanonicalService {
     if (typeof window === 'undefined' || !window.performance) {
       return {
         success: false,
-        error: new Error('Performance API not available')
+        error: new Error('Performance API not available'),
       };
     }
 
@@ -389,7 +389,7 @@ export class MonitoringService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to capture performance')
+        error: error instanceof Error ? error : new Error('Failed to capture performance'),
       };
     }
   }
@@ -407,7 +407,7 @@ export class MonitoringService extends BaseCanonicalService {
         { name: 'Cache', instance: CacheService.getInstance() },
         { name: 'Template', instance: TemplateService.getInstance() },
         { name: 'Data', instance: DataService.getInstance() },
-        { name: 'Validation', instance: ValidationService.getInstance() }
+        { name: 'Validation', instance: ValidationService.getInstance() },
       ];
 
       const statuses: HealthStatus[] = [];
@@ -422,7 +422,7 @@ export class MonitoringService extends BaseCanonicalService {
             service: name,
             healthy,
             lastCheck: new Date(),
-            responseTime
+            responseTime,
           };
 
           this.healthChecks.set(name, status);
@@ -434,7 +434,7 @@ export class MonitoringService extends BaseCanonicalService {
               type: 'health',
               severity: 'high',
               title: `${name}Service is unhealthy`,
-              message: `Health check failed for ${name}Service`
+              message: `Health check failed for ${name}Service`,
             });
           }
         } catch (error) {
@@ -442,7 +442,7 @@ export class MonitoringService extends BaseCanonicalService {
             service: name,
             healthy: false,
             lastCheck: new Date(),
-            error: error instanceof Error ? error.message : 'Unknown error'
+            error: error instanceof Error ? error.message : 'Unknown error',
           };
 
           this.healthChecks.set(name, status);
@@ -454,7 +454,7 @@ export class MonitoringService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Health check failed')
+        error: error instanceof Error ? error : new Error('Health check failed'),
       };
     }
   }
@@ -466,7 +466,7 @@ export class MonitoringService extends BaseCanonicalService {
     const status = this.healthChecks.get(serviceName);
     return {
       success: true,
-      data: status || null
+      data: status || null,
     };
   }
 
@@ -476,7 +476,7 @@ export class MonitoringService extends BaseCanonicalService {
   getAllHealthStatuses(): ServiceResult<HealthStatus[]> {
     return {
       success: true,
-      data: Array.from(this.healthChecks.values())
+      data: Array.from(this.healthChecks.values()),
     };
   }
 
@@ -496,7 +496,7 @@ export class MonitoringService extends BaseCanonicalService {
         memory = {
           used: mem.usedJSHeapSize,
           total: mem.totalJSHeapSize,
-          percentage: (mem.usedJSHeapSize / mem.totalJSHeapSize) * 100
+          percentage: (mem.usedJSHeapSize / mem.totalJSHeapSize) * 100,
         };
       }
 
@@ -506,7 +506,7 @@ export class MonitoringService extends BaseCanonicalService {
         const timing = window.performance.timing;
         performanceInfo = {
           loadTime: timing.loadEventEnd - timing.navigationStart,
-          domContentLoaded: timing.domContentLoadedEventEnd - timing.navigationStart
+          domContentLoaded: timing.domContentLoadedEventEnd - timing.navigationStart,
         };
       }
 
@@ -531,20 +531,20 @@ export class MonitoringService extends BaseCanonicalService {
         errors: {
           total: this.errorReports.length,
           byComponent: errorsByComponent,
-          bySeverity: errorsBySeverity
+          bySeverity: errorsBySeverity,
         },
         services: {
           total: healthStatuses.length,
           healthy: healthyCount,
-          unhealthy: healthStatuses.length - healthyCount
-        }
+          unhealthy: healthStatuses.length - healthyCount,
+        },
       };
 
       return { success: true, data: metrics };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get system metrics')
+        error: error instanceof Error ? error : new Error('Failed to get system metrics'),
       };
     }
   }
@@ -569,7 +569,7 @@ export class MonitoringService extends BaseCanonicalService {
       title: params.title,
       message: params.message,
       timestamp: new Date(),
-      acknowledged: false
+      acknowledged: false,
     };
 
     this.alertsList.push(alert);
@@ -610,7 +610,7 @@ export class MonitoringService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get alerts')
+        error: error instanceof Error ? error : new Error('Failed to get alerts'),
       };
     }
   }
@@ -628,7 +628,7 @@ export class MonitoringService extends BaseCanonicalService {
     }
     return {
       success: false,
-      error: new Error('Alert not found')
+      error: new Error('Alert not found'),
     };
   }
 
@@ -644,9 +644,9 @@ export class MonitoringService extends BaseCanonicalService {
         {
           filename: event.filename,
           lineno: event.lineno,
-          colno: event.colno
+          colno: event.colno,
         },
-        'high'
+        'high',
       );
     });
 
@@ -655,7 +655,7 @@ export class MonitoringService extends BaseCanonicalService {
         event.reason,
         'UnhandledPromiseRejection',
         {},
-        'high'
+        'high',
       );
     });
   }
@@ -711,7 +711,7 @@ export class MonitoringService extends BaseCanonicalService {
     resolve: (errorId: string) =>
       this.resolveError(errorId),
     clear: () =>
-      this.clearErrors()
+      this.clearErrors(),
   };
 
   readonly performance = {
@@ -720,7 +720,7 @@ export class MonitoringService extends BaseCanonicalService {
     get: (filters?: Parameters<typeof this.getMetrics>[0]) =>
       this.getMetrics(filters),
     capturePage: () =>
-      this.capturePagePerformance()
+      this.capturePagePerformance(),
   };
 
   readonly health = {
@@ -729,19 +729,19 @@ export class MonitoringService extends BaseCanonicalService {
     getService: (serviceName: string) =>
       this.getServiceHealth(serviceName),
     getAll: () =>
-      this.getAllHealthStatuses()
+      this.getAllHealthStatuses(),
   };
 
   readonly alerts = {
     get: (filters?: Parameters<typeof this.getAlerts>[0]) =>
       this.getAlerts(filters),
     acknowledge: (alertId: string, acknowledgedBy?: string) =>
-      this.acknowledgeAlert(alertId, acknowledgedBy)
+      this.acknowledgeAlert(alertId, acknowledgedBy),
   };
 
   readonly system = {
     getMetrics: () =>
-      this.getSystemMetrics()
+      this.getSystemMetrics(),
   };
 }
 

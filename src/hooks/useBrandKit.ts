@@ -50,18 +50,18 @@ const DEFAULT_BRAND_KIT: BrandKitConfig = {
         accent: '#EC4899',
         background: '#FFFFFF',
         text: '#1F2937',
-        muted: '#9CA3AF'
+        muted: '#9CA3AF',
     },
     fonts: {
         heading: 'Inter',
-        body: 'Inter'
+        body: 'Inter',
     },
     assets: {
         logo: '',
         favicon: '',
         backgroundImage: '',
-        watermark: ''
-    }
+        watermark: '',
+    },
 };
 
 const STORAGE_KEY = 'brand-kit-config';
@@ -108,7 +108,7 @@ export const useBrandKit = () => {
     const updateColors = useCallback((colors: Partial<BrandColors>) => {
         setBrandKit(prev => ({
             ...prev,
-            colors: { ...prev.colors, ...colors }
+            colors: { ...prev.colors, ...colors },
         }));
     }, []);
 
@@ -116,7 +116,7 @@ export const useBrandKit = () => {
     const updateFonts = useCallback((fonts: Partial<BrandFonts>) => {
         setBrandKit(prev => ({
             ...prev,
-            fonts: { ...prev.fonts, ...fonts }
+            fonts: { ...prev.fonts, ...fonts },
         }));
     }, []);
 
@@ -124,7 +124,7 @@ export const useBrandKit = () => {
     const updateAssets = useCallback((assets: Partial<BrandAssets>) => {
         setBrandKit(prev => ({
             ...prev,
-            assets: { ...prev.assets, ...assets }
+            assets: { ...prev.assets, ...assets },
         }));
     }, []);
 
@@ -135,7 +135,7 @@ export const useBrandKit = () => {
             ...newBrandKit,
             colors: { ...prev.colors, ...(newBrandKit.colors || {}) },
             fonts: { ...prev.fonts, ...(newBrandKit.fonts || {}) },
-            assets: { ...prev.assets, ...(newBrandKit.assets || {}) }
+            assets: { ...prev.assets, ...(newBrandKit.assets || {}) },
         }));
     }, []);
 
@@ -169,7 +169,7 @@ export const useBrandKit = () => {
         applyBrandKit,
         resetBrandKit,
         exportBrandKit,
-        importBrandKit
+        importBrandKit,
     };
 };
 

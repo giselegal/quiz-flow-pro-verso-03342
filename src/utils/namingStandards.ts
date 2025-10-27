@@ -69,7 +69,7 @@ export const LEGACY_PROPERTY_MAP = {
     'instance_key': 'instanceKey',
     'INSTANCE_KEY': 'instanceKey',
     'instanceId': 'instanceKey',
-    'instance_id': 'instanceKey'
+    'instance_id': 'instanceKey',
 } as const;
 
 /**
@@ -86,14 +86,14 @@ export const DB_TO_FRONTEND_MAP = {
     'is_template': 'isTemplate',
     'order_index': 'orderIndex',
     'page_order': 'pageOrder',
-    'component_type_key': 'componentTypeKey'
+    'component_type_key': 'componentTypeKey',
 } as const;
 
 /**
  * Mapeia formatos frontend para database
  */
 export const FRONTEND_TO_DB_MAP = Object.fromEntries(
-    Object.entries(DB_TO_FRONTEND_MAP).map(([db, frontend]) => [frontend, db])
+    Object.entries(DB_TO_FRONTEND_MAP).map(([db, frontend]) => [frontend, db]),
 ) as Record<string, string>;
 
 // ============================================================================
@@ -161,7 +161,7 @@ export const normalizeIdentifiers = (input: any): StandardIdentifiers => {
         stepNumber: stepValidation.isValid ? parseInt(stepValidation.normalized!) : 1,
         instanceKey: instanceValidation?.isValid ? instanceValidation.normalized! : '',
         displayName: input.displayName || input.name || `Step ${stepValidation.normalized || 1}`,
-        internalKey: input.internalKey || input.id
+        internalKey: input.internalKey || input.id,
     };
 };
 
@@ -173,7 +173,7 @@ export const normalizeIdentifiers = (input: any): StandardIdentifiers => {
  * Cria adapter para manter compatibilidade com código legacy
  */
 export const createLegacyAdapter = <T extends Record<string, any>>(
-    modernObject: T
+    modernObject: T,
 ): T & Record<string, any> => {
     const adapter = { ...modernObject };
 
@@ -200,7 +200,7 @@ export const createLegacyAdapter = <T extends Record<string, any>>(
  * Migra objeto legacy para nova nomenclatura
  */
 export const migrateLegacyObject = <T extends Record<string, any>>(
-    legacyObject: T
+    legacyObject: T,
 ): StandardIdentifiers & Omit<T, keyof typeof LEGACY_PROPERTY_MAP> => {
     const normalized = normalizeLegacyProperties(legacyObject);
     const identifiers = normalizeIdentifiers(normalized);
@@ -213,7 +213,7 @@ export const migrateLegacyObject = <T extends Record<string, any>>(
 
     return {
         ...migrated,
-        ...identifiers
+        ...identifiers,
     };
 };
 
@@ -254,7 +254,7 @@ export const validateNamingConsistency = (obj: Record<string, any>): {
     return {
         isConsistent: issues.length === 0,
         issues,
-        suggestions
+        suggestions,
     };
 };
 
@@ -263,7 +263,7 @@ export const validateNamingConsistency = (obj: Record<string, any>): {
  */
 export const normalizeBatch = <T extends Record<string, any>>(
     objects: T[],
-    targetFormat: 'frontend' | 'database' = 'frontend'
+    targetFormat: 'frontend' | 'database' = 'frontend',
 ): Record<string, any>[] => {
     return objects.map(obj => {
         const normalized = normalizeLegacyProperties(obj);

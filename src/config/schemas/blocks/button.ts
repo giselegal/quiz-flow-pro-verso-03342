@@ -11,7 +11,7 @@ import {
   colorFields, 
   borderRadiusField,
   alignmentField,
-  paddingField 
+  paddingField, 
 } from '../base/presets';
 import { BlockFieldSchema } from '../base/types';
 
@@ -60,17 +60,17 @@ export const buttonSchema = templates
   .addGroup('ab', 'Teste A/B', { order: 5, collapsible: true, defaultExpanded: false })
   .addFields(
     buttonTextField('content'),
-    buttonUrlField('content')
+    buttonUrlField('content'),
   )
   // Compatibilidade com JSON v3 (CTAButton usa label/href)
   .addFields(
     { key: 'label', label: 'Label (alias)', type: 'string', group: 'content', placeholder: 'Texto do botão' },
-    { key: 'href', label: 'Href (alias)', type: 'string', group: 'content', placeholder: 'https://...' }
+    { key: 'href', label: 'Href (alias)', type: 'string', group: 'content', placeholder: 'https://...' },
   )
   // Aliases adicionais usados em diversos templates (text/url)
   .addFields(
     { key: 'text', label: 'Texto (alias v3)', type: 'string', group: 'content', placeholder: 'Clique aqui' } as BlockFieldSchema<string>,
-    { key: 'url', label: 'URL (alias v3)', type: 'string', group: 'content', placeholder: 'https://exemplo.com' } as BlockFieldSchema<string>
+    { key: 'url', label: 'URL (alias v3)', type: 'string', group: 'content', placeholder: 'https://exemplo.com' } as BlockFieldSchema<string>,
   )
   // Compatibilidade extra com CTAButton do JSON v3 (props.*)
   .addFields(
@@ -94,18 +94,18 @@ export const buttonSchema = templates
     // Analytics (v3)
     { key: 'analyticsEventName', label: 'Analytics: eventName', type: 'string', group: 'analytics', placeholder: 'cta_primary_click' } as BlockFieldSchema<string>,
     { key: 'analyticsCategory', label: 'Analytics: category', type: 'string', group: 'analytics', placeholder: 'conversion' } as BlockFieldSchema<string>,
-    { key: 'analyticsLabel', label: 'Analytics: label', type: 'string', group: 'analytics', placeholder: 'after_offer' } as BlockFieldSchema<string>
+    { key: 'analyticsLabel', label: 'Analytics: label', type: 'string', group: 'analytics', placeholder: 'after_offer' } as BlockFieldSchema<string>,
   )
   .addFields(
     variantField,
     sizeField,
     ...colorFields('style'),
     borderRadiusField('style'),
-    paddingField('style')
+    paddingField('style'),
   )
   .addFields(
     alignmentField('logic'),
-    fullWidthField
+    fullWidthField,
   )
   // Campos de A/B testing (opt-in por bloco)
   .addFields(
@@ -115,7 +115,7 @@ export const buttonSchema = templates
       type: 'string',
       group: 'ab',
       placeholder: 'ex.: cta-copy',
-      description: 'Identificador do experimento A/B. Deve corresponder a FUNNEL_CONFIG.abTests[].experimentKey.'
+      description: 'Identificador do experimento A/B. Deve corresponder a FUNNEL_CONFIG.abTests[].experimentKey.',
     } as BlockFieldSchema<string>,
     {
       key: 'abTextA',
@@ -123,7 +123,7 @@ export const buttonSchema = templates
       type: 'string',
       group: 'ab',
       placeholder: 'Cópia alternativa A',
-      description: 'Texto exibido quando a variante A é atribuída.'
+      description: 'Texto exibido quando a variante A é atribuída.',
     } as BlockFieldSchema<string>,
     {
       key: 'abTextB',
@@ -131,8 +131,8 @@ export const buttonSchema = templates
       type: 'string',
       group: 'ab',
       placeholder: 'Cópia alternativa B',
-      description: 'Texto exibido quando a variante B é atribuída.'
-    } as BlockFieldSchema<string>
+      description: 'Texto exibido quando a variante B é atribuída.',
+    } as BlockFieldSchema<string>,
   )
   .version('2.0.0')
   .build();

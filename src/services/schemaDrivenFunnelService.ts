@@ -81,7 +81,7 @@ export const schemaDrivenFunnelService = {
           ...funnelData,
           id: generateId(),
           created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         };
 
         // Salvar no localStorage
@@ -90,7 +90,7 @@ export const schemaDrivenFunnelService = {
           id: fallbackData.id,
           name: funnel.name || 'Novo Funil',
           description: funnel.description || '',
-          pages: funnel.pages || []
+          pages: funnel.pages || [],
         };
         
         localStorage.setItem(`schema_funnel_${fallbackData.id}`, JSON.stringify(fallbackFunnel));
@@ -135,7 +135,7 @@ export const schemaDrivenFunnelService = {
 
   async updateFunnel(
     id: string,
-    updates: Partial<SchemaDrivenFunnelData>
+    updates: Partial<SchemaDrivenFunnelData>,
   ): Promise<SchemaDrivenFunnelData | null> {
     try {
       const {
@@ -346,7 +346,7 @@ export const schemaDrivenFunnelService = {
 
   async createPage(
     funnelId: string,
-    page: Partial<SchemaDrivenPageData>
+    page: Partial<SchemaDrivenPageData>,
   ): Promise<SchemaDrivenPageData | null> {
     try {
       const {
@@ -400,7 +400,7 @@ export const schemaDrivenFunnelService = {
           order: 1,
           blocks: [],
           funnel_id: id,
-        }
+        },
       ],
       theme: 'default',
     };

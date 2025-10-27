@@ -89,8 +89,8 @@ class PermissionService {
         { id: 'stage_all', name: 'All Stage Permissions', resource: 'stage', action: 'manage' },
         { id: 'block_all', name: 'All Block Permissions', resource: 'block', action: 'manage' },
         { id: 'settings_all', name: 'All Settings Permissions', resource: 'settings', action: 'manage' },
-        { id: 'collaboration_all', name: 'All Collaboration Permissions', resource: 'collaboration', action: 'manage' }
-      ]
+        { id: 'collaboration_all', name: 'All Collaboration Permissions', resource: 'collaboration', action: 'manage' },
+      ],
     };
 
     // Editor Role
@@ -108,8 +108,8 @@ class PermissionService {
         { id: 'block_create', name: 'Create Block', resource: 'block', action: 'create' },
         { id: 'block_read', name: 'Read Block', resource: 'block', action: 'read' },
         { id: 'block_update', name: 'Update Block', resource: 'block', action: 'update' },
-        { id: 'block_delete', name: 'Delete Block', resource: 'block', action: 'delete' }
-      ]
+        { id: 'block_delete', name: 'Delete Block', resource: 'block', action: 'delete' },
+      ],
     };
 
     // Viewer Role
@@ -120,8 +120,8 @@ class PermissionService {
       permissions: [
         { id: 'funnel_read', name: 'Read Funnel', resource: 'funnel', action: 'read' },
         { id: 'stage_read', name: 'Read Stage', resource: 'stage', action: 'read' },
-        { id: 'block_read', name: 'Read Block', resource: 'block', action: 'read' }
-      ]
+        { id: 'block_read', name: 'Read Block', resource: 'block', action: 'read' },
+      ],
     };
 
     this.roles.set('owner', ownerRole);
@@ -139,7 +139,7 @@ class PermissionService {
     funnelId: string,
     resource: Permission['resource'],
     action: Permission['action'],
-    context?: Record<string, any>
+    context?: Record<string, any>,
   ): Promise<boolean> {
     const userPermissions = this.userPermissions.get(userId) || [];
     const funnelPermission = userPermissions.find(p => p.funnelId === funnelId && p.isActive);
@@ -159,7 +159,7 @@ class PermissionService {
     const hasRolePermission = funnelPermission.role.permissions.some(permission => 
       permission.resource === resource && 
       permission.action === action &&
-      this.evaluateConditions(permission.conditions, context)
+      this.evaluateConditions(permission.conditions, context),
     );
 
     if (hasRolePermission) {
@@ -180,7 +180,7 @@ class PermissionService {
     funnelId: string,
     roleId: string,
     grantedBy: string,
-    expiresAt?: Date
+    expiresAt?: Date,
   ): Promise<boolean> {
     const role = this.roles.get(roleId);
     if (!role) {
@@ -201,7 +201,7 @@ class PermissionService {
       grantedBy,
       grantedAt: new Date(),
       expiresAt,
-      isActive: true
+      isActive: true,
     };
 
     filteredPermissions.push(newPermission);
@@ -211,7 +211,7 @@ class PermissionService {
     await this.logAction(grantedBy, funnelId, 'grant', 'collaboration', {
       targetUserId: userId,
       roleId,
-      expiresAt
+      expiresAt,
     });
 
     console.log(`✅ Permissão concedida: ${userId} -> ${roleId} para funnel ${funnelId}`);
@@ -224,7 +224,7 @@ class PermissionService {
   async revokePermission(
     userId: string,
     funnelId: string,
-    revokedBy: string
+    revokedBy: string,
   ): Promise<boolean> {
     const userPermissions = this.userPermissions.get(userId) || [];
     const permissionIndex = userPermissions.findIndex(p => p.funnelId === funnelId);
@@ -240,7 +240,7 @@ class PermissionService {
 
     // Log da ação
     await this.logAction(revokedBy, funnelId, 'revoke', 'collaboration', {
-      targetUserId: userId
+      targetUserId: userId,
     });
 
     console.log(`🚫 Permissão revogada: ${userId} para funnel ${funnelId}`);
@@ -255,7 +255,7 @@ class PermissionService {
     email: string,
     roleId: string,
     invitedBy: string,
-    expiresInHours: number = 72
+    expiresInHours: number = 72,
   ): Promise<Invitation> {
     const role = this.roles.get(roleId);
     if (!role) {
@@ -271,7 +271,7 @@ class PermissionService {
       invitedAt: new Date(),
       expiresAt: new Date(Date.now() + expiresInHours * 60 * 60 * 1000),
       status: 'pending',
-      token: this.generateInvitationToken()
+      token: this.generateInvitationToken(),
     };
 
     this.invitations.set(invitation.id, invitation);
@@ -280,7 +280,7 @@ class PermissionService {
     await this.logAction(invitedBy, funnelId, 'invite', 'collaboration', {
       targetEmail: email,
       roleId,
-      invitationId: invitation.id
+      invitationId: invitation.id,
     });
 
     console.log(`📧 Convite criado: ${email} -> ${roleId} para funnel ${funnelId}`);
@@ -292,7 +292,7 @@ class PermissionService {
    */
   async acceptInvitation(
     invitationId: string,
-    userId: string
+    userId: string,
   ): Promise<boolean> {
     const invitation = this.invitations.get(invitationId);
     if (!invitation) {
@@ -316,7 +316,7 @@ class PermissionService {
       userId,
       invitation.funnelId,
       invitation.role.id,
-      invitation.invitedBy
+      invitation.invitedBy,
     );
 
     if (success) {
@@ -326,7 +326,7 @@ class PermissionService {
       // Log da ação
       await this.logAction(userId, invitation.funnelId, 'accept_invitation', 'collaboration', {
         invitationId,
-        roleId: invitation.role.id
+        roleId: invitation.role.id,
       });
 
       console.log(`✅ Convite aceito: ${invitationId} por usuário ${userId}`);
@@ -346,7 +346,7 @@ class PermissionService {
     
     // Log da ação
     await this.logAction(userId, invitation.funnelId, 'decline_invitation', 'collaboration', {
-      invitationId
+      invitationId,
     });
 
     console.log(`🚫 Convite recusado: ${invitationId} por usuário ${userId}`);
@@ -387,7 +387,7 @@ class PermissionService {
    */
   private evaluateConditions(
     conditions: PermissionCondition[] | undefined,
-    context: Record<string, any> = {}
+    context: Record<string, any> = {},
   ): boolean {
     if (!conditions || conditions.length === 0) return true;
 
@@ -419,7 +419,7 @@ class PermissionService {
     funnelId: string,
     action: string,
     resource: string,
-    details: Record<string, any> = {}
+    details: Record<string, any> = {},
   ): Promise<void> {
     const auditLog: AuditLog = {
       id: `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -429,7 +429,7 @@ class PermissionService {
       resource,
       resourceId: details.resourceId || 'unknown',
       details,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     this.auditLogs.push(auditLog);

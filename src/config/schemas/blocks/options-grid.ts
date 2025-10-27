@@ -24,8 +24,8 @@ const optionsField: BlockFieldSchema = {
       { key: 'imageUrl', label: 'Imagem (URL)', type: 'text' },
       { key: 'points', label: 'Pontos', type: 'number' },
       { key: 'category', label: 'Categoria', type: 'text' },
-    ]
-  }
+    ],
+  },
 };
 
 // Campo de seleções requeridas
@@ -83,7 +83,7 @@ const showImagesField: BlockFieldSchema<boolean> = {
   type: 'boolean',
   group: 'content',
   default: true,
-  description: 'Exibir imagens nas opções (se disponíveis)'
+  description: 'Exibir imagens nas opções (se disponíveis)',
 };
 
 const imageSizeField: BlockFieldSchema<string> = {
@@ -93,7 +93,7 @@ const imageSizeField: BlockFieldSchema<string> = {
   group: 'layout',
   enumValues: ['small', 'medium', 'large', 'custom'],
   default: 'medium',
-  description: 'Tamanho padrão das imagens'
+  description: 'Tamanho padrão das imagens',
 };
 
 const imageWidthField: BlockFieldSchema<number> = {
@@ -105,7 +105,7 @@ const imageWidthField: BlockFieldSchema<number> = {
   max: 1024,
   step: 4,
   description: 'Largura da imagem quando imageSize = custom',
-  when: (values) => values.imageSize === 'custom'
+  when: (values) => values.imageSize === 'custom',
 };
 
 const imageHeightField: BlockFieldSchema<number> = {
@@ -117,7 +117,7 @@ const imageHeightField: BlockFieldSchema<number> = {
   max: 1024,
   step: 4,
   description: 'Altura da imagem quando imageSize = custom',
-  when: (values) => values.imageSize === 'custom'
+  when: (values) => values.imageSize === 'custom',
 };
 
 // Slider rápido para tamanho da imagem (quando não estiver em modo custom)
@@ -131,7 +131,7 @@ const imageMaxSizeField: BlockFieldSchema<number> = {
   step: 8,
   default: 96,
   description: 'Ajuste rápido do tamanho visual das imagens',
-  when: (values) => values.showImages !== false && values.imageSize !== 'custom'
+  when: (values) => values.showImages !== false && values.imageSize !== 'custom',
 };
 
 const imagePositionField: BlockFieldSchema<string> = {
@@ -141,7 +141,7 @@ const imagePositionField: BlockFieldSchema<string> = {
   group: 'layout',
   enumValues: ['top', 'left', 'right', 'bottom'],
   default: 'top',
-  description: 'Posicionamento da imagem em relação ao texto'
+  description: 'Posicionamento da imagem em relação ao texto',
 };
 
 const imageLayoutField: BlockFieldSchema<string> = {
@@ -151,7 +151,7 @@ const imageLayoutField: BlockFieldSchema<string> = {
   group: 'layout',
   enumValues: ['vertical', 'horizontal'],
   default: 'vertical',
-  description: 'Organização do cartão (vertical/horizontal)'
+  description: 'Organização do cartão (vertical/horizontal)',
 };
 
 // Campos de validação/seleção adicionais
@@ -163,7 +163,7 @@ const maxSelectionsField: BlockFieldSchema<number> = {
   min: 1,
   max: 12,
   default: 1,
-  description: 'Número máximo de opções que podem ser selecionadas'
+  description: 'Número máximo de opções que podem ser selecionadas',
 };
 
 const allowDeselectionField: BlockFieldSchema<boolean> = {
@@ -172,7 +172,7 @@ const allowDeselectionField: BlockFieldSchema<boolean> = {
   type: 'boolean',
   group: 'logic',
   default: true,
-  description: 'Permitir remover uma opção já selecionada'
+  description: 'Permitir remover uma opção já selecionada',
 };
 
 export const optionsGridSchema = createSchema('options-grid', 'Grid de Opções')
@@ -191,13 +191,13 @@ export const optionsGridSchema = createSchema('options-grid', 'Grid de Opções'
     { key: 'minSelections', label: 'Mínimo de Seleções', type: 'number', group: 'content', min: 0, max: 12, default: 1 },
     { key: 'autoAdvance', label: 'Avanço Automático', type: 'boolean', group: 'content', default: false },
     { key: 'autoAdvanceDelay', label: 'Delay do Avanço (ms)', type: 'number', group: 'content', min: 0, max: 60000, default: 0 },
-    { key: 'validationMessage', label: 'Mensagem de Validação', type: 'string', group: 'content', placeholder: 'Selecione N opções para continuar' }
+    { key: 'validationMessage', label: 'Mensagem de Validação', type: 'string', group: 'content', placeholder: 'Selecione N opções para continuar' },
   )
   .addFields(
     requiredSelectionsField,
     maxSelectionsField,
     multipleSelectionField,
-    allowDeselectionField
+    allowDeselectionField,
   )
   .addFields(
     gridColumnsField,
@@ -207,7 +207,7 @@ export const optionsGridSchema = createSchema('options-grid', 'Grid de Opções'
     imageWidthField,
     imageHeightField,
     imagePositionField,
-    imageLayoutField
+    imageLayoutField,
   )
   .version('2.2.0')
   .build();

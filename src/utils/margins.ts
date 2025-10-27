@@ -5,7 +5,7 @@ export type SpacingSide = 'top' | 'bottom' | 'left' | 'right';
 
 export function getMarginClass(
   value: string | number | null | undefined,
-  type: SpacingSide
+  type: SpacingSide,
 ): string {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value ?? 0;
   if (Number.isNaN(numValue) || numValue === 0) return '';

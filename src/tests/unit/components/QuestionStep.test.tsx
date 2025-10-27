@@ -19,16 +19,16 @@ describe('QuestionStep', () => {
     options: [
       { id: 'option1', text: 'Estilo Natural' },
       { id: 'option2', text: 'Estilo Clássico' },
-      { id: 'option3', text: 'Estilo Elegante' }
-    ]
+      { id: 'option3', text: 'Estilo Elegante' },
+    ],
   };
 
   const mockQuestionWithImages: QuizStep = {
     ...mockQuestionData,
     options: [
       { id: 'img1', text: 'Opção 1', image: '/images/style1.jpg' },
-      { id: 'img2', text: 'Opção 2', image: '/images/style2.jpg' }
-    ]
+      { id: 'img2', text: 'Opção 2', image: '/images/style2.jpg' },
+    ],
   };
 
   beforeEach(() => {
@@ -42,7 +42,7 @@ describe('QuestionStep', () => {
           data={mockQuestionData}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       expect(screen.getByText('Pergunta 1')).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('QuestionStep', () => {
           data={mockQuestionWithImages}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       const images = screen.getAllByRole('img');
@@ -73,7 +73,7 @@ describe('QuestionStep', () => {
           data={mockQuestionData}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       expect(screen.getByText('Selecione uma opção')).toBeInTheDocument();
@@ -87,7 +87,7 @@ describe('QuestionStep', () => {
           data={multiSelectData}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       expect(screen.getByText('Selecione 3 opções')).toBeInTheDocument();
@@ -101,7 +101,7 @@ describe('QuestionStep', () => {
           data={mockQuestionData}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       const option = screen.getByText('Estilo Natural');
@@ -116,7 +116,7 @@ describe('QuestionStep', () => {
           data={mockQuestionData}
           currentAnswers={['option1']}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       const option = screen.getByText('Estilo Natural');
@@ -133,7 +133,7 @@ describe('QuestionStep', () => {
           data={multiSelectData}
           currentAnswers={['option1']}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       const option2 = screen.getByText('Estilo Clássico');
@@ -148,7 +148,7 @@ describe('QuestionStep', () => {
           data={mockQuestionData}
           currentAnswers={['option1']}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       const option2 = screen.getByText('Estilo Clássico');
@@ -166,7 +166,7 @@ describe('QuestionStep', () => {
           data={mockQuestionData}
           currentAnswers={['option1']}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       const selectedOption = screen.getByText('Estilo Natural').closest('button');
@@ -179,7 +179,7 @@ describe('QuestionStep', () => {
           data={mockQuestionData}
           currentAnswers={['option1']}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       const unselectedOption = screen.getByText('Estilo Clássico').closest('button');
@@ -192,7 +192,7 @@ describe('QuestionStep', () => {
           data={mockQuestionWithImages}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       const optionsContainer = screen.getByText('Opção 1').closest('div')?.parentElement;
@@ -214,7 +214,7 @@ describe('QuestionStep', () => {
           data={mockQuestionData}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       const container = screen.getByText('Pergunta 1').closest('div');
@@ -233,7 +233,7 @@ describe('QuestionStep', () => {
           data={mockQuestionData}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       const container = screen.getByText('Pergunta 1').closest('div');
@@ -250,7 +250,7 @@ describe('QuestionStep', () => {
           data={emptyOptionsData}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       expect(screen.getByText('Pergunta 1')).toBeInTheDocument();
@@ -264,7 +264,7 @@ describe('QuestionStep', () => {
           data={noRequiredData}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       expect(screen.getByText('Selecione uma opção')).toBeInTheDocument();
@@ -273,7 +273,7 @@ describe('QuestionStep', () => {
     it('deve renderizar sem quebrar com dados mínimos', () => {
       const minimalData: QuizStep = {
         type: 'question',
-        options: [{ id: 'test', text: 'Test Option' }]
+        options: [{ id: 'test', text: 'Test Option' }],
       };
 
       render(
@@ -281,7 +281,7 @@ describe('QuestionStep', () => {
           data={minimalData}
           currentAnswers={[]}
           onAnswersChange={mockOnAnswersChange}
-        />
+        />,
       );
 
       expect(screen.getByText('Test Option')).toBeInTheDocument();

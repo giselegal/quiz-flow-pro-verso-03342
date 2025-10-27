@@ -150,7 +150,7 @@ export class ContextualStorageService {
       context: this.context,
       keysCount: keys.length,
       totalSizeBytes: totalSize,
-      totalSizeKB: (totalSize / 1024).toFixed(2)
+      totalSizeKB: (totalSize / 1024).toFixed(2),
     };
   }
 }

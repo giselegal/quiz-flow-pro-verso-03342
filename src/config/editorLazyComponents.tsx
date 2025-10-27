@@ -19,7 +19,7 @@ export const LazyQuizProductionPreview = lazy(() =>
     /* webpackChunkName: "preview-production" */
     /* webpackPrefetch: true */
     '@/components/editor/quiz/QuizProductionPreview'
-  )
+  ),
 );
 
 /**
@@ -30,7 +30,7 @@ export const LazyThemeEditorPanel = lazy(() =>
   import(
     /* webpackChunkName: "theme-editor" */
     '@/components/editor/quiz/components/ThemeEditorPanel'
-  ).then(m => ({ default: m.default }))
+  ).then(m => ({ default: m.default })),
 );
 
 /**
@@ -41,7 +41,7 @@ export const LazyAnalyticsDashboard = lazy(() =>
   import(
     /* webpackChunkName: "analytics-dashboard" */
     '@/components/dashboard/AnalyticsDashboard'
-  ).then(m => ({ default: m.default }))
+  ).then(m => ({ default: m.default })),
 );
 
 /**
@@ -62,7 +62,7 @@ export const LazyStyleResultCard = lazy(() =>
   import(
     /* webpackChunkName: "style-result-card" */
     '@/components/editor/quiz/components/StyleResultCard'
-  ).then(m => ({ default: m.StyleResultCard }))
+  ).then(m => ({ default: m.StyleResultCard })),
 );
 
 /**
@@ -73,7 +73,7 @@ export const LazyOfferMap = lazy(() =>
   import(
     /* webpackChunkName: "offer-map" */
     '@/components/editor/quiz/components/OfferMap'
-  ).then(m => ({ default: m.OfferMap }))
+  ).then(m => ({ default: m.OfferMap })),
 );
 
 /**
@@ -96,7 +96,7 @@ export const LazyIsolatedPreview = lazyWithRetry(
     /* webpackPrefetch: true */
     '@/components/editor/quiz/canvas/IsolatedPreview'
   ),
-  3 // 3 tentativas com retry
+  3, // 3 tentativas com retry
 );
 
 /**

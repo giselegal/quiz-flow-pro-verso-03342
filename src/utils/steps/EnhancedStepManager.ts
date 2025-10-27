@@ -51,7 +51,7 @@ const mockLogger: Logger = {
     info: (message: string, data?: any) => console.log(`[INFO] ${message}`, data),
     warn: (message: string, data?: any) => console.warn(`[WARN] ${message}`, data),
     error: (message: string, data?: any) => console.error(`[ERROR] ${message}`, data),
-    performance: (name: string, duration: number) => console.log(`[PERF] ${name}: ${duration}ms`)
+    performance: (name: string, duration: number) => console.log(`[PERF] ${name}: ${duration}ms`),
 };
 
 const mockCacheManager = {
@@ -59,16 +59,16 @@ const mockCacheManager = {
         get: (_key: string) => null,
         set: (_key: string, _value: T) => { },
         has: (_key: string) => false,
-        delete: (_key: string) => false
-    })
+        delete: (_key: string) => false,
+    }),
 };
 
 const mockUnifiedIDGenerator: UnifiedIDGenerator = {
-    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
 };
 
 const mockPersonalizationEngine: PersonalizationEngine = {
-    personalizeContent: (content: string, _context: UserPersonalizationContext, _options?: any) => content
+    personalizeContent: (content: string, _context: UserPersonalizationContext, _options?: any) => content,
 };
 
 // Define all missing types
@@ -449,13 +449,13 @@ export class EnhancedStepManager {
             templateId: string;
             funnelId: string;
         },
-        options?: Partial<EnhancedStepMetadata>
+        options?: Partial<EnhancedStepMetadata>,
     ): EnhancedStepMetadata {
 
         const stepId = mockUnifiedIDGenerator.generateID('step', {
             template: basicData.templateId,
             funnel: basicData.funnelId,
-            type: basicData.type
+            type: basicData.type,
         });
 
         const enhancedStep: EnhancedStepMetadata = {
@@ -489,7 +489,7 @@ export class EnhancedStepManager {
             system: this.createSystemMetadata(),
 
             // Override com opções fornecidas
-            ...options
+            ...options,
         };
 
         // Registrar no sistema
@@ -502,7 +502,7 @@ export class EnhancedStepManager {
         this.logger.debug('Enhanced step created', {
             stepId,
             title: basicData.title,
-            type: basicData.type
+            type: basicData.type,
         });
 
         return enhancedStep;
@@ -514,7 +514,7 @@ export class EnhancedStepManager {
     async processStep(
         stepId: string,
         userContext: UserPersonalizationContext,
-        sessionContext?: Record<string, any>
+        sessionContext?: Record<string, any>,
     ): Promise<ProcessedStepResult> {
 
         const step = this.getStep(stepId);
@@ -552,7 +552,7 @@ export class EnhancedStepManager {
                 presentationData,
                 processingTime,
                 recommendations: await this.generateStepRecommendations(processedStep, userContext),
-                nextSteps: this.calculateNextSteps(processedStep, userContext)
+                nextSteps: this.calculateNextSteps(processedStep, userContext),
             };
 
         } catch (error) {
@@ -574,7 +574,7 @@ export class EnhancedStepManager {
             requiredBefore: [],
             optionalBefore: [],
             unlocksAfter: [],
-            relatedSteps: step.relatedSteps
+            relatedSteps: step.relatedSteps,
         };
 
         // Calcular dependências recursivamente
@@ -605,21 +605,21 @@ export class EnhancedStepManager {
                 completionRate: analytics.completionRate,
                 averageTime: analytics.averageTimeSpent,
                 abandonmentRate: analytics.abandonmentRate,
-                engagementScore: analytics.engagementScore
+                engagementScore: analytics.engagementScore,
             },
 
             // Performance
             performance: {
                 loadTime: analytics.loadTime,
                 renderTime: analytics.renderTime,
-                errorRate: analytics.errorRate
+                errorRate: analytics.errorRate,
             },
 
             // Insights
             insights: this.generateAnalyticsInsights(step),
 
             // Recomendações
-            recommendations: this.generateOptimizationRecommendations(step)
+            recommendations: this.generateOptimizationRecommendations(step),
         };
     }
 
@@ -638,7 +638,7 @@ export class EnhancedStepManager {
                 type: 'performance',
                 action: 'enable_lazy_loading',
                 description: 'Ativar carregamento lazy para componentes pesados',
-                expectedImprovement: '40% mais rápido'
+                expectedImprovement: '40% mais rápido',
             });
         }
 
@@ -648,7 +648,7 @@ export class EnhancedStepManager {
                 type: 'ux',
                 action: 'simplify_interface',
                 description: 'Simplificar interface para reduzir cognitive load',
-                expectedImprovement: '25% menos abandono'
+                expectedImprovement: '25% menos abandono',
             });
         }
 
@@ -658,7 +658,7 @@ export class EnhancedStepManager {
                 type: 'engagement',
                 action: 'add_interactive_elements',
                 description: 'Adicionar elementos interativos para aumentar engajamento',
-                expectedImprovement: '30% mais engajamento'
+                expectedImprovement: '30% mais engajamento',
             });
         }
 
@@ -669,7 +669,7 @@ export class EnhancedStepManager {
             stepId,
             optimizationsApplied: optimizations,
             estimatedImprovements: this.calculateEstimatedImprovements(optimizations),
-            newConfiguration: step
+            newConfiguration: step,
         };
     }
 
@@ -687,7 +687,7 @@ export class EnhancedStepManager {
             dependencies: this.calculateDependencyChain(stepId),
             relatedComponents: this.getRelatedComponents(stepId),
             analytics: this.generateStepAnalyticsReport(stepId),
-            optimizations: this.getAppliedOptimizations(stepId)
+            optimizations: this.getAppliedOptimizations(stepId),
         };
     }
 
@@ -715,7 +715,7 @@ export class EnhancedStepManager {
             'form': 'data-collection',
             'result': 'output',
             'info': 'content',
-            'calculation': 'processing'
+            'calculation': 'processing',
         };
 
         return categoryMap[type] || 'general';
@@ -728,14 +728,14 @@ export class EnhancedStepManager {
             responsiveBreakpoints: {
                 mobile: 768,
                 tablet: 1024,
-                desktop: 1200
+                desktop: 1200,
             },
             accessibility: {
                 screenReaderSupport: true,
                 keyboardNavigation: true,
                 highContrast: false,
-                fontSize: 'medium'
-            }
+                fontSize: 'medium',
+            },
         };
     }
 
@@ -747,8 +747,8 @@ export class EnhancedStepManager {
             errorHandling: {
                 showInline: true,
                 showSummary: false,
-                blockProgression: true
-            }
+                blockProgression: true,
+            },
         };
     }
 
@@ -757,7 +757,7 @@ export class EnhancedStepManager {
             userSegments: [],
             dynamicContent: [],
             adaptiveUI: [],
-            recommendations: []
+            recommendations: [],
         };
     }
 
@@ -775,7 +775,7 @@ export class EnhancedStepManager {
             experiments: [],
             loadTime: 0,
             renderTime: 0,
-            errorRate: 0
+            errorRate: 0,
         };
     }
 
@@ -787,7 +787,7 @@ export class EnhancedStepManager {
             answers: {},
             calculations: {},
             flags: {},
-            temporaryData: {}
+            temporaryData: {},
         };
     }
 
@@ -799,7 +799,7 @@ export class EnhancedStepManager {
             cacheStrategy: { type: 'memory', ttl: 300000 },
             preloadRules: [],
             securityRules: [],
-            i18n: { defaultLocale: 'pt-BR', supportedLocales: ['pt-BR', 'en-US'] }
+            i18n: { defaultLocale: 'pt-BR', supportedLocales: ['pt-BR', 'en-US'] },
         };
     }
 
@@ -814,9 +814,9 @@ export class EnhancedStepManager {
             performanceMetrics: {
                 avgProcessingTime: 0,
                 memoryUsage: 0,
-                cacheHitRate: 0
+                cacheHitRate: 0,
             },
-            associatedLogIds: []
+            associatedLogIds: [],
         };
     }
 
@@ -847,7 +847,7 @@ export class EnhancedStepManager {
         const personalizedContent = mockPersonalizationEngine.personalizeContent(
             JSON.stringify(step),
             context,
-            { cacheResult: true }
+            { cacheResult: true },
         );
 
         return JSON.parse(personalizedContent);
@@ -856,7 +856,7 @@ export class EnhancedStepManager {
     private async applyBusinessRules(
         step: EnhancedStepMetadata,
         userContext: UserPersonalizationContext,
-        sessionContext?: Record<string, any>
+        sessionContext?: Record<string, any>,
     ): Promise<EnhancedStepMetadata> {
 
         let processedStep = { ...step };
@@ -873,7 +873,7 @@ export class EnhancedStepManager {
     private evaluateBusinessRule(
         rule: BusinessRule,
         userContext: UserPersonalizationContext,
-        sessionContext?: Record<string, any>
+        sessionContext?: Record<string, any>,
     ): boolean {
         try {
             // Criar contexto para avaliação
@@ -881,7 +881,7 @@ export class EnhancedStepManager {
                 user: userContext.user,
                 session: userContext.session,
                 history: userContext.history,
-                custom: sessionContext || {}
+                custom: sessionContext || {},
             };
 
             // Avaliar condição
@@ -927,7 +927,7 @@ export class EnhancedStepManager {
             layout: step.presentation.layout,
             theme: step.presentation.theme,
             accessibility: step.presentation.accessibility,
-            responsive: step.presentation.responsiveBreakpoints
+            responsive: step.presentation.responsiveBreakpoints,
         };
     }
 
@@ -940,7 +940,7 @@ export class EnhancedStepManager {
         step.sessionData.interactions.push({
             type: 'view',
             timestamp: new Date(),
-            data: { userId: userContext.user.id }
+            data: { userId: userContext.user.id },
         });
     }
 
@@ -950,8 +950,8 @@ export class EnhancedStepManager {
                 type: 'optimization',
                 title: 'Optimize step performance',
                 description: 'Consider reducing complexity for better user experience',
-                confidence: 0.8
-            }
+                confidence: 0.8,
+            },
         ];
     }
 
@@ -964,7 +964,7 @@ export class EnhancedStepManager {
 
     private canAccessStep(step: EnhancedStepMetadata, userContext: UserPersonalizationContext): boolean {
         return step.prerequisites.every(prereqId =>
-            userContext.session.answers[prereqId] !== undefined
+            userContext.session.answers[prereqId] !== undefined,
         );
     }
 
@@ -993,7 +993,7 @@ export class EnhancedStepManager {
                 type: 'abandonment',
                 title: 'High Abandonment Rate',
                 description: 'This step has a high abandonment rate. Consider simplifying the interface.',
-                severity: 'high'
+                severity: 'high',
             });
         }
 
@@ -1008,7 +1008,7 @@ export class EnhancedStepManager {
                 type: 'performance',
                 title: 'Slow Loading Time',
                 description: 'Consider optimizing assets and enabling lazy loading',
-                impact: 'high'
+                impact: 'high',
             });
         }
 

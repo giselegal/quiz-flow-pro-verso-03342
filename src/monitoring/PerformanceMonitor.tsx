@@ -43,7 +43,7 @@ export const PerformanceMonitorProvider: React.FC<{
 }> = ({ 
   children, 
   enabled = true,
-  maxMetrics = 1000 
+  maxMetrics = 1000, 
 }) => {
   const [metrics, setMetrics] = useState<PerformanceMetric[]>([]);
   const [isMonitoring] = useState(enabled);
@@ -58,7 +58,7 @@ export const PerformanceMonitorProvider: React.FC<{
       start: performance.now(),
       name,
       context,
-      metadata
+      metadata,
     });
     
     return timerId;
@@ -77,7 +77,7 @@ export const PerformanceMonitorProvider: React.FC<{
       duration,
       timestamp: new Date(),
       context: timer.context,
-      metadata: timer.metadata
+      metadata: timer.metadata,
     };
     
     recordMetric(metric);
@@ -101,7 +101,7 @@ export const PerformanceMonitorProvider: React.FC<{
   // 📊 GET AVERAGE TIME
   const getAverageTime = useCallback((name: string, context?: 'clean' | 'legacy') => {
     const filteredMetrics = metrics.filter(m => 
-      m.name === name && (!context || m.context === context)
+      m.name === name && (!context || m.context === context),
     );
     
     if (filteredMetrics.length === 0) return 0;
@@ -120,7 +120,7 @@ export const PerformanceMonitorProvider: React.FC<{
     return {
       clean: cleanAvg,
       legacy: legacyAvg,
-      improvement: Math.round(improvement * 100) / 100
+      improvement: Math.round(improvement * 100) / 100,
     };
   }, [getAverageTime]);
 
@@ -133,7 +133,7 @@ export const PerformanceMonitorProvider: React.FC<{
     getAverageTime,
     comparePerformance,
     isMonitoring,
-    metricsCount: metrics.length
+    metricsCount: metrics.length,
   };
 
   return (
@@ -156,7 +156,7 @@ export const usePerformanceMonitor = () => {
 export const withPerformanceMonitoring = <P extends object>(
   Component: React.ComponentType<P>,
   componentName: string,
-  context: 'clean' | 'legacy'
+  context: 'clean' | 'legacy',
 ) => {
   const WrappedComponent: React.FC<P> = (props) => {
     const { startTimer, endTimer } = usePerformanceMonitor();

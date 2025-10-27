@@ -20,8 +20,8 @@ const WEBSOCKET_CONFIG = {
     'devserver_websocket_open',
     'devserver_websocket_close',
     'WebSocket connection',
-    'HMR connection'
-  ]
+    'HMR connection',
+  ],
 };
 
 class WebSocketOptimizer {
@@ -41,7 +41,7 @@ class WebSocketOptimizer {
     this.originalConsole = {
       log: console.log,
       warn: console.warn,
-      error: console.error
+      error: console.error,
     };
     this.initializeOptimization();
     this.setupWebSocketMonitoring();
@@ -198,7 +198,7 @@ class WebSocketOptimizer {
       reconnectAttempts: this.reconnectAttempts,
       lastReconnectTime: this.lastReconnectTime,
       webSocketLogCount: this.webSocketLogCount,
-      lastWebSocketLog: this.lastWebSocketLog
+      lastWebSocketLog: this.lastWebSocketLog,
     };
   }
 

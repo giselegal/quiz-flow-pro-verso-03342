@@ -64,7 +64,7 @@ class RenderProfiler {
             avgRenderTime: 0,
             lastRenderTime: 0,
             renderEfficiency: 1,
-            memoryUsage: 0
+            memoryUsage: 0,
         };
     }
     
@@ -81,7 +81,7 @@ export const useRenderOptimization = (config: Partial<RenderOptimizationConfig> 
         batchingDelay: 16,
         memoizationLevel: 'basic',
         enableRenderProfiling: false,
-        ...config
+        ...config,
     });
     
     const [metrics, setMetrics] = useState<RenderMetrics>({
@@ -90,7 +90,7 @@ export const useRenderOptimization = (config: Partial<RenderOptimizationConfig> 
         avgRenderTime: 0,
         lastRenderTime: 0,
         renderEfficiency: 1,
-        memoryUsage: 0
+        memoryUsage: 0,
     });
     
     const updateConfig = useCallback((newConfig: Partial<RenderOptimizationConfig>) => {
@@ -105,7 +105,7 @@ export const useRenderOptimization = (config: Partial<RenderOptimizationConfig> 
             avgRenderTime: 0,
             lastRenderTime: 0,
             renderEfficiency: 1,
-            memoryUsage: 0
+            memoryUsage: 0,
         });
     }, []);
     
@@ -125,7 +125,7 @@ export const useRenderOptimization = (config: Partial<RenderOptimizationConfig> 
         updateConfig,
         clearMetrics,
         enableProfiling,
-        disableProfiling
+        disableProfiling,
     };
 };
 

@@ -50,7 +50,7 @@ export const monitorPerformance = () => {
       }
 
       console.log(
-        `📊 CLS: ${clsValue.toFixed(3)} ${clsValue < PERFORMANCE_THRESHOLD.CLS ? '✅' : '⚠️'}`
+        `📊 CLS: ${clsValue.toFixed(3)} ${clsValue < PERFORMANCE_THRESHOLD.CLS ? '✅' : '⚠️'}`,
       );
 
       // Se o CLS for ruim, aplicar otimizações
@@ -69,7 +69,7 @@ export const monitorPerformance = () => {
         const fid = entry.processingStart - entry.startTime;
 
         console.log(
-          `📊 FID: ${Math.round(fid)}ms ${fid < PERFORMANCE_THRESHOLD.FID ? '✅' : '⚠️'}`
+          `📊 FID: ${Math.round(fid)}ms ${fid < PERFORMANCE_THRESHOLD.FID ? '✅' : '⚠️'}`,
         );
 
         // Se o FID for ruim, aplicar otimizações
@@ -174,7 +174,7 @@ export const disableNonEssentialAnimations = () => {
 
     // Remover classes de animação específicas
     const animatedElements = document.querySelectorAll(
-      '.animate-bounce, .animate-pulse, .animate-spin, .animate-ping, .hover-scale'
+      '.animate-bounce, .animate-pulse, .animate-spin, .animate-ping, .hover-scale',
     );
 
     animatedElements.forEach(el => {
@@ -183,7 +183,7 @@ export const disableNonEssentialAnimations = () => {
         'animate-pulse',
         'animate-spin',
         'animate-ping',
-        'hover-scale'
+        'hover-scale',
       );
     });
 
@@ -271,7 +271,7 @@ export const reportPerformanceIssues = () => {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       optimizationsApplied: true,
-    })
+    }),
   );
 };
 

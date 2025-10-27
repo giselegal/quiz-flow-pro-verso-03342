@@ -13,7 +13,7 @@ const DEFAULT_BREAKPOINTS = {
     md: 768,   // Medium devices  
     lg: 992,   // Large devices
     xl: 1200,  // Extra large devices
-    xxl: 1400  // Extra extra large devices
+    xxl: 1400,  // Extra extra large devices
 } as const;
 
 type BreakpointKey = keyof typeof DEFAULT_BREAKPOINTS;
@@ -81,7 +81,7 @@ interface UseResponsiveOptions {
 
 function debounce<T extends (...args: any[]) => any>(
     func: T,
-    delay: number
+    delay: number,
 ): (...args: Parameters<T>) => void {
     let timeoutId: NodeJS.Timeout;
 
@@ -97,13 +97,13 @@ export function useResponsive(options: UseResponsiveOptions = {}): ResponsiveSta
         debounceDelay = 100,
         includeConnection = true,
         onBreakpointChange,
-        onOrientationChange
+        onOrientationChange,
     } = options;
 
     // Merge breakpoints
     const breakpoints = useMemo(() => ({
         ...DEFAULT_BREAKPOINTS,
-        ...customBreakpoints
+        ...customBreakpoints,
     }), [customBreakpoints]);
 
     // 🎯 Detectar device info inicial
@@ -129,7 +129,7 @@ export function useResponsive(options: UseResponsiveOptions = {}): ResponsiveSta
             pixelRatio: window.devicePixelRatio || 1,
             isRetina: window.devicePixelRatio > 1,
             userAgent: navigator.userAgent,
-            platform: navigator.platform
+            platform: navigator.platform,
         };
     }, []);
 
@@ -139,7 +139,7 @@ export function useResponsive(options: UseResponsiveOptions = {}): ResponsiveSta
         height: window.innerHeight,
         aspectRatio: window.innerWidth / window.innerHeight,
         availableWidth: screen.availWidth,
-        availableHeight: screen.availHeight
+        availableHeight: screen.availHeight,
     }), []);
 
     // 🎯 Determinar breakpoint atual
@@ -169,7 +169,7 @@ export function useResponsive(options: UseResponsiveOptions = {}): ResponsiveSta
 
         return {
             prefersReducedMotion,
-            prefersColorScheme
+            prefersColorScheme,
         };
     }, []);
 
@@ -221,7 +221,7 @@ export function useResponsive(options: UseResponsiveOptions = {}): ResponsiveSta
             isMedium,
             isLarge,
             ...systemPrefs,
-            ...connectionInfo
+            ...connectionInfo,
         };
     });
 
@@ -272,7 +272,7 @@ export function useResponsive(options: UseResponsiveOptions = {}): ResponsiveSta
             isMedium,
             isLarge,
             ...systemPrefs,
-            ...connectionInfo
+            ...connectionInfo,
         });
     }, [
         getViewportInfo,
@@ -286,13 +286,13 @@ export function useResponsive(options: UseResponsiveOptions = {}): ResponsiveSta
         onOrientationChange,
         state.breakpoint,
         state.device.orientation,
-        state.isOnline
+        state.isOnline,
     ]);
 
     // Debounced update function
     const debouncedUpdate = useMemo(
         () => debounce(updateState, debounceDelay),
-        [updateState, debounceDelay]
+        [updateState, debounceDelay],
     );
 
     // 👂 Event listeners
@@ -404,5 +404,5 @@ export type {
     DeviceInfo,
     ViewportInfo,
     UseResponsiveOptions,
-    BreakpointKey
+    BreakpointKey,
 };

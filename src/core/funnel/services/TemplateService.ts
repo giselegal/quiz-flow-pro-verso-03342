@@ -263,7 +263,7 @@ export class TemplateService {
                         theme: 'modern',
                         version: '1.0.0',
                         isPublished: true,
-                        isOfficial: true
+                        isOfficial: true,
                     },
                     settings: {
                         autoSave: true,
@@ -276,26 +276,26 @@ export class TemplateService {
                             fontFamily: 'Inter',
                             borderRadius: '12px',
                             spacing: '24px',
-                            layout: 'centered'
+                            layout: 'centered',
                         },
                         navigation: {
                             showProgress: true,
                             showStepNumbers: true,
                             allowBackward: true,
                             showNavigationButtons: true,
-                            autoAdvanceDelay: 3000
+                            autoAdvanceDelay: 3000,
                         },
                         validation: {
                             strictMode: false,
                             requiredFields: [],
-                            customValidators: {}
-                        }
+                            customValidators: {},
+                        },
                     },
-                    steps: []
+                    steps: [],
                 },
                 components: [],
                 createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
+                updatedAt: new Date().toISOString(),
             },
             {
                 id: 'quiz-negocio-basico',
@@ -316,7 +316,7 @@ export class TemplateService {
                         theme: 'professional',
                         version: '1.0.0',
                         isPublished: true,
-                        isOfficial: true
+                        isOfficial: true,
                     },
                     settings: {
                         autoSave: true,
@@ -329,27 +329,27 @@ export class TemplateService {
                             fontFamily: 'Inter',
                             borderRadius: '8px',
                             spacing: '16px',
-                            layout: 'centered'
+                            layout: 'centered',
                         },
                         navigation: {
                             showProgress: true,
                             showStepNumbers: false,
                             allowBackward: true,
                             showNavigationButtons: true,
-                            autoAdvanceDelay: 3000
+                            autoAdvanceDelay: 3000,
                         },
                         validation: {
                             strictMode: true,
                             requiredFields: ['email'],
-                            customValidators: {}
-                        }
+                            customValidators: {},
+                        },
                     },
-                    steps: []
+                    steps: [],
                 },
                 components: [],
                 createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            }
+                updatedAt: new Date().toISOString(),
+            },
         ];
 
         return category ? templates.filter(t => t.category === category) : templates;
@@ -378,7 +378,7 @@ export class TemplateService {
                     theme: 'default',
                     version: '1.0.0',
                     isPublished: true,
-                    isOfficial: false
+                    isOfficial: false,
                 },
                 settings: {
                     autoSave: true,
@@ -391,26 +391,26 @@ export class TemplateService {
                         fontFamily: 'Inter',
                         borderRadius: '8px',
                         spacing: '16px',
-                        layout: 'centered'
+                        layout: 'centered',
                     },
                     navigation: {
                         showProgress: true,
                         allowBackward: true,
                         showStepNumbers: false,
                         showNavigationButtons: true,
-                        autoAdvanceDelay: 3000
+                        autoAdvanceDelay: 3000,
                     },
                     validation: {
                         strictMode: false,
                         requiredFields: [],
-                        customValidators: {}
-                    }
+                        customValidators: {},
+                    },
                 },
-                steps: []
+                steps: [],
             },
             components: [],
             createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+            updatedAt: new Date().toISOString(),
         };
     }
 
@@ -425,7 +425,7 @@ export class TemplateService {
                 description: 'Templates para quizzes de estilo de vida',
                 icon: 'heart',
                 color: '#e91e63',
-                templateCount: 5
+                templateCount: 5,
             },
             {
                 id: 'business',
@@ -433,7 +433,7 @@ export class TemplateService {
                 description: 'Templates para lead generation e vendas',
                 icon: 'briefcase',
                 color: '#2563eb',
-                templateCount: 8
+                templateCount: 8,
             },
             {
                 id: 'education',
@@ -441,7 +441,7 @@ export class TemplateService {
                 description: 'Templates educacionais e avaliativos',
                 icon: 'book',
                 color: '#059669',
-                templateCount: 3
+                templateCount: 3,
             },
             {
                 id: 'entertainment',
@@ -449,8 +449,8 @@ export class TemplateService {
                 description: 'Templates divertidos e interativos',
                 icon: 'star',
                 color: '#d97706',
-                templateCount: 4
-            }
+                templateCount: 4,
+            },
         ];
     }
 }

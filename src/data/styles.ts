@@ -44,7 +44,7 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     keywords: ['atemporal', 'elegante', 'sofisticado', 'equilibrado', 'refinado'],
     image: '/estilos/classico-personal.webp',
     guideImage: '/estilos/classico-guide.webp',
-    specialTips: ['Invista em peças de qualidade', 'Mantenha um guarda-roupa atemporal']
+    specialTips: ['Invista em peças de qualidade', 'Mantenha um guarda-roupa atemporal'],
   },
 
   natural: {
@@ -61,7 +61,7 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     keywords: ['descomplicado', 'confortável', 'natural', 'terroso', 'autêntico'],
     image: '/estilos/natural-personal.webp',
     guideImage: '/estilos/natural-guide.webp',
-    specialTips: ['Priorize o conforto', 'Use tecidos naturais']
+    specialTips: ['Priorize o conforto', 'Use tecidos naturais'],
   },
 
   'contemporâneo': {
@@ -78,7 +78,7 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     keywords: ['moderno', 'atual', 'tendência', 'inovador', 'experimental'],
     image: '/estilos/contemporaneo-personal.webp',
     guideImage: '/estilos/contemporaneo-guide.webp',
-    specialTips: ['Experimente tendências novas', 'Misture peças modernas com clássicas']
+    specialTips: ['Experimente tendências novas', 'Misture peças modernas com clássicas'],
   },
 
   elegante: {
@@ -95,7 +95,7 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     keywords: ['refinado', 'polido', 'qualidade', 'sofisticação', 'bom gosto'],
     image: '/estilos/elegante-personal.webp',
     guideImage: '/estilos/elegante-guide.webp',
-    specialTips: ['Foque na qualidade dos tecidos', 'Atenção aos detalhes']
+    specialTips: ['Foque na qualidade dos tecidos', 'Atenção aos detalhes'],
   },
 
   'romântico': {
@@ -112,7 +112,7 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     keywords: ['delicado', 'feminino', 'floral', 'suave', 'doce'],
     image: '/estilos/romantico-personal.webp',
     guideImage: '/estilos/romantico-guide.webp',
-    specialTips: ['Use estampas florais', 'Aposte em cores suaves']
+    specialTips: ['Use estampas florais', 'Aposte em cores suaves'],
   },
 
   sexy: {
@@ -129,7 +129,7 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     keywords: ['sedutor', 'confiante', 'feminino', 'marcante', 'poderosa'],
     image: '/estilos/sexy-personal.webp',
     guideImage: '/estilos/sexy-guide.webp',
-    specialTips: ['Realce suas curvas', 'Confie na sua feminilidade']
+    specialTips: ['Realce suas curvas', 'Confie na sua feminilidade'],
   },
 
   'dramático': {
@@ -146,7 +146,7 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     keywords: ['marcante', 'impactante', 'contraste', 'geométrico', 'confiante'],
     image: '/estilos/dramatico-personal.webp',
     guideImage: '/estilos/dramatico-guide.webp',
-    specialTips: ['Use contrastes marcantes', 'Invista em acessórios statement']
+    specialTips: ['Use contrastes marcantes', 'Invista em acessórios statement'],
   },
 
   criativo: {
@@ -163,8 +163,8 @@ export const STYLE_DEFINITIONS: Record<string, Style> = {
     keywords: ['único', 'expressivo', 'experimental', 'colorido', 'criativo'],
     image: '/estilos/criativo-personal.webp',
     guideImage: '/estilos/criativo-guide.webp',
-    specialTips: ['Misture estampas', 'Seja ousada com as cores']
-  }
+    specialTips: ['Misture estampas', 'Seja ousada com as cores'],
+  },
 };
 
 // Legacy compatibility exports

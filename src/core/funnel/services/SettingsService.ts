@@ -39,20 +39,20 @@ export const defaultFunnelSettings: FunnelSettings = {
         fontFamily: 'Inter, sans-serif',
         borderRadius: '8px',
         spacing: '16px',
-        layout: 'centered'
+        layout: 'centered',
     },
     navigation: {
         showProgress: true,
         showStepNumbers: true,
         allowBackward: true,
         showNavigationButtons: true,
-        autoAdvanceDelay: 3000
+        autoAdvanceDelay: 3000,
     },
     validation: {
         strictMode: false,
         requiredFields: [],
-        customValidators: {}
-    }
+        customValidators: {},
+    },
 };
 
 // ============================================================================
@@ -254,7 +254,7 @@ export class SettingsService {
             validation: {
                 ...defaultFunnelSettings.validation,
                 ...settings?.validation,
-            }
+            },
         };
     }
 
@@ -299,7 +299,7 @@ export class SettingsService {
         return {
             isValid: errors.length === 0,
             errors,
-            warnings
+            warnings,
         };
     }
 
@@ -388,14 +388,14 @@ export function generateTestSettings(_funnelId: string): FunnelSettings {
         theme: {
             ...defaultFunnelSettings.theme,
             primaryColor: '#ff6b6b',
-            secondaryColor: '#4ecdc4'
+            secondaryColor: '#4ecdc4',
         },
         analytics: true,
         progressTracking: true,
         navigation: {
             ...defaultFunnelSettings.navigation,
             showProgress: true,
-            allowBackward: true
-        }
+            allowBackward: true,
+        },
     };
 }

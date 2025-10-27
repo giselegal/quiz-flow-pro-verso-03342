@@ -25,7 +25,7 @@ interface UseInlineEditorReturn {
 }
 
 export const useInlineEditor = (
-  onBlockUpdate?: (blockId: string, changes: Partial<Block>) => void
+  onBlockUpdate?: (blockId: string, changes: Partial<Block>) => void,
 ): UseInlineEditorReturn => {
   const [editorState, setEditorState] = useState<InlineEditorState>({
     activeBlockId: null,
@@ -37,7 +37,7 @@ export const useInlineEditor = (
   const startEditing = useCallback((
     blockId: string, 
     mode: 'text' | 'properties' | 'style',
-    initialValue?: any
+    initialValue?: any,
   ) => {
     setEditorState({
       activeBlockId: blockId,

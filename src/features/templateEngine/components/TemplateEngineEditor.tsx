@@ -102,7 +102,7 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
         setIsFlushing(true);
         updateComponentProps.mutate(patch, {
             onSettled: () => setIsFlushing(false),
-            onSuccess: () => { setLastSavedAt(Date.now()); setDirtyKeys(new Set()); }
+            onSuccess: () => { setLastSavedAt(Date.now()); setDirtyKeys(new Set()); },
         });
         if (now && debounceRef.current) clearTimeout(debounceRef.current);
     }
@@ -145,7 +145,7 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                     if (res.completed) {
                         setRuntime(r => r ? { ...r, currentStageId: r.currentStageId } : r);
                     }
-                }
+                },
             });
             return { ...prev, [stageId]: next };
         });
@@ -160,7 +160,7 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
             QuestionSingle: { title: 'Pergunta', options: [{ id: 'opt1', label: 'Opção 1' }, { id: 'opt2', label: 'Opção 2' }] },
             QuestionMulti: { title: 'Pergunta Multi', options: [{ id: 'm1', label: 'Item 1' }, { id: 'm2', label: 'Item 2' }] },
             Transition: { message: 'Transição...' },
-            ResultPlaceholder: { template: 'Seu resultado: {{score}}' }
+            ResultPlaceholder: { template: 'Seu resultado: {{score}}' },
         };
         addCmp.mutate({ component: { type: kind, props: defaults[kind] || {} } });
     }
@@ -460,7 +460,7 @@ export const TemplateEngineEditor: React.FC<{ id: string; onBack: () => void }> 
                     return <li key={h.id} className={`p-2 text-xs flex flex-col gap-1 ${active ? 'bg-blue-50' : ''}`}>
                         <div className="flex items-center gap-2">
                             <button className={`text-[10px] px-1 rounded border ${active ? 'bg-blue-600 text-white' : 'bg-gray-50'}`} onClick={() => setSelectedHistoryId(active ? null : h.id)}>{active ? '✓' : '⟲'}</button>
-                            <span className="font-mono text-[10px]">{h.version ? 'v' + h.version : h.op}</span>
+                            <span className="font-mono text-[10px]">{h.version ? `v${  h.version}` : h.op}</span>
                             <span className="text-gray-500">{new Date(h.timestamp).toLocaleString()}</span>
                             <span className="ml-auto text-[10px] text-gray-400">{h.stagesCount} stages / {h.componentsCount} comps</span>
                         </div>

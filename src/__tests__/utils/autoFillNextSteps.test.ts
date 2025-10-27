@@ -6,7 +6,7 @@ describe('autoFillNextSteps', () => {
     const steps: StepLike[] = [
       { id: 'a', order: 1, nextStep: 'b' },
       { id: 'b', order: 2, nextStep: 'c' },
-      { id: 'c', order: 3 }
+      { id: 'c', order: 3 },
     ];
     const { steps: result, adjusted } = autoFillNextSteps(steps);
     expect(adjusted).toBe(false);
@@ -17,7 +17,7 @@ describe('autoFillNextSteps', () => {
     const steps: StepLike[] = [
       { id: 'a', order: 1 },
       { id: 'b', order: 2 },
-      { id: 'c', order: 3 }
+      { id: 'c', order: 3 },
     ];
     const { steps: result, adjusted } = autoFillNextSteps(steps);
     expect(adjusted).toBe(true);
@@ -29,7 +29,7 @@ describe('autoFillNextSteps', () => {
   it('mantém imutabilidade do array original', () => {
     const steps: StepLike[] = [
       { id: 'a', order: 2 },
-      { id: 'b', order: 1 }
+      { id: 'b', order: 1 },
     ];
     const cloneJson = JSON.stringify(steps);
     autoFillNextSteps(steps);

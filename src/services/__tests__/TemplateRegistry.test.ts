@@ -43,9 +43,9 @@ describe('TemplateRegistry', () => {
             id: 'block-1',
             type: 'heading',
             content: 'Título',
-            style: {}
-          }
-        ]
+            style: {},
+          },
+        ],
       };
 
       registry.register('step-1', template);
@@ -57,7 +57,7 @@ describe('TemplateRegistry', () => {
     it('deve congelar o template registrado', () => {
       const template = {
         type: 'question',
-        blocks: [{ id: 'block-1', type: 'text', content: 'Test' }]
+        blocks: [{ id: 'block-1', type: 'text', content: 'Test' }],
       };
 
       registry.register('frozen-step', template);
@@ -82,7 +82,7 @@ describe('TemplateRegistry', () => {
 
       const customTemplate = {
         customField: 'value',
-        data: [1, 2, 3]
+        data: [1, 2, 3],
       };
 
       registry.register('v3-template', templateV3);
@@ -232,7 +232,7 @@ describe('TemplateRegistry', () => {
     it('não deve permitir modificação do template após registro', () => {
       const template = {
         type: 'question',
-        blocks: [{ id: 'block-1', content: 'Original' }]
+        blocks: [{ id: 'block-1', content: 'Original' }],
       };
 
       registry.register('immutable-test', template);
@@ -247,7 +247,7 @@ describe('TemplateRegistry', () => {
     it('não deve permitir modificação de propriedades aninhadas', () => {
       const template: any = {
         type: 'question',
-        blocks: [{ id: 'block-1', content: 'Original' }]
+        blocks: [{ id: 'block-1', content: 'Original' }],
       };
 
       registry.register('nested-immutable', template);
@@ -272,7 +272,7 @@ describe('TemplateRegistry', () => {
         'step_with_underscore',
         'step.with.dot',
         'step:with:colon',
-        'step/with/slash'
+        'step/with/slash',
       ];
 
       specialIds.forEach(id => {
@@ -292,24 +292,24 @@ describe('TemplateRegistry', () => {
             content: 'Título Principal',
             style: {
               fontSize: '2rem',
-              color: '#333'
-            }
+              color: '#333',
+            },
           },
           {
             id: 'text-1',
             type: 'text',
             content: 'Descrição detalhada',
-            style: {}
+            style: {},
           },
           {
             id: 'button-1',
             type: 'button',
             content: 'Clique aqui',
             style: {
-              backgroundColor: '#007bff'
-            }
-          }
-        ]
+              backgroundColor: '#007bff',
+            },
+          },
+        ],
       };
 
       registry.register('complex-step', complexTemplate);

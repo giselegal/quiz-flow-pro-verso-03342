@@ -44,7 +44,7 @@ export const useEditorPro = (): UseEditorPro => {
                     isBrandKitOpen: parsed.isBrandKitOpen || false,
                     isAnalyticsOpen: parsed.isAnalyticsOpen || false,
                     isLoading: false,
-                    error: null
+                    error: null,
                 };
             }
         } catch (error) {
@@ -57,7 +57,7 @@ export const useEditorPro = (): UseEditorPro => {
             isBrandKitOpen: false,
             isAnalyticsOpen: false,
             isLoading: false,
-            error: null
+            error: null,
         };
     });
 
@@ -67,7 +67,7 @@ export const useEditorPro = (): UseEditorPro => {
             const preferences = {
                 isTemplatesIAOpen: state.isTemplatesIAOpen,
                 isBrandKitOpen: state.isBrandKitOpen,
-                isAnalyticsOpen: state.isAnalyticsOpen
+                isAnalyticsOpen: state.isAnalyticsOpen,
             };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
         } catch (error) {
@@ -101,7 +101,7 @@ export const useEditorPro = (): UseEditorPro => {
     const toggleAnalytics = useCallback(() => {
         setState(prev => ({
             ...prev,
-            isAnalyticsOpen: !prev.isAnalyticsOpen
+            isAnalyticsOpen: !prev.isAnalyticsOpen,
         }));
     }, []);
 
@@ -109,7 +109,7 @@ export const useEditorPro = (): UseEditorPro => {
     const setLoading = useCallback((loading: boolean) => {
         setState(prev => ({
             ...prev,
-            isLoading: loading
+            isLoading: loading,
         }));
     }, []);
 
@@ -118,7 +118,7 @@ export const useEditorPro = (): UseEditorPro => {
         setState(prev => ({
             ...prev,
             error,
-            isLoading: false
+            isLoading: false,
         }));
     }, []);
 
@@ -154,6 +154,6 @@ export const useEditorPro = (): UseEditorPro => {
         toggleBrandKit,
         toggleAnalytics,
         setLoading,
-        setError
+        setError,
     };
 };

@@ -66,7 +66,7 @@ export const updateImageCache = (url: string, updates: Partial<ImageCacheEntry>)
 
 export const hasImageWithStatus = (
   url: string,
-  status: 'loading' | 'loaded' | 'error'
+  status: 'loading' | 'loaded' | 'error',
 ): boolean => {
   const entry = getImageFromCache(url);
   return entry?.loadStatus === status || false;

@@ -52,7 +52,7 @@ export const checkImageStatus = () => {
 
   if (withLowQuality < cacheSize * 0.8 && cacheSize > 5) {
     console.warn(
-      `⚠️ Apenas ${withLowQuality} de ${cacheSize} imagens têm placeholders de baixa qualidade.`
+      `⚠️ Apenas ${withLowQuality} de ${cacheSize} imagens têm placeholders de baixa qualidade.`,
     );
   }
 
@@ -73,7 +73,7 @@ export const checkImageStatus = () => {
     if (uncachedImages.length < 10) {
       console.log(
         'Imagens não cacheadas:',
-        uncachedImages.map(img => img.id)
+        uncachedImages.map(img => img.id),
       );
     }
   }
@@ -120,7 +120,7 @@ export const checkIntroImages = () => {
       !img.src.includes('q_auto')
     ) {
       notOptimized++;
-      console.warn(`⚠️ Imagem Cloudinary não otimizada:`, img.src);
+      console.warn('⚠️ Imagem Cloudinary não otimizada:', img.src);
     }
 
     // Verificar placeholders/blur
@@ -247,19 +247,19 @@ export const analyzeImageUrl = url => {
 
       if (!info.width && !info.height) {
         info.suggestions.push(
-          'Especificar largura e/ou altura para evitar servir imagens muito grandes'
+          'Especificar largura e/ou altura para evitar servir imagens muito grandes',
         );
       }
 
       if (info.format === 'png' && !url.includes('transparent')) {
         info.suggestions.push(
-          'Considerar usar formato WEBP ou AVIF em vez de PNG para melhor compressão'
+          'Considerar usar formato WEBP ou AVIF em vez de PNG para melhor compressão',
         );
       }
 
       if (info.quality && parseInt(info.quality) > 85 && info.quality !== 'auto') {
         info.suggestions.push(
-          'Considerar reduzir a qualidade para 80-85 para melhorar o desempenho sem perda visual perceptível'
+          'Considerar reduzir a qualidade para 80-85 para melhorar o desempenho sem perda visual perceptível',
         );
       }
     }
@@ -269,7 +269,7 @@ export const analyzeImageUrl = url => {
   }
 
   // Exibir resultados da análise
-  console.log(`📊 Análise Completa:`, info);
+  console.log('📊 Análise Completa:', info);
 
   if (info.suggestions.length > 0) {
     console.log('💡 Sugestões de Otimização:');

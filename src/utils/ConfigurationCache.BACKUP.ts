@@ -41,7 +41,7 @@ class ConfigurationCache {
         const entry: CacheEntry<T> = {
             data,
             timestamp: Date.now(),
-            ttl: ttl || this.DEFAULT_TTL
+            ttl: ttl || this.DEFAULT_TTL,
         };
 
         this.cache.set(key, entry);
@@ -88,7 +88,7 @@ class ConfigurationCache {
         return {
             size: this.cache.size,
             keys: Array.from(this.cache.keys()),
-            memoryUsage: this.estimateMemoryUsage()
+            memoryUsage: this.estimateMemoryUsage(),
         };
     }
 

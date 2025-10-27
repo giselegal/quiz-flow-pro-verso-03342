@@ -42,7 +42,7 @@ const COMMON_SCHEMAS: BlockType[] = [
   'button-inline',
   'image',
   'quiz-options',
-  'container'
+  'container',
 ];
 
 /**
@@ -90,7 +90,7 @@ async function loadSchemaFromRegistry(blockType: BlockType): Promise<BlockSchema
     return {
       type: blockType,
       properties: {},
-      groups: []
+      groups: [],
     };
   } catch (error) {
     console.warn(`⚠️ Failed to load schema for ${blockType}:`, error);
@@ -161,6 +161,6 @@ export function getCacheStats(): {
   return {
     cached: schemaCache.size,
     loading: loadingPromises.size,
-    hitRate: 0 // TODO: Implementar tracking de hit rate
+    hitRate: 0, // TODO: Implementar tracking de hit rate
   };
 }

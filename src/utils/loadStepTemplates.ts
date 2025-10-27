@@ -118,7 +118,7 @@ export function loadStepTemplate(stepId: string): Block[] {
       stepId,
       blockCount: blocks.length,
       blockTypes: blocks.map(b => b.type),
-      cached: false
+      cached: false,
     });
   }
 

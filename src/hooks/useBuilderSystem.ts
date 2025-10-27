@@ -31,7 +31,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
     isGenerating: false,
     currentTemplate: null,
     availablePresets: [],
-    error: null
+    error: null,
   });
 
   // 🎯 CONFIGURAÇÃO OTIMIZADA
@@ -40,7 +40,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
     templatesEnabled: true,
     autoOptimization: true,
     mode: 'hybrid',
-    ...config
+    ...config,
   }), [config]);
 
   // 🤖 AI ORCHESTRATOR INICIALIZAÇÃO
@@ -67,7 +67,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
           ...prev,
           availablePresets: presets,
           isInitialized: true,
-          error: null
+          error: null,
         }));
 
         logger.info('✅ Builder System: Inicializado com sucesso');
@@ -77,7 +77,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
         setState(prev => ({
           ...prev,
           error: error instanceof Error ? error.message : 'Erro desconhecido',
-          isInitialized: false
+          isInitialized: false,
         }));
       }
     };
@@ -99,12 +99,12 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       // Tentar usar Edge Function primeiro
       try {
         const response = await fetch(
-          `https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/ai-quiz-generator`,
+          'https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/ai-quiz-generator',
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt, quizType: type })
-          }
+            body: JSON.stringify({ prompt, quizType: type }),
+          },
         );
 
         const data = await response.json();
@@ -112,7 +112,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
           setState(prev => ({ 
             ...prev, 
             isGenerating: false,
-            currentTemplate: type
+            currentTemplate: type,
           }));
           logger.info('✅ Builder System: Quiz gerado via IA Edge Function');
           return data.quiz;
@@ -136,7 +136,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       setState(prev => ({ 
         ...prev, 
         isGenerating: false,
-        currentTemplate: type
+        currentTemplate: type,
       }));
 
       return result;
@@ -146,7 +146,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       setState(prev => ({ 
         ...prev, 
         isGenerating: false,
-        error: error instanceof Error ? error.message : 'Erro na geração'
+        error: error instanceof Error ? error.message : 'Erro na geração',
       }));
       throw error;
     }
@@ -171,7 +171,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       setState(prev => ({ 
         ...prev, 
         isGenerating: false,
-        currentTemplate: presetName
+        currentTemplate: presetName,
       }));
 
       logger.info('✅ Builder System: Preset aplicado com sucesso');
@@ -182,7 +182,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       setState(prev => ({ 
         ...prev, 
         isGenerating: false,
-        error: error instanceof Error ? error.message : 'Erro ao aplicar preset'
+        error: error instanceof Error ? error.message : 'Erro ao aplicar preset',
       }));
       throw error;
     }
@@ -223,7 +223,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       setState(prev => ({ 
         ...prev, 
         isGenerating: false,
-        currentTemplate: requirements.name
+        currentTemplate: requirements.name,
       }));
 
       logger.info('✅ Builder System: Template personalizado gerado');
@@ -235,7 +235,7 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       setState(prev => ({ 
         ...prev, 
         isGenerating: false,
-        error: error instanceof Error ? error.message : 'Erro na geração de template'
+        error: error instanceof Error ? error.message : 'Erro na geração de template',
       }));
       throw error;
     }
@@ -249,16 +249,16 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
       logger.info('🔄 Builder System: Otimização automática');
       
       const response = await fetch(
-        `https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/ai-optimization-engine`,
+        'https://pwtjuuhchtbzttrzoutw.supabase.co/functions/v1/ai-optimization-engine',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'optimize',
             funnelConfig: funnelData,
-            userBehaviorData: userBehaviorData || {}
-          })
-        }
+            userBehaviorData: userBehaviorData || {},
+          }),
+        },
       );
 
       const data = await response.json();
@@ -290,8 +290,8 @@ export const useBuilderSystem = (config: Partial<BuilderSystemConfig> = {}) => {
         isGenerating: false,
         currentTemplate: null,
         availablePresets: [],
-        error: null
+        error: null,
       });
-    }, [])
+    }, []),
   };
 };

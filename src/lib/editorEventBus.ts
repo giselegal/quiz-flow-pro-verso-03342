@@ -67,7 +67,7 @@ class EditorEventBus {
   private stats = {
     emitted: 0,
     handled: 0,
-    errors: 0
+    errors: 0,
   };
   
   constructor() {
@@ -79,14 +79,14 @@ class EditorEventBus {
    */
   emit<K extends keyof EditorEvents>(
     eventName: K,
-    detail: EditorEvents[K]
+    detail: EditorEvents[K],
   ): void {
     this.stats.emitted++;
     
     const event = new CustomEvent(eventName, {
       detail,
       bubbles: false,
-      cancelable: false
+      cancelable: false,
     });
     
     console.log(`📡 [EventBus] ${eventName}`, detail);
@@ -98,7 +98,7 @@ class EditorEventBus {
    */
   on<K extends keyof EditorEvents>(
     eventName: K,
-    handler: EventHandler<EditorEvents[K]>
+    handler: EventHandler<EditorEvents[K]>,
   ): void {
     if (!this.listeners.has(eventName)) {
       this.listeners.set(eventName, new Set());
@@ -126,7 +126,7 @@ class EditorEventBus {
    */
   off<K extends keyof EditorEvents>(
     eventName: K,
-    handler: EventHandler<EditorEvents[K]>
+    handler: EventHandler<EditorEvents[K]>,
   ): void {
     const listeners = this.listeners.get(eventName);
     if (listeners) {
@@ -146,7 +146,7 @@ class EditorEventBus {
    */
   once<K extends keyof EditorEvents>(
     eventName: K,
-    handler: EventHandler<EditorEvents[K]>
+    handler: EventHandler<EditorEvents[K]>,
   ): void {
     const wrappedHandler: EventHandler<EditorEvents[K]> = (event) => {
       handler(event);
@@ -177,8 +177,8 @@ class EditorEventBus {
       ...this.stats,
       activeListeners: Array.from(this.listeners.entries()).map(([event, handlers]) => ({
         event,
-        count: handlers.size
-      }))
+        count: handlers.size,
+      })),
     };
   }
   
@@ -212,7 +212,7 @@ if (typeof window !== 'undefined') {
 export function useEditorEvent<K extends keyof EditorEvents>(
   eventName: K,
   handler: (detail: EditorEvents[K]) => void,
-  deps: React.DependencyList = []
+  deps: React.DependencyList = [],
 ): void {
   const { useEffect, useCallback } = require('react');
   

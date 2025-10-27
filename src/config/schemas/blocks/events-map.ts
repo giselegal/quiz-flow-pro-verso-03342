@@ -16,8 +16,8 @@ export const eventsMapSchema = templates
         { key: 'name', label: 'Nome', type: 'text' },
         { key: 'endpoint', label: 'Endpoint (URL)', type: 'text' },
         { key: 'payload', label: 'Payload (JSON)', type: 'text' },
-      ]
-    }
+      ],
+    },
   })
   .version('2.0.0')
   .build();

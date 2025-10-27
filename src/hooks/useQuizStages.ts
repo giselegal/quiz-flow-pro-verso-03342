@@ -22,7 +22,7 @@ export const useQuizStages = () => {
   const addStage = useCallback((stage: Omit<QuizStage, 'id'>) => {
     const newStage: QuizStage = {
       ...stage,
-      id: `stage-${Date.now()}`
+      id: `stage-${Date.now()}`,
     };
     
     setStages(prev => [...prev, newStage]);
@@ -31,7 +31,7 @@ export const useQuizStages = () => {
 
   const updateStage = useCallback((stageId: string, updates: Partial<QuizStage>) => {
     setStages(prev => prev.map(stage => 
-      stage.id === stageId ? { ...stage, ...updates } : stage
+      stage.id === stageId ? { ...stage, ...updates } : stage,
     ));
     console.log('🔄 Stage atualizado:', stageId, updates);
   }, []);
@@ -53,7 +53,7 @@ export const useQuizStages = () => {
     updateStage,
     removeStage,
     goToStage,
-    totalStages: stages.length
+    totalStages: stages.length,
   };
 };
 

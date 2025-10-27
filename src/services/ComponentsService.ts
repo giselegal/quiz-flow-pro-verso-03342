@@ -100,7 +100,7 @@ export class ComponentsService {
             default_content,
             default_properties
           )
-        `
+        `,
         )
         .eq('stage_key', stageKey)
         .order('stage_order', { ascending: true }) as any;
@@ -185,7 +185,7 @@ export class ComponentsService {
     stageKey: string,
     typeKey: string,
     content?: any,
-    properties?: any
+    properties?: any,
   ): Promise<string | null> {
     try {
       if (!this.isOnline) throw new Error('Serviço offline');
@@ -259,7 +259,7 @@ export class ComponentsService {
    */
   public static async updateBlock(
     instanceKey: string,
-    updates: Partial<Pick<Block, 'content' | 'properties' | 'order'>>
+    updates: Partial<Pick<Block, 'content' | 'properties' | 'order'>>,
   ): Promise<boolean> {
     try {
       const updateData: any = {};
@@ -397,7 +397,7 @@ export class ComponentsService {
 
       // Remove duplicatas usando Set
       const stageKeys = Array.from(
-        new Set((data?.map((item: any) => item.stage_key) || []) as string[])
+        new Set((data?.map((item: any) => item.stage_key) || []) as string[]),
       );
       return stageKeys;
     } catch (error) {

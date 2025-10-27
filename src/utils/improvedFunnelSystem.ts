@@ -36,7 +36,7 @@ export const validateFunnelData = (data: any) => {
         isValid: true,
         errors: [] as string[],
         warnings: [] as string[],
-        normalized: null as any
+        normalized: null as any,
     };
 
     try {
@@ -75,7 +75,7 @@ export const validateFunnelData = (data: any) => {
             const validationError = createValidationError('SCHEMA_VALIDATION_FAILED',
                 `Funnel validation failed: ${results.errors.join(', ')}`, {
                 funnelId: normalized.funnelId,
-                additionalData: { errors: results.errors, warnings: results.warnings }
+                additionalData: { errors: results.errors, warnings: results.warnings },
             });
             errorManager.handleError(validationError);
         }
@@ -86,7 +86,7 @@ export const validateFunnelData = (data: any) => {
 
         const systemError = createValidationError('SCHEMA_VALIDATION_FAILED',
             'Critical validation system error', {
-            additionalData: { originalError: error }
+            additionalData: { originalError: error },
         });
         errorManager.handleError(systemError);
     }
@@ -116,12 +116,12 @@ export const sanitizeAndNormalizeFunnelData = (rawData: any) => {
             data: frontendData,
             isValid: validation.isValid,
             errors: validation.errors,
-            warnings: validation.warnings
+            warnings: validation.warnings,
         };
     } catch (error) {
         const processingError = createValidationError('SCHEMA_VALIDATION_FAILED',
             'Failed to sanitize and normalize funnel data', {
-            additionalData: { rawData, error }
+            additionalData: { rawData, error },
         });
         errorManager.handleError(processingError);
 
@@ -129,7 +129,7 @@ export const sanitizeAndNormalizeFunnelData = (rawData: any) => {
             data: rawData,
             isValid: false,
             errors: [`Processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`],
-            warnings: []
+            warnings: [],
         };
     }
 };
@@ -146,7 +146,7 @@ export const migrateToNewSystem = async (legacyData: any[]) => {
         success: 0,
         failed: 0,
         warnings: 0,
-        migratedData: [] as any[]
+        migratedData: [] as any[],
     };
 
     for (const item of legacyData) {
@@ -171,7 +171,7 @@ export const migrateToNewSystem = async (legacyData: any[]) => {
             const migrationError = createStorageError('MIGRATION_FAILED',
                 `Failed to migrate item: ${error instanceof Error ? error.message : 'Unknown error'}`, {
                 operation: 'migrateToNewSystem',
-                additionalData: { item }
+                additionalData: { item },
             });
             errorManager.handleError(migrationError);
         }
@@ -196,10 +196,10 @@ export const performSystemHealthCheck = () => {
             schemaValidation: false,
             namingConsistency: false,
             errorHandling: false,
-            storageIntegrity: false
+            storageIntegrity: false,
         },
         issues: [] as string[],
-        recommendations: [] as string[]
+        recommendations: [] as string[],
     };
 
     try {
@@ -212,14 +212,14 @@ export const performSystemHealthCheck = () => {
         const testSchema = validateFunnelSchema({
             id: 'test',
             name: 'Test Funnel',
-            pages: []
+            pages: [],
         });
         health.checks.schemaValidation = testSchema.isValid;
 
         // Test naming consistency
         const testNaming = normalizeIdentifiers({
             funnel_id: 'test',
-            step_number: 1
+            step_number: 1,
         });
         health.checks.namingConsistency = testNaming.funnelId === 'test' && testNaming.stepNumber === 1;
 

@@ -49,7 +49,7 @@ export class FunnelValidationService {
                     exists: false,
                     hasPermission: false,
                     error: 'ID do funil inválido',
-                    errorType: 'INVALID_FORMAT'
+                    errorType: 'INVALID_FORMAT',
                 };
             }
 
@@ -70,7 +70,7 @@ export class FunnelValidationService {
                     exists: false,
                     hasPermission: false,
                     error: 'Funil não encontrado',
-                    errorType: 'NOT_FOUND'
+                    errorType: 'NOT_FOUND',
                 };
                 this.cache.set(cacheKey, { result, timestamp: Date.now() });
                 return result;
@@ -85,7 +85,7 @@ export class FunnelValidationService {
                     exists: true,
                     hasPermission: false,
                     error: 'Sem permissão para acessar este funil',
-                    errorType: 'NO_PERMISSION'
+                    errorType: 'NO_PERMISSION',
                 };
                 this.cache.set(cacheKey, { result, timestamp: Date.now() });
                 return result;
@@ -96,7 +96,7 @@ export class FunnelValidationService {
                 isValid: true,
                 exists: true,
                 hasPermission: true,
-                funnel: funnelExists.funnel
+                funnel: funnelExists.funnel,
             };
             this.cache.set(cacheKey, { result, timestamp: Date.now() });
             return result;
@@ -108,7 +108,7 @@ export class FunnelValidationService {
                 exists: false,
                 hasPermission: false,
                 error: 'Erro de rede ao validar funil',
-                errorType: 'NETWORK_ERROR'
+                errorType: 'NETWORK_ERROR',
             };
         }
     }
@@ -129,7 +129,7 @@ export class FunnelValidationService {
             'quiz-basico',
             'quiz-avancado',
             'funnel-vendas',
-            'funnel-leads'
+            'funnel-leads',
         ];
 
         if (validFunnels.includes(funnelId)) {
@@ -141,8 +141,8 @@ export class FunnelValidationService {
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString(),
                     owner_id: 'user-1',
-                    status: 'active'
-                }
+                    status: 'active',
+                },
             };
         }
 
@@ -166,7 +166,7 @@ export class FunnelValidationService {
                 canWrite: false,
                 canDelete: false,
                 canShare: false,
-                isOwner: false
+                isOwner: false,
             };
         }
 
@@ -176,7 +176,7 @@ export class FunnelValidationService {
             canWrite: true,
             canDelete: true,
             canShare: true,
-            isOwner: true
+            isOwner: true,
         };
     }
 
@@ -201,7 +201,7 @@ export class FunnelValidationService {
         const suggestions = [
             'default',
             'template-1',
-            'quiz-basico'
+            'quiz-basico',
         ];
 
         return suggestions.filter(id => id !== originalFunnelId);
@@ -233,6 +233,6 @@ export function useFunnelValidation() {
         getPermissions: funnelValidationService.getFunnelPermissions.bind(funnelValidationService),
         suggestAlternatives: funnelValidationService.suggestAlternativeFunnels.bind(funnelValidationService),
         clearCache: funnelValidationService.clearCache.bind(funnelValidationService),
-        invalidateCache: funnelValidationService.invalidateCache.bind(funnelValidationService)
+        invalidateCache: funnelValidationService.invalidateCache.bind(funnelValidationService),
     };
 }

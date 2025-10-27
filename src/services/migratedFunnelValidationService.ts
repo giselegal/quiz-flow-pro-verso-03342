@@ -63,8 +63,8 @@ export class MigratedFunnelValidationService {
                     `ID do funil inválido: ${idValidationResult.error}`,
                     {
                         funnelId,
-                        additionalData: { validationResult: idValidationResult }
-                    }
+                        additionalData: { validationResult: idValidationResult },
+                    },
                 );
 
                 errorManager.handleError(error);
@@ -78,8 +78,8 @@ export class MigratedFunnelValidationService {
                         idValidation: false,
                         schemaValidation: false,
                         permissionCheck: false,
-                        healthCheck: false
-                    }
+                        healthCheck: false,
+                    },
                 };
             }
 
@@ -99,8 +99,8 @@ export class MigratedFunnelValidationService {
                     `Funil '${funnelId}' não foi encontrado no sistema`,
                     {
                         funnelId,
-                        additionalData: { searchAttempts: funnelExists.searchAttempts }
-                    }
+                        additionalData: { searchAttempts: funnelExists.searchAttempts },
+                    },
                 );
 
                 errorManager.handleError(error);
@@ -114,8 +114,8 @@ export class MigratedFunnelValidationService {
                         idValidation: true,
                         schemaValidation: false,
                         permissionCheck: false,
-                        healthCheck: false
-                    }
+                        healthCheck: false,
+                    },
                 };
 
                 this.cache.set(cacheKey, { result, timestamp: Date.now() });
@@ -130,8 +130,8 @@ export class MigratedFunnelValidationService {
                     `Schema do funil inválido: ${schemaValidation.errors?.join(', ')}`,
                     {
                         funnelId,
-                        additionalData: { schemaErrors: schemaValidation.errors }
-                    }
+                        additionalData: { schemaErrors: schemaValidation.errors },
+                    },
                 );
 
                 errorManager.handleError(error);
@@ -145,8 +145,8 @@ export class MigratedFunnelValidationService {
                         idValidation: true,
                         schemaValidation: false,
                         permissionCheck: false,
-                        healthCheck: false
-                    }
+                        healthCheck: false,
+                    },
                 };
 
                 this.cache.set(cacheKey, { result, timestamp: Date.now() });
@@ -163,8 +163,8 @@ export class MigratedFunnelValidationService {
                     {
                         funnelId,
                         userId: userId || 'anonymous',
-                        additionalData: { accessLevel: permissions.accessLevel }
-                    }
+                        additionalData: { accessLevel: permissions.accessLevel },
+                    },
                 );
 
                 errorManager.handleError(error);
@@ -178,8 +178,8 @@ export class MigratedFunnelValidationService {
                         idValidation: true,
                         schemaValidation: true,
                         permissionCheck: false,
-                        healthCheck: false
-                    }
+                        healthCheck: false,
+                    },
                 };
 
                 this.cache.set(cacheKey, { result, timestamp: Date.now() });
@@ -199,8 +199,8 @@ export class MigratedFunnelValidationService {
                     idValidation: true,
                     schemaValidation: true,
                     permissionCheck: true,
-                    healthCheck: healthCheck.overall === 'healthy'
-                }
+                    healthCheck: healthCheck.overall === 'healthy',
+                },
             };
 
             this.cache.set(cacheKey, { result, timestamp: Date.now() });
@@ -214,8 +214,8 @@ export class MigratedFunnelValidationService {
                 {
                     funnelId,
                     userId,
-                    additionalData: { originalError: error }
-                }
+                    additionalData: { originalError: error },
+                },
             );
 
             errorManager.handleError(standardizedError);
@@ -229,8 +229,8 @@ export class MigratedFunnelValidationService {
                     idValidation: false,
                     schemaValidation: false,
                     permissionCheck: false,
-                    healthCheck: false
-                }
+                    healthCheck: false,
+                },
             };
         }
     }    /**
@@ -248,7 +248,7 @@ export class MigratedFunnelValidationService {
         searchAttempts++;
         const templateFunnels = [
             'default', 'template-1', 'template-2', 'quiz-basico',
-            'quiz-avancado', 'funnel-vendas', 'funnel-leads'
+            'quiz-avancado', 'funnel-vendas', 'funnel-leads',
         ];
 
         if (templateFunnels.includes(funnelId)) {
@@ -264,8 +264,8 @@ export class MigratedFunnelValidationService {
                     updated_at: new Date().toISOString(),
                     owner_id: 'system',
                     status: 'active',
-                    is_template: true
-                }
+                    is_template: true,
+                },
             };
         }
 
@@ -281,7 +281,7 @@ export class MigratedFunnelValidationService {
                     exists: true,
                     searchAttempts,
                     dataSource: 'localStorage',
-                    funnel: frontendToDb(funnel) // Padronizar para snake_case
+                    funnel: frontendToDb(funnel), // Padronizar para snake_case
                 };
             } catch (parseError) {
                 // Dados corrompidos, continuar busca
@@ -292,7 +292,7 @@ export class MigratedFunnelValidationService {
         return {
             exists: false,
             searchAttempts,
-            dataSource: undefined
+            dataSource: undefined,
         };
     }
 
@@ -314,7 +314,7 @@ export class MigratedFunnelValidationService {
                 canDelete: false,
                 canShare: false,
                 isOwner: false,
-                accessLevel: hasAccess ? 'read' : 'none'
+                accessLevel: hasAccess ? 'read' : 'none',
             };
         }
 
@@ -329,7 +329,7 @@ export class MigratedFunnelValidationService {
                 canDelete: false,
                 canShare: true,
                 isOwner: false,
-                accessLevel: 'read'
+                accessLevel: 'read',
             };
         }
 
@@ -340,7 +340,7 @@ export class MigratedFunnelValidationService {
             canDelete: true,
             canShare: true,
             isOwner: true,
-            accessLevel: 'owner'
+            accessLevel: 'owner',
         };
     }
 
@@ -405,7 +405,7 @@ export class MigratedFunnelValidationService {
         return {
             size: entries.length,
             oldestEntry: new Date(Math.min(...timestamps)),
-            newestEntry: new Date(Math.max(...timestamps))
+            newestEntry: new Date(Math.max(...timestamps)),
         };
     }
 }
@@ -423,7 +423,7 @@ export function useMigratedFunnelValidation() {
         suggestAlternatives: migratedFunnelValidationService.suggestAlternativeFunnels.bind(migratedFunnelValidationService),
         clearCache: migratedFunnelValidationService.clearCache.bind(migratedFunnelValidationService),
         invalidateCache: migratedFunnelValidationService.invalidateCache.bind(migratedFunnelValidationService),
-        getCacheStats: migratedFunnelValidationService.getCacheStats.bind(migratedFunnelValidationService)
+        getCacheStats: migratedFunnelValidationService.getCacheStats.bind(migratedFunnelValidationService),
     };
 }
 
@@ -449,7 +449,7 @@ export async function legacyValidateFunnelAccess(funnelId: string, userId?: stri
         hasPermission: result.hasPermission,
         funnel: result.funnel,
         error: result.error?.message,
-        errorType: mapNewErrorTypeToLegacy(result.error?.code)
+        errorType: mapNewErrorTypeToLegacy(result.error?.code),
     };
 }
 

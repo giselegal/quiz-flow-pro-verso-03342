@@ -4,16 +4,16 @@ import { render, screen } from '@testing-library/react';
 
 // Mocks modulares
 vi.mock('@/components/editor/quiz-estilo/ModularTransitionStep', () => ({
-    default: (props: any) => <div data-testid={`modular-transition-step-${props?.data?.id}`}>Transition {props?.data?.id}</div>
+    default: (props: any) => <div data-testid={`modular-transition-step-${props?.data?.id}`}>Transition {props?.data?.id}</div>,
 }));
 vi.mock('@/components/editor/quiz-estilo/ModularResultStep', () => ({
-    default: (props: any) => <div data-testid={`modular-result-step-${props?.data?.id}`}>Result {props?.data?.id}</div>
+    default: (props: any) => <div data-testid={`modular-result-step-${props?.data?.id}`}>Result {props?.data?.id}</div>,
 }));
 
 // Adapter simplificado
 vi.mock('@/utils/StepDataAdapter', () => ({
     adaptStepData: (step: any) => step,
-    extractStepNumber: (id: string) => parseInt(id.replace('step-', '')) || 1
+    extractStepNumber: (id: string) => parseInt(id.replace('step-', '')) || 1,
 }));
 
 // Mock do estado do quiz controlado
@@ -29,7 +29,7 @@ vi.mock('@/hooks/useQuizState', () => ({
             state: {
                 currentStep: current,
                 userProfile: { userName: 'X', resultStyle: 'natural', secondaryStyles: [] },
-                answers: {}
+                answers: {},
             },
             currentStepData: steps[current],
             progress: 75,
@@ -39,12 +39,12 @@ vi.mock('@/hooks/useQuizState', () => ({
             addAnswer: vi.fn(),
             addStrategicAnswer: vi.fn(),
         };
-    }
+    },
 }));
 
 // UI global
 vi.mock('@/hooks/core/useGlobalState', () => ({
-    useGlobalUI: () => ({ ui: { propertiesPanelOpen: false }, togglePropertiesPanel: vi.fn() })
+    useGlobalUI: () => ({ ui: { propertiesPanelOpen: false }, togglePropertiesPanel: vi.fn() }),
 }));
 
 // EditorProviderOptional → não provido, o container criará

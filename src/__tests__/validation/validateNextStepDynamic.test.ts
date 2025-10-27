@@ -9,7 +9,7 @@ describe('validateNextStep (dinâmico / normalização)', () => {
             type: 'question',
             options: styleIds.map((id, idx) => ({ id, text: `Opção ${idx + 1}`, image: 'x.png' })),
             nextStep: undefined,
-            ...step
+            ...step,
         } as any;
     }
 

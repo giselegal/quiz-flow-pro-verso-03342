@@ -77,12 +77,12 @@ export class EditorState {
       previewMode: 'desktop',
       isDarkMode: false,
       showBlockIds: false,
-      enableAnalytics: true
+      enableAnalytics: true,
     },
     public validation: EditorValidation = {
       isValid: true,
       errors: [],
-      warnings: []
+      warnings: [],
     },
     public session: EditorSession,
     public metadata: {
@@ -97,8 +97,8 @@ export class EditorState {
       version: 1,
       isAutoSaved: false,
       createdAt: new Date(),
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   ) {}
 
   // 🔍 Business Rules - State Validation
@@ -137,15 +137,15 @@ export class EditorState {
       {
         ...this.session,
         lastActiveAt: new Date(),
-        actionsCount: this.session.actionsCount + 1
+        actionsCount: this.session.actionsCount + 1,
       },
-      { ...this.metadata, updatedAt: new Date() }
+      { ...this.metadata, updatedAt: new Date() },
     );
   }
 
   getTotalSteps(): number {
     return Math.max(...Object.keys(this.stepBlocks).map(key => 
-      parseInt(key.replace('step-', '')) || 0
+      parseInt(key.replace('step-', '')) || 0,
     ), 0);
   }
 
@@ -188,13 +188,13 @@ export class EditorState {
       {
         ...this.session,
         lastActiveAt: new Date(),
-        actionsCount: this.session.actionsCount + 1
+        actionsCount: this.session.actionsCount + 1,
       },
       { 
         ...this.metadata, 
         updatedAt: new Date(),
-        isAutoSaved: false 
-      }
+        isAutoSaved: false, 
+      },
     );
   }
 
@@ -219,13 +219,13 @@ export class EditorState {
       {
         ...this.session,
         lastActiveAt: new Date(),
-        actionsCount: this.session.actionsCount + 1
+        actionsCount: this.session.actionsCount + 1,
       },
       { 
         ...this.metadata, 
         updatedAt: new Date(),
-        isAutoSaved: false 
-      }
+        isAutoSaved: false, 
+      },
     );
   }
 
@@ -252,13 +252,13 @@ export class EditorState {
       {
         ...this.session,
         lastActiveAt: new Date(),
-        actionsCount: this.session.actionsCount + 1
+        actionsCount: this.session.actionsCount + 1,
       },
       { 
         ...this.metadata, 
         updatedAt: new Date(),
-        isAutoSaved: false 
-      }
+        isAutoSaved: false, 
+      },
     );
   }
 
@@ -291,13 +291,13 @@ export class EditorState {
       {
         ...this.session,
         lastActiveAt: new Date(),
-        actionsCount: this.session.actionsCount + 1
+        actionsCount: this.session.actionsCount + 1,
       },
       { 
         ...this.metadata, 
         updatedAt: new Date(),
-        isAutoSaved: false 
-      }
+        isAutoSaved: false, 
+      },
     );
   }
 
@@ -318,9 +318,9 @@ export class EditorState {
       this.validation,
       {
         ...this.session,
-        lastActiveAt: new Date()
+        lastActiveAt: new Date(),
       },
-      this.metadata
+      this.metadata,
     );
   }
 
@@ -349,9 +349,9 @@ export class EditorState {
       {
         ...this.session,
         lastActiveAt: new Date(),
-        actionsCount: this.session.actionsCount + 1
+        actionsCount: this.session.actionsCount + 1,
       },
-      this.metadata
+      this.metadata,
     );
   }
 
@@ -365,7 +365,7 @@ export class EditorState {
     this.clipboard.forEach((block, index) => {
       const newBlock = block.clone(
         `${block.id}-paste-${Date.now()}-${index}`,
-        `step-${this.currentStep}`
+        `step-${this.currentStep}`,
       );
       
       const insertPosition = position !== undefined ? position + index : undefined;
@@ -385,7 +385,7 @@ export class EditorState {
       this.settings,
       this.validation,
       this.session,
-      this.metadata
+      this.metadata,
     );
   }
 
@@ -401,9 +401,9 @@ export class EditorState {
       this.validation,
       {
         ...this.session,
-        lastActiveAt: new Date()
+        lastActiveAt: new Date(),
       },
-      { ...this.metadata, updatedAt: new Date() }
+      { ...this.metadata, updatedAt: new Date() },
     );
   }
 
@@ -421,7 +421,7 @@ export class EditorState {
             type: 'error',
             message: `Bloco ${block.type} inválido`,
             blockId: block.id,
-            stepId: stepKey
+            stepId: stepKey,
           });
         }
       });
@@ -435,7 +435,7 @@ export class EditorState {
     const validation: EditorValidation = {
       isValid: errors.filter(e => e.type === 'error').length === 0,
       errors,
-      warnings
+      warnings,
     };
 
     return new EditorState(
@@ -447,7 +447,7 @@ export class EditorState {
       this.settings,
       validation,
       this.session,
-      this.metadata
+      this.metadata,
     );
   }
 
@@ -465,8 +465,8 @@ export class EditorState {
       {
         ...this.metadata,
         isAutoSaved: true,
-        lastSavedAt: new Date()
-      }
+        lastSavedAt: new Date(),
+      },
     );
   }
 
@@ -504,7 +504,7 @@ export class EditorState {
       blocksByStep,
       averageBlocksPerStep: totalBlocks / Math.max(Object.keys(this.stepBlocks).length, 1),
       sessionDuration,
-      actionsPerMinute
+      actionsPerMinute,
     };
   }
 
@@ -515,8 +515,8 @@ export class EditorState {
       stepBlocks: Object.fromEntries(
         Object.entries(this.stepBlocks).map(([key, blocks]) => [
           key, 
-          blocks.map(block => block.toJSON())
-        ])
+          blocks.map(block => block.toJSON()),
+        ]),
       ),
       currentStep: this.currentStep,
       selectedBlockId: this.selectedBlockId,
@@ -524,7 +524,7 @@ export class EditorState {
       settings: this.settings,
       validation: this.validation,
       session: this.session,
-      metadata: this.metadata
+      metadata: this.metadata,
     };
   }
 
@@ -544,7 +544,7 @@ export class EditorState {
       data.settings,
       data.validation,
       data.session,
-      data.metadata
+      data.metadata,
     );
   }
 }

@@ -44,7 +44,7 @@ export const useResultCalculations = (
     userProfile?: {
         resultStyle?: string;
         secondaryStyles?: string[];
-    }
+    },
 ): ResultCalculations => {
     return useMemo(() => {
         // Resultado vazio se não há scores
@@ -55,7 +55,7 @@ export const useResultCalculations = (
                 secondaryStyles: [],
                 totalPoints: 0,
                 confidence: 0,
-                allStyles: []
+                allStyles: [],
             };
         }
         
@@ -71,7 +71,7 @@ export const useResultCalculations = (
             ['romantico', scores.romantico || 0],
             ['sexy', scores.sexy || 0],
             ['dramatico', scores.dramatico || 0],
-            ['criativo', scores.criativo || 0]
+            ['criativo', scores.criativo || 0],
         ] as [string, number][];
         
         // 2. Calcular total de pontos
@@ -84,7 +84,7 @@ export const useResultCalculations = (
                 secondaryStyles: [],
                 totalPoints: 0,
                 confidence: 0,
-                allStyles: []
+                allStyles: [],
             };
         }
         
@@ -94,11 +94,11 @@ export const useResultCalculations = (
                 const displayKey = resolveStyleId(styleKey); // chave canônica (acentuada se existir)
                 return {
                     key: styleKey,
-                    displayKey: displayKey,
+                    displayKey,
                     name: styleConfigGisele[displayKey]?.name || displayKey,
                     score,
                     percentage: ((score / totalPoints) * 100),
-                    originalIndex // Preserva ordem original para desempate
+                    originalIndex, // Preserva ordem original para desempate
                 };
             })
             .filter(style => style.score > 0)
@@ -132,7 +132,7 @@ export const useResultCalculations = (
             secondaryStyles,
             totalPoints,
             confidence: Math.round(confidence),
-            allStyles: stylesWithPercentages
+            allStyles: stylesWithPercentages,
         };
         
     }, [scores, userProfile?.resultStyle, userProfile?.secondaryStyles]);

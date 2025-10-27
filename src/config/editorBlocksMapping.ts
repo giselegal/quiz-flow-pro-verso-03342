@@ -34,7 +34,7 @@ export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
 
   // Blocos de quiz e resultado (funcionais)
   'quiz-result-calculated': QuizResultCalculatedBlock,
-  QuizResultCalculatedBlock: QuizResultCalculatedBlock,
+  QuizResultCalculatedBlock,
 };
 
 // FUNÇÃO PRINCIPAL - Busca primeiro no Enhanced Registry, depois no Unified Map

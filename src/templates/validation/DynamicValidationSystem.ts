@@ -55,7 +55,7 @@ class DynamicValidationSystem {
 
         templateEventSystem.emit('validation:registered', {
             stepId: config.stepId,
-            rulesCount: config.rules.length
+            rulesCount: config.rules.length,
         }, 'system');
     }
 
@@ -64,7 +64,7 @@ class DynamicValidationSystem {
      */
     registerCustomValidator(
         id: string,
-        validator: (value: any, formData: any) => boolean | Promise<boolean>
+        validator: (value: any, formData: any) => boolean | Promise<boolean>,
     ): void {
         this.customValidators.set(id, validator);
     }
@@ -75,7 +75,7 @@ class DynamicValidationSystem {
     async validateStep(
         stepId: string,
         formData: any,
-        templateId: string
+        templateId: string,
     ): Promise<ValidationResult> {
         const config = this.stepValidations.get(stepId);
 
@@ -111,7 +111,7 @@ class DynamicValidationSystem {
                 errors.push({
                     field: rule.field,
                     message: rule.message,
-                    ruleId: rule.id
+                    ruleId: rule.id,
                 });
             }
         }
@@ -119,14 +119,14 @@ class DynamicValidationSystem {
         const result: ValidationResult = {
             isValid: errors.length === 0,
             errors,
-            warnings: warnings.length > 0 ? warnings : undefined
+            warnings: warnings.length > 0 ? warnings : undefined,
         };
 
         // Emitir evento
         templateEventSystem.emit(
             result.isValid ? 'validation:success' : 'validation:error',
             { stepId, result },
-            templateId
+            templateId,
         );
 
         return result;
@@ -156,7 +156,7 @@ class DynamicValidationSystem {
         return {
             isValid: allErrors.length === 0,
             errors: allErrors,
-            warnings: allWarnings.length > 0 ? allWarnings : undefined
+            warnings: allWarnings.length > 0 ? allWarnings : undefined,
         };
     }
 
@@ -166,7 +166,7 @@ class DynamicValidationSystem {
     private async validateRule(
         rule: ValidationRule,
         value: any,
-        formData: any
+        formData: any,
     ): Promise<boolean> {
         switch (rule.type) {
             case 'required':
@@ -257,7 +257,7 @@ import { useTemplateEvents } from '../events/TemplateEventSystem';
 export function useStepValidation(stepId: string, templateId: string) {
     const [validationResult, setValidationResult] = useState<ValidationResult>({
         isValid: true,
-        errors: []
+        errors: [],
     });
 
     // Escutar eventos de validação
@@ -284,6 +284,6 @@ export function useStepValidation(stepId: string, templateId: string) {
         validateStep,
         isValid: validationResult.isValid,
         errors: validationResult.errors,
-        warnings: validationResult.warnings
+        warnings: validationResult.warnings,
     };
 }

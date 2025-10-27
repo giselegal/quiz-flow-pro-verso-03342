@@ -20,7 +20,7 @@ describe('QuizAppConnected - Preview com initialConfig não deve chamar API de c
             steps: [
                 { id: 'step-01', type: 'intro', title: 'Intro', blocks: [] },
                 { id: 'step-02', type: 'question', title: 'Pergunta 1', blocks: [] },
-            ]
+            ],
         };
 
         // Renderizar em preview

@@ -174,7 +174,7 @@ export class JsonTemplateService {
             // 3. Salvar arquivo (simulado - em produção salvaria no servidor)
             const fileName = `quiz-estilo-step-${stepNumber}.json`;
             console.log(`✅ Template convertido: ${fileName}`);
-            console.log('📄 JSON:', JSON.stringify(jsonTemplate, null, 2).slice(0, 200) + '...');
+            console.log('📄 JSON:', `${JSON.stringify(jsonTemplate, null, 2).slice(0, 200)  }...`);
 
             // 4. Atualizar cache
             if (this.config.cacheEnabled) {
@@ -426,15 +426,15 @@ export class JsonTemplateService {
         return {
             cache: {
                 size: cacheSize,
-                hitRate: (cacheHitRate * 100).toFixed(2) + '%',
+                hitRate: `${(cacheHitRate * 100).toFixed(2)  }%`,
                 ttl: this.config.cacheTTL,
             },
             performance: {
-                averageLoadTime: this.metrics.averageLoadTime.toFixed(2) + 'ms',
+                averageLoadTime: `${this.metrics.averageLoadTime.toFixed(2)  }ms`,
                 totalLoads: this.metrics.hits + this.metrics.misses,
             },
             reliability: {
-                successRate: ((1 - this.metrics.errors / (this.metrics.hits + this.metrics.misses)) * 100).toFixed(2) + '%',
+                successRate: `${((1 - this.metrics.errors / (this.metrics.hits + this.metrics.misses)) * 100).toFixed(2)  }%`,
                 errors: this.metrics.errors,
             },
             config: this.config,

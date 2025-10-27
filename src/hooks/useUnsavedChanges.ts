@@ -22,7 +22,7 @@ interface UseUnsavedChangesReturn {
  */
 export function useUnsavedChanges(): UseUnsavedChangesReturn {
   const [unsavedChanges, setUnsavedChanges] = useState<Map<string, UnsavedChange>>(
-    new Map()
+    new Map(),
   );
 
   // Marca um step como modificado
@@ -57,7 +57,7 @@ export function useUnsavedChanges(): UseUnsavedChangesReturn {
     (stepId: string) => {
       return unsavedChanges.has(stepId);
     },
-    [unsavedChanges]
+    [unsavedChanges],
   );
 
   // Retorna número total de steps modificados

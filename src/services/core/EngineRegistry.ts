@@ -57,7 +57,7 @@ export class EngineRegistry {
     this.engines.set(engine.id, {
       ...engine,
       lastUsed: undefined,
-      errors: []
+      errors: [],
     });
     
     console.log(`✅ Motor ${engine.name} registrado com sucesso`);
@@ -84,7 +84,7 @@ export class EngineRegistry {
       useCache?: boolean;
       maxRetries?: number;
       excludeEngines?: string[];
-    } = {}
+    } = {},
   ): Promise<EngineExecutionResult> {
     const { userName, useCache = true, maxRetries = 2, excludeEngines = [] } = options;
     
@@ -100,7 +100,7 @@ export class EngineRegistry {
           success: true,
           result: unifiedResult,
           executionTime: 0,
-          fromCache: true
+          fromCache: true,
         };
       }
     }
@@ -109,7 +109,7 @@ export class EngineRegistry {
     const availableEngines = this.getEnginesByPriority()
       .filter(engine => 
         engine.status === 'active' && 
-        !excludeEngines.includes(engine.id)
+        !excludeEngines.includes(engine.id),
       );
 
     if (availableEngines.length === 0) {
@@ -163,7 +163,7 @@ export class EngineRegistry {
   async executeEngine(
     engine: EngineDefinition, 
     data: any, 
-    options: { maxRetries?: number } = {}
+    options: { maxRetries?: number } = {},
   ): Promise<EngineExecutionResult> {
     const { maxRetries = 1 } = options;
     const startTime = Date.now();
@@ -178,7 +178,7 @@ export class EngineRegistry {
         if (engine.isHealthy) {
           const healthy = await Promise.race([
             engine.isHealthy(),
-            new Promise<boolean>(resolve => setTimeout(() => resolve(false), 2000)) // 2s timeout
+            new Promise<boolean>(resolve => setTimeout(() => resolve(false), 2000)), // 2s timeout
           ]);
           
           if (!healthy) {
@@ -190,8 +190,8 @@ export class EngineRegistry {
         const rawResult = await Promise.race([
           engine.execute(data, options),
           new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Timeout de execução (10s)')), 10000)
-          )
+            setTimeout(() => reject(new Error('Timeout de execução (10s)')), 10000),
+          ),
         ]);
         
         // Converter resultado para formato unificado
@@ -213,7 +213,7 @@ export class EngineRegistry {
           success: true,
           result: unifiedResult,
           executionTime,
-          fromCache: false
+          fromCache: false,
         };
         
         this.addToHistory(result);
@@ -238,7 +238,7 @@ export class EngineRegistry {
       success: false,
       error: lastError,
       executionTime,
-      fromCache: false
+      fromCache: false,
     };
     
     this.addToHistory(result);
@@ -279,8 +279,8 @@ export class EngineRegistry {
         status: engine.status,
         lastUsed: engine.lastUsed,
         errorCount: engine.errors?.length || 0,
-        recentErrors: engine.errors?.slice(-3) || []
-      }))
+        recentErrors: engine.errors?.slice(-3) || [],
+      })),
     };
   }
 
@@ -329,7 +329,7 @@ export class EngineRegistry {
         } catch {
           return false;
         }
-      }
+      },
     });
 
     // Motor de fallback - ResultOrchestrator
@@ -345,10 +345,10 @@ export class EngineRegistry {
         const { ResultOrchestrator } = await import('@/services/core/ResultOrchestrator');
         const result = await ResultOrchestrator.run({
           selectionsByQuestion: data.selections || {},
-          userName: data.userName || 'Usuário'
+          userName: data.userName || 'Usuário',
         });
         return result.payload;
-      }
+      },
     });
 
     console.log('🔧 Motores padrão registrados');
@@ -388,7 +388,7 @@ export class EngineRegistry {
       success: false,
       error,
       executionTime: 0,
-      fromCache: false
+      fromCache: false,
     };
   }
 

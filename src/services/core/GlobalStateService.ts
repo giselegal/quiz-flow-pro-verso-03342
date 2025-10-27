@@ -10,7 +10,7 @@
 import {
     GlobalAppConfig,
     GlobalUIState,
-    GlobalFunnelState
+    GlobalFunnelState,
 } from '@/hooks/core/useGlobalState';
 import { EventEmitter } from '@/utils/EventEmitter';
 
@@ -77,7 +77,7 @@ export class GlobalStateService extends EventEmitter {
         this.emit('configChanged', {
             old: oldConfig,
             new: this.cache.config,
-            changes: updates
+            changes: updates,
         });
 
         this.notifySubscribers('config', this.cache.config);
@@ -95,7 +95,7 @@ export class GlobalStateService extends EventEmitter {
         this.emit('uiChanged', {
             old: oldUI,
             new: this.cache.ui,
-            changes: updates
+            changes: updates,
         });
 
         this.notifySubscribers('ui', this.cache.ui);
@@ -113,7 +113,7 @@ export class GlobalStateService extends EventEmitter {
         this.emit('funnelChanged', {
             old: oldFunnel,
             new: this.cache.funnel,
-            changes: updates
+            changes: updates,
         });
 
         this.notifySubscribers('funnel', this.cache.funnel);
@@ -127,7 +127,7 @@ export class GlobalStateService extends EventEmitter {
             config: { ...this.cache.config },
             ui: { ...this.cache.ui },
             funnel: { ...this.cache.funnel },
-            timestamp: Date.now()
+            timestamp: Date.now(),
         };
     }
 
@@ -200,8 +200,8 @@ export class GlobalStateService extends EventEmitter {
                 features: {
                     analytics: true,
                     debugging: true,
-                    performance: true
-                }
+                    performance: true,
+                },
             },
             ui: {
                 sidebarOpen: true,
@@ -211,7 +211,7 @@ export class GlobalStateService extends EventEmitter {
                 currentRoute: '/',
                 isFullscreen: false,
                 loading: false,
-                currentView: 'dashboard'
+                currentView: 'dashboard',
             },
             funnel: {
                 activeFunnelId: null,
@@ -219,10 +219,10 @@ export class GlobalStateService extends EventEmitter {
                 funnelHistory: [],
                 recentFunnels: [],
                 currentFunnelId: null,
-                editMode: false
+                editMode: false,
             },
             lastSync: Date.now(),
-            isDirty: false
+            isDirty: false,
         };
     }
 

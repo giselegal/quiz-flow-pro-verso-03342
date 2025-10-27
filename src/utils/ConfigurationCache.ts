@@ -73,7 +73,7 @@ class ConfigurationCache {
         return {
             size: stats.size,
             keys: [], // LRU não expõe keys diretamente
-            memoryUsage: `${(stats.memoryUsage / 1024).toFixed(1)} KB`
+            memoryUsage: `${(stats.memoryUsage / 1024).toFixed(1)} KB`,
         };
     }
 }

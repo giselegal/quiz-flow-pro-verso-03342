@@ -20,7 +20,7 @@ export const useUniversalNavigation = (options: NavigationOptions = {}) => {
         setLocation(path);
       }
     },
-    [setLocation, options]
+    [setLocation, options],
   );
 
   const goBack = useCallback(() => {

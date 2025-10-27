@@ -25,7 +25,7 @@ export const getNextBlockOrder = (blocks: Block[]): number => {
  */
 export const createBlockFromComponent = (
   componentType: BlockType,
-  existingBlocks: Block[] = []
+  existingBlocks: Block[] = [],
 ): Block => {
   const def = getBlockDefinition(componentType as any);
   const defaults = def?.defaultProps || {};
@@ -122,6 +122,6 @@ export const validateEditorJSON = (jsonString: string): { valid: boolean; error?
 
     return { valid: true };
   } catch (err) {
-    return { valid: false, error: 'JSON inválido: ' + (err as Error).message };
+    return { valid: false, error: `JSON inválido: ${  (err as Error).message}` };
   }
 };

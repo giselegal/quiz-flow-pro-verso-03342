@@ -52,14 +52,14 @@ export class Quiz21StepsDataExtractor {
         title: step.title || `Etapa ${index + 1}`,
         blocks: (step.blocks || []).map((block: any) => ({
           ...block,
-          id: block.id || `block-${Date.now()}-${Math.random()}`
-        }))
+          id: block.id || `block-${Date.now()}-${Math.random()}`,
+        })),
       }));
 
       return {
         steps: processedSteps,
         totalSteps: processedSteps.length,
-        config: config || {}
+        config: config || {},
       };
     } catch (error) {
       console.error('❌ Erro ao extrair dados do template:', error);
@@ -69,10 +69,10 @@ export class Quiz21StepsDataExtractor {
         steps: Array.from({ length: 21 }, (_, i) => ({
           id: `step-${i + 1}`,
           title: `Etapa ${i + 1}`,
-          blocks: []
+          blocks: [],
         })),
         totalSteps: 21,
-        config: {}
+        config: {},
       };
     }
   }

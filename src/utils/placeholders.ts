@@ -12,7 +12,7 @@ export const generatePlaceholderSVG = (
     height: number = 200,
     text: string = 'Imagem',
     backgroundColor: string = '#f1f5f9',
-    textColor: string = '#64748b'
+    textColor: string = '#64748b',
 ): string => {
     console.warn('generatePlaceholderSVG is deprecated. Use imageCache.getOrCreatePlaceholder() for better performance.');
 

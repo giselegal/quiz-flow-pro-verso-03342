@@ -21,7 +21,7 @@ const block = (type: string, content: Record<string, any> = {}, properties: Reco
 describe('stepDataMigration', () => {
   it('migra quiz-options (alias) e options-grid (canônico)', () => {
     const step1 = makeStep([
-      block('quiz-options', { question: 'Pergunta A', options: [{ id: 'a' }] }, { requiredSelections: 2 })
+      block('quiz-options', { question: 'Pergunta A', options: [{ id: 'a' }] }, { requiredSelections: 2 }),
     ]);
     const out1 = migrateBlocksToStepMetadata(step1);
     expect(out1.metadata?.questionText).toBe('Pergunta A');
@@ -29,7 +29,7 @@ describe('stepDataMigration', () => {
     expect(Array.isArray(out1.metadata?.options)).toBe(true);
 
     const step2 = makeStep([
-      block('options-grid', { questionNumber: 3 }, { options: [{ id: 'x' }, { id: 'y' }] })
+      block('options-grid', { questionNumber: 3 }, { options: [{ id: 'x' }, { id: 'y' }] }),
     ]);
     const out2 = migrateBlocksToStepMetadata(step2);
     expect(out2.metadata?.questionNumber).toBe(3);

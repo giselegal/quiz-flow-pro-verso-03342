@@ -84,7 +84,7 @@ export const useUnifiedQuizNavigation = ({
 
     // Procurar regras aplicáveis ao step atual
     const applicableRules = rules.filter(rule => 
-      rule.stepId === currentStepIndex && rule.condition(answers)
+      rule.stepId === currentStepIndex && rule.condition(answers),
     );
 
     // Se encontrou alguma regra, retorna o step alvo da primeira regra aplicável
@@ -185,7 +185,7 @@ export const useUnifiedQuizNavigation = ({
   // Debug
   useEffect(() => {
     console.log(
-      `🧭 useUnifiedQuizNavigation: Step ${currentStepIndex + 1}/${totalSteps} (${completionPercentage}%) - Valid: ${isCurrentStepValid}`
+      `🧭 useUnifiedQuizNavigation: Step ${currentStepIndex + 1}/${totalSteps} (${completionPercentage}%) - Valid: ${isCurrentStepValid}`,
     );
   }, [currentStepIndex, totalSteps, completionPercentage, isCurrentStepValid]);
 

@@ -35,7 +35,7 @@ export const useQuizFormEvents = ({
         onFormChange(detail);
       }
     },
-    [onFormChange]
+    [onFormChange],
   );
 
   // Handler para conclusão do formulário
@@ -48,7 +48,7 @@ export const useQuizFormEvents = ({
         onFormComplete(detail);
       }
     },
-    [onFormComplete]
+    [onFormComplete],
   );
 
   // Handler para mudanças em inputs individuais
@@ -61,7 +61,7 @@ export const useQuizFormEvents = ({
         onInputChange(detail);
       }
     },
-    [onInputChange]
+    [onInputChange],
   );
 
   // Registrar event listeners
@@ -83,7 +83,7 @@ export const useQuizFormEvents = ({
       const eventName = `quiz-form-${eventType}`;
       window.dispatchEvent(new CustomEvent(eventName, { detail: data }));
     },
-    []
+    [],
   );
 
   // Função para disparar evento de mudança
@@ -91,7 +91,7 @@ export const useQuizFormEvents = ({
     (data: QuizFormEventData) => {
       dispatchFormEvent('change', data);
     },
-    [dispatchFormEvent]
+    [dispatchFormEvent],
   );
 
   // Função para disparar evento de conclusão
@@ -99,7 +99,7 @@ export const useQuizFormEvents = ({
     (data: QuizFormEventData) => {
       dispatchFormEvent('complete', data);
     },
-    [dispatchFormEvent]
+    [dispatchFormEvent],
   );
 
   // Função para disparar evento de input
@@ -107,7 +107,7 @@ export const useQuizFormEvents = ({
     (data: QuizFormEventData) => {
       dispatchFormEvent('input', data);
     },
-    [dispatchFormEvent]
+    [dispatchFormEvent],
   );
 
   return {

@@ -22,8 +22,8 @@ describe('blockTypeMapper', () => {
           { id: 's2', type: 'BonusSection' },
           { id: 's3', type: 'SocialProofSection' },
           { id: 's4', type: 'GuaranteeSection' },
-        ]
-      }
+        ],
+      },
     };
     const blocks = safeGetTemplateBlocks('step-20', MOCK_TEMPLATE);
     const types = blocks.map(b => b.type);
@@ -40,8 +40,8 @@ describe('blockTypeMapper', () => {
         sections: [
           { id: 'h1', type: 'offer-hero' },
           { id: 'p1', type: 'Pricing' },
-        ]
-      }
+        ],
+      },
     };
     const blocks = safeGetTemplateBlocks('step-21', MOCK_TEMPLATE);
     const types = blocks.map(b => b.type);

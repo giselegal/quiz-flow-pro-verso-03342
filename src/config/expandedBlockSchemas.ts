@@ -31,7 +31,7 @@ const UNIVERSAL_TRANSFORM_PROPERTIES = [
       { label: 'Centro', value: 'center' },
       { label: 'Topo Centro', value: 'top center' },
       { label: 'Base Centro', value: 'bottom center' },
-    ]
+    ],
   },
 ];
 
@@ -63,21 +63,21 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
           { label: 'Direita', value: 'right' },
-        ]
+        ],
       },
       { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: 'base',
         options: [
           { label: 'Pequeno', value: 'sm' },
           { label: 'Normal', value: 'base' },
           { label: 'Grande', value: 'lg' },
-          { label: 'Extra', value: 'xl' }
+          { label: 'Extra', value: 'xl' },
         ], description: 'Controle de tamanho tipográfico do título/subtítulo' },
       { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', defaultValue: 'normal',
         options: [
           { label: 'Fino', value: 'light' },
           { label: 'Normal', value: 'normal' },
           { label: 'Médio', value: 'medium' },
-          { label: 'Negrito', value: 'bold' }
+          { label: 'Negrito', value: 'bold' },
         ], description: 'Espessura da fonte utilizada no cabeçalho' },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -94,14 +94,14 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
         defaultValue: [
           { id: 'opt1', text: 'Opção 1', imageUrl: '', value: 'option1', category: 'categoria1', points: 1 },
           { id: 'opt2', text: 'Opção 2', imageUrl: '', value: 'option2', category: 'categoria2', points: 2 },
-        ]
+        ],
       },
       { key: 'columns', label: 'Número de Colunas', type: 'select', group: 'layout', defaultValue: 2,
         options: [
           { label: '1 Coluna', value: 1 },
           { label: '2 Colunas', value: 2 },
           { label: '3 Colunas', value: 3 },
-        ], description: 'Quantidade de colunas usadas para renderizar as opções'
+        ], description: 'Quantidade de colunas usadas para renderizar as opções',
       },
       { key: 'multipleSelection', label: 'Seleção Múltipla', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'maxSelections', label: 'Máximo de Seleções', type: 'range', min: 1, max: 10, group: 'behavior', defaultValue: 3 },
@@ -115,7 +115,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Pequeno', value: 'small' },
           { label: 'Médio', value: 'medium' },
           { label: 'Grande', value: 'large' },
-        ]
+        ],
       },
       { key: 'gridGap', label: 'Espaçamento da Grade', type: 'range', min: 4, max: 48, step: 4, group: 'layout', defaultValue: 16 },
       { key: 'selectedColor', label: 'Cor de Seleção', type: 'color', group: 'style', defaultValue: '#B89B7A' },
@@ -148,7 +148,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { text: 'Analisando seu perfil...' },
           { text: 'Buscando estilos compatíveis...' },
           { text: 'Finalizando recomendações...' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -172,7 +172,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Extra Grande', value: 'text-xl' },
           { label: '2X Grande', value: 'text-2xl' },
           { label: '3X Grande', value: 'text-3xl' },
-        ]
+        ],
       },
       { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', defaultValue: 'font-normal', description: 'Espessura (peso) da fonte',
         options: [
@@ -180,7 +180,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Médio', value: 'font-medium' },
           { label: 'Semi-negrito', value: 'font-semibold' },
           { label: 'Negrito', value: 'font-bold' },
-        ]
+        ],
       },
       { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', defaultValue: 'left', description: 'Alinhamento horizontal do texto',
         options: [
@@ -188,7 +188,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Centro', value: 'center' },
           { label: 'Direita', value: 'right' },
           { label: 'Justificado', value: 'justify' },
-        ]
+        ],
       },
       { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
       { key: 'lineHeight', label: 'Altura da Linha', type: 'select', group: 'style', description: 'Altura da linha aplicada ao texto',
@@ -196,7 +196,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Compacto', value: 'leading-tight' },
           { label: 'Normal', value: 'leading-normal' },
           { label: 'Relaxado', value: 'leading-relaxed' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -216,7 +216,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'H4 - Detalhes', value: 'h4' },
           { label: 'H5 - Menor', value: 'h5' },
           { label: 'H6 - Mínimo', value: 'h6' },
-        ]
+        ],
       },
       { key: 'fontSize', label: 'Tamanho da Fonte', type: 'select', group: 'style', defaultValue: 'text-2xl', description: 'Escala tipográfica aplicada ao título',
         options: [
@@ -227,7 +227,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: '4XL', value: 'text-4xl' },
           { label: '5XL', value: 'text-5xl' },
           { label: '6XL', value: 'text-6xl' },
-        ]
+        ],
       },
       { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', defaultValue: 'font-bold', description: 'Espessura (peso) da fonte',
         options: [
@@ -236,14 +236,14 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Semi-negrito', value: 'font-semibold' },
           { label: 'Negrito', value: 'font-bold' },
           { label: 'Extra Negrito', value: 'font-extrabold' },
-        ]
+        ],
       },
       { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', defaultValue: 'center', description: 'Alinhamento horizontal do título',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
           { label: 'Direita', value: 'right' },
-        ]
+        ],
       },
       { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#1F2937' },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
@@ -269,14 +269,14 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Conter', value: 'contain' },
           { label: 'Preencher', value: 'fill' },
           { label: 'Nenhum', value: 'none' },
-        ]
+        ],
       },
       { key: 'containerPosition', label: 'Posição do Container', type: 'select', group: 'layout', defaultValue: 'center', description: 'Posicionamento da imagem dentro do container',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
           { label: 'Direita', value: 'right' },
-        ]
+        ],
       },
       { key: 'borderWidth', label: 'Largura da Borda', type: 'range', min: 0, max: 10, group: 'style', defaultValue: 0 },
       { key: 'borderColor', label: 'Cor da Borda', type: 'color', group: 'style', defaultValue: '#E5E7EB' },
@@ -287,7 +287,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Normal', value: 'shadow' },
           { label: 'Média', value: 'shadow-md' },
           { label: 'Grande', value: 'shadow-lg' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -311,7 +311,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Retrato (3:4)', value: 'aspect-[3/4]' },
           { label: 'Paisagem (4:3)', value: 'aspect-[4/3]' },
           { label: 'Auto', value: 'auto' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -335,7 +335,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Outline', value: 'outline' },
           { label: 'Ghost', value: 'ghost' },
           { label: 'Destrutivo', value: 'destructive' },
-        ]
+        ],
       },
       { key: 'size', label: 'Tamanho', type: 'select', group: 'style', defaultValue: 'default', description: 'Tamanho do botão',
         options: [
@@ -343,7 +343,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Padrão', value: 'default' },
           { label: 'Grande', value: 'lg' },
           { label: 'XL', value: 'xl' },
-        ]
+        ],
       },
       { key: 'fullWidth', label: 'Largura Total', type: 'boolean', group: 'layout', defaultValue: false },
       { key: 'disabled', label: 'Desabilitado', type: 'boolean', group: 'behavior', defaultValue: false },
@@ -378,7 +378,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Número', value: 'number' },
           { label: 'Senha', value: 'password' },
           { label: 'URL', value: 'url' },
-        ], description: 'Tipo de input para coleta (compatível com atributos HTML padrão)'
+        ], description: 'Tipo de input para coleta (compatível com atributos HTML padrão)',
       },
       { key: 'type', label: 'Tipo', type: 'select', group: 'content', defaultValue: 'text',
         options: [
@@ -386,7 +386,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Email', value: 'email' },
           { label: 'Telefone', value: 'tel' },
           { label: 'Número', value: 'number' },
-          { label: 'Senha', value: 'password' }
+          { label: 'Senha', value: 'password' },
         ], description: 'Tipo (HTML) utilizado na renderização do input' },
       { key: 'variableName', label: 'Nome da Variável', type: 'text', group: 'content', defaultValue: 'name', description: 'Chave usada para armazenar o valor no estado' },
       { key: 'required', label: 'Obrigatório', type: 'boolean', group: 'behavior', defaultValue: false },
@@ -427,7 +427,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Apenas Nome', value: 'name' },
           { label: 'Nome + Email', value: 'name,email' },
           { label: 'Todos os Campos', value: 'name,email,phone' },
-        ]
+        ],
       },
       { key: 'primaryColor', label: 'Cor Primária', type: 'color', group: 'style', defaultValue: '#3B82F6' },
       { key: 'fieldSpacing', label: 'Espaçamento entre Campos', type: 'range', min: 8, max: 32, group: 'layout', defaultValue: 16 },
@@ -452,7 +452,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Normal', value: 'shadow' },
           { label: 'Média', value: 'shadow-md' },
           { label: 'Grande', value: 'shadow-lg' },
-        ]
+        ],
       },
       { key: 'maxWidth', label: 'Largura Máxima', type: 'select', group: 'layout', description: 'Largura máxima aplicada ao container (classes utilitárias)',
         options: [
@@ -461,7 +461,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Grande', value: 'max-w-lg' },
           { label: 'Extra Grande', value: 'max-w-xl' },
           { label: 'Completo', value: 'max-w-full' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -490,7 +490,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
       { key: 'alignment', label: 'Alinhamento', type: 'select', group: 'layout', defaultValue: 'center', options: [
         { label: 'Esquerda', value: 'left' },
         { label: 'Centro', value: 'center' },
-        { label: 'Direita', value: 'right' }
+        { label: 'Direita', value: 'right' },
       ], description: 'Alinhamento do conteúdo do cabeçalho' },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -515,7 +515,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Com Borda', value: 'bordered' },
           { label: 'Plano', value: 'flat' },
           { label: 'Gradiente', value: 'gradient' },
-        ]
+        ],
       },
       { key: 'imagePosition', label: 'Posição da Imagem', type: 'select', group: 'layout', defaultValue: 'top', description: 'Posição relativa da imagem no card',
         options: [
@@ -523,7 +523,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Esquerda', value: 'left' },
           { label: 'Direita', value: 'right' },
           { label: 'Fundo', value: 'background' },
-        ]
+        ],
       },
       { key: 'padding', label: 'Padding Interno', type: 'range', min: 8, max: 48, group: 'layout', defaultValue: 24 },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
@@ -540,7 +540,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
         defaultValue: [
           { title: 'Estilo 1', description: 'Descrição do estilo 1', imageUrl: '', link: '#' },
           { title: 'Estilo 2', description: 'Descrição do estilo 2', imageUrl: '', link: '#' },
-        ]
+        ],
       },
       { key: 'columns', label: 'Número de Colunas', type: 'select', group: 'layout', defaultValue: 2, description: 'Quantidade de colunas da grade',
         options: [
@@ -548,7 +548,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: '2 Colunas', value: 2 },
           { label: '3 Colunas', value: 3 },
           { label: '4 Colunas', value: 4 },
-        ]
+        ],
       },
       { key: 'gap', label: 'Espaçamento entre Cards', type: 'range', min: 8, max: 48, step: 4, group: 'layout', defaultValue: 24 },
       { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean', group: 'behavior', defaultValue: true },
@@ -559,7 +559,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Elevar', value: 'lift' },
           { label: 'Escalar', value: 'scale' },
           { label: 'Nenhum', value: 'none' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -581,7 +581,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: '75%', value: 'w-3/4' },
           { label: '100%', value: 'w-full' },
           { label: 'Personalizado', value: 'custom' },
-        ]
+        ],
       },
       { key: 'customWidth', label: 'Largura Personalizada (px)', type: 'range', min: 50, max: 800, group: 'layout', defaultValue: 200 },
       { key: 'height', label: 'Altura (px)', type: 'range', min: 2, max: 20, group: 'layout', defaultValue: 4 },
@@ -594,7 +594,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
           { label: 'Direita', value: 'right' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_TRANSFORM_PROPERTIES,
@@ -629,14 +629,14 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Dots', value: 'dots' },
           { label: 'Bars', value: 'bars' },
           { label: 'Pulse', value: 'pulse' },
-        ]
+        ],
       },
       { key: 'size', label: 'Tamanho', type: 'select', group: 'layout', defaultValue: 'medium',
         options: [
           { label: 'Pequeno', value: 'small' },
           { label: 'Médio', value: 'medium' },
           { label: 'Grande', value: 'large' },
-        ]
+        ],
       },
       { key: 'color', label: 'Cor Principal', type: 'color', group: 'style', defaultValue: '#3B82F6' },
       { key: 'speed', label: 'Velocidade', type: 'select', group: 'behavior', defaultValue: 'normal',
@@ -644,7 +644,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Lenta', value: 'slow' },
           { label: 'Normal', value: 'normal' },
           { label: 'Rápida', value: 'fast' },
-        ]
+        ],
       },
       { key: 'text', label: 'Texto do Loading', type: 'text', group: 'content', defaultValue: 'Carregando...' },
       { key: 'showText', label: 'Mostrar Texto', type: 'boolean', group: 'behavior', defaultValue: true },
@@ -654,7 +654,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Abaixo', value: 'bottom' },
           { label: 'Direita', value: 'right' },
           { label: 'Esquerda', value: 'left' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -683,14 +683,14 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Caixas', value: 'boxes' },
           { label: 'Texto', value: 'text' },
           { label: 'Círculos', value: 'circles' },
-        ]
+        ],
       },
       { key: 'size', label: 'Tamanho', type: 'select', group: 'layout', defaultValue: 'medium',
         options: [
           { label: 'Pequeno', value: 'small' },
           { label: 'Médio', value: 'medium' },
           { label: 'Grande', value: 'large' },
-        ]
+        ],
       },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#FFFFFF' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#DC2626' },
@@ -718,11 +718,11 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Lado a Lado', value: 'side-by-side' },
           { label: 'Empilhado', value: 'stacked' },
           { label: 'Slider', value: 'slider' },
-        ]
+        ],
       },
       { key: 'layoutStyle', label: 'Estilo de Layout', type: 'select', group: 'layout', defaultValue: 'side-by-side', options: [
         { label: 'Lado a Lado', value: 'side-by-side' },
-        { label: 'Com Troca (Toggle)', value: 'toggle' }
+        { label: 'Com Troca (Toggle)', value: 'toggle' },
       ], description: 'Modo de exibição do comparativo' },
       { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'showDescriptions', label: 'Mostrar Descrições', type: 'boolean', group: 'behavior', defaultValue: true },
@@ -732,7 +732,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Retrato (3:4)', value: 'aspect-[3/4]' },
           { label: 'Paisagem (4:3)', value: 'aspect-[4/3]' },
           { label: 'Auto', value: 'auto' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
       ...UNIVERSAL_STYLING_PROPERTIES,
@@ -749,21 +749,21 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
         defaultValue: [
           { title: 'Bônus 1', description: 'Descrição do bônus 1', value: 'R$ 297', image: '' },
           { title: 'Bônus 2', description: 'Descrição do bônus 2', value: 'R$ 197', image: '' },
-        ]
+        ],
       },
       { key: 'layout', label: 'Layout dos Bônus', type: 'select', group: 'layout', defaultValue: 'grid',
         options: [
           { label: 'Lista Vertical', value: 'list' },
           { label: 'Grade', value: 'grid' },
           { label: 'Carrossel', value: 'carousel' },
-        ]
+        ],
       },
       { key: 'columns', label: 'Colunas (Grid)', type: 'select', group: 'layout', defaultValue: 2,
         options: [
           { label: '1 Coluna', value: 1 },
           { label: '2 Colunas', value: 2 },
           { label: '3 Colunas', value: 3 },
-        ]
+        ],
       },
       { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'showValues', label: 'Mostrar Valores', type: 'boolean', group: 'behavior', defaultValue: true },
@@ -793,14 +793,14 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Horizontal', value: 'horizontal' },
           { label: 'Vertical', value: 'vertical' },
           { label: 'Card', value: 'card' },
-        ]
+        ],
       },
       { key: 'highlightStyle', label: 'Estilo de Destaque', type: 'select', group: 'style', defaultValue: 'badge',
         options: [
           { label: 'Badge', value: 'badge' },
           { label: 'Tachado', value: 'strikethrough' },
           { label: 'Cor Diferente', value: 'color' },
-        ], description: 'Como destacar visualmente o preço/valor' 
+        ], description: 'Como destacar visualmente o preço/valor', 
       },
       { key: 'accentColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#DC2626' },
       { key: 'discountColor', label: 'Cor do Desconto', type: 'color', group: 'style', defaultValue: '#10B981' },
@@ -820,7 +820,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { icon: '🔒', title: 'SSL Criptografado', description: 'Dados protegidos com SSL 256-bit' },
           { icon: '🛡️', title: 'Garantia de 7 dias', description: 'Satisfação garantida ou seu dinheiro de volta' },
           { icon: '💳', title: 'Pagamento Seguro', description: 'Processamento via Stripe/PayPal' },
-        ]
+        ],
       },
       { key: 'showIcons', label: 'Mostrar Ícones', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'showBadges', label: 'Mostrar Badges de Segurança', type: 'boolean', group: 'behavior', defaultValue: true },
@@ -828,14 +828,14 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
         defaultValue: [
           { image: 'ssl-badge.png', alt: 'SSL Secure' },
           { image: 'money-back.png', alt: 'Money Back Guarantee' },
-        ]
+        ],
       },
       { key: 'layout', label: 'Layout', type: 'select', group: 'layout', defaultValue: 'horizontal',
         options: [
           { label: 'Horizontal', value: 'horizontal' },
           { label: 'Vertical', value: 'vertical' },
           { label: 'Grade', value: 'grid' },
-        ]
+        ],
       },
       { key: 'trustColor', label: 'Cor de Confiança', type: 'color', group: 'style', defaultValue: '#10B981' },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
@@ -861,7 +861,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { text: '+500 clientes atendidas' },
           { text: 'Certificada em Personal Styling' },
           { text: 'Featured na Revista Vogue' },
-        ]
+        ],
       },
       { key: 'testimonial', label: 'Depoimento/Mensagem', type: 'textarea', group: 'content', defaultValue: '"Estou aqui para te ajudar a descobrir seu estilo único."' },
       { key: 'layout', label: 'Layout', type: 'select', group: 'layout', defaultValue: 'side-by-side',
@@ -869,14 +869,14 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Lado a Lado', value: 'side-by-side' },
           { label: 'Foto no Topo', value: 'photo-top' },
           { label: 'Centrado', value: 'centered' },
-        ]
+        ],
       },
       { key: 'photoPosition', label: 'Posição da Foto', type: 'select', group: 'layout', defaultValue: 'left',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Direita', value: 'right' },
           { label: 'Centro', value: 'center' },
-        ]
+        ],
       },
       { key: 'showCredentials', label: 'Mostrar Credenciais', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'photoSize', label: 'Tamanho da Foto', type: 'select', group: 'layout', defaultValue: 'medium',
@@ -884,7 +884,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Pequeno', value: 'small' },
           { label: 'Médio', value: 'medium' },
           { label: 'Grande', value: 'large' },
-        ]
+        ],
       },
       { key: 'accentColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#B89B7A' },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
@@ -909,7 +909,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'LGPD/GDPR', value: 'gdpr' },
           { label: 'Disclaimer', value: 'disclaimer' },
           { label: 'Personalizado', value: 'custom' },
-        ]
+        ],
       },
       { key: 'showIcon', label: 'Mostrar Ícone', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'icon', label: 'Ícone Personalizado', type: 'text', group: 'content' },
@@ -918,14 +918,14 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Extra Pequeno', value: 'text-xs' },
           { label: 'Pequeno', value: 'text-sm' },
           { label: 'Normal', value: 'text-base' },
-        ]
+        ],
       },
       { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', defaultValue: 'center',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
           { label: 'Direita', value: 'right' },
-        ]
+        ],
       },
       { key: 'opacity', label: 'Opacidade', type: 'range', min: 30, max: 100, group: 'style', defaultValue: 70 },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
@@ -947,7 +947,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Contato', value: 'contact' },
           { label: 'Newsletter', value: 'newsletter' },
           { label: 'Agendamento', value: 'booking' },
-        ]
+        ],
       },
       { key: 'integration', label: 'Integração', type: 'select', group: 'content', defaultValue: 'supabase',
         options: [
@@ -955,7 +955,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Mailchimp', value: 'mailchimp' },
           { label: 'HubSpot', value: 'hubspot' },
           { label: 'Zapier', value: 'zapier' },
-        ]
+        ],
       },
       { key: 'webhook', label: 'URL do Webhook', type: 'text', group: 'content' },
       { key: 'redirectUrl', label: 'URL de Redirecionamento', type: 'text', group: 'content' },
@@ -980,7 +980,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Compacto', value: 'compact' },
           { label: 'Expandido', value: 'expanded' },
           { label: 'Personalizado', value: 'custom' },
-        ]
+        ],
       },
       { key: 'dataSource', label: 'Fonte de Dados', type: 'select', group: 'content', defaultValue: 'static',
         options: [
@@ -988,7 +988,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'API', value: 'api' },
           { label: 'Supabase', value: 'supabase' },
           { label: 'Local Storage', value: 'localStorage' },
-        ]
+        ],
       },
       { key: 'apiEndpoint', label: 'Endpoint da API', type: 'text', group: 'content' },
       { key: 'refreshInterval', label: 'Intervalo de Atualização (s)', type: 'range', min: 0, max: 300, group: 'behavior', defaultValue: 0 },
@@ -1022,7 +1022,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Círculo', value: 'circle' },
           { label: 'Steps', value: 'steps' },
           { label: 'Contador', value: 'counter' },
-        ]
+        ],
       },
       { key: 'alignment', label: 'Alinhamento', type: 'select', group: 'layout', defaultValue: 'space-between',
         options: [
@@ -1030,7 +1030,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Centro', value: 'center' },
           { label: 'Esquerda', value: 'flex-start' },
           { label: 'Direita', value: 'flex-end' },
-        ]
+        ],
       },
       { key: 'buttonStyle', label: 'Estilo dos Botões', type: 'select', group: 'style', defaultValue: 'default',
         options: [
@@ -1038,18 +1038,18 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Outline', value: 'outline' },
           { label: 'Ghost', value: 'ghost' },
           { label: 'Personalizado', value: 'custom' },
-        ]
+        ],
       },
       { key: 'showBack', label: 'Mostrar Botão Voltar', type: 'boolean', group: 'behavior', defaultValue: true, description: 'Exibe ou oculta o botão de voltar' },
       { key: 'disableNextUntilComplete', label: 'Desabilitar Próximo até Completar', type: 'boolean', group: 'behavior', defaultValue: false, description: 'Impede avançar enquanto o step não estiver válido' },
       { key: 'position', label: 'Posição', type: 'select', group: 'layout', defaultValue: 'bottom', options: [
         { label: 'Topo', value: 'top' },
-        { label: 'Base', value: 'bottom' }
+        { label: 'Base', value: 'bottom' },
       ], description: 'Onde a navegação aparece no step' },
       { key: 'spacing', label: 'Espaçamento', type: 'select', group: 'layout', defaultValue: 'md', options: [
         { label: 'Pequeno', value: 'sm' },
         { label: 'Médio', value: 'md' },
-        { label: 'Grande', value: 'lg' }
+        { label: 'Grande', value: 'lg' },
       ], description: 'Espaçamento externo da área de navegação' },
       { key: 'enableKeyboard', label: 'Navegação por Teclado', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'autoSave', label: 'Auto-salvar Progresso', type: 'boolean', group: 'behavior', defaultValue: true },
@@ -1073,7 +1073,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Diagonal (↘)', value: 'to-br' },
           { label: 'Diagonal (↙)', value: 'to-bl' },
           { label: 'Radial', value: 'radial' },
-        ]
+        ],
       },
       { key: 'animationType', label: 'Tipo de Animação', type: 'select', group: 'behavior', defaultValue: 'shift',
         options: [
@@ -1082,7 +1082,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Rotate', value: 'rotate' },
           { label: 'Wave', value: 'wave' },
           { label: 'Nenhuma', value: 'none' },
-        ]
+        ],
       },
       { key: 'speed', label: 'Velocidade', type: 'select', group: 'behavior', defaultValue: 'medium',
         options: [
@@ -1091,7 +1091,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Média', value: 'medium' },
           { label: 'Rápida', value: 'fast' },
           { label: 'Muito Rápida', value: 'very-fast' },
-        ]
+        ],
       },
       { key: 'intensity', label: 'Intensidade', type: 'range', min: 10, max: 100, group: 'style', defaultValue: 60 },
       { key: 'blur', label: 'Desfoque', type: 'range', min: 0, max: 100, group: 'style', defaultValue: 20 },
@@ -1102,7 +1102,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: '50%', value: 'w-1/2' },
           { label: '75%', value: 'w-3/4' },
           { label: '100%', value: 'w-full' },
-        ]
+        ],
       },
       { key: 'height', label: 'Altura (px)', type: 'range', min: 50, max: 500, group: 'layout', defaultValue: 200 },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
@@ -1130,7 +1130,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Normal', value: 'base' },
           { label: 'Grande', value: 'lg' },
           { label: 'Extra Grande', value: 'xl' },
-        ]
+        ],
       },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#334155' },
   { key: 'lineHeight', label: 'Altura da Linha', type: 'text', group: 'style', defaultValue: '1.6' },
@@ -1151,7 +1151,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Primário', value: 'primary' },
           { label: 'Secundário', value: 'secondary' },
           { label: 'Outline', value: 'outline' },
-        ]
+        ],
       },
       { key: 'size', label: 'Tamanho', type: 'select', group: 'style', defaultValue: 'lg',
         options: [
@@ -1159,7 +1159,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Médio', value: 'md' },
           { label: 'Grande', value: 'lg' },
           { label: 'XL', value: 'xl' },
-        ]
+        ],
       },
       { key: 'fullWidth', label: 'Largura Total', type: 'boolean', group: 'layout', defaultValue: true },
       { key: 'action', label: 'Ação', type: 'select', group: 'behavior', defaultValue: 'next',
@@ -1168,7 +1168,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Anterior', value: 'previous' },
           { label: 'Enviar', value: 'submit' },
           { label: 'Personalizado', value: 'custom' },
-        ]
+        ],
       },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#3B82F6' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#FFFFFF' },
@@ -1200,7 +1200,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
         defaultValue: [
           { id: 'opt-1', text: 'Opção 1', image: '', value: 'romantico', points: 1 },
           { id: 'opt-2', text: 'Opção 2', image: '', value: 'classico', points: 1 },
-        ]
+        ],
       },
       { key: 'columns', label: 'Número de Colunas', type: 'range', min: 1, max: 4, group: 'layout', defaultValue: 3 },
       { key: 'gap', label: 'Espaçamento', type: 'text', group: 'layout', defaultValue: '1rem' },
@@ -1211,7 +1211,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Elevar', value: 'lift' },
           { label: 'Brilho', value: 'glow' },
           { label: 'Nenhum', value: 'none' },
-        ]
+        ],
       },
       { key: 'selectedBorderColor', label: 'Cor da Borda Selecionada', type: 'color', group: 'style', defaultValue: '#3B82F6' },
       { key: 'selectedBorderWidth', label: 'Largura da Borda', type: 'text', group: 'style', defaultValue: '3px' },
@@ -1229,7 +1229,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { text: 'Processando suas preferências' },
           { text: 'Identificando seu estilo' },
           { text: 'Preparando resultado personalizado' },
-        ]
+        ],
       },
       { key: 'duration', label: 'Duração (ms)', type: 'range', min: 1000, max: 10000, step: 500, group: 'behavior', defaultValue: 3000 },
       { key: 'autoProgress', label: 'Progresso Automático', type: 'boolean', group: 'behavior', defaultValue: true },
@@ -1240,7 +1240,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Pontos', value: 'dots' },
           { label: 'Spinner', value: 'spinner' },
           { label: 'Barra', value: 'bar' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
     ],
@@ -1259,7 +1259,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Fade In', value: 'fade-in' },
           { label: 'Slide Up', value: 'slide-up' },
           { label: 'Zoom', value: 'zoom' },
-        ]
+        ],
       },
       ...UNIVERSAL_LAYOUT_PROPERTIES,
     ],
@@ -1290,14 +1290,14 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { text: 'Característica 1' },
           { text: 'Característica 2' },
           { text: 'Característica 3' },
-        ]
+        ],
       },
       { key: 'layout', label: 'Layout', type: 'select', group: 'layout', defaultValue: 'vertical',
         options: [
           { label: 'Vertical', value: 'vertical' },
           { label: 'Horizontal', value: 'horizontal' },
           { label: 'Grade', value: 'grid' },
-        ]
+        ],
       },
       { key: 'iconType', label: 'Tipo de Ícone', type: 'text', group: 'style', defaultValue: 'checkmark' },
       { key: 'iconColor', label: 'Cor do Ícone', type: 'color', group: 'style', defaultValue: '#10B981' },
@@ -1334,7 +1334,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
         options: [
           { label: 'Horizontal', value: 'horizontal' },
           { label: 'Vertical', value: 'vertical' },
-        ]
+        ],
       },
       { key: 'showBadge', label: 'Mostrar Badge', type: 'boolean', group: 'behavior', defaultValue: true },
       { key: 'badgeText', label: 'Texto do Badge', type: 'text', group: 'content', defaultValue: 'OFERTA LIMITADA' },
@@ -1354,7 +1354,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
         options: [
           { label: 'Contagem Regressiva', value: 'countdown' },
           { label: 'Vagas Limitadas', value: 'limited' },
-        ]
+        ],
       },
       { key: 'endTime', label: 'Tempo Final', type: 'text', group: 'content', defaultValue: '+24h' },
       { key: 'urgencyMessage', label: 'Mensagem de Urgência', type: 'text', group: 'content', defaultValue: 'Restam apenas {count} vagas!' },
@@ -1397,7 +1397,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Cobrir', value: 'cover' },
           { label: 'Conter', value: 'contain' },
           { label: 'Preencher', value: 'fill' },
-        ]
+        ],
       },
       { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
       { key: 'lazyLoad', label: 'Carregamento Preguiçoso', type: 'boolean', group: 'behavior', defaultValue: true },
@@ -1452,7 +1452,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: '4XL', value: 'max-w-4xl' },
           { label: '6XL', value: 'max-w-6xl' },
           { label: 'Completo', value: 'max-w-full' },
-        ]
+        ],
       },
       { key: 'centered', label: 'Centralizado', type: 'boolean', group: 'layout', defaultValue: true },
       { key: 'showBorder', label: 'Mostrar Borda', type: 'boolean', group: 'style', defaultValue: false },
@@ -1466,7 +1466,7 @@ export const expandedBlockSchemas: Record<string, BlockSchema> = {
           { label: 'Média', value: 'shadow-md' },
           { label: 'Grande', value: 'shadow-lg' },
           { label: 'Extra Grande', value: 'shadow-xl' },
-        ]
+        ],
       },
       { key: 'innerPadding', label: 'Padding Interno', type: 'range', min: 0, max: 48, step: 4, group: 'layout', defaultValue: 16 },
       { key: 'verticalSpacing', label: 'Espaçamento Vertical', type: 'range', min: 0, max: 48, step: 4, group: 'layout', defaultValue: 24 },
@@ -1542,15 +1542,15 @@ export function generateFallbackSchema(blockType: string): BlockSchema {
       ...UNIVERSAL_TRANSFORM_PROPERTIES,
       // Add common content properties based on block type
       ...(blockType.includes('text') || blockType.includes('heading') ? [
-        { key: 'content', label: 'Conteúdo', type: 'textarea' as FieldType, group: 'content', defaultValue: 'Digite seu conteúdo aqui' }
+        { key: 'content', label: 'Conteúdo', type: 'textarea' as FieldType, group: 'content', defaultValue: 'Digite seu conteúdo aqui' },
       ] : []),
       ...(blockType.includes('image') ? [
         { key: 'src', label: 'URL da Imagem', type: 'text' as FieldType, group: 'content' },
-        { key: 'alt', label: 'Texto Alternativo', type: 'text' as FieldType, group: 'content' }
+        { key: 'alt', label: 'Texto Alternativo', type: 'text' as FieldType, group: 'content' },
       ] : []),
       ...(blockType.includes('button') ? [
         { key: 'text', label: 'Texto do Botão', type: 'text' as FieldType, group: 'content', defaultValue: 'Clique aqui' },
-        { key: 'url', label: 'Link', type: 'text' as FieldType, group: 'content', defaultValue: '#' }
+        { key: 'url', label: 'Link', type: 'text' as FieldType, group: 'content', defaultValue: '#' },
       ] : []),
     ],
   };

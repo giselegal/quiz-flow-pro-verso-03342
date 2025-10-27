@@ -57,7 +57,7 @@ class BackupService {
       maxBackups: 24, // Keep 24 hours worth
       compressionEnabled: true,
       includeAnalytics: true,
-      includeUserData: true
+      includeUserData: true,
     };
     this.loadPersistedData();
     this.startAutoBackup();
@@ -99,8 +99,8 @@ class BackupService {
           version: '1.0.0',
           triggerReason: reason,
           compressionRatio: this.config.compressionEnabled ? 0.3 : 1.0,
-          duration: Date.now() - startTime
-        }
+          duration: Date.now() - startTime,
+        },
       };
 
       this.backups.unshift(backup);
@@ -129,8 +129,8 @@ class BackupService {
           version: '1.0.0',
           triggerReason: reason,
           compressionRatio: 0,
-          duration: Date.now() - startTime
-        }
+          duration: Date.now() - startTime,
+        },
       };
       
       this.backups.unshift(failedBackup);
@@ -197,7 +197,7 @@ class BackupService {
       name,
       description,
       timestamp: new Date().toISOString(),
-      verified: await this.verifyBackup(backupId)
+      verified: await this.verifyBackup(backupId),
     };
 
     this.restorePoints.unshift(restorePoint);
@@ -245,18 +245,18 @@ class BackupService {
       templates: [],
       userConfigs: [],
       analytics: [],
-      systemSettings: {}
+      systemSettings: {},
     };
 
     // Coletar templates do localStorage
     try {
       const templateKeys = Object.keys(localStorage).filter(key => 
-        key.startsWith('template_') || key.startsWith('funnel_')
+        key.startsWith('template_') || key.startsWith('funnel_'),
       );
       
       data.templates = templateKeys.map(key => ({
         key,
-        value: localStorage.getItem(key)
+        value: localStorage.getItem(key),
       }));
     } catch (error) {
       console.warn('Failed to collect templates:', error);
@@ -265,12 +265,12 @@ class BackupService {
     // Coletar configurações do usuário
     try {
       const configKeys = Object.keys(localStorage).filter(key => 
-        key.startsWith('config_') || key.startsWith('settings_')
+        key.startsWith('config_') || key.startsWith('settings_'),
       );
       
       data.userConfigs = configKeys.map(key => ({
         key,
-        value: localStorage.getItem(key)
+        value: localStorage.getItem(key),
       }));
     } catch (error) {
       console.warn('Failed to collect user configs:', error);
@@ -280,12 +280,12 @@ class BackupService {
     if (this.config.includeAnalytics) {
       try {
         const analyticsKeys = Object.keys(localStorage).filter(key => 
-          key.startsWith('analytics_') || key.startsWith('metrics_')
+          key.startsWith('analytics_') || key.startsWith('metrics_'),
         );
         
         data.analytics = analyticsKeys.map(key => ({
           key,
-          value: localStorage.getItem(key)
+          value: localStorage.getItem(key),
         }));
       } catch (error) {
         console.warn('Failed to collect analytics:', error);
@@ -298,7 +298,7 @@ class BackupService {
         backupConfig: this.config,
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
-        url: window.location.href
+        url: window.location.href,
       };
     } catch (error) {
       console.warn('Failed to collect system settings:', error);
@@ -453,7 +453,7 @@ class BackupService {
         const data = {
           backups: this.backups.slice(0, 10), // Persist only recent backups
           restorePoints: this.restorePoints.slice(0, 20),
-          config: this.config
+          config: this.config,
         };
         StorageService.safeSetJSON('backup_service', data);
       } catch (error) {

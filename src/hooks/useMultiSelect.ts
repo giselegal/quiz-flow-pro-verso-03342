@@ -22,7 +22,7 @@ export interface MultiSelectActions {
 
 export const useMultiSelect = (
   blocks: any[],
-  onSelectionChange?: (selectedBlocks: string[]) => void
+  onSelectionChange?: (selectedBlocks: string[]) => void,
 ) => {
   const [state, setState] = useState<MultiSelectState>({
     selectedBlocks: new Set(),
@@ -91,7 +91,7 @@ export const useMultiSelect = (
         };
       });
     },
-    []
+    [],
   );
 
   // ❌ Desselecionar bloco específico
@@ -190,7 +190,7 @@ export const useMultiSelect = (
     (blockId: string) => {
       return state.selectedBlocks.has(blockId);
     },
-    [state.selectedBlocks]
+    [state.selectedBlocks],
   );
 
   // 📊 Obter contagem de selecionados

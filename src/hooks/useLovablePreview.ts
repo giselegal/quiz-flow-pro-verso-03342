@@ -43,7 +43,7 @@ export const useLovablePreview = () => {
               timestamp: Date.now(),
               config: lovableConfig,
             },
-          })
+          }),
         );
       });
 
@@ -72,7 +72,7 @@ export const useLovablePreview = () => {
               forced: true,
               timestamp: Date.now(),
             },
-          })
+          }),
         );
       }, 500);
 

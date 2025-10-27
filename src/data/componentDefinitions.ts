@@ -369,5 +369,5 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
 };
 
 export const ALL_COMPONENTS: ComponentType[] = Object.values(COMPONENT_CATEGORIES).flatMap(
-  category => category.components
+  category => category.components,
 );

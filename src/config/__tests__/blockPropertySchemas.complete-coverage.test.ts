@@ -29,7 +29,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
       expect(
         missingSchemas,
-        `❌ Schemas ausentes para: ${missingSchemas.join(', ')}`
+        `❌ Schemas ausentes para: ${missingSchemas.join(', ')}`,
       ).toHaveLength(0);
     });
   });
@@ -47,7 +47,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
       expect(
         invalidSchemas,
-        `❌ Schemas inválidos (sem label ou fields): ${invalidSchemas.join(', ')}`
+        `❌ Schemas inválidos (sem label ou fields): ${invalidSchemas.join(', ')}`,
       ).toHaveLength(0);
     });
 
@@ -65,7 +65,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
       expect(
         invalidFields,
-        `❌ Fields inválidos encontrados em ${invalidFields.length} schemas`
+        `❌ Fields inválidos encontrados em ${invalidFields.length} schemas`,
       ).toHaveLength(0);
     });
   });
@@ -82,7 +82,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
       'marginTop',
       'marginBottom',
       'marginLeft',
-      'marginRight'
+      'marginRight',
     ];
 
     it('schemas de componentes visuais devem ter propriedades de estilo', () => {
@@ -93,7 +93,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'image-inline',
         'quiz-intro-header',
         'result-header-inline',
-        'style-card-inline'
+        'style-card-inline',
       ];
 
   const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
@@ -105,12 +105,12 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
         const fieldKeys = schema.fields.map((f: any) => f.key);
         const hasBasicStyle = styleProperties.some(prop =>
-          fieldKeys.includes(prop)
+          fieldKeys.includes(prop),
         );
 
         if (!hasBasicStyle) {
           const missing = styleProperties.filter(prop =>
-            !fieldKeys.includes(prop)
+            !fieldKeys.includes(prop),
           );
           missingStyleProps.push({ type: componentType, missing });
         }
@@ -118,7 +118,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
       expect(
         missingStyleProps,
-        `❌ Componentes sem propriedades de estilo: ${JSON.stringify(missingStyleProps, null, 2)}`
+        `❌ Componentes sem propriedades de estilo: ${JSON.stringify(missingStyleProps, null, 2)}`,
       ).toHaveLength(0);
     });
   });
@@ -133,7 +133,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'heading-inline',
         'image-inline',
         'image-display-inline',
-        'decorative-bar-inline'
+        'decorative-bar-inline',
       ];
 
   const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
@@ -145,7 +145,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
         const fieldKeys = schema.fields.map((f: any) => f.key);
         const hasTransform = transformProperties.some(prop =>
-          fieldKeys.includes(prop)
+          fieldKeys.includes(prop),
         );
 
         if (!hasTransform) {
@@ -155,7 +155,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
       expect(
         missingTransform,
-        `❌ Componentes sem suporte a transformação: ${missingTransform.join(', ')}`
+        `❌ Componentes sem suporte a transformação: ${missingTransform.join(', ')}`,
       ).toHaveLength(0);
     });
   });
@@ -172,17 +172,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'placeholder',
         'inputType',
         'required',
-        'name'
+        'name',
       ];
 
       const fieldKeys = formInputSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ form-input sem campos: ${missingFields.join(', ')}`
+        `❌ form-input sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
 
@@ -198,17 +198,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'showPhoneField',
         'nameLabel',
         'emailLabel',
-        'submitText'
+        'submitText',
       ];
 
       const fieldKeys = leadFormSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ lead-form sem campos: ${missingFields.join(', ')}`
+        `❌ lead-form sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
   });
@@ -229,17 +229,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'columns',
         'showImages',
         'selectedColor',
-        'hoverColor'
+        'hoverColor',
       ];
 
       const fieldKeys = optionsGridSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ options-grid sem campos: ${missingFields.join(', ')}`
+        `❌ options-grid sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
 
@@ -251,16 +251,16 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
       const scoringFields = [
         'enableScoring',
         'scoringType',
-        'pointsMultiplier'
+        'pointsMultiplier',
       ];
 
       const hasScoringSystem = scoringFields.some(field =>
-        fieldKeys.includes(field)
+        fieldKeys.includes(field),
       );
 
       expect(
         hasScoringSystem,
-        '❌ options-grid não tem sistema de pontuação configurável'
+        '❌ options-grid não tem sistema de pontuação configurável',
       ).toBe(true);
     });
   });
@@ -276,17 +276,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'title',
         'subtitle',
         'alignment',
-        'backgroundColor'
+        'backgroundColor',
       ];
 
       const fieldKeys = resultHeaderSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ result-header-inline sem campos: ${missingFields.join(', ')}`
+        `❌ result-header-inline sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
 
@@ -301,17 +301,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'description',
         'imageUrl',
         'buttonText',
-        'link'
+        'link',
       ];
 
       const fieldKeys = styleCardSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ style-card-inline sem campos: ${missingFields.join(', ')}`
+        `❌ style-card-inline sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
   });
@@ -328,17 +328,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'title',
         'urgencyMessage',
         'backgroundColor',
-        'textColor'
+        'textColor',
       ];
 
       const fieldKeys = urgencyTimerSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ urgency-timer-inline sem campos: ${missingFields.join(', ')}`
+        `❌ urgency-timer-inline sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
   });
@@ -352,17 +352,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
       const requiredFields = [
         'title',
-        'showPricing'
+        'showPricing',
       ];
 
       const fieldKeys = valueAnchoringSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ value-anchoring sem campos: ${missingFields.join(', ')}`
+        `❌ value-anchoring sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
 
@@ -377,17 +377,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'afterImage',
         'beforeLabel',
         'afterLabel',
-        'layoutStyle'
+        'layoutStyle',
       ];
 
       const fieldKeys = beforeAfterSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ before-after-inline sem campos: ${missingFields.join(', ')}`
+        `❌ before-after-inline sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
   });
@@ -403,17 +403,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'mentorName',
         'mentorTitle',
         'mentorImage',
-        'mentorBio'
+        'mentorBio',
       ];
 
       const fieldKeys = mentorSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ mentor-section-inline sem campos: ${missingFields.join(', ')}`
+        `❌ mentor-section-inline sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
 
@@ -426,17 +426,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
       const requiredFields = [
         'testimonialType',
         'clientName',
-        'clientTestimonial'
+        'clientTestimonial',
       ];
 
       const fieldKeys = testimonialSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ testimonial-card-inline sem campos: ${missingFields.join(', ')}`
+        `❌ testimonial-card-inline sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
   });
@@ -456,17 +456,17 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'backgroundColor',
         'textColor',
         'requiresValidInput',
-        'requiresValidSelection'
+        'requiresValidSelection',
       ];
 
       const fieldKeys = buttonSchema!.fields.map((f: any) => f.key);
       const missingFields = requiredFields.filter(field =>
-        !fieldKeys.includes(field)
+        !fieldKeys.includes(field),
       );
 
       expect(
         missingFields,
-        `❌ button-inline sem campos: ${missingFields.join(', ')}`
+        `❌ button-inline sem campos: ${missingFields.join(', ')}`,
       ).toHaveLength(0);
     });
   });
@@ -478,13 +478,13 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
       const totalBlockDefinitions = BLOCK_DEFINITIONS.length;
 
       const schemasWithTransform = Object.entries(allSchemas).filter(
-        ([_, schema]) => schema.fields.some((f: any) => f.key === 'scale')
+        ([_, schema]) => schema.fields.some((f: any) => f.key === 'scale'),
       ).length;
 
       const schemasWithStyle = Object.entries(allSchemas).filter(
         ([_, schema]) => schema.fields.some((f: any) =>
-          ['backgroundColor', 'color', 'textColor'].includes(f.key)
-        )
+          ['backgroundColor', 'color', 'textColor'].includes(f.key),
+        ),
       ).length;
 
       console.log('\n📊 RELATÓRIO DE COBERTURA:');
@@ -509,7 +509,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
         'color',
         'options-list',
         'select',
-        'json'
+        'json',
       ];
 
   const allSchemas: Record<string, BlockSchema> = { ...blockPropertySchemas, ...propertySchemas };
@@ -521,7 +521,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
             invalidFields.push({
               schema: schemaType,
               field: field.key,
-              type: field.type
+              type: field.type,
             });
           }
         });
@@ -529,7 +529,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
       expect(
         invalidFields,
-        `❌ Fields com tipos inválidos: ${JSON.stringify(invalidFields, null, 2)}`
+        `❌ Fields com tipos inválidos: ${JSON.stringify(invalidFields, null, 2)}`,
       ).toHaveLength(0);
     });
   });
@@ -550,7 +550,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
               invalidRanges.push({
                 schema: schemaType,
                 field: field.key,
-                missing
+                missing,
               });
             }
           }
@@ -559,7 +559,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
       expect(
         invalidRanges,
-        `❌ Ranges incompletos: ${JSON.stringify(invalidRanges, null, 2)}`
+        `❌ Ranges incompletos: ${JSON.stringify(invalidRanges, null, 2)}`,
       ).toHaveLength(0);
     });
   });
@@ -574,7 +574,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
           if (field.type === 'select' && (!field.options || field.options.length === 0)) {
             invalidSelects.push({
               schema: schemaType,
-              field: field.key
+              field: field.key,
             });
           }
         });
@@ -582,7 +582,7 @@ describe('🎯 Cobertura Completa de Property Schemas', () => {
 
       expect(
         invalidSelects,
-        `❌ Selects sem options: ${JSON.stringify(invalidSelects, null, 2)}`
+        `❌ Selects sem options: ${JSON.stringify(invalidSelects, null, 2)}`,
       ).toHaveLength(0);
     });
   });

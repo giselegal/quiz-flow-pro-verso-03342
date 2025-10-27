@@ -45,39 +45,39 @@ export class StorageMigrationService {
     {
       legacyPattern: /^funnel-[a-zA-Z0-9-_]+$/,
       targetContext: FunnelContext.EDITOR,
-      keyTransform: (key) => key // mantém "funnel-xxx"
+      keyTransform: (key) => key, // mantém "funnel-xxx"
     },
     // Lista de funis
     {
       legacyPattern: /^funnels-list$/,
-      targetContext: FunnelContext.MY_FUNNELS
+      targetContext: FunnelContext.MY_FUNNELS,
     },
     // Templates
     {
       legacyPattern: /^template-/,
-      targetContext: FunnelContext.TEMPLATES
+      targetContext: FunnelContext.TEMPLATES,
     },
     // Dados unificados de funil
     {
       legacyPattern: /^unified_funnel:/,
       targetContext: FunnelContext.EDITOR,
-      keyTransform: (key) => key.replace('unified_funnel:', 'funnel-')
+      keyTransform: (key) => key.replace('unified_funnel:', 'funnel-'),
     },
     // Quiz answers
     {
       legacyPattern: /^(userSelections|quizAnswers|unifiedQuizData)$/,
-      targetContext: FunnelContext.EDITOR
+      targetContext: FunnelContext.EDITOR,
     },
     // Progress tracking
     {
       legacyPattern: /^funnel_progress_/,
-      targetContext: FunnelContext.EDITOR
+      targetContext: FunnelContext.EDITOR,
     },
     // AI generated
     {
       legacyPattern: /^ai-generated-funnel-/,
-      targetContext: FunnelContext.EDITOR
-    }
+      targetContext: FunnelContext.EDITOR,
+    },
   ];
 
   /**
@@ -144,7 +144,7 @@ export class StorageMigrationService {
 
       StorageService.safeSetJSON(this.BACKUP_KEY, {
         timestamp: new Date().toISOString(),
-        data: backup
+        data: backup,
       });
 
       console.log(`💾 [Migration] Backup criado com ${Object.keys(backup).length} chaves`);
@@ -202,7 +202,7 @@ export class StorageMigrationService {
       skippedKeys: 0,
       errors: [],
       backupCreated: false,
-      success: false
+      success: false,
     };
 
     try {
@@ -265,13 +265,13 @@ export class StorageMigrationService {
           } else {
             report.errors.push({
               key: legacyKey,
-              error: 'Falha ao salvar dados migrados'
+              error: 'Falha ao salvar dados migrados',
             });
           }
         } catch (error) {
           report.errors.push({
             key: legacyKey,
-            error: String(error)
+            error: String(error),
           });
           console.error(`  ✗ Erro ao migrar ${legacyKey}:`, error);
         }
@@ -288,7 +288,7 @@ export class StorageMigrationService {
         migradas: report.migratedKeys,
         puladas: report.skippedKeys,
         erros: report.errors.length,
-        duração: `${report.duration}ms`
+        duração: `${report.duration}ms`,
       });
 
       return report;
@@ -304,7 +304,7 @@ export class StorageMigrationService {
       report.duration = Date.now() - startTime;
       report.errors.push({
         key: 'CRITICAL',
-        error: String(error)
+        error: String(error),
       });
 
       return report;

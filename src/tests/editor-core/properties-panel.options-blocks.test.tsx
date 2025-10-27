@@ -70,7 +70,7 @@ function OptionsGridWrapper() {
             <div data-testid="preview">
                 {/* Preview mínimo: mostra imagem, pontos e categoria da primeira opção */}
                 {block.content.options[0]?.imageUrl && (
-                    // eslint-disable-next-line @next/next/no-img-element
+                     
                     <img alt="preview" src={block.content.options[0].imageUrl} />
                 )}
                 {(block.content.options[0]?.category || typeof block.content.options[0]?.points === 'number') && (
@@ -141,7 +141,7 @@ function QuizOptionsWrapper() {
 
             <div data-testid="preview-quiz-options">
                 {block.content.options[0]?.imageUrl && (
-                    // eslint-disable-next-line @next/next/no-img-element
+                     
                     <img alt="preview-qo" src={block.content.options[0].imageUrl} />
                 )}
                 {(block.content.options[0]?.category || typeof block.content.options[0]?.points === 'number') && (

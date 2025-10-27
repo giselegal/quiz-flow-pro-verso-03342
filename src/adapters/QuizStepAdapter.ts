@@ -87,7 +87,7 @@ export class QuizStepAdapter {
             const questionBlock = blocks.find(b =>
                 b.type === 'text-inline' &&
                 b.properties.content?.includes('QUAL') ||
-                b.properties.content?.includes('RESUMA')
+                b.properties.content?.includes('RESUMA'),
             );
 
             if (questionBlock?.properties.content?.includes('importante')) {
@@ -140,12 +140,12 @@ export class QuizStepAdapter {
     private static convertQuestionStep(blocks: JSONBlock[], metadata?: any): QuizStep {
         const questionBlock = blocks.find(b =>
             b.type === 'text-inline' &&
-            (b.properties.content?.includes('?') || b.properties.content?.includes('QUAL'))
+            (b.properties.content?.includes('?') || b.properties.content?.includes('QUAL')),
         );
 
         const optionsBlock = blocks.find(b =>
             b.type === 'options-grid' ||
-            b.type === 'quiz-question'
+            b.type === 'quiz-question',
         );
 
         // Extrair número da pergunta do metadata ou do bloco

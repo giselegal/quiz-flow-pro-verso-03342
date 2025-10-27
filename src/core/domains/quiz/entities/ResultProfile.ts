@@ -71,7 +71,7 @@ export class ResultProfile {
       isActive: boolean;
       createdAt: Date;
       updatedAt: Date;
-    }
+    },
   ) {}
 
   // 🔍 Business Rules - Result Matching
@@ -166,7 +166,7 @@ export class ResultProfile {
       case 'answer-pattern':
         if (this.criteria.requiredAnswers) {
           const matchCount = this.criteria.requiredAnswers.filter(req => 
-            answers[req.questionId] === req.expectedValue
+            answers[req.questionId] === req.expectedValue,
           ).length;
           strength += (matchCount / this.criteria.requiredAnswers.length) * 0.5;
         }
@@ -234,8 +234,8 @@ export class ResultProfile {
       {
         ...this.metadata,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 
@@ -250,8 +250,8 @@ export class ResultProfile {
       {
         ...this.metadata,
         isActive: true,
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 
@@ -266,8 +266,8 @@ export class ResultProfile {
       {
         ...this.metadata,
         isActive: false,
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 
@@ -279,7 +279,7 @@ export class ResultProfile {
       content: this.content,
       visuals: this.visuals,
       actions: this.actions,
-      metadata: this.metadata
+      metadata: this.metadata,
     };
   }
 
@@ -291,7 +291,7 @@ export class ResultProfile {
       data.content,
       data.visuals,
       data.actions,
-      data.metadata
+      data.metadata,
     );
   }
 
@@ -302,7 +302,7 @@ export class ResultProfile {
     title: string,
     description: string,
     minScore: number,
-    maxScore: number
+    maxScore: number,
   ): ResultProfile {
     return new ResultProfile(
       id,
@@ -311,29 +311,29 @@ export class ResultProfile {
         type: 'score-range',
         minScore,
         maxScore,
-        priority: 1
+        priority: 1,
       },
       {
         title,
         description,
-        recommendations: []
+        recommendations: [],
       },
       {
         primaryColor: '#3B82F6',
-        icon: 'star'
+        icon: 'star',
       },
       {
         shareEnabled: true,
         emailCapture: false,
-        retakeAllowed: true
+        retakeAllowed: true,
       },
       {
         category: 'basic',
         tags: [],
         isActive: true,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 }

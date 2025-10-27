@@ -4,17 +4,17 @@ import { render, screen } from '@testing-library/react';
 
 // Mock dos steps modulares no UnifiedStepRenderer
 vi.mock('@/components/editor/quiz-estilo/ModularTransitionStep', () => ({
-    default: (props: any) => <div data-testid="modular-transition-step">ModularTransitionStep OK</div>
+    default: (props: any) => <div data-testid="modular-transition-step">ModularTransitionStep OK</div>,
 }));
 
 vi.mock('@/components/editor/quiz-estilo/ModularResultStep', () => ({
-    default: (props: any) => <div data-testid="modular-result-step">ModularResultStep OK</div>
+    default: (props: any) => <div data-testid="modular-result-step">ModularResultStep OK</div>,
 }));
 
 // Evitar dependências complexas do runtime
 vi.mock('@/utils/StepDataAdapter', () => ({
     adaptStepData: (step: any) => step,
-    extractStepNumber: (id: string) => parseInt(id.replace('step-', '')) || 1
+    extractStepNumber: (id: string) => parseInt(id.replace('step-', '')) || 1,
 }));
 
 // Mock do useQuizState para controlar etapa atual
@@ -23,14 +23,14 @@ vi.mock('@/hooks/useQuizState', () => ({
         const steps = externalSteps || {
             'step-12': { id: 'step-12', type: 'transition', title: 'Transição 12' },
             'step-19': { id: 'step-19', type: 'transition', title: 'Transição 19' },
-            'step-20': { id: 'step-20', type: 'result', title: 'Resultado 20' }
+            'step-20': { id: 'step-20', type: 'result', title: 'Resultado 20' },
         };
         const [current, setCurrent] = React.useState('step-12');
         return {
             state: {
                 currentStep: current,
                 userProfile: { userName: 'Teste', resultStyle: 'natural', secondaryStyles: [] },
-                answers: {}
+                answers: {},
             },
             currentStepData: steps[current],
             progress: 50,
@@ -40,7 +40,7 @@ vi.mock('@/hooks/useQuizState', () => ({
             addAnswer: vi.fn(),
             addStrategicAnswer: vi.fn(),
         };
-    }
+    },
 }));
 
 // Mock do EditorProvider para reduzir ruído (usamos o provider real quando ausente)
@@ -54,7 +54,7 @@ vi.mock('@/components/editor/EditorProviderUnified', async (orig) => {
 
 // UI global
 vi.mock('@/hooks/core/useGlobalState', () => ({
-    useGlobalUI: () => ({ ui: { propertiesPanelOpen: false }, togglePropertiesPanel: vi.fn() })
+    useGlobalUI: () => ({ ui: { propertiesPanelOpen: false }, togglePropertiesPanel: vi.fn() }),
 }));
 
 import { ModularPreviewContainer } from '@/components/editor/quiz/ModularPreviewContainer';

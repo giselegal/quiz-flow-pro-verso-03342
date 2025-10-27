@@ -26,7 +26,7 @@ export const useQuizValidation = (options: QuizValidationOptions = {}) => {
     return {
       isValid: true,
       errors: [],
-      warnings: []
+      warnings: [],
     };
   }, [options]);
 
@@ -36,14 +36,14 @@ export const useQuizValidation = (options: QuizValidationOptions = {}) => {
     return {
       isValid: true,
       errors: [],
-      warnings: []
+      warnings: [],
     };
   }, []);
 
   return {
     validate,
     validateStep,
-    isValidating: false
+    isValidating: false,
   };
 };
 

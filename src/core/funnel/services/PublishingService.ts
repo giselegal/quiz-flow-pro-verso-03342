@@ -83,7 +83,7 @@ export class PublishingService {
      */
     async publishFunnel(
         funnelState: FunnelState,
-        options: PublishOptions
+        options: PublishOptions,
     ): Promise<PublishResult> {
         console.log(`🚀 Iniciando publicação do funil: ${options.funnelId}`);
         const startTime = Date.now();
@@ -95,7 +95,7 @@ export class PublishingService {
                 return {
                     success: false,
                     errors: validation.errors,
-                    warnings: validation.warnings
+                    warnings: validation.warnings,
                 };
             }
 
@@ -109,7 +109,7 @@ export class PublishingService {
             const deployResult = await this.executeDeploy(
                 publishConfig,
                 deploymentId,
-                options
+                options,
             );
 
             if (!deployResult.success) {
@@ -126,7 +126,7 @@ export class PublishingService {
                 publishedAt: new Date().toISOString(),
                 buildTime: Date.now() - startTime,
                 size: this.calculateFunnelSize(funnelState),
-                version: funnelState.metadata.version || '1.0.0'
+                version: funnelState.metadata.version || '1.0.0',
             };
 
             await this.saveDeploymentInfo(deploymentInfo);
@@ -136,7 +136,7 @@ export class PublishingService {
             await this.updateFunnelPublishStatus(
                 options.funnelId,
                 true,
-                deployResult.publishedUrl!
+                deployResult.publishedUrl!,
             );
 
             console.log(`✅ Funil publicado com sucesso: ${options.funnelId}`);
@@ -146,7 +146,7 @@ export class PublishingService {
                 ...deployResult,
                 deploymentId,
                 publishedAt: deploymentInfo.publishedAt,
-                buildTime: deploymentInfo.buildTime
+                buildTime: deploymentInfo.buildTime,
             };
 
         } catch (error) {
@@ -157,7 +157,7 @@ export class PublishingService {
             return {
                 success: false,
                 errors: [`Erro durante publicação: ${errorMessage}`],
-                buildTime: Date.now() - startTime
+                buildTime: Date.now() - startTime,
             };
         }
     }
@@ -214,7 +214,7 @@ export class PublishingService {
 
             return {
                 isPublished: data.is_published || false,
-                lastDeployment
+                lastDeployment,
             };
         } catch (error) {
             console.error('❌ Erro ao obter status:', error);
@@ -251,7 +251,7 @@ export class PublishingService {
             successfulDeployments: successful.length,
             failedDeployments: failed.length,
             averageBuildTime: Math.round(averageBuildTime),
-            lastDeployment: deployments[0]
+            lastDeployment: deployments[0],
         };
     }
 
@@ -307,7 +307,7 @@ export class PublishingService {
         return {
             isValid: errors.length === 0,
             errors,
-            warnings
+            warnings,
         };
     }
 
@@ -317,7 +317,7 @@ export class PublishingService {
 
     private buildPublishConfig(
         funnelState: FunnelState,
-        options: PublishOptions
+        options: PublishOptions,
     ): any {
         return {
             funnel: funnelState,
@@ -327,14 +327,14 @@ export class PublishingService {
             ssl: options.enableSSL || true,
             compression: options.enableCompression || true,
             cdn: options.enableCDN || true,
-            metadata: options.metadata || {}
+            metadata: options.metadata || {},
         };
     }
 
     private async executeDeploy(
         _config: any,
         deploymentId: string,
-        options: PublishOptions
+        options: PublishOptions,
     ): Promise<PublishResult> {
         // Simular processo de deploy
         await this.simulateDeployProcess(deploymentId);
@@ -346,7 +346,7 @@ export class PublishingService {
             success: true,
             publishedUrl: urls.published,
             previewUrl: urls.preview,
-            deploymentId
+            deploymentId,
         };
     }
 
@@ -368,7 +368,7 @@ export class PublishingService {
 
         return {
             published: `https://${subdomain}${baseUrl}/${options.funnelId}`,
-            preview: `https://preview.${baseUrl}/${options.funnelId}`
+            preview: `https://preview.${baseUrl}/${options.funnelId}`,
         };
     }
 
@@ -402,7 +402,7 @@ export class PublishingService {
     private async updateFunnelPublishStatus(
         funnelId: string,
         isPublished: boolean,
-        publishedUrl?: string
+        publishedUrl?: string,
     ): Promise<boolean> {
         try {
             if (!supabase) {
@@ -412,7 +412,7 @@ export class PublishingService {
 
             const updateData: any = {
                 is_published: isPublished,
-                updated_at: new Date().toISOString()
+                updated_at: new Date().toISOString(),
             };
 
             if (publishedUrl) {
@@ -473,7 +473,7 @@ export class PublishingService {
 
         return {
             isValid: errors.length === 0,
-            errors
+            errors,
         };
     }
 

@@ -54,7 +54,7 @@ describe('EditorProvider actions: reorder and insert-at-index', () => {
         const { getByTestId } = render(
             <EditorProvider funnelId="test-funnel">
                 <Harness />
-            </EditorProvider>
+            </EditorProvider>,
         );
 
         // Espera o fluxo completar

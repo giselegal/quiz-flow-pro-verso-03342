@@ -87,7 +87,7 @@ export const useConnectedTemplates = () => {
         return false;
       }
     },
-    [templateConfigs, quizLogic]
+    [templateConfigs, quizLogic],
   );
 
   // 🎯 OBTER ESTADO ATUAL DA QUESTÃO
@@ -106,7 +106,7 @@ export const useConnectedTemplates = () => {
         canProceed: questionAnswers.length >= (config.questionData?.multiSelect || 1),
       };
     },
-    [templateConfigs, quizLogic.answers]
+    [templateConfigs, quizLogic.answers],
   );
 
   // 🎯 VALIDAR SE TEMPLATE ESTÁ PRONTO PARA CONECTAR
@@ -115,7 +115,7 @@ export const useConnectedTemplates = () => {
       const config = templateConfigs[stepNumber];
       return config && config.hasRealData && config.questionData;
     },
-    [templateConfigs]
+    [templateConfigs],
   );
 
   // 📊 ESTATÍSTICAS DOS TEMPLATES

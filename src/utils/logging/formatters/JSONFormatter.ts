@@ -11,7 +11,7 @@ export class JSONFormatter implements LogFormatter {
             return JSON.stringify({
                 ...entry,
                 data: '[Serialization Error]',
-                error: error instanceof Error ? error.message : String(error)
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }

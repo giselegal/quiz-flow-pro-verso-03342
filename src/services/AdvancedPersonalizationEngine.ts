@@ -79,18 +79,18 @@ export class AdvancedPersonalizationEngine {
       psychographics: {
         personality: personalityTraits,
         values: this.inferValues(behaviors),
-        lifestyle: this.inferLifestyle(behaviors)
+        lifestyle: this.inferLifestyle(behaviors),
       },
       behaviors: {
         purchaseFrequency: this.analyzePurchaseBehavior(userData),
         decisionSpeed: engagement.avgResponseTime > 5000 ? 'deliberate' : 'quick',
-        pricesensitivity: this.analyzePriceSensitivity(behaviors)
+        pricesensitivity: this.analyzePriceSensitivity(behaviors),
       },
       preferences: {
         communicationStyle: personalityTraits.includes('extrovert') ? 'direct' : 'gentle',
         visualStyle: this.inferVisualPreferences(behaviors),
-        contentType: ['visual', 'interactive'] // Baseado no engajamento
-      }
+        contentType: ['visual', 'interactive'], // Baseado no engajamento
+      },
     };
 
     this.personas.set(persona.id, persona);
@@ -112,7 +112,7 @@ export class AdvancedPersonalizationEngine {
       colors: this.getPersonalizedColors(persona),
       layout: this.getPersonalizedLayout(persona),
       ctaText: this.personalizeCTA(persona),
-      messaging: this.getPersonalizedMessaging(persona)
+      messaging: this.getPersonalizedMessaging(persona),
     };
 
     // Métricas de performance
@@ -127,13 +127,13 @@ export class AdvancedPersonalizationEngine {
       urgency: this.calculateUrgencyLevel(currentBehavior),
       pricing: this.suggestPricing(currentBehavior),
       offers: this.selectBestOffers(currentBehavior),
-      nextBestAction: this.predictNextAction(currentBehavior)
+      nextBestAction: this.predictNextAction(currentBehavior),
     };
 
     console.log('🔄 Real-time adaptation:', {
       userId,
       adaptations,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return adaptations;
@@ -148,7 +148,7 @@ export class AdvancedPersonalizationEngine {
         criteria: {
           decisionSpeed: 'quick',
           pricesensitivity: 'low',
-          purchaseFrequency: 'high'
+          purchaseFrequency: 'high',
         },
         size: 1250,
         avgValue: 850,
@@ -156,8 +156,8 @@ export class AdvancedPersonalizationEngine {
         personalizations: {
           urgency: 'high',
           socialProof: 'exclusive',
-          pricing: 'premium'
-        }
+          pricing: 'premium',
+        },
       },
       {
         id: 'research-driven-value-seekers',
@@ -165,7 +165,7 @@ export class AdvancedPersonalizationEngine {
         criteria: {
           decisionSpeed: 'deliberate',
           priceActivity: 'high',
-          contentConsumption: 'detailed'
+          contentConsumption: 'detailed',
         },
         size: 890,
         avgValue: 450,
@@ -173,8 +173,8 @@ export class AdvancedPersonalizationEngine {
         personalizations: {
           content: 'detailed',
           socialProof: 'testimonials',
-          pricing: 'value'
-        }
+          pricing: 'value',
+        },
       },
       {
         id: 'style-conscious-trendsetters',
@@ -182,7 +182,7 @@ export class AdvancedPersonalizationEngine {
         criteria: {
           visualStyle: 'trendy',
           socialSharing: 'high',
-          brandAwareness: 'high'
+          brandAwareness: 'high',
         },
         size: 675,
         avgValue: 720,
@@ -190,9 +190,9 @@ export class AdvancedPersonalizationEngine {
         personalizations: {
           visuals: 'cutting-edge',
           socialProof: 'influencer',
-          messaging: 'exclusive'
-        }
-      }
+          messaging: 'exclusive',
+        },
+      },
     ];
 
     return segments;
@@ -206,14 +206,14 @@ export class AdvancedPersonalizationEngine {
       segmentRecommendations: segments.map(s => ({
         segment: s.id,
         recommendations: this.generateOptimizations(s),
-        projectedLift: Math.round(Math.random() * 25 + 10) // 10-35% lift
+        projectedLift: Math.round(Math.random() * 25 + 10), // 10-35% lift
       })),
       globalInsights: {
         bestPerformingPersonality: 'quick-decisive',
         mostEngagingContent: 'visual-interactive',
         optimalTimings: ['10-12h', '15-17h', '20-22h'],
-        seasonalTrends: this.getSeasonalTrends()
-      }
+        seasonalTrends: this.getSeasonalTrends(),
+      },
     };
 
     return optimizations;
@@ -232,15 +232,15 @@ export class AdvancedPersonalizationEngine {
           area: 'Visual Personalization',
           impact: 'High',
           effort: 'Medium',
-          projectedLift: '18%'
+          projectedLift: '18%',
         },
         {
           area: 'Timing Optimization',
           impact: 'Medium',
           effort: 'Low',
-          projectedLift: '12%'
-        }
-      ]
+          projectedLift: '12%',
+        },
+      ],
     };
   }
 
@@ -250,18 +250,18 @@ export class AdvancedPersonalizationEngine {
       {
         id: 'trendy-professional',
         name: 'Profissional Moderna',
-        characteristics: ['tech-savvy', 'time-conscious', 'quality-focused']
+        characteristics: ['tech-savvy', 'time-conscious', 'quality-focused'],
       },
       {
         id: 'style-explorer',
         name: 'Exploradora de Estilo',
-        characteristics: ['creative', 'experimental', 'social']
+        characteristics: ['creative', 'experimental', 'social'],
       },
       {
         id: 'classic-elegance',
         name: 'Elegância Clássica',
-        characteristics: ['sophisticated', 'quality-focused', 'timeless']
-      }
+        characteristics: ['sophisticated', 'quality-focused', 'timeless'],
+      },
     ];
 
     // Initialize with mock data
@@ -281,7 +281,7 @@ export class AdvancedPersonalizationEngine {
     return {
       ageRange: '25-35', // Based on engagement patterns
       location: 'Urban',  // Device/connection analysis
-      income: 'Medium-High' // Purchase behavior
+      income: 'Medium-High', // Purchase behavior
     };
   }
 
@@ -311,13 +311,13 @@ export class AdvancedPersonalizationEngine {
     return {
       headline: 'Descubra Seu Estilo Único',
       description: 'Quiz personalizado para encontrar seu estilo perfeito',
-      ctaText: 'Começar Quiz'
+      ctaText: 'Começar Quiz',
     };
   }
 
   private getMatchingRules(persona: UserPersona): PersonalizationRule[] {
     return Array.from(this.rules.values()).filter(rule => 
-      rule.conditions.persona.some(p => persona.psychographics.personality.includes(p))
+      rule.conditions.persona.some(p => persona.psychographics.personality.includes(p)),
     );
   }
 
@@ -340,7 +340,7 @@ export class AdvancedPersonalizationEngine {
       minimal: { primary: '#000000', secondary: '#FFFFFF' },
       bold: { primary: '#FF6B35', secondary: '#004E89' },
       elegant: { primary: '#B89B7A', secondary: '#432818' },
-      trendy: { primary: '#FF5722', secondary: '#607D8B' }
+      trendy: { primary: '#FF5722', secondary: '#607D8B' },
     };
     return colorPalettes[persona.preferences.visualStyle] || colorPalettes.elegant;
   }
@@ -359,7 +359,7 @@ export class AdvancedPersonalizationEngine {
     return {
       tone: persona.preferences.communicationStyle,
       urgency: persona.behaviors.decisionSpeed === 'quick' ? 'high' : 'low',
-      socialProof: persona.psychographics.personality.includes('social') ? 'community' : 'expert'
+      socialProof: persona.psychographics.personality.includes('social') ? 'community' : 'expert',
     };
   }
 
@@ -376,14 +376,14 @@ export class AdvancedPersonalizationEngine {
     return {
       strategy: 'value-based',
       discount: Math.floor(Math.random() * 20),
-      urgency: Math.random() > 0.5
+      urgency: Math.random() > 0.5,
     };
   }
 
   private selectBestOffers(_behavior: any): any[] {
     return [
       { type: 'early-bird', discount: 15 },
-      { type: 'bundle', savings: 25 }
+      { type: 'bundle', savings: 25 },
     ];
   }
 
@@ -403,13 +403,13 @@ export class AdvancedPersonalizationEngine {
       {
         type: 'content',
         suggestion: 'Increase visual content by 30%',
-        expectedLift: '15%'
+        expectedLift: '15%',
       },
       {
         type: 'timing',
         suggestion: 'Send notifications at 9 AM',
-        expectedLift: '8%'
-      }
+        expectedLift: '8%',
+      },
     ];
   }
 
@@ -418,7 +418,7 @@ export class AdvancedPersonalizationEngine {
       spring: { styles: ['fresh', 'colorful'], engagement: '+12%' },
       summer: { styles: ['casual', 'vibrant'], engagement: '+18%' },
       fall: { styles: ['sophisticated', 'warm'], engagement: '+15%' },
-      winter: { styles: ['elegant', 'cozy'], engagement: '+10%' }
+      winter: { styles: ['elegant', 'cozy'], engagement: '+10%' },
     };
   }
 }

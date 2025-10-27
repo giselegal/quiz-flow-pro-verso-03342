@@ -21,12 +21,12 @@ export const useQuizComponents = () => {
       setComponents(prev => [...prev, newComponent]);
       return newComponent.id;
     },
-    [components.length]
+    [components.length],
   );
 
   const updateComponent = useCallback((id: string, updates: Partial<QuizComponentData>) => {
     setComponents(prev =>
-      prev.map(component => (component.id === id ? { ...component, ...updates } : component))
+      prev.map(component => (component.id === id ? { ...component, ...updates } : component)),
     );
   }, []);
 

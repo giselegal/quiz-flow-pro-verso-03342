@@ -39,74 +39,74 @@ export const FUNNEL_TEMPLATES: Record<string, Partial<FunnelConfigTemplate>> = {
         category: 'quiz',
         customizations: {
             seo: {
-                keywords: ['quiz', 'avaliação', 'teste', 'personalidade', 'descoberta']
+                keywords: ['quiz', 'avaliação', 'teste', 'personalidade', 'descoberta'],
             },
             theme: {
                 primaryColor: '#B89B7A',
                 secondaryColor: '#8F7A6A',
-                accentColor: '#D4C4B0'
+                accentColor: '#D4C4B0',
             },
             utm: {
                 source: 'quiz_organico',
                 medium: 'quiz',
-                campaign: 'descoberta_perfil'
-            }
-        }
+                campaign: 'descoberta_perfil',
+            },
+        },
     },
     'sales': {
         category: 'sales',
         customizations: {
             seo: {
-                keywords: ['venda', 'produto', 'oferta', 'desconto', 'comprar']
+                keywords: ['venda', 'produto', 'oferta', 'desconto', 'comprar'],
             },
             theme: {
                 primaryColor: '#4CAF50',
                 secondaryColor: '#2E7D32',
-                accentColor: '#81C784'
+                accentColor: '#81C784',
             },
             utm: {
                 source: 'funil_vendas',
                 medium: 'sales_funnel',
-                campaign: 'conversao_direta'
-            }
-        }
+                campaign: 'conversao_direta',
+            },
+        },
     },
     'lead-magnet': {
         category: 'lead-magnet',
         customizations: {
             seo: {
-                keywords: ['grátis', 'download', 'lead', 'material', 'guia']
+                keywords: ['grátis', 'download', 'lead', 'material', 'guia'],
             },
             theme: {
                 primaryColor: '#2196F3',
                 secondaryColor: '#1976D2',
-                accentColor: '#64B5F6'
+                accentColor: '#64B5F6',
             },
             utm: {
                 source: 'lead_organico',
                 medium: 'lead_magnet',
-                campaign: 'captura_leads'
-            }
-        }
+                campaign: 'captura_leads',
+            },
+        },
     },
     'assessment': {
         category: 'assessment',
         customizations: {
             seo: {
-                keywords: ['avaliação', 'análise', 'diagnóstico', 'resultado', 'teste']
+                keywords: ['avaliação', 'análise', 'diagnóstico', 'resultado', 'teste'],
             },
             theme: {
                 primaryColor: '#FF9800',
                 secondaryColor: '#F57C00',
-                accentColor: '#FFB74D'
+                accentColor: '#FFB74D',
             },
             utm: {
                 source: 'assessment_organico',
                 medium: 'assessment',
-                campaign: 'avaliacao_completa'
-            }
-        }
-    }
+                campaign: 'avaliacao_completa',
+            },
+        },
+    },
 };
 
 // ============================================================================
@@ -125,24 +125,24 @@ export class FunnelConfigGenerator {
         const mergedCustomizations = {
             seo: {
                 ...categoryDefaults.customizations?.seo,
-                ...template.customizations?.seo
+                ...template.customizations?.seo,
             },
             theme: {
                 ...categoryDefaults.customizations?.theme,
-                ...template.customizations?.theme
+                ...template.customizations?.theme,
             },
             tracking: {
                 ...categoryDefaults.customizations?.tracking,
-                ...template.customizations?.tracking
+                ...template.customizations?.tracking,
             },
             utm: {
                 ...categoryDefaults.customizations?.utm,
-                ...template.customizations?.utm
+                ...template.customizations?.utm,
             },
             webhooks: {
                 ...categoryDefaults.customizations?.webhooks,
-                ...template.customizations?.webhooks
-            }
+                ...template.customizations?.webhooks,
+            },
         };
 
         // Base da configuração usando quiz21StepsComplete como template
@@ -156,8 +156,8 @@ export class FunnelConfigGenerator {
                 version: '1.0.0',
                 author: 'Sistema Automático',
                 createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            }
+                updatedAt: new Date().toISOString(),
+            },
         };
 
         // Aplicar customizações específicas
@@ -169,21 +169,21 @@ export class FunnelConfigGenerator {
                 title: mergedCustomizations.seo.title || `${template.name} | Descubra Agora`,
                 description: mergedCustomizations.seo.description || template.description,
                 ogTitle: mergedCustomizations.seo.ogTitle || template.name,
-                ogDescription: mergedCustomizations.seo.ogDescription || template.description
+                ogDescription: mergedCustomizations.seo.ogDescription || template.description,
             };
         }
 
         if (mergedCustomizations.theme) {
             baseConfig.theme = {
                 ...baseConfig.theme,
-                ...mergedCustomizations.theme
+                ...mergedCustomizations.theme,
             };
         }
 
         if (mergedCustomizations.tracking) {
             baseConfig.tracking = {
                 ...baseConfig.tracking,
-                ...mergedCustomizations.tracking
+                ...mergedCustomizations.tracking,
             };
         }
 
@@ -192,7 +192,7 @@ export class FunnelConfigGenerator {
                 source: 'organico',
                 medium: 'funil',
                 campaign: template.id.replace(/[^a-zA-Z0-9]/g, '_'),
-                ...mergedCustomizations.utm
+                ...mergedCustomizations.utm,
             };
         }
 
@@ -200,7 +200,7 @@ export class FunnelConfigGenerator {
             baseConfig.webhooks = {
                 ...baseConfig.webhooks,
                 ...mergedCustomizations.webhooks,
-                enabled: mergedCustomizations.webhooks.enabled ?? baseConfig.webhooks?.enabled ?? true
+                enabled: mergedCustomizations.webhooks.enabled ?? baseConfig.webhooks?.enabled ?? true,
             };
         }
 
@@ -213,13 +213,13 @@ export class FunnelConfigGenerator {
     static generateQuickConfig(
         funnelId: string,
         name: string,
-        category: FunnelConfigTemplate['category'] = 'other'
+        category: FunnelConfigTemplate['category'] = 'other',
     ): FunnelConfig {
         return this.generateConfig({
             id: funnelId,
-            name: name,
+            name,
             description: `Funil gerado automaticamente: ${name}`,
-            category: category
+            category,
         });
     }
 
@@ -235,33 +235,33 @@ export class FunnelConfigGenerator {
             {
                 category: 'quiz',
                 description: 'Quiz interativo para descoberta de perfil',
-                defaultTheme: '#B89B7A'
+                defaultTheme: '#B89B7A',
             },
             {
                 category: 'sales',
                 description: 'Funil de vendas e conversão',
-                defaultTheme: '#4CAF50'
+                defaultTheme: '#4CAF50',
             },
             {
                 category: 'lead-magnet',
                 description: 'Captura de leads com material gratuito',
-                defaultTheme: '#2196F3'
+                defaultTheme: '#2196F3',
             },
             {
                 category: 'assessment',
                 description: 'Avaliação e diagnóstico personalizado',
-                defaultTheme: '#FF9800'
+                defaultTheme: '#FF9800',
             },
             {
                 category: 'survey',
                 description: 'Pesquisa e coleta de dados',
-                defaultTheme: '#9C27B0'
+                defaultTheme: '#9C27B0',
             },
             {
                 category: 'other',
                 description: 'Outros tipos de funil personalizado',
-                defaultTheme: '#607D8B'
-            }
+                defaultTheme: '#607D8B',
+            },
         ];
     }
 
@@ -292,7 +292,7 @@ export class FunnelConfigGenerator {
         return {
             valid: errors.length === 0,
             errors,
-            warnings
+            warnings,
         };
     }
 }
@@ -310,9 +310,9 @@ export const COMMON_FUNNELS_CONFIGS = {
         category: 'quiz',
         customizations: {
             seo: {
-                keywords: ['personalidade', 'quiz', 'psicologia', 'autoconhecimento']
-            }
-        }
+                keywords: ['personalidade', 'quiz', 'psicologia', 'autoconhecimento'],
+            },
+        },
     }),
 
     // Lead magnet padrão
@@ -323,9 +323,9 @@ export const COMMON_FUNNELS_CONFIGS = {
         category: 'lead-magnet',
         customizations: {
             seo: {
-                keywords: ['ebook', 'grátis', 'download', 'material', 'guia']
-            }
-        }
+                keywords: ['ebook', 'grátis', 'download', 'material', 'guia'],
+            },
+        },
     }),
 
     // Funil de vendas básico
@@ -336,10 +336,10 @@ export const COMMON_FUNNELS_CONFIGS = {
         category: 'sales',
         customizations: {
             seo: {
-                keywords: ['comprar', 'oferta', 'desconto', 'produto']
-            }
-        }
-    })
+                keywords: ['comprar', 'oferta', 'desconto', 'produto'],
+            },
+        },
+    }),
 };
 
 // Export principal

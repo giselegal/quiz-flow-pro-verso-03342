@@ -36,7 +36,7 @@ export const useEditorReusableComponentsSimple = () => {
         description: 'Botão principal do sistema',
         preview: 'https://via.placeholder.com/150x100',
         data: { type: 'button', variant: 'primary' },
-        tags: ['button', 'primary']
+        tags: ['button', 'primary'],
       },
       {
         id: 'comp-2',
@@ -45,8 +45,8 @@ export const useEditorReusableComponentsSimple = () => {
         description: 'Card informativo com título e descrição',
         preview: 'https://via.placeholder.com/150x100',
         data: { type: 'info-card', layout: 'vertical' },
-        tags: ['card', 'info']
-      }
+        tags: ['card', 'info'],
+      },
     ];
     
     setComponents(sampleComponents);
@@ -56,7 +56,7 @@ export const useEditorReusableComponentsSimple = () => {
   const addComponent = useCallback((component: Omit<ReusableComponent, 'id'>) => {
     const newComponent: ReusableComponent = {
       ...component,
-      id: `comp-${Date.now()}`
+      id: `comp-${Date.now()}`,
     };
     
     setComponents(prev => [...prev, newComponent]);
@@ -65,7 +65,7 @@ export const useEditorReusableComponentsSimple = () => {
 
   const updateComponent = useCallback((id: string, updates: Partial<ReusableComponent>) => {
     setComponents(prev => prev.map(comp => 
-      comp.id === id ? { ...comp, ...updates } : comp
+      comp.id === id ? { ...comp, ...updates } : comp,
     ));
     console.log('🔄 Componente atualizado:', id, updates);
   }, []);
@@ -83,7 +83,7 @@ export const useEditorReusableComponentsSimple = () => {
     addComponent,
     updateComponent,
     deleteComponent,
-    totalComponents: components.length
+    totalComponents: components.length,
   };
 };
 

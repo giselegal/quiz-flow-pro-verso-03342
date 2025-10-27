@@ -116,9 +116,9 @@ export const DEFAULT_SCHEMAS = {
             {
                 type: ValidationType.REQUIRED,
                 severity: ValidationSeverity.ERROR,
-                message: 'Content is required'
-            }
-        ]
+                message: 'Content is required',
+            },
+        ],
     },
 
     // Email validation
@@ -127,14 +127,14 @@ export const DEFAULT_SCHEMAS = {
             {
                 type: ValidationType.REQUIRED,
                 severity: ValidationSeverity.ERROR,
-                message: 'Email is required'
+                message: 'Email is required',
             },
             {
                 type: ValidationType.EMAIL,
                 severity: ValidationSeverity.ERROR,
-                message: 'Please enter a valid email address'
-            }
-        ]
+                message: 'Please enter a valid email address',
+            },
+        ],
     },
 
     // URL validation
@@ -143,9 +143,9 @@ export const DEFAULT_SCHEMAS = {
             {
                 type: ValidationType.URL,
                 severity: ValidationSeverity.ERROR,
-                message: 'Please enter a valid URL'
-            }
-        ]
+                message: 'Please enter a valid URL',
+            },
+        ],
     },
 
     // Quiz validation
@@ -154,23 +154,23 @@ export const DEFAULT_SCHEMAS = {
             {
                 type: ValidationType.REQUIRED,
                 severity: ValidationSeverity.ERROR,
-                message: 'Quiz title is required'
+                message: 'Quiz title is required',
             },
             {
                 type: ValidationType.MIN_LENGTH,
                 severity: ValidationSeverity.WARNING,
                 message: 'Title should be at least 5 characters',
-                value: 5
-            }
+                value: 5,
+            },
         ],
         description: [
             {
                 type: ValidationType.MIN_LENGTH,
                 severity: ValidationSeverity.INFO,
                 message: 'Consider adding a description',
-                value: 10
-            }
-        ]
+                value: 10,
+            },
+        ],
     },
 
     // Block validation
@@ -179,8 +179,8 @@ export const DEFAULT_SCHEMAS = {
             {
                 type: ValidationType.REQUIRED,
                 severity: ValidationSeverity.ERROR,
-                message: 'Block type is required'
-            }
+                message: 'Block type is required',
+            },
         ],
         properties: [
             {
@@ -189,10 +189,10 @@ export const DEFAULT_SCHEMAS = {
                 message: 'Block properties are invalid',
                 validator: (properties: any) => {
                     return typeof properties === 'object' && properties !== null;
-                }
-            }
-        ]
-    }
+                },
+            },
+        ],
+    },
 } as Record<string, ValidationSchema>;
 
 // =============================================================================
@@ -238,10 +238,10 @@ export const useUnifiedValidation = () => {
             errors: [],
             warnings: [],
             infos: [],
-            touchedFields: new Set()
+            touchedFields: new Set(),
         },
         schemas: new Map(Object.entries(DEFAULT_SCHEMAS)),
-        asyncValidators: new Map()
+        asyncValidators: new Map(),
     });
 
     const asyncTimeoutRef = useRef<NodeJS.Timeout>();
@@ -277,7 +277,7 @@ export const useUnifiedValidation = () => {
     const validateField = useCallback(async (
         field: string,
         value: any,
-        schemaId?: string
+        schemaId?: string,
     ): Promise<ValidationError[]> => {
         const schema = schemaId ? state.schemas.get(schemaId) : DEFAULT_SCHEMAS.block;
         if (!schema || !schema[field]) return [];
@@ -357,7 +357,7 @@ export const useUnifiedValidation = () => {
                     type: rule.type,
                     severity: rule.severity,
                     message: rule.message,
-                    value
+                    value,
                 });
             }
         }
@@ -368,7 +368,7 @@ export const useUnifiedValidation = () => {
     // Validate all fields
     const validateAllFields = useCallback(async (
         data: Record<string, any>,
-        schemaId?: string
+        schemaId?: string,
     ): Promise<ValidationResult> => {
         setState(prev => ({ ...prev, isValidating: true }));
 
@@ -377,7 +377,7 @@ export const useUnifiedValidation = () => {
 
         // Validate all fields concurrently
         const validationPromises = fields.map(field =>
-            validateField(field, data[field], schemaId)
+            validateField(field, data[field], schemaId),
         );
 
         const fieldErrors = await Promise.all(validationPromises);
@@ -393,13 +393,13 @@ export const useUnifiedValidation = () => {
             errors,
             warnings,
             infos,
-            touchedFields: new Set(fields)
+            touchedFields: new Set(fields),
         };
 
         setState(prev => ({
             ...prev,
             isValidating: false,
-            validationResult: result
+            validationResult: result,
         }));
 
         return result;
@@ -408,7 +408,7 @@ export const useUnifiedValidation = () => {
     // Validate form
     const validateForm = useCallback(async (
         formData: Record<string, any>,
-        schemaId: string
+        schemaId: string,
     ): Promise<ValidationResult> => {
         return validateAllFields(formData, schemaId);
     }, [validateAllFields]);
@@ -422,11 +422,11 @@ export const useUnifiedValidation = () => {
                     field: 'block',
                     type: ValidationType.REQUIRED,
                     severity: ValidationSeverity.ERROR,
-                    message: 'Block is required'
+                    message: 'Block is required',
                 }],
                 warnings: [],
                 infos: [],
-                touchedFields: new Set(['block'])
+                touchedFields: new Set(['block']),
             };
         }
 
@@ -442,17 +442,17 @@ export const useUnifiedValidation = () => {
                     field: 'step',
                     type: ValidationType.REQUIRED,
                     severity: ValidationSeverity.ERROR,
-                    message: 'Step must have blocks array'
+                    message: 'Step must have blocks array',
                 }],
                 warnings: [],
                 infos: [],
-                touchedFields: new Set(['step'])
+                touchedFields: new Set(['step']),
             };
         }
 
         // Validate all blocks in step
         const blockValidations = await Promise.all(
-            step.blocks.map((block: any) => validateBlock(block))
+            step.blocks.map((block: any) => validateBlock(block)),
         );
 
         const allErrors = blockValidations.flatMap(result => result.errors);
@@ -464,7 +464,7 @@ export const useUnifiedValidation = () => {
             errors: allErrors,
             warnings: allWarnings,
             infos: allInfos,
-            touchedFields: new Set(['step', ...step.blocks.map((_: any, i: number) => `block_${i}`)])
+            touchedFields: new Set(['step', ...step.blocks.map((_: any, i: number) => `block_${i}`)]),
         };
     }, [validateBlock]);
 
@@ -477,17 +477,17 @@ export const useUnifiedValidation = () => {
                     field: 'funnel',
                     type: ValidationType.REQUIRED,
                     severity: ValidationSeverity.ERROR,
-                    message: 'Funnel must have steps array'
+                    message: 'Funnel must have steps array',
                 }],
                 warnings: [],
                 infos: [],
-                touchedFields: new Set(['funnel'])
+                touchedFields: new Set(['funnel']),
             };
         }
 
         // Validate all steps in funnel
         const stepValidations = await Promise.all(
-            funnel.steps.map((step: any) => validateStep(step))
+            funnel.steps.map((step: any) => validateStep(step)),
         );
 
         const allErrors = stepValidations.flatMap(result => result.errors);
@@ -499,7 +499,7 @@ export const useUnifiedValidation = () => {
             errors: allErrors,
             warnings: allWarnings,
             infos: allInfos,
-            touchedFields: new Set(['funnel', ...funnel.steps.map((_: any, i: number) => `step_${i}`)])
+            touchedFields: new Set(['funnel', ...funnel.steps.map((_: any, i: number) => `step_${i}`)]),
         };
     }, [validateStep]);
 
@@ -522,8 +522,8 @@ export const useUnifiedValidation = () => {
                         errors: newErrors,
                         warnings: newWarnings,
                         infos: newInfos,
-                        isValid: newErrors.length === 0
-                    }
+                        isValid: newErrors.length === 0,
+                    },
                 };
             } else {
                 return {
@@ -533,8 +533,8 @@ export const useUnifiedValidation = () => {
                         errors: [],
                         warnings: [],
                         infos: [],
-                        touchedFields: new Set()
-                    }
+                        touchedFields: new Set(),
+                    },
                 };
             }
         });
@@ -549,8 +549,8 @@ export const useUnifiedValidation = () => {
                 ...prev,
                 validationResult: {
                     ...prev.validationResult,
-                    touchedFields: newTouchedFields
-                }
+                    touchedFields: newTouchedFields,
+                },
             };
         });
     }, []);
@@ -590,7 +590,7 @@ export const useUnifiedValidation = () => {
         isFieldTouched,
         getFieldErrors,
         hasErrors,
-        hasWarnings
+        hasWarnings,
     }), [
         registerSchema,
         unregisterSchema,
@@ -605,7 +605,7 @@ export const useUnifiedValidation = () => {
         isFieldTouched,
         getFieldErrors,
         hasErrors,
-        hasWarnings
+        hasWarnings,
     ]);
 
     return {
@@ -615,7 +615,7 @@ export const useUnifiedValidation = () => {
         schemas: state.schemas,
 
         // Actions
-        ...actions
+        ...actions,
     };
 };
 

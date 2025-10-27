@@ -20,7 +20,7 @@ export interface TemplateThumbnail {
  */
 export const generateTemplateThumbnail = async (
     templateId: string,
-    step1Blocks?: Block[]
+    step1Blocks?: Block[],
 ): Promise<TemplateThumbnail> => {
     const blocks = step1Blocks || QUIZ_STYLE_21_STEPS_TEMPLATE['step-1'] || [];
 
@@ -164,7 +164,7 @@ const thumbnailCache = new Map<string, TemplateThumbnail>();
  */
 export const getTemplateThumbnail = async (
     templateId: string,
-    step1Blocks?: Block[]
+    step1Blocks?: Block[],
 ): Promise<string> => {
     if (thumbnailCache.has(templateId)) {
         const cached = thumbnailCache.get(templateId)!;

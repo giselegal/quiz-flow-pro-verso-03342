@@ -52,7 +52,7 @@ class ObservabilityManager {
       enableBusinessMetrics: true,
       logLevel: import.meta.env.DEV ? LogLevel.DEBUG : LogLevel.INFO,
       flushInterval: 30000,
-      ...config
+      ...config,
     };
   }
 
@@ -68,7 +68,7 @@ class ObservabilityManager {
     if (this.config.enableStructuredLogging) {
       structuredLogger.info('Observability Manager initialized', {
         config: this.config,
-        category: 'system'
+        category: 'system',
       });
     }
 
@@ -92,8 +92,8 @@ class ObservabilityManager {
       features: {
         structuredLogging: this.config.enableStructuredLogging,
         webVitals: this.config.enableWebVitalsMonitoring,
-        businessMetrics: this.config.enableBusinessMetrics
-      }
+        businessMetrics: this.config.enableBusinessMetrics,
+      },
     });
   }
 
@@ -119,7 +119,7 @@ class ObservabilityManager {
         filename: event.filename,
         lineno: event.lineno,
         colno: event.colno,
-        error: event.error?.stack
+        error: event.error?.stack,
       });
     });
 
@@ -127,7 +127,7 @@ class ObservabilityManager {
     window.addEventListener('unhandledrejection', (event) => {
       this.logError('Unhandled promise rejection', 'global', {
         reason: event.reason,
-        stack: event.reason?.stack
+        stack: event.reason?.stack,
       });
     });
   }
@@ -141,17 +141,17 @@ class ObservabilityManager {
     if (health.status === 'critical') {
       structuredLogger.critical('System health is critical', {
         health,
-        category: 'health_check'
+        category: 'health_check',
       });
     } else if (health.status === 'degraded') {
       structuredLogger.warn('System health is degraded', {
         health,
-        category: 'health_check'
+        category: 'health_check',
       });
     } else {
       structuredLogger.debug('System health check passed', {
         health,
-        category: 'health_check'
+        category: 'health_check',
       });
     }
   }
@@ -163,7 +163,7 @@ class ObservabilityManager {
     const errorEntry = {
       message,
       component,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.errorBuffer.push(errorEntry);
@@ -176,7 +176,7 @@ class ObservabilityManager {
     structuredLogger.error(message, {
       component,
       ...context,
-      category: 'error'
+      category: 'error',
     });
 
     // Track as business metric
@@ -197,7 +197,7 @@ class ObservabilityManager {
       action,
       component,
       metadata,
-      category: 'interaction'
+      category: 'interaction',
     });
   }
 
@@ -213,7 +213,7 @@ class ObservabilityManager {
       event,
       value,
       funnelStep,
-      category: 'conversion'
+      category: 'conversion',
     });
   }
 
@@ -232,13 +232,13 @@ class ObservabilityManager {
     // Business metrics
     const businessSnapshot = businessMetrics.getSnapshot();
     const avgDropoffRate = businessSnapshot.funnelDropoffs.reduce(
-      (sum, item) => sum + item.dropoffRate, 0
+      (sum, item) => sum + item.dropoffRate, 0,
     ) / Math.max(businessSnapshot.funnelDropoffs.length, 1);
 
     // Error analysis
     const recentErrors = this.errorBuffer.slice(-10);
     const criticalErrorCount = recentErrors.filter(
-      error => error.message.includes('critical') || error.message.includes('Critical')
+      error => error.message.includes('critical') || error.message.includes('Critical'),
     ).length;
 
     // Determine overall system status
@@ -255,19 +255,19 @@ class ObservabilityManager {
       performance: {
         score: performanceScore,
         rating: performanceRating,
-        recommendations: webVitalsSnapshot.recommendations
+        recommendations: webVitalsSnapshot.recommendations,
       },
       business: {
         conversionRate: businessSnapshot.conversionRate,
         dropoffRate: avgDropoffRate,
-        activeUsers: businessSnapshot.uniqueUsers
+        activeUsers: businessSnapshot.uniqueUsers,
       },
       errors: {
         count: recentErrors.length,
         criticalCount: criticalErrorCount,
-        recentErrors
+        recentErrors,
       },
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -284,13 +284,13 @@ class ObservabilityManager {
       business: businessData,
       performance: {
         webVitals: webVitalsMetrics,
-        summary: coreWebVitalsMonitor.getMetricsSummary()
+        summary: coreWebVitalsMonitor.getMetricsSummary(),
       },
       realTimeStats: {
         activeSession: businessMetrics['sessionId'],
         sessionDuration: Date.now() - businessMetrics['sessionStart'],
-        errorRate: (systemHealth.errors.count / Math.max(businessData.overview.totalInteractions, 1)) * 100
-      }
+        errorRate: (systemHealth.errors.count / Math.max(businessData.overview.totalInteractions, 1)) * 100,
+      },
     };
   }
 
@@ -304,7 +304,7 @@ class ObservabilityManager {
       errors: [...this.errorBuffer],
       systemHealth: this.getSystemHealth(),
       config: this.config,
-      exportedAt: new Date().toISOString()
+      exportedAt: new Date().toISOString(),
     };
   }
 

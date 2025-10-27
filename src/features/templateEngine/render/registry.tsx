@@ -81,12 +81,12 @@ export const componentRegistry: Record<string, React.FC<RenderComponentProps>> =
     [ComponentKind.QuestionMulti]: QuestionMultiView,
     [ComponentKind.Transition]: TransitionView,
     [ComponentKind.ResultPlaceholder]: ResultPlaceholderView,
-    [ComponentKind.RawLegacyBundle]: RawLegacyBundleView
+    [ComponentKind.RawLegacyBundle]: RawLegacyBundleView,
 };
 
 // Fallback para componentes legacy antigos (sem kind)
 export const legacyTypeFallback: Record<string, React.FC<RenderComponentProps>> = {
-    legacyBlocksBundle: RawLegacyBundleView
+    legacyBlocksBundle: RawLegacyBundleView,
 };
 
 export function renderComponent(component: any, ctx: RenderContext): React.ReactElement {

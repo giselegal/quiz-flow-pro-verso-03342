@@ -51,7 +51,7 @@ export class SchemaBuilder {
   addGroup(
     id: string,
     label: string,
-    options?: Partial<Omit<FieldGroup, 'id' | 'label'>>
+    options?: Partial<Omit<FieldGroup, 'id' | 'label'>>,
   ): this {
     this.schema.groups!.push({
       id,

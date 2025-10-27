@@ -30,7 +30,7 @@ describe('Fluxo quiz-estilo - Step 2 não deve ser intro', () => {
                 setUserName: () => { },
                 addAnswer: () => { },
                 addStrategicAnswer: () => { },
-                getOfferKey: () => 'Montar looks com mais facilidade e confiança'
+                getOfferKey: () => 'Montar looks com mais facilidade e confiança',
             } as any;
         });
 

@@ -30,7 +30,7 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     children,
-    defaultTheme = 'dark'
+    defaultTheme = 'dark',
 }) => {
     const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>(defaultTheme);
 
@@ -65,7 +65,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
         <ThemeContext.Provider value={{
             theme,
             toggleTheme,
-            isLight: currentTheme === 'light'
+            isLight: currentTheme === 'light',
         }}>
             <div className={`theme-${currentTheme} min-h-screen`}>
                 {children}

@@ -97,7 +97,7 @@ export class FunnelErrorRecovery {
                 success: false,
                 strategy,
                 message: 'Circuit breaker open - recovery temporarily disabled',
-                retryAfter: this.getCircuitRetryDelay(strategy)
+                retryAfter: this.getCircuitRetryDelay(strategy),
             };
         }
 
@@ -107,7 +107,7 @@ export class FunnelErrorRecovery {
             return {
                 success: false,
                 strategy,
-                message: 'Recovery strategy disabled'
+                message: 'Recovery strategy disabled',
             };
         }
 
@@ -140,7 +140,7 @@ export class FunnelErrorRecovery {
                     result = {
                         success: false,
                         strategy,
-                        message: 'Unknown recovery strategy'
+                        message: 'Unknown recovery strategy',
                     };
             }
 
@@ -148,7 +148,7 @@ export class FunnelErrorRecovery {
             result = {
                 success: false,
                 strategy,
-                message: `Recovery failed: ${recoveryError.message}`
+                message: `Recovery failed: ${recoveryError.message}`,
             };
         }
 
@@ -170,33 +170,33 @@ export class FunnelErrorRecovery {
             [FunnelErrorCode.NETWORK_ERROR]: [
                 RecoveryStrategy.RETRY,
                 RecoveryStrategy.OFFLINE_MODE,
-                RecoveryStrategy.FALLBACK
+                RecoveryStrategy.FALLBACK,
             ],
 
             [FunnelErrorCode.STORAGE_ERROR]: [
                 RecoveryStrategy.RETRY,
                 RecoveryStrategy.CLEAR_CACHE,
                 RecoveryStrategy.FALLBACK,
-                RecoveryStrategy.RELOAD_PAGE
+                RecoveryStrategy.RELOAD_PAGE,
             ],
 
             [FunnelErrorCode.STORAGE_FULL]: [
                 RecoveryStrategy.CLEAR_CACHE,
                 RecoveryStrategy.FALLBACK,
-                RecoveryStrategy.USER_ACTION
+                RecoveryStrategy.USER_ACTION,
             ],
 
             [FunnelErrorCode.SYNC_FAILED]: [
                 RecoveryStrategy.RETRY,
                 RecoveryStrategy.OFFLINE_MODE,
-                RecoveryStrategy.USER_ACTION
+                RecoveryStrategy.USER_ACTION,
             ],
 
             [FunnelErrorCode.MIGRATION_FAILED]: [
                 RecoveryStrategy.FALLBACK,
                 RecoveryStrategy.RELOAD_PAGE,
-                RecoveryStrategy.CONTACT_SUPPORT
-            ]
+                RecoveryStrategy.CONTACT_SUPPORT,
+            ],
         };
 
         const chain = fallbackChains[error.code];
@@ -261,7 +261,7 @@ export class FunnelErrorRecovery {
             totalAttempts,
             successRate: totalAttempts > 0 ? totalSuccesses / totalAttempts : 0,
             byStrategy,
-            circuitBreakers
+            circuitBreakers,
         };
     }
 
@@ -278,7 +278,7 @@ export class FunnelErrorRecovery {
         // Delay exponencial
         const delay = Math.min(
             1000 * Math.pow(2, attemptNumber - 1),
-            30000 // max 30 segundos
+            30000, // max 30 segundos
         );
 
         await this.sleep(delay);
@@ -299,7 +299,7 @@ export class FunnelErrorRecovery {
                     success: false,
                     strategy: RecoveryStrategy.RETRY,
                     message: 'Retry not applicable for this error type',
-                    nextStrategy: this.getNextStrategy(RecoveryStrategy.RETRY, error)
+                    nextStrategy: this.getNextStrategy(RecoveryStrategy.RETRY, error),
                 };
         }
     }
@@ -328,7 +328,7 @@ export class FunnelErrorRecovery {
                 return {
                     success: false,
                     strategy: RecoveryStrategy.FALLBACK,
-                    message: 'No fallback available for this error type'
+                    message: 'No fallback available for this error type',
                 };
         }
     }
@@ -348,22 +348,22 @@ export class FunnelErrorRecovery {
                 window.dispatchEvent(new CustomEvent('funnelOfflineModeEnabled', {
                     detail: {
                         reason: context.error.code,
-                        timestamp: new Date().toISOString()
-                    }
+                        timestamp: new Date().toISOString(),
+                    },
                 }));
             }
 
             return {
                 success: true,
                 strategy: RecoveryStrategy.OFFLINE_MODE,
-                message: 'Offline mode enabled successfully'
+                message: 'Offline mode enabled successfully',
             };
 
         } catch (offlineError) {
             return {
                 success: false,
                 strategy: RecoveryStrategy.OFFLINE_MODE,
-                message: `Failed to enable offline mode: ${offlineError.message}`
+                message: `Failed to enable offline mode: ${offlineError.message}`,
             };
         }
     }
@@ -419,14 +419,14 @@ export class FunnelErrorRecovery {
                 success: true,
                 strategy: RecoveryStrategy.CLEAR_CACHE,
                 message: `Cache cleared successfully (${clearedItems} items)`,
-                data: { clearedItems }
+                data: { clearedItems },
             };
 
         } catch (cacheError) {
             return {
                 success: false,
                 strategy: RecoveryStrategy.CLEAR_CACHE,
-                message: `Failed to clear cache: ${cacheError.message}`
+                message: `Failed to clear cache: ${cacheError.message}`,
             };
         }
     }
@@ -441,7 +441,7 @@ export class FunnelErrorRecovery {
                 funnelId: context.funnelId,
                 errorCode: context.error.code,
                 timestamp: new Date().toISOString(),
-                recovery: true
+                recovery: true,
             };
 
             sessionStorage.setItem('funnel_recovery_state', JSON.stringify(stateToPreserve));
@@ -455,14 +455,14 @@ export class FunnelErrorRecovery {
                 success: true,
                 strategy: RecoveryStrategy.RELOAD_PAGE,
                 message: 'Page reload scheduled',
-                retryAfter: 1000
+                retryAfter: 1000,
             };
 
         } catch (reloadError) {
             return {
                 success: false,
                 strategy: RecoveryStrategy.RELOAD_PAGE,
-                message: `Failed to schedule page reload: ${reloadError.message}`
+                message: `Failed to schedule page reload: ${reloadError.message}`,
             };
         }
     }
@@ -487,7 +487,7 @@ export class FunnelErrorRecovery {
                 return {
                     success: true,
                     strategy: RecoveryStrategy.RETRY,
-                    message: 'Network operation retry successful'
+                    message: 'Network operation retry successful',
                 };
 
             } catch (retryError) {
@@ -495,7 +495,7 @@ export class FunnelErrorRecovery {
                     success: false,
                     strategy: RecoveryStrategy.RETRY,
                     message: `Network retry failed: ${retryError.message}`,
-                    nextStrategy: RecoveryStrategy.OFFLINE_MODE
+                    nextStrategy: RecoveryStrategy.OFFLINE_MODE,
                 };
             }
         }
@@ -503,7 +503,7 @@ export class FunnelErrorRecovery {
         return {
             success: false,
             strategy: RecoveryStrategy.RETRY,
-            message: 'No network operation data to retry'
+            message: 'No network operation data to retry',
         };
     }
 
@@ -518,7 +518,7 @@ export class FunnelErrorRecovery {
             return {
                 success: true,
                 strategy: RecoveryStrategy.RETRY,
-                message: 'Storage operation retry successful'
+                message: 'Storage operation retry successful',
             };
 
         } catch (storageError) {
@@ -526,7 +526,7 @@ export class FunnelErrorRecovery {
                 success: false,
                 strategy: RecoveryStrategy.RETRY,
                 message: `Storage retry failed: ${storageError.message}`,
-                nextStrategy: RecoveryStrategy.FALLBACK
+                nextStrategy: RecoveryStrategy.FALLBACK,
             };
         }
     }
@@ -545,14 +545,14 @@ export class FunnelErrorRecovery {
             await Promise.race([
                 this.sleep(1000), // Simular operação
                 new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Timeout')), timeout)
-                )
+                    setTimeout(() => reject(new Error('Timeout')), timeout),
+                ),
             ]);
 
             return {
                 success: true,
                 strategy: RecoveryStrategy.RETRY,
-                message: `Operation successful with ${timeout}ms timeout`
+                message: `Operation successful with ${timeout}ms timeout`,
             };
 
         } catch (timeoutError) {
@@ -560,7 +560,7 @@ export class FunnelErrorRecovery {
                 success: false,
                 strategy: RecoveryStrategy.RETRY,
                 message: `Operation still timed out after ${timeout}ms`,
-                nextStrategy: RecoveryStrategy.FALLBACK
+                nextStrategy: RecoveryStrategy.FALLBACK,
             };
         }
     }
@@ -580,14 +580,14 @@ export class FunnelErrorRecovery {
             return {
                 success: true,
                 strategy: RecoveryStrategy.FALLBACK,
-                message: 'Successfully switched to localStorage fallback'
+                message: 'Successfully switched to localStorage fallback',
             };
 
         } catch (fallbackError) {
             return {
                 success: false,
                 strategy: RecoveryStrategy.FALLBACK,
-                message: `localStorage fallback failed: ${fallbackError.message}`
+                message: `localStorage fallback failed: ${fallbackError.message}`,
             };
         }
     }
@@ -607,13 +607,13 @@ export class FunnelErrorRecovery {
                     success: true,
                     strategy: RecoveryStrategy.FALLBACK,
                     message: 'Successfully loaded cached data',
-                    data: JSON.parse(cachedData)
+                    data: JSON.parse(cachedData),
                 };
             } else {
                 return {
                     success: false,
                     strategy: RecoveryStrategy.FALLBACK,
-                    message: 'No cached data available'
+                    message: 'No cached data available',
                 };
             }
 
@@ -621,7 +621,7 @@ export class FunnelErrorRecovery {
             return {
                 success: false,
                 strategy: RecoveryStrategy.FALLBACK,
-                message: `Failed to load cached data: ${cacheError.message}`
+                message: `Failed to load cached data: ${cacheError.message}`,
             };
         }
     }
@@ -638,22 +638,22 @@ export class FunnelErrorRecovery {
                 steps: [
                     { id: 'welcome', type: 'welcome', title: 'Bem-vindo!' },
                     { id: 'question', type: 'question', title: 'Pergunta' },
-                    { id: 'result', type: 'result', title: 'Resultado' }
-                ]
+                    { id: 'result', type: 'result', title: 'Resultado' },
+                ],
             };
 
             return {
                 success: true,
                 strategy: RecoveryStrategy.FALLBACK,
                 message: 'Using default template',
-                data: defaultTemplate
+                data: defaultTemplate,
             };
 
         } catch (templateError) {
             return {
                 success: false,
                 strategy: RecoveryStrategy.FALLBACK,
-                message: `Failed to load default template: ${templateError.message}`
+                message: `Failed to load default template: ${templateError.message}`,
             };
         }
     }
@@ -671,14 +671,14 @@ export class FunnelErrorRecovery {
                 success: true,
                 strategy: RecoveryStrategy.FALLBACK,
                 message: `Disabled plugin: ${pluginName}`,
-                data: { disabledPlugin: pluginName }
+                data: { disabledPlugin: pluginName },
             };
 
         } catch (pluginError) {
             return {
                 success: false,
                 strategy: RecoveryStrategy.FALLBACK,
-                message: `Failed to disable plugin: ${pluginError.message}`
+                message: `Failed to disable plugin: ${pluginError.message}`,
             };
         }
     }
@@ -697,33 +697,33 @@ export class FunnelErrorRecovery {
             baseDelay: 1000,
             backoffMultiplier: 2,
             timeout: 10000,
-            circuitBreakerThreshold: 5
+            circuitBreakerThreshold: 5,
         };
 
         // Configurações específicas por strategy
         this.strategies.set(RecoveryStrategy.RETRY, {
             ...defaultConfig,
-            maxAttempts: 3
+            maxAttempts: 3,
         });
 
         this.strategies.set(RecoveryStrategy.FALLBACK, {
             ...defaultConfig,
-            maxAttempts: 2
+            maxAttempts: 2,
         });
 
         this.strategies.set(RecoveryStrategy.OFFLINE_MODE, {
             ...defaultConfig,
-            maxAttempts: 1
+            maxAttempts: 1,
         });
 
         this.strategies.set(RecoveryStrategy.CLEAR_CACHE, {
             ...defaultConfig,
-            maxAttempts: 1
+            maxAttempts: 1,
         });
 
         this.strategies.set(RecoveryStrategy.RELOAD_PAGE, {
             ...defaultConfig,
-            maxAttempts: 1
+            maxAttempts: 1,
         });
     }
 

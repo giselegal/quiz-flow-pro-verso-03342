@@ -4,8 +4,8 @@ import { vi, describe, it, expect } from 'vitest';
 // Mock supabase para salvar draft
 vi.mock('@/integrations/supabase/client', () => ({
     supabase: {
-        from: () => ({ upsert: () => ({ error: null }) })
-    }
+        from: () => ({ upsert: () => ({ error: null }) }),
+    },
 }));
 
 function makeStepsWithoutFormInput() {
@@ -25,7 +25,7 @@ function makeStepsWithoutFormInput() {
             order: i,
             type: 'question',
             options: ['classico', 'natural', 'contemporâneo', 'elegante', 'romântico', 'sexy', 'dramático', 'criativo'].map((sid, idx) => ({ id: sid, text: `Opção ${idx + 1}`, image: 'x.png' })),
-            nextStep: i < 20 ? `step-${String(i + 1).padStart(2, '0')}` : undefined
+            nextStep: i < 20 ? `step-${String(i + 1).padStart(2, '0')}` : undefined,
         });
     }
     return steps;
@@ -39,7 +39,7 @@ describe('Fallback de formInput (step-01)', () => {
             slug: 'quiz-estilo',
             steps: makeStepsWithoutFormInput(),
             isPublished: false,
-            version: 1
+            version: 1,
         };
 
         const id = await quizEditorBridge.saveDraft(funnel);

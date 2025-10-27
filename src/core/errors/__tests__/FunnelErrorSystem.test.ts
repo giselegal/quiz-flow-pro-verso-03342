@@ -38,7 +38,7 @@ class TestRunner {
                 this.results.push({
                     name: test.name,
                     passed: false,
-                    error: error instanceof Error ? error.message : String(error)
+                    error: error instanceof Error ? error.message : String(error),
                 });
                 console.log(`❌ ${test.name}: ${error}`);
             }
@@ -74,7 +74,7 @@ async function testErrorCodes(): Promise<void> {
             'NETWORK_ERROR',
             'STORAGE_ERROR',
             'INVALID_DATA',
-            'VALIDATION_ERROR'
+            'VALIDATION_ERROR',
         ];
 
         for (const code of essentialCodes) {
@@ -127,7 +127,7 @@ async function testFunnelError(): Promise<void> {
         const error = new FunnelError(
             FunnelErrorCode.NOT_FOUND,
             'Test error message',
-            { funnelId: 'test-123' }
+            { funnelId: 'test-123' },
         );
 
         if (error.code !== FunnelErrorCode.NOT_FOUND) {
@@ -189,7 +189,7 @@ async function testErrorHandler(): Promise<void> {
         const error = new FunnelError(
             FunnelErrorCode.VALIDATION_ERROR,
             'Invalid data provided',
-            { funnelId: 'test-validation' }
+            { funnelId: 'test-validation' },
         );
 
         const result: ErrorHandlingResult = await globalFunnelErrorHandler.handleError(error);
@@ -251,7 +251,7 @@ async function testIntegration(): Promise<void> {
         const errors = [
             new FunnelError(FunnelErrorCode.NETWORK_ERROR, 'Network 1'),
             new FunnelError(FunnelErrorCode.TIMEOUT, 'Timeout 1'),
-            new FunnelError(FunnelErrorCode.STORAGE_ERROR, 'Storage 1')
+            new FunnelError(FunnelErrorCode.STORAGE_ERROR, 'Storage 1'),
         ];
 
         const results = [];

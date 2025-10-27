@@ -34,7 +34,7 @@ const STORAGE_KEYS = {
   HISTORY: 'editor_history',
   AUTO_SAVE: 'editor_auto_save',
   LAST_EDIT: 'editor_last_edit',
-  CRASH_RECOVERY: 'editor_crash_recovery'
+  CRASH_RECOVERY: 'editor_crash_recovery',
 } as const;
 
 /**
@@ -60,7 +60,7 @@ class EditorPersistenceService {
   async autoSave(
     stepBlocks: Record<string, Block[]>,
     funnelId: string,
-    debounceMs: number = 3000
+    debounceMs: number = 3000,
   ): Promise<void> {
     // Cancelar save anterior se existir
     if (this.saveTimeout) {
@@ -89,7 +89,7 @@ class EditorPersistenceService {
    */
   async saveSnapshot(
     stepBlocks: Record<string, Block[]>,
-    funnelId: string
+    funnelId: string,
   ): Promise<EditorSnapshot> {
     const snapshot = this.createSnapshot(stepBlocks, funnelId, false);
     
@@ -109,7 +109,7 @@ class EditorPersistenceService {
   private createSnapshot(
     stepBlocks: Record<string, Block[]>,
     funnelId: string,
-    autoSave: boolean
+    autoSave: boolean,
   ): EditorSnapshot {
     const history = this.getHistory();
     const version = history.snapshots.length > 0
@@ -123,8 +123,8 @@ class EditorPersistenceService {
       metadata: {
         funnelId,
         version,
-        autoSave
-      }
+        autoSave,
+      },
     };
   }
 
@@ -172,7 +172,7 @@ class EditorPersistenceService {
     return {
       snapshots: [],
       maxSize: 10,
-      currentIndex: -1
+      currentIndex: -1,
     };
   }
 
@@ -275,7 +275,7 @@ class EditorPersistenceService {
     const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
     
     history.snapshots = history.snapshots.filter(
-      snapshot => snapshot.timestamp > sevenDaysAgo
+      snapshot => snapshot.timestamp > sevenDaysAgo,
     );
     
     this.saveHistory(history);
@@ -309,7 +309,7 @@ class EditorPersistenceService {
       historySize: history.snapshots.length,
       lastSaveTime: lastEdit ? parseInt(lastEdit, 10) : null,
       hasAutoSave: !!localStorage.getItem(STORAGE_KEYS.AUTO_SAVE),
-      hasCrashRecovery: !!this.getCrashRecovery()
+      hasCrashRecovery: !!this.getCrashRecovery(),
     };
   }
 

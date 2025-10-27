@@ -202,7 +202,7 @@ export class VersioningService {
   async createSnapshot(
     funnel: UnifiedFunnel,
     type: 'auto' | 'manual' | 'milestone' = 'manual',
-    description?: string
+    description?: string,
   ): Promise<VersionSnapshot> {
     try {
       const snapshotId = `snapshot-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;

@@ -85,7 +85,7 @@ export class FunnelAIAgent {
       stepId: string,
       status: 'processing' | 'completed' | 'error',
       progress: number
-    ) => void
+    ) => void,
   ) {
     this.onStepUpdate = onStepUpdate;
     this.steps = [
@@ -220,7 +220,7 @@ export class FunnelAIAgent {
 
   private async analyzeTemplate(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(20);
     await this.delay(300);
@@ -255,7 +255,7 @@ export class FunnelAIAgent {
 
   private async applyDesignSystem(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(30);
     await this.delay(400);
@@ -292,7 +292,7 @@ export class FunnelAIAgent {
 
   private async createIntroStep(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(25);
     await this.delay(500);
@@ -336,7 +336,7 @@ export class FunnelAIAgent {
 
   private async createQuestionsSteps(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(15);
     await this.delay(600);
@@ -391,13 +391,13 @@ export class FunnelAIAgent {
 
   private async createTransitionSteps(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(40);
     await this.delay(400);
 
     const transitions = template.steps.filter(
-      s => s.type.includes('Transition') || s.type.includes('transition')
+      s => s.type.includes('Transition') || s.type.includes('transition'),
     );
     const transitionSteps = transitions.map((transition, index) => ({
       id: generateSemanticId({
@@ -434,7 +434,7 @@ export class FunnelAIAgent {
 
   private async createStrategicSteps(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(20);
     await this.delay(700);
@@ -488,7 +488,7 @@ export class FunnelAIAgent {
 
   private async createResultStep(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(30);
     await this.delay(500);
@@ -527,7 +527,7 @@ export class FunnelAIAgent {
 
   private async implementCalculationLogic(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(35);
     await this.delay(400);
@@ -569,7 +569,7 @@ export class FunnelAIAgent {
 
   private async setupAnalytics(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(25);
     await this.delay(350);
@@ -599,7 +599,7 @@ export class FunnelAIAgent {
 
   private async applyOptimizations(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(20);
     await this.delay(600);
@@ -643,7 +643,7 @@ export class FunnelAIAgent {
 
   private async deployFunnel(
     template: FunnelTemplate,
-    progress: (p: number) => void
+    progress: (p: number) => void,
   ): Promise<any> {
     progress(15);
     await this.delay(800);

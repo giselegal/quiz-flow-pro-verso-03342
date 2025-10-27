@@ -19,7 +19,7 @@ global.indexedDB = {
             req.onsuccess && req.onsuccess.call(req, {} as any);
         }, 0);
         return req as any;
-    }
+    },
 };
 
 // Mock mínimo do console para evitar poluição
@@ -34,10 +34,10 @@ const baseQuizState = {
     userName: 'Maria',
     answers: {},
     strategicAnswers: {
-        'Qual desses resultados você mais gostaria de alcançar?': 'montar-looks-facilidade'
+        'Qual desses resultados você mais gostaria de alcançar?': 'montar-looks-facilidade',
     },
     resultStyle: 'elegante', // slug canônico usado no styleConfig (normalmente sem acento ou ajustado pelo resolve)
-    secondaryStyles: ['natural']
+    secondaryStyles: ['natural'],
 };
 
 describe('Integração UnifiedStepRenderer → Resultado e Oferta (Maria)', () => {
@@ -49,9 +49,9 @@ describe('Integração UnifiedStepRenderer → Resultado e Oferta (Maria)', () =
                 quizState={baseQuizState as any}
                 stepProps={{
                     title: '{userName}, seu estilo predominante é:',
-                    type: 'result'
+                    type: 'result',
                 }}
-            />
+            />,
         );
         // Espera lazy adapter carregar (spinner some)
         await waitFor(() => {
@@ -75,11 +75,11 @@ describe('Integração UnifiedStepRenderer → Resultado e Oferta (Maria)', () =
                             title: '{userName}, solução para montar looks',
                             description: 'Liberamos uma oferta especial para combinar suas peças.',
                             buttonText: 'Quero combinar minhas peças',
-                            testimonial: { quote: 'Ok', author: 'Tester' }
-                        }
-                    }
+                            testimonial: { quote: 'Ok', author: 'Tester' },
+                        },
+                    },
                 }}
-            />
+            />,
         );
         await waitFor(() => {
             expect(screen.queryByText(/Carregando\s+Step step-21/i)).toBeNull();

@@ -121,7 +121,7 @@ export class UnifiedQuizStepAdapter {
       b.type === 'options-grid' ||
       b.type === 'quiz-question-inline' ||
       b.type === 'heading' ||
-      b.type === 'text'
+      b.type === 'text',
     );
     
     if (!questionBlock) return undefined;
@@ -140,7 +140,7 @@ export class UnifiedQuizStepAdapter {
   private static extractQuestionNumber(blocks: BlockComponent[]): string | number | undefined {
     const questionBlock = blocks.find(b => 
       b.type === 'quiz-options' || 
-      b.type === 'options-grid'
+      b.type === 'options-grid',
     );
     
     if (!questionBlock) return undefined;
@@ -163,7 +163,7 @@ export class UnifiedQuizStepAdapter {
   }> | undefined {
     const questionBlock = blocks.find(b => 
       b.type === 'quiz-options' || 
-      b.type === 'options-grid'
+      b.type === 'options-grid',
     );
     
     if (!questionBlock) return undefined;
@@ -251,7 +251,7 @@ export class UnifiedQuizStepAdapter {
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 }

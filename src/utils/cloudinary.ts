@@ -47,7 +47,7 @@ export const DEFAULT_UPLOAD_OPTIONS: Partial<CloudinaryOptions> = {
     maxImageWidth: 2000,
     maxImageHeight: 2000,
     resourceType: 'image',
-    multiple: false
+    multiple: false,
 };
 
 /**
@@ -59,7 +59,7 @@ export const DEFAULT_UPLOAD_OPTIONS: Partial<CloudinaryOptions> = {
  */
 export function openCloudinaryWidget(
     opts: CloudinaryOptions,
-    onProgress?: (progress: CloudinaryUploadProgress) => void
+    onProgress?: (progress: CloudinaryUploadProgress) => void,
 ): Promise<CloudinaryUploadResult> {
     return new Promise((resolve, reject) => {
         try {
@@ -99,9 +99,9 @@ export function openCloudinaryWidget(
                         'files': 'Meus Arquivos',
                         'web': 'Web',
                         'camera': 'Câmera',
-                        'url': 'URL'
-                    }
-                }
+                        'url': 'URL',
+                    },
+                },
             };
 
             const widget = window.cloudinary.createUploadWidget(
@@ -124,7 +124,7 @@ export function openCloudinaryWidget(
                                     const progress: CloudinaryUploadProgress = {
                                         loaded: result.info.loaded || 0,
                                         total: result.info.total || 0,
-                                        percentage: Math.round(((result.info.loaded || 0) / (result.info.total || 1)) * 100)
+                                        percentage: Math.round(((result.info.loaded || 0) / (result.info.total || 1)) * 100),
                                     };
                                     onProgress(progress);
                                 }
@@ -139,7 +139,7 @@ export function openCloudinaryWidget(
                                     format: result.info.format,
                                     width: result.info.width,
                                     height: result.info.height,
-                                    bytes: result.info.bytes
+                                    bytes: result.info.bytes,
                                 };
                                 widget.close();
                                 resolve(uploadResult);
@@ -151,7 +151,7 @@ export function openCloudinaryWidget(
                                 break;
                         }
                     }
-                }
+                },
             );
 
             widget.open();

@@ -29,7 +29,7 @@ const DEFAULT_OPTIONS: UseOptimizedQuizEngineOptions = {
   enableWorker: false,
   debounceMs: 300,
   cacheTimeout: 60000,
-  autoSave: true
+  autoSave: true,
 };
 
 // Style weights para cálculo otimizado
@@ -38,7 +38,7 @@ const STYLE_WEIGHTS: Record<string, { base: number; multipliers: Record<string, 
   'romântico': { base: 1, multipliers: { softness: 1.3, femininity: 1.2 } },
   'dramático': { base: 1, multipliers: { boldness: 1.4, contrast: 1.2 } },
   'natural': { base: 1, multipliers: { comfort: 1.2, simplicity: 1.1 } },
-  'criativo': { base: 1, multipliers: { uniqueness: 1.5, artistic: 1.3 } }
+  'criativo': { base: 1, multipliers: { uniqueness: 1.5, artistic: 1.3 } },
 };
 
 export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
@@ -50,7 +50,7 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
     currentStep: 1,
     isDirty: false,
     lastCalculation: 0,
-    cachedResult: null
+    cachedResult: null,
   });
 
   const debounceRef = useRef<NodeJS.Timeout>();
@@ -133,7 +133,7 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
         ...prev,
         cachedResult: result,
         isDirty: false,
-        lastCalculation: Date.now()
+        lastCalculation: Date.now(),
       }));
 
       if (opts.autoSave) {
@@ -151,14 +151,14 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
     state.answers,
     cacheKey,
     opts.autoSave,
-    getAnswerScore
+    getAnswerScore,
   ]);
 
   const updateAnswer = useCallback((questionId: string, answer: any) => {
     setState(prev => ({
       ...prev,
       answers: { ...prev.answers, [questionId]: answer },
-      isDirty: true
+      isDirty: true,
     }));
   }, []);
 
@@ -168,7 +168,7 @@ export const useOptimizedQuizEngine = (options = DEFAULT_OPTIONS) => {
       ...prev,
       cachedResult: null,
       isDirty: true,
-      lastCalculation: 0
+      lastCalculation: 0,
     }));
   }, []);
 

@@ -79,7 +79,7 @@ const LegacyBridgeProvider: React.FC<{ children: ReactNode; enableWarnings: bool
  */
 export function withLegacyCompatibility<P extends object>(
     Component: React.ComponentType<P>,
-    enableWarnings = true
+    enableWarnings = true,
 ) {
     const WrappedComponent: React.FC<P> = (props) => {
         return (

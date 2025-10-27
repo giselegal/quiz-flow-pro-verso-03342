@@ -288,7 +288,7 @@ export class ConfigService extends BaseCanonicalService {
     if (!this.environmentConfig) {
       return {
         success: false,
-        error: new Error('Environment not loaded')
+        error: new Error('Environment not loaded'),
       };
     }
 
@@ -311,7 +311,7 @@ export class ConfigService extends BaseCanonicalService {
       this.error('Get env error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get env failed')
+        error: error instanceof Error ? error : new Error('Get env failed'),
       };
     }
   }
@@ -368,7 +368,7 @@ export class ConfigService extends BaseCanonicalService {
       this.error('Is feature enabled error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Check feature failed')
+        error: error instanceof Error ? error : new Error('Check feature failed'),
       };
     }
   }
@@ -387,7 +387,7 @@ export class ConfigService extends BaseCanonicalService {
         key: flag.key,
         oldValue: oldFlag,
         newValue: flag,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('Feature flag set:', flag.key, flag.enabled);
@@ -397,7 +397,7 @@ export class ConfigService extends BaseCanonicalService {
       this.error('Set feature flag error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Set feature flag failed')
+        error: error instanceof Error ? error : new Error('Set feature flag failed'),
       };
     }
   }
@@ -412,7 +412,7 @@ export class ConfigService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get feature flags failed')
+        error: error instanceof Error ? error : new Error('Get feature flags failed'),
       };
     }
   }
@@ -427,13 +427,13 @@ export class ConfigService extends BaseCanonicalService {
       if (!flag) {
         return {
           success: false,
-          error: new Error(`Feature flag '${key}' not found`)
+          error: new Error(`Feature flag '${key}' not found`),
         };
       }
 
       const updatedFlag: FeatureFlag = {
         ...flag,
-        enabledForUsers: [...(flag.enabledForUsers || []), ...userIds]
+        enabledForUsers: [...(flag.enabledForUsers || []), ...userIds],
       };
 
       return this.setFeatureFlag(updatedFlag);
@@ -442,7 +442,7 @@ export class ConfigService extends BaseCanonicalService {
       this.error('Enable feature for users error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Enable feature for users failed')
+        error: error instanceof Error ? error : new Error('Enable feature for users failed'),
       };
     }
   }
@@ -458,7 +458,7 @@ export class ConfigService extends BaseCanonicalService {
     if (!this.themeConfig) {
       return {
         success: false,
-        error: new Error('Theme not loaded')
+        error: new Error('Theme not loaded'),
       };
     }
 
@@ -479,7 +479,7 @@ export class ConfigService extends BaseCanonicalService {
         key: 'theme',
         oldValue: oldTheme,
         newValue: theme,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       // Apply theme if in browser
@@ -494,7 +494,7 @@ export class ConfigService extends BaseCanonicalService {
       this.error('Set theme error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Set theme failed')
+        error: error instanceof Error ? error : new Error('Set theme failed'),
       };
     }
   }
@@ -507,7 +507,7 @@ export class ConfigService extends BaseCanonicalService {
       if (!this.themeConfig) {
         return {
           success: false,
-          error: new Error('Theme not initialized')
+          error: new Error('Theme not initialized'),
         };
       }
 
@@ -517,7 +517,7 @@ export class ConfigService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Update theme failed')
+        error: error instanceof Error ? error : new Error('Update theme failed'),
       };
     }
   }
@@ -536,7 +536,7 @@ export class ConfigService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get integration failed')
+        error: error instanceof Error ? error : new Error('Get integration failed'),
       };
     }
   }
@@ -555,7 +555,7 @@ export class ConfigService extends BaseCanonicalService {
         key: integration.name,
         oldValue: oldIntegration,
         newValue: integration,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('Integration set:', integration.name);
@@ -565,7 +565,7 @@ export class ConfigService extends BaseCanonicalService {
       this.error('Set integration error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Set integration failed')
+        error: error instanceof Error ? error : new Error('Set integration failed'),
       };
     }
   }
@@ -580,7 +580,7 @@ export class ConfigService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get integrations failed')
+        error: error instanceof Error ? error : new Error('Get integrations failed'),
       };
     }
   }
@@ -624,7 +624,7 @@ export class ConfigService extends BaseCanonicalService {
       this.error('Get AB test variant error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get AB test variant failed')
+        error: error instanceof Error ? error : new Error('Get AB test variant failed'),
       };
     }
   }
@@ -642,7 +642,7 @@ export class ConfigService extends BaseCanonicalService {
       this.error('Set AB test error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Set AB test failed')
+        error: error instanceof Error ? error : new Error('Set AB test failed'),
       };
     }
   }
@@ -670,7 +670,7 @@ export class ConfigService extends BaseCanonicalService {
       if (this.persistPreferences && typeof window !== 'undefined') {
         localStorage.setItem(
           `${this.storagePrefix}preferences`,
-          JSON.stringify(preferences)
+          JSON.stringify(preferences),
         );
       }
 
@@ -680,7 +680,7 @@ export class ConfigService extends BaseCanonicalService {
         key: 'preferences',
         oldValue: oldPreferences,
         newValue: preferences,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('User preferences set');
@@ -690,7 +690,7 @@ export class ConfigService extends BaseCanonicalService {
       this.error('Set preferences error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Set preferences failed')
+        error: error instanceof Error ? error : new Error('Set preferences failed'),
       };
     }
   }
@@ -707,7 +707,7 @@ export class ConfigService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Update preferences failed')
+        error: error instanceof Error ? error : new Error('Update preferences failed'),
       };
     }
   }
@@ -742,7 +742,7 @@ export class ConfigService extends BaseCanonicalService {
     get: this.getEnvironment.bind(this),
     getVar: this.getEnv.bind(this),
     isDev: this.isDevelopment.bind(this),
-    isProd: this.isProduction.bind(this)
+    isProd: this.isProduction.bind(this),
   };
 
   /**
@@ -752,7 +752,7 @@ export class ConfigService extends BaseCanonicalService {
     isEnabled: this.isFeatureEnabled.bind(this),
     set: this.setFeatureFlag.bind(this),
     getAll: this.getAllFeatureFlags.bind(this),
-    enableForUsers: this.enableFeatureForUsers.bind(this)
+    enableForUsers: this.enableFeatureForUsers.bind(this),
   };
 
   /**
@@ -761,7 +761,7 @@ export class ConfigService extends BaseCanonicalService {
   readonly theme = {
     get: this.getTheme.bind(this),
     set: this.setTheme.bind(this),
-    update: this.updateTheme.bind(this)
+    update: this.updateTheme.bind(this),
   };
 
   /**
@@ -771,7 +771,7 @@ export class ConfigService extends BaseCanonicalService {
     get: this.getIntegration.bind(this),
     set: this.setIntegration.bind(this),
     getAll: this.getAllIntegrations.bind(this),
-    isEnabled: this.isIntegrationEnabled.bind(this)
+    isEnabled: this.isIntegrationEnabled.bind(this),
   };
 
   /**
@@ -779,7 +779,7 @@ export class ConfigService extends BaseCanonicalService {
    */
   readonly abTests = {
     getVariant: this.getABTestVariant.bind(this),
-    set: this.setABTest.bind(this)
+    set: this.setABTest.bind(this),
   };
 
   /**
@@ -788,7 +788,7 @@ export class ConfigService extends BaseCanonicalService {
   readonly preferences = {
     get: this.getPreferences.bind(this),
     set: this.setPreferences.bind(this),
-    update: this.updatePreferences.bind(this)
+    update: this.updatePreferences.bind(this),
   };
 
   // ============================================================================
@@ -809,7 +809,7 @@ export class ConfigService extends BaseCanonicalService {
         isStaging: env === 'staging',
         isProduction: env === 'production',
         isTest: env === 'test',
-        debug: import.meta.env.DEV || false
+        debug: import.meta.env.DEV || false,
       };
 
       this.log('Environment loaded:', env);
@@ -823,18 +823,18 @@ export class ConfigService extends BaseCanonicalService {
       {
         key: 'useJsonTemplates',
         enabled: import.meta.env.VITE_USE_JSON_TEMPLATES === 'true',
-        description: 'Use JSON templates instead of TypeScript'
+        description: 'Use JSON templates instead of TypeScript',
       },
       {
         key: 'enablePrefetch',
         enabled: import.meta.env.VITE_ENABLE_PREFETCH !== 'false',
-        description: 'Enable resource prefetching'
+        description: 'Enable resource prefetching',
       },
       {
         key: 'enableAnalytics',
         enabled: import.meta.env.VITE_ENABLE_ANALYTICS !== 'false',
-        description: 'Enable analytics tracking'
-      }
+        description: 'Enable analytics tracking',
+      },
     ];
 
     defaultFlags.forEach(flag => this.featureFlags.set(flag.key, flag));
@@ -850,7 +850,7 @@ export class ConfigService extends BaseCanonicalService {
       fontFamily: 'Inter, system-ui, sans-serif',
       fontSize: 16,
       borderRadius: 8,
-      spacing: 16
+      spacing: 16,
     };
 
     this.log('Default theme loaded');
@@ -882,17 +882,17 @@ export class ConfigService extends BaseCanonicalService {
       notifications: {
         email: true,
         push: true,
-        sms: false
+        sms: false,
       },
       privacy: {
         analytics: true,
-        marketing: false
+        marketing: false,
       },
       accessibility: {
         highContrast: false,
         fontSize: 'medium',
-        reducedMotion: false
-      }
+        reducedMotion: false,
+      },
     };
   }
 

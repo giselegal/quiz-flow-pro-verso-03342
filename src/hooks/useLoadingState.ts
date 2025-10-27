@@ -28,7 +28,7 @@ export const useLoadingState = (options: LoadingStateOptions = {}) => {
         }, timeoutValue);
       }
     },
-    [setLoading, timeout]
+    [setLoading, timeout],
   );
 
   const handleError = useCallback((errorMessage: string) => {

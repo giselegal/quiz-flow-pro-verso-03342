@@ -37,7 +37,7 @@ export const useUniversalStepEditorSimple = () => {
     await new Promise(resolve => setTimeout(resolve, 100));
     
     setSteps(prev => prev.map(step => 
-      step.id === stepId ? { ...step, content: data } : step
+      step.id === stepId ? { ...step, content: data } : step,
     ));
     
     setIsLoading(false);
@@ -54,7 +54,7 @@ export const useUniversalStepEditorSimple = () => {
     loadStep,
     saveStep,
     handleError,
-    totalSteps: steps.length
+    totalSteps: steps.length,
   };
 };
 

@@ -126,7 +126,7 @@ async function handleIncomingMessage(request: Request): Promise<Response> {
     // Log do webhook recebido
     console.log('📱 Webhook WhatsApp recebido:', {
       object: payload.object,
-      entries: payload.entry.length
+      entries: payload.entry.length,
     });
 
     // Processar cada entrada
@@ -173,7 +173,7 @@ type WhatsAppContact = NonNullable<WhatsAppWebhookEntry['changes'][0]['value']['
 
 async function handleUserMessage(
   message: WhatsAppMessage,
-  contact?: WhatsAppContact
+  contact?: WhatsAppContact,
 ): Promise<void> {
   const userPhone = message.from;
   const userName = contact?.profile?.name || 'Usuário';
@@ -182,7 +182,7 @@ async function handleUserMessage(
     from: userPhone,
     name: userName,
     type: message.type,
-    timestamp: message.timestamp
+    timestamp: message.timestamp,
   });
 
   // Processar diferentes tipos de mensagem
@@ -201,7 +201,7 @@ async function handleUserMessage(
           userPhone, 
           userName, 
           message.interactive.button_reply.id,
-          message.interactive.button_reply.title
+          message.interactive.button_reply.title,
         );
       }
       break;
@@ -267,7 +267,7 @@ async function handleInteractiveResponse(
   userPhone: string, 
   userName: string, 
   buttonId: string, 
-  buttonTitle: string
+  buttonTitle: string,
 ): Promise<void> {
   console.log('🎯 Resposta interativa:', { userPhone, userName, buttonId, buttonTitle });
 
@@ -284,7 +284,7 @@ async function handleMessageStatus(status: WhatsAppStatus): Promise<void> {
     messageId: status.id,
     status: status.status,
     recipientId: status.recipient_id,
-    timestamp: status.timestamp
+    timestamp: status.timestamp,
   });
 
   // Salvar métricas de entrega
@@ -292,7 +292,7 @@ async function handleMessageStatus(status: WhatsAppStatus): Promise<void> {
     messageId: status.id,
     status: status.status,
     recipientId: status.recipient_id,
-    timestamp: new Date(parseInt(status.timestamp) * 1000)
+    timestamp: new Date(parseInt(status.timestamp) * 1000),
   };
 
   // Salvar no localStorage ou banco

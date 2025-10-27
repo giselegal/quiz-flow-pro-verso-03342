@@ -37,7 +37,7 @@ export const useBackupSystem = () => {
       setError(null);
 
       const { data, error } = await supabase.functions.invoke('backup-system/create', {
-        body: options
+        body: options,
       });
 
       if (error) throw error;
@@ -63,7 +63,7 @@ export const useBackupSystem = () => {
       if (limit) params.append('limit', limit.toString());
 
       const { data, error } = await supabase.functions.invoke(
-        `backup-system/list?${params.toString()}`
+        `backup-system/list?${params.toString()}`,
       );
 
       if (error) throw error;
@@ -85,7 +85,7 @@ export const useBackupSystem = () => {
       setError(null);
 
       const { data, error } = await supabase.functions.invoke(
-        `backup-system/status?backup_id=${backupId}`
+        `backup-system/status?backup_id=${backupId}`,
       );
 
       if (error) throw error;
@@ -104,7 +104,7 @@ export const useBackupSystem = () => {
   const restoreBackup = useCallback(async (
     backupId: string, 
     tables: string[] = [], 
-    confirm = false
+    confirm = false,
   ) => {
     try {
       setIsLoading(true);
@@ -114,8 +114,8 @@ export const useBackupSystem = () => {
         body: {
           backup_id: backupId,
           tables,
-          confirm
-        }
+          confirm,
+        },
       });
 
       if (error) throw error;
@@ -139,8 +139,8 @@ export const useBackupSystem = () => {
       const { data, error } = await supabase.functions.invoke('backup-system/schedule', {
         body: {
           schedule,
-          ...options
-        }
+          ...options,
+        },
       });
 
       if (error) throw error;
@@ -180,7 +180,7 @@ export const useBackupSystem = () => {
   const createEmergencyBackup = useCallback(async (reason: string) => {
     return createBackup({
       type: 'full',
-      description: `Emergency backup: ${reason}`
+      description: `Emergency backup: ${reason}`,
     });
   }, [createBackup]);
 
@@ -188,7 +188,7 @@ export const useBackupSystem = () => {
   const waitForBackupCompletion = useCallback(async (
     backupId: string,
     pollInterval = 5000,
-    timeout = 300000 // 5 minutos
+    timeout = 300000, // 5 minutos
   ): Promise<BackupJob> => {
     const startTime = Date.now();
     
@@ -228,6 +228,6 @@ export const useBackupSystem = () => {
 
     // Helpers
     createEmergencyBackup,
-    waitForBackupCompletion
+    waitForBackupCompletion,
   };
 };

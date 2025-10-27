@@ -402,7 +402,7 @@ class StyleCalculationEngine {
 
   private generatePersonalizedInsights(
     dominantStyle: StyleCategory,
-    categoryScores: CategoryScore[]
+    categoryScores: CategoryScore[],
   ): StyleResult['personalizedInsights'] {
     const secondaryCategories = categoryScores.slice(1, 3);
     
@@ -431,7 +431,7 @@ class StyleCalculationEngine {
 
   private generateLookRecommendations(
     dominantStyle: StyleCategory,
-    secondaryStyles: CategoryScore[]
+    secondaryStyles: CategoryScore[],
   ): string[] {
     const recommendations = [
       `Look ${dominantStyle.name} para o dia a dia`,

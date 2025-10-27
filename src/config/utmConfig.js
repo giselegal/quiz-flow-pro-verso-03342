@@ -153,8 +153,8 @@ export const generateMockCreativeData = (days = 7) => {
       page_views: baseViews,
       quiz_starts: Math.floor(baseViews * 0.8),
       quiz_completions: Math.floor(baseViews * 0.6),
-      leads: leads,
-      purchases: purchases,
+      leads,
+      purchases,
       revenue: purchases * 39.9, // Preço do produto
       conversion_rate: `${conversionRate}%`,
       cost_per_lead: ((baseViews * 1.2) / leads).toFixed(2), // CPC simulado de R$1,20

@@ -164,7 +164,7 @@ export class PersonalizationEngine {
     personalizeContent(
         template: string,
         context: UserPersonalizationContext,
-        options?: { useAI?: boolean; cacheResult?: boolean }
+        options?: { useAI?: boolean; cacheResult?: boolean },
     ): string {
         const cacheKey = `content_${context.user.id}_${this.hashContent(template)}`;
 
@@ -285,7 +285,7 @@ export class PersonalizationEngine {
             } catch (error) {
                 this.logger.warn('Calculation failed', {
                     calcId: calc.id,
-                    error: error instanceof Error ? error.message : String(error)
+                    error: error instanceof Error ? error.message : String(error),
                 });
             }
         }
@@ -364,7 +364,7 @@ export class PersonalizationEngine {
                 history: context.history,
                 session: context.session,
                 segments: context.segments,
-                params: trigger.parameters
+                params: trigger.parameters,
             };
 
             // Avaliar condição de forma segura
@@ -372,7 +372,7 @@ export class PersonalizationEngine {
         } catch (error) {
             this.logger.warn('Trigger evaluation failed', {
                 trigger: trigger.type,
-                error: error instanceof Error ? error.message : String(error)
+                error: error instanceof Error ? error.message : String(error),
             });
             return false;
         }
@@ -404,7 +404,7 @@ export class PersonalizationEngine {
 
             case 'recommendation':
                 // Adicionar recomendações baseadas no contexto
-                return content + `\n<!-- Recomendação: ${this.recommendNextStep(context)} -->`;
+                return `${content  }\n<!-- Recomendação: ${this.recommendNextStep(context)} -->`;
 
             default:
                 return content;
@@ -477,13 +477,13 @@ export class PersonalizationEngine {
             {
                 type: 'style',
                 content: this.recommendStyle(context),
-                confidence: 0.8
+                confidence: 0.8,
             },
             {
                 type: 'next_step',
                 content: this.recommendNextStep(context),
-                confidence: 0.9
-            }
+                confidence: 0.9,
+            },
         ];
     }
 
@@ -527,7 +527,7 @@ export class PersonalizationEngine {
     addPersonalizationRule(rule: Omit<PersonalizationRule, 'id'>): string {
         const newRule: PersonalizationRule = {
             ...rule,
-            id: `rule_${Date.now()}_${Math.random().toString(36).slice(2)}`
+            id: `rule_${Date.now()}_${Math.random().toString(36).slice(2)}`,
         };
 
         this.rules.push(newRule);
@@ -562,7 +562,7 @@ export class PersonalizationEngine {
             totalRules: this.rules.length,
             activeRules: this.rules.filter(r => r.active).length,
             cacheHitRate: 0.85, // TODO: calcular real
-            avgProcessingTime: 45 // TODO: calcular real
+            avgProcessingTime: 45, // TODO: calcular real
         };
     }
 }
@@ -577,7 +577,7 @@ export function usePersonalization(context: UserPersonalizationContext) {
     const personalize = React.useCallback((template: string, key?: string) => {
         const result = personalizationEngine.personalizeContent(template, context, {
             cacheResult: true,
-            useAI: false
+            useAI: false,
         });
 
         if (key) {
@@ -590,7 +590,7 @@ export function usePersonalization(context: UserPersonalizationContext) {
     return {
         personalize,
         personalizedContent,
-        engine: personalizationEngine
+        engine: personalizationEngine,
     };
 }
 

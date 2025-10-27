@@ -43,7 +43,7 @@ import {
     type LoadingCategory,
     type LoadingPriority,
     type LoadingOptions,
-    type LoadingManager
+    type LoadingManager,
 } from './MasterLoadingService';
 
 export {
@@ -54,7 +54,7 @@ export {
     type LoadingCategory,
     type LoadingPriority,
     type LoadingOptions,
-    type LoadingManager
+    type LoadingManager,
 };
 
 // =============================================
@@ -74,7 +74,7 @@ export {
 
     // Migration utilities
     checkLegacyLoadingUsage,
-    migrateLegacyLoadingStates
+    migrateLegacyLoadingStates,
 } from './LegacyLoadingAdapters';
 
 // =============================================
@@ -94,7 +94,7 @@ export const loadingService = masterLoadingService;
 export {
     useLoadingState as useLocalLoading,
     useGlobalLoading as useGlobal,
-    useFunnelLoadingState as useFunnel
+    useFunnelLoadingState as useFunnel,
 } from './LegacyLoadingAdapters';
 
 // =============================================
@@ -146,14 +146,14 @@ export async function getGlobalLoadingState(): Promise<{
             message: currentState.message,
             progress: currentState.progress,
             errors: currentState.error ? [currentState.error] : [],
-            warnings: []
+            warnings: [],
         };
     } catch (error) {
         console.warn('Failed to get global loading state:', error);
         return {
             isLoading: false,
             errors: [],
-            warnings: []
+            warnings: [],
         };
     }
 }
@@ -193,7 +193,7 @@ export async function getLoadingPerformanceSummary(): Promise<{
 
     return {
         ...metrics,
-        currentActiveLoadings
+        currentActiveLoadings,
     };
 }
 

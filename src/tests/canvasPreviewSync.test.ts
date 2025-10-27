@@ -14,7 +14,7 @@ const mockUseLiveCanvasPreview = vi.fn();
 const mockSteps = [
     { id: 'step-1', type: 'question', title: 'Pergunta Original 1', order: 1 },
     { id: 'step-2', type: 'question', title: 'Pergunta Original 2', order: 2 },
-    { id: 'step-3', type: 'result', title: 'Resultado Original', order: 3 }
+    { id: 'step-3', type: 'result', title: 'Resultado Original', order: 3 },
 ];
 
 describe('🔄 Sincronização Canvas ↔ Preview', () => {
@@ -31,13 +31,13 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
             steps: [...mockSteps],
             lastUpdate: Date.now(),
             isLoading: false,
-            updateCount: 0
+            updateCount: 0,
         };
 
         // Simular edição no canvas
         const editedStep = {
             ...mockSteps[0],
-            title: 'Pergunta Editada no Canvas'
+            title: 'Pergunta Editada no Canvas',
         };
 
         // Atualizar preview
@@ -58,14 +58,14 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
         const previewState = {
             steps: [...mockSteps],
             lastUpdate: Date.now(),
-            updateCount: 0
+            updateCount: 0,
         };
 
         // Simular reordenação no canvas (trocar posições)
         const reorderedSteps = [
             { ...mockSteps[1], order: 1 },
             { ...mockSteps[0], order: 2 },
-            { ...mockSteps[2], order: 3 }
+            { ...mockSteps[2], order: 3 },
         ];
 
         // Atualizar preview
@@ -87,7 +87,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
         const previewState = {
             steps: [...mockSteps],
             lastUpdate: Date.now(),
-            updateCount: 0
+            updateCount: 0,
         };
 
         // Simular adição de nova etapa
@@ -95,7 +95,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
             id: 'step-4',
             type: 'question',
             title: 'Nova Pergunta Adicionada',
-            order: 4
+            order: 4,
         };
 
         // Adicionar ao preview
@@ -117,7 +117,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
         const previewState = {
             steps: [...mockSteps],
             lastUpdate: Date.now(),
-            updateCount: 0
+            updateCount: 0,
         };
 
         // Simular remoção de etapa
@@ -173,7 +173,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
             steps: [...mockSteps],
             selectedStepId: 'step-1',
             lastUpdate: Date.now(),
-            updateCount: 0
+            updateCount: 0,
         };
 
         // Simular mudança de seleção no canvas
@@ -194,7 +194,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
         const previewState = {
             steps: [...mockSteps],
             lastUpdate: Date.now(),
-            updateCount: 0
+            updateCount: 0,
         };
 
         // Simular mudança de propriedades
@@ -205,8 +205,8 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
             properties: {
                 backgroundColor: '#ff0000',
                 textColor: '#ffffff',
-                required: true
-            }
+                required: true,
+            },
         };
 
         // Atualizar no preview
@@ -231,7 +231,7 @@ export const testCanvasPreviewSync = async () => {
         passed: 0,
         failed: 0,
         total: 6,
-        details: [] as string[]
+        details: [] as string[],
     };
 
     try {

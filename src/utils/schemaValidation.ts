@@ -63,27 +63,27 @@ export const FUNNEL_SCHEMA = {
         id: {
             type: 'string',
             minLength: 1,
-            pattern: '^[a-zA-Z0-9\\-_]{1,100}$'
+            pattern: '^[a-zA-Z0-9\\-_]{1,100}$',
         },
         name: {
             type: 'string',
             minLength: 1,
-            maxLength: 200
+            maxLength: 200,
         },
         description: {
             type: 'string',
-            maxLength: 1000
+            maxLength: 1000,
         },
         version: {
             type: 'number',
-            minimum: 1
+            minimum: 1,
         },
         is_published: {
-            type: 'boolean'
+            type: 'boolean',
         },
         settings: {
             type: 'object',
-            additionalProperties: true
+            additionalProperties: true,
         },
         pages: {
             type: 'array',
@@ -94,11 +94,11 @@ export const FUNNEL_SCHEMA = {
                     id: { type: 'string', minLength: 1 },
                     title: { type: 'string', minLength: 1 },
                     blocks: { type: 'array' },
-                    page_order: { type: 'number', minimum: 0 }
-                }
-            }
-        }
-    }
+                    page_order: { type: 'number', minimum: 0 },
+                },
+            },
+        },
+    },
 } as const;
 
 /**
@@ -110,37 +110,37 @@ export const COMPONENT_SCHEMA = {
     properties: {
         id: {
             type: 'string',
-            pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+            pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
         },
         component_type_key: {
             type: 'string',
             enum: [
                 'quiz-question', 'quiz-result', 'form-container',
                 'heading-inline', 'progress-inline', 'navigation',
-                'testimonial', 'guarantee', 'pricing', 'bonus'
-            ]
+                'testimonial', 'guarantee', 'pricing', 'bonus',
+            ],
         },
         instance_key: {
             type: 'string',
-            pattern: '^[a-z0-9\\-]+_\\d+_[a-z0-9\\-]+$'
+            pattern: '^[a-z0-9\\-]+_\\d+_[a-z0-9\\-]+$',
         },
         step_number: {
             type: 'number',
             minimum: 1,
-            maximum: 1000
+            maximum: 1000,
         },
         order_index: {
             type: 'number',
-            minimum: 0
+            minimum: 0,
         },
         properties: {
             type: 'object',
-            additionalProperties: true
+            additionalProperties: true,
         },
         is_active: {
-            type: 'boolean'
-        }
-    }
+            type: 'boolean',
+        },
+    },
 } as const;
 
 /**
@@ -152,25 +152,25 @@ export const BLOCK_SCHEMA = {
     properties: {
         id: {
             type: 'string',
-            minLength: 1
+            minLength: 1,
         },
         type: {
             type: 'string',
             enum: [
                 'quiz-question', 'quiz-result', 'form-container',
                 'heading-inline', 'progress-inline', 'options-grid',
-                'testimonial', 'guarantee', 'pricing', 'bonus'
-            ]
+                'testimonial', 'guarantee', 'pricing', 'bonus',
+            ],
         },
         properties: {
             type: 'object',
-            additionalProperties: true
+            additionalProperties: true,
         },
         styles: {
             type: 'object',
-            additionalProperties: true
-        }
-    }
+            additionalProperties: true,
+        },
+    },
 } as const;
 
 // ============================================================================
@@ -183,7 +183,7 @@ export const BLOCK_SCHEMA = {
 function validateObjectStructure(
     data: any,
     schema: any,
-    path: string[] = []
+    path: string[] = [],
 ): SchemaValidationError[] {
     const errors: SchemaValidationError[] = [];
 
@@ -192,7 +192,7 @@ function validateObjectStructure(
             code: SchemaErrorCode.INVALID_FIELD_TYPE,
             message: 'Expected object',
             path,
-            value: data
+            value: data,
         });
         return errors;
     }
@@ -204,7 +204,7 @@ function validateObjectStructure(
                 errors.push({
                     code: SchemaErrorCode.MISSING_REQUIRED_FIELD,
                     message: `Missing required field: ${required}`,
-                    path: [...path, required]
+                    path: [...path, required],
                 });
             }
         }
@@ -230,7 +230,7 @@ function validateObjectStructure(
 function validateProperty(
     value: any,
     schema: any,
-    path: string[]
+    path: string[],
 ): SchemaValidationError[] {
     const errors: SchemaValidationError[] = [];
 
@@ -244,7 +244,7 @@ function validateProperty(
                 code: SchemaErrorCode.INVALID_FIELD_TYPE,
                 message: `Expected ${expectedType}, got ${actualType}`,
                 path,
-                value
+                value,
             });
             return errors; // Parar validação se tipo estiver errado
         }
@@ -258,7 +258,7 @@ function validateProperty(
                     code: SchemaErrorCode.INVALID_FIELD_VALUE,
                     message: `String too short (min: ${schema.minLength})`,
                     path,
-                    value
+                    value,
                 });
             }
             if (schema.maxLength && value.length > schema.maxLength) {
@@ -266,7 +266,7 @@ function validateProperty(
                     code: SchemaErrorCode.INVALID_FIELD_VALUE,
                     message: `String too long (max: ${schema.maxLength})`,
                     path,
-                    value
+                    value,
                 });
             }
             if (schema.pattern && !new RegExp(schema.pattern).test(value)) {
@@ -274,7 +274,7 @@ function validateProperty(
                     code: SchemaErrorCode.INVALID_FIELD_VALUE,
                     message: `String does not match pattern: ${schema.pattern}`,
                     path,
-                    value
+                    value,
                 });
             }
             if (schema.enum && !schema.enum.includes(value)) {
@@ -282,7 +282,7 @@ function validateProperty(
                     code: SchemaErrorCode.INVALID_FIELD_VALUE,
                     message: `Value must be one of: ${schema.enum.join(', ')}`,
                     path,
-                    value
+                    value,
                 });
             }
             break;
@@ -293,7 +293,7 @@ function validateProperty(
                     code: SchemaErrorCode.INVALID_FIELD_VALUE,
                     message: `Number too small (min: ${schema.minimum})`,
                     path,
-                    value
+                    value,
                 });
             }
             if (schema.maximum && value > schema.maximum) {
@@ -301,7 +301,7 @@ function validateProperty(
                     code: SchemaErrorCode.INVALID_FIELD_VALUE,
                     message: `Number too large (max: ${schema.maximum})`,
                     path,
-                    value
+                    value,
                 });
             }
             break;
@@ -339,7 +339,7 @@ export const validateFunnelSchema = (funnel: any): SchemaValidationResult => {
     return {
         isValid: errors.length === 0,
         errors,
-        warnings: []
+        warnings: [],
     };
 };
 
@@ -352,7 +352,7 @@ export const validateComponentSchema = (component: any): SchemaValidationResult 
     return {
         isValid: errors.length === 0,
         errors,
-        warnings: []
+        warnings: [],
     };
 };
 
@@ -365,7 +365,7 @@ export const validateBlockSchema = (block: any): SchemaValidationResult => {
     return {
         isValid: errors.length === 0,
         errors,
-        warnings: []
+        warnings: [],
     };
 };
 
@@ -373,7 +373,7 @@ export const validateBlockSchema = (block: any): SchemaValidationResult => {
  * Valida múltiplos schemas de uma vez
  */
 export const validateSchemaBatch = (
-    items: Array<{ data: any; type: 'funnel' | 'component' | 'block' }>
+    items: Array<{ data: any; type: 'funnel' | 'component' | 'block' }>,
 ): Record<number, SchemaValidationResult> => {
     const results: Record<number, SchemaValidationResult> = {};
 
@@ -430,7 +430,7 @@ export const sanitizeData = (data: any, schemaType: 'funnel' | 'component' | 'bl
  * Verifica se todos os schemas em um batch são válidos
  */
 export const validateAllSchemas = (
-    items: Array<{ data: any; type: 'funnel' | 'component' | 'block' }>
+    items: Array<{ data: any; type: 'funnel' | 'component' | 'block' }>,
 ): boolean => {
     const results = validateSchemaBatch(items);
     return Object.values(results).every(result => result.isValid);

@@ -60,7 +60,7 @@ export class RateLimitFilter implements LogFilter {
         const recentCount = this.logTimestamps.filter(timestamp => now - timestamp < 1000).length;
         return {
             recentCount,
-            totalBlocked: this.burstCount
+            totalBlocked: this.burstCount,
         };
     }
 }

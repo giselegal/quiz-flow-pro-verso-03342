@@ -50,5 +50,5 @@ export const snippetsManager = {
     remove(id: string) {
         const all = loadAll().filter(s => s.id !== id);
         saveAll(all);
-    }
+    },
 };

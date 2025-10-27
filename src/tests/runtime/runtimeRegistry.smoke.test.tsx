@@ -35,7 +35,7 @@ describe('QuizRuntimeRegistry + useQuizState integration', () => {
         render(
             <QuizRuntimeRegistryProvider>
                 <SmokeHarness />
-            </QuizRuntimeRegistryProvider>
+            </QuizRuntimeRegistryProvider>,
         );
 
         // Deve eventualmente avançar para step-2 via nextStep do override

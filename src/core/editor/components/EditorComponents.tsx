@@ -13,7 +13,7 @@ import {
     EditorPageType,
     EditorMode,
     EditorSaveStatus,
-    EditorValidationResult
+    EditorValidationResult,
 } from '../interfaces/EditorInterfaces';
 
 // ============================================================================
@@ -28,7 +28,7 @@ export const EditorPagePanel: React.FC<EditorPagePanelProps> = ({
     onPageRemove,
     onPageReorder,
     onPageDuplicate,
-    canEdit
+    canEdit,
 }) => {
     return (
         <div className="h-full flex flex-col">
@@ -145,7 +145,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
     selectedPage,
     onBlockUpdate,
     onPageUpdate,
-    onStyleUpdate
+    onStyleUpdate,
 }) => {
     if (!selectedPage && !selectedBlock) {
         return (
@@ -186,7 +186,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                                 value={value}
                                                 onChange={(e) => onBlockUpdate(selectedBlock.id, {
                                                     ...selectedBlock.properties,
-                                                    [key]: e.target.value
+                                                    [key]: e.target.value,
                                                 })}
                                                 className="w-full p-2 border border-gray-300 rounded text-sm"
                                                 rows={3}
@@ -197,7 +197,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                                 value={value}
                                                 onChange={(e) => onBlockUpdate(selectedBlock.id, {
                                                     ...selectedBlock.properties,
-                                                    [key]: e.target.value
+                                                    [key]: e.target.value,
                                                 })}
                                                 className="w-full p-2 border border-gray-300 rounded text-sm"
                                             />
@@ -208,7 +208,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                             value={value}
                                             onChange={(e) => onBlockUpdate(selectedBlock.id, {
                                                 ...selectedBlock.properties,
-                                                [key]: Number(e.target.value)
+                                                [key]: Number(e.target.value),
                                             })}
                                             className="w-full p-2 border border-gray-300 rounded text-sm"
                                         />
@@ -219,7 +219,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                                 checked={value}
                                                 onChange={(e) => onBlockUpdate(selectedBlock.id, {
                                                     ...selectedBlock.properties,
-                                                    [key]: e.target.checked
+                                                    [key]: e.target.checked,
                                                 })}
                                                 className="mr-2"
                                             />
@@ -233,7 +233,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                                     const parsed = JSON.parse(e.target.value);
                                                     onBlockUpdate(selectedBlock.id, {
                                                         ...selectedBlock.properties,
-                                                        [key]: parsed
+                                                        [key]: parsed,
                                                     });
                                                 } catch {
                                                     // Ignore invalid JSON
@@ -263,7 +263,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                     value={selectedPage.title}
                                     onChange={(e) => onPageUpdate(selectedPage.id, {
                                         ...selectedPage.settings,
-                                        title: e.target.value
+                                        title: e.target.value,
                                     } as any)}
                                     className="w-full p-2 border border-gray-300 rounded text-sm"
                                 />
@@ -277,7 +277,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                     value={selectedPage.type}
                                     onChange={(e) => onPageUpdate(selectedPage.id, {
                                         ...selectedPage.settings,
-                                        type: e.target.value
+                                        type: e.target.value,
                                     } as any)}
                                     className="w-full p-2 border border-gray-300 rounded text-sm"
                                 >
@@ -297,7 +297,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
                                         checked={selectedPage.settings.showTitle}
                                         onChange={(e) => onPageUpdate(selectedPage.id, {
                                             ...selectedPage.settings,
-                                            showTitle: e.target.checked
+                                            showTitle: e.target.checked,
                                         })}
                                         className="mr-2"
                                     />
@@ -388,7 +388,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
     onBlockUpdate,
     onBlockAdd,
     onBlockRemove,
-    onBlockReorder
+    onBlockReorder,
 }) => {
     const isEditMode = mode === 'edit';
 
@@ -434,7 +434,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                                     backgroundColor: theme.backgroundColor,
                                     color: theme.textColor,
                                     fontFamily: theme.fontFamily,
-                                    ...block.styles
+                                    ...block.styles,
                                 }}
                                 onClick={() => isEditMode && onBlockSelect(block.id)}
                             >
@@ -585,7 +585,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
     canRedo,
     onUndo,
     onRedo,
-    validation
+    validation,
 }) => {
     return (
         <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between canvas-toolbar">

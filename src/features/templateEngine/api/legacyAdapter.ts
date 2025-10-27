@@ -25,7 +25,7 @@ export function useLegacyQuizDraft(slug: string | null) {
     return useQuery({
         queryKey: ['legacy-quiz-draft', slug],
         queryFn: () => fetchLegacyDraft(slug!),
-        enabled: !!slug
+        enabled: !!slug,
     });
 }
 
@@ -39,7 +39,7 @@ async function postLegacyDelta({ slug, ...payload }: ApplyDeltaInput) {
     const res = await fetch(`/api/quiz-style/${slug}/apply-delta`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
     });
     if (!res.ok) {
         throw new Error(`Falha ao aplicar delta (${res.status})`);
@@ -53,6 +53,6 @@ export function useApplyLegacyDelta() {
         mutationFn: postLegacyDelta,
         onSuccess: (_data, vars) => {
             qc.invalidateQueries({ queryKey: ['legacy-quiz-draft', vars.slug] });
-        }
+        },
     });
 }

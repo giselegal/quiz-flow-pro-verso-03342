@@ -11,7 +11,7 @@ const ACCENTED_MAP: Record<string, string> = {
     classico: 'clássico', // Mantemos canonical existente no banco (se aplicável)
     contemporaneo: 'contemporâneo',
     romantico: 'romântico',
-    dramatico: 'dramático'
+    dramatico: 'dramático',
 };
 
 // Inverso (com acento -> sem acento)
@@ -47,7 +47,7 @@ export const CANONICAL_STYLE_IDS = [
     'romântico',
     'sexy',
     'dramático',
-    'criativo'
+    'criativo',
 ];
 
 /** Lista de estilos sem acento (usar para estruturas de pontos). */
@@ -59,12 +59,12 @@ export const UNACCENTED_STYLE_IDS = [
     'romantico',
     'sexy',
     'dramatico',
-    'criativo'
+    'criativo',
 ];
 
 export default {
     resolveStyleId,
     toUnaccentedStyleId,
     CANONICAL_STYLE_IDS,
-    UNACCENTED_STYLE_IDS
+    UNACCENTED_STYLE_IDS,
 };

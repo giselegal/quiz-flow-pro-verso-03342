@@ -29,7 +29,7 @@ export interface LogLevel {
 }
 
 export const createLoggerConfig = (
-    overrides: Partial<LoggerConfig> = {}
+    overrides: Partial<LoggerConfig> = {},
 ): LoggerConfig => {
     const environment = (import.meta.env.NODE_ENV || 'development') as LoggerConfig['environment'];
 
@@ -45,7 +45,7 @@ export const createLoggerConfig = (
         flushInterval: environment === 'production' ? 5000 : 1000,
         maxStorageSize: 50 * 1024 * 1024, // 50MB
         storageRetention: 7 * 24 * 60 * 60 * 1000, // 7 days
-        ...overrides
+        ...overrides,
     };
 
     return baseConfig;
@@ -70,7 +70,7 @@ export const developmentConfig = createLoggerConfig({
     allowedContexts: undefined, // Log all contexts
     enableStorage: true,
     // Enable debug contexts in development
-    blockedContexts: undefined
+    blockedContexts: undefined,
 });
 
 export const productionConfig = createLoggerConfig({
@@ -83,10 +83,10 @@ export const productionConfig = createLoggerConfig({
     remoteEndpoint: import.meta.env.VITE_LOGGING_ENDPOINT,
     remoteHeaders: {
         'Authorization': `Bearer ${import.meta.env.VITE_LOGGING_API_KEY}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     },
     // Block debug contexts in production
-    blockedContexts: ['trace', 'debug-performance', 'dev-tools']
+    blockedContexts: ['trace', 'debug-performance', 'dev-tools'],
 });
 
 export const testConfig = createLoggerConfig({
@@ -98,7 +98,7 @@ export const testConfig = createLoggerConfig({
     // Only allow test-related contexts
     allowedContexts: ['test', 'error'],
     flushInterval: 100, // Quick flush for tests
-    batchSize: 1
+    batchSize: 1,
 });
 
 export const stagingConfig = createLoggerConfig({
@@ -110,8 +110,8 @@ export const stagingConfig = createLoggerConfig({
     remoteEndpoint: import.meta.env.VITE_STAGING_LOGGING_ENDPOINT,
     remoteHeaders: {
         'Authorization': `Bearer ${import.meta.env.VITE_STAGING_LOGGING_API_KEY}`,
-        'Content-Type': 'application/json'
-    }
+        'Content-Type': 'application/json',
+    },
 });
 
 // Config selector based on environment
@@ -138,5 +138,5 @@ export const LoggingFeatures = {
     ENABLE_STORAGE_LOGGING: import.meta.env.VITE_ENABLE_STORAGE_LOGGING !== 'false',
     ENABLE_DEBUG_CONTEXT: import.meta.env.VITE_ENABLE_DEBUG_LOGGING === 'true',
     MAX_LOG_BUFFER_SIZE: parseInt(import.meta.env.VITE_MAX_LOG_BUFFER_SIZE || '1000'),
-    LOG_FLUSH_INTERVAL: parseInt(import.meta.env.VITE_LOG_FLUSH_INTERVAL || '5000')
+    LOG_FLUSH_INTERVAL: parseInt(import.meta.env.VITE_LOG_FLUSH_INTERVAL || '5000'),
 };

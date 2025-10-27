@@ -85,12 +85,12 @@ const AI_PROVIDERS: AIProvider[] = [
             'step_automation',
             'design_system',
             'template_processing',
-            'semantic_id_generation'
+            'semantic_id_generation',
         ],
         config: {
             maxSteps: 21,
-            timeout: 30000
-        }
+            timeout: 30000,
+        },
     },
     {
         id: 'gemini-integration',
@@ -102,13 +102,13 @@ const AI_PROVIDERS: AIProvider[] = [
             'content_optimization',
             'personalization',
             'language_processing',
-            'context_understanding'
+            'context_understanding',
         ],
         config: {
             model: 'gemini-2.0-flash',
             maxTokens: 2048,
-            temperature: 0.7
-        }
+            temperature: 0.7,
+        },
     },
     {
         id: 'calculation-engine',
@@ -120,12 +120,12 @@ const AI_PROVIDERS: AIProvider[] = [
             'result_analysis',
             'confidence_scoring',
             'pattern_recognition',
-            'predictive_analytics'
+            'predictive_analytics',
         ],
         config: {
             algorithm: 'hybrid',
-            confidenceThreshold: 0.8
-        }
+            confidenceThreshold: 0.8,
+        },
     },
     {
         id: 'performance-ai',
@@ -137,12 +137,12 @@ const AI_PROVIDERS: AIProvider[] = [
             'bundle_analysis',
             'load_time_prediction',
             'resource_optimization',
-            'cache_strategies'
+            'cache_strategies',
         ],
         config: {
             optimizationLevel: 'aggressive',
-            cacheEnabled: true
-        }
+            cacheEnabled: true,
+        },
     },
     {
         id: 'analytics-ai',
@@ -154,13 +154,13 @@ const AI_PROVIDERS: AIProvider[] = [
             'conversion_prediction',
             'user_segmentation',
             'trend_analysis',
-            'anomaly_detection'
+            'anomaly_detection',
         ],
         config: {
             realTime: true,
-            predictionWindow: 7 // days
-        }
-    }
+            predictionWindow: 7, // days
+        },
+    },
 ];
 
 // ===============================
@@ -191,7 +191,7 @@ export class UnifiedAIOrchestrator {
      */
     async orchestrate(
         request: AIOrchestrationRequest,
-        onProgress?: (progress: AIProgress) => void
+        onProgress?: (progress: AIProgress) => void,
     ): Promise<AIOrchestrationResult> {
         const startTime = performance.now();
         const result: AIOrchestrationResult = {
@@ -202,8 +202,8 @@ export class UnifiedAIOrchestrator {
                 totalDuration: 0,
                 primaryProvider: '',
                 fallbackUsed: false,
-                qualityScore: 0
-            }
+                qualityScore: 0,
+            },
         };
 
         const progress: AIProgress = {
@@ -211,7 +211,7 @@ export class UnifiedAIOrchestrator {
             currentProvider: '',
             currentTask: request.type,
             completedProviders: [],
-            errors: []
+            errors: [],
         };
 
         try {
@@ -284,7 +284,7 @@ export class UnifiedAIOrchestrator {
         request: AIOrchestrationRequest,
         result: AIOrchestrationResult,
         progress: AIProgress,
-        onProgress?: (progress: AIProgress) => void
+        onProgress?: (progress: AIProgress) => void,
     ) {
         const promises = providerIds.map(async (providerId) => {
             const startTime = performance.now();
@@ -298,7 +298,7 @@ export class UnifiedAIOrchestrator {
                 result.providers[providerId] = {
                     status: 'success',
                     result: providerResult,
-                    duration: performance.now() - startTime
+                    duration: performance.now() - startTime,
                 };
 
                 progress.completedProviders.push(providerId);
@@ -308,7 +308,7 @@ export class UnifiedAIOrchestrator {
                 result.providers[providerId] = {
                     status: 'error',
                     error: error.message,
-                    duration: performance.now() - startTime
+                    duration: performance.now() - startTime,
                 };
 
                 progress.errors.push({ provider: providerId, error: error.message });
@@ -328,7 +328,7 @@ export class UnifiedAIOrchestrator {
         request: AIOrchestrationRequest,
         result: AIOrchestrationResult,
         progress: AIProgress,
-        onProgress?: (progress: AIProgress) => void
+        onProgress?: (progress: AIProgress) => void,
     ) {
         for (let i = 0; i < providerIds.length; i++) {
             const providerId = providerIds[i];
@@ -344,7 +344,7 @@ export class UnifiedAIOrchestrator {
                 result.providers[providerId] = {
                     status: 'success',
                     result: providerResult,
-                    duration: performance.now() - startTime
+                    duration: performance.now() - startTime,
                 };
 
                 progress.completedProviders.push(providerId);
@@ -358,7 +358,7 @@ export class UnifiedAIOrchestrator {
                 result.providers[providerId] = {
                     status: 'error',
                     error: error.message,
-                    duration: performance.now() - startTime
+                    duration: performance.now() - startTime,
                 };
 
                 progress.errors.push({ provider: providerId, error: error.message });
@@ -445,16 +445,16 @@ export class UnifiedAIOrchestrator {
                 return {
                     optimizedContent: `AI-optimized: ${request.data.content}`,
                     improvements: ['clarity', 'engagement', 'conversion'],
-                    confidence: 0.92
+                    confidence: 0.92,
                 };
             case 'generate_insights':
                 return {
                     insights: [
                         'User engagement peaks at step 3',
                         'Conversion improves with personalized content',
-                        'Mobile users prefer shorter steps'
+                        'Mobile users prefer shorter steps',
                     ],
-                    confidence: 0.87
+                    confidence: 0.87,
                 };
             default:
                 throw new Error(`Gemini doesn't support ${request.type}`);
@@ -470,7 +470,7 @@ export class UnifiedAIOrchestrator {
                 return {
                     patterns: ['Natural style dominates', 'High confidence scores'],
                     predictions: ['95% completion rate', 'Strong conversion potential'],
-                    confidence: 0.91
+                    confidence: 0.91,
                 };
             default:
                 throw new Error(`CalculationEngine doesn't support ${request.type}`);
@@ -484,14 +484,14 @@ export class UnifiedAIOrchestrator {
             optimizations: [
                 { type: 'bundle-split', impact: '25% faster load' },
                 { type: 'image-optimization', impact: '40% less bandwidth' },
-                { type: 'cache-strategy', impact: '60% faster repeat visits' }
+                { type: 'cache-strategy', impact: '60% faster repeat visits' },
             ],
             predictions: {
                 loadTime: '1.2s',
                 performanceScore: 95,
-                conversionImpact: '+12%'
+                conversionImpact: '+12%',
             },
-            confidence: 0.89
+            confidence: 0.89,
         };
     }
 
@@ -502,19 +502,19 @@ export class UnifiedAIOrchestrator {
             userBehavior: {
                 averageTimePerStep: '45s',
                 dropoffPoints: ['step 5', 'step 12'],
-                engagementScore: 8.5
+                engagementScore: 8.5,
             },
             predictions: {
                 completionRate: '78%',
                 conversionRate: '23%',
-                retentionRate: '65%'
+                retentionRate: '65%',
             },
             recommendations: [
                 'Simplify step 5 content',
                 'Add progress indicator at step 12',
-                'Implement micro-interactions'
+                'Implement micro-interactions',
             ],
-            confidence: 0.84
+            confidence: 0.84,
         };
     }
 
@@ -536,7 +536,7 @@ export class UnifiedAIOrchestrator {
                 return {
                     funnelId: successfulResults[0],
                     optimizations: successfulResults[1] || null,
-                    analytics: successfulResults[2] || null
+                    analytics: successfulResults[2] || null,
                 };
 
             case 'generate_insights':
@@ -546,7 +546,7 @@ export class UnifiedAIOrchestrator {
                     insights: successfulResults.flatMap(r => r.insights || r.patterns || []),
                     predictions: successfulResults.flatMap(r => r.predictions || []),
                     recommendations: successfulResults.flatMap(r => r.recommendations || []),
-                    averageConfidence: successfulResults.reduce((acc, r) => acc + (r.confidence || 0), 0) / successfulResults.length
+                    averageConfidence: successfulResults.reduce((acc, r) => acc + (r.confidence || 0), 0) / successfulResults.length,
                 };
 
             default:
@@ -605,7 +605,7 @@ export const useAIOrchestrator = () => {
     const analytics = useAnalytics();
 
     const orchestrate = useCallback(async (
-        request: AIOrchestrationRequest
+        request: AIOrchestrationRequest,
     ): Promise<AIOrchestrationResult> => {
         setIsProcessing(true);
         setProgress(null);
@@ -613,7 +613,7 @@ export const useAIOrchestrator = () => {
         analytics.trackEvent('ai_orchestration_start', {
             type: request.type,
             providers: request.providers?.length || 'auto',
-            priority: request.options?.priority || 'balanced'
+            priority: request.options?.priority || 'balanced',
         });
 
         try {
@@ -624,14 +624,14 @@ export const useAIOrchestrator = () => {
                 type: request.type,
                 success: result.success,
                 duration: result.metadata.totalDuration,
-                qualityScore: result.metadata.qualityScore
+                qualityScore: result.metadata.qualityScore,
             });
 
             return result;
         } catch (error: any) {
             analytics.trackEvent('ai_orchestration_error', {
                 type: request.type,
-                error: error.message
+                error: error.message,
             });
             throw error;
         } finally {
@@ -653,7 +653,7 @@ export const useAIOrchestrator = () => {
         configureProvider,
         isProcessing,
         progress,
-        lastResult
+        lastResult,
     };
 };
 

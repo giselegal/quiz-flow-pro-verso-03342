@@ -10,7 +10,7 @@ import {
     FunnelAction,
     FunnelProgress,
     NavigationState,
-    ValidationState
+    ValidationState,
 } from '../types';
 import { funnelCore } from '../FunnelCore';
 import { funnelEngine } from '../FunnelEngine';
@@ -63,10 +63,10 @@ function funnelReducer(state: FunnelState, action: FunnelAction): FunnelState {
 
 export function useFunnelState(
     initialState: FunnelState,
-    options: UseFunnelStateOptions = {}
+    options: UseFunnelStateOptions = {},
 ): UseFunnelStateReturn {
     const [state, dispatch] = useReducer(funnelReducer, initialState, (initial) =>
-        funnelEngine.initializeFunnel(initial)
+        funnelEngine.initializeFunnel(initial),
     );
 
     // ============================================================================
@@ -81,7 +81,7 @@ export function useFunnelState(
         isValid: false,
         errors: [],
         warnings: [],
-        currentStepValid: false
+        currentStepValid: false,
     };
 
     // Status checks
@@ -169,7 +169,7 @@ export function useFunnelState(
         reset,
         clone,
         serialize,
-        deserialize
+        deserialize,
     };
 }
 
@@ -187,7 +187,7 @@ export function useFunnelPersistence(
         autoSave?: boolean;
         saveInterval?: number;
         storageKey?: string;
-    } = {}
+    } = {},
 ) {
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState<Error | null>(null);
@@ -244,7 +244,7 @@ export function useFunnelPersistence(
         isSaving,
         saveError,
         lastSaved,
-        hasSaved: !!lastSaved
+        hasSaved: !!lastSaved,
     };
 }
 
@@ -302,7 +302,7 @@ export function useFunnelHistory(maxHistory = 50) {
         canRedo,
         clearHistory,
         historySize: history.length,
-        currentIndex
+        currentIndex,
     };
 }
 
@@ -316,7 +316,7 @@ export function useFunnelAnalytics(state: FunnelState) {
         interactions: 0,
         validationErrors: 0,
         completionRate: 0,
-        dropOffPoints: [] as string[]
+        dropOffPoints: [] as string[],
     });
 
     const [sessionStart] = useState(Date.now());
@@ -331,8 +331,8 @@ export function useFunnelAnalytics(state: FunnelState) {
             ...prev,
             stepTimes: {
                 ...prev.stepTimes,
-                [state.currentStep]: (prev.stepTimes[state.currentStep] || 0) + timeOnPreviousStep
-            }
+                [state.currentStep]: (prev.stepTimes[state.currentStep] || 0) + timeOnPreviousStep,
+            },
         }));
 
         setStepStartTime(stepChangeTime);
@@ -343,7 +343,7 @@ export function useFunnelAnalytics(state: FunnelState) {
         const interval = setInterval(() => {
             setAnalytics(prev => ({
                 ...prev,
-                timeSpent: Date.now() - sessionStart
+                timeSpent: Date.now() - sessionStart,
             }));
         }, 1000);
 
@@ -358,7 +358,7 @@ export function useFunnelAnalytics(state: FunnelState) {
             if (!validation.isValid) {
                 setAnalytics(prev => ({
                     ...prev,
-                    validationErrors: prev.validationErrors + validation.errors.length
+                    validationErrors: prev.validationErrors + validation.errors.length,
                 }));
             }
         }
@@ -369,7 +369,7 @@ export function useFunnelAnalytics(state: FunnelState) {
         const progress = funnelCore.calculateProgress(state);
         setAnalytics(prev => ({
             ...prev,
-            completionRate: progress.percentage
+            completionRate: progress.percentage,
         }));
     }, [state.completedSteps, state.steps]);
 
@@ -380,7 +380,7 @@ export function useFunnelAnalytics(state: FunnelState) {
             totalSteps: state.steps.length,
             completedSteps: state.completedSteps.length,
             currentStep: state.currentStep,
-            sessionDuration: Date.now() - sessionStart
+            sessionDuration: Date.now() - sessionStart,
         };
     }, [analytics, state, sessionStart]);
 
@@ -388,7 +388,7 @@ export function useFunnelAnalytics(state: FunnelState) {
         analytics,
         getReport,
         timeSpent: analytics.timeSpent,
-        completionRate: analytics.completionRate
+        completionRate: analytics.completionRate,
     };
 }
 
@@ -402,7 +402,7 @@ export function useFunnelComparison() {
             completedSteps: JSON.stringify(state1.completedSteps) !== JSON.stringify(state2.completedSteps),
             userData: JSON.stringify(state1.userData) !== JSON.stringify(state2.userData),
             status: state1.status !== state2.status,
-            settings: JSON.stringify(state1.settings) !== JSON.stringify(state2.settings)
+            settings: JSON.stringify(state1.settings) !== JSON.stringify(state2.settings),
         };
 
         const hasChanges = Object.values(differences).some(Boolean);
@@ -415,8 +415,8 @@ export function useFunnelComparison() {
                 progressChanged: differences.completedSteps,
                 dataChanged: differences.userData,
                 statusChanged: differences.status,
-                settingsChanged: differences.settings
-            }
+                settingsChanged: differences.settings,
+            },
         };
     }, []);
 
@@ -427,12 +427,12 @@ export function useFunnelComparison() {
             added: {},
             removed: {},
             modified: {},
-            unchanged: JSON.stringify(state1) === JSON.stringify(state2) ? state1 : {}
+            unchanged: JSON.stringify(state1) === JSON.stringify(state2) ? state1 : {},
         };
     }, []);
 
     return {
         compareStates,
-        getStateDiff
+        getStateDiff,
     };
 }

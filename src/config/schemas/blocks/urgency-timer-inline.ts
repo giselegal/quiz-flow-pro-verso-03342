@@ -70,15 +70,15 @@ export const urgencyTimerInlineSchema = createSchema('urgency-timer-inline', 'Ti
     .addGroup('layout', 'Layout', { order: 4 })
     .addFields(
         initialMinutesField,
-        urgencyMessageField
+        urgencyMessageField,
     )
     .addFields(
         showIconField,
-        ...colorFields('style')
+        ...colorFields('style'),
     )
     .addFields(
         autoStartField,
-        onExpireActionField
+        onExpireActionField,
     )
     .addField(alignmentField('layout'))
     .version('2.0.0')

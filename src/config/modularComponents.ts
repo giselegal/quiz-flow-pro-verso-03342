@@ -564,21 +564,21 @@ export const mapComponentsToSteps = () => {
   // Etapas 2-11 - Perguntas principais (componentes de questão)
   for (let i = 2; i <= 11; i++) {
     stepComponents[`step-${i.toString().padStart(2, '0')}`] = MODULAR_COMPONENTS.filter(comp =>
-      ['Structure', 'Content', 'Interactive'].includes(comp.category)
+      ['Structure', 'Content', 'Interactive'].includes(comp.category),
     );
   }
 
   // Etapas 12, 20 - Transições (componentes de transição)
   [12, 20].forEach(i => {
     stepComponents[`step-${i.toString().padStart(2, '0')}`] = MODULAR_COMPONENTS.filter(comp =>
-      ['Structure', 'Content', 'Media'].includes(comp.category)
+      ['Structure', 'Content', 'Media'].includes(comp.category),
     );
   });
 
   // Etapas 13-19 - Estratégicas (componentes específicos)
   for (let i = 13; i <= 19; i++) {
     stepComponents[`step-${i.toString().padStart(2, '0')}`] = MODULAR_COMPONENTS.filter(comp =>
-      ['Structure', 'Content', 'Interactive'].includes(comp.category)
+      ['Structure', 'Content', 'Interactive'].includes(comp.category),
     );
   }
 

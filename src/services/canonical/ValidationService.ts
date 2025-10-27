@@ -124,7 +124,7 @@ export class ValidationService extends BaseCanonicalService {
    */
   async validateFunnelAccess(
     funnelId: string,
-    userId?: string
+    userId?: string,
   ): Promise<ServiceResult<FunnelValidationResult>> {
     try {
       // Basic format validation
@@ -136,8 +136,8 @@ export class ValidationService extends BaseCanonicalService {
             exists: false,
             hasPermission: false,
             error: 'ID do funil inválido',
-            errorType: 'INVALID_FORMAT'
-          }
+            errorType: 'INVALID_FORMAT',
+          },
         };
       }
 
@@ -157,7 +157,7 @@ export class ValidationService extends BaseCanonicalService {
           exists: false,
           hasPermission: false,
           error: 'Funil não encontrado',
-          errorType: 'NOT_FOUND'
+          errorType: 'NOT_FOUND',
         };
         this.setCached(cacheKey, result);
         return { success: true, data: result };
@@ -172,7 +172,7 @@ export class ValidationService extends BaseCanonicalService {
           exists: true,
           hasPermission: false,
           error: 'Sem permissão para acessar este funil',
-          errorType: 'NO_PERMISSION'
+          errorType: 'NO_PERMISSION',
         };
         this.setCached(cacheKey, result);
         return { success: true, data: result };
@@ -183,7 +183,7 @@ export class ValidationService extends BaseCanonicalService {
         isValid: true,
         exists: true,
         hasPermission: true,
-        funnel: funnelResult.data
+        funnel: funnelResult.data,
       };
 
       this.setCached(cacheKey, result);
@@ -191,7 +191,7 @@ export class ValidationService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Validation failed')
+        error: error instanceof Error ? error : new Error('Validation failed'),
       };
     }
   }
@@ -210,7 +210,7 @@ export class ValidationService extends BaseCanonicalService {
         canWrite: true,
         canDelete: true,
         canShare: true,
-        isOwner: true
+        isOwner: true,
       };
     }
 
@@ -221,7 +221,7 @@ export class ValidationService extends BaseCanonicalService {
         canWrite: false,
         canDelete: false,
         canShare: false,
-        isOwner: false
+        isOwner: false,
       };
     }
 
@@ -233,7 +233,7 @@ export class ValidationService extends BaseCanonicalService {
         canWrite: false,
         canDelete: false,
         canShare: false,
-        isOwner: false
+        isOwner: false,
       };
     }
 
@@ -243,7 +243,7 @@ export class ValidationService extends BaseCanonicalService {
       canWrite: false,
       canDelete: false,
       canShare: false,
-      isOwner: false
+      isOwner: false,
     };
   }
 
@@ -260,7 +260,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'id',
         message: 'Funnel ID is required',
         code: 'MISSING_ID',
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -269,7 +269,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'name',
         message: 'Funnel name is required',
         code: 'MISSING_NAME',
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -278,7 +278,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'context',
         message: 'Funnel context is required',
         code: 'MISSING_CONTEXT',
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -288,7 +288,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'description',
         message: 'Funnel description is recommended',
         code: 'MISSING_DESCRIPTION',
-        severity: 'warning'
+        severity: 'warning',
       });
     }
 
@@ -297,7 +297,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'pages',
         message: 'Funnel has no pages',
         code: 'NO_PAGES',
-        severity: 'warning'
+        severity: 'warning',
       });
     }
 
@@ -306,8 +306,8 @@ export class ValidationService extends BaseCanonicalService {
       data: {
         isValid: errors.length === 0,
         errors,
-        warnings
-      }
+        warnings,
+      },
     };
   }
 
@@ -329,7 +329,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'id',
         message: 'Template ID is required',
         code: 'MISSING_ID',
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -338,7 +338,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'name',
         message: 'Template name is required',
         code: 'MISSING_NAME',
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -348,7 +348,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'blocks',
         message: 'Template must have blocks array',
         code: 'MISSING_BLOCKS',
-        severity: 'error'
+        severity: 'error',
       });
     } else {
       // Check each block
@@ -357,7 +357,7 @@ export class ValidationService extends BaseCanonicalService {
         if (blockValidation.success && !blockValidation.data.isValid) {
           blockErrors.push({
             blockId: block.id || `block_${index}`,
-            errors: blockValidation.data.errors.map((e: ValidationError) => e.message)
+            errors: blockValidation.data.errors.map((e: ValidationError) => e.message),
           });
         }
       });
@@ -373,8 +373,8 @@ export class ValidationService extends BaseCanonicalService {
         warnings,
         templateId: template.id,
         hasRequiredBlocks,
-        blockErrors
-      }
+        blockErrors,
+      },
     };
   }
 
@@ -392,7 +392,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'id',
         message: 'Block ID is required',
         code: 'MISSING_ID',
-        severity: 'error'
+        severity: 'error',
       });
       missingFields.push('id');
     }
@@ -402,7 +402,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'type',
         message: 'Block type is required',
         code: 'MISSING_TYPE',
-        severity: 'error'
+        severity: 'error',
       });
       missingFields.push('type');
     }
@@ -413,7 +413,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'content.question',
         message: 'Question block must have question text',
         code: 'MISSING_QUESTION',
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -422,7 +422,7 @@ export class ValidationService extends BaseCanonicalService {
         field: 'content.options',
         message: 'Question block should have options',
         code: 'NO_OPTIONS',
-        severity: 'warning'
+        severity: 'warning',
       });
     }
 
@@ -434,8 +434,8 @@ export class ValidationService extends BaseCanonicalService {
         warnings,
         blockId: block.id,
         blockType: block.type,
-        missingFields
-      }
+        missingFields,
+      },
     };
   }
 
@@ -450,7 +450,7 @@ export class ValidationService extends BaseCanonicalService {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return {
       success: true,
-      data: emailRegex.test(email)
+      data: emailRegex.test(email),
     };
   }
 
@@ -473,7 +473,7 @@ export class ValidationService extends BaseCanonicalService {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return {
       success: true,
-      data: uuidRegex.test(uuid)
+      data: uuidRegex.test(uuid),
     };
   }
 
@@ -488,7 +488,7 @@ export class ValidationService extends BaseCanonicalService {
     if (prefix) {
       return {
         success: true,
-        data: id.startsWith(prefix)
+        data: id.startsWith(prefix),
       };
     }
 
@@ -496,7 +496,7 @@ export class ValidationService extends BaseCanonicalService {
     const idRegex = /^[a-zA-Z0-9_-]+$/;
     return {
       success: true,
-      data: idRegex.test(id)
+      data: idRegex.test(id),
     };
   }
 
@@ -505,7 +505,7 @@ export class ValidationService extends BaseCanonicalService {
    */
   validateRequiredFields(
     obj: any,
-    requiredFields: string[]
+    requiredFields: string[],
   ): ServiceResult<ValidationResultV2> {
     const errors: ValidationError[] = [];
 
@@ -515,7 +515,7 @@ export class ValidationService extends BaseCanonicalService {
           field,
           message: `Field '${field}' is required`,
           code: 'MISSING_FIELD',
-          severity: 'error'
+          severity: 'error',
         });
       }
     });
@@ -525,8 +525,8 @@ export class ValidationService extends BaseCanonicalService {
       data: {
         isValid: errors.length === 0,
         errors,
-        warnings: []
-      }
+        warnings: [],
+      },
     };
   }
 
@@ -549,7 +549,7 @@ export class ValidationService extends BaseCanonicalService {
   private setCached<T>(key: string, result: T): void {
     this.cache.set(key, {
       result,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 

@@ -18,12 +18,12 @@ function buildSnapshot() {
         stages: [
             { id: 'stage_intro', type: 'intro', order: 0, componentIds: ['c_heading_intro'] },
             { id: 'stage_q1', type: 'question', order: 1, componentIds: ['c_q1_opts'] },
-            { id: 'stage_result', type: 'result', order: 2, componentIds: [] }
+            { id: 'stage_result', type: 'result', order: 2, componentIds: [] },
         ],
         components: {
             c_heading_intro: { id: 'c_heading_intro', type: 'Heading', props: { text: 'Bem-vindo' } },
-            c_q1_opts: { id: 'c_q1_opts', type: 'OptionList', props: { options: [{ id: 'opt1', label: 'Opção 1' }, { id: 'opt2', label: 'Opção 2' }] } }
-        }
+            c_q1_opts: { id: 'c_q1_opts', type: 'OptionList', props: { options: [{ id: 'opt1', label: 'Opção 1' }, { id: 'opt2', label: 'Opção 2' }] } },
+        },
     } as any;
 }
 

@@ -18,7 +18,7 @@ export class RobustnessOptimizer {
     typeErrorsFixed: 11, // any[] -> typed arrays
     performanceGain: 60, // % improvement in re-renders
     bundleSizeReduction: 40, // % reduction in bundle size
-    memoryUsageImprovement: 50 // % improvement in memory usage
+    memoryUsageImprovement: 50, // % improvement in memory usage
   };
 
   static getMetrics(): RobustnessMetrics {

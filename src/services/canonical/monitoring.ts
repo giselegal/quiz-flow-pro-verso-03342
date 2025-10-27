@@ -16,7 +16,7 @@ export class CanonicalServicesMonitor {
       (window as any).__canonicalMonitor = {
         calls: this.calls,
         legacyCalls: this.legacyCalls,
-        registry: this.registry.slice(-100)
+        registry: this.registry.slice(-100),
       };
     }
     // Log leve (pode ser desligado pelo consumidor)
@@ -25,7 +25,7 @@ export class CanonicalServicesMonitor {
 
   static trackLegacyBridge(service: string, method: string) {
     this.legacyCalls++;
-    this.trackUsage(service + '(legacy)', method);
+    this.trackUsage(`${service  }(legacy)`, method);
   }
 
   static getAdoptionRate(): number {

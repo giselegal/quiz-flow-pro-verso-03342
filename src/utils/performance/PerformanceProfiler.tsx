@@ -102,7 +102,7 @@ class PerformanceStore {
                 componentName: name,
                 averageTime: metrics.reduce((sum, m) => sum + m.actualDuration, 0) / metrics.length,
                 renderCount: metrics.length,
-                totalTime: metrics.reduce((sum, m) => sum + m.actualDuration, 0)
+                totalTime: metrics.reduce((sum, m) => sum + m.actualDuration, 0),
             }))
             .sort((a, b) => b.averageTime - a.averageTime);
 
@@ -123,7 +123,7 @@ class PerformanceStore {
                 baseDuration: avg.averageTime,
                 startTime: 0,
                 commitTime: Date.now(),
-                interactions: new Set()
+                interactions: new Set(),
             })),
             mostRenderedComponents: mostRendered.slice(0, 10).map(avg => ({
                 componentName: avg.componentName,
@@ -134,13 +134,13 @@ class PerformanceStore {
                 baseDuration: avg.averageTime,
                 startTime: 0,
                 commitTime: Date.now(),
-                interactions: new Set()
+                interactions: new Set(),
             })),
             totalRenderTime,
             averageRenderTime: renderCount > 0 ? totalRenderTime / renderCount : 0,
             renderCount,
             timestamp: new Date(),
-            warnings
+            warnings,
         };
     }
 
@@ -197,7 +197,7 @@ export const usePerformanceMetrics = () => {
         startMonitoring,
         stopMonitoring,
         generateReport,
-        clearMetrics: () => performanceStore.clear()
+        clearMetrics: () => performanceStore.clear(),
     };
 };
 
@@ -213,7 +213,7 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
     id,
     children,
     enableLogging = false,
-    onRender
+    onRender,
 }) => {
     // Em produção, apenas renderizar children sem profiling para evitar overhead
     if (process.env.NODE_ENV === 'production' && !enableLogging) {
@@ -222,11 +222,11 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
 
     const onRenderCallback: ProfilerOnRenderCallback = (
         profilerID: string,
-        phase: "mount" | "update" | "nested-update",
+        phase: 'mount' | 'update' | 'nested-update',
         actualDuration: number,
         baseDuration: number,
         startTime: number,
-        commitTime: number
+        commitTime: number,
     ) => {
         const metric: PerformanceMetrics = {
             componentName: profilerID,
@@ -237,7 +237,7 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
             baseDuration,
             startTime,
             commitTime,
-            interactions: new Set()
+            interactions: new Set(),
         };
 
         // Adicionar ao store global
@@ -262,7 +262,7 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
 // Higher-Order Component para wrapping automático
 export const withPerformanceProfiler = <P extends object>(
     WrappedComponent: React.ComponentType<P>,
-    profileId?: string
+    profileId?: string,
 ) => {
     const WithPerformanceProfiler = (props: P) => {
         const componentName = profileId || WrappedComponent.displayName || WrappedComponent.name || 'Component';
@@ -287,7 +287,7 @@ export const useRenderTracker = (componentName: string, dependencies: any[]) => 
     renderCountRef.current++;
 
     const depsChanged = prevDepsRef.current.some((dep, index) =>
-        dep !== dependencies[index]
+        dep !== dependencies[index],
     );
 
     if (renderCountRef.current > 1 && !depsChanged) {
@@ -298,7 +298,7 @@ export const useRenderTracker = (componentName: string, dependencies: any[]) => 
 
     return {
         renderCount: renderCountRef.current,
-        unnecessaryRender: renderCountRef.current > 1 && !depsChanged
+        unnecessaryRender: renderCountRef.current > 1 && !depsChanged,
     };
 };
 

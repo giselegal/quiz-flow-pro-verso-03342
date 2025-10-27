@@ -197,9 +197,9 @@ export const useQuizResult = () => {
     500, // 500ms de debounce
     { 
       leading: false, // Não executar na borda de entrada
-      trailing: true  // Executar na borda de saída
+      trailing: true,  // Executar na borda de saída
     },
-    [loadFromStorage]
+    [loadFromStorage],
   );
 
   useEffect(() => {

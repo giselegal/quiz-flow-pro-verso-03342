@@ -11,7 +11,7 @@ export async function testTemplateLoading() {
   
   const templatesToTest = [
     'quiz21StepsComplete',
-    'testTemplate'
+    'testTemplate',
   ];
   
   for (const templateId of templatesToTest) {

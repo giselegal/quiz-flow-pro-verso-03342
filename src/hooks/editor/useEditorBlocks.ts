@@ -6,7 +6,7 @@ import { generateId } from '@/utils/idGenerator';
 
 export const useEditorBlocks = (
   config: EditorConfig,
-  setConfig: (config: EditorConfig) => void
+  setConfig: (config: EditorConfig) => void,
 ): EditorActions => {
   const addBlock = useCallback(
     (type: EditorBlock['type']) => {
@@ -26,7 +26,7 @@ export const useEditorBlocks = (
 
       return newBlock.id;
     },
-    [config, setConfig]
+    [config, setConfig],
   );
 
   const updateBlock = useCallback(
@@ -35,11 +35,11 @@ export const useEditorBlocks = (
       setConfig({
         ...config,
         blocks: blocks.map((block: EditorBlock) =>
-          block.id === id ? { ...block, content: { ...block.content, ...content } } : block
+          block.id === id ? { ...block, content: { ...block.content, ...content } } : block,
         ) as any,
       });
     },
-    [config, setConfig]
+    [config, setConfig],
   );
 
   const deleteBlock = useCallback(
@@ -55,7 +55,7 @@ export const useEditorBlocks = (
           })) as any,
       });
     },
-    [config, setConfig]
+    [config, setConfig],
   );
 
   const reorderBlocks = useCallback(
@@ -73,7 +73,7 @@ export const useEditorBlocks = (
         })) as any,
       });
     },
-    [config, setConfig]
+    [config, setConfig],
   );
 
   return {

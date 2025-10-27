@@ -18,13 +18,13 @@ import {
   versioningService, 
   VersionSnapshot, 
   VersionComparison,
-  VersioningStats 
+  VersioningStats, 
 } from '@/services/versioningService';
 import { 
   historyManager, 
   HistoryEntry, 
   HistoryFilter,
-  HistoryStats 
+  HistoryStats, 
 } from '@/services/HistoryManager';
 import { UnifiedFunnel } from '@/services/UnifiedCRUDService';
 
@@ -108,7 +108,7 @@ export const useUnifiedVersioning = (
     autoSnapshotInterval?: number;
     maxSnapshots?: number;
     enableHistoryTracking?: boolean;
-  } = {}
+  } = {},
 ): VersioningReturn => {
   
   const {
@@ -175,7 +175,7 @@ export const useUnifiedVersioning = (
 
   const createSnapshot = useCallback(async (
     type: 'auto' | 'manual' | 'milestone' = 'manual',
-    description?: string
+    description?: string,
   ): Promise<VersionSnapshot> => {
     if (!funnel) {
       throw new Error('Nenhum funnel carregado para criar snapshot');
@@ -193,7 +193,7 @@ export const useUnifiedVersioning = (
           'funnel',
           funnel.id,
           [],
-          `Snapshot ${type} criado: ${snapshot.version}`
+          `Snapshot ${type} criado: ${snapshot.version}`,
         );
       }
 
@@ -237,7 +237,7 @@ export const useUnifiedVersioning = (
             'funnel',
             id,
             [],
-            `Snapshot ${id} excluído`
+            `Snapshot ${id} excluído`,
           );
         }
 
@@ -299,7 +299,7 @@ export const useUnifiedVersioning = (
             'funnel',
             restoredFunnel.id,
             [],
-            `Funnel restaurado do snapshot ${id}`
+            `Funnel restaurado do snapshot ${id}`,
           );
         }
 

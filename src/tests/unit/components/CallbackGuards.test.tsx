@@ -12,8 +12,8 @@ const questionData: any = {
     options: [
         { id: 'a', text: 'A' },
         { id: 'b', text: 'B' },
-        { id: 'c', text: 'C' }
-    ]
+        { id: 'c', text: 'C' },
+    ],
 };
 
 describe('Callback guards', () => {
@@ -26,7 +26,7 @@ describe('Callback guards', () => {
         const strategicData: any = {
             type: 'strategic-question',
             questionText: 'Objetivo principal?',
-            options: [{ id: 'x', text: 'X' }]
+            options: [{ id: 'x', text: 'X' }],
         };
         const { getByText } = render(<StrategicQuestionStep data={strategicData} currentAnswer="" onAnswerChange={undefined as any} />);
         fireEvent.click(getByText('X'));

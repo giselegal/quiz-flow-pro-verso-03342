@@ -39,7 +39,7 @@ class PerformanceManager {
       level,
       message,
       data,
-      timestamp: performance.now()
+      timestamp: performance.now(),
     };
 
     // Buffer de logs para evitar spam
@@ -70,7 +70,7 @@ class PerformanceManager {
         this.log('warn', 'High memory usage detected', {
           usage: `${usagePercent.toFixed(1)}%`,
           used: `${(memory.usedJSHeapSize / 1048576).toFixed(1)}MB`,
-          limit: `${(memory.jsHeapSizeLimit / 1048576).toFixed(1)}MB`
+          limit: `${(memory.jsHeapSizeLimit / 1048576).toFixed(1)}MB`,
         });
       }
     }, 30000); // Check every 30 seconds
@@ -175,8 +175,8 @@ class PerformanceManager {
       memory: memory ? {
         used: `${(memory.usedJSHeapSize / 1048576).toFixed(1)}MB`,
         limit: `${(memory.jsHeapSizeLimit / 1048576).toFixed(1)}MB`,
-        usage: `${((memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100).toFixed(1)}%`
-      } : null
+        usage: `${((memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100).toFixed(1)}%`,
+      } : null,
     };
   }
 }

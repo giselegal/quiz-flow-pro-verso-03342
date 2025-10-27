@@ -12,7 +12,7 @@ export function safePlaceholder(
     height: number | string = 300,
     text = 'Imagem indisponível',
     bg = '#e5e7eb',
-    fg = '#6b7280'
+    fg = '#6b7280',
 ) {
     const w = typeof width === 'number' ? width : parseInt(String(width), 10) || 400;
     const h = typeof height === 'number' ? height : parseInt(String(height), 10) || 300;

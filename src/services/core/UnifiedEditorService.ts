@@ -60,7 +60,7 @@ class UnifiedEditorService {
     async createBlock(
         type: BlockType,
         properties: Record<string, any> = {},
-        editorId: string = 'default'
+        editorId: string = 'default',
     ): Promise<Block> {
         const definition = MASTER_BLOCK_REGISTRY[type];
 
@@ -88,7 +88,7 @@ class UnifiedEditorService {
             type: 'create',
             blockId,
             timestamp: Date.now(),
-            data: { type, properties }
+            data: { type, properties },
         };
 
         state.operations.push(operation);
@@ -103,7 +103,7 @@ class UnifiedEditorService {
     async updateBlock(
         blockId: string,
         updates: Partial<Block>,
-        editorId: string = 'default'
+        editorId: string = 'default',
     ): Promise<Block> {
         const state = this.getEditorState(editorId);
         const existingBlock = state.blocks.get(blockId);
@@ -115,7 +115,7 @@ class UnifiedEditorService {
         const updatedBlock: Block = {
             ...existingBlock,
             ...updates,
-            id: blockId // Garantir que o ID não seja alterado
+            id: blockId, // Garantir que o ID não seja alterado
         };
 
         state.blocks.set(blockId, updatedBlock);
@@ -125,7 +125,7 @@ class UnifiedEditorService {
             type: 'update',
             blockId,
             timestamp: Date.now(),
-            data: updates
+            data: updates,
         };
 
         state.operations.push(operation);
@@ -153,7 +153,7 @@ class UnifiedEditorService {
         const operation: EditorOperation = {
             type: 'delete',
             blockId,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         };
 
         state.operations.push(operation);
@@ -188,14 +188,14 @@ class UnifiedEditorService {
                     isValid: false,
                     errors: [{
                         path: 'type',
-                        message: `Unknown block type: ${block.type}`
-                    }]
+                        message: `Unknown block type: ${block.type}`,
+                    }],
                 };
             }
 
             return {
                 isValid: true,
-                errors: []
+                errors: [],
             };
 
         } catch (error) {
@@ -203,8 +203,8 @@ class UnifiedEditorService {
                 isValid: false,
                 errors: [{
                     path: 'validation',
-                    message: error instanceof Error ? error.message : String(error)
-                }]
+                    message: error instanceof Error ? error.message : String(error),
+                }],
             };
         }
     }
@@ -238,7 +238,7 @@ class UnifiedEditorService {
                 selectedBlockId: null,
                 isLoading: false,
                 errors: [],
-                operations: []
+                operations: [],
             };
             this.states.set(editorId, newState);
         }

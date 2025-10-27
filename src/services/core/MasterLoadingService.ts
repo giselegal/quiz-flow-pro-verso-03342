@@ -93,7 +93,7 @@ export class MasterLoadingService extends EventEmitter {
         this.layers = {
             global: this.createEmptyState(),
             contextual: new Map(),
-            granular: new Map()
+            granular: new Map(),
         };
 
         this.operations = new Map();
@@ -116,7 +116,7 @@ export class MasterLoadingService extends EventEmitter {
             onProgress?: (progress: number) => void;
             onComplete?: (result: any) => void;
             onError?: (error: Error) => void;
-        } = {}
+        } = {},
     ): Promise<string> {
         const operationId = this.generateOperationId();
 
@@ -131,7 +131,7 @@ export class MasterLoadingService extends EventEmitter {
             dependencies: options.dependencies,
             onProgress: options.onProgress,
             onComplete: options.onComplete,
-            onError: options.onError
+            onError: options.onError,
         };
 
         this.operations.set(operationId, operation);
@@ -151,7 +151,7 @@ export class MasterLoadingService extends EventEmitter {
     async updateProgress(
         operationId: string,
         progress: number,
-        message?: string
+        message?: string,
     ): Promise<void> {
         const operation = this.operations.get(operationId);
         if (!operation) {
@@ -179,7 +179,7 @@ export class MasterLoadingService extends EventEmitter {
      */
     async completeLoading(
         operationId: string,
-        result?: any
+        result?: any,
     ): Promise<void> {
         const operation = this.operations.get(operationId);
         if (!operation) {
@@ -192,7 +192,7 @@ export class MasterLoadingService extends EventEmitter {
         this.completedOperations.set(operationId, {
             operation,
             result,
-            duration
+            duration,
         });
 
         // Remove das operações ativas
@@ -215,7 +215,7 @@ export class MasterLoadingService extends EventEmitter {
     async failLoading(
         operationId: string,
         error: Error,
-        shouldRetry: boolean = true
+        shouldRetry: boolean = true,
     ): Promise<void> {
         const operation = this.operations.get(operationId);
         if (!operation) {
@@ -227,7 +227,7 @@ export class MasterLoadingService extends EventEmitter {
             error,
             context: operation.context,
             timestamp: Date.now(),
-            retryCount: 0
+            retryCount: 0,
         };
 
         // Adiciona ao histórico de erros
@@ -317,7 +317,7 @@ export class MasterLoadingService extends EventEmitter {
             message: string;
             task: () => Promise<T>;
             priority?: number;
-        }>
+        }>,
     ): Promise<T[]> {
         const startedOperations: string[] = [];
 
@@ -325,7 +325,7 @@ export class MasterLoadingService extends EventEmitter {
             // Inicia todas as operações
             const promises = operations.map(async (op, index) => {
                 const operationId = await this.startLoading(op.context, op.message, {
-                    priority: op.priority || 1
+                    priority: op.priority || 1,
                 });
 
                 startedOperations.push(operationId);
@@ -361,14 +361,14 @@ export class MasterLoadingService extends EventEmitter {
             message: string;
             task: (previousResults: T[]) => Promise<T>;
             priority?: number;
-        }>
+        }>,
     ): Promise<T[]> {
         const results: T[] = [];
 
         for (let i = 0; i < operations.length; i++) {
             const op = operations[i];
             const operationId = await this.startLoading(op.context, op.message, {
-                priority: op.priority || 1
+                priority: op.priority || 1,
             });
 
             try {
@@ -391,7 +391,7 @@ export class MasterLoadingService extends EventEmitter {
         context: LoadingContext,
         message: string,
         task: () => Promise<T>,
-        timeoutMs: number
+        timeoutMs: number,
     ): Promise<T> {
         const operationId = await this.startLoading(context, message);
 
@@ -474,14 +474,14 @@ export class MasterLoadingService extends EventEmitter {
         this.emit('stateUpdate', {
             global: this.layers.global,
             contextual: Object.fromEntries(this.layers.contextual),
-            granular: Object.fromEntries(this.layers.granular)
+            granular: Object.fromEntries(this.layers.granular),
         });
     }
 
     private calculateGlobalState(): LoadingState {
         const operations = Array.from(this.operations.values());
         const errors = Array.from(this.errors.values()).filter(error =>
-            Date.now() - error.timestamp < 60000 // Apenas erros dos últimos 60 segundos
+            Date.now() - error.timestamp < 60000, // Apenas erros dos últimos 60 segundos
         );
 
         if (operations.length === 0) {
@@ -492,19 +492,19 @@ export class MasterLoadingService extends EventEmitter {
                 progress: 0,
                 activeOperations: 0,
                 queuedOperations: 0,
-                errors
+                errors,
             };
         }
 
         // Calcula progresso médio ponderado por prioridade
         const totalWeight = operations.reduce((sum, op) => sum + op.priority, 0);
         const weightedProgress = operations.reduce((sum, op) =>
-            sum + (op.progress * op.priority), 0
+            sum + (op.progress * op.priority), 0,
         ) / totalWeight;
 
         // Mensagem da operação de maior prioridade
         const highestPriorityOp = operations.reduce((max, op) =>
-            op.priority > max.priority ? op : max
+            op.priority > max.priority ? op : max,
         );
 
         return {
@@ -514,7 +514,7 @@ export class MasterLoadingService extends EventEmitter {
             progress: Math.round(weightedProgress),
             activeOperations: operations.length,
             queuedOperations: 0, // TODO: Implementar sistema de fila
-            errors
+            errors,
         };
     }
 
@@ -577,11 +577,11 @@ export class MasterLoadingService extends EventEmitter {
 
         const totalWeight = operations.reduce((sum, op) => sum + op.priority, 0);
         const weightedProgress = operations.reduce((sum, op) =>
-            sum + (op.progress * op.priority), 0
+            sum + (op.progress * op.priority), 0,
         ) / totalWeight;
 
         const highestPriorityOp = operations.reduce((max, op) =>
-            op.priority > max.priority ? op : max
+            op.priority > max.priority ? op : max,
         );
 
         return {
@@ -591,7 +591,7 @@ export class MasterLoadingService extends EventEmitter {
             progress: Math.round(weightedProgress),
             activeOperations: operations.length,
             queuedOperations: 0,
-            errors: []
+            errors: [],
         };
     }
 
@@ -614,7 +614,7 @@ export class MasterLoadingService extends EventEmitter {
             progress: 0,
             activeOperations: 0,
             queuedOperations: 0,
-            errors: []
+            errors: [],
         };
     }
 
@@ -639,7 +639,7 @@ export class MasterLoadingService extends EventEmitter {
             failedOperations: this.errors.size,
             averageDuration: avgDuration,
             currentLoad: this.operations.size / this.maxConcurrentOperations,
-            queueLength: 0 // TODO: Implementar sistema de fila
+            queueLength: 0, // TODO: Implementar sistema de fila
         };
     }
 

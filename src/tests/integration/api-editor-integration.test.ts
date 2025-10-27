@@ -38,7 +38,7 @@ describe('🔌 API + Editor Integration Tests', () => {
                 gridGap: 12,
                 columns: 2,
                 primaryColor: '#FF5733',
-                autoAdvance: { enabled: true, delay: 2000 }
+                autoAdvance: { enabled: true, delay: 2000 },
             };
 
             // Salvar configuração
@@ -89,13 +89,13 @@ describe('🔌 API + Editor Integration Tests', () => {
             await configAPI.updateConfiguration('quiz-options-grid', {
                 imageSize: 280,
                 columns: 'auto',
-                primaryColor: '#B89B7A'
+                primaryColor: '#B89B7A',
             }, testFunnelId);
 
             await configAPI.updateConfiguration('quiz-theme-config', {
                 primaryColor: '#B89B7A',
                 backgroundColor: '#F5F5F5',
-                fontFamily: 'Roboto, sans-serif'
+                fontFamily: 'Roboto, sans-serif',
             }, testFunnelId);
 
             // Gerar JSON master
@@ -167,7 +167,7 @@ describe('🔌 API + Editor Integration Tests', () => {
                 { key: 'imageSize', value: 200 },
                 { key: 'imageSize', value: 220 },
                 { key: 'imageSize', value: 240 },
-                { key: 'gridGap', value: 10 }
+                { key: 'gridGap', value: 10 },
             ];
 
             for (const update of updates) {
@@ -203,8 +203,8 @@ describe('🔌 API + Editor Integration Tests', () => {
                 options: [
                     { id: '1', text: 'Moderno', imageUrl: '/test/modern.jpg', points: 10 },
                     { id: '2', text: 'Clássico', imageUrl: '/test/classic.jpg', points: 20 },
-                    { id: '3', text: 'Casual', imageUrl: '/test/casual.jpg', points: 15 }
-                ]
+                    { id: '3', text: 'Casual', imageUrl: '/test/casual.jpg', points: 15 },
+                ],
             };
 
             await configAPI.updateConfiguration(componentId, editorChanges, testFunnelId);
@@ -231,18 +231,18 @@ describe('🔌 API + Editor Integration Tests', () => {
             // Simular duas sessões de editor editando simultaneamente
             const session1Changes = {
                 primaryColor: '#RED001',
-                fontSize: '18px'
+                fontSize: '18px',
             };
 
             const session2Changes = {
                 primaryColor: '#BLUE001',
-                backgroundColor: '#WHITE001'
+                backgroundColor: '#WHITE001',
             };
 
             // Aplicar mudanças concorrentemente
             await Promise.all([
                 configAPI.updateConfiguration(componentId, session1Changes, testFunnelId),
-                configAPI.updateConfiguration(componentId, session2Changes, testFunnelId)
+                configAPI.updateConfiguration(componentId, session2Changes, testFunnelId),
             ]);
 
             // Verificar resultado final (última mudança deve prevalecer)
@@ -295,8 +295,8 @@ describe('🔌 API + Editor Integration Tests', () => {
                 metadata: {
                     category: `categoria-${i % 5}`,
                     tags: [`tag-${i}`, `tag-${i + 1}`],
-                    description: `Descrição detalhada da opção ${i} com mais informações`
-                }
+                    description: `Descrição detalhada da opção ${i} com mais informações`,
+                },
             }));
 
             const largeConfig = {
@@ -306,8 +306,8 @@ describe('🔌 API + Editor Integration Tests', () => {
                 customProperties: {
                     analytics: { trackViews: true, trackClicks: true },
                     seo: { alt: 'Opções do quiz', title: 'Escolha sua opção' },
-                    accessibility: { ariaLabel: 'Grid de opções do quiz' }
-                }
+                    accessibility: { ariaLabel: 'Grid de opções do quiz' },
+                },
             };
 
             // Deve conseguir salvar e recuperar
@@ -400,15 +400,15 @@ export const e2eIntegrationTests = {
                     options: [
                         { id: 'modern', text: 'Moderno e minimalista', imageUrl: '/images/modern.jpg', points: 10 },
                         { id: 'classic', text: 'Clássico e elegante', imageUrl: '/images/classic.jpg', points: 20 },
-                        { id: 'casual', text: 'Casual e confortável', imageUrl: '/images/casual.jpg', points: 15 }
-                    ]
+                        { id: 'casual', text: 'Casual e confortável', imageUrl: '/images/casual.jpg', points: 15 },
+                    ],
                 },
                 'quiz-theme-config': {
                     primaryColor: '#E74C3C',
                     secondaryColor: '#2C3E50',
                     backgroundColor: '#ECF0F1',
-                    fontFamily: 'Poppins, sans-serif'
-                }
+                    fontFamily: 'Poppins, sans-serif',
+                },
             };
 
             for (const [componentId, config] of Object.entries(editorConfig)) {
@@ -428,7 +428,7 @@ export const e2eIntegrationTests = {
                 hasThemeConfig: !!masterJSON.globalConfig.theme,
                 hasSteps: Object.keys(masterJSON.steps).length === 21,
                 hasComponents: Object.keys(masterJSON.components).length > 0,
-                hasCorrectColors: masterJSON.globalConfig.theme.colors.primary === '#E74C3C'
+                hasCorrectColors: masterJSON.globalConfig.theme.colors.primary === '#E74C3C',
             };
 
             console.log('🔍 Validation Results:', validations);
@@ -441,7 +441,7 @@ export const e2eIntegrationTests = {
 
             console.log('🔄 Real-time update result:', {
                 newImageSize: updatedConfig.imageSize,
-                success: updatedConfig.imageSize === 320
+                success: updatedConfig.imageSize === 320,
             });
 
             // PASSO 5: Gerar JSON atualizado
@@ -451,7 +451,7 @@ export const e2eIntegrationTests = {
             const finalValidation = {
                 configUpdated: updatedMasterJSON.components['quiz-options-grid'].apiConfiguration.imageSize === 320,
                 cacheInvalidated: true,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
             };
 
             console.log('✅ Final validation:', finalValidation);
@@ -461,16 +461,16 @@ export const e2eIntegrationTests = {
                 success: true,
                 validations,
                 finalValidation,
-                masterJSON: updatedMasterJSON
+                masterJSON: updatedMasterJSON,
             };
 
         } catch (error) {
             console.error('❌ E2E Integration Test failed:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error.message : String(error)
+                error: error instanceof Error ? error.message : String(error),
             };
         }
-    }
+    },
 
 };

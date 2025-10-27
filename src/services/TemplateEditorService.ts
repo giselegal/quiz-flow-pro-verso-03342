@@ -21,7 +21,7 @@ export class TemplateEditorService {
      */
     static async saveStepChanges(
         stepId: string,
-        updatedStep: any
+        updatedStep: any,
     ): Promise<SaveResult> {
         try {
             console.log(`💾 Salvando alterações do ${stepId}...`);
@@ -31,7 +31,7 @@ export class TemplateEditorService {
                 return {
                     success: false,
                     message: 'Estrutura do step inválida',
-                    stepId
+                    stepId,
                 };
             }
 
@@ -41,7 +41,7 @@ export class TemplateEditorService {
                 return {
                     success: false,
                     message: 'Master template não disponível',
-                    stepId
+                    stepId,
                 };
             }
 
@@ -52,8 +52,8 @@ export class TemplateEditorService {
                 metadata: {
                     ...master.steps[stepId]?.metadata,
                     ...updatedStep.metadata,
-                    updatedAt: new Date().toISOString()
-                }
+                    updatedAt: new Date().toISOString(),
+                },
             };
 
             // 4. Salvar no servidor via API
@@ -70,13 +70,13 @@ export class TemplateEditorService {
                 return {
                     success: true,
                     message: `Step ${stepId} salvo com sucesso`,
-                    stepId
+                    stepId,
                 };
             } else {
                 return {
                     success: false,
                     message: 'Erro ao salvar no servidor',
-                    stepId
+                    stepId,
                 };
             }
 
@@ -86,7 +86,7 @@ export class TemplateEditorService {
                 success: false,
                 message: 'Erro ao processar salvamento',
                 stepId,
-                error
+                error,
             };
         }
     }
@@ -212,17 +212,17 @@ export class TemplateEditorService {
             const data = JSON.parse(jsonString);
 
             // Validar estrutura básica
-            if (data.templateVersion !== "3.0") {
+            if (data.templateVersion !== '3.0') {
                 return {
                     success: false,
-                    message: `Versão do template incorreta: ${data.templateVersion} (esperado: 3.0)`
+                    message: `Versão do template incorreta: ${data.templateVersion} (esperado: 3.0)`,
                 };
             }
 
             if (!data.steps || typeof data.steps !== 'object') {
                 return {
                     success: false,
-                    message: 'Campo "steps" ausente ou inválido'
+                    message: 'Campo "steps" ausente ou inválido',
                 };
             }
 
@@ -230,7 +230,7 @@ export class TemplateEditorService {
             if (stepCount !== 21) {
                 return {
                     success: false,
-                    message: `Número incorreto de steps: ${stepCount} (esperado: 21)`
+                    message: `Número incorreto de steps: ${stepCount} (esperado: 21)`,
                 };
             }
 
@@ -242,13 +242,13 @@ export class TemplateEditorService {
                 console.log('✅ Template importado com sucesso');
                 return {
                     success: true,
-                    message: 'Template importado com sucesso'
+                    message: 'Template importado com sucesso',
                 };
             }
 
             return {
                 success: false,
-                message: 'Erro ao salvar template importado'
+                message: 'Erro ao salvar template importado',
             };
 
         } catch (error) {
@@ -256,7 +256,7 @@ export class TemplateEditorService {
             return {
                 success: false,
                 message: error instanceof Error ? error.message : 'JSON inválido',
-                error
+                error,
             };
         }
     }

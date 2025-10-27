@@ -106,8 +106,8 @@ export const COMPONENT_TEMPLATES: ComponentTemplate[] = [
             type: 'header',
             title: 'Novo Cabeçalho',
             alignment: 'center',
-            size: 'medium'
-        }
+            size: 'medium',
+        },
     },
     {
         type: 'text',
@@ -117,8 +117,8 @@ export const COMPONENT_TEMPLATES: ComponentTemplate[] = [
             type: 'text',
             content: 'Novo parágrafo de texto...',
             alignment: 'left',
-            size: 'medium'
-        }
+            size: 'medium',
+        },
     },
     {
         type: 'image',
@@ -128,8 +128,8 @@ export const COMPONENT_TEMPLATES: ComponentTemplate[] = [
             type: 'image',
             src: '/api/placeholder/400/300',
             alt: 'Nova imagem',
-            alignment: 'center'
-        }
+            alignment: 'center',
+        },
     },
     {
         type: 'button',
@@ -139,8 +139,8 @@ export const COMPONENT_TEMPLATES: ComponentTemplate[] = [
             type: 'button',
             text: 'Novo Botão',
             action: 'next',
-            style: 'primary'
-        }
+            style: 'primary',
+        },
     },
     {
         type: 'spacer',
@@ -148,8 +148,8 @@ export const COMPONENT_TEMPLATES: ComponentTemplate[] = [
         icon: '📏',
         defaultProps: {
             type: 'spacer',
-            height: 32
-        }
+            height: 32,
+        },
     },
     {
         type: 'question',
@@ -160,10 +160,10 @@ export const COMPONENT_TEMPLATES: ComponentTemplate[] = [
             questionText: 'Nova pergunta?',
             options: [
                 { id: 'opt1', text: 'Opção 1' },
-                { id: 'opt2', text: 'Opção 2' }
+                { id: 'opt2', text: 'Opção 2' },
             ],
-            requiredSelections: 1
-        }
+            requiredSelections: 1,
+        },
     },
     {
         type: 'input',
@@ -174,7 +174,7 @@ export const COMPONENT_TEMPLATES: ComponentTemplate[] = [
             label: 'Novo Campo',
             placeholder: 'Digite aqui...',
             inputType: 'text',
-            required: false
-        }
-    }
+            required: false,
+        },
+    },
 ];

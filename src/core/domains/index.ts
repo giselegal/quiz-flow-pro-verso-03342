@@ -14,7 +14,7 @@ export { ResultProfile } from './quiz/entities/ResultProfile';
 export type {
   QuizMetadata,
   QuizSettings,
-  QuizBranding
+  QuizBranding,
 } from './quiz/entities/Quiz';
 
 export type {
@@ -22,19 +22,19 @@ export type {
   QuestionMedia,
   QuestionOption,
   QuestionValidation,
-  QuestionLogic
+  QuestionLogic,
 } from './quiz/entities/Question';
 
 export type {
   AnswerValue,
-  AnswerMetadata
+  AnswerMetadata,
 } from './quiz/entities/Answer';
 
 export type {
   ResultCriteria,
   ResultContent,
   ResultVisuals,
-  ResultActions
+  ResultActions,
 } from './quiz/entities/ResultProfile';
 
 // Quiz Repository Interfaces
@@ -47,7 +47,7 @@ export type {
   QuizFilters,
   QuizSortOptions,
   PaginationOptions,
-  PaginatedResult
+  PaginatedResult,
 } from './quiz/repositories/QuizRepository';
 
 // Funnel Domain
@@ -59,7 +59,7 @@ export type {
   FunnelMetadata,
   FunnelSettings,
   FunnelBranding,
-  FunnelAnalytics
+  FunnelAnalytics,
 } from './funnel/entities/Funnel';
 
 export type {
@@ -67,7 +67,7 @@ export type {
   PageSEO,
   PageTracking,
   PageSettings,
-  PageAnalytics
+  PageAnalytics,
 } from './funnel/entities/Page';
 
 export type {
@@ -75,7 +75,7 @@ export type {
   BlockContent,
   BlockStyles,
   BlockSettings,
-  BlockAnalytics
+  BlockAnalytics,
 } from './funnel/entities/Block';
 
 // Editor Domain
@@ -86,7 +86,7 @@ export type {
   EditorValidation,
   EditorSettings,
   EditorHistory,
-  EditorStateSnapshot
+  EditorStateSnapshot,
 } from './editor/entities/EditorState';
 
 // Domain Events (para futura implementação)
@@ -124,7 +124,7 @@ export class EntityId {
 export class DateRange {
   constructor(
     public readonly start: Date,
-    public readonly end: Date
+    public readonly end: Date,
   ) {
     if (start >= end) {
       throw new Error('Start date must be before end date');
@@ -172,7 +172,7 @@ export class DomainError extends Error {
   constructor(
     message: string,
     public readonly code: string,
-    public readonly details?: Record<string, any>
+    public readonly details?: Record<string, any>,
   ) {
     super(message);
     this.name = 'DomainError';

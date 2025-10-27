@@ -92,12 +92,12 @@ class ImprovedFunnelSystem {
         userPermissions: Permission[],
         requiredAction: Permission['action'],
         resourceType: Permission['resource'],
-        scope: Permission['scope'] = 'own'
+        scope: Permission['scope'] = 'own',
     ): boolean {
         return userPermissions.some(permission =>
             permission.action === requiredAction &&
             permission.resource === resourceType &&
-            (permission.scope === scope || permission.scope === 'organization') // Admin org pode tudo
+            (permission.scope === scope || permission.scope === 'organization'), // Admin org pode tudo
         );
     }
 
@@ -106,7 +106,7 @@ class ImprovedFunnelSystem {
         requestingUserId: string,
         requestingUserOrg: string,
         requestingUserWorkspace: string,
-        requiredAction: Permission['action'] = 'view'
+        requiredAction: Permission['action'] = 'view',
     ): boolean {
         // 1. Proprietário sempre pode acessar
         if (funnelData.userId === requestingUserId) {
@@ -140,7 +140,7 @@ class ImprovedFunnelSystem {
         const result: ValidationResult = {
             isValid: true,
             errors: [],
-            warnings: []
+            warnings: [],
         };
 
         // Validação de ID
@@ -192,7 +192,7 @@ class ImprovedFunnelSystem {
         this.logger.debug('hybrid-validation', 'Validação completa', {
             isValid: result.isValid,
             errorsCount: result.errors.length,
-            warningsCount: result.warnings.length
+            warningsCount: result.warnings.length,
         });
 
         return result;
@@ -210,7 +210,7 @@ class ImprovedFunnelSystem {
             templateId: params.templateId,
             context: params.context,
             organizationId: params.organizationId,
-            workspaceId: params.workspaceId
+            workspaceId: params.workspaceId,
         });
 
         try {
@@ -222,7 +222,7 @@ class ImprovedFunnelSystem {
             const defaultPermissions: Permission[] = [
                 { action: 'view', resource: 'funnel', scope: 'own' },
                 { action: 'edit', resource: 'funnel', scope: 'own' },
-                { action: 'duplicate', resource: 'funnel', scope: 'own' }
+                { action: 'duplicate', resource: 'funnel', scope: 'own' },
             ];
 
             // 3. Criar dados completos do funil
@@ -245,7 +245,7 @@ class ImprovedFunnelSystem {
                 url: `/editor/${encodeURIComponent(funnelId)}`,
                 version: 1,
                 createdAt: now,
-                updatedAt: now
+                updatedAt: now,
             };
 
             // 3. Validação híbrida integrada
@@ -254,7 +254,7 @@ class ImprovedFunnelSystem {
                 const validationError = createStorageError(
                     'STORAGE_NOT_AVAILABLE',
                     `Validação falhou: ${validation.errors.join(', ')}`,
-                    { operation: 'createFunnel', funnelId }
+                    { operation: 'createFunnel', funnelId },
                 );
                 errorManager.handleError(validationError);
 
@@ -266,7 +266,7 @@ class ImprovedFunnelSystem {
                     createdAt: now,
                     updatedAt: now,
                     success: false,
-                    validationStatus: 'invalid'
+                    validationStatus: 'invalid',
                 };
             }
 
@@ -285,9 +285,9 @@ class ImprovedFunnelSystem {
                     organizationId: params.organizationId,
                     workspaceId: params.workspaceId,
                     visibility: params.visibility || 'private',
-                    autoPublish: params.autoPublish || false
+                    autoPublish: params.autoPublish || false,
                 },
-                metadata: this.getCurrentEventMetadata()
+                metadata: this.getCurrentEventMetadata(),
             });
 
             this.logger.info('hybrid-creation', 'Funil criado com sucesso no sistema híbrido', {
@@ -295,7 +295,7 @@ class ImprovedFunnelSystem {
                 status: storedFunnel.status,
                 validationPassed: true,
                 storageMethod: 'advanced',
-                analyticsTracked: true
+                analyticsTracked: true,
             });
 
             return {
@@ -306,19 +306,19 @@ class ImprovedFunnelSystem {
                 createdAt: storedFunnel.createdAt,
                 updatedAt: storedFunnel.updatedAt,
                 success: true,
-                validationStatus: 'valid'
+                validationStatus: 'valid',
             };
 
         } catch (error) {
             this.logger.error('hybrid-creation', 'Falha na criação híbrida', {
                 error: error instanceof Error ? error.message : String(error),
-                params
+                params,
             });
 
             const systemError = createStorageError(
                 'STORAGE_NOT_AVAILABLE',
                 `Falha na criação do funil: ${error instanceof Error ? error.message : String(error)}`,
-                { operation: 'createFunnel' }
+                { operation: 'createFunnel' },
             );
             errorManager.handleError(systemError);
 
@@ -346,7 +346,7 @@ class ImprovedFunnelSystem {
                 ...funnelData,
                 updatedAt: now,
                 createdAt: funnelData.createdAt || now,
-                version: (funnelData.version || 0) + 1
+                version: (funnelData.version || 0) + 1,
             };
 
             // 3. Armazenar usando AdvancedFunnelStorage
@@ -354,19 +354,19 @@ class ImprovedFunnelSystem {
 
             this.logger.info('hybrid-storage', 'Funil validado e armazenado com sucesso', {
                 funnelId: funnelData.id,
-                version: storageData.version
+                version: storageData.version,
             });
 
         } catch (error) {
             this.logger.error('hybrid-storage', 'Erro no armazenamento híbrido', {
                 funnelId: funnelData.id,
-                error: error instanceof Error ? error.message : String(error)
+                error: error instanceof Error ? error.message : String(error),
             });
 
             const storageError = createStorageError(
                 'STORAGE_NOT_AVAILABLE',
                 `Erro no armazenamento: ${error instanceof Error ? error.message : String(error)}`,
-                { operation: 'validateAndStore', funnelId: funnelData.id }
+                { operation: 'validateAndStore', funnelId: funnelData.id },
             );
             errorManager.handleError(storageError);
 
@@ -387,7 +387,7 @@ class ImprovedFunnelSystem {
             workspaceId?: string;
             visibility?: HybridFunnelData['visibility'];
             category?: string;
-        }
+        },
     ): Promise<any[]> {
         try {
             const allFunnels = await advancedFunnelStorage.listFunnels();
@@ -396,7 +396,7 @@ class ImprovedFunnelSystem {
                 totalCount: allFunnels.length,
                 requestingUserId,
                 requestingUserOrg,
-                filters
+                filters,
             });
 
             // Filtrar e validar funis
@@ -411,7 +411,7 @@ class ImprovedFunnelSystem {
                         funnel as HybridFunnelData,
                         requestingUserId,
                         requestingUserOrg || '',
-                        requestingUserWorkspace || ''
+                        requestingUserWorkspace || '',
                     );
                     if (!hasAccess) return false;
                 }
@@ -429,20 +429,20 @@ class ImprovedFunnelSystem {
 
             this.logger.debug('hybrid-list', 'Funis filtrados por multi-tenancy', {
                 filteredCount: validatedFunnels.length,
-                originalCount: allFunnels.length
+                originalCount: allFunnels.length,
             });
 
             return validatedFunnels;
 
         } catch (error) {
             this.logger.error('hybrid-list', 'Erro na listagem validada', {
-                error: error instanceof Error ? error.message : String(error)
+                error: error instanceof Error ? error.message : String(error),
             });
 
             const listError = createStorageError(
                 'STORAGE_NOT_AVAILABLE',
                 `Erro na listagem: ${error instanceof Error ? error.message : String(error)}`,
-                { operation: 'listValidatedFunnels' }
+                { operation: 'listValidatedFunnels' },
             );
             errorManager.handleError(listError);
 
@@ -480,14 +480,14 @@ class ImprovedFunnelSystem {
                 storageReady: true,
                 validationReady: typeof validateFunnelId === 'function',
                 errorHandlingReady: typeof errorManager.handleError === 'function',
-                totalFunnels: storageInfo.totalFunnels
+                totalFunnels: storageInfo.totalFunnels,
             };
         } catch (error) {
             return {
                 storageReady: false,
                 validationReady: false,
                 errorHandlingReady: false,
-                totalFunnels: 0
+                totalFunnels: 0,
             };
         }
     }
@@ -509,16 +509,16 @@ class ImprovedFunnelSystem {
                 os: 'Unknown',
                 browser: 'Unknown',
                 screenResolution: '1920x1080',
-                viewportSize: '1920x1080'
+                viewportSize: '1920x1080',
             },
             location: {
                 country: 'BR',
                 region: 'SP',
                 city: 'São Paulo',
-                timezone: 'America/Sao_Paulo'
+                timezone: 'America/Sao_Paulo',
             },
             referrer: 'direct',
-            utm: {}
+            utm: {},
         };
     }
 }

@@ -30,7 +30,7 @@ import {
     Step20CompatibilityBlock,
     Step20SecondaryStylesBlock,
     Step20PersonalizedOfferBlock,
-    Step20CompleteTemplateBlock
+    Step20CompleteTemplateBlock,
 } from '@/components/editor/blocks/Step20ModularBlocks';
 import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
 
@@ -56,7 +56,7 @@ const CRITICAL_COMPONENTS = [
     'quiz-transition', 'transition-hero',
 
     // resultado/oferta (20)
-    'result-cta', 'offer-hero', 'pricing', 'testimonials', 'guarantee', 'secure-purchase'
+    'result-cta', 'offer-hero', 'pricing', 'testimonials', 'guarantee', 'secure-purchase',
 ];
 
 // 📊 REGISTRY UNIFICADO - Consolidação dos 3 sistemas
@@ -278,7 +278,7 @@ export const getRegistryStats = () => ({
     preloadedComponents: preloadedComponents.size,
     cachedComponents: componentCache.size,
     criticalComponents: CRITICAL_COMPONENTS.length,
-    cacheHitRate: componentCache.size > 0 ? (preloadedComponents.size / componentCache.size) * 100 : 0
+    cacheHitRate: componentCache.size > 0 ? (preloadedComponents.size / componentCache.size) * 100 : 0,
 });
 
 // 🚀 Auto-preload críticos na inicialização - DESABILITADO TEMPORARIAMENTE

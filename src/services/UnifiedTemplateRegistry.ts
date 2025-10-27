@@ -75,7 +75,7 @@ export class UnifiedTemplateRegistry {
     l2Hits: 0,
     l3Hits: 0,
     misses: 0,
-    loads: 0
+    loads: 0,
   };
   
   private readonly CACHE_VERSION = '1.0.0';
@@ -280,7 +280,7 @@ export class UnifiedTemplateRegistry {
       order: section.order ?? index,
       properties: section.properties || section.props || {},
       content: section.content || {},
-      parentId: section.parentId || null
+      parentId: section.parentId || null,
     }));
   }
 
@@ -295,7 +295,7 @@ export class UnifiedTemplateRegistry {
       'quiz-question': 'quiz-options',
       'question': 'quiz-options',
       'cta': 'button',
-      'call-to-action': 'button'
+      'call-to-action': 'button',
     };
     
     return typeMap[type] || type;
@@ -312,7 +312,7 @@ export class UnifiedTemplateRegistry {
         stepId,
         blocks,
         timestamp: Date.now(),
-        version: this.CACHE_VERSION
+        version: this.CACHE_VERSION,
       });
       console.log(`💾 L2 SAVE: ${stepId}`);
     } catch (error) {
@@ -407,7 +407,7 @@ export class UnifiedTemplateRegistry {
       hitRate: totalRequests > 0 ? (totalHits / totalRequests) * 100 : 0,
       memoryUsage,
       totalHits,
-      totalMisses: this.stats.misses
+      totalMisses: this.stats.misses,
     };
   }
 
@@ -461,7 +461,7 @@ export class UnifiedTemplateRegistry {
       l2Hits: this.stats.l2Hits,
       l3Hits: this.stats.l3Hits,
       misses: this.stats.misses,
-      totalLoads: this.stats.loads
+      totalLoads: this.stats.loads,
     });
     console.groupEnd();
   }

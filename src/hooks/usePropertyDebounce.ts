@@ -14,7 +14,7 @@ interface UsePropertyDebounceOptions {
 
 export const usePropertyDebounce = <T = any>(
   initialValue: T,
-  options: UsePropertyDebounceOptions = {}
+  options: UsePropertyDebounceOptions = {},
 ) => {
   const { debounceMs = 300, onUpdate, immediate = false } = options;
 
@@ -46,7 +46,7 @@ export const usePropertyDebounce = <T = any>(
         }, debounceMs);
       }
     },
-    [debounceMs, onUpdate, immediate, debounce, key]
+    [debounceMs, onUpdate, immediate, debounce, key],
   );
 
   const resetValue = useCallback(() => {

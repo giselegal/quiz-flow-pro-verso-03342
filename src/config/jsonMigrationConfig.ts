@@ -78,7 +78,7 @@ export const MIGRATION_PROGRESS = {
 // 🎯 Validação de migração completa
 export const validateMigration = (): boolean => {
   const allStepsReady = Object.values(MIGRATION_PROGRESS.stepsStatus).every(status =>
-    status.includes('✅')
+    status.includes('✅'),
   );
 
   return (

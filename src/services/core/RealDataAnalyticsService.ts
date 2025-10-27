@@ -74,7 +74,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       priority: 1,
       cacheTTL: 120000, // 2 minutes for real-time feel
       retryAttempts: 3,
-      timeout: 15000
+      timeout: 15000,
     });
   }
 
@@ -110,12 +110,12 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
         { data: sessions },
         { data: funnels },
         { data: results },
-        { data: analytics }
+        { data: analytics },
       ] = await Promise.all([
         supabase.from('quiz_sessions').select('*'),
         supabase.from('funnels').select('id, name'),
         supabase.from('quiz_results').select('*'),
-        supabase.from('quiz_analytics').select('*')
+        supabase.from('quiz_analytics').select('*'),
       ]);
 
       const sessionsData = sessions || [];
@@ -159,7 +159,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       const deviceStats = Array.from(deviceCounts.entries()).map(([device, count]) => ({
         device,
         count,
-        percentage: Math.round((count / totalSessions) * 100 * 10) / 10
+        percentage: Math.round((count / totalSessions) * 100 * 10) / 10,
       })).sort((a, b) => b.count - a.count);
 
       // Hourly activity
@@ -171,7 +171,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
 
       const hourlyActivity = Array.from({ length: 24 }, (_, hour) => ({
         hour,
-        count: hourlyMap.get(hour) || 0
+        count: hourlyMap.get(hour) || 0,
       }));
 
       // Daily trends (last 14 days)
@@ -193,7 +193,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       const dailyTrends = last14Days.map(date => ({
         date: date.split('-').slice(1).reverse().join('/'), // MM/DD format
         sessions: dailyMap.get(date)?.sessions || 0,
-        completions: dailyMap.get(date)?.completions || 0
+        completions: dailyMap.get(date)?.completions || 0,
       })).reverse();
 
       // Top performing funnels
@@ -210,7 +210,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
           id,
           name: funnelsMap.get(id) || 'Unknown Funnel',
           sessions: stats.sessions,
-          rate: stats.sessions > 0 ? Math.round((stats.completions / stats.sessions) * 100) : 0
+          rate: stats.sessions > 0 ? Math.round((stats.completions / stats.sessions) * 100) : 0,
         }))
         .sort((a, b) => b.sessions - a.sessions)
         .slice(0, 5);
@@ -218,7 +218,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       // Real-time metrics
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
       const activeUsersNow = sessionsData.filter(s => 
-        s.last_activity && s.last_activity > fiveMinutesAgo
+        s.last_activity && s.last_activity > fiveMinutesAgo,
       ).length;
 
       const recentActivity = (analytics || [])
@@ -228,7 +228,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
           sessionId: activity.session_id || 'unknown',
           funnelId: activity.funnel_id,
           timestamp: activity.timestamp,
-          event: activity.event_type
+          event: activity.event_type,
         }));
 
       const leadGeneration = (results || []).length;
@@ -250,7 +250,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
         activeUsersNow,
         recentActivity,
         lastUpdated: new Date(),
-        dataSource: 'supabase'
+        dataSource: 'supabase',
       };
 
       this.setCached(cacheKey, metrics, 120000); // 2 minutes
@@ -294,7 +294,7 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
       
       const [{ data: results }, { data: responses }] = await Promise.all([
         supabase.from('quiz_results').select('*').in('session_id', sessionIds),
-        supabase.from('quiz_step_responses').select('session_id').in('session_id', sessionIds)
+        supabase.from('quiz_step_responses').select('session_id').in('session_id', sessionIds),
       ]);
 
       const resultsMap = new Map((results || []).map(r => [r.session_id, r]));
@@ -340,14 +340,14 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
           timeSpent,
           finalResult: result ? {
             resultType: result.result_type || 'Unknown',
-            resultTitle: result.result_title || 'No title'
-          } : undefined
+            resultTitle: result.result_title || 'No title',
+          } : undefined,
         };
       });
 
       const data = {
         participants,
-        total: count || 0
+        total: count || 0,
       };
 
       this.setCached(cacheKey, data, 180000); // 3 minutes
@@ -384,8 +384,8 @@ export class RealDataAnalyticsService extends BaseUnifiedService {
           { step: 'Quiz Start', conversion: 75 },
           { step: 'Mid-Point', conversion: 65 },
           { step: 'Completion', conversion: 45 },
-          { step: 'Lead Capture', conversion: 38 }
-        ]
+          { step: 'Lead Capture', conversion: 38 },
+        ],
       };
 
       this.setCached(cacheKey, intelligence, 300000); // 5 minutes

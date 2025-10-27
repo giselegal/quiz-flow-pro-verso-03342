@@ -306,7 +306,7 @@ export class CanvasConfigUtils {
   static getResponsiveClasses(
     mobile: string,
     tablet: string = mobile,
-    desktop: string = tablet
+    desktop: string = tablet,
   ): string {
     return `${mobile} md:${tablet} lg:${desktop}`;
   }
@@ -316,7 +316,7 @@ export class CanvasConfigUtils {
    */
   static mergeConfig(
     defaultConfig: Partial<CanvasLayoutConfig>,
-    customConfig: Partial<CanvasLayoutConfig>
+    customConfig: Partial<CanvasLayoutConfig>,
   ): CanvasLayoutConfig {
     return {
       ...defaultConfig,
@@ -351,7 +351,7 @@ export class CanvasConfigUtils {
    * Gera configuração otimizada para dispositivo específico
    */
   static getDeviceOptimizedConfig(
-    device: 'mobile' | 'tablet' | 'desktop'
+    device: 'mobile' | 'tablet' | 'desktop',
   ): Partial<CanvasLayoutConfig> {
     const responsive = RESPONSIVE_BREAKPOINTS[device];
 

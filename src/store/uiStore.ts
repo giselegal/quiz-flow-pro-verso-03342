@@ -274,8 +274,8 @@ export const useUIStore = create<UIStore>()(
       showInfo: (title, message) =>
         get().showNotification({ type: 'info', title, message }),
     })),
-    { name: 'UIStore' }
-  )
+    { name: 'UIStore' },
+  ),
 );
 
 // ============================================================================

@@ -93,7 +93,7 @@ class EditorDashboardSyncServiceImpl {
                 type: 'save',
                 funnelId: savedFunnel.id,
                 funnelData: savedFunnel,
-                timestamp: new Date()
+                timestamp: new Date(),
             };
 
             // 3. Notificar todos os listeners
@@ -106,7 +106,7 @@ class EditorDashboardSyncServiceImpl {
             this.showNotification({
                 type: 'success',
                 message: `Funil "${savedFunnel.name}" salvo com sucesso`,
-                autoHide: true
+                autoHide: true,
             });
 
             console.log(`✅ Funil ${funnelId} sincronizado com sucesso`);
@@ -118,7 +118,7 @@ class EditorDashboardSyncServiceImpl {
             this.showNotification({
                 type: 'error',
                 message: `Erro ao salvar funil: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
-                autoHide: false
+                autoHide: false,
             });
 
             return false;
@@ -136,7 +136,7 @@ class EditorDashboardSyncServiceImpl {
             const publishedData = {
                 ...funnelData,
                 is_published: true,
-                version: (funnelData.version || 0) + 1
+                version: (funnelData.version || 0) + 1,
             };
 
             // 2. Salvar no UnifiedDataService
@@ -147,7 +147,7 @@ class EditorDashboardSyncServiceImpl {
                 type: 'publish',
                 funnelId: publishedFunnel.id,
                 funnelData: publishedFunnel,
-                timestamp: new Date()
+                timestamp: new Date(),
             };
 
             // 4. Notificar todos os listeners
@@ -163,7 +163,7 @@ class EditorDashboardSyncServiceImpl {
             this.showNotification({
                 type: 'success',
                 message: `Funil "${publishedFunnel.name}" publicado com sucesso! Dashboard atualizado.`,
-                autoHide: true
+                autoHide: true,
             });
 
             // 8. Toast adicional para confirmação
@@ -182,7 +182,7 @@ class EditorDashboardSyncServiceImpl {
             this.showNotification({
                 type: 'error',
                 message: `Erro ao publicar funil: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
-                autoHide: false
+                autoHide: false,
             });
 
             return false;
@@ -201,7 +201,7 @@ class EditorDashboardSyncServiceImpl {
                 ...funnelData,
                 id: funnelData.id || crypto.randomUUID(),
                 created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
+                updated_at: new Date().toISOString(),
             });
 
             // 2. Criar evento de sincronização
@@ -209,7 +209,7 @@ class EditorDashboardSyncServiceImpl {
                 type: 'create',
                 funnelId: newFunnel.id,
                 funnelData: newFunnel,
-                timestamp: new Date()
+                timestamp: new Date(),
             };
 
             // 3. Notificar listeners
@@ -222,7 +222,7 @@ class EditorDashboardSyncServiceImpl {
             this.showNotification({
                 type: 'success',
                 message: `Novo funil "${newFunnel.name}" criado com sucesso`,
-                autoHide: true
+                autoHide: true,
             });
 
             console.log(`✅ Novo funil ${newFunnel.id} criado e sincronizado`);
@@ -234,7 +234,7 @@ class EditorDashboardSyncServiceImpl {
             this.showNotification({
                 type: 'error',
                 message: `Erro ao criar funil: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
-                autoHide: false
+                autoHide: false,
             });
 
             return null;
@@ -259,7 +259,7 @@ class EditorDashboardSyncServiceImpl {
             const syncEvent: EditorSyncEvent = {
                 type: 'delete',
                 funnelId,
-                timestamp: new Date()
+                timestamp: new Date(),
             };
 
             // 3. Notificar listeners
@@ -271,8 +271,8 @@ class EditorDashboardSyncServiceImpl {
             // 5. Mostrar notificação
             this.showNotification({
                 type: 'info',
-                message: `Funil deletado com sucesso`,
-                autoHide: true
+                message: 'Funil deletado com sucesso',
+                autoHide: true,
             });
 
             console.log(`✅ Funil ${funnelId} deletado e sincronizado`);
@@ -284,7 +284,7 @@ class EditorDashboardSyncServiceImpl {
             this.showNotification({
                 type: 'error',
                 message: `Erro ao deletar funil: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
-                autoHide: false
+                autoHide: false,
             });
 
             return false;
@@ -307,13 +307,13 @@ class EditorDashboardSyncServiceImpl {
 
             await Promise.all([
                 UnifiedDataService.getFunnels(),
-                UnifiedDataService.getDashboardMetrics()
+                UnifiedDataService.getDashboardMetrics(),
             ]);
 
             this.showNotification({
                 type: 'info',
                 message: 'Dashboard atualizado com os dados mais recentes',
-                autoHide: true
+                autoHide: true,
             });
 
             console.log('✅ Dashboard atualizado');
@@ -366,14 +366,14 @@ class EditorDashboardSyncServiceImpl {
         }, {} as Record<string, number>);
 
         const last24h = this.syncHistory.filter(
-            event => Date.now() - event.timestamp.getTime() < 24 * 60 * 60 * 1000
+            event => Date.now() - event.timestamp.getTime() < 24 * 60 * 60 * 1000,
         ).length;
 
         return {
             total,
             byType,
             last24h,
-            lastSync: this.syncHistory[this.syncHistory.length - 1]?.timestamp
+            lastSync: this.syncHistory[this.syncHistory.length - 1]?.timestamp,
         };
     }
 
@@ -404,7 +404,7 @@ class EditorDashboardSyncServiceImpl {
         const fullNotification: SyncNotification = {
             ...notification,
             id: crypto.randomUUID(),
-            timestamp: new Date()
+            timestamp: new Date(),
         };
 
         this.notificationCallbacks.forEach(callback => {

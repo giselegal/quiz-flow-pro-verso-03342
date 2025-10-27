@@ -123,7 +123,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
   };
 
   const createSession = async (
-    sessionData: Partial<InsertQuizSession>
+    sessionData: Partial<InsertQuizSession>,
   ): Promise<QuizSession | null> => {
     try {
       if (!currentUser) {
@@ -154,7 +154,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
 
   const updateSession = async (
     sessionId: string,
-    updates: Partial<QuizSession>
+    updates: Partial<QuizSession>,
   ): Promise<boolean> => {
     try {
       const { error } = await supabase

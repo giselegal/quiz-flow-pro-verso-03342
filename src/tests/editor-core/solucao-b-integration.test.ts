@@ -26,8 +26,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 options: [
                     { label: 'Clássico' },
                     { label: 'Moderno' },
-                    { label: 'Boho' }
-                ]
+                    { label: 'Boho' },
+                ],
             };
 
             // 2. Validar com Zod
@@ -53,7 +53,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 id: 'step-02',
                 type: 'question',
                 meta: { props: normalized },
-                blocks: []
+                blocks: [],
             };
             const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
 
@@ -79,7 +79,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 question: 'Pergunta?',
                 requiredSelections: 5,
                 maxSelections: 2,
-                options: [{ label: 'A' }]
+                options: [{ label: 'A' }],
             };
 
             const schema = SCHEMAS['question'];
@@ -89,11 +89,11 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
         it('deve gerar IDs determinísticos (mesmo step = mesmo ID)', () => {
             const props1 = {
                 question: 'Q?',
-                options: [{ label: 'Azul' }, { label: 'Vermelho' }]
+                options: [{ label: 'Azul' }, { label: 'Vermelho' }],
             };
             const props2 = {
                 question: 'Q?',
-                options: [{ label: 'Azul' }, { label: 'Vermelho' }]
+                options: [{ label: 'Azul' }, { label: 'Vermelho' }],
             };
 
             const schema = SCHEMAS['question'];
@@ -114,7 +114,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 title: 'Bem-vindo ao Quiz',
                 subtitle: 'Descubra seu estilo',
                 cta: 'Começar Agora',
-                layout: 'centered'
+                layout: 'centered',
             };
 
             const schema = SCHEMAS['intro'];
@@ -126,7 +126,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 id: 'step-01',
                 type: 'intro',
                 meta: { props: normalized },
-                blocks: []
+                blocks: [],
             };
             const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
 
@@ -148,7 +148,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 primaryStyleId: 'natural',
                 showSecondaryStyles: true,
                 secondaryStylesCount: 2,
-                offersToShow: ['offer-1', 'offer-2']
+                offersToShow: ['offer-1', 'offer-2'],
             };
 
             const schema = SCHEMAS['result'];
@@ -160,7 +160,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 id: 'step-19',
                 type: 'result',
                 meta: { props: normalized },
-                blocks: []
+                blocks: [],
             };
             const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
 
@@ -189,15 +189,15 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                         title: 'Guia de Estilos',
                         description: 'Aprenda combinar looks',
                         price: 49.90,
-                        ctaLabel: 'Comprar'
+                        ctaLabel: 'Comprar',
                     },
                     offer2: {
                         title: 'Consultoria',
                         description: 'Sessão 1:1',
                         price: 199.00,
-                        ctaLabel: 'Agendar'
-                    }
-                }
+                        ctaLabel: 'Agendar',
+                    },
+                },
             };
 
             const schema = SCHEMAS['offer'];
@@ -209,7 +209,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 id: 'step-21',
                 type: 'offer',
                 meta: { props: normalized },
-                blocks: []
+                blocks: [],
             };
             const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
 
@@ -228,7 +228,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 question: 'Pergunta?',
                 requiredSelections: 10,
                 maxSelections: 3,
-                options: [{ label: 'A' }]
+                options: [{ label: 'A' }],
             };
 
             const schema = SCHEMAS['question'];
@@ -241,11 +241,11 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
         it('deve gerar slugs determinísticos', () => {
             const props1 = {
                 question: 'Q?',
-                options: [{ label: 'Meu Estilo Clássico' }]
+                options: [{ label: 'Meu Estilo Clássico' }],
             };
             const props2 = {
                 question: 'Q?',
-                options: [{ label: 'Meu Estilo Clássico' }]
+                options: [{ label: 'Meu Estilo Clássico' }],
             };
 
             const schema = SCHEMAS['question'];
@@ -262,8 +262,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 question: 'Q?',
                 options: [
                     { label: 'A', points: 10, metadata: { category: 'natural' } },
-                    { label: 'B', points: 20, metadata: { category: 'elegante' } }
-                ]
+                    { label: 'B', points: 20, metadata: { category: 'elegante' } },
+                ],
             };
 
             const schema = SCHEMAS['question'];
@@ -281,7 +281,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
         it('deve manter e atualizar schemaVersion', () => {
             const props = {
                 question: 'Q?',
-                options: [{ label: 'A' }]
+                options: [{ label: 'A' }],
             };
 
             const schema = SCHEMAS['question'];
@@ -300,7 +300,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 title: 'Quase lá!',
                 text: 'Falta pouco para ver seu resultado',
                 showContinueButton: true,
-                continueButtonText: 'Ver Resultado'
+                continueButtonText: 'Ver Resultado',
             };
 
             const schema = SCHEMAS['transition'];
@@ -312,7 +312,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 id: 'step-18',
                 type: 'transition',
                 meta: { props: normalized },
-                blocks: []
+                blocks: [],
             };
             const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
 
@@ -326,8 +326,8 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 question: 'Qual é seu estilo predominante?',
                 options: [
                     { label: 'Natural' },
-                    { label: 'Elegante' }
-                ]
+                    { label: 'Elegante' },
+                ],
             };
 
             const schema = SCHEMAS['strategic-question'];
@@ -339,7 +339,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 id: 'step-12',
                 type: 'strategic-question',
                 meta: { props: normalized },
-                blocks: []
+                blocks: [],
             };
             const converted = PropsToBlocksAdapter.applyPropsToBlocks(step);
 
@@ -358,10 +358,10 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 meta: {
                     props: {
                         question: 'Pergunta?',
-                        options: [{ label: 'Opção', id: 'opt-1', value: 'opt' }]
-                    }
+                        options: [{ label: 'Opção', id: 'opt-1', value: 'opt' }],
+                    },
                 },
-                blocks: []
+                blocks: [],
             };
 
             const converted1 = PropsToBlocksAdapter.applyPropsToBlocks(step);
@@ -378,7 +378,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
         it('deve lidar com opções vazias em question', () => {
             const props = {
                 question: 'Q?',
-                options: []
+                options: [],
             };
 
             const schema = SCHEMAS['question'];
@@ -389,7 +389,7 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
             const props = {
                 title: 'Título',
                 logoUrl: 'https://example.com/logo.png',
-                backgroundImage: 'https://example.com/bg.jpg'
+                backgroundImage: 'https://example.com/bg.jpg',
             };
 
             const schema = SCHEMAS['intro'];
@@ -402,9 +402,9 @@ describe('✅ INTEGRAÇÃO SOLUÇÃO B: Props → Blocks Completo', () => {
                 offerMap: {
                     offer1: {
                         title: 'Oferta',
-                        ctaUrl: 'not-a-valid-url'
-                    }
-                }
+                        ctaUrl: 'not-a-valid-url',
+                    },
+                },
             };
 
             const schema = SCHEMAS['offer'];

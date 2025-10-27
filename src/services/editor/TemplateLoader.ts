@@ -47,7 +47,7 @@ export class TemplateLoader {
     label: string,
     fn: () => Promise<T>,
     attempts = 3,
-    initialDelayMs = 150
+    initialDelayMs = 150,
   ): Promise<T | null> {
     let lastErr: any = null;
     const start = performance.now?.() ?? Date.now();
@@ -171,7 +171,7 @@ export class TemplateLoader {
       const urls = [
         `/templates/blocks/${normalizedKey}.json`,
         `${base}-v3.json`,
-        `${base}.json`
+        `${base}.json`,
       ];
       let data: any | null = null;
 
@@ -203,7 +203,7 @@ export class TemplateLoader {
           order: (b.order ?? b.position ?? b.index ?? idx) as number,
           // Suporte a múltiplas convenções: properties | props | config | options
           properties: (b.properties || b.props || b.config || b.options || {}) as Record<string, any>,
-          content: (b.content || {}) as Record<string, any>
+          content: (b.content || {}) as Record<string, any>,
         }));
 
         // Hidratar textos do v3 (sections) se disponível → aplica apenas para question-block
@@ -322,7 +322,7 @@ export class TemplateLoader {
                 type: 'intro-logo-header',
                 order: 0,
                 properties: { logoUrl: p.logoUrl, logoAlt: p.logoAlt },
-                content: {}
+                content: {},
               });
               // Título
               if (p.titleHtml || p.title) {
@@ -331,7 +331,7 @@ export class TemplateLoader {
                   type: 'intro-title',
                   order: introBlocks.length,
                   properties: {},
-                  content: { titleHtml: p.titleHtml || p.title }
+                  content: { titleHtml: p.titleHtml || p.title },
                 });
               }
               // Imagem
@@ -341,7 +341,7 @@ export class TemplateLoader {
                   type: 'intro-image',
                   order: introBlocks.length,
                   properties: {},
-                  content: { imageUrl: p.imageUrl, imageAlt: p.imageAlt }
+                  content: { imageUrl: p.imageUrl, imageAlt: p.imageAlt },
                 });
               }
               // Descrição/subtítulo
@@ -351,7 +351,7 @@ export class TemplateLoader {
                   type: 'intro-description',
                   order: introBlocks.length,
                   properties: {},
-                  content: { text: p.subtitleHtml || p.subtitle }
+                  content: { text: p.subtitleHtml || p.subtitle },
                 });
               }
             }
@@ -362,7 +362,7 @@ export class TemplateLoader {
                 type: 'intro-form',
                 order: introBlocks.length,
                 properties: { buttonText: p.buttonText, placeholder: p.placeholder },
-                content: { formQuestion: p.questionLabel, namePlaceholder: p.placeholder, submitText: p.buttonText }
+                content: { formQuestion: p.questionLabel, namePlaceholder: p.placeholder, submitText: p.buttonText },
               });
             }
 
@@ -383,7 +383,7 @@ export class TemplateLoader {
                 { id: `${normalizedKey}-qnum`, type: 'question-number', order: 0, properties: { questionNumber: p.questionNumber }, content: {} },
                 { id: `${normalizedKey}-qtext`, type: 'question-text', order: 1, properties: { questionText: p.questionText }, content: { questionText: p.questionText } },
                 { id: `${normalizedKey}-qopts`, type: 'options-grid', order: 2, properties: { options: mapped }, content: { options: mapped } },
-                { id: `${normalizedKey}-qnav`, type: 'quiz-navigation', order: 3, properties: { enableWhenValid: true }, content: {} }
+                { id: `${normalizedKey}-qnav`, type: 'quiz-navigation', order: 3, properties: { enableWhenValid: true }, content: {} },
               ] as any[];
             }
           }
@@ -400,7 +400,7 @@ export class TemplateLoader {
               blocks = [
                 { id: `${normalizedKey}-transition-title`, type: 'transition-title', order: 0, properties: {}, content: { text: title } },
                 { id: `${normalizedKey}-transition-text`, type: 'transition-text', order: 1, properties: {}, content: { text } },
-                { id: `${normalizedKey}-transition-cta`, type: 'CTAButton', order: 2, properties: {}, content: { label: nextLabel, href: '#next', variant: 'primary', size: 'large' } }
+                { id: `${normalizedKey}-transition-cta`, type: 'CTAButton', order: 2, properties: {}, content: { label: nextLabel, href: '#next', variant: 'primary', size: 'large' } },
               ] as any[];
             }
           }
@@ -412,7 +412,7 @@ export class TemplateLoader {
         try {
           const hydrated = {
             ...data,
-            sections: hydrateSectionsWithQuizSteps(normalizedKey, data.sections)
+            sections: hydrateSectionsWithQuizSteps(normalizedKey, data.sections),
           };
           const blocksComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
           blocks = blockComponentsToBlocks(blocksComponents);
@@ -482,7 +482,7 @@ export class TemplateLoader {
         console.log(`📦 Cache hit: ${normalizedKey} → ${cachedStepBlocks.length} blocos`);
         return {
           blocks: cachedStepBlocks as Block[],
-          source: 'master-hydrated'
+          source: 'master-hydrated',
         };
       }
     } catch (e) {
@@ -520,7 +520,7 @@ export class TemplateLoader {
             try {
               console.log(`🔍 [loadFromMasterJSON] Tentativa ${attempt + 1}/3...`);
               const resp = await fetch('/templates/quiz21-complete.json', {
-                cache: 'force-cache'
+                cache: 'force-cache',
               });
 
               console.log(`📊 [loadFromMasterJSON] Response status: ${resp.status}, ok: ${resp.ok}`);
@@ -529,7 +529,7 @@ export class TemplateLoader {
                 this.masterTemplateRef = await resp.json();
                 unifiedCache.set(masterTemplateKey(), this.masterTemplateRef);
                 console.log(`✅ Master JSON carregado (tentativa ${attempt + 1})`);
-                console.log(`📊 Steps no master:`, Object.keys(this.masterTemplateRef?.steps || {}).length);
+                console.log('📊 Steps no master:', Object.keys(this.masterTemplateRef?.steps || {}).length);
                 break;
               } else {
                 lastError = new Error(`HTTP ${resp.status}`);
@@ -563,12 +563,12 @@ export class TemplateLoader {
       }
 
       console.log(`✅ [loadFromMasterJSON] Step ${normalizedKey} encontrado!`);
-      console.log(`📊 [loadFromMasterJSON] Sections no step:`, stepConfig.sections?.length || 0);
+      console.log('📊 [loadFromMasterJSON] Sections no step:', stepConfig.sections?.length || 0);
 
       if (stepConfig) {
         const hydrated = {
           ...stepConfig,
-          sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections)
+          sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections),
         };
         const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
         const blocks = blockComponentsToBlocks(blockComponents);
@@ -616,7 +616,7 @@ export class TemplateLoader {
           type: (b.type || 'text-inline') as any,
           order: b.order ?? b.position ?? idx,
           properties: b.properties || b.props || {},
-          content: b.content || {}
+          content: b.content || {},
         })) as Block[];
 
         unifiedCache.set(templateKey(`normalized:${normalizedKey}`), blocks);
@@ -665,7 +665,7 @@ export class TemplateLoader {
     }
 
     const blockComponents = safeGetTemplateBlocks(normalizedKey, {
-      [normalizedKey]: stepTemplate
+      [normalizedKey]: stepTemplate,
     });
     const blocks = blockComponentsToBlocks(blockComponents);
 
@@ -680,7 +680,7 @@ export class TemplateLoader {
    */
   async preloadSteps(steps: (number | string)[]): Promise<void> {
     await Promise.allSettled(
-      steps.map(step => this.loadStep(step))
+      steps.map(step => this.loadStep(step)),
     );
   }
 

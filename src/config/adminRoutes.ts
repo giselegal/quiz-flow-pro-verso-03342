@@ -140,6 +140,6 @@ export function requiresAuth(path: string): boolean {
 export function getAllAdminPaths(): string[] {
   return [
     ...adminRoutes.map(r => r.path),
-    ...Object.keys(adminRouteAliases)
+    ...Object.keys(adminRouteAliases),
   ];
 }

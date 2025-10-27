@@ -140,17 +140,17 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                             { label: 'Auto (detecta imagens)', value: 'auto' },
                             { label: '1 Coluna', value: 1 },
                             { label: '2 Colunas', value: 2 },
-                            { label: '3 Colunas', value: 3 }
-                        ]
-                    }
+                            { label: '3 Colunas', value: 3 },
+                        ],
+                    },
                 },
                 defaultValue: 'auto',
                 apiConfig: {
                     endpoint: '/api/quiz-options-grid/columns',
                     syncRealTime: true,
                     cacheable: true,
-                    versionable: true
-                }
+                    versionable: true,
+                },
             },
             {
                 key: 'imageSize',
@@ -162,7 +162,7 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                     component: 'RangeEditor',
                     props: { min: 100, max: 500, step: 8, unit: 'px' },
                     preview: true,
-                    realTimeSync: true
+                    realTimeSync: true,
                 },
                 validation: { min: 100, max: 500 },
                 defaultValue: 256,
@@ -170,8 +170,8 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                     endpoint: '/api/quiz-options-grid/image-size',
                     syncRealTime: true,
                     cacheable: true,
-                    versionable: true
-                }
+                    versionable: true,
+                },
             },
             {
                 key: 'gridGap',
@@ -183,15 +183,15 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                     component: 'RangeEditor',
                     props: { min: 0, max: 32, step: 2, unit: 'px' },
                     preview: true,
-                    realTimeSync: true
+                    realTimeSync: true,
                 },
                 defaultValue: 8,
                 apiConfig: {
                     endpoint: '/api/quiz-options-grid/grid-gap',
                     syncRealTime: true,
                     cacheable: true,
-                    versionable: true
-                }
+                    versionable: true,
+                },
             },
 
             // CONTENT PROPERTIES
@@ -203,15 +203,15 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                 category: PropertyCategory.CONTENT,
                 editor: {
                     component: 'TextEditor',
-                    props: { placeholder: 'Digite sua pergunta aqui' }
+                    props: { placeholder: 'Digite sua pergunta aqui' },
                 },
                 defaultValue: 'Qual opção você prefere?',
                 apiConfig: {
                     endpoint: '/api/quiz-options-grid/question',
                     syncRealTime: false,
                     cacheable: true,
-                    versionable: true
-                }
+                    versionable: true,
+                },
             },
             {
                 key: 'options',
@@ -225,16 +225,16 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                         allowImages: true,
                         allowScoring: true,
                         minOptions: 2,
-                        maxOptions: 8
-                    }
+                        maxOptions: 8,
+                    },
                 },
                 defaultValue: [],
                 apiConfig: {
                     endpoint: '/api/quiz-options-grid/options',
                     syncRealTime: false,
                     cacheable: true,
-                    versionable: true
-                }
+                    versionable: true,
+                },
             },
 
             // VISUAL PROPERTIES
@@ -247,15 +247,15 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                 editor: {
                     component: 'ColorEditor',
                     preview: true,
-                    realTimeSync: true
+                    realTimeSync: true,
                 },
                 defaultValue: '#B89B7A',
                 apiConfig: {
                     endpoint: '/api/quiz-options-grid/primary-color',
                     syncRealTime: true,
                     cacheable: true,
-                    versionable: true
-                }
+                    versionable: true,
+                },
             },
             {
                 key: 'selectedColor',
@@ -266,15 +266,15 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                 editor: {
                     component: 'ColorEditor',
                     preview: true,
-                    realTimeSync: true
+                    realTimeSync: true,
                 },
                 defaultValue: '#432818',
                 apiConfig: {
                     endpoint: '/api/quiz-options-grid/selected-color',
                     syncRealTime: true,
                     cacheable: true,
-                    versionable: true
-                }
+                    versionable: true,
+                },
             },
 
             // BEHAVIOR PROPERTIES  
@@ -285,15 +285,15 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                 type: PropertyType.BOOLEAN,
                 category: PropertyCategory.BEHAVIOR,
                 editor: {
-                    component: 'BooleanEditor'
+                    component: 'BooleanEditor',
                 },
                 defaultValue: false,
                 apiConfig: {
                     endpoint: '/api/quiz-options-grid/multiple-selection',
                     syncRealTime: true,
                     cacheable: true,
-                    versionable: false
-                }
+                    versionable: false,
+                },
             },
             {
                 key: 'autoAdvance',
@@ -305,17 +305,17 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                     component: 'AutoAdvanceEditor',
                     props: {
                         showDelayOption: true,
-                        delayRange: { min: 500, max: 5000 }
-                    }
+                        delayRange: { min: 500, max: 5000 },
+                    },
                 },
                 defaultValue: { enabled: true, delay: 1500 },
                 apiConfig: {
                     endpoint: '/api/quiz-options-grid/auto-advance',
                     syncRealTime: true,
                     cacheable: true,
-                    versionable: false
-                }
-            }
+                    versionable: false,
+                },
+            },
         ],
 
         defaultProperties: {
@@ -327,7 +327,7 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
             primaryColor: '#B89B7A',
             selectedColor: '#432818',
             multipleSelection: false,
-            autoAdvance: { enabled: true, delay: 1500 }
+            autoAdvance: { enabled: true, delay: 1500 },
         },
 
         editorConfig: {
@@ -337,9 +337,9 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                 PropertyCategory.CONTENT,
                 PropertyCategory.LAYOUT,
                 PropertyCategory.VISUAL,
-                PropertyCategory.BEHAVIOR
-            ]
-        }
+                PropertyCategory.BEHAVIOR,
+            ],
+        },
     },
 
     // Adicionar outros componentes...
@@ -361,8 +361,8 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                     endpoint: '/api/quiz-intro-header/title',
                     syncRealTime: false,
                     cacheable: true,
-                    versionable: true
-                }
+                    versionable: true,
+                },
             },
             {
                 key: 'logo',
@@ -375,19 +375,19 @@ export const QUIZ_COMPONENTS_DEFINITIONS: Record<string, ComponentDefinition> = 
                     endpoint: '/api/quiz-intro-header/logo',
                     syncRealTime: false,
                     cacheable: true,
-                    versionable: true
-                }
-            }
+                    versionable: true,
+                },
+            },
         ],
         defaultProperties: {
             title: 'Descubra Seu Estilo',
-            logo: ''
+            logo: '',
         },
         editorConfig: {
             propertiesPanelTitle: 'Configurações do Cabeçalho',
-            categories: [PropertyCategory.CONTENT, PropertyCategory.VISUAL]
-        }
-    }
+            categories: [PropertyCategory.CONTENT, PropertyCategory.VISUAL],
+        },
+    },
 };
 
 // ============================================================================

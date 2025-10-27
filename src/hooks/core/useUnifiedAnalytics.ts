@@ -57,7 +57,7 @@ export interface AnalyticsActions {
 
 export function useUnifiedAnalytics(
   funnelId: string,
-  userId: string
+  userId: string,
 ): AnalyticsState & AnalyticsActions {
 
   const [state, setState] = useState<AnalyticsState>({
@@ -71,7 +71,7 @@ export function useUnifiedAnalytics(
     activeAlerts: [],
     isLoading: true,
     lastUpdate: null,
-    error: null
+    error: null,
   });
 
   /**
@@ -107,7 +107,7 @@ export function useUnifiedAnalytics(
       setState(prev => ({
         ...prev,
         isLoading: false,
-        error: error instanceof Error ? error.message : 'Erro desconhecido'
+        error: error instanceof Error ? error.message : 'Erro desconhecido',
       }));
     }
   };
@@ -120,7 +120,7 @@ export function useUnifiedAnalytics(
     value: number,
     unit: string,
     category: Metric['category'],
-    tags: Record<string, string> = {}
+    tags: Record<string, string> = {},
   ): Promise<void> => {
     try {
       const metric = await analyticsService.recordMetric(name, value, unit, category, tags);
@@ -130,7 +130,7 @@ export function useUnifiedAnalytics(
         return {
           ...prev,
           [`${category}Metrics`]: [...categoryMetrics, metric],
-          lastUpdate: new Date()
+          lastUpdate: new Date(),
         };
       });
     } catch (error) {
@@ -143,7 +143,7 @@ export function useUnifiedAnalytics(
    */
   const recordEvent = useCallback(async (
     type: string,
-    properties: Record<string, any> = {}
+    properties: Record<string, any> = {},
   ): Promise<void> => {
     try {
       const event = await analyticsService.recordEvent(type, userId, funnelId, properties);
@@ -152,7 +152,7 @@ export function useUnifiedAnalytics(
         ...prev,
         events: [...prev.events, event],
         recentEvents: [event, ...prev.recentEvents.slice(0, 49)], // Manter últimos 50
-        lastUpdate: new Date()
+        lastUpdate: new Date(),
       }));
     } catch (error) {
       console.error('❌ Erro ao registrar evento:', error);
@@ -174,7 +174,7 @@ export function useUnifiedAnalytics(
           key.includes('Time') || key.includes('Latency') ? 'ms' :
             key.includes('Usage') || key.includes('Rate') ? '%' : 'count',
           'performance',
-          { source: 'system' }
+          { source: 'system' },
         );
       }
     } catch (error) {
@@ -196,7 +196,7 @@ export function useUnifiedAnalytics(
           value as number,
           key.includes('Rate') || key.includes('Duration') ? 'min' : 'count',
           'collaboration',
-          { funnelId }
+          { funnelId },
         );
       }
     } catch (error) {
@@ -218,7 +218,7 @@ export function useUnifiedAnalytics(
           value as number,
           key.includes('Ratio') ? '%' : key.includes('Storage') ? 'MB' : 'count',
           'versioning',
-          { funnelId }
+          { funnelId },
         );
       }
     } catch (error) {
@@ -241,7 +241,7 @@ export function useUnifiedAnalytics(
             value,
             key.includes('Rate') ? '%' : key.includes('Duration') ? 'min' : 'count',
             'usage',
-            { source: 'analytics' }
+            { source: 'analytics' },
           );
         }
       }
@@ -259,7 +259,7 @@ export function useUnifiedAnalytics(
     title: string,
     message: string,
     threshold: number,
-    currentValue: number
+    currentValue: number,
   ): Promise<void> => {
     try {
       const alert = await analyticsService.createAlert(type, severity, title, message, threshold, currentValue);
@@ -268,7 +268,7 @@ export function useUnifiedAnalytics(
         ...prev,
         alerts: [...prev.alerts, alert],
         activeAlerts: [...prev.activeAlerts, alert],
-        lastUpdate: new Date()
+        lastUpdate: new Date(),
       }));
     } catch (error) {
       console.error('❌ Erro ao criar alerta:', error);
@@ -285,10 +285,10 @@ export function useUnifiedAnalytics(
         alerts: prev.alerts.map(alert =>
           alert.id === alertId
             ? { ...alert, resolved: true, resolvedAt: new Date(), resolvedBy: userId }
-            : alert
+            : alert,
         ),
         activeAlerts: prev.activeAlerts.filter(alert => alert.id !== alertId),
-        lastUpdate: new Date()
+        lastUpdate: new Date(),
       }));
     } catch (error) {
       console.error('❌ Erro ao resolver alerta:', error);
@@ -328,14 +328,14 @@ export function useUnifiedAnalytics(
         activeAlerts,
         isLoading: false,
         lastUpdate: new Date(),
-        error: null
+        error: null,
       }));
     } catch (error) {
       console.error('❌ Erro ao atualizar analytics:', error);
       setState(prev => ({
         ...prev,
         isLoading: false,
-        error: error instanceof Error ? error.message : 'Erro desconhecido'
+        error: error instanceof Error ? error.message : 'Erro desconhecido',
       }));
     }
   }, []);
@@ -354,7 +354,7 @@ export function useUnifiedAnalytics(
         versioningMetrics: state.versioningMetrics,
         usageMetrics: state.usageMetrics,
         events: state.events,
-        alerts: state.alerts
+        alerts: state.alerts,
       };
 
       if (format === 'json') {
@@ -409,6 +409,6 @@ export function useUnifiedAnalytics(
     exportData,
     getMetricsByCategory,
     getEventsByType,
-    getActiveAlerts
+    getActiveAlerts,
   };
 }

@@ -61,7 +61,7 @@ describe('AICache Service', () => {
 
       expect(setItemSpy).toHaveBeenCalledWith(
         `ai_cache_${key}`,
-        expect.any(String)
+        expect.any(String),
       );
     });
     it('deve carregar dados do localStorage na inicialização', () => {
@@ -70,13 +70,13 @@ describe('AICache Service', () => {
       const cacheEntry = {
         data,
         timestamp: Date.now(),
-        ttl: 300000
+        ttl: 300000,
       };
 
       // Simula dados já existentes no localStorage
       localStorage.setItem(
         `ai_cache_${key}`,
-        JSON.stringify(cacheEntry)
+        JSON.stringify(cacheEntry),
       );
 
       // Cria uma nova instância para simular a inicialização
@@ -92,9 +92,9 @@ describe('AICache Service', () => {
       const templateData = {
         blocks: [
           { id: 'header', type: 'text', content: 'Business Template' },
-          { id: 'form', type: 'form', content: 'Contact Form' }
+          { id: 'form', type: 'form', content: 'Contact Form' },
         ],
-        metadata: { generated: true, style: 'business' }
+        metadata: { generated: true, style: 'business' },
       };
 
       cache.set(templateKey, templateData);
@@ -109,7 +109,7 @@ describe('AICache Service', () => {
       const optimizationData = {
         suggestions: ['Improve CTA', 'Reduce form fields'],
         confidence: 0.85,
-        impact: 'high'
+        impact: 'high',
       };
 
       cache.set(optimizationKey, optimizationData, 600000); // 10 min TTL
@@ -225,7 +225,7 @@ describe('AICache Service', () => {
 
       expect(setItemSpy).toHaveBeenCalledWith(
         `ai_cache_${key}`,
-        expect.any(String)
+        expect.any(String),
       );
     }); it('deve carregar dados do localStorage na inicialização', () => {
       const key = 'load-test';
@@ -233,13 +233,13 @@ describe('AICache Service', () => {
       const cacheEntry = {
         data,
         timestamp: Date.now(),
-        ttl: 300000
+        ttl: 300000,
       };
 
       // Simula dados já existentes no localStorage
       localStorage.setItem(
         `ai_cache_${key}`,
-        JSON.stringify(cacheEntry)
+        JSON.stringify(cacheEntry),
       );
 
       // Cria uma nova instância para simular a inicialização
@@ -255,9 +255,9 @@ describe('AICache Service', () => {
       const templateData = {
         blocks: [
           { id: 'header', type: 'text', content: 'Business Template' },
-          { id: 'form', type: 'form', content: 'Contact Form' }
+          { id: 'form', type: 'form', content: 'Contact Form' },
         ],
-        metadata: { generated: true, style: 'business' }
+        metadata: { generated: true, style: 'business' },
       };
 
       cache.set(templateKey, templateData);
@@ -272,7 +272,7 @@ describe('AICache Service', () => {
       const optimizationData = {
         suggestions: ['Improve CTA', 'Reduce form fields'],
         confidence: 0.85,
-        impact: 'high'
+        impact: 'high',
       };
 
       cache.set(optimizationKey, optimizationData, 600000); // 10 min TTL

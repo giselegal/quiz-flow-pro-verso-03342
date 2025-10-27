@@ -5,8 +5,8 @@ import { vi } from 'vitest';
 // Mock supabase to avoid real network
 vi.mock('@/integrations/supabase/client', () => ({
     supabase: {
-        from: () => ({ upsert: () => ({ error: null }), select: () => ({ eq: () => ({ single: () => ({ data: null }) }) }) })
-    }
+        from: () => ({ upsert: () => ({ error: null }), select: () => ({ eq: () => ({ single: () => ({ data: null }) }) }) }),
+    },
 }));
 
 function mkSteps(count = 20): { steps: any[]; asRecord: Record<string, QuizStep> } {
@@ -21,7 +21,7 @@ function mkSteps(count = 20): { steps: any[]; asRecord: Record<string, QuizStep>
             order: i,
             type: 'question',
             options: styleIds.map((sid, idx) => ({ id: sid, text: `Opção ${idx + 1}`, image: 'x.png' })),
-            nextStep: i % 2 === 0 ? nextStep : undefined // metade sem nextStep para testar autoFill
+            nextStep: i % 2 === 0 ? nextStep : undefined, // metade sem nextStep para testar autoFill
         };
         stepsArr.push(step);
         record[id] = { ...step };
@@ -38,7 +38,7 @@ describe('saveDraft autoFill integração', () => {
             slug: 'quiz-estilo',
             steps,
             isPublished: false,
-            version: 1
+            version: 1,
         } as any;
 
         const id = await quizEditorBridge.saveDraft(funnel);

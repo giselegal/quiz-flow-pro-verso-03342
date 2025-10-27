@@ -83,7 +83,7 @@ export class WhiteLabelPlatform {
 
     const brandConfig: BrandConfig = {
       id: brandId,
-      ...config.brandConfig
+      ...config.brandConfig,
     };
 
     const client: WhiteLabelClient = {
@@ -95,7 +95,7 @@ export class WhiteLabelPlatform {
       billing: this.getPlanBilling(config.plan),
       status: 'trial',
       createdAt: new Date(),
-      lastLogin: new Date()
+      lastLogin: new Date(),
     };
 
     this.clients.set(clientId, client);
@@ -105,7 +105,7 @@ export class WhiteLabelPlatform {
       client: config.name,
       plan: config.plan,
       domain: brandConfig.domain,
-      monthlyRevenue: client.billing.monthlyFee
+      monthlyRevenue: client.billing.monthlyFee,
     });
 
     return client;
@@ -118,7 +118,7 @@ export class WhiteLabelPlatform {
 
     const updatedBrand = {
       ...client.brandConfig,
-      ...updates
+      ...updates,
     };
 
     client.brandConfig = updatedBrand;
@@ -196,7 +196,7 @@ export class WhiteLabelPlatform {
       type: 'CNAME',
       name: domain,
       value: 'platform.quizstyle.ai',
-      ttl: 300
+      ttl: 300,
     };
 
     // SSL certificate setup
@@ -208,7 +208,7 @@ export class WhiteLabelPlatform {
       client: client.name,
       domain,
       ssl: sslStatus,
-      dnsConfig
+      dnsConfig,
     });
 
     return true;
@@ -230,30 +230,30 @@ export class WhiteLabelPlatform {
         name: client.name,
         plan: client.plan,
         status: client.status,
-        domain: client.brandConfig.domain
+        domain: client.brandConfig.domain,
       },
       revenue: {
         monthly: client.billing.monthlyFee,
         annual: client.billing.monthlyFee * 12,
-        ltv: this.calculateClientLTV(client)
+        ltv: this.calculateClientLTV(client),
       },
       usage: {
         activeUsers: Math.floor(Math.random() * 1000) + 100,
         quizzesTaken: Math.floor(Math.random() * 5000) + 500,
         conversionRate: (Math.random() * 0.3 + 0.15).toFixed(3), // 15-45%
-        monthlyGrowth: (Math.random() * 0.2 + 0.05).toFixed(3)  // 5-25%
+        monthlyGrowth: (Math.random() * 0.2 + 0.05).toFixed(3),  // 5-25%
       },
       features: {
         enabled: Object.entries(client.features)
           .filter(([_, enabled]) => enabled)
           .map(([feature, _]) => feature),
-        utilization: Math.floor(Math.random() * 40) + 60 // 60-100%
+        utilization: Math.floor(Math.random() * 40) + 60, // 60-100%
       },
       support: {
         tickets: Math.floor(Math.random() * 10),
         satisfaction: (Math.random() * 2 + 8).toFixed(1), // 8.0-10.0
-        responseTime: Math.floor(Math.random() * 4) + 1  // 1-5 hours
-      }
+        responseTime: Math.floor(Math.random() * 4) + 1,  // 1-5 hours
+      },
     };
 
     return analytics;
@@ -264,13 +264,13 @@ export class WhiteLabelPlatform {
     const clients = Array.from(this.clients.values());
     
     const totalRevenue = clients.reduce((sum, client) => 
-      sum + client.billing.monthlyFee, 0
+      sum + client.billing.monthlyFee, 0,
     );
 
     const planDistribution = {
       basic: clients.filter(c => c.plan === 'basic').length,
       professional: clients.filter(c => c.plan === 'professional').length,
-      enterprise: clients.filter(c => c.plan === 'enterprise').length
+      enterprise: clients.filter(c => c.plan === 'enterprise').length,
     };
 
     return {
@@ -280,13 +280,13 @@ export class WhiteLabelPlatform {
         trialClients: clients.filter(c => c.status === 'trial').length,
         monthlyRevenue: totalRevenue,
         annualRevenue: totalRevenue * 12,
-        averageRevenuePerClient: Math.round(totalRevenue / clients.length) || 0
+        averageRevenuePerClient: Math.round(totalRevenue / clients.length) || 0,
       },
       growth: {
         newClientsThisMonth: Math.floor(Math.random() * 5) + 2,
         churnRate: '2.3%',
         growthRate: '28%',
-        upgrades: Math.floor(Math.random() * 3) + 1
+        upgrades: Math.floor(Math.random() * 3) + 1,
       },
       planDistribution,
       topPerformingClients: clients
@@ -296,14 +296,14 @@ export class WhiteLabelPlatform {
           name: client.name,
           plan: client.plan,
           revenue: client.billing.monthlyFee,
-          domain: client.brandConfig.domain
+          domain: client.brandConfig.domain,
         })),
       featureUsage: {
         customDomain: clients.filter(c => c.features.customDomain).length,
         removeBranding: clients.filter(c => c.features.removeBranding).length,
         customCSS: clients.filter(c => c.features.customCSS).length,
-        apiAccess: clients.filter(c => c.features.apiAccess).length
-      }
+        apiAccess: clients.filter(c => c.features.apiAccess).length,
+      },
     };
   }
 
@@ -316,7 +316,7 @@ export class WhiteLabelPlatform {
         customCSS: false,
         apiAccess: false,
         analytics: true,
-        integrations: false
+        integrations: false,
       },
       professional: {
         customDomain: true,
@@ -324,7 +324,7 @@ export class WhiteLabelPlatform {
         customCSS: true,
         apiAccess: false,
         analytics: true,
-        integrations: true
+        integrations: true,
       },
       enterprise: {
         customDomain: true,
@@ -332,8 +332,8 @@ export class WhiteLabelPlatform {
         customCSS: true,
         apiAccess: true,
         analytics: true,
-        integrations: true
-      }
+        integrations: true,
+      },
     };
 
     return features[plan] || features.basic;
@@ -343,12 +343,12 @@ export class WhiteLabelPlatform {
     const billing: Record<string, any> = {
       basic: { monthlyFee: 297, setupFee: 0 },
       professional: { monthlyFee: 897, setupFee: 500 },
-      enterprise: { monthlyFee: 2497, setupFee: 1500 }
+      enterprise: { monthlyFee: 2497, setupFee: 1500 },
     };
 
     return {
       ...billing[plan] || billing.basic,
-      nextBilling: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      nextBilling: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     };
   }
 
@@ -356,7 +356,7 @@ export class WhiteLabelPlatform {
     const avgLifespanMonths = {
       basic: 18,
       professional: 36,
-      enterprise: 60
+      enterprise: 60,
     };
 
     const lifespan = avgLifespanMonths[client.plan] || 24;
@@ -378,25 +378,25 @@ export class WhiteLabelPlatform {
         totalUsers: analytics.usage.activeUsers,
         totalQuizzes: analytics.usage.quizzesTaken,
         conversionRate: analytics.usage.conversionRate,
-        revenue: analytics.revenue.monthly
+        revenue: analytics.revenue.monthly,
       },
       recommendations: [
         {
           area: 'Conversion Optimization',
           suggestion: 'A/B test new quiz questions',
-          expectedImpact: '+12% conversion'
+          expectedImpact: '+12% conversion',
         },
         {
           area: 'User Engagement',
           suggestion: 'Add personalized results',
-          expectedImpact: '+18% retention'
-        }
+          expectedImpact: '+18% retention',
+        },
       ],
       nextSteps: [
         'Review quiz performance metrics',
         'Implement suggested optimizations',  
-        'Schedule monthly strategy call'
-      ]
+        'Schedule monthly strategy call',
+      ],
     };
   }
 
@@ -413,11 +413,11 @@ export class WhiteLabelPlatform {
         'Push notifications',
         'Offline mode',
         'Custom branding',
-        'Analytics dashboard'
+        'Analytics dashboard',
       ],
       buildStatus: 'ready',
       estimatedDelivery: '2-3 weeks',
-      cost: 5000 // R$ 5k setup fee
+      cost: 5000, // R$ 5k setup fee
     };
   }
 
@@ -430,8 +430,8 @@ export class WhiteLabelPlatform {
     
     console.log('🔑 API key generated:', {
       client: client.name,
-      keyPreview: apiKey.substring(0, 20) + '...',
-      permissions: ['read', 'write', 'analytics']
+      keyPreview: `${apiKey.substring(0, 20)  }...`,
+      permissions: ['read', 'write', 'analytics'],
     });
 
     return apiKey;
@@ -466,7 +466,7 @@ export class WhiteLabelPlatform {
     console.log('⬆️ Client plan upgraded:', {
       client: client.name,
       newPlan,
-      newMonthlyFee: client.billing.monthlyFee
+      newMonthlyFee: client.billing.monthlyFee,
     });
 
     return true;

@@ -47,7 +47,7 @@ const DEFAULT_STEP20_CONFIG: Step20Configuration = {
     showNextSteps: true,
     nextStepsText: 'Agora você pode acessar sua consultoria personalizada com recomendações exclusivas baseadas no seu estilo!',
     isResultPage: true,
-    routePath: '/step20'
+    routePath: '/step20',
 };
 
 export const useStep20Configuration = create<Step20Store>()(
@@ -57,7 +57,7 @@ export const useStep20Configuration = create<Step20Store>()(
 
             updateConfiguration: (config) =>
                 set((state) => ({
-                    configuration: { ...state.configuration, ...config }
+                    configuration: { ...state.configuration, ...config },
                 })),
 
             resetToDefaults: () =>
@@ -69,18 +69,18 @@ export const useStep20Configuration = create<Step20Store>()(
                 switch (configuration.backgroundType) {
                     case 'gradient':
                         return {
-                            background: `linear-gradient(135deg, ${configuration.backgroundGradientFrom} 0%, ${configuration.backgroundGradientVia} 50%, ${configuration.backgroundGradientTo} 100%)`
+                            background: `linear-gradient(135deg, ${configuration.backgroundGradientFrom} 0%, ${configuration.backgroundGradientVia} 50%, ${configuration.backgroundGradientTo} 100%)`,
                         };
                     case 'image':
                         return {
                             backgroundImage: `url(${configuration.backgroundImage})`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat'
+                            backgroundRepeat: 'no-repeat',
                         };
                     case 'solid':
                         return {
-                            backgroundColor: configuration.backgroundSolid
+                            backgroundColor: configuration.backgroundSolid,
                         };
                     default:
                         return {};
@@ -102,13 +102,13 @@ export const useStep20Configuration = create<Step20Store>()(
                     default:
                         return '🏆';
                 }
-            }
+            },
         }),
         {
             name: 'step20-configuration',
             version: 1,
-        }
-    )
+        },
+    ),
 );
 
 // Hook para integração com NoCode Configuration
@@ -146,14 +146,14 @@ export const useStep20NoCodeIntegration = () => {
         description: configuration.resultMessage,
         isResultPage: configuration.isResultPage,
         routePath: configuration.routePath,
-        socialShareText: configuration.enableSocialSharing ? configuration.socialShareText : undefined
+        socialShareText: configuration.enableSocialSharing ? configuration.socialShareText : undefined,
     });
 
     return {
         configuration,
         updateConfiguration,
         applyToStepNavigation,
-        getPageMetadata
+        getPageMetadata,
     };
 };
 

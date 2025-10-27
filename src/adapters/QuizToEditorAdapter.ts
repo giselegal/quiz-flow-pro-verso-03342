@@ -58,7 +58,7 @@ export class QuizToEditorAdapter {
     return {
       stepBlocks,
       totalSteps,
-      quizMetadata
+      quizMetadata,
     };
   }
 
@@ -114,7 +114,7 @@ export class QuizToEditorAdapter {
       'background-section': 'background-component',
       
       // Fallback
-      'text-inline': 'text-inline'
+      'text-inline': 'text-inline',
     };
 
     return typeMap[quizType] || quizType;
@@ -128,7 +128,7 @@ export class QuizToEditorAdapter {
       ...quizBlock.properties,
       stepNumber,
       isQuizComponent: true,
-      originalType: quizBlock.type
+      originalType: quizBlock.type,
     };
 
     // Preservar configurações específicas baseadas no tipo
@@ -139,7 +139,7 @@ export class QuizToEditorAdapter {
           options: quizBlock.options || [],
           selectionMode: quizBlock.selectionMode || 'multiple',
           maxSelections: quizBlock.maxSelections || 3,
-          scoringData: quizBlock.scoring || {}
+          scoringData: quizBlock.scoring || {},
         };
 
       case 'strategic-options':
@@ -147,7 +147,7 @@ export class QuizToEditorAdapter {
           ...baseProperties,
           strategicType: quizBlock.strategicType || 'single',
           offers: quizBlock.offers || [],
-          triggerLogic: quizBlock.triggerLogic || {}
+          triggerLogic: quizBlock.triggerLogic || {},
         };
 
       case 'quiz-result-display':
@@ -155,7 +155,7 @@ export class QuizToEditorAdapter {
           ...baseProperties,
           resultCalculation: quizBlock.resultCalculation || {},
           styleMapping: quizBlock.styleMapping || {},
-          dynamicContent: quizBlock.dynamicContent || true
+          dynamicContent: quizBlock.dynamicContent || true,
         };
 
       default:
@@ -170,13 +170,13 @@ export class QuizToEditorAdapter {
     return {
       styles: [
         'Natural', 'Clássico', 'Contemporâneo', 'Elegante', 
-        'Romântico', 'Sexy', 'Dramático', 'Criativo'
+        'Romântico', 'Sexy', 'Dramático', 'Criativo',
       ],
       scoringSystem: {
         questionSteps: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
         strategicSteps: [13, 14, 15, 16, 17, 18],
         resultStep: 20,
-        offerStep: 21
+        offerStep: 21,
       },
       strategicQuestions: [
         { step: 13, type: 'budget', offers: ['basic', 'premium'] },
@@ -184,8 +184,8 @@ export class QuizToEditorAdapter {
         { step: 15, type: 'experience', offers: ['beginner', 'advanced'] },
         { step: 16, type: 'goals', offers: ['personal', 'professional'] },
         { step: 17, type: 'investment', offers: ['conservative', 'aggressive'] },
-        { step: 18, type: 'support', offers: ['self-service', 'guided'] }
-      ]
+        { step: 18, type: 'support', offers: ['self-service', 'guided'] },
+      ],
     };
   }
 
@@ -205,7 +205,7 @@ export class QuizToEditorAdapter {
         content: block.content,
         order: block.order,
         // Preservar dados específicos do quiz
-        ...(block.properties?.quizData && { quizData: block.properties.quizData })
+        ...(block.properties?.quizData && { quizData: block.properties.quizData }),
       }));
     });
     
@@ -224,7 +224,7 @@ export class QuizToEditorAdapter {
       'offer-component': 'offer-section',
       'button-component': 'cta-button',
       'image-component': 'image-display',
-      'background-component': 'background-section'
+      'background-component': 'background-section',
     };
 
     return reverseMap[editorType] || editorType;
@@ -263,8 +263,8 @@ export class QuizToEditorAdapter {
       blocks: template,
       metadata: {
         isQuizStep: true,
-        originalQuizStep: stepNumber
-      }
+        originalQuizStep: stepNumber,
+      },
     };
   }
 

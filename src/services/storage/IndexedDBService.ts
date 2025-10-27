@@ -75,7 +75,7 @@ class IndexedDBService {
         id: key,
         data,
         timestamp: Date.now(),
-        metadata
+        metadata,
       };
 
       const request = store.put(item);

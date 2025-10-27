@@ -37,6 +37,6 @@ export function compareHistoryEntry(draft: any, entry: any): HistoryHashComparis
         metaChanged: currentMeta !== entry.metaHash,
         stagesChanged: currentStages !== entry.stagesHash,
         componentsChanged: currentComponents !== entry.componentsHash,
-        current: { metaHash: currentMeta, stagesHash: currentStages, componentsHash: currentComponents }
+        current: { metaHash: currentMeta, stagesHash: currentStages, componentsHash: currentComponents },
     };
 }

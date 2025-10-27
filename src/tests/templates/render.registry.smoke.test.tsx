@@ -18,7 +18,7 @@ describe('render registry smoke', () => {
         'QuestionMulti',
         'Transition',
         'ResultPlaceholder',
-        'RawLegacyBundle'
+        'RawLegacyBundle',
     ];
 
     for (const k of KINDS) {

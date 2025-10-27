@@ -38,7 +38,7 @@ export const deprecationWarning = (options: DeprecationOptions): void => {
     removalDate,
     removalVersion,
     migrationGuide,
-    once = true
+    once = true,
   } = options;
 
   // Skip se já alertado e once=true
@@ -77,7 +77,7 @@ export const deprecationWarning = (options: DeprecationOptions): void => {
  */
 export const withDeprecationWarning = <T extends (...args: any[]) => any>(
   fn: T,
-  options: DeprecationOptions
+  options: DeprecationOptions,
 ): T => {
   return ((...args: any[]) => {
     deprecationWarning(options);
@@ -90,7 +90,7 @@ export const withDeprecationWarning = <T extends (...args: any[]) => any>(
  */
 export const withDeprecatedComponent = <P extends object>(
   Component: React.ComponentType<P>,
-  options: DeprecationOptions
+  options: DeprecationOptions,
 ): React.ComponentType<P> => {
   return (props: P) => {
     deprecationWarning(options);
@@ -129,7 +129,7 @@ export const initDeprecationTracking = (): void => {
     (window as any).getDeprecationStats = getDeprecationStats;
     
     console.log(
-      '📊 Deprecation tracking ativo. Use window.getDeprecationStats() para ver uso.'
+      '📊 Deprecation tracking ativo. Use window.getDeprecationStats() para ver uso.',
     );
   }
 };

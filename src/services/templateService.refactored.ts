@@ -208,7 +208,7 @@ class TemplateServiceRefactored {
     if (template.metadata) {
       if (template.metadata.totalSteps !== template.steps.length) {
         errors.push(
-          `Metadata totalSteps (${template.metadata.totalSteps}) doesn't match actual steps (${template.steps.length})`
+          `Metadata totalSteps (${template.metadata.totalSteps}) doesn't match actual steps (${template.steps.length})`,
         );
       }
     }
@@ -229,7 +229,7 @@ class TemplateServiceRefactored {
       const templateIds = ['quiz-21-steps', 'quiz-basic', 'quiz-advanced'];
       
       const templates = await Promise.all(
-        templateIds.map((id) => this.getTemplate(id))
+        templateIds.map((id) => this.getTemplate(id)),
       );
 
       return templates.filter((t): t is Template => t !== null);

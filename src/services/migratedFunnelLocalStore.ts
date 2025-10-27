@@ -15,7 +15,7 @@
 
 import {
     validateFunnelId,
-    performSystemHealthCheck
+    performSystemHealthCheck,
 } from '../utils/improvedFunnelSystem';
 import { advancedFunnelStorage } from './AdvancedFunnelStorage';
 import { funnelDataMigration } from './FunnelDataMigration';
@@ -112,7 +112,7 @@ class MigratedFunnelLocalStore {
                     success: migrationResult.success,
                     migratedFunnels: migrationResult.migratedFunnels,
                     migratedSettings: migrationResult.migratedSettings,
-                    duration: migrationResult.duration
+                    duration: migrationResult.duration,
                 });
             }
 
@@ -138,7 +138,7 @@ class MigratedFunnelLocalStore {
                 name: f.name,
                 status: f.status,
                 url: f.url,
-                updatedAt: f.updatedAt
+                updatedAt: f.updatedAt,
             })) : [];
 
         } catch (error) {
@@ -163,13 +163,13 @@ class MigratedFunnelLocalStore {
                             name: funnel.name,
                             status: funnel.status,
                             url: funnel.url,
-                            updatedAt: funnel.updatedAt
+                            updatedAt: funnel.updatedAt,
                         });
                     }
                 } catch (validationError) {
                     console.warn('[MigratedLocalStore] Invalid funnel skipped', {
                         funnelId: funnel.id,
-                        error: validationError
+                        error: validationError,
                     });
                 }
             }
@@ -232,7 +232,7 @@ class MigratedFunnelLocalStore {
                 } catch (error) {
                     console.warn('[MigratedLocalStore] Failed to save individual funnel', {
                         funnelId: item.id,
-                        error
+                        error,
                     });
                     throw error;
                 }
@@ -305,7 +305,7 @@ class MigratedFunnelLocalStore {
                     name: funnel.name,
                     status: funnel.status,
                     url: funnel.url,
-                    updatedAt: funnel.updatedAt
+                    updatedAt: funnel.updatedAt,
                 };
 
                 // Atualizar cache
@@ -356,7 +356,7 @@ class MigratedFunnelLocalStore {
 
             const updatedItem = {
                 ...item,
-                updatedAt: new Date().toISOString()
+                updatedAt: new Date().toISOString(),
             };
 
             await advancedFunnelStorage.upsertFunnel({
@@ -426,7 +426,7 @@ class MigratedFunnelLocalStore {
                     token: settings.token || '',
                     utm: settings.utm || {},
                     webhooks: Array.isArray(settings.webhooks) ? settings.webhooks : [],
-                    custom: settings.custom || this.defaultSettings().custom
+                    custom: settings.custom || this.defaultSettings().custom,
                 };
 
                 // Atualizar cache
@@ -465,7 +465,7 @@ class MigratedFunnelLocalStore {
                 token: settings.token,
                 utm: settings.utm,
                 webhooks: settings.webhooks,
-                custom: settings.custom
+                custom: settings.custom,
             };
 
             // Atualizar cache
@@ -512,7 +512,7 @@ class MigratedFunnelLocalStore {
                 token: settings.token,
                 utm: settings.utm,
                 webhooks: settings.webhooks,
-                custom: settings.custom
+                custom: settings.custom,
             });
 
             // Atualizar cache
@@ -558,7 +558,7 @@ class MigratedFunnelLocalStore {
 
             const [info, healthStatus] = await Promise.all([
                 advancedFunnelStorage.getStorageInfo(),
-                performSystemHealthCheck()
+                performSystemHealthCheck(),
             ]);
 
             const migrationNeeded = funnelDataMigration.isMigrationNeeded();
@@ -572,8 +572,8 @@ class MigratedFunnelLocalStore {
                 healthStatus: {
                     isHealthy: healthStatus.overall === 'healthy',
                     score: healthStatus.overall === 'healthy' ? 100 : healthStatus.overall === 'warning' ? 50 : 0,
-                    issues: healthStatus.issues
-                }
+                    issues: healthStatus.issues,
+                },
             };
 
         } catch (error) {
@@ -586,7 +586,7 @@ class MigratedFunnelLocalStore {
                 estimatedSize: JSON.stringify(list).length,
                 migrationStatus: 'pending',
                 storageType: 'localStorage',
-                healthStatus: { isHealthy: false, score: 0, issues: ['Storage info unavailable'] }
+                healthStatus: { isHealthy: false, score: 0, issues: ['Storage info unavailable'] },
             };
         }
     }
@@ -605,17 +605,17 @@ class MigratedFunnelLocalStore {
                 success: result.success,
                 data: {
                     migratedFunnels: result.migratedFunnels,
-                    migratedSettings: result.migratedSettings
+                    migratedSettings: result.migratedSettings,
                 },
                 message: result.success
                     ? `Migration completed: ${result.migratedFunnels} funnels, ${result.migratedSettings} settings`
-                    : `Migration failed: ${result.errors.join(', ')}`
+                    : `Migration failed: ${result.errors.join(', ')}`,
             };
 
         } catch (error) {
             return {
                 success: false,
-                message: `Migration error: ${error}`
+                message: `Migration error: ${error}`,
             };
         }
     }
@@ -629,13 +629,13 @@ class MigratedFunnelLocalStore {
             return {
                 success: true,
                 data: backup,
-                message: 'Backup created successfully'
+                message: 'Backup created successfully',
             };
 
         } catch (error) {
             return {
                 success: false,
-                message: `Backup failed: ${error}`
+                message: `Backup failed: ${error}`,
             };
         }
     }
@@ -654,17 +654,17 @@ class MigratedFunnelLocalStore {
                 success: result.success,
                 data: {
                     migratedFunnels: result.migratedFunnels,
-                    migratedSettings: result.migratedSettings
+                    migratedSettings: result.migratedSettings,
                 },
                 message: result.success
                     ? `Restore completed: ${result.migratedFunnels} funnels, ${result.migratedSettings} settings`
-                    : `Restore failed: ${result.errors.join(', ')}`
+                    : `Restore failed: ${result.errors.join(', ')}`,
             };
 
         } catch (error) {
             return {
                 success: false,
-                message: `Restore error: ${error}`
+                message: `Restore error: ${error}`,
             };
         }
     }
@@ -674,7 +674,7 @@ class MigratedFunnelLocalStore {
             if (confirmation !== 'RESET_ALL_FUNNEL_DATA') {
                 return {
                     success: false,
-                    message: 'Invalid confirmation. Use "RESET_ALL_FUNNEL_DATA" to confirm.'
+                    message: 'Invalid confirmation. Use "RESET_ALL_FUNNEL_DATA" to confirm.',
                 };
             }
 
@@ -688,13 +688,13 @@ class MigratedFunnelLocalStore {
 
             return {
                 success: true,
-                message: 'All funnel data has been reset successfully.'
+                message: 'All funnel data has been reset successfully.',
             };
 
         } catch (error) {
             return {
                 success: false,
-                message: `Reset failed: ${error}`
+                message: `Reset failed: ${error}`,
             };
         }
     }

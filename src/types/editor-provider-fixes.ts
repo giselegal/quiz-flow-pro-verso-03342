@@ -30,14 +30,14 @@ export const createTypedSetState = (setState: React.Dispatch<React.SetStateActio
 
     setSupabaseMode: (isSupabaseEnabled: boolean, databaseMode: 'local' | 'supabase') => {
       setState((prev: EditorState) => ({ ...prev, isSupabaseEnabled, databaseMode }));
-    }
+    },
   };
 };
 
 // Export type-safe updater functions
 export const createStateUpdater = <T extends keyof EditorState>(
   setState: React.Dispatch<React.SetStateAction<EditorState>>,
-  key: T
+  key: T,
 ) => {
   return (value: EditorState[T]) => {
     setState((prev: EditorState) => ({ ...prev, [key]: value }));

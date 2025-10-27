@@ -117,7 +117,7 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
         <button
           onClick={() => {
             window.location.href =
-              window.location.href + (window.location.search ? '&' : '?') + 'lovable=true';
+              `${window.location.href + (window.location.search ? '&' : '?')  }lovable=true`;
           }}
           style={{ color: '#B89B7A' }}
         >

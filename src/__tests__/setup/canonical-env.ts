@@ -5,6 +5,6 @@ if (!(globalThis as any).indexedDB) {
       const req: any = { onerror: null, onsuccess: null, result: {} };
       setTimeout(() => req.onsuccess && req.onsuccess({ target: { result: {} } }), 0);
       return req;
-    }
+    },
   };
 }

@@ -61,14 +61,14 @@ export interface UseFunnelLoaderOptions {
 
 export function useFunnelLoader(
     initialFunnelId?: string,
-    options: UseFunnelLoaderOptions = {}
+    options: UseFunnelLoaderOptions = {},
 ): FunnelLoadingState {
 
     const {
         context = FunnelContext.EDITOR,
         autoLoad = true,
         enableEvents = true,
-        userId
+        userId,
     } = options;
 
     // Estados locais
@@ -84,7 +84,7 @@ export function useFunnelLoader(
         canRead: false,
         canEdit: false,
         canDelete: false,
-        isOwner: false
+        isOwner: false,
     });
 
     // Refs para evitar re-renders desnecessários
@@ -144,7 +144,7 @@ export function useFunnelLoader(
                 setErrorState(
                     'Funil não encontrado',
                     'NOT_FOUND',
-                    ['Verifique se o ID está correto', 'Tente recarregar a página', 'Selecione outro funil']
+                    ['Verifique se o ID está correto', 'Tente recarregar a página', 'Selecione outro funil'],
                 );
                 setFunnel(null);
                 setFunnelId(null);
@@ -158,7 +158,7 @@ export function useFunnelLoader(
             setErrorState(
                 errorMessage,
                 'LOAD_ERROR',
-                ['Verifique sua conexão', 'Tente novamente', 'Contate o suporte']
+                ['Verifique sua conexão', 'Tente novamente', 'Contate o suporte'],
             );
             setFunnel(null);
             setFunnelId(null);
@@ -186,7 +186,7 @@ export function useFunnelLoader(
                 setErrorState(
                     'Sem permissão para acessar este funil',
                     'NO_PERMISSION',
-                    ['Verifique se você está logado', 'Contate o proprietário', 'Selecione outro funil']
+                    ['Verifique se você está logado', 'Contate o proprietário', 'Selecione outro funil'],
                 );
             }
 
@@ -214,7 +214,7 @@ export function useFunnelLoader(
                 name,
                 context,
                 userId,
-                ...createOptions
+                ...createOptions,
             });
 
             // Atualizar estado local
@@ -227,7 +227,7 @@ export function useFunnelLoader(
                 canRead: true,
                 canEdit: true,
                 canDelete: true,
-                isOwner: true
+                isOwner: true,
             });
 
             console.log('✅ Funil criado:', newFunnel);
@@ -317,7 +317,7 @@ export function useFunnelLoader(
                     canRead: false,
                     canEdit: false,
                     canDelete: false,
-                    isOwner: false
+                    isOwner: false,
                 });
                 console.log('✅ Funil deletado');
             }
@@ -391,7 +391,7 @@ export function useFunnelLoader(
         // Armazenar cleanup functions
         const cleanupFunctions = [
             () => funnelUnifiedService.off('updated', handleFunnelUpdated),
-            () => funnelUnifiedService.off('deleted', handleFunnelDeleted)
+            () => funnelUnifiedService.off('deleted', handleFunnelDeleted),
         ];
         eventListenersRef.current = cleanupFunctions;
 
@@ -444,7 +444,7 @@ export function useFunnelLoader(
         retry,
         reload,
         clearError,
-        validateFunnel
+        validateFunnel,
     };
 }
 
@@ -460,7 +460,7 @@ export function useFunnelContext(funnelId?: string, userId?: string) {
         userId,
         autoLoad: true,
         enableEvents: true,
-        context: FunnelContext.EDITOR
+        context: FunnelContext.EDITOR,
     });
 }
 

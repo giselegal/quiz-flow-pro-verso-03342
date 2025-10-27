@@ -45,7 +45,7 @@ export class ContextualFunnelService {
         ...funnel,
         id: contextualId,
         context: this.context,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       // Salvar no storage contextual
@@ -179,7 +179,7 @@ export class ContextualFunnelService {
         name: `${funnel.name} (cópia)`,
         context: targetContext,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       return await targetService.saveFunnel(copiedFunnel);
@@ -207,7 +207,7 @@ export class ContextualFunnelService {
     return {
       ...storageStats,
       cacheSize,
-      cacheHitRate: cacheSize > 0 ? '~' + Math.round((cacheSize / storageStats.keysCount) * 100) + '%' : '0%'
+      cacheHitRate: cacheSize > 0 ? `~${  Math.round((cacheSize / storageStats.keysCount) * 100)  }%` : '0%',
     };
   }
 
@@ -224,7 +224,7 @@ export class ContextualFunnelService {
       name: funnelName,
       context: this.context,
       createdAt: existingIndex >= 0 ? list[existingIndex].createdAt : new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     if (existingIndex >= 0) {
@@ -264,7 +264,7 @@ export class ContextualFunnelService {
           ...legacyData,
           id: contextualId,
           context: this.context,
-          updatedAt: new Date()
+          updatedAt: new Date(),
         };
 
         await this.saveFunnel(migratedFunnel);

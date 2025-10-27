@@ -26,7 +26,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
   const {
     enableCache = true,
     preloadNext = 2,
-    compressionEnabled = true
+    compressionEnabled = true,
   } = options;
 
   const [metrics, setMetrics] = useState<PerformanceMetrics>({
@@ -34,7 +34,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
     cacheHits: 0,
     cacheMisses: 0,
     totalSteps: 21,
-    loadedSteps: 0
+    loadedSteps: 0,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +51,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
       setMetrics(prev => ({
         ...prev,
         cacheHits: prev.cacheHits + 1,
-        loadTime: performance.now() - loadStartRef.current
+        loadTime: performance.now() - loadStartRef.current,
       }));
       setIsLoading(false);
       return cacheRef.current.get(stepId);
@@ -69,7 +69,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
         ...prev,
         cacheMisses: prev.cacheMisses + 1,
         loadedSteps: prev.loadedSteps + 1,
-        loadTime: performance.now() - loadStartRef.current
+        loadTime: performance.now() - loadStartRef.current,
       }));
 
       setIsLoading(false);
@@ -121,7 +121,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
       ...prev,
       cacheHits: 0,
       cacheMisses: 0,
-      loadedSteps: 0
+      loadedSteps: 0,
     }));
   }, []);
 
@@ -138,8 +138,8 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
       recommendations: {
         shouldEnableCompression: compressionEnabled && metrics.loadTime > 100,
         shouldPreload: loadProgress < 50,
-        cacheOptimal: cacheEfficiency > 70
-      }
+        cacheOptimal: cacheEfficiency > 70,
+      },
     };
   }, [metrics, compressionEnabled]);
 
@@ -160,7 +160,7 @@ export function useTemplatePerformance(options: UseTemplatePerformanceOptions = 
     navigateToStep,
     metrics,
     isLoading,
-    cacheSize: cacheRef.current.size
+    cacheSize: cacheRef.current.size,
   };
 }
 
@@ -169,7 +169,7 @@ export function useQuiz21Performance() {
   const performance = useTemplatePerformance({
     enableCache: true,
     preloadNext: 2,
-    compressionEnabled: true
+    compressionEnabled: true,
   });
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -195,7 +195,7 @@ export function useQuiz21Performance() {
       ...report,
       currentStep,
       stepsRemaining: 21 - currentStep,
-      completionPercentage: (currentStep / 21) * 100
+      completionPercentage: (currentStep / 21) * 100,
     };
   }, [performance, currentStep]);
 
@@ -204,6 +204,6 @@ export function useQuiz21Performance() {
     navigateToStep,
     getQuizMetrics,
     currentStep,
-    totalSteps: 21
+    totalSteps: 21,
   };
 }

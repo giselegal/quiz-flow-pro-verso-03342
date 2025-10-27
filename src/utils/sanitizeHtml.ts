@@ -9,7 +9,7 @@
 // e não modificar package.json (histórico do repositório mostra restrição).
 
 const ALLOWED_TAGS = new Set([
-    'b', 'strong', 'i', 'em', 'u', 'br', 'span', 'p', 'div', 'ul', 'ol', 'li', 'blockquote'
+    'b', 'strong', 'i', 'em', 'u', 'br', 'span', 'p', 'div', 'ul', 'ol', 'li', 'blockquote',
 ]);
 
 export function sanitizeHtml(input?: string | null): string {

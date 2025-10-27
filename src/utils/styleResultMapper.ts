@@ -34,7 +34,7 @@ export function mapToStyleResult(data: LegacyStyleData): StyleResult {
     percentage: data.percentage,
     style: data.style || data.category,
     points: data.points || data.score,
-    rank: data.rank
+    rank: data.rank,
   };
 }
 

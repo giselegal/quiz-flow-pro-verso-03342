@@ -34,7 +34,7 @@ export interface SelectionValidityResult {
 
 export function getEffectiveRequiredSelections(
   step: unknown,
-  config: SelectionConfig
+  config: SelectionConfig,
 ): number {
   if (isScoringPhase(step)) return 3;
   if (isStrategicPhase(step)) return 1;
@@ -45,7 +45,7 @@ export function getEffectiveRequiredSelections(
 export function computeSelectionValidity(
   step: unknown,
   selectionCount: number,
-  config: SelectionConfig
+  config: SelectionConfig,
 ): SelectionValidityResult {
   const effectiveRequiredSelections = getEffectiveRequiredSelections(step, config);
   return {

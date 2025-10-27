@@ -36,7 +36,7 @@ export type {
     QuizBlockComponentProps,
 
     // Legacy compatibility
-    LegacyBlockComponentProps
+    LegacyBlockComponentProps,
 } from './BlockInterfaces';
 
 export {
@@ -46,7 +46,7 @@ export {
 
     // Type guards
     isQuizBlockProps,
-    isEditableBlockProps
+    isEditableBlockProps,
 } from './BlockInterfaces';
 
 // =============================================
@@ -69,7 +69,7 @@ export type {
     // Legacy aliases
     SchemaValidationError,
     BlockValidationResult,
-    QuizValidationResult
+    QuizValidationResult,
 } from './ValidationTypes';
 
 export {
@@ -83,7 +83,7 @@ export {
 
     // Conversion utilities
     convertLegacyErrors,
-    hasDetailedErrors
+    hasDetailedErrors,
 } from './ValidationTypes';
 
 // =============================================
@@ -92,7 +92,7 @@ export {
 export type {
     // Legacy types (temporary)
     LegacyBlockProps,
-    LegacyValidationResult
+    LegacyValidationResult,
 } from './LegacyTypeAdapters';
 
 export {
@@ -109,7 +109,7 @@ export {
 
     // Temporary compatibility
     convertLegacyBlockProps,
-    convertLegacyValidationResult
+    convertLegacyValidationResult,
 } from './LegacyTypeAdapters';
 
 // =============================================
@@ -118,15 +118,15 @@ export {
 
 // Most commonly used types for easy access
 export type {
-    BlockData as Block
+    BlockData as Block,
 } from './BlockInterfaces';
 
 export type {
-    UnifiedBlockComponentProps as BlockProps
+    UnifiedBlockComponentProps as BlockProps,
 } from './BlockInterfaces';
 
 export type {
-    UnifiedValidationResult as Validation
+    UnifiedValidationResult as Validation,
 } from './ValidationTypes';
 
 // =============================================
@@ -149,14 +149,14 @@ export const CONSOLIDATION_INFO = {
         'src/utils/blockValidation.ts (ValidationResult)',
         'src/utils/schemaValidator.ts (SchemaValidationError)',
         'src/utils/calcResults.ts (ValidationResult)',
-        'src/utils/validateDataSync.ts (ValidationResult)'
+        'src/utils/validateDataSync.ts (ValidationResult)',
     ],
     benefits: [
         'Resolved TypeScript conflicts between duplicate interfaces',
         'Unified validation types across all utils',
         'Maintained backward compatibility with legacy code',
         'Reduced code duplication by ~200 lines',
-        'Established foundation for Phase 2 consolidations'
+        'Established foundation for Phase 2 consolidations',
     ],
-    nextPhase: 'PHASE_2_SERVICES_AND_HOOKS'
+    nextPhase: 'PHASE_2_SERVICES_AND_HOOKS',
 } as const;

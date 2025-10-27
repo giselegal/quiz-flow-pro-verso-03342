@@ -11,7 +11,7 @@ import React, {
     useEffect,
     useCallback,
     useMemo,
-    ReactNode
+    ReactNode,
 } from 'react';
 import { advancedStorage, StorageChangeEvent } from './AdvancedStorageSystem';
 
@@ -68,7 +68,7 @@ function syncedReducer<T>(state: SyncedState<T>, action: SyncAction<T>): SyncedS
                 data: action.payload,
                 loading: false,
                 error: null,
-                lastSync: Date.now()
+                lastSync: Date.now(),
             };
 
         case 'SET_LOADING':
@@ -89,7 +89,7 @@ function syncedReducer<T>(state: SyncedState<T>, action: SyncAction<T>): SyncedS
                 loading: false,
                 error: null,
                 lastSync: 0,
-                version: 0
+                version: 0,
             };
 
         default:
@@ -118,7 +118,7 @@ function createSyncedContext<T>(config: SyncedContextConfig<T>) {
             loading: false,
             error: null,
             lastSync: 0,
-            version: 0
+            version: 0,
         };
 
         const [state, dispatch] = useReducer(syncedReducer<T>, initialState);
@@ -152,7 +152,7 @@ function createSyncedContext<T>(config: SyncedContextConfig<T>) {
 
                 const stored = await advancedStorage.getItem<T>(
                     'context-data',
-                    config.namespace
+                    config.namespace,
                 );
 
                 if (stored) {
@@ -177,7 +177,7 @@ function createSyncedContext<T>(config: SyncedContextConfig<T>) {
 
         const updateData = useCallback(async (
             newData: Partial<T> | T,
-            optimistic: boolean = true
+            optimistic: boolean = true,
         ) => {
             try {
                 const mergedData = typeof newData === 'object' && newData !== null
@@ -199,7 +199,7 @@ function createSyncedContext<T>(config: SyncedContextConfig<T>) {
                 await advancedStorage.setItem('context-data', dataToStore, {
                     namespace: config.namespace,
                     compress: config.compression,
-                    tags: ['context', 'synced']
+                    tags: ['context', 'synced'],
                 });
 
                 // Update pessimista (storage first) 
@@ -238,7 +238,7 @@ function createSyncedContext<T>(config: SyncedContextConfig<T>) {
             updateData,
             refreshData,
             resetState,
-            isStale
+            isStale,
         };
 
         return (
@@ -299,14 +299,14 @@ const editorContextConfig: SyncedContextConfig<EditorState> = {
         settings: {
             theme: 'elegant-brown',
             primaryColor: '#B89B7A',
-            fontFamily: 'Inter'
+            fontFamily: 'Inter',
         },
         history: {
             undoStack: [],
             redoStack: [],
             canUndo: false,
-            canRedo: false
-        }
+            canRedo: false,
+        },
     },
     syncInterval: 2000, // Sincronizar a cada 2s
     compression: true,
@@ -315,7 +315,7 @@ const editorContextConfig: SyncedContextConfig<EditorState> = {
             data !== null &&
             'editorMode' in data &&
             'blocks' in data;
-    }
+    },
 };
 
 export const { Provider: EditorSyncProvider, useContext: useEditorSync } =
@@ -348,15 +348,15 @@ const userContextConfig: SyncedContextConfig<UserState> = {
         preferences: {
             theme: 'light',
             language: 'pt-BR',
-            notifications: true
+            notifications: true,
         },
         session: {
             isAuthenticated: false,
-            lastActivity: Date.now()
-        }
+            lastActivity: Date.now(),
+        },
     },
     syncInterval: 5000, // Sincronizar a cada 5s
-    compression: false // Dados pequenos, não comprimir
+    compression: false, // Dados pequenos, não comprimir
 };
 
 export const { Provider: UserSyncProvider, useContext: useUserSync } =
@@ -400,23 +400,23 @@ const funnelContextConfig: SyncedContextConfig<FunnelState> = {
             fonts: { primary: 'Inter', secondary: 'Playfair Display' },
             seo: {},
             domain: {},
-            pixels: {}
+            pixels: {},
         },
         publishedAt: null,
-        isDraft: true
+        isDraft: true,
     },
     syncInterval: 3000, // Sincronizar a cada 3s
     compression: true,
     transformer: {
         serialize: (data) => ({
             ...data,
-            lastModified: new Date().toISOString()
+            lastModified: new Date().toISOString(),
         }),
         deserialize: (data) => {
             const { lastModified, ...rest } = data;
             return rest;
-        }
-    }
+        },
+    },
 };
 
 export const { Provider: FunnelSyncProvider, useContext: useFunnelSync } =
@@ -468,7 +468,7 @@ export const useSyncedErrors = () => {
     const errors = [
         editor.state.error,
         user.state.error,
-        funnel.state.error
+        funnel.state.error,
     ].filter(Boolean);
 
     return errors.length > 0 ? errors : null;
@@ -482,7 +482,7 @@ export const useRefreshAll = () => {
         await Promise.all([
             editor.refreshData(),
             user.refreshData(),
-            funnel.refreshData()
+            funnel.refreshData(),
         ]);
     }, [editor, user, funnel]);
 };
@@ -510,7 +510,7 @@ export const useMigrateFromLocalStorage = () => {
                 'editor_',
                 'funnel_',
                 'user_',
-                'quiz_'
+                'quiz_',
             ], false); // Não deletar ainda, manter backup
 
             console.log(`✅ Migração concluída: ${migrated} itens migrados`);
@@ -538,7 +538,7 @@ export const useSafeStorageCleanup = () => {
             const cleaned = await advancedStorage.cleanup({
                 maxAge: options.maxAge || 7 * 24 * 60 * 60 * 1000, // 7 dias
                 namespace: options.namespace,
-                preserveEssential: options.preserveEssential !== false
+                preserveEssential: options.preserveEssential !== false,
             });
 
             console.log(`✅ Limpeza concluída: ${cleaned} itens removidos`);
@@ -558,5 +558,5 @@ export default {
     useSafeStorageCleanup,
     useEditorSync,
     useUserSync,
-    useFunnelSync
+    useFunnelSync,
 };

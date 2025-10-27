@@ -45,7 +45,7 @@ export class UnifiedCalculationEngine {
      */
     calculateResults(
         answers: QuizAnswer[],
-        options: UnifiedCalculationOptions = {}
+        options: UnifiedCalculationOptions = {},
     ): QuizResult {
         const {
             includeUserData = true,
@@ -53,7 +53,7 @@ export class UnifiedCalculationEngine {
             strategicAnswersCount = 0,
             tieBreakStrategy = 'first-answer',
             customWeights = {},
-            debug = false
+            debug = false,
         } = options;
 
         this.debugMode = debug;
@@ -62,7 +62,7 @@ export class UnifiedCalculationEngine {
             console.log('🧮 UnifiedCalculationEngine: Iniciando cálculo', {
                 totalAnswers: answers.length,
                 tieBreakStrategy,
-                hasConfig: !!this.config
+                hasConfig: !!this.config,
             });
         }
 
@@ -98,7 +98,7 @@ export class UnifiedCalculationEngine {
                 points: 0,
                 percentage: 0,
                 responseCount: 0,
-                firstResponseTime: undefined
+                firstResponseTime: undefined,
             };
         });
 
@@ -130,7 +130,7 @@ export class UnifiedCalculationEngine {
                     responseOrder.push({
                         style: styleName,
                         timestamp,
-                        questionId: answer.questionId
+                        questionId: answer.questionId,
                     });
 
                     // Registrar primeiro tempo de resposta para desempate
@@ -164,7 +164,7 @@ export class UnifiedCalculationEngine {
             const difference = 100 - totalPercentage;
             // Ajustar no estilo com maior pontuação
             const highestStyle = stylesWithPoints.reduce((prev, current) =>
-                (current.points > prev.points) ? current : prev
+                (current.points > prev.points) ? current : prev,
             );
             highestStyle.percentage += difference;
         }
@@ -173,7 +173,7 @@ export class UnifiedCalculationEngine {
             console.log('📊 Pontuação final por estilo:',
                 Object.entries(styleScores)
                     .map(([style, data]) => `${style}: ${data.points} pts (${data.percentage}%)`)
-                    .join(', ')
+                    .join(', '),
             );
         }
 
@@ -217,7 +217,7 @@ export class UnifiedCalculationEngine {
             percentage: primaryStyleData.percentage,
             style: primaryStyleData.style.toLowerCase(),
             points: primaryStyleData.points,
-            rank: 1
+            rank: 1,
         };
 
         const secondaryStyles: StyleResult[] = secondaryStylesData.map((styleData, index) => ({
@@ -235,7 +235,7 @@ export class UnifiedCalculationEngine {
             percentage: styleData.percentage,
             style: styleData.style.toLowerCase(),
             points: styleData.points,
-            rank: index + 2
+            rank: index + 2,
         }));
 
         // Converter para formato de scores simples
@@ -253,7 +253,7 @@ export class UnifiedCalculationEngine {
             primaryStyle,
             secondaryStyles,
             totalQuestions: scorableAnswers.length,
-            styleResult: primaryStyle
+            styleResult: primaryStyle,
         };
 
         // ========================================================================
@@ -264,7 +264,7 @@ export class UnifiedCalculationEngine {
             result.userData = {
                 name: userName,
                 completionTime: new Date(),
-                strategicAnswersCount
+                strategicAnswersCount,
             };
         }
 
@@ -273,7 +273,7 @@ export class UnifiedCalculationEngine {
                 primaryStyle: result.primaryStyle?.category,
                 percentage: result.primaryStyle?.percentage,
                 totalQuestions: result.totalQuestions,
-                hasUserData: !!result.userData
+                hasUserData: !!result.userData,
             });
         }
 
@@ -339,7 +339,7 @@ export class UnifiedCalculationEngine {
         a: StyleCalculationResult,
         b: StyleCalculationResult,
         strategy: string,
-        _responseOrder: { style: string; timestamp: Date; questionId: string }[]
+        _responseOrder: { style: string; timestamp: Date; questionId: string }[],
     ): number {
         switch (strategy) {
             case 'first-answer': {
@@ -421,7 +421,7 @@ export class UnifiedCalculationEngine {
 
         return {
             valid: issues.length === 0,
-            issues
+            issues,
         };
     }
 }
@@ -448,7 +448,7 @@ export function getDefaultCalculationEngine(): UnifiedCalculationEngine {
  */
 export function calculateQuizResults(
     answers: QuizAnswer[],
-    options: UnifiedCalculationOptions = {}
+    options: UnifiedCalculationOptions = {},
 ): QuizResult {
     return getDefaultCalculationEngine().calculateResults(answers, options);
 }

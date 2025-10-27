@@ -16,7 +16,7 @@ export interface LegacyStyle extends StyleResult {
 
 // Helper to convert partial style objects to full StyleResult
 export function createFullStyleResult(
-  partialStyle: Partial<StyleResult> & { id: string; name: string; description: string }
+  partialStyle: Partial<StyleResult> & { id: string; name: string; description: string },
 ): StyleResult {
   return {
     id: partialStyle.id,
@@ -45,7 +45,7 @@ export const createLegacyStyleResult = (
   score: number,
   percentage: number,
   points: number,
-  rank: number
+  rank: number,
 ): StyleResult => createFullStyleResult({
   id: category,
   name: category,

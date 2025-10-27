@@ -146,7 +146,7 @@ class QuizDataService {
     selectedOptions: string[],
     optionTexts: string[],
     stylePoints: Record<string, number>,
-    responseTime: number
+    responseTime: number,
   ): void {
     if (!this.currentSession) {
       console.warn('No active session to add answer');
@@ -184,7 +184,7 @@ class QuizDataService {
     elementText?: string,
     position?: { x: number; y: number },
     questionIndex?: number,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ): void {
     if (!this.isTrackingEnabled || !this.currentSession) return;
 
@@ -375,7 +375,7 @@ class QuizDataService {
 
     const totalTime = this.currentSession.answers.reduce(
       (sum, answer) => sum + answer.responseTime,
-      0
+      0,
     );
     return totalTime / this.currentSession.answers.length;
   }

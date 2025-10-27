@@ -18,23 +18,23 @@ export {
   LocalStorageAdapter,
   EditorStorageAdapter,
   QuizStorageAdapter,
-  FunnelStorageAdapter
+  FunnelStorageAdapter,
 } from './storage/LocalStorageAdapter';
 export type { 
   StorageAdapter,
-  CacheOptions
+  CacheOptions,
 } from './storage/LocalStorageAdapter';
 
 // API Clients
 import { supabaseApi } from './api/SupabaseApiClient';
 export { 
   SupabaseApiClient,
-  supabaseApi
+  supabaseApi,
 } from './api/SupabaseApiClient';
 export type {
   ApiResponse,
   PaginatedApiResponse,
-  QueryOptions
+  QueryOptions,
 } from './api/SupabaseApiClient';
 
 // Utility Functions
@@ -50,10 +50,10 @@ export const isValidUUID = (uuid: string): boolean => {
 export const infrastructureLayer = {
   repositories: {
     quiz: new SupabaseQuizRepository(),
-    funnel: new SupabaseFunnelRepository()
+    funnel: new SupabaseFunnelRepository(),
   },
   storage: new LocalStorageAdapter(),
-  api: supabaseApi
+  api: supabaseApi,
 };
 
 export const validateEnvironment = (): {
@@ -90,7 +90,7 @@ export const validateEnvironment = (): {
     hasSupabase,
     hasLocalStorage,
     environment,
-    warnings
+    warnings,
   };
 };
 
@@ -100,7 +100,7 @@ export class InfrastructureError extends Error {
     message: string,
     public readonly service: string,
     public readonly operation: string,
-    public readonly originalError?: any
+    public readonly originalError?: any,
   ) {
     super(message);
     this.name = 'InfrastructureError';
@@ -119,7 +119,7 @@ export class ApiError extends InfrastructureError {
     message: string, 
     operation: string, 
     originalError?: any,
-    public readonly statusCode?: number
+    public readonly statusCode?: number,
   ) {
     super(message, 'api', operation, originalError);
     this.name = 'ApiError';
@@ -138,7 +138,7 @@ export class RetryPolicy {
   constructor(
     public readonly maxAttempts: number = 3,
     public readonly delayMs: number = 1000,
-    public readonly backoffMultiplier: number = 2
+    public readonly backoffMultiplier: number = 2,
   ) {}
 
   async execute<T>(operation: () => Promise<T>): Promise<T> {
@@ -155,7 +155,7 @@ export class RetryPolicy {
             `Operation failed after ${this.maxAttempts} attempts`,
             'retry-policy',
             'execute',
-            error
+            error,
           );
         }
         
@@ -176,7 +176,7 @@ export class CircuitBreaker {
 
   constructor(
     private readonly threshold: number = 5,
-    private readonly timeoutMs: number = 60000
+    private readonly timeoutMs: number = 60000,
   ) {}
 
   async execute<T>(operation: () => Promise<T>): Promise<T> {
@@ -187,7 +187,7 @@ export class CircuitBreaker {
         throw new InfrastructureError(
           'Circuit breaker is open',
           'circuit-breaker',
-          'execute'
+          'execute',
         );
       }
     }
@@ -220,7 +220,7 @@ export class CircuitBreaker {
     return {
       state: this.state,
       failures: this.failures,
-      lastFailureTime: this.lastFailureTime
+      lastFailureTime: this.lastFailureTime,
     };
   }
 }
@@ -265,7 +265,7 @@ export class PerformanceMonitor {
         averageTime: data.count > 0 ? data.totalTime / data.count : 0,
         totalTime: data.totalTime,
         errors: data.errors,
-        errorRate: data.count > 0 ? data.errors / data.count : 0
+        errorRate: data.count > 0 ? data.errors / data.count : 0,
       };
     });
     

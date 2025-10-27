@@ -231,7 +231,7 @@ export class AnalyticsService extends BaseCanonicalService {
         sessionId: this.currentSessionId,
         timestamp: new Date(),
         properties: params.properties || {},
-        context: this.getEventContext()
+        context: this.getEventContext(),
       };
 
       this.eventsList.push(event);
@@ -259,7 +259,7 @@ export class AnalyticsService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to track event')
+        error: error instanceof Error ? error : new Error('Failed to track event'),
       };
     }
   }
@@ -273,8 +273,8 @@ export class AnalyticsService extends BaseCanonicalService {
       userId,
       funnelId,
       properties: {
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     });
   }
 
@@ -291,8 +291,8 @@ export class AnalyticsService extends BaseCanonicalService {
       properties: {
         stepNumber,
         stepType,
-        timeSpent: Math.round(timeSpent / 1000) // seconds
-      }
+        timeSpent: Math.round(timeSpent / 1000), // seconds
+      },
     });
   }
 
@@ -306,8 +306,8 @@ export class AnalyticsService extends BaseCanonicalService {
       properties: {
         questionId,
         optionId,
-        stepNumber
-      }
+        stepNumber,
+      },
     });
   }
 
@@ -325,8 +325,8 @@ export class AnalyticsService extends BaseCanonicalService {
         resultPercentage: result.primaryStyle?.percentage,
         totalQuestions: result.totalQuestions,
         completionTime: Math.round(completionTime / 1000), // seconds
-        score: result.score
-      }
+        score: result.score,
+      },
     });
   }
 
@@ -338,7 +338,7 @@ export class AnalyticsService extends BaseCanonicalService {
       type: 'editor_action',
       userId: details.userId,
       funnelId: details.funnelId,
-      properties: { action, ...details }
+      properties: { action, ...details },
     });
   }
 
@@ -351,8 +351,8 @@ export class AnalyticsService extends BaseCanonicalService {
       properties: {
         message: error.message,
         stack: error.stack,
-        component: component || 'unknown'
-      }
+        component: component || 'unknown',
+      },
     });
   }
 
@@ -405,7 +405,7 @@ export class AnalyticsService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get events')
+        error: error instanceof Error ? error : new Error('Failed to get events'),
       };
     }
   }
@@ -434,7 +434,7 @@ export class AnalyticsService extends BaseCanonicalService {
         timestamp: new Date(),
         category: params.category,
         tags: params.tags || {},
-        metadata: params.metadata
+        metadata: params.metadata,
       };
 
       const categoryMetrics = this.metricsList.get(params.category) || [];
@@ -454,7 +454,7 @@ export class AnalyticsService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to record metric')
+        error: error instanceof Error ? error : new Error('Failed to record metric'),
       };
     }
   }
@@ -467,7 +467,7 @@ export class AnalyticsService extends BaseCanonicalService {
       name: metric,
       value,
       unit,
-      category: 'performance'
+      category: 'performance',
     });
   }
 
@@ -514,7 +514,7 @@ export class AnalyticsService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get metrics')
+        error: error instanceof Error ? error : new Error('Failed to get metrics'),
       };
     }
   }
@@ -538,9 +538,9 @@ export class AnalyticsService extends BaseCanonicalService {
       deviceInfo: {
         type: this.detectDeviceType(),
         userAgent: this.isBrowser() ? navigator.userAgent : 'server',
-        screenResolution: this.isBrowser() ? `${screen.width}x${screen.height}` : 'unknown'
+        screenResolution: this.isBrowser() ? `${screen.width}x${screen.height}` : 'unknown',
       },
-      responses: 0
+      responses: 0,
     };
 
     this.sessionsMap.set(this.currentSessionId, session);
@@ -572,7 +572,7 @@ export class AnalyticsService extends BaseCanonicalService {
           session.finalResult = {
             resultType: event.properties.resultStyle,
             resultTitle: event.properties.resultStyle,
-            score: event.properties.score
+            score: event.properties.score,
           };
         }
         break;
@@ -618,7 +618,7 @@ export class AnalyticsService extends BaseCanonicalService {
       if (supabaseMetrics.success) {
         this.dashboardCache = {
           data: supabaseMetrics.data!,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         };
         return supabaseMetrics;
       }
@@ -627,14 +627,14 @@ export class AnalyticsService extends BaseCanonicalService {
       const localMetrics = this.calculateLocalDashboardMetrics(funnelId);
       this.dashboardCache = {
         data: localMetrics,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
       return { success: true, data: localMetrics };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get dashboard metrics')
+        error: error instanceof Error ? error : new Error('Failed to get dashboard metrics'),
       };
     }
   }
@@ -678,7 +678,7 @@ export class AnalyticsService extends BaseCanonicalService {
         .map(([style, count]) => ({
           style,
           count,
-          percentage: Math.round((count / quizCompleteEvents.length) * 100 * 10) / 10
+          percentage: Math.round((count / quizCompleteEvents.length) * 100 * 10) / 10,
         }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 5);
@@ -699,7 +699,7 @@ export class AnalyticsService extends BaseCanonicalService {
           step,
           completionRate: data.started > 0 
             ? Math.round((data.completed / data.started) * 100 * 10) / 10 
-            : 0
+            : 0,
         }))
         .sort((a, b) => a.step - b.step);
 
@@ -717,7 +717,7 @@ export class AnalyticsService extends BaseCanonicalService {
       const averageTimePerStep = Array.from(stepTimes.entries())
         .map(([step, times]) => ({
           step,
-          averageTime: Math.round((times.reduce((a, b) => a + b, 0) / times.length) * 10) / 10
+          averageTime: Math.round((times.reduce((a, b) => a + b, 0) / times.length) * 10) / 10,
         }))
         .sort((a, b) => a.step - b.step);
 
@@ -727,14 +727,14 @@ export class AnalyticsService extends BaseCanonicalService {
         averageScore,
         popularStyles,
         stepCompletionRates,
-        averageTimePerStep
+        averageTimePerStep,
       };
 
       return { success: true, data: analytics };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get quiz analytics')
+        error: error instanceof Error ? error : new Error('Failed to get quiz analytics'),
       };
     }
   }
@@ -766,7 +766,7 @@ export class AnalyticsService extends BaseCanonicalService {
       this.trackError(error, component),
     
     get: (filters?: Parameters<AnalyticsService['getEvents']>[0]) => 
-      this.getEvents(filters)
+      this.getEvents(filters),
   };
 
   readonly metrics = {
@@ -777,7 +777,7 @@ export class AnalyticsService extends BaseCanonicalService {
       this.trackPerformance(metric, value, unit),
     
     get: (filters?: Parameters<AnalyticsService['getMetrics']>[0]) => 
-      this.getMetrics(filters)
+      this.getMetrics(filters),
   };
 
   readonly sessions = {
@@ -785,7 +785,7 @@ export class AnalyticsService extends BaseCanonicalService {
       this.getCurrentSession(),
     
     get: (sessionId: string) => 
-      this.getSession(sessionId)
+      this.getSession(sessionId),
   };
 
   readonly dashboard = {
@@ -793,7 +793,7 @@ export class AnalyticsService extends BaseCanonicalService {
       this.getDashboardMetrics(funnelId),
     
     getQuizAnalytics: (funnelId?: string) => 
-      this.getQuizAnalytics(funnelId)
+      this.getQuizAnalytics(funnelId),
   };
 
   // ============================================================================
@@ -811,7 +811,7 @@ export class AnalyticsService extends BaseCanonicalService {
         url: 'server',
         screenResolution: 'unknown',
         timezone: 'UTC',
-        deviceType: 'unknown'
+        deviceType: 'unknown',
       };
     }
 
@@ -821,7 +821,7 @@ export class AnalyticsService extends BaseCanonicalService {
       referrer: document.referrer,
       screenResolution: `${screen.width}x${screen.height}`,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      deviceType: this.detectDeviceType()
+      deviceType: this.detectDeviceType(),
     };
   }
 
@@ -863,7 +863,7 @@ export class AnalyticsService extends BaseCanonicalService {
       const data = {
         events: this.eventsList.slice(-100), // Store last 100 events
         sessions: Array.from(this.sessionsMap.entries()).slice(-10), // Store last 10 sessions
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
@@ -887,7 +887,7 @@ export class AnalyticsService extends BaseCanonicalService {
       if (Array.isArray(data.events)) {
         this.eventsList = data.events.map((e: any) => ({
           ...e,
-          timestamp: new Date(e.timestamp)
+          timestamp: new Date(e.timestamp),
         }));
       }
 
@@ -900,16 +900,16 @@ export class AnalyticsService extends BaseCanonicalService {
               ...session,
               startedAt: new Date(session.startedAt),
               lastActivity: new Date(session.lastActivity),
-              completedAt: session.completedAt ? new Date(session.completedAt) : undefined
-            }
-          ])
+              completedAt: session.completedAt ? new Date(session.completedAt) : undefined,
+            },
+          ]),
         );
       }
 
       if (this.options.debug) {
         this.log('Restored from storage:', {
           events: this.eventsList.length,
-          sessions: this.sessionsMap.size
+          sessions: this.sessionsMap.size,
         });
       }
     } catch (error) {
@@ -927,7 +927,7 @@ export class AnalyticsService extends BaseCanonicalService {
         funnel_id: event.funnelId || '',
         user_id: event.userId,
         event_data: event.properties as any,
-        timestamp: event.timestamp.toISOString()
+        timestamp: event.timestamp.toISOString(),
       });
     } catch (error) {
       // Silent fail - localStorage is fallback
@@ -952,7 +952,7 @@ export class AnalyticsService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to fetch Supabase metrics')
+        error: error instanceof Error ? error : new Error('Failed to fetch Supabase metrics'),
       };
     }
   }
@@ -968,7 +968,7 @@ export class AnalyticsService extends BaseCanonicalService {
 
     const totalSessions = filteredSessions.length;
     const activeSessions = filteredSessions.filter(s => 
-      now - s.lastActivity.getTime() < activeThreshold
+      now - s.lastActivity.getTime() < activeThreshold,
     ).length;
     const completedSessions = filteredSessions.filter(s => s.completedAt).length;
     const abandonedSessions = totalSessions - completedSessions - activeSessions;
@@ -993,7 +993,7 @@ export class AnalyticsService extends BaseCanonicalService {
       activeUsersNow: activeSessions,
       recentActivity: [],
       lastUpdated: new Date(),
-      dataSource: 'localStorage'
+      dataSource: 'localStorage',
     };
   }
 

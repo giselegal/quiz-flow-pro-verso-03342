@@ -28,7 +28,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
         id: 'gisele-galvao',
         name: 'Gisele Galvão',
         email: 'contato@giselegaalvao.com',
-        role: 'admin'
+        role: 'admin',
     },
 
     // ============================================================================
@@ -48,7 +48,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             'Gisele Galvão',
             'quiz interativo',
             'descobrir estilo',
-            'transformação visual'
+            'transformação visual',
         ],
 
         // Open Graph para redes sociais
@@ -59,7 +59,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             url: 'https://quiz-sell-genius.com/',
             type: 'website',
             locale: 'pt_BR',
-            siteName: 'Gisele Galvão - Consultoria de Imagem'
+            siteName: 'Gisele Galvão - Consultoria de Imagem',
         },
 
         // Twitter Cards
@@ -69,7 +69,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             description: 'Faça nosso quiz personalizado e descubra qual é o seu estilo predominante.',
             image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/og-image-style-quiz-gisele.webp',
             site: '@giselegaalvao',
-            creator: '@giselegaalvao'
+            creator: '@giselegaalvao',
         },
 
         // Configurações técnicas
@@ -80,7 +80,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             viewport: 'width=device-width, initial-scale=1.0',
             themeColor: '#B89B7A',
             appleMobileWebAppCapable: 'yes',
-            appleMobileWebAppStatusBarStyle: 'default'
+            appleMobileWebAppStatusBarStyle: 'default',
         },
 
         // Structured Data (JSON-LD)
@@ -95,20 +95,20 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 url: 'https://giselegaalvao.com',
                 sameAs: [
                     'https://instagram.com/giselegaalvao',
-                    'https://facebook.com/giselegaalvao'
-                ]
+                    'https://facebook.com/giselegaalvao',
+                ],
             },
             provider: {
                 '@type': 'Organization',
                 name: 'Gisele Galvão - Consultoria de Imagem',
                 url: 'https://giselegaalvao.com',
-                logo: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+                logo: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             },
             interactionType: 'https://schema.org/AssessAction',
             expectedDuration: 'PT5M', // 5 minutos
             educationalLevel: 'Beginner',
-            inLanguage: 'pt-BR'
-        }
+            inLanguage: 'pt-BR',
+        },
     },
 
     // ============================================================================
@@ -122,7 +122,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
         aliases: [
             'quiz-descubra-seu-estilo.com',
             'estilopessoal.gisele.com',
-            'quiz.giselegaalvao.com'
+            'quiz.giselegaalvao.com',
         ],
 
         // Configurações SSL
@@ -130,7 +130,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             enabled: true,
             forceHTTPS: true,
             provider: 'letsencrypt',
-            autoRenewal: true
+            autoRenewal: true,
         },
 
         // CDN Configuration
@@ -141,8 +141,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             cacheSettings: {
                 static: '30d',
                 dynamic: '1h',
-                api: '5m'
-            }
+                api: '5m',
+            },
         },
 
         // Redirecionamentos
@@ -152,8 +152,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             { from: '/descobrir-estilo', to: '/', type: '301' },
             { from: '/quiz-style', to: '/', type: '301' },
             { from: '/style-quiz', to: '/', type: '301' },
-            { from: '/consultoria', to: '/resultado', type: '302' }
-        ]
+            { from: '/consultoria', to: '/resultado', type: '302' },
+        ],
     },
 
     // ============================================================================
@@ -176,15 +176,15 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 'result_viewed',
                 'offer_viewed',
                 'email_captured',
-                'conversion_completed'
+                'conversion_completed',
             ],
 
             // Conversões
             conversions: [
                 { name: 'quiz_completion', value: 10 },
                 { name: 'email_capture', value: 25 },
-                { name: 'purchase', value: 197 }
-            ]
+                { name: 'purchase', value: 197 },
+            ],
         },
 
         // Facebook Pixel
@@ -199,7 +199,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 'CompleteRegistration',
                 'Lead',
                 'Purchase',
-                'InitiateCheckout'
+                'InitiateCheckout',
             ],
 
             // Configurações avançadas
@@ -213,9 +213,9 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                     'quiz_completers',
                     'email_subscribers',
                     'purchasers',
-                    'high_engagement'
-                ]
-            }
+                    'high_engagement',
+                ],
+            },
         },
 
         // Google Tag Manager
@@ -229,8 +229,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 'conversion_tracking',
                 'remarketing',
                 'enhanced_ecommerce',
-                'user_engagement'
-            ]
+                'user_engagement',
+            ],
         },
 
         // Hotjar (Heatmaps e Session Recording)
@@ -247,15 +247,15 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 enabled: true,
                 sampleRate: 100,
                 recordConsoleErrors: true,
-                maskSensitiveData: true
+                maskSensitiveData: true,
             },
 
             // Heatmaps
             heatmaps: {
                 enabled: true,
                 pages: ['/', '/resultado', '/oferta'],
-                deviceTypes: ['desktop', 'tablet', 'mobile']
-            }
+                deviceTypes: ['desktop', 'tablet', 'mobile'],
+            },
         },
 
         // Configurações de privacy
@@ -264,8 +264,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             gdprCompliant: true,
             lgpdCompliant: true,
             cookieConsent: true,
-            dataMinimization: true
-        }
+            dataMinimization: true,
+        },
     },
 
     // ============================================================================
@@ -276,7 +276,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
         facebook: {
             id: '123456789012345', // 🔧 CONFIGURE AQUI
             enabled: true,
-            events: ['PageView', 'ViewContent', 'CompleteRegistration', 'Lead', 'Purchase']
+            events: ['PageView', 'ViewContent', 'CompleteRegistration', 'Lead', 'Purchase'],
         },
 
         // Google Ads
@@ -284,26 +284,26 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             conversionId: 'AW-XXXXXXXXX', // 🔧 CONFIGURE AQUI
             conversionLabel: 'XXXXXXXXXXXXX', // 🔧 CONFIGURE AQUI
             enabled: true,
-            remarketing: true
+            remarketing: true,
         },
 
         // LinkedIn Insight Tag
         linkedin: {
             partnerId: '12345', // 🔧 CONFIGURE AQUI
-            enabled: false
+            enabled: false,
         },
 
         // TikTok Pixel
         tiktok: {
             pixelId: 'XXXXXXXXXXXXX', // 🔧 CONFIGURE AQUI
-            enabled: false
+            enabled: false,
         },
 
         // Pinterest Tag
         pinterest: {
             tagId: 'XXXXXXXXXXXXX', // 🔧 CONFIGURE AQUI
-            enabled: false
-        }
+            enabled: false,
+        },
     },
 
     // ============================================================================
@@ -316,7 +316,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             medium: 'cpc',
             campaign: 'quiz_style_2025',
             term: '',
-            content: ''
+            content: '',
         },
 
         // Auto-tracking
@@ -333,7 +333,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 content: 'quiz_focus',
                 budget: 1500,
                 startDate: '2025-01-01',
-                endDate: '2025-03-31'
+                endDate: '2025-03-31',
             },
             {
                 name: 'Instagram Stories',
@@ -343,7 +343,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 content: 'story_interactive',
                 budget: 800,
                 startDate: '2025-01-15',
-                endDate: '2025-03-15'
+                endDate: '2025-03-15',
             },
             {
                 name: 'Google Ads Quiz',
@@ -353,8 +353,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 content: 'search_quiz',
                 budget: 1200,
                 startDate: '2025-01-01',
-                endDate: '2025-06-30'
-            }
+                endDate: '2025-06-30',
+            },
         ],
 
         // A/B Testing
@@ -363,12 +363,12 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 name: 'Landing vs Quiz Direct',
                 variants: [
                     { name: 'control', utmContent: 'quiz_direct', traffic: 50 },
-                    { name: 'landing', utmContent: 'landing_first', traffic: 50 }
+                    { name: 'landing', utmContent: 'landing_first', traffic: 50 },
                 ],
                 status: 'active',
-                startDate: '2025-01-01'
-            }
-        ]
+                startDate: '2025-01-01',
+            },
+        ],
     },
 
     // ============================================================================
@@ -389,7 +389,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 leadCapture: 'https://hooks.zapier.com/hooks/catch/123456/lead-capture/', // 🔧 CONFIGURE AQUI
                 quizComplete: 'https://hooks.zapier.com/hooks/catch/123456/quiz-complete/', // 🔧 CONFIGURE AQUI
                 purchase: 'https://hooks.zapier.com/hooks/catch/123456/purchase/', // 🔧 CONFIGURE AQUI
-                stepCompleted: 'https://hooks.zapier.com/hooks/catch/123456/step-completed/' // 🔧 CONFIGURE AQUI
+                stepCompleted: 'https://hooks.zapier.com/hooks/catch/123456/step-completed/', // 🔧 CONFIGURE AQUI
             },
 
             // ActiveCampaign
@@ -397,21 +397,21 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 apiUrl: 'https://youraccountname.api-us1.com', // 🔧 CONFIGURE AQUI
                 apiKey: '', // 🔧 CONFIGURE AQUI
                 listId: '', // 🔧 CONFIGURE AQUI
-                enabled: false
+                enabled: false,
             },
 
             // Mailchimp
             mailchimp: {
                 apiKey: '', // 🔧 CONFIGURE AQUI
                 audienceId: '', // 🔧 CONFIGURE AQUI
-                enabled: false
+                enabled: false,
             },
 
             // RD Station
             rdStation: {
                 token: '', // 🔧 CONFIGURE AQUI
-                enabled: false
-            }
+                enabled: false,
+            },
         },
 
         // Configurações de payload por evento
@@ -419,7 +419,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             leadCapture: {
                 fields: ['userName', 'email', 'phone', 'timestamp', 'source', 'utmParams'],
                 format: 'json',
-                includeMetadata: true
+                includeMetadata: true,
             },
 
             quizComplete: {
@@ -434,20 +434,20 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                     'sessionDuration',
                     'timestamp',
                     'source',
-                    'utmParams'
+                    'utmParams',
                 ],
                 format: 'json',
                 includeUserAgent: true,
-                includeReferrer: true
+                includeReferrer: true,
             },
 
             stepCompleted: {
                 fields: ['stepId', 'stepName', 'timeSpent', 'answers', 'timestamp'],
                 format: 'json',
                 batchMode: true,
-                batchSize: 10
-            }
-        }
+                batchSize: 10,
+            },
+        },
     },
 
     // ============================================================================
@@ -467,7 +467,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             gradients: {
                 primary: 'linear-gradient(135deg, #B89B7A 0%, #D4C2A8 100%)',
                 accent: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)',
-                warm: 'linear-gradient(135deg, #B89B7A 0%, #432818 100%)'
+                warm: 'linear-gradient(135deg, #B89B7A 0%, #432818 100%)',
             },
 
             // Backgrounds
@@ -475,8 +475,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 primary: '#FAF9F7',
                 secondary: '#FFFFFF',
                 card: '#FEFEFE',
-                border: '#E6DDD4'
-            }
+                border: '#E6DDD4',
+            },
         },
 
         // Tipografia
@@ -493,7 +493,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 xl: '1.25rem',    // 20px
                 '2xl': '1.5rem',  // 24px
                 '3xl': '1.875rem', // 30px
-                '4xl': '2.25rem'  // 36px
+                '4xl': '2.25rem',  // 36px
             },
 
             // Pesos
@@ -502,8 +502,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 normal: 400,
                 medium: 500,
                 semibold: 600,
-                bold: 700
-            }
+                bold: 700,
+            },
         },
 
         // Assets visuais
@@ -516,8 +516,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             placeholders: {
                 loading: 'https://via.placeholder.com/400x300/B89B7A/FFFFFF?text=Carregando...',
                 error: 'https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Erro+ao+carregar',
-                noImage: 'https://via.placeholder.com/400x300/E5E7EB/9CA3AF?text=Sem+imagem'
-            }
+                noImage: 'https://via.placeholder.com/400x300/E5E7EB/9CA3AF?text=Sem+imagem',
+            },
         },
 
         // Layout e espaçamentos
@@ -531,7 +531,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 md: '768px',
                 lg: '1024px',
                 xl: '1280px',
-                '2xl': '1536px'
+                '2xl': '1536px',
             },
 
             // Sistema de espaçamento
@@ -542,9 +542,9 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 lg: '1.5rem',    // 24px
                 xl: '2rem',      // 32px
                 '2xl': '3rem',   // 48px
-                '3xl': '4rem'    // 64px
-            }
-        }
+                '3xl': '4rem',    // 64px
+            },
+        },
     },
 
     // ============================================================================
@@ -556,7 +556,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             privacy: '/privacy',
             terms: '/terms',
             cookies: '/cookies',
-            disclaimer: '/disclaimer'
+            disclaimer: '/disclaimer',
         },
 
         // Configurações de cookies
@@ -577,21 +577,21 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                     name: 'Essenciais',
                     description: 'Necessários para o funcionamento básico do site',
                     required: true,
-                    cookies: ['session', 'csrf_token', 'preferences']
+                    cookies: ['session', 'csrf_token', 'preferences'],
                 },
                 analytics: {
                     name: 'Analíticos',
                     description: 'Nos ajudam a entender como você usa o site',
                     required: false,
-                    cookies: ['_ga', '_gid', '_gat', 'hotjar']
+                    cookies: ['_ga', '_gid', '_gat', 'hotjar'],
                 },
                 marketing: {
                     name: 'Marketing',
                     description: 'Usados para personalizar anúncios e conteúdo',
                     required: false,
-                    cookies: ['_fbp', '_fbc', 'google_ads']
-                }
-            }
+                    cookies: ['_fbp', '_fbc', 'google_ads'],
+                },
+            },
         },
 
         // Compliance GDPR/LGPD
@@ -607,7 +607,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 'erasure',       // Direito ao esquecimento
                 'portability',   // Portabilidade de dados
                 'restriction',   // Restrição de processamento
-                'objection'      // Direito de oposição
+                'objection',      // Direito de oposição
             ],
 
             // Configurações de consentimento
@@ -622,9 +622,9 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                     'email_marketing',
                     'analytics_tracking',
                     'advertising_cookies',
-                    'third_party_integrations'
-                ]
-            }
+                    'third_party_integrations',
+                ],
+            },
         },
 
         // Informações da empresa
@@ -641,7 +641,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 city: 'São Paulo',
                 state: 'SP',
                 zipCode: '00000-000',
-                country: 'Brasil'
+                country: 'Brasil',
             },
 
             // Contatos
@@ -649,7 +649,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 phone: '(11) 99999-9999', // 🔧 CONFIGURE AQUI
                 whatsapp: '5511999999999', // 🔧 CONFIGURE AQUI
                 email: 'contato@giselegaalvao.com', // 🔧 CONFIGURE AQUI
-                website: 'https://giselegaalvao.com'
+                website: 'https://giselegaalvao.com',
             },
 
             // Redes sociais
@@ -657,9 +657,9 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 instagram: 'https://instagram.com/giselegaalvao',
                 facebook: 'https://facebook.com/giselegaalvao',
                 linkedin: 'https://linkedin.com/in/giselegaalvao',
-                youtube: 'https://youtube.com/@giselegaalvao'
-            }
-        }
+                youtube: 'https://youtube.com/@giselegaalvao',
+            },
+        },
     },
 
     // ============================================================================
@@ -676,8 +676,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 static: 2592000,  // 30 dias
                 images: 604800,   // 7 dias
                 api: 300,         // 5 minutos
-                html: 3600        // 1 hora
-            }
+                html: 3600,        // 1 hora
+            },
         },
 
         // Otimizações de imagem
@@ -690,15 +690,15 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             responsive: {
                 breakpoints: [375, 768, 1024, 1200],
                 formats: ['avif', 'webp', 'jpg'],
-                qualities: [80, 85, 90]
+                qualities: [80, 85, 90],
             },
 
             // CDN
             cdn: {
                 provider: 'cloudinary',
                 baseUrl: 'https://res.cloudinary.com/dqljyf76t/',
-                transformations: 'f_auto,q_auto,w_auto,dpr_auto'
-            }
+                transformations: 'f_auto,q_auto,w_auto,dpr_auto',
+            },
         },
 
         // Preloading
@@ -706,20 +706,20 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             critical: [
                 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
                 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap',
-                'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+                'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             ],
 
             prefetch: [
                 '/resultado',
-                '/oferta'
+                '/oferta',
             ],
 
             preconnect: [
                 'https://fonts.googleapis.com',
                 'https://fonts.gstatic.com',
                 'https://www.google-analytics.com',
-                'https://connect.facebook.net'
-            ]
+                'https://connect.facebook.net',
+            ],
         },
 
         // Monitoramento Web Vitals
@@ -732,7 +732,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 FID: 100,   // First Input Delay
                 CLS: 0.1,   // Cumulative Layout Shift
                 FCP: 1800,  // First Contentful Paint
-                TTFB: 600   // Time to First Byte
+                TTFB: 600,   // Time to First Byte
             },
 
             // Reporting
@@ -740,9 +740,9 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 googleAnalytics: true,
                 customEndpoint: '/api/web-vitals',
                 batchSize: 10,
-                batchTimeout: 5000
-            }
-        }
+                batchTimeout: 5000,
+            },
+        },
     },
 
     // ============================================================================
@@ -755,7 +755,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             frameOptions: 'DENY',
             contentTypeOptions: 'nosniff',
             referrerPolicy: 'strict-origin-when-cross-origin',
-            xssProtection: '1; mode=block'
+            xssProtection: '1; mode=block',
         },
 
         // Rate limiting
@@ -764,7 +764,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             requests: 100,
             window: 3600000, // 1 hora em ms
             skipSuccessfulRequests: true,
-            keyGenerator: 'ip' // ou 'user_id'
+            keyGenerator: 'ip', // ou 'user_id'
         },
 
         // Validação de input
@@ -773,7 +773,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             sqlInjectionProtection: true,
             maxInputLength: 1000,
             allowedFileTypes: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-            maxFileSize: 5242880 // 5MB
+            maxFileSize: 5242880, // 5MB
         },
 
         // CORS
@@ -781,8 +781,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             origin: ['https://giselegaalvao.com', 'https://quiz-sell-genius.com'],
             methods: ['GET', 'POST', 'PUT', 'DELETE'],
             allowedHeaders: ['Content-Type', 'Authorization'],
-            credentials: true
-        }
+            credentials: true,
+        },
     },
 
     // ============================================================================
@@ -795,7 +795,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             basic: {
                 userName: { required: true, maxLength: 50 },
                 email: { required: false, validation: 'email' },
-                phone: { required: false, validation: 'phone' }
+                phone: { required: false, validation: 'phone' },
             },
 
             // Dados do quiz
@@ -803,7 +803,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 answers: { type: 'array', required: true },
                 scores: { type: 'object', required: true },
                 timeSpent: { type: 'number', required: true },
-                completedAt: { type: 'datetime', required: true }
+                completedAt: { type: 'datetime', required: true },
             },
 
             // Dados de sessão
@@ -812,8 +812,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 userAgent: { type: 'string', required: false },
                 referrer: { type: 'string', required: false },
                 utmParams: { type: 'object', required: false },
-                ipAddress: { type: 'string', required: false, encrypt: true }
-            }
+                ipAddress: { type: 'string', required: false, encrypt: true },
+            },
         },
 
         // Armazenamento
@@ -827,8 +827,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             retention: {
                 sessions: '30d',
                 completedQuizzes: '2y',
-                analytics: '26m' // 26 meses para compliance
-            }
+                analytics: '26m', // 26 meses para compliance
+            },
         },
 
         // Privacy
@@ -843,9 +843,9 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 enabled: true,
                 granular: true,
                 withdrawable: true,
-                history: true
-            }
-        }
+                history: true,
+            },
+        },
     },
 
     // ============================================================================
@@ -861,7 +861,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             trafficAllocation: 100, // % do tráfego incluído nos testes
             statisticalSignificance: 0.95,
             minimumSampleSize: 100,
-            maxRunningTime: 90 // dias
+            maxRunningTime: 90, // dias
         },
 
         // Testes ativos
@@ -880,7 +880,7 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                         description: 'Usuário vai direto para o quiz',
                         trafficPercentage: 50,
                         path: '/',
-                        utmContent: 'quiz_direct'
+                        utmContent: 'quiz_direct',
                     },
                     {
                         id: 'landing_first',
@@ -888,31 +888,31 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                         description: 'Página de apresentação antes do quiz',
                         trafficPercentage: 50,
                         path: '/landing',
-                        utmContent: 'landing_first'
-                    }
+                        utmContent: 'landing_first',
+                    },
                 ],
 
                 // Métricas e objetivos
                 primaryGoal: {
                     name: 'quiz_completion_rate',
                     type: 'conversion',
-                    description: 'Taxa de conclusão do quiz'
+                    description: 'Taxa de conclusão do quiz',
                 },
 
                 secondaryGoals: [
                     {
                         name: 'email_capture_rate',
                         type: 'conversion',
-                        description: 'Taxa de captura de email'
+                        description: 'Taxa de captura de email',
                     },
                     {
                         name: 'time_to_completion',
                         type: 'engagement',
-                        description: 'Tempo até completar o quiz'
-                    }
-                ]
-            }
-        ]
+                        description: 'Tempo até completar o quiz',
+                    },
+                ],
+            },
+        ],
     },
 
     // ============================================================================
@@ -930,28 +930,28 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 questions: { start: 2, end: 11, type: 'quiz', selections: 3 },
                 strategic: { start: 13, end: 18, type: 'strategic', selections: 1 },
                 result: { id: 20, type: 'result' },
-                offer: { id: 21, type: 'offer' }
+                offer: { id: 21, type: 'offer' },
             },
 
             // Sistema de pontuação
             scoring: {
                 styles: [
                     'natural', 'classico', 'contemporaneo', 'elegante',
-                    'romantico', 'sexy', 'dramatico', 'criativo'
+                    'romantico', 'sexy', 'dramatico', 'criativo',
                 ],
 
                 weights: {
                     quiz_questions: 0.7,      // 70% peso para questões do quiz
-                    strategic_questions: 0.3  // 30% peso para questões estratégicas
+                    strategic_questions: 0.3,  // 30% peso para questões estratégicas
                 },
 
                 // Algoritmo de resultado
                 algorithm: {
                     primaryStyle: 'highest_score',
                     secondaryStyles: 'top_3_excluding_primary',
-                    minimumScoreDifference: 0.1
-                }
-            }
+                    minimumScoreDifference: 0.1,
+                },
+            },
         },
 
         // Configurações de integração
@@ -965,8 +965,8 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                     users: 'quiz_users',
                     sessions: 'quiz_sessions',
                     answers: 'quiz_answers',
-                    results: 'quiz_results'
-                }
+                    results: 'quiz_results',
+                },
             },
 
             emailProvider: {
@@ -975,10 +975,10 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
                 templates: {
                     welcome: 'd-xxxxxxxx',
                     result: 'd-yyyyyyyy',
-                    follow_up: 'd-zzzzzzzz'
-                }
-            }
-        }
+                    follow_up: 'd-zzzzzzzz',
+                },
+            },
+        },
     },
 
     // ============================================================================
@@ -994,23 +994,23 @@ export const COMPLETE_FUNNEL_CONFIG_EXAMPLE = {
             'user_data',
             'quiz_results',
             'analytics_data',
-            'configurations'
+            'configurations',
         ],
 
         // Onde armazenar
         storage: {
             primary: 'supabase',
             secondary: 's3',
-            local: false
+            local: false,
         },
 
         // Configurações de recuperação
         recovery: {
             automatic: true,
             pointInTime: true,
-            maxRecoveryTime: '24h'
-        }
-    }
+            maxRecoveryTime: '24h',
+        },
+    },
 };
 
 // 🧪 VALIDAÇÃO DA ESTRUTURA
@@ -1039,7 +1039,7 @@ export function validateFunnelConfig(config: any): { isValid: boolean; errors: s
 
     return {
         isValid: errors.length === 0,
-        errors
+        errors,
     };
 }
 

@@ -26,7 +26,7 @@ export const useMonitoring = (options?: {
     isHealthy: true,
     lastError: null,
     errorCount: 0,
-    isMonitoring: false
+    isMonitoring: false,
   });
 
   const { autoStart = true, healthCheckInterval = 30000, trackComponent } = options || {};
@@ -48,7 +48,7 @@ export const useMonitoring = (options?: {
       setState(prev => ({
         ...prev,
         healthStatus: status,
-        isHealthy: status.status === 'healthy'
+        isHealthy: status.status === 'healthy',
       }));
     };
 
@@ -61,7 +61,7 @@ export const useMonitoring = (options?: {
       setState(prev => ({
         ...prev,
         lastError: error,
-        errorCount: prev.errorCount + 1
+        errorCount: prev.errorCount + 1,
       }));
     };
 
@@ -85,7 +85,7 @@ export const useMonitoring = (options?: {
         ...prev,
         healthStatus: initialHealth,
         isHealthy: initialHealth.status === 'healthy',
-        isMonitoring: true
+        isMonitoring: true,
       }));
 
       console.log('📊 Monitoring started');
@@ -101,7 +101,7 @@ export const useMonitoring = (options?: {
     healthCheckService.stopMonitoring();
     setState(prev => ({
       ...prev,
-      isMonitoring: false
+      isMonitoring: false,
     }));
 
     console.log('📊 Monitoring stopped');
@@ -116,7 +116,7 @@ export const useMonitoring = (options?: {
       setState(prev => ({
         ...prev,
         healthStatus: health,
-        isHealthy: health.status === 'healthy'
+        isHealthy: health.status === 'healthy',
       }));
       return health;
     } catch (error) {
@@ -132,7 +132,7 @@ export const useMonitoring = (options?: {
     // Normaliza para assinatura simples (nome + propriedades)
     analyticsService.trackEvent(eventName, {
       component: trackComponent,
-      ...properties
+      ...properties,
     });
   }, [trackComponent]);
 
@@ -142,13 +142,13 @@ export const useMonitoring = (options?: {
   const trackError = useCallback((error: Error | string, context?: Record<string, any>) => {
     const errorId = errorTrackingService.captureError(error, {
       component: trackComponent,
-      metadata: context
+      metadata: context,
     });
 
     // Também rastrear no analytics
     analyticsService.trackError(
       typeof error === 'string' ? new Error(error) : error,
-      trackComponent
+      trackComponent,
     );
 
     return errorId;
@@ -167,7 +167,7 @@ export const useMonitoring = (options?: {
   const trackEditorAction = useCallback((action: string, details?: Record<string, any>) => {
     analyticsService.trackEditorAction(action, {
       component: trackComponent,
-      ...details
+      ...details,
     });
   }, [trackComponent]);
 
@@ -193,7 +193,7 @@ export const useMonitoring = (options?: {
     setState(prev => ({
       ...prev,
       errorCount: 0,
-      lastError: null
+      lastError: null,
     }));
   }, []);
 
@@ -227,7 +227,7 @@ export const useMonitoring = (options?: {
     getServiceHealth: (serviceName: string) => {
       if (!state.healthStatus) return null;
       return state.healthStatus.services[serviceName as keyof typeof state.healthStatus.services];
-    }
+    },
   };
 };
 
@@ -237,7 +237,7 @@ export const useMonitoring = (options?: {
 export const useEditorMonitoring = (componentName: string) => {
   const monitoring = useMonitoring({
     trackComponent: componentName,
-    autoStart: true
+    autoStart: true,
   });
 
   // Auto-track mount/unmount
@@ -270,7 +270,7 @@ export const useMonitoringAlerts = () => {
           id: error.id,
           type: 'error',
           message: error.message,
-          timestamp: error.timestamp
+          timestamp: error.timestamp,
         }, ...prev.slice(0, 9)]); // Manter apenas 10 alertas
       }
     };
@@ -281,7 +281,7 @@ export const useMonitoringAlerts = () => {
           id: `health_${Date.now()}`,
           type: 'error',
           message: 'Sistema em estado crítico',
-          timestamp: status.timestamp
+          timestamp: status.timestamp,
         }, ...prev.slice(0, 9)]);
       }
     };
@@ -307,6 +307,6 @@ export const useMonitoringAlerts = () => {
     dismissAlert,
     clearAllAlerts,
     hasAlerts: alerts.length > 0,
-    errorCount: alerts.filter(a => a.type === 'error').length
+    errorCount: alerts.filter(a => a.type === 'error').length,
   };
 };

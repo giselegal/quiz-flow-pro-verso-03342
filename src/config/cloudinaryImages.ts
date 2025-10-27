@@ -10,7 +10,7 @@ export const CLOUDINARY_CONFIG = {
     MAIN_CLOUD: 'dqljyf76t',
 
     // Cloud name alternativo (imagens específicas)  
-    ALT_CLOUD: 'der8kogzu'
+    ALT_CLOUD: 'der8kogzu',
 };
 
 // === URLS BASE ===
@@ -22,7 +22,7 @@ export const IMAGE_IDS = {
     LOGO: 'v1744911572/LOGO_DA_MARCA_GISELE_r14oz2',
 
     // Imagem principal da intro (nova)
-    INTRO_MAIN: 'v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up'
+    INTRO_MAIN: 'v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up',
 };
 
 // === LOGO OTIMIZADO (Multi-formato) ===
@@ -33,13 +33,13 @@ export const LOGO_URLS = {
     // Variações de tamanho
     small: {
         webp: `${MAIN_BASE_URL}f_webp,q_70,w_80,h_35,c_fit/${IMAGE_IDS.LOGO}.webp`,
-        png: `${MAIN_BASE_URL}f_png,q_70,w_80,h_35,c_fit/${IMAGE_IDS.LOGO}.png`
+        png: `${MAIN_BASE_URL}f_png,q_70,w_80,h_35,c_fit/${IMAGE_IDS.LOGO}.png`,
     },
 
     large: {
         webp: `${MAIN_BASE_URL}f_webp,q_80,w_200,h_85,c_fit/${IMAGE_IDS.LOGO}.webp`,
-        png: `${MAIN_BASE_URL}f_png,q_80,w_200,h_85,c_fit/${IMAGE_IDS.LOGO}.png`
-    }
+        png: `${MAIN_BASE_URL}f_png,q_80,w_200,h_85,c_fit/${IMAGE_IDS.LOGO}.png`,
+    },
 };
 
 // === IMAGEM PRINCIPAL DA INTRO (Multi-formato) ===
@@ -57,14 +57,14 @@ export const INTRO_IMAGE_URLS = {
     mobile: {
         png: `${MAIN_BASE_URL}f_png,q_80,w_250,c_limit/${IMAGE_IDS.INTRO_MAIN}.png`,
         webp: `${MAIN_BASE_URL}f_webp,q_80,w_250,c_limit/${IMAGE_IDS.INTRO_MAIN}.webp`,
-        avif: `${MAIN_BASE_URL}f_avif,q_80,w_250,c_limit/${IMAGE_IDS.INTRO_MAIN}.avif`
+        avif: `${MAIN_BASE_URL}f_avif,q_80,w_250,c_limit/${IMAGE_IDS.INTRO_MAIN}.avif`,
     },
 
     desktop: {
         png: `${MAIN_BASE_URL}f_png,q_90,w_400,c_limit/${IMAGE_IDS.INTRO_MAIN}.png`,
         webp: `${MAIN_BASE_URL}f_webp,q_90,w_400,c_limit/${IMAGE_IDS.INTRO_MAIN}.webp`,
-        avif: `${MAIN_BASE_URL}f_avif,q_90,w_400,c_limit/${IMAGE_IDS.INTRO_MAIN}.avif`
-    }
+        avif: `${MAIN_BASE_URL}f_avif,q_90,w_400,c_limit/${IMAGE_IDS.INTRO_MAIN}.avif`,
+    },
 };
 
 // === FUNÇÕES UTILITÁRIAS ===
@@ -99,13 +99,13 @@ export function generateIntroImageUrl(options: {
 // URLs estáticas pré-otimizadas para uso direto (compatível com exemplo ideal)
 export const STATIC_LOGO_IMAGE_URLS = {
     webp: LOGO_URLS.webp,
-    png: LOGO_URLS.png
+    png: LOGO_URLS.png,
 };
 
 export const STATIC_INTRO_IMAGE_URLS = {
     avif: INTRO_IMAGE_URLS.avif,
     webp: INTRO_IMAGE_URLS.webp,
-    png: INTRO_IMAGE_URLS.png
+    png: INTRO_IMAGE_URLS.png,
 };
 
 // Configuração para o exemplo ideal

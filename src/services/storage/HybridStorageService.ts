@@ -29,7 +29,7 @@ class HybridStorageService {
     useIndexedDB: true,
     useLocalStorage: true,
     memoryCache: true,
-    defaultTTL: 30 * 60 * 1000 // 30 minutos
+    defaultTTL: 30 * 60 * 1000, // 30 minutos
   };
 
   /**
@@ -86,7 +86,7 @@ class HybridStorageService {
     const item: StorageItem = {
       data,
       timestamp: Date.now(),
-      ttl: ttl || this.config.defaultTTL
+      ttl: ttl || this.config.defaultTTL,
     };
 
     // 1. Cache em memória (mais rápido)
@@ -302,7 +302,7 @@ export const hybridStorage = {
   saveData: (key: string, data: any, ttl?: number) => hybridStorageInstance.saveData(key, data, ttl),
   loadData: (key: string) => hybridStorageInstance.loadData(key),
   deleteData: (key: string) => hybridStorageInstance.deleteData(key),
-  cleanup: () => hybridStorageInstance.cleanup()
+  cleanup: () => hybridStorageInstance.cleanup(),
 };
 
 export default hybridStorage;

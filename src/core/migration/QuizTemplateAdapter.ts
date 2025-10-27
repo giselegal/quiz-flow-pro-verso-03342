@@ -52,7 +52,7 @@ export class QuizTemplateAdapter {
       template: null, // QUIZ_STYLE_21_STEPS_TEMPLATE,
       questions: [], // QUIZ_QUESTIONS_COMPLETE,
       persistence: null, // FUNNEL_PERSISTENCE_SCHEMA,
-      globalConfig: null // QUIZ_GLOBAL_CONFIG
+      globalConfig: null, // QUIZ_GLOBAL_CONFIG
     };
   }
 
@@ -76,32 +76,32 @@ export class QuizTemplateAdapter {
       runtime: {
         scoring: {
           method: 'sum',
-          tieBreak: 'alphabetical'
+          tieBreak: 'alphabetical',
         },
         navigation: {
           autoAdvance: {
             enable: true,
-            delayMs: 800
-          }
-        }
+            delayMs: 800,
+          },
+        },
       },
       results: {
         styles: {
           natural: {
             title: 'Estilo Natural',
             description: 'Conforto e praticidade com leveza. Peças básicas com bom caimento e tons neutros.',
-            image: 'https://placehold.co/640x360/B89B7A/FFFFFF?text=Natural'
+            image: 'https://placehold.co/640x360/B89B7A/FFFFFF?text=Natural',
           },
           classico: {
             title: 'Estilo Clássico',
             description: 'Elegância atemporal, cortes retos e qualidade. Paleta sóbria e sofisticação discreta.',
-            image: 'https://placehold.co/640x360/432818/FFFFFF?text=Classico'
+            image: 'https://placehold.co/640x360/432818/FFFFFF?text=Classico',
           },
           romantico: {
             title: 'Estilo Romântico',
             description: 'Delicadeza e feminilidade. Babados leves, florais suaves e curvas suaves.',
-            image: 'https://placehold.co/640x360/D4AF37/FFFFFF?text=Romantico'
-          }
+            image: 'https://placehold.co/640x360/D4AF37/FFFFFF?text=Romantico',
+          },
         },
         offersMap: {
           'Montar looks com mais facilidade e confiança': {
@@ -109,22 +109,22 @@ export class QuizTemplateAdapter {
             description: 'Aprenda a combinar peças com confiança diária usando seu estilo predominante.',
             ctaLabel: 'Quero meu Guia',
             ctaUrl: '#oferta-looks',
-            image: 'https://placehold.co/640x360/8F7A6A/FFFFFF?text=Guia+Looks'
+            image: 'https://placehold.co/640x360/8F7A6A/FFFFFF?text=Guia+Looks',
           },
           'Usar o que já tenho e me sentir estilosa': {
             title: 'Rota do Guarda-Roupa Inteligente',
             description: 'Maximize o que você já tem com combinações certeiras para seu estilo.',
             ctaLabel: 'Começar Agora',
             ctaUrl: '#oferta-guarda-roupa',
-            image: 'https://placehold.co/640x360/AA6B5D/FFFFFF?text=Guarda-Roupa'
-          }
-        }
+            image: 'https://placehold.co/640x360/AA6B5D/FFFFFF?text=Guarda-Roupa',
+          },
+        },
       },
       ui: {
         behavior: {
           selectionEffects: { enabled: true, highlightColor: '#B89B7A', pulseOnComplete: true },
-          validation: { showErrorOnUnderSelection: true, errorCopy: 'Selecione as opções necessárias' }
-        }
+          validation: { showErrorOnUnderSelection: true, errorCopy: 'Selecione as opções necessárias' },
+        },
       },
       steps,
 
@@ -140,17 +140,17 @@ export class QuizTemplateAdapter {
             'Migração para esquema unificado',
             'Suporte completo ao editor visual',
             'Preview real implementado',
-            'Publicação instantânea habilitada'
+            'Publicação instantânea habilitada',
           ],
-          author: 'Sistema de Migração'
+          author: 'Sistema de Migração',
         }],
         accessControl: {
-          public: true
+          public: true,
         },
         cdn: {
           enabled: true,
-          provider: 'cloudflare'
-        }
+          provider: 'cloudflare',
+        },
       },
 
       editorMeta: {
@@ -161,7 +161,7 @@ export class QuizTemplateAdapter {
           autoSave: true,
           previewMode: 'desktop',
           showGrid: false,
-          snapToGrid: true
+          snapToGrid: true,
         },
         baseTemplate: 'quiz21StepsComplete',
         variations: [],
@@ -171,9 +171,9 @@ export class QuizTemplateAdapter {
         stats: {
           totalBlocks: steps.reduce((acc, step) => acc + step.blocks.length, 0),
           totalSteps: steps.length,
-          estimatedCompletionTime: 15 // minutos
-        }
-      }
+          estimatedCompletionTime: 15, // minutos
+        },
+      },
     };
   }
 
@@ -200,7 +200,7 @@ export class QuizTemplateAdapter {
     stepId: string,
     stepNumber: number,
     blocks: Block[],
-    questionText?: string
+    questionText?: string,
   ): Promise<FunnelStep> {
     const stepType = this.determineStepType(stepNumber);
     const stepName = this.generateStepName(stepNumber, stepType, questionText);
@@ -220,7 +220,7 @@ export class QuizTemplateAdapter {
         allowSkip: false,
         trackTimeOnStep: true,
         trackInteractions: true,
-        customEvents: [`step_${stepNumber}_viewed`]
+        customEvents: [`step_${stepNumber}_viewed`],
       },
 
       blocks: this.convertBlocks(blocks),
@@ -229,7 +229,7 @@ export class QuizTemplateAdapter {
 
       validation: this.generateValidationRules(stepType, blocks),
 
-      seo: this.generateStepSEO(stepNumber, stepType, questionText)
+      seo: this.generateStepSEO(stepNumber, stepType, questionText),
     };
   }
 
@@ -300,7 +300,7 @@ export class QuizTemplateAdapter {
       ...block,
       // Adicionar propriedades do novo esquema se necessário
       editable: true,
-      version: '2.0.0'
+      version: '2.0.0',
     }));
   }
 
@@ -312,7 +312,7 @@ export class QuizTemplateAdapter {
       conditions: [],
       nextStep: stepNumber < 21 ? `step-${stepNumber + 1}` : undefined,
       prevStep: stepNumber > 1 ? `step-${stepNumber - 1}` : undefined,
-      actions: []
+      actions: [],
     };
 
     // Adicionar lógicas específicas baseadas no tipo
@@ -322,8 +322,8 @@ export class QuizTemplateAdapter {
           type: 'calculate-score',
           parameters: {
             scoreType: 'style-points',
-            method: 'accumulative'
-          }
+            method: 'accumulative',
+          },
         });
         break;
 
@@ -332,8 +332,8 @@ export class QuizTemplateAdapter {
           type: 'set-variable',
           parameters: {
             variableName: `strategic_answer_${stepNumber - 12}`,
-            source: 'user_input'
-          }
+            source: 'user_input',
+          },
         });
         break;
 
@@ -342,8 +342,8 @@ export class QuizTemplateAdapter {
           type: 'calculate-score',
           parameters: {
             scoreType: 'final-result',
-            method: 'determine-primary-style'
-          }
+            method: 'determine-primary-style',
+          },
         });
         break;
     }
@@ -358,7 +358,7 @@ export class QuizTemplateAdapter {
     const hasFormInput = blocks.some(block =>
       block.type === 'form-input' ||
       block.type === 'options-grid' ||
-      block.type === 'quiz-question-inline'
+      block.type === 'quiz-question-inline',
     );
 
     return {
@@ -368,8 +368,8 @@ export class QuizTemplateAdapter {
         required: 'Este campo é obrigatório',
         minSelection: 'Selecione pelo menos uma opção',
         maxSelection: 'Selecione no máximo as opções permitidas',
-        invalidEmail: 'Digite um email válido'
-      }
+        invalidEmail: 'Digite um email válido',
+      },
     };
   }
 
@@ -383,25 +383,25 @@ export class QuizTemplateAdapter {
       case 'lead-capture':
         return {
           title: `${baseTitle} - Comece Agora`,
-          description: 'Descubra seu estilo pessoal através de nosso quiz exclusivo'
+          description: 'Descubra seu estilo pessoal através de nosso quiz exclusivo',
         };
 
       case 'quiz-question':
         return {
           title: `${baseTitle} - Pergunta ${stepNumber - 1}`,
-          description: questionText || `Responda à pergunta ${stepNumber - 1} do quiz de estilo`
+          description: questionText || `Responda à pergunta ${stepNumber - 1} do quiz de estilo`,
         };
 
       case 'result':
         return {
           title: `${baseTitle} - Seu Resultado`,
-          description: 'Descubra seu estilo predominante e transforme seu guarda-roupa'
+          description: 'Descubra seu estilo predominante e transforme seu guarda-roupa',
         };
 
       case 'offer':
         return {
           title: `${baseTitle} - Oferta Exclusiva`,
-          description: 'Transforme seu resultado em um guia personalizado completo'
+          description: 'Transforme seu resultado em um guia personalizado completo',
         };
 
       default:
@@ -420,7 +420,7 @@ export class QuizTemplateAdapter {
       persistence: this.convertPersistenceConfig(globalConfig.persistence),
       integrations: this.convertIntegrationsConfig(globalConfig.integrations),
       performance: this.convertPerformanceConfig(globalConfig.performance),
-      legal: this.convertLegalConfig(globalConfig.legal)
+      legal: this.convertLegalConfig(globalConfig.legal),
     };
   }
 
@@ -441,14 +441,14 @@ export class QuizTemplateAdapter {
         imageAlt: 'Quiz de Estilo Pessoal',
         type: 'website' as const,
         url: 'https://quiz.giselegalvao.com.br',
-        siteName: 'Gisele Galvão - Consultoria de Imagem'
+        siteName: 'Gisele Galvão - Consultoria de Imagem',
       },
 
       twitter: {
         card: 'summary_large_image' as const,
         title: 'Quiz de Estilo Pessoal',
         description: 'Descubra seu estilo único',
-        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/quiz_twitter_card.webp'
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/quiz_twitter_card.webp',
       },
 
       structuredData: {
@@ -459,12 +459,12 @@ export class QuizTemplateAdapter {
           '@type': 'Organization' as const,
           name: 'Gisele Galvão',
           url: 'https://giselegalvao.com.br',
-          logo: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+          logo: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         },
         category: ['Fashion', 'Lifestyle', 'Personal Development'],
         dateCreated: new Date().toISOString(),
-        dateModified: new Date().toISOString()
-      }
+        dateModified: new Date().toISOString(),
+      },
     };
   }
 
@@ -484,8 +484,8 @@ export class QuizTemplateAdapter {
           'quiz_completed',
           'result_viewed',
           'offer_viewed',
-          'conversion'
-        ]
+          'conversion',
+        ],
       },
 
       customEvents: [
@@ -493,21 +493,21 @@ export class QuizTemplateAdapter {
           name: 'quiz_progression',
           category: 'engagement',
           action: 'step_completed',
-          label: 'quiz_flow'
+          label: 'quiz_flow',
         },
         {
           name: 'result_interaction',
           category: 'conversion',
           action: 'result_viewed',
-          label: 'quiz_result'
-        }
+          label: 'quiz_result',
+        },
       ],
 
       utm: {
         source: 'organic',
         medium: 'quiz',
-        campaign: 'estilo-pessoal'
-      }
+        campaign: 'estilo-pessoal',
+      },
     };
   }
 
@@ -525,18 +525,18 @@ export class QuizTemplateAdapter {
         text: {
           primary: '#432818',
           secondary: '#6B5B4E',
-          disabled: '#9CA3AF'
+          disabled: '#9CA3AF',
         },
         error: '#EF4444',
         warning: '#F59E0B',
-        success: '#10B981'
+        success: '#10B981',
       },
 
       typography: {
         fontFamily: {
           primary: 'Inter, system-ui, sans-serif',
           secondary: 'Poppins, sans-serif',
-          monospace: 'JetBrains Mono, monospace'
+          monospace: 'JetBrains Mono, monospace',
         },
         fontSizes: {
           xs: '0.75rem',
@@ -546,26 +546,26 @@ export class QuizTemplateAdapter {
           xl: '1.25rem',
           '2xl': '1.5rem',
           '3xl': '1.875rem',
-          '4xl': '2.25rem'
+          '4xl': '2.25rem',
         },
         fontWeights: {
           light: 300,
           normal: 400,
           medium: 500,
           semibold: 600,
-          bold: 700
+          bold: 700,
         },
         lineHeight: {
           tight: 1.25,
           normal: 1.5,
-          relaxed: 1.75
-        }
+          relaxed: 1.75,
+        },
       },
 
       logo: {
         primary: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         favicon: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/favicon.ico',
-        appleTouchIcon: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/apple-touch-icon.png'
+        appleTouchIcon: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/apple-touch-icon.png',
       },
 
       spacing: {
@@ -574,7 +574,7 @@ export class QuizTemplateAdapter {
         md: '1rem',
         lg: '1.5rem',
         xl: '2rem',
-        '2xl': '3rem'
+        '2xl': '3rem',
       },
 
       borderRadius: {
@@ -583,15 +583,15 @@ export class QuizTemplateAdapter {
         md: '0.5rem',
         lg: '0.75rem',
         xl: '1rem',
-        full: '9999px'
+        full: '9999px',
       },
 
       shadows: {
         sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
         md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
         lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-        xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
-      }
+        xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+      },
     };
   }
 
@@ -608,7 +608,7 @@ export class QuizTemplateAdapter {
       encryption: false,
       backupEnabled: true,
 
-      webhooks: []
+      webhooks: [],
     };
   }
 
@@ -624,16 +624,16 @@ export class QuizTemplateAdapter {
           url: 'https://hooks.zapier.com/hooks/catch/XXXXXX/XXXXXX/',
           method: 'POST' as const,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           events: ['quiz_completed', 'result_calculated'] as const,
           active: false,
           retryPolicy: {
             maxRetries: 3,
-            backoffMultiplier: 2
-          }
-        }
-      ]
+            backoffMultiplier: 2,
+          },
+        },
+      ],
     };
   }
 
@@ -645,27 +645,27 @@ export class QuizTemplateAdapter {
       cache: {
         enabled: true,
         strategy: 'stale-while-revalidate' as const,
-        ttl: 3600
+        ttl: 3600,
       },
 
       lazyLoading: {
         images: true,
         components: true,
-        threshold: 100
+        threshold: 100,
       },
 
       preload: {
         criticalResources: [
-          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         ],
-        nextStep: true
+        nextStep: true,
       },
 
       compression: {
         images: true,
         scripts: true,
-        styles: true
-      }
+        styles: true,
+      },
     };
   }
 
@@ -678,13 +678,13 @@ export class QuizTemplateAdapter {
         enabled: true,
         policyUrl: 'https://giselegalvao.com.br/privacidade',
         consentRequired: true,
-        cookieNotice: true
+        cookieNotice: true,
       },
 
       terms: {
         enabled: true,
         termsUrl: 'https://giselegalvao.com.br/termos',
-        acceptanceRequired: false
+        acceptanceRequired: false,
       },
 
       dataProcessing: {
@@ -692,8 +692,8 @@ export class QuizTemplateAdapter {
         legalBasis: 'Consentimento explícito do usuário',
         retentionPeriod: 365,
         rightToDelete: true,
-        rightToPortability: true
-      }
+        rightToPortability: true,
+      },
     };
   }
 
@@ -727,7 +727,7 @@ export class QuizTemplateAdapter {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 }

@@ -106,7 +106,7 @@ export class PerformanceManager {
     // Check for hook overuse
     const hookStats = this.getHookUsageStats();
     const componentHooks = Object.entries(hookStats).filter(([hook]) =>
-      this.metrics.hookUsage.get(hook)?.has(component)
+      this.metrics.hookUsage.get(hook)?.has(component),
     );
 
     if (componentHooks.length > 10) {
@@ -247,7 +247,7 @@ export class PerformanceManager {
     const cutoff = Date.now() - 24 * 60 * 60 * 1000; // 24 hours ago
 
     this.metrics.memorySnapshots = this.metrics.memorySnapshots.filter(
-      snapshot => snapshot.timestamp > cutoff
+      snapshot => snapshot.timestamp > cutoff,
     );
 
     // Reset render counts for components that haven't rendered recently
@@ -349,7 +349,7 @@ export class PerformanceManager {
       },
       suggestions: suggestions.filter(
         (s, i, arr) =>
-          arr.findIndex(other => other.component === s.component && other.issue === s.issue) === i
+          arr.findIndex(other => other.component === s.component && other.issue === s.issue) === i,
       ),
       details: {
         hookUsage: hookStats,

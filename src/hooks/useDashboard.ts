@@ -119,7 +119,7 @@ class PerformanceTracker {
             averageLoadTime: this.loadTimes.length > 0
                 ? this.loadTimes.reduce((a, b) => a + b, 0) / this.loadTimes.length
                 : 0,
-            cacheHitRate: totalRequests > 0 ? (this.cacheHits / totalRequests) * 100 : 0
+            cacheHitRate: totalRequests > 0 ? (this.cacheHits / totalRequests) * 100 : 0,
         };
     }
 }
@@ -133,7 +133,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
         autoRefresh = true,
         refreshInterval = 30000, // 30 seconds
         enableRealTime = true,
-        maxRetries = 3
+        maxRetries = 3,
     } = options;
 
     // ========================================================================
@@ -147,23 +147,23 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
             data: [],
             total: 0,
             totalPages: 0,
-            currentPage: 1
+            currentPage: 1,
         },
         loading: {
             metrics: true,
             participants: false,
-            realTime: false
+            realTime: false,
         },
         errors: {
             metrics: null,
             participants: null,
-            realTime: null
+            realTime: null,
         },
         lastUpdated: {
             metrics: null,
             participants: null,
-            realTime: null
-        }
+            realTime: null,
+        },
     });
 
     const [filters, setFilters] = useState<AnalyticsFilters>({});
@@ -176,7 +176,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
     const retryCounters = useRef({
         metrics: 0,
         participants: 0,
-        realTime: 0
+        realTime: 0,
     });
     const intervalRefs = useRef<{
         metrics?: NodeJS.Timeout;
@@ -193,7 +193,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
         setState(prev => ({
             ...prev,
             loading: { ...prev.loading, metrics: true },
-            errors: { ...prev.errors, metrics: null }
+            errors: { ...prev.errors, metrics: null },
         }));
 
         try {
@@ -206,7 +206,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
                 ...prev,
                 metrics,
                 loading: { ...prev.loading, metrics: false },
-                lastUpdated: { ...prev.lastUpdated, metrics: new Date() }
+                lastUpdated: { ...prev.lastUpdated, metrics: new Date() },
             }));
 
             retryCounters.current.metrics = 0;
@@ -220,7 +220,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
             setState(prev => ({
                 ...prev,
                 loading: { ...prev.loading, metrics: false },
-                errors: { ...prev.errors, metrics: errorMessage }
+                errors: { ...prev.errors, metrics: errorMessage },
             }));
 
             // Retry logic
@@ -239,7 +239,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
         setState(prev => ({
             ...prev,
             loading: { ...prev.loading, participants: true },
-            errors: { ...prev.errors, participants: null }
+            errors: { ...prev.errors, participants: null },
         }));
 
         try {
@@ -254,10 +254,10 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
                     data: result.participants,
                     total: result.total,
                     totalPages: result.totalPages,
-                    currentPage: result.currentPage
+                    currentPage: result.currentPage,
                 } : { data: [], total: 0, totalPages: 0, currentPage: 1 },
                 loading: { ...prev.loading, participants: false },
-                lastUpdated: { ...prev.lastUpdated, participants: new Date() }
+                lastUpdated: { ...prev.lastUpdated, participants: new Date() },
             }));
 
             retryCounters.current.participants = 0;
@@ -271,7 +271,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
             setState(prev => ({
                 ...prev,
                 loading: { ...prev.loading, participants: false },
-                errors: { ...prev.errors, participants: errorMessage }
+                errors: { ...prev.errors, participants: errorMessage },
             }));
 
             // Retry logic
@@ -290,7 +290,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
         setState(prev => ({
             ...prev,
             loading: { ...prev.loading, realTime: true },
-            errors: { ...prev.errors, realTime: null }
+            errors: { ...prev.errors, realTime: null },
         }));
 
         try {
@@ -303,7 +303,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
                 ...prev,
                 realTimeMetrics,
                 loading: { ...prev.loading, realTime: false },
-                lastUpdated: { ...prev.lastUpdated, realTime: new Date() }
+                lastUpdated: { ...prev.lastUpdated, realTime: new Date() },
             }));
 
             retryCounters.current.realTime = 0;
@@ -317,7 +317,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
             setState(prev => ({
                 ...prev,
                 loading: { ...prev.loading, realTime: false },
-                errors: { ...prev.errors, realTime: errorMessage }
+                errors: { ...prev.errors, realTime: errorMessage },
             }));
 
             // Retry logic for real-time is less aggressive
@@ -331,7 +331,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
     const refreshAll = useCallback(async (force = false) => {
         await Promise.all([
             refreshMetrics(force),
-            refreshRealTime(force)
+            refreshRealTime(force),
         ]);
     }, [refreshMetrics, refreshRealTime]);
 
@@ -408,7 +408,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
         filters,
         isLoading,
         hasErrors,
-        performance
+        performance,
     };
 };
 
@@ -420,7 +420,7 @@ export const useDashboard = (options: DashboardHookOptions = {}): DashboardHookR
 export const useDashboardMetrics = (_filters?: AnalyticsFilters) => {
     const { state, refreshMetrics, performance } = useDashboard({
         enableRealTime: false,
-        autoRefresh: false
+        autoRefresh: false,
     });
 
     return {
@@ -429,7 +429,7 @@ export const useDashboardMetrics = (_filters?: AnalyticsFilters) => {
         error: state.errors.metrics,
         lastUpdated: state.lastUpdated.metrics,
         refresh: refreshMetrics,
-        performance
+        performance,
     };
 };
 
@@ -437,7 +437,7 @@ export const useDashboardMetrics = (_filters?: AnalyticsFilters) => {
 export const useDashboardParticipants = (_filters?: AnalyticsFilters) => {
     const { state, refreshParticipants, performance } = useDashboard({
         enableRealTime: false,
-        autoRefresh: false
+        autoRefresh: false,
     });
 
     return {
@@ -446,7 +446,7 @@ export const useDashboardParticipants = (_filters?: AnalyticsFilters) => {
         error: state.errors.participants,
         lastUpdated: state.lastUpdated.participants,
         refresh: refreshParticipants,
-        performance
+        performance,
     };
 };
 
@@ -455,7 +455,7 @@ export const useRealTimeMetrics = () => {
     const { state, refreshRealTime, performance } = useDashboard({
         autoRefresh: true,
         refreshInterval: 10000, // 10 seconds for real-time
-        enableRealTime: true
+        enableRealTime: true,
     });
 
     return {
@@ -464,7 +464,7 @@ export const useRealTimeMetrics = () => {
         error: state.errors.realTime,
         lastUpdated: state.lastUpdated.realTime,
         refresh: refreshRealTime,
-        performance
+        performance,
     };
 };
 

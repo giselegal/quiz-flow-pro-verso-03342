@@ -76,7 +76,7 @@ export const ResultOrchestrator = {
                 sample: Object.fromEntries(
                     Object.entries(selectionsByQuestion || {})
                         .slice(0, 3)
-                        .map(([k, v]) => [k, (v || []).slice(0, 3)])
+                        .map(([k, v]) => [k, (v || []).slice(0, 3)]),
                 ),
                 scores,
                 total,

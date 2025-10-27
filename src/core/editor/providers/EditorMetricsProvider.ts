@@ -16,7 +16,7 @@ import {
     EditorUsageMetrics,
     EditorMetricsConfig,
     EditorMetricType,
-    EditorOperationType
+    EditorOperationType,
 } from '../interfaces/EditorInterfaces';
 
 // Importar serviços de monitoramento existentes
@@ -71,13 +71,13 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
                 loadTime: 2000,      // 2s
                 saveTime: 1000,      // 1s  
                 validationTime: 500, // 500ms
-                renderTime: 100      // 100ms
+                renderTime: 100,      // 100ms
             },
             errorThresholds: {
                 maxErrorRate: 0.05,      // 5%
-                maxFallbackRate: 0.02    // 2%
+                maxFallbackRate: 0.02,    // 2%
             },
-            ...config
+            ...config,
         };
     }
 
@@ -101,7 +101,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         // Registrar no sistema de monitoramento
         this.monitoringService.log('info', 'EditorMetrics', 'Metrics collection initialized', {
             sessionId: this.sessionId,
-            config: this.config
+            config: this.config,
         });
     }
 
@@ -116,7 +116,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             successfulSaves: 0,
             abandonedEdits: 0,
             mostUsedFeatures: [],
-            performanceIssues: []
+            performanceIssues: [],
         };
     }
 
@@ -131,7 +131,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         const enhancedMetric: EditorMetricData = {
             ...metric,
             sessionId: this.sessionId,
-            timestamp: metric.timestamp || new Date()
+            timestamp: metric.timestamp || new Date(),
         };
 
         this.metrics.push(enhancedMetric);
@@ -147,8 +147,8 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             {
                 funnelId: metric.funnelId,
                 operation: metric.operation,
-                sessionId: this.sessionId
-            }
+                sessionId: this.sessionId,
+            },
         );
 
         // Atualizar sessão de uso
@@ -170,14 +170,14 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             blockCount: snapshot.blockCount,
             memoryUsage: snapshot.memoryUsage,
             renderTime: snapshot.renderTime,
-            errorCount: snapshot.errorCount
+            errorCount: snapshot.errorCount,
         });
 
         // Verificar thresholds
         if (snapshot.renderTime > this.config.performanceThresholds.renderTime) {
             this.recordAlert('performance', 'High render time detected', {
                 renderTime: snapshot.renderTime,
-                threshold: this.config.performanceThresholds.renderTime
+                threshold: this.config.performanceThresholds.renderTime,
             });
         }
     }
@@ -199,8 +199,8 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             metadata: {
                 errorCount: metrics.errorCount,
                 warningCount: metrics.warningCount,
-                success: metrics.success
-            }
+                success: metrics.success,
+            },
         });
 
         // Verificar threshold
@@ -208,7 +208,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             this.recordAlert('validation', 'Slow validation detected', {
                 validationTime: metrics.validationTime,
                 errorCount: metrics.errorCount,
-                operation: metrics.operation
+                operation: metrics.operation,
             });
         }
     }
@@ -232,8 +232,8 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
                 cacheHit: metrics.cacheHit,
                 fallbackUsed: metrics.fallbackUsed,
                 retryCount: metrics.retryCount,
-                dataSize: metrics.dataSize
-            }
+                dataSize: metrics.dataSize,
+            },
         });
 
         // Verificar threshold de loading
@@ -241,7 +241,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             this.recordAlert('loading', 'Slow loading detected', {
                 duration: metrics.duration,
                 operation: metrics.operation,
-                fallbackUsed: metrics.fallbackUsed
+                fallbackUsed: metrics.fallbackUsed,
             });
         }
     }
@@ -264,8 +264,8 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
                 fallbackType: metrics.fallbackType,
                 fallbackAction: metrics.fallbackAction,
                 originalError: metrics.originalError,
-                success: metrics.success
-            }
+                success: metrics.success,
+            },
         });
 
         // Sempre alertar fallbacks críticos
@@ -273,7 +273,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             type: metrics.fallbackType,
             action: metrics.fallbackAction,
             operation: metrics.operation,
-            error: metrics.originalError
+            error: metrics.originalError,
         });
     }
 
@@ -289,7 +289,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             operationCounts: metrics.operationCounts,
             errorCount: metrics.errorCount,
             successfulSaves: metrics.successfulSaves,
-            performanceIssues: metrics.performanceIssues
+            performanceIssues: metrics.performanceIssues,
         });
     }
 
@@ -402,7 +402,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             fallbackRate,
             performanceScore: Math.max(0, performanceScore),
             issues,
-            recommendations
+            recommendations,
         };
     }
 
@@ -415,7 +415,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             fallbackMetrics: this.fallbackMetrics,
             usageMetrics: this.usageMetrics,
             exportedAt: new Date(),
-            sessionId: this.sessionId
+            sessionId: this.sessionId,
         };
 
         if (format === 'json') {
@@ -431,7 +431,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
                 metric.value.toString(),
                 metric.unit,
                 metric.timestamp.toISOString(),
-                metric.funnelId || ''
+                metric.funnelId || '',
             ].join(','));
         });
 
@@ -450,7 +450,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
 
         this.monitoringService.log('info', 'EditorMetrics', 'Metrics cleared', {
             cutoff: cutoff.toISOString(),
-            remainingCount: this.metrics.length
+            remainingCount: this.metrics.length,
         });
     }
 
@@ -465,21 +465,21 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         if (metric.type === 'load_time' && metric.value > this.config.performanceThresholds.loadTime) {
             this.recordAlert('performance', 'Slow load time detected', {
                 loadTime: metric.value,
-                operation: metric.operation
+                operation: metric.operation,
             });
         }
 
         if (metric.type === 'save_time' && metric.value > this.config.performanceThresholds.saveTime) {
             this.recordAlert('performance', 'Slow save time detected', {
                 saveTime: metric.value,
-                operation: metric.operation
+                operation: metric.operation,
             });
         }
 
         if (metric.type === 'error_count') {
             this.recordAlert('error', 'Editor error occurred', {
                 operation: metric.operation,
-                funnelId: metric.funnelId
+                funnelId: metric.funnelId,
             });
         }
     }
@@ -488,7 +488,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         this.monitoringService.log('warn', 'EditorMetrics', message, {
             alertType: type,
             sessionId: this.sessionId,
-            ...data
+            ...data,
         });
 
         // Integrar com analytics para alertas críticos
@@ -496,7 +496,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
             type,
             message,
             sessionId: this.sessionId,
-            ...data
+            ...data,
         });
     }
 
@@ -526,7 +526,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         // Flush dos dados para sistema de monitoramento
         this.monitoringService.log('info', 'EditorMetrics', 'Periodic flush', {
             metricsCount: this.metrics.length,
-            sessionId: this.sessionId
+            sessionId: this.sessionId,
         });
     }
 
@@ -553,7 +553,7 @@ export class EditorMetricsProviderImpl implements EditorMetricsProvider {
         this.flushToMonitoring();
 
         this.monitoringService.log('info', 'EditorMetrics', 'Metrics provider disposed', {
-            sessionId: this.sessionId
+            sessionId: this.sessionId,
         });
     }
 }
@@ -621,7 +621,7 @@ export class MockEditorMetricsProvider implements EditorMetricsProvider {
             fallbackRate: 0.01,
             performanceScore: 85,
             issues: ['Mock issue'],
-            recommendations: ['Mock recommendation']
+            recommendations: ['Mock recommendation'],
         };
     }
 

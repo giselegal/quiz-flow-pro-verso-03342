@@ -29,57 +29,57 @@ class DeploymentChecker {
       name: 'Políticas de Segurança RLS',
       description: 'Verificar se todas as tabelas têm RLS habilitado',
       status: 'pending',
-      critical: true
+      critical: true,
     },
     {
       id: 'environment-variables',
       name: 'Variáveis de Ambiente',
       description: 'Verificar se todas as variáveis necessárias estão definidas',
       status: 'pending',
-      critical: true
+      critical: true,
     },
     {
       id: 'database-indexes',
       name: 'Índices do Banco',
       description: 'Verificar se índices críticos estão criados',
       status: 'pending',
-      critical: false
+      critical: false,
     },
     {
       id: 'edge-functions',
       name: 'Funções Edge',
       description: 'Verificar saúde das funções serverless',
       status: 'pending',
-      critical: true
+      critical: true,
     },
     {
       id: 'performance-metrics',
       name: 'Métricas de Performance',
       description: 'Verificar se performance está dentro dos limites',
       status: 'pending',
-      critical: false
+      critical: false,
     },
     {
       id: 'error-handling',
       name: 'Tratamento de Erros',
       description: 'Verificar se todos os erros são tratados adequadamente',
       status: 'pending',
-      critical: true
+      critical: true,
     },
     {
       id: 'monitoring-setup',
       name: 'Sistema de Monitoramento',
       description: 'Verificar se monitoramento está funcionando',
       status: 'pending',
-      critical: false
+      critical: false,
     },
     {
       id: 'backup-system',
       name: 'Sistema de Backup',
       description: 'Verificar se backups estão configurados',
       status: 'pending',
-      critical: true
-    }
+      critical: true,
+    },
   ];
 
   async runSecurityCheck(): Promise<void> {
@@ -112,7 +112,7 @@ class DeploymentChecker {
     
     const requiredVars = [
       'VITE_SUPABASE_URL',
-      'VITE_SUPABASE_PUBLISHABLE_KEY'
+      'VITE_SUPABASE_PUBLISHABLE_KEY',
     ];
 
     const missingVars = requiredVars.filter(varName => !import.meta.env[varName]);
@@ -135,9 +135,9 @@ class DeploymentChecker {
       const results = await Promise.allSettled(
         functions.map(fn => 
           supabase.functions.invoke(fn, { 
-            body: { action: 'health_check' } 
-          })
-        )
+            body: { action: 'health_check' }, 
+          }),
+        ),
       );
 
       const failures = results.filter(r => r.status === 'rejected').length;
@@ -193,7 +193,7 @@ class DeploymentChecker {
       this.runSecurityCheck(),
       this.runEnvironmentCheck(),
       this.runEdgeFunctionsCheck(),
-      this.runPerformanceCheck()
+      this.runPerformanceCheck(),
     ]);
 
     // Verificações simples (sem async)
@@ -221,7 +221,7 @@ class DeploymentChecker {
       checks: [...this.checks],
       score: Math.round(score),
       criticalIssues,
-      warnings
+      warnings,
     };
   }
 }

@@ -77,7 +77,7 @@ export interface AdaptOptions {
 
 export const adaptStepData = (
   editableStep: EditableQuizStep,
-  options?: AdaptOptions
+  options?: AdaptOptions,
 ): QuizStep => {
   const { source, editorMode = false } = options || {};
   // Se estiver no editor, SEMPRE usar 'merge' para preservar edições

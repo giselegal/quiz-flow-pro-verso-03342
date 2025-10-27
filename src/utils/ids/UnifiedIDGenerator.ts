@@ -27,7 +27,7 @@ const ID_PREFIXES: Record<IDType, string> = {
     block: 'blk',
     session: 'ses',
     user: 'usr',
-    analytics: 'ana'
+    analytics: 'ana',
 };
 
 // ✅ INTERFACE PARA METADADOS
@@ -80,7 +80,7 @@ export class UnifiedIDGenerator {
             type,
             createdAt: new Date(),
             prefix,
-            version: '1.0'
+            version: '1.0',
         });
 
         return id;
@@ -93,7 +93,7 @@ export class UnifiedIDGenerator {
         return this.generate('funnel', {
             suffix: `from_${templateId.slice(0, 8)}`,
             timestamp: true,
-            readable: true
+            readable: true,
         });
     }
 
@@ -104,7 +104,7 @@ export class UnifiedIDGenerator {
         const stepNum = stepNumber.toString().padStart(2, '0');
         return this.generate('step', {
             suffix: `${funnelId.slice(0, 8)}_${stepNum}`,
-            readable: true
+            readable: true,
         });
     }
 
@@ -170,7 +170,7 @@ export class UnifiedIDGenerator {
         const patterns = {
             timestamp: /^.+-\d{13}.*$/, // templateId-timestamp format
             uuid: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
-            custom: /^(quiz|funnel|step|block)-.+$/i
+            custom: /^(quiz|funnel|step|block)-.+$/i,
         };
 
         // Se já está no formato novo, retorna
@@ -203,7 +203,7 @@ export class UnifiedIDGenerator {
         const stats = {
             totalGenerated: this.cache.size,
             byType: {} as Record<IDType, number>,
-            recentIds: [] as Array<{ id: string; type: IDType; createdAt: Date }>
+            recentIds: [] as Array<{ id: string; type: IDType; createdAt: Date }>,
         };
 
         // Contar por tipo
@@ -212,7 +212,7 @@ export class UnifiedIDGenerator {
             stats.recentIds.push({
                 id,
                 type: metadata.type,
-                createdAt: metadata.createdAt
+                createdAt: metadata.createdAt,
             });
         }
 
@@ -243,7 +243,7 @@ export const generateID = {
     session: () => idGenerator.generate('session'),
     block: () => idGenerator.generate('block'),
     user: () => idGenerator.generate('user'),
-    analytics: () => idGenerator.generate('analytics')
+    analytics: () => idGenerator.generate('analytics'),
 };
 
 // ✅ MIGRATION HELPER
@@ -288,7 +288,7 @@ export function validateIDs(obj: any): { valid: boolean; errors: string[] } {
 
     return {
         valid: errors.length === 0,
-        errors
+        errors,
     };
 }
 

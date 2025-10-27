@@ -104,8 +104,8 @@ export class MigrationService {
     }
 
     const essentialQueries = [
-      `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`,
-      `CREATE TABLE IF NOT EXISTS profiles (id UUID PRIMARY KEY, email TEXT UNIQUE);`,
+      'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";',
+      'CREATE TABLE IF NOT EXISTS profiles (id UUID PRIMARY KEY, email TEXT UNIQUE);',
     ];
 
     for (let i = 0; i < essentialQueries.length; i++) {

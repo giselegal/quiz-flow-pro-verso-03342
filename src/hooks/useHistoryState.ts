@@ -147,7 +147,7 @@ export const useHistoryState = <T>(initialState: T, options: UseHistoryStateOpti
         };
       });
     },
-    [historyLimit]
+    [historyLimit],
   );
 
   const undo = useCallback(() => {

@@ -36,7 +36,7 @@ export const useDragDropState = (): UseDragDropStateReturn => {
       setIsValidDrop(validation.isValid);
       setDropFeedback(validation.reason || '');
     },
-    []
+    [],
   );
 
   const handleDragEnd = useCallback(() => {

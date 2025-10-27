@@ -22,7 +22,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
                     CONNECTING: 0,
                     OPEN: 1,
                     CLOSING: 2,
-                    CLOSED: 3
+                    CLOSED: 3,
                 } as any;
             }
             return new originalWebSocket(url, protocols);
@@ -40,10 +40,10 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
                     return Promise.resolve(new Response(JSON.stringify({
                         status: 'disabled_in_dev',
                         message: 'Lovable SDK disabled in development',
-                        config: {}
+                        config: {},
                     }), {
                         status: 200,
-                        headers: { 'Content-Type': 'application/json' }
+                        headers: { 'Content-Type': 'application/json' },
                     }));
                 }
 
@@ -61,16 +61,16 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
                 const originalSrcSetter = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src')?.set;
                 if (originalSrcSetter) {
                     Object.defineProperty(scriptElement, 'src', {
-                        set: function (value: string) {
+                        set (value: string) {
                             if (value && value.includes('lovable.dev')) {
                                 console.warn('🚫 Bloqueado script Lovable em desenvolvimento:', value);
                                 return;
                             }
                             originalSrcSetter.call(this, value);
                         },
-                        get: function () {
+                        get () {
                             return this.getAttribute('src');
-                        }
+                        },
                     });
                 }
             }

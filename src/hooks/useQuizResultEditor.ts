@@ -55,14 +55,14 @@ const AVAILABLE_STYLES: QuizStyleResult[] = [
       'Elegância atemporal',
       'Peças bem estruturadas',
       'Cores neutras e sofisticadas',
-      'Qualidade sobre quantidade'
+      'Qualidade sobre quantidade',
     ],
     recommendations: [
       'Invista em peças-chave de qualidade',
       'Priorize alfaiataria impecável',
       'Escolha acessórios discretos',
-      'Mantenha uma paleta neutra'
-    ]
+      'Mantenha uma paleta neutra',
+    ],
   },
   {
     id: 'romantico',
@@ -76,14 +76,14 @@ const AVAILABLE_STYLES: QuizStyleResult[] = [
       'Feminilidade delicada',
       'Texturas fluidas e suaves',
       'Detalhes românticos',
-      'Cores suaves e pastéis'
+      'Cores suaves e pastéis',
     ],
     recommendations: [
       'Use tecidos fluidos como seda e chiffon',
       'Adicione detalhes como babados e rendas',
       'Escolha cores suaves e femininas',
-      'Invista em acessórios delicados'
-    ]
+      'Invista em acessórios delicados',
+    ],
   },
   {
     id: 'dramatico',
@@ -97,14 +97,14 @@ const AVAILABLE_STYLES: QuizStyleResult[] = [
       'Presença marcante',
       'Peças statement',
       'Contrastes fortes',
-      'Silhuetas estruturadas'
+      'Silhuetas estruturadas',
     ],
     recommendations: [
       'Use peças com impacto visual',
       'Aposte em contrastes marcantes',
       'Escolha silhuetas geométricas',
-      'Adicione acessórios statement'
-    ]
+      'Adicione acessórios statement',
+    ],
   },
   {
     id: 'natural',
@@ -118,14 +118,14 @@ const AVAILABLE_STYLES: QuizStyleResult[] = [
       'Conforto e praticidade',
       'Texturas naturais',
       'Silhuetas relaxadas',
-      'Cores terrosas'
+      'Cores terrosas',
     ],
     recommendations: [
       'Priorize tecidos naturais',
       'Escolha silhuetas confortáveis',
       'Use cores terrosas e neutras',
-      'Evite excessos e complicações'
-    ]
+      'Evite excessos e complicações',
+    ],
   },
   {
     id: 'criativo',
@@ -139,15 +139,15 @@ const AVAILABLE_STYLES: QuizStyleResult[] = [
       'Experimentação constante',
       'Mix de estampas e texturas',
       'Cores vibrantes',
-      'Peças únicas e artísticas'
+      'Peças únicas e artísticas',
     ],
     recommendations: [
       'Misture estampas com confiança',
       'Experimente combinações inusitadas',
       'Invista em peças artísticas',
-      'Use cores vibrantes e contrastantes'
-    ]
-  }
+      'Use cores vibrantes e contrastantes',
+    ],
+  },
 ];
 
 /**
@@ -166,8 +166,8 @@ export const useQuizResultEditor = () => {
         romantico: 75,
         natural: 70,
         dramatico: 80,
-        criativo: 60
-      }
+        criativo: 60,
+      },
     },
     availableStyles: AVAILABLE_STYLES,
     isEditing: false,
@@ -175,8 +175,8 @@ export const useQuizResultEditor = () => {
     customizations: {
       colors: {},
       texts: {},
-      images: {}
-    }
+      images: {},
+    },
   });
 
   // Alternar estilo principal
@@ -189,23 +189,23 @@ export const useQuizResultEditor = () => {
       currentResult: {
         ...prev.currentResult,
         primaryStyle: newStyle,
-        totalScore: newStyle.score
-      }
+        totalScore: newStyle.score,
+      },
     }));
   }, []);
 
   // Atualizar estilos secundários
   const updateSecondaryStyles = useCallback((styleIds: string[]) => {
     const newStyles = styleIds.map(id => 
-      AVAILABLE_STYLES.find(s => s.id === id)
+      AVAILABLE_STYLES.find(s => s.id === id),
     ).filter(Boolean) as QuizStyleResult[];
 
     setEditorState(prev => ({
       ...prev,
       currentResult: {
         ...prev.currentResult,
-        secondaryStyles: newStyles
-      }
+        secondaryStyles: newStyles,
+      },
     }));
   }, []);
 
@@ -217,9 +217,9 @@ export const useQuizResultEditor = () => {
         ...prev.customizations,
         texts: {
           ...prev.customizations.texts,
-          [key]: value
-        }
-      }
+          [key]: value,
+        },
+      },
     }));
   }, []);
 
@@ -231,9 +231,9 @@ export const useQuizResultEditor = () => {
         ...prev.customizations,
         colors: {
           ...prev.customizations.colors,
-          [key]: value
-        }
-      }
+          [key]: value,
+        },
+      },
     }));
   }, []);
 
@@ -245,9 +245,9 @@ export const useQuizResultEditor = () => {
         ...prev.customizations,
         images: {
           ...prev.customizations.images,
-          [key]: value
-        }
-      }
+          [key]: value,
+        },
+      },
     }));
   }, []);
 
@@ -255,7 +255,7 @@ export const useQuizResultEditor = () => {
   const setPreviewMode = useCallback((mode: 'single' | 'multiple' | 'comparison') => {
     setEditorState(prev => ({
       ...prev,
-      previewMode: mode
+      previewMode: mode,
     }));
   }, []);
 
@@ -263,7 +263,7 @@ export const useQuizResultEditor = () => {
   const toggleEditMode = useCallback(() => {
     setEditorState(prev => ({
       ...prev,
-      isEditing: !prev.isEditing
+      isEditing: !prev.isEditing,
     }));
   }, []);
 
@@ -305,7 +305,7 @@ export const useQuizResultEditor = () => {
       .map(([id]) => id);
     
     const secondaryStyles = secondaryStyleIds.map(id => 
-      AVAILABLE_STYLES.find(s => s.id === id)!
+      AVAILABLE_STYLES.find(s => s.id === id)!,
     );
 
     setEditorState(prev => ({
@@ -315,16 +315,16 @@ export const useQuizResultEditor = () => {
         primaryStyle: {
           ...primaryStyle,
           percentage: styleScores[topStyleId],
-          score: styleScores[topStyleId]
+          score: styleScores[topStyleId],
         },
         secondaryStyles: secondaryStyles.map(style => ({
           ...style,
           percentage: styleScores[style.id],
-          score: styleScores[style.id]
+          score: styleScores[style.id],
         })),
         totalScore: styleScores[topStyleId],
-        styleScores
-      }
+        styleScores,
+      },
     }));
   }, []);
 
@@ -350,8 +350,8 @@ export const useQuizResultEditor = () => {
       customizations: {
         colors: {},
         texts: {},
-        images: {}
-      }
+        images: {},
+      },
     }));
   }, []);
 
@@ -360,7 +360,7 @@ export const useQuizResultEditor = () => {
     return {
       result: editorState.currentResult,
       customizations: editorState.customizations,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   }, [editorState]);
 
@@ -392,7 +392,7 @@ export const useQuizResultEditor = () => {
     setPreviewMode,
     toggleEditMode,
     generateMockResult,
-    exportConfig
+    exportConfig,
   };
 };
 

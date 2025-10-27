@@ -190,7 +190,7 @@ export class ComponentLibrary {
             compatibility: {
                 minVersion: '1.0.0',
                 supportedDevices: ['desktop', 'mobile', 'tablet'],
-                supportedBrowsers: ['chrome', 'firefox', 'safari', 'edge']
+                supportedBrowsers: ['chrome', 'firefox', 'safari', 'edge'],
             },
             tags: ['quiz', 'header', 'navigation', 'standard'],
             properties: {
@@ -198,44 +198,44 @@ export class ComponentLibrary {
                     showLogo: {
                         type: 'boolean',
                         description: 'Mostrar logo da marca',
-                        defaultValue: true
+                        defaultValue: true,
                     },
                     showProgress: {
                         type: 'boolean',
                         description: 'Mostrar barra de progresso',
-                        defaultValue: true
+                        defaultValue: true,
                     },
                     title: {
                         type: 'string',
                         description: 'Título do cabeçalho',
-                        defaultValue: ''
+                        defaultValue: '',
                     },
                     subtitle: {
                         type: 'string',
                         description: 'Subtítulo do cabeçalho',
-                        defaultValue: ''
+                        defaultValue: '',
                     },
                     backgroundColor: {
                         type: 'string',
                         description: 'Cor de fundo',
-                        defaultValue: '#F8F9FA'
-                    }
+                        defaultValue: '#F8F9FA',
+                    },
                 },
                 defaults: {
                     showLogo: true,
                     showProgress: true,
                     title: 'Quiz de Estilo',
                     subtitle: 'Descubra seu estilo pessoal',
-                    backgroundColor: '#F8F9FA'
+                    backgroundColor: '#F8F9FA',
                 },
                 required: ['title'],
                 validation: [
                     {
                         required: true,
                         minLength: 3,
-                        maxLength: 100
-                    }
-                ]
+                        maxLength: 100,
+                    },
+                ],
             },
             variants: [
                 {
@@ -245,13 +245,13 @@ export class ComponentLibrary {
                     overrides: [
                         {
                             propertyPath: 'showProgress',
-                            value: false
+                            value: false,
                         },
                         {
                             propertyPath: 'backgroundColor',
-                            value: '#FFFFFF'
-                        }
-                    ]
+                            value: '#FFFFFF',
+                        },
+                    ],
                 },
                 {
                     id: 'branded',
@@ -260,14 +260,14 @@ export class ComponentLibrary {
                     overrides: [
                         {
                             propertyPath: 'showLogo',
-                            value: true
+                            value: true,
                         },
                         {
                             propertyPath: 'backgroundColor',
-                            value: '#B89B7A'
-                        }
-                    ]
-                }
+                            value: '#B89B7A',
+                        },
+                    ],
+                },
             ],
             dependencies: [],
             usage: {
@@ -278,8 +278,8 @@ export class ComponentLibrary {
                     loadTime: 150,
                     renderTime: 50,
                     bundleSize: 1200,
-                    cacheHitRate: 0.85
-                }
+                    cacheHitRate: 0.85,
+                },
             },
             theme: {
                 primaryColor: '#B89B7A',
@@ -291,17 +291,17 @@ export class ComponentLibrary {
                     sm: 8,
                     md: 16,
                     lg: 24,
-                    xl: 32
+                    xl: 32,
                 },
                 shadows: {
                     sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
                     md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-                }
+                    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                },
             },
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            createdBy: 'system'
+            createdBy: 'system',
         });
 
         // 📋 QUIZ QUESTION COMPONENT
@@ -315,7 +315,7 @@ export class ComponentLibrary {
             compatibility: {
                 minVersion: '1.0.0',
                 supportedDevices: ['desktop', 'mobile', 'tablet'],
-                supportedBrowsers: ['chrome', 'firefox', 'safari', 'edge']
+                supportedBrowsers: ['chrome', 'firefox', 'safari', 'edge'],
             },
             tags: ['quiz', 'question', 'options', 'grid', 'interactive'],
             properties: {
@@ -323,38 +323,38 @@ export class ComponentLibrary {
                     question: {
                         type: 'string',
                         description: 'Pergunta a ser exibida',
-                        defaultValue: ''
+                        defaultValue: '',
                     },
                     options: {
                         type: 'array',
                         description: 'Lista de opções disponíveis',
-                        defaultValue: []
+                        defaultValue: [],
                     },
                     multipleSelection: {
                         type: 'boolean',
                         description: 'Permite seleção múltipla',
-                        defaultValue: true
+                        defaultValue: true,
                     },
                     requiredSelections: {
                         type: 'number',
                         description: 'Número mínimo de seleções obrigatórias',
-                        defaultValue: 1
+                        defaultValue: 1,
                     },
                     maxSelections: {
                         type: 'number',
                         description: 'Número máximo de seleções permitidas',
-                        defaultValue: 3
+                        defaultValue: 3,
                     },
                     columns: {
                         type: 'number',
                         description: 'Número de colunas no grid',
-                        defaultValue: 2
+                        defaultValue: 2,
                     },
                     showImages: {
                         type: 'boolean',
                         description: 'Mostrar imagens nas opções',
-                        defaultValue: true
-                    }
+                        defaultValue: true,
+                    },
                 },
                 defaults: {
                     question: 'Selecione suas opções favoritas:',
@@ -363,15 +363,15 @@ export class ComponentLibrary {
                     requiredSelections: 1,
                     maxSelections: 3,
                     columns: 2,
-                    showImages: true
+                    showImages: true,
                 },
                 required: ['question', 'options'],
                 validation: [
                     {
                         required: true,
-                        minLength: 10
-                    }
-                ]
+                        minLength: 10,
+                    },
+                ],
             },
             variants: [
                 {
@@ -381,13 +381,13 @@ export class ComponentLibrary {
                     overrides: [
                         {
                             propertyPath: 'multipleSelection',
-                            value: false
+                            value: false,
                         },
                         {
                             propertyPath: 'maxSelections',
-                            value: 1
-                        }
-                    ]
+                            value: 1,
+                        },
+                    ],
                 },
                 {
                     id: 'text-only',
@@ -396,14 +396,14 @@ export class ComponentLibrary {
                     overrides: [
                         {
                             propertyPath: 'showImages',
-                            value: false
+                            value: false,
                         },
                         {
                             propertyPath: 'columns',
-                            value: 1
-                        }
-                    ]
-                }
+                            value: 1,
+                        },
+                    ],
+                },
             ],
             dependencies: [],
             usage: {
@@ -414,8 +414,8 @@ export class ComponentLibrary {
                     loadTime: 200,
                     renderTime: 75,
                     bundleSize: 2100,
-                    cacheHitRate: 0.78
-                }
+                    cacheHitRate: 0.78,
+                },
             },
             theme: {
                 primaryColor: '#3B82F6',
@@ -427,17 +427,17 @@ export class ComponentLibrary {
                     sm: 8,
                     md: 16,
                     lg: 24,
-                    xl: 32
+                    xl: 32,
                 },
                 shadows: {
                     sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
                     md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-                }
+                    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                },
             },
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            createdBy: 'system'
+            createdBy: 'system',
         });
 
         // 🎯 CTA BUTTON COMPONENT
@@ -451,7 +451,7 @@ export class ComponentLibrary {
             compatibility: {
                 minVersion: '1.0.0',
                 supportedDevices: ['desktop', 'mobile', 'tablet'],
-                supportedBrowsers: ['chrome', 'firefox', 'safari', 'edge']
+                supportedBrowsers: ['chrome', 'firefox', 'safari', 'edge'],
             },
             tags: ['cta', 'button', 'conversion', 'primary'],
             properties: {
@@ -459,35 +459,35 @@ export class ComponentLibrary {
                     text: {
                         type: 'string',
                         description: 'Texto do botão',
-                        defaultValue: 'Clique aqui'
+                        defaultValue: 'Clique aqui',
                     },
                     size: {
                         type: 'string',
                         description: 'Tamanho do botão',
                         defaultValue: 'medium',
-                        options: ['small', 'medium', 'large']
+                        options: ['small', 'medium', 'large'],
                     },
                     backgroundColor: {
                         type: 'string',
                         description: 'Cor de fundo',
-                        defaultValue: '#B89B7A'
+                        defaultValue: '#B89B7A',
                     },
                     textColor: {
                         type: 'string',
                         description: 'Cor do texto',
-                        defaultValue: '#FFFFFF'
+                        defaultValue: '#FFFFFF',
                     },
                     action: {
                         type: 'string',
                         description: 'Ação a ser executada',
                         defaultValue: 'next-step',
-                        options: ['next-step', 'submit', 'external-link', 'custom']
+                        options: ['next-step', 'submit', 'external-link', 'custom'],
                     },
                     fullWidth: {
                         type: 'boolean',
                         description: 'Botão ocupa toda a largura',
-                        defaultValue: false
-                    }
+                        defaultValue: false,
+                    },
                 },
                 defaults: {
                     text: 'Continuar',
@@ -495,16 +495,16 @@ export class ComponentLibrary {
                     backgroundColor: '#B89B7A',
                     textColor: '#FFFFFF',
                     action: 'next-step',
-                    fullWidth: false
+                    fullWidth: false,
                 },
                 required: ['text', 'action'],
                 validation: [
                     {
                         required: true,
                         minLength: 2,
-                        maxLength: 50
-                    }
-                ]
+                        maxLength: 50,
+                    },
+                ],
             },
             variants: [
                 {
@@ -514,13 +514,13 @@ export class ComponentLibrary {
                     overrides: [
                         {
                             propertyPath: 'backgroundColor',
-                            value: '#DC2626'
+                            value: '#DC2626',
                         },
                         {
                             propertyPath: 'size',
-                            value: 'large'
-                        }
-                    ]
+                            value: 'large',
+                        },
+                    ],
                 },
                 {
                     id: 'subtle',
@@ -529,14 +529,14 @@ export class ComponentLibrary {
                     overrides: [
                         {
                             propertyPath: 'backgroundColor',
-                            value: '#6B7280'
+                            value: '#6B7280',
                         },
                         {
                             propertyPath: 'size',
-                            value: 'small'
-                        }
-                    ]
-                }
+                            value: 'small',
+                        },
+                    ],
+                },
             ],
             dependencies: [],
             usage: {
@@ -547,8 +547,8 @@ export class ComponentLibrary {
                     loadTime: 50,
                     renderTime: 25,
                     bundleSize: 800,
-                    cacheHitRate: 0.92
-                }
+                    cacheHitRate: 0.92,
+                },
             },
             theme: {
                 primaryColor: '#B89B7A',
@@ -560,21 +560,21 @@ export class ComponentLibrary {
                     sm: 8,
                     md: 16,
                     lg: 24,
-                    xl: 32
+                    xl: 32,
                 },
                 shadows: {
                     sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
                     md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-                }
+                    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                },
             },
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            createdBy: 'system'
+            createdBy: 'system',
         });
 
         logger.info('component-library', 'Built-in components initialized', {
-            componentsCount: this.components.size
+            componentsCount: this.components.size,
         });
     }
 
@@ -599,7 +599,7 @@ export class ComponentLibrary {
         logger.info('component-library', 'Component registered', {
             componentId: component.id,
             category: component.category,
-            version: component.version
+            version: component.version,
         });
     }
 
@@ -620,7 +620,7 @@ export class ComponentLibrary {
         return this.getAllComponents().filter(component =>
             component.name.toLowerCase().includes(searchTerm) ||
             component.description.toLowerCase().includes(searchTerm) ||
-            component.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            component.tags.some(tag => tag.toLowerCase().includes(searchTerm)),
         );
     }
 
@@ -630,11 +630,11 @@ export class ComponentLibrary {
 
     composeTemplate(
         templateId: string,
-        composition: ComponentComposition
+        composition: ComponentComposition,
     ): ComposedTemplate {
         logger.info('component-library', 'Composing template', {
             templateId,
-            componentsCount: composition.components.length
+            componentsCount: composition.components.length,
         });
 
         const composedComponents = composition.components.map(componentRef => {
@@ -646,7 +646,7 @@ export class ComponentLibrary {
             // Aplicar overrides se existirem
             const finalProperties = this.applyOverrides(
                 component.properties.defaults,
-                componentRef.overrides || []
+                componentRef.overrides || [],
             );
 
             // Aplicar variante se especificada
@@ -662,7 +662,7 @@ export class ComponentLibrary {
                 type: component.type,
                 properties: finalProperties,
                 order: componentRef.order,
-                stepId: componentRef.stepId
+                stepId: componentRef.stepId,
             };
         });
 
@@ -674,7 +674,7 @@ export class ComponentLibrary {
             layout: composition.layout,
             theme: composition.theme || this.getDefaultTheme(),
             createdAt: new Date().toISOString(),
-            version: '1.0.0'
+            version: '1.0.0',
         };
     }
 
@@ -704,7 +704,7 @@ export class ComponentLibrary {
 
     private applyOverrides(
         baseProperties: Record<string, any>,
-        overrides: PropertyOverride[]
+        overrides: PropertyOverride[],
     ): Record<string, any> {
         const result = { ...baseProperties };
 
@@ -739,13 +739,13 @@ export class ComponentLibrary {
                 sm: 8,
                 md: 16,
                 lg: 24,
-                xl: 32
+                xl: 32,
             },
             shadows: {
                 sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
                 md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-            }
+                lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+            },
         };
     }
 }

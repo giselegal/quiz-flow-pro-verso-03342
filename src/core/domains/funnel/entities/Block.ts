@@ -104,7 +104,7 @@ export class Block {
       clicks: 0,
       interactions: 0,
       conversionRate: 0,
-      averageViewTime: 0
+      averageViewTime: 0,
     },
     public metadata: {
       order: number;
@@ -117,8 +117,8 @@ export class Block {
       version: 1,
       isTemplate: false,
       createdAt: new Date(),
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   ) {}
 
   // 🔍 Business Rules - Block Validation
@@ -163,7 +163,7 @@ export class Block {
       this.styles,
       this.settings,
       this.analytics,
-      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 }
+      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 },
     );
   }
 
@@ -178,7 +178,7 @@ export class Block {
       updatedStyles,
       this.settings,
       this.analytics,
-      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 }
+      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 },
     );
   }
 
@@ -193,7 +193,7 @@ export class Block {
       this.styles,
       updatedSettings,
       this.analytics,
-      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 }
+      { ...this.metadata, updatedAt: new Date(), version: this.metadata.version + 1 },
     );
   }
 
@@ -204,7 +204,7 @@ export class Block {
     // Check show conditions
     if (this.settings.conditions?.showIf) {
       const showConditionsMet = this.settings.conditions.showIf.every(condition =>
-        this.evaluateCondition(condition, context)
+        this.evaluateCondition(condition, context),
       );
       if (!showConditionsMet) return false;
     }
@@ -212,7 +212,7 @@ export class Block {
     // Check hide conditions
     if (this.settings.conditions?.hideIf) {
       const hideConditionsMet = this.settings.conditions.hideIf.some(condition =>
-        this.evaluateCondition(condition, context)
+        this.evaluateCondition(condition, context),
       );
       if (hideConditionsMet) return false;
     }
@@ -252,9 +252,9 @@ export class Block {
       this.settings,
       {
         ...this.analytics,
-        impressions: this.analytics.impressions + 1
+        impressions: this.analytics.impressions + 1,
       },
-      this.metadata
+      this.metadata,
     );
   }
 
@@ -262,7 +262,7 @@ export class Block {
     const updatedAnalytics = {
       ...this.analytics,
       clicks: this.analytics.clicks + 1,
-      interactions: this.analytics.interactions + 1
+      interactions: this.analytics.interactions + 1,
     };
 
     // Recalcular conversion rate
@@ -278,7 +278,7 @@ export class Block {
       this.styles,
       this.settings,
       updatedAnalytics,
-      this.metadata
+      this.metadata,
     );
   }
 
@@ -292,9 +292,9 @@ export class Block {
       this.settings,
       {
         ...this.analytics,
-        interactions: this.analytics.interactions + 1
+        interactions: this.analytics.interactions + 1,
       },
-      this.metadata
+      this.metadata,
     );
   }
 
@@ -363,15 +363,15 @@ export class Block {
         clicks: 0,
         interactions: 0,
         conversionRate: 0,
-        averageViewTime: 0
+        averageViewTime: 0,
       },
       {
         order: this.metadata.order,
         version: 1,
         isTemplate: true,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 
@@ -389,15 +389,15 @@ export class Block {
         clicks: 0,
         interactions: 0,
         conversionRate: 0,
-        averageViewTime: 0
+        averageViewTime: 0,
       },
       {
         order: this.metadata.order,
         version: 1,
         isTemplate: false,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 
@@ -410,7 +410,7 @@ export class Block {
       styles: this.styles,
       settings: this.settings,
       analytics: this.analytics,
-      metadata: this.metadata
+      metadata: this.metadata,
     };
   }
 
@@ -427,15 +427,15 @@ export class Block {
         clicks: 0,
         interactions: 0,
         conversionRate: 0,
-        averageViewTime: 0
+        averageViewTime: 0,
       },
       data.metadata || {
         order: 0,
         version: 1,
         isTemplate: false,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 
@@ -444,7 +444,7 @@ export class Block {
     id: string,
     pageId: string,
     text: string,
-    order: number = 0
+    order: number = 0,
   ): Block {
     return new Block(
       id,
@@ -458,15 +458,15 @@ export class Block {
         clicks: 0,
         interactions: 0,
         conversionRate: 0,
-        averageViewTime: 0
+        averageViewTime: 0,
       },
       {
         order,
         version: 1,
         isTemplate: false,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 
@@ -475,7 +475,7 @@ export class Block {
     pageId: string,
     text: string,
     url: string,
-    order: number = 0
+    order: number = 0,
   ): Block {
     return new Block(
       id,
@@ -483,14 +483,14 @@ export class Block {
       'button',
       { 
         text, 
-        link: { url, target: '_self' } 
+        link: { url, target: '_self' }, 
       },
       {
         backgroundColor: '#3B82F6',
         textColor: '#FFFFFF',
         padding: '12px 24px',
         borderRadius: '8px',
-        textAlign: 'center'
+        textAlign: 'center',
       },
       { isVisible: true },
       {
@@ -498,15 +498,15 @@ export class Block {
         clicks: 0,
         interactions: 0,
         conversionRate: 0,
-        averageViewTime: 0
+        averageViewTime: 0,
       },
       {
         order,
         version: 1,
         isTemplate: false,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 }

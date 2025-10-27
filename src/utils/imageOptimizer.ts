@@ -83,7 +83,7 @@ export function optimizeImage(
     height?: number;
     quality?: number;
     format?: string;
-  }
+  },
 ): string {
   if (!url) return url;
 
@@ -101,7 +101,7 @@ export function optimizeImage(
       if (url.includes('/upload/')) {
         return url.replace(
           '/upload/',
-          `/upload/${widthParam}${heightParam}${formatParam}${qualityParam}/`
+          `/upload/${widthParam}${heightParam}${formatParam}${qualityParam}/`,
         );
       }
     }

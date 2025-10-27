@@ -15,7 +15,7 @@ function makeOptions(prefix: string, count: number, withImages = false) {
   const arr = Array.from({ length: count }).map((_, i) => ({
     id: `${prefix}${i + 1}`,
     text: `Opção ${i + 1}`,
-    ...(withImages ? { image: `https://placehold.co/320x200?text=Op%20${i + 1}` } : {})
+    ...(withImages ? { image: `https://placehold.co/320x200?text=Op%20${i + 1}` } : {}),
   }));
   return arr;
 }
@@ -33,8 +33,8 @@ export function buildFashionStyle21Steps(funnelId?: string): EditableQuizStep[] 
       makeBlock('b1-1', 'heading', 1, { level: 1, textAlign: 'center', color: '#432818' }, { text: 'Descubra seu estilo pessoal em minutos' }),
       makeBlock('b1-2', 'text', 2, { textAlign: 'center', color: '#6B7280' }, { text: 'Responda algumas perguntas rápidas e receba um resultado personalizado com recomendações.' }),
       makeBlock('b1-3', 'form-input', 3, {}, { label: 'Como posso te chamar?', placeholder: 'Digite seu primeiro nome...' }),
-      makeBlock('b1-4', 'button', 4, { action: 'next-step' }, { text: 'Começar' })
-    ]
+      makeBlock('b1-4', 'button', 4, { action: 'next-step' }, { text: 'Começar' }),
+    ],
   });
 
   // 2-11) 10 perguntas principais (multiSelect, 3 seleções obrigatórias)
@@ -54,9 +54,9 @@ export function buildFashionStyle21Steps(funnelId?: string): EditableQuizStep[] 
           'quiz-options',
           2,
           { multiSelect: true, requiredSelections: 3, maxSelections: 3, autoAdvance: true, showImages: true, layout: 'auto' },
-          { options: makeOptions(`p${i}-opt-`, 6, true) }
-        )
-      ]
+          { options: makeOptions(`p${i}-opt-`, 6, true) },
+        ),
+      ],
     });
   }
 
@@ -69,8 +69,8 @@ export function buildFashionStyle21Steps(funnelId?: string): EditableQuizStep[] 
     blocks: [
       makeBlock('b12-1', 'heading', 1, { level: 2, textAlign: 'center' }, { text: 'Quase lá!' }),
       makeBlock('b12-2', 'text', 2, { textAlign: 'center' }, { text: 'Agora algumas perguntas estratégicas para refinar seu resultado.' }),
-      makeBlock('b12-3', 'button', 3, { action: 'next-step' }, { text: 'Continuar' })
-    ]
+      makeBlock('b12-3', 'button', 3, { action: 'next-step' }, { text: 'Continuar' }),
+    ],
   });
 
   // 13-18) 6 perguntas estratégicas (1 seleção obrigatória)
@@ -90,9 +90,9 @@ export function buildFashionStyle21Steps(funnelId?: string): EditableQuizStep[] 
           'quiz-options',
           2,
           { multiSelect: false, requiredSelections: 1, maxSelections: 1, autoAdvance: true, showImages: false, layout: 'auto' },
-          { options: makeOptions(`s${i}-opt-`, 4, false) }
-        )
-      ]
+          { options: makeOptions(`s${i}-opt-`, 4, false) },
+        ),
+      ],
     });
   }
 
@@ -104,8 +104,8 @@ export function buildFashionStyle21Steps(funnelId?: string): EditableQuizStep[] 
     nextStep: 'step-20',
     blocks: [
       makeBlock('b19-1', 'heading', 1, { level: 2, textAlign: 'center' }, { text: 'Processando seu resultado...' }),
-      makeBlock('b19-2', 'text', 2, { textAlign: 'center' }, { text: 'Levamos em conta suas preferências e combinamos com nosso mapa de estilos.' })
-    ]
+      makeBlock('b19-2', 'text', 2, { textAlign: 'center' }, { text: 'Levamos em conta suas preferências e combinamos com nosso mapa de estilos.' }),
+    ],
   });
 
   // 20) Resultado
@@ -117,8 +117,8 @@ export function buildFashionStyle21Steps(funnelId?: string): EditableQuizStep[] 
     blocks: [
       makeBlock('b20-1', 'heading', 1, { level: 2, textAlign: 'center' }, { text: 'Seu resultado personalizado' }),
       makeBlock('b20-2', 'text', 2, { textAlign: 'center' }, { text: 'Seu estilo predominante é: {resultStyle}. Toque em continuar para ver uma oferta especial para você.' }),
-      makeBlock('b20-3', 'button', 3, { action: 'next-step' }, { text: 'Ver oferta' })
-    ]
+      makeBlock('b20-3', 'button', 3, { action: 'next-step' }, { text: 'Ver oferta' }),
+    ],
   });
 
   // 21) Oferta
@@ -129,12 +129,12 @@ export function buildFashionStyle21Steps(funnelId?: string): EditableQuizStep[] 
     blocks: [
       makeBlock('b21-1', 'heading', 1, { level: 2, textAlign: 'center' }, { text: 'Oferta Especial' }),
       makeBlock('b21-2', 'text', 2, { textAlign: 'center' }, { text: 'Receba um guia completo com combinações, cores e peças-chave para seu estilo.' }),
-      makeBlock('b21-3', 'button', 3, { action: 'open-url', url: 'https://example.com/checkout' }, { text: 'Quero meu guia' })
+      makeBlock('b21-3', 'button', 3, { action: 'open-url', url: 'https://example.com/checkout' }, { text: 'Quero meu guia' }),
     ],
     offerMap: {
       // Estrutura simples pronta para evoluir
-      default: { sku: 'guia-estilo', price: 97.0 }
-    }
+      default: { sku: 'guia-estilo', price: 97.0 },
+    },
   });
 
   // Se veio um funnelId, guardar como metadata simples

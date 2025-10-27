@@ -54,7 +54,7 @@ class TemplateEventSystem {
      */
     addEventListener<T = any>(
         type: TemplateEventType,
-        handler: TemplateEventHandler<T>
+        handler: TemplateEventHandler<T>,
     ): () => void {
         if (!this.listeners.has(type)) {
             this.listeners.set(type, new Set());
@@ -74,13 +74,13 @@ class TemplateEventSystem {
     emit<T = any>(
         type: TemplateEventType,
         payload: T,
-        templateId: string
+        templateId: string,
     ): void {
         const event: TemplateEvent<T> = {
             type,
             payload,
             timestamp: Date.now(),
-            templateId
+            templateId,
         };
 
         // Adicionar ao histórico
@@ -147,7 +147,7 @@ import { useEffect, useCallback } from 'react';
 export function useTemplateEvents<T = any>(
     type: TemplateEventType,
     handler: TemplateEventHandler<T>,
-    deps: React.DependencyList = []
+    deps: React.DependencyList = [],
 ) {
     const memoizedHandler = useCallback(handler, deps);
 

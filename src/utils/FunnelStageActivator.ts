@@ -137,7 +137,7 @@ export class FunnelStageActivator {
   registerFieldFilled(fieldName: string, value: string) {
     this.userAnswers[fieldName] = value;
 
-    console.log(`📝 Campo preenchido:`, { fieldName, value });
+    console.log('📝 Campo preenchido:', { fieldName, value });
 
     // Verificar ativação da etapa 1 (nome preenchido)
     if (fieldName === 'userName' && value.trim().length >= 2) {
@@ -279,7 +279,7 @@ export class FunnelStageActivator {
    * Mapear tipo da etapa por número
    */
   private getStepType(
-    stepNumber: number
+    stepNumber: number,
   ): 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' | 'final' {
     if (stepNumber === 1) return 'intro';
     if (stepNumber >= 2 && stepNumber <= 14) return 'question';

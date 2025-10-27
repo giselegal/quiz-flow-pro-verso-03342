@@ -33,7 +33,7 @@ export const GLOBAL_SEO_CONFIG: GlobalSEOConfig = {
     defaultFavicon: '/favicon.ico',
     charset: 'UTF-8',
     language: 'pt-BR',
-    viewport: 'width=device-width, initial-scale=1.0'
+    viewport: 'width=device-width, initial-scale=1.0',
 };
 
 // ============================================================================
@@ -55,7 +55,7 @@ export const DOMAIN_CONFIG: DomainConfig = {
     ssl: true,
     enforceHTTPS: true,
     www: false, // preferir sem www
-    subdomainHandling: 'allow'
+    subdomainHandling: 'allow',
 };
 
 // ============================================================================
@@ -82,14 +82,14 @@ export const GLOBAL_ANALYTICS_CONFIG: GlobalAnalyticsConfig = {
         measurementId: 'GA-GLOBAL-MEASUREMENT-ID',
         enabled: true,
         trackPageViews: true,
-        trackEvents: true
+        trackEvents: true,
     },
     googleTagManager: {
         containerId: 'GTM-GLOBAL-CONTAINER',
-        enabled: true
+        enabled: true,
     },
     enableCookieConsent: true,
-    privacyMode: true
+    privacyMode: true,
 };
 
 // ============================================================================
@@ -122,10 +122,10 @@ export const GLOBAL_BRANDING_CONFIG: GlobalBrandingConfig = {
     fontFamily: {
         primary: 'Inter, system-ui, sans-serif',
         secondary: 'Playfair Display, serif',
-        mono: 'Fira Code, monospace'
+        mono: 'Fira Code, monospace',
     },
     favicon: '/favicon.ico',
-    appleTouchIcon: '/apple-touch-icon.png'
+    appleTouchIcon: '/apple-touch-icon.png',
 };
 
 // ============================================================================
@@ -155,7 +155,7 @@ export const LEGAL_CONFIG: LegalConfig = {
     cookiePolicyUrl: '/cookie-policy',
     gdprCompliant: true,
     ccpaCompliant: true,
-    showCookieBanner: true
+    showCookieBanner: true,
 };
 
 // ============================================================================
@@ -181,7 +181,7 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
         apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:3000',
         cdnUrl: import.meta.env.VITE_CDN_URL || '',
         enableDevTools: isDev,
-        enablePerformanceMonitoring: !isDev
+        enablePerformanceMonitoring: !isDev,
     };
 };
 
@@ -210,7 +210,7 @@ export const APP_CONFIG: AppConfig = {
     analytics: GLOBAL_ANALYTICS_CONFIG,
     branding: GLOBAL_BRANDING_CONFIG,
     legal: LEGAL_CONFIG,
-    environment: getEnvironmentConfig()
+    environment: getEnvironmentConfig(),
 };
 
 // ============================================================================
@@ -263,7 +263,7 @@ export function generateBasicMetaTags() {
         'og:image': seo.defaultOgImage,
         'og:url': getFullUrl(),
         'og:type': 'website',
-        'og:site_name': seo.siteName
+        'og:site_name': seo.siteName,
     };
 }
 

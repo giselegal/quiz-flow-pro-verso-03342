@@ -61,7 +61,7 @@ export async function loadQuizStep(stepId: string): Promise<QuizStep | null> {
  */
 export async function loadQuizSteps(stepIds: string[]): Promise<Map<string, QuizStep>> {
     const results = await Promise.all(
-        stepIds.map(id => loadQuizStep(id))
+        stepIds.map(id => loadQuizStep(id)),
     );
 
     const stepsMap = new Map<string, QuizStep>();
@@ -138,7 +138,7 @@ export function getCacheStats() {
     return {
         cached: stepsCache.size,
         loading: loadingPromises.size,
-        cachedSteps: Array.from(stepsCache.keys())
+        cachedSteps: Array.from(stepsCache.keys()),
     };
 }
 
@@ -148,5 +148,5 @@ export function getCacheStats() {
 export const STEP_ORDER = [
     'step-01', 'step-02', 'step-03', 'step-04', 'step-05', 'step-06', 'step-07',
     'step-08', 'step-09', 'step-10', 'step-11', 'step-12', 'step-13', 'step-14',
-    'step-15', 'step-16', 'step-17', 'step-18', 'step-19', 'step-20', 'step-21'
+    'step-15', 'step-16', 'step-17', 'step-18', 'step-19', 'step-20', 'step-21',
 ];

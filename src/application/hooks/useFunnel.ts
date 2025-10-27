@@ -72,7 +72,7 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
     session: null,
     analytics: null,
     isLoading: false,
-    error: null
+    error: null,
   });
 
   // 🔍 Internal state updaters
@@ -92,7 +92,7 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
   const createFunnel = useCallback(async (
     name: string,
     description: string,
-    options: any = {}
+    options: any = {},
   ) => {
     try {
       setLoading(true);
@@ -147,7 +147,7 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
           pages: [], 
           currentPage: null,
           blocks: [],
-          error: null 
+          error: null, 
         });
       } else {
         setError('Failed to delete funnel');
@@ -208,7 +208,7 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
   const addPage = useCallback(async (
     type: string,
     title: string,
-    description?: string
+    description?: string,
   ) => {
     if (!state.funnel) {
       setError('No funnel loaded');
@@ -221,11 +221,11 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
         state.funnel.id,
         type,
         title,
-        description
+        description,
       );
       updateState({ 
         pages: [...state.pages, page],
-        error: null 
+        error: null, 
       });
     } catch (error) {
       setError(`Failed to add page: ${error}`);
@@ -234,20 +234,20 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
 
   const updatePage = useCallback(async (
     pageId: string,
-    updates: Partial<Page>
+    updates: Partial<Page>,
   ) => {
     try {
       setLoading(true);
       const updatedPage = await funnelService.updatePage(pageId, updates);
       
       const updatedPages = state.pages.map(p => 
-        p.id === pageId ? updatedPage : p
+        p.id === pageId ? updatedPage : p,
       );
       
       updateState({ 
         pages: updatedPages,
         currentPage: state.currentPage?.id === pageId ? updatedPage : state.currentPage,
-        error: null 
+        error: null, 
       });
     } catch (error) {
       setError(`Failed to update page: ${error}`);
@@ -269,7 +269,7 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
           pages: filteredPages,
           currentPage: state.currentPage?.id === pageId ? null : state.currentPage,
           blocks: state.currentPage?.id === pageId ? [] : state.blocks,
-          error: null 
+          error: null, 
         });
       } else {
         setError('Failed to delete page');
@@ -297,7 +297,7 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
       setState(prev => ({ 
         ...prev, 
         currentPage: page,
-        blocks: [] // Clear blocks, will be loaded separately
+        blocks: [], // Clear blocks, will be loaded separately
       }));
     }
   }, [state.pages]);
@@ -306,7 +306,7 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
   const addBlock = useCallback(async (
     type: string,
     content: any,
-    position?: number
+    position?: number,
   ) => {
     if (!state.currentPage) {
       setError('No page selected');
@@ -319,11 +319,11 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
         state.currentPage.id,
         type,
         content,
-        position
+        position,
       );
       updateState({ 
         blocks: [...state.blocks, block],
-        error: null 
+        error: null, 
       });
     } catch (error) {
       setError(`Failed to add block: ${error}`);
@@ -332,14 +332,14 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
 
   const updateBlock = useCallback(async (
     blockId: string,
-    updates: Partial<Block>
+    updates: Partial<Block>,
   ) => {
     try {
       setLoading(true);
       const updatedBlock = await funnelService.updateBlock(blockId, updates);
       
       const updatedBlocks = state.blocks.map(b => 
-        b.id === blockId ? updatedBlock : b
+        b.id === blockId ? updatedBlock : b,
       );
       
       updateState({ blocks: updatedBlocks, error: null });
@@ -419,7 +419,7 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
       setLoading(true);
       const completedSession = await funnelService.completeFunnelSession(
         state.session.id,
-        conversionData
+        conversionData,
       );
       updateState({ session: completedSession, error: null });
     } catch (error) {
@@ -494,7 +494,7 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
       session: null,
       analytics: null,
       isLoading: false,
-      error: null
+      error: null,
     });
   }, []);
 
@@ -554,6 +554,6 @@ export function useFunnel(funnelId?: string): UseFunnelState & UseFunnelActions 
     loadAnalytics,
     
     clearError,
-    reset
+    reset,
   };
 }

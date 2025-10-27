@@ -51,7 +51,7 @@ export interface UseComponentConfigurationReturn {
 // ============================================================================
 
 export function useComponentConfiguration(
-    options: UseComponentConfigurationOptions
+    options: UseComponentConfigurationOptions,
 ): UseComponentConfigurationReturn {
 
     const {
@@ -61,7 +61,7 @@ export function useComponentConfiguration(
         cacheEnabled = true,
         autoSave = false,
         autoSaveDelay = 2000,
-        editorMode = false // Reservado para uso futuro
+        editorMode = false, // Reservado para uso futuro
     } = options;
 
     // ============================================================================
@@ -254,7 +254,7 @@ export function useComponentConfiguration(
 
     const updateProperties = useCallback(async (newProperties: Record<string, any>) => {
         if (!componentId || !isConnected) {
-            console.warn(`Cannot update properties: component not connected`);
+            console.warn('Cannot update properties: component not connected');
             return;
         }
 
@@ -277,7 +277,7 @@ export function useComponentConfiguration(
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar propriedades';
             setError(errorMessage);
-            console.error(`❌ Error updating properties:`, err);
+            console.error('❌ Error updating properties:', err);
         }
     }, [componentId, funnelId, isConnected, properties]);
 
@@ -301,7 +301,7 @@ export function useComponentConfiguration(
             console.log(`✅ Auto-save completed for ${componentId}`);
 
         } catch (err) {
-            console.error(`❌ Error in auto-save:`, err);
+            console.error('❌ Error in auto-save:', err);
             setError(err instanceof Error ? err.message : 'Erro no auto-save');
         }
     }, [componentId, funnelId, properties]);
@@ -326,7 +326,7 @@ export function useComponentConfiguration(
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao resetar configuração';
             setError(errorMessage);
-            console.error(`❌ Error resetting to defaults:`, err);
+            console.error('❌ Error resetting to defaults:', err);
         }
     }, [componentId, funnelId, componentDefinition, loadConfiguration]);
 
@@ -414,7 +414,7 @@ export function useComponentConfiguration(
         hasUnsavedChanges,
 
         // Estado da conexão
-        connectionStatus
+        connectionStatus,
     };
 }
 
@@ -427,14 +427,14 @@ export function useComponentConfiguration(
  */
 export function useQuizComponentConfiguration(
     componentId: string,
-    funnelId?: string
+    funnelId?: string,
 ) {
     return useComponentConfiguration({
         componentId,
         funnelId,
         realTimeSync: true,
         autoSave: true,
-        autoSaveDelay: 1500
+        autoSaveDelay: 1500,
     });
 }
 
@@ -444,7 +444,7 @@ export function useQuizComponentConfiguration(
 export function useComponentProperty<T = any>(
     componentId: string,
     propertyKey: string,
-    funnelId?: string
+    funnelId?: string,
 ): {
     value: T;
     setValue: (value: T) => Promise<void>;
@@ -453,13 +453,13 @@ export function useComponentProperty<T = any>(
 } {
     const { properties, updateProperty, isLoading, error } = useComponentConfiguration({
         componentId,
-        funnelId
+        funnelId,
     });
 
     return {
         value: properties[propertyKey] as T,
         setValue: (value: T) => updateProperty(propertyKey, value),
         isLoading,
-        error
+        error,
     };
 }

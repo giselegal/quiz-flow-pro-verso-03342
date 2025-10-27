@@ -269,7 +269,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Se Supabase estiver desabilitado, mas sem credenciais locais válidas
       if (DISABLE || !ENABLE) {
         throw new Error(
-          'Autenticação offline: defina VITE_LOCAL_ADMIN_EMAIL e VITE_LOCAL_ADMIN_PASSWORD para login local.'
+          'Autenticação offline: defina VITE_LOCAL_ADMIN_EMAIL e VITE_LOCAL_ADMIN_PASSWORD para login local.',
         );
       }
 

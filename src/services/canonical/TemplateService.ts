@@ -125,7 +125,7 @@ export class TemplateService extends BaseCanonicalService {
     18: { name: 'S6: Objetivos', type: 'strategic', description: 'O que deseja alcançar com novo estilo', multiSelect: 1 },
     19: { name: 'Transição Final', type: 'transition', description: 'Preparando resultado personalizado' },
     20: { name: 'Resultado', type: 'result', description: 'Página de resultado personalizada' },
-    21: { name: 'Oferta', type: 'offer', description: 'Apresentação da oferta final' }
+    21: { name: 'Oferta', type: 'offer', description: 'Apresentação da oferta final' },
   };
 
   private constructor(options?: ServiceOptions) {
@@ -172,8 +172,8 @@ export class TemplateService extends BaseCanonicalService {
             blocks,
             metadata: {
               category: 'quiz-style',
-              funnelType: 'quiz21StepsComplete'
-            }
+              funnelType: 'quiz21StepsComplete',
+            },
           };
           
           return this.createResult(template);
@@ -245,7 +245,7 @@ export class TemplateService extends BaseCanonicalService {
       const updated: Template = {
         ...existingResult.data,
         ...updates,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       // Salvar
@@ -295,8 +295,8 @@ export class TemplateService extends BaseCanonicalService {
           blocks: [], // Não carregar blocos na listagem
           metadata: {
             category: 'quiz-style',
-            funnelType: 'quiz21StepsComplete'
-          }
+            funnelType: 'quiz21StepsComplete',
+          },
         });
       }
 
@@ -330,7 +330,7 @@ export class TemplateService extends BaseCanonicalService {
       const results = allTemplates.data.filter(t => 
         t.name.toLowerCase().includes(lowerQuery) ||
         t.description.toLowerCase().includes(lowerQuery) ||
-        t.id.toLowerCase().includes(lowerQuery)
+        t.id.toLowerCase().includes(lowerQuery),
       );
 
       return this.createResult(results);
@@ -428,7 +428,7 @@ export class TemplateService extends BaseCanonicalService {
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   }
 
@@ -442,7 +442,7 @@ export class TemplateService extends BaseCanonicalService {
       order: block.order ?? block.position ?? index,
       properties: block.properties || block.props || {},
       content: block.content || {},
-      parentId: block.parentId ?? null
+      parentId: block.parentId ?? null,
     }));
   }
 
@@ -461,7 +461,7 @@ export class TemplateService extends BaseCanonicalService {
       'question': 'QuestionBlock',
       'options': 'OptionsBlock',
       'result': 'ResultBlock',
-      'cta': 'CTABlock'
+      'cta': 'CTABlock',
     };
 
     return typeMap[type.toLowerCase()] || type;
@@ -497,7 +497,7 @@ export class TemplateService extends BaseCanonicalService {
             order: i,
             blocksCount: 0, // TODO: buscar do cache se disponível
             hasTemplate: true,
-            ...info
+            ...info,
           });
         }
 
@@ -522,7 +522,7 @@ export class TemplateService extends BaseCanonicalService {
     invalidate: (stepNumber: number): void => {
       const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
       this.invalidateTemplate(stepId);
-    }
+    },
   };
 
   /**
@@ -558,7 +558,7 @@ export class TemplateService extends BaseCanonicalService {
           order: 0,
           properties: blockData.properties || {},
           content: blockData.content || {},
-          parentId: blockData.parentId ?? null
+          parentId: blockData.parentId ?? null,
         };
 
         // Cache o bloco
@@ -583,7 +583,7 @@ export class TemplateService extends BaseCanonicalService {
 
         const updated: Block = {
           ...existingResult.data,
-          ...updates
+          ...updates,
         };
 
         // Atualizar cache
@@ -607,7 +607,7 @@ export class TemplateService extends BaseCanonicalService {
         this.error('blocks.delete failed:', error);
         return this.createError(error as Error);
       }
-    }
+    },
   };
 
   // ==================== HEALTH CHECK ====================

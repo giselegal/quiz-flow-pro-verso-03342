@@ -50,7 +50,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   onStepChange,
   onReorderBlocks,
   className = '',
-  funnelId = 'quiz-estilo-21-steps'
+  funnelId = 'quiz-estilo-21-steps',
 }) => {
   // 🔒 REFS ESTÁVEIS - Evitam re-criação desnecessária
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -63,7 +63,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
       activationConstraint: {
         distance: 8, // Evita ativação acidental ao clicar
       },
-    })
+    }),
   );
 
   // 📊 DEBUG TRACKING
@@ -72,7 +72,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
     currentStep,
     isPreviewMode,
     blocksCount: blocks.length,
-    selectedBlockId: selectedBlock?.id
+    selectedBlockId: selectedBlock?.id,
   });
   // Resolver funnelId de forma flexível: prop tem prioridade, depois query (?funnelId ou ?funnel)
   const effectiveFunnelId = useMemo(() => {
@@ -109,7 +109,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   const stepSelection = useStepSelection({
     stepNumber: currentStep,
     onSelectBlock,
-    debounceMs: 50
+    debounceMs: 50,
   });
 
   // 🧠 MEMOIZED VALUES - Recalculados apenas quando necessário
@@ -131,7 +131,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
       type: block.type || 'text',
       properties: block.properties || {},
       content: block.content || {},
-      position: block.position || { x: 0, y: index * 100 }
+      position: block.position || { x: 0, y: index * 100 },
     }));
   }, [blocks]);
 
@@ -190,7 +190,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
       overBlockId,
       oldIndex,
       newIndex,
-      totalBlocks: stabilizedBlocks.length
+      totalBlocks: stabilizedBlocks.length,
     });
 
     if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
@@ -287,7 +287,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
     handleBlockSelection,
     onUpdateBlock,
     onDeleteBlock,
-    currentStep
+    currentStep,
   ]);
 
   // 🎯 MAIN RENDER - Lógica simples e estável
@@ -303,7 +303,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
  */
 const arePropsEqual = (
   prevProps: StabilizedCanvasProps,
-  nextProps: StabilizedCanvasProps
+  nextProps: StabilizedCanvasProps,
 ): boolean => {
   // 1. Comparações rápidas primeiro
   if (

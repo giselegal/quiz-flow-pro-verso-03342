@@ -13,7 +13,7 @@ import {
     useUserSync,
     EditorSyncProvider,
     FunnelSyncProvider,
-    UserSyncProvider
+    UserSyncProvider,
 } from '../storage/SyncedContexts';
 
 /**
@@ -43,7 +43,7 @@ export const EditorComponent: React.FC = () => {
         deleteBlock,
         setSelectedBlock,
         saveState,
-        isLoading
+        isLoading,
     } = useEditorSync();
 
     // Exemplo de uso com lazy loading
@@ -59,9 +59,9 @@ export const EditorComponent: React.FC = () => {
             properties: {
                 text: 'Novo bloco de texto',
                 fontSize: '16px',
-                color: '#000000'
+                color: '#000000',
             },
-            position: { x: 100, y: 100 }
+            position: { x: 100, y: 100 },
         };
 
         await addBlock(newBlock);
@@ -120,7 +120,7 @@ const BlockComponent: React.FC<BlockComponentProps> = ({
     onUpdate,
     onDelete,
     onSelect,
-    isSelected
+    isSelected,
 }) => {
     const [isEditing, setIsEditing] = React.useState(false);
 
@@ -128,8 +128,8 @@ const BlockComponent: React.FC<BlockComponentProps> = ({
         onUpdate({
             properties: {
                 ...block.properties,
-                text: newText
-            }
+                text: newText,
+            },
         });
     };
 
@@ -140,7 +140,7 @@ const BlockComponent: React.FC<BlockComponentProps> = ({
                 position: 'absolute',
                 left: block.position.x,
                 top: block.position.y,
-                border: isSelected ? '2px solid blue' : '1px solid gray'
+                border: isSelected ? '2px solid blue' : '1px solid gray',
             }}
             onClick={onSelect}
         >
@@ -176,12 +176,12 @@ const BlockComponent: React.FC<BlockComponentProps> = ({
  */
 export const FunnelSettingsModal: React.FC<{ funnelId: string; onClose: () => void }> = ({
     funnelId,
-    onClose
+    onClose,
 }) => {
     const {
         funnelSettings,
         updateFunnelSettings,
-        saveFunnelSettings
+        saveFunnelSettings,
     } = useFunnelSync(funnelId);
 
     const [localSettings, setLocalSettings] = React.useState(funnelSettings);
@@ -208,7 +208,7 @@ export const FunnelSettingsModal: React.FC<{ funnelId: string; onClose: () => vo
                         value={localSettings.name || ''}
                         onChange={(e) => setLocalSettings({
                             ...localSettings,
-                            name: e.target.value
+                            name: e.target.value,
                         })}
                     />
                 </div>
@@ -219,7 +219,7 @@ export const FunnelSettingsModal: React.FC<{ funnelId: string; onClose: () => vo
                         value={localSettings.description || ''}
                         onChange={(e) => setLocalSettings({
                             ...localSettings,
-                            description: e.target.value
+                            description: e.target.value,
                         })}
                     />
                 </div>
@@ -231,7 +231,7 @@ export const FunnelSettingsModal: React.FC<{ funnelId: string; onClose: () => vo
                             checked={localSettings.isActive || false}
                             onChange={(e) => setLocalSettings({
                                 ...localSettings,
-                                isActive: e.target.checked
+                                isActive: e.target.checked,
                             })}
                         />
                         Ativo
@@ -263,7 +263,7 @@ export const Dashboard: React.FC = () => {
             const allFunnels = await getAllFunnelSettings();
             setFunnels(Object.entries(allFunnels).map(([id, settings]) => ({
                 id,
-                ...settings
+                ...settings,
             })));
         };
 
@@ -274,7 +274,7 @@ export const Dashboard: React.FC = () => {
         const newTheme = userPreferences.theme === 'dark' ? 'light' : 'dark';
         await updateUserPreferences({
             ...userPreferences,
-            theme: newTheme
+            theme: newTheme,
         });
     };
 
@@ -337,7 +337,7 @@ export const useAutoSave = (data: any, namespace: string, key: string, delay = 2
             setIsSaving(true);
             try {
                 await import('../storage/AdvancedStorageSystem').then(({ advancedStorage }) =>
-                    advancedStorage.setItem(key, data, { namespace })
+                    advancedStorage.setItem(key, data, { namespace }),
                 );
             } catch (error) {
                 console.error('Erro no auto-save:', error);
@@ -367,7 +367,7 @@ export const LegacyComponentAdapter: React.FC = () => {
         blocks: editorState.blocks.map(block => ({
             ...block,
             // Conversões necessárias para formato antigo
-        }))
+        })),
     }), [editorState.blocks]);
 
     // Converter mudanças do formato legacy para novo

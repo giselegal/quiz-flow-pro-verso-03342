@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import {
     Search, Brain, Crown, Download, Eye, Copy, Star,
-    Sparkles, FileText, Target, Layout, Layers, Palette, Zap
+    Sparkles, FileText, Target, Layout, Layers, Palette, Zap,
 } from 'lucide-react';
 
 // ===============================
@@ -260,15 +260,15 @@ export class UniversalTemplateEngine {
                 capabilities: [
                     { name: 'Progressive Disclosure', description: 'Revelação progressiva de campos', enabled: true },
                     { name: 'Smart Validation', description: 'Validação inteligente em tempo real', enabled: true },
-                    { name: 'Conversion Tracking', description: 'Rastreamento de conversões', enabled: true }
+                    { name: 'Conversion Tracking', description: 'Rastreamento de conversões', enabled: true },
                 ],
                 compatibility: this.createDefaultCompatibility(),
                 aiEnhanced: true,
                 aiFeatures: [
                     { type: 'content_optimization', name: 'Content AI', description: 'Otimização de conteúdo com IA', enabled: true },
-                    { type: 'performance_tuning', name: 'Performance AI', description: 'Otimização de performance', enabled: true }
+                    { type: 'performance_tuning', name: 'Performance AI', description: 'Otimização de performance', enabled: true },
                 ],
-                performance: { loadTime: 1.2, bundleSize: 45, renderScore: 95, accessibility: 98, seo: 92 }
+                performance: { loadTime: 1.2, bundleSize: 45, renderScore: 95, accessibility: 98, seo: 92 },
             },
 
             // Quiz Templates
@@ -290,15 +290,15 @@ export class UniversalTemplateEngine {
                 capabilities: [
                     { name: 'Adaptive Questions', description: 'Perguntas adaptativas baseadas em respostas', enabled: true },
                     { name: 'AI Scoring', description: 'Pontuação inteligente com ML', enabled: true },
-                    { name: 'Result Personalization', description: 'Resultados personalizados', enabled: true }
+                    { name: 'Result Personalization', description: 'Resultados personalizados', enabled: true },
                 ],
                 compatibility: this.createDefaultCompatibility(),
                 aiEnhanced: true,
                 aiFeatures: [
                     { type: 'auto_generation', name: 'Question Generator', description: 'Gerador automático de perguntas', enabled: true },
-                    { type: 'smart_suggestions', name: 'Smart Answers', description: 'Sugestões inteligentes de respostas', enabled: true }
+                    { type: 'smart_suggestions', name: 'Smart Answers', description: 'Sugestões inteligentes de respostas', enabled: true },
                 ],
-                performance: { loadTime: 0.8, bundleSize: 38, renderScore: 97, accessibility: 95, seo: 88 }
+                performance: { loadTime: 0.8, bundleSize: 38, renderScore: 97, accessibility: 95, seo: 88 },
             },
 
             // Landing Page Templates
@@ -320,15 +320,15 @@ export class UniversalTemplateEngine {
                 capabilities: [
                     { name: 'A/B Testing', description: 'Testes A/B integrados', enabled: true },
                     { name: 'Social Proof', description: 'Prova social dinâmica', enabled: true },
-                    { name: 'Urgency Timers', description: 'Timers de urgência', enabled: true }
+                    { name: 'Urgency Timers', description: 'Timers de urgência', enabled: true },
                 ],
                 compatibility: this.createDefaultCompatibility(),
                 aiEnhanced: true,
                 aiFeatures: [
-                    { type: 'content_optimization', name: 'Copy AI', description: 'Otimização de copy com IA', enabled: true }
+                    { type: 'content_optimization', name: 'Copy AI', description: 'Otimização de copy com IA', enabled: true },
                 ],
-                performance: { loadTime: 1.1, bundleSize: 42, renderScore: 94, accessibility: 96, seo: 95 }
-            }
+                performance: { loadTime: 1.1, bundleSize: 42, renderScore: 94, accessibility: 96, seo: 95 },
+            },
         ];
 
         defaultTemplates.forEach(template => {
@@ -342,7 +342,7 @@ export class UniversalTemplateEngine {
     async renderTemplate(
         templateId: string,
         data: Record<string, any> = {},
-        options: RenderOptions = {}
+        options: RenderOptions = {},
     ): Promise<RenderedTemplate> {
         const cacheKey = `${templateId}-${JSON.stringify(data)}-${JSON.stringify(options)}`;
 
@@ -388,7 +388,7 @@ export class UniversalTemplateEngine {
      */
     private async applyAIEnhancements(
         template: UniversalTemplate,
-        data: Record<string, any>
+        data: Record<string, any>,
     ): Promise<UniversalTemplate> {
         const enhanced = { ...template };
 
@@ -434,7 +434,7 @@ export class UniversalTemplateEngine {
             templates = templates.filter(t =>
                 t.name.toLowerCase().includes(search) ||
                 t.description.toLowerCase().includes(search) ||
-                t.metadata.tags.some(tag => tag.toLowerCase().includes(search))
+                t.metadata.tags.some(tag => tag.toLowerCase().includes(search)),
             );
         }
 
@@ -469,13 +469,13 @@ export class UniversalTemplateEngine {
             metadata: {
                 ...this.createDefaultMetadata(),
                 tags: config.tags || [],
-                keywords: config.keywords || []
+                keywords: config.keywords || [],
             },
             capabilities: config.capabilities || [],
             compatibility: this.createDefaultCompatibility(),
             aiEnhanced: config.aiEnhanced || false,
             aiFeatures: config.aiFeatures || [],
-            performance: { loadTime: 0, bundleSize: 0, renderScore: 0, accessibility: 0, seo: 0 }
+            performance: { loadTime: 0, bundleSize: 0, renderScore: 0, accessibility: 0, seo: 0 },
         };
 
         // Calculate performance metrics
@@ -534,13 +534,13 @@ export class UniversalTemplateEngine {
             version: '1.0.0',
             downloads: 0,
             rating: 0,
-            ...customizations
+            ...customizations,
         };
 
         cloned.metadata = {
             ...cloned.metadata,
             createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+            updatedAt: new Date().toISOString(),
         };
 
         this.templates.set(cloned.id, cloned);
@@ -557,7 +557,7 @@ export class UniversalTemplateEngine {
             sections: [],
             layout: { type: 'single-column', maxWidth: 1200 },
             responsive: { breakpoints: { mobile: 768, tablet: 1024, desktop: 1200 } },
-            accessibility: { contrast: 'AA', keyboard: true, screenReader: true }
+            accessibility: { contrast: 'AA', keyboard: true, screenReader: true },
         };
     }
 
@@ -569,11 +569,11 @@ export class UniversalTemplateEngine {
                 spacing: { base: 4, scale: 1.5 },
                 borders: { radius: 8, width: 1 },
                 shadows: { sm: '0 1px 2px rgba(0,0,0,0.05)', md: '0 4px 6px rgba(0,0,0,0.1)' },
-                animations: { duration: 200, easing: 'ease-in-out' }
+                animations: { duration: 200, easing: 'ease-in-out' },
             },
             components: {},
             themes: {},
-            responsive: {}
+            responsive: {},
         };
     }
 
@@ -582,7 +582,7 @@ export class UniversalTemplateEngine {
             interactions: [],
             transitions: [],
             validations: [],
-            analytics: []
+            analytics: [],
         };
     }
 
@@ -591,7 +591,7 @@ export class UniversalTemplateEngine {
             schema: {},
             defaultValues: {},
             validationRules: [],
-            transformations: []
+            transformations: [],
         };
     }
 
@@ -604,7 +604,7 @@ export class UniversalTemplateEngine {
             keywords: [],
             preview: { thumbnail: '', screenshots: [] },
             documentation: '',
-            changelog: []
+            changelog: [],
         };
     }
 
@@ -614,17 +614,17 @@ export class UniversalTemplateEngine {
                 { name: 'Chrome', version: '90+' },
                 { name: 'Firefox', version: '88+' },
                 { name: 'Safari', version: '14+' },
-                { name: 'Edge', version: '90+' }
+                { name: 'Edge', version: '90+' },
             ],
             devices: [
                 { type: 'desktop', supported: true },
                 { type: 'tablet', supported: true },
-                { type: 'mobile', supported: true }
+                { type: 'mobile', supported: true },
             ],
             frameworks: [
                 { name: 'React', version: '18+' },
-                { name: 'Next.js', version: '13+' }
-            ]
+                { name: 'Next.js', version: '13+' },
+            ],
         };
     }
 
@@ -655,7 +655,7 @@ export class UniversalTemplateEngine {
             bundleSize: Math.floor(Math.random() * 50 + 30),
             renderScore: Math.floor(Math.random() * 10 + 90),
             accessibility: Math.floor(Math.random() * 10 + 90),
-            seo: Math.floor(Math.random() * 10 + 85)
+            seo: Math.floor(Math.random() * 10 + 85),
         };
     }
 
@@ -671,7 +671,7 @@ export class UniversalTemplateEngine {
 
     private clearTemplateCache(templateId: string): void {
         const keysToDelete = Array.from(this.cache.keys()).filter(key =>
-            key.startsWith(templateId)
+            key.startsWith(templateId),
         );
         keysToDelete.forEach(key => this.cache.delete(key));
     }
@@ -691,7 +691,7 @@ class FunnelRenderer extends TemplateRenderer {
             html: '<div class="funnel-template">Funnel Content</div>',
             css: '.funnel-template { /* styles */ }',
             js: '// Funnel behavior',
-            metadata: { renderTime: performance.now(), cacheKey: '' }
+            metadata: { renderTime: performance.now(), cacheKey: '' },
         };
     }
 }
@@ -702,7 +702,7 @@ class QuizRenderer extends TemplateRenderer {
             html: '<div class="quiz-template">Quiz Content</div>',
             css: '.quiz-template { /* styles */ }',
             js: '// Quiz behavior',
-            metadata: { renderTime: performance.now(), cacheKey: '' }
+            metadata: { renderTime: performance.now(), cacheKey: '' },
         };
     }
 }
@@ -713,7 +713,7 @@ class LandingPageRenderer extends TemplateRenderer {
             html: '<div class="landing-template">Landing Page Content</div>',
             css: '.landing-template { /* styles */ }',
             js: '// Landing page behavior',
-            metadata: { renderTime: performance.now(), cacheKey: '' }
+            metadata: { renderTime: performance.now(), cacheKey: '' },
         };
     }
 }
@@ -724,7 +724,7 @@ class FormRenderer extends TemplateRenderer {
             html: '<div class="form-template">Form Content</div>',
             css: '.form-template { /* styles */ }',
             js: '// Form behavior',
-            metadata: { renderTime: performance.now(), cacheKey: '' }
+            metadata: { renderTime: performance.now(), cacheKey: '' },
         };
     }
 }
@@ -735,7 +735,7 @@ class ComponentRenderer extends TemplateRenderer {
             html: '<div class="component-template">Component Content</div>',
             css: '.component-template { /* styles */ }',
             js: '// Component behavior',
-            metadata: { renderTime: performance.now(), cacheKey: '' }
+            metadata: { renderTime: performance.now(), cacheKey: '' },
         };
     }
 }
@@ -746,7 +746,7 @@ class LayoutRenderer extends TemplateRenderer {
             html: '<div class="layout-template">Layout Content</div>',
             css: '.layout-template { /* styles */ }',
             js: '// Layout behavior',
-            metadata: { renderTime: performance.now(), cacheKey: '' }
+            metadata: { renderTime: performance.now(), cacheKey: '' },
         };
     }
 }
@@ -757,7 +757,7 @@ class ThemeRenderer extends TemplateRenderer {
             html: '<div class="theme-template">Theme Content</div>',
             css: '.theme-template { /* styles */ }',
             js: '// Theme behavior',
-            metadata: { renderTime: performance.now(), cacheKey: '' }
+            metadata: { renderTime: performance.now(), cacheKey: '' },
         };
     }
 }
@@ -768,7 +768,7 @@ class HybridRenderer extends TemplateRenderer {
             html: '<div class="hybrid-template">Hybrid Content</div>',
             css: '.hybrid-template { /* styles */ }',
             js: '// Hybrid behavior',
-            metadata: { renderTime: performance.now(), cacheKey: '' }
+            metadata: { renderTime: performance.now(), cacheKey: '' },
         };
     }
 }
@@ -959,7 +959,7 @@ export const UniversalTemplateBrowser: React.FC = () => {
                     </Select>
 
                     <Button
-                        variant={filters.aiEnhanced ? "default" : "outline"}
+                        variant={filters.aiEnhanced ? 'default' : 'outline'}
                         onClick={() => handleFilter({ aiEnhanced: !filters.aiEnhanced })}
                     >
                         <Brain className="w-4 h-4 mr-2" />
@@ -1120,7 +1120,7 @@ export const useUniversalTemplateEngine = () => {
         createTemplate: engine.createTemplate.bind(engine),
         updateTemplate: engine.updateTemplate.bind(engine),
         deleteTemplate: engine.deleteTemplate.bind(engine),
-        cloneTemplate: engine.cloneTemplate.bind(engine)
+        cloneTemplate: engine.cloneTemplate.bind(engine),
     };
 };
 

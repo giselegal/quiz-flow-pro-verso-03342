@@ -28,7 +28,7 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
         apiKey: config.apiKey,
         style: config.style || 'realistic',
         size: '1024x1024',
-        quality: 'hd'
+        quality: 'hd',
     });
 
     /**
@@ -60,7 +60,7 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
                 success: false,
                 error: errorMessage,
                 prompt: request.prompt,
-                provider: config.provider
+                provider: config.provider,
             };
         } finally {
             setIsGenerating(false);
@@ -125,7 +125,7 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
         isGenerating,
         error,
         lastGenerated,
-        providerStatus
+        providerStatus,
     };
 }
 
@@ -134,35 +134,35 @@ export function useFashionAI(config: UseFashionAIConfig): UseFashionAI {
  */
 export const FASHION_PROMPTS = {
     casual: {
-        prompt: "Casual comfortable outfit for daily wear",
-        occasion: "casual" as const,
-        style: "moderno" as const
+        prompt: 'Casual comfortable outfit for daily wear',
+        occasion: 'casual' as const,
+        style: 'moderno' as const,
     },
     work: {
-        prompt: "Professional business attire for office work",
-        occasion: "trabalho" as const,
-        style: "clássico" as const
+        prompt: 'Professional business attire for office work',
+        occasion: 'trabalho' as const,
+        style: 'clássico' as const,
     },
     party: {
-        prompt: "Elegant party outfit for evening event",
-        occasion: "festa" as const,
-        style: "romântico" as const
+        prompt: 'Elegant party outfit for evening event',
+        occasion: 'festa' as const,
+        style: 'romântico' as const,
     },
     weekend: {
-        prompt: "Relaxed weekend outfit for leisure activities",
-        occasion: "casual" as const,
-        style: "minimalista" as const
+        prompt: 'Relaxed weekend outfit for leisure activities',
+        occasion: 'casual' as const,
+        style: 'minimalista' as const,
     },
     date: {
-        prompt: "Stylish romantic outfit for dinner date",
-        occasion: "festa" as const,
-        style: "romântico" as const
+        prompt: 'Stylish romantic outfit for dinner date',
+        occasion: 'festa' as const,
+        style: 'romântico' as const,
     },
     travel: {
-        prompt: "Comfortable travel outfit for long journey",
-        occasion: "viagem" as const,
-        style: "moderno" as const
-    }
+        prompt: 'Comfortable travel outfit for long journey',
+        occasion: 'viagem' as const,
+        style: 'moderno' as const,
+    },
 };
 
 /**
@@ -174,7 +174,7 @@ export const FASHION_COLORS = {
     cool: ['blue', 'green', 'purple', 'turquoise', 'mint'],
     earth: ['brown', 'tan', 'olive', 'rust', 'terracotta'],
     pastel: ['pink', 'lavender', 'peach', 'mint', 'cream'],
-    bold: ['emerald', 'royal blue', 'magenta', 'gold', 'crimson']
+    bold: ['emerald', 'royal blue', 'magenta', 'gold', 'crimson'],
 };
 
 export default useFashionAI;

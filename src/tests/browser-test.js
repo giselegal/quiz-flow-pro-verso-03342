@@ -12,7 +12,7 @@ const executarTestesNoBrowser = async () => {
     const resultados = {
         sucessos: 0,
         falhas: 0,
-        testes: []
+        testes: [],
     };
 
     // Teste 1: Verificar se a página /editor carrega
@@ -42,7 +42,7 @@ const executarTestesNoBrowser = async () => {
 
         resultados.testes.push({
             nome: 'Carregamento página /editor',
-            passou: !!temEditor
+            passou: !!temEditor,
         });
 
     } catch (error) {
@@ -51,7 +51,7 @@ const executarTestesNoBrowser = async () => {
         resultados.testes.push({
             nome: 'Carregamento página /editor',
             passou: false,
-            erro: error.message
+            erro: error.message,
         });
     }
 
@@ -64,7 +64,7 @@ const executarTestesNoBrowser = async () => {
             document.querySelector('[data-reactroot]'),
             document.querySelector('[data-react]'),
             document.querySelector('.react-component'),
-            document.querySelector('#root')
+            document.querySelector('#root'),
         ].filter(Boolean);
 
         const temReact = elementosReact.length > 0 ||
@@ -81,7 +81,7 @@ const executarTestesNoBrowser = async () => {
 
         resultados.testes.push({
             nome: 'Renderização React',
-            passou: temReact
+            passou: temReact,
         });
 
     } catch (error) {
@@ -119,7 +119,7 @@ const executarTestesNoBrowser = async () => {
         resultados.testes.push({
             nome: 'Erros no console',
             passou: errosConsole === 0,
-            detalhes: `${errosConsole} erros`
+            detalhes: `${errosConsole} erros`,
         });
 
     } catch (error) {
@@ -134,7 +134,7 @@ const executarTestesNoBrowser = async () => {
         const funisDeTeste = [
             '/editor/meu-quiz-personalizado',
             '/editor/landing-page-produto',
-            '/editor/campanha-email'
+            '/editor/campanha-email',
         ];
 
         let funisQuePassaram = 0;
@@ -169,7 +169,7 @@ const executarTestesNoBrowser = async () => {
         resultados.testes.push({
             nome: 'Funis dinâmicos',
             passou: funisQuePassaram === funisDeTeste.length,
-            detalhes: `${funisQuePassaram}/${funisDeTeste.length} funcionando`
+            detalhes: `${funisQuePassaram}/${funisDeTeste.length} funcionando`,
         });
 
     } catch (error) {
@@ -206,7 +206,7 @@ const executarTestesNoBrowser = async () => {
         resultados.testes.push({
             nome: 'Performance renderização',
             passou: renderTime < 100,
-            detalhes: `${renderTime.toFixed(2)}ms`
+            detalhes: `${renderTime.toFixed(2)}ms`,
         });
 
     } catch (error) {
@@ -234,7 +234,7 @@ const executarTestesNoBrowser = async () => {
             timestamp: new Date().toISOString(),
             resultados,
             url: window.location.href,
-            userAgent: navigator.userAgent
+            userAgent: navigator.userAgent,
         }));
         console.log('\n💾 Resultados salvos no localStorage');
     } catch (e) {
@@ -288,6 +288,6 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         executarTestesNoBrowser,
-        recuperarResultadosSalvos
+        recuperarResultadosSalvos,
     };
 }

@@ -8,7 +8,7 @@ export const getOptimizedImageUrl = (
     height?: number;
     quality?: number;
     format?: string;
-  }
+  },
 ) => {
   if (!src) return '';
 
@@ -27,7 +27,7 @@ export const getLowQualityPlaceholder = (src: string) => {
 
 export const preloadImagesByUrls = (
   urls: string[],
-  options: PreloadOptions = {}
+  options: PreloadOptions = {},
 ): Promise<void> => {
   return new Promise(resolve => {
     const { quality = 80, batchSize = 5 } = options;
@@ -54,8 +54,8 @@ export const preloadImagesByUrls = (
                 options.onProgress?.(loaded, total);
                 resolveImage();
               };
-            })
-        )
+            }),
+        ),
       ).then(() => {
         if (loaded >= total) {
           options.onComplete?.();
@@ -74,7 +74,7 @@ export const preloadImagesByUrls = (
 
 export const preloadCriticalImages = async (
   context: 'strategic' | 'results' | 'transformation' | 'bonus' | 'testimonials' | string[],
-  options: Omit<PreloadOptions, 'onProgress' | 'onComplete'> = {}
+  options: Omit<PreloadOptions, 'onProgress' | 'onComplete'> = {},
 ): Promise<void> => {
   const { quality = 75, batchSize = 3, format } = options;
   let imageUrls: string[] = [];
@@ -138,7 +138,7 @@ export const preloadCriticalImages = async (
             '/images/quiz/strategic/elegant-woman-1.webp',
             '/images/quiz/strategic/elegant-woman-2.webp',
             '/images/quiz/strategic/modern-woman-1.webp',
-            '/images/quiz/strategic/modern-woman-2.webp'
+            '/images/quiz/strategic/modern-woman-2.webp',
           );
           break;
         case 'results':
@@ -146,7 +146,7 @@ export const preloadCriticalImages = async (
             '/images/results/style-result-dressing-room-2.webp',
             '/images/results/style-result-woman-thinking.webp',
             '/images/results/style-result-woman-walking.webp',
-            '/images/results/style-results-header.webp'
+            '/images/results/style-results-header.webp',
           );
           break;
         case 'transformation':
@@ -154,7 +154,7 @@ export const preloadCriticalImages = async (
             '/images/transformation/transformation-header.webp',
             '/images/transformation/transformation-1-v2.webp',
             '/images/transformation/transformation-2-v2.webp',
-            '/images/transformation/transformation-3-v2.webp'
+            '/images/transformation/transformation-3-v2.webp',
           );
           break;
         case 'bonus':
@@ -162,7 +162,7 @@ export const preloadCriticalImages = async (
             '/images/bonus/bonus-header.webp',
             '/images/bonus/bonus-1.webp',
             '/images/bonus/bonus-2.webp',
-            '/images/bonus/bonus-3.webp'
+            '/images/bonus/bonus-3.webp',
           );
           break;
         case 'testimonials':
@@ -170,7 +170,7 @@ export const preloadCriticalImages = async (
             '/images/testimonials/testimonials-header.webp',
             '/images/testimonials/testimonial-1.webp',
             '/images/testimonials/testimonial-2.webp',
-            '/images/testimonials/testimonial-3.webp'
+            '/images/testimonials/testimonial-3.webp',
           );
           break;
         default:
@@ -214,7 +214,7 @@ export const getOptimizedImage = (
     height?: number;
     quality?: number;
     format?: string;
-  }
+  },
 ) => {
   // For now, delegate to existing function
   return getOptimizedImageUrl(src, options);
@@ -228,7 +228,7 @@ export const preloadImages = (
     category?: string;
     preloadPriority?: number;
   }>,
-  options?: { quality?: number; batchSize?: number; format?: string }
+  options?: { quality?: number; batchSize?: number; format?: string },
 ) => {
   const urls = images.map(img => img.src);
   return preloadImagesByUrls(urls, options);
@@ -243,14 +243,14 @@ export const preloadImagesByIds = (ids: string[], options?: PreloadOptions) => {
 
 export const preloadImagesByCategory = (
   category: string,
-  options?: Omit<PreloadOptions, 'onProgress' | 'onComplete'>
+  options?: Omit<PreloadOptions, 'onProgress' | 'onComplete'>,
 ) => {
   // Map category to proper context string
   const validCategories = ['strategic', 'results', 'transformation', 'bonus', 'testimonials'];
   if (validCategories.includes(category)) {
     return preloadCriticalImages(
       category as 'strategic' | 'results' | 'transformation' | 'bonus' | 'testimonials',
-      options
+      options,
     );
   }
 

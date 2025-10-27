@@ -50,7 +50,7 @@ class RollbackService {
       healthThreshold: 70,
       errorRateThreshold: 5,
       monitoringDuration: 300000, // 5 minutes
-      rollbackTimeout: 120000 // 2 minutes
+      rollbackTimeout: 120000, // 2 minutes
     };
     this.loadPersistedData();
   }
@@ -70,7 +70,7 @@ class RollbackService {
       ...deployment,
       id: this.generateDeploymentId(),
       timestamp: new Date().toISOString(),
-      status: 'standby'
+      status: 'standby',
     };
 
     this.deployments.unshift(newDeployment);
@@ -194,7 +194,7 @@ class RollbackService {
         toVersion: targetDeployment.id,
         rollbackTime,
         reason,
-        logs
+        logs,
       };
 
       console.log('✅ Rollback successful:', result);
@@ -210,7 +210,7 @@ class RollbackService {
         toVersion: targetVersion || 'unknown',
         rollbackTime,
         reason,
-        logs
+        logs,
       };
 
       console.error('❌ Rollback failed:', result);
@@ -290,7 +290,7 @@ class RollbackService {
       { name: 'response_time', weight: 30, value: Math.random() * 100 },
       { name: 'error_rate', weight: 40, value: Math.random() * 10 },
       { name: 'memory_usage', weight: 20, value: Math.random() * 100 },
-      { name: 'cpu_usage', weight: 10, value: Math.random() * 100 }
+      { name: 'cpu_usage', weight: 10, value: Math.random() * 100 },
     ];
 
     let totalScore = 0;
@@ -399,7 +399,7 @@ class RollbackService {
         const data = {
           deployments: this.deployments,
           activeVersion: this.activeVersion,
-          config: this.config
+          config: this.config,
         };
         StorageService.safeSetJSON('rollback_service', data);
       } catch (error) {

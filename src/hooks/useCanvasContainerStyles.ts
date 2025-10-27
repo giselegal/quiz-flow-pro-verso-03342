@@ -234,7 +234,7 @@ export const useCanvasContainerStyles = () => {
 
           .navigation-button,
           [data-navigation-button] {
-            padding: ${styles.navigationButtonPadding.replace(/(\d+)px/g, (_, num) => Math.max(4, parseInt(num) - 2) + 'px')} !important;
+            padding: ${styles.navigationButtonPadding.replace(/(\d+)px/g, (_, num) => `${Math.max(4, parseInt(num) - 2)  }px`)} !important;
             font-size: 0.875rem !important;
           }
         }
@@ -381,7 +381,7 @@ export const useCanvasContainerStyles = () => {
         resetStyles,
         applyStyles,
         getCustomCSS,
-        defaultStyles: DEFAULT_CANVAS_STYLES
+        defaultStyles: DEFAULT_CANVAS_STYLES,
     };
 };
 

@@ -71,8 +71,8 @@ export class Question {
     } = {
       order: 0,
       createdAt: new Date(),
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   ) {}
 
   // 🔍 Business Rules - Question Validation
@@ -136,7 +136,7 @@ export class Question {
       id: `opt-${Date.now()}`,
       text: text.trim(),
       value: value ?? text.trim(),
-      weight
+      weight,
     };
 
     return new Question(
@@ -148,7 +148,7 @@ export class Question {
       this.media,
       this.validation,
       this.logic,
-      { ...this.metadata, updatedAt: new Date() }
+      { ...this.metadata, updatedAt: new Date() },
     );
   }
 
@@ -174,7 +174,7 @@ export class Question {
       this.media,
       this.validation,
       this.logic,
-      { ...this.metadata, updatedAt: new Date() }
+      { ...this.metadata, updatedAt: new Date() },
     );
   }
 
@@ -196,7 +196,7 @@ export class Question {
       this.media,
       this.validation,
       this.logic,
-      { ...this.metadata, updatedAt: new Date() }
+      { ...this.metadata, updatedAt: new Date() },
     );
   }
 
@@ -305,8 +305,8 @@ export class Question {
       {
         ...this.metadata,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 
@@ -320,7 +320,7 @@ export class Question {
       media: this.media,
       validation: this.validation,
       logic: this.logic,
-      metadata: this.metadata
+      metadata: this.metadata,
     };
   }
 
@@ -337,8 +337,8 @@ export class Question {
       data.metadata || {
         order: 0,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     );
   }
 }

@@ -67,13 +67,13 @@ export class FunnelBuilder {
         stepKey,
         blockCount: (blocks || []).length,
         hasQuestions: (blocks || []).some((block: any) => block.type === 'options-grid'),
-        category: this.getStepCategory(index + 1)
+        category: this.getStepCategory(index + 1),
       },
       validation: {
         required: true,
         minAnswers: 1,
-        maxAnswers: 3
-      }
+        maxAnswers: 3,
+      },
     }));
 
     this.steps = steps;
@@ -87,14 +87,14 @@ export class FunnelBuilder {
         theme: 'quiz-style',
         branding: QUIZ_GLOBAL_CONFIG?.branding || {},
         analytics: QUIZ_GLOBAL_CONFIG?.tracking || {},
-        seo: QUIZ_GLOBAL_CONFIG?.seo || {}
+        seo: QUIZ_GLOBAL_CONFIG?.seo || {},
       },
       metadata: {
         ...FUNNEL_PERSISTENCE_SCHEMA,
         initialized: true,
         source: 'quiz21StepsComplete',
-        version: '2.0.0'
-      }
+        version: '2.0.0',
+      },
     };
 
     console.log(`✅ FunnelBuilder inicializado com ${steps.length} etapas funcionais`);
@@ -132,7 +132,7 @@ export class FunnelBuilder {
       name,
       order: this.steps.length + 1,
       components: [],
-      metadata: {}
+      metadata: {},
     };
     return this;
   }
@@ -145,7 +145,7 @@ export class FunnelBuilder {
         id: `${this.currentStep.id}-${type}-${this.currentStep.components.length + 1}`,
         properties: {},
         content: {},
-        metadata: { templateType: type }
+        metadata: { templateType: type },
       });
     }
     return this;
@@ -215,8 +215,8 @@ export class FunnelBuilder {
       performanceMetrics: {
         avgLoadTime: '< 100ms',
         cacheEnabled: true,
-        compressionEnabled: true
-      }
+        compressionEnabled: true,
+      },
     };
     return this;
   }
@@ -227,7 +227,7 @@ export class FunnelBuilder {
         ...this.config.settings.analytics,
         enabled: true,
         trackingEvents: ['page_view', 'step_completion', 'form_submission'],
-        providers: ['google_analytics', 'facebook_pixel']
+        providers: ['google_analytics', 'facebook_pixel'],
       };
     }
     return this;
@@ -244,9 +244,9 @@ export class FunnelBuilder {
         theme: 'default',
         branding: {},
         analytics: {},
-        seo: {}
+        seo: {},
       },
-      metadata: this.config.metadata || {}
+      metadata: this.config.metadata || {},
     };
 
     console.log(`🏗️ Funnel construído com ${finalConfig.totalSteps} etapas:`, finalConfig);
@@ -267,7 +267,7 @@ export const createFunnelFromTemplate = (template: string): any => {
     autoConnect: () => builder.autoConnect(),
     optimize: () => builder.optimize(),
     enableAnalytics: () => builder.enableAnalytics(),
-    build: () => builder.build()
+    build: () => builder.build(),
   };
 };
 

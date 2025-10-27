@@ -143,7 +143,7 @@ function AppCore() {
                         enableCache: true,
                         enableAnalytics: true,
                         enableCollaboration: false,
-                        enableAdvancedEditor: true
+                        enableAdvancedEditor: true,
                     }}
                 >
 

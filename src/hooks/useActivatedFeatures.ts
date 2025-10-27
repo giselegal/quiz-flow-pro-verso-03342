@@ -16,7 +16,7 @@ export const useActivatedFeatures = () => {
     // FASE 2: Coming soon
     fashionAI: false,
     predictiveAnalytics: false,
-    automatedOptimization: false
+    automatedOptimization: false,
   });
 
   const [insights, setInsights] = useState<any>(null);
@@ -44,7 +44,7 @@ export const useActivatedFeatures = () => {
   const activateFeature = (featureName: string) => {
     setFeatures(prev => ({
       ...prev,
-      [featureName]: true
+      [featureName]: true,
     }));
     
     console.log(`🚀 Feature activated: ${featureName}`);
@@ -55,7 +55,7 @@ export const useActivatedFeatures = () => {
     insights,
     isLoading,
     activateFeature,
-    refreshInsights: loadAIInsights
+    refreshInsights: loadAIInsights,
   };
 };
 

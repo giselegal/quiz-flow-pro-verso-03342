@@ -29,7 +29,7 @@ export class AICache {
     hits: 0,
     misses: 0,
     totalRequests: 0,
-    hitRate: 0
+    hitRate: 0,
   };
   private generation = 0;
 
@@ -116,7 +116,7 @@ export class AICache {
       timestamp: Date.now(),
       ttl: ttlMs,
       hash,
-      generation: this.generation
+      generation: this.generation,
     };
 
     this.cache.set(fullKey, entry);
@@ -124,7 +124,7 @@ export class AICache {
     try {
       localStorage.setItem(fullKey, JSON.stringify(entry));
     } catch (e) {
-      console.error("Falha ao persistir no localStorage:", e);
+      console.error('Falha ao persistir no localStorage:', e);
     }
 
     console.log(`🧠 AICache: Cached '${key}' (TTL: ${ttlMs}ms)`);
@@ -188,7 +188,7 @@ export class AICache {
       hits: 0,
       misses: 0,
       totalRequests: 0,
-      hitRate: 0
+      hitRate: 0,
     };
     console.log('🧠 AICache: Cache cleared');
   }
@@ -220,7 +220,7 @@ export class AICache {
         key,
         size: JSON.stringify(entry.data).length,
         age: Date.now() - entry.timestamp,
-        ttl: entry.ttl
+        ttl: entry.ttl,
       });
     }
 
@@ -228,7 +228,7 @@ export class AICache {
       stats: this.getStats(),
       size: this.cache.size,
       maxSize: this.maxSize,
-      entries: entries.sort((a, b) => b.age - a.age)
+      entries: entries.sort((a, b) => b.age - a.age),
     };
   }
 }
@@ -241,7 +241,7 @@ export const aiCache = new AICache(50);
  */
 export function cached(
   key: string,
-  ttlMs = 5 * 60 * 1000
+  ttlMs = 5 * 60 * 1000,
 ) {
   return function (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;

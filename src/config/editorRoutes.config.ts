@@ -17,7 +17,7 @@ export const QuizModularProductionEditor = lazy(() =>
     /* webpackChunkName: "editor-production" */
     /* webpackPreload: true */
     '@/components/editor/quiz/QuizModularProductionEditor'
-  ).then(module => ({ default: module.default }))
+  ).then(module => ({ default: module.default })),
 );
 
 // ⚠️ EDITORES DEPRECADOS (apenas para compatibilidade temporária)
@@ -27,7 +27,7 @@ export const deprecatedEditors = {
     import(
       /* webpackChunkName: "editor-deprecated-modern" */
       '@/pages/editor/deprecated/ModernUnifiedEditor'
-    ).then(module => ({ default: module.default }))
+    ).then(module => ({ default: module.default })),
   ),
 };
 

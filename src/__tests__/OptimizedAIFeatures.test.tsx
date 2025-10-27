@@ -73,8 +73,8 @@ const OptimizedAIFeatures = React.lazy(() =>
           )}
         </div>
       );
-    }
-  })
+    },
+  }),
 );
 
 const TestWrapper = () => (

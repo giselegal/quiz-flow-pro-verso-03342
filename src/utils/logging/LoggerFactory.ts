@@ -52,7 +52,7 @@ export class LoggerFactory {
             includePerformance: true,
             includeStackTrace: true,
             enableStorage: true,
-            defaultFormatter: 'dev'
+            defaultFormatter: 'dev',
         });
     }
 
@@ -69,7 +69,7 @@ export class LoggerFactory {
             defaultFormatter: 'json',
             batchSize: 50,
             flushInterval: 10000,
-            remoteEndpoint: import.meta.env.VITE_LOGGING_ENDPOINT
+            remoteEndpoint: import.meta.env.VITE_LOGGING_ENDPOINT,
         });
     }
 
@@ -84,7 +84,7 @@ export class LoggerFactory {
             includePerformance: false,
             defaultFormatter: 'json',
             batchSize: 1,
-            flushInterval: 100
+            flushInterval: 100,
         });
     }
 
@@ -105,7 +105,7 @@ export class LoggerFactory {
                 logger.addFilter(new RateLimitFilter({
                     maxLogsPerSecond: 10,
                     maxLogsPerMinute: 300,
-                    burstLimit: 20
+                    burstLimit: 20,
                 }));
             });
         }
@@ -128,7 +128,7 @@ export class LoggerFactory {
                 filename: event.filename,
                 lineno: event.lineno,
                 colno: event.colno,
-                error: event.error
+                error: event.error,
             });
         });
 
@@ -136,7 +136,7 @@ export class LoggerFactory {
         window.addEventListener('unhandledrejection', (event) => {
             logger.error('global', 'Unhandled promise rejection', {
                 reason: event.reason,
-                promise: event.promise
+                promise: event.promise,
             });
         });
 

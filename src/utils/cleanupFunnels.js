@@ -20,13 +20,13 @@ function cleanupFunnels() {
             key.includes('funnel') ||
             key.includes('Funnel') ||
             key.includes('quiz') ||
-            key.includes('Quiz')
+            key.includes('Quiz'),
         );
 
         console.log('📋 Chaves relacionadas a funis encontradas:', funnelKeys.length);
         funnelKeys.forEach(key => {
             const value = localStorage.getItem(key);
-            console.log(`   - ${key}: ${value ? (value.length > 100 ? value.length + ' caracteres' : value) : 'vazio'}`);
+            console.log(`   - ${key}: ${value ? (value.length > 100 ? `${value.length  } caracteres` : value) : 'vazio'}`);
         });
 
         // 2. Limpar todas as chaves de funis antigas
@@ -46,7 +46,7 @@ function cleanupFunnels() {
             key.includes('copy') ||
             key.includes('duplicate') ||
             key.includes('cache') ||
-            key.includes('session')
+            key.includes('session'),
         );
 
         if (tempKeys.length > 0) {
@@ -80,7 +80,7 @@ function cleanupFunnels() {
                 isNoCodeEnabled: true,
                 persistenceMethod: 'localStorage',
                 cleanupDate: new Date().toISOString(),
-                uniqueFunnel: true
+                uniqueFunnel: true,
             },
             // Configuração das etapas (NOCODE)
             stepConfigurations: {
@@ -90,7 +90,7 @@ function cleanupFunnels() {
                     nextStep: 'linear',
                     isActive: true,
                     type: 'form',
-                    description: 'Etapa inicial para coleta do nome do usuário'
+                    description: 'Etapa inicial para coleta do nome do usuário',
                 },
                 'step-2': {
                     stepId: '2',
@@ -99,7 +99,7 @@ function cleanupFunnels() {
                     isActive: true,
                     type: 'quiz',
                     requiredSelections: 3,
-                    description: 'Primeira questão do quiz sobre preferências de estilo'
+                    description: 'Primeira questão do quiz sobre preferências de estilo',
                 },
                 'step-3': {
                     stepId: '3',
@@ -108,7 +108,7 @@ function cleanupFunnels() {
                     isActive: true,
                     type: 'quiz',
                     requiredSelections: 3,
-                    description: 'Segunda questão sobre características de personalidade'
+                    description: 'Segunda questão sobre características de personalidade',
                 },
                 'step-4': {
                     stepId: '4',
@@ -116,7 +116,7 @@ function cleanupFunnels() {
                     nextStep: 'linear',
                     isActive: true,
                     type: 'quiz',
-                    requiredSelections: 3
+                    requiredSelections: 3,
                 },
                 'step-5': {
                     stepId: '5',
@@ -124,7 +124,7 @@ function cleanupFunnels() {
                     nextStep: 'linear',
                     isActive: true,
                     type: 'quiz',
-                    requiredSelections: 3
+                    requiredSelections: 3,
                 },
                 'step-12': {
                     stepId: '12',
@@ -132,7 +132,7 @@ function cleanupFunnels() {
                     nextStep: 'linear',
                     isActive: true,
                     type: 'transition',
-                    description: 'Transição entre quiz de estilo e questões estratégicas'
+                    description: 'Transição entre quiz de estilo e questões estratégicas',
                 },
                 'step-20': {
                     stepId: '20',
@@ -140,7 +140,7 @@ function cleanupFunnels() {
                     nextStep: 'step-21',
                     isActive: true,
                     type: 'result',
-                    description: 'Apresentação do resultado do quiz de estilo'
+                    description: 'Apresentação do resultado do quiz de estilo',
                 },
                 'step-21': {
                     stepId: '21',
@@ -148,8 +148,8 @@ function cleanupFunnels() {
                     nextStep: 'end',
                     isActive: true,
                     type: 'offer',
-                    description: 'Página final com oferta comercial'
-                }
+                    description: 'Página final com oferta comercial',
+                },
             },
             // Configurações de navegação
             navigation: {
@@ -158,7 +158,7 @@ function cleanupFunnels() {
                 autoAdvance: true,
                 validateBeforeAdvance: true,
                 progressCalculation: 'steps',
-                totalSteps: 21
+                totalSteps: 21,
             },
             // Configurações do template
             templateConfig: {
@@ -167,8 +167,8 @@ function cleanupFunnels() {
                 questions: 10,
                 strategicQuestions: 6,
                 resultPages: 2,
-                totalSteps: 21
-            }
+                totalSteps: 21,
+            },
         };
 
         // 5. Salvar o funil único e ativo
@@ -210,14 +210,14 @@ function cleanupFunnels() {
             success: true,
             removedCount,
             activeFunnelId: savedFunnel.id,
-            funnelKey: funnelKey
+            funnelKey,
         };
 
     } catch (error) {
         console.error('❌ Erro durante a limpeza:', error);
         return {
             success: false,
-            error: error.message
+            error: error.message,
         };
     }
 }
@@ -234,7 +234,7 @@ if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
 
             // Dispatch event para notificar outros componentes
             window.dispatchEvent(new CustomEvent('funnelCleanupCompleted', {
-                detail: result
+                detail: result,
             }));
         }
     }, 100);

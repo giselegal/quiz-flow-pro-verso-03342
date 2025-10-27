@@ -40,14 +40,14 @@ export function useAI(options: UseAIOptions = {}): UseAIReturn {
 
     const handleRequest = useCallback(async <T>(
         action: string,
-        payload: any
+        payload: any,
     ): Promise<T | null> => {
         setIsLoading(true);
         setError(null);
 
         try {
             const { data, error: functionError } = await supabase.functions.invoke('github-models-ai', {
-                body: { action, ...payload }
+                body: { action, ...payload },
             });
 
             if (functionError) {
@@ -66,7 +66,7 @@ export function useAI(options: UseAIOptions = {}): UseAIReturn {
     }, []);
 
     const generateContent = useCallback(async (
-        messages: Array<{role: string, content: string}>
+        messages: Array<{role: string, content: string}>,
     ): Promise<any | null> => {
         const result = await handleRequest('generate', {
             messages,
@@ -83,25 +83,25 @@ export function useAI(options: UseAIOptions = {}): UseAIReturn {
 
     const generateQuiz = useCallback(async (prompt: string): Promise<any | null> => {
         return handleRequest('generateQuiz', {
-            messages: [{ role: 'user', content: prompt }]
+            messages: [{ role: 'user', content: prompt }],
         });
     }, [handleRequest]);
 
     const generateFunnel = useCallback(async (prompt: string): Promise<any[] | null> => {
         return handleRequest('generateFunnel', {
-            messages: [{ role: 'user', content: prompt }]
+            messages: [{ role: 'user', content: prompt }],
         });
     }, [handleRequest]);
 
     const improveText = useCallback(async (
         text: string,
-        context?: string
+        context?: string,
     ): Promise<string | null> => {
         const result = await handleRequest<{improvedText: string}>('improveText', {
             messages: [
                 { role: 'user', content: text },
-                { role: 'user', content: context || '' }
-            ]
+                { role: 'user', content: context || '' },
+            ],
         });
         
         return result?.improvedText || null;
@@ -109,7 +109,7 @@ export function useAI(options: UseAIOptions = {}): UseAIReturn {
 
     const generateDesign = useCallback(async (
         theme: string,
-        brand?: string
+        brand?: string,
     ): Promise<any | null> => {
         // For now, return a mock design config
         // This could be enhanced to call a specific AI endpoint for design generation
@@ -117,14 +117,14 @@ export function useAI(options: UseAIOptions = {}): UseAIReturn {
             colors: {
                 primary: '#6366F1',
                 secondary: '#8B5CF6',
-                accent: '#EC4899'
+                accent: '#EC4899',
             },
             fonts: {
                 heading: 'Inter',
-                body: 'Inter'
+                body: 'Inter',
             },
             theme,
-            brand
+            brand,
         };
     }, []);
 

@@ -587,7 +587,7 @@ export const isTextBlock = (block: Block): block is TextBlock => {
 
 export const isTestimonialBlock = (block: Block): block is TestimonialBlock => {
   return ['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonials-carousel-inline', 'testimonialsSection'].includes(
-    block.type
+    block.type,
   );
 };
 
@@ -621,7 +621,7 @@ export const getContentType = (blockType: BlockType): string => {
   if (blockType === 'text') return 'TextContent';
   if (
     ['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonials-carousel-inline', 'testimonialsSection'].includes(
-      blockType
+      blockType,
     )
   )
     return 'TestimonialContent';

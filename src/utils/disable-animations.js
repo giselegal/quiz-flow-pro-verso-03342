@@ -41,7 +41,7 @@ export const configureEssentialAnimations = () => {
     document
       .querySelectorAll('.animate-enhanced-pulse, .animate-bounce, .hover-scale')
       .forEach(el =>
-        el.classList.remove('animate-enhanced-pulse', 'animate-bounce', 'hover-scale')
+        el.classList.remove('animate-enhanced-pulse', 'animate-bounce', 'hover-scale'),
       );
   }
 };

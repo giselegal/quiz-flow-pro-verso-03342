@@ -23,7 +23,7 @@ export const QuizEstiloModularRedirect: React.FC = () => {
         createMut.mutate({ name: 'Quiz Estilo', slug: TARGET_SLUG }, {
             onSuccess: (res: any) => {
                 window.location.replace(`/template-engine/${res.id}`);
-            }
+            },
         });
     }, [TARGET_SLUG, isLoading, data, error, createMut.isPending]);
 

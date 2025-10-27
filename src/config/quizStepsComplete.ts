@@ -33,7 +33,7 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
     hasStepBlocks: !!stepBlocks,
     stepBlocksKeys: stepBlocks ? Object.keys(stepBlocks) : [],
     candidates: candidateKeysForStep(step),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 
   if (!stepBlocks) {
@@ -55,7 +55,7 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
         ...debugInfo,
         foundKey: key,
         blocksCount: Array.isArray(raw) ? raw.length : 0,
-        blocksType: typeof raw
+        blocksType: typeof raw,
       });
     }
 
@@ -65,7 +65,7 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
           ...debugInfo,
           foundKey: key,
           blocksCount: raw.length,
-          blockTypes: raw.map(b => b?.type || 'unknown')
+          blockTypes: raw.map(b => b?.type || 'unknown'),
         });
       }
       return raw as EditorBlock[];
@@ -78,7 +78,7 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
           console.log('🔍 getBlocksForStep SUCCESS (nested blocks):', {
             ...debugInfo,
             foundKey: key,
-            blocksCount: maybe.length
+            blocksCount: maybe.length,
           });
         }
         return maybe as EditorBlock[];
@@ -104,7 +104,7 @@ export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBloc
     console.warn('🔍 getBlocksForStep: No blocks found', {
       ...debugInfo,
       availableKeys: stepBlocks ? Object.keys(stepBlocks).slice(0, 10) : [], // Limit output
-      firstKeyContent: stepBlocks ? (stepBlocks as any)[Object.keys(stepBlocks)[0]] : null
+      firstKeyContent: stepBlocks ? (stepBlocks as any)[Object.keys(stepBlocks)[0]] : null,
     });
 
     // Add failed lookups to window for debugging  

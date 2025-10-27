@@ -269,7 +269,7 @@ export class AnalyticsEngine {
         const fullEvent: AnalyticsEvent = {
             ...event,
             id: this.generateEventId(),
-            timestamp: new Date()
+            timestamp: new Date(),
         };
 
         // Armazenar evento
@@ -288,7 +288,7 @@ export class AnalyticsEngine {
             eventType: event.type,
             funnelId: event.funnelId,
             userId: event.userId,
-            sessionId: event.sessionId
+            sessionId: event.sessionId,
         });
     }
 
@@ -314,7 +314,7 @@ export class AnalyticsEngine {
 
     async getFunnelMetrics(
         funnelId: string,
-        timeRange: '24h' | '7d' | '30d' | '90d' = '7d'
+        timeRange: '24h' | '7d' | '30d' | '90d' = '7d',
     ): Promise<FunnelMetrics> {
         const events = this.getEventsByTimeRange(funnelId, timeRange);
 
@@ -330,7 +330,7 @@ export class AnalyticsEngine {
             deviceBreakdown: this.calculateDeviceBreakdown(events),
             trafficSources: this.calculateTrafficSources(events),
             timeRangeStats: this.calculateTimeRangeStats(events, timeRange),
-            updatedAt: new Date()
+            updatedAt: new Date(),
         };
 
         // Calcular taxas
@@ -357,7 +357,7 @@ export class AnalyticsEngine {
             conversionContribution: this.calculateConversionContribution(componentEvents),
             popularVariants: this.getPopularVariants(componentEvents),
             devicePerformance: this.getDevicePerformance(componentEvents),
-            updatedAt: new Date()
+            updatedAt: new Date(),
         };
     }
 
@@ -398,7 +398,7 @@ export class AnalyticsEngine {
             ...experiment,
             id: experimentId,
             status: 'draft',
-            results: undefined
+            results: undefined,
         };
 
         this.experiments.set(experimentId, fullExperiment);
@@ -406,7 +406,7 @@ export class AnalyticsEngine {
         logger.info('analytics', 'A/B test experiment created', {
             experimentId,
             funnelId: experiment.funnelId,
-            variantsCount: experiment.variants.length
+            variantsCount: experiment.variants.length,
         });
 
         return experimentId;
@@ -423,7 +423,7 @@ export class AnalyticsEngine {
 
         logger.info('analytics', 'A/B test experiment started', {
             experimentId,
-            funnelId: experiment.funnelId
+            funnelId: experiment.funnelId,
         });
 
         return true;
@@ -451,9 +451,9 @@ export class AnalyticsEngine {
                     sessionId,
                     properties: {
                         experimentId,
-                        variantId: variant.id
+                        variantId: variant.id,
                     },
-                    metadata: this.getCurrentEventMetadata()
+                    metadata: this.getCurrentEventMetadata(),
                 });
                 return variant.id;
             }
@@ -467,7 +467,7 @@ export class AnalyticsEngine {
         if (!experiment) return null;
 
         const experimentEvents = Array.from(this.events.values()).flat().filter(e =>
-            e.properties.experimentId === experimentId
+            e.properties.experimentId === experimentId,
         );
 
         const variantResults: VariantResults[] = experiment.variants.map(variant => {
@@ -482,12 +482,12 @@ export class AnalyticsEngine {
                 conversions,
                 conversionRate,
                 confidenceInterval: this.calculateConfidenceInterval(conversions, sessions),
-                significance: this.calculateSignificance(variant, experiment.variants, experimentEvents)
+                significance: this.calculateSignificance(variant, experiment.variants, experimentEvents),
             };
         });
 
         const controlResult = variantResults.find(r =>
-            experiment.variants.find(v => v.id === r.variantId)?.isControl
+            experiment.variants.find(v => v.id === r.variantId)?.isControl,
         );
 
         if (controlResult) {
@@ -507,7 +507,7 @@ export class AnalyticsEngine {
             confidenceInterval: 95,
             winner: winner?.variantId,
             recommendation: this.generateRecommendation(variantResults, experiment),
-            calculatedAt: new Date()
+            calculatedAt: new Date(),
         };
 
         experiment.results = results;
@@ -533,7 +533,7 @@ export class AnalyticsEngine {
                     funnelId: event.funnelId,
                     stepId: event.stepId,
                     threshold: 50,
-                    currentValue: abandonmentRate
+                    currentValue: abandonmentRate,
                 });
             }
         }
@@ -553,7 +553,7 @@ export class AnalyticsEngine {
                         description: `Conversões caíram ${Math.abs(change).toFixed(1)}% comparado a ontem`,
                         funnelId: event.funnelId,
                         threshold: -20,
-                        currentValue: change
+                        currentValue: change,
                     });
                 }
             }
@@ -570,7 +570,7 @@ export class AnalyticsEngine {
                     description: `${recentErrors.length} erros nos últimos 30 minutos`,
                     funnelId: event.funnelId,
                     threshold: 10,
-                    currentValue: recentErrors.length
+                    currentValue: recentErrors.length,
                 });
             }
         }
@@ -581,7 +581,7 @@ export class AnalyticsEngine {
             ...alert,
             id: this.generateAlertId(),
             triggeredAt: new Date(),
-            resolved: false
+            resolved: false,
         };
 
         this.alerts.push(fullAlert);
@@ -590,7 +590,7 @@ export class AnalyticsEngine {
             alertId: fullAlert.id,
             type: alert.type,
             severity: alert.severity,
-            funnelId: alert.funnelId
+            funnelId: alert.funnelId,
         });
 
         // Aqui você enviaria notificações (email, Slack, etc.)
@@ -635,16 +635,16 @@ export class AnalyticsEngine {
                 os: this.detectOS(),
                 browser: this.detectBrowser(),
                 screenResolution: `${screen?.width || 0}x${screen?.height || 0}`,
-                viewportSize: `${window?.innerWidth || 0}x${window?.innerHeight || 0}`
+                viewportSize: `${window?.innerWidth || 0}x${window?.innerHeight || 0}`,
             },
             location: {
                 country: 'BR',
                 region: 'SP',
                 city: 'São Paulo',
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             },
             referrer: document?.referrer || 'direct',
-            utm: this.extractUTMParams()
+            utm: this.extractUTMParams(),
         };
     }
 
@@ -687,7 +687,7 @@ export class AnalyticsEngine {
             medium: urlParams.get('utm_medium') || undefined,
             campaign: urlParams.get('utm_campaign') || undefined,
             term: urlParams.get('utm_term') || undefined,
-            content: urlParams.get('utm_content') || undefined
+            content: urlParams.get('utm_content') || undefined,
         };
     }
 
@@ -713,7 +713,7 @@ export class AnalyticsEngine {
                 totalEvents: 0,
                 activeUsers: new Set(),
                 currentConversions: 0,
-                lastUpdateTimestamp: Date.now()
+                lastUpdateTimestamp: Date.now(),
             };
         }
 
@@ -791,7 +791,7 @@ export class AnalyticsEngine {
     private calculateTimeRangeStats(_events: AnalyticsEvent[], timeRange: string): TimeRangeStats {
         return {
             period: timeRange as any,
-            data: []
+            data: [],
         };
     }
 
@@ -840,7 +840,7 @@ export class AnalyticsEngine {
 
     private determineWinner(results: VariantResults[]): VariantResults | undefined {
         return results.reduce((winner, current) =>
-            current.conversionRate > winner.conversionRate ? current : winner
+            current.conversionRate > winner.conversionRate ? current : winner,
         );
     }
 
@@ -870,7 +870,7 @@ export class AnalyticsEngine {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         return (this.events.get(funnelId) || []).filter(e =>
-            e.type === 'conversion_completed' && e.timestamp >= today
+            e.type === 'conversion_completed' && e.timestamp >= today,
         ).length;
     }
 
@@ -882,14 +882,14 @@ export class AnalyticsEngine {
         dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 1);
 
         return (this.events.get(funnelId) || []).filter(e =>
-            e.type === 'conversion_completed' && e.timestamp >= dayBeforeYesterday && e.timestamp < yesterday
+            e.type === 'conversion_completed' && e.timestamp >= dayBeforeYesterday && e.timestamp < yesterday,
         ).length;
     }
 
     private getRecentErrors(funnelId: string, timeRange: string): AnalyticsEvent[] {
         const cutoff = this.parseTimeRange(timeRange);
         return (this.events.get(funnelId) || []).filter(e =>
-            e.type === 'error_occurred' && e.timestamp >= cutoff
+            e.type === 'error_occurred' && e.timestamp >= cutoff,
         );
     }
 
@@ -921,7 +921,7 @@ export class AnalyticsEngine {
             (window as any).gtag('event', 'timing_complete', {
                 event_category: category,
                 name: variable,
-                value: value,
+                value,
                 event_label: label,
             });
         }
@@ -932,15 +932,15 @@ export class AnalyticsEngine {
             userId: 'anonymous',
             sessionId: this.generateSessionId(),
             properties: { category, variable, value, label },
-            metadata: this.getCurrentEventMetadata()
+            metadata: this.getCurrentEventMetadata(),
         });
     }
 
     trackException(description: string, fatal: boolean = false): void {
         if (typeof window !== 'undefined' && (window as any).gtag) {
             (window as any).gtag('event', 'exception', {
-                description: description,
-                fatal: fatal,
+                description,
+                fatal,
             });
         }
 
@@ -950,7 +950,7 @@ export class AnalyticsEngine {
             userId: 'anonymous',
             sessionId: this.generateSessionId(),
             properties: { description, fatal },
-            metadata: this.getCurrentEventMetadata()
+            metadata: this.getCurrentEventMetadata(),
         });
     }
 
@@ -972,7 +972,7 @@ export class AnalyticsEngine {
             properties: {
                 start_time: new Date().toISOString(),
             },
-            metadata: this.getCurrentEventMetadata()
+            metadata: this.getCurrentEventMetadata(),
         });
 
         this.saveEventLocally({
@@ -981,7 +981,7 @@ export class AnalyticsEngine {
             event_type: 'quiz_started',
             session_id: sessionId,
             event_data: { start_time: new Date().toISOString() },
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         });
     }
 
@@ -989,7 +989,7 @@ export class AnalyticsEngine {
         quizId: string,
         questionId: string,
         answer: any,
-        userId?: string
+        userId?: string,
     ): Promise<void> {
         const sessionId = this.generateSessionId();
 
@@ -1001,10 +1001,10 @@ export class AnalyticsEngine {
             sessionId,
             properties: {
                 question_id: questionId,
-                answer: answer,
+                answer,
                 answer_time: new Date().toISOString(),
             },
-            metadata: this.getCurrentEventMetadata()
+            metadata: this.getCurrentEventMetadata(),
         });
 
         this.saveEventLocally({
@@ -1014,10 +1014,10 @@ export class AnalyticsEngine {
             session_id: sessionId,
             event_data: {
                 question_id: questionId,
-                answer: answer,
+                answer,
                 answer_time: new Date().toISOString(),
             },
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         });
     }
 
@@ -1030,10 +1030,10 @@ export class AnalyticsEngine {
             userId: userId || 'anonymous',
             sessionId,
             properties: {
-                result: result,
+                result,
                 completion_time: new Date().toISOString(),
             },
-            metadata: this.getCurrentEventMetadata()
+            metadata: this.getCurrentEventMetadata(),
         });
 
         this.trackEvent({
@@ -1045,7 +1045,7 @@ export class AnalyticsEngine {
                 quiz_result: result,
                 completion_time: new Date().toISOString(),
             },
-            metadata: this.getCurrentEventMetadata()
+            metadata: this.getCurrentEventMetadata(),
         });
 
         this.saveEventLocally({
@@ -1054,10 +1054,10 @@ export class AnalyticsEngine {
             event_type: 'quiz_completed',
             session_id: sessionId,
             event_data: {
-                result: result,
+                result,
                 completion_time: new Date().toISOString(),
             },
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         });
     }
 

@@ -32,7 +32,7 @@ import {
     ArrowUp,
     ArrowDown,
     Sparkles,
-    Layers
+    Layers,
 } from 'lucide-react';
 
 // ===============================
@@ -178,7 +178,7 @@ export class UnifiedAnalyticsEngine {
                 activeUsers: 0,
                 currentSessions: 0,
                 liveInteractions: 0,
-                realTimeEvents: []
+                realTimeEvents: [],
             },
             performance: {
                 loadTime: 0,
@@ -189,8 +189,8 @@ export class UnifiedAnalyticsEngine {
                 coreWebVitals: {
                     lcp: 1.2,
                     fid: 50,
-                    cls: 0.1
-                }
+                    cls: 0.1,
+                },
             },
             advanced: {
                 conversionRate: 0,
@@ -198,7 +198,7 @@ export class UnifiedAnalyticsEngine {
                 engagementScore: 0,
                 userJourney: [],
                 segmentation: [],
-                predictiveInsights: []
+                predictiveInsights: [],
             },
             editor: {
                 editorUsage: 0,
@@ -206,7 +206,7 @@ export class UnifiedAnalyticsEngine {
                 templatesUsed: 0,
                 aiAssistance: 0,
                 builderEfficiency: 0,
-                errorFrequency: 0
+                errorFrequency: 0,
             },
             builder: {
                 funnelsCreated: 0,
@@ -214,8 +214,8 @@ export class UnifiedAnalyticsEngine {
                 averageBuildTime: 0,
                 templatePopularity: [],
                 builderPatterns: [],
-                optimizationSuggestions: []
-            }
+                optimizationSuggestions: [],
+            },
         };
     }
 
@@ -229,7 +229,7 @@ export class UnifiedAnalyticsEngine {
             type,
             data,
             userId,
-            sessionId: sessionId || 'default'
+            sessionId: sessionId || 'default',
         };
 
         this.eventBuffer.push(event);
@@ -386,28 +386,28 @@ export class UnifiedAnalyticsEngine {
                 title: 'Conversion Rate Optimization',
                 description: 'Adding personalized content could improve conversion by 15%',
                 impact: 'high',
-                actions: ['Implement dynamic content', 'A/B test personalization']
+                actions: ['Implement dynamic content', 'A/B test personalization'],
             },
             {
                 type: 'trend',
                 title: 'Mobile Usage Increasing',
                 description: 'Mobile traffic increased 25% this week',
                 impact: 'medium',
-                actions: ['Optimize mobile UX', 'Test mobile-first designs']
+                actions: ['Optimize mobile UX', 'Test mobile-first designs'],
             },
             {
                 type: 'risk',
                 title: 'Performance Degradation',
                 description: 'Page load time increased by 200ms',
                 impact: 'high',
-                actions: ['Optimize images', 'Review code bundle size']
-            }
+                actions: ['Optimize images', 'Review code bundle size'],
+            },
         ];
 
         const insight = insights[Math.floor(Math.random() * insights.length)];
         const fullInsight: PredictiveInsight = {
             ...insight,
-            confidence: Math.random() * 0.3 + 0.7 // 70-100% confidence
+            confidence: Math.random() * 0.3 + 0.7, // 70-100% confidence
         };
 
         // Add to insights, keep only last 10
@@ -438,38 +438,38 @@ const DASHBOARD_TABS: DashboardTab[] = [
         id: 'realtime',
         name: 'Tempo Real',
         icon: Activity,
-        description: 'Métricas em tempo real'
+        description: 'Métricas em tempo real',
     },
     {
         id: 'performance',
         name: 'Performance',
         icon: Gauge,
-        description: 'Monitoramento de performance'
+        description: 'Monitoramento de performance',
     },
     {
         id: 'advanced',
         name: 'Analytics',
         icon: BarChart3,
-        description: 'Análises avançadas'
+        description: 'Análises avançadas',
     },
     {
         id: 'editor',
         name: 'Editor',
         icon: Settings,
-        description: 'Métricas do editor'
+        description: 'Métricas do editor',
     },
     {
         id: 'builder',
         name: 'Builder',
         icon: Target,
-        description: 'Analytics do builder'
+        description: 'Analytics do builder',
     },
     {
         id: 'ai',
         name: 'IA Insights',
         icon: Brain,
-        description: 'Insights de IA'
-    }
+        description: 'Insights de IA',
+    },
 ];
 
 // ===============================
@@ -818,14 +818,14 @@ const MetricCard: React.FC<MetricCardProps> = ({
     value,
     icon: IconComponent,
     trend,
-    color = 'blue'
+    color = 'blue',
 }) => {
     const colorClasses = {
         green: 'text-green-500',
         blue: 'text-blue-500',
         purple: 'text-purple-500',
         orange: 'text-orange-500',
-        red: 'text-red-500'
+        red: 'text-red-500',
     };
 
     const trendColor = trend && trend > 0 ? 'text-green-500' : 'text-red-500';
@@ -869,7 +869,7 @@ export const useUnifiedAnalytics = () => {
         getAdvancedMetrics: engine.getAdvancedMetrics.bind(engine),
         getEditorMetrics: engine.getEditorMetrics.bind(engine),
         getBuilderMetrics: engine.getBuilderMetrics.bind(engine),
-        subscribe: engine.subscribe.bind(engine)
+        subscribe: engine.subscribe.bind(engine),
     };
 };
 

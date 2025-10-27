@@ -38,7 +38,7 @@ export const MOCK_USER_DATA = {
     boho: 12,
     classico: 19,
     moderno: 16,
-    dramatico: 14
+    dramatico: 14,
   },
   
   // Respostas do usuário (simuladas)
@@ -49,7 +49,7 @@ export const MOCK_USER_DATA = {
     'step-5': ['elegante_q4', 'classico_q4', 'moderno_q4'],
     'step-6': ['minimalista_q5', 'elegante_q5', 'dramatico_q5'],
     'step-7': ['elegante_q6', 'classico_q6', 'romantico_q6'],
-    'step-8': ['casual_q7', 'boho_q7', 'minimalista_q7']
+    'step-8': ['casual_q7', 'boho_q7', 'minimalista_q7'],
   },
   
   // Questões estratégicas
@@ -59,14 +59,14 @@ export const MOCK_USER_DATA = {
     'step-15': 'versatile_pieces',
     'step-16': 'classic_colors',
     'step-17': 'structured_silhouettes',
-    'step-18': 'minimalist_accessories'
+    'step-18': 'minimalist_accessories',
   },
   
   // Dados de contexto
   device: 'desktop',
   browser: 'Chrome',
   timestamp: new Date().toISOString(),
-  sessionId: 'session_' + Date.now(),
+  sessionId: `session_${  Date.now()}`,
   
   // Dados para oferta
   offerValue: 'R$ 497',
@@ -84,8 +84,8 @@ export const MOCK_USER_DATA = {
     workEnviroment: 95,
     casualOutings: 88,
     specialEvents: 92,
-    travelStyle: 85
-  }
+    travelStyle: 85,
+  },
 };
 
 // 🎯 DADOS MOCKADOS POR ETAPA (contexto específico)
@@ -93,19 +93,19 @@ export const STEP_SPECIFIC_MOCK_DATA: Record<string, Record<string, any>> = {
   'step-1': {
     welcomeMessage: 'Bem-vinda ao seu Quiz de Estilo Pessoal!',
     estimatedTime: '5 minutos',
-    participantsCount: '12.847'
+    participantsCount: '12.847',
   },
   
   'step-2': {
     questionNumber: 1,
     questionProgress: '1 de 10',
-    questionCategory: 'Preferências Básicas'
+    questionCategory: 'Preferências Básicas',
   },
   
   'step-12': {
     transitionMessage: 'Agora vamos descobrir mais sobre seu estilo de vida...',
     completedQuestions: 10,
-    strategicPhaseInfo: 'Perguntas Estratégicas (6 de 6)'
+    strategicPhaseInfo: 'Perguntas Estratégicas (6 de 6)',
   },
   
   'step-19': {
@@ -114,8 +114,8 @@ export const STEP_SPECIFIC_MOCK_DATA: Record<string, Record<string, any>> = {
       'Avaliando preferências de cor',
       'Analisando silhuetas favoritas',
       'Identificando estilo dominante',
-      'Preparando resultado personalizado'
-    ]
+      'Preparando resultado personalizado',
+    ],
   },
   
   'step-20': {
@@ -124,15 +124,15 @@ export const STEP_SPECIFIC_MOCK_DATA: Record<string, Record<string, any>> = {
     personalizedTips: [
       'Invista em peças estruturadas',
       'Prefira cores neutras e sofisticadas',
-      'Aposte em tecidos de qualidade'
-    ]
+      'Aposte em tecidos de qualidade',
+    ],
   },
   
   'step-21': {
     offerTitle: 'Transforme Seu Guarda-Roupa Hoje!',
     urgencyMessage: 'Oferta válida por apenas 48 horas',
-    bonusItems: ['E-book Guia de Cores', 'Checklist de Compras', 'Consultoria Express']
-  }
+    bonusItems: ['E-book Guia de Cores', 'Checklist de Compras', 'Consultoria Express'],
+  },
 };
 
 // 🎯 FUNÇÕES DE INTERPOLAÇÃO
@@ -185,7 +185,7 @@ export function interpolateBlockForPreview(block: Block, stepId?: string): Block
   return {
     ...block,
     content: interpolateContent(block.content, MOCK_USER_DATA, stepData),
-    properties: interpolateContent(block.properties, MOCK_USER_DATA, stepData)
+    properties: interpolateContent(block.properties, MOCK_USER_DATA, stepData),
   };
 }
 
@@ -207,7 +207,7 @@ export function getMockDataForStep(stepId: string): Record<string, any> {
     ...MOCK_USER_DATA,
     ...stepData,
     currentStep: stepNumber,
-    completionPercentage: Math.round((stepNumber / 21) * 100)
+    completionPercentage: Math.round((stepNumber / 21) * 100),
   };
 }
 
@@ -225,7 +225,7 @@ export function simulateQuizProgress(upToStep: number): Record<string, any> {
     answeredQuestions,
     isComplete: upToStep >= 21,
     canProceed: true,
-    timeSpent: Math.round(progress * 300) // 5 minutos total simulado
+    timeSpent: Math.round(progress * 300), // 5 minutos total simulado
   };
 }
 
@@ -255,7 +255,7 @@ export function generateCustomMockData(seed: string): Record<string, any> {
     userName: names[seedNum % names.length],
     resultStyle: styles[seedNum % styles.length],
     userLocation: locations[seedNum % locations.length],
-    sessionId: `session_${seed}_${Date.now()}`
+    sessionId: `session_${seed}_${Date.now()}`,
   };
 }
 

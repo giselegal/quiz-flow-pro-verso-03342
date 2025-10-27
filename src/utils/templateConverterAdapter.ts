@@ -21,7 +21,7 @@ import { templateRegistry } from '@/services/UnifiedTemplateRegistry';
 export async function safeGetTemplateBlocksAsync(
   stepId: string,
   _template?: any,
-  _funnelId?: string
+  _funnelId?: string,
 ): Promise<BlockComponent[]> {
   console.warn('⚠️ safeGetTemplateBlocksAsync is deprecated. Use templateRegistry.getStep() instead.');
   
@@ -38,7 +38,7 @@ export async function safeGetTemplateBlocksAsync(
 export function safeGetTemplateBlocks(
   stepId: string,
   _template?: any,
-  _funnelId?: string
+  _funnelId?: string,
 ): BlockComponent[] {
   console.warn('⚠️ safeGetTemplateBlocks (sync) is deprecated. Use templateRegistry.getStep() instead.');
   
@@ -82,7 +82,7 @@ export function blocksToBlockComponents(blocks: Block[]): BlockComponent[] {
     order: block.order,
     properties: block.properties || {},
     content: block.content || {},
-    parentId: null
+    parentId: null,
   }));
 }
 

@@ -17,7 +17,7 @@ export const loadCoreService = async (serviceName: string) => {
     case 'UnifiedQuizStorage':
       return {
         service: unifiedQuizStorage,
-        source: 'static-import'
+        source: 'static-import',
       };
     default:
       return null;

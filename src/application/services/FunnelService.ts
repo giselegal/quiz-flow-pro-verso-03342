@@ -115,7 +115,7 @@ export class FunnelService {
       visitedPages: [],
       startedAt: new Date(),
       lastActivity: new Date(),
-      isCompleted: false
+      isCompleted: false,
     };
   }
 
@@ -127,7 +127,7 @@ export class FunnelService {
       visitedPages: [],
       startedAt: new Date(),
       lastActivity: new Date(),
-      isCompleted: false
+      isCompleted: false,
     };
   }
 
@@ -152,7 +152,7 @@ export class FunnelService {
       exitRate: 0,
       topTrafficSources: {},
       deviceBreakdown: {},
-      locationBreakdown: {}
+      locationBreakdown: {},
     };
   }
 

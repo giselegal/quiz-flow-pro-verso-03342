@@ -35,10 +35,10 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
                 steps: Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
                     ...step,
                     id,
-                    order: index + 1
+                    order: index + 1,
                 })),
                 isPublished: false,
-                version: 1
+                version: 1,
             };
 
             // Validar
@@ -60,7 +60,7 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
             const stepsArray = Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
                 ...step,
                 id,
-                order: index + 1
+                order: index + 1,
             }));
 
             const testFunnel = {
@@ -69,7 +69,7 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
                 slug: 'quiz-estilo',
                 steps: stepsArray,
                 isPublished: true,
-                version: 1
+                version: 1,
             };
 
             const result = quizEditorBridge.validateFunnel(testFunnel);
@@ -98,12 +98,12 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
                 slug: 'invalid',
                 steps: [], // VAZIO - inválido!
                 isPublished: false,
-                version: 1
+                version: 1,
             };
 
             // Tentar salvar deve falhar
             await expect(
-                quizEditorBridge.saveDraft(invalidFunnel as any)
+                quizEditorBridge.saveDraft(invalidFunnel as any),
             ).rejects.toThrow();
         });
 
@@ -115,10 +115,10 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
                 steps: Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
                     ...step,
                     id,
-                    order: index + 1
+                    order: index + 1,
                 })),
                 isPublished: false,
-                version: 1
+                version: 1,
             };
 
             try {
@@ -143,7 +143,7 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
         it('publishToProduction deve validar antes de publicar', async () => {
             // Tentar publicar draft inexistente
             await expect(
-                quizEditorBridge.publishToProduction('nonexistent-draft')
+                quizEditorBridge.publishToProduction('nonexistent-draft'),
             ).rejects.toThrow('Draft não encontrado');
         });
 
@@ -203,10 +203,10 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
                 steps: Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
                     ...step,
                     id,
-                    order: index + 1
+                    order: index + 1,
                 })),
                 isPublished: false,
-                version: 1
+                version: 1,
             };
 
             const result = quizEditorBridge.validateFunnel(funnel as any);
@@ -231,12 +231,12 @@ describe('QuizEditorBridge Integration Tests - Fase 6.5', () => {
                 {
                     id: 'step-01',
                     type: 'intro',
-                    order: 1
+                    order: 1,
                     // Faltam propriedades obrigatórias
-                }
+                },
             ],
             isPublished: false,
-            version: 1
+            version: 1,
         };
 
         const result = quizEditorBridge.validateFunnel(invalidFunnel as any);
@@ -264,10 +264,10 @@ describe('6. Logs de Integração', () => {
             steps: Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
                 ...step,
                 id,
-                order: index + 1
+                order: index + 1,
             })),
             isPublished: false,
-            version: 1
+            version: 1,
         };
 
         try {
@@ -280,7 +280,7 @@ describe('6. Logs de Integração', () => {
         expect(consoleSpy).toHaveBeenCalled();
         const logs = consoleSpy.mock.calls.map(call => call.join(' '));
         const hasValidationLog = logs.some(log =>
-            log.includes('Validando') || log.includes('validação') || log.includes('Salvando')
+            log.includes('Validando') || log.includes('validação') || log.includes('Salvando'),
         );
         expect(hasValidationLog).toBe(true);
 

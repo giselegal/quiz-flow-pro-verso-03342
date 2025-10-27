@@ -102,7 +102,7 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
         setIsScrolling(false);
       });
     },
-    [isDisabled]
+    [isDisabled],
   );
 
   const value = {

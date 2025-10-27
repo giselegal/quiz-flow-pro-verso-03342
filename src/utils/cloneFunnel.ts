@@ -129,7 +129,7 @@ export function deepClone<T>(obj: T): T {
  */
 export function deepCloneWithNewIds<T extends Record<string, any>>(
     obj: T,
-    options: CloneOptions = {}
+    options: CloneOptions = {},
 ): CloneResult<T> {
     const startTime = Date.now();
     const idMapping = new Map<string, string>();
@@ -160,7 +160,7 @@ export function deepCloneWithNewIds<T extends Record<string, any>>(
             cloned,
             idMapping,
             clonedAt: new Date(),
-            success: true
+            success: true,
         };
 
     } catch (error) {
@@ -171,7 +171,7 @@ export function deepCloneWithNewIds<T extends Record<string, any>>(
             idMapping,
             clonedAt: new Date(),
             success: false,
-            error: error instanceof Error ? error.message : 'Erro desconhecido'
+            error: error instanceof Error ? error.message : 'Erro desconhecido',
         };
     }
 }
@@ -222,7 +222,7 @@ function updateIdReferences(obj: any, idMapping: Map<string, string>): void {
         'funnelId', 'funnel_id', 'parentId', 'parent_id',
         'targetId', 'target_id', 'sourceId', 'source_id',
         'stepId', 'step_id', 'blockId', 'block_id',
-        'pageId', 'page_id', 'componentId', 'component_id'
+        'pageId', 'page_id', 'componentId', 'component_id',
     ];
 
     if (Array.isArray(obj)) {
@@ -329,7 +329,7 @@ export function cloneFunnelTemplate(template: FunnelTemplate, customName?: strin
     const cloneResult = deepCloneWithNewIds(template, {
         regenerateIds: true,
         preserveMetadata: false,
-        customName: customName
+        customName,
     });
 
     if (!cloneResult.success) {
@@ -346,9 +346,9 @@ export function cloneFunnelTemplate(template: FunnelTemplate, customName?: strin
         blocks: cloned.blocks?.map((b: any) => ({
             id: generateId(),
             type: b.type,
-            properties: deepClone(b.properties || {})
+            properties: deepClone(b.properties || {}),
         })) || [],
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
     };
 }
 
@@ -357,13 +357,13 @@ export function cloneFunnelTemplate(template: FunnelTemplate, customName?: strin
  */
 export function cloneFunnelComplete<T extends Record<string, any>>(
     funnel: T,
-    options: CloneOptions = {}
+    options: CloneOptions = {},
 ): CloneResult<T> {
     return deepCloneWithNewIds(funnel, {
         regenerateIds: true,
         preserveMetadata: false,
         nameSuffix: ' (Cópia)',
-        ...options
+        ...options,
     });
 }
 
@@ -384,7 +384,7 @@ export function cloneFunnelPages(pages: any[], funnelId?: string): any[] {
         if (clonedPage.blocks) {
             clonedPage.blocks = clonedPage.blocks.map((block: any) => ({
                 ...deepClone(block),
-                id: generateUniqueId('block')
+                id: generateUniqueId('block'),
             }));
         }
 
@@ -462,5 +462,5 @@ export default {
     verifyIsolation,
     findDuplicateIds,
     generateId,
-    generateUniqueId
+    generateUniqueId,
 };

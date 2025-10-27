@@ -60,7 +60,7 @@ export const LIVE_QUIZ_QUESTIONS = caktoquizQuestions.map(
       showImages: question.type === 'both' || question.type === 'image',
       showText: question.type === 'both' || question.type === 'text',
     },
-  })
+  }),
 );
 
 // ETAPA 11: Transição Principal (componente MainTransition)

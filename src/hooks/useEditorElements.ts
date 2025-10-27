@@ -26,7 +26,7 @@ export const useEditorElements = () => {
 
   const updateElement = useCallback((id: string, updates: Partial<EditorElement>) => {
     setElements(prev =>
-      prev.map(el => (el.id === id ? { ...el, ...updates } : el))
+      prev.map(el => (el.id === id ? { ...el, ...updates } : el)),
     );
   }, []);
 

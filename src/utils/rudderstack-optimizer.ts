@@ -18,8 +18,8 @@ const RUDDERSTACK_CONFIG = {
     '_ttq_create',
     '_ttq_keys',
     'devserver_websocket',
-    'RudderStack: Identifying user'
-  ]
+    'RudderStack: Identifying user',
+  ],
 };
 
 class RudderStackOptimizer {
@@ -35,7 +35,7 @@ class RudderStackOptimizer {
     this.originalConsole = {
       log: console.log,
       warn: console.warn,
-      error: console.error
+      error: console.error,
     };
     this.initializeOptimization();
   }

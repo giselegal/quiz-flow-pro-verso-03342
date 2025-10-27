@@ -47,7 +47,7 @@ export const searchImages = (query: string): ImageEntry[] => {
     return imageDatabase.images.filter(img => 
         img.name.toLowerCase().includes(queryLower) ||
         img.description?.toLowerCase().includes(queryLower) ||
-        img.tags.some(tag => tag.toLowerCase().includes(queryLower))
+        img.tags.some(tag => tag.toLowerCase().includes(queryLower)),
     );
 };
 

@@ -34,7 +34,7 @@ export class HistoryService<T = any> {
     // Adiciona novo state (shallow clone para performance)
     this.history.push({
       state: this.cloneState(state),
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     // Limita tamanho do histórico
@@ -117,7 +117,7 @@ export class EditorHistoryService extends HistoryService<any> {
   protected cloneState(state: any): any {
     return {
       ...state,
-      stepBlocks: { ...state.stepBlocks }
+      stepBlocks: { ...state.stepBlocks },
     };
   }
 }

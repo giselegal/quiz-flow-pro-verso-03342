@@ -253,7 +253,7 @@ export class DataService extends BaseCanonicalService {
    */
   async listFunnels(
     filters?: FunnelFilters,
-    pagination?: FunnelPagination
+    pagination?: FunnelPagination,
   ): Promise<ServiceResult<Funnel[]>> {
     CanonicalServicesMonitor.trackUsage(this.name, 'listFunnels');
     return funnelDataService.listFunnels(filters, pagination);

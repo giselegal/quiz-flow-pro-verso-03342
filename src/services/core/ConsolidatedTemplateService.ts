@@ -60,7 +60,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
     priority: 1,
     cacheTTL: 10 * 60 * 1000, // 10 minutos
     retryAttempts: 3,
-    timeout: 5000
+    timeout: 5000,
   };
 
   private loadedTemplates = new Map<string, FullTemplate>();
@@ -126,7 +126,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       () => this.loadFromRegistry(templateId),
       () => this.loadFromTypeScript(templateId),
       () => this.loadFromJSON(templateId),
-      () => this.generateFallback(templateId)
+      () => this.generateFallback(templateId),
     ];
 
     for (const loadMethod of loadMethods) {
@@ -243,7 +243,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
     return {
       id: templateId,
       name: `Template ${templateId}`,
-      description: `Template gerado automaticamente`,
+      description: 'Template gerado automaticamente',
       category: 'generated',
       version: '1.0.0',
       stepCount: 1,
@@ -258,14 +258,14 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
         metadata: {
           type: 'fallback',
           validation: { required: false },
-          behavior: { autoAdvance: false }
-        }
+          behavior: { autoAdvance: false },
+        },
       }],
       globalConfig: {
         theme: { primaryColor: '#007bff' },
         navigation: { allowBack: true },
-        analytics: { enabled: false }
-      }
+        analytics: { enabled: false },
+      },
     };
   }
 
@@ -283,22 +283,22 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
             type: 'text',
             content: baseContent,
             order: 0,
-            properties: { text: 'Bem-vindo!' }
+            properties: { text: 'Bem-vindo!' },
           },
           {
             id: 'name-input-1',
             type: 'form-input',
             content: baseContent,
             order: 1,
-            properties: { placeholder: 'Seu nome' }
+            properties: { placeholder: 'Seu nome' },
           },
           {
             id: 'start-btn-1',
             type: 'button',
             content: baseContent,
             order: 2,
-            properties: { text: 'Começar' }
-          }
+            properties: { text: 'Começar' },
+          },
         ];
       case 20:
         return [
@@ -307,22 +307,22 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
             type: 'text',
             content: baseContent,
             order: 0,
-            properties: { text: 'Seu Resultado' }
+            properties: { text: 'Seu Resultado' },
           },
           {
             id: 'style-reveal-20',
             type: 'result-display',
             content: baseContent,
             order: 1,
-            properties: {}
+            properties: {},
           },
           {
             id: 'offer-20',
             type: 'button',
             content: baseContent,
             order: 2,
-            properties: {}
-          }
+            properties: {},
+          },
         ];
       case 21:
         return [
@@ -331,22 +331,22 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
             type: 'text',
             content: baseContent,
             order: 0,
-            properties: { text: 'Oferta Especial' }
+            properties: { text: 'Oferta Especial' },
           },
           {
             id: 'timer-21',
             type: 'countdown-inline',
             content: baseContent,
             order: 1,
-            properties: {}
+            properties: {},
           },
           {
             id: 'cta-21',
             type: 'button',
             content: baseContent,
             order: 2,
-            properties: { text: 'Garantir Agora' }
-          }
+            properties: { text: 'Garantir Agora' },
+          },
         ];
       default:
         return [
@@ -355,22 +355,22 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
             type: 'text',
             content: baseContent,
             order: 0,
-            properties: { text: `Pergunta ${stepNumber}` }
+            properties: { text: `Pergunta ${stepNumber}` },
           },
           {
             id: `options-${stepNumber}`,
             type: 'options-grid',
             content: baseContent,
             order: 1,
-            properties: {}
+            properties: {},
           },
           {
             id: `next-${stepNumber}`,
             type: 'button',
             content: baseContent,
             order: 2,
-            properties: { text: 'Continuar' }
-          }
+            properties: { text: 'Continuar' },
+          },
         ];
     }
   }
@@ -395,8 +395,8 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       globalConfig: registryTemplate.globalConfig || {
         theme: { primaryColor: '#007bff' },
         navigation: { allowBack: true },
-        analytics: { enabled: false }
-      }
+        analytics: { enabled: false },
+      },
     };
   }
 
@@ -419,14 +419,14 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
         metadata: {
           type: page.type || 'step',
           validation: page.validation,
-          behavior: page.behavior
-        }
+          behavior: page.behavior,
+        },
       })) || [],
       globalConfig: legacyTemplate.config || {
         theme: { primaryColor: '#007bff' },
         navigation: { allowBack: true },
-        analytics: { enabled: true }
-      }
+        analytics: { enabled: true },
+      },
     };
   }
 
@@ -444,7 +444,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       isOfficial: jsonData.isOfficial || false,
       usageCount: jsonData.usageCount || 0,
       steps: jsonData.steps || [],
-      globalConfig: jsonData.globalConfig || {}
+      globalConfig: jsonData.globalConfig || {},
     };
   }
 
@@ -471,7 +471,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
   async preloadCriticalTemplates(): Promise<void> {
     const criticalTemplates = [
       'quiz21StepsComplete',
-      'step-1', 'step-2', 'step-12', 'step-20'
+      'step-1', 'step-2', 'step-12', 'step-20',
     ];
 
     console.log('🚀 Preloading critical templates...');
@@ -503,7 +503,7 @@ export class ConsolidatedTemplateService extends BaseUnifiedService {
       loaded: this.loadedTemplates.size,
       preloading: this.preloadingPromises.size,
       hitRate: `${hitRate}%`,
-      memoryUsage: this.estimateMemoryUsage()
+      memoryUsage: this.estimateMemoryUsage(),
     };
   }
 

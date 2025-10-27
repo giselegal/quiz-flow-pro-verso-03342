@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef } from 'react';
 export const useAutoSaveDebounce = (
   saveFunction: () => Promise<void>,
   delay: number = 1000,
-  maxInterval: number = 10000
+  maxInterval: number = 10000,
 ) => {
   const debounceRef = useRef<number | null>(null);
   const maxDelayRef = useRef<number | null>(null);

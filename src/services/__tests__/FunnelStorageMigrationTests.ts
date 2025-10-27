@@ -12,7 +12,7 @@ import { UnifiedStorageService } from '@/services/aliases';
 const createMockFunnelData = () => ({
     funnels: [
         { id: 'test-funnel-1', name: 'Test Funnel 1', status: 'draft' as const, url: 'https://test1.com', updatedAt: '2024-01-01T10:00:00.000Z' },
-        { id: 'test-funnel-2', name: 'Test Funnel 2', status: 'published' as const, url: 'https://test2.com', updatedAt: '2024-01-02T10:00:00.000Z' }
+        { id: 'test-funnel-2', name: 'Test Funnel 2', status: 'published' as const, url: 'https://test2.com', updatedAt: '2024-01-02T10:00:00.000Z' },
     ],
     settings: {
         'test-funnel-1': {
@@ -23,9 +23,9 @@ const createMockFunnelData = () => ({
             token: 'token123',
             utm: { source: 'test', medium: 'email' },
             webhooks: [{ platform: 'zapier', url: 'https://webhook1.com' }],
-            custom: { collectUserName: true, variables: [{ key: 'test1', label: 'Test Variable 1' }, { key: 'test2', label: 'Test Variable 2' }] }
-        }
-    }
+            custom: { collectUserName: true, variables: [{ key: 'test1', label: 'Test Variable 1' }, { key: 'test2', label: 'Test Variable 2' }] },
+        },
+    },
 });
 
 const setupMockLocalStorage = (data: ReturnType<typeof createMockFunnelData>) => {

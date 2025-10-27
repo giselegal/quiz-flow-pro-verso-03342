@@ -17,7 +17,7 @@ export const DynamicPropertiesPanelImproved: React.FC = () => {
     // ✅ USANDO APENAS PureBuilder que funciona
     const {
         state: builderState,
-        actions: builderActions
+        actions: builderActions,
     } = usePureBuilder();
 
     const [activeTab, setActiveTab] = useState<PanelTab>('step');
@@ -106,7 +106,7 @@ export const DynamicPropertiesPanelImproved: React.FC = () => {
                             { id: 'step', name: 'Bloco', icon: '🧩', color: 'blue' },
                             { id: 'global', name: 'Global', icon: '🌍', color: 'green' },
                             { id: 'style', name: 'Estilo', icon: '🎨', color: 'purple' },
-                            { id: 'publish', name: 'Deploy', icon: '🚀', color: 'orange' }
+                            { id: 'publish', name: 'Deploy', icon: '🚀', color: 'orange' },
                         ].map((tab) => (
                             <button
                                 key={tab.id}
@@ -141,7 +141,7 @@ export const DynamicPropertiesPanelImproved: React.FC = () => {
                     goToStep,
                     selectedBlockId,
                     setSelectedBlockId,
-                    builderActions
+                    builderActions,
                 )}
             </div>
         </div>
@@ -161,7 +161,7 @@ function renderTabContent(
     goToStep: (index: number) => void,
     selectedBlockId: string | null,
     setSelectedBlockId: (id: string | null) => void,
-    builderActions: any
+    builderActions: any,
 ) {
     switch (tab) {
         case 'step':
@@ -222,7 +222,7 @@ const ImprovedStepPanel: React.FC<ImprovedStepPanelProps> = ({
     goToStep,
     selectedBlockId,
     setSelectedBlockId,
-    builderActions
+    builderActions,
 }) => {
     const totalSteps = Object.keys(builderState.stepBlocks || {}).length;
     const currentStepNumber = builderState.currentStep;
@@ -356,7 +356,7 @@ const BlockEditor: React.FC<BlockEditorProps> = ({
     block,
     builderState,
     builderActions,
-    onClose
+    onClose,
 }) => {
     const currentStepNumber = builderState.currentStep;
     const [hasChanges, setHasChanges] = useState(false);
@@ -419,7 +419,7 @@ const BlockEditor: React.FC<BlockEditorProps> = ({
 
         // �🔄 PREVIEW EM TEMPO REAL: Atualiza propriedades imediatamente  
         builderActions.updateBlock(stepKey, block.id, {
-            properties: { ...block.properties, [field]: value }
+            properties: { ...block.properties, [field]: value },
         });
         setHasChanges(true);
 
@@ -636,7 +636,7 @@ interface ImprovedGlobalPanelProps {
 
 const ImprovedGlobalPanel: React.FC<ImprovedGlobalPanelProps> = ({
     builderState,
-    updateGlobalSettings
+    updateGlobalSettings,
 }) => {
     return (
         <div className="p-4 space-y-4">
@@ -667,7 +667,7 @@ interface ImprovedStylePanelProps {
 
 const ImprovedStylePanel: React.FC<ImprovedStylePanelProps> = ({
     builderState,
-    updateGlobalSettings
+    updateGlobalSettings,
 }) => {
     return (
         <div className="p-4 space-y-4">
@@ -698,7 +698,7 @@ interface ImprovedPublishPanelProps {
 
 const ImprovedPublishPanel: React.FC<ImprovedPublishPanelProps> = ({
     builderState,
-    updateGlobalSettings
+    updateGlobalSettings,
 }) => {
     return (
         <div className="p-4 space-y-4">
@@ -739,7 +739,7 @@ function getBlockIcon(blockType: string): string {
         'container': '📦',
         'form': '📝',
         'quiz-question': '❓',
-        'quiz-answer': '✅'
+        'quiz-answer': '✅',
     };
 
     return icons[blockType] || '🧩';

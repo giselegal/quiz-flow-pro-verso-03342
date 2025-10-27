@@ -131,14 +131,14 @@ export class SupabaseConfigurationStorage {
                 lastModified: new Date(),
                 metadata: {
                     ...config.metadata,
-                    source: config.metadata.source || 'editor' as const
-                }
+                    source: config.metadata.source || 'editor' as const,
+                },
             };
 
             // 1. Salvar no cache local
             this.cache.set(key, {
                 data: configWithDefaults,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             });
 
             // 2. Salvar no IndexedDB (sempre funciona)  
@@ -165,7 +165,7 @@ export class SupabaseConfigurationStorage {
             }
 
         } catch (error) {
-            console.error(`❌ Erro ao salvar configuração:`, error);
+            console.error('❌ Erro ao salvar configuração:', error);
             throw error;
         }
     }
@@ -186,9 +186,9 @@ export class SupabaseConfigurationStorage {
                     properties: config.properties,
                     metadata: config.metadata,
                     created_by: config.createdBy || null,
-                    version: config.version
+                    version: config.version,
                 }, {
-                    onConflict: 'component_id,funnel_id'
+                    onConflict: 'component_id,funnel_id',
                 });
 
             if (error) {
@@ -240,13 +240,13 @@ export class SupabaseConfigurationStorage {
                             version: data.version,
                             lastModified: new Date(data.last_modified),
                             createdBy: data.created_by,
-                            metadata: data.metadata
+                            metadata: data.metadata,
                         };
 
                         // Salvar no cache
                         this.cache.set(key, {
                             data: config,
-                            timestamp: Date.now()
+                            timestamp: Date.now(),
                         });
 
                         console.log(`✅ Configuração carregada do Supabase: ${key}`);
@@ -286,7 +286,7 @@ export class SupabaseConfigurationStorage {
             return null;
 
         } catch (error) {
-            console.error(`❌ Erro ao carregar configuração:`, error);
+            console.error('❌ Erro ao carregar configuração:', error);
             return null;
         }
     }
@@ -313,7 +313,7 @@ export class SupabaseConfigurationStorage {
                             version: item.version,
                             lastModified: new Date(item.last_modified),
                             createdBy: item.created_by,
-                            metadata: item.metadata
+                            metadata: item.metadata,
                         }));
                     }
                 } catch (error: any) {
@@ -344,7 +344,7 @@ export class SupabaseConfigurationStorage {
             }
 
         } catch (error) {
-            console.error(`❌ Erro ao listar configurações:`, error);
+            console.error('❌ Erro ao listar configurações:', error);
             return [];
         }
     }
@@ -396,7 +396,7 @@ export class SupabaseConfigurationStorage {
             return true;
 
         } catch (error) {
-            console.error(`❌ Erro ao deletar configuração:`, error);
+            console.error('❌ Erro ao deletar configuração:', error);
             return false;
         }
     }
@@ -431,7 +431,7 @@ export class SupabaseConfigurationStorage {
             totalConfigurations: configurations.length,
             byFunnel: {},
             byComponent: {},
-            lastModified: new Date(0)
+            lastModified: new Date(0),
         };
 
         configurations.forEach(config => {
@@ -463,7 +463,7 @@ export class SupabaseConfigurationStorage {
     getCacheStats(): { size: number; entries: string[] } {
         return {
             size: this.cache.size,
-            entries: Array.from(this.cache.keys())
+            entries: Array.from(this.cache.keys()),
         };
     }
 }

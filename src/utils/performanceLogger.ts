@@ -111,13 +111,13 @@ export const perfLogger = new PerformanceLogger();
 export const useOptimizedCallback = <T extends (...args: any[]) => void>(
   callback: T,
   deps: DependencyList,
-  debounceMs = 100
+  debounceMs = 100,
 ): T => {
   return useCallback((...args: Parameters<T>) => {
     perfLogger.debounce(
       `callback-${callback.name || 'anonymous'}`,
       () => callback(...args),
-      debounceMs
+      debounceMs,
     );
   }, deps) as T;
 };
@@ -127,7 +127,7 @@ export const dispatchThrottledEvent = (
   eventName: string,
   detail: any,
   element: Element | Document = document,
-  throttleMs = 16 // ~60fps
+  throttleMs = 16, // ~60fps
 ) => {
   perfLogger.throttle(
     `event-${eventName}`,
@@ -143,7 +143,7 @@ export const dispatchThrottledEvent = (
         element.dispatchEvent(event);
       });
     },
-    throttleMs
+    throttleMs,
   );
 };
 

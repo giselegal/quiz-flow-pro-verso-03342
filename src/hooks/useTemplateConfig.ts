@@ -191,7 +191,7 @@ export const useTemplateConfig = (stepNumber: number) => {
       if (!config) return null;
       return config.blocks.find(block => block.id === blockId);
     },
-    [config]
+    [config],
   );
 
   // Função para obter propriedades de design

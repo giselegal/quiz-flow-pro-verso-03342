@@ -27,6 +27,6 @@ export function diffProps(current?: Record<string, any>, previous?: Record<strin
 export function diffComponentsMap(current: Record<string, any>, previous: Record<string, any>) {
     return Object.keys(current).filter(cid => previous[cid]).map(cid => ({
         id: cid,
-        diffs: diffProps(current[cid]?.props, previous[cid]?.props)
+        diffs: diffProps(current[cid]?.props, previous[cid]?.props),
     })).filter(e => e.diffs.length > 0);
 }

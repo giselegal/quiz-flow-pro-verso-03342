@@ -55,6 +55,6 @@ export function logMeasures(prefix?: string) {
   if (!ms.length) return;
   // eslint-disable-next-line no-console
   console.table(
-    ms.map(m => ({ name: m.name, duration: Math.round(m.duration), detail: m.detail || '' }))
+    ms.map(m => ({ name: m.name, duration: Math.round(m.duration), detail: m.detail || '' })),
   );
 }

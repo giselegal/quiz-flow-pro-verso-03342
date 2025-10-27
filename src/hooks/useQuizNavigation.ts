@@ -16,7 +16,7 @@ export interface NavigationState {
 export const useQuizNavigation = (
   _initialStep = 1,
   _totalSteps = 21,
-  onStepChange?: (step: number) => void
+  onStepChange?: (step: number) => void,
 ) => {
   const { currentStep, next, previous, goTo, totalSteps: flowTotal } = useQuizFlow();
 
@@ -29,7 +29,7 @@ export const useQuizNavigation = (
         onStepChange?.(step);
       }
     },
-    [effectiveTotal, goTo, onStepChange]
+    [effectiveTotal, goTo, onStepChange],
   );
 
   const nextStep = useCallback(() => {

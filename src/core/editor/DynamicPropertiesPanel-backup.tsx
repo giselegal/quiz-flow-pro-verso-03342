@@ -10,12 +10,12 @@ type PanelTab = 'step' | 'global' | 'style' | 'publish';
 export const DynamicPropertiesPanel: React.FC = () => {
   const {
     schema,
-    isLoading: schemaLoading
+    isLoading: schemaLoading,
   } = useHeadlessEditor();
 
   const {
     state: builderState,
-    actions: builderActions
+    actions: builderActions,
   } = usePureBuilder();
 
   const [activeTab, setActiveTab] = useState<PanelTab>('step');
@@ -60,8 +60,8 @@ export const DynamicPropertiesPanel: React.FC = () => {
     settings: {
       showProgress: true,
       showBackButton: true,
-      allowSkip: false
-    }
+      allowSkip: false,
+    },
   };
 
   // 🔧 DEFININDO handleStepUpdate que estava faltando
@@ -110,7 +110,7 @@ export const DynamicPropertiesPanel: React.FC = () => {
               { id: 'step', name: 'Etapa', icon: '📝', color: 'blue' },
               { id: 'global', name: 'Global', icon: '⚙️', color: 'green' },
               { id: 'style', name: 'Estilo', icon: '🎨', color: 'purple' },
-              { id: 'publish', name: 'Publicar', icon: '🚀', color: 'orange' }
+              { id: 'publish', name: 'Publicar', icon: '🚀', color: 'orange' },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -145,7 +145,7 @@ export const DynamicPropertiesPanel: React.FC = () => {
           goToStep,
           selectedBlockId,
           setSelectedBlockId,
-          builderActions
+          builderActions,
         )}
       </div>
     </div>
@@ -164,7 +164,7 @@ function renderTabContent(
   goToStep: (index: number) => void,
   selectedBlockId: string | null,
   setSelectedBlockId: (id: string | null) => void,
-  builderActions: any
+  builderActions: any,
 ) {
   switch (tab) {
     case 'step':
@@ -230,7 +230,7 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
   goToStep,
   selectedBlockId,
   setSelectedBlockId,
-  builderActions
+  builderActions,
 }) => {
   // 🎯 NOVA LÓGICA: Usar dados reais do builder
   const totalSteps = Object.keys(builderState.stepBlocks || {}).length;
@@ -323,7 +323,7 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
     if (selectedBlock) {
       const stepKey = `step-${currentStepNumber}`;
       builderActions.updateBlock(stepKey, selectedBlock.id, {
-        properties: { ...selectedBlock.properties, [field]: value }
+        properties: { ...selectedBlock.properties, [field]: value },
       });
     }
   };
@@ -411,7 +411,7 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
               checked={currentStep.settings?.showProgress || false}
               onChange={(e) => handleStepUpdate('settings', {
                 ...currentStep.settings,
-                showProgress: e.target.checked
+                showProgress: e.target.checked,
               })}
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
@@ -424,7 +424,7 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
               checked={currentStep.settings?.showBackButton || false}
               onChange={(e) => handleStepUpdate('settings', {
                 ...currentStep.settings,
-                showBackButton: e.target.checked
+                showBackButton: e.target.checked,
               })}
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
@@ -437,7 +437,7 @@ const StepPropertiesPanel: React.FC<StepPropertiesPanelProps> = ({
               checked={currentStep.settings?.allowSkip || false}
               onChange={(e) => handleStepUpdate('settings', {
                 ...currentStep.settings,
-                allowSkip: e.target.checked
+                allowSkip: e.target.checked,
               })}
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
@@ -510,14 +510,14 @@ interface GlobalPropertiesPanelProps {
 
 const GlobalPropertiesPanel: React.FC<GlobalPropertiesPanelProps> = ({
   schema,
-  updateGlobalSettings
+  updateGlobalSettings,
 }) => {
   const handleUpdate = (section: string, field: string, value: any) => {
     updateGlobalSettings({
       [section]: {
         ...schema.settings?.[section],
-        [field]: value
-      }
+        [field]: value,
+      },
     });
   };
 
@@ -671,7 +671,7 @@ const GlobalPropertiesPanel: React.FC<GlobalPropertiesPanelProps> = ({
                 value={schema.settings?.analytics?.googleAnalytics?.measurementId || ''}
                 onChange={(e) => handleUpdate('analytics', 'googleAnalytics', {
                   ...schema.settings?.analytics?.googleAnalytics,
-                  measurementId: e.target.value
+                  measurementId: e.target.value,
                 })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 placeholder="G-XXXXXXXXXX"
@@ -734,9 +734,9 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
         ...schema.settings?.branding,
         [section]: {
           ...schema.settings?.branding?.[section],
-          [field]: value
-        }
-      }
+          [field]: value,
+        },
+      },
     });
   };
 
@@ -746,9 +746,9 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
         ...schema.settings?.branding,
         colors: {
           ...schema.settings?.branding?.colors,
-          [colorKey]: value
-        }
-      }
+          [colorKey]: value,
+        },
+      },
     });
   };
 
@@ -866,7 +866,7 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
               value={schema.settings?.branding?.typography?.fontFamily?.primary || 'Inter, system-ui, sans-serif'}
               onChange={(e) => handleBrandingUpdate('typography', 'fontFamily', {
                 ...schema.settings?.branding?.typography?.fontFamily,
-                primary: e.target.value
+                primary: e.target.value,
               })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
             >
@@ -887,7 +887,7 @@ const StylePropertiesPanel: React.FC<StylePropertiesPanelProps> = ({ schema, upd
               value={schema.settings?.branding?.typography?.fontFamily?.secondary || 'Poppins, sans-serif'}
               onChange={(e) => handleBrandingUpdate('typography', 'fontFamily', {
                 ...schema.settings?.branding?.typography?.fontFamily,
-                secondary: e.target.value
+                secondary: e.target.value,
               })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
             >
@@ -1013,8 +1013,8 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
     updateGlobalSettings({
       publication: {
         ...schema.publication,
-        [field]: value
-      }
+        [field]: value,
+      },
     });
   };
 
@@ -1126,7 +1126,7 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
               checked={schema.publication?.accessControl?.public || false}
               onChange={(e) => handlePublicationUpdate('accessControl', {
                 ...schema.publication?.accessControl,
-                public: e.target.checked
+                public: e.target.checked,
               })}
               className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
             />
@@ -1139,7 +1139,7 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
               checked={schema.publication?.accessControl?.requiresAuth || false}
               onChange={(e) => handlePublicationUpdate('accessControl', {
                 ...schema.publication?.accessControl,
-                requiresAuth: e.target.checked
+                requiresAuth: e.target.checked,
               })}
               className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
             />
@@ -1152,7 +1152,7 @@ const PublishPropertiesPanel: React.FC<PublishPropertiesPanelProps> = ({ schema,
               checked={schema.publication?.cdn?.enabled || false}
               onChange={(e) => handlePublicationUpdate('cdn', {
                 ...schema.publication?.cdn,
-                enabled: e.target.checked
+                enabled: e.target.checked,
               })}
               className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
             />
@@ -1235,7 +1235,7 @@ const BlockPropertiesEditor: React.FC<BlockPropertiesEditorProps> = ({ block, on
     if (onUpdateBlock) {
       onUpdateBlock({
         ...block,
-        [field]: value
+        [field]: value,
       });
     }
   };
@@ -1246,8 +1246,8 @@ const BlockPropertiesEditor: React.FC<BlockPropertiesEditorProps> = ({ block, on
         ...block,
         properties: {
           ...block.properties,
-          [key]: value
-        }
+          [key]: value,
+        },
       });
     }
   };

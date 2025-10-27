@@ -84,8 +84,8 @@ export const DATABASE_CONFIG: StorageConfig = {
                 { name: 'context', keyPath: 'metadata.context' },
                 { name: 'timestamp', keyPath: 'timestamp' },
                 { name: 'namespace', keyPath: 'metadata.namespace' },
-                { name: 'tags', keyPath: 'metadata.tags', options: { multiEntry: true } }
-            ]
+                { name: 'tags', keyPath: 'metadata.tags', options: { multiEntry: true } },
+            ],
         },
         {
             name: 'settings',
@@ -93,8 +93,8 @@ export const DATABASE_CONFIG: StorageConfig = {
             indexes: [
                 { name: 'funnelId', keyPath: 'funnelId' },
                 { name: 'userId', keyPath: 'metadata.userId' },
-                { name: 'timestamp', keyPath: 'timestamp' }
-            ]
+                { name: 'timestamp', keyPath: 'timestamp' },
+            ],
         },
         {
             name: 'configurations',
@@ -103,8 +103,8 @@ export const DATABASE_CONFIG: StorageConfig = {
                 { name: 'componentId', keyPath: 'data.componentId' },
                 { name: 'funnelId', keyPath: 'data.funnelId' },
                 { name: 'timestamp', keyPath: 'timestamp' },
-                { name: 'namespace', keyPath: 'metadata.namespace' }
-            ]
+                { name: 'namespace', keyPath: 'metadata.namespace' },
+            ],
         },
         {
             name: 'cache',
@@ -112,8 +112,8 @@ export const DATABASE_CONFIG: StorageConfig = {
             indexes: [
                 { name: 'namespace', keyPath: 'metadata.namespace' },
                 { name: 'ttl', keyPath: 'ttl' },
-                { name: 'timestamp', keyPath: 'timestamp' }
-            ]
+                { name: 'timestamp', keyPath: 'timestamp' },
+            ],
         },
         {
             name: 'sync_queue',
@@ -122,18 +122,18 @@ export const DATABASE_CONFIG: StorageConfig = {
             indexes: [
                 { name: 'status', keyPath: 'status' },
                 { name: 'priority', keyPath: 'priority' },
-                { name: 'timestamp', keyPath: 'timestamp' }
-            ]
+                { name: 'timestamp', keyPath: 'timestamp' },
+            ],
         },
         {
             name: 'metadata',
             keyPath: 'key',
             indexes: [
                 { name: 'category', keyPath: 'category' },
-                { name: 'timestamp', keyPath: 'timestamp' }
-            ]
-        }
-    ]
+                { name: 'timestamp', keyPath: 'timestamp' },
+            ],
+        },
+    ],
 };
 
 // ============================================================================
@@ -193,7 +193,7 @@ export class IndexedDBStorageService {
             if (!db.objectStoreNames.contains(storeConfig.name)) {
                 const store = db.createObjectStore(storeConfig.name, {
                     keyPath: storeConfig.keyPath,
-                    autoIncrement: storeConfig.autoIncrement
+                    autoIncrement: storeConfig.autoIncrement,
                 });
 
                 // Criar índices
@@ -202,7 +202,7 @@ export class IndexedDBStorageService {
                         store.createIndex(
                             indexConfig.name,
                             indexConfig.keyPath,
-                            indexConfig.options
+                            indexConfig.options,
                         );
                     }
                 }
@@ -221,14 +221,14 @@ export class IndexedDBStorageService {
 
     private executeMigrations(db: IDBDatabase, fromVersion: number, toVersion: number): void {
         const applicableMigrations = this.migrations.filter(
-            m => m.fromVersion >= fromVersion && m.toVersion <= toVersion
+            m => m.fromVersion >= fromVersion && m.toVersion <= toVersion,
         );
 
         for (const migration of applicableMigrations) {
             try {
                 const transaction = db.transaction(
                     Array.from(db.objectStoreNames),
-                    'readwrite'
+                    'readwrite',
                 );
                 migration.handler(db, transaction);
                 console.log(`✅ Migração executada: v${migration.fromVersion} → v${migration.toVersion}`);
@@ -246,7 +246,7 @@ export class IndexedDBStorageService {
         storeName: string,
         key: string,
         data: T,
-        metadata?: Partial<StorageMetadata>
+        metadata?: Partial<StorageMetadata>,
     ): Promise<boolean> {
         if (!this.db) {
             throw new Error('IndexedDB não inicializado');
@@ -260,8 +260,8 @@ export class IndexedDBStorageService {
                 version: this.config.version.toString(),
                 metadata: {
                     namespace: 'default',
-                    ...metadata
-                }
+                    ...metadata,
+                },
             };
 
             // Compressão automática para dados grandes
@@ -284,7 +284,7 @@ export class IndexedDBStorageService {
                 };
 
                 request.onerror = () => {
-                    console.error(`❌ Erro ao salvar no IndexedDB:`, request.error);
+                    console.error('❌ Erro ao salvar no IndexedDB:', request.error);
                     reject(request.error);
                 };
             });
@@ -334,7 +334,7 @@ export class IndexedDBStorageService {
                 };
 
                 request.onerror = () => {
-                    console.error(`❌ Erro ao carregar do IndexedDB:`, request.error);
+                    console.error('❌ Erro ao carregar do IndexedDB:', request.error);
                     reject(request.error);
                 };
             });
@@ -364,7 +364,7 @@ export class IndexedDBStorageService {
                 };
 
                 request.onerror = () => {
-                    console.error(`❌ Erro ao remover do IndexedDB:`, request.error);
+                    console.error('❌ Erro ao remover do IndexedDB:', request.error);
                     reject(request.error);
                 };
             });
@@ -386,7 +386,7 @@ export class IndexedDBStorageService {
             key?: IDBValidKey | IDBKeyRange;
             direction?: IDBCursorDirection;
             limit?: number;
-        }
+        },
     ): Promise<T[]> {
         if (!this.db) {
             throw new Error('IndexedDB não inicializado');
@@ -425,7 +425,7 @@ export class IndexedDBStorageService {
                 };
 
                 request.onerror = () => {
-                    console.error(`❌ Erro na consulta do IndexedDB:`, request.error);
+                    console.error('❌ Erro na consulta do IndexedDB:', request.error);
                     reject(request.error);
                 };
             });
@@ -446,7 +446,7 @@ export class IndexedDBStorageService {
                 // Limpar apenas itens do namespace específico
                 const items = await this.query<any>(storeName, {
                     index: 'namespace',
-                    key: namespace
+                    key: namespace,
                 });
 
                 for (const item of items) {
@@ -466,7 +466,7 @@ export class IndexedDBStorageService {
                     };
 
                     request.onerror = () => {
-                        console.error(`❌ Erro ao limpar store:`, request.error);
+                        console.error('❌ Erro ao limpar store:', request.error);
                         reject(request.error);
                     };
                 });
@@ -547,7 +547,7 @@ export class IndexedDBStorageService {
             data,
             timestamp: Date.now(),
             status: 'pending',
-            priority: 1
+            priority: 1,
         };
 
         // Adicionar à fila de sincronização
@@ -569,7 +569,7 @@ export class IndexedDBStorageService {
             const pendingItems = await this.query<any>('sync_queue', {
                 index: 'status',
                 key: 'pending',
-                limit: this.syncConfig.batchSize || 10
+                limit: this.syncConfig.batchSize || 10,
             });
 
             if (pendingItems.length === 0) return;
@@ -578,7 +578,7 @@ export class IndexedDBStorageService {
             const response = await fetch(this.syncConfig.endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items: pendingItems })
+                body: JSON.stringify({ items: pendingItems }),
             });
 
             if (response.ok) {
@@ -707,7 +707,7 @@ export class IndexedDBStorageService {
             const backupData = {
                 version: this.config.version,
                 timestamp: Date.now(),
-                data: backup
+                data: backup,
             };
 
             return JSON.stringify(backupData);

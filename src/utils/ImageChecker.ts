@@ -48,7 +48,7 @@ export const analyzeImageUrl = (url: string) => {
         // Check if quality is too high
         if (result.quality !== 'auto' && parseInt(result.quality as string, 10) > 85) {
           result.suggestions.push(
-            'Consider using q_auto or reducing quality to 85 for better performance'
+            'Consider using q_auto or reducing quality to 85 for better performance',
           );
         }
       } else {
@@ -73,7 +73,7 @@ export const analyzeImageUrl = (url: string) => {
   } else {
     // Not a Cloudinary URL
     result.suggestions.push(
-      'Not a Cloudinary URL. Consider using Cloudinary for better optimization.'
+      'Not a Cloudinary URL. Consider using Cloudinary for better optimization.',
     );
 
     // Check for common image formats in the URL
@@ -82,12 +82,12 @@ export const analyzeImageUrl = (url: string) => {
     } else if (url.includes('.png')) {
       result.format = 'png';
       result.suggestions.push(
-        'PNG format detected. Consider using WebP or AVIF for better compression.'
+        'PNG format detected. Consider using WebP or AVIF for better compression.',
       );
     } else if (url.includes('.gif')) {
       result.format = 'gif';
       result.suggestions.push(
-        'GIF format detected. Consider using video formats for animated content.'
+        'GIF format detected. Consider using video formats for animated content.',
       );
     } else if (url.includes('.webp')) {
       result.format = 'webp';
@@ -111,7 +111,7 @@ export const isOversizedImage = (
   naturalWidth: number,
   naturalHeight: number,
   displayWidth: number,
-  displayHeight: number
+  displayHeight: number,
 ): boolean => {
   // Consider device pixel ratio for retina displays
   const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;

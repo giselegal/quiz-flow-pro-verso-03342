@@ -115,11 +115,11 @@ async function loadRealTemplate(stepNumber: number): Promise<any> {
           const rawTemplate = await response.json();
           const template = normalizeTemplateV3(rawTemplate, stepNumber);
           console.log(`✅ Template v3 carregado via HTTP: step ${stepNumber}`);
-          console.log(`📊 Template info:`, {
+          console.log('📊 Template info:', {
             version: template.templateVersion,
             sections: template.sections?.length || 0,
             blocks: template.blocks?.length || 0,
-            id: template.metadata?.id
+            id: template.metadata?.id,
           });
           
           // Converter template v3 para formato compatível com editor
@@ -133,8 +133,8 @@ async function loadRealTemplate(stepNumber: number): Promise<any> {
                 // Consolidar dados: usar props (estilo) + content (conteúdo)
                 properties: section.props || section.style || {},
                 content: section.content || {},
-                position: section.order || 0
-              }))
+                position: section.order || 0,
+              })),
             };
           } else if (template.blocks && Array.isArray(template.blocks)) {
             // Template v2 com blocos

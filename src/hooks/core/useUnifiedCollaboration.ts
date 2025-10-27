@@ -92,7 +92,7 @@ export function useUnifiedCollaboration(
   userId: string,
   userName: string,
   userEmail: string,
-  userAvatar?: string
+  userAvatar?: string,
 ): CollaborationState & CollaborationActions {
 
   // Estados
@@ -119,7 +119,7 @@ export function useUnifiedCollaboration(
     isLoading: true,
     isSaving: false,
     lastSync: null,
-    conflictCount: 0
+    conflictCount: 0,
   });
 
   const [selectedElement, setSelectedElement] = useState<{ stageId: string; blockId?: string } | null>(null);
@@ -186,7 +186,7 @@ export function useUnifiedCollaboration(
         chatMessages,
         comments,
         presence,
-        isLoading: false
+        isLoading: false,
       }));
 
       // Configurar listeners
@@ -198,7 +198,7 @@ export function useUnifiedCollaboration(
       setState(prev => ({
         ...prev,
         connectionError: error instanceof Error ? error.message : 'Erro desconhecido',
-        isLoading: false
+        isLoading: false,
       }));
     }
   };
@@ -213,7 +213,7 @@ export function useUnifiedCollaboration(
         setState(prev => ({
           ...prev,
           notifications: [notification, ...prev.notifications],
-          unreadCount: prev.unreadCount + 1
+          unreadCount: prev.unreadCount + 1,
         }));
       }
     };
@@ -223,7 +223,7 @@ export function useUnifiedCollaboration(
       if (message.funnelId === funnelId) {
         setState(prev => ({
           ...prev,
-          chatMessages: [...prev.chatMessages, message]
+          chatMessages: [...prev.chatMessages, message],
         }));
       }
     };
@@ -233,7 +233,7 @@ export function useUnifiedCollaboration(
       if (comment.funnelId === funnelId) {
         setState(prev => ({
           ...prev,
-          comments: [...prev.comments, comment]
+          comments: [...prev.comments, comment],
         }));
       }
     };
@@ -248,7 +248,7 @@ export function useUnifiedCollaboration(
 
         return {
           ...prev,
-          presence: updatedPresence
+          presence: updatedPresence,
         };
       });
     };
@@ -293,7 +293,7 @@ export function useUnifiedCollaboration(
       avatar: userAvatar,
       role: 'owner',
       isOnline: true,
-      lastSeen: new Date()
+      lastSeen: new Date(),
     };
 
     await collaborationService.addUserToSession(session.id, currentUser, 'owner');
@@ -304,7 +304,7 @@ export function useUnifiedCollaboration(
       isConnected: true,
       currentUser,
       users: [currentUser],
-      activeUsers: [currentUser]
+      activeUsers: [currentUser],
     }));
 
     return session;
@@ -315,7 +315,7 @@ export function useUnifiedCollaboration(
    */
   const joinSession = useCallback(async (
     sessionId: string,
-    user: Omit<CollaborationUser, 'isOnline' | 'lastSeen' | 'cursor'>
+    user: Omit<CollaborationUser, 'isOnline' | 'lastSeen' | 'cursor'>,
   ): Promise<boolean> => {
     try {
       const success = await collaborationService.addUserToSession(sessionId, user, 'editor');
@@ -329,7 +329,7 @@ export function useUnifiedCollaboration(
             isConnected: true,
             currentUser: user as CollaborationUser,
             users: session.users,
-            activeUsers: session.users.filter(u => u.isOnline)
+            activeUsers: session.users.filter(u => u.isOnline),
           }));
         }
       }
@@ -357,7 +357,7 @@ export function useUnifiedCollaboration(
           isConnected: false,
           currentUser: null,
           users: [],
-          activeUsers: []
+          activeUsers: [],
         }));
       }
 
@@ -374,7 +374,7 @@ export function useUnifiedCollaboration(
   const grantPermission = useCallback(async (
     userId: string,
     roleId: string,
-    expiresAt?: Date
+    expiresAt?: Date,
   ): Promise<boolean> => {
     return await permissionService.grantPermission(userId, funnelId, roleId, userId, expiresAt);
   }, [funnelId, userId]);
@@ -392,7 +392,7 @@ export function useUnifiedCollaboration(
   const createInvitation = useCallback(async (
     email: string,
     roleId: string,
-    expiresInHours: number = 72
+    expiresInHours: number = 72,
   ) => {
     return await permissionService.createInvitation(funnelId, email, roleId, userId, expiresInHours);
   }, [funnelId, userId]);
@@ -404,7 +404,7 @@ export function useUnifiedCollaboration(
     type: CollaborationChange['type'],
     entityType: CollaborationChange['entityType'],
     entityId: string,
-    changes: Record<string, any>
+    changes: Record<string, any>,
   ): Promise<void> => {
     if (!state.session) return;
 
@@ -417,13 +417,13 @@ export function useUnifiedCollaboration(
         type,
         entityType,
         entityId,
-        changes
+        changes,
       );
 
       setState(prev => ({
         ...prev,
         isSaving: false,
-        lastSync: new Date()
+        lastSync: new Date(),
       }));
     } catch (error) {
       console.error('❌ Erro ao rastrear mudança:', error);
@@ -437,7 +437,7 @@ export function useUnifiedCollaboration(
   const updateCursor = useCallback(async (
     stageId: string,
     blockId?: string,
-    position?: { x: number; y: number }
+    position?: { x: number; y: number },
   ): Promise<void> => {
     if (!state.session) return;
 
@@ -455,9 +455,9 @@ export function useUnifiedCollaboration(
       setState(prev => ({
         ...prev,
         notifications: prev.notifications.map(n =>
-          n.id === notificationId ? { ...n, read: true } : n
+          n.id === notificationId ? { ...n, read: true } : n,
         ),
-        unreadCount: Math.max(0, prev.unreadCount - 1)
+        unreadCount: Math.max(0, prev.unreadCount - 1),
       }));
     }
 
@@ -477,7 +477,7 @@ export function useUnifiedCollaboration(
     setState(prev => ({
       ...prev,
       notifications: prev.notifications.map(n => ({ ...n, read: true })),
-      unreadCount: 0
+      unreadCount: 0,
     }));
   }, [state.notifications]);
 
@@ -486,7 +486,7 @@ export function useUnifiedCollaboration(
    */
   const sendMessage = useCallback(async (
     message: string,
-    replyTo?: string
+    replyTo?: string,
   ): Promise<ChatMessage> => {
     return await notificationService.sendChatMessage(
       funnelId,
@@ -494,7 +494,7 @@ export function useUnifiedCollaboration(
       userName,
       userAvatar,
       message,
-      replyTo
+      replyTo,
     );
   }, [funnelId, userId, userName, userAvatar]);
 
@@ -511,7 +511,7 @@ export function useUnifiedCollaboration(
   const addComment = useCallback(async (
     stageId: string,
     blockId: string | undefined,
-    content: string
+    content: string,
   ): Promise<Comment> => {
     return await notificationService.addComment(
       funnelId,
@@ -520,7 +520,7 @@ export function useUnifiedCollaboration(
       userId,
       userName,
       userAvatar,
-      content
+      content,
     );
   }, [funnelId, userId, userName, userAvatar]);
 
@@ -542,7 +542,7 @@ export function useUnifiedCollaboration(
 
     setState(prev => ({
       ...prev,
-      selectedElementComments: elementComments
+      selectedElementComments: elementComments,
     }));
   }, [funnelId]);
 
@@ -561,7 +561,7 @@ export function useUnifiedCollaboration(
       setState(prev => ({
         ...prev,
         isSaving: false,
-        lastSync: new Date()
+        lastSync: new Date(),
       }));
     } catch (error) {
       console.error('❌ Erro na sincronização:', error);
@@ -616,6 +616,6 @@ export function useUnifiedCollaboration(
     resolveComment,
     selectElement,
     sync,
-    resolveConflicts
+    resolveConflicts,
   };
 }

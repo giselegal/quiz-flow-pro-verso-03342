@@ -34,13 +34,13 @@ const mockBlock: BlockComponent = {
     type: 'heading',
     order: 0,
     content: { text: 'Test Heading' },
-    parentId: null
+    parentId: null,
 };
 
 const mockBlockList: BlockComponent[] = [
     { id: 'block-1', type: 'heading', order: 0, content: { text: 'Heading 1' }, parentId: null },
     { id: 'block-2', type: 'paragraph', order: 1, content: { text: 'Paragraph 1' }, parentId: null },
-    { id: 'block-3', type: 'button', order: 2, content: { text: 'Click Me' }, parentId: null }
+    { id: 'block-3', type: 'button', order: 2, content: { text: 'Click Me' }, parentId: null },
 ];
 
 // ========================================
@@ -90,7 +90,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
                     {mockBlockList.map((block, index) => (
                         <MockDropZoneBefore key={block.id} blockId={block.id} blockIndex={index} />
                     ))}
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             // Deve haver 3 drop zones (uma para cada bloco)
@@ -102,7 +102,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
             render(
                 <TestDndWrapper>
                     <MockDropZoneBefore blockId="test-block" blockIndex={5} />
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             const dropZone = screen.getByTestId('drop-zone-before-test-block');
@@ -114,7 +114,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
             render(
                 <TestDndWrapper>
                     <MockDropZoneBefore blockId="accessible-block" blockIndex={0} />
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             const dropZone = screen.getByRole('region', { name: /drop zone before block accessible-block/i });
@@ -125,7 +125,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
             const blocksWithChildren = [
                 { id: 'parent-1', type: 'container', order: 0, parentId: null },
                 { id: 'child-1', type: 'heading', order: 0, parentId: 'parent-1' }, // ← Não deve ter drop zone
-                { id: 'parent-2', type: 'container', order: 1, parentId: null }
+                { id: 'parent-2', type: 'container', order: 1, parentId: null },
             ];
 
             const { container } = render(
@@ -135,7 +135,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
                         .map((block, index) => (
                             <MockDropZoneBefore key={block.id} blockId={block.id} blockIndex={index} />
                         ))}
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             // Deve ter apenas 2 drop zones (parent-1 e parent-2)
@@ -149,7 +149,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
             render(
                 <TestDndWrapper>
                     <MockDropZoneBefore blockId="my-custom-block-123" blockIndex={0} />
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             const dropZone = screen.getByTestId('drop-zone-before-my-custom-block-123');
@@ -162,7 +162,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
                     {mockBlockList.map((block, index) => (
                         <MockDropZoneBefore key={block.id} blockId={block.id} blockIndex={index} />
                     ))}
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             const dropZoneIds = Array.from(container.querySelectorAll('[data-testid^="drop-zone-before-"]'))
@@ -174,7 +174,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
             expect(dropZoneIds).toEqual([
                 'drop-zone-before-block-1',
                 'drop-zone-before-block-2',
-                'drop-zone-before-block-3'
+                'drop-zone-before-block-3',
             ]);
         });
     });
@@ -184,7 +184,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
             render(
                 <TestDndWrapper>
                     <MockDropZoneBefore blockId="first-block" blockIndex={0} />
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             const dropZone = screen.getByTestId('drop-zone-before-first-block');
@@ -197,7 +197,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
                     {mockBlockList.map((block, index) => (
                         <MockDropZoneBefore key={block.id} blockId={block.id} blockIndex={index} />
                     ))}
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             const dropZone2 = screen.getByTestId('drop-zone-before-block-2');
@@ -213,7 +213,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
             const { container } = render(
                 <TestDndWrapper>
                     <MockDropZoneBefore blockId="test-block" blockIndex={0} />
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             const dropZone = container.querySelector('.drop-zone-before');
@@ -224,7 +224,7 @@ describe('🎯 BlockRow - Drop Zones', () => {
             render(
                 <TestDndWrapper>
                     <MockDropZoneBefore blockId="test-block" blockIndex={0} />
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             const label = screen.getByText('+ Soltar antes');
@@ -245,7 +245,7 @@ describe('🎯 BlockRow - Integração com DndContext', () => {
             const { container } = render(
                 <TestDndWrapper onDragEnd={mockHandleDragEnd}>
                     <MockDropZoneBefore blockId="target-block" blockIndex={1} />
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             // Simular drag & drop seria complexo, então validamos estrutura
@@ -258,7 +258,7 @@ describe('🎯 BlockRow - Integração com DndContext', () => {
             render(
                 <TestDndWrapper>
                     <MockDropZoneBefore blockId="calc-block" blockIndex={3} />
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             const dropZone = screen.getByTestId('drop-zone-before-calc-block');
@@ -281,7 +281,7 @@ describe('🎯 BlockRow - Integração com DndContext', () => {
                         <MockDropZoneBefore blockId="block-3" blockIndex={2} />
                         <div data-testid="block-3">Block 3</div>
                     </div>
-                </TestDndWrapper>
+                </TestDndWrapper>,
             );
 
             const containerEl = screen.getByTestId('container');
@@ -308,7 +308,7 @@ describe('🎯 BlockRow - Acessibilidade', () => {
         render(
             <TestDndWrapper>
                 <MockDropZoneBefore blockId="accessible-block" blockIndex={0} />
-            </TestDndWrapper>
+            </TestDndWrapper>,
         );
 
         const dropZone = screen.getByRole('region');
@@ -319,7 +319,7 @@ describe('🎯 BlockRow - Acessibilidade', () => {
         render(
             <TestDndWrapper>
                 <MockDropZoneBefore blockId="keyboard-block" blockIndex={0} />
-            </TestDndWrapper>
+            </TestDndWrapper>,
         );
 
         const dropZone = screen.getByTestId('drop-zone-before-keyboard-block');
@@ -339,7 +339,7 @@ describe('🎯 BlockRow - Performance', () => {
             id: `block-${i}`,
             type: 'heading',
             order: i,
-            parentId: null
+            parentId: null,
         }));
 
         const startTime = performance.now();
@@ -349,7 +349,7 @@ describe('🎯 BlockRow - Performance', () => {
                 {manyBlocks.map((block, index) => (
                     <MockDropZoneBefore key={block.id} blockId={block.id} blockIndex={index} />
                 ))}
-            </TestDndWrapper>
+            </TestDndWrapper>,
         );
 
         const endTime = performance.now();
@@ -371,7 +371,7 @@ describe('🎯 BlockRow - Performance', () => {
         const { rerender } = render(
             <TestDndWrapper>
                 <TrackedDropZone blockId="stable-block" blockIndex={0} />
-            </TestDndWrapper>
+            </TestDndWrapper>,
         );
 
         expect(renderSpy).toHaveBeenCalledTimes(1);
@@ -380,7 +380,7 @@ describe('🎯 BlockRow - Performance', () => {
         rerender(
             <TestDndWrapper>
                 <TrackedDropZone blockId="stable-block" blockIndex={0} />
-            </TestDndWrapper>
+            </TestDndWrapper>,
         );
 
         // React pode chamar 2x em StrictMode, mas não deve crescer exponencialmente

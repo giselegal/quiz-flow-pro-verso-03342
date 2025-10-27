@@ -108,7 +108,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
       } catch (err) {
         console.warn(
           `⚠️ Erro ao carregar template JSON ${stepId}, usando fallback QUIZ_STEPS`,
-          err
+          err,
         );
 
         // 5. Fallback para QUIZ_STEPS
@@ -129,7 +129,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         setIsLoading(false);
       }
     },
-    []
+    [],
   );
 
   /**
@@ -146,7 +146,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
           return loadQuizEstiloTemplate(stepNumber)
             .then(step => [
               `step-${stepNumber.toString().padStart(2, '0')}`,
-              step
+              step,
             ])
             .catch(err => {
               console.error(`Erro ao carregar step ${stepNumber}:`, err);
@@ -174,7 +174,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         setIsLoading(false);
       }
     },
-    [loadQuizEstiloTemplate]
+    [loadQuizEstiloTemplate],
   );
 
   /**
@@ -192,7 +192,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
 
       await Promise.all(promises);
     },
-    [loadQuizEstiloTemplate]
+    [loadQuizEstiloTemplate],
   );
 
   /**
@@ -274,7 +274,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         setIsLoading(false);
       }
     },
-    [state, stages, cachedTemplates]
+    [state, stages, cachedTemplates],
   );
 
   // Carregar blocos do template
@@ -291,7 +291,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         order: index + 1,
       }));
     },
-    [loadTemplate]
+    [loadTemplate],
   );
 
   // Obter metadata de um template
@@ -299,7 +299,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
     (stageId: string): TemplateMetadata | null => {
       return templatesMetadata[stageId] || null;
     },
-    [templatesMetadata]
+    [templatesMetadata],
   );
 
   return {

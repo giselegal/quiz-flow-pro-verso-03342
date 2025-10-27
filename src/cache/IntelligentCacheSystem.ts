@@ -38,7 +38,7 @@ class IntelligentCacheSystem<T = any> {
     hits: 0,
     misses: 0,
     evictions: 0,
-    invalidations: 0
+    invalidations: 0,
   };
   
   // 🎛️ CONFIGURAÇÕES DINÂMICAS
@@ -51,7 +51,7 @@ class IntelligentCacheSystem<T = any> {
     critical: 30 * 60 * 1000, // 30 minutes
     high: 15 * 60 * 1000,     // 15 minutes
     medium: 5 * 60 * 1000,    // 5 minutes
-    low: 2 * 60 * 1000        // 2 minutes
+    low: 2 * 60 * 1000,        // 2 minutes
   };
 
   private cleanupTimer?: NodeJS.Timeout;
@@ -100,7 +100,7 @@ class IntelligentCacheSystem<T = any> {
     options: {
       priority?: 'critical' | 'high' | 'medium' | 'low';
       customTTL?: number;
-    } = {}
+    } = {},
   ): void {
     const { priority = 'medium', customTTL } = options;
     const now = Date.now();
@@ -119,7 +119,7 @@ class IntelligentCacheSystem<T = any> {
       accessCount: 0,
       lastAccessed: now,
       priority,
-      size
+      size,
     };
 
     this.cache.set(key, entry);
@@ -273,7 +273,7 @@ class IntelligentCacheSystem<T = any> {
       hitRate: `${hitRate}%`,
       memoryUsage: `${((totalSize / (this.MAX_MEMORY_MB * 1024 * 1024)) * 100).toFixed(1)}%`,
       oldestEntry,
-      mostAccessed
+      mostAccessed,
     };
   }
 

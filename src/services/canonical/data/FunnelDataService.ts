@@ -45,7 +45,7 @@ export class FunnelDataService extends BaseCanonicalService {
 
   async listFunnels(
     filters?: FunnelFilters,
-    pagination?: FunnelPagination
+    pagination?: FunnelPagination,
   ): Promise<ServiceResult<Funnel[]>> {
     CanonicalServicesMonitor.trackUsage(this.name, 'listFunnels');
     try {
@@ -66,7 +66,7 @@ export class FunnelDataService extends BaseCanonicalService {
       const sortBy = pagination?.sortBy || 'updatedAt';
       const sortOrder = pagination?.sortOrder || 'desc';
       query = query.order(sortBy === 'updatedAt' ? 'updated_at' : sortBy === 'createdAt' ? 'created_at' : 'name', {
-        ascending: sortOrder === 'asc'
+        ascending: sortOrder === 'asc',
       });
 
       const { data, error } = await query;

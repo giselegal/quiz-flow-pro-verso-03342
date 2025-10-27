@@ -39,8 +39,8 @@ export const templateLibraryService = {
         collectUserName: true,
         seo: {
           title: 'Quiz de Estilo Pessoal',
-          description: 'Descubra seu estilo'
-        }
+          description: 'Descubra seu estilo',
+        },
       },
       variables: [
         { key: 'romantico', label: 'Romântico', scoringWeight: 1 },
@@ -49,8 +49,8 @@ export const templateLibraryService = {
         { key: 'elegante', label: 'Elegante', scoringWeight: 1 },
         { key: 'criativo', label: 'Criativo', scoringWeight: 1 },
         { key: 'dramatico', label: 'Dramático', scoringWeight: 1 },
-        { key: 'sensual', label: 'Sensual', scoringWeight: 1 }
-      ]
+        { key: 'sensual', label: 'Sensual', scoringWeight: 1 },
+      ],
     }];
   },
   listAll(): FunnelTemplate[] {

@@ -80,7 +80,7 @@ export class UnifiedPersistenceService {
 
   private async performSave(
     data: any,
-    options: { validate: boolean; backup: boolean; timeout: number }
+    options: { validate: boolean; backup: boolean; timeout: number },
   ): Promise<PersistenceResult> {
     // const _startTime = Date.now();
 
@@ -226,7 +226,7 @@ export class UnifiedPersistenceService {
             source: 'UnifiedPersistenceService.load',
             fallback,
             logErrors: true,
-          }
+          },
         );
 
         if (!validation.success && validation.fallback) {

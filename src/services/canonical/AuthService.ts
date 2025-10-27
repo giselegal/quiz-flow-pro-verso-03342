@@ -189,22 +189,22 @@ export class AuthService extends BaseCanonicalService {
         options: {
           data: {
             display_name: params.displayName,
-            ...params.metadata
-          }
-        }
+            ...params.metadata,
+          },
+        },
       });
 
       if (error) {
         return {
           success: false,
-          error: new Error(error.message)
+          error: new Error(error.message),
         };
       }
 
       if (!data.user) {
         return {
           success: false,
-          error: new Error('User creation failed')
+          error: new Error('User creation failed'),
         };
       }
 
@@ -221,7 +221,7 @@ export class AuthService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Sign up failed')
+        error: error instanceof Error ? error : new Error('Sign up failed'),
       };
     }
   }
@@ -233,20 +233,20 @@ export class AuthService extends BaseCanonicalService {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: params.email,
-        password: params.password
+        password: params.password,
       });
 
       if (error) {
         return {
           success: false,
-          error: new Error(error.message)
+          error: new Error(error.message),
         };
       }
 
       if (!data.session || !data.user) {
         return {
           success: false,
-          error: new Error('Authentication failed')
+          error: new Error('Authentication failed'),
         };
       }
 
@@ -267,7 +267,7 @@ export class AuthService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Sign in failed')
+        error: error instanceof Error ? error : new Error('Sign in failed'),
       };
     }
   }
@@ -282,7 +282,7 @@ export class AuthService extends BaseCanonicalService {
       if (error) {
         return {
           success: false,
-          error: new Error(error.message)
+          error: new Error(error.message),
         };
       }
 
@@ -300,7 +300,7 @@ export class AuthService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Sign out failed')
+        error: error instanceof Error ? error : new Error('Sign out failed'),
       };
     }
   }
@@ -336,14 +336,14 @@ export class AuthService extends BaseCanonicalService {
       if (error) {
         return {
           success: false,
-          error: new Error(error.message)
+          error: new Error(error.message),
         };
       }
 
       if (!data.session || !data.user) {
         return {
           success: false,
-          error: new Error('Session refresh failed')
+          error: new Error('Session refresh failed'),
         };
       }
 
@@ -361,7 +361,7 @@ export class AuthService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Session refresh failed')
+        error: error instanceof Error ? error : new Error('Session refresh failed'),
       };
     }
   }
@@ -391,14 +391,14 @@ export class AuthService extends BaseCanonicalService {
       if (error) {
         return {
           success: false,
-          error: new Error(error.message)
+          error: new Error(error.message),
         };
       }
 
       if (!data) {
         return {
           success: false,
-          error: new Error('Profile not found')
+          error: new Error('Profile not found'),
         };
       }
 
@@ -412,7 +412,7 @@ export class AuthService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get profile')
+        error: error instanceof Error ? error : new Error('Failed to get profile'),
       };
     }
   }
@@ -423,7 +423,7 @@ export class AuthService extends BaseCanonicalService {
   async updateUserProfile(userId: string, updates: UpdateProfileParams): Promise<ServiceResult<UserProfile>> {
     try {
       const updateData: any = {
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       };
 
       if (updates.displayName !== undefined) updateData.display_name = updates.displayName;
@@ -446,7 +446,7 @@ export class AuthService extends BaseCanonicalService {
       if (error) {
         return {
           success: false,
-          error: new Error(error.message)
+          error: new Error(error.message),
         };
       }
 
@@ -463,7 +463,7 @@ export class AuthService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to update profile')
+        error: error instanceof Error ? error : new Error('Failed to update profile'),
       };
     }
   }
@@ -484,7 +484,7 @@ export class AuthService extends BaseCanonicalService {
       if (uploadError) {
         return {
           success: false,
-          error: new Error(uploadError.message)
+          error: new Error(uploadError.message),
         };
       }
 
@@ -499,7 +499,7 @@ export class AuthService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to upload avatar')
+        error: error instanceof Error ? error : new Error('Failed to upload avatar'),
       };
     }
   }
@@ -515,7 +515,7 @@ export class AuthService extends BaseCanonicalService {
     userId: string,
     resourceType: Permission['resourceType'],
     resourceId: string,
-    action: PermissionAction
+    action: PermissionAction,
   ): Promise<ServiceResult<boolean>> {
     try {
       const permissions = await this.getUserPermissions(userId, resourceType, resourceId);
@@ -526,14 +526,14 @@ export class AuthService extends BaseCanonicalService {
 
       const hasPermission = permissions.data!.some(p => 
         p.actions.includes(action) &&
-        (!p.expiresAt || p.expiresAt.getTime() > Date.now())
+        (!p.expiresAt || p.expiresAt.getTime() > Date.now()),
       );
 
       return { success: true, data: hasPermission };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to check permission')
+        error: error instanceof Error ? error : new Error('Failed to check permission'),
       };
     }
   }
@@ -544,7 +544,7 @@ export class AuthService extends BaseCanonicalService {
   async getUserPermissions(
     userId: string,
     resourceType: Permission['resourceType'],
-    resourceId: string
+    resourceId: string,
   ): Promise<ServiceResult<Permission[]>> {
     try {
       const cacheKey = `${userId}:${resourceType}:${resourceId}`;
@@ -566,7 +566,7 @@ export class AuthService extends BaseCanonicalService {
       if (error) {
         return {
           success: false,
-          error: new Error(error.message)
+          error: new Error(error.message),
         };
       }
 
@@ -581,7 +581,7 @@ export class AuthService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to get permissions')
+        error: error instanceof Error ? error : new Error('Failed to get permissions'),
       };
     }
   }
@@ -594,7 +594,7 @@ export class AuthService extends BaseCanonicalService {
     resourceType: Permission['resourceType'],
     resourceId: string,
     role: UserRole,
-    grantedBy: string
+    grantedBy: string,
   ): Promise<ServiceResult<Permission>> {
     try {
       const actions = this.getRoleActions(role);
@@ -606,7 +606,7 @@ export class AuthService extends BaseCanonicalService {
         role,
         actions,
         granted_by: grantedBy,
-        granted_at: new Date().toISOString()
+        granted_at: new Date().toISOString(),
       };
 
       const { data, error } = await (supabase as any)
@@ -618,7 +618,7 @@ export class AuthService extends BaseCanonicalService {
       if (error) {
         return {
           success: false,
-          error: new Error(error.message)
+          error: new Error(error.message),
         };
       }
 
@@ -636,7 +636,7 @@ export class AuthService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to grant permission')
+        error: error instanceof Error ? error : new Error('Failed to grant permission'),
       };
     }
   }
@@ -647,7 +647,7 @@ export class AuthService extends BaseCanonicalService {
   async revokePermission(
     userId: string,
     resourceType: Permission['resourceType'],
-    resourceId: string
+    resourceId: string,
   ): Promise<ServiceResult<void>> {
     try {
       const { error } = await (supabase as any)
@@ -660,7 +660,7 @@ export class AuthService extends BaseCanonicalService {
       if (error) {
         return {
           success: false,
-          error: new Error(error.message)
+          error: new Error(error.message),
         };
       }
 
@@ -676,7 +676,7 @@ export class AuthService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Failed to revoke permission')
+        error: error instanceof Error ? error : new Error('Failed to revoke permission'),
       };
     }
   }
@@ -721,7 +721,7 @@ export class AuthService extends BaseCanonicalService {
       this.isAuthenticated(),
     
     refreshSession: () => 
-      this.refreshSession()
+      this.refreshSession(),
   };
 
   readonly profile = {
@@ -732,7 +732,7 @@ export class AuthService extends BaseCanonicalService {
       this.updateUserProfile(userId, updates),
     
     uploadAvatar: (userId: string, file: File) => 
-      this.uploadAvatar(userId, file)
+      this.uploadAvatar(userId, file),
   };
 
   readonly permissions = {
@@ -746,7 +746,7 @@ export class AuthService extends BaseCanonicalService {
       this.grantPermission(userId, resourceType, resourceId, role, grantedBy),
     
     revoke: (userId: string, resourceType: Permission['resourceType'], resourceId: string) => 
-      this.revokePermission(userId, resourceType, resourceId)
+      this.revokePermission(userId, resourceType, resourceId),
   };
 
   // ============================================================================
@@ -779,7 +779,7 @@ export class AuthService extends BaseCanonicalService {
     });
 
     this.authSubscription = {
-      unsubscribe: () => data.subscription.unsubscribe()
+      unsubscribe: () => data.subscription.unsubscribe(),
     };
   }
 
@@ -824,10 +824,10 @@ export class AuthService extends BaseCanonicalService {
           theme: 'system',
           language: 'en',
           notifications: true,
-          emailDigest: true
+          emailDigest: true,
         },
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       });
     } catch (error) {
       // Non-critical - profile might already exist
@@ -860,7 +860,7 @@ export class AuthService extends BaseCanonicalService {
       avatarUrl: user.user_metadata?.avatar_url,
       metadata: user.user_metadata,
       createdAt: new Date(user.created_at),
-      lastLoginAt: new Date()
+      lastLoginAt: new Date(),
     };
   }
 
@@ -869,7 +869,7 @@ export class AuthService extends BaseCanonicalService {
       accessToken: session.access_token,
       refreshToken: session.refresh_token,
       expiresAt: new Date(session.expires_at! * 1000).getTime(),
-      user
+      user,
     };
   }
 
@@ -886,10 +886,10 @@ export class AuthService extends BaseCanonicalService {
         theme: 'system',
         language: 'en',
         notifications: true,
-        emailDigest: true
+        emailDigest: true,
       },
       metadata: data.metadata,
-      updatedAt: new Date(data.updated_at)
+      updatedAt: new Date(data.updated_at),
     };
   }
 
@@ -902,7 +902,7 @@ export class AuthService extends BaseCanonicalService {
       actions: data.actions,
       grantedBy: data.granted_by,
       grantedAt: new Date(data.granted_at),
-      expiresAt: data.expires_at ? new Date(data.expires_at) : undefined
+      expiresAt: data.expires_at ? new Date(data.expires_at) : undefined,
     };
   }
 

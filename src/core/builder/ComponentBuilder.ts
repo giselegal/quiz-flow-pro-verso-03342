@@ -62,12 +62,12 @@ export const COMPONENT_TEMPLATES = {
         properties: {
             questionType: 'single-choice',
             required: true,
-            showProgress: true
+            showProgress: true,
         },
         content: {
             question: 'Qual sua resposta?',
-            options: ['Opção A', 'Opção B', 'Opção C']
-        }
+            options: ['Opção A', 'Opção B', 'Opção C'],
+        },
     },
 
     'multiple-choice': {
@@ -76,12 +76,12 @@ export const COMPONENT_TEMPLATES = {
             questionType: 'multiple-choice',
             required: true,
             minSelections: 1,
-            maxSelections: 3
+            maxSelections: 3,
         },
         content: {
             question: 'Selecione todas as opções que se aplicam:',
-            options: ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4']
-        }
+            options: ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'],
+        },
     },
 
     'text-input': {
@@ -89,12 +89,12 @@ export const COMPONENT_TEMPLATES = {
         properties: {
             inputType: 'text',
             required: true,
-            maxLength: 200
+            maxLength: 200,
         },
         content: {
             label: 'Digite sua resposta:',
-            placeholder: 'Sua resposta aqui...'
-        }
+            placeholder: 'Sua resposta aqui...',
+        },
     },
 
     // Lead Capture
@@ -103,13 +103,13 @@ export const COMPONENT_TEMPLATES = {
         properties: {
             fields: ['email'],
             required: true,
-            validateEmail: true
+            validateEmail: true,
         },
         content: {
             title: 'Receba seus resultados',
             subtitle: 'Digite seu email para continuar',
-            buttonText: 'Continuar'
-        }
+            buttonText: 'Continuar',
+        },
     },
 
     'full-lead-capture': {
@@ -118,13 +118,13 @@ export const COMPONENT_TEMPLATES = {
             fields: ['name', 'email', 'phone'],
             required: true,
             validateEmail: true,
-            validatePhone: true
+            validatePhone: true,
         },
         content: {
             title: 'Complete seu cadastro',
             subtitle: 'Precisamos de algumas informações',
-            buttonText: 'Finalizar'
-        }
+            buttonText: 'Finalizar',
+        },
     },
 
     // Content Blocks
@@ -133,14 +133,14 @@ export const COMPONENT_TEMPLATES = {
         properties: {
             alignment: 'center',
             backgroundType: 'gradient',
-            showButton: true
+            showButton: true,
         },
         content: {
             title: 'Título Principal',
             subtitle: 'Subtítulo explicativo',
             buttonText: 'Começar',
-            backgroundImage: ''
-        }
+            backgroundImage: '',
+        },
     },
 
     'info-card': {
@@ -148,14 +148,14 @@ export const COMPONENT_TEMPLATES = {
         properties: {
             layout: 'vertical',
             showIcon: true,
-            elevation: 'medium'
+            elevation: 'medium',
         },
         content: {
             title: 'Informação Importante',
             description: 'Descrição detalhada da informação',
-            icon: '💡'
-        }
-    }
+            icon: '💡',
+        },
+    },
 } as const;
 
 /**
@@ -178,7 +178,7 @@ export class ComponentBuilder {
             content: {},
             style: {},
             validation: {},
-            metadata: {}
+            metadata: {},
         };
         this.context = context;
     }
@@ -270,7 +270,7 @@ export class ComponentBuilder {
             this.errors.push({
                 field: 'template',
                 message: `Template '${templateName}' não encontrado`,
-                severity: 'error'
+                severity: 'error',
             });
             return this;
         }
@@ -297,7 +297,7 @@ export class ComponentBuilder {
             errors.push({
                 field: 'type',
                 message: `Tipo de componente '${this.config.type}' não encontrado no registry`,
-                severity: 'error'
+                severity: 'error',
             });
         }
 
@@ -310,7 +310,7 @@ export class ComponentBuilder {
                         errors.push({
                             field: schema.key,
                             message: `Propriedade obrigatória '${schema.label || schema.key}' não foi definida`,
-                            severity: 'error'
+                            severity: 'error',
                         });
                     }
                 }
@@ -323,7 +323,7 @@ export class ComponentBuilder {
                         errors.push({
                             field: schema.key,
                             message: `Valor inválido para '${schema.label || schema.key}'. Esperado: ${schema.kind}`,
-                            severity: 'error'
+                            severity: 'error',
                         });
                     }
                 }
@@ -339,7 +339,7 @@ export class ComponentBuilder {
         return {
             isValid: errors.length === 0,
             errors,
-            warnings
+            warnings,
         };
     }
 
@@ -380,14 +380,14 @@ export class ComponentBuilder {
                 warnings.push({
                     field: schema.key,
                     message: `Valor ${value} é menor que o mínimo permitido (${schema.min})`,
-                    suggestion: `Use um valor >= ${schema.min}`
+                    suggestion: `Use um valor >= ${schema.min}`,
                 });
             }
             if (schema.max !== undefined && value > schema.max) {
                 warnings.push({
                     field: schema.key,
                     message: `Valor ${value} é maior que o máximo permitido (${schema.max})`,
-                    suggestion: `Use um valor <= ${schema.max}`
+                    suggestion: `Use um valor <= ${schema.max}`,
                 });
             }
         }
@@ -397,7 +397,7 @@ export class ComponentBuilder {
             warnings.push({
                 field: schema.key,
                 message: `Array '${schema.label || schema.key}' está vazio`,
-                suggestion: 'Adicione pelo menos um item'
+                suggestion: 'Adicione pelo menos um item',
             });
         }
     }
@@ -413,14 +413,14 @@ export class ComponentBuilder {
                     warnings.push({
                         field: 'question',
                         message: 'Pergunta não foi definida',
-                        suggestion: 'Adicione uma pergunta para o componente'
+                        suggestion: 'Adicione uma pergunta para o componente',
                     });
                 }
                 if (!this.config.content?.options || this.config.content.options.length < 2) {
                     warnings.push({
                         field: 'options',
                         message: 'Pelo menos 2 opções são recomendadas',
-                        suggestion: 'Adicione mais opções de resposta'
+                        suggestion: 'Adicione mais opções de resposta',
                     });
                 }
                 break;
@@ -430,7 +430,7 @@ export class ComponentBuilder {
                     warnings.push({
                         field: 'title',
                         message: 'Título não foi definido',
-                        suggestion: 'Adicione um título chamativo para captura de leads'
+                        suggestion: 'Adicione um título chamativo para captura de leads',
                     });
                 }
                 break;
@@ -440,7 +440,7 @@ export class ComponentBuilder {
                     warnings.push({
                         field: 'title',
                         message: 'Título principal não foi definido',
-                        suggestion: 'Adicione um título impactante para a seção hero'
+                        suggestion: 'Adicione um título impactante para a seção hero',
                     });
                 }
                 break;
@@ -528,14 +528,14 @@ export class ComponentBuilder {
             ...this.config.metadata,
             builtAt: new Date().toISOString(),
             builderVersion: '1.0.0',
-            context: this.context
+            context: this.context,
         };
 
         return {
             component: this.config,
             validation,
             suggestions,
-            optimizations
+            optimizations,
         };
     }
 
@@ -590,7 +590,7 @@ export function createComponent(type: string, context?: BuilderContext): Compone
  */
 export function fromTemplate(
     templateName: keyof typeof COMPONENT_TEMPLATES,
-    context?: BuilderContext
+    context?: BuilderContext,
 ): ComponentBuilder {
     const template = COMPONENT_TEMPLATES[templateName];
     return new ComponentBuilder(template.type, context).fromTemplate(templateName);

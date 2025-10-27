@@ -11,7 +11,7 @@ describe('ResultStep - exibição de scores e estilos secundários', () => {
     const baseData: any = {
         id: 'step-20',
         type: 'result',
-        title: '{userName}, seu estilo predominante é:'
+        title: '{userName}, seu estilo predominante é:',
     };
 
     it('renderiza top 5 estilos ordenados por pontuação com porcentagens', () => {
@@ -23,7 +23,7 @@ describe('ResultStep - exibição de scores e estilos secundários', () => {
             romantico: 8,
             sexy: 12,
             dramatico: 0,
-            criativo: 4
+            criativo: 4,
         };
 
         // Total = 104
@@ -44,10 +44,10 @@ describe('ResultStep - exibição de scores e estilos secundários', () => {
                 userProfile={{
                     userName: 'Maria',
                     resultStyle: 'elegante',
-                    secondaryStyles: ['natural', 'classico']
+                    secondaryStyles: ['natural', 'classico'],
                 }}
                 scores={scores as any}
-            />
+            />,
         );
 
         // Primeiro título interpolado
@@ -72,7 +72,7 @@ describe('ResultStep - exibição de scores e estilos secundários', () => {
             Clássico: /24\.0|24\.1|24\.04/,
             Sexy: /11\.5|11\.6|11\.54/,
             Natural: /9\.6|9\.7|9\.62/,
-            Romântico: /7\.6|7\.7|7\.69/
+            Romântico: /7\.6|7\.7|7\.69/,
         };
 
         // Selecionar todos spans que possuem %
@@ -95,7 +95,7 @@ describe('ResultStep - exibição de scores e estilos secundários', () => {
             romantico: 6,
             sexy: 5,
             dramatico: 4,
-            criativo: 3
+            criativo: 3,
         };
 
         const { container } = render(
@@ -104,10 +104,10 @@ describe('ResultStep - exibição de scores e estilos secundários', () => {
                 userProfile={{
                     userName: 'Ana',
                     resultStyle: 'natural',
-                    secondaryStyles: []
+                    secondaryStyles: [],
                 }}
                 scores={scores as any}
-            />
+            />,
         );
 
         // Deve haver exatamente 5 barras (div com role progress bar não existe, então selecionamos pela classe bg-gray-200, robustez: filtrar containers de barra)

@@ -9,7 +9,7 @@ import {
     FunnelState,
     FunnelAction,
     FunnelError,
-    NavigationDirection
+    NavigationDirection,
 } from './types';
 import { funnelCore } from './FunnelCore';
 
@@ -44,10 +44,10 @@ export class FunnelEngine {
                 payload: {
                     previousState: state,
                     newState,
-                    action
+                    action,
                 },
                 timestamp: Date.now(),
-                funnelId: state.id
+                funnelId: state.id,
             });
 
             return newState;
@@ -60,10 +60,10 @@ export class FunnelEngine {
                 payload: {
                     error: error as Error,
                     state,
-                    action
+                    action,
                 },
                 timestamp: Date.now(),
-                funnelId: state.id
+                funnelId: state.id,
             });
 
             return state; // Retorna estado anterior em caso de erro
@@ -168,7 +168,7 @@ export class FunnelEngine {
         state.navigation = {
             ...computedNav,
             history: newHistory,
-            direction: direction || 'forward'
+            direction: direction || 'forward',
         };
 
         // Emitir evento de navegação
@@ -177,10 +177,10 @@ export class FunnelEngine {
             payload: {
                 from: state.currentStep,
                 to: nextStepId,
-                direction: direction || 'forward'
+                direction: direction || 'forward',
             },
             timestamp: Date.now(),
-            funnelId: state.id
+            funnelId: state.id,
         });
 
         return state;
@@ -203,10 +203,10 @@ export class FunnelEngine {
             type: 'data-update',
             payload: {
                 data,
-                userData: state.userData
+                userData: state.userData,
             },
             timestamp: Date.now(),
-            funnelId: state.id
+            funnelId: state.id,
         });
 
         return state;
@@ -228,10 +228,10 @@ export class FunnelEngine {
             type: 'step-complete',
             payload: {
                 stepId: targetStepId,
-                progress: funnelCore.calculateProgress(state)
+                progress: funnelCore.calculateProgress(state),
             },
             timestamp: Date.now(),
-            funnelId: state.id
+            funnelId: state.id,
         });
 
         return state;
@@ -264,7 +264,7 @@ export class FunnelEngine {
             type: 'error',
             payload: { error },
             timestamp: Date.now(),
-            funnelId: state.id
+            funnelId: state.id,
         });
 
         return state;
@@ -288,7 +288,7 @@ export class FunnelEngine {
         state.navigation = {
             ...computed,
             history: [],
-            direction: 'forward'
+            direction: 'forward',
         };
 
         // Limpar dados do usuário se solicitado
@@ -306,7 +306,7 @@ export class FunnelEngine {
             type: 'reset',
             payload: { preserveUserData },
             timestamp: Date.now(),
-            funnelId: state.id
+            funnelId: state.id,
         });
 
         return state;
@@ -320,7 +320,7 @@ export class FunnelEngine {
 
         state.settings = {
             ...state.settings,
-            ...settings
+            ...settings,
         };
 
         return state;
@@ -347,7 +347,7 @@ export class FunnelEngine {
             initializedState.navigation = {
                 ...nav,
                 history: [],
-                direction: 'forward'
+                direction: 'forward',
             };
         }
 
@@ -366,7 +366,7 @@ export class FunnelEngine {
             type: 'initialize',
             payload: { state: initializedState },
             timestamp: Date.now(),
-            funnelId: initializedState.id
+            funnelId: initializedState.id,
         });
 
         return initializedState;
@@ -384,7 +384,7 @@ export class FunnelEngine {
 
         // Garantir que todos os passos visíveis estão completos
         const visibleSteps = finalizedState.steps.filter(step =>
-            funnelCore.isStepVisible(step, finalizedState)
+            funnelCore.isStepVisible(step, finalizedState),
         );
 
         visibleSteps.forEach(step => {
@@ -398,10 +398,10 @@ export class FunnelEngine {
             type: 'complete',
             payload: {
                 state: finalizedState,
-                results: finalizedState.userData
+                results: finalizedState.userData,
             },
             timestamp: Date.now(),
-            funnelId: finalizedState.id
+            funnelId: finalizedState.id,
         });
 
         return finalizedState;
@@ -419,7 +419,7 @@ export class FunnelEngine {
             type: 'pause',
             payload: { state: pausedState },
             timestamp: Date.now(),
-            funnelId: pausedState.id
+            funnelId: pausedState.id,
         });
 
         return pausedState;
@@ -437,7 +437,7 @@ export class FunnelEngine {
             type: 'resume',
             payload: { state: resumedState },
             timestamp: Date.now(),
-            funnelId: resumedState.id
+            funnelId: resumedState.id,
         });
 
         return resumedState;
@@ -485,7 +485,7 @@ export class FunnelEngine {
         const navigation = funnelCore.calculateNavigationState(state);
         const validation = funnelCore.validateStep(
             state.steps.find(step => step.id === state.currentStep)!,
-            state
+            state,
         );
 
         return {
@@ -495,7 +495,7 @@ export class FunnelEngine {
             currentStep: state.currentStep,
             totalSteps: state.steps.length,
             isComplete: progress.percentage === 100,
-            hasErrors: !validation.isValid
+            hasErrors: !validation.isValid,
         };
     }
 }
@@ -510,7 +510,7 @@ export const FunnelActions = {
      */
     navigate: (direction: NavigationDirection, targetStep?: string): FunnelAction => ({
         type: 'navigate',
-        payload: { direction, targetStep }
+        payload: { direction, targetStep },
     }),
 
     /**
@@ -518,7 +518,7 @@ export const FunnelActions = {
      */
     updateUserData: (data: Record<string, any>, merge = true): FunnelAction => ({
         type: 'update-user-data',
-        payload: { data, merge }
+        payload: { data, merge },
     }),
 
     /**
@@ -526,7 +526,7 @@ export const FunnelActions = {
      */
     completeStep: (stepId?: string): FunnelAction => ({
         type: 'complete-step',
-        payload: { stepId }
+        payload: { stepId },
     }),
 
     /**
@@ -534,7 +534,7 @@ export const FunnelActions = {
      */
     setLoading: (isLoading: boolean, message?: string): FunnelAction => ({
         type: 'set-loading',
-        payload: { isLoading, message }
+        payload: { isLoading, message },
     }),
 
     /**
@@ -542,7 +542,7 @@ export const FunnelActions = {
      */
     setError: (error: FunnelError | null): FunnelAction => ({
         type: 'set-error',
-        payload: { error }
+        payload: { error },
     }),
 
     /**
@@ -550,7 +550,7 @@ export const FunnelActions = {
      */
     reset: (preserveUserData = false): FunnelAction => ({
         type: 'reset',
-        payload: { preserveUserData }
+        payload: { preserveUserData },
     }),
 
     /**
@@ -558,8 +558,8 @@ export const FunnelActions = {
      */
     updateSettings: (settings: Partial<FunnelState['settings']>): FunnelAction => ({
         type: 'update-settings',
-        payload: { settings }
-    })
+        payload: { settings },
+    }),
 };
 
 // Exportar instância singleton

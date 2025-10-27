@@ -21,7 +21,7 @@ describe('QuizAppConnected - EditorMode não deve baixar normalized JSON', () =>
             steps: [
                 { id: 'step-01', type: 'intro', title: 'Intro', blocks: [] },
                 { id: 'step-02', type: 'question', title: 'Pergunta 1', blocks: [] },
-            ]
+            ],
         };
 
         render(<QuizAppConnected editorMode initialConfig={initialConfig} initialStepId="step-01" />);

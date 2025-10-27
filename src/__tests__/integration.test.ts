@@ -37,13 +37,13 @@ describe('Integration: Template Edit → Save → Reload Flow', () => {
                 id: 'step-01',
                 name: 'Step 01 - MODIFICADO EM TESTE',
                 description: 'Descrição modificada durante teste de integração',
-                updatedAt: new Date().toISOString()
+                updatedAt: new Date().toISOString(),
             },
             theme: {
                 ...original?.theme,
                 primaryColor: '#FF5722',
-                testFlag: true
-            }
+                testFlag: true,
+            },
         };
 
         // PASSO 3: Salvar modificações
@@ -149,14 +149,14 @@ describe('Integration: Template Edit → Save → Reload Flow', () => {
             metadata: {
                 id: 'step-01',
                 name: 'Modificado',
-                description: 'Teste'
+                description: 'Teste',
             },
             sections: [
                 {
                     type: 'hero',
-                    blocks: []
-                }
-            ]
+                    blocks: [],
+                },
+            ],
         };
 
         await TemplateEditorService.saveStepChanges('step-01', modified);
@@ -195,9 +195,9 @@ describe('Integration: Template Edit → Save → Reload Flow', () => {
                 metadata: {
                     id: stepId,
                     name: `${stepId} - Editado`,
-                    description: 'Teste múltiplas edições'
+                    description: 'Teste múltiplas edições',
                 },
-                sections: []
+                sections: [],
             };
 
             const result = await TemplateEditorService.saveStepChanges(stepId, modified);
@@ -232,9 +232,9 @@ describe('Integration: Template Edit → Save → Reload Flow', () => {
             metadata: {
                 id: 'step-01',
                 name: 'Teste Storage',
-                description: 'x'.repeat(1000) // Adicionar dados
+                description: 'x'.repeat(1000), // Adicionar dados
             },
-            sections: []
+            sections: [],
         };
 
         await TemplateEditorService.saveStepChanges('step-01', modified);
@@ -284,11 +284,11 @@ describe('Integration: Fallback System', () => {
                 'step-01': {
                     metadata: {
                         id: 'step-01',
-                        name: 'CUSTOM LOCAL DATA'
+                        name: 'CUSTOM LOCAL DATA',
                     },
-                    sections: []
-                }
-            }
+                    sections: [],
+                },
+            },
         };
 
         localStorage.setItem('quiz-master-template-v3', JSON.stringify(customData));

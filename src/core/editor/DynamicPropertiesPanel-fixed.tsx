@@ -9,12 +9,12 @@ type PanelTab = 'step' | 'global' | 'style' | 'publish';
 export const DynamicPropertiesPanel: React.FC = () => {
     const {
         schema,
-        isLoading: schemaLoading
+        isLoading: schemaLoading,
     } = useHeadlessEditor();
 
     const {
         state: builderState,
-        actions: builderActions
+        actions: builderActions,
     } = usePureBuilder();
 
     const [activeTab, setActiveTab] = useState<PanelTab>('step');
@@ -60,8 +60,8 @@ export const DynamicPropertiesPanel: React.FC = () => {
         settings: {
             showProgress: true,
             showBackButton: true,
-            allowSkip: false
-        }
+            allowSkip: false,
+        },
     };
 
     // 🔧 DEFININDO handleStepUpdate que estava faltando
@@ -87,7 +87,7 @@ export const DynamicPropertiesPanel: React.FC = () => {
                         { id: 'step', label: 'Etapa', icon: '📝' },
                         { id: 'global', label: 'Global', icon: '🌍' },
                         { id: 'style', label: 'Estilo', icon: '🎨' },
-                        { id: 'publish', label: 'Publicar', icon: '🚀' }
+                        { id: 'publish', label: 'Publicar', icon: '🚀' },
                     ] as const).map(tab => (
                         <button
                             key={tab.id}
@@ -176,7 +176,7 @@ const StepPropertiesPanel: React.FC<{
     updateProperty,
     addBlock,
     removeBlock,
-    selectBlock
+    selectBlock,
 }) => {
         return (
             <div className="p-4 space-y-6">

@@ -7,7 +7,7 @@ import * as useQuizStateModule from '@/hooks/useQuizState';
 // Mock Helmet para evitar necessidade de provider
 vi.mock('react-helmet-async', () => ({
     Helmet: ({ children }: any) => <>{children}</>,
-    HelmetProvider: ({ children }: any) => <>{children}</>
+    HelmetProvider: ({ children }: any) => <>{children}</>,
 }));
 
 // Mock UnifiedStepRenderer para simular step de oferta (step-21)
@@ -43,8 +43,8 @@ describe('Rota /quiz-estilo - step-21 oferta personalizada para Maria', () => {
                     resultStyle: 'Elegante',
                     secondaryStyles: ['Natural'],
                     strategicAnswers: {
-                        [strategicQuestion]: strategicAnswerId
-                    }
+                        [strategicQuestion]: strategicAnswerId,
+                    },
                 },
                 answers: {},
             },
@@ -55,9 +55,9 @@ describe('Rota /quiz-estilo - step-21 oferta personalizada para Maria', () => {
                         title: '{userName}, encontramos a solução para **combinar as suas peças com confiança!**',
                         description: 'Chega de incertezas. Liberamos uma oferta especial que vai te guiar passo a passo para criar looks harmoniosos e incríveis, usando o que você já tem.',
                         buttonText: 'Quero aprender a combinar as minhas peças agora!',
-                        testimonial: { quote: 'Ok', author: 'Tester' }
-                    }
-                }
+                        testimonial: { quote: 'Ok', author: 'Tester' },
+                    },
+                },
             },
             progress: 100,
             nextStep: vi.fn(),
@@ -70,7 +70,7 @@ describe('Rota /quiz-estilo - step-21 oferta personalizada para Maria', () => {
             answers: {},
             strategicAnswers: { [strategicQuestion]: strategicAnswerId },
             resultStyle: 'Elegante',
-            secondaryStyles: ['Natural']
+            secondaryStyles: ['Natural'],
         } as any);
 
         render(<QuizEstiloPessoalPage />);

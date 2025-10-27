@@ -22,7 +22,7 @@ export const useInlineBlock = (
   isSelected?: boolean,
   onClick?: () => void,
   onPropertyChange?: (key: string, value: any) => void,
-  className?: string
+  className?: string,
 ): UseInlineBlockReturn => {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -40,7 +40,7 @@ export const useInlineBlock = (
         onPropertyChange(key, value);
       }
     },
-    [onPropertyChange]
+    [onPropertyChange],
   );
 
   const properties = block?.properties || {};

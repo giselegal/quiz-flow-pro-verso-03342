@@ -27,26 +27,26 @@ const CHUNK_MAP: Record<ChunkRange, ChunkInfo> = {
     range: 'critical',
     stepRange: [1, 5],
     priority: 'high',
-    preloadAdjacent: true
+    preloadAdjacent: true,
   },
   questions: {
     range: 'questions',
     stepRange: [6, 11],
     priority: 'medium',
-    preloadAdjacent: true
+    preloadAdjacent: true,
   },
   strategic: {
     range: 'strategic',
     stepRange: [12, 18],
     priority: 'medium',
-    preloadAdjacent: true
+    preloadAdjacent: true,
   },
   conversion: {
     range: 'conversion',
     stepRange: [19, 21],
     priority: 'high',
-    preloadAdjacent: false
-  }
+    preloadAdjacent: false,
+  },
 };
 
 /**
@@ -116,7 +116,7 @@ export function getChunkStats(): Record<ChunkRange, { steps: number; loaded: boo
     critical: { steps: 5, loaded: true },
     questions: { steps: 6, loaded: false },
     strategic: { steps: 7, loaded: false },
-    conversion: { steps: 3, loaded: false }
+    conversion: { steps: 3, loaded: false },
   };
 }
 

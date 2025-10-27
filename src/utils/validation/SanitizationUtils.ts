@@ -113,7 +113,7 @@ export function sanitizeUrl(url: string): string {
     // Block dangerous protocols
     const dangerousProtocols = [
         'javascript:', 'data:', 'vbscript:', 'file:', 'ftp:',
-        'jar:', 'chrome:', 'chrome-extension:', 'moz-extension:'
+        'jar:', 'chrome:', 'chrome-extension:', 'moz-extension:',
     ];
 
     const lowerUrl = trimmedUrl.toLowerCase();
@@ -125,7 +125,7 @@ export function sanitizeUrl(url: string): string {
     // Allow only safe protocols
     const safeProtocols = ['http://', 'https://', '/', './', '../', 'mailto:', 'tel:'];
     const isSafeProtocol = safeProtocols.some(protocol =>
-        lowerUrl.startsWith(protocol) || !lowerUrl.includes(':')
+        lowerUrl.startsWith(protocol) || !lowerUrl.includes(':'),
     );
 
     if (!isSafeProtocol) {
@@ -179,7 +179,7 @@ export function sanitizeText(text: string, options: {
     const {
         maxLength = 10000,
         allowNewlines = true,
-        allowSpecialChars = true
+        allowSpecialChars = true,
     } = options;
 
     let sanitized = text
@@ -231,13 +231,13 @@ export function sanitizeNumber(
         max?: number;
         allowFloat?: boolean;
         allowNegative?: boolean;
-    } = {}
+    } = {},
 ): number | null {
     const {
         min = Number.MIN_SAFE_INTEGER,
         max = Number.MAX_SAFE_INTEGER,
         allowFloat = true,
-        allowNegative = true
+        allowNegative = true,
     } = options;
 
     // Convert to number
@@ -285,7 +285,7 @@ export function sanitizeObject(
         maxDepth?: number;
         allowedKeys?: string[];
         sanitizers?: Record<string, (value: any) => any>;
-    } = {}
+    } = {},
 ): any {
     const { maxDepth = 10, allowedKeys, sanitizers = {} } = options;
 
@@ -357,7 +357,7 @@ export function isValidColor(color: string): boolean {
     // CSS named colors (basic set)
     const namedColors = [
         'transparent', 'black', 'white', 'red', 'green', 'blue', 'yellow',
-        'purple', 'orange', 'pink', 'gray', 'grey', 'brown', 'cyan', 'magenta'
+        'purple', 'orange', 'pink', 'gray', 'grey', 'brown', 'cyan', 'magenta',
     ];
 
     return namedColors.includes(color.toLowerCase());

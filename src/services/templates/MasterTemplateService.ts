@@ -94,7 +94,7 @@ export class MasterTemplateService {
       ...template,
       id: `template_${Date.now()}`,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
   }
 

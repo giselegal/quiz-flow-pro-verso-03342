@@ -170,7 +170,7 @@ export class EditorService extends BaseCanonicalService {
     hoveredBlockId: null,
     isModified: false,
     lastSaved: null,
-    collaborators: []
+    collaborators: [],
   };
   
   // Blocks registry
@@ -198,7 +198,7 @@ export class EditorService extends BaseCanonicalService {
     this.autoSaveOptions = options.autoSave || {
       enabled: true,
       interval: 30000, // 30 seconds
-      debounce: 2000 // 2 seconds
+      debounce: 2000, // 2 seconds
     };
     this.enableCollaboration = options.enableCollaboration ?? false;
     this.maxBlocks = options.maxBlocks || 1000;
@@ -297,7 +297,7 @@ export class EditorService extends BaseCanonicalService {
       this.emitChange({
         type: 'state',
         changes: { mode: { old: oldMode, new: mode } },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('Editor mode changed:', mode);
@@ -306,7 +306,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Set mode failed')
+        error: error instanceof Error ? error : new Error('Set mode failed'),
       };
     }
   }
@@ -319,7 +319,7 @@ export class EditorService extends BaseCanonicalService {
       if (blockId && !this.blocks.has(blockId)) {
         return {
           success: false,
-          error: new Error(`Block ${blockId} not found`)
+          error: new Error(`Block ${blockId} not found`),
         };
       }
 
@@ -329,7 +329,7 @@ export class EditorService extends BaseCanonicalService {
         type: 'state',
         blockId: blockId || undefined,
         changes: { selectedBlockId: blockId },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       return { success: true, data: undefined };
@@ -337,7 +337,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Select block failed')
+        error: error instanceof Error ? error : new Error('Select block failed'),
       };
     }
   }
@@ -353,7 +353,7 @@ export class EditorService extends BaseCanonicalService {
         type: 'state',
         blockId: blockId || undefined,
         changes: { focusedBlockId: blockId },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       return { success: true, data: undefined };
@@ -361,7 +361,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Focus block failed')
+        error: error instanceof Error ? error : new Error('Focus block failed'),
       };
     }
   }
@@ -377,7 +377,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Mark modified failed')
+        error: error instanceof Error ? error : new Error('Mark modified failed'),
       };
     }
   }
@@ -394,7 +394,7 @@ export class EditorService extends BaseCanonicalService {
       if (this.blocks.size >= this.maxBlocks) {
         return {
           success: false,
-          error: new Error(`Maximum blocks limit (${this.maxBlocks}) reached`)
+          error: new Error(`Maximum blocks limit (${this.maxBlocks}) reached`),
         };
       }
 
@@ -403,8 +403,8 @@ export class EditorService extends BaseCanonicalService {
         id: block.id || this.generateBlockId(),
         layout: {
           order: block.layout?.order ?? this.blocks.size,
-          ...block.layout
-        }
+          ...block.layout,
+        },
       };
 
       this.blocks.set(newBlock.id, newBlock);
@@ -414,7 +414,7 @@ export class EditorService extends BaseCanonicalService {
         type: 'block',
         blockId: newBlock.id,
         changes: { operation: 'create', block: newBlock },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('Block created:', newBlock.id, newBlock.type);
@@ -424,7 +424,7 @@ export class EditorService extends BaseCanonicalService {
       this.error('Create block error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Create block failed')
+        error: error instanceof Error ? error : new Error('Create block failed'),
       };
     }
   }
@@ -439,7 +439,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get block failed')
+        error: error instanceof Error ? error : new Error('Get block failed'),
       };
     }
   }
@@ -455,7 +455,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Get blocks failed')
+        error: error instanceof Error ? error : new Error('Get blocks failed'),
       };
     }
   }
@@ -470,14 +470,14 @@ export class EditorService extends BaseCanonicalService {
       if (!block) {
         return {
           success: false,
-          error: new Error(`Block ${blockId} not found`)
+          error: new Error(`Block ${blockId} not found`),
         };
       }
 
       const updatedBlock: Block = {
         ...block,
         ...updates,
-        id: blockId // Prevent ID change
+        id: blockId, // Prevent ID change
       };
 
       this.blocks.set(blockId, updatedBlock);
@@ -487,7 +487,7 @@ export class EditorService extends BaseCanonicalService {
         type: 'block',
         blockId,
         changes: { operation: 'update', updates },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('Block updated:', blockId);
@@ -496,7 +496,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Update block failed')
+        error: error instanceof Error ? error : new Error('Update block failed'),
       };
     }
   }
@@ -511,7 +511,7 @@ export class EditorService extends BaseCanonicalService {
       if (!block) {
         return {
           success: false,
-          error: new Error(`Block ${blockId} not found`)
+          error: new Error(`Block ${blockId} not found`),
         };
       }
 
@@ -527,7 +527,7 @@ export class EditorService extends BaseCanonicalService {
         type: 'block',
         blockId,
         changes: { operation: 'delete' },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('Block deleted:', blockId);
@@ -536,7 +536,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Delete block failed')
+        error: error instanceof Error ? error : new Error('Delete block failed'),
       };
     }
   }
@@ -551,13 +551,13 @@ export class EditorService extends BaseCanonicalService {
       if (!block) {
         return {
           success: false,
-          error: new Error(`Block ${blockId} not found`)
+          error: new Error(`Block ${blockId} not found`),
         };
       }
 
       block.layout = {
         ...block.layout,
-        order: newOrder
+        order: newOrder,
       };
 
       this.blocks.set(blockId, block);
@@ -567,7 +567,7 @@ export class EditorService extends BaseCanonicalService {
         type: 'block',
         blockId,
         changes: { operation: 'move', newOrder },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('Block moved:', blockId, newOrder);
@@ -576,7 +576,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Move block failed')
+        error: error instanceof Error ? error : new Error('Move block failed'),
       };
     }
   }
@@ -591,7 +591,7 @@ export class EditorService extends BaseCanonicalService {
       if (!block) {
         return {
           success: false,
-          error: new Error(`Block ${blockId} not found`)
+          error: new Error(`Block ${blockId} not found`),
         };
       }
 
@@ -600,8 +600,8 @@ export class EditorService extends BaseCanonicalService {
         id: this.generateBlockId(),
         layout: {
           ...block.layout,
-          order: (block.layout?.order || 0) + 1
-        }
+          order: (block.layout?.order || 0) + 1,
+        },
       };
 
       return this.createBlock(newBlock);
@@ -609,7 +609,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Duplicate block failed')
+        error: error instanceof Error ? error : new Error('Duplicate block failed'),
       };
     }
   }
@@ -628,7 +628,7 @@ export class EditorService extends BaseCanonicalService {
       if (!block) {
         return {
           success: false,
-          error: new Error(`Block ${update.blockId} not found`)
+          error: new Error(`Block ${update.blockId} not found`),
         };
       }
 
@@ -652,7 +652,7 @@ export class EditorService extends BaseCanonicalService {
         type: 'content',
         blockId: update.blockId,
         changes: { path: update.path, value: update.value },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('Content updated:', update.blockId, update.path);
@@ -661,7 +661,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Update content failed')
+        error: error instanceof Error ? error : new Error('Update content failed'),
       };
     }
   }
@@ -682,7 +682,7 @@ export class EditorService extends BaseCanonicalService {
         if (!block) {
           return {
             success: false,
-            error: new Error(`Block ${update.blockId} not found`)
+            error: new Error(`Block ${update.blockId} not found`),
           };
         }
 
@@ -704,7 +704,7 @@ export class EditorService extends BaseCanonicalService {
         type: 'style',
         blockId: update.blockId,
         changes: update.properties,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('Style updated:', update.blockId || 'global');
@@ -713,7 +713,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Update style failed')
+        error: error instanceof Error ? error : new Error('Update style failed'),
       };
     }
   }
@@ -739,14 +739,14 @@ export class EditorService extends BaseCanonicalService {
       if (!block) {
         return {
           success: false,
-          error: new Error(`Block ${update.blockId} not found`)
+          error: new Error(`Block ${update.blockId} not found`),
         };
       }
 
       block.layout = { 
         order: block.layout?.order ?? 0,
         ...block.layout, 
-        ...update.layout 
+        ...update.layout, 
       };
       this.blocks.set(update.blockId, block);
       this.markModified();
@@ -755,7 +755,7 @@ export class EditorService extends BaseCanonicalService {
         type: 'layout',
         blockId: update.blockId,
         changes: update.layout,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       this.log('Layout updated:', update.blockId);
@@ -764,7 +764,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Update layout failed')
+        error: error instanceof Error ? error : new Error('Update layout failed'),
       };
     }
   }
@@ -788,7 +788,7 @@ export class EditorService extends BaseCanonicalService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error : new Error('Save failed')
+        error: error instanceof Error ? error : new Error('Save failed'),
       };
     }
   }
@@ -823,7 +823,7 @@ export class EditorService extends BaseCanonicalService {
     get: this.getState.bind(this),
     setMode: this.setMode.bind(this),
     selectBlock: this.selectBlock.bind(this),
-    focusBlock: this.focusBlock.bind(this)
+    focusBlock: this.focusBlock.bind(this),
   };
 
   /**
@@ -836,14 +836,14 @@ export class EditorService extends BaseCanonicalService {
     update: this.updateBlock.bind(this),
     delete: this.deleteBlock.bind(this),
     move: this.moveBlock.bind(this),
-    duplicate: this.duplicateBlock.bind(this)
+    duplicate: this.duplicateBlock.bind(this),
   };
 
   /**
    * Content API
    */
   readonly content = {
-    update: this.updateContent.bind(this)
+    update: this.updateContent.bind(this),
   };
 
   /**
@@ -851,14 +851,14 @@ export class EditorService extends BaseCanonicalService {
    */
   readonly style = {
     update: this.updateStyle.bind(this),
-    getGlobal: this.getGlobalStyles.bind(this)
+    getGlobal: this.getGlobalStyles.bind(this),
   };
 
   /**
    * Layout API
    */
   readonly layout = {
-    update: this.updateLayout.bind(this)
+    update: this.updateLayout.bind(this),
   };
 
   // ============================================================================
@@ -928,7 +928,7 @@ export class EditorService extends BaseCanonicalService {
       const data = {
         blocks: Array.from(this.blocks.values()),
         globalStyles: this.globalStyles,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       localStorage.setItem(this.storageKey, JSON.stringify(data));

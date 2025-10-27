@@ -219,7 +219,7 @@ export const getDefaultTheme = (): FunnelTheme => {
  */
 export const applyThemeToBlock = (
   blockProperties: Record<string, any>,
-  theme: FunnelTheme
+  theme: FunnelTheme,
 ): Record<string, any> => {
   return {
     ...blockProperties,

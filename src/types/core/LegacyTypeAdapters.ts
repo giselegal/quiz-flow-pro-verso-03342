@@ -30,14 +30,14 @@ export type {
     BlockDefinition,
     TypedBlockComponentProps,
     EditableBlockComponentProps,
-    QuizBlockComponentProps
+    QuizBlockComponentProps,
 } from './BlockInterfaces';
 
 export {
     asBlockComponent,
     createBlockComponent,
     isQuizBlockProps,
-    isEditableBlockProps
+    isEditableBlockProps,
 } from './BlockInterfaces';
 
 // =============================================
@@ -56,7 +56,7 @@ export type {
     ValidationContext,
     ValidationPerformance,
     ValidationOptions,
-    ValidationRule
+    ValidationRule,
 } from './ValidationTypes';
 
 export {
@@ -65,7 +65,7 @@ export {
     createErrorResult,
     combineValidationResults,
     convertLegacyErrors,
-    hasDetailedErrors
+    hasDetailedErrors,
 } from './ValidationTypes';
 
 // =============================================
@@ -73,10 +73,10 @@ export {
 // =============================================
 
 import {
-    UnifiedBlockComponentProps
+    UnifiedBlockComponentProps,
 } from './BlockInterfaces';
 import {
-    UnifiedValidationResult
+    UnifiedValidationResult,
 } from './ValidationTypes';
 
 /**
@@ -84,7 +84,7 @@ import {
  * Converte props do formato antigo para o novo formato unificado
  */
 export function migrateLegacyBlockProps(
-    legacyProps: any
+    legacyProps: any,
 ): UnifiedBlockComponentProps {
     // Se já está no formato novo, retorna como está
     if (isNewFormatProps(legacyProps)) {
@@ -121,7 +121,7 @@ function isNewFormatProps(props: any): props is UnifiedBlockComponentProps {
  * Converte results antigos para novo formato
  */
 export function migrateLegacyValidationResult(
-    legacyResult: any
+    legacyResult: any,
 ): UnifiedValidationResult {
     // Se já está no formato novo, retorna como está
     if (isNewValidationResult(legacyResult)) {
@@ -173,7 +173,7 @@ function isNewValidationResult(result: any): result is UnifiedValidationResult {
  * HOC to wrap legacy components with new prop format
  */
 export function withUnifiedProps<T extends Record<string, any>>(
-    Component: React.ComponentType<T>
+    Component: React.ComponentType<T>,
 ): React.ComponentType<UnifiedBlockComponentProps> {
     return function UnifiedPropsWrapper(props: UnifiedBlockComponentProps) {
         const legacyProps = convertToLegacyProps(props);
@@ -210,8 +210,8 @@ export function checkMigrationReadiness(): {
         recommendations: [
             'Update import statements to use unified types',
             'Replace legacy prop patterns with unified interface',
-            'Update validation calls to use unified ValidationResult'
-        ]
+            'Update validation calls to use unified ValidationResult',
+        ],
     };
 }
 
@@ -224,7 +224,7 @@ export function getMigrationStepsForFile(filePath: string): string[] {
         `Update imports in ${filePath}`,
         'Replace BlockComponentProps with UnifiedBlockComponentProps',
         'Update ValidationResult usage',
-        'Test component functionality'
+        'Test component functionality',
     ];
 }
 

@@ -96,7 +96,7 @@ class EditorFunnelConsolidatedService {
         this.cache.set(key, {
             data,
             timestamp: Date.now(),
-            ttl
+            ttl,
         });
     }
 
@@ -140,7 +140,7 @@ class EditorFunnelConsolidatedService {
                     metadata: unifiedTemplate.metadata || {},
                     category: unifiedTemplate.category || 'default',
                     created_at: unifiedTemplate.created_at || new Date().toISOString(),
-                    updated_at: unifiedTemplate.updated_at || new Date().toISOString()
+                    updated_at: unifiedTemplate.updated_at || new Date().toISOString(),
                 };
 
                 // Cache result
@@ -180,7 +180,7 @@ class EditorFunnelConsolidatedService {
                 // Load predefined templates from unified service (20 steps total)
                 const templateIds = [
                     'step-1', 'step-2', 'step-3', 'step-4', 'step-5',
-                    'step-12', 'step-19', 'step-20'
+                    'step-12', 'step-19', 'step-20',
                 ];
 
                 for (const templateId of templateIds) {
@@ -249,7 +249,7 @@ class EditorFunnelConsolidatedService {
                 configuration: supabaseFunnel.settings as any || {},
                 steps: await this.loadFunnelSteps(funnelId),
                 created_at: supabaseFunnel.created_at || new Date().toISOString(),
-                updated_at: supabaseFunnel.updated_at || new Date().toISOString()
+                updated_at: supabaseFunnel.updated_at || new Date().toISOString(),
             };
 
             // Cache result
@@ -277,7 +277,7 @@ class EditorFunnelConsolidatedService {
         try {
             const response = await supabaseApiClient.getFunnels({
                 status: options?.status,
-                limit: options?.limit
+                limit: options?.limit,
             });
 
             if (response.status !== 'success' || !response.data) {
@@ -297,7 +297,7 @@ class EditorFunnelConsolidatedService {
                     configuration: supabaseFunnel.settings as any || {},
                     steps: [], // Load on demand
                     created_at: supabaseFunnel.created_at || new Date().toISOString(),
-                    updated_at: supabaseFunnel.updated_at || new Date().toISOString()
+                    updated_at: supabaseFunnel.updated_at || new Date().toISOString(),
                 };
                 funnels.push(consolidatedFunnel);
             }
@@ -330,7 +330,7 @@ class EditorFunnelConsolidatedService {
                     name: funnelData.name,
                     description: funnelData.description || '',
                     settings: funnelData.configuration || {},
-                    is_published: false
+                    is_published: false,
                 })
                 .select()
                 .single();
@@ -352,7 +352,7 @@ class EditorFunnelConsolidatedService {
                 configuration: data.settings as any || {},
                 steps: [],
                 created_at: data.created_at || new Date().toISOString(),
-                updated_at: data.updated_at || new Date().toISOString()
+                updated_at: data.updated_at || new Date().toISOString(),
             };
 
             console.log(`✅ Created funnel: ${data.id}`);
@@ -377,7 +377,7 @@ class EditorFunnelConsolidatedService {
             current_step: 1,
             changes: [],
             auto_save_enabled: true,
-            last_saved: new Date()
+            last_saved: new Date(),
         };
 
         this.editorSessions.set(sessionId, session);
@@ -419,7 +419,7 @@ class EditorFunnelConsolidatedService {
             content: block.content || {},
             style: block.style || {},
             order: block.order || index,
-            step: block.step
+            step: block.step,
         }));
     }
 
@@ -432,8 +432,8 @@ class EditorFunnelConsolidatedService {
                     step_number: 1,
                     name: 'Initial Step',
                     blocks: [],
-                    configuration: {}
-                }
+                    configuration: {},
+                },
             ];
         } catch (error) {
             console.error('Error loading funnel steps:', error);
@@ -454,7 +454,7 @@ class EditorFunnelConsolidatedService {
         const services = {
             supabase: false,
             unified_template: false,
-            cache: true
+            cache: true,
         };
 
         try {
@@ -489,21 +489,21 @@ class EditorFunnelConsolidatedService {
             status,
             services,
             cache_size: this.cache.size,
-            active_sessions: this.editorSessions.size
+            active_sessions: this.editorSessions.size,
         };
     }
 
     getCacheStats(): { size: number; keys: string[] } {
         return {
             size: this.cache.size,
-            keys: Array.from(this.cache.keys())
+            keys: Array.from(this.cache.keys()),
         };
     }
 
     getActiveSessionsStats(): { count: number; sessions: string[] } {
         return {
             count: this.editorSessions.size,
-            sessions: Array.from(this.editorSessions.keys())
+            sessions: Array.from(this.editorSessions.keys()),
         };
     }
 

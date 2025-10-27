@@ -99,7 +99,7 @@ export const useFunnelComponents = ({
   const addComponent = useCallback(
     async (componentTypeKey: string, position?: number): Promise<ComponentInstance | null> => {
       console.log(
-        `➕ Adicionando componente: ${componentTypeKey} na posição ${position || 'final'}`
+        `➕ Adicionando componente: ${componentTypeKey} na posição ${position || 'final'}`,
       );
 
       if (!isSupabaseEnabled) {
@@ -168,7 +168,7 @@ export const useFunnelComponents = ({
         return null;
       }
     },
-    [funnelId, stepNumber, components.length, isSupabaseEnabled, toast]
+    [funnelId, stepNumber, components.length, isSupabaseEnabled, toast],
   );
 
   /**
@@ -177,7 +177,7 @@ export const useFunnelComponents = ({
   const updateComponent = useCallback(
     async (
       id: string,
-      updates: Partial<UpdateComponentInput>
+      updates: Partial<UpdateComponentInput>,
     ): Promise<ComponentInstance | null> => {
       console.log(`🔄 Atualizando componente: ${id}`);
 
@@ -209,7 +209,7 @@ export const useFunnelComponents = ({
         return null;
       }
     },
-    [isSupabaseEnabled, toast, components]
+    [isSupabaseEnabled, toast, components],
   );
 
   /**
@@ -251,7 +251,7 @@ export const useFunnelComponents = ({
         return false;
       }
     },
-    [isSupabaseEnabled, toast]
+    [isSupabaseEnabled, toast],
   );
 
   /**
@@ -322,7 +322,7 @@ export const useFunnelComponents = ({
         return false;
       }
     },
-    [funnelId, stepNumber, components, isSupabaseEnabled, toast]
+    [funnelId, stepNumber, components, isSupabaseEnabled, toast],
   );
 
   /**

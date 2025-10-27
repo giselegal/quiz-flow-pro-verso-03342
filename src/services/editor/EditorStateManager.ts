@@ -36,7 +36,7 @@ export class EditorStateManager {
   constructor(
     updateState: StateUpdateCallback,
     history: EditorHistoryService,
-    loader: TemplateLoader
+    loader: TemplateLoader,
   ) {
     this.updateState = updateState;
     this.history = history;
@@ -51,15 +51,15 @@ export class EditorStateManager {
       const currentBlocks = prev.stepBlocks[stepKey] || [];
       const newBlock = {
         ...block,
-        order: currentBlocks.length
+        order: currentBlocks.length,
       };
       
       const newState = {
         ...prev,
         stepBlocks: {
           ...prev.stepBlocks,
-          [stepKey]: [...currentBlocks, newBlock]
-        }
+          [stepKey]: [...currentBlocks, newBlock],
+        },
       };
       
       this.history.push(newState);
@@ -84,8 +84,8 @@ export class EditorStateManager {
         ...prev,
         stepBlocks: {
           ...prev.stepBlocks,
-          [stepKey]: reorderedBlocks
-        }
+          [stepKey]: reorderedBlocks,
+        },
       };
       
       this.history.push(newState);
@@ -107,9 +107,9 @@ export class EditorStateManager {
         ...prev,
         stepBlocks: {
           ...prev.stepBlocks,
-          [stepKey]: filteredBlocks
+          [stepKey]: filteredBlocks,
         },
-        selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId
+        selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId,
       };
       
       this.history.push(newState);
@@ -130,8 +130,8 @@ export class EditorStateManager {
         ...prev,
         stepBlocks: {
           ...prev.stepBlocks,
-          [stepKey]: reorderedBlocks
-        }
+          [stepKey]: reorderedBlocks,
+        },
       };
       
       this.history.push(newState);
@@ -145,22 +145,22 @@ export class EditorStateManager {
   async updateBlock(
     stepKey: string, 
     blockId: string, 
-    updates: Record<string, any>
+    updates: Record<string, any>,
   ): Promise<void> {
     this.updateState(prev => {
       const currentBlocks = prev.stepBlocks[stepKey] || [];
       const updatedBlocks = currentBlocks.map(block =>
         block.id === blockId
           ? { ...block, ...updates }
-          : block
+          : block,
       );
       
       const newState = {
         ...prev,
         stepBlocks: {
           ...prev.stepBlocks,
-          [stepKey]: updatedBlocks
-        }
+          [stepKey]: updatedBlocks,
+        },
       };
       
       this.history.push(newState);
@@ -173,7 +173,7 @@ export class EditorStateManager {
    */
   async ensureStepLoaded(
     step: number | string,
-    currentState: EditorState
+    currentState: EditorState,
   ): Promise<Partial<EditorState>> {
     const normalizedKey = this.normalizeStepKey(step);
     const existingBlocks = currentState.stepBlocks[normalizedKey];
@@ -190,12 +190,12 @@ export class EditorStateManager {
       return {
         stepBlocks: {
           ...currentState.stepBlocks,
-          [normalizedKey]: blocks
+          [normalizedKey]: blocks,
         },
         stepSources: {
           ...(currentState.stepSources || {}),
-          [normalizedKey]: source
-        }
+          [normalizedKey]: source,
+        },
       };
     } catch (error) {
       console.error(`❌ Erro ao carregar ${normalizedKey}:`, error);

@@ -24,7 +24,7 @@ export const useRateLimit = () => {
   const checkRateLimit = useCallback(async (
     endpoint: string,
     identifier?: string,
-    userId?: string
+    userId?: string,
   ): Promise<RateLimitCheck> => {
     try {
       setIsLoading(true);
@@ -38,8 +38,8 @@ export const useRateLimit = () => {
         body: {
           identifier: finalIdentifier,
           endpoint,
-          user_id: userId
-        }
+          user_id: userId,
+        },
       });
 
       if (error) {
@@ -73,7 +73,7 @@ export const useRateLimit = () => {
       }
 
       const { data, error } = await supabase.functions.invoke(
-        `rate-limiter/status?${params.toString()}`
+        `rate-limiter/status?${params.toString()}`,
       );
 
       if (error) throw error;
@@ -95,7 +95,7 @@ export const useRateLimit = () => {
       setError(null);
 
       const { data, error } = await supabase.functions.invoke('rate-limiter/reset', {
-        body: { identifier, endpoint }
+        body: { identifier, endpoint },
       });
 
       if (error) throw error;
@@ -139,7 +139,7 @@ export const useRateLimit = () => {
     operation: () => Promise<T>,
     endpoint: string,
     identifier?: string,
-    maxRetries = 3
+    maxRetries = 3,
   ): Promise<T> => {
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
@@ -149,7 +149,7 @@ export const useRateLimit = () => {
         if (!rateLimitCheck.allowed) {
           if (rateLimitCheck.retry_after) {
             await new Promise(resolve => 
-              setTimeout(resolve, (rateLimitCheck.retry_after || 60) * 1000)
+              setTimeout(resolve, (rateLimitCheck.retry_after || 60) * 1000),
             );
             continue;
           }
@@ -183,6 +183,6 @@ export const useRateLimit = () => {
 
     // Helpers
     waitForReset,
-    retryWithBackoff
+    retryWithBackoff,
   };
 };

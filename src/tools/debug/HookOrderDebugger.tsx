@@ -15,7 +15,7 @@ interface HookOrderDebuggerProps {
 export const HookOrderDebugger: React.FC<HookOrderDebuggerProps> = ({
   componentName,
   hookCalls,
-  enabled = process.env.NODE_ENV === 'development'
+  enabled = process.env.NODE_ENV === 'development',
 }) => {
   const renderCount = useRef(0);
   const previousHookCalls = useRef<string[]>([]);
@@ -37,7 +37,7 @@ export const HookOrderDebugger: React.FC<HookOrderDebuggerProps> = ({
           previousOrder,
           currentOrder,
           hookCalls,
-          previousHookCalls: previousHookCalls.current
+          previousHookCalls: previousHookCalls.current,
         });
         
         // Identificar qual hook mudou
@@ -62,7 +62,7 @@ export const HookOrderDebugger: React.FC<HookOrderDebuggerProps> = ({
     if (enabled) {
       console.log(`🔍 ${componentName} render #${renderCount.current}:`, {
         hookCount: hookCalls.length,
-        hooks: hookCalls
+        hooks: hookCalls,
       });
     }
   });

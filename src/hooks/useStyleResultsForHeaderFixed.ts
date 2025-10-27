@@ -21,7 +21,7 @@ interface StyleResultsForHeader {
 }
 
 export const useStyleResultsForHeader = (
-  results?: { primaryStyle?: StyleResult; secondaryStyles?: StyleResult[] }
+  results?: { primaryStyle?: StyleResult; secondaryStyles?: StyleResult[] },
 ): StyleResultsForHeader => {
   const [data, setData] = useState<StyleResultsForHeader>({
     primaryStyle: null,
@@ -59,7 +59,7 @@ export const useStyleResultsForHeader = (
       secondary: secondaryStyles.map(style => safeName(style.name || style.category)),
       all: [
         safeName(primaryStyle.name || primaryStyle.category),
-        ...secondaryStyles.map(style => safeName(style.name || style.category))
+        ...secondaryStyles.map(style => safeName(style.name || style.category)),
       ],
     };
 

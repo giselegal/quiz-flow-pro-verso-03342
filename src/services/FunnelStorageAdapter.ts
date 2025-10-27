@@ -69,7 +69,7 @@ class StorageInitializer {
                     success: migrationResult.success,
                     migratedFunnels: migrationResult.migratedFunnels,
                     migratedSettings: migrationResult.migratedSettings,
-                    duration: migrationResult.duration
+                    duration: migrationResult.duration,
                 });
             }
 
@@ -100,7 +100,7 @@ export const funnelLocalStore = {
                 name: f.name,
                 status: f.status,
                 url: f.url,
-                updatedAt: f.updatedAt
+                updatedAt: f.updatedAt,
             })) : [];
         } catch {
             return [];
@@ -117,7 +117,7 @@ export const funnelLocalStore = {
                 name: f.name,
                 status: f.status,
                 url: f.url,
-                updatedAt: f.updatedAt
+                updatedAt: f.updatedAt,
             }));
         } catch (error) {
             console.error('[StorageAdapter] Failed to list funnels async', error);
@@ -172,7 +172,7 @@ export const funnelLocalStore = {
                 name: funnel.name,
                 status: funnel.status,
                 url: funnel.url,
-                updatedAt: funnel.updatedAt
+                updatedAt: funnel.updatedAt,
             } : null;
         } catch (error) {
             console.error('[StorageAdapter] Failed to get funnel async', error);
@@ -234,7 +234,7 @@ export const funnelLocalStore = {
                     token: settings.token,
                     utm: settings.utm,
                     webhooks: settings.webhooks,
-                    custom: settings.custom
+                    custom: settings.custom,
                 };
             }
         } catch (error) {
@@ -256,7 +256,7 @@ export const funnelLocalStore = {
                 token: settings.token,
                 utm: settings.utm,
                 webhooks: settings.webhooks,
-                custom: settings.custom
+                custom: settings.custom,
             };
         } catch (error) {
             console.error('[StorageAdapter] Failed to get settings async', error);
@@ -284,7 +284,7 @@ export const funnelLocalStore = {
                 token: settings.token,
                 utm: settings.utm,
                 webhooks: settings.webhooks,
-                custom: settings.custom
+                custom: settings.custom,
             });
         } catch (error) {
             console.error('[StorageAdapter] Failed to save settings async', error);
@@ -360,12 +360,12 @@ export const funnelLocalStore = {
                 success: result.success,
                 message: result.success
                     ? `Migration completed: ${result.migratedFunnels} funnels, ${result.migratedSettings} settings`
-                    : `Migration failed: ${result.errors.join(', ')}`
+                    : `Migration failed: ${result.errors.join(', ')}`,
             };
         } catch (error) {
             return {
                 success: false,
-                message: `Migration error: ${error}`
+                message: `Migration error: ${error}`,
             };
         }
     },
@@ -374,7 +374,7 @@ export const funnelLocalStore = {
         if (confirmation !== 'RESET_ALL_FUNNEL_DATA') {
             return {
                 success: false,
-                message: 'Invalid confirmation. Use "RESET_ALL_FUNNEL_DATA" to confirm.'
+                message: 'Invalid confirmation. Use "RESET_ALL_FUNNEL_DATA" to confirm.',
             };
         }
 
@@ -382,12 +382,12 @@ export const funnelLocalStore = {
             await funnelDataMigration.resetAllData(confirmation);
             return {
                 success: true,
-                message: 'All funnel data has been reset successfully.'
+                message: 'All funnel data has been reset successfully.',
             };
         } catch (error) {
             return {
                 success: false,
-                message: `Reset failed: ${error}`
+                message: `Reset failed: ${error}`,
             };
         }
     },
@@ -398,12 +398,12 @@ export const funnelLocalStore = {
             return {
                 success: true,
                 backup,
-                message: 'Backup created successfully'
+                message: 'Backup created successfully',
             };
         } catch (error) {
             return {
                 success: false,
-                message: `Backup failed: ${error}`
+                message: `Backup failed: ${error}`,
             };
         }
     },
@@ -415,13 +415,13 @@ export const funnelLocalStore = {
                 success: result.success,
                 message: result.success
                     ? `Restore completed: ${result.migratedFunnels} funnels, ${result.migratedSettings} settings`
-                    : `Restore failed: ${result.errors.join(', ')}`
+                    : `Restore failed: ${result.errors.join(', ')}`,
             };
         } catch (error) {
             return {
                 success: false,
-                message: `Restore error: ${error}`
+                message: `Restore error: ${error}`,
             };
         }
-    }
+    },
 };

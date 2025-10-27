@@ -31,11 +31,11 @@ const mockLogger: Logger = {
     info: (message: string, data?: any) => console.log(`[INFO] ${message}`, data),
     warn: (message: string, data?: any) => console.warn(`[WARN] ${message}`, data),
     error: (message: string, data?: any) => console.error(`[ERROR] ${message}`, data),
-    performance: (name: string, duration: number) => console.log(`[PERF] ${name}: ${duration}ms`)
+    performance: (name: string, duration: number) => console.log(`[PERF] ${name}: ${duration}ms`),
 };
 
 const unifiedIDGenerator: UnifiedIDGenerator = {
-    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    generateID: (type: string, _context?: any) => `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
 };
 
 const mockCacheManager = {
@@ -43,8 +43,8 @@ const mockCacheManager = {
         get: (_key: string) => null,
         set: (_key: string, _value: T) => { },
         has: (_key: string) => false,
-        delete: (_key: string) => false
-    })
+        delete: (_key: string) => false,
+    }),
 };
 
 // ✅ INTERFACES DE ANALYTICS
@@ -198,7 +198,7 @@ export class RealAnalyticsEngine {
         enableRealTime: true,
         enableBehaviorTracking: true,
         enablePerformanceMonitoring: true,
-        sampleRate: 1.0 // 100% dos eventos
+        sampleRate: 1.0, // 100% dos eventos
     };
 
     // Timers e workers
@@ -253,7 +253,7 @@ export class RealAnalyticsEngine {
             userId?: string;
             funnelId?: string;
             stepId?: string;
-        }
+        },
     ): string {
 
         // Sample rate check
@@ -274,7 +274,7 @@ export class RealAnalyticsEngine {
             label: properties?.label,
             value: properties?.value,
             metadata: properties?.metadata || {},
-            context: this.captureEventContext()
+            context: this.captureEventContext(),
         };
 
         // Armazenar evento
@@ -297,7 +297,7 @@ export class RealAnalyticsEngine {
             eventId: event.id,
             type: eventType,
             category,
-            action
+            action,
         });
 
         return event.id;
@@ -312,8 +312,8 @@ export class RealAnalyticsEngine {
             metadata: {
                 sessionData,
                 timestamp: new Date(),
-                isNewSession: true
-            }
+                isNewSession: true,
+            },
         });
     }
 
@@ -323,15 +323,15 @@ export class RealAnalyticsEngine {
     trackStepInteraction(
         stepId: string,
         action: 'view' | 'start' | 'complete' | 'abandon',
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ): void {
         this.track('step_completion', 'step', action, {
             stepId,
             metadata: {
                 ...metadata,
                 stepId,
-                timestamp: new Date()
-            }
+                timestamp: new Date(),
+            },
         });
     }
 
@@ -341,7 +341,7 @@ export class RealAnalyticsEngine {
     trackConversion(
         funnelId: string,
         value?: number,
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ): void {
         this.track('conversion', 'funnel', 'complete', {
             funnelId,
@@ -349,8 +349,8 @@ export class RealAnalyticsEngine {
             metadata: {
                 ...metadata,
                 funnelId,
-                conversionTimestamp: new Date()
-            }
+                conversionTimestamp: new Date(),
+            },
         });
     }
 
@@ -363,7 +363,7 @@ export class RealAnalyticsEngine {
             component?: string;
             action?: string;
             metadata?: Record<string, any>;
-        }
+        },
     ): void {
         this.track('error', 'system', 'error', {
             metadata: {
@@ -371,8 +371,8 @@ export class RealAnalyticsEngine {
                 errorStack: error.stack,
                 errorName: error.name,
                 context: context || {},
-                timestamp: new Date()
-            }
+                timestamp: new Date(),
+            },
         });
     }
 
@@ -382,7 +382,7 @@ export class RealAnalyticsEngine {
     trackPerformance(
         context: string,
         metrics: Partial<PerformanceMetrics['metrics']>,
-        breakdown?: Partial<PerformanceMetrics['breakdown']>
+        breakdown?: Partial<PerformanceMetrics['breakdown']>,
     ): void {
         const performanceData: PerformanceMetrics = {
             id: unifiedIDGenerator.generateID('performance'),
@@ -399,14 +399,14 @@ export class RealAnalyticsEngine {
                 memoryUsage: 0,
                 bundleSize: 0,
                 apiResponseTime: 0,
-                ...metrics
+                ...metrics,
             },
             breakdown: {
                 components: [],
                 apis: [],
                 resources: [],
-                ...breakdown
-            }
+                ...breakdown,
+            },
         };
 
         this.performanceData.push(performanceData);
@@ -415,8 +415,8 @@ export class RealAnalyticsEngine {
             metadata: {
                 context,
                 metrics: performanceData.metrics,
-                performanceId: performanceData.id
-            }
+                performanceId: performanceData.id,
+            },
         });
     }
 
@@ -429,7 +429,7 @@ export class RealAnalyticsEngine {
         _config?: {
             trackingConfig?: Record<string, any>;
             goals?: Record<string, number>;
-        }
+        },
     ): string {
         const funnelId = unifiedIDGenerator.generateID('funnel');
 
@@ -444,14 +444,14 @@ export class RealAnalyticsEngine {
                 conversions: 0,
                 conversionRate: 0,
                 averageTime: 0,
-                dropoffRate: 0
+                dropoffRate: 0,
             })),
             totalUsers: 0,
             completedUsers: 0,
             conversionRate: 0,
             dropoffPoints: [],
             averageTime: 0,
-            valueGenerated: 0
+            valueGenerated: 0,
         };
 
         this.funnels.set(funnelId, funnel);
@@ -468,7 +468,7 @@ export class RealAnalyticsEngine {
         name: string,
         description: string,
         variants: string[],
-        allocation?: Record<string, number>
+        allocation?: Record<string, number>,
     ): string {
         const experimentId = unifiedIDGenerator.generateID('ab_test');
 
@@ -489,7 +489,7 @@ export class RealAnalyticsEngine {
                 users: 0,
                 conversions: 0,
                 conversionRate: 0,
-                confidence: 0
+                confidence: 0,
             })),
             allocation: allocation || defaultAllocation,
             metrics: {
@@ -497,11 +497,11 @@ export class RealAnalyticsEngine {
                 conversionCounts: {},
                 conversionRates: {},
                 statisticalSignificance: 0,
-                confidence: 0
+                confidence: 0,
             },
             startDate: new Date(),
             sampleSize: 1000, // default
-            significance: 0.95 // 95% confidence
+            significance: 0.95, // 95% confidence
         };
 
         this.abTests.set(experimentId, experiment);
@@ -534,8 +534,8 @@ export class RealAnalyticsEngine {
                     metadata: {
                         experimentId,
                         variantName,
-                        hash: normalizedHash
-                    }
+                        hash: normalizedHash,
+                    },
                 });
 
                 return variantName;
@@ -551,7 +551,7 @@ export class RealAnalyticsEngine {
     generateReport(
         type: 'overview' | 'funnel' | 'ab_test' | 'performance' | 'behavior',
         timeRange: { start: Date; end: Date },
-        filters?: Record<string, any>
+        filters?: Record<string, any>,
     ): AnalyticsReport {
 
         const events = this.filterEventsByTimeRange(this.events, timeRange);
@@ -594,7 +594,7 @@ export class RealAnalyticsEngine {
             topPages: this.calculateTopPages(recentEvents),
             errorRate: this.calculateErrorRate(recentEvents),
             averageLoadTime: this.calculateAverageLoadTime(recentEvents),
-            conversionRate: this.calculateConversionRate(recentEvents)
+            conversionRate: this.calculateConversionRate(recentEvents),
         };
     }
 
@@ -617,7 +617,7 @@ export class RealAnalyticsEngine {
             });
 
             this.performanceObserver.observe({
-                entryTypes: ['navigation', 'paint', 'largest-contentful-paint', 'first-input', 'layout-shift']
+                entryTypes: ['navigation', 'paint', 'largest-contentful-paint', 'first-input', 'layout-shift'],
             });
         }
     }
@@ -705,11 +705,11 @@ export class RealAnalyticsEngine {
                 userAgent: navigator.userAgent,
                 screenResolution: {
                     width: window.screen.width,
-                    height: window.screen.height
+                    height: window.screen.height,
                 },
                 viewportSize: {
                     width: window.innerWidth,
-                    height: window.innerHeight
+                    height: window.innerHeight,
                 },
                 deviceType: this.detectDeviceType(),
                 browser: this.detectBrowser(),
@@ -724,7 +724,7 @@ export class RealAnalyticsEngine {
                 isNewUser: this.isNewUser(),
                 loadTime: this.getPageLoadTime(),
                 renderTime: this.getRenderTime(),
-                memoryUsage: this.getMemoryUsage()
+                memoryUsage: this.getMemoryUsage(),
             };
         }
 
@@ -743,7 +743,7 @@ export class RealAnalyticsEngine {
             pageTitle: '',
             sessionDuration: 0,
             pageViews: 0,
-            isNewUser: true
+            isNewUser: true,
         };
     }
 

@@ -128,12 +128,12 @@ export class DynamicMasterJSONGenerator {
                 globalConfig,
                 themeConfig,
                 stepsConfig,
-                componentsConfig
+                componentsConfig,
             ] = await Promise.all([
                 this.generateGlobalConfig(funnelId),
                 this.generateThemeConfig(funnelId),
                 this.generateStepsConfig(funnelId),
-                this.generateComponentsConfig(funnelId)
+                this.generateComponentsConfig(funnelId),
             ]);
 
             // Montar JSON master
@@ -146,7 +146,7 @@ export class DynamicMasterJSONGenerator {
                     version: '3.0.0',
                     generatedAt: new Date().toISOString(),
                     source: 'dynamic-api',
-                    funnelId
+                    funnelId,
                 },
 
                 globalConfig: {
@@ -157,12 +157,12 @@ export class DynamicMasterJSONGenerator {
                     api: {
                         baseUrl: process.env.API_BASE_URL || '/api',
                         endpoints: this.generateAPIEndpoints(),
-                        realTimeSync: true
-                    }
+                        realTimeSync: true,
+                    },
                 },
 
                 steps: stepsConfig,
-                components: componentsConfig
+                components: componentsConfig,
             };
 
             // Cachear resultado
@@ -192,24 +192,24 @@ export class DynamicMasterJSONGenerator {
                     autoAdvanceSteps: globalConfig.autoAdvanceSteps || [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     manualAdvanceSteps: globalConfig.manualAdvanceSteps || [1, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                     autoAdvanceDelay: globalConfig.autoAdvanceDelay || 1500,
-                    allowBackNavigation: globalConfig.allowBackNavigation !== false
+                    allowBackNavigation: globalConfig.allowBackNavigation !== false,
                 },
 
                 navigation: {
                     showProgress: globalConfig.showProgress !== false,
                     showStepNumbers: globalConfig.showStepNumbers === true,
                     progressStyle: globalConfig.progressStyle || 'bar',
-                    enableKeyboardNavigation: globalConfig.enableKeyboardNavigation === true
+                    enableKeyboardNavigation: globalConfig.enableKeyboardNavigation === true,
                 },
 
                 validation: {
                     rules: {
                         intro: { type: 'input', required: true, minLength: 2 },
                         questions: { type: 'selection', required: true, requiredSelections: 3 },
-                        strategic: { type: 'selection', required: true, requiredSelections: 1 }
+                        strategic: { type: 'selection', required: true, requiredSelections: 1 },
                     },
-                    messages: globalConfig.validationMessages || {}
-                }
+                    messages: globalConfig.validationMessages || {},
+                },
             };
 
         } catch (error) {
@@ -233,28 +233,28 @@ export class DynamicMasterJSONGenerator {
                     accent: themeConfig.accentColor || '#aa6b5d',
                     background: themeConfig.backgroundColor || '#fefefe',
                     text: themeConfig.textColor || '#5b4135',
-                    progress: themeConfig.progressColor || '#deac6d'
+                    progress: themeConfig.progressColor || '#deac6d',
                 },
 
                 typography: {
                     fontFamily: themeConfig.fontFamily || 'Inter, sans-serif',
                     headingFont: themeConfig.headingFont || 'Playfair Display, serif',
                     fontSize: themeConfig.fontSize || '16px',
-                    lineHeight: themeConfig.lineHeight || '1.6'
+                    lineHeight: themeConfig.lineHeight || '1.6',
                 },
 
                 layout: {
                     maxWidth: themeConfig.maxWidth || 'max-w-6xl',
                     padding: themeConfig.padding || 'px-4 py-8',
                     borderRadius: themeConfig.borderRadius || '8px',
-                    spacing: themeConfig.spacing || '8px'
+                    spacing: themeConfig.spacing || '8px',
                 },
 
                 animations: {
                     transitionDuration: themeConfig.transitionDuration || '300ms',
                     easing: themeConfig.easing || 'ease-in-out',
-                    enableAnimations: themeConfig.enableAnimations !== false
-                }
+                    enableAnimations: themeConfig.enableAnimations !== false,
+                },
             };
 
         } catch (error) {
@@ -282,14 +282,14 @@ export class DynamicMasterJSONGenerator {
                         description: stepConfig.description || `Configuração da etapa ${stepNumber}`,
                         type: this.inferStepType(stepNumber),
                         category: 'quiz',
-                        stepNumber
+                        stepNumber,
                     },
 
                     behavior: {
                         autoAdvance: stepConfig.autoAdvance ?? this.getDefaultAutoAdvance(stepNumber),
                         autoAdvanceDelay: stepConfig.autoAdvanceDelay || 1500,
                         showProgress: stepConfig.showProgress ?? (stepNumber > 1),
-                        allowBack: stepConfig.allowBack ?? (stepNumber > 1 && stepNumber < 21)
+                        allowBack: stepConfig.allowBack ?? (stepNumber > 1 && stepNumber < 21),
                     },
 
                     validation: {
@@ -297,7 +297,7 @@ export class DynamicMasterJSONGenerator {
                         required: stepConfig.required ?? true,
                         requiredSelections: stepConfig.requiredSelections || this.getDefaultRequiredSelections(stepNumber),
                         maxSelections: stepConfig.maxSelections || this.getDefaultRequiredSelections(stepNumber),
-                        message: stepConfig.validationMessage || this.getDefaultValidationMessage(stepNumber)
+                        message: stepConfig.validationMessage || this.getDefaultValidationMessage(stepNumber),
                     },
 
                     blocks: await this.generateStepBlocks(stepNumber, stepConfig, funnelId),
@@ -305,8 +305,8 @@ export class DynamicMasterJSONGenerator {
                     apiConfig: {
                         endpoint: `/api/quiz-step-${stepNumber}/configuration`,
                         syncRealTime: true,
-                        cacheEnabled: true
-                    }
+                        cacheEnabled: true,
+                    },
                 };
 
             } catch (error) {
@@ -326,7 +326,7 @@ export class DynamicMasterJSONGenerator {
     private async generateStepBlocks(
         stepNumber: number,
         stepConfig: any,
-        funnelId?: string
+        funnelId?: string,
     ): Promise<DynamicBlockConfig[]> {
 
         const blocks: DynamicBlockConfig[] = [];
@@ -340,7 +340,7 @@ export class DynamicMasterJSONGenerator {
                     id: 'intro-header',
                     type: 'quiz-intro-header',
                     properties: await this.configAPI.getConfiguration('quiz-intro-header', funnelId),
-                    apiEndpoint: '/api/components/quiz-intro-header/configuration'
+                    apiEndpoint: '/api/components/quiz-intro-header/configuration',
                 });
                 break;
 
@@ -349,7 +349,7 @@ export class DynamicMasterJSONGenerator {
                     id: 'options-grid',
                     type: 'quiz-options-grid-connected',
                     properties: await this.configAPI.getConfiguration('quiz-options-grid', funnelId),
-                    apiEndpoint: '/api/components/quiz-options-grid/configuration'
+                    apiEndpoint: '/api/components/quiz-options-grid/configuration',
                 });
                 break;
 
@@ -358,7 +358,7 @@ export class DynamicMasterJSONGenerator {
                     id: 'strategic-options',
                     type: 'quiz-strategic-options',
                     properties: await this.configAPI.getConfiguration('quiz-strategic-options', funnelId),
-                    apiEndpoint: '/api/components/quiz-strategic-options/configuration'
+                    apiEndpoint: '/api/components/quiz-strategic-options/configuration',
                 });
                 break;
 
@@ -386,7 +386,7 @@ export class DynamicMasterJSONGenerator {
                     definition,
                     defaultProperties: definition.defaultProperties,
                     apiConfiguration,
-                    isActive: true
+                    isActive: true,
                 };
 
             } catch (error) {
@@ -395,7 +395,7 @@ export class DynamicMasterJSONGenerator {
                     definition,
                     defaultProperties: definition.defaultProperties,
                     apiConfiguration: {},
-                    isActive: false
+                    isActive: false,
                 };
             }
         }
@@ -415,7 +415,7 @@ export class DynamicMasterJSONGenerator {
             stats: '/api/configurations/stats',
             export: '/api/configurations/export',
             import: '/api/configurations/import',
-            reset: '/api/components/{componentId}/reset'
+            reset: '/api/components/{componentId}/reset',
         };
     }
 
@@ -458,16 +458,16 @@ export class DynamicMasterJSONGenerator {
                 autoAdvanceSteps: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 manualAdvanceSteps: [1, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                 autoAdvanceDelay: 1500,
-                allowBackNavigation: true
+                allowBackNavigation: true,
             },
             navigation: {
                 showProgress: true,
-                progressStyle: 'bar'
+                progressStyle: 'bar',
             },
             validation: {
                 rules: {},
-                messages: {}
-            }
+                messages: {},
+            },
         };
     }
 
@@ -478,15 +478,15 @@ export class DynamicMasterJSONGenerator {
                 secondary: '#432818',
                 background: '#fefefe',
                 text: '#5b4135',
-                progress: '#deac6d'
+                progress: '#deac6d',
             },
             typography: {
-                fontFamily: 'Inter, sans-serif'
+                fontFamily: 'Inter, sans-serif',
             },
             layout: {
                 maxWidth: 'max-w-6xl',
-                padding: 'px-4 py-8'
-            }
+                padding: 'px-4 py-8',
+            },
         };
     }
 
@@ -497,26 +497,26 @@ export class DynamicMasterJSONGenerator {
                 description: `Configuração padrão da etapa ${stepNumber}`,
                 type: this.inferStepType(stepNumber),
                 category: 'quiz',
-                stepNumber
+                stepNumber,
             },
             behavior: {
                 autoAdvance: this.getDefaultAutoAdvance(stepNumber),
                 autoAdvanceDelay: 1500,
                 showProgress: stepNumber > 1,
-                allowBack: stepNumber > 1 && stepNumber < 21
+                allowBack: stepNumber > 1 && stepNumber < 21,
             },
             validation: {
                 type: this.getDefaultValidationType(stepNumber),
                 required: true,
                 requiredSelections: this.getDefaultRequiredSelections(stepNumber),
-                message: this.getDefaultValidationMessage(stepNumber)
+                message: this.getDefaultValidationMessage(stepNumber),
             },
             blocks: [],
             apiConfig: {
                 endpoint: `/api/quiz-step-${stepNumber}/configuration`,
                 syncRealTime: true,
-                cacheEnabled: true
-            }
+                cacheEnabled: true,
+            },
         };
     }
 
@@ -569,7 +569,7 @@ export class DynamicMasterJSONGenerator {
     getStats(): { cacheSize: number; lastGenerated: Date | null } {
         return {
             cacheSize: this.cache.size,
-            lastGenerated: null // TODO: Implementar tracking
+            lastGenerated: null, // TODO: Implementar tracking
         };
     }
 }

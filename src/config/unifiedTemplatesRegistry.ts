@@ -123,19 +123,19 @@ export const UNIFIED_TEMPLATE_REGISTRY: Record<string, UnifiedTemplate> = {
                 changes: [
                     'Adicionado sistema de herança',
                     'Melhorado sistema multi-tenant',
-                    'Otimizada performance de carregamento'
+                    'Otimizada performance de carregamento',
                 ],
-                breaking: false
+                breaking: false,
             },
             {
                 version: '2.0.0',
                 date: '2025-03-01',
                 changes: [
                     'Template completo implementado',
-                    'Sistema de pontuação refinado'
+                    'Sistema de pontuação refinado',
                 ],
-                breaking: true
-            }
+                breaking: true,
+            },
         ],
 
         // 🚀 TEMPLATE BASE (sem herança - é o template pai)
@@ -152,11 +152,11 @@ export const UNIFIED_TEMPLATE_REGISTRY: Record<string, UnifiedTemplate> = {
                     {
                         path: 'stepCount',
                         value: 15,
-                        reason: 'Reduzir abandono mantendo qualidade'
-                    }
+                        reason: 'Reduzir abandono mantendo qualidade',
+                    },
                 ],
                 tags: ['conversao-otimizada', 'mobile-friendly'],
-                conversionRate: '97%'
+                conversionRate: '97%',
             },
             {
                 id: 'quiz21Steps-variant-premium',
@@ -166,13 +166,13 @@ export const UNIFIED_TEMPLATE_REGISTRY: Record<string, UnifiedTemplate> = {
                     {
                         path: 'stepCount',
                         value: 25,
-                        reason: 'Análise mais profunda para clientes premium'
-                    }
+                        reason: 'Análise mais profunda para clientes premium',
+                    },
                 ],
                 tags: ['premium', 'analise-profunda'],
-                conversionRate: '89%'
-            }
-        ]
+                conversionRate: '89%',
+            },
+        ],
     },
 
     // 🚀 EXEMPLO DE TEMPLATE COM HERANÇA
@@ -191,7 +191,7 @@ export const UNIFIED_TEMPLATE_REGISTRY: Record<string, UnifiedTemplate> = {
             'Herda do Template Principal',
             'Otimizado para Mobile',
             'Alta Conversão',
-            'Resultado Instantâneo'
+            'Resultado Instantâneo',
         ],
         conversionRate: '98%',
         image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
@@ -208,23 +208,23 @@ export const UNIFIED_TEMPLATE_REGISTRY: Record<string, UnifiedTemplate> = {
             {
                 path: 'stepCount',
                 value: 10,
-                reason: 'Reduzir abandono em mobile'
+                reason: 'Reduzir abandono em mobile',
             },
             {
                 path: 'category',
                 value: 'quiz-express',
-                reason: 'Nova categoria para versão rápida'
+                reason: 'Nova categoria para versão rápida',
             },
             {
                 path: 'steps.transition',
                 value: false,
-                reason: 'Remover páginas de transição'
+                reason: 'Remover páginas de transição',
             },
             {
                 path: 'result.showSecondaryStyles',
                 value: false,
-                reason: 'Mostrar apenas estilo principal'
-            }
+                reason: 'Mostrar apenas estilo principal',
+            },
         ],
 
         changeLog: [
@@ -234,11 +234,11 @@ export const UNIFIED_TEMPLATE_REGISTRY: Record<string, UnifiedTemplate> = {
                 changes: [
                     'Otimizado para dispositivos móveis',
                     'Removidas transições desnecessárias',
-                    'Foco no estilo principal apenas'
+                    'Foco no estilo principal apenas',
                 ],
-                breaking: false
-            }
-        ]
+                breaking: false,
+            },
+        ],
     },
 
     'com-que-roupa-eu-vou': {
@@ -525,7 +525,7 @@ export const TemplateRegistry = {
         return this.getAll().filter(template =>
             template.name.toLowerCase().includes(searchTerm) ||
             template.description.toLowerCase().includes(searchTerm) ||
-            template.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            template.tags.some(tag => tag.toLowerCase().includes(searchTerm)),
         );
     },
 
@@ -613,7 +613,7 @@ export function getUnifiedTemplates(options: {
         templates = templates.filter(template =>
             template.name.toLowerCase().includes(searchTerm) ||
             template.description.toLowerCase().includes(searchTerm) ||
-            template.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            template.tags.some(tag => tag.toLowerCase().includes(searchTerm)),
         );
     }
 

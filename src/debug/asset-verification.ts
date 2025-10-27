@@ -10,7 +10,7 @@ export function verifyAssets() {
   // Lista de assets que podem estar causando 404
   const problematicAssets = [
     'badge-BjxqhOgC.js',
-    'target-CvH_VoNZ.js'
+    'target-CvH_VoNZ.js',
   ];
   
   // Verificar se os assets existem

@@ -23,10 +23,10 @@ export const useOptimizedBlockOperations = () => {
     name: 'useOptimizedBlockOperations',
     replacement: 'useEditor from @/components/editor/EditorProviderUnified or useUnifiedCRUD',
     removalDate: '2025-11-01',
-    migrationGuide: 'docs/QUICK_WIN_SERVICE_CONSOLIDATION.md'
+    migrationGuide: 'docs/QUICK_WIN_SERVICE_CONSOLIDATION.md',
   });
 
   throw new Error(
-    'useOptimizedBlockOperations is deprecated. Use useEditor() from @/components/editor/EditorProviderUnified instead.'
+    'useOptimizedBlockOperations is deprecated. Use useEditor() from @/components/editor/EditorProviderUnified instead.',
   );
 };

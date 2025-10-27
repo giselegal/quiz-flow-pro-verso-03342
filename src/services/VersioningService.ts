@@ -38,10 +38,10 @@ export class VersioningService {
 
   async createSnapshot(data: any): Promise<VersionSnapshot> {
     return {
-      id: 'snapshot-' + Date.now(),
+      id: `snapshot-${  Date.now()}`,
       timestamp: new Date(),
       data,
-      metadata: { tags: [] }
+      metadata: { tags: [] },
     };
   }
 

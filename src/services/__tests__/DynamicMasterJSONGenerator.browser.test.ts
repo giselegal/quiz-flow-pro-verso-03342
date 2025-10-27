@@ -43,7 +43,7 @@ describe('DynamicMasterJSONGenerator (browser)', () => {
         expect(masterSpy).toHaveBeenCalled();
         // Deve avisar que não irá salvar no browser
         expect(warnSpy).toHaveBeenCalledWith(
-            expect.stringContaining('generateAndSaveJSON: Ignorando writeFile no browser')
+            expect.stringContaining('generateAndSaveJSON: Ignorando writeFile no browser'),
         );
     });
 });

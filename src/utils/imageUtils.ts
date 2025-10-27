@@ -17,7 +17,7 @@ export const optimizeCloudinaryUrl = (
     quality?: number;
     format?: 'auto' | 'webp' | 'avif';
     crop?: 'fill' | 'fit' | 'limit';
-  } = {}
+  } = {},
 ): string => {
   if (!url || !url.includes('cloudinary.com')) {
     return url;
@@ -79,7 +79,7 @@ export const optimizeCloudinaryUrl = (
  */
 export const getLowQualityPlaceholder = (
   url: string,
-  options: { width?: number; quality?: number } = {}
+  options: { width?: number; quality?: number } = {},
 ): string => {
   if (!url || !url.includes('cloudinary.com')) {
     return url;
@@ -123,7 +123,7 @@ interface ResponsiveImageSource {
  */
 export const getResponsiveImageSources = (
   url: string,
-  sizes: number[] = [320, 640, 960, 1280]
+  sizes: number[] = [320, 640, 960, 1280],
 ): ResponsiveImageSource => {
   if (!url || !url.includes('cloudinary.com')) {
     return { srcSet: url, sizes: '100vw' };

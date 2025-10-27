@@ -100,7 +100,7 @@ export const analyzeIntroImages = () => {
   console.group('🖼️ Análise de Imagens da Introdução');
 
   const introImages = Array.from(
-    document.querySelectorAll('.quiz-intro img, [data-section="intro"] img')
+    document.querySelectorAll('.quiz-intro img, [data-section="intro"] img'),
   );
   console.log(`Encontradas ${introImages.length} imagens na introdução.`);
 

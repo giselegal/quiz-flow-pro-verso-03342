@@ -66,7 +66,7 @@ export class AdvancedCacheManager {
             value,
             expiresAt,
             accessedAt: Date.now(),
-            createdAt: Date.now()
+            createdAt: Date.now(),
         });
 
         this.accessCount.set(key, 0);
@@ -197,15 +197,15 @@ export class IntelligentLazyLoader {
             this.debounce(this.handleIntersection.bind(this), this.config.debounceMs),
             {
                 rootMargin: `${this.config.threshold}px`,
-                threshold: 0.1
-            }
+                threshold: 0.1,
+            },
         );
     }
 
     async lazyLoad<T>(
         itemId: string,
         element: Element,
-        loadFunction: () => Promise<T>
+        loadFunction: () => Promise<T>,
     ): Promise<T | null> {
         // Se já foi carregado, retorna null
         if (this.loadedItems.has(itemId)) {
@@ -231,7 +231,7 @@ export class IntelligentLazyLoader {
 
     private async executeLoad<T>(
         itemId: string,
-        loadFunction: () => Promise<T>
+        loadFunction: () => Promise<T>,
     ): Promise<T> {
         try {
             const result = await loadFunction();
@@ -252,7 +252,7 @@ export class IntelligentLazyLoader {
                 if (itemId && !this.loadedItems.has(itemId)) {
                     // Lógica de carregamento será implementada pelo consumer
                     entry.target.dispatchEvent(new CustomEvent('lazyLoad', {
-                        detail: { itemId }
+                        detail: { itemId },
                     }));
                 }
             }
@@ -261,7 +261,7 @@ export class IntelligentLazyLoader {
 
     private debounce<T extends (...args: any[]) => any>(
         func: T,
-        wait: number
+        wait: number,
     ): (...args: Parameters<T>) => void {
         let timeout: NodeJS.Timeout;
         return (...args: Parameters<T>) => {
@@ -298,7 +298,7 @@ export class SmartPaginator<T> {
 
     async loadPage(
         pageNumber: number,
-        fetchFunction: (page: number, size: number) => Promise<PaginatedResult<T>>
+        fetchFunction: (page: number, size: number) => Promise<PaginatedResult<T>>,
     ): Promise<PaginatedResult<T>> {
         const cacheKey = `page_${pageNumber}_${this.config.pageSize}`;
 
@@ -337,7 +337,7 @@ export class SmartPaginator<T> {
 
     private async preloadNextPage(
         nextPage: number,
-        fetchFunction: (page: number, size: number) => Promise<PaginatedResult<T>>
+        fetchFunction: (page: number, size: number) => Promise<PaginatedResult<T>>,
     ): Promise<void> {
         const cacheKey = `page_${nextPage}_${this.config.pageSize}`;
 
@@ -354,14 +354,14 @@ export class SmartPaginator<T> {
 
     // Navegação inteligente
     async nextPage(
-        fetchFunction: (page: number, size: number) => Promise<PaginatedResult<T>>
+        fetchFunction: (page: number, size: number) => Promise<PaginatedResult<T>>,
     ): Promise<PaginatedResult<T> | null> {
         if (!this.hasNextPage()) return null;
         return this.loadPage(this.currentPage + 1, fetchFunction);
     }
 
     async previousPage(
-        fetchFunction: (page: number, size: number) => Promise<PaginatedResult<T>>
+        fetchFunction: (page: number, size: number) => Promise<PaginatedResult<T>>,
     ): Promise<PaginatedResult<T> | null> {
         if (!this.hasPreviousPage()) return null;
         return this.loadPage(this.currentPage - 1, fetchFunction);
@@ -387,7 +387,7 @@ export class SmartPaginator<T> {
             hasNext: this.hasNextPage(),
             hasPrevious: this.hasPreviousPage(),
             isLoading: this.isLoading,
-            cacheMetrics: this.cache.getMetrics()
+            cacheMetrics: this.cache.getMetrics(),
         };
     }
 }
@@ -462,7 +462,7 @@ export class PerformanceMonitor {
             cacheHitRate: this.getCacheHitRate(10),
             totalRequests: recent.length,
             memoryUsage: recent.reduce((sum, m) => sum + m.memoryUsage, 0) / recent.length,
-            timestamp: new Date()
+            timestamp: new Date(),
         };
     }
 
@@ -493,7 +493,7 @@ export class PerformanceTimer {
             memoryUsage: 0,
             itemsLoaded: 0,
             timestamp: new Date(),
-            ...additionalData
+            ...additionalData,
         };
 
         this.monitor.recordMetric(metric);
@@ -522,7 +522,7 @@ export class FunnelPerformanceOptimizer {
     constructor(
         cacheConfig: CacheConfig,
         lazyConfig: LazyLoadConfig,
-        paginationConfig: PaginationConfig
+        paginationConfig: PaginationConfig,
     ) {
         this.cacheManager = new AdvancedCacheManager(cacheConfig);
         this.lazyLoader = new IntelligentLazyLoader(lazyConfig);
@@ -534,7 +534,7 @@ export class FunnelPerformanceOptimizer {
     // 🎯 API Principal para Funis
     async loadFunnelsPage(
         page: number,
-        filters?: FunnelFilters
+        filters?: FunnelFilters,
     ): Promise<PaginatedResult<HybridFunnelData>> {
         const timer = this.performanceMonitor.startTiming('loadFunnelsPage');
 
@@ -547,7 +547,7 @@ export class FunnelPerformanceOptimizer {
 
             timer.end({
                 itemsLoaded: result.items.length,
-                cacheHitRate: this.cacheManager.getMetrics().hitRate
+                cacheHitRate: this.cacheManager.getMetrics().hitRate,
             });
 
             return result;
@@ -560,7 +560,7 @@ export class FunnelPerformanceOptimizer {
     // 🎯 API Principal para Templates
     async loadTemplatesPage(
         page: number,
-        category?: string
+        category?: string,
     ): Promise<PaginatedResult<UnifiedTemplate>> {
         const timer = this.performanceMonitor.startTiming('loadTemplatesPage');
 
@@ -571,7 +571,7 @@ export class FunnelPerformanceOptimizer {
 
             timer.end({
                 itemsLoaded: result.items.length,
-                cacheHitRate: this.cacheManager.getMetrics().hitRate
+                cacheHitRate: this.cacheManager.getMetrics().hitRate,
             });
 
             return result;
@@ -585,7 +585,7 @@ export class FunnelPerformanceOptimizer {
     private async mockFunnelFetch(
         page: number,
         size: number,
-        filters?: FunnelFilters
+        filters?: FunnelFilters,
     ): Promise<PaginatedResult<HybridFunnelData>> {
         // Simular delay de rede
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -600,14 +600,14 @@ export class FunnelPerformanceOptimizer {
             total,
             totalPages,
             hasNext: page < totalPages - 1,
-            hasPrevious: page > 0
+            hasPrevious: page > 0,
         };
     }
 
     private async mockTemplateFetch(
         page: number,
         size: number,
-        category?: string
+        category?: string,
     ): Promise<PaginatedResult<UnifiedTemplate>> {
         await new Promise(resolve => setTimeout(resolve, 80));
 
@@ -621,7 +621,7 @@ export class FunnelPerformanceOptimizer {
             total,
             totalPages,
             hasNext: page < totalPages - 1,
-            hasPrevious: page > 0
+            hasPrevious: page > 0,
         };
     }
 
@@ -654,24 +654,24 @@ interface FunnelFilters {
 export const DEFAULT_CACHE_CONFIG: CacheConfig = {
     maxSize: 1000,
     ttl: 5 * 60 * 1000, // 5 minutos
-    strategy: 'lru'
+    strategy: 'lru',
 };
 
 export const DEFAULT_LAZY_CONFIG: LazyLoadConfig = {
     threshold: 200,
     batchSize: 20,
-    debounceMs: 100
+    debounceMs: 100,
 };
 
 export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
     pageSize: 50,
     maxPages: 20,
-    preloadNextPage: true
+    preloadNextPage: true,
 };
 
 // 🚀 Instância global otimizada
 export const globalOptimizer = new FunnelPerformanceOptimizer(
     DEFAULT_CACHE_CONFIG,
     DEFAULT_LAZY_CONFIG,
-    DEFAULT_PAGINATION_CONFIG
+    DEFAULT_PAGINATION_CONFIG,
 );

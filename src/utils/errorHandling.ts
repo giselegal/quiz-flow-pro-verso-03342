@@ -116,7 +116,7 @@ export const ErrorCodes = {
     SYSTEM_INITIALIZATION_FAILED: 'SYSTEM_001',
     FEATURE_NOT_AVAILABLE: 'SYSTEM_002',
     RESOURCE_EXHAUSTED: 'SYSTEM_003',
-    UNEXPECTED_ERROR: 'SYSTEM_004'
+    UNEXPECTED_ERROR: 'SYSTEM_004',
 } as const;
 
 // ============================================================================
@@ -143,7 +143,7 @@ export class StandardizedError extends Error implements StandardError {
             canRecover?: boolean;
             recoveryActions?: string[];
             cause?: Error;
-        }
+        },
     ) {
         super(message);
         this.name = 'StandardizedError';
@@ -158,7 +158,7 @@ export class StandardizedError extends Error implements StandardError {
             timestamp: Date.now(),
             url: typeof window !== 'undefined' ? window.location.href : undefined,
             userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
-            ...options.context
+            ...options.context,
         };
 
         if (options.cause) {
@@ -176,7 +176,7 @@ export class StandardizedError extends Error implements StandardError {
             context: this.context,
             canRecover: this.canRecover,
             recoveryActions: this.recoveryActions,
-            stack: this.stack
+            stack: this.stack,
         };
     }
 }
@@ -188,61 +188,61 @@ export class StandardizedError extends Error implements StandardError {
 export const createValidationError = (
     code: keyof typeof ErrorCodes,
     message: string,
-    context?: Partial<ErrorContext>
+    context?: Partial<ErrorContext>,
 ) => new StandardizedError(ErrorCodes[code], message, {
     category: ErrorCategory.VALIDATION,
     severity: ErrorSeverity.MEDIUM,
     context,
     canRecover: true,
-    recoveryActions: ['Correct the invalid data', 'Use default values']
+    recoveryActions: ['Correct the invalid data', 'Use default values'],
 });
 
 export const createStorageError = (
     code: keyof typeof ErrorCodes,
     message: string,
-    context?: Partial<ErrorContext>
+    context?: Partial<ErrorContext>,
 ) => new StandardizedError(ErrorCodes[code], message, {
     category: ErrorCategory.STORAGE,
     severity: ErrorSeverity.HIGH,
     context,
     canRecover: true,
-    recoveryActions: ['Try again', 'Use fallback storage', 'Clear storage']
+    recoveryActions: ['Try again', 'Use fallback storage', 'Clear storage'],
 });
 
 export const createAPIError = (
     code: keyof typeof ErrorCodes,
     message: string,
-    context?: Partial<ErrorContext>
+    context?: Partial<ErrorContext>,
 ) => new StandardizedError(ErrorCodes[code], message, {
     category: ErrorCategory.API,
     severity: ErrorSeverity.HIGH,
     context,
     canRecover: true,
-    recoveryActions: ['Retry request', 'Check connection', 'Use cached data']
+    recoveryActions: ['Retry request', 'Check connection', 'Use cached data'],
 });
 
 export const createFunnelError = (
     code: keyof typeof ErrorCodes,
     message: string,
-    context?: Partial<ErrorContext>
+    context?: Partial<ErrorContext>,
 ) => new StandardizedError(ErrorCodes[code], message, {
     category: ErrorCategory.FUNNEL,
     severity: ErrorSeverity.MEDIUM,
     context,
     canRecover: true,
-    recoveryActions: ['Reload funnel', 'Use default template', 'Reset to last saved']
+    recoveryActions: ['Reload funnel', 'Use default template', 'Reset to last saved'],
 });
 
 export const createSystemError = (
     code: keyof typeof ErrorCodes,
     message: string,
-    context?: Partial<ErrorContext>
+    context?: Partial<ErrorContext>,
 ) => new StandardizedError(ErrorCodes[code], message, {
     category: ErrorCategory.SYSTEM,
     severity: ErrorSeverity.CRITICAL,
     context,
     canRecover: false,
-    recoveryActions: ['Reload page', 'Clear cache', 'Contact support']
+    recoveryActions: ['Reload page', 'Clear cache', 'Contact support'],
 });
 
 // ============================================================================
@@ -286,8 +286,8 @@ class ErrorManager {
                     technicalMessage: error.stack,
                     context,
                     canRecover: true,
-                    cause: error
-                }
+                    cause: error,
+                },
             );
         }
 
@@ -319,7 +319,7 @@ class ErrorManager {
             technicalMessage: error.technicalMessage,
             context: error.context,
             canRecover: error.canRecover,
-            recoveryActions: error.recoveryActions
+            recoveryActions: error.recoveryActions,
         });
     }
 
@@ -372,7 +372,7 @@ export const errorManager = new ErrorManager();
  */
 export const withErrorHandling = <T extends (...args: any[]) => any>(
     fn: T,
-    context?: Partial<ErrorContext>
+    context?: Partial<ErrorContext>,
 ): T => {
     return ((...args: any[]) => {
         try {
@@ -407,7 +407,7 @@ export const useErrorHandler = () => {
             storage: createStorageError,
             api: createAPIError,
             funnel: createFunnelError,
-            system: createSystemError
-        }
+            system: createSystemError,
+        },
     };
 };

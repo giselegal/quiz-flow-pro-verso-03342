@@ -53,7 +53,7 @@ export const DraftPersistence = {
         stepKey: string,
         blocks: Block[],
         schemaVersion: string = 'v1',
-        debounceMs: number = 350
+        debounceMs: number = 350,
     ) {
         const timerKey = `${quizId}::${stepKey}`;
         if (pendingTimers.has(timerKey)) {

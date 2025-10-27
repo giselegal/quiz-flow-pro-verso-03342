@@ -96,7 +96,7 @@ export class ConfigurationService {
             behavior: funnelConfig.behavior,
             results: funnelConfig.results,
             webhooks: funnelConfig.webhooks,
-            ...context.overrides
+            ...context.overrides,
         };
 
         // Aplicar configurações específicas de ambiente
@@ -139,7 +139,7 @@ export class ConfigurationService {
             config = FunnelConfigGenerator.generateQuickConfig(
                 funnelId,
                 friendlyName,
-                category
+                category,
             );
 
             // Armazenar no registry para próximas consultas
@@ -203,13 +203,13 @@ export class ConfigurationService {
     invalidateCache(funnelId?: string): void {
         if (funnelId) {
             const keysToDelete = Array.from(this.cache.keys()).filter(key =>
-                key.startsWith(funnelId)
+                key.startsWith(funnelId),
             );
             keysToDelete.forEach(key => this.cache.delete(key));
             console.log(`🗑️ [ConfigService] Cache invalidado para funil ${funnelId}`);
         } else {
             this.cache.clear();
-            console.log(`🗑️ [ConfigService] Todo cache invalidado`);
+            console.log('🗑️ [ConfigService] Todo cache invalidado');
         }
     }
 
@@ -264,7 +264,7 @@ export class ConfigurationService {
         return {
             isValid: errors.length === 0,
             errors,
-            warnings
+            warnings,
         };
     }
 
@@ -284,7 +284,7 @@ export class ConfigurationService {
             'og:site_name': config.seo.siteName,
             'og:type': 'website',
             'theme-color': config.branding.primaryColor,
-            'msapplication-TileColor': config.branding.primaryColor
+            'msapplication-TileColor': config.branding.primaryColor,
         };
     }
 
@@ -294,7 +294,7 @@ export class ConfigurationService {
     generateTrackingConfig(config: MergedConfiguration) {
         const tracking: any = {
             analytics: config.analytics,
-            utm: config.utm
+            utm: config.utm,
         };
 
         if (config.webhooks?.enabled) {
@@ -317,12 +317,12 @@ export const configurationService = ConfigurationService.getInstance();
 export async function getFunnelConfiguration(
     funnelId: string,
     environment: string = 'development',
-    overrides?: Partial<MergedConfiguration>
+    overrides?: Partial<MergedConfiguration>,
 ): Promise<MergedConfiguration> {
     return configurationService.getConfiguration({
         funnelId,
         environment,
-        overrides
+        overrides,
     });
 }
 

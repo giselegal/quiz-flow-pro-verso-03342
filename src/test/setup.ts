@@ -14,7 +14,7 @@ import '../__tests__/setup/indexeddb.mock';
 vi.mock('next-themes', () => {
     return {
         ThemeProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
-        useTheme: () => ({ theme: 'light', setTheme: () => {} })
+        useTheme: () => ({ theme: 'light', setTheme: () => {} }),
     };
 });
 

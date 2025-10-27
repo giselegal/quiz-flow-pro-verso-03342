@@ -16,7 +16,7 @@ import {
     isOfferBlockType,
     isInlineBlockType,
     getBlockCategory,
-    isValidBlockType
+    isValidBlockType,
 } from '@/types/editor';
 
 describe('FASE 2 - JSON Template Integration', () => {

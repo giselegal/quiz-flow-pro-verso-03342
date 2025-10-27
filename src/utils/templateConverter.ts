@@ -31,7 +31,7 @@ export function blocksToBlockComponents(blocks: Block[]): BlockComponent[] {
     order: block.order,
     properties: block.properties || {},
     content: block.content || {},
-    parentId: null
+    parentId: null,
   }));
 }
 
@@ -49,7 +49,7 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
       content: block.content || {},
       properties: block.properties || block.props || {},
       order: (block.order != null ? block.order : (block.position != null ? block.position : index)),
-      parentId: block.parentId || null
+      parentId: block.parentId || null,
     }));
   }
 
@@ -73,11 +73,11 @@ export function convertTemplateToBlocks(template: any): BlockComponent[] {
           ...section.style,
           ...section.animation,
           ...(section.properties || {}),
-          _originalType: originalType
+          _originalType: originalType,
         },
         // Gargalo #3: respeitar position do JSON quando presente
         order: (section.position != null ? section.position : index),
-        parentId: null
+        parentId: null,
       };
     });
   }

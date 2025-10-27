@@ -32,7 +32,7 @@ export const useStyleQuizResults = (answers: Map<string, QuestionOption[]>) => {
       // Aplicar método de cálculo para determinar o estilo predominante
       const winningCategory = applyCalculationMethod(
         categoryScores,
-        initialStyleQuizConfig.calculationMethod
+        initialStyleQuizConfig.calculationMethod,
       );
 
       // Determinar o resultado final

@@ -34,7 +34,7 @@ import {
     createStorageError,
     createFunnelError as createFunnelErrorUtil,
     createAPIError,
-    ErrorCodes
+    ErrorCodes,
 } from '@/utils/errorHandling';
 
 // ============================================================================
@@ -72,7 +72,7 @@ const legacyToNewErrorCodeMap: Record<string, keyof typeof ErrorCodes> = {
     'FUNNEL_CREATE_FAILED': 'FUNNEL_CREATION_FAILED',
     'FUNNEL_UPDATE_FAILED': 'FUNNEL_UPDATE_FAILED',
     'FUNNEL_DELETE_FAILED': 'FUNNEL_DELETE_FAILED',
-    'CIRCULAR_REF': 'CIRCULAR_REFERENCE'
+    'CIRCULAR_REF': 'CIRCULAR_REFERENCE',
 };
 
 // ============================================================================
@@ -91,8 +91,8 @@ export class FunnelError extends Error {
     constructor(code: string, message: string, context: any = {}) {
         super(message);
 
-        console.warn(`🚨 DEPRECATED: FunnelError is deprecated. Use StandardizedError instead.`);
-        console.warn(`📖 Migration guide: Replace FunnelError with createValidationError, createStorageError, etc.`);
+        console.warn('🚨 DEPRECATED: FunnelError is deprecated. Use StandardizedError instead.');
+        console.warn('📖 Migration guide: Replace FunnelError with createValidationError, createStorageError, etc.');
 
         this.name = 'FunnelError';
         this.code = code;

@@ -102,7 +102,7 @@ export const useNavigation = ({
   schedule('nav-transition-finish', () => setIsTransitioning(false), 300, 'timeout');
       }
     },
-    [currentStep, totalSteps, isTransitioning, onStepChange]
+    [currentStep, totalSteps, isTransitioning, onStepChange],
   );
 
   // Validar etapa atual
@@ -119,7 +119,7 @@ export const useNavigation = ({
         schedule('nav-auto-advance', nextStep, 1000, 'timeout');
       }
     },
-    [currentStep, autoAdvance, navigationState.canGoNext, nextStep]
+    [currentStep, autoAdvance, navigationState.canGoNext, nextStep],
   );
 
   // Resetar validação de uma etapa
@@ -132,7 +132,7 @@ export const useNavigation = ({
         return newValidation;
       });
     },
-    [currentStep]
+    [currentStep],
   );
 
   // Resetar navegação completa
@@ -160,7 +160,7 @@ export const useNavigation = ({
         onStepChange?.(step);
       }
     },
-    [currentStep, totalSteps, visitedSteps, onStepChange]
+    [currentStep, totalSteps, visitedSteps, onStepChange],
   );
 
   // Verificar se etapa foi visitada
@@ -168,7 +168,7 @@ export const useNavigation = ({
     (step: number) => {
       return visitedSteps.has(step);
     },
-    [visitedSteps]
+    [visitedSteps],
   );
 
   // Obter etapas válidas

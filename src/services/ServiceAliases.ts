@@ -156,7 +156,7 @@ const logDeprecationWarning = (oldName: string, newName: string) => {
     appLogger.warn(
       `🚨 DEPRECATION: "${oldName}" é um alias deprecated. ` +
       `Use "${newName}" diretamente. ` +
-      `Este alias será removido na v2.0.0`
+      'Este alias será removido na v2.0.0',
     );
   }
 };
@@ -190,6 +190,6 @@ export const DEPRECATION_GUIDE = {
   estimatedSavings: {
     services: '77 serviços a menos',
     bundle: '~400KB redução estimada',
-    confusion: '70% menos "qual serviço usar?"'
-  }
+    confusion: '70% menos "qual serviço usar?"',
+  },
 };

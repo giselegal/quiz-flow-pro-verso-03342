@@ -95,7 +95,7 @@ describe('🧭 Sistema de Roteamento com Wouter', () => {
         const complexUrls = [
             '/editor?step=5&theme=dark&mode=preview',
             '/editor?funnel=test-123&step=1',
-            '/editor?mode=debug'
+            '/editor?mode=debug',
         ];
 
         complexUrls.forEach(url => {

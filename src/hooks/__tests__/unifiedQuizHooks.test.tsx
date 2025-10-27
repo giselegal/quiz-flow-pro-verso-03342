@@ -174,7 +174,7 @@ describe('useUnifiedQuizNavigation', () => {
                 stepId: 1,
                 condition: (answers: any[]) => {
                     return answers.some((a: any) =>
-                        a.stepId === 1 && a.selectedOptions && a.selectedOptions.some((opt: any) => opt.id === 'special')
+                        a.stepId === 1 && a.selectedOptions && a.selectedOptions.some((opt: any) => opt.id === 'special'),
                     );
                 },
                 targetStepId: 3,

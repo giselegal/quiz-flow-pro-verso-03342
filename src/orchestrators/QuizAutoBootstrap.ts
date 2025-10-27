@@ -64,7 +64,7 @@ class QuizAutoBootstrap {
       enableAnalytics: true,
       enableSupabase: false,
       debugMode: false,
-      ...config 
+      ...config, 
     };
 
     console.log('🚀 QuizAutoBootstrap: Iniciando bootstrap do sistema...', this.config);
@@ -336,7 +336,7 @@ class QuizAutoBootstrap {
     try {
       await quizDataPipeline.initialize(
         this.config.funnelId,
-        this.config.userId
+        this.config.userId,
       );
       
       console.log('🔄 Pipeline inicializado');
@@ -426,7 +426,7 @@ class QuizAutoBootstrap {
         detail: {
           config: this.config,
           timestamp: new Date().toISOString(),
-        }
+        },
       }));
     }
   }
@@ -441,7 +441,7 @@ class QuizAutoBootstrap {
         
         // Aqui integraria com Google Analytics, Mixpanel, etc.
         window.dispatchEvent(new CustomEvent('quiz-analytics', {
-          detail: { eventName, properties }
+          detail: { eventName, properties },
         }));
       };
 

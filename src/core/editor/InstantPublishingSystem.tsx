@@ -96,8 +96,8 @@ export const InstantPublishingSystem: React.FC = () => {
           status: 'published',
           publishedAt: new Date().toISOString(),
           url: deployment.url,
-          version: (parseInt(schema.publication.version) + 1).toString()
-        }
+          version: (parseInt(schema.publication.version) + 1).toString(),
+        },
       });
 
     } catch (error) {
@@ -364,7 +364,7 @@ const ValidationPanel: React.FC<ValidationPanelProps> = ({ schema, errors, onRev
 
 async function buildStaticVersion(
   schema: QuizFunnelSchema, 
-  onProgress: (progress: number) => void
+  onProgress: (progress: number) => void,
 ): Promise<StaticBuild> {
   onProgress(0);
 
@@ -374,7 +374,7 @@ async function buildStaticVersion(
     { name: 'Compilando componentes', duration: 1000 },
     { name: 'Otimizando assets', duration: 800 },
     { name: 'Gerando páginas estáticas', duration: 1200 },
-    { name: 'Aplicando configurações', duration: 400 }
+    { name: 'Aplicando configurações', duration: 400 },
   ];
 
   let progress = 0;
@@ -397,8 +397,8 @@ async function buildStaticVersion(
     manifest: {
       version: schema.publication.version,
       timestamp: Date.now(),
-      schema: schema
-    }
+      schema,
+    },
   };
 }
 
@@ -409,7 +409,7 @@ async function buildStaticVersion(
 async function deployToEdge(
   build: StaticBuild, 
   schema: QuizFunnelSchema,
-  onProgress: (progress: number) => void
+  onProgress: (progress: number) => void,
 ): Promise<{ url: string; cdnUrl: string }> {
   onProgress(0);
 
@@ -419,7 +419,7 @@ async function deployToEdge(
     { name: 'Upload HTML', duration: 500 },
     { name: 'Upload assets', duration: 700 },
     { name: 'Configurando rotas', duration: 400 },
-    { name: 'Propagando cache', duration: 600 }
+    { name: 'Propagando cache', duration: 600 },
   ];
 
   let progress = 0;

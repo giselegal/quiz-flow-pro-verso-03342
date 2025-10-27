@@ -71,7 +71,7 @@ export const migrateLegacyFunnelData = (): MigrationResult => {
 
         result.success = result.errors.length === 0;
 
-        console.log(`✅ Migração concluída:`);
+        console.log('✅ Migração concluída:');
         console.log(`  - Itens migrados: ${result.migratedItems}`);
         console.log(`  - Erros: ${result.errors.length}`);
 
@@ -141,7 +141,7 @@ const migrateSpecificData = (result: MigrationResult): void => {
     if (editorFunnelId && !localStorage.getItem(generateContextualStorageKey(FunnelContext.EDITOR, 'current-funnel-id'))) {
         localStorage.setItem(
             generateContextualStorageKey(FunnelContext.EDITOR, 'current-funnel-id'),
-            editorFunnelId
+            editorFunnelId,
         );
         result.migratedItems++;
         result.details.push(`✅ Editor funnel ID migrado: ${editorFunnelId}`);
@@ -152,10 +152,10 @@ const migrateSpecificData = (result: MigrationResult): void => {
     if (quizConfig && !localStorage.getItem(generateContextualStorageKey(FunnelContext.PREVIEW, 'config'))) {
         localStorage.setItem(
             generateContextualStorageKey(FunnelContext.PREVIEW, 'config'),
-            quizConfig
+            quizConfig,
         );
         result.migratedItems++;
-        result.details.push(`✅ Quiz config migrado`);
+        result.details.push('✅ Quiz config migrado');
     }
 
     // Migrar respostas de quiz
@@ -163,10 +163,10 @@ const migrateSpecificData = (result: MigrationResult): void => {
     if (quizResponses && !localStorage.getItem(generateContextualStorageKey(FunnelContext.PREVIEW, 'responses'))) {
         localStorage.setItem(
             generateContextualStorageKey(FunnelContext.PREVIEW, 'responses'),
-            quizResponses
+            quizResponses,
         );
         result.migratedItems++;
-        result.details.push(`✅ Quiz responses migradas`);
+        result.details.push('✅ Quiz responses migradas');
     }
 };
 

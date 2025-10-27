@@ -539,7 +539,7 @@ export class UnifiedCRUDService {
             'funnel',
             validatedFunnel.id,
             [],
-            `Funnel "${validatedFunnel.name}" atualizado`
+            `Funnel "${validatedFunnel.name}" atualizado`,
           );
         } catch (versioningError) {
           console.warn('⚠️ Erro ao criar snapshot automático:', versioningError);
@@ -1450,7 +1450,7 @@ export class UnifiedCRUDService {
    */
   listFunnels(): UnifiedFunnel[] {
     return Array.from(this.funnels.values()).sort((a, b) =>
-      b.updatedAt.getTime() - a.updatedAt.getTime()
+      b.updatedAt.getTime() - a.updatedAt.getTime(),
     );
   }
 

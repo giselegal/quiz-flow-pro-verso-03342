@@ -32,7 +32,7 @@ export const SimpleQuizCore: React.FC<SimpleQuizCoreProps> = ({
     steps,
     onStepChange,
     onComplete,
-    className = ""
+    className = '',
 }) => {
     // ✅ Estado mínimo necessário
     const [currentStep, setCurrentStep] = useState(0);
@@ -48,7 +48,7 @@ export const SimpleQuizCore: React.FC<SimpleQuizCoreProps> = ({
     const handleAnswer = (answer: any) => {
         const newAnswers = {
             ...answers,
-            [currentStepData.id]: answer
+            [currentStepData.id]: answer,
         };
 
         setAnswers(newAnswers);

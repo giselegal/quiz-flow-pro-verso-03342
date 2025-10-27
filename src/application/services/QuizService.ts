@@ -113,7 +113,7 @@ export class QuizService {
       score: 0,
       startedAt: new Date(),
       timeSpent: 0,
-      isCompleted: false
+      isCompleted: false,
     };
   }
 
@@ -126,7 +126,7 @@ export class QuizService {
       score: 0,
       startedAt: new Date(),
       timeSpent: 0,
-      isCompleted: false
+      isCompleted: false,
     };
   }
 
@@ -151,7 +151,7 @@ export class QuizService {
       dropOffPoints: [],
       popularAnswers: {},
       deviceBreakdown: {},
-      locationBreakdown: {}
+      locationBreakdown: {},
     };
   }
 

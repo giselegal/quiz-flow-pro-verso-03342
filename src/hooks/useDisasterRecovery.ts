@@ -49,7 +49,7 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
     healthStatus: null,
     systemCritical: false,
     lastRollback: null,
-    lastBackupId: null
+    lastBackupId: null,
   });
 
   const { toast } = useToast();
@@ -59,7 +59,7 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
     criticalHealthThreshold: 30,
     autoBackupBeforeRollback: true,
     monitoringEnabled: true,
-    ...config
+    ...config,
   };
 
   // Load initial data
@@ -87,9 +87,9 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
         
         if (isCritical && defaultConfig.autoRollbackEnabled) {
           toast({
-            title: "🚨 Sistema Crítico Detectado",
-            description: "Iniciando rollback automático...",
-            variant: "destructive"
+            title: '🚨 Sistema Crítico Detectado',
+            description: 'Iniciando rollback automático...',
+            variant: 'destructive',
           });
           
           performEmergencyRollback();
@@ -107,7 +107,7 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
       deployments: rollbackService.getDeploymentHistory(),
       activeDeployment: rollbackService.getActiveDeployment(),
       backups: backupService.getBackups(),
-      restorePoints: backupService.getRestorePoints()
+      restorePoints: backupService.getRestorePoints(),
     }));
   }, []);
 
@@ -149,12 +149,12 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
       setState(prev => ({ 
         ...prev, 
         lastRollback: result,
-        isRollingBack: false 
+        isRollingBack: false, 
       }));
 
       if (result.success) {
         toast({
-          title: "✅ Rollback de Emergência Concluído",
+          title: '✅ Rollback de Emergência Concluído',
           description: `Sistema restaurado para versão ${result.toVersion}`,
         });
         
@@ -168,9 +168,9 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
       setState(prev => ({ ...prev, isRollingBack: false }));
       
       toast({
-        title: "❌ Rollback de Emergência Falhou",
+        title: '❌ Rollback de Emergência Falhou',
         description: error instanceof Error ? error.message : 'Erro crítico no rollback',
-        variant: "destructive"
+        variant: 'destructive',
       });
       
       return false;
@@ -191,12 +191,12 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
       setState(prev => ({ 
         ...prev, 
         lastRollback: result,
-        isRollingBack: false 
+        isRollingBack: false, 
       }));
 
       if (result.success) {
         toast({
-          title: "✅ Rollback Concluído",
+          title: '✅ Rollback Concluído',
           description: `Rollback para ${result.toVersion} executado com sucesso`,
         });
         
@@ -210,9 +210,9 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
       setState(prev => ({ ...prev, isRollingBack: false }));
       
       toast({
-        title: "❌ Rollback Falhou",
+        title: '❌ Rollback Falhou',
         description: error instanceof Error ? error.message : 'Erro no rollback',
-        variant: "destructive"
+        variant: 'destructive',
       });
       
       return false;
@@ -233,11 +233,11 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
       setState(prev => ({ 
         ...prev, 
         lastBackupId: backupId,
-        isBackingUp: false 
+        isBackingUp: false, 
       }));
 
       toast({
-        title: "✅ Backup Criado",
+        title: '✅ Backup Criado',
         description: `Backup ${backupId} criado com sucesso`,
       });
       
@@ -248,9 +248,9 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
       setState(prev => ({ ...prev, isBackingUp: false }));
       
       toast({
-        title: "❌ Backup Falhou",
+        title: '❌ Backup Falhou',
         description: error instanceof Error ? error.message : 'Erro no backup',
-        variant: "destructive"
+        variant: 'destructive',
       });
       
       return null;
@@ -272,7 +272,7 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
 
       if (success) {
         toast({
-          title: "✅ Restauração Concluída",
+          title: '✅ Restauração Concluída',
           description: `Dados restaurados do backup ${backupId}`,
         });
         
@@ -292,9 +292,9 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
       setState(prev => ({ ...prev, isRestoring: false }));
       
       toast({
-        title: "❌ Restauração Falhou",
+        title: '❌ Restauração Falhou',
         description: error instanceof Error ? error.message : 'Erro na restauração',
-        variant: "destructive"
+        variant: 'destructive',
       });
       
       return false;
@@ -344,6 +344,6 @@ export const useDisasterRecovery = (config?: Partial<DisasterRecoveryConfig>) =>
     // Utilitários
     isOperationInProgress: state.isRollingBack || state.isBackingUp || state.isRestoring,
     hasRecentBackups: state.backups.length > 0,
-    hasValidRestorePoints: state.restorePoints.some(rp => rp.verified)
+    hasValidRestorePoints: state.restorePoints.some(rp => rp.verified),
   };
 };

@@ -14,7 +14,7 @@ describe('Rota /auth', () => {
         return render(
             <Router>
                 <App />
-            </Router>
+            </Router>,
         );
     };
 

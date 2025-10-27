@@ -14,7 +14,7 @@ import {
     FunnelErrorDefinition,
     getErrorDefinition,
     ErrorSeverity,
-    RecoveryStrategy
+    RecoveryStrategy,
 } from './FunnelErrorCodes';
 
 // ============================================================================
@@ -115,7 +115,7 @@ export class FunnelError extends Error {
         code: FunnelErrorCode,
         message?: string,
         context: Partial<FunnelErrorContext> = {},
-        originalError?: Error
+        originalError?: Error,
     ) {
         // Usar mensagem customizada ou padrão primeiro
         const definition = getErrorDefinition(code);
@@ -145,13 +145,13 @@ export class FunnelError extends Error {
                 autoRetryCount: 0,
                 autoRetryDelay: 0,
                 userActions: [],
-                tags: []
+                tags: [],
             };
             this.isRecoverable = false;
             this.context = {
                 timestamp: this.occurredAt.toISOString(),
                 userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown',
-                ...context
+                ...context,
             };
             this.recoveryInfo = {
                 strategy: RecoveryStrategy.NONE,
@@ -159,7 +159,7 @@ export class FunnelError extends Error {
                 autoRetryDelay: 0,
                 userActions: [],
                 technicalSuggestions: [],
-                requiresUserInput: false
+                requiresUserInput: false,
             };
             this.metadata = {
                 errorId: this.generateErrorId(),
@@ -169,7 +169,7 @@ export class FunnelError extends Error {
                 severity: ErrorSeverity.ERROR,
                 retryable: false,
                 reportable: true,
-                sensitive: false
+                sensitive: false,
             };
             this.retryCount = 0;
             return;
@@ -183,7 +183,7 @@ export class FunnelError extends Error {
         this.context = {
             timestamp: this.occurredAt.toISOString(),
             userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown',
-            ...context
+            ...context,
         };
 
         // Configurar recovery info
@@ -193,7 +193,7 @@ export class FunnelError extends Error {
             autoRetryDelay: definition.autoRetryDelay,
             userActions: [...definition.userActions],
             technicalSuggestions: this.generateTechnicalSuggestions(),
-            requiresUserInput: definition.recoveryStrategy === RecoveryStrategy.USER_ACTION
+            requiresUserInput: definition.recoveryStrategy === RecoveryStrategy.USER_ACTION,
         };
 
         // Configurar metadata
@@ -205,7 +205,7 @@ export class FunnelError extends Error {
             severity: definition.severity,
             retryable: definition.retryable,
             reportable: this.shouldBeReported(),
-            sensitive: this.containsSensitiveData(context)
+            sensitive: this.containsSensitiveData(context),
         };
 
         // Preservar stack trace do erro original
@@ -238,12 +238,12 @@ export class FunnelError extends Error {
             recoveryInfo: {
                 strategy: this.recoveryInfo.strategy,
                 userActions: this.recoveryInfo.userActions,
-                requiresUserInput: this.recoveryInfo.requiresUserInput
+                requiresUserInput: this.recoveryInfo.requiresUserInput,
             },
             retryCount: this.retryCount,
             occurredAt: this.occurredAt.toISOString(),
             isRecoverable: this.isRecoverable,
-            stack: this.stack
+            stack: this.stack,
         };
     }
 
@@ -330,7 +330,7 @@ export class FunnelError extends Error {
             retryCount: this.retryCount,
             occurredAt: this.occurredAt.toISOString(),
             duration: this.resolvedAt ?
-                this.resolvedAt.getTime() - this.occurredAt.getTime() : null
+                this.resolvedAt.getTime() - this.occurredAt.getTime() : null,
         };
     }
 
@@ -358,7 +358,7 @@ export class FunnelError extends Error {
                 suggestions.push(
                     'Verificar conectividade de rede',
                     'Validar configurações de proxy',
-                    'Checar CORS headers'
+                    'Checar CORS headers',
                 );
                 break;
 
@@ -366,7 +366,7 @@ export class FunnelError extends Error {
                 suggestions.push(
                     'Executar limpeza de cache',
                     'Verificar quota disponível',
-                    'Implementar compressão de dados'
+                    'Implementar compressão de dados',
                 );
                 break;
 
@@ -374,7 +374,7 @@ export class FunnelError extends Error {
                 suggestions.push(
                     'Verificar integridade dos dados de origem',
                     'Validar schema de migração',
-                    'Checar permissões de escrita'
+                    'Checar permissões de escrita',
                 );
                 break;
 
@@ -382,7 +382,7 @@ export class FunnelError extends Error {
                 suggestions.push(
                     'Implementar merge automático',
                     'Validar timestamps de alteração',
-                    'Verificar algoritmo de resolução de conflitos'
+                    'Verificar algoritmo de resolução de conflitos',
                 );
                 break;
 
@@ -390,7 +390,7 @@ export class FunnelError extends Error {
                 suggestions.push(
                     'Verificar logs detalhados',
                     'Reproduzir cenário de erro',
-                    'Validar estado da aplicação'
+                    'Validar estado da aplicação',
                 );
         }
 
@@ -428,7 +428,7 @@ export class FunnelError extends Error {
     private containsSensitiveData(context: Partial<FunnelErrorContext>): boolean {
         const sensitiveKeys = [
             'password', 'token', 'apiKey', 'secret',
-            'authorization', 'cookie', 'session'
+            'authorization', 'cookie', 'session',
         ];
 
         const contextStr = JSON.stringify(context).toLowerCase();
@@ -450,7 +450,7 @@ export class FunnelError extends Error {
 
         // Truncar stack traces muito longos
         if (sanitized.stackTrace && sanitized.stackTrace.length > 2000) {
-            sanitized.stackTrace = sanitized.stackTrace.substring(0, 2000) + '... [truncated]';
+            sanitized.stackTrace = `${sanitized.stackTrace.substring(0, 2000)  }... [truncated]`;
         }
 
         return sanitized;
@@ -470,7 +470,7 @@ export class FunnelErrorFactory {
         return new FunnelError(
             FunnelErrorCode.NOT_FOUND,
             `Funil "${funnelId}" não foi encontrado`,
-            { funnelId, userId, operation: 'getFunnel' }
+            { funnelId, userId, operation: 'getFunnel' },
         );
     }
 
@@ -478,7 +478,7 @@ export class FunnelErrorFactory {
         return new FunnelError(
             FunnelErrorCode.NO_PERMISSION,
             `Sem permissão para ${operation} no funil "${funnelId}"`,
-            { funnelId, userId, operation }
+            { funnelId, userId, operation },
         );
     }
 
@@ -487,7 +487,7 @@ export class FunnelErrorFactory {
             FunnelErrorCode.NETWORK_ERROR,
             undefined,
             { operation },
-            originalError
+            originalError,
         );
     }
 
@@ -495,7 +495,7 @@ export class FunnelErrorFactory {
         return new FunnelError(
             FunnelErrorCode.STORAGE_ERROR,
             details ? `Erro de storage durante ${operation}: ${details}` : undefined,
-            { operation }
+            { operation },
         );
     }
 
@@ -505,8 +505,8 @@ export class FunnelErrorFactory {
             reason ? `Migração falhou de v${fromVersion} para v${toVersion}: ${reason}` : undefined,
             {
                 operation: 'migration',
-                requestData: { fromVersion, toVersion, reason }
-            }
+                requestData: { fromVersion, toVersion, reason },
+            },
         );
     }
 
@@ -517,8 +517,8 @@ export class FunnelErrorFactory {
             {
                 funnelId,
                 operation: 'sync',
-                requestData: { localVersion, remoteVersion }
-            }
+                requestData: { localVersion, remoteVersion },
+            },
         );
     }
 
@@ -528,8 +528,8 @@ export class FunnelErrorFactory {
             `Campo "${field}" não atende à regra: ${rule}`,
             {
                 operation: 'validation',
-                requestData: { field, value, rule }
-            }
+                requestData: { field, value, rule },
+            },
         );
     }
 
@@ -537,7 +537,7 @@ export class FunnelErrorFactory {
         return new FunnelError(
             FunnelErrorCode.TIMEOUT,
             `Timeout durante ${operation} após ${duration}ms`,
-            { operation, duration }
+            { operation, duration },
         );
     }
 
@@ -547,8 +547,8 @@ export class FunnelErrorFactory {
             `Erro do servidor (${statusCode})`,
             {
                 operation: 'serverRequest',
-                responseData: responseBody
-            }
+                responseData: responseBody,
+            },
         );
     }
 
@@ -556,7 +556,7 @@ export class FunnelErrorFactory {
         return new FunnelError(
             FunnelErrorCode.OFFLINE,
             undefined,
-            { operation: 'connectivity_check' }
+            { operation: 'connectivity_check' },
         );
     }
 }

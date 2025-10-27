@@ -11,7 +11,7 @@ import {
     useConfiguration,
     useSEOConfiguration,
     useTrackingConfiguration,
-    useThemeConfiguration
+    useThemeConfiguration,
 } from '@/hooks/useConfiguration';
 
 // ============================================================================
@@ -42,20 +42,20 @@ export const ROUTE_FUNNEL_MAPPING: RouteConfigMapping[] = [
     {
         path: '/quiz',
         funnelId: 'quiz21StepsComplete',
-        trackingEvents: ['page_view', 'quiz_start']
+        trackingEvents: ['page_view', 'quiz_start'],
     },
     {
         path: '/admin/funis',
         funnelId: 'quiz21StepsComplete', // Admin usa o funil ativo
         requiresAuth: true,
-        trackingEvents: ['admin_access', 'funnel_management']
+        trackingEvents: ['admin_access', 'funnel_management'],
     },
     {
         path: '/editor',
         funnelId: 'quiz21StepsComplete',
         requiresAuth: true,
-        trackingEvents: ['editor_access', 'funnel_edit']
-    }
+        trackingEvents: ['editor_access', 'funnel_edit'],
+    },
 ];
 
 // ============================================================================
@@ -70,14 +70,14 @@ export function useRouteConfiguration() {
 
     // Encontrar configuração para a rota atual
     const routeConfig = ROUTE_FUNNEL_MAPPING.find(mapping =>
-        location.startsWith(mapping.path)
+        location.startsWith(mapping.path),
     );
 
     // Carregar configuração do funil correspondente
     const { config, isLoading, error } = useConfiguration({
         funnelId: routeConfig?.funnelId,
         autoRefresh: true,
-        refreshInterval: 60000 // 1 minuto
+        refreshInterval: 60000, // 1 minuto
     });
 
     // Aplicar configurações automaticamente
@@ -101,7 +101,7 @@ export function useRouteConfiguration() {
         isLoading,
         error,
         currentFunnelId: routeConfig?.funnelId,
-        requiresAuth: routeConfig?.requiresAuth || false
+        requiresAuth: routeConfig?.requiresAuth || false,
     };
 }
 
@@ -162,7 +162,7 @@ export function useAutoSEO(customSEO?: Partial<SEOMetaData>) {
         updateSEO: (newSEO: Partial<SEOMetaData>) => {
             // Atualizar SEO customizado dinamicamente
             console.log('🔄 [AutoSEO] Atualizando SEO:', newSEO);
-        }
+        },
     };
 }
 
@@ -251,7 +251,7 @@ export function useAutoTracking() {
                 trackEvent(event, {
                     route: location,
                     funnelId: currentFunnelId,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 });
             });
         }
@@ -261,7 +261,7 @@ export function useAutoTracking() {
         tracking,
         utm,
         trackingConfig,
-        trackEvent
+        trackEvent,
     };
 }
 
@@ -323,8 +323,8 @@ export function useAutoTheme() {
             accentColor: colors?.accent,
             fontFamily: fonts,
             companyName: branding?.companyName,
-            logoUrl: logo
-        }
+            logoUrl: logo,
+        },
     };
 }
 
@@ -345,7 +345,7 @@ export function useAutoConfiguration(options?: {
         enableSEO = true,
         enableTracking = true,
         enableTheme = true,
-        customSEO
+        customSEO,
     } = options || {};
 
     const routeConfig = useRouteConfiguration();
@@ -368,7 +368,7 @@ export function useAutoConfiguration(options?: {
             console.log('📊 Tracking:', trackingConfig);
             console.log('🎨 Tema:', themeConfig);
             console.groupEnd();
-        }
+        },
     };
 }
 
@@ -381,7 +381,7 @@ export function useAutoConfiguration(options?: {
  */
 export function registerRoute(mapping: RouteConfigMapping) {
     const existingIndex = ROUTE_FUNNEL_MAPPING.findIndex(
-        route => route.path === mapping.path
+        route => route.path === mapping.path,
     );
 
     if (existingIndex >= 0) {
@@ -398,7 +398,7 @@ export function registerRoute(mapping: RouteConfigMapping) {
  */
 export function getRouteConfiguration(path: string): RouteConfigMapping | undefined {
     return ROUTE_FUNNEL_MAPPING.find(mapping =>
-        path.startsWith(mapping.path)
+        path.startsWith(mapping.path),
     );
 }
 
@@ -417,5 +417,5 @@ export default {
     useAutoConfiguration,
     registerRoute,
     getRouteConfiguration,
-    getAllRouteConfigurations
+    getAllRouteConfigurations,
 };

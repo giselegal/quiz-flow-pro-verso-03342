@@ -28,7 +28,7 @@ export const dynamicIconImport = (iconName: string): React.ElementType => {
 export const getAvailableIcons = (): string[] => {
   return Object.keys(Icons)
     .filter(
-      key => typeof Icons[key as keyof typeof Icons] === 'function' && key !== 'createLucideIcon'
+      key => typeof Icons[key as keyof typeof Icons] === 'function' && key !== 'createLucideIcon',
     )
     .map(key => {
       // Convert PascalCase to kebab-case

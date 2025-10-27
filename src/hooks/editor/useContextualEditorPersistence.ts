@@ -46,7 +46,7 @@ export interface UseContextualEditorPersistenceReturn {
  * Hook de persistência contextual para funis
  */
 export const useContextualEditorPersistence = (
-    context: FunnelContext
+    context: FunnelContext,
 ): UseContextualEditorPersistenceReturn => {
     const [isSaving, setIsSaving] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -116,7 +116,7 @@ export const useContextualEditorPersistence = (
                 setIsSaving(false);
             }
         },
-        [toast, context, service]
+        [toast, context, service],
     );
 
     const loadFunnel = useCallback(
@@ -148,7 +148,7 @@ export const useContextualEditorPersistence = (
                 setIsLoading(false);
             }
         },
-        [toast, context, service]
+        [toast, context, service],
     );
 
     const listFunnels = useCallback(async (): Promise<any[]> => {
@@ -200,7 +200,7 @@ export const useContextualEditorPersistence = (
                 return { success: false, error: 'Unexpected error' };
             }
         },
-        [toast, context, service]
+        [toast, context, service],
     );
 
     const publishFunnel = useCallback(
@@ -238,7 +238,7 @@ export const useContextualEditorPersistence = (
                 return { success: false, error: 'Unexpected error' };
             }
         },
-        [toast, context, service]
+        [toast, context, service],
     );
 
     return {

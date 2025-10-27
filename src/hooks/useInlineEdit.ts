@@ -53,7 +53,7 @@ export const useInlineEdit = ({
       }
       setIsEditing(true);
     },
-    [preventDefault, stopPropagation]
+    [preventDefault, stopPropagation],
   );
 
   const saveEdit = useCallback(() => {
@@ -80,7 +80,7 @@ export const useInlineEdit = ({
         cancelEdit();
       }
     },
-    [multiline, saveEdit, cancelEdit]
+    [multiline, saveEdit, cancelEdit],
   );
 
   const handleBlur = useCallback(() => {
@@ -93,7 +93,7 @@ export const useInlineEdit = ({
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setEditValue(e.target.value);
     },
-    []
+    [],
   );
 
   return {

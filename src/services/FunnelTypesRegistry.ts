@@ -62,8 +62,8 @@ export const FUNNEL_TYPES: Record<string, FunnelType> = {
             showProgressBar: true,
             allowReordering: false, // Ordem específica para lógica do quiz
             supportsDragDrop: true,
-            customComponents: ['quiz-question', 'option-selector', 'result-display']
-        }
+            customComponents: ['quiz-question', 'option-selector', 'result-display'],
+        },
     },
 
     // 🧪 QUIZ SIMPLES
@@ -80,8 +80,8 @@ export const FUNNEL_TYPES: Record<string, FunnelType> = {
             showStepNavigation: true,
             showProgressBar: true,
             allowReordering: true,
-            supportsDragDrop: true
-        }
+            supportsDragDrop: true,
+        },
     },
 
     // 📝 LANDING PAGE
@@ -99,8 +99,8 @@ export const FUNNEL_TYPES: Record<string, FunnelType> = {
             showProgressBar: false,
             allowReordering: true,
             supportsDragDrop: true,
-            customComponents: ['hero-section', 'form-capture', 'testimonials']
-        }
+            customComponents: ['hero-section', 'form-capture', 'testimonials'],
+        },
     },
 
     // 🛒 FUNIL DE VENDAS
@@ -118,8 +118,8 @@ export const FUNNEL_TYPES: Record<string, FunnelType> = {
             showProgressBar: true,
             allowReordering: true,
             supportsDragDrop: true,
-            customComponents: ['product-showcase', 'checkout-form', 'upsell-offer']
-        }
+            customComponents: ['product-showcase', 'checkout-form', 'upsell-offer'],
+        },
     },
 
     // 📊 LEAD MAGNET
@@ -136,9 +136,9 @@ export const FUNNEL_TYPES: Record<string, FunnelType> = {
             showStepNavigation: true,
             showProgressBar: false,
             allowReordering: true,
-            supportsDragDrop: true
-        }
-    }
+            supportsDragDrop: true,
+        },
+    },
 };
 
 // ============================================================================
@@ -188,7 +188,7 @@ export function generateFunnelInstanceId(typeId: string): string {
 export function createFunnelInstance(
     typeId: string,
     name: string,
-    description?: string
+    description?: string,
 ): FunnelInstance | null {
     const funnelType = getFunnelType(typeId);
     if (!funnelType) return null;
@@ -204,8 +204,8 @@ export function createFunnelInstance(
         metadata: {
             stepCount: funnelType.defaultSteps,
             supportsAI: funnelType.supportsAI,
-            hasCustomLogic: funnelType.hasCustomLogic
-        }
+            hasCustomLogic: funnelType.hasCustomLogic,
+        },
     };
 }
 
@@ -252,8 +252,8 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
                             name: `Etapa ${i}`,
                             type: 'generic',
                             blocks: [],
-                            placeholder: true
-                        })
+                            placeholder: true,
+                        }),
                     });
                 } catch (stepErr) {
                     console.warn(`⚠️ Falha carregando step ${i}, usando placeholder:`, stepErr);
@@ -263,7 +263,7 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
                         type: 'generic',
                         blocks: [],
                         error: true,
-                        placeholder: true
+                        placeholder: true,
                     });
                 }
             }
@@ -281,7 +281,7 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
                     navigation: { autoAdvanceSteps: [], manualAdvanceSteps: [], defaultAutoAdvanceDelay: 1500 },
                     validation: { globalRules: {}, strictMode: false },
                     ui: { theme: 'default' },
-                    analytics: { enabled: false }
+                    analytics: { enabled: false },
                 };
             }
 
@@ -295,8 +295,8 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
                 isQuiz: true,
                 _resilience: {
                     hasGetStepConfig,
-                    hasGetGlobalConfig
-                }
+                    hasGetGlobalConfig,
+                },
             };
         } catch (error) {
             console.error('Erro ao carregar quiz:', error);
@@ -312,10 +312,10 @@ export async function loadFunnelConfig(funnelId: string, typeId: string) {
         steps: Array.from({ length: funnelType.defaultSteps }, (_, i) => ({
             stepNumber: i + 1,
             name: `Etapa ${i + 1}`,
-            blocks: []
+            blocks: [],
         })),
         globalConfig: {},
-        totalSteps: funnelType.defaultSteps
+        totalSteps: funnelType.defaultSteps,
     };
 }
 
@@ -340,7 +340,7 @@ export async function saveFunnelConfig(funnelId: string, typeId: string, config:
                     if (step.modified) {
                         await funnelType.templateService.saveStepOverride(
                             step.stepNumber,
-                            step
+                            step,
                         );
                     }
                 }
@@ -349,7 +349,7 @@ export async function saveFunnelConfig(funnelId: string, typeId: string, config:
             return {
                 success: true,
                 message: `Quiz ${funnelId} salvo com sucesso`,
-                savedSteps: config.steps?.filter((s: any) => s.modified)?.length || 0
+                savedSteps: config.steps?.filter((s: any) => s.modified)?.length || 0,
             };
         } catch (error) {
             console.error('Erro ao salvar quiz:', error);
@@ -361,7 +361,7 @@ export async function saveFunnelConfig(funnelId: string, typeId: string, config:
     console.log(`💾 Salvando funil ${typeId}:`, config);
     return {
         success: true,
-        message: `Funil ${funnelId} salvo com sucesso`
+        message: `Funil ${funnelId} salvo com sucesso`,
     };
 }
 
@@ -375,16 +375,16 @@ export async function saveFunnelConfig(funnelId: string, typeId: string, config:
 export const PREDEFINED_FUNNELS: Record<string, { typeId: string; name: string }> = {
     'quiz-estilo-demo': {
         typeId: 'quiz-estilo-21-steps',
-        name: 'Quiz de Estilo - Demo'
+        name: 'Quiz de Estilo - Demo',
     },
     'landing-demo': {
         typeId: 'landing-page',
-        name: 'Landing Page - Demo'
+        name: 'Landing Page - Demo',
     },
     'sales-demo': {
         typeId: 'sales-funnel',
-        name: 'Funil de Vendas - Demo'
-    }
+        name: 'Funil de Vendas - Demo',
+    },
 };
 
 /**

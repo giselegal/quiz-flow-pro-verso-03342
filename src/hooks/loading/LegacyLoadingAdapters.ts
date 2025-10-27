@@ -47,7 +47,7 @@ export const useLoadingState = (options: LoadingStateOptions = {}): LegacyLoadin
         error: null,
         category: 'local',
         priority: 'normal',
-        timestamp: new Date()
+        timestamp: new Date(),
     });
 
     // Create component manager
@@ -59,7 +59,7 @@ export const useLoadingState = (options: LoadingStateOptions = {}): LegacyLoadin
                 initialState: options.initialState,
                 timeout: options.timeout,
                 category: 'local',
-                priority: 'normal'
+                priority: 'normal',
             });
         }
 
@@ -85,7 +85,7 @@ export const useLoadingState = (options: LoadingStateOptions = {}): LegacyLoadin
         (loading: boolean, timeoutMs?: number) => {
             managerRef.current?.setLoadingWithTimeout(loading, timeoutMs || options.timeout);
         },
-        [options.timeout]
+        [options.timeout],
     );
 
     const handleError = useCallback((errorMessage: string) => {
@@ -102,7 +102,7 @@ export const useLoadingState = (options: LoadingStateOptions = {}): LegacyLoadin
         setLoading,
         setLoadingWithTimeout,
         handleError,
-        clearError
+        clearError,
     };
 };
 
@@ -133,7 +133,7 @@ export const useGlobalLoading = (): GlobalLoadingHookReturn => {
     const [state, setState] = useState<GlobalLoadingState>({
         isLoading: false,
         message: undefined,
-        progress: undefined
+        progress: undefined,
     });
 
     useEffect(() => {
@@ -141,7 +141,7 @@ export const useGlobalLoading = (): GlobalLoadingHookReturn => {
             setState({
                 isLoading: globalState.isLoading,
                 message: globalState.message,
-                progress: globalState.progress
+                progress: globalState.progress,
             });
         });
 
@@ -164,7 +164,7 @@ export const useGlobalLoading = (): GlobalLoadingHookReturn => {
         state,
         setLoading,
         updateProgress,
-        clearLoading
+        clearLoading,
     };
 };
 
@@ -200,7 +200,7 @@ export interface FunnelLoadingState {
  */
 export const useFunnelLoadingState = (
     initialFunnelId?: string,
-    userId?: string
+    userId?: string,
 ): FunnelLoadingState => {
     console.warn('🚨 useFunnelLoadingState is deprecated. Use masterLoadingService.createComponentManager() instead.');
 
@@ -214,13 +214,13 @@ export const useFunnelLoadingState = (
         isLoading: false,
         error: null,
         funnel: null,
-        funnelId: initialFunnelId || null
+        funnelId: initialFunnelId || null,
     });
 
     const manager = masterLoadingService.createComponentManager(componentId, {
         category: 'funnel',
         priority: 'normal',
-        operationName: 'funnel-operations'
+        operationName: 'funnel-operations',
     });
 
     useEffect(() => {
@@ -229,7 +229,7 @@ export const useFunnelLoadingState = (
             setState(prev => ({
                 ...prev,
                 isLoading: componentState.isLoading,
-                error: componentState.error
+                error: componentState.error,
             }));
         });
 
@@ -250,7 +250,7 @@ export const useFunnelLoadingState = (
             setState(prev => ({
                 ...prev,
                 funnel: { id, name: `Funnel ${id}` }, // Mock data
-                funnelId: id
+                funnelId: id,
             }));
 
             manager.setLoading(false);
@@ -271,7 +271,7 @@ export const useFunnelLoadingState = (
             setState(prev => ({
                 ...prev,
                 funnel: { id: newId, ...data },
-                funnelId: newId
+                funnelId: newId,
             }));
 
             manager.setLoading(false);
@@ -292,7 +292,7 @@ export const useFunnelLoadingState = (
 
             setState(prev => ({
                 ...prev,
-                funnel: prev.funnel ? { ...prev.funnel, ...updates } : null
+                funnel: prev.funnel ? { ...prev.funnel, ...updates } : null,
             }));
 
             manager.setLoading(false);
@@ -314,7 +314,7 @@ export const useFunnelLoadingState = (
             setState(prev => ({
                 ...prev,
                 funnel: null,
-                funnelId: null
+                funnelId: null,
             }));
 
             manager.setLoading(false);
@@ -337,7 +337,7 @@ export const useFunnelLoadingState = (
             setState(prev => ({
                 ...prev,
                 funnel: { id: newId, name: newName },
-                funnelId: newId
+                funnelId: newId,
             }));
 
             manager.setLoading(false);
@@ -371,7 +371,7 @@ export const useFunnelLoadingState = (
         deleteFunnel,
         duplicateFunnel,
         clearCache,
-        refreshFunnel
+        refreshFunnel,
     };
 };
 
@@ -453,7 +453,7 @@ export function checkLegacyLoadingUsage(): {
 
     return {
         hasLegacyUsage,
-        recommendations
+        recommendations,
     };
 }
 
@@ -484,7 +484,7 @@ export async function migrateLegacyLoadingStates(): Promise<{
         if (typeof localStorage !== 'undefined') {
             try {
                 const legacyKeys = Object.keys(localStorage).filter(key =>
-                    key.includes('loading') || key.includes('loader')
+                    key.includes('loading') || key.includes('loader'),
                 );
 
                 for (const key of legacyKeys) {

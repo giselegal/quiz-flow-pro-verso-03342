@@ -124,7 +124,7 @@ class QuizService {
    */
   async saveAnswers(
     sessionId: string,
-    answers: QuizAnswer[]
+    answers: QuizAnswer[],
   ): Promise<QuizStepResponse[]> {
     try {
       // Buscar sessão
@@ -238,7 +238,7 @@ class QuizService {
       description?: string;
       recommendation?: string;
       nextSteps?: Record<string, any>;
-    }
+    },
   ): Promise<QuizResult> {
     try {
       // Buscar sessão

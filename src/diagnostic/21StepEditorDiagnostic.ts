@@ -96,14 +96,14 @@ export function run21StepDiagnostic(): DiagnosticResults {
       finalStepsProcessing,
       resultsRendering,
       loggingSystem,
-      correction
-    }
+      correction,
+    },
   };
 
   console.log('🎯 21-Step Editor Diagnostic Complete:', {
     overallStatus,
     issuesCount: issues.length,
-    issues: issues.slice(0, 5) // Limit console output
+    issues: issues.slice(0, 5), // Limit console output
   });
 
   // Store results for browser debugging
@@ -121,7 +121,7 @@ function investigateContextLoading(): DiagnosticResult {
       return {
         status: 'pass',
         message: 'Server-side rendering environment detected',
-        details: { environment: 'server' }
+        details: { environment: 'server' },
       };
     }
 
@@ -139,13 +139,13 @@ function investigateContextLoading(): DiagnosticResult {
         details: {
           contextError: (window as any).__EDITOR_CONTEXT_ERROR__,
           editorProviders: editorProviders.length,
-          editorElements: editorElements.length
+          editorElements: editorElements.length,
         },
         recommendations: [
           'Verify EditorPro is wrapped in EditorProvider',
           'Check component mounting order',
-          'Validate provider props'
-        ]
+          'Validate provider props',
+        ],
       };
     }
 
@@ -155,8 +155,8 @@ function investigateContextLoading(): DiagnosticResult {
       details: {
         editorProviders: editorProviders.length,
         editorElements: editorElements.length,
-        hasContextError
-      }
+        hasContextError,
+      },
     };
 
   } catch (error) {
@@ -164,7 +164,7 @@ function investigateContextLoading(): DiagnosticResult {
       status: 'fail',
       message: 'Context loading investigation failed',
       details: { error: String(error) },
-      recommendations: ['Check browser console for errors']
+      recommendations: ['Check browser console for errors'],
     };
   }
 }
@@ -192,13 +192,13 @@ function investigateCurrentStepIdentification(): DiagnosticResult {
         details: {
           invalidSteps: invalidSteps.slice(-5), // Last 5 attempts
           validationTest: { validCount, invalidCount },
-          recentInvalidSteps: invalidSteps.slice(-3).map((s: any) => s.requestedStep)
+          recentInvalidSteps: invalidSteps.slice(-3).map((s: any) => s.requestedStep),
         },
         recommendations: [
           'Check step navigation logic',
           'Validate event payload formats',
-          'Review auto-correction handling'
-        ]
+          'Review auto-correction handling',
+        ],
       };
     }
 
@@ -207,15 +207,15 @@ function investigateCurrentStepIdentification(): DiagnosticResult {
       message: 'Current step identification working correctly',
       details: {
         invalidAttemptsCount: invalidSteps ? invalidSteps.length : 0,
-        validationTest: { validCount, invalidCount }
-      }
+        validationTest: { validCount, invalidCount },
+      },
     };
 
   } catch (error) {
     return {
       status: 'fail',
       message: 'Current step identification investigation failed',
-      details: { error: String(error) }
+      details: { error: String(error) },
     };
   }
 }
@@ -236,7 +236,7 @@ function investigateBlockLoading(): DiagnosticResult {
           step,
           hasBlocks: isSuccess,
           blockCount: isSuccess ? blocks.length : 0,
-          blockTypes: isSuccess ? blocks.map(b => b?.type || 'unknown').slice(0, 3) : []
+          blockTypes: isSuccess ? blocks.map(b => b?.type || 'unknown').slice(0, 3) : [],
         });
 
         if (isSuccess) successCount++;
@@ -246,7 +246,7 @@ function investigateBlockLoading(): DiagnosticResult {
         stepResults.push({
           step,
           hasBlocks: false,
-          error: String(error)
+          error: String(error),
         });
       }
     }
@@ -263,13 +263,13 @@ function investigateBlockLoading(): DiagnosticResult {
           failureCount,
           failedSteps: stepResults.filter(r => !r.hasBlocks).map(r => r.step),
           recentFailedLookups: failedLookups ? failedLookups.slice(-3) : [],
-          sampleSuccesses: stepResults.filter(r => r.hasBlocks).slice(0, 3)
+          sampleSuccesses: stepResults.filter(r => r.hasBlocks).slice(0, 3),
         },
         recommendations: [
           'Check stepBlocks initialization',
           'Verify step key format consistency',
-          'Validate template structure'
-        ]
+          'Validate template structure',
+        ],
       };
     }
 
@@ -280,15 +280,15 @@ function investigateBlockLoading(): DiagnosticResult {
         successCount,
         failureCount,
         stepsWithBlocks: stepResults.filter(r => r.hasBlocks).length,
-        totalBlocksFound: stepResults.reduce((sum, r) => sum + (r.blockCount || 0), 0)
-      }
+        totalBlocksFound: stepResults.reduce((sum, r) => sum + (r.blockCount || 0), 0),
+      },
     };
 
   } catch (error) {
     return {
       status: 'fail',
       message: 'Block loading investigation failed',
-      details: { error: String(error) }
+      details: { error: String(error) },
     };
   }
 }
@@ -303,7 +303,7 @@ function investigateStepCalculation(): DiagnosticResult {
         status: 'warning',
         message: 'Step analysis data not available',
         details: { stepAnalysis: null },
-        recommendations: ['Navigate to editor to generate step analysis data']
+        recommendations: ['Navigate to editor to generate step analysis data'],
       };
     }
 
@@ -321,13 +321,13 @@ function investigateStepCalculation(): DiagnosticResult {
           mandatoryStepsEmpty,
           finalStepsEmpty,
           totalStepsWithBlocks: stepsWithBlocks.length,
-          totalStepsWithoutBlocks: stepsWithoutBlocks.length
+          totalStepsWithoutBlocks: stepsWithoutBlocks.length,
         },
         recommendations: [
           'Check template initialization',
           'Verify mandatory step content',
-          'Review step validation logic'
-        ]
+          'Review step validation logic',
+        ],
       };
     }
 
@@ -338,15 +338,15 @@ function investigateStepCalculation(): DiagnosticResult {
         stepsWithBlocks: stepsWithBlocks.length,
         stepsWithoutBlocks: stepsWithoutBlocks.length,
         mandatoryStepsEmpty: mandatoryStepsEmpty.length,
-        finalStepsEmpty: finalStepsEmpty.length
-      }
+        finalStepsEmpty: finalStepsEmpty.length,
+      },
     };
 
   } catch (error) {
     return {
       status: 'fail',
       message: 'Step calculation investigation failed',
-      details: { error: String(error) }
+      details: { error: String(error) },
     };
   }
 }
@@ -360,7 +360,7 @@ function investigateGlobalState(): DiagnosticResult {
       return {
         status: 'pass',
         message: 'Server-side environment, global state check skipped',
-        details: { environment: 'server' }
+        details: { environment: 'server' },
       };
     }
 
@@ -376,20 +376,20 @@ function investigateGlobalState(): DiagnosticResult {
       details: {
         persistenceDisabled,
         hasReactDevTools,
-        globalKeys: Object.keys(window).filter(k => k.includes('EDITOR')).slice(0, 10)
+        globalKeys: Object.keys(window).filter(k => k.includes('EDITOR')).slice(0, 10),
       },
       recommendations: persistenceDisabled ? [
         'Check localStorage quota',
         'Review persistence error handling',
-        'Clear problematic storage keys'
-      ] : []
+        'Clear problematic storage keys',
+      ] : [],
     };
 
   } catch (error) {
     return {
       status: 'fail',
       message: 'Global state investigation failed',
-      details: { error: String(error) }
+      details: { error: String(error) },
     };
   }
 }
@@ -409,13 +409,13 @@ function investigateEventSystem(): DiagnosticResult {
             const key = event.rawStepId?.toString() || 'undefined';
             acc[key] = (acc[key] || 0) + 1;
             return acc;
-          }, {})
+          }, {}),
         },
         recommendations: [
           'Check event payload formats',
           'Validate event listener registration',
-          'Review step ID parsing logic'
-        ]
+          'Review step ID parsing logic',
+        ],
       };
     }
 
@@ -423,15 +423,15 @@ function investigateEventSystem(): DiagnosticResult {
       status: 'pass',
       message: 'Event system working correctly',
       details: {
-        invalidEventsCount: invalidNavigation ? invalidNavigation.length : 0
-      }
+        invalidEventsCount: invalidNavigation ? invalidNavigation.length : 0,
+      },
     };
 
   } catch (error) {
     return {
       status: 'fail',
       message: 'Event system investigation failed',
-      details: { error: String(error) }
+      details: { error: String(error) },
     };
   }
 }
@@ -446,7 +446,7 @@ function investigateFinalStepsProcessing(): DiagnosticResult {
         step,
         hasBlocks: Array.isArray(blocks) && blocks.length > 0,
         blockCount: Array.isArray(blocks) ? blocks.length : 0,
-        blockTypes: Array.isArray(blocks) ? blocks.map(b => b?.type) : []
+        blockTypes: Array.isArray(blocks) ? blocks.map(b => b?.type) : [],
       };
     });
 
@@ -460,8 +460,8 @@ function investigateFinalStepsProcessing(): DiagnosticResult {
         recommendations: [
           'Check final steps template content',
           'Verify results processing logic',
-          'Review scoring calculation'
-        ]
+          'Review scoring calculation',
+        ],
       };
     }
 
@@ -471,15 +471,15 @@ function investigateFinalStepsProcessing(): DiagnosticResult {
       details: {
         finalStepResults,
         stepsWithContent: finalStepResults.filter(r => r.hasBlocks).length,
-        totalFinalBlocks: finalStepResults.reduce((sum, r) => sum + r.blockCount, 0)
-      }
+        totalFinalBlocks: finalStepResults.reduce((sum, r) => sum + r.blockCount, 0),
+      },
     };
 
   } catch (error) {
     return {
       status: 'fail',
       message: 'Final steps processing investigation failed',
-      details: { error: String(error) }
+      details: { error: String(error) },
     };
   }
 }
@@ -497,20 +497,20 @@ function investigateResultsRendering(): DiagnosticResult {
       details: {
         hasCanvas: !!hasCanvas,
         hasResults: !!hasResults,
-        note: 'Full rendering check requires active navigation to final steps'
+        note: 'Full rendering check requires active navigation to final steps',
       },
       recommendations: [
         'Navigate to steps 19-21 for full results rendering validation',
         'Check component prop flow for result components',
-        'Use React DevTools to inspect component state'
-      ]
+        'Use React DevTools to inspect component state',
+      ],
     };
 
   } catch (error) {
     return {
       status: 'fail',
       message: 'Results rendering investigation failed',
-      details: { error: String(error) }
+      details: { error: String(error) },
     };
   }
 }
@@ -522,7 +522,7 @@ function investigateLoggingSystem(): DiagnosticResult {
 
     // Test console methods
     const consoleMethodsAvailable = ['log', 'warn', 'error', 'info'].every(method =>
-      typeof console[method as keyof Console] === 'function'
+      typeof console[method as keyof Console] === 'function',
     );
 
     // Check for diagnostic globals
@@ -536,15 +536,15 @@ function investigateLoggingSystem(): DiagnosticResult {
         isDevelopment,
         consoleMethodsAvailable,
         diagnosticGlobals,
-        environment: typeof window !== 'undefined' ? 'browser' : 'server'
-      }
+        environment: typeof window !== 'undefined' ? 'browser' : 'server',
+      },
     };
 
   } catch (error) {
     return {
       status: 'fail',
       message: 'Logging system investigation failed',
-      details: { error: String(error) }
+      details: { error: String(error) },
     };
   }
 }
@@ -564,21 +564,21 @@ function investigateCorrection(): DiagnosticResult {
           'currentStep range validation',
           'invalid navigation handling',
           'template auto-reload',
-          'context error recovery'
-        ]
+          'context error recovery',
+        ],
       },
       recommendations: [
         'Run full editor navigation test',
         'Test rapid step switching',
-        'Validate error recovery flows'
-      ]
+        'Validate error recovery flows',
+      ],
     };
 
   } catch (error) {
     return {
       status: 'fail',
       message: 'Correction investigation failed',
-      details: { error: String(error) }
+      details: { error: String(error) },
     };
   }
 }

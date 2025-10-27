@@ -107,26 +107,26 @@ export function getRegistryStats() {
 export function initializeSchemaRegistry(): void {
   // Blocos básicos
   registerSchema('headline', () => 
-    import('./blocks/headline').then(m => m.headlineSchema)
+    import('./blocks/headline').then(m => m.headlineSchema),
   );
   
   registerSchema('image', () => 
-    import('./blocks/image').then(m => m.imageSchema)
+    import('./blocks/image').then(m => m.imageSchema),
   );
   
   registerSchema('button', () => 
-    import('./blocks/button').then(m => m.buttonSchema)
+    import('./blocks/button').then(m => m.buttonSchema),
   );
   
   registerSchema('options-grid', () => 
-    import('./blocks/options-grid').then(m => m.optionsGridSchema)
+    import('./blocks/options-grid').then(m => m.optionsGridSchema),
   );
   registerSchema('text-inline', () => 
-    import('./blocks/text-inline').then(m => m.textInlineSchema)
+    import('./blocks/text-inline').then(m => m.textInlineSchema),
   );
   
   registerSchema('urgency-timer-inline', () => 
-    import('./blocks/urgency-timer-inline').then(m => m.urgencyTimerInlineSchema)
+    import('./blocks/urgency-timer-inline').then(m => m.urgencyTimerInlineSchema),
   );
 
   // NEW: Intro blocks (já existentes em outro módulo, manter quando forem criados)
@@ -139,58 +139,58 @@ export function initializeSchemaRegistry(): void {
 
   // NEW: Question blocks
   registerSchema('question-hero', () => 
-    import('./blocks/question-blocks').then(m => m.questionHeroSchema)
+    import('./blocks/question-blocks').then(m => m.questionHeroSchema),
   );
   registerSchema('question-title', () => 
-    import('./blocks/question-blocks').then(m => m.questionTitleSchema)
+    import('./blocks/question-blocks').then(m => m.questionTitleSchema),
   );
   registerSchema('question-text', () => 
-    import('./blocks/question-blocks').then(m => m.questionTextSchema)
+    import('./blocks/question-blocks').then(m => m.questionTextSchema),
   );
   registerSchema('question-number', () => 
-    import('./blocks/question-blocks').then(m => m.questionNumberSchema)
+    import('./blocks/question-blocks').then(m => m.questionNumberSchema),
   );
   registerSchema('question-progress', () => 
-    import('./blocks/question-blocks').then(m => m.questionProgressSchema)
+    import('./blocks/question-blocks').then(m => m.questionProgressSchema),
   );
   registerSchema('question-instructions', () => 
-    import('./blocks/question-blocks').then(m => m.questionInstructionsSchema)
+    import('./blocks/question-blocks').then(m => m.questionInstructionsSchema),
   );
 
   // NEW: Transition blocks
   registerSchema('transition-subtitle', () => 
-    import('./blocks/transition-blocks').then(m => m.transitionSubtitleSchema)
+    import('./blocks/transition-blocks').then(m => m.transitionSubtitleSchema),
   );
   registerSchema('transition-image', () => 
-    import('./blocks/transition-blocks').then(m => m.transitionImageSchema)
+    import('./blocks/transition-blocks').then(m => m.transitionImageSchema),
   );
   registerSchema('transition-description', () => 
-    import('./blocks/transition-blocks').then(m => m.transitionDescriptionSchema)
+    import('./blocks/transition-blocks').then(m => m.transitionDescriptionSchema),
   );
   registerSchema('transition-hero', () => 
-    import('./blocks/transition-blocks').then(m => m.transitionHeroSchema)
+    import('./blocks/transition-blocks').then(m => m.transitionHeroSchema),
   );
 
   // NEW: Offer blocks
   registerSchema('offer-hero', () => 
-    import('./blocks/offer-blocks').then(m => m.offerHeroSchema)
+    import('./blocks/offer-blocks').then(m => m.offerHeroSchema),
   );
   registerSchema('bonus', () => 
-    import('./blocks/offer-blocks').then(m => m.bonusSchema)
+    import('./blocks/offer-blocks').then(m => m.bonusSchema),
   );
   registerSchema('benefits', () => 
-    import('./blocks/offer-blocks').then(m => m.benefitsSchema)
+    import('./blocks/offer-blocks').then(m => m.benefitsSchema),
   );
   registerSchema('guarantee', () => 
-    import('./blocks/offer-blocks').then(m => m.guaranteeSchema)
+    import('./blocks/offer-blocks').then(m => m.guaranteeSchema),
   );
 
   // NEW: Step 20 blocks
   registerSchema('step20-result-header', () => 
-    import('./blocks/step20-blocks').then(m => m.step20ResultHeaderSchema)
+    import('./blocks/step20-blocks').then(m => m.step20ResultHeaderSchema),
   );
   registerSchema('step20-style-reveal', () => 
-    import('./blocks/step20-blocks').then(m => m.step20StyleRevealSchema)
+    import('./blocks/step20-blocks').then(m => m.step20StyleRevealSchema),
   );
 
   // Aliases úteis para compatibilidade

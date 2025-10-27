@@ -98,7 +98,7 @@ export const useUnifiedEditorState = create<EditorState>()(
       updateBlock: (blockId, updates) => {
         const { blocks } = get();
         const newBlocks = blocks.map(block =>
-          block.id === blockId ? { ...block, ...updates } : block
+          block.id === blockId ? { ...block, ...updates } : block,
         );
         set({ blocks: newBlocks });
         get().pushToHistory(newBlocks);
@@ -110,7 +110,7 @@ export const useUnifiedEditorState = create<EditorState>()(
         
         set({
           blocks: newBlocks,
-          selectedBlock: selectedBlock?.id === blockId ? null : selectedBlock
+          selectedBlock: selectedBlock?.id === blockId ? null : selectedBlock,
         });
         get().pushToHistory(newBlocks);
       },
@@ -121,7 +121,7 @@ export const useUnifiedEditorState = create<EditorState>()(
       
       togglePreview: () => set((state) => ({ 
         isPreviewMode: !state.isPreviewMode,
-        selectedBlock: null // Limpar seleção no preview
+        selectedBlock: null, // Limpar seleção no preview
       })),
       
       setViewMode: (mode) => set({ viewMode: mode }),
@@ -141,7 +141,7 @@ export const useUnifiedEditorState = create<EditorState>()(
         
         set({
           history: newHistory,
-          historyIndex: newHistory.length - 1
+          historyIndex: newHistory.length - 1,
         });
       },
       
@@ -152,7 +152,7 @@ export const useUnifiedEditorState = create<EditorState>()(
           set({
             blocks: [...history[newIndex]],
             historyIndex: newIndex,
-            selectedBlock: null
+            selectedBlock: null,
           });
         }
       },
@@ -164,7 +164,7 @@ export const useUnifiedEditorState = create<EditorState>()(
           set({
             blocks: [...history[newIndex]],
             historyIndex: newIndex,
-            selectedBlock: null
+            selectedBlock: null,
           });
         }
       },
@@ -180,10 +180,10 @@ export const useUnifiedEditorState = create<EditorState>()(
       
   getBlocksForStep: (step) => {
     return get().blocks.filter(block => (block as any).step === step);
-  }
+  },
     })),
-    { name: 'unified-editor-state' }
-  )
+    { name: 'unified-editor-state' },
+  ),
 );
 
 // Hook simplificado para performance monitoring
@@ -197,6 +197,6 @@ export const useEditorPerformance = () => {
       memoryUsage: (performance as any).memory ? Math.round((performance as any).memory.usedJSHeapSize / 1024 / 1024) : 0,
       cacheSize: 0,
       isDirty: false,
-      isSaving
+      isSaving,
     };
 };

@@ -314,7 +314,7 @@ const useGlobalStore = create<GlobalStore>()(
         set((state) => {
           const newRecents = [
             { ...funnel, lastAccessed: new Date() },
-            ...state.funnel.recentFunnels.filter(f => f.id !== funnel.id)
+            ...state.funnel.recentFunnels.filter(f => f.id !== funnel.id),
           ];
           return {
             funnel: {
@@ -359,7 +359,7 @@ const useGlobalStore = create<GlobalStore>()(
       markNotificationRead: (id) => {
         set((state) => {
           const notifications = state.notifications.notifications.map(n =>
-            n.id === id ? { ...n, read: true } : n
+            n.id === id ? { ...n, read: true } : n,
           );
           const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -433,7 +433,7 @@ const useGlobalStore = create<GlobalStore>()(
           const newSlowOperations = duration > 100
             ? [
               { operation, duration, timestamp: new Date() },
-              ...state.performanceMetrics.slowOperations.slice(0, 9) // Keep last 10
+              ...state.performanceMetrics.slowOperations.slice(0, 9), // Keep last 10
             ]
             : state.performanceMetrics.slowOperations;
 
@@ -448,8 +448,8 @@ const useGlobalStore = create<GlobalStore>()(
         });
       },
     })),
-    { name: 'global-state-store' }
-  )
+    { name: 'global-state-store' },
+  ),
 );
 
 // =============================================================================
@@ -477,7 +477,7 @@ export const useGlobalState = (): UseGlobalStateReturn => {
   const store = useGlobalStore();
   const performanceRef = useRef<{ startTime: number; renderCount: number }>({
     startTime: performance.now(),
-    renderCount: 0
+    renderCount: 0,
   });
 
   // Performance tracking
@@ -507,7 +507,7 @@ export const useGlobalState = (): UseGlobalStateReturn => {
   }), [
     store.notifications.unreadCount,
     store.funnel.activeFunnel?.name,
-    store.lastUpdated
+    store.lastUpdated,
   ]);
 
   // Selectors
@@ -561,7 +561,7 @@ export const useGlobalUI = () => {
     setPreviewMode, 
     setViewMode, 
     setCurrentRoute, 
-    toggleFullscreen 
+    toggleFullscreen, 
   };
 };
 
@@ -580,7 +580,7 @@ export const useGlobalFunnel = () => {
     setActiveFunnel, 
     addToFunnelHistory, 
     addToRecentFunnels, 
-    clearFunnelHistory 
+    clearFunnelHistory, 
   };
 };
 
@@ -601,7 +601,7 @@ export const useGlobalNotifications = () => {
     markNotificationRead, 
     markAllNotificationsRead, 
     removeNotification, 
-    clearNotifications 
+    clearNotifications, 
   };
 };
 

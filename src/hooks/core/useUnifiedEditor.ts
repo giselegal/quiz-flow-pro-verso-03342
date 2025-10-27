@@ -290,7 +290,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
 
       return newStage.id;
     },
-    [state.funnel]
+    [state.funnel],
   );
 
   const setActiveStage = useCallback((stageId: string) => {
@@ -357,7 +357,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
 
       return newBlock.id;
     },
-    [state.funnel]
+    [state.funnel],
   );
 
   const updateBlock = useCallback(
@@ -397,7 +397,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
 
       addToHistory(updatedFunnel);
     },
-    [state.funnel, state.selectedBlockId]
+    [state.funnel, state.selectedBlockId],
   );
 
   const setSelectedBlock = useCallback(
@@ -429,7 +429,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
         selectedBlock: foundBlock,
       }));
     },
-    [state.funnel]
+    [state.funnel],
   );
 
   // =============================================================================
@@ -452,7 +452,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       });
       setHistoryIndex(prev => prev + 1);
     },
-    [historyIndex]
+    [historyIndex],
   );
 
   const undo = useCallback(() => {
@@ -499,7 +499,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       lastRenderTime: performance.now() - startTimeRef.current,
       memoryUsage: (performance as any).memory?.usedJSHeapSize || 0,
     }),
-    []
+    [],
   );
 
   // Legacy compatibility interface
@@ -516,7 +516,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
         console.warn('Legacy deleteBlock called - implement as needed');
       },
     }),
-    [activeBlocks, state.activeStageId, addBlock, updateBlock]
+    [activeBlocks, state.activeStageId, addBlock, updateBlock],
   );
 
   // =============================================================================
@@ -571,8 +571,8 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
         ...state.funnel, stages: state.funnel.stages.map(stage => ({
           ...stage,
           blocks: stage.blocks.filter(b => b.id !== blockId),
-          blockOrder: stage.blockOrder.filter(id => id !== blockId)
-        }))
+          blockOrder: stage.blockOrder.filter(id => id !== blockId),
+        })),
       };
       setState(prev => ({ ...prev, funnel: updated, selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId, selectedBlock: null, isDirty: true }));
       addToHistory(updated);
@@ -592,7 +592,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
           // Normaliza order
           newBlocks.forEach((b, i) => b.order = i);
           return { ...stage, blocks: newBlocks, blockOrder: newBlocks.map(b => b.id) };
-        })
+        }),
       };
       if (newId) {
         setState(prev => ({ ...prev, funnel: updated, selectedBlockId: newId, selectedBlock: null, isDirty: true }));
@@ -611,7 +611,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
           blocks.splice(toIndex, 0, moved);
           blocks.forEach((b, i) => b.order = i);
           return { ...stage, blocks, blockOrder: blocks.map(b => b.id) };
-        })
+        }),
       };
       setState(prev => ({ ...prev, funnel: updated, isDirty: true }));
       addToHistory(updated);

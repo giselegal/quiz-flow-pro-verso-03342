@@ -22,7 +22,7 @@ const DnDPerformanceAnalyzer = {
         dragEndTimes: [],
         reorderTimes: [],
         memoryUsage: [],
-        contextSwitches: []
+        contextSwitches: [],
     },
 
     // ========================================================================
@@ -39,7 +39,7 @@ const DnDPerformanceAnalyzer = {
             level4: 'EditorPro.tsx',
             level5: 'StepDndProvider.tsx (DndContext)',
             level6: 'CanvasAreaLayout.tsx',
-            level7: 'SortableContext + Draggable items'
+            level7: 'SortableContext + Draggable items',
         };
 
         Object.entries(hierarchy).forEach(([level, component]) => {
@@ -66,7 +66,7 @@ const DnDPerformanceAnalyzer = {
             totalLevels: Object.keys(hierarchy).length,
             contextsFound: dndContexts.length,
             hasNesting: dndContexts.length > 1,
-            isOptimal: dndContexts.length === 1
+            isOptimal: dndContexts.length === 1,
         };
     },
 
@@ -109,7 +109,7 @@ const DnDPerformanceAnalyzer = {
             droppableCount: droppables.length,
             sortableCount: sortables.length,
             queryTime,
-            hasRerenderTracking: rerenderIndicators.length > 0
+            hasRerenderTracking: rerenderIndicators.length > 0,
         };
     },
 
@@ -139,7 +139,7 @@ const DnDPerformanceAnalyzer = {
                 bubbles: true,
                 cancelable: true,
                 clientX: 100 + i * 10,
-                clientY: 100 + i * 10
+                clientY: 100 + i * 10,
             });
 
             firstDraggable.dispatchEvent(mouseDownEvent);
@@ -152,7 +152,7 @@ const DnDPerformanceAnalyzer = {
                 bubbles: true,
                 cancelable: true,
                 clientX: 150 + i * 10,
-                clientY: 150 + i * 10
+                clientY: 150 + i * 10,
             });
 
             document.dispatchEvent(mouseMoveEvent);
@@ -160,7 +160,7 @@ const DnDPerformanceAnalyzer = {
             // Simular mouseup
             const mouseUpEvent = new MouseEvent('mouseup', {
                 bubbles: true,
-                cancelable: true
+                cancelable: true,
             });
 
             document.dispatchEvent(mouseUpEvent);
@@ -191,7 +191,7 @@ const DnDPerformanceAnalyzer = {
             avgTime,
             maxTime,
             minTime,
-            isPerformant
+            isPerformant,
         };
     },
 
@@ -217,7 +217,7 @@ const DnDPerformanceAnalyzer = {
                 index: i,
                 id: el.id,
                 hasMouseDown,
-                hasTouch
+                hasTouch,
             });
         });
 
@@ -230,7 +230,7 @@ const DnDPerformanceAnalyzer = {
                 index: i,
                 id: el.id,
                 hasDrop,
-                hasDragOver
+                hasDragOver,
             });
         });
 
@@ -252,7 +252,7 @@ const DnDPerformanceAnalyzer = {
             totalElements: elementsWithListeners.length,
             draggableElements: elementsWithListeners.filter(el => el.type === 'draggable').length,
             droppableElements: elementsWithListeners.filter(el => el.type === 'droppable').length,
-            potentialGlobalListeners: activeGlobalListeners.length
+            potentialGlobalListeners: activeGlobalListeners.length,
         };
     },
 
@@ -271,7 +271,7 @@ const DnDPerformanceAnalyzer = {
             hierarchy: this.analyzeHierarchy(),
             performance: this.measurePerformance(),
             dragSimulation: await this.simulateDragPerformance(),
-            eventListeners: this.analyzeEventListeners()
+            eventListeners: this.analyzeEventListeners(),
         };
 
         // Calcular score geral
@@ -314,7 +314,7 @@ const DnDPerformanceAnalyzer = {
         }
 
         return results;
-    }
+    },
 };
 
 // Execução automática se estiver no browser

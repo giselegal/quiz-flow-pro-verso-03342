@@ -17,7 +17,7 @@ const SimpleStepSidebar: React.FC<{
     console.log('🔍 SimpleStepSidebar render:', {
         currentStep,
         stepHasBlocksKeys: Object.keys(stepHasBlocks),
-        stepsWithBlocks: Object.entries(stepHasBlocks).filter(([, has]) => has).map(([step]) => step)
+        stepsWithBlocks: Object.entries(stepHasBlocks).filter(([, has]) => has).map(([step]) => step),
     });
 
     return (
@@ -72,7 +72,7 @@ const StepSidebarTest: React.FC = () => {
         console.log('🔍 StepSidebarTest normalized blocks:', {
             keyCount: Object.keys(normalized).length,
             keys: Object.keys(normalized),
-            blockCounts: Object.entries(normalized).map(([k, v]) => [k, v.length])
+            blockCounts: Object.entries(normalized).map(([k, v]) => [k, v.length]),
         });
         return normalized;
     }, []);

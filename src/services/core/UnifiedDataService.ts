@@ -119,7 +119,7 @@ class UnifiedDataServiceImpl {
         this.cache.set(key, {
             data,
             timestamp: Date.now(),
-            ttl
+            ttl,
         });
     }
 
@@ -234,7 +234,7 @@ class UnifiedDataServiceImpl {
                     updated_at: funnel.updated_at || new Date().toISOString(),
                     views: metrics.views,
                     conversions: metrics.conversions,
-                    conversion_rate: metrics.conversion_rate
+                    conversion_rate: metrics.conversion_rate,
                 } as UnifiedFunnel;
             }));
 
@@ -303,7 +303,7 @@ class UnifiedDataServiceImpl {
                 updated_at: typedData.updated_at || new Date().toISOString(),
                 views: metrics.views,
                 conversions: metrics.conversions,
-                conversion_rate: metrics.conversion_rate
+                conversion_rate: metrics.conversion_rate,
             };
 
             this.setCache(cacheKey, funnel);
@@ -327,7 +327,7 @@ class UnifiedDataServiceImpl {
                 is_published: funnel.is_published || false,
                 version: (funnel.version || 0) + 1,
                 settings: funnel.settings || { theme: 'default', category: 'general', autoSave: true },
-                updated_at: new Date().toISOString()
+                updated_at: new Date().toISOString(),
             };
 
             const { data, error } = await supabase
@@ -424,7 +424,7 @@ class UnifiedDataServiceImpl {
                         id: funnel.id,
                         name: funnel.name,
                         conversions: funnel.conversions || 0,
-                        conversion_rate: funnel.conversion_rate || 0
+                        conversion_rate: funnel.conversion_rate || 0,
                     } : null;
                 })
                 .filter(Boolean)
@@ -440,7 +440,7 @@ class UnifiedDataServiceImpl {
                 conversionRate,
                 totalRevenue: completedSessions * 45, // R$ 45 por conversão
                 activeUsersNow: Math.floor(Math.random() * 20) + 5, // Simulado
-                topPerformingFunnels: topPerformingFunnels as any[]
+                topPerformingFunnels: topPerformingFunnels as any[],
             };
 
             this.setCache(cacheKey, metrics);
@@ -484,22 +484,22 @@ class UnifiedDataServiceImpl {
                     { step: 5, dropoffRate: 15 },
                     { step: 10, dropoffRate: 25 },
                     { step: 15, dropoffRate: 35 },
-                    { step: 20, dropoffRate: 45 }
+                    { step: 20, dropoffRate: 45 },
                 ],
                 demographicData: {
                     ageGroups: {
                         '18-25': 25,
                         '26-35': 40,
                         '36-45': 25,
-                        '46+': 10
+                        '46+': 10,
                     },
                     locations: {
                         'São Paulo': 30,
                         'Rio de Janeiro': 20,
                         'Belo Horizonte': 15,
-                        'Outros': 35
-                    }
-                }
+                        'Outros': 35,
+                    },
+                },
             };
 
             this.setCache(cacheKey, analytics);
@@ -535,7 +535,7 @@ class UnifiedDataServiceImpl {
                 email: user.email,
                 full_name: profile?.name || user.user_metadata?.full_name,
                 avatar_url: user.user_metadata?.avatar_url,
-                created_at: user.created_at
+                created_at: user.created_at,
             };
 
         } catch (error) {
@@ -560,7 +560,7 @@ class UnifiedDataServiceImpl {
             theme: settings.theme || 'default',
             category: settings.category || 'general',
             autoSave: settings.autoSave !== false,
-            ...settings
+            ...settings,
         };
     }
 
@@ -577,7 +577,7 @@ class UnifiedDataServiceImpl {
             blocks: Array.isArray(page.blocks) ? page.blocks : [],
             metadata: page.metadata || undefined,
             created_at: page.created_at || new Date().toISOString(),
-            updated_at: page.updated_at || new Date().toISOString()
+            updated_at: page.updated_at || new Date().toISOString(),
         }));
     }
 
@@ -614,7 +614,7 @@ class UnifiedDataServiceImpl {
             const pagesData = pages.map(page => ({
                 ...page,
                 funnel_id: funnelId,
-                updated_at: new Date().toISOString()
+                updated_at: new Date().toISOString(),
             }));
 
             const { error } = await supabase
@@ -644,7 +644,7 @@ class UnifiedDataServiceImpl {
             updated_at: new Date().toISOString(),
             views: 150,
             conversions: 45,
-            conversion_rate: 30
+            conversion_rate: 30,
         };
 
         console.log('⚠️ Usando dados de fallback para funis');
@@ -665,7 +665,7 @@ class UnifiedDataServiceImpl {
             updated_at: new Date().toISOString(),
             views: 0,
             conversions: 0,
-            conversion_rate: 0
+            conversion_rate: 0,
         };
     }
 
@@ -682,8 +682,8 @@ class UnifiedDataServiceImpl {
             activeUsersNow: 12,
             topPerformingFunnels: [
                 { id: 'fallback-1', name: 'Quiz de Estilo', conversions: 25, conversion_rate: 35 },
-                { id: 'fallback-2', name: 'Funil Marketing', conversions: 20, conversion_rate: 30 }
-            ]
+                { id: 'fallback-2', name: 'Funil Marketing', conversions: 20, conversion_rate: 30 },
+            ],
         };
     }
 
@@ -697,12 +697,12 @@ class UnifiedDataServiceImpl {
             dropoffPoints: [
                 { step: 1, dropoffRate: 5 },
                 { step: 10, dropoffRate: 20 },
-                { step: 20, dropoffRate: 40 }
+                { step: 20, dropoffRate: 40 },
             ],
             demographicData: {
                 ageGroups: { '18-25': 30, '26-35': 45, '36+': 25 },
-                locations: { 'São Paulo': 40, 'Rio de Janeiro': 30, 'Outros': 30 }
-            }
+                locations: { 'São Paulo': 40, 'Rio de Janeiro': 30, 'Outros': 30 },
+            },
         };
     }
 
@@ -720,7 +720,7 @@ class UnifiedDataServiceImpl {
             updated_at: new Date().toISOString(),
             views: 0,
             conversions: 0,
-            conversion_rate: 0
+            conversion_rate: 0,
         };
 
         try {
@@ -749,7 +749,7 @@ class UnifiedDataServiceImpl {
         await Promise.all([
             this.getFunnels(),
             this.getDashboardMetrics(),
-            this.getCurrentUser()
+            this.getCurrentUser(),
         ]);
         console.log('🔄 Dados do UnifiedDataService atualizados');
     }

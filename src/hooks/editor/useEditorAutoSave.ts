@@ -39,7 +39,7 @@ export const useEditorAutoSave = ({
   enabled = true,
   delay = 2000,
   showToasts = false,
-  context = FunnelContext.EDITOR // 🎯 Contexto padrão é EDITOR
+  context = FunnelContext.EDITOR, // 🎯 Contexto padrão é EDITOR
 }: UseEditorAutoSaveOptions): UseEditorAutoSaveReturn => {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
@@ -84,8 +84,8 @@ export const useEditorAutoSave = ({
             JSON.stringify({
               data: dataToSave,
               timestamp: new Date().toISOString(),
-              funnelId: currentFunnelId
-            })
+              funnelId: currentFunnelId,
+            }),
           );
         } catch (err) {
           console.warn('⚠️ Erro ao salvar no localStorage:', err);
@@ -98,7 +98,7 @@ export const useEditorAutoSave = ({
           description: `Funil editado em ${new Date().toLocaleDateString()}`,
           pages: [], // Os dados do editor vão aqui
           settings: dataToSave || {},
-          context
+          context,
         };
 
         await contextualFunnelService.saveFunnel(contextualData as any);
@@ -116,7 +116,7 @@ export const useEditorAutoSave = ({
         toast({
           title: 'Alterações salvas',
           description: `Funil ${currentFunnelId} atualizado com sucesso`,
-          variant: 'default'
+          variant: 'default',
         });
       }
 
@@ -129,7 +129,7 @@ export const useEditorAutoSave = ({
         toast({
           title: 'Erro ao salvar',
           description: 'Não foi possível salvar as alterações',
-          variant: 'destructive'
+          variant: 'destructive',
         });
       }
 
@@ -143,7 +143,7 @@ export const useEditorAutoSave = ({
     onSave: saveFunction,
     delay,
     enabled,
-    showToasts: false // Gerenciamos os toasts aqui
+    showToasts: false, // Gerenciamos os toasts aqui
   });
 
   // 💾 Função de salvamento manual
@@ -173,7 +173,7 @@ export const useEditorAutoSave = ({
     hasUnsavedChanges,
     forceSave,
     saveStatus,
-    errorMessage
+    errorMessage,
   };
 };
 

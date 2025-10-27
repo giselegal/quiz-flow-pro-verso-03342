@@ -74,7 +74,7 @@ class BusinessMetrics {
       // Track page hide
       window.addEventListener('pagehide', () => {
       this.trackInteraction('session_end', 'window', {
-        sessionDuration: Date.now() - this.sessionStart
+        sessionDuration: Date.now() - this.sessionStart,
       });
       this.flushMetrics();
     });
@@ -87,7 +87,7 @@ class BusinessMetrics {
     action: string,
     component: string,
     metadata?: Record<string, any>,
-    userId?: string
+    userId?: string,
   ) {
     const interaction: UserInteraction = {
       action,
@@ -95,7 +95,7 @@ class BusinessMetrics {
       timestamp: Date.now(),
       userId,
       sessionId: this.sessionId,
-      metadata
+      metadata,
     };
 
     this.interactions.push(interaction);
@@ -105,7 +105,7 @@ class BusinessMetrics {
       component,
       userId,
       category: 'user_interaction',
-      ...metadata
+      ...metadata,
     });
 
     // Keep only last 1000 interactions in memory
@@ -122,7 +122,7 @@ class BusinessMetrics {
     value?: number,
     currency = 'USD',
     funnelStep?: number,
-    userId?: string
+    userId?: string,
   ) {
     const conversion: ConversionEvent = {
       event,
@@ -131,7 +131,7 @@ class BusinessMetrics {
       timestamp: Date.now(),
       funnelStep,
       userId,
-      sessionId: this.sessionId
+      sessionId: this.sessionId,
     };
 
     this.conversions.push(conversion);
@@ -142,7 +142,7 @@ class BusinessMetrics {
       currency,
       funnelStep,
       userId,
-      category: 'conversion'
+      category: 'conversion',
     });
 
     // Keep only last 100 conversions in memory
@@ -158,7 +158,7 @@ class BusinessMetrics {
     this.trackInteraction('funnel_step', 'funnel', {
       step,
       stepName,
-      progress: `${step}/21` // Assuming 21-step funnel
+      progress: `${step}/21`, // Assuming 21-step funnel
     }, userId);
   }
 
@@ -169,7 +169,7 @@ class BusinessMetrics {
     this.trackInteraction('funnel_dropoff', 'funnel', {
       step,
       reason,
-      sessionDuration: Date.now() - this.sessionStart
+      sessionDuration: Date.now() - this.sessionStart,
     }, userId);
   }
 
@@ -181,7 +181,7 @@ class BusinessMetrics {
       error,
       severity,
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
-      url: typeof window !== 'undefined' ? window.location.href : ''
+      url: typeof window !== 'undefined' ? window.location.href : '',
     });
   }
 
@@ -193,7 +193,7 @@ class BusinessMetrics {
     const uniqueUsers = new Set(
       this.interactions
         .filter(i => i.userId)
-        .map(i => i.userId)
+        .map(i => i.userId),
     ).size;
 
     const totalInteractions = this.interactions.length;
@@ -251,7 +251,7 @@ class BusinessMetrics {
       averageSessionDuration,
       topActions,
       funnelDropoffs: funnelDropoffRates,
-      timestamp: now
+      timestamp: now,
     };
   }
 
@@ -260,7 +260,7 @@ class BusinessMetrics {
    */
   getFunnelMetrics() {
     const funnelInteractions = this.interactions.filter(i => 
-      i.component === 'funnel' && i.metadata?.step
+      i.component === 'funnel' && i.metadata?.step,
     );
 
     const stepMetrics: Record<number, {
@@ -303,7 +303,7 @@ class BusinessMetrics {
         totalInteractions: snapshot.totalInteractions,
         uniqueUsers: snapshot.uniqueUsers,
         conversionRate: snapshot.conversionRate,
-        category: 'business_metrics'
+        category: 'business_metrics',
       });
     } catch (error) {
       structuredLogger.error('Failed to flush business metrics', { error });
@@ -315,7 +315,7 @@ class BusinessMetrics {
     // For now, just log to structured logger
     structuredLogger.info('Analytics snapshot', {
       snapshot,
-      category: 'analytics'
+      category: 'analytics',
     });
   }
 
@@ -331,15 +331,15 @@ class BusinessMetrics {
         totalInteractions: snapshot.totalInteractions,
         uniqueUsers: snapshot.uniqueUsers,
         conversionRate: `${snapshot.conversionRate.toFixed(2)}%`,
-        avgSessionDuration: `${Math.round(snapshot.averageSessionDuration / 1000)}s`
+        avgSessionDuration: `${Math.round(snapshot.averageSessionDuration / 1000)}s`,
       },
       topActions: snapshot.topActions.slice(0, 5),
       funnelHealth: {
         totalSteps: Object.keys(funnelMetrics).length,
         averageDropoffRate: snapshot.funnelDropoffs.reduce((sum, item) => sum + item.dropoffRate, 0) / Math.max(snapshot.funnelDropoffs.length, 1),
-        criticalDropoffs: snapshot.funnelDropoffs.filter(item => item.dropoffRate > 20)
+        criticalDropoffs: snapshot.funnelDropoffs.filter(item => item.dropoffRate > 20),
       },
-      recentActivity: this.interactions.slice(-10).reverse()
+      recentActivity: this.interactions.slice(-10).reverse(),
     };
   }
 

@@ -20,8 +20,8 @@ export const resultCategoriesConfigSchema = templates
         { key: 'description', label: 'Descrição', type: 'text' },
         { key: 'imageUrl', label: 'Imagem (URL)', type: 'text' },
         { key: 'color', label: 'Cor', type: 'text' },
-      ]
-    }
+      ],
+    },
   })
   .version('2.0.0')
   .build();

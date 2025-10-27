@@ -45,7 +45,7 @@ export class MultiTenantService {
   async createTenant(config: Omit<TenantConfig, 'id'>): Promise<TenantConfig> {
     const tenant: TenantConfig = {
       id: `tenant-${Date.now()}`,
-      ...config
+      ...config,
     };
 
     this.tenants.set(tenant.id, tenant);
@@ -54,7 +54,7 @@ export class MultiTenantService {
       id: tenant.id,
       name: tenant.name,
       plan: tenant.billing.plan,
-      projectedRevenue: tenant.billing.monthlyRevenue
+      projectedRevenue: tenant.billing.monthlyRevenue,
     });
 
     return tenant;
@@ -85,7 +85,7 @@ export class MultiTenantService {
         accent: tenant.brandColors.accent,
       },
       features: tenant.features,
-      whiteLabel: tenant.features.whiteLabel
+      whiteLabel: tenant.features.whiteLabel,
     };
   }
 
@@ -101,9 +101,9 @@ export class MultiTenantService {
       utilizacao: {
         users: (tenant.billing.users / tenant.limits.maxUsers) * 100,
         storage: 65, // Simulado
-        funnels: 45  // Simulado
+        funnels: 45,  // Simulado
       },
-      roi: this.calculateTenantROI(tenant)
+      roi: this.calculateTenantROI(tenant),
     };
   }
 
@@ -118,14 +118,14 @@ export class MultiTenantService {
       colors: {
         primary: '#B89B7A',
         secondary: '#432818',
-        accent: '#8F7A6A'
+        accent: '#8F7A6A',
       },
       features: {
         aiPersonalization: false,
         advancedAnalytics: false,
         whiteLabel: false,
-        customIntegrations: false
-      }
+        customIntegrations: false,
+      },
     };
   }
 
@@ -150,7 +150,7 @@ export class MultiTenantService {
       },
       avgRevenuePerTenant: tenants.length > 0 
         ? Math.round(tenants.reduce((sum, t) => sum + t.billing.monthlyRevenue, 0) / tenants.length)
-        : 0
+        : 0,
     };
   }
 }

@@ -117,7 +117,7 @@ export const QUIZ21_STEPS_CONFIG: FunnelConfig = {
         version: '2.1.0',
         author: 'Gisele Galvão',
         createdAt: '2025-01-01T00:00:00.000Z',
-        updatedAt: '2025-09-10T00:00:00.000Z'
+        updatedAt: '2025-09-10T00:00:00.000Z',
     },
 
     // SEO específico deste funil (sobrescreve global quando necessário)
@@ -133,11 +133,11 @@ export const QUIZ21_STEPS_CONFIG: FunnelConfig = {
             'personal stylist',
             'guarda-roupa',
             'autoestima',
-            'consultoria de imagem'
+            'consultoria de imagem',
         ],
         ogTitle: 'Quiz de Estilo Pessoal - Descubra seu estilo em 5 minutos',
         ogDescription: 'Faça o quiz da consultora Gisele Galvão e descubra seu estilo predominante. Resultado imediato + dicas personalizadas!',
-        ogImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/quiz-estilo-og-image.jpg'
+        ogImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/quiz-estilo-og-image.jpg',
     },
 
     // Tema visual específico do funil
@@ -160,7 +160,7 @@ export const QUIZ21_STEPS_CONFIG: FunnelConfig = {
         background-color: #F3E8E6;
         border-color: #B89B7A;
       }
-    `
+    `,
     },
 
     // Tracking específico do funil
@@ -172,8 +172,8 @@ export const QUIZ21_STEPS_CONFIG: FunnelConfig = {
             quiz_completed: 'quiz_style_completed',
             result_viewed: 'style_result_viewed',
             email_captured: 'style_email_captured',
-            pdf_downloaded: 'style_pdf_downloaded'
-        }
+            pdf_downloaded: 'style_pdf_downloaded',
+        },
     },
 
     // UTMs específicas desta campanha
@@ -182,14 +182,14 @@ export const QUIZ21_STEPS_CONFIG: FunnelConfig = {
         medium: 'quiz',
         campaign: 'quiz_estilo_pessoal_2025',
         term: 'descobrir_estilo',
-        content: 'quiz_21_etapas'
+        content: 'quiz_21_etapas',
     },
 
     // Webhooks específicos do funil
     webhooks: {
         leadCapture: 'https://hooks.zapier.com/hooks/catch/123456/quiz-style-lead/',
         quizComplete: 'https://hooks.zapier.com/hooks/catch/123456/quiz-style-complete/',
-        enabled: false // Desabilitado por padrão
+        enabled: false, // Desabilitado por padrão
     },
 
     // Configurações de comportamento
@@ -199,7 +199,7 @@ export const QUIZ21_STEPS_CONFIG: FunnelConfig = {
         showProgress: true,
         allowBackward: true,
         saveProgress: true,
-        requiredFieldsValidation: true
+        requiredFieldsValidation: true,
     },
 
     // Configurações de resultado
@@ -208,8 +208,8 @@ export const QUIZ21_STEPS_CONFIG: FunnelConfig = {
         enableSocialSharing: true,
         enablePDFDownload: true,
         enableResultEmail: true,
-        customResultUrl: undefined // Usa padrão do sistema
-    }
+        customResultUrl: undefined, // Usa padrão do sistema
+    },
 };
 
 // ============================================================================
@@ -221,7 +221,7 @@ export const QUIZ21_STEPS_CONFIG: FunnelConfig = {
  */
 export function mergeFunnelWithAppConfig(
     funnelConfig: FunnelConfig,
-    appConfig: AppConfig
+    appConfig: AppConfig,
 ): AppConfig & { funnel: FunnelConfig['funnel'] } {
     return {
         // Configurações globais do app como base
@@ -232,8 +232,8 @@ export function mergeFunnelWithAppConfig(
                 defaultTitle: funnelConfig.seo.title || appConfig.seo.defaultTitle,
                 defaultDescription: funnelConfig.seo.description || appConfig.seo.defaultDescription,
                 defaultKeywords: funnelConfig.seo.keywords || appConfig.seo.defaultKeywords,
-                defaultOgImage: funnelConfig.seo.ogImage || appConfig.seo.defaultOgImage
-            })
+                defaultOgImage: funnelConfig.seo.ogImage || appConfig.seo.defaultOgImage,
+            }),
         },
 
         // Configurações de domínio permanecem globais
@@ -244,8 +244,8 @@ export function mergeFunnelWithAppConfig(
             ...appConfig.analytics,
             ...(funnelConfig.tracking && {
                 // Adicionar tracking específico se fornecido
-                facebookPixel: funnelConfig.tracking.facebookPixel || appConfig.analytics.googleAnalytics.measurementId
-            })
+                facebookPixel: funnelConfig.tracking.facebookPixel || appConfig.analytics.googleAnalytics.measurementId,
+            }),
         },
 
         // Branding global + tema do funil
@@ -257,9 +257,9 @@ export function mergeFunnelWithAppConfig(
                 accentColor: funnelConfig.theme.accentColor || appConfig.branding.accentColor,
                 fontFamily: {
                     ...appConfig.branding.fontFamily,
-                    primary: funnelConfig.theme.fontFamily || appConfig.branding.fontFamily.primary
-                }
-            })
+                    primary: funnelConfig.theme.fontFamily || appConfig.branding.fontFamily.primary,
+                },
+            }),
         },
 
         // Configurações legais permanecem globais
@@ -269,7 +269,7 @@ export function mergeFunnelWithAppConfig(
         environment: appConfig.environment,
 
         // Adicionar dados específicos do funil
-        funnel: funnelConfig.funnel
+        funnel: funnelConfig.funnel,
     };
 }
 
@@ -283,7 +283,7 @@ export function generateFunnelUTMs(funnelConfig: FunnelConfig): Record<string, s
         utm_medium: utm.medium,
         utm_campaign: utm.campaign,
         ...(utm.term && { utm_term: utm.term }),
-        ...(utm.content && { utm_content: utm.content })
+        ...(utm.content && { utm_content: utm.content }),
     };
 }
 
@@ -298,9 +298,9 @@ export function generateFunnelTracking(funnelConfig: FunnelConfig) {
         events: tracking.customEvents || {},
         pixels: {
             ...(tracking.facebookPixel && { facebook: tracking.facebookPixel }),
-            ...(tracking.googleAnalytics && { google: tracking.googleAnalytics })
+            ...(tracking.googleAnalytics && { google: tracking.googleAnalytics }),
         },
-        ...(tracking.hotjar && { hotjar: tracking.hotjar })
+        ...(tracking.hotjar && { hotjar: tracking.hotjar }),
     };
 }
 

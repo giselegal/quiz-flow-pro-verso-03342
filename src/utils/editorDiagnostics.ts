@@ -40,10 +40,10 @@ export async function runCompleteDiagnostics(): Promise<DiagnosticResult> {
       warningIssues: 0,
       infoIssues: 0,
       fixableIssues: 0,
-      fixedIssues: 0
+      fixedIssues: 0,
     },
     details: [],
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
 }
 

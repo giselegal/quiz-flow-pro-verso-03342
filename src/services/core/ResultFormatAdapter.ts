@@ -106,8 +106,8 @@ export class ResultFormatAdapter {
         source: 'useQuizResults',
         version: '1.0',
         timestamp: new Date().toISOString(),
-        userName
-      }
+        userName,
+      },
     };
   }
 
@@ -131,8 +131,8 @@ export class ResultFormatAdapter {
         source: 'quizResultsService',
         version: '3.0',
         timestamp: new Date().toISOString(),
-        userName
-      }
+        userName,
+      },
     };
   }
 
@@ -157,8 +157,8 @@ export class ResultFormatAdapter {
         source: 'ResultEngine',
         version: payload.version || '1.0',
         timestamp: new Date().toISOString(),
-        userName
-      }
+        userName,
+      },
     };
   }
 
@@ -182,8 +182,8 @@ export class ResultFormatAdapter {
       metadata: {
         source: 'calcResults',
         version: result.version || result.engineVersion || '2.0',
-        timestamp: result.calculatedAt?.toISOString() || new Date().toISOString()
-      }
+        timestamp: result.calculatedAt?.toISOString() || new Date().toISOString(),
+      },
     };
   }
 
@@ -197,7 +197,7 @@ export class ResultFormatAdapter {
       scores.push({
         category,
         score,
-        count: 1 // Aproximação, pois não temos dados originais
+        count: 1, // Aproximação, pois não temos dados originais
       });
     });
 
@@ -220,7 +220,7 @@ export class ResultFormatAdapter {
       lifestyle: 'equilibrado',
       occasionPriorities: ['trabalho', 'casual', 'social'],
       confidence: unified.confidence,
-      styleScores: unified.allScores
+      styleScores: unified.allScores,
     };
   }
 
@@ -233,7 +233,7 @@ export class ResultFormatAdapter {
       category: style,
       score: unified.allScores[style] || 0,
       percentage: Math.round((unified.allScores[style] || 0) / Math.max(1, Object.values(unified.allScores).reduce((a, b) => a + b, 0)) * 100),
-      rank: index + 2
+      rank: index + 2,
     }));
 
     return {
@@ -243,12 +243,12 @@ export class ResultFormatAdapter {
         category: unified.primaryStyle,
         score: unified.allScores[unified.primaryStyle] || 0,
         percentage: unified.percentage,
-        rank: 1
+        rank: 1,
       },
       secondaryStyles,
       scores: unified.allScores,
       totalQuestions: 21, // Valor padrão
-      userData: { name: unified.metadata.userName || 'Usuário' }
+      userData: { name: unified.metadata.userName || 'Usuário' },
     };
   }
 
@@ -305,8 +305,8 @@ export class ResultFormatAdapter {
         source: source as any,
         version: '1.0',
         timestamp: new Date().toISOString(),
-        userName
-      }
+        userName,
+      },
     };
   }
 
@@ -342,7 +342,7 @@ export class ResultFormatAdapter {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 }

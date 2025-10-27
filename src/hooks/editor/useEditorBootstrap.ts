@@ -29,7 +29,7 @@ interface UseEditorBootstrapResult {
 const EditorParamsSchema = z.object({
     funnel: z.string().min(1).optional(),
     template: z.string().min(1).optional(),
-    mode: z.enum(['visual', 'builder', 'funnel', 'headless', 'admin-integrated', 'quiz']).optional()
+    mode: z.enum(['visual', 'builder', 'funnel', 'headless', 'admin-integrated', 'quiz']).optional(),
 });
 
 // Parse e normaliza parâmetros da URL de forma resiliente
@@ -176,7 +176,7 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
             funnel: { step: 2, label: 'Carregando funil' },
             seed: { step: 3, label: 'Aplicando seed' },
             ready: { step: 4, label: 'Pronto' },
-            error: { step: 4, label: 'Erro' }
+            error: { step: 4, label: 'Erro' },
         };
         const total = 4;
         const { step, label } = map[phase];
@@ -192,7 +192,7 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
         progress,
         seedApplied,
         effectiveFunnelId: params.funnelId || crud.currentFunnel?.id,
-        setMode
+        setMode,
     };
 }
 

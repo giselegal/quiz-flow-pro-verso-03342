@@ -14,8 +14,8 @@ Object.defineProperty(global, 'performance', {
     mark: vi.fn(),
     measure: vi.fn(),
     getEntriesByName: vi.fn(() => []),
-    getEntriesByType: vi.fn(() => [])
-  }
+    getEntriesByType: vi.fn(() => []),
+  },
 });
 
 describe('⚡ Performance e Tempo de Carregamento', () => {
@@ -129,7 +129,7 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
         'step-3': ['option2'],
         'step-4': ['option1'],
         'step-5': ['option3'],
-        'step-6': ['option2']
+        'step-6': ['option2'],
       };
 
       const startTime = performance.now();
@@ -143,7 +143,7 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
         romantico: 0,
         sexy: 0,
         dramatico: 0,
-        criativo: 0
+        criativo: 0,
       };
 
       Object.entries(mockAnswers).forEach(([_, answers]) => {
@@ -172,7 +172,7 @@ describe('⚡ Performance e Tempo de Carregamento', () => {
         stepTransition: 50,    // Transição entre etapas
         resultCalculation: 100, // Cálculo de resultado
         dataStorage: 10,       // Salvamento local
-        imageLoad: 200         // Carregamento de imagens
+        imageLoad: 200,         // Carregamento de imagens
       };
 
       // Todos os tempos devem estar dentro dos limites aceitáveis para UX

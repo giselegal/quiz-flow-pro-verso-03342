@@ -294,7 +294,7 @@ class QuizDataPipeline {
       // Gerar insights personalizados
       const personalizedInsights = this.generatePersonalizedInsights(
         dominantStyle, 
-        categoryScores
+        categoryScores,
       );
 
       const result = {
@@ -345,7 +345,7 @@ class QuizDataPipeline {
   } {
     const stages = Array.from(this.stages.values());
     const isComplete = stages.every(stage => 
-      stage.status === 'completed' || stage.status === 'error'
+      stage.status === 'completed' || stage.status === 'error',
     );
     const hasErrors = stages.some(stage => stage.status === 'error');
 
@@ -543,7 +543,7 @@ class QuizDataPipeline {
 
   private generatePersonalizedInsights(
     dominantStyle: string, 
-    scores: Record<string, number>
+    scores: Record<string, number>,
   ): any {
     return {
       primaryStyle: dominantStyle,

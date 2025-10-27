@@ -50,7 +50,7 @@ const loadNoCodeConfiguration = () => {
             global: globalConfig ? JSON.parse(globalConfig) : null,
             result: resultConfig ? JSON.parse(resultConfig) : null,
             step20: step20Config ? JSON.parse(step20Config) : null,
-            styles: styleConfigs
+            styles: styleConfigs,
         };
     } catch (error) {
         console.warn('Erro ao carregar configurações NoCode:', error);
@@ -77,8 +77,8 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
             value: '',
             type: PropertyType.TEXT,
             label: 'ID',
-            category: PropertyCategory.ADVANCED
-        }
+            category: PropertyCategory.ADVANCED,
+        },
     ];    // Propriedades específicas por tipo
     switch (blockType) {
         case 'header':
@@ -91,7 +91,7 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                     type: PropertyType.TEXT,
                     label: 'Texto do Título',
                     category: PropertyCategory.CONTENT,
-                    placeholder: 'Digite o título...'
+                    placeholder: 'Digite o título...',
                 },
                 {
                     key: 'level',
@@ -105,8 +105,8 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                         { value: 3, label: 'H3 - Seção' },
                         { value: 4, label: 'H4 - Subseção' },
                         { value: 5, label: 'H5 - Pequeno' },
-                        { value: 6, label: 'H6 - Menor' }
-                    ]
+                        { value: 6, label: 'H6 - Menor' },
+                    ],
                 },
                 {
                     key: 'fontSize',
@@ -116,14 +116,14 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                     category: PropertyCategory.STYLE,
                     min: 12,
                     max: 72,
-                    step: 1
+                    step: 1,
                 },
                 {
                     key: 'textColor',
                     value: '#000000',
                     type: PropertyType.COLOR,
                     label: 'Cor do Texto',
-                    category: PropertyCategory.STYLE
+                    category: PropertyCategory.STYLE,
                 },
                 {
                     key: 'textAlign',
@@ -134,9 +134,9 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                     options: [
                         { value: 'left', label: 'Esquerda' },
                         { value: 'center', label: 'Centro' },
-                        { value: 'right', label: 'Direita' }
-                    ]
-                }
+                        { value: 'right', label: 'Direita' },
+                    ],
+                },
             ];
             break;
 
@@ -150,7 +150,7 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                     type: PropertyType.TEXTAREA,
                     label: 'Texto',
                     category: PropertyCategory.CONTENT,
-                    placeholder: 'Digite o texto...'
+                    placeholder: 'Digite o texto...',
                 },
                 {
                     key: 'fontSize',
@@ -160,15 +160,15 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                     category: PropertyCategory.STYLE,
                     min: 10,
                     max: 36,
-                    step: 1
+                    step: 1,
                 },
                 {
                     key: 'textColor',
                     value: '#000000',
                     type: PropertyType.COLOR,
                     label: 'Cor do Texto',
-                    category: PropertyCategory.STYLE
-                }
+                    category: PropertyCategory.STYLE,
+                },
             ];
             break;
 
@@ -180,7 +180,7 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                     value: 'Clique aqui',
                     type: PropertyType.TEXT,
                     label: 'Texto do Botão',
-                    category: PropertyCategory.CONTENT
+                    category: PropertyCategory.CONTENT,
                 },
                 {
                     key: 'variant',
@@ -191,8 +191,8 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                     options: [
                         { value: 'primary', label: 'Primário' },
                         { value: 'secondary', label: 'Secundário' },
-                        { value: 'outline', label: 'Contorno' }
-                    ]
+                        { value: 'outline', label: 'Contorno' },
+                    ],
                 },
                 {
                     key: 'size',
@@ -203,16 +203,16 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                     options: [
                         { value: 'sm', label: 'Pequeno' },
                         { value: 'md', label: 'Médio' },
-                        { value: 'lg', label: 'Grande' }
-                    ]
+                        { value: 'lg', label: 'Grande' },
+                    ],
                 },
                 {
                     key: 'backgroundColor',
                     value: '#0066cc',
                     type: PropertyType.COLOR,
                     label: 'Cor de Fundo',
-                    category: PropertyCategory.STYLE
-                }
+                    category: PropertyCategory.STYLE,
+                },
             ];
             break;
 
@@ -227,14 +227,14 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                     value: noCodeConfigs.result?.title || noCodeConfigs.step20?.title || 'Seu Resultado',
                     type: PropertyType.TEXT,
                     label: 'Título do Resultado',
-                    category: PropertyCategory.CONTENT
+                    category: PropertyCategory.CONTENT,
                 },
                 {
                     key: 'resultDescription',
                     value: noCodeConfigs.result?.description || noCodeConfigs.step20?.description || '',
                     type: PropertyType.TEXTAREA,
                     label: 'Descrição do Resultado',
-                    category: PropertyCategory.CONTENT
+                    category: PropertyCategory.CONTENT,
                 },
                 {
                     key: 'resultStyle',
@@ -248,9 +248,9 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                         { value: 'Natural', label: 'Natural' },
                         { value: 'Clássico', label: 'Clássico' },
                         { value: 'Boho', label: 'Boho' },
-                        { value: 'Minimalista', label: 'Minimalista' }
-                    ]
-                }
+                        { value: 'Minimalista', label: 'Minimalista' },
+                    ],
+                },
             ];
 
             // Adicionar configurações específicas por estilo se existirem
@@ -261,7 +261,7 @@ const generatePropertiesForBlockType = (blockType: string): UnifiedProperty[] =>
                         value: JSON.stringify(config, null, 2),
                         type: PropertyType.TEXTAREA,
                         label: `Config. ${style}`,
-                        category: PropertyCategory.ADVANCED
+                        category: PropertyCategory.ADVANCED,
                     });
                 }
             });
@@ -280,7 +280,7 @@ export const useOptimizedUnifiedProperties = ({
     blockType,
     blockId,
     currentBlock,
-    onUpdate
+    onUpdate,
 }: UseOptimizedUnifiedPropertiesOptions) => {
 
     // Gera propriedades baseadas no tipo (memoizado e cacheado)
@@ -296,7 +296,7 @@ export const useOptimizedUnifiedProperties = ({
             hasContent: !!currentBlock?.content,
             propertiesData: currentBlock?.properties,
             contentData: currentBlock?.content,
-            basePropsCount: generated.length
+            basePropsCount: generated.length,
         });
 
         // Aplica valores atuais do bloco se existir
@@ -305,7 +305,7 @@ export const useOptimizedUnifiedProperties = ({
                 ...prop,
                 value: currentBlock?.properties?.[prop.key] ??
                     currentBlock?.content?.[prop.key] ??
-                    prop.value
+                    prop.value,
             }));
 
             console.log('✅ useOptimizedUnifiedProperties - propriedades hidratadas:', result);
@@ -323,7 +323,7 @@ export const useOptimizedUnifiedProperties = ({
         console.log('🚀 useOptimizedUnifiedProperties updateProperty:', {
             blockId,
             key,
-            value
+            value,
         });
 
         onUpdate(blockId, { properties: { [key]: value } });
@@ -358,7 +358,7 @@ export const useOptimizedUnifiedProperties = ({
         updateProperty,
         getPropertiesByCategory,
         getPropertyByKey,
-        resetProperties
+        resetProperties,
     };
 };
 

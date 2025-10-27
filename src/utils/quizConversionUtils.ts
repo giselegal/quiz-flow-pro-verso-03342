@@ -54,9 +54,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     level: 'h1',
                     textAlign: 'center',
                     fontFamily: 'playfair-display', // ✅ Propriedade crítica
-                    color: '#432818'
+                    color: '#432818',
                 },
-                content: { text: step.title }
+                content: { text: step.title },
             });
         }
 
@@ -69,9 +69,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                 properties: {
                     level: 'h3',
                     textAlign: 'center',
-                    color: '#6B4F43'
+                    color: '#6B4F43',
                 },
-                content: { text: step.formQuestion }
+                content: { text: step.formQuestion },
             });
         }
 
@@ -86,9 +86,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     required: true,
                     placeholder: step.placeholder,
                     buttonText: step.buttonText,
-                    action: 'collect-name'
+                    action: 'collect-name',
                 },
-                content: {}
+                content: {},
             });
         }
 
@@ -102,9 +102,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     width: '100%',
                     maxWidth: '600px',
                     borderRadius: '12px',
-                    alignment: 'center'
+                    alignment: 'center',
                 },
-                content: { src: step.image, alt: 'Quiz intro image' }
+                content: { src: step.image, alt: 'Quiz intro image' },
             });
         }
     }
@@ -121,9 +121,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                 order: order++,
                 properties: {
                     variant: 'secondary',
-                    alignment: 'center'
+                    alignment: 'center',
                 },
-                content: { text: `Pergunta ${step.questionNumber} de 10` }
+                content: { text: `Pergunta ${step.questionNumber} de 10` },
             });
         }
 
@@ -136,9 +136,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                 properties: {
                     level: 'h2',
                     textAlign: 'center',
-                    color: '#432818'
+                    color: '#432818',
                 },
-                content: { text: step.questionText }
+                content: { text: step.questionText },
             });
         }
 
@@ -153,16 +153,16 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     requiredSelections: step.requiredSelections || 3, // ✅ Propriedade crítica
                     showImages: true, // ✅ Propriedade crítica (perguntas principais TÊM imagens)
                     gridColumns: 4,
-                    alignment: 'center'
+                    alignment: 'center',
                 },
                 content: {
                     options: step.options.map((opt: QuizOption) => ({
                         id: opt.id,
                         text: opt.text,
                         image: opt.image,
-                        value: opt.id // ID = estilo (e.g., 'clássico', 'natural')
-                    }))
-                }
+                        value: opt.id, // ID = estilo (e.g., 'clássico', 'natural')
+                    })),
+                },
             });
         }
     }
@@ -181,9 +181,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     level: 'h2',
                     textAlign: 'center',
                     fontFamily: 'playfair-display',
-                    color: '#432818'
+                    color: '#432818',
                 },
-                content: { text: step.title }
+                content: { text: step.title },
             });
         }
 
@@ -197,9 +197,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     textAlign: 'center',
                     fontSize: '1.125rem',
                     color: '#6B4F43',
-                    maxWidth: '600px'
+                    maxWidth: '600px',
                 },
-                content: { text: step.text }
+                content: { text: step.text },
             });
         }
 
@@ -214,9 +214,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     textColor: '#FFFFFF',
                     size: 'large',
                     action: 'next-step',
-                    alignment: 'center'
+                    alignment: 'center',
                 },
-                content: { text: step.continueButtonText }
+                content: { text: step.continueButtonText },
             });
         }
 
@@ -228,9 +228,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
             properties: {
                 duration: step.duration || 3500, // ✅ Propriedade crítica
                 showContinueButton: step.showContinueButton || false,
-                autoAdvance: !step.showContinueButton
+                autoAdvance: !step.showContinueButton,
             },
-            content: {}
+            content: {},
         });
     }
 
@@ -247,9 +247,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                 properties: {
                     level: 'h2',
                     textAlign: 'center',
-                    color: '#432818'
+                    color: '#432818',
                 },
-                content: { text: step.questionText }
+                content: { text: step.questionText },
             });
         }
 
@@ -263,15 +263,15 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     multiSelect: false,
                     requiredSelections: 1,
                     showImages: false, // ✅ Propriedade crítica (estratégicas NÃO têm imagens)
-                    alignment: 'center'
+                    alignment: 'center',
                 },
                 content: {
                     options: step.options.map((opt: QuizOption) => ({
                         id: opt.id,
                         text: opt.text,
-                        value: opt.id
-                    }))
-                }
+                        value: opt.id,
+                    })),
+                },
             });
         }
     }
@@ -290,9 +290,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     level: 'h2',
                     textAlign: 'center',
                     fontFamily: 'playfair-display',
-                    color: '#432818'
+                    color: '#432818',
                 },
-                content: { text: step.title }
+                content: { text: step.title },
             });
         }
 
@@ -304,9 +304,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
             properties: {
                 variant: 'dots',
                 color: '#B89B7A',
-                size: 'medium'
+                size: 'medium',
             },
-            content: {}
+            content: {},
         });
 
         // Auto-advance config
@@ -317,9 +317,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
             properties: {
                 duration: 2000,
                 autoAdvance: true,
-                showContinueButton: false
+                showContinueButton: false,
             },
-            content: {}
+            content: {},
         });
     }
 
@@ -337,9 +337,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     level: 'h2',
                     textAlign: 'center',
                     fontFamily: 'playfair-display',
-                    color: '#432818'
+                    color: '#432818',
                 },
-                content: { text: step.title } // Contém {userName}
+                content: { text: step.title }, // Contém {userName}
             });
         }
 
@@ -352,12 +352,12 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                 showSecondaryStyles: true,
                 showCharacteristics: true,
                 showRecommendations: true,
-                animateReveal: true
+                animateReveal: true,
             },
             content: {
                 // Lido dinamicamente do quizState.resultStyle
-                readFromState: true
-            }
+                readFromState: true,
+            },
         });
 
         // Botão de ação
@@ -371,9 +371,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     textColor: '#FFFFFF',
                     size: 'large',
                     action: 'next-step',
-                    alignment: 'center'
+                    alignment: 'center',
                 },
-                content: { text: step.buttonText }
+                content: { text: step.buttonText },
             });
         }
     }
@@ -392,9 +392,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     width: '100%',
                     maxWidth: '800px',
                     borderRadius: '16px',
-                    alignment: 'center'
+                    alignment: 'center',
                 },
-                content: { src: step.image, alt: 'Oferta personalizada' }
+                content: { src: step.image, alt: 'Oferta personalizada' },
             });
         }
 
@@ -406,11 +406,11 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                 order: order++,
                 properties: {
                     readFromStrategicAnswers: true, // Seleciona oferta baseado em step-18
-                    showTestimonials: true
+                    showTestimonials: true,
                 },
                 content: {
-                    offerMap: step.offerMap
-                }
+                    offerMap: step.offerMap,
+                },
             });
         }
 
@@ -425,9 +425,9 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
                     textColor: '#FFFFFF',
                     size: 'large',
                     action: 'checkout',
-                    alignment: 'center'
+                    alignment: 'center',
                 },
-                content: { text: step.buttonText }
+                content: { text: step.buttonText },
             });
         }
     }
@@ -446,10 +446,10 @@ export function convertStepToBlocks(step: QuizStep & { id: string }): EditableBl
 export function convertBlocksToStep(
     stepId: string,
     stepType: QuizStep['type'],
-    blocks: EditableBlock[]
+    blocks: EditableBlock[],
 ): Partial<QuizStep> {
     const step: Partial<QuizStep> = {
-        type: stepType
+        type: stepType,
     };
 
     // Iterar pelos blocos e extrair propriedades
@@ -533,7 +533,7 @@ export function convertBlocksToStep(
  * Útil para testes automatizados
  */
 export function validateRoundTrip(
-    originalStep: QuizStep & { id: string }
+    originalStep: QuizStep & { id: string },
 ): { success: boolean; errors: string[] } {
     const errors: string[] = [];
 
@@ -560,7 +560,7 @@ export function validateRoundTrip(
             'duration',
             'showContinueButton',
             'continueButtonText',
-            'offerMap'
+            'offerMap',
         ];
 
         criticalProps.forEach(prop => {
@@ -579,6 +579,6 @@ export function validateRoundTrip(
 
     return {
         success: errors.length === 0,
-        errors
+        errors,
     };
 }

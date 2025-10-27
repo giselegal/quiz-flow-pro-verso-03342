@@ -11,9 +11,9 @@ export const setCookie = (name, value, days = 30) => {
 
   const date = new Date();
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-  const expires = '; expires=' + date.toUTCString();
+  const expires = `; expires=${  date.toUTCString()}`;
 
-  document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/';
+  document.cookie = `${name  }=${  encodeURIComponent(value)  }${expires  }; path=/`;
 };
 
 /**
@@ -24,7 +24,7 @@ export const setCookie = (name, value, days = 30) => {
 export const getCookie = name => {
   if (typeof window === 'undefined') return null;
 
-  const nameEQ = name + '=';
+  const nameEQ = `${name  }=`;
   const ca = document.cookie.split(';');
 
   for (let i = 0; i < ca.length; i++) {
@@ -43,5 +43,5 @@ export const getCookie = name => {
 export const deleteCookie = name => {
   if (typeof window === 'undefined') return;
 
-  document.cookie = name + '=; Max-Age=-99999999; path=/';
+  document.cookie = `${name  }=; Max-Age=-99999999; path=/`;
 };

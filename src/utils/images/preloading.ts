@@ -20,7 +20,7 @@ export const isImagePreloaded = (url: string): boolean => {
  */
 export const preloadImagesByIds = (
   imageIds: string[],
-  options: PreloadOptions = {}
+  options: PreloadOptions = {},
 ): Promise<boolean> => {
   try {
     const images = imageIds
@@ -41,7 +41,7 @@ export const preloadImagesByIds = (
  */
 export const preloadImagesByUrls = (
   urls: string[],
-  options: PreloadOptions = {}
+  options: PreloadOptions = {},
 ): Promise<boolean> => {
   try {
     const images = urls.map(url => ({
@@ -65,7 +65,7 @@ export const preloadImagesByUrls = (
  */
 export const preloadImages = (
   images: BankImage[],
-  options: PreloadOptions = {}
+  options: PreloadOptions = {},
 ): Promise<boolean> => {
   if (!images || images.length === 0) {
     return Promise.resolve(true);
@@ -153,13 +153,13 @@ export const preloadImages = (
  */
 export const preloadImagesByCategory = (
   categoryName: string,
-  options: PreloadOptions = {}
+  options: PreloadOptions = {},
 ): Promise<boolean> => {
   try {
     const allImages = getAllImages();
     const categoryImages = allImages.filter(
       img =>
-        img.category === categoryName || (img.categories && img.categories.includes(categoryName))
+        img.category === categoryName || (img.categories && img.categories.includes(categoryName)),
     );
 
     if (categoryImages.length === 0) {
@@ -168,7 +168,7 @@ export const preloadImagesByCategory = (
     }
 
     console.log(
-      `[Image Manager] Pré-carregando ${categoryImages.length} imagens da categoria '${categoryName}'`
+      `[Image Manager] Pré-carregando ${categoryImages.length} imagens da categoria '${categoryName}'`,
     );
     return preloadImages(categoryImages, options);
   } catch (error) {
@@ -184,7 +184,7 @@ export const preloadImagesByCategory = (
  */
 export const preloadCriticalImages = (
   section: string | string[],
-  options: PreloadOptions = {}
+  options: PreloadOptions = {},
 ): Promise<boolean> => {
   // Converter para array se for string única
   const sections = Array.isArray(section) ? section : [section];
@@ -217,7 +217,7 @@ export const preloadCriticalImages = (
  */
 const preloadBySection = async (
   sections: string[],
-  options: PreloadOptions = {}
+  options: PreloadOptions = {},
 ): Promise<boolean> => {
   try {
     const allImages = getAllImages();
@@ -231,13 +231,13 @@ const preloadBySection = async (
         section =>
           (img.section && img.section === section) ||
           img.category === section ||
-          (img.categories && img.categories.includes(section))
+          (img.categories && img.categories.includes(section)),
       );
     });
 
     if (sectionImages.length === 0) {
       console.warn(
-        `[Image Manager] Nenhuma imagem crítica encontrada para seções: ${sections.join(', ')}`
+        `[Image Manager] Nenhuma imagem crítica encontrada para seções: ${sections.join(', ')}`,
       );
       return Promise.resolve(false);
     }
@@ -255,7 +255,7 @@ const preloadBySection = async (
     });
 
     console.log(
-      `[Image Manager] Pré-carregando ${sectionImages.length} imagens críticas para: ${sections.join(', ')}`
+      `[Image Manager] Pré-carregando ${sectionImages.length} imagens críticas para: ${sections.join(', ')}`,
     );
     return preloadImages(sectionImages, options);
   } catch (error) {
@@ -272,7 +272,7 @@ const preloadBySection = async (
  */
 export const getLowQualityImage = (
   url: string,
-  options: { width?: number; quality?: number } = {}
+  options: { width?: number; quality?: number } = {},
 ): string => {
   if (!url) return '';
 

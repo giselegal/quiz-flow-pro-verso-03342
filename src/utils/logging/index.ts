@@ -8,7 +8,7 @@ export {
     createLoggerConfig,
     getConfigForEnvironment,
     LoggingFeatures,
-    type LoggerConfig
+    type LoggerConfig,
 } from './LoggerConfig';
 
 // Core interfaces and types from LoggerService
@@ -17,7 +17,7 @@ export type {
     LogEntry,
     LogTransport,
     LogFilter,
-    LogFormatter
+    LogFormatter,
 } from './LoggerService';
 
 // Import for type alias

@@ -44,7 +44,7 @@ class QueryBatcher {
     maxBatchSize: 10,
     batchTimeout: 50, // 50ms
     enableCache: true,
-    enableDeduplication: true
+    enableDeduplication: true,
   };
 
   private stats = {
@@ -52,7 +52,7 @@ class QueryBatcher {
     batchedQueries: 0,
     cacheHits: 0,
     deduplicatedQueries: 0,
-    networkRequests: 0
+    networkRequests: 0,
   };
 
   /**
@@ -67,13 +67,13 @@ class QueryBatcher {
       priority?: 'high' | 'medium' | 'low';
       skipCache?: boolean;
       deduplicationKey?: string;
-    } = {}
+    } = {},
   ): Promise<T> {
     const {
       filters = {},
       priority = 'medium',
       skipCache = false,
-      deduplicationKey
+      deduplicationKey,
     } = options;
 
     this.stats.totalQueries++;
@@ -114,7 +114,7 @@ class QueryBatcher {
         resolve,
         reject,
         timestamp: Date.now(),
-        priority
+        priority,
       };
 
       this.addToBatch(batchQuery);
@@ -302,7 +302,7 @@ class QueryBatcher {
     for (const [batchKey, batch] of this.pendingQueries) {
       if (batchKey.startsWith(table)) {
         const duplicate = batch.find(q => 
-          this.generateQueryId(q) === deduplicationKey
+          this.generateQueryId(q) === deduplicationKey,
         );
         if (duplicate) return duplicate;
       }
@@ -344,7 +344,7 @@ class QueryBatcher {
       batchingEfficiency: `${batchingEfficiency}%`,
       averageBatchSize: this.stats.networkRequests > 0 
         ? (this.stats.batchedQueries / this.stats.networkRequests).toFixed(1)
-        : '0.0'
+        : '0.0',
     };
   }
 

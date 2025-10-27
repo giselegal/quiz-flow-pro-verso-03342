@@ -42,7 +42,7 @@ export class AlignmentValidator {
       return {
         score: 0,
         status: 'needs_improvement',
-        issues: ['Validation failed: ' + error.message]
+        issues: [`Validation failed: ${  error.message}`],
       };
     }
   }

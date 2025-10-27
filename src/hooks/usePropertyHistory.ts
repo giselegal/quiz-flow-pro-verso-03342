@@ -57,7 +57,7 @@ export function usePropertyHistory(initialProperties: Record<string, any> = {}) 
 
       lastSaveTime.current = now;
     },
-    [currentIndex, history]
+    [currentIndex, history],
   );
 
   const undo = useCallback(() => {
@@ -84,7 +84,7 @@ export function usePropertyHistory(initialProperties: Record<string, any> = {}) 
       }
       return null;
     },
-    [history]
+    [history],
   );
 
   const clearHistory = useCallback(() => {

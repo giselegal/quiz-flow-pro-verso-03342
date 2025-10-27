@@ -12,7 +12,7 @@ import {
     FunnelState,
     FunnelTemplate,
     FunnelSettings,
-    FunnelStatus
+    FunnelStatus,
 } from './types';
 
 // ============================================================================
@@ -112,12 +112,12 @@ export class FunnelManager {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 isPublished: false,
-                isOfficial: false
+                isOfficial: false,
             },
             settings: {
                 ...baseState.settings,
-                ...options.settings
-            }
+                ...options.settings,
+            },
         } as FunnelState;
 
         // Validar estado criado
@@ -130,8 +130,8 @@ export class FunnelManager {
             funnelId: finalState.id,
             data: {
                 templateId: options.templateId,
-                name: finalState.metadata.name
-            }
+                name: finalState.metadata.name,
+            },
         });
 
         return finalState;
@@ -182,8 +182,8 @@ export class FunnelManager {
                 data: {
                     funnelId: state.id,
                     stepCount: state.steps.length,
-                    completedSteps: state.completedSteps.length
-                }
+                    completedSteps: state.completedSteps.length,
+                },
             });
         } catch (error) {
             console.error('[FunnelManager] Error saving funnel:', error);
@@ -231,8 +231,8 @@ export class FunnelManager {
                 this.core.emitEvent({
                     type: 'funnel_abandoned',
                     timestamp: Date.now(),
-                    funnelId: funnelId,
-                    data: { funnelId }
+                    funnelId,
+                    data: { funnelId },
                 });
             }
 
@@ -305,7 +305,7 @@ export class FunnelManager {
         const steps = template.templateData.steps.map((stepTemplate: any, index: number) => ({
             ...stepTemplate,
             id: stepTemplate.id || `step-${index + 1}`,
-            order: index
+            order: index,
         }));
 
         return {
@@ -318,7 +318,7 @@ export class FunnelManager {
                 currentStepIndex: 0,
                 totalSteps: steps.length,
                 completedSteps: 0,
-                percentage: 0
+                percentage: 0,
             },
             navigation: {
                 canGoForward: true,
@@ -326,15 +326,15 @@ export class FunnelManager {
                 nextStep: steps[1]?.id,
                 previousStep: undefined,
                 history: [],
-                direction: undefined
+                direction: undefined,
             },
             validation: {
                 isValid: true,
                 errors: [],
                 warnings: [],
-                currentStepValid: true
+                currentStepValid: true,
             },
-            status: 'ready' as FunnelStatus
+            status: 'ready' as FunnelStatus,
         };
     }
 
@@ -356,10 +356,10 @@ export class FunnelManager {
                         showProgress: true,
                         allowSkip: false,
                         validation: {
-                            required: false
-                        }
-                    }
-                }
+                            required: false,
+                        },
+                    },
+                },
             ],
             settings: {
                 autoSave: true,
@@ -372,20 +372,20 @@ export class FunnelManager {
                     fontFamily: 'Inter',
                     borderRadius: '8px',
                     spacing: '16px',
-                    layout: 'centered'
+                    layout: 'centered',
                 },
                 navigation: {
                     showProgress: true,
                     showStepNumbers: true,
                     allowBackward: true,
                     showNavigationButtons: true,
-                    autoAdvanceDelay: 3000
+                    autoAdvanceDelay: 3000,
                 },
                 validation: {
                     strictMode: true,
                     requiredFields: [],
-                    customValidators: {}
-                }
+                    customValidators: {},
+                },
             },
             userData: {},
             completedSteps: [],
@@ -394,7 +394,7 @@ export class FunnelManager {
                 currentStepIndex: 0,
                 totalSteps: 1,
                 completedSteps: 0,
-                percentage: 0
+                percentage: 0,
             },
             navigation: {
                 canGoForward: false,
@@ -402,15 +402,15 @@ export class FunnelManager {
                 nextStep: undefined,
                 previousStep: undefined,
                 history: [],
-                direction: undefined
+                direction: undefined,
             },
             validation: {
                 isValid: true,
                 errors: [],
                 warnings: [],
-                currentStepValid: true
+                currentStepValid: true,
             },
-            status: 'ready' as FunnelStatus
+            status: 'ready' as FunnelStatus,
         };
     }
 }

@@ -327,7 +327,7 @@ export class OptionsGridUtils {
   static getFallbackImageUrl(
     text: string = 'Erro',
     width: number = 256,
-    height: number = 256
+    height: number = 256,
   ): string {
     return `https://placehold.co/${width}x${height}/cccccc/333333?text=${encodeURIComponent(text)}`;
   }
@@ -368,7 +368,7 @@ export class OptionsGridUtils {
    */
   static mergeWithPreset(
     presetName: keyof typeof PRESET_CONFIGS,
-    customConfig: Partial<OptionsGridConfig>
+    customConfig: Partial<OptionsGridConfig>,
   ): OptionsGridConfig {
     const preset = PRESET_CONFIGS[presetName];
     return {
@@ -383,7 +383,7 @@ export class OptionsGridUtils {
    */
   static getDeviceOptimizedConfig(
     device: 'mobile' | 'tablet' | 'desktop',
-    baseConfig: OptionsGridConfig
+    baseConfig: OptionsGridConfig,
   ): Partial<OptionsGridConfig> {
     const optimizations = {
       mobile: {

@@ -333,10 +333,10 @@ export const useEditorStore = create<EditorStore>()(
           funnelId: state.funnelId,
           funnelName: state.funnelName,
         }),
-      }
+      },
     ),
-    { name: 'EditorStore' }
-  )
+    { name: 'EditorStore' },
+  ),
 );
 
 // ============================================================================

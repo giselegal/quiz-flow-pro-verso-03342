@@ -43,7 +43,7 @@ class EditorStateMachine {
     blocks: [],
     isDragging: false,
     dropZonesVisible: false,
-    lastAction: 'init'
+    lastAction: 'init',
   };
 
   selectStep(stepId: string): void {
@@ -72,7 +72,7 @@ class EditorStateMachine {
     const newBlock = {
       id: `${this.state.selectedStepId}-${componentType}-${Date.now()}`,
       type: componentType,
-      order: position
+      order: position,
     };
 
     // Inserir na posição
@@ -147,7 +147,7 @@ describe('🎯 E2E: Jornada do Usuário - Drag & Drop', () => {
       editor.loadBlocks([
         { id: 'block-1', type: 'heading', order: 0 },
         { id: 'block-2', type: 'paragraph', order: 1 },
-        { id: 'block-3', type: 'button', order: 2 }
+        { id: 'block-3', type: 'button', order: 2 },
       ]);
 
       // 1. Usuário quer inserir imagem ENTRE parágrafo e botão
@@ -171,7 +171,7 @@ describe('🎯 E2E: Jornada do Usuário - Drag & Drop', () => {
     it('deve inserir múltiplos componentes em sequência', () => {
       editor.selectStep('step-1');
       editor.loadBlocks([
-        { id: 'block-1', type: 'heading', order: 0 }
+        { id: 'block-1', type: 'heading', order: 0 },
       ]);
 
       // Inserção 1: Paragraph no início
@@ -201,7 +201,7 @@ describe('🎯 E2E: Jornada do Usuário - Drag & Drop', () => {
       editor.selectStep('step-fix');
       editor.loadBlocks([
         { id: 'title', type: 'heading', order: 0 },
-        { id: 'button', type: 'button', order: 1 } // Falta descrição!
+        { id: 'button', type: 'button', order: 1 }, // Falta descrição!
       ]);
 
       // Usuário percebe que falta descrição entre título e botão
@@ -217,7 +217,7 @@ describe('🎯 E2E: Jornada do Usuário - Drag & Drop', () => {
       editor.selectStep('step-enhance');
       editor.loadBlocks([
         { id: 'title', type: 'heading', order: 0 },
-        { id: 'cta', type: 'button', order: 1 }
+        { id: 'cta', type: 'button', order: 1 },
       ]);
 
       // Adicionar imagem após título
@@ -242,7 +242,7 @@ describe('🎯 E2E: Jornada do Usuário - Drag & Drop', () => {
     it('deve lidar com cancelamento de drag (drop fora do canvas)', () => {
       editor.selectStep('step-cancel');
       editor.loadBlocks([
-        { id: 'block-1', type: 'heading', order: 0 }
+        { id: 'block-1', type: 'heading', order: 0 },
       ]);
 
       const initialBlockCount = editor.getState().blocks.length;
@@ -264,7 +264,7 @@ describe('🎯 E2E: Jornada do Usuário - Drag & Drop', () => {
       const manyBlocks = Array.from({ length: 10 }, (_, i) => ({
         id: `block-${i}`,
         type: i % 2 === 0 ? 'heading' : 'paragraph',
-        order: i
+        order: i,
       }));
 
       editor.selectStep('step-many');
@@ -284,7 +284,7 @@ describe('🎯 E2E: Jornada do Usuário - Drag & Drop', () => {
       const manyBlocks = Array.from({ length: 50 }, (_, i) => ({
         id: `block-${i}`,
         type: 'paragraph',
-        order: i
+        order: i,
       }));
 
       editor.selectStep('step-performance');
@@ -311,7 +311,7 @@ describe('🎯 E2E: Jornada do Usuário - Drag & Drop', () => {
       editor.selectStep('step-validate');
       editor.loadBlocks([
         { id: 'a', type: 'heading', order: 0 },
-        { id: 'b', type: 'paragraph', order: 1 }
+        { id: 'b', type: 'paragraph', order: 1 },
       ]);
 
       // Múltiplas inserções
@@ -361,7 +361,7 @@ describe('🎯 E2E: Jornada do Usuário - Drag & Drop', () => {
         { component: 'image', position: 1, expectedType: 'image' },
         { component: 'paragraph', position: 2, expectedType: 'paragraph' },
         { component: 'spacer', position: 3, expectedType: 'spacer' },
-        { component: 'button', position: 4, expectedType: 'button' }
+        { component: 'button', position: 4, expectedType: 'button' },
       ];
 
       buildSteps.forEach((step, index) => {
@@ -402,7 +402,7 @@ describe('🎯 Testes de Regressão - Bugs Conhecidos', () => {
   it('[BUG-FIX] não deve duplicar blocos ao inserir', () => {
     editor.selectStep('step-bug');
     editor.loadBlocks([
-      { id: 'original', type: 'heading', order: 0 }
+      { id: 'original', type: 'heading', order: 0 },
     ]);
 
     editor.dropComponent('paragraph', 0);
@@ -420,7 +420,7 @@ describe('🎯 Testes de Regressão - Bugs Conhecidos', () => {
     editor.loadBlocks([
       { id: 'a', type: 'heading', order: 0 },
       { id: 'b', type: 'paragraph', order: 1 },
-      { id: 'c', type: 'button', order: 2 }
+      { id: 'c', type: 'button', order: 2 },
     ]);
 
     const initialIds = editor.getBlockIds();
@@ -438,7 +438,7 @@ describe('🎯 Testes de Regressão - Bugs Conhecidos', () => {
   it('[BUG-FIX] ordem não deve ter números negativos ou muito altos', () => {
     editor.selectStep('step-order-validation');
     editor.loadBlocks([
-      { id: 'a', type: 'heading', order: 0 }
+      { id: 'a', type: 'heading', order: 0 },
     ]);
 
     // Múltiplas inserções

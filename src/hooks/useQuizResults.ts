@@ -65,7 +65,7 @@ export const useQuizResults = () => {
   // Aplicar método de cálculo para determinar o resultado
   const applyCalculationMethod = (
     categoryScores: CategoryScore[],
-    method: CalculationMethod
+    method: CalculationMethod,
   ): CategoryScore | null => {
     if (categoryScores.length === 0) return null;
 
@@ -81,7 +81,7 @@ export const useQuizResults = () => {
           averageScore: cs.score / cs.count,
         }));
         return withAverages.reduce((max, current) =>
-          max.averageScore > current.averageScore ? max : current
+          max.averageScore > current.averageScore ? max : current,
         );
 
       case 'highest':
@@ -89,7 +89,7 @@ export const useQuizResults = () => {
         if (method.primaryCategory) {
           // Se tiver categoria primária definida, priorizar ela
           const primaryCategoryScore = categoryScores.find(
-            cs => cs.category === method.primaryCategory
+            cs => cs.category === method.primaryCategory,
           );
           if (primaryCategoryScore) return primaryCategoryScore;
         }
@@ -108,7 +108,7 @@ export const useQuizResults = () => {
   const determineResult = (
     winningCategory: CategoryScore | null,
     results: QuizResult[],
-    allAnswers: Map<string, QuestionOption[]>
+    allAnswers: Map<string, QuestionOption[]>,
   ): QuizResult | null => {
     if (!winningCategory || results.length === 0) return null;
 
@@ -134,7 +134,7 @@ export const useQuizResults = () => {
     // Encontrar o resultado adequado para a pontuação dentro da categoria
     return (
       categoryResults.find(
-        result => totalScore >= result.minScore && totalScore <= result.maxScore
+        result => totalScore >= result.minScore && totalScore <= result.maxScore,
       ) || categoryResults[0]
     );
   };

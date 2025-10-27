@@ -19,7 +19,7 @@ export {
     getUnifiedEditorService,
     type EditorOperation,
     type EditorContext,
-    type EditorTransaction
+    type EditorTransaction,
 } from './UnifiedEditorService';
 
 export {
@@ -28,7 +28,7 @@ export {
     type StateChangeEvent,
     type StatePersistenceConfig,
     type StateSubscription,
-    type StateSnapshot
+    type StateSnapshot,
 } from './GlobalStateService';
 
 export {
@@ -39,7 +39,7 @@ export {
     type ValidationResult,
     type ValidationError,
     type ValidationWarning,
-    type AsyncValidationJob
+    type AsyncValidationJob,
 } from './UnifiedValidationService';
 
 export {
@@ -48,7 +48,7 @@ export {
     type NavigationState,
     type NavigationTransaction,
     type RouteHistory,
-    type NavigationEvent
+    type NavigationEvent,
 } from './NavigationService';
 
 export {
@@ -58,7 +58,7 @@ export {
     type LoadingOperation,
     type LoadingState,
     type LoadingError,
-    type LoadingStats
+    type LoadingStats,
 } from './MasterLoadingService';
 
 // === SERVIÇOS LEGACY (mantidos por compatibilidade) ===
@@ -86,7 +86,7 @@ export function initializeCoreServices() {
         globalState: globalStateService,
         validation: validationService,
         navigation: navigationService,
-        loading: loadingService
+        loading: loadingService,
     };
 }
 
@@ -105,8 +105,8 @@ export function createServiceContext(contextType: 'editor' | 'preview' | 'admin'
                 features: {
                     realTimeValidation: true,
                     autoSave: true,
-                    collaborativeMode: false
-                }
+                    collaborativeMode: false,
+                },
             };
 
         case 'preview':
@@ -116,8 +116,8 @@ export function createServiceContext(contextType: 'editor' | 'preview' | 'admin'
                 features: {
                     realTimeValidation: false,
                     autoSave: false,
-                    collaborativeMode: false
-                }
+                    collaborativeMode: false,
+                },
             };
 
         case 'admin':
@@ -127,8 +127,8 @@ export function createServiceContext(contextType: 'editor' | 'preview' | 'admin'
                 features: {
                     realTimeValidation: true,
                     autoSave: true,
-                    collaborativeMode: true
-                }
+                    collaborativeMode: true,
+                },
             };
 
         default:
@@ -158,7 +158,7 @@ export function connectServicesToHooks() {
         navigationService: services.navigation,
 
         // Para useMasterLoading
-        loadingService: services.loading
+        loadingService: services.loading,
     };
 }
 
@@ -206,7 +206,7 @@ export function getAllServiceStats() {
             validation: services.validation.getStats(),
             navigation: services.navigation.getStats(),
             loading: services.loading.getStats(),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         };
     } catch (error) {
         console.error('Error getting service stats:', error);
@@ -225,7 +225,7 @@ export async function healthCheckCoreServices(): Promise<{
     const results = {
         status: 'healthy' as const,
         services: {} as Record<string, 'ok' | 'warning' | 'error'>,
-        details: {} as Record<string, any>
+        details: {} as Record<string, any>,
     };
 
     try {
@@ -237,7 +237,7 @@ export async function healthCheckCoreServices(): Promise<{
             { name: 'globalState', service: services.globalState },
             { name: 'validation', service: services.validation },
             { name: 'navigation', service: services.navigation },
-            { name: 'loading', service: services.loading }
+            { name: 'loading', service: services.loading },
         ];
 
         for (const check of checks) {
@@ -249,7 +249,7 @@ export async function healthCheckCoreServices(): Promise<{
                 results.services[check.name] = 'error';
                 results.details[check.name] = {
                     error: error instanceof Error ? error.message : String(error),
-                    healthy: false
+                    healthy: false,
                 };
                 results.status = 'unhealthy';
             }
@@ -258,7 +258,7 @@ export async function healthCheckCoreServices(): Promise<{
     } catch (error) {
         results.status = 'unhealthy';
         results.details.global = {
-            error: error instanceof Error ? error.message : String(error)
+            error: error instanceof Error ? error.message : String(error),
         };
     }
 

@@ -11,7 +11,7 @@ export const useEditorSupabaseIntegration = (
   setState: (state: any) => void,
   rawState: any,
   funnelId?: string,
-  quizId?: string
+  quizId?: string,
 ) => {
   const editorSupabase = useEditorSupabase(funnelId, quizId);
 
@@ -42,7 +42,7 @@ export const useEditorSupabaseIntegration = (
 
         console.log(
           '✅ EditorProvider: populated stepBlocks from Supabase, steps:',
-          Object.keys(groupedBlocks).length
+          Object.keys(groupedBlocks).length,
         );
       } else {
         setState({
@@ -105,7 +105,7 @@ export const useEditorSupabaseIntegration = (
           supabaseData.component_type_key!,
           supabaseData.step_number!,
           supabaseData.properties,
-          supabaseData.order_index
+          supabaseData.order_index,
         );
 
         if (created) {
@@ -116,7 +116,7 @@ export const useEditorSupabaseIntegration = (
             stepBlocks: {
               ...rawState.stepBlocks,
               [stepKey]: currentBlocks.map((b: Block) =>
-                b.id === tempId ? { ...blockData, id: created.id } : b
+                b.id === tempId ? { ...blockData, id: created.id } : b,
               ),
             },
             isLoading: false,
@@ -142,7 +142,7 @@ export const useEditorSupabaseIntegration = (
         throw err;
       }
     },
-    [editorSupabase, rawState, setState, funnelId, quizId]
+    [editorSupabase, rawState, setState, funnelId, quizId],
   );
 
   return {

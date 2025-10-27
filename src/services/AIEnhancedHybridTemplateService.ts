@@ -149,7 +149,7 @@ class AIEnhancedHybridTemplateService {
                     token: process.env.GITHUB_TOKEN || '',
                     model: 'gpt-4o-mini',
                     maxTokens: 1000,
-                    temperature: 0.7
+                    temperature: 0.7,
                 });
 
                 console.log('✅ Serviço de IA ativado com sucesso!');
@@ -159,7 +159,7 @@ class AIEnhancedHybridTemplateService {
                     fallbackEnabled: this.aiConfig.fallbackEnabled,
                     personalizationEnabled: this.aiConfig.personalizationEnabled,
                     optimizationEnabled: this.aiConfig.optimizationEnabled,
-                    contentGenerationEnabled: this.aiConfig.contentGenerationEnabled
+                    contentGenerationEnabled: this.aiConfig.contentGenerationEnabled,
                 });
 
             } catch (error) {
@@ -194,7 +194,7 @@ class AIEnhancedHybridTemplateService {
             personalizationEnabled: true,
             optimizationEnabled: true,
             contentGenerationEnabled: true,
-            ...config
+            ...config,
         };
 
         this.initializeAI(newConfig);
@@ -204,7 +204,7 @@ class AIEnhancedHybridTemplateService {
             'Personalização': newConfig.personalizationEnabled,
             'Otimização': newConfig.optimizationEnabled,
             'Geração de conteúdo': newConfig.contentGenerationEnabled,
-            'Fallback inteligente': newConfig.fallbackEnabled
+            'Fallback inteligente': newConfig.fallbackEnabled,
         });
     }
 
@@ -225,7 +225,7 @@ class AIEnhancedHybridTemplateService {
         return {
             enabled: this.aiConfig.enabled,
             config: { ...this.aiConfig },
-            hasService: this.aiService !== null
+            hasService: this.aiService !== null,
         };
     }
 
@@ -267,7 +267,7 @@ class AIEnhancedHybridTemplateService {
                 masterStep,
                 override,
                 aiGenerated,
-                stepNumber
+                stepNumber,
             });
 
             console.log(`✅ AI-Enhanced HybridTemplateService: Step ${stepNumber} configurado`, {
@@ -311,15 +311,15 @@ class AIEnhancedHybridTemplateService {
                         role: 'system',
                         content: `Você é um especialista em UX e templates de quiz. 
                         Gere configurações otimizadas para etapas de quiz baseadas no contexto fornecido.
-                        Responda sempre em JSON válido seguindo a estrutura StepTemplate.`
+                        Responda sempre em JSON válido seguindo a estrutura StepTemplate.`,
                     },
                     {
                         role: 'user',
-                        content: prompt
-                    }
+                        content: prompt,
+                    },
                 ],
                 maxTokens: 800,
-                temperature: 0.7
+                temperature: 0.7,
             });
 
             if (!aiResponse?.content) {
@@ -338,19 +338,19 @@ class AIEnhancedHybridTemplateService {
                     category: 'quiz',
                     aiGenerated: true,
                     aiConfidence: aiConfig.confidence || 0.8,
-                    aiOptimized: true
+                    aiOptimized: true,
                 },
                 behavior: {
                     ...this.getGlobalRules(stepNumber).behavior,
                     ...aiConfig.behavior,
                     aiOptimized: true,
-                    aiPersonalized: this.aiConfig.personalizationEnabled
+                    aiPersonalized: this.aiConfig.personalizationEnabled,
                 },
                 validation: {
                     ...this.getGlobalRules(stepNumber).validation,
                     ...aiConfig.validation,
                     aiValidation: true,
-                    aiSuggestions: aiConfig.suggestions || []
+                    aiSuggestions: aiConfig.suggestions || [],
                 },
                 blocks: aiConfig.blocks || [],
                 aiContent: {
@@ -358,13 +358,13 @@ class AIEnhancedHybridTemplateService {
                     description: aiConfig.aiContent?.description,
                     questions: aiConfig.aiContent?.questions,
                     options: aiConfig.aiContent?.options,
-                    personalizedText: aiConfig.aiContent?.personalizedText
-                }
+                    personalizedText: aiConfig.aiContent?.personalizedText,
+                },
             };
 
             console.log(`🤖 Template gerado por IA para step ${stepNumber}:`, {
                 confidence: aiTemplate.metadata.aiConfidence,
-                hasPersonalization: !!aiTemplate.aiContent?.personalizedText
+                hasPersonalization: !!aiTemplate.aiContent?.personalizedText,
             });
 
             return aiTemplate;
@@ -435,7 +435,7 @@ Responda com JSON contendo:
         masterStep,
         override,
         aiGenerated,
-        stepNumber
+        stepNumber,
     }: {
         globalRules: { behavior: StepBehaviorConfig; validation: StepValidationConfig };
         masterStep?: StepTemplate;
@@ -475,7 +475,7 @@ Responda com JSON contendo:
                 aiGenerated: true,
                 aiOptimized: true,
                 aiPersonalizationScore: aiGenerated.metadata.aiConfidence || 0.8,
-                aiConfidence: aiGenerated.metadata.aiConfidence || 0.8
+                aiConfidence: aiGenerated.metadata.aiConfidence || 0.8,
             };
 
             // 🧠 OTIMIZAÇÃO INTELIGENTE DO COMPORTAMENTO
@@ -484,7 +484,7 @@ Responda com JSON contendo:
                     ...finalConfig.behavior,
                     ...aiGenerated.behavior,
                     aiOptimized: true,
-                    aiPersonalized: this.aiConfig.personalizationEnabled
+                    aiPersonalized: this.aiConfig.personalizationEnabled,
                 };
             }
 
@@ -494,7 +494,7 @@ Responda com JSON contendo:
                     ...finalConfig.validation,
                     message: aiGenerated.validation.message || finalConfig.validation.message,
                     aiValidation: true,
-                    aiSuggestions: aiGenerated.validation.aiSuggestions || []
+                    aiSuggestions: aiGenerated.validation.aiSuggestions || [],
                 };
             }
 
@@ -522,7 +522,7 @@ Responda com JSON contendo:
      */
     private static async applyPerformanceOptimizations(
         config: StepTemplate,
-        stepNumber: number
+        stepNumber: number,
     ): Promise<StepTemplate> {
         const perfData = this.aiContext.performanceData;
         if (!perfData) return config;
@@ -540,13 +540,13 @@ Responda com JSON contendo:
 
         if (isDropOffPoint) {
             config.validation.message = config.aiContent?.personalizedText ||
-                "Você está indo muito bem! Continue descobrindo seu estilo único.";
+                'Você está indo muito bem! Continue descobrindo seu estilo único.';
             config.behavior.aiPersonalized = true;
         }
 
         if (conversionRate < 0.5) { // Taxa de conversão baixa
             config.behavior.autoAdvance = false; // Dar mais controle ao usuário
-            config.validation.aiSuggestions?.push("Dica: Suas escolhas ajudam a criar seu perfil único!");
+            config.validation.aiSuggestions?.push('Dica: Suas escolhas ajudam a criar seu perfil único!');
         }
 
         return config;
@@ -576,7 +576,7 @@ Responda com JSON contendo:
      */
     static async personalizeContent(
         content: string,
-        context: AIContext = {}
+        context: AIContext = {},
     ): Promise<string> {
         if (!this.aiService || !this.aiConfig.personalizationEnabled) {
             return content;
@@ -587,7 +587,7 @@ Responda com JSON contendo:
                 content,
                 `Personalizar para usuário: ${context.userName || 'usuário'}, 
                  Segmento: ${context.userSegment || 'geral'}, 
-                 Contexto: Quiz de descoberta de estilo pessoal`
+                 Contexto: Quiz de descoberta de estilo pessoal`,
             );
 
             return personalizedResponse || content;
@@ -611,7 +611,7 @@ Responda com JSON contendo:
                 predictedCompletionTime: 15000,
                 predictedDropOffRate: 0.1,
                 predictedEngagement: 0.8,
-                recommendations: ['Análise preditiva não disponível - IA desabilitada']
+                recommendations: ['Análise preditiva não disponível - IA desabilitada'],
             };
         }
 
@@ -635,8 +635,8 @@ Forneça previsões e recomendações em JSON:
             const response = await this.aiService.generateContent({
                 messages: [
                     { role: 'system', content: 'Você é um especialista em UX Analytics e Performance Prediction.' },
-                    { role: 'user', content: analysisPrompt }
-                ]
+                    { role: 'user', content: analysisPrompt },
+                ],
             });
 
             return JSON.parse(response.content);
@@ -646,7 +646,7 @@ Forneça previsões e recomendações em JSON:
                 predictedCompletionTime: 15000,
                 predictedDropOffRate: 0.15,
                 predictedEngagement: 0.75,
-                recommendations: ['Erro na análise - usar configurações padrão']
+                recommendations: ['Erro na análise - usar configurações padrão'],
             };
         }
     }
@@ -693,7 +693,7 @@ Forneça previsões e recomendações em JSON:
                 // 🤖 TENTAR GERAR COM IA COMO FALLBACK
                 if (this.aiConfig.enabled && this.aiConfig.fallbackEnabled) {
                     const aiTemplate = await this.generateStepWithAI(
-                        parseInt(stepId.replace(/\D/g, ''), 10)
+                        parseInt(stepId.replace(/\D/g, ''), 10),
                     );
                     if (aiTemplate) {
                         this.overrideCache.set(stepId, aiTemplate);
@@ -737,7 +737,7 @@ Forneça previsões e recomendações em JSON:
                 description: `Template padrão gerado para ${stepId}`,
                 type: this.inferStepType(stepNumber),
                 category: 'quiz',
-                aiGenerated: false
+                aiGenerated: false,
             },
             behavior: globalRules.behavior,
             validation: globalRules.validation,
@@ -849,7 +849,7 @@ Forneça previsões e recomendações em JSON:
                 description: `Configuração fallback para etapa ${stepNumber}`,
                 type: this.inferStepType(stepNumber),
                 category: 'fallback',
-                aiGenerated: false
+                aiGenerated: false,
             },
             behavior: globalRules.behavior,
             validation: globalRules.validation,
@@ -881,7 +881,7 @@ Forneça previsões e recomendações em JSON:
 
     private static async optimizeConfigWithAI(
         changes: Partial<StepTemplate>,
-        stepNumber: number
+        stepNumber: number,
     ): Promise<Partial<StepTemplate>> {
         if (!this.aiService) return {};
 
@@ -898,8 +898,8 @@ Retorne apenas as otimizações sugeridas em JSON.`;
             const response = await this.aiService.generateContent({
                 messages: [
                     { role: 'system', content: 'Você é um especialista em otimização de UX para quizzes.' },
-                    { role: 'user', content: optimizationPrompt }
-                ]
+                    { role: 'user', content: optimizationPrompt },
+                ],
             });
 
             return JSON.parse(response.content);

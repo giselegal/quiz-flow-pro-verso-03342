@@ -72,7 +72,7 @@ export const useUserDataPersistence = () => {
         console.error('Erro ao salvar dados:', err);
       }
     },
-    [userData, user]
+    [userData, user],
   );
 
   // Atualizar preferências do usuário
@@ -80,7 +80,7 @@ export const useUserDataPersistence = () => {
     (preferences: UserStyleData['preferences']) => {
       saveUserData({ preferences });
     },
-    [saveUserData]
+    [saveUserData],
   );
 
   // Limpar dados do usuário

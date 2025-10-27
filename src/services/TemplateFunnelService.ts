@@ -27,7 +27,7 @@ export class TemplateFunnelService {
    */
   async createFunnelFromTemplate(
     funnelId: string,
-    templateId: string = 'quiz21StepsComplete'
+    templateId: string = 'quiz21StepsComplete',
   ): Promise<any> {
     console.log('🎯 TemplateFunnelService: Creating funnel from template', { funnelId, templateId });
 
@@ -50,7 +50,7 @@ export class TemplateFunnelService {
         context: FunnelContext.EDITOR,
         templateId: templateName,
         userId: 'anonymous', // For now, use anonymous until auth is implemented
-        autoPublish: false
+        autoPublish: false,
       };
 
       // Aplicar dados do template
@@ -91,8 +91,8 @@ export class TemplateFunnelService {
           totalSteps: 21,
           theme: 'quiz-style',
           hasScoring: true,
-          showProgress: true
-        }
+          showProgress: true,
+        },
       });
 
       console.log('✅ Quiz21Steps template applied successfully');
@@ -119,8 +119,8 @@ export class TemplateFunnelService {
       metadata: {
         originalTemplate: 'quiz21StepsComplete',
         stepNumber: index + 1,
-        ...page.metadata
-      }
+        ...page.metadata,
+      },
     }));
   }
 
@@ -166,7 +166,7 @@ export class TemplateFunnelService {
     const templatePatterns = [
       /^quiz21StepsComplete-\d+_.+$/,
       /^quiz-style-express-\d+_.+$/,
-      /^com-que-roupa-eu-vou-\d+_.+$/
+      /^com-que-roupa-eu-vou-\d+_.+$/,
     ];
 
     return templatePatterns.some(pattern => pattern.test(funnelId));

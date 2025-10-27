@@ -103,7 +103,7 @@ class FunnelCache {
             timestamp: Date.now(),
             ttl: ttl || this.DEFAULT_TTL,
             context,
-            userId
+            userId,
         });
     }
 
@@ -253,7 +253,7 @@ export class FunnelUnifiedService {
                             await indexedDBService.save('funnels', funnel.id, funnel, {
                                 userId: funnel.userId,
                                 context: funnel.context,
-                                tags: [funnel.category]
+                                tags: [funnel.category],
                             });
                             migratedCount++;
                         } catch (parseError) {
@@ -306,7 +306,7 @@ export class FunnelUnifiedService {
             data,
             context: context || FunnelContext.EDITOR,
             userId: finalUserId,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         });
     }
 
@@ -364,7 +364,7 @@ export class FunnelUnifiedService {
                 createdAt: new Date(data.created_at || Date.now()),
                 updatedAt: new Date(data.updated_at || Date.now()),
                 templateId: data.settings?.templateId,
-                isFromTemplate: data.settings?.isFromTemplate || false
+                isFromTemplate: data.settings?.isFromTemplate || false,
             };
         } catch (error) {
             console.error('❌ Erro ao converter dados do Supabase:', error);
@@ -407,7 +407,7 @@ export class FunnelUnifiedService {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 templateId: options.templateId,
-                isFromTemplate: !!options.templateId
+                isFromTemplate: !!options.templateId,
             };
 
             // Se for baseado em template, aplicar deep clone
@@ -424,7 +424,7 @@ export class FunnelUnifiedService {
                 savedFunnel,
                 undefined,
                 options.context,
-                userId
+                userId,
             );
 
             // Invalidar cache de listas
@@ -494,7 +494,7 @@ export class FunnelUnifiedService {
                     funnel,
                     undefined,
                     funnel.context,
-                    funnel.userId
+                    funnel.userId,
                 );
 
                 console.log('✅ Funil carregado do Supabase:', id);
@@ -539,7 +539,7 @@ export class FunnelUnifiedService {
                 userId: currentFunnel.userId, // Preservar owner
                 createdAt: currentFunnel.createdAt, // Preservar data criação
                 updatedAt: new Date(),
-                version: currentFunnel.version + 1
+                version: currentFunnel.version + 1,
             };
 
             // Validar dados atualizados
@@ -616,7 +616,7 @@ export class FunnelUnifiedService {
                 funnels,
                 2 * 60 * 1000, // 2 minutos
                 options.context,
-                userId
+                userId,
             );
 
             console.log(`✅ ${funnels.length} funis carregados`);
@@ -658,13 +658,13 @@ export class FunnelUnifiedService {
                 description: duplicatedFunnel.description,
                 category: duplicatedFunnel.category,
                 context: duplicatedFunnel.context,
-                userId: userId || duplicatedFunnel.userId
+                userId: userId || duplicatedFunnel.userId,
             });
 
             // Aplicar dados clonados
             const finalFunnel = await this.updateFunnel(newFunnel.id, {
                 settings: duplicatedFunnel.settings,
-                pages: duplicatedFunnel.pages
+                pages: duplicatedFunnel.pages,
             }, userId);
 
             console.log('✅ Funil duplicado com sucesso:', finalFunnel);
@@ -732,8 +732,8 @@ export class FunnelUnifiedService {
                 {
                     funnelId: funnel.id,
                     userId: funnel.userId,
-                    additionalData: { errorType: validation.errorType }
-                }
+                    additionalData: { errorType: validation.errorType },
+                },
             );
             errorManager.handleError(error);
             throw error;
@@ -754,7 +754,7 @@ export class FunnelUnifiedService {
                     canEdit: false,
                     canDelete: false,
                     canPublish: false,
-                    isOwner: false
+                    isOwner: false,
                 };
             }
 
@@ -765,7 +765,7 @@ export class FunnelUnifiedService {
                 canEdit: isOwner,
                 canDelete: isOwner,
                 canPublish: isOwner,
-                isOwner
+                isOwner,
             };
 
         } catch (error) {
@@ -775,7 +775,7 @@ export class FunnelUnifiedService {
                 canEdit: false,
                 canDelete: false,
                 canPublish: false,
-                isOwner: false
+                isOwner: false,
             };
         }
     }
@@ -806,8 +806,8 @@ export class FunnelUnifiedService {
                 funnel_id: cloned.id,
                 blocks: (page.blocks || []).map((block: any) => ({
                     ...block,
-                    id: this.generateUniqueId()
-                }))
+                    id: this.generateUniqueId(),
+                })),
             }));
         }
 
@@ -824,8 +824,8 @@ export class FunnelUnifiedService {
         // Por enquanto, aplicar estrutura básica
         funnel.settings = deepClone({
             theme: 'default',
-            templateId: templateId,
-            appliedAt: new Date().toISOString()
+            templateId,
+            appliedAt: new Date().toISOString(),
         });
 
         funnel.pages = [];
@@ -871,10 +871,10 @@ export class FunnelUnifiedService {
                     context: funnel.context,
                     templateId: funnel.templateId,
                     isFromTemplate: funnel.isFromTemplate,
-                    category: funnel.category // Mantém categoria dentro de settings
+                    category: funnel.category, // Mantém categoria dentro de settings
                 },
                 created_at: funnel.createdAt.toISOString(),
-                updated_at: funnel.updatedAt.toISOString()
+                updated_at: funnel.updatedAt.toISOString(),
             };
 
             let result;
@@ -1053,7 +1053,7 @@ export class FunnelUnifiedService {
                     page_type: page.type || 'content',
                     page_order: index,
                     title: page.title || page.name || `Página ${index + 1}`,
-                    blocks: page.blocks || []
+                    blocks: page.blocks || [],
                 }));
 
                 const { error } = await supabase
@@ -1083,7 +1083,7 @@ export class FunnelUnifiedService {
             await indexedDBService.save('funnels', funnel.id, funnel, {
                 userId: funnel.userId,
                 context: funnel.context,
-                tags: [funnel.category]
+                tags: [funnel.category],
             });
 
             console.log('✅ Funil salvo no IndexedDB com sucesso');
@@ -1113,7 +1113,7 @@ export class FunnelUnifiedService {
                 category: funnel.category,
                 isPublished: funnel.isPublished,
                 createdAt: funnel.createdAt,
-                updatedAt: funnel.updatedAt
+                updatedAt: funnel.updatedAt,
             };
 
             if (existingIndex >= 0) {
@@ -1212,7 +1212,7 @@ export class FunnelUnifiedService {
             return funnels.map((funnel: any) => ({
                 ...funnel,
                 createdAt: new Date(funnel.createdAt || Date.now()),
-                updatedAt: new Date(funnel.updatedAt || Date.now())
+                updatedAt: new Date(funnel.updatedAt || Date.now()),
             }));
 
         } catch (error) {
@@ -1246,7 +1246,7 @@ export class FunnelUnifiedService {
                 createdAt: new Date(item.createdAt || Date.now()),
                 updatedAt: new Date(item.updatedAt || Date.now()),
                 templateId: item.templateId,
-                isFromTemplate: item.isFromTemplate || false
+                isFromTemplate: item.isFromTemplate || false,
             }));
 
         } catch (error) {

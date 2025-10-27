@@ -132,7 +132,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
         console.warn('🚨 Preview: Número/ID de etapa inválido:', stepId);
       }
     },
-    [effectiveTotal, goTo]
+    [effectiveTotal, goTo],
   );
 
   const setCurrentStep = useCallback(
@@ -142,7 +142,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
         console.log('🚀 Preview: Definiu etapa atual para', step);
       }
     },
-    [effectiveTotal, goTo]
+    [effectiveTotal, goTo],
   );
 
   const updateSessionData = useCallback((key: string, value: any) => {

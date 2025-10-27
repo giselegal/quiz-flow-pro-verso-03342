@@ -38,7 +38,7 @@ export const useObservability = (componentName: string) => {
     trackInteraction,
     trackError,
     trackConversion,
-    logger: componentLogger
+    logger: componentLogger,
   };
 };
 
@@ -63,14 +63,14 @@ export const usePerformanceMonitoring = (componentName: string) => {
           renderTime: renderTime.toFixed(2),
           renderCount: renderCount.current,
           component: componentName,
-          category: 'performance'
+          category: 'performance',
         });
       }
     }
   });
 
   return {
-    renderCount: renderCount.current
+    renderCount: renderCount.current,
   };
 };
 
@@ -86,7 +86,7 @@ export const useUserTracking = () => {
     observabilityManager.trackInteraction('page_view', page, {
       url: window.location.href,
       referrer: document.referrer,
-      ...metadata
+      ...metadata,
     });
   }, []);
 
@@ -94,14 +94,14 @@ export const useUserTracking = () => {
     observabilityManager.trackInteraction(
       success ? 'form_submit_success' : 'form_submit_error', 
       formName, 
-      metadata
+      metadata,
     );
   }, []);
 
   return {
     trackClick,
     trackPageView,
-    trackFormSubmission
+    trackFormSubmission,
   };
 };
 
@@ -114,7 +114,7 @@ export const useFunnelTracking = () => {
       step,
       stepName,
       progress: `${step}/21`,
-      ...metadata
+      ...metadata,
     });
   }, []);
 
@@ -127,14 +127,14 @@ export const useFunnelTracking = () => {
     observabilityManager.trackInteraction('funnel_dropoff', 'funnel', {
       step,
       reason,
-      ...metadata
+      ...metadata,
     });
   }, []);
 
   return {
     trackFunnelStep,
     trackFunnelCompletion,
-    trackFunnelDropoff
+    trackFunnelDropoff,
   };
 };
 
@@ -146,7 +146,7 @@ export const useErrorTracking = () => {
     observabilityManager.logError(error.message, context, {
       stack: error.stack,
       name: error.name,
-      ...metadata
+      ...metadata,
     });
   }, []);
 
@@ -155,13 +155,13 @@ export const useErrorTracking = () => {
       endpoint,
       status,
       message,
-      ...metadata
+      ...metadata,
     });
   }, []);
 
   return {
     trackError,
-    trackAPIError
+    trackAPIError,
   };
 };
 
@@ -199,6 +199,6 @@ export const useDashboardData = (autoRefresh = true, interval = 10000) => {
     data,
     loading,
     error,
-    refetch: fetchData
+    refetch: fetchData,
   };
 };

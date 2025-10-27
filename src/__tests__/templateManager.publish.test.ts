@@ -36,11 +36,11 @@ vi.mock('../services/unifiedTemplateService', () => {
         // Simula carregamento de template quando não há override
         return [
           {
-            id: `tmpl-step-3-header`,
+            id: 'tmpl-step-3-header',
             type: 'text-inline',
             order: 0,
-            properties: { content: `Template Step 3` },
-            content: { content: `Template Step 3` },
+            properties: { content: 'Template Step 3' },
+            content: { content: 'Template Step 3' },
           },
         ];
       }),
@@ -91,7 +91,7 @@ describe('TemplateManager publish/unpublish flow', () => {
     TemplateManager.publishStep(stepId, blocks);
 
     const stored = JSON.parse(
-      localStorage.getItem('quiz_published_blocks_' + stepId) || 'null'
+      localStorage.getItem(`quiz_published_blocks_${  stepId}`) || 'null',
     ) as any;
     expect(stored).toBeTruthy();
     expect(stored.blocks?.length).toBe(1);
@@ -149,7 +149,7 @@ describe('TemplateManager publish/unpublish flow', () => {
     window.addEventListener('quiz-template-updated', spy as EventListener);
     TemplateManager.unpublishStep(stepId);
 
-    expect(localStorage.getItem('quiz_published_blocks_' + stepId)).toBeNull();
+    expect(localStorage.getItem(`quiz_published_blocks_${  stepId}`)).toBeNull();
     expect(spy).toHaveBeenCalled();
 
     const loaded = await TemplateManager.loadStepBlocks(stepId);

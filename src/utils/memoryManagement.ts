@@ -46,7 +46,7 @@ class MemoryManager {
     element: Element | Window | Document,
     event: string,
     handler: EventListener,
-    options?: boolean | AddEventListenerOptions
+    options?: boolean | AddEventListenerOptions,
   ): void {
     appLogger.debug('Adding event listener for cleanup', { event });
     element.addEventListener(event, handler, options);
@@ -82,7 +82,7 @@ class MemoryManager {
       eventListeners: this.eventListeners.size,
       intervals: this.intervals.size,
       timeouts: this.timeouts.size,
-      observers: this.observers.size
+      observers: this.observers.size,
     });
 
     // Remover event listeners

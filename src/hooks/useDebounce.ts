@@ -16,7 +16,7 @@ export function useDebounce<T>(value: T, delay: number): T {
         setDebouncedValue(value);
       },
       delay,
-      strategy
+      strategy,
     );
 
     return () => {
@@ -32,7 +32,7 @@ export function useDebounce<T>(value: T, delay: number): T {
 // Hook para debouncing de callbacks
 export function useDebouncedCallback<T extends (...args: any[]) => any>(
   callback: T,
-  delay: number
+  delay: number,
 ): T {
   const [timeoutId, setTimeoutId] = useState<number | null>(null);
 
@@ -49,7 +49,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
         setTimeoutId(null);
       },
       delay,
-      strategy
+      strategy,
     );
 
     if (strategy === 'timeout') {

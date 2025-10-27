@@ -132,7 +132,7 @@ interface MachineLearningState {
 
 export function useMachineLearning(
     componentName: string,
-    options: UseMachineLearningOptions = {}
+    options: UseMachineLearningOptions = {},
 ) {
     const {
         autoCollect = true,
@@ -141,7 +141,7 @@ export function useMachineLearning(
         patternTypes = ['user-flow', 'performance', 'engagement'],
         onPatternDiscovered,
         onAnomalyDetected,
-        onInsightsGenerated
+        onInsightsGenerated,
     } = options;
 
     // Estados
@@ -153,14 +153,14 @@ export function useMachineLearning(
         insights: {
             trends: [],
             correlations: [],
-            recommendations: []
+            recommendations: [],
         },
         isTraining: false,
         isAnalyzing: false,
         dataPoints: 0,
         modelAccuracy: 0,
         patternReliability: 0,
-        predictionSuccess: 0
+        predictionSuccess: 0,
     });
 
     // Dados coletados para ML
@@ -194,9 +194,9 @@ export function useMachineLearning(
                 userAgent: navigator.userAgent,
                 viewport: {
                     width: window.innerWidth,
-                    height: window.innerHeight
-                }
-            }
+                    height: window.innerHeight,
+                },
+            },
         };
 
         dataBuffer.current.push(dataPoint);
@@ -227,7 +227,7 @@ export function useMachineLearning(
                 ...prev,
                 isTraining: false,
                 models: trainingResults.models,
-                modelAccuracy: trainingResults.averageAccuracy
+                modelAccuracy: trainingResults.averageAccuracy,
             }));
 
         } catch (error) {
@@ -248,7 +248,7 @@ export function useMachineLearning(
 
             // Filtrar padrões novos
             const newPatterns = discoveredPatterns.filter(pattern =>
-                !state.patterns.some(existing => existing.id === pattern.id)
+                !state.patterns.some(existing => existing.id === pattern.id),
             );
 
             // Notificar novos padrões
@@ -258,7 +258,7 @@ export function useMachineLearning(
                 ...prev,
                 isAnalyzing: false,
                 patterns: [...prev.patterns, ...newPatterns],
-                patternReliability: calculatePatternReliability([...prev.patterns, ...newPatterns])
+                patternReliability: calculatePatternReliability([...prev.patterns, ...newPatterns]),
             }));
 
         } catch (error) {
@@ -277,7 +277,7 @@ export function useMachineLearning(
 
             // Filtrar anomalias novas
             const newAnomalies = anomalies.filter(anomaly =>
-                !state.anomalies.some(existing => existing.id === anomaly.id)
+                !state.anomalies.some(existing => existing.id === anomaly.id),
             );
 
             // Notificar anomalias
@@ -285,7 +285,7 @@ export function useMachineLearning(
 
             setState(prev => ({
                 ...prev,
-                anomalies: [...prev.anomalies.slice(-50), ...newAnomalies] // Manter últimas 50
+                anomalies: [...prev.anomalies.slice(-50), ...newAnomalies], // Manter últimas 50
             }));
 
         } catch (error) {
@@ -315,7 +315,7 @@ export function useMachineLearning(
             const insights = await mlEngine.current.generateInsights(
                 dataBuffer.current,
                 state.patterns,
-                state.models
+                state.models,
             );
 
             setState(prev => ({ ...prev, insights }));
@@ -348,7 +348,7 @@ export function useMachineLearning(
             return await mlEngine.current.getPersonalizedRecommendations(
                 userId,
                 dataBuffer.current,
-                state.segments
+                state.segments,
             );
         } catch (error) {
             console.error('Personalized recommendations failed:', error);
@@ -394,7 +394,7 @@ export function useMachineLearning(
                     name: entry.name,
                     duration: entry.duration,
                     startTime: entry.startTime,
-                    type: entry.entryType
+                    type: entry.entryType,
                 });
             }
         });
@@ -408,7 +408,7 @@ export function useMachineLearning(
                     type: mutation.type,
                     target: mutation.target.nodeName,
                     addedNodes: mutation.addedNodes.length,
-                    removedNodes: mutation.removedNodes.length
+                    removedNodes: mutation.removedNodes.length,
                 });
             });
         });
@@ -416,7 +416,7 @@ export function useMachineLearning(
         mutationObserver.observe(document.body, {
             childList: true,
             subtree: true,
-            attributes: true
+            attributes: true,
         });
 
         // Event listeners para interações
@@ -424,7 +424,7 @@ export function useMachineLearning(
             collectDataPoint('user-interaction', {
                 type: event.type,
                 target: (event.target as Element)?.tagName,
-                timestamp: event.timeStamp
+                timestamp: event.timeStamp,
             });
         };
 
@@ -461,7 +461,7 @@ export function useMachineLearning(
         hasEnoughData: dataBuffer.current.length >= minDataThreshold,
         canTrain: dataBuffer.current.length >= minDataThreshold && !state.isTraining,
         isLearning: state.isTraining || state.isAnalyzing,
-        learningQuality: (state.modelAccuracy + state.patternReliability + state.predictionSuccess) / 3
+        learningQuality: (state.modelAccuracy + state.patternReliability + state.predictionSuccess) / 3,
     };
 }
 
@@ -488,7 +488,7 @@ class MachineLearningEngine {
                 predictions: 0,
                 lastTrained: Date.now(),
                 features: ['clickPattern', 'scrollBehavior', 'sessionDuration'],
-                status: 'ready'
+                status: 'ready',
             },
             {
                 id: 'performance-predictor',
@@ -499,15 +499,15 @@ class MachineLearningEngine {
                 predictions: 0,
                 lastTrained: Date.now(),
                 features: ['renderTime', 'memoryUsage', 'networkLatency'],
-                status: 'ready'
-            }
+                status: 'ready',
+            },
         ];
 
         models.forEach(model => this.models.set(model.id, model));
 
         return {
             models,
-            averageAccuracy: models.reduce((sum, m) => sum + m.accuracy, 0) / models.length
+            averageAccuracy: models.reduce((sum, m) => sum + m.accuracy, 0) / models.length,
         };
     }
 
@@ -527,7 +527,7 @@ class MachineLearningEngine {
                 impact: 'medium',
                 discovered: Date.now(),
                 lastSeen: Date.now(),
-                metadata: { avgDuration: 12000, conversionRate: 0.35 }
+                metadata: { avgDuration: 12000, conversionRate: 0.35 },
             });
         }
 
@@ -541,7 +541,7 @@ class MachineLearningEngine {
                 impact: 'high',
                 discovered: Date.now(),
                 lastSeen: Date.now(),
-                metadata: { avgDelay: 850, affectedUsers: 67 }
+                metadata: { avgDelay: 850, affectedUsers: 67 },
             });
         }
 
@@ -562,7 +562,7 @@ class MachineLearningEngine {
                 detected: Date.now(),
                 context: { component: this.componentName },
                 resolved: false,
-                falsePositive: false
+                falsePositive: false,
             });
         }
 
@@ -581,13 +581,13 @@ class MachineLearningEngine {
                     avgSessionDuration: 720000, // 12 minutos
                     conversionRate: 0.85,
                     engagementScore: 0.92,
-                    commonPaths: ['/editor', '/advanced-settings', '/export']
+                    commonPaths: ['/editor', '/advanced-settings', '/export'],
                 },
                 predictions: {
                     churnRisk: 0.05,
                     conversionProbability: 0.85,
-                    lifetimeValue: 850
-                }
+                    lifetimeValue: 850,
+                },
             },
             {
                 id: 'segment-casual-users',
@@ -598,14 +598,14 @@ class MachineLearningEngine {
                     avgSessionDuration: 180000, // 3 minutos
                     conversionRate: 0.12,
                     engagementScore: 0.34,
-                    commonPaths: ['/home', '/templates', '/quick-start']
+                    commonPaths: ['/home', '/templates', '/quick-start'],
                 },
                 predictions: {
                     churnRisk: 0.45,
                     conversionProbability: 0.15,
-                    lifetimeValue: 45
-                }
-            }
+                    lifetimeValue: 45,
+                },
+            },
         ];
     }
 
@@ -617,37 +617,37 @@ class MachineLearningEngine {
                     metric: 'user-engagement',
                     direction: 'up',
                     confidence: 0.87,
-                    forecast: [0.65, 0.68, 0.71, 0.73, 0.75]
+                    forecast: [0.65, 0.68, 0.71, 0.73, 0.75],
                 },
                 {
                     metric: 'performance',
                     direction: 'down',
                     confidence: 0.92,
-                    forecast: [450, 420, 380, 360, 340]
-                }
+                    forecast: [450, 420, 380, 360, 340],
+                },
             ],
             correlations: [
                 {
                     factorA: 'page-load-time',
                     factorB: 'user-retention',
                     correlation: -0.73,
-                    significance: 0.95
-                }
+                    significance: 0.95,
+                },
             ],
             recommendations: [
                 {
                     action: 'Optimize component loading in editor',
                     reasoning: 'Strong correlation between load time and user drop-off',
                     expectedImpact: 25,
-                    confidence: 0.89
+                    confidence: 0.89,
                 },
                 {
                     action: 'Implement personalized onboarding for casual users',
                     reasoning: 'Casual user segment shows low engagement but high potential',
                     expectedImpact: 40,
-                    confidence: 0.76
-                }
-            ]
+                    confidence: 0.76,
+                },
+            ],
         };
     }
 
@@ -664,8 +664,8 @@ class MachineLearningEngine {
                 confidence: 0.87,
                 probabilities: {
                     'power-user': 0.87,
-                    'casual-user': 0.13
-                }
+                    'casual-user': 0.13,
+                },
             };
         }
 
@@ -679,14 +679,14 @@ class MachineLearningEngine {
                 type: 'feature',
                 title: 'Try Advanced Templates',
                 reason: 'Based on your usage patterns, you might enjoy our advanced template features',
-                confidence: 0.82
+                confidence: 0.82,
             },
             {
                 type: 'optimization',
                 title: 'Enable Auto-save',
                 reason: 'Users like you typically benefit from automatic saving',
-                confidence: 0.75
-            }
+                confidence: 0.75,
+            },
         ];
     }
 
@@ -702,5 +702,5 @@ export type {
     AnomalyDetection,
     MLInsights,
     UseMachineLearningOptions,
-    MachineLearningState
+    MachineLearningState,
 };

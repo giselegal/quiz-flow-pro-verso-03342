@@ -26,7 +26,7 @@ export const useProductionOptimization = () => {
     enableCodeSplitting: true,
     enableLazyLoading: true,  
     enableCaching: true,
-    enableCompression: true
+    enableCompression: true,
   });
   const [isOptimizing, setIsOptimizing] = useState(false);
 
@@ -54,7 +54,7 @@ export const useProductionOptimization = () => {
         bundleSize,
         loadTime,
         memoryUsage,
-        renderTime
+        renderTime,
       };
 
       setMetrics(newMetrics);
@@ -65,8 +65,8 @@ export const useProductionOptimization = () => {
           body: {
             action: 'record_performance',
             metrics: newMetrics,
-            timestamp: new Date().toISOString()
-          }
+            timestamp: new Date().toISOString(),
+          },
         });
       }
 
@@ -141,7 +141,7 @@ export const useProductionOptimization = () => {
     isOptimizing,
     updateSettings: setSettings,
     collectMetrics,
-    applyOptimizations
+    applyOptimizations,
   };
 };
 

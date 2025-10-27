@@ -55,7 +55,7 @@ export const useStepConfig = ({
     stepNumber,
     enableAutoAdvance = true,
     onStepValid,
-    onAutoAdvance
+    onAutoAdvance,
 }: UseStepConfigOptions) => {
     const [config, setConfig] = useState<StepConfig | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -135,13 +135,13 @@ export const useStepConfig = ({
                 const stepConfig: StepConfig = {
                     metadata: {
                         type: getStepType(stepNumber) as any,
-                        stepNumber
+                        stepNumber,
                     },
                     behavior: {
                         autoAdvance: stepNumber >= 2 && stepNumber <= 11, // Etapas 2-11 têm auto-avanço
                         autoAdvanceDelay: 1500,
                         showProgress: true,
-                        allowBack: stepNumber > 1 // Não permitir voltar na primeira etapa
+                        allowBack: stepNumber > 1, // Não permitir voltar na primeira etapa
                     },
                     validation: {
                         type: optionsGrid ? 'selection' : 'none',
@@ -149,15 +149,15 @@ export const useStepConfig = ({
                         requiredSelections,
                         minSelections,
                         maxSelections,
-                        message: 'Por favor, complete esta etapa para continuar'
+                        message: 'Por favor, complete esta etapa para continuar',
                     },
                     ui: {
-                        theme: 'default'
+                        theme: 'default',
                     },
                     analytics: {
                         trackEvents: true,
                         eventName: `step_${stepNumber}_view`,
-                    }
+                    },
                 };
 
                 if (mounted) {
@@ -248,14 +248,14 @@ export const useStepConfig = ({
                 funnel_id: funnelId,
                 step_number: stepNumber,
                 step_type: config.metadata.type,
-                ...config.analytics.customProperties
+                ...config.analytics.customProperties,
             });
         }
 
         console.log(`📊 Analytics: ${config.analytics.eventName}`, {
             funnelId,
             stepNumber,
-            type: config.metadata.type
+            type: config.metadata.type,
         });
     }, [config, funnelId, stepNumber]);
 

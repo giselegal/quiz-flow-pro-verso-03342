@@ -91,7 +91,7 @@ export class MigrationSystem {
                     .replace(/editorService\./g, 'getUnifiedEditorService().')
                     .replace(/canvasConfigurationService\./g, 'getUnifiedEditorService().')
                     .replace(/pageConfigService\./g, 'getUnifiedEditorService().');
-            }
+            },
         });
 
         // Migração de hooks fragmentados para hooks consolidados
@@ -114,12 +114,12 @@ export class MigrationSystem {
                     .replace(/const\s+\{[^}]*\}\s*=\s*useSingleActiveFunnel\(\);/g, 'const { funnel, updateFunnel } = useGlobalState();');
 
                 // Adiciona import se não existir
-                if (!transformed.includes("import { useGlobalState }")) {
-                    transformed = imports + '\n' + transformed;
+                if (!transformed.includes('import { useGlobalState }')) {
+                    transformed = `${imports  }\n${  transformed}`;
                 }
 
                 return transformed;
-            }
+            },
         });
 
         // Migração de validação fragmentada para validação unificada
@@ -138,7 +138,7 @@ export class MigrationSystem {
                     .replace(/funnelValidationService\./g, 'getUnifiedValidationService().')
                     .replace(/pageStructureValidator\./g, 'getUnifiedValidationService().')
                     .replace(/validationService\./g, 'getUnifiedValidationService().');
-            }
+            },
         });
 
         // Migração para Master Schema
@@ -162,11 +162,11 @@ export class MigrationSystem {
 
                 // Adiciona import se não existir
                 if (!transformed.includes('MASTER_BLOCK_REGISTRY') && !transformed.includes(imports)) {
-                    transformed = imports + '\n' + transformed;
+                    transformed = `${imports  }\n${  transformed}`;
                 }
 
                 return transformed;
-            }
+            },
         });
 
         // Remove imports desnecessários
@@ -185,7 +185,7 @@ export class MigrationSystem {
                     if (trimmed.startsWith('import') &&
                         (trimmed.includes('legacy') || trimmed.includes('old') || trimmed.includes('deprecated'))) {
                         const importName = this.extractImportName(trimmed);
-                        if (importName && !content.includes(importName + '.') && !content.includes(importName + '(')) {
+                        if (importName && !content.includes(`${importName  }.`) && !content.includes(`${importName  }(`)) {
                             return false;
                         }
                     }
@@ -193,7 +193,7 @@ export class MigrationSystem {
                 });
 
                 return cleanedLines.join('\n');
-            }
+            },
         });
     }
 
@@ -290,7 +290,7 @@ export class MigrationSystem {
             skippedFiles: skippedCount,
             results,
             totalTime,
-            estimatedSavings
+            estimatedSavings,
         };
 
         console.log('✅ Migration completed!');
@@ -309,7 +309,7 @@ export class MigrationSystem {
             appliedRules: [],
             errors: [],
             warnings: [],
-            rollbackAvailable: false
+            rollbackAvailable: false,
         };
 
         try {
@@ -394,7 +394,7 @@ export class MigrationSystem {
                 migrationNeeded,
                 applicableRules,
                 estimatedComplexity: complexity,
-                dependencies
+                dependencies,
             };
 
         } catch (error) {
@@ -473,7 +473,7 @@ export class MigrationSystem {
      */
     private async createBackup(filePath: string, content: string): Promise<string> {
         const relativePath = path.relative(process.cwd(), filePath);
-        const backupPath = path.join(this.backupDir, relativePath + '.backup');
+        const backupPath = path.join(this.backupDir, `${relativePath  }.backup`);
         const backupDir = path.dirname(backupPath);
 
         await fs.mkdir(backupDir, { recursive: true });
@@ -554,7 +554,7 @@ To rollback a file, copy it back from here to its original location.
         return {
             lines: successfulResults.length * 50, // Estima 50 linhas economizadas por arquivo
             files: successfulResults.length,
-            kb: successfulResults.length * 2 // Estima 2KB economizados por arquivo
+            kb: successfulResults.length * 2, // Estima 2KB economizados por arquivo
         };
     }
 
@@ -593,7 +593,7 @@ To rollback a file, copy it back from here to its original location.
     async rollback(filePath: string): Promise<boolean> {
         try {
             const relativePath = path.relative(process.cwd(), filePath);
-            const backupPath = path.join(this.backupDir, relativePath + '.backup');
+            const backupPath = path.join(this.backupDir, `${relativePath  }.backup`);
 
             const backupContent = await fs.readFile(backupPath, 'utf-8');
             await fs.writeFile(filePath, backupContent, 'utf-8');
@@ -626,7 +626,7 @@ export async function migrateProject(options: {
 
     const report = await migrationSystem.migrate(sourceDir, {
         dryRun: options.dryRun || false,
-        targetFiles: options.targetFiles
+        targetFiles: options.targetFiles,
     });
 
     return report;
@@ -646,7 +646,7 @@ export async function analyzeForMigration(sourceDir: string = './src') {
     const byComplexity = {
         low: targets.filter(t => t.estimatedComplexity === 'low').length,
         medium: targets.filter(t => t.estimatedComplexity === 'medium').length,
-        high: targets.filter(t => t.estimatedComplexity === 'high').length
+        high: targets.filter(t => t.estimatedComplexity === 'high').length,
     };
 
     console.log(`Complexity breakdown: Low: ${byComplexity.low}, Medium: ${byComplexity.medium}, High: ${byComplexity.high}`);

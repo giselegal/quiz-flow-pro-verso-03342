@@ -62,7 +62,7 @@ class AdvancedCache<T = any> {
             maxMemoryMB: 50,
             enableCompression: false,
             enableMetrics: true,
-            ...config
+            ...config,
         };
         
         this.metrics = {
@@ -72,7 +72,7 @@ class AdvancedCache<T = any> {
             totalSize: 0,
             memoryUsage: 0,
             hitRate: 0,
-            avgAccessTime: 0
+            avgAccessTime: 0,
         };
         
         // Verificar se localStorage está disponível
@@ -97,7 +97,7 @@ class AdvancedCache<T = any> {
             dependencies?: string[];
             persist?: boolean;
             compress?: boolean;
-        } = {}
+        } = {},
     ): void {
         const startTime = performance.now();
         
@@ -109,7 +109,7 @@ class AdvancedCache<T = any> {
                 lastAccessed: Date.now(),
                 ttl: options.ttl || this.config.defaultTTL,
                 dependencies: options.dependencies,
-                size: this.calculateSize(data)
+                size: this.calculateSize(data),
             };
             
             // Verificar limites antes de inserir
@@ -246,7 +246,7 @@ class AdvancedCache<T = any> {
                         console.warn(`Preload failed for ${key}:`, error);
                     }
                 }
-            })
+            }),
         );
     }
     
@@ -349,7 +349,7 @@ class AdvancedCache<T = any> {
             totalSize: 0,
             memoryUsage: 0,
             hitRate: 0,
-            avgAccessTime: 0
+            avgAccessTime: 0,
         };
     }
     
@@ -359,7 +359,7 @@ class AdvancedCache<T = any> {
             const persistData = {
                 data: entry.data,
                 timestamp: entry.timestamp,
-                ttl: entry.ttl
+                ttl: entry.ttl,
             };
             this.persistentStorage!.setItem(persistKey, JSON.stringify(persistData));
         } catch (error) {
@@ -382,7 +382,7 @@ class AdvancedCache<T = any> {
                         timestamp: parsed.timestamp,
                         accessCount: 0,
                         lastAccessed: Date.now(),
-                        ttl: parsed.ttl
+                        ttl: parsed.ttl,
                     };
                     
                     if (!this.isExpired(entry)) {
@@ -439,7 +439,7 @@ class AdvancedCache<T = any> {
 
 export const useAdvancedCache = <T = any>(
     namespace: string = 'default',
-    config?: Partial<CacheConfig>
+    config?: Partial<CacheConfig>,
 ) => {
     const cacheRef = useRef<AdvancedCache<T>>();
     const [metrics, setMetrics] = useState<CacheMetrics>();
@@ -449,7 +449,7 @@ export const useAdvancedCache = <T = any>(
         if (!cacheRef.current) {
             cacheRef.current = new AdvancedCache<T>({
                 persistentKeys: [`${namespace}_persistent`],
-                ...config
+                ...config,
             });
         }
     }, [namespace, config]);
@@ -474,7 +474,7 @@ export const useAdvancedCache = <T = any>(
     const memoizedSet = useCallback((
         key: string, 
         data: T, 
-        options?: Parameters<typeof cache.set>[2]
+        options?: Parameters<typeof cache.set>[2],
     ) => {
         cache?.set(`${namespace}:${key}`, data, options);
     }, [namespace]);
@@ -505,12 +505,12 @@ export const useAdvancedCache = <T = any>(
         preload: (keys: Array<{ key: string; loader: () => Promise<T> }>) => 
             cache?.preload(keys.map(({ key, loader }) => ({ 
                 key: `${namespace}:${key}`, 
-                loader 
+                loader, 
             }))),
         warmup: (keys: string[]) => 
             cache?.warmup(keys.map(key => `${namespace}:${key}`)),
         metrics,
-        size: cache?.getSize() || 0
+        size: cache?.getSize() || 0,
     };
 };
 

@@ -27,7 +27,7 @@ function buildMock() {
         eq: () => chain(),
         order: () => chain(),
         single: async () => ok,
-        maybeSingle: async () => ok
+        maybeSingle: async () => ok,
     });
 
     const subscription = { unsubscribe: () => { /* noop */ } };
@@ -40,8 +40,8 @@ function buildMock() {
             getSession: async () => ({ data: { session: null }, error: null }),
             getUser: async () => ({ data: { user: null }, error: null }),
             signInWithPassword: async () => ok,
-            signOut: async () => ok
-        }
+            signOut: async () => ok,
+        },
     };
 }
 
@@ -73,10 +73,10 @@ export async function getSupabaseClient(opts: SupabaseLazyOptions = {}) {
                 autoRefreshToken: !isServer,
                 detectSessionInUrl: !isServer,
                 // Evitar colisão de múltiplas instâncias sob a mesma storageKey
-                storageKey: 'sb-editor'
+                storageKey: 'sb-editor',
             },
-            global: { headers: { 'x-lazy-supabase': '1' } }
-        }
+            global: { headers: { 'x-lazy-supabase': '1' } },
+        },
     );
     return cached;
 }

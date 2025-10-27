@@ -148,14 +148,14 @@ export const AVAILABLE_TEMPLATES: Record<string, EnhancedTemplateMetadata> = {
             supportsDragDrop: false,
             supportsRealTimeValidation: true,
             supportsPlugins: true,
-            cacheStrategy: 'normal'
+            cacheStrategy: 'normal',
         },
         analytics: {
             usage: 150,
             completionRate: 85,
             averageTime: 4.2,
-            userRating: 4.1
-        }
+            userRating: 4.1,
+        },
     },
 
     simpleTestTemplate: {
@@ -186,14 +186,14 @@ export const AVAILABLE_TEMPLATES: Record<string, EnhancedTemplateMetadata> = {
             supportsDragDrop: false,
             supportsRealTimeValidation: false,
             supportsPlugins: false,
-            cacheStrategy: 'minimal'
+            cacheStrategy: 'minimal',
         },
         analytics: {
             usage: 0,
             completionRate: 0,
             averageTime: 0,
-            userRating: 0
-        }
+            userRating: 0,
+        },
     },
 
     quiz21StepsComplete: {
@@ -221,7 +221,7 @@ export const AVAILABLE_TEMPLATES: Record<string, EnhancedTemplateMetadata> = {
             'múltiplos tipos de questão',
             'sistema de eventos completo',
             'plugins extensíveis',
-            'drag & drop'
+            'drag & drop',
         ],
         loader: () => import('../quiz21StepsComplete.ts'),
         eventHandlers: ['quiz:advanced', 'progress:tracking', 'analytics:collection'],
@@ -233,14 +233,14 @@ export const AVAILABLE_TEMPLATES: Record<string, EnhancedTemplateMetadata> = {
             supportsDragDrop: true,
             supportsRealTimeValidation: true,
             supportsPlugins: true,
-            cacheStrategy: 'aggressive'
+            cacheStrategy: 'aggressive',
         },
         analytics: {
             usage: 890,
             completionRate: 78,
             averageTime: 42.5,
-            userRating: 4.7
-        }
+            userRating: 4.7,
+        },
     },
 } as const;
 
@@ -276,7 +276,7 @@ export function getTemplateMetadata(templateId: string): TemplateMetadata | null
  */
 export function getTemplatesByCategory(category: string): TemplateMetadata[] {
     return getAllTemplateMetadata().filter(template =>
-        category === 'all' || template.category === category
+        category === 'all' || template.category === category,
     );
 }
 
@@ -288,7 +288,7 @@ export function searchTemplates(query: string): TemplateMetadata[] {
     return getAllTemplateMetadata().filter(template =>
         template.name.toLowerCase().includes(lowerQuery) ||
         template.description.toLowerCase().includes(lowerQuery) ||
-        template.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
+        template.tags.some(tag => tag.toLowerCase().includes(lowerQuery)),
     );
 }
 
@@ -307,7 +307,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
                 (window as any).templateEventSystem.emit('template:loaded', {
                     templateId,
                     source: 'cache',
-                    loadTime: 0
+                    loadTime: 0,
                 }, templateId);
             }
 
@@ -327,7 +327,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
         if (typeof window !== 'undefined' && (window as any).templateEventSystem) {
             (window as any).templateEventSystem.emit('template:loading', {
                 templateId,
-                source: 'dynamic-import'
+                source: 'dynamic-import',
             }, templateId);
         }
 
@@ -354,7 +354,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
                 (window as any).templateEventSystem.emit('template:error', {
                     templateId,
                     error: (importError as any)?.message || 'Erro de importação',
-                    phase: 'import'
+                    phase: 'import',
                 }, templateId);
             }
 
@@ -365,7 +365,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
         const fullTemplate: FullTemplate = {
             ...metadata,
             config: templateModule.config || {},
-            steps: templateModule.steps || []
+            steps: templateModule.steps || [],
         };
 
         // Cache inteligente baseado na estratégia
@@ -400,7 +400,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
                 cacheStrategy,
                 hasPlugins: !!(metadata.requiredPlugins?.length || metadata.optionalPlugins?.length),
                 hasValidation: !!(metadata.validationRules?.length),
-                hasEventHandlers: !!(metadata.eventHandlers?.length)
+                hasEventHandlers: !!(metadata.eventHandlers?.length),
             }, templateId);
         }
 
@@ -415,7 +415,7 @@ export async function loadFullTemplate(templateId: string): Promise<FullTemplate
             (window as any).templateEventSystem.emit('template:error', {
                 templateId,
                 error: error?.message || 'Erro desconhecido',
-                phase: 'critical'
+                phase: 'critical',
             }, templateId);
         }
 
@@ -473,11 +473,11 @@ export function convertTemplateToEditorFormat(template: FullTemplate): any {
         thumbnailUrl: template.thumbnail,
         templateData: {
             globalConfig: template.config.globalConfig,
-            steps: template.steps
+            steps: template.steps,
         },
         components: template.steps.flatMap(step => step.blocks || []),
         createdAt: template.createdAt,
-        updatedAt: template.updatedAt
+        updatedAt: template.updatedAt,
     };
 }
 
@@ -497,7 +497,7 @@ export function incrementTemplateUsage(templateId: string): void {
         if (typeof window !== 'undefined' && (window as any).templateEventSystem) {
             (window as any).templateEventSystem.emit('template:usage_incremented', {
                 templateId,
-                newCount: template.usageCount
+                newCount: template.usageCount,
             }, templateId);
         }
     }
@@ -513,7 +513,7 @@ export function clearTemplateCache(): void {
     // Emitir evento
     if (typeof window !== 'undefined' && (window as any).templateEventSystem) {
         (window as any).templateEventSystem.emit('cache:cleared', {
-            timestamp: Date.now()
+            timestamp: Date.now(),
         }, 'system');
     }
 
@@ -542,15 +542,15 @@ export function getTemplateAnalytics(): any {
         }, {} as Record<string, number>),
         pluginsStats: {
             templatesWithPlugins: templates.filter(t =>
-                t.requiredPlugins?.length || t.optionalPlugins?.length
+                t.requiredPlugins?.length || t.optionalPlugins?.length,
             ).length,
             totalRequiredPlugins: templates.reduce((sum, t) =>
-                sum + (t.requiredPlugins?.length || 0), 0
+                sum + (t.requiredPlugins?.length || 0), 0,
             ),
             totalOptionalPlugins: templates.reduce((sum, t) =>
-                sum + (t.optionalPlugins?.length || 0), 0
-            )
-        }
+                sum + (t.optionalPlugins?.length || 0), 0,
+            ),
+        },
     };
 }
 
@@ -569,5 +569,5 @@ export default {
     clearTemplateCache,
     initializeTemplateSystem, // 🔥 Nova função
     getTemplateAnalytics, // 🔥 Nova função
-    AVAILABLE_TEMPLATES
+    AVAILABLE_TEMPLATES,
 };

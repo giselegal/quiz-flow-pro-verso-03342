@@ -10,7 +10,7 @@ import { useQuizState } from '@/hooks/useQuizState';
 // Mock do router para navegação
 vi.mock('wouter', () => ({
   useLocation: () => ['/quiz', vi.fn()],
-  useRoute: () => [true, {}]
+  useRoute: () => [true, {}],
 }));
 
 describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
@@ -181,7 +181,7 @@ describe('🎯 Fluxo Completo do Quiz (21 Etapas)', () => {
         'step-15': 'answer3',
         'step-16': 'answer4',
         'step-17': 'answer5',
-        'step-18': 'answer6'
+        'step-18': 'answer6',
       };
 
       act(() => {

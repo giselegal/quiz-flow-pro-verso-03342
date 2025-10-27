@@ -77,7 +77,7 @@ export const validateStepNumber = (stepNumber: number | string): IdValidationRes
     if (isNaN(num) || !Number.isInteger(num) || num < 1 || num > 1000) {
         return {
             isValid: false,
-            error: 'Step number deve ser um inteiro entre 1 e 1000'
+            error: 'Step number deve ser um inteiro entre 1 e 1000',
         };
     }
 
@@ -98,7 +98,7 @@ export const validateInstanceKey = (instanceKey: string): IdValidationResult => 
     if (!instanceRegex.test(instanceKey)) {
         return {
             isValid: false,
-            error: 'Instance key deve seguir o formato: component-type_step-number_unique-id'
+            error: 'Instance key deve seguir o formato: component-type_step-number_unique-id',
         };
     }
 
@@ -155,7 +155,7 @@ export const generateFunnelId = (options: IdGenerationOptions = {}): string => {
 export const generateInstanceKey = (
     componentType: string,
     stepNumber: number,
-    uniqueId?: string
+    uniqueId?: string,
 ): string => {
     const normalizedType = componentType.toLowerCase().replace(/[^a-z0-9]/g, '-');
     const normalizedStep = Math.max(1, Math.floor(stepNumber));

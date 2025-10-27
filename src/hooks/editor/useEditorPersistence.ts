@@ -49,7 +49,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
           userId: data.userId,
           isPublished: data.isPublished,
           version: data.version,
-          settings: data.settings
+          settings: data.settings,
         };
 
         // 🎯 Usar o serviço contextual para isolamento completo
@@ -72,7 +72,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         setIsSaving(false);
       }
     },
-    [toast, context, contextualFunnelService]
+    [toast, context, contextualFunnelService],
   );
 
   const loadFunnel = useCallback(
@@ -120,7 +120,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         setIsLoading(false);
       }
     },
-    [toast, context, contextualFunnelService]
+    [toast, context, contextualFunnelService],
   );
 
   const listFunnels = useCallback(async () => {
@@ -179,7 +179,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         return { success: false, error: 'Unexpected error' };
       }
     },
-    [toast, context, contextualFunnelService]
+    [toast, context, contextualFunnelService],
   );
 
   const publishFunnel = useCallback(
@@ -207,7 +207,7 @@ export const useEditorPersistence = (context: FunnelContext = FunnelContext.EDIT
         return { success: false, error: 'Unexpected error' };
       }
     },
-    [toast, context, contextualFunnelService]
+    [toast, context, contextualFunnelService],
   );
 
   return {

@@ -240,7 +240,7 @@ export class MarketplaceEngine {
     // ============================================================================
 
     async submitTemplate(
-        template: Omit<MarketplaceTemplate, 'id' | 'downloads' | 'purchases' | 'rating' | 'reviewCount' | 'createdAt' | 'updatedAt' | 'status'>
+        template: Omit<MarketplaceTemplate, 'id' | 'downloads' | 'purchases' | 'rating' | 'reviewCount' | 'createdAt' | 'updatedAt' | 'status'>,
     ): Promise<string> {
         const templateId = this.generateTemplateId();
 
@@ -253,7 +253,7 @@ export class MarketplaceEngine {
             reviewCount: 0,
             status: 'under_review',
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
         };
 
         this.templates.set(templateId, fullTemplate);
@@ -268,16 +268,16 @@ export class MarketplaceEngine {
                 templateId,
                 category: template.category,
                 pricing: template.pricing,
-                organizationId: template.organizationId
+                organizationId: template.organizationId,
             },
-            metadata: this.getCurrentEventMetadata()
+            metadata: this.getCurrentEventMetadata(),
         });
 
         logger.info('marketplace', 'Template submitted for review', {
             templateId,
             creatorId: template.creatorId,
             category: template.category,
-            pricing: template.pricing.type
+            pricing: template.pricing.type,
         });
 
         return templateId;
@@ -296,7 +296,7 @@ export class MarketplaceEngine {
         logger.info('marketplace', 'Template approved', {
             templateId,
             reviewerId,
-            publishedAt: template.publishedAt
+            publishedAt: template.publishedAt,
         });
 
         return true;
@@ -313,14 +313,14 @@ export class MarketplaceEngine {
 
         if (query.tags && query.tags.length > 0) {
             filtered = filtered.filter(t =>
-                query.tags!.some(tag => t.tags.includes(tag))
+                query.tags!.some(tag => t.tags.includes(tag)),
             );
         }
 
         if (query.priceRange) {
             filtered = filtered.filter(t =>
                 t.pricing.amount >= query.priceRange!.min &&
-                t.pricing.amount <= query.priceRange!.max
+                t.pricing.amount <= query.priceRange!.max,
             );
         }
 
@@ -333,7 +333,7 @@ export class MarketplaceEngine {
             filtered = filtered.filter(t =>
                 t.name.toLowerCase().includes(term) ||
                 t.description.toLowerCase().includes(term) ||
-                t.tags.some(tag => tag.toLowerCase().includes(term))
+                t.tags.some(tag => tag.toLowerCase().includes(term)),
             );
         }
 
@@ -365,7 +365,7 @@ export class MarketplaceEngine {
             totalCount: filtered.length,
             page: query.page,
             limit: query.limit,
-            hasMore: start + query.limit < filtered.length
+            hasMore: start + query.limit < filtered.length,
         };
     }
 
@@ -381,7 +381,7 @@ export class MarketplaceEngine {
             id: reviewId,
             helpfulCount: 0,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
         };
 
         if (!this.reviews.has(review.templateId)) {
@@ -396,7 +396,7 @@ export class MarketplaceEngine {
             reviewId,
             templateId: review.templateId,
             userId: review.userId,
-            rating: review.rating
+            rating: review.rating,
         });
 
         return reviewId;
@@ -423,7 +423,7 @@ export class MarketplaceEngine {
     async purchaseTemplate(
         templateId: string,
         userId: string,
-        paymentDetails: PaymentDetails
+        paymentDetails: PaymentDetails,
     ): Promise<PurchaseResult> {
         const template = this.templates.get(templateId);
         if (!template) {
@@ -440,7 +440,7 @@ export class MarketplaceEngine {
             return {
                 success: false,
                 error: 'Payment failed',
-                transactionId: paymentResult.transactionId
+                transactionId: paymentResult.transactionId,
             };
         }
 
@@ -461,22 +461,22 @@ export class MarketplaceEngine {
                 templateId,
                 amount: template.pricing.amount,
                 currency: template.pricing.currency,
-                creatorId: template.creatorId
+                creatorId: template.creatorId,
             },
-            metadata: this.getCurrentEventMetadata()
+            metadata: this.getCurrentEventMetadata(),
         });
 
         logger.info('marketplace', 'Template purchased', {
             templateId,
             userId,
             amount: template.pricing.amount,
-            transactionId: paymentResult.transactionId
+            transactionId: paymentResult.transactionId,
         });
 
         return {
             success: true,
             templateData: template.template,
-            transactionId: paymentResult.transactionId
+            transactionId: paymentResult.transactionId,
         };
     }
 
@@ -498,15 +498,15 @@ export class MarketplaceEngine {
             properties: {
                 templateId,
                 free: true,
-                creatorId: template.creatorId
+                creatorId: template.creatorId,
             },
-            metadata: this.getCurrentEventMetadata()
+            metadata: this.getCurrentEventMetadata(),
         });
 
         return {
             success: true,
             templateData: template.template,
-            transactionId: `free_${Date.now()}`
+            transactionId: `free_${Date.now()}`,
         };
     }
 
@@ -540,16 +540,16 @@ export class MarketplaceEngine {
                         templateId: t.id,
                         name: t.name,
                         revenue: t.purchases * t.pricing.amount,
-                        downloads: t.downloads
-                    }))
+                        downloads: t.downloads,
+                    })),
             },
             performance: {
                 totalTemplates: creatorTemplates.length,
                 totalDownloads,
                 averageRating,
-                conversionRate: totalDownloads > 0 ? (creatorTemplates.reduce((sum, t) => sum + t.purchases, 0) / totalDownloads) * 100 : 0
+                conversionRate: totalDownloads > 0 ? (creatorTemplates.reduce((sum, t) => sum + t.purchases, 0) / totalDownloads) * 100 : 0,
             },
-            insights: this.generateCreatorInsights(creatorTemplates)
+            insights: this.generateCreatorInsights(creatorTemplates),
         };
     }
 
@@ -602,7 +602,7 @@ export class MarketplaceEngine {
             device: { type: 'server' },
             location: { country: 'BR' },
             referrer: 'marketplace',
-            utm: {}
+            utm: {},
         };
     }
 
@@ -610,7 +610,7 @@ export class MarketplaceEngine {
         // Simplified payment processing
         return {
             success: Math.random() > 0.1, // 90% success rate
-            transactionId: `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+            transactionId: `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         };
     }
 

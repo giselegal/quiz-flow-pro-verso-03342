@@ -115,13 +115,13 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         { label: 'Pequeno', value: 'sm' },
         { label: 'Normal', value: 'base' },
         { label: 'Grande', value: 'lg' },
-        { label: 'Extra', value: 'xl' }
+        { label: 'Extra', value: 'xl' },
       ], defaultValue: 'base', description: 'Controle de tamanho tipográfico do título/subtítulo' },
       { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [
         { label: 'Fino', value: 'light' },
         { label: 'Normal', value: 'normal' },
         { label: 'Médio', value: 'medium' },
-        { label: 'Negrito', value: 'bold' }
+        { label: 'Negrito', value: 'bold' },
       ], defaultValue: 'normal', description: 'Espessura da fonte utilizada no cabeçalho' },
       { key: 'type', label: 'Tipo', type: 'text' },
       // Propriedades de container e layout
@@ -338,7 +338,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         { label: 'Email', value: 'email' },
         { label: 'Telefone', value: 'tel' },
         { label: 'Número', value: 'number' },
-        { label: 'Senha', value: 'password' }
+        { label: 'Senha', value: 'password' },
       ], description: 'Tipo do campo de formulário (HTML input type) utilizado na renderização' },
       { key: 'placeholder', label: 'Placeholder', type: 'text' },
       { key: 'label', label: 'Label', type: 'text' },
@@ -571,7 +571,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         group: 'content',
         defaultValue: 'Escolha uma opção:',
         required: true,
-        description: 'Título ou pergunta que aparece acima das opções'
+        description: 'Título ou pergunta que aparece acima das opções',
       },
       {
         key: 'subtitle',
@@ -579,7 +579,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: '',
-        description: 'Texto complementar ou instrução adicional'
+        description: 'Texto complementar ou instrução adicional',
       },
       {
         key: 'description',
@@ -587,7 +587,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'textarea',
         group: 'content',
         defaultValue: '',
-        description: 'Texto explicativo mais longo, se necessário'
+        description: 'Texto explicativo mais longo, se necessário',
       },
 
       // === OPÇÕES INDIVIDUAIS ===
@@ -596,7 +596,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         label: 'Opções da Questão',
         type: 'options-list',
         group: 'content',
-        description: 'Configure as opções disponíveis - texto, imagem, pontuação e categoria'
+        description: 'Configure as opções disponíveis - texto, imagem, pontuação e categoria',
       },
       {
         key: 'option1Text',
@@ -604,7 +604,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: 'Primeira opção',
-        description: 'Texto que aparece na primeira opção'
+        description: 'Texto que aparece na primeira opção',
       },
       {
         key: 'option1Image',
@@ -612,7 +612,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: '',
-        description: 'URL da imagem para a primeira opção'
+        description: 'URL da imagem para a primeira opção',
       },
       {
         key: 'option1Score',
@@ -620,7 +620,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'number',
         group: 'content',
         defaultValue: 1,
-        description: 'Pontos atribuídos ao selecionar esta opção'
+        description: 'Pontos atribuídos ao selecionar esta opção',
       },
       {
         key: 'option1Category',
@@ -628,7 +628,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: '',
-        description: 'Categoria para agrupamento de resultados'
+        description: 'Categoria para agrupamento de resultados',
       },
       {
         key: 'option2Text',
@@ -636,7 +636,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: 'Segunda opção',
-        description: 'Texto que aparece na segunda opção'
+        description: 'Texto que aparece na segunda opção',
       },
       {
         key: 'option2Image',
@@ -644,7 +644,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: '',
-        description: 'URL da imagem para a segunda opção'
+        description: 'URL da imagem para a segunda opção',
       },
       {
         key: 'option2Score',
@@ -652,7 +652,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'number',
         group: 'content',
         defaultValue: 2,
-        description: 'Pontos atribuídos ao selecionar esta opção'
+        description: 'Pontos atribuídos ao selecionar esta opção',
       },
       {
         key: 'option2Category',
@@ -660,7 +660,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: '',
-        description: 'Categoria para agrupamento de resultados'
+        description: 'Categoria para agrupamento de resultados',
       },
       {
         key: 'option3Text',
@@ -668,7 +668,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: 'Terceira opção',
-        description: 'Texto que aparece na terceira opção'
+        description: 'Texto que aparece na terceira opção',
       },
       {
         key: 'option3Image',
@@ -676,7 +676,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: '',
-        description: 'URL da imagem para a terceira opção'
+        description: 'URL da imagem para a terceira opção',
       },
       {
         key: 'option3Score',
@@ -684,7 +684,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'number',
         group: 'content',
         defaultValue: 3,
-        description: 'Pontos atribuídos ao selecionar esta opção'
+        description: 'Pontos atribuídos ao selecionar esta opção',
       },
       {
         key: 'option3Category',
@@ -692,7 +692,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: '',
-        description: 'Categoria para agrupamento de resultados'
+        description: 'Categoria para agrupamento de resultados',
       },
       {
         key: 'option4Text',
@@ -700,7 +700,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: 'Quarta opção',
-        description: 'Texto que aparece na quarta opção'
+        description: 'Texto que aparece na quarta opção',
       },
       {
         key: 'option4Image',
@@ -708,7 +708,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: '',
-        description: 'URL da imagem para a quarta opção'
+        description: 'URL da imagem para a quarta opção',
       },
       {
         key: 'option4Score',
@@ -716,7 +716,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'number',
         group: 'content',
         defaultValue: 4,
-        description: 'Pontos atribuídos ao selecionar esta opção'
+        description: 'Pontos atribuídos ao selecionar esta opção',
       },
       {
         key: 'option4Category',
@@ -724,7 +724,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'content',
         defaultValue: '',
-        description: 'Categoria para agrupamento de resultados'
+        description: 'Categoria para agrupamento de resultados',
       },
 
       // === LAYOUT ===
@@ -737,7 +737,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 1,
         group: 'layout',
         defaultValue: 2,
-        description: 'Quantas colunas terá o grid de opções'
+        description: 'Quantas colunas terá o grid de opções',
       },
       {
         key: 'gridGap',
@@ -748,7 +748,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 2,
         group: 'layout',
         defaultValue: 16,
-        description: 'Espaço entre as opções no grid'
+        description: 'Espaço entre as opções no grid',
       },
       {
         key: 'responsiveColumns',
@@ -756,7 +756,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'layout',
         defaultValue: true,
-        description: 'Ajusta automaticamente o número de colunas em diferentes telas'
+        description: 'Ajusta automaticamente o número de colunas em diferentes telas',
       },
       {
         key: 'padding',
@@ -767,7 +767,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 2,
         group: 'layout',
         defaultValue: 16,
-        description: 'Espaçamento interno de cada opção'
+        description: 'Espaçamento interno de cada opção',
       },
 
       // === IMAGENS ===
@@ -777,7 +777,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'images',
         defaultValue: true,
-        description: 'Exibir ou ocultar imagens nas opções'
+        description: 'Exibir ou ocultar imagens nas opções',
       },
       {
         key: 'imageSize',
@@ -791,7 +791,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'Grande (300px)', value: 'large' },
           { label: 'Personalizado', value: 'custom' },
         ],
-        description: 'Tamanho padrão das imagens'
+        description: 'Tamanho padrão das imagens',
       },
       {
         key: 'imageWidth',
@@ -803,7 +803,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         group: 'images',
         defaultValue: 256,
         showIf: 'imageSize === "custom"',
-        description: 'Largura personalizada das imagens'
+        description: 'Largura personalizada das imagens',
       },
       {
         key: 'imageHeight',
@@ -815,7 +815,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         group: 'images',
         defaultValue: 256,
         showIf: 'imageSize === "custom"',
-        description: 'Altura personalizada das imagens'
+        description: 'Altura personalizada das imagens',
       },
       {
         key: 'imagePosition',
@@ -829,7 +829,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'À Direita', value: 'right' },
           { label: 'Abaixo do Texto', value: 'bottom' },
         ],
-        description: 'Onde a imagem aparece em relação ao texto'
+        description: 'Onde a imagem aparece em relação ao texto',
       },
       {
         key: 'imageLayout',
@@ -841,7 +841,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'Vertical', value: 'vertical' },
           { label: 'Horizontal', value: 'horizontal' },
         ],
-        description: 'Orientação geral de cada opção'
+        description: 'Orientação geral de cada opção',
       },
 
       // === COMPORTAMENTO ===
@@ -851,7 +851,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'behavior',
         defaultValue: false,
-        description: 'Permite selecionar mais de uma opção'
+        description: 'Permite selecionar mais de uma opção',
       },
       {
         key: 'minSelections',
@@ -862,7 +862,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 1,
         group: 'behavior',
         defaultValue: 1,
-        description: 'Número mínimo de opções que devem ser selecionadas'
+        description: 'Número mínimo de opções que devem ser selecionadas',
       },
       {
         key: 'maxSelections',
@@ -873,7 +873,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 1,
         group: 'behavior',
         defaultValue: 1,
-        description: 'Número máximo de opções que podem ser selecionadas'
+        description: 'Número máximo de opções que podem ser selecionadas',
       },
       {
         key: 'requiredSelections',
@@ -884,7 +884,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 1,
         group: 'behavior',
         defaultValue: 1,
-        description: 'Quantas seleções são necessárias para prosseguir'
+        description: 'Quantas seleções são necessárias para prosseguir',
       },
       {
         key: 'allowDeselection',
@@ -892,7 +892,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'behavior',
         defaultValue: true,
-        description: 'Permite clicar novamente para desmarcar uma opção'
+        description: 'Permite clicar novamente para desmarcar uma opção',
       },
       {
         key: 'showSelectionCount',
@@ -900,7 +900,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'behavior',
         defaultValue: true,
-        description: 'Exibe quantas opções foram selecionadas'
+        description: 'Exibe quantas opções foram selecionadas',
       },
       {
         key: 'autoAdvanceOnComplete',
@@ -908,7 +908,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'behavior',
         defaultValue: false,
-        description: 'Avança automaticamente quando atingir o número de seleções'
+        description: 'Avança automaticamente quando atingir o número de seleções',
       },
       {
         key: 'autoAdvanceDelay',
@@ -920,7 +920,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         group: 'behavior',
         defaultValue: 0,
         showIf: 'autoAdvanceOnComplete === true',
-        description: 'Tempo de espera antes de avançar automaticamente'
+        description: 'Tempo de espera antes de avançar automaticamente',
       },
 
       // === SISTEMA DE PONTUAÇÃO ===
@@ -930,7 +930,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'scoring',
         defaultValue: true,
-        description: 'Habilita ou desabilita o sistema de pontuação'
+        description: 'Habilita ou desabilita o sistema de pontuação',
       },
       {
         key: 'scoringType',
@@ -943,7 +943,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'Categorias', value: 'categories' },
           { label: 'Pesos Personalizados', value: 'weights' },
         ],
-        description: 'Método de cálculo da pontuação'
+        description: 'Método de cálculo da pontuação',
       },
       {
         key: 'pointsMultiplier',
@@ -954,7 +954,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 1,
         group: 'scoring',
         defaultValue: 1,
-        description: 'Multiplica os pontos base por este valor'
+        description: 'Multiplica os pontos base por este valor',
       },
       {
         key: 'bonusPoints',
@@ -962,7 +962,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'number',
         group: 'scoring',
         defaultValue: 0,
-        description: 'Pontos extras adicionados a esta questão'
+        description: 'Pontos extras adicionados a esta questão',
       },
       {
         key: 'penaltyPoints',
@@ -970,7 +970,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'number',
         group: 'scoring',
         defaultValue: 0,
-        description: 'Pontos subtraídos por resposta incorreta'
+        description: 'Pontos subtraídos por resposta incorreta',
       },
 
       // === REGRAS DE SELEÇÃO AVANÇADAS ===
@@ -987,7 +987,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'No máximo N opções', value: 'maximum' },
           { label: 'Entre X e Y opções', value: 'range' },
         ],
-        description: 'Define as regras de quantas opções podem ser selecionadas'
+        description: 'Define as regras de quantas opções podem ser selecionadas',
       },
       {
         key: 'forcedChoices',
@@ -995,7 +995,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'rules',
         defaultValue: '',
-        description: 'IDs das opções que devem ser selecionadas (separadas por vírgula)'
+        description: 'IDs das opções que devem ser selecionadas (separadas por vírgula)',
       },
       {
         key: 'blockedChoices',
@@ -1003,7 +1003,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'rules',
         defaultValue: '',
-        description: 'IDs das opções que não podem ser selecionadas juntas'
+        description: 'IDs das opções que não podem ser selecionadas juntas',
       },
       {
         key: 'exclusiveGroups',
@@ -1011,7 +1011,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'rules',
         defaultValue: '',
-        description: 'Configuração de grupos mutuamente exclusivos (JSON)'
+        description: 'Configuração de grupos mutuamente exclusivos (JSON)',
       },
       {
         key: 'enableTimeLimit',
@@ -1019,7 +1019,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'rules',
         defaultValue: false,
-        description: 'Define um tempo limite para esta questão'
+        description: 'Define um tempo limite para esta questão',
       },
       {
         key: 'timeLimitSeconds',
@@ -1031,7 +1031,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         group: 'rules',
         defaultValue: 30,
         showIf: 'enableTimeLimit === true',
-        description: 'Tempo disponível para responder esta questão'
+        description: 'Tempo disponível para responder esta questão',
       },
       {
         key: 'showTimeRemaining',
@@ -1040,7 +1040,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         group: 'rules',
         defaultValue: true,
         showIf: 'enableTimeLimit === true',
-        description: 'Exibe um contador regressivo'
+        description: 'Exibe um contador regressivo',
       },
 
       // === ESTILO VISUAL ===
@@ -1050,7 +1050,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'color',
         group: 'style',
         defaultValue: '#FFFFFF',
-        description: 'Cor de fundo de cada opção'
+        description: 'Cor de fundo de cada opção',
       },
       {
         key: 'selectedColor',
@@ -1058,7 +1058,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'color',
         group: 'style',
         defaultValue: '#B89B7A',
-        description: 'Cor quando a opção está selecionada'
+        description: 'Cor quando a opção está selecionada',
       },
       {
         key: 'hoverColor',
@@ -1066,7 +1066,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'color',
         group: 'style',
         defaultValue: '#D4C2A8',
-        description: 'Cor quando o mouse passa sobre a opção'
+        description: 'Cor quando o mouse passa sobre a opção',
       },
       {
         key: 'borderRadius',
@@ -1077,7 +1077,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 1,
         group: 'style',
         defaultValue: 8,
-        description: 'Quão arredondadas são as bordas das opções'
+        description: 'Quão arredondadas são as bordas das opções',
       },
       {
         key: 'selectionStyle',
@@ -1091,7 +1091,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'Brilho', value: 'glow' },
           { label: 'Escala', value: 'scale' },
         ],
-        description: 'Como destacar visualmente a opção selecionada'
+        description: 'Como destacar visualmente a opção selecionada',
       },
 
       // === VALIDAÇÃO E FEEDBACK ===
@@ -1101,7 +1101,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'validation',
         defaultValue: true,
-        description: 'Só ativa o botão continuar quando as seleções estão corretas'
+        description: 'Só ativa o botão continuar quando as seleções estão corretas',
       },
       {
         key: 'showValidationFeedback',
@@ -1109,7 +1109,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'validation',
         defaultValue: true,
-        description: 'Mostra mensagens de erro ou sucesso'
+        description: 'Mostra mensagens de erro ou sucesso',
       },
       {
         key: 'validationMessage',
@@ -1117,7 +1117,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'text',
         group: 'validation',
         defaultValue: 'Selecione uma opção para continuar',
-        description: 'Mensagem mostrada quando a validação falha'
+        description: 'Mensagem mostrada quando a validação falha',
       },
 
       // === CONFIGURAÇÕES AVANÇADAS ===
@@ -1130,7 +1130,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         step: 5,
         group: 'advanced',
         defaultValue: 100,
-        description: 'Controle de zoom geral do componente inteiro'
+        description: 'Controle de zoom geral do componente inteiro',
       },
       {
         key: 'scoreValues',
@@ -1138,7 +1138,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'json',
         group: 'advanced',
         defaultValue: {},
-        description: 'Configuração avançada de pontuação personalizada'
+        description: 'Configuração avançada de pontuação personalizada',
       },
     ],
   },
@@ -1159,7 +1159,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'Categorias', value: 'categories' },
           { label: 'Pesos', value: 'weights' },
         ],
-        description: 'Estratégia de cálculo do resultado final do quiz'
+        description: 'Estratégia de cálculo do resultado final do quiz',
       },
       {
         key: 'calculationMode',
@@ -1171,7 +1171,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'Categorias', value: 'categories' },
           { label: 'Pesos', value: 'weights' },
         ],
-        description: 'Compatibilidade: chave anterior para método de cálculo'
+        description: 'Compatibilidade: chave anterior para método de cálculo',
       },
       {
         key: 'categoryThresholds',
@@ -1179,7 +1179,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'json',
         group: 'scoring',
         defaultValue: {},
-        description: 'Mapa de categoria -> limiares/intervalos para mapeamento de resultado'
+        description: 'Mapa de categoria -> limiares/intervalos para mapeamento de resultado',
       },
       {
         key: 'scoreMapping',
@@ -1187,14 +1187,14 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'json',
         group: 'scoring',
         defaultValue: {},
-        description: 'Configuração de pesos/pontos por opção, step ou grupo'
+        description: 'Configuração de pesos/pontos por opção, step ou grupo',
       },
       {
         key: 'weightMap',
         label: 'Pesos por Opção/Grupo (legacy)',
         type: 'json',
         group: 'scoring',
-        description: 'Compatibilidade: chave antiga equivalente a scoreMapping'
+        description: 'Compatibilidade: chave antiga equivalente a scoreMapping',
       },
       {
         key: 'resultLogic',
@@ -1202,14 +1202,14 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'json',
         group: 'scoring',
         defaultValue: {},
-        description: 'Regras para traduzir pontuação/categoria em resultado textual/visual'
+        description: 'Regras para traduzir pontuação/categoria em resultado textual/visual',
       },
       {
         key: 'resultMapping',
         label: 'Mapeamento Resultado (legacy)',
         type: 'json',
         group: 'scoring',
-        description: 'Compatibilidade: chave antiga equivalente a resultLogic'
+        description: 'Compatibilidade: chave antiga equivalente a resultLogic',
       },
       {
         key: 'leadCapture',
@@ -1217,7 +1217,7 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'behavior',
         defaultValue: false,
-        description: 'Se habilitado, aciona captura de contato junto ao cálculo do resultado'
+        description: 'Se habilitado, aciona captura de contato junto ao cálculo do resultado',
       },
       {
         key: 'debug',
@@ -1225,9 +1225,9 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         type: 'boolean',
         group: 'advanced',
         defaultValue: false,
-        description: 'Mostra detalhes do cálculo durante o desenvolvimento'
-      }
-    ]
+        description: 'Mostra detalhes do cálculo durante o desenvolvimento',
+      },
+    ],
   },
   'urgency-timer-inline': {
     label: 'Timer de Urgência',
@@ -1723,8 +1723,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'layout', defaultValue: '1rem' },
       { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'layout', defaultValue: '1200px' },
       { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'section': {
@@ -1734,8 +1734,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'layout', defaultValue: '1rem' },
       { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'layout', defaultValue: '1200px' },
       { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'box': {
@@ -1745,8 +1745,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'layout', defaultValue: '1rem' },
       { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'layout', defaultValue: '1200px' },
       { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'legal-notice': {
@@ -1757,8 +1757,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [{ label: 'Normal', value: 'normal' }, { label: 'Negrito', value: 'bold' }], defaultValue: 'normal' },
       { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#6b7280' },
       { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{ label: 'Esquerda', value: 'left' }, { label: 'Centro', value: 'center' }, { label: 'Direita', value: 'right' }], defaultValue: 'center' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'legal-notice-inline': {
@@ -1769,8 +1769,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [{ label: 'Normal', value: 'normal' }, { label: 'Negrito', value: 'bold' }], defaultValue: 'normal' },
       { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#6b7280' },
       { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{ label: 'Esquerda', value: 'left' }, { label: 'Centro', value: 'center' }, { label: 'Direita', value: 'right' }], defaultValue: 'center' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'headline-inline': {
@@ -1782,8 +1782,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [{ label: 'Normal', value: 'normal' }, { label: 'Negrito', value: 'bold' }], defaultValue: 'bold' },
       { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
       { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{ label: 'Esquerda', value: 'left' }, { label: 'Centro', value: 'center' }, { label: 'Direita', value: 'right' }], defaultValue: 'left' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'button-inline-fixed': {
@@ -1795,8 +1795,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
       { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'style', defaultValue: '0.75rem 1.5rem' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'cta-inline': {
@@ -1808,8 +1808,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
       { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'style', defaultValue: '0.75rem 1.5rem' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-offer-cta-inline': {
@@ -1821,8 +1821,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
       { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'style', defaultValue: '0.75rem 1.5rem' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-navigation': {
@@ -1838,15 +1838,15 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'disableNextUntilComplete', label: 'Desabilitar Próximo até Completar', type: 'boolean', group: 'behavior', defaultValue: false, description: 'Impede avançar enquanto o step não estiver válido' },
       { key: 'position', label: 'Posição', type: 'select', group: 'layout', defaultValue: 'bottom', options: [
         { label: 'Topo', value: 'top' },
-        { label: 'Base', value: 'bottom' }
+        { label: 'Base', value: 'bottom' },
       ], description: 'Onde a navegação aparece no step' },
       { key: 'spacing', label: 'Espaçamento', type: 'select', group: 'layout', defaultValue: 'md', options: [
         { label: 'Pequeno', value: 'sm' },
         { label: 'Médio', value: 'md' },
-        { label: 'Grande', value: 'lg' }
+        { label: 'Grande', value: 'lg' },
       ], description: 'Espaçamento externo da área de navegação' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'progress-bar': {
@@ -1857,8 +1857,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'color', label: 'Cor da Barra', type: 'color', group: 'style', defaultValue: '#3b82f6' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
       { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '8px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'progress-inline': {
@@ -1869,8 +1869,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'color', label: 'Cor da Barra', type: 'color', group: 'style', defaultValue: '#3b82f6' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
       { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '8px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'loader-inline': {
@@ -1879,8 +1879,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'size', label: 'Tamanho', type: 'select', group: 'style', options: [{ label: 'Pequeno', value: 'sm' }, { label: 'Médio', value: 'md' }, { label: 'Grande', value: 'lg' }], defaultValue: 'md' },
       { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#3b82f6' },
       { key: 'text', label: 'Texto de Carregamento', type: 'text', group: 'content', defaultValue: 'Carregando...' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'loading-animation': {
@@ -1889,8 +1889,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'type', label: 'Tipo de Animação', type: 'select', group: 'style', options: [{ label: 'Spinner', value: 'spinner' }, { label: 'Dots', value: 'dots' }, { label: 'Pulse', value: 'pulse' }], defaultValue: 'spinner' },
       { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#3b82f6' },
       { key: 'text', label: 'Texto', type: 'text', group: 'content', defaultValue: 'Carregando...' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'decorative-bar': {
@@ -1900,8 +1900,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '4px' },
       { key: 'width', label: 'Largura', type: 'text', group: 'style', defaultValue: '100%' },
       { key: 'opacity', label: 'Opacidade', type: 'range', group: 'style', min: 0, max: 100, defaultValue: 100 },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'guarantee-badge': {
@@ -1911,8 +1911,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'days', label: 'Dias de Garantia', type: 'number', group: 'content', defaultValue: 7 },
       { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#10b981' },
       { key: 'size', label: 'Tamanho', type: 'select', group: 'style', options: [{ label: 'Pequeno', value: 'sm' }, { label: 'Médio', value: 'md' }, { label: 'Grande', value: 'lg' }], defaultValue: 'md' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'gradient-animation': {
@@ -1922,8 +1922,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'colorEnd', label: 'Cor Final', type: 'color', group: 'style', defaultValue: '#8b5cf6' },
       { key: 'direction', label: 'Direção', type: 'select', group: 'style', options: [{ label: 'Horizontal', value: 'horizontal' }, { label: 'Vertical', value: 'vertical' }, { label: 'Diagonal', value: 'diagonal' }], defaultValue: 'horizontal' },
       { key: 'speed', label: 'Velocidade', type: 'select', group: 'style', options: [{ label: 'Lenta', value: 'slow' }, { label: 'Normal', value: 'normal' }, { label: 'Rápida', value: 'fast' }], defaultValue: 'normal' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   // Quiz Components (18 tipos)
@@ -1934,8 +1934,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-button': {
@@ -1944,8 +1944,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'text', label: 'Texto', type: 'text', group: 'content', defaultValue: 'Continuar' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#3b82f6' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-form': {
@@ -1954,8 +1954,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text', group: 'content' },
       { key: 'placeholder', label: 'Placeholder', type: 'text', group: 'content', defaultValue: 'Digite aqui...' },
       { key: 'required', label: 'Campo Obrigatório', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-image': {
@@ -1964,8 +1964,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'src', label: 'URL da Imagem', type: 'text', group: 'content', required: true },
       { key: 'alt', label: 'Texto Alternativo', type: 'text', group: 'content', defaultValue: 'Imagem' },
       { key: 'width', label: 'Largura', type: 'text', group: 'style', defaultValue: '100%' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-intro': {
@@ -1976,8 +1976,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-options-inline': {
@@ -1986,8 +1986,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text', group: 'content' },
       { key: 'columns', label: 'Colunas', type: 'select', group: 'layout', options: [{ label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 }, { label: '4', value: 4 }], defaultValue: 2 },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-personal-info-inline': {
@@ -1995,8 +1995,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Suas Informações' },
       { key: 'fields', label: 'Campos', type: 'json', group: 'content', description: 'Array de campos do formulário' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-processing': {
@@ -2004,8 +2004,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Processando suas respostas...' },
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-progress': {
@@ -2014,8 +2014,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'currentStep', label: 'Step Atual', type: 'number', group: 'content', defaultValue: 1 },
       { key: 'totalSteps', label: 'Total de Steps', type: 'number', group: 'content', defaultValue: 21 },
       { key: 'showPercentage', label: 'Mostrar Percentual', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-question-inline': {
@@ -2023,8 +2023,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'question', label: 'Pergunta', type: 'text', group: 'content', required: true },
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-result-header': {
@@ -2034,8 +2034,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-result-secondary': {
@@ -2043,8 +2043,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'title', label: 'Título', type: 'text', group: 'content' },
       { key: 'items', label: 'Itens', type: 'json', group: 'content', description: 'Array de itens secundários' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-result-style': {
@@ -2053,8 +2053,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'styleName', label: 'Nome do Estilo', type: 'text', group: 'content' },
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
       { key: 'image', label: 'Imagem', type: 'text', group: 'content', description: 'URL da imagem' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-results': {
@@ -2062,8 +2062,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Seus Resultados' },
       { key: 'results', label: 'Resultados', type: 'json', group: 'content', description: 'Array de resultados' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-start-page-inline': {
@@ -2072,8 +2072,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Bem-vindo!' },
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
       { key: 'buttonText', label: 'Texto do Botão', type: 'text', group: 'content', defaultValue: 'Começar' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-style-question': {
@@ -2081,8 +2081,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'question', label: 'Pergunta', type: 'text', group: 'content', required: true },
       { key: 'styles', label: 'Estilos', type: 'json', group: 'content', description: 'Array de opções de estilo' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-text': {
@@ -2091,8 +2091,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'content', label: 'Conteúdo', type: 'textarea', group: 'content', required: true },
       { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: '1rem' },
       { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{ label: 'Esquerda', value: 'left' }, { label: 'Centro', value: 'center' }, { label: 'Direita', value: 'right' }], defaultValue: 'left' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-transition': {
@@ -2101,8 +2101,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Analisando suas respostas...' },
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
       { key: 'duration', label: 'Duração (ms)', type: 'number', group: 'behavior', defaultValue: 3000 },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   // Result & Sales Components
@@ -2114,8 +2114,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'userName', label: 'Nome do Usuário', type: 'text', group: 'content', description: 'Variável: {{userName}}' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'result-card': {
@@ -2125,8 +2125,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
       { key: 'image', label: 'Imagem', type: 'text', group: 'content', description: 'URL da imagem' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'style-results': {
@@ -2134,8 +2134,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'mainStyle', label: 'Estilo Principal', type: 'text', group: 'content' },
       { key: 'secondaryStyles', label: 'Estilos Secundários', type: 'json', group: 'content', description: 'Array de estilos' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'options-grid-inline': {
@@ -2143,8 +2143,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'options', label: 'Opções', type: 'json', group: 'content', description: 'Array de opções', required: true },
       { key: 'columns', label: 'Colunas', type: 'select', group: 'layout', options: [{ label: '2', value: 2 }, { label: '3', value: 3 }, { label: '4', value: 4 }], defaultValue: 3 },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'benefits-list': {
@@ -2153,8 +2153,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Benefícios' },
       { key: 'benefits', label: 'Benefícios', type: 'json', group: 'content', description: 'Array de benefícios', required: true },
       { key: 'iconColor', label: 'Cor do Ícone', type: 'color', group: 'style', defaultValue: '#10b981' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'bonus-inline': {
@@ -2164,8 +2164,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
       { key: 'value', label: 'Valor', type: 'text', group: 'content', description: 'Ex: R$ 197' },
       { key: 'image', label: 'Imagem', type: 'text', group: 'content', description: 'URL da imagem' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'personalized-hook-inline': {
@@ -2174,8 +2174,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text', group: 'content' },
       { key: 'message', label: 'Mensagem', type: 'textarea', group: 'content' },
       { key: 'userName', label: 'Nome do Usuário', type: 'text', group: 'content', description: 'Variável: {{userName}}' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'final-value-proposition-inline': {
@@ -2183,8 +2183,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Por que escolher?' },
       { key: 'reasons', label: 'Razões', type: 'json', group: 'content', description: 'Array de razões' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'testimonials-grid': {
@@ -2193,8 +2193,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Depoimentos' },
       { key: 'testimonials', label: 'Depoimentos', type: 'json', group: 'content', description: 'Array de depoimentos', required: true },
       { key: 'columns', label: 'Colunas', type: 'select', group: 'layout', options: [{ label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 }], defaultValue: 2 },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   // Step 20 Modular Blocks (7 tipos)
@@ -2204,16 +2204,16 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Compatibilidade de Estilos' },
       { key: 'mainStyle', label: 'Estilo Principal', type: 'text', group: 'content' },
       { key: 'compatibleStyles', label: 'Estilos Compatíveis', type: 'json', group: 'content', description: 'Array de estilos' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-complete-template': {
     label: 'Step 20 - Template Completo',
     fields: [
       { key: 'sections', label: 'Seções', type: 'json', group: 'content', description: 'Array de seções do template' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-personalized-offer': {
@@ -2224,8 +2224,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'price', label: 'Preço', type: 'text', group: 'content', defaultValue: 'R$ 197' },
       { key: 'discount', label: 'Desconto', type: 'text', group: 'content', description: 'Ex: 50% OFF' },
       { key: 'ctaText', label: 'Texto do CTA', type: 'text', group: 'content', defaultValue: 'Quero garantir' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-result-header': {
@@ -2235,8 +2235,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content' },
       { key: 'userName', label: 'Nome do Usuário', type: 'text', group: 'content', description: 'Variável: {{userName}}' },
       { key: 'mainStyle', label: 'Estilo Principal', type: 'text', group: 'content', description: 'Variável: {{mainStyle}}' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   // =====================================================================
@@ -2251,20 +2251,20 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         options: [
           { label: '2xl', value: '2xl' },
           { label: '3xl', value: '3xl' },
-          { label: '4xl', value: '4xl' }
+          { label: '4xl', value: '4xl' },
         ], 
-        defaultValue: '3xl' 
+        defaultValue: '3xl', 
       },
       { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#5b4135' },
       { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
-          { label: 'Direita', value: 'right' }
+          { label: 'Direita', value: 'right' },
         ],
-        defaultValue: 'center'
-      }
-    ]
+        defaultValue: 'center',
+      },
+    ],
   },
 
   'transition-loader': {
@@ -2272,8 +2272,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#deac6d' },
       { key: 'dots', label: 'Número de Pontos', type: 'number', group: 'behavior', defaultValue: 3, min: 2, max: 5, description: 'Quantidade de pontos exibidos na animação' },
-      { key: 'size', label: 'Tamanho', type: 'text', group: 'style', defaultValue: '12px' }
-    ]
+      { key: 'size', label: 'Tamanho', type: 'text', group: 'style', defaultValue: '12px' },
+    ],
   },
 
   'transition-text': {
@@ -2284,28 +2284,28 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         options: [
           { label: 'Normal (base)', value: 'base' },
           { label: 'Grande (lg)', value: 'lg' },
-          { label: 'Extra Grande (xl)', value: 'xl' }
+          { label: 'Extra Grande (xl)', value: 'xl' },
         ],
-        defaultValue: 'lg'
+        defaultValue: 'lg',
       },
       { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#6b7280' },
       { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
-          { label: 'Direita', value: 'right' }
+          { label: 'Direita', value: 'right' },
         ],
-        defaultValue: 'center'
-      }
-    ]
+        defaultValue: 'center',
+      },
+    ],
   },
 
   'transition-progress': {
     label: 'Progress de Transição',
     fields: [
       { key: 'dots', label: 'Número de Pontos', type: 'number', group: 'behavior', defaultValue: 3, min: 2, max: 5, description: 'Quantidade de pontos do indicador de progresso' },
-      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#deac6d' }
-    ]
+      { key: 'color', label: 'Cor', type: 'color', group: 'style', defaultValue: '#deac6d' },
+    ],
   },
 
   'transition-message': {
@@ -2314,8 +2314,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'emoji', label: 'Emoji', type: 'text', group: 'content', defaultValue: '🧮' },
       { key: 'text', label: 'Mensagem', type: 'textarea', group: 'content', required: true },
       { key: 'gradientFrom', label: 'Gradiente Início', type: 'color', group: 'style' },
-      { key: 'gradientTo', label: 'Gradiente Fim', type: 'color', group: 'style' }
-    ]
+      { key: 'gradientTo', label: 'Gradiente Fim', type: 'color', group: 'style' },
+    ],
   },
 
   // =====================================================================
@@ -2329,8 +2329,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'subtitle', label: 'Subtítulo', type: 'text', group: 'content' },
       { key: 'emoji', label: 'Emoji', type: 'text', group: 'content', defaultValue: '🎉' },
       { key: 'titleColor', label: 'Cor do Título', type: 'color', group: 'style', defaultValue: '#5b4135' },
-      { key: 'subtitleColor', label: 'Cor do Subtítulo', type: 'color', group: 'style', defaultValue: '#8F7A6A' }
-    ]
+      { key: 'subtitleColor', label: 'Cor do Subtítulo', type: 'color', group: 'style', defaultValue: '#8F7A6A' },
+    ],
   },
 
   'result-main': {
@@ -2340,8 +2340,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'percentage', label: 'Porcentagem', type: 'number', group: 'content', min: 0, max: 100, defaultValue: 65 },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#F5EDE4' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#5b4135' },
-      { key: 'accentColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#B89B7A' }
-    ]
+      { key: 'accentColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#B89B7A' },
+    ],
   },
 
   'result-image': {
@@ -2351,8 +2351,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'alt', label: 'Texto Alternativo', type: 'text', group: 'content' },
       { key: 'borderRadius', label: 'Raio da Borda', type: 'text', group: 'style', defaultValue: '12px' },
       { key: 'width', label: 'Largura', type: 'text', group: 'style', defaultValue: '100%' },
-      { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'style', defaultValue: '500px' }
-    ]
+      { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'style', defaultValue: '500px' },
+    ],
   },
 
   'result-description': {
@@ -2363,19 +2363,19 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         options: [
           { label: 'Normal (base)', value: 'base' },
           { label: 'Grande (lg)', value: 'lg' },
-          { label: 'Extra Grande (xl)', value: 'xl' }
+          { label: 'Extra Grande (xl)', value: 'xl' },
         ],
-        defaultValue: 'lg'
+        defaultValue: 'lg',
       },
       { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style',
         options: [
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
-          { label: 'Direita', value: 'right' }
+          { label: 'Direita', value: 'right' },
         ],
-        defaultValue: 'center'
-      }
-    ]
+        defaultValue: 'center',
+      },
+    ],
   },
 
   'result-characteristics': {
@@ -2384,9 +2384,9 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'title', label: 'Título', type: 'text', group: 'content' },
       { key: 'items', label: 'Itens (JSON)', type: 'json', group: 'content', 
         description: 'Array de strings com as características',
-        defaultValue: JSON.stringify(['Item 1', 'Item 2', 'Item 3'], null, 2)
-      }
-    ]
+        defaultValue: JSON.stringify(['Item 1', 'Item 2', 'Item 3'], null, 2),
+      },
+    ],
   },
 
   'result-cta': {
@@ -2397,19 +2397,19 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         options: [
           { label: 'Padrão', value: 'default' },
           { label: 'Secundário', value: 'secondary' },
-          { label: 'Outline', value: 'outline' }
+          { label: 'Outline', value: 'outline' },
         ],
-        defaultValue: 'default'
+        defaultValue: 'default',
       },
       { key: 'size', label: 'Tamanho', type: 'select', group: 'style',
         options: [
           { label: 'Pequeno', value: 'sm' },
           { label: 'Médio', value: 'md' },
-          { label: 'Grande', value: 'lg' }
+          { label: 'Grande', value: 'lg' },
         ],
-        defaultValue: 'lg'
-      }
-    ]
+        defaultValue: 'lg',
+      },
+    ],
   },
 
   'result-secondary-styles': {
@@ -2420,10 +2420,10 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         description: 'Array de objetos com name, percentage, color',
         defaultValue: JSON.stringify([
           { name: 'Minimalista', percentage: 25, color: '#6b7280' },
-          { name: 'Romântico', percentage: 10, color: '#c49548' }
-        ], null, 2)
-      }
-    ]
+          { name: 'Romântico', percentage: 10, color: '#c49548' },
+        ], null, 2),
+      },
+    ],
   },
 
   'step20-secondary-styles': {
@@ -2431,8 +2431,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'title', label: 'Título', type: 'text', group: 'content', defaultValue: 'Estilos Complementares' },
       { key: 'styles', label: 'Estilos', type: 'json', group: 'content', description: 'Array de estilos secundários' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-style-reveal': {
@@ -2443,8 +2443,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
       { key: 'image', label: 'Imagem', type: 'text', group: 'content', description: 'URL da imagem' },
       { key: 'animationDuration', label: 'Duração da Animação (ms)', type: 'number', group: 'behavior', defaultValue: 2000 },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-user-greeting': {
@@ -2452,8 +2452,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     fields: [
       { key: 'greeting', label: 'Saudação', type: 'text', group: 'content', defaultValue: 'Olá, {{userName}}!' },
       { key: 'message', label: 'Mensagem', type: 'textarea', group: 'content' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   // AI Components
@@ -2464,8 +2464,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
       { key: 'buttonText', label: 'Texto do Botão', type: 'text', group: 'content', defaultValue: 'Gerar Look com IA' },
       { key: 'apiEndpoint', label: 'Endpoint da API', type: 'text', group: 'content', description: 'URL do endpoint de IA' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   // Sales & Marketing Components
@@ -2482,8 +2482,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'overlay', label: 'Overlay', type: 'boolean', group: 'style', defaultValue: true, description: 'Adicionar overlay escuro sobre a imagem' },
       { key: 'overlayOpacity', label: 'Opacidade do Overlay', type: 'range', group: 'style', min: 0, max: 100, defaultValue: 50 },
       { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '600px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'secondary-styles': {
@@ -2496,8 +2496,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'columns', label: 'Colunas', type: 'select', group: 'layout', options: [{ label: '2 Colunas', value: 2 }, { label: '3 Colunas', value: 3 }, { label: '4 Colunas', value: 4 }], defaultValue: 3 },
       { key: 'cardBackgroundColor', label: 'Cor de Fundo dos Cards', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'cardBorderColor', label: 'Cor da Borda dos Cards', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   // ============================================================================
@@ -2516,8 +2516,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'H3 - Subtítulo', value: 3 },
           { label: 'H4 - Menor', value: 4 },
           { label: 'H5 - Micro', value: 5 },
-          { label: 'H6 - Mínimo', value: 6 }
-        ], defaultValue: 2
+          { label: 'H6 - Mínimo', value: 6 },
+        ], defaultValue: 2,
       },
       { key: 'fontSize', label: 'Tamanho da Fonte', type: 'text', group: 'style', defaultValue: '24px', description: 'Ex: 24px, 2rem, 1.5em' },
       {
@@ -2526,8 +2526,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'Médio', value: '500' },
           { label: 'Semi-bold', value: '600' },
           { label: 'Bold', value: 'bold' },
-          { label: 'Extra Bold', value: '800' }
-        ], defaultValue: 'bold'
+          { label: 'Extra Bold', value: '800' },
+        ], defaultValue: 'bold',
       },
       { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#432818' },
       {
@@ -2535,13 +2535,13 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
           { label: 'Esquerda', value: 'left' },
           { label: 'Centro', value: 'center' },
           { label: 'Direita', value: 'right' },
-          { label: 'Justificado', value: 'justify' }
-        ], defaultValue: 'center'
+          { label: 'Justificado', value: 'justify' },
+        ], defaultValue: 'center',
       },
       { key: 'marginTop', label: 'Margem Superior', type: 'text', group: 'layout', defaultValue: '0px' },
       { key: 'marginBottom', label: 'Margem Inferior', type: 'text', group: 'layout', defaultValue: '16px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   // Quiz Components
@@ -2556,8 +2556,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'overlay', label: 'Overlay Escuro', type: 'boolean', group: 'style', defaultValue: false },
       { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '300px' },
       { key: 'padding', label: 'Padding', type: 'text', group: 'layout', defaultValue: '48px 24px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'strategic-question': {
@@ -2569,8 +2569,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'icon', label: 'Ícone', type: 'text', group: 'content', description: 'Nome do ícone Lucide ou URL' },
       { key: 'showProgress', label: 'Mostrar Progresso', type: 'boolean', group: 'content', defaultValue: true },
       { key: 'required', label: 'Resposta Obrigatória', type: 'boolean', group: 'content', defaultValue: true },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'transition-hero': {
@@ -2584,8 +2584,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'backgroundImage', label: 'Imagem de Fundo', type: 'text', group: 'style' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '400px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   // Offer/Sales Components
@@ -2604,8 +2604,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
       { key: 'ctaBackgroundColor', label: 'Cor do Botão', type: 'color', group: 'style', defaultValue: '#b3a26a' },
       { key: 'minHeight', label: 'Altura Mínima', type: 'text', group: 'layout', defaultValue: '500px' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'bonus': {
@@ -2619,8 +2619,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'layout', label: 'Layout', type: 'select', group: 'layout', options: [{ label: 'Lista', value: 'list' }, { label: 'Grade 2 Colunas', value: 'grid-2' }, { label: 'Grade 3 Colunas', value: 'grid-3' }], defaultValue: 'list' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'accentColor', label: 'Cor de Destaque', type: 'color', group: 'style', defaultValue: '#b3a26a' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' },
+    ],
   },
 
   'testimonials': {
@@ -2634,8 +2634,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'cardBackgroundColor', label: 'Cor de Fundo dos Cards', type: 'color', group: 'style', defaultValue: '#ffffff' },
       { key: 'cardBorderColor', label: 'Cor da Borda', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
       { key: 'starColor', label: 'Cor das Estrelas', type: 'color', group: 'style', defaultValue: '#fbbf24' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' },
+    ],
   },
 
   'guarantee': {
@@ -2650,8 +2650,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ecfdf5' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#065f46' },
       { key: 'borderColor', label: 'Cor da Borda', type: 'color', group: 'style', defaultValue: '#10b981' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' },
+    ],
   },
 
   'benefits': {
@@ -2664,8 +2664,8 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'iconStyle', label: 'Estilo do Ícone', type: 'select', group: 'style', options: [{ label: 'Check Simples', value: 'check' }, { label: 'Check Circulado', value: 'check-circle' }, { label: 'Estrela', value: 'star' }, { label: 'Customizado', value: 'custom' }], defaultValue: 'check-circle' },
       { key: 'iconColor', label: 'Cor do Ícone', type: 'color', group: 'style', defaultValue: '#10b981' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
-      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' }
-    ]
+      { key: 'className', label: 'Classes CSS', type: 'text', group: 'style' },
+    ],
   },
 
 };

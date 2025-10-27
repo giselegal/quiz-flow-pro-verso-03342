@@ -37,7 +37,7 @@ export class EditorService {
   async createEditorSession(
     entityId: string,
     entityType: 'quiz' | 'funnel',
-    userId?: string
+    userId?: string,
   ): Promise<EditorSession> {
     const initialState = new EditorState();
     
@@ -50,10 +50,10 @@ export class EditorService {
       history: {
         states: [initialState],
         currentIndex: 0,
-        maxStates: this.MAX_HISTORY_STATES
+        maxStates: this.MAX_HISTORY_STATES,
       },
       startedAt: new Date(),
-      isAutoSaving: false
+      isAutoSaving: false,
     };
 
     await this.storageAdapter.set(`editor_session_${session.id}`, session);

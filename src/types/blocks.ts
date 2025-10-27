@@ -14,7 +14,7 @@ import { Block, BlockType } from './editor';
 export type {
   BlockData,
   BlockDefinition,
-  UnifiedBlockComponentProps as BlockComponentProps
+  UnifiedBlockComponentProps as BlockComponentProps,
 } from './core';
 
 /**

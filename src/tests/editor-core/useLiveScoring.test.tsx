@@ -7,14 +7,14 @@ describe('useLiveScoring', () => {
         const scoringMap = {
             blk1: {
                 optA: { classico: 2, urbano: 1 },
-                optB: { urbano: 3 }
+                optB: { urbano: 3 },
             },
             blk2: {
-                optX: { classico: 5 }
-            }
+                optX: { classico: 5 },
+            },
         } as any;
         const { result, rerender } = renderHook(({ selections }) => useLiveScoring({ selections, scoringMap }), {
-            initialProps: { selections: { blk1: ['optA'], blk2: ['optX'] } }
+            initialProps: { selections: { blk1: ['optA'], blk2: ['optX'] } },
         });
         expect(result.current.scores.classico).toBe(7);
         expect(result.current.scores.urbano).toBe(1);

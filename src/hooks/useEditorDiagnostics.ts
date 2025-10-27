@@ -190,7 +190,7 @@ export const useEditorDiagnostics = (options?: {
         },
         2000,
         'timeout',
-        { cancelOnNav: true, label: 'editor-diagnostic-initial' }
+        { cancelOnNav: true, label: 'editor-diagnostic-initial' },
       ); // Aguardar 2s para o editor carregar
       if (typeof id === 'number') initialTimeoutRef.id = id;
     };
@@ -206,7 +206,7 @@ export const useEditorDiagnostics = (options?: {
       },
       interval,
       'timeout',
-      { cancelOnNav: true, label: 'editor-diagnostic-interval' }
+      { cancelOnNav: true, label: 'editor-diagnostic-interval' },
     );
     if (typeof intervalId === 'number') intervalRef.id = intervalId;
 

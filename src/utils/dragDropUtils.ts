@@ -45,7 +45,7 @@ export const normalizeOverId = (id: string | null | undefined): string | null =>
 export const validateDrop = (
   active: Active,
   over: Over | null,
-  currentStepBlocks: Block[]
+  currentStepBlocks: Block[],
 ): DropValidationResult => {
   if (!over) {
     return { isValid: false, reason: 'Nenhuma zona de drop válida' };
@@ -87,7 +87,7 @@ export const validateDrop = (
   // Validação para bloco do canvas
   if (activeData.type === 'canvas-block' || activeData.type === 'block') {
     const activeBlockExists = currentStepBlocks.some(
-      block => String(block.id) === String(activeData.blockId)
+      block => String(block.id) === String(activeData.blockId),
     );
     if (!activeBlockExists) return { isValid: false, reason: 'Bloco de origem não encontrado' };
 
@@ -170,7 +170,7 @@ export const logDragEvent = (
   event: 'start' | 'end' | 'cancel',
   active: Active,
   over?: Over | null,
-  validation?: DropValidationResult
+  validation?: DropValidationResult,
 ) => {
   if (process.env.NODE_ENV === 'development') {
     const data = extractDragData(active);
@@ -190,7 +190,7 @@ export const logDragEvent = (
  */
 export const getDragFeedback = (
   dragData: DragData | null,
-  validation: DropValidationResult
+  validation: DropValidationResult,
 ): { message: string; type: 'success' | 'error' | 'info' } => {
   if (!dragData) {
     return { message: 'Dados de drag inválidos', type: 'error' };

@@ -23,7 +23,7 @@ export const useFunnelSettingsHistory = (funnelId: string, initialSettings: Funn
     (newSettings: FunnelSettings) => {
       saveState(newSettings);
     },
-    [saveState]
+    [saveState],
   );
 
   // Auto-save com debounce

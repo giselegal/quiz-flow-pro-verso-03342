@@ -20,7 +20,7 @@ describe('HybridTemplateService', () => {
             const validMaster: any = {
                 templateVersion: '3.0',
                 globalConfig: {},
-                steps: {}
+                steps: {},
             };
 
             // Adicionar 21 steps válidos
@@ -28,7 +28,7 @@ describe('HybridTemplateService', () => {
                 const stepId = `step-${i.toString().padStart(2, '0')}`;
                 validMaster.steps[stepId] = {
                     metadata: { id: stepId, name: `Step ${i}` },
-                    sections: []
+                    sections: [],
                 };
             }
 
@@ -41,7 +41,7 @@ describe('HybridTemplateService', () => {
         it('deve rejeitar master sem templateVersion', () => {
             const invalidMaster: any = {
                 globalConfig: {},
-                steps: {}
+                steps: {},
             };
 
             // Validação falha sem templateVersion
@@ -51,8 +51,8 @@ describe('HybridTemplateService', () => {
                 templateVersion: '3.0',
                 globalConfig: {},
                 steps: {
-                    'step-01': { metadata: {}, sections: [] }
-                }
+                    'step-01': { metadata: {}, sections: [] },
+                },
             };
 
             expect(Object.keys(invalidMaster.steps).length).toBeLessThan(21);

@@ -19,7 +19,7 @@
  */
 export interface TemplateV3 {
     /** Versão do template */
-    templateVersion: "3.0";
+    templateVersion: '3.0';
 
     /** Metadados do template */
     metadata: MetadataV3;
@@ -80,12 +80,12 @@ export interface MetadataV3 {
  * Categorias de templates
  */
 export type TemplateCategory =
-    | "quiz-question"    // Perguntas do quiz
-    | "quiz-result"      // Página de resultado
-    | "quiz-final"       // Página final/thank you
-    | "landing-page"     // Landing pages
-    | "opt-in"           // Páginas de captura
-    | "sales-page";      // Páginas de vendas
+    | 'quiz-question'    // Perguntas do quiz
+    | 'quiz-result'      // Página de resultado
+    | 'quiz-final'       // Página final/thank you
+    | 'landing-page'     // Landing pages
+    | 'opt-in'           // Páginas de captura
+    | 'sales-page';      // Páginas de vendas
 
 // ============================================================================
 // OFFER SYSTEM
@@ -131,7 +131,7 @@ export interface PricingSystem {
     salePrice: number;
 
     /** Moeda (ISO 4217) */
-    currency: "BRL" | "USD" | "EUR";
+    currency: 'BRL' | 'USD' | 'EUR';
 
     /** Opções de parcelamento */
     installments: {
@@ -315,15 +315,15 @@ export interface Section {
  * Tipos de sections disponíveis
  */
 export type SectionType =
-    | "HeroSection"
-    | "StyleProfileSection"
-    | "CTAButton"
-    | "TransformationSection"
-    | "MethodStepsSection"
-    | "BonusSection"
-    | "SocialProofSection"
-    | "OfferSection"
-    | "GuaranteeSection";
+    | 'HeroSection'
+    | 'StyleProfileSection'
+    | 'CTAButton'
+    | 'TransformationSection'
+    | 'MethodStepsSection'
+    | 'BonusSection'
+    | 'SocialProofSection'
+    | 'OfferSection'
+    | 'GuaranteeSection';
 
 /**
  * Props base para todas as sections
@@ -369,7 +369,7 @@ export interface HeroSectionProps extends BaseSectionProps {
     celebrationEmoji: string;
 
     /** Tipo de animação */
-    celebrationAnimation: "bounce" | "fade" | "scale";
+    celebrationAnimation: 'bounce' | 'fade' | 'scale';
 
     /** Formato do greeting */
     greetingFormat: string;
@@ -400,7 +400,7 @@ export interface HeroSectionProps extends BaseSectionProps {
  */
 export interface StyleProfileSectionProps extends BaseSectionProps {
     /** Layout da section */
-    layout: "cards" | "list" | "grid";
+    layout: 'cards' | 'list' | 'grid';
 
     /** Mostrar características */
     showCharacteristics: boolean;
@@ -427,16 +427,16 @@ export interface CTAButtonProps extends BaseSectionProps {
     href: string;
 
     /** Variante visual */
-    variant: "primary" | "secondary" | "outline";
+    variant: 'primary' | 'secondary' | 'outline';
 
     /** Tamanho do botão */
-    size: "small" | "medium" | "large";
+    size: 'small' | 'medium' | 'large';
 
     /** Ícone (opcional) */
     icon?: string;
 
     /** Animação */
-    animation?: "pulse" | "shake" | "none";
+    animation?: 'pulse' | 'shake' | 'none';
 
     /** Configuração de tracking */
     tracking?: {
@@ -450,7 +450,7 @@ export interface CTAButtonProps extends BaseSectionProps {
  */
 export interface TransformationSectionProps extends BaseSectionProps {
     /** Layout da transformação */
-    layout: "side-by-side" | "timeline" | "slider";
+    layout: 'side-by-side' | 'timeline' | 'slider';
 
     /** Estado "antes" */
     before: {
@@ -472,7 +472,7 @@ export interface TransformationSectionProps extends BaseSectionProps {
  */
 export interface MethodStepsSectionProps extends BaseSectionProps {
     /** Layout dos steps */
-    layout: "vertical" | "horizontal" | "grid";
+    layout: 'vertical' | 'horizontal' | 'grid';
 
     /** Steps do método */
     steps: Array<{
@@ -488,7 +488,7 @@ export interface MethodStepsSectionProps extends BaseSectionProps {
  */
 export interface BonusSectionProps extends BaseSectionProps {
     /** Layout dos bônus */
-    layout: "cards" | "list";
+    layout: 'cards' | 'list';
 
     /** Lista de bônus */
     bonuses: Array<{
@@ -504,7 +504,7 @@ export interface BonusSectionProps extends BaseSectionProps {
  */
 export interface SocialProofSectionProps extends BaseSectionProps {
     /** Layout dos depoimentos */
-    layout: "carousel" | "grid" | "masonry";
+    layout: 'carousel' | 'grid' | 'masonry';
 
     /** Depoimentos */
     testimonials: Array<{
@@ -521,7 +521,7 @@ export interface SocialProofSectionProps extends BaseSectionProps {
  */
 export interface OfferSectionProps extends BaseSectionProps {
     /** Layout da oferta */
-    layout: "card" | "inline" | "split";
+    layout: 'card' | 'inline' | 'split';
 
     /** Mostrar desconto */
     showDiscount: boolean;
@@ -538,7 +538,7 @@ export interface GuaranteeSectionProps extends BaseSectionProps {
     icon?: string;
 
     /** Variante visual */
-    variant: "badge" | "card" | "banner";
+    variant: 'badge' | 'card' | 'banner';
 }
 
 // ============================================================================
@@ -550,13 +550,13 @@ export interface GuaranteeSectionProps extends BaseSectionProps {
  */
 export interface LayoutConfig {
     /** Largura do container */
-    containerWidth: "full" | "wide" | "narrow";
+    containerWidth: 'full' | 'wide' | 'narrow';
 
     /** Largura máxima */
     maxWidth: string;
 
     /** Espaçamento geral */
-    spacing: "compact" | "comfortable" | "spacious";
+    spacing: 'compact' | 'comfortable' | 'spacious';
 
     /** Cor de fundo */
     backgroundColor: string;
@@ -618,27 +618,27 @@ export interface UserData {
  * CSS Variables geradas do theme
  */
 export interface CSSVariables {
-    "--color-primary": string;
-    "--color-secondary": string;
-    "--color-background": string;
-    "--color-text": string;
-    "--color-accent": string;
-    "--color-success": string;
-    "--color-warning": string;
-    "--font-heading": string;
-    "--font-body": string;
-    "--spacing-section": string;
-    "--spacing-block": string;
-    "--radius-small": string;
-    "--radius-medium": string;
-    "--radius-large": string;
+    '--color-primary': string;
+    '--color-secondary': string;
+    '--color-background': string;
+    '--color-text': string;
+    '--color-accent': string;
+    '--color-success': string;
+    '--color-warning': string;
+    '--font-heading': string;
+    '--font-body': string;
+    '--spacing-section': string;
+    '--spacing-block': string;
+    '--radius-small': string;
+    '--radius-medium': string;
+    '--radius-large': string;
     [key: string]: string;
 }
 
 /**
  * Resultado da detecção de versão
  */
-export type TemplateVersion = "1.0" | "2.0" | "2.1" | "3.0";
+export type TemplateVersion = '1.0' | '2.0' | '2.1' | '3.0';
 
 /**
  * Template unificado (v2 ou v3)
@@ -649,7 +649,7 @@ export type AnyTemplate = TemplateV2 | TemplateV3;
  * Template v2.0 (para compatibilidade)
  */
 export interface TemplateV2 {
-    templateVersion?: "2.0" | "2.1" | "1.0";
+    templateVersion?: '2.0' | '2.1' | '1.0';
     metadata?: Record<string, any>;
     layout?: Record<string, any>;
     blocks?: Array<Record<string, any>>;

@@ -32,7 +32,7 @@ interface UseUnifiedQuizLoaderReturn {
 const cache: Record<string, UnifiedQuizStep> = {};
 
 export function useUnifiedQuizLoader(
-  options: UseUnifiedQuizLoaderOptions
+  options: UseUnifiedQuizLoaderOptions,
 ): UseUnifiedQuizLoaderReturn {
   const { funnelId, source, enableCache = true } = options;
   
@@ -146,6 +146,6 @@ export function useUnifiedQuizLoader(
     loadAllSteps,
     reloadSteps,
     isLoading,
-    error
+    error,
   };
 }

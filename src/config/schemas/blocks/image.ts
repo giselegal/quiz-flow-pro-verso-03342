@@ -11,7 +11,7 @@ import {
   alignmentField, 
   dimensionFields,
   borderRadiusField,
-  labelField 
+  labelField, 
 } from '../base/presets';
 
 export const imageSchema = templates
@@ -22,7 +22,7 @@ export const imageSchema = templates
   .addFields(
     imageUrlField('content'),
     imageAltField('content'),
-    labelField('content')
+    labelField('content'),
   )
   .addField(borderRadiusField('style'))
   .addFields(...dimensionFields('layout'))

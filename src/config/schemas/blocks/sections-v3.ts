@@ -161,8 +161,8 @@ export const methodStepsSectionSchema = templates
         { key: 'icon', label: 'Ícone', type: 'text' },
         { key: 'title', label: 'Título', type: 'text' },
         { key: 'description', label: 'Descrição', type: 'text' },
-      ]
-    }
+      ],
+    },
   })
   // Estilo dos passos (flatten)
   .addField({ key: 'stepStyleLayout', label: 'Estilo: Layout', type: 'string', group: 'layout', placeholder: 'card | list' })
@@ -196,8 +196,8 @@ export const bonusSectionSchema = templates
         { key: 'description', label: 'Descrição', type: 'text' },
         { key: 'icon', label: 'Ícone', type: 'text' },
         { key: 'image', label: 'Imagem', type: 'image' },
-      ]
-    }
+      ],
+    },
   })
   .addField({ key: 'layout', label: 'Layout', type: 'string', group: 'layout', placeholder: 'grid-3 | list' })
   .addField({ key: 'cardStyleBackground', label: 'Card: Fundo', type: 'string', group: 'style', placeholder: 'primary/5' })
@@ -228,8 +228,8 @@ export const socialProofSectionSchema = templates
         { key: 'text', label: 'Depoimento', type: 'text' },
         { key: 'rating', label: 'Nota', type: 'number' },
         { key: 'image', label: 'Imagem', type: 'image' },
-      ]
-    }
+      ],
+    },
   })
   .addField({ key: 'cardStyleBackground', label: 'Card: Fundo', type: 'string', group: 'style', placeholder: 'primary/5' })
   .addField({ key: 'cardStylePadding', label: 'Card: Padding', type: 'string', group: 'layout', placeholder: '1.5rem' })
@@ -278,8 +278,8 @@ export const offerSectionSchema = templates
       fields: [
         { key: 'icon', label: 'Ícone', type: 'text' },
         { key: 'text', label: 'Texto', type: 'text' },
-      ]
-    }
+      ],
+    },
   })
   // Background
   .addField({ key: 'backgroundType', label: 'Fundo: tipo', type: 'string', group: 'style', placeholder: 'gradient | solid' })
@@ -331,8 +331,8 @@ export const transformationSectionSchema = templates
       fields: [
         { key: 'icon', label: 'Ícone', type: 'text' },
         { key: 'text', label: 'Texto', type: 'text' },
-      ]
-    }
+      ],
+    },
   })
   .addField({ key: 'benefitStyleBackground', label: 'Benefício: Fundo', type: 'string', group: 'style', placeholder: 'primary/5' })
   .addField({ key: 'benefitStyleIconSize', label: 'Benefício: Tamanho ícone', type: 'string', group: 'style', placeholder: '2xl' })

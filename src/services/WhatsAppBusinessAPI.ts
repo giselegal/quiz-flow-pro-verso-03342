@@ -101,9 +101,9 @@ export class WhatsAppBusinessAPI {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${this.config.accessToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(message)
+        body: JSON.stringify(message),
       });
 
       const data = await response.json();
@@ -111,19 +111,19 @@ export class WhatsAppBusinessAPI {
       if (response.ok) {
         return {
           success: true,
-          messageId: data.messages?.[0]?.id
+          messageId: data.messages?.[0]?.id,
         };
       } else {
         return {
           success: false,
-          error: data.error?.message || `HTTP ${response.status}`
+          error: data.error?.message || `HTTP ${response.status}`,
         };
       }
 
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Erro de rede'
+        error: error instanceof Error ? error.message : 'Erro de rede',
       };
     }
   }
@@ -137,9 +137,9 @@ export class WhatsAppBusinessAPI {
         `${this.baseUrl}/${this.config.businessAccountId}/message_templates`,
         {
           headers: {
-            'Authorization': `Bearer ${this.config.accessToken}`
-          }
-        }
+            'Authorization': `Bearer ${this.config.accessToken}`,
+          },
+        },
       );
 
       const data = await response.json();
@@ -168,7 +168,7 @@ export class WhatsAppBusinessAPI {
         components: [
           {
             type: 'BODY',
-            text: 'Olá {{1}}! 👋\n\nVi que você estava interessado no {{2}} por {{3}}.\n\nQue tal finalizar sua compra agora? Tenho uma oferta especial para você! 🎯'
+            text: 'Olá {{1}}! 👋\n\nVi que você estava interessado no {{2}} por {{3}}.\n\nQue tal finalizar sua compra agora? Tenho uma oferta especial para você! 🎯',
           },
           {
             type: 'BUTTONS',
@@ -176,15 +176,15 @@ export class WhatsAppBusinessAPI {
               {
                 type: 'URL',
                 text: '🛒 Finalizar Compra',
-                url: 'https://pay.hotmart.com/{{4}}'
+                url: 'https://pay.hotmart.com/{{4}}',
               },
               {
                 type: 'QUICK_REPLY',
-                text: '❓ Tenho Dúvidas'
-              }
-            ]
-          }
-        ]
+                text: '❓ Tenho Dúvidas',
+              },
+            ],
+          },
+        ],
       };
 
       const response = await fetch(
@@ -193,10 +193,10 @@ export class WhatsAppBusinessAPI {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${this.config.accessToken}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(template)
-        }
+          body: JSON.stringify(template),
+        },
       );
 
       return response.ok;
@@ -218,8 +218,8 @@ export class WhatsAppBusinessAPI {
     try {
       const response = await fetch(`${this.baseUrl}/${this.config.phoneNumberId}`, {
         headers: {
-          'Authorization': `Bearer ${this.config.accessToken}`
-        }
+          'Authorization': `Bearer ${this.config.accessToken}`,
+        },
       });
 
       const data = await response.json();
@@ -227,19 +227,19 @@ export class WhatsAppBusinessAPI {
       if (response.ok) {
         return {
           status: 'healthy',
-          phoneNumber: data.display_phone_number
+          phoneNumber: data.display_phone_number,
         };
       } else {
         return {
           status: 'error',
-          error: data.error?.message || 'API não acessível'
+          error: data.error?.message || 'API não acessível',
         };
       }
 
     } catch (error) {
       return {
         status: 'error',
-        error: error instanceof Error ? error.message : 'Erro de conexão'
+        error: error instanceof Error ? error.message : 'Erro de conexão',
       };
     }
   }
@@ -258,16 +258,16 @@ export class WhatsAppBusinessAPI {
       const params = new URLSearchParams({
         metric: 'messages',
         since: Math.floor(startDate.getTime() / 1000).toString(),
-        until: Math.floor(endDate.getTime() / 1000).toString()
+        until: Math.floor(endDate.getTime() / 1000).toString(),
       });
 
       const response = await fetch(
         `${this.baseUrl}/${this.config.businessAccountId}/insights?${params}`,
         {
           headers: {
-            'Authorization': `Bearer ${this.config.accessToken}`
-          }
-        }
+            'Authorization': `Bearer ${this.config.accessToken}`,
+          },
+        },
       );
 
       const data = await response.json();
@@ -278,7 +278,7 @@ export class WhatsAppBusinessAPI {
           sent: data.data?.[0]?.values?.[0]?.value || 0,
           delivered: data.data?.[1]?.values?.[0]?.value || 0,
           read: data.data?.[2]?.values?.[0]?.value || 0,
-          replied: data.data?.[3]?.values?.[0]?.value || 0
+          replied: data.data?.[3]?.values?.[0]?.value || 0,
         };
       } else {
         throw new Error('Erro ao carregar métricas');
@@ -322,7 +322,7 @@ export function validateWhatsAppConfig(config: Partial<WhatsAppBusinessConfig>):
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 }
 
