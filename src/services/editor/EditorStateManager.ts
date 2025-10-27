@@ -44,6 +44,57 @@ export class EditorStateManager {
   }
 
   /**
+   * Duplica um bloco dentro de um step e retorna o novo ID
+   */
+  async duplicateBlock(stepKey: string, blockId: string): Promise<string> {
+    let createdId = '';
+    this.updateState(prev => {
+      const currentBlocks = prev.stepBlocks[stepKey] || [];
+      const idx = currentBlocks.findIndex(b => b.id === blockId);
+      if (idx === -1) return prev;
+
+      const source = currentBlocks[idx] as any;
+
+      // Gera um ID único baseado no original
+      const baseId = `${source.id}-copy`;
+      let n = 1;
+      let newId = baseId;
+      const ids = new Set(currentBlocks.map(b => b.id));
+      while (ids.has(newId)) {
+        n += 1;
+        newId = `${baseId}-${n}`;
+      }
+
+      // Cópia rasa do bloco (mantém type/content/properties/parentId quando existir)
+      const duplicated: Block = {
+        ...(source as Block),
+        id: newId,
+        order: idx + 1,
+        // parentId não faz parte da interface Block; preservar se existir em tempo de execução
+        ...(source.parentId ? { parentId: source.parentId } : {}),
+      } as any as Block;
+
+      const newBlocks = [...currentBlocks];
+      newBlocks.splice(idx + 1, 0, duplicated);
+      const reordered = newBlocks.map((b, i) => ({ ...b, order: i }));
+
+      const newState = {
+        ...prev,
+        stepBlocks: {
+          ...prev.stepBlocks,
+          [stepKey]: reordered,
+        },
+        selectedBlockId: newId,
+      } as EditorState;
+
+      createdId = newId;
+      this.history.push(newState);
+      return newState;
+    });
+
+    return createdId;
+  }
+  /**
    * Adiciona bloco ao final de um step
    */
   async addBlock(stepKey: string, block: Block): Promise<void> {
