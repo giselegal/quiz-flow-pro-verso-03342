@@ -170,7 +170,7 @@ export class ComponentLibrary {
     private categories = new Map<ComponentCategory, Component[]>();
     constructor() {
         // Logger available if needed
-        console.log('ComponentLibrary initialized');
+        logger.info('componentLibrary', 'ComponentLibrary initialized');
         this.initializeBuiltInComponents();
     }
 
