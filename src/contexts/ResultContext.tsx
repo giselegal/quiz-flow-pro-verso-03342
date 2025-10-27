@@ -1,3 +1,6 @@
+import React, { createContext, useCallback, useContext, useMemo } from 'react';
+import { useResultCalculations, ResultCalculations } from '@/hooks/useResultCalculations';
+import { appLogger } from '@/utils/logger';
 import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 import { useResultCalculations, ResultCalculations } from '@/hooks/useResultCalculations';
 import { styleConfigGisele } from '@/data/styles';
@@ -98,7 +101,7 @@ export const ResultProvider: React.FC<ResultProviderProps> = ({
 
         // Fallback: usar primeiro estilo disponível
         if (!config) {
-            console.warn(`⚠️ Estilo "${userProfile.resultStyle}" não encontrado, usando fallback`);
+            appLogger.warn('⚠️ Estilo não encontrado, usando fallback', { resultStyle: userProfile.resultStyle });
             const firstStyle = Object.keys(styleConfigGisele)[0];
             config = styleConfigGisele[firstStyle];
         }
