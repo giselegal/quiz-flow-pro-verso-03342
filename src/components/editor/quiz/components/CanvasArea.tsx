@@ -108,7 +108,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     } = useEditorMode();
     const { previewDevice, setPreviewDevice } = useEditorMode();
 
-    appLogger.debug('🔍 CanvasArea render - selectedStep:', selectedStep?.id, 'viewMode:', viewMode);
+    appLogger.debug('🔍 CanvasArea render', { selectedStepId: selectedStep?.id, viewMode });
 
     // 🚨 DEPRECATION WARNING para activeTab/onTabChange
     if (activeTab !== undefined && process.env.NODE_ENV === 'development') {
@@ -126,7 +126,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         return smartMigration(base);
     }, [selectedStep, steps]);
 
-    appLogger.debug('🔍 CanvasArea - migratedStep:', migratedStep?.id, 'type:', migratedStep?.type);
+    appLogger.debug('🔍 CanvasArea - migratedStep', { stepId: migratedStep?.id, type: migratedStep?.type });
 
     // 🔗 Integrar com EditorProvider: pegar blocos do estado para o step atual
     const editor = useEditor({ optional: true } as any);

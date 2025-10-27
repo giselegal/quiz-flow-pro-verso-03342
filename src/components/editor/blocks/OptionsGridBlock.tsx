@@ -914,7 +914,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         const nextStep = Math.min(currentStep + 1, 21);
         const delayMs = stepBehavior.autoAdvanceDelay ?? 1000;
 
-        appLogger.debug('🚀 Auto-avanço ativado para etapa', currentStep, '→', nextStep);
+        appLogger.debug('🚀 Auto-avanço ativado para etapa', { currentStep, nextStep });
 
         cancel('options-grid-editor-auto-advance');
         schedule('options-grid-editor-auto-advance', () => {

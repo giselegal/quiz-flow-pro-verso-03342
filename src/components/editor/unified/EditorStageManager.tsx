@@ -100,14 +100,11 @@ export const EditorStageManager: React.FC<EditorStageManagerProps> = ({
       // Propagar para o editor externo, se houver
       onStepSelect?.(target);
       if (import.meta.env.DEV) {
-        appLogger.debug(
-          '➡️ EditorStageManager: navegação por evento',
-          e.detail?.stepId,
-          '→',
+        appLogger.debug('➡️ EditorStageManager: navegação por evento', {
+          stepId: e.detail?.stepId,
           target,
-          'origem:',
-          e.detail?.source
-        );
+          source: e.detail?.source,
+        });
       }
     };
 

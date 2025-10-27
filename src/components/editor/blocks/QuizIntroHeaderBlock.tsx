@@ -37,7 +37,10 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     // Evitar logar em todo render: usa raf para coalescer
     requestAnimationFrame(() => {
       // eslint-disable-next-line no-console
-      appLogger.debug('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties, 'ID:', block.id);
+      appLogger.debug('🔍 [QuizIntroHeaderBlock] Propriedades recebidas', {
+        properties: block.properties,
+        id: block.id,
+      });
     });
   }
 
