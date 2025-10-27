@@ -42,7 +42,7 @@ const ARQUIVOS_PARA_REMOVER = {
     backup: [
         'backup/properties-panels/', // Pasta inteira
         'src/components/universal/EnhancedUniversalPropertiesPanel.simple.tsx',
-    ]
+    ],
 };
 
 // ===== ARQUIVOS QUE PRECISAM SER ATUALIZADOS =====
@@ -54,7 +54,7 @@ const ARQUIVOS_PARA_ATUALIZAR = {
             arquivo: 'src/components/editor/properties/PropertiesColumn.tsx',
             mudanca: 'Importar e usar SinglePropertiesPanel ao invés de PropertiesPanel',
             linhas: [5, 50, 72], // Linhas onde PropertiesPanel é usado
-        }
+        },
     ],
 
     // Editor responsivo - atualizar para usar SinglePropertiesPanel
@@ -63,7 +63,7 @@ const ARQUIVOS_PARA_ATUALIZAR = {
             arquivo: 'src/components/editor/SchemaDrivenEditorResponsive.tsx',
             mudanca: 'Substituir RegistryPropertiesPanel por SinglePropertiesPanel',
             linhas: [1, 187], // Import e uso
-        }
+        },
     ],
 
     // Componentes de layout que passam painéis
@@ -71,8 +71,8 @@ const ARQUIVOS_PARA_ATUALIZAR = {
         {
             arquivo: 'src/components/editor/layout/FourColumnLayout.tsx',
             mudanca: 'Manter como está - apenas recebe propertiesPanel como prop',
-            status: 'ok'
-        }
+            status: 'ok',
+        },
     ],
 
     // Componentes lazy loading
@@ -80,8 +80,8 @@ const ARQUIVOS_PARA_ATUALIZAR = {
         {
             arquivo: 'src/components/lazy/PerformanceOptimizedComponents.tsx',
             mudanca: 'Remover lazy loading dos painéis antigos, adicionar para SinglePropertiesPanel',
-            linhas: [33, 34, 121, 123]
-        }
+            linhas: [33, 34, 121, 123],
+        },
     ],
 
     // Exportações principais
@@ -89,8 +89,8 @@ const ARQUIVOS_PARA_ATUALIZAR = {
         {
             arquivo: 'src/components/editor/properties/index.ts',
             mudanca: 'Remover exports antigos, adicionar SinglePropertiesPanel',
-        }
-    ]
+        },
+    ],
 };
 
 // ===== ESTATÍSTICAS DA LIMPEZA =====
@@ -100,7 +100,7 @@ const ESTATISTICAS_LIMPEZA = {
     arquivos_removidos: 15,
     arquivos_atualizados: 6,
     reducao_complexidade: '85%',
-    resolucao_ids_duplicados: '100%'
+    resolucao_ids_duplicados: '100%',
 };
 
 // ===== ORDEM DE EXECUÇÃO =====
@@ -112,12 +112,12 @@ const ORDEM_MIGRACAO = [
     '4. Remover arquivos antigos um por vez',
     '5. Atualizar imports e exports',
     '6. Executar testes para validar',
-    '7. Commit final da limpeza'
+    '7. Commit final da limpeza',
 ];
 
 export {
     ARQUIVOS_PARA_REMOVER,
     ARQUIVOS_PARA_ATUALIZAR,
     ESTATISTICAS_LIMPEZA,
-    ORDEM_MIGRACAO
+    ORDEM_MIGRACAO,
 };

@@ -62,7 +62,7 @@ function limparDadosSalvos() {
         'draft_',
         'autosave_',
         'history_',
-        'cache_'
+        'cache_',
     ];
 
     // Limpar localStorage
@@ -71,7 +71,7 @@ function limparDadosSalvos() {
         const key = localStorage.key(i);
         if (key) {
             const shouldRemove = prefixosParaLimpar.some(prefix =>
-                key.toLowerCase().includes(prefix.toLowerCase())
+                key.toLowerCase().includes(prefix.toLowerCase()),
             );
             if (shouldRemove) {
                 keysToRemove.push(key);
@@ -90,7 +90,7 @@ function limparDadosSalvos() {
         const key = sessionStorage.key(i);
         if (key) {
             const shouldRemove = prefixosParaLimpar.some(prefix =>
-                key.toLowerCase().includes(prefix.toLowerCase())
+                key.toLowerCase().includes(prefix.toLowerCase()),
             );
             if (shouldRemove) {
                 sessionKeys.push(key);
@@ -124,7 +124,7 @@ function resetarEstadoReact() {
         '__FUNNEL_DATA__',
         '__QUIZ_STATE__',
         '__WYSIWYG_STATE__',
-        '__DISABLE_EDITOR_PERSISTENCE__'
+        '__DISABLE_EDITOR_PERSISTENCE__',
     ];
 
     globalsToReset.forEach(global => {
@@ -149,7 +149,7 @@ function limparCacheNavegador() {
                         console.log(`✅ Removendo cache: ${cacheName}`);
                         return caches.delete(cacheName);
                     }
-                })
+                }),
             );
         }).catch(err => console.log('Cache cleanup error:', err));
     }
@@ -176,7 +176,7 @@ function limparIndexedDB() {
         'FunnelUnifiedDB',
         'EditorStorageDB',
         'CRUDServiceDB',
-        'ContextualFunnelDB'
+        'ContextualFunnelDB',
     ];
 
     databasesToDelete.forEach(dbName => {

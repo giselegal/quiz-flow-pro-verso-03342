@@ -56,7 +56,7 @@ class FunnelAPI {
         const res = await fetch(`${this.baseUrl}/${id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         });
         if (!res.ok) throw new Error('Failed to update funnel');
         return res.json();
@@ -66,15 +66,15 @@ class FunnelAPI {
         funnelId: string,
         stepId: string,
         blockId: string,
-        updates: Partial<Block>
+        updates: Partial<Block>,
     ): Promise<void> {
         const res = await fetch(
             `${this.baseUrl}/${funnelId}/steps/${stepId}/blocks/${blockId}`,
             {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updates)
-            }
+                body: JSON.stringify(updates),
+            },
         );
         if (!res.ok) throw new Error('Failed to update block');
     }
@@ -84,7 +84,7 @@ class FunnelAPI {
         const res = await fetch(`${this.baseUrl}/${id}/auto-save`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         });
         if (!res.ok) throw new Error('Auto-save failed');
     }
@@ -108,7 +108,7 @@ export function useHybridEditor(options: UseHybridEditorOptions) {
         funnelId,
         autoSaveDelay = 2000,
         pollingInterval = 30000,
-        enableAutoSave = true
+        enableAutoSave = true,
     } = options;
 
     const queryClient = useQueryClient();
@@ -120,7 +120,7 @@ export function useHybridEditor(options: UseHybridEditorOptions) {
         data: serverFunnel,
         isLoading,
         isError,
-        error
+        error,
     } = useQuery({
         queryKey: ['funnel', funnelId],
         queryFn: () => funnelAPI.getFunnel(funnelId),
@@ -167,7 +167,7 @@ export function useHybridEditor(options: UseHybridEditorOptions) {
                 return {
                     ...old,
                     steps: newData.steps,
-                    updatedAt: new Date().toISOString()
+                    updatedAt: new Date().toISOString(),
                 };
             });
 
@@ -184,7 +184,7 @@ export function useHybridEditor(options: UseHybridEditorOptions) {
             toast({
                 title: 'Erro ao salvar',
                 description: 'Suas alterações foram revertidas. Tente novamente.',
-                variant: 'destructive'
+                variant: 'destructive',
             });
 
             console.error('Save error:', err);
@@ -215,7 +215,7 @@ export function useHybridEditor(options: UseHybridEditorOptions) {
         onSettled: () => {
             // Revalida dados do servidor
             queryClient.invalidateQueries(['funnel', funnelId]);
-        }
+        },
     });
 
     // ============================================
@@ -227,14 +227,14 @@ export function useHybridEditor(options: UseHybridEditorOptions) {
                 saveMutation.mutate({ steps: newSteps });
             }
         },
-        autoSaveDelay
+        autoSaveDelay,
     );
 
     // ============================================
     // 5. UPDATE STEPS (com auto-save)
     // ============================================
     const updateSteps = useCallback((
-        updater: Step[] | ((prev: Step[]) => Step[])
+        updater: Step[] | ((prev: Step[]) => Step[]),
     ) => {
         setSteps(prev => {
             const next = typeof updater === 'function' ? updater(prev) : updater;
@@ -309,8 +309,8 @@ export function useHybridEditor(options: UseHybridEditorOptions) {
                     onClick: () => {
                         setIsDirty(false);
                         setSteps(serverFunnel.steps);
-                    }
-                }
+                    },
+                },
             });
         }
     }, [serverFunnel, isDirty, lastSaveTime]);
@@ -321,7 +321,7 @@ export function useHybridEditor(options: UseHybridEditorOptions) {
     const updateBlock = useCallback((
         stepId: string,
         blockId: string,
-        updates: Partial<Block>
+        updates: Partial<Block>,
     ) => {
         updateSteps(prev =>
             prev.map(step => {
@@ -332,17 +332,17 @@ export function useHybridEditor(options: UseHybridEditorOptions) {
                     blocks: step.blocks.map(block =>
                         block.id === blockId
                             ? { ...block, ...updates }
-                            : block
-                    )
+                            : block,
+                    ),
                 };
-            })
+            }),
         );
     }, [updateSteps]);
 
     const updateBlockProperties = useCallback((
         stepId: string,
         blockId: string,
-        propertyUpdates: Record<string, any>
+        propertyUpdates: Record<string, any>,
     ) => {
         updateSteps(prev =>
             prev.map(step => {
@@ -356,13 +356,13 @@ export function useHybridEditor(options: UseHybridEditorOptions) {
                                 ...block,
                                 properties: {
                                     ...block.properties,
-                                    ...propertyUpdates
-                                }
+                                    ...propertyUpdates,
+                                },
                             }
-                            : block
-                    )
+                            : block,
+                    ),
                 };
-            })
+            }),
         );
     }, [updateSteps]);
 
@@ -406,7 +406,7 @@ export function SaveIndicator({
     status,
     isDirty,
     lastSaveTime,
-    onSaveNow
+    onSaveNow,
 }: SaveIndicatorProps) {
     const getStatusInfo = () => {
         switch (status) {
@@ -415,21 +415,21 @@ export function SaveIndicator({
                     icon: '⏳',
                     text: 'Salvando...',
                     color: 'text-blue-600',
-                    bg: 'bg-blue-50'
+                    bg: 'bg-blue-50',
                 };
             case 'saved':
                 return {
                     icon: '✅',
                     text: 'Salvo',
                     color: 'text-green-600',
-                    bg: 'bg-green-50'
+                    bg: 'bg-green-50',
                 };
             case 'error':
                 return {
                     icon: '❌',
                     text: 'Erro ao salvar',
                     color: 'text-red-600',
-                    bg: 'bg-red-50'
+                    bg: 'bg-red-50',
                 };
             default:
                 if (isDirty) {
@@ -437,14 +437,14 @@ export function SaveIndicator({
                         icon: '⚠️',
                         text: 'Não salvo',
                         color: 'text-orange-600',
-                        bg: 'bg-orange-50'
+                        bg: 'bg-orange-50',
                     };
                 }
                 return {
                     icon: '✓',
                     text: 'Tudo salvo',
                     color: 'text-gray-600',
-                    bg: 'bg-gray-50'
+                    bg: 'bg-gray-50',
                 };
         }
     };
@@ -501,12 +501,12 @@ export function QuizEditorWithAPI({ funnelId }: { funnelId: string }) {
         lastSaveTime,
         updateBlockProperties,
         saveNow,
-        canSave
+        canSave,
     } = useHybridEditor({
         funnelId,
         autoSaveDelay: 2000,        // 2 segundos
         pollingInterval: 30000,     // 30 segundos
-        enableAutoSave: true
+        enableAutoSave: true,
     });
 
     const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
@@ -515,12 +515,12 @@ export function QuizEditorWithAPI({ funnelId }: { funnelId: string }) {
     // Derivações
     const selectedStep = useMemo(
         () => steps.find(s => s.id === selectedStepId),
-        [steps, selectedStepId]
+        [steps, selectedStepId],
     );
 
     const selectedBlock = useMemo(
         () => selectedStep?.blocks.find(b => b.id === selectedBlockId),
-        [selectedStep, selectedBlockId]
+        [selectedStep, selectedBlockId],
     );
 
     if (isLoading) {
@@ -570,7 +570,7 @@ export function QuizEditorWithAPI({ funnelId }: { funnelId: string }) {
                                 updateBlockProperties(
                                     selectedStepId,
                                     selectedBlockId,
-                                    updates
+                                    updates,
                                 );
                             }}
                         />

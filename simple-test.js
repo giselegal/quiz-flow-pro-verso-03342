@@ -2,14 +2,14 @@
 console.log('🔍 Iniciando teste simples de carregamento...');
 
 // Teste 1: Verificar se a página está carregando
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     console.log('✅ DOM carregado com sucesso');
 
     // Teste 2: Verificar elementos básicos
     const rootElement = document.getElementById('root');
     if (rootElement) {
         console.log('✅ Elemento #root encontrado:', rootElement);
-        console.log('📄 Conteúdo inicial:', rootElement.innerHTML.substring(0, 200) + '...');
+        console.log('📄 Conteúdo inicial:', `${rootElement.innerHTML.substring(0, 200)  }...`);
     } else {
         console.error('❌ Elemento #root não encontrado!');
     }
@@ -57,7 +57,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const template = urlParams.get('template');
 console.log('📋 Parâmetros URL:', {
     template,
-    fullUrl: window.location.href
+    fullUrl: window.location.href,
 });
 
 // Teste 7: Função de debug global
@@ -84,7 +84,7 @@ window.testFunnelLoading = function () {
     console.log('📏 Dimensões:', {
         bodyHeight,
         visibleHeight,
-        ratio: bodyHeight / visibleHeight
+        ratio: bodyHeight / visibleHeight,
     });
 
     // Resumo final

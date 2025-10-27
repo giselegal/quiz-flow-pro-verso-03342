@@ -12,7 +12,7 @@
 import { 
   isValidFunnelId, 
   generateFunnelId,
-  getFunnelIdFromEnvOrStorage 
+  getFunnelIdFromEnvOrStorage, 
 } from '../src/utils/funnelIdentity';
 
 interface TestCase {
@@ -29,7 +29,7 @@ const testCases: TestCase[] = [
     test: () => {
       const validUuid = '123e4567-e89b-12d3-a456-426614174000';
       return isValidFunnelId(validUuid);
-    }
+    },
   },
 
   // 🔧 TESTE 2: Template IDs
@@ -39,7 +39,7 @@ const testCases: TestCase[] = [
     test: () => {
       const templateId = 'template-quiz-estilo-completo';
       return isValidFunnelId(templateId);
-    }
+    },
   },
 
   // 🔧 TESTE 3: Default fallback
@@ -49,7 +49,7 @@ const testCases: TestCase[] = [
     test: () => {
       const defaultId = 'default-funnel';
       return isValidFunnelId(defaultId);
-    }
+    },
   },
 
   // 🔧 TESTE 4: IDs inválidos
@@ -59,7 +59,7 @@ const testCases: TestCase[] = [
     test: () => {
       const invalidId = 'invalid-format!@#';
       return !isValidFunnelId(invalidId);
-    }
+    },
   },
 
   // 🔧 TESTE 5: Geração de UUID
@@ -69,7 +69,7 @@ const testCases: TestCase[] = [
     test: () => {
       const newId = generateFunnelId();
       return isValidFunnelId(newId);
-    }
+    },
   },
 
   // 🔧 TESTE 6: URL Param Reading
@@ -82,8 +82,8 @@ const testCases: TestCase[] = [
       const urlParams = new URLSearchParams(new URL(mockUrl).search);
       const funnelId = urlParams.get('funnel');
       return funnelId === 'template-test-id';
-    }
-  }
+    },
+  },
 ];
 
 /**
@@ -113,7 +113,7 @@ export const runFunnelIdTests = async (): Promise<void> => {
     }
   }
 
-  console.log(`\n🏁 === RESULTADO FINAL ===`);
+  console.log('\n🏁 === RESULTADO FINAL ===');
   console.log(`✅ Testes que passaram: ${passedTests}/${totalTests}`);
   console.log(`❌ Testes que falharam: ${totalTests - passedTests}/${totalTests}`);
   
@@ -152,7 +152,7 @@ export const testNavigationWithFunnelParam = (): void => {
       console.log('🚀 Navegação simulada:', {
         pathname: urlObj.pathname,
         funnelId: funnelParam || 'default-funnel',
-        isValid: funnelParam ? isValidFunnelId(funnelParam) : true
+        isValid: funnelParam ? isValidFunnelId(funnelParam) : true,
       });
       
     } catch (error) {
@@ -173,20 +173,20 @@ export const testContextPropagation = (): void => {
       name: 'URL param presente',
       windowLocation: 'http://localhost:8080/editor?funnel=123e4567-e89b-12d3-a456-426614174000',
       localStorage: null,
-      expected: '123e4567-e89b-12d3-a456-426614174000'
+      expected: '123e4567-e89b-12d3-a456-426614174000',
     },
     {
       name: 'Apenas localStorage',
       windowLocation: 'http://localhost:8080/editor',
       localStorage: 'template-quiz-estilo-completo',
-      expected: 'template-quiz-estilo-completo'
+      expected: 'template-quiz-estilo-completo',
     },
     {
       name: 'Fallback padrão',
       windowLocation: 'http://localhost:8080/editor',
       localStorage: null,
-      expected: 'template-quiz-estilo-completo'
-    }
+      expected: 'template-quiz-estilo-completo',
+    },
   ];
 
   scenarios.forEach((scenario, index) => {
@@ -225,7 +225,7 @@ if (typeof window !== 'undefined') {
     testNavigationWithFunnelParam,
     testContextPropagation,
     isValidFunnelId,
-    generateFunnelId
+    generateFunnelId,
   };
   
   console.log('🧪 Testes disponíveis no window.testFunnelIdSystem');

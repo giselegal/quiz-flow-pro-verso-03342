@@ -22,13 +22,13 @@ const MOCK_NAMES = [
     'Ana Silva', 'Carlos Santos', 'Maria Oliveira', 'João Pedro', 'Fernanda Costa',
     'Roberto Lima', 'Julia Ferreira', 'Pedro Henrique', 'Camila Rodriguez', 'Lucas Almeida',
     'Beatriz Souza', 'Rafael Miranda', 'Isabela Martins', 'Gustavo Pereira', 'Larissa Rocha',
-    'Thiago Barbosa', 'Natália Campos', 'Diego Monteiro', 'Gabriela Vieira', 'Alexandre Reis'
+    'Thiago Barbosa', 'Natália Campos', 'Diego Monteiro', 'Gabriela Vieira', 'Alexandre Reis',
 ];
 
 const STYLE_RESULTS = [
     'Clássico Elegante', 'Moderno Minimalista', 'Boho Chic', 'Romântico Delicado',
     'Rock Contemporâneo', 'Casual Confortável', 'Glamour Noturno', 'Vintage Retrô',
-    'Esportivo Urbano', 'Artístico Criativo'
+    'Esportivo Urbano', 'Artístico Criativo',
 ];
 
 const DEVICE_TYPES = ['mobile', 'tablet', 'desktop'];
@@ -96,8 +96,8 @@ const generateRandomSession = (index) => {
             metadata: {
                 device_type: deviceType,
                 time_spent: timeSpent,
-                user_agent: `Mozilla/5.0 (${deviceType === 'mobile' ? 'Mobile' : 'Desktop'}) Browser/1.0`
-            }
+                user_agent: `Mozilla/5.0 (${deviceType === 'mobile' ? 'Mobile' : 'Desktop'}) Browser/1.0`,
+            },
         },
         result: isCompleted ? {
             session_id: sessionId,
@@ -107,14 +107,14 @@ const generateRandomSession = (index) => {
             result_data: {
                 primaryStyle: STYLE_RESULTS[Math.floor(Math.random() * STYLE_RESULTS.length)],
                 totalScore: Math.floor(Math.random() * 100) + 50,
-                confidence: Math.floor(Math.random() * 30) + 70
+                confidence: Math.floor(Math.random() * 30) + 70,
             },
             recommendation: 'Explore peças que realcem seu estilo natural.',
             next_steps: {
-                suggestions: ['Visite nossa coleção', 'Agende consultoria', 'Compartilhe resultado']
-            }
+                suggestions: ['Visite nossa coleção', 'Agende consultoria', 'Compartilhe resultado'],
+            },
         } : null,
-        responses: generateStepResponses(sessionId, currentStep)
+        responses: generateStepResponses(sessionId, currentStep),
     };
 };
 
@@ -135,8 +135,8 @@ const generateStepResponses = (sessionId, maxStep) => {
                 responded_at: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString(),
                 metadata: {
                     step_type: step <= 11 ? 'scoring' : 'strategic',
-                    category: `category_${Math.floor(Math.random() * 5) + 1}`
-                }
+                    category: `category_${Math.floor(Math.random() * 5) + 1}`,
+                },
             });
         }
     }
@@ -204,8 +204,8 @@ const generateTestData = async (count = 30) => {
             }
         }
 
-        console.log(`✅ Dados de teste gerados com sucesso!`);
-        console.log(`📊 Estatísticas:`);
+        console.log('✅ Dados de teste gerados com sucesso!');
+        console.log('📊 Estatísticas:');
         console.log(`   - ${sessions.length} sessões criadas`);
         console.log(`   - ${results.length} resultados completos`);
         console.log(`   - ${allResponses.length} respostas por etapa`);

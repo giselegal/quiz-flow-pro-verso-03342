@@ -18,28 +18,28 @@ const globalEditorState = {
             type: 'text',
             order: 1,
             content: {
-                text: 'Bem-vindo ao Quiz!'
+                text: 'Bem-vindo ao Quiz!',
             },
             properties: {
                 fontSize: 'text-2xl',
                 color: '#333333',
                 backgroundColor: '#ffffff',
                 textAlign: 'center',
-                fontWeight: 'bold'
-            }
+                fontWeight: 'bold',
+            },
         },
         {
             id: 'step-1-heading-2',
             type: 'heading',
             order: 2,
             content: {
-                text: 'Descubra seu estilo'
+                text: 'Descubra seu estilo',
             },
             properties: {
                 level: 2,
                 color: '#007acc',
-                marginBottom: 16
-            }
+                marginBottom: 16,
+            },
         },
         {
             id: 'step-1-button-3',
@@ -47,17 +47,17 @@ const globalEditorState = {
             order: 3,
             content: {
                 text: 'Começar Quiz',
-                href: '#next'
+                href: '#next',
             },
             properties: {
                 variant: 'primary',
                 size: 'large',
                 backgroundColor: '#007acc',
-                textColor: '#ffffff'
-            }
-        }
+                textColor: '#ffffff',
+            },
+        },
     ],
-    selectedBlockId: null // ← Inicialmente nenhum bloco selecionado
+    selectedBlockId: null, // ← Inicialmente nenhum bloco selecionado
 };
 
 console.log('\n📦 ESTADO INICIAL:');
@@ -95,7 +95,7 @@ function getSelectedBlock() {
 // ============================================================================
 
 function simulateBlockSelection(blockId) {
-    console.log('\n' + '='.repeat(50));
+    console.log(`\n${  '='.repeat(50)}`);
     console.log(`🖱️ SIMULANDO CLIQUE: Usuário clicou no bloco "${blockId}"`);
 
     // 1. Atualizar selectedBlockId (equivale ao setSelectedBlockId)
@@ -136,21 +136,21 @@ function simulatePropertyPanel(block) {
             { key: 'properties.fontSize', label: 'Tamanho da Fonte', type: 'select' },
             { key: 'properties.color', label: 'Cor do Texto', type: 'color' },
             { key: 'properties.backgroundColor', label: 'Cor de Fundo', type: 'color' },
-            { key: 'properties.textAlign', label: 'Alinhamento', type: 'select' }
+            { key: 'properties.textAlign', label: 'Alinhamento', type: 'select' },
         ],
         heading: [
             { key: 'content.text', label: 'Título', type: 'input' },
             { key: 'properties.level', label: 'Nível (H1-H6)', type: 'select' },
             { key: 'properties.color', label: 'Cor', type: 'color' },
-            { key: 'properties.marginBottom', label: 'Margem Inferior', type: 'number' }
+            { key: 'properties.marginBottom', label: 'Margem Inferior', type: 'number' },
         ],
         button: [
             { key: 'content.text', label: 'Texto do Botão', type: 'input' },
             { key: 'content.href', label: 'Link/URL', type: 'input' },
             { key: 'properties.variant', label: 'Variante', type: 'select' },
             { key: 'properties.size', label: 'Tamanho', type: 'select' },
-            { key: 'properties.backgroundColor', label: 'Cor de Fundo', type: 'color' }
-        ]
+            { key: 'properties.backgroundColor', label: 'Cor de Fundo', type: 'color' },
+        ],
     };
 
     const fields = fieldConfigs[type] || [];
@@ -183,7 +183,7 @@ function getNestedValue(obj, path) {
 // ============================================================================
 
 function simulatePropertyUpdate(blockId, propertyPath, newValue) {
-    console.log('\n' + '='.repeat(50));
+    console.log(`\n${  '='.repeat(50)}`);
     console.log(`✏️ SIMULANDO EDIÇÃO: ${propertyPath} = "${newValue}"`);
 
     // 1. Encontrar bloco
@@ -220,7 +220,7 @@ function simulatePropertyUpdate(blockId, propertyPath, newValue) {
 // EXECUÇÃO DA DEMONSTRAÇÃO
 // ============================================================================
 
-console.log('\n' + '█'.repeat(60));
+console.log(`\n${  '█'.repeat(60)}`);
 console.log('🚀 INICIANDO DEMONSTRAÇÃO PRÁTICA');
 console.log('█'.repeat(60));
 
@@ -253,7 +253,7 @@ getSelectedBlock();
 // RESUMO FINAL
 // ============================================================================
 
-console.log('\n' + '█'.repeat(60));
+console.log(`\n${  '█'.repeat(60)}`);
 console.log('📋 RESUMO DA DEMONSTRAÇÃO');
 console.log('█'.repeat(60));
 
@@ -272,6 +272,6 @@ console.log('• Campos dinâmicos baseados no tipo do bloco');
 console.log('• Valores aninhados (content.*, properties.*)');
 console.log('• Updates imediatos com feedback visual');
 
-console.log('\n' + '█'.repeat(60));
+console.log(`\n${  '█'.repeat(60)}`);
 console.log('🎉 SISTEMA FUNCIONA PERFEITAMENTE!');
 console.log('█'.repeat(60));

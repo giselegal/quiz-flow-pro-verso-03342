@@ -8,7 +8,7 @@ console.log('1. Template availability:', {
     hasTemplate: !!QUIZ_STYLE_21_STEPS_TEMPLATE,
     templateType: typeof QUIZ_STYLE_21_STEPS_TEMPLATE,
     templateKeys: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE) : [],
-    keyCount: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length : 0
+    keyCount: QUIZ_STYLE_21_STEPS_TEMPLATE ? Object.keys(QUIZ_STYLE_21_STEPS_TEMPLATE).length : 0,
 });
 
 if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
@@ -18,7 +18,7 @@ if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
             type: typeof value,
             isArray: Array.isArray(value),
             length: Array.isArray(value) ? value.length : 'N/A',
-            hasBlocks: value && typeof value === 'object' && 'blocks' in value
+            hasBlocks: value && typeof value === 'object' && 'blocks' in value,
         });
     });
 
@@ -28,7 +28,7 @@ if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
     console.log('Normalized result:', {
         keys: Object.keys(normalized),
         keyCount: Object.keys(normalized).length,
-        stepBlockCounts: Object.entries(normalized).map(([k, v]) => [k, v.length])
+        stepBlockCounts: Object.entries(normalized).map(([k, v]) => [k, v.length]),
     });
 
     console.log('\n4. Testing specific steps:');
@@ -38,7 +38,7 @@ if (QUIZ_STYLE_21_STEPS_TEMPLATE) {
         console.log(`  Step ${i}:`, {
             hasBlocks: !!blocks,
             count: blocks?.length || 0,
-            types: blocks?.slice(0, 3).map(b => b.type) || []
+            types: blocks?.slice(0, 3).map(b => b.type) || [],
         });
     }
 }

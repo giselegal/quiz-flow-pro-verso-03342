@@ -17,7 +17,7 @@ function diagnosticarEditor() {
         'PropertiesPanel': document.querySelector('[class*="properties"], [data-testid*="properties"]'),
         'RegistryPanel': document.body.textContent?.includes('RegistryPropertiesPanel'),
         'HotReloadText': document.body.textContent?.includes('🔥 TESTE HOT RELOAD'),
-        'RedBackground': document.querySelector('[class*="bg-red"]')
+        'RedBackground': document.querySelector('[class*="bg-red"]'),
     };
 
     console.log('\n🧭 2. INDICADORES DE EDITOR NA DOM:');
@@ -40,7 +40,7 @@ function diagnosticarEditor() {
             try {
                 const reactKeys = Object.keys(element).filter(key =>
                     key.startsWith('__reactInternalInstance') ||
-                    key.startsWith('__reactFiber')
+                    key.startsWith('__reactFiber'),
                 );
 
                 for (const key of reactKeys) {
@@ -58,7 +58,7 @@ function diagnosticarEditor() {
         const components = ['RegistryPropertiesPanel', 'UnifiedEditor', 'EditorPro', 'SchemaDrivenEditorResponsive'];
         components.forEach(comp => {
             const found = Array.from(document.querySelectorAll('*')).some(el =>
-                findReactComponent(el, comp)
+                findReactComponent(el, comp),
             );
             console.log(`   ${comp}: ${found ? '✅ ATIVO' : '❌ NÃO ENCONTRADO'}`);
         });
@@ -132,7 +132,7 @@ function investigarCausa() {
             const hasRedBgInFile = content.includes('bg-red-500');
 
             console.log('\n📄 7. VERIFICAÇÃO DO ARQUIVO SOURCE:');
-            console.log(`   Arquivo existe: ✅ SIM`);
+            console.log('   Arquivo existe: ✅ SIM');
             console.log(`   HOT RELOAD no código: ${hasHotReloadInFile ? '✅ SIM' : '❌ NÃO'}`);
             console.log(`   Background vermelho no código: ${hasRedBgInFile ? '✅ SIM' : '❌ NÃO'}`);
 

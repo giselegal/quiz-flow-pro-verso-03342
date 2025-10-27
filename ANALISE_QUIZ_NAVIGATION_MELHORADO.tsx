@@ -32,7 +32,7 @@ const NAVIGATION_CONFIG = {
         secondary: 'amber-600',
         disabled: 'gray-300',
         text: 'amber-800',
-    }
+    },
 };
 
 const QuizNavigation: React.FC<QuizNavigationProps> = ({
@@ -159,7 +159,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                     <Button
                         onClick={onNext}
                         disabled={!canProceed}
-                        variant={canProceed ? "default" : "outline"}
+                        variant={canProceed ? 'default' : 'outline'}
                         className={`text-lg px-6 py-3 flex items-center transition-all duration-300 ease-in-out rounded-lg shadow-sm hover:shadow-md transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${colors.primary}
               ${canProceed
                                 ? `bg-${colors.primary} text-white hover:bg-${colors.primaryHover} border-${colors.primary} ${showActivationEffect ? 'scale-105 shadow-lg ring-2 ring-amber-300/50' : ''

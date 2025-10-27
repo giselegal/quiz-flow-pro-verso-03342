@@ -9,7 +9,7 @@ const sidebar = document.querySelector('.components-sidebar');
 console.log('🧩 Components Sidebar encontrada:', !!sidebar);
 
 if (sidebar) {
-  console.log('📋 HTML da sidebar:', sidebar.innerHTML.substring(0, 200) + '...');
+  console.log('📋 HTML da sidebar:', `${sidebar.innerHTML.substring(0, 200)  }...`);
 }
 
 // 2. Verificar se EnhancedComponentsSidebar renderizou
@@ -36,7 +36,7 @@ console.log('🎯 Items arrastáveis encontrados:', draggableItems.length);
 
 // 7. Verificar categorias
 const categories = document.querySelectorAll(
-  '.components-sidebar [class*="category"], .components-sidebar [class*="group"]'
+  '.components-sidebar [class*="category"], .components-sidebar [class*="group"]',
 );
 console.log('📂 Categorias encontradas:', categories.length);
 

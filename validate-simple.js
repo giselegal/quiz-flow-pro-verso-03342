@@ -26,7 +26,7 @@ const requiredFiles = [
     'src/core/editor/components/EditorComponents.tsx',
     'src/core/editor/examples/EditorExamples.tsx',
     'src/core/editor/__tests__/EditorTests.test.tsx',
-    'src/core/editor/README.md'
+    'src/core/editor/README.md',
 ];
 
 let allFilesExist = true;

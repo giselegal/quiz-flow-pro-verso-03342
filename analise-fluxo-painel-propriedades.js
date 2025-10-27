@@ -19,7 +19,7 @@ const arquiteturaGeral = {
         '🖼️ Canvas/Renderer - Exibição e interação',
         '🎛️ PropertiesPanel - Interface de edição',
         '📦 Block objects - Dados dos componentes',
-        '🔄 Update callbacks - Sincronização'
+        '🔄 Update callbacks - Sincronização',
     ],
     fluxoDados: [
         '1. Usuário clica no componente no canvas',
@@ -31,8 +31,8 @@ const arquiteturaGeral = {
         '7. Usuário edita propriedades',
         '8. Panel dispara onUpdateBlock(id, updates)',
         '9. EditorContext atualiza estado dos blocos',
-        '10. Canvas re-renderiza com novos dados'
-    ]
+        '10. Canvas re-renderiza com novos dados',
+    ],
 };
 
 arquiteturaGeral.componentesChave.forEach(comp => console.log(`  ${comp}`));
@@ -66,8 +66,8 @@ const selectedBlock = useMemo(() => {
             '🎯 selectedBlockId: ID do bloco atualmente selecionado',
             '📦 blocks: Array com todos os blocos da etapa atual',
             '🔍 selectedBlock: Computed property que busca o bloco pelo ID',
-            '🔄 Reactive: Atualiza automaticamente quando seleção muda'
-        ]
+            '🔄 Reactive: Atualiza automaticamente quando seleção muda',
+        ],
     },
 
     eventoSelecao: {
@@ -93,9 +93,9 @@ const handleBlockClick = (blockId: string) => {
             '🖱️ onClick: Captura clique do usuário no bloco',
             '📨 setSelectedBlockId: Atualiza ID selecionado no contexto',
             '🔄 Dispatch: Alternativa usando reducer pattern',
-            '⚡ Imediato: Mudança reflete instantaneamente'
-        ]
-    }
+            '⚡ Imediato: Mudança reflete instantaneamente',
+        ],
+    },
 };
 
 console.log('🎯 ESTADO GLOBAL:');
@@ -118,7 +118,7 @@ const buscaDados = {
             order: 1,
             content: {
                 text: 'Título do Quiz',
-                subtitle: 'Subtítulo opcional'
+                subtitle: 'Subtítulo opcional',
             },
             properties: {
                 fontSize: 'text-2xl',
@@ -127,20 +127,20 @@ const buscaDados = {
                 textAlign: 'center',
                 fontWeight: 'bold',
                 marginTop: 16,
-                marginBottom: 8
+                marginBottom: 8,
             },
             metadata: {
                 createdAt: '2025-09-18',
-                updatedAt: '2025-09-18'
-            }
+                updatedAt: '2025-09-18',
+            },
         },
         explicacao: [
             '🆔 id: Identificador único do bloco',
             '🏷️ type: Tipo do bloco (text, heading, image, etc)',
             '📝 content: Dados de conteúdo (texto, imagens, etc)',
             '🎨 properties: Propriedades visuais e comportamentais',
-            '📊 metadata: Informações auxiliares'
-        ]
+            '📊 metadata: Informações auxiliares',
+        ],
     },
 
     buscaNoContext: {
@@ -178,9 +178,9 @@ const PropertiesPanel = ({ selectedBlockId }) => {
             '🔍 useMemo: Busca eficiente com cache automático',
             '✅ Null check: Verifica se bloco existe',
             '📦 Destructuring: Extrai dados necessários',
-            '🔄 Reativo: Re-busca quando seleção ou dados mudam'
-        ]
-    }
+            '🔄 Reativo: Re-busca quando seleção ou dados mudam',
+        ],
+    },
 };
 
 console.log('📦 ESTRUTURA DE UM BLOCO:');
@@ -201,7 +201,7 @@ const renderizacaoDinamica = {
         heading: ['content.text', 'properties.level', 'properties.color'],
         image: ['content.src', 'content.alt', 'properties.width'],
         button: ['content.text', 'content.href', 'properties.variant'],
-        form: ['content.fields', 'properties.submitText', 'properties.action']
+        form: ['content.fields', 'properties.submitText', 'properties.action'],
     },
 
     sistemaRenderizacao: {
@@ -262,9 +262,9 @@ const PropertyEditor = ({ block, onUpdate }) => {
             '⚙️ Config por tipo: Cada tipo de bloco tem suas propriedades',
             '🔧 Campos dinâmicos: Renderiza inputs baseado na configuração',
             '📊 Nested values: Acessa propriedades aninhadas (content.text)',
-            '🎨 Tipos variados: input, select, color, textarea, etc.'
-        ]
-    }
+            '🎨 Tipos variados: input, select, color, textarea, etc.',
+        ],
+    },
 };
 
 console.log('🎯 TIPOS DE PROPRIEDADES POR BLOCO:');
@@ -290,7 +290,7 @@ const atualizacaoProps = {
         '4. 📤 onUpdateBlock é chamado com novos dados',
         '5. 🔄 EditorContext atualiza array de blocos',
         '6. ⚡ Re-render automático do canvas',
-        '7. 👁️ Usuário vê mudança visual imediatamente'
+        '7. 👁️ Usuário vê mudança visual imediatamente',
     ],
 
     codigoAtualizacao: `
@@ -333,8 +333,8 @@ const setNestedValue = (obj, path, value) => {
         '🔧 Configuração: Atualização em metadata.*',
         '📊 Nested: Suporte a propriedades aninhadas',
         '✅ Validation: Validação antes da atualização',
-        '⚡ Debouncing: Para evitar updates excessivos'
-    ]
+        '⚡ Debouncing: Para evitar updates excessivos',
+    ],
 };
 
 console.log('🔄 FLUXO DE ATUALIZAÇÃO:');
@@ -355,21 +355,21 @@ const otimizacoes = {
         '🧠 useMemo: Cache de selectedBlock para evitar re-buscas',
         '📝 useCallback: Cache de handlers para evitar re-renders',
         '🎯 React.memo: Memoização de componentes do painel',
-        '🔄 Shallow comparison: Comparação otimizada de props'
+        '🔄 Shallow comparison: Comparação otimizada de props',
     ],
 
     lazyLoading: [
         '📦 Lazy imports: Carregar editores por tipo sob demanda',
         '🎨 Conditional rendering: Renderizar apenas campos visíveis',
         '📊 Virtual scrolling: Para listas longas de propriedades',
-        '🔍 Search filtering: Filtrar propriedades em tempo real'
+        '🔍 Search filtering: Filtrar propriedades em tempo real',
     ],
 
     debouncing: [
         '⏱️ Input debouncing: Atrasar atualizações durante digitação',
         '🔄 Batch updates: Agrupar múltiplas mudanças',
         '💾 Auto-save: Salvar automaticamente após inatividade',
-        '🚫 Prevent unnecessary renders: Evitar renders desnecessários'
+        '🚫 Prevent unnecessary renders: Evitar renders desnecessários',
     ],
 
     codigoOtimizado: `
@@ -404,7 +404,7 @@ const OptimizedPropertiesPanel = memo(({ selectedBlockId }) => {
     />
   );
 });
-    `
+    `,
 };
 
 console.log('🧠 MEMOIZATION:');
@@ -435,8 +435,8 @@ const exemplosPraticos = {
             '6. Usuário digita "Hello World"',
             '7. onChange dispara com ("content.text", "Hello World")',
             '8. onUpdateBlock("step-1-text-1", { content: { text: "Hello World" } })',
-            '9. Canvas re-renderiza mostrando "Hello World"'
-        ]
+            '9. Canvas re-renderiza mostrando "Hello World"',
+        ],
     },
 
     exemploCor: {
@@ -449,8 +449,8 @@ const exemplosPraticos = {
             '5. ColorPicker.onChange("#007acc")',
             '6. handleChange("properties.backgroundColor", "#007acc")',
             '7. Update: { properties: { backgroundColor: "#007acc" } }',
-            '8. Bloco no canvas fica com fundo azul instantaneamente'
-        ]
+            '8. Bloco no canvas fica com fundo azul instantaneamente',
+        ],
     },
 
     exemploComplexo: {
@@ -461,25 +461,25 @@ const exemplosPraticos = {
             content: {
                 fields: [
                     { name: 'email', type: 'email', label: 'Email', required: true },
-                    { name: 'name', type: 'text', label: 'Nome', required: false }
+                    { name: 'name', type: 'text', label: 'Nome', required: false },
                 ],
                 submitText: 'Enviar',
-                successMessage: 'Obrigado!'
+                successMessage: 'Obrigado!',
             },
             properties: {
                 layout: 'vertical',
                 buttonColor: '#007acc',
-                fieldSpacing: 16
-            }
+                fieldSpacing: 16,
+            },
         },
         edicoes: [
             '✏️ Adicionar novo campo ao array fields',
             '🎨 Alterar cor do botão (buttonColor)',
             '📝 Editar texto do botão (submitText)',
             '📐 Ajustar espaçamento (fieldSpacing)',
-            '🔧 Trocar layout (vertical/horizontal)'
-        ]
-    }
+            '🔧 Trocar layout (vertical/horizontal)',
+        ],
+    },
 };
 
 console.log('📝 EXEMPLO 1 - TEXTO:');
@@ -505,11 +505,11 @@ const resumoFinal = {
         '🎨 PropertyEditor renderiza campos baseado no tipo do bloco',
         '📝 Cada campo tem path específico (content.text, properties.color)',
         '🔄 onUpdateBlock atualiza o estado global e re-renderiza canvas',
-        '⚡ Otimizações (memo, debounce) melhoram performance'
+        '⚡ Otimizações (memo, debounce) melhoram performance',
     ],
 
     fluxoCompleto: [
-        '🖱️ CLIQUE → 🎯 SELEÇÃO → 🔍 BUSCA → 🎨 RENDER → ✏️ EDIÇÃO → 🔄 UPDATE → 👁️ VISUAL'
+        '🖱️ CLIQUE → 🎯 SELEÇÃO → 🔍 BUSCA → 🎨 RENDER → ✏️ EDIÇÃO → 🔄 UPDATE → 👁️ VISUAL',
     ],
 
     arquivos: [
@@ -517,8 +517,8 @@ const resumoFinal = {
         '📄 PropertiesPanel.tsx - Interface do painel',
         '📄 PropertyEditor.tsx - Editores específicos por tipo',
         '📄 usePropertiesPanel.ts - Lógica do painel',
-        '📄 Block interfaces - Definição de tipos'
-    ]
+        '📄 Block interfaces - Definição de tipos',
+    ],
 };
 
 console.log('🎯 PONTOS PRINCIPAIS:');
@@ -530,7 +530,7 @@ resumoFinal.fluxoCompleto.forEach(fluxo => console.log(`  ${fluxo}`));
 console.log('\n📁 ARQUIVOS ENVOLVIDOS:');
 resumoFinal.arquivos.forEach(arquivo => console.log(`  ${arquivo}`));
 
-console.log('\n' + '='.repeat(60));
+console.log(`\n${  '='.repeat(60)}`);
 console.log('✨ O painel busca informações através de um sistema reativo');
 console.log('   baseado em selectedBlockId e busca eficiente no array blocks!');
 console.log('='.repeat(60));

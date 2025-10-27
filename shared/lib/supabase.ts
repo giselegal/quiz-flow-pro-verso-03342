@@ -50,7 +50,7 @@ export const supabaseAdmin: SupabaseClient<Database> | null = (() => {
 
   if (!serviceKey) {
     console.warn(
-      'VITE_SUPABASE_SERVICE_KEY não encontrada. Operações administrativas não estarão disponíveis.'
+      'VITE_SUPABASE_SERVICE_KEY não encontrada. Operações administrativas não estarão disponíveis.',
     );
     return null;
   }
@@ -173,7 +173,7 @@ export const createProfile = async (user: any) => {
 export const uploadFile = async (
   bucket: string,
   path: string,
-  file: File
+  file: File,
 ): Promise<{ url: string; path: string }> => {
   try {
     const { data, error } = await supabase.storage.from(bucket).upload(path, file, {
@@ -272,7 +272,7 @@ export const subscribeToQuizUpdates = (quizId: string, callback: (payload: any) 
         table: 'quizzes',
         filter: `id=eq.${quizId}`,
       },
-      callback
+      callback,
     )
     .subscribe();
 };
@@ -291,7 +291,7 @@ export const subscribeToQuizAttempts = (quizId: string, callback: (payload: any)
         table: 'quiz_attempts',
         filter: `quiz_id=eq.${quizId}`,
       },
-      callback
+      callback,
     )
     .subscribe();
 };

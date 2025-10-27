@@ -79,7 +79,7 @@ const fixNavigationButtons = () => {
             console.log('📊 Dados da navegação:', {
                 templateId,
                 funnelId,
-                editorUrl
+                editorUrl,
             });
 
             // Salvar no localStorage antes de navegar
@@ -89,7 +89,7 @@ const fixNavigationButtons = () => {
                     name: `Template ${templateId} - ${new Date().toLocaleTimeString()}`,
                     status: 'draft',
                     updatedAt: new Date().toISOString(),
-                    templateId: templateId
+                    templateId,
                 };
 
                 localStorage.setItem(`funnel-${funnelId}`, JSON.stringify(funnelData));

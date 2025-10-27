@@ -14,7 +14,7 @@ export default defineConfig({
       'src/__tests__/data/**/*.test.ts',
       'src/__tests__/monitoring/**/*.test.ts',
       // Testes rápidos auxiliares (regras/guardas de config)
-      'src/config/__tests__/**/*.test.ts'
+      'src/config/__tests__/**/*.test.ts',
     ],
     reporters: ['default'],
     silent: true,
@@ -22,18 +22,18 @@ export default defineConfig({
     pool: 'threads',
     poolOptions: {
       threads: {
-        singleThread: true
-      }
+        singleThread: true,
+      },
     },
     coverage: {
       reporter: ['text'],
-      reportsDirectory: './coverage/canonical'
-    }
+      reportsDirectory: './coverage/canonical',
+    },
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@templates': path.resolve(__dirname, './src/templates')
-    }
-  }
+      '@templates': path.resolve(__dirname, './src/templates'),
+    },
+  },
 });

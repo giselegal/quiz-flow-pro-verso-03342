@@ -246,7 +246,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             ...prev,
             profile: prev.profile ? { ...prev.profile, ...updates } : undefined,
           }
-          : null
+          : null,
       );
 
       return { error: null };
@@ -268,7 +268,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             ...prev,
             profile: profile || undefined,
           }
-          : null
+          : null,
       );
     } catch (error) {
       console.error('Erro ao atualizar perfil:', error);
@@ -383,7 +383,7 @@ export function useSocialAuth() {
 
       return { error: null };
     } catch (error) {
-      console.error(`Erro no login social:`, error);
+      console.error('Erro no login social:', error);
       return { error: error as AuthError };
     } finally {
       setIsLoading(false);

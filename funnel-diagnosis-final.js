@@ -13,7 +13,7 @@ const testFunnelIds = [
     'personality-assessment-1757514679394',
     'lead-capture-simple-1757514692752',
     'com-que-roupa-eu-vou-1757514710892',
-    'style-quiz-21-steps-1757514731045'
+    'style-quiz-21-steps-1757514731045',
 ];
 
 console.log('📊 IDs DE TESTE:', testFunnelIds);
@@ -32,7 +32,7 @@ testFunnelIds.forEach((funnelId, index) => {
         `contextual-editor-funnel-${funnelId}`,
         `contextual-my-templates-funnel-${funnelId}`,
         `qqcv_funnel_${funnelId}`,
-        funnelId // chave direta
+        funnelId, // chave direta
     ];
 
     console.log(`\n📋 ${index + 1}. TESTANDO ${funnelId}:`);
@@ -45,7 +45,7 @@ testFunnelIds.forEach((funnelId, index) => {
                 console.log(`   ✅ ${key}:`, {
                     id: parsed.id,
                     name: parsed.name || 'Sem nome',
-                    blocks: Array.isArray(parsed.blocks) ? parsed.blocks.length : 'N/A'
+                    blocks: Array.isArray(parsed.blocks) ? parsed.blocks.length : 'N/A',
                 });
             } catch (e) {
                 console.log(`   ✅ ${key}: [Dados não-JSON]`);
@@ -111,12 +111,12 @@ const mockTemplate = {
                     textColor: '#000000',
                     nestedData: {
                         painPoints: ['Ponto 1', 'Ponto 2'],
-                        features: { premium: true, basic: false }
-                    }
-                }
-            }
-        }
-    ]
+                        features: { premium: true, basic: false },
+                    },
+                },
+            },
+        },
+    ],
 };
 
 // Simular clonagem BEFORE (problema)
@@ -127,8 +127,8 @@ const shallowClone = {
     blocks: mockTemplate.blocks.map(block => ({
         id: `block-${Date.now()}`,
         type: block.type,
-        properties: { ...block.properties } // SHALLOW COPY!
-    }))
+        properties: { ...block.properties }, // SHALLOW COPY!
+    })),
 };
 
 // Simular clonagem AFTER (corrigido)
@@ -139,8 +139,8 @@ const deepClone = {
     blocks: mockTemplate.blocks.map(block => ({
         id: `block-${Date.now()}`,
         type: block.type,
-        properties: JSON.parse(JSON.stringify(block.properties || {})) // DEEP CLONE!
-    }))
+        properties: JSON.parse(JSON.stringify(block.properties || {})), // DEEP CLONE!
+    })),
 };
 
 // Teste de isolamento

@@ -24,7 +24,7 @@ if (localStorage.getItem('templateCache')) {
 
 // Limpar dados de sessão do quiz
 const sessionKeys = Object.keys(sessionStorage).filter(key =>
-    key.includes('quiz') || key.includes('step') || key.includes('template')
+    key.includes('quiz') || key.includes('step') || key.includes('template'),
 );
 
 sessionKeys.forEach(key => {

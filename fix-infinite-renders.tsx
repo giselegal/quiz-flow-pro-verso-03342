@@ -72,5 +72,5 @@ export const fixes = {
       return prevProps.prop1 === nextProps.prop1 && 
              prevProps.prop2 === nextProps.prop2;
     });
-  `
+  `,
 };

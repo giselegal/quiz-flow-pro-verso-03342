@@ -84,7 +84,7 @@ async function analyzeFunnelsStructure() {
 
             console.log(`   📊 Funil: "${funnel.name}" (${funnel.id})`);
             if (!sessions || sessions.length === 0) {
-                console.log(`   ⚠️ Nenhuma sessão encontrada para este funil.\n`);
+                console.log('   ⚠️ Nenhuma sessão encontrada para este funil.\n');
                 continue;
             }
 

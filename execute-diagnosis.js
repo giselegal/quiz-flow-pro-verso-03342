@@ -22,7 +22,7 @@ const simulatedLocalStorage = {
     // Outros dados
     'auth_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
     'user_settings': '{"theme":"dark","language":"pt-BR"}',
-    'app_config': '{"version":"1.0.0","debug":true}'
+    'app_config': '{"version":"1.0.0","debug":true}',
 };
 
 function simulateAnalysis() {
@@ -39,7 +39,7 @@ function simulateAnalysis() {
         'Templates': [],
         'Auth/Usuário': [],
         'Configurações': [],
-        'Outros': []
+        'Outros': [],
     };
 
     Object.entries(simulatedLocalStorage).forEach(([key, value]) => {
@@ -159,7 +159,7 @@ function simulateAnalysis() {
         needsMigration: foundLegacy.length > 0,
         categories,
         foundLegacy,
-        contextualData
+        contextualData,
     };
 }
 

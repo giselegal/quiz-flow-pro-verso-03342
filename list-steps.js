@@ -22,7 +22,7 @@ const categories = {
     'ESTRATÉGICAS (6 steps)': steps.slice(12, 18), // step-13 a step-18
     'TRANSIÇÃO 2 (1 step)': ['step-19'],
     'RESULTADO (1 step)': ['step-20'],
-    'OFERTA (1 step)': ['step-21']
+    'OFERTA (1 step)': ['step-21'],
 };
 
 Object.entries(categories).forEach(([category, stepList]) => {
@@ -39,7 +39,7 @@ console.log('╚═════════════════════�
 const stepsWithOptions = [
     'step-02', 'step-03', 'step-04', 'step-05', 'step-06',
     'step-07', 'step-08', 'step-09', 'step-10', 'step-11',
-    'step-13', 'step-14', 'step-15', 'step-16', 'step-17', 'step-18'
+    'step-13', 'step-14', 'step-15', 'step-16', 'step-17', 'step-18',
 ];
 
 console.log('📦 Steps que TÊM "options grid" (com imageUrl, points, category):');

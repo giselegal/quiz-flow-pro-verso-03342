@@ -83,7 +83,7 @@ async function testarEstruturaSupabase() {
                                     imageUrl: opt.imageUrl || opt.image || '❌ AUSENTE',
                                     points: opt.points ?? opt.score ?? '❌ AUSENTE',
                                     category: opt.category || '❌ AUSENTE',
-                                    value: opt.value
+                                    value: opt.value,
                                 });
                             }
                         } else {
@@ -100,7 +100,7 @@ async function testarEstruturaSupabase() {
                                     text: opt.text,
                                     imageUrl: opt.imageUrl || opt.image || '❌ AUSENTE',
                                     points: opt.points ?? opt.score ?? '❌ AUSENTE',
-                                    category: opt.category || '❌ AUSENTE'
+                                    category: opt.category || '❌ AUSENTE',
                                 });
                             }
                         } else {

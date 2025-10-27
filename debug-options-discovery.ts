@@ -11,10 +11,10 @@ const mockOptionsGridBlock = {
         title: 'Teste de questão',
         options: [
             { text: 'Opção 1', score: 1, category: 'A' },
-            { text: 'Opção 2', score: 2, category: 'B' }
-        ]
+            { text: 'Opção 2', score: 2, category: 'B' },
+        ],
     },
-    content: {}
+    content: {},
 };
 
 console.log('🧪 Testando descoberta de propriedades para options-grid...');

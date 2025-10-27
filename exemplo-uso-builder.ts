@@ -15,23 +15,23 @@
 
 // Para fins de exemplo, vamos simular as funções:
 const createQuizQuestion = () => ({
-    withContentField: (key, value) => ({ withProperty: (prop, val) => ({ build: () => ({ tipo: 'quiz', [key]: value, [prop]: val }) }) })
+    withContentField: (key, value) => ({ withProperty: (prop, val) => ({ build: () => ({ tipo: 'quiz', [key]: value, [prop]: val }) }) }),
 });
 const createFunnelFromTemplate = (template) => ({
-    withName: (name) => ({ withAnalytics: (analytics) => ({ autoConnect: () => ({ optimize: () => ({ build: () => ({ template, name, analytics }) }) }) }) })
+    withName: (name) => ({ withAnalytics: (analytics) => ({ autoConnect: () => ({ optimize: () => ({ build: () => ({ template, name, analytics }) }) }) }) }),
 });
 const createQuizLayout = (name) => ({
-    withTheme: (theme) => ({ withFullAccessibility: () => ({ optimizeForMobile: () => ({ build: () => ({ name, theme }), generateCSS: () => 'css-gerado' }) }) })
+    withTheme: (theme) => ({ withFullAccessibility: () => ({ optimizeForMobile: () => ({ build: () => ({ name, theme }), generateCSS: () => 'css-gerado' }) }) }),
 });
 const QuizBuilderFacade = {
     createCompleteQuiz: (name) => ({ funnel: { name, tipo: 'quiz-completo' }, layout: { tema: 'moderno' } }),
     createLandingPage: (name) => ({ layout: { name, tipo: 'landing' }, css: 'css-landing' }),
-    createLeadQualification: (name) => ({ funnel: { name, tipo: 'lead-qualification' }, layout: { tema: 'minimal' } })
+    createLeadQualification: (name) => ({ funnel: { name, tipo: 'lead-qualification' }, layout: { tema: 'minimal' } }),
 };
 const BUILDER_PRESETS = {
     'quiz-product-recommendation': () => ({ tipo: 'quiz-produto' }),
     'lead-magnet-quiz': () => ({ tipo: 'lead-magnet' }),
-    'landing-page-hero': () => ({ tipo: 'landing-hero' })
+    'landing-page-hero': () => ({ tipo: 'landing-hero' }),
 };
 
 // 🎯 EXEMPLO 1: Criar uma pergunta de quiz
@@ -53,7 +53,7 @@ export function criarFunilDeLeads() {
         .withName('Qualificação de Leads - Marketing')
         .withAnalytics({
             trackingEnabled: true,
-            events: ['step_start', 'step_complete', 'lead_captured']
+            events: ['step_start', 'step_complete', 'lead_captured'],
         })
         .autoConnect() // Conecta as etapas automaticamente
         .optimize()    // Aplica otimizações automáticas
@@ -92,13 +92,13 @@ export function usarPresetsProntos() {
     console.log('✅ Presets criados:', {
         quizProduto,
         leadMagnet,
-        landingPage
+        landingPage,
     });
 
     return {
         quizProduto,
         leadMagnet,
-        landingPage
+        landingPage,
     };
 }
 
@@ -159,13 +159,13 @@ export function usarFacadeSimplificado() {
     console.log('✅ Tudo criado com facade:', {
         quizCompleto,
         landingPage,
-        leadQualification
+        leadQualification,
     });
 
     return {
         quizCompleto,
         landingPage,
-        leadQualification
+        leadQualification,
     };
 }
 

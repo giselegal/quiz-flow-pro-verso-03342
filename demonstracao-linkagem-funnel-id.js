@@ -15,7 +15,7 @@ console.log('================================================================\n'
 const exemploIds = [
     'funnel_1758197040308_9bdqx5zve',
     'funnel_1758197040312_8xdqw2abc',
-    'funnel_1758197040315_7ycsm1def'
+    'funnel_1758197040315_7ycsm1def',
 ];
 
 console.log('📋 1. IDs de Funis de Exemplo:');
@@ -42,23 +42,23 @@ exemploIds.forEach(funnelId => {
         domain: {
             slug: `quiz-${funnelId.split('_')[2]}`, // Usa parte do ID como slug único
             customDomain: null,
-            subdomain: 'app'
+            subdomain: 'app',
         },
         results: {
             primary: {
                 id: 'primary',
                 title: `Resultado para ${funnelId}`,
-                description: `Descrição personalizada para o funil ${funnelId}`
-            }
+                description: `Descrição personalizada para o funil ${funnelId}`,
+            },
         },
         seo: {
             title: `Quiz Personalizado - ${funnelId}`,
-            description: `Meta description específica para ${funnelId}`
+            description: `Meta description específica para ${funnelId}`,
         },
         tracking: {
             googleAnalytics: 'GA4-XXXXXXXXX',
-            facebookPixel: '123456789012345'
-        }
+            facebookPixel: '123456789012345',
+        },
     };
 
     configuracoesPorFunil[chaveStorage] = configuracoes;
@@ -99,7 +99,7 @@ class SimulacaoPublicacao {
             funnelId,
             publicUrl: urlPublicacao,
             previewUrl: urlPreview,
-            config
+            config,
         };
     }
 }
@@ -165,7 +165,7 @@ const exemploConfigReal = {
             slug: 'meu-quiz-personalizado',
             customDomain: 'meudominio.com',
             subdomain: 'quiz',
-            seoFriendlyUrl: true
+            seoFriendlyUrl: true,
         },
         results: {
             primary: {
@@ -177,24 +177,24 @@ const exemploConfigReal = {
                 primaryFunction: 'Líder Criativo',
                 images: {
                     avatar: 'https://cdn.exemplo.com/avatar1.jpg',
-                    banner: 'https://cdn.exemplo.com/banner1.jpg'
-                }
+                    banner: 'https://cdn.exemplo.com/banner1.jpg',
+                },
             },
             secondary: [],
             keywords: [
                 {
                     keywords: ['criativo', 'líder', 'inovador'],
                     resultId: 'primary',
-                    weight: 1.0
-                }
-            ]
+                    weight: 1.0,
+                },
+            ],
         },
         seo: {
             title: 'Quiz: Descubra Seu Perfil de Liderança',
             description: 'Teste personalizado para descobrir seu estilo único de liderança',
             keywords: ['quiz', 'liderança', 'personalidade'],
             ogImage: 'https://cdn.exemplo.com/og-image.jpg',
-            robots: 'index,follow'
+            robots: 'index,follow',
         },
         tracking: {
             googleAnalytics: 'GA4-XXXXXXXXX',
@@ -202,14 +202,14 @@ const exemploConfigReal = {
             utmParameters: {
                 source: 'website',
                 medium: 'organic',
-                campaign: 'quiz-lideranca'
-            }
+                campaign: 'quiz-lideranca',
+            },
         },
         security: {
             accessToken: 'token_secreto_123',
-            webhookUrls: ['https://meusite.com/webhook/quiz-completed']
-        }
-    }
+            webhookUrls: ['https://meusite.com/webhook/quiz-completed'],
+        },
+    },
 };
 
 console.log('   📋 Exemplo de configuração completa:');

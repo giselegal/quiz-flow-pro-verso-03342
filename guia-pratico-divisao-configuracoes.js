@@ -21,7 +21,7 @@ const painelFunis = {
         '⭐ Status (publicado/rascunho/arquivado)',
         '🏷️ Tags e categorização',
         '📅 Agendamento de publicação',
-        '🔄 Versionamento e histórico'
+        '🔄 Versionamento e histórico',
     ],
 
     '⚙️ CONFIGURAÇÕES TÉCNICAS GLOBAIS': [
@@ -30,7 +30,7 @@ const painelFunis = {
         '📈 SEO Global (meta tags padrão, sitemaps)',
         '🔒 SSL e certificados',
         '🌍 Configurações de CDN',
-        '⚡ Cache e performance'
+        '⚡ Cache e performance',
     ],
 
     '📊 ANALYTICS & TRACKING': [
@@ -39,7 +39,7 @@ const painelFunis = {
         '🎯 Configuração de UTMs padrão',
         '📈 Dashboard de métricas consolidadas',
         '📊 Relatórios por funil',
-        '🔄 A/B Testing setup'
+        '🔄 A/B Testing setup',
     ],
 
     '🎨 BRANDING GLOBAL': [
@@ -48,7 +48,7 @@ const painelFunis = {
         '✏️ Fontes padrão da empresa',
         '🎭 Templates de marca',
         '📱 Configurações de responsividade global',
-        '🌈 Temas corporativos'
+        '🌈 Temas corporativos',
     ],
 
     '🔐 INTEGRAÇÕES & SEGURANÇA': [
@@ -57,7 +57,7 @@ const painelFunis = {
         '💳 Gateways de pagamento',
         '🔐 Webhooks globais',
         '🔑 API keys e tokens',
-        '👥 Controle de acesso de usuários'
+        '👥 Controle de acesso de usuários',
     ],
 
     '🚀 PUBLICAÇÃO AVANÇADA': [
@@ -66,8 +66,8 @@ const painelFunis = {
         '🌍 Multi-idioma',
         '📊 Monitoring e logs',
         '🔒 Controles de privacidade',
-        '⚡ Otimizações de velocidade'
-    ]
+        '⚡ Otimizações de velocidade',
+    ],
 };
 
 Object.entries(painelFunis).forEach(([categoria, items]) => {
@@ -75,7 +75,7 @@ Object.entries(painelFunis).forEach(([categoria, items]) => {
     items.forEach(item => console.log(`  ${item}`));
 });
 
-console.log('\n' + '='.repeat(60));
+console.log(`\n${  '='.repeat(60)}`);
 
 // ============================================================================
 // 🎨 EDITOR VISUAL (/editor)
@@ -91,7 +91,7 @@ const editorVisual = {
         '🖼️ Upload e crop de imagens',
         '🎬 Inserção de vídeos e GIFs',
         '📊 Configuração de perguntas do quiz',
-        '🎯 Setup de respostas e resultados'
+        '🎯 Setup de respostas e resultados',
     ],
 
     '🎨 PROPRIEDADES VISUAIS': [
@@ -100,7 +100,7 @@ const editorVisual = {
         '📐 Margens, padding, espaçamentos',
         '🔲 Bordas, sombras, efeitos',
         '📱 Ajustes de responsividade por elemento',
-        '✨ Animações e transições'
+        '✨ Animações e transições',
     ],
 
     '⚡ COMPORTAMENTO DA PÁGINA': [
@@ -109,7 +109,7 @@ const editorVisual = {
         '⏱️ Timers e contadores',
         '✅ Validações de input',
         '📊 Cálculo de scores',
-        '🔀 Fluxos dinâmicos baseados em respostas'
+        '🔀 Fluxos dinâmicos baseados em respostas',
     ],
 
     '🧩 ESTRUTURA DE BLOCOS': [
@@ -118,7 +118,7 @@ const editorVisual = {
         '🎛️ Configurar propriedades de cada bloco',
         '📐 Layout e posicionamento',
         '🔗 Links e navegação interna',
-        '🎭 Aplicar estilos visuais'
+        '🎭 Aplicar estilos visuais',
     ],
 
     '👁️ PREVIEW & TESTE IMEDIATO': [
@@ -127,7 +127,7 @@ const editorVisual = {
         '🧪 Teste do fluxo completo',
         '🔍 Debug de elementos específicos',
         '⚡ Preview de performance',
-        '🚀 Publicação rápida individual'
+        '🚀 Publicação rápida individual',
     ],
 
     '💾 CONFIGURAÇÕES DE PÁGINA': [
@@ -136,8 +136,8 @@ const editorVisual = {
         '📈 Meta title/description específicos',
         '⏭️ Configurações de transição',
         '📊 Tracking específico da página',
-        '🎨 Background e tema da página'
-    ]
+        '🎨 Background e tema da página',
+    ],
 };
 
 Object.entries(editorVisual).forEach(([categoria, items]) => {
@@ -149,7 +149,7 @@ Object.entries(editorVisual).forEach(([categoria, items]) => {
 // FLUXO DE TRABALHO RECOMENDADO
 // ============================================================================
 
-console.log('\n' + '='.repeat(60));
+console.log(`\n${  '='.repeat(60)}`);
 console.log('🔄 FLUXO DE TRABALHO RECOMENDADO:');
 console.log('================================');
 
@@ -161,8 +161,8 @@ const fluxoTrabalho = [
             '🎨 Definir brand kit (cores, fontes, logos)',
             '📊 Configurar analytics (GA, Pixels)',
             '📧 Conectar integrações (email, CRM)',
-            '🔐 Definir configurações de segurança'
-        ]
+            '🔐 Definir configurações de segurança',
+        ],
     },
     {
         etapa: '2. CRIAR/CONFIGURAR FUNIL',
@@ -171,8 +171,8 @@ const fluxoTrabalho = [
             '🏷️ Definir nome e categoria',
             '🎯 Configurar objetivos e métricas',
             '📅 Definir cronograma (se aplicável)',
-            '🚀 Acessar editor para criação'
-        ]
+            '🚀 Acessar editor para criação',
+        ],
     },
     {
         etapa: '3. CRIAÇÃO NO EDITOR',
@@ -181,8 +181,8 @@ const fluxoTrabalho = [
             '📝 Criar conteúdo e configurar quiz',
             '⚡ Definir comportamentos e lógica',
             '👁️ Testar interatividade',
-            '📱 Verificar responsividade'
-        ]
+            '📱 Verificar responsividade',
+        ],
     },
     {
         etapa: '4. FINALIZAÇÃO NO PAINEL',
@@ -191,9 +191,9 @@ const fluxoTrabalho = [
             '📊 Verificar analytics setup',
             '🌐 Confirmar URLs e domínios',
             '🚀 Publicação oficial',
-            '📈 Monitorar performance'
-        ]
-    }
+            '📈 Monitorar performance',
+        ],
+    },
 ];
 
 fluxoTrabalho.forEach(({ etapa, acoes }) => {
@@ -205,7 +205,7 @@ fluxoTrabalho.forEach(({ etapa, acoes }) => {
 // COMPARAÇÃO VISUAL
 // ============================================================================
 
-console.log('\n' + '='.repeat(60));
+console.log(`\n${  '='.repeat(60)}`);
 console.log('📊 COMPARAÇÃO: ANTES vs DEPOIS');
 console.log('==============================');
 
@@ -218,8 +218,8 @@ const comparacao = {
             '🔄 Navegação confusa entre contextos',
             '⏱️ Setup técnico interrompe criação',
             '🔍 Difícil encontrar configurações',
-            '📊 Analytics espalhados'
-        ]
+            '📊 Analytics espalhados',
+        ],
     },
     depois: {
         titulo: '✅ SITUAÇÃO IDEAL (OTIMIZADA)',
@@ -229,9 +229,9 @@ const comparacao = {
             '🧠 Contextos claramente separados',
             '⚡ Fluxo de trabalho otimizado',
             '🔍 Configurações fáceis de encontrar',
-            '📊 Analytics centralizados'
-        ]
-    }
+            '📊 Analytics centralizados',
+        ],
+    },
 };
 
 console.log(`\n${comparacao.antes.titulo}:`);
@@ -244,7 +244,7 @@ comparacao.depois.beneficios.forEach(beneficio => console.log(`  ${beneficio}`))
 // EXEMPLOS PRÁTICOS
 // ============================================================================
 
-console.log('\n' + '='.repeat(60));
+console.log(`\n${  '='.repeat(60)}`);
 console.log('🎯 EXEMPLOS PRÁTICOS:');
 console.log('====================');
 
@@ -252,28 +252,28 @@ const exemplosPraticos = {
     cenario1: {
         titulo: '📊 Configurar Google Analytics',
         painelFunis: 'Configurar código GA global que aplicará a todos os funis',
-        editor: 'Configurar events específicos para elementos da página'
+        editor: 'Configurar events específicos para elementos da página',
     },
     cenario2: {
         titulo: '🎨 Definir Cores',
         painelFunis: 'Criar paleta de cores da marca (primária, secundária, accent)',
-        editor: 'Aplicar cores específicas em elementos individuais'
+        editor: 'Aplicar cores específicas em elementos individuais',
     },
     cenario3: {
         titulo: '🌐 Configurar Domínio',
         painelFunis: 'Configurar domínio personalizado (meusite.com)',
-        editor: 'Definir slug específico da página (/quiz-estilo)'
+        editor: 'Definir slug específico da página (/quiz-estilo)',
     },
     cenario4: {
         titulo: '📧 Integração com Email',
         painelFunis: 'Conectar Mailchimp/ActiveCampaign globalmente',
-        editor: 'Configurar campos do formulário de lead'
+        editor: 'Configurar campos do formulário de lead',
     },
     cenario5: {
         titulo: '🚀 Publicação',
         painelFunis: 'Publicação oficial com todas as configurações técnicas',
-        editor: 'Preview rápido e publicação para testes'
-    }
+        editor: 'Preview rápido e publicação para testes',
+    },
 };
 
 Object.entries(exemplosPraticos).forEach(([key, { titulo, painelFunis, editor }]) => {
@@ -286,7 +286,7 @@ Object.entries(exemplosPraticos).forEach(([key, { titulo, painelFunis, editor }]
 // RESUMO EXECUTIVO
 // ============================================================================
 
-console.log('\n' + '='.repeat(60));
+console.log(`\n${  '='.repeat(60)}`);
 console.log('📋 RESUMO EXECUTIVO:');
 console.log('====================');
 

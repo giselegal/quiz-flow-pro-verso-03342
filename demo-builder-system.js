@@ -13,13 +13,13 @@ const quizAntigo = {
     type: 'multiple-choice',
     properties: {
         required: true,
-        questionType: 'single-choice'
+        questionType: 'single-choice',
     },
     content: {
         question: 'Qual sua cor favorita?',
         options: ['Azul', 'Verde', 'Vermelho'],
         placeholder: '',
-        description: ''
+        description: '',
     },
     styles: {
         backgroundColor: '#ffffff',
@@ -27,17 +27,17 @@ const quizAntigo = {
         borderColor: '#cccccc',
         fontSize: '16px',
         padding: '12px',
-        borderRadius: '8px'
+        borderRadius: '8px',
     },
     validation: {
         isValid: false,
         errors: [],
-        warnings: []
+        warnings: [],
     },
     metadata: {
         created: new Date(),
-        version: 1
-    }
+        version: 1,
+    },
 };
 console.log('Resultado antigo:', JSON.stringify(quizAntigo, null, 2));
 console.log('\n⏰ Tempo gasto: ~10 minutos escrevendo código\n');
@@ -48,47 +48,47 @@ console.log('✅ DEPOIS - Com Builder System (3 linhas):');
 // Simulação do que o builder faz
 function createQuizQuestion() {
     return {
-        withContentField: function (key, value) {
+        withContentField (key, value) {
             this[key] = value;
             return this;
         },
-        withProperty: function (prop, val) {
+        withProperty (prop, val) {
             this.properties = this.properties || {};
             this.properties[prop] = val;
             return this;
         },
-        fromTemplate: function (template) {
+        fromTemplate (template) {
             // Aplica template automático
             const templates = {
                 'multiple-choice': {
                     type: 'multiple-choice',
                     styles: { backgroundColor: '#ffffff', borderRadius: '8px' },
-                    validation: { isValid: true, errors: [], warnings: [] }
-                }
+                    validation: { isValid: true, errors: [], warnings: [] },
+                },
             };
             Object.assign(this, templates[template]);
             return this;
         },
-        build: function () {
+        build () {
             return {
-                id: 'auto-' + Math.random().toString(36).substr(2, 9),
+                id: `auto-${  Math.random().toString(36).substr(2, 9)}`,
                 type: this.type || 'text',
                 properties: this.properties || {},
                 content: {
                     question: this.question || '',
                     options: this.options || [],
                     placeholder: this.placeholder || '',
-                    description: this.description || ''
+                    description: this.description || '',
                 },
                 styles: this.styles || {},
                 validation: this.validation || { isValid: true, errors: [], warnings: [] },
                 metadata: {
                     created: new Date(),
                     version: 1,
-                    builder: 'BuilderSystem v1.0'
-                }
+                    builder: 'BuilderSystem v1.0',
+                },
             };
-        }
+        },
     };
 }
 
@@ -150,14 +150,14 @@ function createCompleteFunnel() {
             createQuizQuestion()
                 .fromTemplate('text-input')
                 .withContentField('question', 'Conte mais sobre suas necessidades')
-                .build()
+                .build(),
         ],
         analytics: {
             trackingEnabled: true,
-            events: ['step_start', 'step_complete', 'funnel_complete']
+            events: ['step_start', 'step_complete', 'funnel_complete'],
         },
         createdAt: new Date(),
-        builder: 'FunnelBuilder v1.0'
+        builder: 'FunnelBuilder v1.0',
     };
 }
 console.log('Funil criado:', JSON.stringify(createCompleteFunnel(), null, 2));

@@ -46,7 +46,7 @@ function adicionarDadosMockParaTeste() {
 
     // Encontrar primeiro componente da sidebar
     const firstSidebarItem = document.querySelector(
-      '.components-sidebar [data-dnd-kit-draggable-id]'
+      '.components-sidebar [data-dnd-kit-draggable-id]',
     );
     const canvas = document.querySelector('[data-dnd-kit-droppable-id="canvas-dropzone"]');
 
@@ -54,7 +54,7 @@ function adicionarDadosMockParaTeste() {
       console.log('✅ Elementos encontrados para simulação');
       console.log(
         '📍 Simulando drag do componente:',
-        firstSidebarItem.getAttribute('data-dnd-kit-draggable-id')
+        firstSidebarItem.getAttribute('data-dnd-kit-draggable-id'),
       );
 
       // Simular drag & drop real
@@ -68,7 +68,7 @@ function adicionarDadosMockParaTeste() {
           pointerId: 1,
           clientX: rectDrag.left + rectDrag.width / 2,
           clientY: rectDrag.top + rectDrag.height / 2,
-        })
+        }),
       );
 
       setTimeout(() => {
@@ -79,7 +79,7 @@ function adicionarDadosMockParaTeste() {
             pointerId: 1,
             clientX: rectDrag.left + rectDrag.width / 2 + 15,
             clientY: rectDrag.top + rectDrag.height / 2 + 15,
-          })
+          }),
         );
 
         setTimeout(() => {
@@ -90,7 +90,7 @@ function adicionarDadosMockParaTeste() {
               pointerId: 1,
               clientX: rectCanvas.left + rectCanvas.width / 2,
               clientY: rectCanvas.top + rectCanvas.height / 2,
-            })
+            }),
           );
 
           setTimeout(() => {
@@ -101,7 +101,7 @@ function adicionarDadosMockParaTeste() {
                 pointerId: 1,
                 clientX: rectCanvas.left + rectCanvas.width / 2,
                 clientY: rectCanvas.top + rectCanvas.height / 2,
-              })
+              }),
             );
 
             console.log('🎯 Simulação completa!');
@@ -137,7 +137,7 @@ function verificarEstadoEditor() {
   console.log('  - Sidebar:', !!document.querySelector('.components-sidebar'));
   console.log(
     '  - Canvas:',
-    !!document.querySelector('[data-dnd-kit-droppable-id="canvas-dropzone"]')
+    !!document.querySelector('[data-dnd-kit-droppable-id="canvas-dropzone"]'),
   );
   console.log('  - Editor container:', !!document.querySelector('.editor-unified-container'));
 

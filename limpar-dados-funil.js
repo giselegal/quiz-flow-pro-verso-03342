@@ -59,7 +59,7 @@ const dbsToDelete = [
     'QuizQuestEditorDB',
     'FunnelUnifiedDB',
     'EditorStorage',
-    'UnifiedCRUDDB'
+    'UnifiedCRUDDB',
 ];
 
 Promise.all(dbsToDelete.map(db => deleteDB(db).catch(err => console.log(`DB ${db} não encontrado ou erro:`, err))))

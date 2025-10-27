@@ -85,7 +85,7 @@ export const getOptimizedBlockComponentRobust = (type: string): React.ComponentT
         return React.createElement(VisualBlockFallback, {
             blockType: type,
             blockId: block?.id || 'unknown',
-            block: block
+            block,
         });
     };
     VisualFallback.displayName = `RobustFallback(${type})`;

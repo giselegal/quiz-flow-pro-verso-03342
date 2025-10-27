@@ -23,16 +23,16 @@ const mockBlock = {
     borderColor: '#e2e8f0',
     multiple: true,
     required: true,
-    autoProceed: false
+    autoProceed: false,
   },
   content: {
     'content.title': 'Teste de Quiz',
     'content.description': 'Esta é uma pergunta de teste',
     options: [
       { id: '1', text: 'Opção A', image: '', points: 1 },
-      { id: '2', text: 'Opção B', image: '', points: 2 }
-    ]
-  }
+      { id: '2', text: 'Opção B', image: '', points: 2 },
+    ],
+  },
 };
 
 export default function TestModernPropertiesPanel() {
@@ -44,7 +44,7 @@ export default function TestModernPropertiesPanel() {
       if (!prev) return prev;
       return {
         ...prev,
-        ...updates
+        ...updates,
       };
     });
   };

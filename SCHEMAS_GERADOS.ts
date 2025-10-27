@@ -10,8 +10,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'layout', defaultValue: '1rem' },
     { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'layout', defaultValue: '1200px' },
     { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0px' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'section': {
@@ -21,8 +21,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'layout', defaultValue: '1rem' },
     { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'layout', defaultValue: '1200px' },
     { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0px' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'box': {
@@ -32,8 +32,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'layout', defaultValue: '1rem' },
     { key: 'maxWidth', label: 'Largura Máxima', type: 'text', group: 'layout', defaultValue: '1200px' },
     { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0px' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'legal-notice': {
@@ -44,8 +44,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [{label: 'Normal', value: 'normal'}, {label: 'Negrito', value: 'bold'}], defaultValue: 'normal' },
     { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
     { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{label: 'Esquerda', value: 'left'}, {label: 'Centro', value: 'center'}, {label: 'Direita', value: 'right'}], defaultValue: 'left' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'legal-notice-inline': {
@@ -56,8 +56,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [{label: 'Normal', value: 'normal'}, {label: 'Negrito', value: 'bold'}], defaultValue: 'normal' },
     { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
     { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{label: 'Esquerda', value: 'left'}, {label: 'Centro', value: 'center'}, {label: 'Direita', value: 'right'}], defaultValue: 'left' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'headline-inline': {
@@ -68,8 +68,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'fontWeight', label: 'Peso da Fonte', type: 'select', group: 'style', options: [{label: 'Normal', value: 'normal'}, {label: 'Negrito', value: 'bold'}], defaultValue: 'normal' },
     { key: 'color', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
     { key: 'textAlign', label: 'Alinhamento', type: 'select', group: 'style', options: [{label: 'Esquerda', value: 'left'}, {label: 'Centro', value: 'center'}, {label: 'Direita', value: 'right'}], defaultValue: 'left' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'button-inline-fixed': {
@@ -81,8 +81,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
     { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'style', defaultValue: '0.75rem 1.5rem' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'cta-inline': {
@@ -94,8 +94,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
     { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'style', defaultValue: '0.75rem 1.5rem' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-offer-cta-inline': {
@@ -107,8 +107,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'borderRadius', label: 'Borda Arredondada', type: 'text', group: 'style', defaultValue: '0.5rem' },
     { key: 'padding', label: 'Espaçamento Interno', type: 'text', group: 'style', defaultValue: '0.75rem 1.5rem' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-navigation': {
@@ -118,8 +118,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'showStepNumber', label: 'Mostrar Número do Step', type: 'boolean', group: 'content', defaultValue: true },
     { key: 'backButtonText', label: 'Texto Botão Voltar', type: 'text', group: 'content', defaultValue: 'Voltar' },
     { key: 'nextButtonText', label: 'Texto Botão Avançar', type: 'text', group: 'content', defaultValue: 'Próximo' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'progress-bar': {
@@ -130,8 +130,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'color', label: 'Cor da Barra', type: 'color', group: 'style', defaultValue: '#3b82f6' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
     { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '8px' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'progress-inline': {
@@ -142,8 +142,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'color', label: 'Cor da Barra', type: 'color', group: 'style', defaultValue: '#3b82f6' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
     { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '8px' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'loader-inline': {
@@ -154,8 +154,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'color', label: 'Cor da Barra', type: 'color', group: 'style', defaultValue: '#3b82f6' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
     { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '8px' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'loading-animation': {
@@ -166,8 +166,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'color', label: 'Cor da Barra', type: 'color', group: 'style', defaultValue: '#3b82f6' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#e5e7eb' },
     { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '8px' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'decorative-bar': {
@@ -177,8 +177,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '4px' },
     { key: 'width', label: 'Largura', type: 'text', group: 'style', defaultValue: '100%' },
     { key: 'opacity', label: 'Opacidade', type: 'range', group: 'style', min: 0, max: 100, defaultValue: 100 },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'guarantee-badge': {
@@ -188,8 +188,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '4px' },
     { key: 'width', label: 'Largura', type: 'text', group: 'style', defaultValue: '100%' },
     { key: 'opacity', label: 'Opacidade', type: 'range', group: 'style', min: 0, max: 100, defaultValue: 100 },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'gradient-animation': {
@@ -199,8 +199,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'height', label: 'Altura', type: 'text', group: 'style', defaultValue: '4px' },
     { key: 'width', label: 'Largura', type: 'text', group: 'style', defaultValue: '100%' },
     { key: 'opacity', label: 'Opacidade', type: 'range', group: 'style', min: 0, max: 100, defaultValue: 100 },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-advanced-question': {
@@ -210,8 +210,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-button': {
@@ -221,8 +221,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-form': {
@@ -232,8 +232,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-image': {
@@ -243,8 +243,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-intro': {
@@ -254,8 +254,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-options-inline': {
@@ -265,8 +265,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-personal-info-inline': {
@@ -276,8 +276,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-processing': {
@@ -287,8 +287,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-progress': {
@@ -298,8 +298,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-question-inline': {
@@ -309,8 +309,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-result-header': {
@@ -320,8 +320,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-result-secondary': {
@@ -331,8 +331,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-result-style': {
@@ -342,8 +342,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-results': {
@@ -353,8 +353,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-start-page-inline': {
@@ -364,8 +364,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-style-question': {
@@ -375,8 +375,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-text': {
@@ -386,8 +386,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'quiz-transition': {
@@ -397,8 +397,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'modular-result-header': {
@@ -409,8 +409,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'result-card': {
@@ -421,8 +421,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'style-results': {
@@ -433,8 +433,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'options-grid-inline': {
@@ -445,8 +445,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'benefits-list': {
@@ -457,8 +457,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'bonus-inline': {
@@ -469,8 +469,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'personalized-hook-inline': {
@@ -481,8 +481,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'final-value-proposition-inline': {
@@ -493,8 +493,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'testimonials-grid': {
@@ -505,8 +505,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-compatibility': {
@@ -517,8 +517,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-complete-template': {
@@ -529,8 +529,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-personalized-offer': {
@@ -541,8 +541,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-result-header': {
@@ -553,8 +553,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-secondary-styles': {
@@ -565,8 +565,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-style-reveal': {
@@ -577,8 +577,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'step20-user-greeting': {
@@ -589,8 +589,8 @@ export const GENERATED_SCHEMAS = {
     { key: 'description', label: 'Descrição', type: 'textarea', group: 'content' },
     { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color', group: 'style', defaultValue: '#ffffff' },
     { key: 'textColor', label: 'Cor do Texto', type: 'color', group: 'style', defaultValue: '#000000' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
   },
 
   'fashion-ai-generator': {
@@ -599,7 +599,7 @@ export const GENERATED_SCHEMAS = {
     { key: 'apiKey', label: 'Chave da API', type: 'text', group: 'config' },
     { key: 'model', label: 'Modelo', type: 'text', group: 'config', defaultValue: 'gpt-4' },
     { key: 'prompt', label: 'Prompt', type: 'textarea', group: 'content' },
-    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' }
-    ]
-  }
+    { key: 'className', label: 'Classes CSS', type: 'text', group: 'style', description: 'Classes Tailwind personalizadas' },
+    ],
+  },
 };

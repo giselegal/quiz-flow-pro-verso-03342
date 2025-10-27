@@ -36,13 +36,13 @@ function cleanupLocalStorage() {
                     key.includes('debug_') ||
                     key.includes('test_')
                 ) {
-                    problematicKeys.push({ key, size, value: value.substring(0, 100) + '...' });
+                    problematicKeys.push({ key, size, value: `${value.substring(0, 100)  }...` });
                 }
             }
         }
     }
 
-    console.log(`📊 ANÁLISE DO LOCALSTORAGE:`);
+    console.log('📊 ANÁLISE DO LOCALSTORAGE:');
     console.log(`   Total de chaves: ${allKeys.length}`);
     console.log(`   Chaves problemáticas: ${problematicKeys.length}`);
 
@@ -117,7 +117,7 @@ function cleanupLocalStorage() {
     return {
         keysRemoved: totalKeysRemoved,
         sizeFreed: totalSizeFreed,
-        remainingKeys: localStorage.length
+        remainingKeys: localStorage.length,
     };
 }
 
@@ -127,7 +127,7 @@ function checkLocalStorageHealth() {
 
     try {
         // Testar se conseguimos escrever
-        const testKey = 'health_check_' + Date.now();
+        const testKey = `health_check_${  Date.now()}`;
         const testValue = 'test_value';
         localStorage.setItem(testKey, testValue);
         localStorage.removeItem(testKey);

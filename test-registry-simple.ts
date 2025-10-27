@@ -8,7 +8,7 @@ const typesToTest = [
     'quiz-intro-header',
     'text',
     'image',
-    'button'
+    'button',
 ];
 
 console.log('🔍 Testando tipos problemáticos:');

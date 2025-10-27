@@ -40,7 +40,7 @@ const requiredComponents = [
     'options-grid',
     'text-inline',
     'button-inline',
-    'name-input-section'
+    'name-input-section',
 ];
 
 console.log('🔍 Verificando componentes registrados...');
@@ -51,7 +51,7 @@ const componentStatus = requiredComponents.map(component => {
     return {
         name: component,
         registered: true, // Fixado na correção do UniversalBlockRenderer
-        status: '✅'
+        status: '✅',
     };
 });
 
@@ -69,7 +69,7 @@ const templateFlow = {
     'HybridTemplateService': '✅ Corrigido',
     'QUIZ_STYLE_21_STEPS_TEMPLATE': '✅ Disponível',
     'Master JSON Fallback': '⚠️ Opcional',
-    'Cache System': '✅ Funcionando'
+    'Cache System': '✅ Funcionando',
 };
 
 console.table(templateFlow);
@@ -80,7 +80,7 @@ const contextFlow = {
     'PureBuilderProvider': '✅ Ativo',
     'AuthProvider': '✅ Ativo',
     'Template Loading': '✅ Corrigido',
-    'Block Rendering': '✅ Corrigido'
+    'Block Rendering': '✅ Corrigido',
 };
 
 console.table(contextFlow);
@@ -96,7 +96,7 @@ const routes = {
     '/editor': '✅ ModernUnifiedEditor',
     '/modular-editor': '✅ ModularEditorPro',
     '/comparativo': '✅ EditorComparativePage',
-    '/editor?template=quiz21StepsComplete': '✅ Com template'
+    '/editor?template=quiz21StepsComplete': '✅ Com template',
 };
 
 console.table(routes);
@@ -114,29 +114,29 @@ export const testSystemFunctionality = () => {
             test: () => {
                 // Simular carregamento de template
                 return Promise.resolve(true);
-            }
+            },
         },
         {
             name: 'Component Registry',
             test: () => {
                 // Verificar se componentes estão registrados
                 return Promise.resolve(true);
-            }
+            },
         },
         {
             name: 'Context Providers',
             test: () => {
                 // Verificar se contexts estão ativos
                 return Promise.resolve(true);
-            }
+            },
         },
         {
             name: 'Route Navigation',
             test: () => {
                 // Verificar navegação entre rotas
                 return Promise.resolve(true);
-            }
-        }
+            },
+        },
     ];
 
     return Promise.all(tests.map(async (test) => {
@@ -145,14 +145,14 @@ export const testSystemFunctionality = () => {
             return {
                 name: test.name,
                 status: result ? '✅ PASS' : '❌ FAIL',
-                success: result
+                success: result,
             };
         } catch (error) {
             return {
                 name: test.name,
                 status: '❌ ERROR',
                 success: false,
-                error: error.message
+                error: error.message,
             };
         }
     }));
@@ -169,30 +169,30 @@ export const getFixSummary = () => {
             {
                 issue: 'HybridTemplateService.getTemplate missing',
                 fix: 'Método getTemplate adicionado ao HybridTemplateService',
-                status: '✅ FIXED'
+                status: '✅ FIXED',
             },
             {
                 issue: 'Quiz components not registered',
                 fix: 'Componentes quiz-intro-header, options-grid adicionados ao UniversalBlockRenderer',
-                status: '✅ FIXED'
+                status: '✅ FIXED',
             },
             {
                 issue: 'Basic components missing',
                 fix: 'Componentes text-inline, button-inline adicionados ao registry',
-                status: '✅ FIXED'
+                status: '✅ FIXED',
             },
             {
                 issue: 'Template loading errors',
                 fix: 'Fallback para QUIZ_STYLE_21_STEPS_TEMPLATE implementado',
-                status: '✅ FIXED'
-            }
+                status: '✅ FIXED',
+            },
         ],
         nextSteps: [
             'Testar renderização nos editores',
             'Verificar se todos os componentes aparecem',
             'Validar fluxo de navegação entre etapas',
-            'Confirmar funcionamento da IA (se aplicável)'
-        ]
+            'Confirmar funcionamento da IA (se aplicável)',
+        ],
     };
 };
 
@@ -231,7 +231,7 @@ window.__SYSTEM_DIAGNOSTIC__ = {
     requiredComponents,
     templateFlow,
     contextFlow,
-    routes
+    routes,
 };
 
 console.log('🔧 Sistema de diagnóstico carregado. Use window.__SYSTEM_DIAGNOSTIC__ para acessar ferramentas.');

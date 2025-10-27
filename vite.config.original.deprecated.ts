@@ -79,34 +79,34 @@ export default defineConfig({
           'editor-heavy': [
             './src/components/editor/SchemaDrivenEditorResponsive', // 218kB
             './src/components/editor/EditorProvider', // 70kB
-            './src/components/editor/properties/EnhancedPropertiesPanel' // 17kB
+            './src/components/editor/properties/EnhancedPropertiesPanel', // 17kB
           ],
 
           'pages-admin': [
             './src/pages/admin/MetricsPage', // 20kB
             './src/pages/admin/ParticipantsPage', // 35kB
-            './src/pages/admin/NoCodeConfigPage' // 63kB
+            './src/pages/admin/NoCodeConfigPage', // 63kB
           ],
 
           'pages-quiz': [
             './src/pages/QuizModularPage', // 30kB
-            './src/pages/admin/OverviewPage' // 27kB
+            './src/pages/admin/OverviewPage', // 27kB
           ],
 
           // Sistemas modulares
           'funnel-system': [
             './src/core/funnel/FunnelCore',
             './src/core/funnel/FunnelEngine',
-            './src/core/funnel/hooks/useFunnelState'
+            './src/core/funnel/hooks/useFunnelState',
           ],
           'quiz-system': [
             './src/components/quiz/QuizRenderer',
             './src/services/quizResultsService',
-            './src/hooks/useQuizFlow'
+            './src/hooks/useQuizFlow',
           ],
 
           // 📊 REGISTRY PESADO SEPARADO
-          'registry-heavy': ['./src/components/editor/blocks/optimizedRegistry'] // 73kB
+          'registry-heavy': ['./src/components/editor/blocks/optimizedRegistry'], // 73kB
         },
 
         // 📁 ORGANIZAÇÃO MELHORADA DE ARQUIVOS
@@ -125,7 +125,7 @@ export default defineConfig({
 
     // 🎯 OTIMIZAÇÕES ADICIONAIS
     target: 'esnext',
-    minify: 'esbuild'
+    minify: 'esbuild',
   },
   optimizeDeps: {
     exclude: ['lucide-react'],

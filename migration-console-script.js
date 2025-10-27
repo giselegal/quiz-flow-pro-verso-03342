@@ -13,7 +13,7 @@ const funnelKeys = allKeys.filter(key =>
     key.includes('funnel') ||
     key.includes('quiz') ||
     key.includes('template') ||
-    key.includes('editor')
+    key.includes('editor'),
 );
 console.log('🎯 Chaves relacionadas a funis:', funnelKeys);
 
@@ -35,7 +35,7 @@ window.migrateDataManual = function () {
     const templateKeys = Object.keys(localStorage).filter(key =>
         key.startsWith('funnel_templates_') ||
         key.startsWith('funnel_my_') ||
-        key.startsWith('funnel_editor_')
+        key.startsWith('funnel_editor_'),
     );
 
     console.log('🔍 Dados contextuais existentes:', templateKeys);
@@ -45,7 +45,7 @@ window.migrateDataManual = function () {
         (key.includes('funnel') && !key.includes('funnel_templates_') && !key.includes('funnel_my_') && !key.includes('funnel_editor_')) ||
         key === 'funnels' ||
         key === 'templates' ||
-        key === 'editorData'
+        key === 'editorData',
     );
 
     console.log('🕰️ Dados legados encontrados:', legacyKeys);
@@ -92,7 +92,7 @@ window.clearTestData = function () {
             key.includes('funnel') ||
             key.includes('quiz') ||
             key.includes('template') ||
-            key.includes('editor')
+            key.includes('editor'),
         );
 
         funnelKeys.forEach(key => {
@@ -111,21 +111,21 @@ window.createTestData = function () {
     // Dados de teste para templates
     const templateData = [
         { id: 'template1', name: 'Template Teste 1', type: 'quiz', context: 'templates' },
-        { id: 'template2', name: 'Template Teste 2', type: 'funnel', context: 'templates' }
+        { id: 'template2', name: 'Template Teste 2', type: 'funnel', context: 'templates' },
     ];
     localStorage.setItem('funnel_templates_data', JSON.stringify(templateData));
 
     // Dados de teste para meus funis
     const myFunnelsData = [
         { id: 'my1', name: 'Meu Funil 1', type: 'quiz', context: 'my' },
-        { id: 'my2', name: 'Meu Funil 2', type: 'funnel', context: 'my' }
+        { id: 'my2', name: 'Meu Funil 2', type: 'funnel', context: 'my' },
     ];
     localStorage.setItem('funnel_my_data', JSON.stringify(myFunnelsData));
 
     // Dados de teste para editor
     const editorData = {
         currentFunnel: { id: 'editor1', name: 'Funil em Edição', type: 'quiz', context: 'editor' },
-        steps: []
+        steps: [],
     };
     localStorage.setItem('funnel_editor_current', JSON.stringify(editorData));
 

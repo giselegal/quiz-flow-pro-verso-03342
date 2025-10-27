@@ -61,7 +61,7 @@ const testEssentialFiles = () => {
 
     return {
         essential: { passed: passedEssential, total: essentialFiles.length },
-        optional: { passed: passedOptional, total: optionalFiles.length }
+        optional: { passed: passedOptional, total: optionalFiles.length },
     };
 };
 
@@ -84,33 +84,33 @@ const testUnifiedTemplateServiceCode = () => {
         {
             name: 'Método loadFromDatabase implementado',
             test: () => content.includes('loadFromDatabase'),
-            critical: true
+            critical: true,
         },
         {
             name: 'Busca dinâmica no Supabase',
             test: () => content.includes('supabase') && content.includes('funnels'),
-            critical: true
+            critical: true,
         },
         {
             name: 'Sistema de cache implementado',
             test: () => content.includes('cache') && content.includes('getCachedTemplate'),
-            critical: false
+            critical: false,
         },
         {
             name: 'Fallback dinâmico',
             test: () => content.includes('generateFallbackTemplate'),
-            critical: true
+            critical: true,
         },
         {
             name: 'Remoção da dependência antiga',
             test: () => !content.includes('import { templateService }'),
-            critical: true
+            critical: true,
         },
         {
             name: 'Preload de templates críticos',
             test: () => content.includes('preloadCriticalTemplates'),
-            critical: false
-        }
+            critical: false,
+        },
     ];
 
     let passed = 0;
@@ -165,7 +165,7 @@ const testModernUnifiedEditorCode = () => {
         {
             name: 'Integração com PureBuilderProvider',
             test: () => content.includes('PureBuilderProvider') && content.includes('funnelId='),
-        }
+        },
     ];
 
     let passed = 0;
@@ -212,7 +212,7 @@ const testPureBuilderProviderCode = () => {
         {
             name: 'Removida dependência de template fixo',
             test: () => !content.includes('pure-builder-quiz') || content.includes('targetFunnelId'),
-        }
+        },
     ];
 
     let passed = 0;
@@ -261,7 +261,7 @@ const testPackageJson = () => {
             {
                 name: 'Vite como bundler',
                 test: () => packageJson.devDependencies?.vite || packageJson.dependencies?.vite,
-            }
+            },
         ];
 
         let passed = 0;
@@ -295,7 +295,7 @@ const runAllTests = () => {
         testUnifiedTemplateServiceCode(),
         testModernUnifiedEditorCode(),
         testPureBuilderProviderCode(),
-        testPackageJson()
+        testPackageJson(),
     ];
 
     // Calcular totais

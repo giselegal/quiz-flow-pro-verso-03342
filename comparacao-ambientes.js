@@ -21,7 +21,7 @@ console.log(
       ? '🏠 LOCAL'
       : isCodespaces
         ? '📦 CODESPACES'
-        : '❓ DESCONHECIDO'
+        : '❓ DESCONHECIDO',
 );
 
 // 2. Verificar React e componentes básicos
@@ -34,7 +34,7 @@ console.log('\n🧩 SIDEBAR STATUS:');
 const searchInput = document.querySelector('input[placeholder*="Buscar"]');
 const sidebarCard = document.querySelector('[class*="Card"]:has(input[placeholder*="Buscar"])');
 const quizBuilderTitle = Array.from(document.querySelectorAll('*')).find(
-  el => el.textContent && el.textContent.includes('Quiz Builder')
+  el => el.textContent && el.textContent.includes('Quiz Builder'),
 );
 
 console.log('Input busca:', searchInput ? '✅' : '❌');
@@ -118,7 +118,7 @@ console.log(`Sidebar: ${searchInput ? 'EXISTE' : 'AUSENTE'}`);
 console.log(`Draggables: ${draggableElements.length}`);
 console.log(`Badges: ${badges.length}`);
 console.log(
-  `Status: ${searchInput && draggableElements.length > 0 ? '✅ FUNCIONANDO' : '❌ COM PROBLEMA'}`
+  `Status: ${searchInput && draggableElements.length > 0 ? '✅ FUNCIONANDO' : '❌ COM PROBLEMA'}`,
 );
 
 console.log('\n💡 PRÓXIMA AÇÃO:');

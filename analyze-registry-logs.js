@@ -27,7 +27,7 @@
             logs.push({
                 type: 'log',
                 timestamp,
-                args: [...args]
+                args: [...args],
             });
 
             // Contar sucessos
@@ -54,7 +54,7 @@
             logs.push({
                 type: 'error',
                 timestamp,
-                args: [...args]
+                args: [...args],
             });
 
             originalError.apply(console, [`[ERRO #${errorCount}]`, ...args]);
@@ -74,7 +74,7 @@
             'Logs totais': logs.length,
             'Sucessos': successCount,
             'Erros': errorCount,
-            'Última análise': new Date().toLocaleTimeString()
+            'Última análise': new Date().toLocaleTimeString(),
         });
 
         // Analisar tipos de bloco problemáticos

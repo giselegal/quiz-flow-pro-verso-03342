@@ -21,13 +21,13 @@ const localizacaoAtual = {
         posicao: 'Última seção (4ª)',
         icone: 'Link2',
         titulo: 'Integrações',
-        descricao: 'SEO, Pixel, UTM, Webhooks'
+        descricao: 'SEO, Pixel, UTM, Webhooks',
     },
     acessibilidade: {
         clicks: 2, // 1. Entrar no admin + 2. Clicar na seção
         visibilidade: 'Baixa - Final do menu',
-        contexto: 'Misturado com configurações técnicas'
-    }
+        contexto: 'Misturado com configurações técnicas',
+    },
 };
 
 console.log(`   🔗 Rota: ${localizacaoAtual.rota}`);
@@ -51,32 +51,32 @@ const problemas = [
         tipo: 'NAMING',
         problema: 'Título "Integrações" não comunica NoCode',
         impacto: 'Alto - Usuário não identifica funcionalidade',
-        severidade: 'Crítica'
+        severidade: 'Crítica',
     },
     {
         tipo: 'POSICIONAMENTO',
         problema: 'Última seção do menu - baixa prioridade visual',
         impacto: 'Médio - Dificulta descoberta da funcionalidade',
-        severidade: 'Média'
+        severidade: 'Média',
     },
     {
         tipo: 'CONTEXTO',
         problema: 'Misturado com configurações técnicas',
         impacto: 'Alto - Confunde usuário não-técnico',
-        severidade: 'Alta'
+        severidade: 'Alta',
     },
     {
         tipo: 'DISCOVERABILITY',
         problema: 'Não há indicação clara de que é NoCode',
         impacto: 'Crítico - Usuários podem não encontrar',
-        severidade: 'Crítica'
+        severidade: 'Crítica',
     },
     {
         tipo: 'WORKFLOW',
         problema: 'Desconectado do fluxo de criação de funis',
         impacto: 'Alto - Quebra fluxo natural do usuário',
-        severidade: 'Alta'
-    }
+        severidade: 'Alta',
+    },
 ];
 
 problemas.forEach((p, i) => {
@@ -100,7 +100,7 @@ const fluxoAtual = [
     '3. Última seção "Configuração"',
     '4. Clica em "Integrações" (nome confuso)',
     '5. Encontra NoCode (se souber que é isso)',
-    '6. Configura sem contexto do funil específico'
+    '6. Configura sem contexto do funil específico',
 ];
 
 const fluxoIdeal = [
@@ -108,7 +108,7 @@ const fluxoIdeal = [
     '2. Vê botão claro "Configurar NoCode" no contexto',
     '3. Acessa configurações diretamente',
     '4. Configura com contexto do funil atual',
-    '5. Vê mudanças aplicadas imediatamente'
+    '5. Vê mudanças aplicadas imediatamente',
 ];
 
 console.log('   📋 Fluxo Atual (Problemático):');
@@ -130,26 +130,26 @@ const concorrentes = {
         localizacao: 'Tab principal "Design"',
         acesso: '1 click',
         contexto: 'Dentro do editor',
-        nome: 'Design & Logic'
+        nome: 'Design & Logic',
     },
     'Leadpages': {
         localizacao: 'Barra superior do editor',
         acesso: '1 click',
         contexto: 'No contexto da página',
-        nome: 'Settings'
+        nome: 'Settings',
     },
     'ClickFunnels': {
         localizacao: 'Menu lateral do funil',
         acesso: '1 click',
         contexto: 'Específico do funil',
-        nome: 'Funnel Settings'
+        nome: 'Funnel Settings',
     },
     'Unbounce': {
         localizacao: 'Tab do editor',
         acesso: '1 click',
         contexto: 'Na própria landing page',
-        nome: 'Page Settings'
-    }
+        nome: 'Page Settings',
+    },
 };
 
 console.log('   🏆 Melhores Práticas do Mercado:');
@@ -174,32 +174,32 @@ const metricas = {
         atual: 3,
         ideal: 10,
         gap: 7,
-        motivo: 'Nome confuso, posição baixa'
+        motivo: 'Nome confuso, posição baixa',
     },
     'Accessibility': {
         atual: 4,
         ideal: 10,
         gap: 6,
-        motivo: '2 clicks, não óbvio'
+        motivo: '2 clicks, não óbvio',
     },
     'Context Relevance': {
         atual: 2,
         ideal: 10,
         gap: 8,
-        motivo: 'Desconectado do funil específico'
+        motivo: 'Desconectado do funil específico',
     },
     'Naming Clarity': {
         atual: 2,
         ideal: 10,
         gap: 8,
-        motivo: '"Integrações" não comunica NoCode'
+        motivo: '"Integrações" não comunica NoCode',
     },
     'Workflow Integration': {
         atual: 3,
         ideal: 10,
         gap: 7,
-        motivo: 'Fora do fluxo natural de criação'
-    }
+        motivo: 'Fora do fluxo natural de criação',
+    },
 };
 
 let somaAtual = 0;
@@ -234,32 +234,32 @@ const recomendacoes = [
         prioridade: 'CRÍTICA',
         acao: 'Renomear "Integrações" para "Configurações NoCode"',
         beneficio: 'Usuários identificam imediatamente a funcionalidade',
-        implementacao: 'Imediata - mudança de texto apenas'
+        implementacao: 'Imediata - mudança de texto apenas',
     },
     {
         prioridade: 'ALTA',
         acao: 'Mover para seção "Core Business" (2ª posição)',
         beneficio: 'Maior visibilidade e prioridade visual',
-        implementacao: 'Rápida - reorganização do menu'
+        implementacao: 'Rápida - reorganização do menu',
     },
     {
         prioridade: 'ALTA',
         acao: 'Adicionar acesso direto no editor de funis',
         beneficio: 'Configuração contextual por funil específico',
-        implementacao: 'Média - integração com editor'
+        implementacao: 'Média - integração com editor',
     },
     {
         prioridade: 'MÉDIA',
         acao: 'Adicionar badge "NoCode" ou "Sem Código"',
         beneficio: 'Destaque visual da funcionalidade principal',
-        implementacao: 'Rápida - adição de badge'
+        implementacao: 'Rápida - adição de badge',
     },
     {
         prioridade: 'MÉDIA',
         acao: 'Quick actions na dashboard para configurações comuns',
         beneficio: 'Acesso mais rápido às funções mais usadas',
-        implementacao: 'Média - desenvolvimento de shortcuts'
-    }
+        implementacao: 'Média - desenvolvimento de shortcuts',
+    },
 ];
 
 console.log('   🎯 Plano de Ação Priorizado:');
