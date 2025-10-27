@@ -8,7 +8,7 @@
  * - Injeção dinâmica de dados do usuário ({userName}, {resultStyle})
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { appLogger } from '@/utils/logger';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable, arrayMove } from '@dnd-kit/sortable';
@@ -149,13 +149,17 @@ export default function ModularResultStep({
         }));
     }, [sourceBlocks, userProfile, resultCtx]);
 
-    // Auto-load se vazio
+    // Auto-load se vazio (garantir apenas uma chamada por step para evitar loops)
+    const autoloadRequestedRef = useRef(false);
     React.useEffect(() => {
-        if ((Array.isArray(blocksProp) ? blocksProp.length === 0 : true) && sourceBlocks.length === 0 && editor?.actions?.ensureStepLoaded) {
+        const noBlocksInProps = !(Array.isArray(blocksProp) && blocksProp.length > 0);
+        const noBlocksInState = sourceBlocks.length === 0;
+        if (!autoloadRequestedRef.current && noBlocksInProps && noBlocksInState && editor?.actions?.ensureStepLoaded) {
+            autoloadRequestedRef.current = true;
             appLogger.debug(`🔄 [ModularResultStep] Auto-loading ${stepKey} (blocks empty)`);
             editor.actions.ensureStepLoaded(stepKey).catch((err: Error) => appLogger.error(`❌ [ModularResultStep] Failed to load ${stepKey}:`, err));
         }
-    }, [stepKey, blocksProp, sourceBlocks.length, editor?.actions]);
+    }, [stepKey, blocksProp, sourceBlocks.length, editor?.actions?.ensureStepLoaded]);
 
     // Debug (DEV)
     React.useEffect(() => {
@@ -176,13 +180,18 @@ export default function ModularResultStep({
 
     // Ordenação
     const [localOrder, setLocalOrder] = React.useState<string[]>([]);
+    const arraysEqual = (a: string[], b: string[]) => a.length === b.length && a.every((v, i) => v === b[i]);
     React.useEffect(() => {
-        if (blocks.length > 0) {
-            const orderFromMetadata = (data as any)?.metadata?.blockOrder;
-            if (orderFromMetadata && Array.isArray(orderFromMetadata)) setLocalOrder(orderFromMetadata);
-            else setLocalOrder(blocks.map((b: Block) => b.id));
+        if (blocks.length === 0) return;
+        const orderFromMetadata = (data as any)?.metadata?.blockOrder as string[] | undefined;
+        const desired = (orderFromMetadata && Array.isArray(orderFromMetadata) && orderFromMetadata.length > 0)
+            ? orderFromMetadata
+            : blocks.map((b: Block) => b.id);
+        if (!arraysEqual(localOrder, desired)) {
+            setLocalOrder(desired);
         }
-    }, [blocks, (data as any)?.metadata?.blockOrder]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [blocks.map((b: Block) => b.id).join('|'), (data as any)?.metadata?.blockOrder?.join?.('|')]);
 
     const orderedBlocks = useMemo(() => {
         if (localOrder.length === 0) return blocks;
