@@ -10,8 +10,8 @@
 
 import React, { useMemo } from 'react';
 import { appLogger } from '@/utils/logger';
-import { DndContext, closestCenter, useSensors, useSensor, PointerSensor, DragEndEvent } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { useResultOptional } from '@/contexts/ResultContext';
@@ -43,54 +43,54 @@ interface ModularResultStepProps {
 function injectDynamicData(block: Block, userProfile?: ModularResultStepProps['userProfile']): Block {
     if (!userProfile) return block;
 
-    const injectedBlock = { ...block };
+    const injectedBlock = { ...block } as Block & { content?: any };
     const blockType = String(injectedBlock.type);
 
     // Injetar no content.text
-    if (injectedBlock.content?.text) {
-        injectedBlock.content.text = injectedBlock.content.text
+    if ((injectedBlock as any).content?.text) {
+        (injectedBlock as any).content.text = (injectedBlock as any).content.text
             .replace(/{userName}/g, userProfile.userName || 'Visitante')
             .replace(/{resultStyle}/g, userProfile.resultStyle || 'Clássico Elegante');
     }
 
     // Injetar no content.styleName
-    if (injectedBlock.content?.styleName) {
-        injectedBlock.content.styleName = injectedBlock.content.styleName
+    if ((injectedBlock as any).content?.styleName) {
+        (injectedBlock as any).content.styleName = (injectedBlock as any).content.styleName
             .replace(/{resultStyle}/g, userProfile.resultStyle || 'Clássico Elegante');
     }
 
     // Injetar dados no content para blocos específicos
     if (blockType === 'result-congrats') {
-        injectedBlock.content = {
-            ...injectedBlock.content,
+        (injectedBlock as any).content = {
+            ...(injectedBlock as any).content,
             userName: userProfile.userName,
         };
     }
 
     if (blockType === 'result-main') {
-        injectedBlock.content = {
-            ...injectedBlock.content,
+        (injectedBlock as any).content = {
+            ...(injectedBlock as any).content,
             resultStyle: userProfile.resultStyle,
         };
     }
 
     if (blockType === 'result-progress-bars' && userProfile.scores) {
-        injectedBlock.content = {
-            ...injectedBlock.content,
+        (injectedBlock as any).content = {
+            ...(injectedBlock as any).content,
             scores: userProfile.scores,
         };
     }
 
     if (blockType === 'result-secondary-styles' && userProfile.secondaryStyles) {
-        injectedBlock.content = {
-            ...injectedBlock.content,
+        (injectedBlock as any).content = {
+            ...(injectedBlock as any).content,
             styles: userProfile.secondaryStyles.map(name => ({ name })),
         };
     }
 
     // Injetar no content.url (para imagens dinâmicas)
-    if (injectedBlock.content?.url) {
-        injectedBlock.content.url = injectedBlock.content.url
+    if ((injectedBlock as any).content?.url) {
+        (injectedBlock as any).content.url = (injectedBlock as any).content.url
             .replace(/{resultStyle}/g, (userProfile.resultStyle || 'natural').toLowerCase().replace(/\s+/g, '-'));
     }
 
@@ -114,32 +114,21 @@ export default function ModularResultStep({
     const isStandardStepId = typeof computedId === 'string' && /^step-\d{1,2}$/.test(computedId);
     const stepKey = isStandardStepId ? (computedId as string) : 'step-20';
 
-    // Handler para clique em blocos
+    // Clique em blocos: seleciona e abre propriedades
     const handleBlockClick = React.useCallback((blockId: string) => {
         appLogger.debug(`🎯 Bloco clicado: ${blockId}`);
-
-        // 1. Notificar componente pai
         onBlockSelect(blockId);
-
-        // 2. Atualizar estado no editor (se disponível)
-        if (editor?.actions?.setSelectedBlockId) {
-            editor.actions.setSelectedBlockId(blockId);
-        }
-
-        // 3. Abrir painel de propriedades
+        if (editor?.actions?.setSelectedBlockId) editor.actions.setSelectedBlockId(blockId);
         onOpenProperties(blockId);
     }, [onBlockSelect, onOpenProperties, editor]);
 
-    // ✅ FASE 1: Buscar blocos diretamente sem disparar carregamento
+    // Fonte de blocos (props → editor.state)
     const sourceBlocks = useMemo(() => {
-        // Preferir blocos passados por props (preview/produção sem provider)
-        if (Array.isArray(blocksProp) && blocksProp.length > 0) {
-            return blocksProp;
-        }
+        if (Array.isArray(blocksProp) && blocksProp.length > 0) return blocksProp;
         return editor?.state?.stepBlocks?.[stepKey] || [];
     }, [blocksProp, editor?.state?.stepBlocks, stepKey]);
 
-    // Injetar dados dinâmicos nos blocos
+    // Injeção dinâmica (userProfile + resultCtx)
     const blocks = useMemo(() => {
         const injected = sourceBlocks.map((block: Block) => injectDynamicData(block, userProfile));
         if (!resultCtx) return injected;
@@ -153,25 +142,20 @@ export default function ModularResultStep({
         };
         return injected.map((b: Block) => ({
             ...b,
-            content: interpolateDeep(b.content, ctx),
-            properties: interpolateDeep(b.properties, ctx),
+            content: interpolateDeep((b as any).content, ctx),
+            properties: interpolateDeep((b as any).properties, ctx),
         }));
     }, [sourceBlocks, userProfile, resultCtx]);
 
-    // ✅ FASE 1.5: Auto-load se blocos estão vazios (CORREÇÃO CRÍTICA)
+    // Auto-load se vazio
     React.useEffect(() => {
-        // Só autoload se não foram fornecidos blocos por props
         if ((Array.isArray(blocksProp) ? blocksProp.length === 0 : true) && sourceBlocks.length === 0 && editor?.actions?.ensureStepLoaded) {
             appLogger.debug(`🔄 [ModularResultStep] Auto-loading ${stepKey} (blocks empty)`);
-            editor.actions.ensureStepLoaded(stepKey).then(() => {
-                appLogger.debug(`✅ [ModularResultStep] Loaded ${stepKey} successfully`);
-            }).catch((err: Error) => {
-                appLogger.error(`❌ [ModularResultStep] Failed to load ${stepKey}:`, err);
-            });
+            editor.actions.ensureStepLoaded(stepKey).catch((err: Error) => appLogger.error(`❌ [ModularResultStep] Failed to load ${stepKey}:`, err));
         }
     }, [stepKey, blocksProp, sourceBlocks.length, editor?.actions]);
 
-    // ✅ FASE 2: Debug logs apenas em DEV
+    // Debug (DEV)
     React.useEffect(() => {
         if (import.meta.env.DEV) {
             appLogger.debug(`🔍 ModularResultStep [${stepKey}]:`, {
@@ -188,88 +172,15 @@ export default function ModularResultStep({
         }
     }, [stepKey, blocks.length, userProfile]);
 
-    // Ordenação dos blocos via metadata
+    // Ordenação
     const [localOrder, setLocalOrder] = React.useState<string[]>([]);
-
     React.useEffect(() => {
         if (blocks.length > 0) {
-            const orderFromMetadata = data?.metadata?.blockOrder;
-            if (orderFromMetadata && Array.isArray(orderFromMetadata)) {
-                setLocalOrder(orderFromMetadata);
-            } else {
-                setLocalOrder(blocks.map((b: Block) => b.id));
-            }
+            const orderFromMetadata = (data as any)?.metadata?.blockOrder;
+            if (orderFromMetadata && Array.isArray(orderFromMetadata)) setLocalOrder(orderFromMetadata);
+            else setLocalOrder(blocks.map((b: Block) => b.id));
         }
-    }, [blocks, data?.metadata?.blockOrder]);
-
-    // Configurar sensores de drag
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: { distance: 4 },
-        }),
-    );
-
-    const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
-        if (!over || active.id === over.id) return;
-
-        const activeIdStr = String(active.id);
-
-        // ✅ NOVO COMPONENTE DA BIBLIOTECA (lib:tipo-componente)
-        if (activeIdStr.startsWith('lib:')) {
-            appLogger.debug('🎯 ModularResultStep: Novo componente arrastado da biblioteca', {
-                activeId: activeIdStr,
-                overId: over.id,
-                stepKey,
-            });
-
-            const componentType = activeIdStr.slice(4); // Remove 'lib:' prefix
-
-            // Determinar posição de inserção
-            let insertIndex = orderedBlocks.length; // Default: ao final
-
-            if (over.id !== 'canvas-end') {
-                const targetIndex = orderedBlocks.findIndex((b: Block) => b.id === over.id);
-                if (targetIndex >= 0) {
-                    insertIndex = targetIndex + 1; // Inserir APÓS o bloco alvo
-                }
-            }
-
-            appLogger.debug(`✅ Inserindo ${componentType} na posição ${insertIndex}`);
-
-            // Criar novo bloco
-            const newBlock: Block = {
-                id: `${stepKey}-${componentType}-${Date.now()}`,
-                type: componentType as any, // Type assertion para BlockType
-                order: insertIndex,
-                content: {},
-                properties: {},
-            };
-
-            // Adicionar via editor actions
-            if (editor?.actions?.addBlockAtIndex) {
-                editor.actions.addBlockAtIndex(stepKey, newBlock, insertIndex).catch((err: Error) => {
-                    appLogger.error('❌ Erro ao adicionar bloco:', err);
-                });
-            }
-
-            return;
-        }
-
-        // ✅ REORDENAÇÃO DE BLOCOS EXISTENTES
-        const oldIndex = localOrder.indexOf(activeIdStr);
-        const newIndex = localOrder.indexOf(over.id as string);
-
-        if (oldIndex !== -1 && newIndex !== -1) {
-            const newOrder = arrayMove(localOrder, oldIndex, newIndex);
-            setLocalOrder(newOrder);
-
-            // Persistir no editor
-            if (editor?.actions?.reorderBlocks) {
-                editor.actions.reorderBlocks(stepKey, oldIndex, newIndex);
-            }
-        }
-    };
+    }, [blocks, (data as any)?.metadata?.blockOrder]);
 
     const orderedBlocks = useMemo(() => {
         if (localOrder.length === 0) return blocks;
@@ -278,37 +189,51 @@ export default function ModularResultStep({
             .filter(Boolean) as Block[];
     }, [blocks, localOrder]);
 
-    // ✅ Wrapper para tornar blocos individuais arrastáveis E droppable
+    // Drop zones
+    const DropZoneBefore: React.FC<{ blockId: string; blockIndex: number }> = ({ blockId }) => {
+        const dropZoneId = `drop-before-${blockId}`;
+        const { setNodeRef, isOver } = useDroppable({ id: dropZoneId, data: { dropZone: 'before', blockId, stepId: stepKey } });
+        return (
+            <div
+                ref={setNodeRef}
+                className={`h-8 -my-2 relative transition-all duration-200 border-2 rounded-md ${isOver
+                        ? 'bg-blue-100 border-blue-400 border-dashed shadow-lg'
+                        : 'bg-gray-50 border-gray-300 border-dashed opacity-40 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400'
+                    }`}
+            >
+                <div className={`absolute inset-0 flex items-center justify-center ${isOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                    <span className="text-[10px] font-medium text-blue-600 bg-white px-2 py-0.5 rounded shadow-sm">
+                        {isOver ? '⬇ Soltar aqui' : '+ Soltar antes'}
+                    </span>
+                </div>
+            </div>
+        );
+    };
+
+    const CanvasEndDroppable: React.FC = () => {
+        const { setNodeRef, isOver } = useDroppable({ id: 'canvas-end', data: { stepId: stepKey } });
+        return (
+            <div
+                ref={setNodeRef}
+                className={`h-12 mt-2 border-2 border-dashed rounded-lg flex items-center justify-center text-xs transition-all ${isOver ? 'border-blue-400 bg-blue-50 text-blue-600' : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-gray-500'
+                    }`}
+            >
+                <span>+ Solte componente aqui para adicionar ao final</span>
+            </div>
+        );
+    };
+
+    // Bloco arrastável
     const SortableBlock: React.FC<{ id: string; children: React.ReactNode; index: number }> = ({ id, children, index }) => {
-        const { attributes, listeners, setNodeRef, transform, transition, isDragging, isOver } = useSortable({ id });
+        const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
         const style = {
             transform: CSS.Transform.toString(transform),
             transition,
             opacity: isDragging ? 0.7 : 1,
         } as React.CSSProperties;
-
         return (
             <div className="relative">
-                {/* 🎯 ZONA DROPPABLE antes do bloco */}
-                <div
-                    className={`
-                        h-8 -my-4 relative
-                        transition-all duration-200
-                        ${isOver ? 'bg-blue-100 border-2 border-dashed border-blue-400' : 'hover:bg-gray-100'}
-                    `}
-                    data-drop-zone="before"
-                    data-block-index={index}
-                >
-                    {isOver && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xs font-medium text-blue-600">
-                                Solte aqui para inserir antes
-                            </span>
-                        </div>
-                    )}
-                </div>
-
-                {/* Bloco arrastável */}
+                <DropZoneBefore blockId={id} blockIndex={index} />
                 <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
                     {children}
                 </div>
@@ -321,47 +246,24 @@ export default function ModularResultStep({
             <main className="w-full max-w-6xl mx-auto px-4 py-8">
                 <div className="bg-card p-6 md:p-12 rounded-lg shadow-lg max-w-4xl mx-auto">
                     {isEditable && orderedBlocks.length > 0 ? (
-                        <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={handleDragEnd}
-                        >
-                            <SortableContext
-                                items={localOrder}
-                                strategy={verticalListSortingStrategy}
-                            >
-                                {orderedBlocks.map((block: Block, index: number) => (
-                                    <SortableBlock key={block.id} id={block.id} index={index}>
-                                        <UniversalBlockRenderer
-                                            block={block}
-                                            mode="editor"
-                                            isSelected={selectedBlockId === block.id}
-                                            onSelect={() => handleBlockClick(block.id)}
-                                            onClick={() => handleBlockClick(block.id)}
-                                        />
-                                    </SortableBlock>
-                                ))}
-
-                                {/* 🎯 ZONA DROPPABLE ao final */}
-                                <div
-                                    className="h-12 mt-2 border-2 border-dashed border-gray-300 rounded-lg
-                                              hover:border-gray-400 hover:bg-gray-50 transition-all
-                                              flex items-center justify-center text-xs text-gray-500"
-                                    data-drop-zone="after"
-                                    data-block-index={orderedBlocks.length}
-                                >
-                                    <span>+ Solte componente aqui para adicionar ao final</span>
-                                </div>
-                            </SortableContext>
-                        </DndContext>
+                        <SortableContext items={localOrder} strategy={verticalListSortingStrategy}>
+                            {orderedBlocks.map((block: Block, index: number) => (
+                                <SortableBlock key={block.id} id={block.id} index={index}>
+                                    <UniversalBlockRenderer
+                                        block={block}
+                                        mode="editor"
+                                        isSelected={selectedBlockId === block.id}
+                                        onSelect={() => handleBlockClick(block.id)}
+                                        onClick={() => handleBlockClick(block.id)}
+                                    />
+                                </SortableBlock>
+                            ))}
+                            <CanvasEndDroppable />
+                        </SortableContext>
                     ) : orderedBlocks.length > 0 ? (
                         <>
                             {orderedBlocks.map((block: Block) => (
-                                <UniversalBlockRenderer
-                                    key={block.id}
-                                    block={block}
-                                    mode="preview"
-                                />
+                                <UniversalBlockRenderer key={block.id} block={block} mode="preview" />
                             ))}
                         </>
                     ) : null}

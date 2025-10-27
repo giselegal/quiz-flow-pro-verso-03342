@@ -10,7 +10,7 @@
 
 import React, { useMemo } from 'react';
 import { appLogger } from '@/utils/logger';
-import { DndContext, closestCenter, useSensors, useSensor, PointerSensor, DragEndEvent } from '@dnd-kit/core';
+import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
@@ -126,74 +126,7 @@ export default function ModularTransitionStep({
         }
     }, [isEditable, enableAutoAdvance, onComplete, data?.navigation?.autoAdvanceDelay, data?.metadata?.autoAdvanceDelay]);
 
-    // Configurar sensores de drag
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: { distance: 4 },
-        }),
-    );
-
-    const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
-        if (!over || active.id === over.id) return;
-
-        const activeIdStr = String(active.id);
-
-        // ✅ NOVO COMPONENTE DA BIBLIOTECA (lib:tipo-componente)
-        if (activeIdStr.startsWith('lib:')) {
-            appLogger.debug('🎯 ModularTransitionStep: Novo componente arrastado da biblioteca', {
-                activeId: activeIdStr,
-                overId: over.id,
-                stepKey,
-            });
-
-            const componentType = activeIdStr.slice(4); // Remove 'lib:' prefix
-
-            // Determinar posição de inserção
-            let insertIndex = orderedBlocks.length; // Default: ao final
-
-            if (over.id !== 'canvas-end') {
-                const targetIndex = orderedBlocks.findIndex((b: Block) => b.id === over.id);
-                if (targetIndex >= 0) {
-                    insertIndex = targetIndex + 1; // Inserir APÓS o bloco alvo
-                }
-            }
-
-            appLogger.debug(`✅ Inserindo ${componentType} na posição ${insertIndex}`);
-
-            // Criar novo bloco
-            const newBlock: Block = {
-                id: `${stepKey}-${componentType}-${Date.now()}`,
-                type: componentType as any, // Type assertion para BlockType
-                order: insertIndex,
-                content: {},
-                properties: {},
-            };
-
-            // Adicionar via editor actions
-            if (editor?.actions?.addBlockAtIndex) {
-                editor.actions.addBlockAtIndex(stepKey, newBlock, insertIndex).catch((err: Error) => {
-                    appLogger.error('❌ Erro ao adicionar bloco:', err);
-                });
-            }
-
-            return;
-        }
-
-        // ✅ REORDENAÇÃO DE BLOCOS EXISTENTES
-        const oldIndex = localOrder.indexOf(activeIdStr);
-        const newIndex = localOrder.indexOf(over.id as string);
-
-        if (oldIndex !== -1 && newIndex !== -1) {
-            const newOrder = arrayMove(localOrder, oldIndex, newIndex);
-            setLocalOrder(newOrder);
-
-            // Persistir no editor
-            if (editor?.actions?.reorderBlocks) {
-                editor.actions.reorderBlocks(stepKey, oldIndex, newIndex);
-            }
-        }
-    };
+    // DnD agora é tratado pelo contexto global; este step apenas registra droppables
 
     const orderedBlocks = useMemo(() => {
         if (localOrder.length === 0) return blocks;
@@ -201,6 +134,41 @@ export default function ModularTransitionStep({
             .map(id => blocks.find((b: Block) => b.id === id))
             .filter(Boolean) as Block[];
     }, [blocks, localOrder]);
+
+    // 🎯 DROP ZONE - antes de cada bloco
+    const DropZoneBefore: React.FC<{ blockId: string; blockIndex: number }> = ({ blockId }) => {
+        const dropZoneId = `drop-before-${blockId}`;
+        const { setNodeRef, isOver } = useDroppable({ id: dropZoneId, data: { dropZone: 'before', blockId, stepId: stepKey } });
+        return (
+            <div
+                ref={setNodeRef}
+                className={`h-8 -my-2 relative transition-all duration-200 border-2 rounded-md ${isOver
+                        ? 'bg-blue-100 border-blue-400 border-dashed shadow-lg'
+                        : 'bg-gray-50 border-gray-300 border-dashed opacity-40 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400'
+                    }`}
+            >
+                <div className={`absolute inset-0 flex items-center justify-center ${isOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                    <span className="text-[10px] font-medium text-blue-600 bg-white px-2 py-0.5 rounded shadow-sm">
+                        {isOver ? '⬇ Soltar aqui' : '+ Soltar antes'}
+                    </span>
+                </div>
+            </div>
+        );
+    };
+
+    // 🎯 DROP ZONE - ao final do canvas
+    const CanvasEndDroppable: React.FC = () => {
+        const { setNodeRef, isOver } = useDroppable({ id: 'canvas-end', data: { stepId: stepKey } });
+        return (
+            <div
+                ref={setNodeRef}
+                className={`h-12 mt-2 border-2 border-dashed rounded-lg flex items-center justify-center text-xs transition-all ${isOver ? 'border-blue-400 bg-blue-50 text-blue-600' : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-gray-500'
+                    }`}
+            >
+                <span>+ Solte componente aqui para adicionar ao final</span>
+            </div>
+        );
+    };
 
     // ✅ Wrapper para tornar blocos individuais arrastáveis E droppable
     const SortableBlock: React.FC<{ id: string; children: React.ReactNode; index: number }> = ({ id, children, index }) => {
@@ -213,24 +181,8 @@ export default function ModularTransitionStep({
 
         return (
             <div className="relative">
-                {/* 🎯 ZONA DROPPABLE antes do bloco */}
-                <div
-                    className={`
-                        h-8 -my-4 relative
-                        transition-all duration-200
-                        ${isOver ? 'bg-blue-100 border-2 border-dashed border-blue-400' : 'hover:bg-gray-100'}
-                    `}
-                    data-drop-zone="before"
-                    data-block-index={index}
-                >
-                    {isOver && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xs font-medium text-blue-600">
-                                Solte aqui para inserir antes
-                            </span>
-                        </div>
-                    )}
-                </div>
+                {/* 🎯 ZONA DROPPABLE antes do bloco (id: drop-before-{id}) */}
+                <DropZoneBefore blockId={id} blockIndex={index} />
 
                 {/* Bloco arrastável */}
                 <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
@@ -245,39 +197,21 @@ export default function ModularTransitionStep({
             <main className="w-full max-w-6xl mx-auto px-4 py-8">
                 <div className="bg-card p-6 md:p-12 rounded-lg shadow-lg text-center max-w-2xl mx-auto">
                     {isEditable && orderedBlocks.length > 0 ? (
-                        <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={handleDragEnd}
-                        >
-                            <SortableContext
-                                items={localOrder}
-                                strategy={verticalListSortingStrategy}
-                            >
-                                {orderedBlocks.map((block: Block, index: number) => (
-                                    <SortableBlock key={block.id} id={block.id} index={index}>
-                                        <UniversalBlockRenderer
-                                            block={block}
-                                            mode="editor"
-                                            isSelected={selectedBlockId === block.id}
-                                            onSelect={() => handleBlockClick(block.id)}
-                                            onClick={() => handleBlockClick(block.id)}
-                                        />
-                                    </SortableBlock>
-                                ))}
-
-                                {/* 🎯 ZONA DROPPABLE ao final */}
-                                <div
-                                    className="h-12 mt-2 border-2 border-dashed border-gray-300 rounded-lg
-                                              hover:border-gray-400 hover:bg-gray-50 transition-all
-                                              flex items-center justify-center text-xs text-gray-500"
-                                    data-drop-zone="after"
-                                    data-block-index={orderedBlocks.length}
-                                >
-                                    <span>+ Solte componente aqui para adicionar ao final</span>
-                                </div>
-                            </SortableContext>
-                        </DndContext>
+                        <SortableContext items={localOrder} strategy={verticalListSortingStrategy}>
+                            {orderedBlocks.map((block: Block, index: number) => (
+                                <SortableBlock key={block.id} id={block.id} index={index}>
+                                    <UniversalBlockRenderer
+                                        block={block}
+                                        mode="editor"
+                                        isSelected={selectedBlockId === block.id}
+                                        onSelect={() => handleBlockClick(block.id)}
+                                        onClick={() => handleBlockClick(block.id)}
+                                    />
+                                </SortableBlock>
+                            ))}
+                            {/* 🎯 DROP ao final (id: canvas-end) */}
+                            <CanvasEndDroppable />
+                        </SortableContext>
                     ) : (
                         <>
                             {orderedBlocks.map((block: Block) => (
