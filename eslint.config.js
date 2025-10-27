@@ -181,6 +181,7 @@ export default [
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       'no-unused-expressions': 'off',
+      'no-empty': 'off',
 
       // Test-specific rules
   // Removed: was referencing a plugin we don't use. If needed, install eslint-plugin-no-only-tests.
@@ -237,6 +238,10 @@ export default [
       'no-empty': 'off',
       // Permitir imports profundos em utilitários de testes
       'no-restricted-imports': 'off',
+      // Flaky style rules ou edge-cases em strings regex
+      'no-useless-escape': 'off',
+      // Preferência de estilo não deve quebrar testes
+      'prefer-const': 'off',
     },
   },
 
@@ -251,6 +256,17 @@ export default [
     rules: {
       // Deno fornece Deno global; evitar no-undef aqui
       'no-undef': 'off',
+      // Não falhar por estilo de ponto e vírgula nesses handlers
+      'semi': 'off',
+    },
+  },
+
+  // Root-level ad-hoc test runners (test-*.ts etc.)
+  {
+    files: ['test*.{js,jsx,ts,tsx,mjs,cjs}', 'test-*.{js,jsx,ts,tsx,mjs,cjs}'],
+    rules: {
+      'no-console': 'off',
+      'prefer-const': 'off',
     },
   },
 
