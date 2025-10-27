@@ -192,6 +192,73 @@ export class EditorStateManager {
 
     return createdIds;
   }
+
+  /**
+   * Move/reordena bloco (e sua posição relativa entre irmãos) para um parent alvo.
+   * Se overBlockId for fornecido, posiciona antes dele dentro do mesmo parent.
+   */
+  async moveBlock(stepKey: string, blockId: string, targetParentId: string | null, overBlockId: string | null): Promise<void> {
+    this.updateState(prev => {
+      const blocks = (prev.stepBlocks[stepKey] || []).map(b => ({ ...b })) as any[];
+      const active = blocks.find(b => b.id === blockId);
+      if (!active) return prev;
+
+      const siblings = (pid: string | null) => blocks.filter(b => (b.parentId || null) === (pid || null)).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+      const fromParent = active.parentId || null;
+      const toParent = targetParentId != null ? targetParentId : (() => {
+        if (!overBlockId) return fromParent;
+        const over = blocks.find(b => b.id === overBlockId);
+        return over ? (over.parentId || null) : fromParent;
+      })();
+
+      const sameParent = (fromParent || null) === (toParent || null);
+
+      // Remover ativo da lista de irmãos de origem
+      const originSibs = siblings(fromParent).filter(b => b.id !== active.id);
+      originSibs.forEach((b, i) => { b.order = i; });
+
+      // Atualizar parent do ativo
+      active.parentId = toParent || null;
+
+      // Calcular posição no alvo
+      const targetSibs = siblings(toParent);
+      if (overBlockId) {
+        const idx = targetSibs.findIndex(b => b.id === overBlockId);
+        if (idx >= 0) {
+          // Inserir antes do over
+          targetSibs.splice(idx, 0, active);
+        } else {
+          targetSibs.push(active);
+        }
+      } else {
+        targetSibs.push(active);
+      }
+
+      // Reatribuir ordem nos irmãos de destino
+      targetSibs.forEach((b, i) => { b.order = i; });
+
+      // Reconstituir array final preservando demais blocos
+      const updated = blocks.map(b => {
+        if ((b.parentId || null) === (fromParent || null) || (b.parentId || null) === (toParent || null) || b.id === active.id) {
+          // Já atualizado via originSibs/targetSibs
+          return b;
+        }
+        return b;
+      });
+
+      const newState = {
+        ...prev,
+        stepBlocks: {
+          ...prev.stepBlocks,
+          [stepKey]: updated as Block[],
+        },
+      } as EditorState;
+
+      this.history.push(newState);
+      return newState;
+    });
+  }
   /**
    * Adiciona bloco ao final de um step
    */

@@ -1262,7 +1262,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 setIsDirty(true);
                 toastRef.current({ title: 'Blocos colados', description: `${clipboard.length} bloco(s) inserido(s)` });
                 return;
-            } catch {/* fallback abaixo */}
+            } catch {/* fallback abaixo */ }
         }
         // Fallback legado
         pasteGeneric(stepId);

@@ -69,6 +69,7 @@ export interface EditorActions {
     updateBlock: (stepKey: string, blockId: string, updates: Record<string, any>) => Promise<void>;
     duplicateBlock?: (stepKey: string, blockId: string) => Promise<string>;
     insertSnippetBlocks?: (stepKey: string, blocks: Block[]) => Promise<string[]>;
+    moveBlock?: (stepKey: string, blockId: string, targetParentId: string | null, overBlockId: string | null) => Promise<void>;
 
     // Step management
     ensureStepLoaded: (step: number | string) => Promise<void>;
@@ -314,6 +315,10 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     const insertSnippetBlocks = useCallback(async (stepKey: string, blocks: Block[]) => {
         return await stateManager.insertSnippetBlocks(normalizeStepKey(stepKey), blocks);
+    }, [stateManager, normalizeStepKey]);
+
+    const moveBlock = useCallback(async (stepKey: string, blockId: string, targetParentId: string | null, overBlockId: string | null) => {
+        await stateManager.moveBlock(normalizeStepKey(stepKey), blockId, targetParentId, overBlockId);
     }, [stateManager, normalizeStepKey]);
 
     // ============================================================================
@@ -741,6 +746,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             updateBlock,
             duplicateBlock,
             insertSnippetBlocks,
+            moveBlock,
 
             // Step management
             ensureStepLoaded,
