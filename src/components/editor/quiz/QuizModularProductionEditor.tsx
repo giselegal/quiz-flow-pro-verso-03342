@@ -129,6 +129,10 @@ import { SCHEMAS, migrateProps } from '@/schemas';
 import { normalizeByType } from '@/utils/normalizeByType';
 import { PropsToBlocksAdapter } from '@/services/editor/PropsToBlocksAdapter';
 import { validateEditorFunnelSteps } from '@/services/canonical/EditorFunnelValidation';
+// Persistência Supabase manual (P1)
+import { funnelComponentsService } from '@/services/funnelComponentsService';
+import { useUnifiedCRUD } from '@/contexts';
+import { createLogger } from '@/utils/logger';
 
 // Pré-visualizações especializadas (lazy) dos componentes finais de produção
 const StyleResultCard = React.lazy(() => import('@/components/editor/quiz/components/StyleResultCard').then(m => ({ default: m.StyleResultCard })));
@@ -500,6 +504,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } as any;
     });
     useEffect(() => { try { StorageService.safeSetJSON('quiz_editor_header_config_v1', headerConfig); } catch {/* ignore */ } }, [headerConfig]);
+
+    // Unified CRUD (para obter/criar funnelId quando necessário)
+    const crud = useUnifiedCRUD();
 
     // Componente de cabeçalho fixo
     const FixedProgressHeader: React.FC<{ config: any; steps: EditableQuizStep[]; currentStepId: string }> = ({ config, steps, currentStepId }) => {
@@ -2444,6 +2451,76 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
     }, [steps, funnelId, toast]);
 
+    // Salvar diretamente no Supabase (component_instances): depuração/forçar persistência (P1)
+    const handleSupabaseSaveManual = useCallback(async () => {
+        const log = createLogger({ namespace: 'ManualSupabaseSave' });
+        setIsSaving(true);
+        try {
+            let targetFunnelId = funnelId;
+            if (!targetFunnelId) {
+                // Cria um funil mínimo para vincular as instâncias
+                const created = await crud.createFunnel('Quiz 21 Steps Draft');
+                targetFunnelId = created.id;
+                setFunnelId(created.id);
+                log.info('Funnel criado para persistência manual', { id: created.id });
+            }
+
+            if (!targetFunnelId) throw new Error('FunnelId indisponível para salvar no Supabase');
+
+            log.info('Iniciando salvamento manual → component_instances', {
+                targetFunnelId,
+                stepsCount: steps.length,
+            });
+
+            let totalInserted = 0;
+            for (const s of steps) {
+                const match = String(s.id).match(/step-(\d{1,2})/);
+                const stepNumber = match ? parseInt(match[1], 10) : (typeof s.order === 'number' ? s.order : NaN);
+                if (!stepNumber || Number.isNaN(stepNumber)) {
+                    log.warn('Ignorando etapa com id inválido', { id: s.id, order: s.order });
+                    continue;
+                }
+
+                // Limpa instâncias existentes da etapa para regravar ordenado
+                try {
+                    const existing = await funnelComponentsService.getComponents({ funnelId: targetFunnelId, stepNumber });
+                    for (const c of existing) {
+                        await funnelComponentsService.deleteComponent(c.id);
+                    }
+                } catch (e: any) {
+                    log.warn('Falha ao limpar componentes existentes (seguindo)', { stepNumber, err: e?.message });
+                }
+
+                // Insere blocos atuais na ordem
+                const blocks = Array.isArray(s.blocks) ? s.blocks : [];
+                for (let i = 0; i < blocks.length; i++) {
+                    const b: any = blocks[i];
+                    try {
+                        await funnelComponentsService.addComponent({
+                            funnelId: targetFunnelId,
+                            stepNumber,
+                            instanceKey: b.id || `${s.id}-block-${i + 1}`,
+                            componentTypeKey: b.type || 'text',
+                            orderIndex: i + 1,
+                            properties: { ...(b.properties || {}), ...(b.content || {}) },
+                        });
+                        totalInserted++;
+                    } catch (e: any) {
+                        log.warn('Falha ao inserir componente', { stepNumber, blockIndex: i, err: e?.message });
+                    }
+                }
+            }
+
+            log.info('Persistência manual concluída', { funnelId: targetFunnelId, totalInserted });
+            toast({ title: '✅ Supabase', description: `Salvo ${totalInserted} componentes em component_instances` });
+        } catch (error: any) {
+            log.error('Erro no salvamento manual para Supabase', { message: error?.message });
+            toast({ title: 'Erro ao salvar no Supabase', description: String(error?.message || error || 'Erro desconhecido'), variant: 'destructive' });
+        } finally {
+            setIsSaving(false);
+        }
+    }, [crud, funnelId, steps, toast]);
+
     // Exportar JSON simples (será refinado depois com metadados)
     const handleExport = useCallback(() => {
         const data = JSON.stringify(steps, null, 2);
@@ -2924,6 +3001,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         Preview Produção
                                     </Button>
                                     <Button variant="outline" size="sm" onClick={handleExport}>Exportar</Button>
+                                    <Button variant="outline" size="sm" onClick={handleSupabaseSaveManual} disabled={isSaving} title="Salvar diretamente no Supabase (component_instances)">Supabase</Button>
                                     <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving || !isDirty}>{isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}Salvar</Button>
                                     <div className="flex items-center gap-1">
                                         <Button variant="ghost" size="sm" disabled={!canUndo} onClick={handleUndo} className="text-xs px-2">⮪ Undo</Button>

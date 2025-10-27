@@ -479,12 +479,21 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     const saveToSupabase = useCallback(async () => {
         const log = createLogger({ namespace: 'SaveToSupabase' });
+        // Log explícito no console para facilitar diagnóstico em qualquer nível de logger
+        console.log('💾 [SaveToSupabase] called', {
+            enableSupabase,
+            hasUnifiedCrud: !!unifiedCrud,
+            funnelId,
+            stepsCount: Object.keys(state.stepBlocks).length,
+        });
         if (!enableSupabase || !unifiedCrud) {
             log.info('Supabase desabilitado ou UnifiedCRUD indisponível', {
                 enableSupabase,
                 hasUnifiedCrud: !!unifiedCrud,
                 funnelId,
             });
+            // Garantir visibilidade mesmo se nível do logger estiver alto
+            console.warn('⚠️ [SaveToSupabase] Supabase desabilitado ou UnifiedCRUD indisponível');
             return;
         }
 
@@ -540,8 +549,25 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             if (!unifiedCrud.saveFunnel) {
                 throw new Error('UnifiedCRUD.saveFunnel não está disponível');
             }
-
-            const result = await unifiedCrud.saveFunnel(funnelData);
+            // Retry básico (x3) para aumentar robustez em casos transitórios
+            let result: any = null;
+            let attempt = 0;
+            let lastErr: any = null;
+            while (attempt < 3) {
+                attempt++;
+                try {
+                    log.info(`Tentativa de saveFunnel (${attempt}/3)`);
+                    result = await unifiedCrud.saveFunnel(funnelData);
+                    break;
+                } catch (e) {
+                    lastErr = e;
+                    log.warn('Falha ao salvar no UnifiedCRUD - retry agendado', { attempt, err: (e as any)?.message });
+                    await new Promise(res => setTimeout(res, 300 * attempt));
+                }
+            }
+            if (!result && lastErr) {
+                throw lastErr;
+            }
 
             log.info('Salvo no UnifiedCRUD (cache + sync)', {
                 funnelId: funnelData.id,
