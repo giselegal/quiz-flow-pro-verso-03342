@@ -282,7 +282,7 @@ class OptimizedImageStorage {
             };
 
             request.onerror = () => {
-                console.error('❌ Erro ao recuperar imagem:', request.error);
+                // logger?.error?.('imageCache', 'Erro ao recuperar imagem', request.error);
                 reject(request.error);
             };
         });
@@ -302,12 +302,12 @@ class OptimizedImageStorage {
         // Tentar recuperar do cache
         const cached = await this.getImage(id);
         if (cached) {
-            console.log('🎯 Imagem carregada do cache:', id);
+            // logger?.debug?.('imageCache', 'Imagem carregada do cache', { id });
             return cached;
         }
 
         // Se não estiver no cache, baixar e otimizar
-        console.log('📥 Baixando e otimizando imagem:', url);
+        // logger?.info?.('imageCache', 'Baixando e otimizando imagem', { url });
 
         try {
             let imageBlob: File | Blob;
@@ -327,7 +327,7 @@ class OptimizedImageStorage {
             return await this.storeImage(url, imageBlob, options);
 
         } catch (error) {
-            console.error('❌ Erro ao baixar imagem:', error);
+            // logger?.error?.('imageCache', 'Erro ao baixar imagem', error);
             throw error;
         }
     }
@@ -344,7 +344,7 @@ class OptimizedImageStorage {
             return;
         }
 
-        console.log('⚠️ Limite de armazenamento atingido, limpando cache...');
+    // logger?.warn?.('imageCache', 'Limite de armazenamento atingido, limpando cache...');
 
         // Obter todas as imagens ordenadas por timestamp (mais antigas primeiro)
         const allImages = await this.getAllImages();
@@ -358,7 +358,7 @@ class OptimizedImageStorage {
 
             await this.deleteImage(image.id);
             currentSize -= image.size;
-            console.log('🗑️ Imagem removida do cache:', image.id);
+            // logger?.debug?.('imageCache', 'Imagem removida do cache', { id: image.id });
         }
     }
 

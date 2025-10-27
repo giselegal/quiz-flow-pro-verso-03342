@@ -89,7 +89,7 @@ export class JsonTemplateService {
      */
     public configure(config: Partial<JsonTemplateServiceConfig>): void {
         this.config = { ...this.config, ...config };
-        console.log('🔧 JsonTemplateService configurado:', this.config);
+        // logger?.debug?.('jsonTemplates', 'JsonTemplateService configurado', this.config);
     }
 
     // ==========================================================================
@@ -108,14 +108,14 @@ export class JsonTemplateService {
                 const cached = this.getCachedTemplate(stepNumber);
                 if (cached) {
                     this.recordHit();
-                    console.log(`⚡ Cache hit: step-${stepNumber} (${cached.source})`);
+                    // logger?.debug?.('jsonTemplates', 'Cache hit', { stepNumber, source: cached.source });
                     return cached.data;
                 }
             }
 
             // 2. Verificar se já está carregando
             if (this.loadingPromises.has(stepNumber)) {
-                console.log(`🔄 Aguardando carregamento: step-${stepNumber}`);
+                // logger?.debug?.('jsonTemplates', 'Aguardando carregamento', { stepNumber });
                 return await this.loadingPromises.get(stepNumber)!;
             }
 
@@ -154,7 +154,7 @@ export class JsonTemplateService {
      */
     async saveTemplate(stepNumber: number, quizStep: QuizStep): Promise<void> {
         try {
-            console.log(`💾 Salvando template step-${stepNumber}...`);
+            // logger?.info?.('jsonTemplates', 'Salvando template', { stepNumber });
 
             // 1. Converter para blocos JSON
             const jsonBlocks = QuizStepAdapter.toJSONBlocks(quizStep);
@@ -173,8 +173,8 @@ export class JsonTemplateService {
 
             // 3. Salvar arquivo (simulado - em produção salvaria no servidor)
             const fileName = `quiz-estilo-step-${stepNumber}.json`;
-            console.log(`✅ Template convertido: ${fileName}`);
-            console.log('📄 JSON:', `${JSON.stringify(jsonTemplate, null, 2).slice(0, 200)  }...`);
+            // logger?.debug?.('jsonTemplates', 'Template convertido', { fileName });
+            // logger?.trace?.('jsonTemplates', 'JSON', { preview: `${JSON.stringify(jsonTemplate, null, 2).slice(0, 200)}...` });
 
             // 4. Atualizar cache
             if (this.config.cacheEnabled) {
@@ -186,9 +186,9 @@ export class JsonTemplateService {
                 });
             }
 
-            console.log(`✅ Template step-${stepNumber} salvo com sucesso`);
+            // logger?.info?.('jsonTemplates', 'Template salvo com sucesso', { stepNumber });
         } catch (error) {
-            console.error(`❌ Erro ao salvar template step-${stepNumber}:`, error);
+            // logger?.error?.('jsonTemplates', `Erro ao salvar template step-${stepNumber}`, error);
             throw error;
         }
     }
@@ -202,7 +202,7 @@ export class JsonTemplateService {
             // Template já foi validado no fromJSON
             return !!template && !!template.type;
         } catch (error) {
-            console.error(`❌ Erro ao validar template step-${stepNumber}:`, error);
+            // logger?.error?.('jsonTemplates', `Erro ao validar template step-${stepNumber}`, error);
             return false;
         }
     }    /**
@@ -250,7 +250,7 @@ export class JsonTemplateService {
         }
 
         if (removed > 0) {
-            console.log(`🧹 Cache cleanup: ${removed} templates expirados removidos`);
+            // logger?.info?.('jsonTemplates', 'Cache cleanup', { removed });
         }
     }
 
@@ -258,16 +258,16 @@ export class JsonTemplateService {
      * Limpar todo o cache
      */
     public clearCache(): void {
-        this.cache.clear();
-        console.log('🗑️ Cache limpo');
+    this.cache.clear();
+    // logger?.info?.('jsonTemplates', 'Cache limpo');
     }
 
     /**
      * Invalidar cache de uma etapa específica
      */
     public invalidateCache(stepNumber: number): void {
-        this.cache.delete(stepNumber);
-        console.log(`🗑️ Cache invalidado: step-${stepNumber}`);
+    this.cache.delete(stepNumber);
+    // logger?.debug?.('jsonTemplates', 'Cache invalidado', { stepNumber });
     }
 
     // ==========================================================================
@@ -279,7 +279,7 @@ export class JsonTemplateService {
      */
     private async loadTemplate(stepNumber: number, startTime: number): Promise<QuizStep> {
         try {
-            console.log(`📥 Carregando template JSON: step-${stepNumber}`);
+            // logger?.info?.('jsonTemplates', 'Carregando template JSON', { stepNumber });
 
             // Tentar carregar JSON
             const jsonTemplate = await this.loadJsonFile(stepNumber);
@@ -287,7 +287,7 @@ export class JsonTemplateService {
 
             // Template já foi validado durante conversão
             if (!quizStep || !quizStep.type) {
-                console.warn(`⚠️ Template JSON inválido: step-${stepNumber}, usando fallback`);
+                // logger?.warn?.('jsonTemplates', 'Template JSON inválido, usando fallback', { stepNumber });
                 return this.loadFallback(stepNumber, startTime);
             }            // Cache
             const loadTime = performance.now() - startTime;
@@ -301,10 +301,10 @@ export class JsonTemplateService {
             }
 
             this.recordLoadTime(loadTime);
-            console.log(`✅ Template JSON carregado: step-${stepNumber} (${loadTime.toFixed(2)}ms)`);
+            // logger?.info?.('jsonTemplates', 'Template JSON carregado', { stepNumber, ms: Number(loadTime.toFixed(2)) });
             return quizStep;
         } catch (error) {
-            console.warn(`⚠️ Erro ao carregar JSON step-${stepNumber}, usando fallback:`, error);
+            // logger?.warn?.('jsonTemplates', 'Erro ao carregar JSON, usando fallback', { stepNumber, error });
             return this.loadFallback(stepNumber, startTime);
         }
     }
@@ -326,7 +326,7 @@ export class JsonTemplateService {
      * Fallback para QUIZ_STEPS
      */
     private async loadFallback(stepNumber: number, startTime: number): Promise<QuizStep> {
-        console.log(`🔄 Usando fallback QUIZ_STEPS: step-${stepNumber}`);
+    // logger?.info?.('jsonTemplates', 'Usando fallback QUIZ_STEPS', { stepNumber });
 
         // Import dinâmico para evitar dependency circular
         const { QUIZ_STEPS } = await import('@/data/quizSteps');
@@ -346,8 +346,8 @@ export class JsonTemplateService {
             });
         }
 
-        this.recordLoadTime(loadTime);
-        console.log(`✅ Fallback carregado: step-${stepNumber} (${loadTime.toFixed(2)}ms)`);
+    this.recordLoadTime(loadTime);
+    // logger?.info?.('jsonTemplates', 'Fallback carregado', { stepNumber, ms: Number(loadTime.toFixed(2)) });
         return fallbackStep;
     }
 
@@ -370,10 +370,10 @@ export class JsonTemplateService {
         }
 
         if (stepsToPrefetch.length > 0) {
-            console.log(`🚀 Prefetching steps: ${stepsToPrefetch.join(', ')}`);
+            // logger?.debug?.('jsonTemplates', 'Prefetching steps', { steps: stepsToPrefetch });
             stepsToPrefetch.forEach(step => {
                 this.getTemplate(step).catch(err => {
-                    console.warn(`⚠️ Prefetch failed for step-${step}:`, err);
+                    // logger?.warn?.('jsonTemplates', 'Prefetch failed', { step, error: err });
                 });
             });
         }
@@ -446,7 +446,7 @@ export class JsonTemplateService {
      */
     public logStats(): void {
         const stats = this.getStats();
-        console.log('📊 JsonTemplateService Stats:', JSON.stringify(stats, null, 2));
+    // logger?.info?.('jsonTemplates', 'Stats', stats);
     }
 
     /**
@@ -460,7 +460,7 @@ export class JsonTemplateService {
             totalLoadTime: 0,
             averageLoadTime: 0,
         };
-        console.log('🔄 Métricas resetadas');
+        // logger?.info?.('jsonTemplates', 'Métricas resetadas');
     }
 }
 
