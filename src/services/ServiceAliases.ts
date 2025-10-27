@@ -157,9 +157,41 @@ const logDeprecationWarning = (oldName: string, newName: string) => {
       `🚨 DEPRECATION: "${oldName}" é um alias deprecated. ` +
       `Use "${newName}" diretamente. ` +
       'Este alias será removido na v2.0.0',
+      { alias: oldName, target: newName, fase: '2', area: 'services' },
     );
   }
 };
+
+// Telemetria: cria um Proxy que registra a primeira utilização do alias
+function createDeprecatedAlias<T extends object>(target: T, oldName: string, newName: string): T {
+  let logged = false;
+  const ensureLog = () => {
+    if (!logged) {
+      logged = true;
+      logDeprecationWarning(oldName, newName);
+    }
+  };
+  try {
+    const handler: ProxyHandler<any> = {
+      get(t, p, r) {
+        ensureLog();
+        return Reflect.get(t, p, r);
+      },
+      apply(t, thisArg, argArray) {
+        ensureLog();
+        return Reflect.apply(t as any, thisArg, argArray as any);
+      },
+      construct(t, argArray, newTarget) {
+        ensureLog();
+        return Reflect.construct(t as any, argArray as any, newTarget as any);
+      },
+    };
+  return new Proxy(target as any, handler) as T;
+  } catch {
+    ensureLog();
+    return target;
+  }
+}
 
 // ============================================================================
 // ESTATÍSTICAS DE REDUÇÃO
