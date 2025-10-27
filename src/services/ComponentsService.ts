@@ -4,6 +4,9 @@
 // 📦 IMPORTS
 // ============================================================================
 import { getSupabaseClient } from '@/integrations/supabase/supabaseLazy';
+import { getLogger } from '@/utils/logging';
+
+const logger = getLogger();
 
 // ============================================================================
 // ⚙️ CONFIGURAÇÃO DO SUPABASE
@@ -15,7 +18,7 @@ const ensureClient = async () => {
   try {
     supabase = await getSupabaseClient();
   } catch (e) {
-    console.warn('ComponentsService: Supabase indisponível, operações retornam defaults.');
+    logger.warn('components', 'Supabase indisponível, operações retornam defaults.', e);
     supabase = null;
   }
   return supabase;
@@ -74,7 +77,7 @@ export class ComponentsService {
    */
   public static setOnlineStatus(online: boolean): void {
     this.isOnline = online;
-    console.log(`Serviço agora está ${online ? 'online' : 'offline'}`);
+    logger.info('components', `Serviço agora está ${online ? 'online' : 'offline'}`);
   }
 
   /**
@@ -108,7 +111,7 @@ export class ComponentsService {
       const { data, error } = await query;
 
       if (error) {
-        console.error('Erro ao carregar blocos:', error);
+        logger.error('components', 'Erro ao carregar blocos:', error);
         return [];
       }
 
@@ -130,7 +133,7 @@ export class ComponentsService {
         },
       }));
     } catch (error) {
-      console.error('Erro ao carregar blocos da stage:', error);
+      logger.error('components', 'Erro ao carregar blocos da stage:', error);
       return [];
     }
   }
@@ -161,14 +164,14 @@ export class ComponentsService {
       if (instances.length > 0) {
         const { error } = await client.from('component_instances').insert(instances);
         if (error) {
-          console.error('Erro ao sincronizar stage:', error);
+          logger.error('components', 'Erro ao sincronizar stage:', error);
           return false;
         }
       }
 
       return true;
     } catch (error) {
-      console.error('Erro ao sincronizar stage:', error);
+      logger.error('components', 'Erro ao sincronizar stage:', error);
       return false;
     }
   }
@@ -201,7 +204,7 @@ export class ComponentsService {
       const { data: componentType, error: typeError } = await componentQuery;
 
       if (typeError || !componentType) {
-        console.error('Tipo de componente não encontrado:', typeKey);
+        logger.error('components', 'Tipo de componente não encontrado:', { typeKey, error: typeError });
         return null;
       }
 
@@ -212,7 +215,7 @@ export class ComponentsService {
       });
 
       if (error || !result) {
-        console.error('Erro ao gerar instance_key:', error);
+        logger.error('components', 'Erro ao gerar instance_key:', error);
         return null;
       }
 
@@ -240,13 +243,13 @@ export class ComponentsService {
       });
 
       if (insertError) {
-        console.error('Erro ao criar bloco:', insertError);
+        logger.error('components', 'Erro ao criar bloco:', insertError);
         return null;
       }
 
       return instanceKey;
     } catch (error) {
-      console.error('Erro ao criar bloco:', error);
+      logger.error('components', 'Erro ao criar bloco:', error);
       return null;
     }
   }
@@ -281,13 +284,13 @@ export class ComponentsService {
         .eq('instance_key', instanceKey);
 
       if (error) {
-        console.error('Erro ao atualizar bloco:', error);
+        logger.error('components', 'Erro ao atualizar bloco:', error);
         return false;
       }
 
       return true;
     } catch (error) {
-      console.error('Erro ao atualizar bloco:', error);
+      logger.error('components', 'Erro ao atualizar bloco:', error);
       return false;
     }
   }
@@ -307,13 +310,13 @@ export class ComponentsService {
         .eq('instance_key', instanceKey);
 
       if (error) {
-        console.error('Erro ao deletar bloco:', error);
+        logger.error('components', 'Erro ao deletar bloco:', error);
         return false;
       }
 
       return true;
     } catch (error) {
-      console.error('Erro ao deletar bloco:', error);
+      logger.error('components', 'Erro ao deletar bloco:', error);
       return false;
     }
   }
@@ -335,13 +338,13 @@ export class ComponentsService {
       const { data, error } = await queryWithOrder;
 
       if (error) {
-        console.error('Erro ao carregar tipos de componentes:', error);
+        logger.error('components', 'Erro ao carregar tipos de componentes:', error);
         return [];
       }
 
       return data || [];
     } catch (error) {
-      console.error('Erro ao carregar tipos de componentes:', error);
+      logger.error('components', 'Erro ao carregar tipos de componentes:', error);
       return [];
     }
   }
@@ -364,13 +367,13 @@ export class ComponentsService {
       const { data, error } = await query;
 
       if (error) {
-        console.error('Erro ao verificar stage:', error);
+        logger.error('components', 'Erro ao verificar stage:', error);
         return false;
       }
 
       return (data && data.length > 0) || false;
     } catch (error) {
-      console.error('Erro ao verificar stage:', error);
+      logger.error('components', 'Erro ao verificar stage:', error);
       return false;
     }
   }
@@ -391,7 +394,7 @@ export class ComponentsService {
       const { data, error } = await query;
 
       if (error) {
-        console.error('Erro ao carregar stages:', error);
+        logger.error('components', 'Erro ao carregar stages:', error);
         return [];
       }
 
@@ -401,7 +404,7 @@ export class ComponentsService {
       );
       return stageKeys;
     } catch (error) {
-      console.error('Erro ao carregar stages:', error);
+      logger.error('components', 'Erro ao carregar stages:', error);
       return [];
     }
   }

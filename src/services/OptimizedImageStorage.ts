@@ -59,9 +59,12 @@ const DEFAULT_CONFIG: ImageCacheConfig = {
 // SERVIÇO PRINCIPAL
 // ============================================================================
 
+import { getLogger } from '@/utils/logging';
+
 class OptimizedImageStorage {
     private db: IDBDatabase | null = null;
     private config: ImageCacheConfig;
+    private logger = getLogger();
 
     constructor(config: Partial<ImageCacheConfig> = {}) {
         this.config = { ...DEFAULT_CONFIG, ...config };
@@ -76,13 +79,13 @@ class OptimizedImageStorage {
             const request = indexedDB.open(this.config.dbName, this.config.version);
 
             request.onerror = () => {
-                console.error('❌ Erro ao abrir IndexedDB:', request.error);
+                this.logger.error('imageCache', 'Erro ao abrir IndexedDB', request.error);
                 reject(request.error);
             };
 
             request.onsuccess = () => {
                 this.db = request.result;
-                // logger?.info?.('imageCache', 'IndexedDB inicializado com sucesso');
+                this.logger.info('imageCache', 'IndexedDB inicializado com sucesso');
                 resolve();
             };
 
@@ -93,7 +96,7 @@ class OptimizedImageStorage {
                     const store = db.createObjectStore(this.config.storeName, { keyPath: 'id' });
                     store.createIndex('timestamp', 'timestamp', { unique: false });
                     store.createIndex('originalUrl', 'originalUrl', { unique: false });
-                    // logger?.debug?.('imageCache', 'Object store criado', { storeName: this.config.storeName });
+                    this.logger.debug('imageCache', 'Object store criado', { storeName: this.config.storeName });
                 }
             };
         });
@@ -199,7 +202,7 @@ class OptimizedImageStorage {
         // Verificar se já existe
         const existing = await this.getImage(id);
         if (existing) {
-            // logger?.debug?.('imageCache', 'Imagem já existe no cache', { id });
+            this.logger.debug('imageCache', 'Imagem já existe no cache', { id });
             return existing;
         }
 
@@ -231,18 +234,18 @@ class OptimizedImageStorage {
             // Salvar no IndexedDB
             await this.saveToDB(imageData);
 
-            // logger?.info?.('imageCache', 'Imagem otimizada e salva', {
-            //     id,
-            //     originalSize: metadata.originalSize,
-            //     optimizedSize: blob.size,
-            //     compressionRatio: metadata.compressionRatio,
-            //     format: metadata.format,
-            // });
+            this.logger.info('imageCache', 'Imagem otimizada e salva', {
+                id,
+                originalSize: metadata.originalSize,
+                optimizedSize: blob.size,
+                compressionRatio: metadata.compressionRatio,
+                format: metadata.format,
+            });
 
             return URL.createObjectURL(blob);
 
         } catch (error) {
-            // logger?.error?.('imageCache', 'Erro ao armazenar imagem', error);
+            this.logger.error('imageCache', 'Erro ao armazenar imagem', error);
             throw error;
         }
     }
@@ -282,7 +285,7 @@ class OptimizedImageStorage {
             };
 
             request.onerror = () => {
-                // logger?.error?.('imageCache', 'Erro ao recuperar imagem', request.error);
+                this.logger.error('imageCache', 'Erro ao recuperar imagem', request.error);
                 reject(request.error);
             };
         });
@@ -344,7 +347,7 @@ class OptimizedImageStorage {
             return;
         }
 
-    // logger?.warn?.('imageCache', 'Limite de armazenamento atingido, limpando cache...');
+        this.logger.warn('imageCache', 'Limite de armazenamento atingido, limpando cache...');
 
         // Obter todas as imagens ordenadas por timestamp (mais antigas primeiro)
         const allImages = await this.getAllImages();
@@ -358,7 +361,7 @@ class OptimizedImageStorage {
 
             await this.deleteImage(image.id);
             currentSize -= image.size;
-            // logger?.debug?.('imageCache', 'Imagem removida do cache', { id: image.id });
+            this.logger.debug('imageCache', 'Imagem removida do cache', { id: image.id });
         }
     }
 
@@ -489,7 +492,7 @@ class OptimizedImageStorage {
             const request = store.clear();
 
             request.onsuccess = () => {
-                // logger?.info?.('imageCache', 'Cache de imagens limpo');
+                this.logger.info('imageCache', 'Cache de imagens limpo');
                 resolve();
             };
             request.onerror = () => reject(request.error);
