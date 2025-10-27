@@ -519,6 +519,46 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         } catch { /* noop */ }
     }, []);
 
+    // Pré-carrega schemas mais usados no editor para evitar atrasos ao abrir o Painel de Propriedades
+    useEffect(() => {
+        try {
+            SchemaAPI.preload(
+                // Intro (01)
+                'intro-logo', 'intro-title', 'intro-image', 'intro-description', 'intro-form', 'intro-logo-header', 'quiz-intro-header',
+                // Perguntas (02–18)
+                'options-grid', 'quiz-options', 'question-title', 'question-text', 'question-number', 'question-progress', 'question-instructions', 'question-navigation', 'quiz-navigation', 'text-inline', 'image', 'button',
+                // Transição (12 & 19)
+                'transition-title', 'transition-text', 'transition-loader', 'transition-progress', 'transition-message',
+                // Resultado (20)
+                'result-header', 'result-description', 'result-image', 'result-cta', 'result-progress-bars', 'result-main', 'result-style', 'result-characteristics', 'result-secondary-styles', 'result-cta-primary', 'result-cta-secondary', 'result-share',
+                // Oferta (21)
+                'offer-hero', 'pricing', 'benefits', 'guarantee', 'urgency-timer-inline',
+            );
+        } catch { /* ignore in dev */ }
+    }, []);
+
+    // Dev-only: checa cobertura de schemas para todos os block.types presentes
+    useEffect(() => {
+        if (!steps || !steps.length) return;
+        if (typeof import.meta !== 'undefined' && !(import.meta as any).env?.DEV) return; // apenas em dev
+        const types = Array.from(new Set(steps.flatMap(s => (s?.blocks || []).map(b => String((b as any)?.type || ''))).filter(Boolean)));
+        if (!types.length) return;
+        let cancelled = false;
+        (async () => {
+            const results = await Promise.all(types.map(async t => ({ t, s: await SchemaAPI.get(t) })));
+            if (cancelled) return;
+            const missing = results.filter(r => !r.s).map(r => r.t);
+            if (missing.length) {
+                try {
+                    appLogger.warn('⚠️ Tipos sem schema no SchemaAPI (adicione em src/config/schemas/dynamic.ts + blocks/*):', { count: missing.length, types: missing });
+                } catch {
+                    console.warn('[Editor Coverage] Tipos sem schema:', missing);
+                }
+            }
+        })();
+        return () => { cancelled = true; };
+    }, [steps]);
+
     // Unified CRUD (para obter/criar funnelId quando necessário)
     const crud = useUnifiedCRUD();
 

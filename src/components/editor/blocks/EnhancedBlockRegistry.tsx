@@ -112,6 +112,8 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
     'question-progress': lazy(() => import('@/components/editor/blocks/atomic/QuestionProgressBlock')),
     'question-number': lazy(() => import('@/components/editor/blocks/atomic/QuestionNumberBlock')),
     'question-text': lazy(() => import('@/components/editor/blocks/atomic/QuestionTextBlock')),
+    // Alias: alguns templates usam "question-title" como heading curto
+    'question-title': lazy(() => import('@/components/editor/blocks/atomic/QuestionTextBlock')),
     'question-instructions': lazy(() => import('@/components/editor/blocks/atomic/QuestionInstructionsBlock')),
     'question-navigation': lazy(() => import('@/components/editor/blocks/atomic/QuestionNavigationBlock')),
     'quiz-start-page-inline': QuizIntroHeaderBlock,

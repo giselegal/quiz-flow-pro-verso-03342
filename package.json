@@ -117,6 +117,9 @@
     "validate:typescript": "bash scripts/validar-typescript.sh",
     "hydrate:blocks": "node tools/hydrate-blocks-from-v3.mjs"
   },
+  "lintCoverage": {
+    "blocks": "node scripts/dev/check-block-coverage.mjs"
+  },
   "smoke": {
     "step20": "node scripts/smoke-step20.mjs"
   },

@@ -37,6 +37,7 @@ console.log('✅ Schema system initialized');
 
 // Pré-carregar schemas críticos para evitar fallback legacy em blocos de resultado
 try {
+  // Resultado (Step 20)
   SchemaAPI.preload(
     'result-header',
     'result-description',
@@ -50,6 +51,47 @@ try {
     'result-cta-primary',
     'result-cta-secondary',
     'result-share',
+  );
+  // Perguntas (Steps 02–18)
+  SchemaAPI.preload(
+    'options-grid',
+    'quiz-options',
+    'question-title',
+    'question-text',
+    'question-number',
+    'question-progress',
+    'question-instructions',
+    'question-navigation',
+    'quiz-navigation',
+    'text-inline',
+    'image',
+    'button',
+  );
+  // Intro (Step 01)
+  SchemaAPI.preload(
+    'intro-logo',
+    'intro-title',
+    'intro-image',
+    'intro-description',
+    'intro-form',
+    'intro-logo-header',
+    'quiz-intro-header',
+  );
+  // Transição (Steps 12 & 19)
+  SchemaAPI.preload(
+    'transition-title',
+    'transition-text',
+    'transition-loader',
+    'transition-progress',
+    'transition-message',
+  );
+  // Oferta (Step 21)
+  SchemaAPI.preload(
+    'offer-hero',
+    'pricing',
+    'benefits',
+    'guarantee',
+    'urgency-timer-inline',
   );
 } catch { /* ignore preload errors in dev */ }
 
