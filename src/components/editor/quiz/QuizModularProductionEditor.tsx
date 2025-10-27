@@ -3017,6 +3017,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragStart={(event) => setActiveId(event.active.id as string)}
+                onDragOver={(event) => {
+                    const overIdRaw = event.over?.id;
+                    if (!overIdRaw) { setHoverContainerId(null); return; }
+                    const overId = String(overIdRaw);
+                    if (overId.startsWith('container-slot:')) {
+                        setHoverContainerId(overId.slice('container-slot:'.length));
+                    } else {
+                        setHoverContainerId(null);
+                    }
+                }}
                 onDragEnd={handleDragEnd}
             >
                 <LayoutShell
