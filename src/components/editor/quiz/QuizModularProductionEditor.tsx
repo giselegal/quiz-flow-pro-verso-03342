@@ -1224,10 +1224,17 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (effectiveSelectedBlockId === blockId) setSelectedBlockIdUnified('');
     }, [removeBlockHook, effectiveSelectedBlockId, setSelectedBlockIdUnified, editorCtx?.actions]);
 
-    // Duplicar bloco
+    // Duplicar bloco (preferir Provider quando disponível)
     const duplicateBlock = useCallback((stepId: string, block: BlockComponent) => {
-        duplicateBlockHook(stepId, block.id);
-    }, [duplicateBlockHook]);
+        if (editorCtx?.actions?.duplicateBlock) {
+            editorCtx.actions.duplicateBlock(stepId, block.id).then((newId) => {
+                if (newId) setSelectedBlockIdUnified(newId);
+                toastRef.current({ title: 'Bloco duplicado', description: `Cópia de ${block.id}` });
+            });
+        } else {
+            duplicateBlockHook(stepId, block.id);
+        }
+    }, [duplicateBlockHook, editorCtx?.actions, setSelectedBlockIdUnified]);
 
     const blockPendingDuplicateRef = useRef<BlockComponent | null>(null);
     const targetStepIdRef = useRef<string>('');

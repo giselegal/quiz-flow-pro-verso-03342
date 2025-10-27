@@ -67,6 +67,7 @@ export interface EditorActions {
     removeBlock: (stepKey: string, blockId: string) => Promise<void>;
     reorderBlocks: (stepKey: string, oldIndex: number, newIndex: number) => Promise<void>;
     updateBlock: (stepKey: string, blockId: string, updates: Record<string, any>) => Promise<void>;
+    duplicateBlock?: (stepKey: string, blockId: string) => Promise<string>;
 
     // Step management
     ensureStepLoaded: (step: number | string) => Promise<void>;
@@ -304,6 +305,10 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     const updateBlock = useCallback(async (stepKey: string, blockId: string, updates: Record<string, any>) => {
         await stateManager.updateBlock(normalizeStepKey(stepKey), blockId, updates);
+    }, [stateManager, normalizeStepKey]);
+
+    const duplicateBlock = useCallback(async (stepKey: string, blockId: string) => {
+        return await stateManager.duplicateBlock(normalizeStepKey(stepKey), blockId);
     }, [stateManager, normalizeStepKey]);
 
     // ============================================================================
@@ -729,6 +734,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
             removeBlock,
             reorderBlocks,
             updateBlock,
+            duplicateBlock,
 
             // Step management
             ensureStepLoaded,
