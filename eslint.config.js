@@ -64,7 +64,9 @@ export default [
       import: importPlugin,
       'react-refresh': reactRefresh,
       react: reactPlugin,
+      // Suporte aos dois namespaces: 'next' e '@next/next'
       next: nextPlugin,
+      '@next/next': nextPlugin,
     },
     rules: {
       // Base rules

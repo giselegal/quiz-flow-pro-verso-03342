@@ -11,7 +11,6 @@
  */
 
 import React, {
-import { appLogger } from '@/utils/logger';
     createContext,
     useContext,
     useReducer,
@@ -21,13 +20,14 @@ import { appLogger } from '@/utils/logger';
     useRef,
     ReactNode
 } from 'react';
+import { appLogger } from '@/utils/logger';
 
 // Placeholder functions for removed providers
-const useSuperUnified = () => ({ getState: () => ({}), setState: () => {} });
-const useIntelligentCache = () => ({ 
-  get: async (_key: string) => null, 
-  set: async (_key: string, _value: any) => {},
-  cache: new Map()
+const useSuperUnified = () => ({ getState: () => ({}), setState: () => { } });
+const useIntelligentCache = () => ({
+    get: async (_key: string) => null,
+    set: async (_key: string, _value: any) => { },
+    cache: new Map()
 });
 
 // 🎯 TYPES AND INTERFACES

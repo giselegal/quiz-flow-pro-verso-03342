@@ -13,7 +13,6 @@
  */
 
 import React, {
-import { appLogger } from '@/utils/logger';
     useState,
     useEffect,
     useCallback,
@@ -23,6 +22,7 @@ import { appLogger } from '@/utils/logger';
     useContext,
     ReactNode
 } from 'react';
+import { appLogger } from '@/utils/logger';
 import { useEditorCore, useEditorElements, EditorElement } from '../core/EditorCore';
 
 // 🎯 COLLABORATION TYPES
