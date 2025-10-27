@@ -17,8 +17,8 @@
 
   "progress": "progress-inline",
   "progress-bar": "progress-inline",
-  "loading": "transition-loader",
-  "spinner": "transition-loader",
+  "loading": "loading-animation",
+  "spinner": "loading-animation",
 
   "options-grid": "options-grid",
   "options grid": "options-grid",

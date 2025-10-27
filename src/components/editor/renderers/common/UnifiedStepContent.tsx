@@ -376,6 +376,12 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                         enableAutoAdvance={isEditMode ? !!autoAdvanceInEdit : true}
                         selectedBlockId={(selectedBlockId || undefined) as any}
                         onBlockSelect={handleSelectBlock}
+                        onOpenProperties={handleOpenProperties}
+                        onComplete={() => {
+                            // Mantém comportamento existente de auto-avançar quando aplicável
+                            try { (editor as any)?.actions?.nextStep?.(); } catch { }
+                        }}
+                        onBlocksReorder={handleBlocksReorder}
                     />
                 );
             }
