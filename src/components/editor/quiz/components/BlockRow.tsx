@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSortable, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDroppable } from '@dnd-kit/core';
@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { BlockComponent } from '../types';
+import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
 
 export interface BlockRowProps {
     block: BlockComponent;
@@ -102,6 +103,24 @@ const Inner: React.FC<BlockRowProps> = (props) => {
     // Calcular índice do bloco atual (índice real no array, não filtrado)
     const blockIndex = allBlocks.findIndex(b => b.id === block.id);
 
+    // Pré-computar filhos diretos (ordenados) para containers
+    const childrenSorted = useMemo(() => {
+        if (!isContainer) return [] as BlockComponent[];
+        return allBlocks
+            .filter(b => b.parentId === block.id)
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    }, [isContainer, allBlocks, block.id]);
+
+    // Virtualização leve para muitos filhos de container
+    // Observação: para minimizar impactos no DnD, ativamos apenas com muitos itens e quando expandido
+    const childrenVirtualizationEnabled = isContainer && isExpanded && (childrenSorted.length >= 40);
+    const {
+        visible: vChildren,
+        topSpacer: vChildrenTop,
+        bottomSpacer: vChildrenBottom,
+        total: vChildrenTotal,
+    } = useVirtualBlocks({ blocks: childrenSorted as any[], rowHeight: 120, overscan: 8, enabled: childrenVirtualizationEnabled });
+
     return (
         <>
             {/* 🎯 DROP ZONE ANTES DO BLOCO */}
@@ -162,10 +181,11 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                         <div className="mt-3 relative">
                             <div className="text-[10px] text-slate-400 italic mb-1 flex items-center gap-2">
                                 <span>Conteúdo</span>
-                                <span className="text-[9px] text-slate-400">{allBlocks.filter(b => b.parentId === block.id).length}</span>
+                                <span className="text-[9px] text-slate-400">{childrenSorted.length}</span>
                             </div>
                             <SortableContext
-                                items={[...allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order).map(c => c.id), `container-slot:${block.id}`]}
+                                // Para virtualização, limitamos itens à janela visível para não sobrecarregar o DnD
+                                items={[...(childrenVirtualizationEnabled ? vChildren : childrenSorted).map(c => c.id), `container-slot:${block.id}`]}
                                 strategy={verticalListSortingStrategy}
                             >
                                 <div
@@ -178,21 +198,25 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                                         if (!e.currentTarget.contains(e.relatedTarget as Node)) setHoverContainerId && setHoverContainerId((prev: string | null) => (prev === block.id ? null : prev));
                                     }}
                                 >
-                                    {allBlocks.filter(b => b.parentId === block.id).length === 0 && (
+                                    {childrenSorted.length === 0 && (
                                         <div className="text-[10px] text-slate-400 italic">Solte aqui para aninhar</div>
                                     )}
                                     {/* Drop zone antes do primeiro filho, quando existir pelo menos um */}
-                                    {allBlocks.filter(b => b.parentId === block.id).length > 0 && (
+                                    {childrenSorted.length > 0 && (
                                         <DropZoneBefore
-                                            blockId={allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order)[0].id}
-                                            blockIndex={allBlocks.findIndex(b => b.id === allBlocks.filter(c => c.parentId === block.id).sort((a, b) => a.order - b.order)[0].id)}
+                                            blockId={childrenSorted[0].id}
+                                            blockIndex={allBlocks.findIndex(b => b.id === childrenSorted[0].id)}
                                             stepId={stepId}
                                         />
                                     )}
-                                    {allBlocks.filter(b => b.parentId === block.id).sort((a, b) => a.order - b.order).map(child => (
+                                    {/* Virtualização de filhos: spacers + janela visível */}
+                                    {childrenVirtualizationEnabled && vChildrenTop > 0 && (
+                                        <div style={{ height: vChildrenTop }} />
+                                    )}
+                                    {(childrenVirtualizationEnabled ? vChildren : childrenSorted).map(child => (
                                         <MemoBlockRow
                                             key={child.id}
-                                            block={child}
+                                            block={child as any}
                                             byBlock={byBlockSafe}
                                             selectedBlockId={selectedBlockId}
                                             isMultiSelected={isMultiSelected}
@@ -210,6 +234,9 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                                             setHoverContainerId={setHoverContainerId}
                                         />
                                     ))}
+                                    {childrenVirtualizationEnabled && vChildrenBottom > 0 && (
+                                        <div style={{ height: vChildrenBottom }} />
+                                    )}
                                     <ContainerSlotDroppable parentId={block.id} />
                                 </div>
                             </SortableContext>
