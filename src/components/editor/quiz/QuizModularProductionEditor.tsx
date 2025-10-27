@@ -535,7 +535,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                 <div className={cn('flex items-center gap-4', config.align === 'center' && 'justify-center', config.align === 'right' && 'justify-end')}>
                     {config.showLogo && (
                         <div className="shrink-0" style={{ maxWidth: config.logoWidth }}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            {/* img tag permitido: projeto Vite/React, regra de Next não se aplica */}
                             <img src={config.logoUrl} alt="Logo" className="object-contain max-h-12" />
                         </div>
                     )}
@@ -1580,7 +1580,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             const borderRadius = properties?.borderRadius || content.borderRadius || '8px';
             node = (
                 <div className={cn('w-full flex', justify)}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    {/* img tag permitido: projeto Vite/React, regra de Next não se aplica */}
                     <img
                         src={content.src || properties?.src || INLINE_IMG_PLACEHOLDER}
                         alt={content.alt || properties?.alt || 'Imagem'}
@@ -1714,7 +1714,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     <div className="flex items-center justify-between min-h-[40px]">
                         {showLogo && (
                             <div className="shrink-0" style={{ maxWidth: properties?.logoWidth || '120px' }}>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                {/* img tag permitido: projeto Vite/React, regra de Next não se aplica */}
                                 <img
                                     src={properties?.logoUrl || BRAND_LOGO_URL}
                                     alt="Logo"
@@ -3413,20 +3413,16 @@ const LiveRuntimePreview: React.FC<LiveRuntimePreviewProps> = React.memo(({ step
         registryReady
     });
 
-    // Contador de renders para debug
-    const renderCountRef = React.useRef(0);
-    renderCountRef.current++;
-
     // ✅ FASE 1 (P0): Calcular runtimeMap usando transformação unificada
     const runtimeMap = React.useMemo(() => {
-        appLogger.debug(`🔄 [Render #${renderCountRef.current}] Recalculando runtimeMap`, { steps: steps.length });
+        appLogger.debug('🔄 Recalculando runtimeMap', { steps: steps.length });
         return editorStepsToRuntimeMap(steps as any);
     }, [steps]);
 
     // Refs para evitar loop infinito
     const lastVersionRef = React.useRef<string>('');
     const updateCountRef = React.useRef(0);
-    const loopResetTimerRef = React.useRef<NodeJS.Timeout>();
+    const loopResetTimerRef = React.useRef<ReturnType<typeof setTimeout>>();
 
     // ✅ P0-3: Atualizar registry apenas quando a versão/fingerprint muda
     React.useEffect(() => {

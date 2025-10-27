@@ -49,6 +49,7 @@ export default [
     plugins: {
       '@typescript-eslint': tseslint,
       'react-hooks': reactHooks,
+      import: importPlugin,
       'react-refresh': reactRefresh,
     },
     rules: {
@@ -90,7 +91,9 @@ export default [
       'no-debugger': 'warn',
       'no-alert': 'warn',
       'no-duplicate-imports': 'error',
-      'no-unused-expressions': 'error',
+  'no-unused-expressions': 'error',
+  // Use TS plugin version for unused vars
+  'no-unused-vars': 'off',
       'no-unreachable': 'error',
       'no-constant-condition': 'warn',
 
