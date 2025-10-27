@@ -5,6 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
+import reactPlugin from 'eslint-plugin-react';
+import nextPlugin from 'eslint-plugin-next';
 
 const isProd = process.env.NODE_ENV === 'production' || process.env.CI === 'true';
 
@@ -27,6 +29,9 @@ export default [
       'archived/**',
       'scripts/**',
       'server/**',
+      // Scripts soltos de diagnóstico fora do fluxo de app
+      'full-diagnosis-script.js',
+      'isolation-test-script.js',
       // Temporário: evitar erro ENOENT intermitente neste caminho específico durante lint
       'src/components/editor/dnd/SortablePreviewBlockWrapper.tsx',
       // Temporário: symlink corrompido; ignorar até normalização do arquivo
@@ -58,6 +63,8 @@ export default [
       'react-hooks': reactHooks,
       import: importPlugin,
       'react-refresh': reactRefresh,
+      react: reactPlugin,
+      next: nextPlugin,
     },
     rules: {
       // Base rules
@@ -113,6 +120,11 @@ export default [
       'no-unused-vars': 'off',
       'no-unreachable': isProd ? 'error' : 'warn',
       'no-constant-condition': 'warn',
+      'no-prototype-builtins': isProd ? 'error' : 'warn',
+      'no-useless-catch': isProd ? 'warn' : 'off',
+      'no-constant-binary-expression': isProd ? 'warn' : 'off',
+      'no-redeclare': isProd ? 'error' : 'warn',
+      'no-import-assign': isProd ? 'error' : 'warn',
       // Evitar ruído em switch/case com declarações; tratar gradualmente
       'no-case-declarations': isProd ? 'error' : 'warn',
       // Blocos vazios são comuns durante refactors; tratar gradualmente
@@ -124,6 +136,8 @@ export default [
 
       // Best practices
       'prefer-const': 'error',
+      // Em dev, reduzir ruído de prefer-const
+      ...(isProd ? {} : { 'prefer-const': 'warn' }),
       'no-var': 'error',
       'object-shorthand': 'warn',
       'prefer-template': 'warn',
@@ -243,6 +257,7 @@ export default [
       '@typescript-eslint/no-non-null-assertion': 'off',
       'no-unused-expressions': 'off',
       'no-empty': 'off',
+      'no-eval': 'off',
 
       // Test-specific rules
       // Removed: was referencing a plugin we don't use. If needed, install eslint-plugin-no-only-tests.
