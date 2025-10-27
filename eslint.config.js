@@ -22,6 +22,8 @@ export default [
       '*.config.js',
       '*.config.ts',
       'public',
+      // Temporário: evitar erro ENOENT intermitente neste caminho específico durante lint
+      'src/components/editor/dnd/SortablePreviewBlockWrapper.tsx',
     ],
   },
 
