@@ -506,6 +506,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     });
     useEffect(() => { try { StorageService.safeSetJSON('quiz_editor_header_config_v1', headerConfig); } catch {/* ignore */ } }, [headerConfig]);
 
+    // Preferir JSON v3 em formato sections por padrão no editor (habilita blocos atômicos em todas as etapas)
+    useEffect(() => {
+        try {
+            if (typeof window !== 'undefined') {
+                const ls = window.localStorage.getItem('qfp.preferSectionsV3');
+                if (ls == null) {
+                    window.localStorage.setItem('qfp.preferSectionsV3', '1');
+                }
+                (window as any).__editorPreferSectionsV3 = true;
+            }
+        } catch { /* noop */ }
+    }, []);
+
     // Unified CRUD (para obter/criar funnelId quando necessário)
     const crud = useUnifiedCRUD();
 
