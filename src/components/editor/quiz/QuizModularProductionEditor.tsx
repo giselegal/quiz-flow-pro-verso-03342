@@ -1254,7 +1254,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     const copyBlock = useCallback((block: BlockComponent) => copyGeneric([block.id]), [copyGeneric]);
     const copyMultiple = useCallback((blocks: BlockComponent[]) => { copyGeneric(blocks.map(b => b.id)); toastRef.current({ title: 'Copiado', description: `${blocks.length} bloco(s) copiado(s)` }); }, [copyGeneric]);
-    const pasteBlocks = useCallback((stepId: string) => pasteGeneric(stepId), [pasteGeneric]);
+    const pasteBlocks = useCallback((stepId: string) => {
+        if (editorCtx?.actions?.insertSnippetBlocks && clipboard && clipboard.length) {
+            try {
+                // Inserção via Provider (mantém hierarquia relativa entre blocos do clipboard)
+                editorCtx.actions.insertSnippetBlocks(stepId, clipboard as any);
+                setIsDirty(true);
+                toastRef.current({ title: 'Blocos colados', description: `${clipboard.length} bloco(s) inserido(s)` });
+                return;
+            } catch {/* fallback abaixo */}
+        }
+        // Fallback legado
+        pasteGeneric(stepId);
+    }, [pasteGeneric, editorCtx?.actions, clipboard, setIsDirty]);
 
     // Atualizar propriedades do bloco
     const updateBlockProperties = useCallback((stepId: string, blockId: string, updates: Record<string, any>) => {
