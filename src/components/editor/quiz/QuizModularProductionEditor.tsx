@@ -2785,14 +2785,16 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         );
     }
 
-    // FASE 2: Layout Modular (4 colunas) - habilitado por flag simples
+    // FASE 2: Layout Modular (4 colunas)
+    // Alterado: desligado por padrão para restaurar comportamento anterior.
+    // Pode ser ativado via localStorage: localStorage.setItem('editor:phase2:modular', '1')
     const USE_PHASE2_MODULAR_LAYOUT = (() => {
-        // Travar ON por padrão em qualquer ambiente; permitir desligar via localStorage = '0'
         try {
             const v = StorageService.safeGetString('editor:phase2:modular');
-            if (v === '0') return false;
+            if (v === '1') return true;  // explicitamente ligado
+            if (v === '0') return false; // explicitamente desligado
         } catch { /* ignore */ }
-        return true;
+        return false; // padrão: OFF (modo antigo)
     })();
 
     if (USE_PHASE2_MODULAR_LAYOUT) {
@@ -3056,6 +3058,19 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     return (
         <EditorThemeProvider tokens={themeOverrides}>
+            {import.meta.env.DEV && (
+                <button
+                    type="button"
+                    onClick={() => {
+                        try { localStorage.setItem('editor:phase2:modular', '1'); } catch { }
+                        window.location.reload();
+                    }}
+                    className="fixed top-2 right-2 z-50 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-medium px-3 py-1.5 rounded shadow"
+                    title="Alternar layout modular (ativar)"
+                >
+                    Modular: OFF (ativar)
+                </button>
+            )}
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
