@@ -52,6 +52,9 @@ import ResultCTABlock from './atomic/ResultCTABlock';
 import ResultSecondaryStylesBlock from './atomic/ResultSecondaryStylesBlock';
 import ResultStyleBlock from './atomic/ResultStyleBlock';
 import ResultShareBlock from './atomic/ResultShareBlock';
+import HeadingInlineBlock from '@/components/editor/blocks/HeadingInlineBlock';
+import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
+import GuaranteeBlock from '@/components/editor/blocks/GuaranteeBlock';
 
 // ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
 import { default as ResultCalculationSection } from '@/components/blocks/ResultCalculationSection';
@@ -135,16 +138,23 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'quiz-title': QuizTitleBlock,
   'options-grid': OptionsGridBlock,
   'text-inline': TextInlineBlock,
+  'heading-inline': HeadingInlineBlock,
+  heading: HeadingInlineBlock,
+  headline: HeadingInlineBlock,
+  'headline-inline': HeadingInlineBlock,
   // Navegação de perguntas (usado em steps de perguntas e como alias em alguns templates)
   'question-navigation': QuestionNavigationBlock,
   'quiz-navigation': QuestionNavigationBlock,
   // Alias comum em templates antigos
   'question-title': TextInlineBlock,
   'button-inline': ButtonInlineBlock,
+  'cta-inline': ButtonInlineBlock,
   'form-input': FormInputBlock,
+  'image-inline': ImageInlineBlock,
   'fashion-ai-generator': FashionAIGeneratorBlock,
   'mentor-section-inline': MentorSectionInlineBlock,
   'testimonial-card-inline': TestimonialCardInlineBlock,
+  testimonials: TestimonialsInlineBlock,
   'testimonials-carousel-inline': TestimonialsCarouselInlineBlock,
   // Step20 Components
   'step20-result-header': Step20ResultHeaderBlock,
@@ -183,15 +193,17 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'spinner': SpinnerBlock,
   // ✅ FASE 3A: Componentes de Offer
   'offer-header': OfferHeaderInlineBlock,
+  'offer-hero': OfferHeroSectionInlineBlock,
   'offer-hero-section': OfferHeroSectionInlineBlock,
   'offer-benefits-list': BenefitsInlineBlock,
   'offer-testimonials': TestimonialsInlineBlock,
   'offer-pricing-table': QuizOfferPricingInlineBlock,
   'offer-faq-section': OfferFaqSectionInlineBlock,
   'offer-cta-section': QuizOfferCTAInlineBlock,
+  pricing: QuizOfferPricingInlineBlock,
+  guarantee: GuaranteeBlock,
   // Fallbacks para tipos básicos
   'text': createFallbackComponent('text'),
-  'headline': createFallbackComponent('headline'),
   'image': createFallbackComponent('image'),
   'button': createFallbackComponent('button'),
   'form': createFallbackComponent('form'),
