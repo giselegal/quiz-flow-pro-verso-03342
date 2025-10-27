@@ -1446,7 +1446,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         if (active.id === over.id && !targetContainerId && !droppedAtEnd) { setActiveId(null); setHoverContainerId(null); return; }
         // Reordenação / movimento
         const overId = String(over.id).startsWith('container-slot:') ? null : over.id;
-        reorderOrMove(curStepId, active.id, targetContainerId, overId);
+        if (editorCtx?.actions?.moveBlock) {
+            editorCtx.actions.moveBlock(curStepId, String(active.id), targetContainerId, overId);
+        } else {
+            reorderOrMove(curStepId, active.id, targetContainerId, overId);
+        }
         setActiveId(null); setHoverContainerId(null);
     };
 
