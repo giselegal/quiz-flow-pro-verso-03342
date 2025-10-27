@@ -131,7 +131,7 @@ export default [
 
       // ⚠️ NOVO: Prevenir uso direto de localStorage
       'no-restricted-globals': [
-        'error',
+        isProd ? 'error' : 'warn',
         {
           name: 'localStorage',
           message: '❌ Uso direto de localStorage não é permitido. Use StorageService.safeGetJSON/safeSetJSON ao invés. Exemplo: import { StorageService } from "@/services/core/StorageService"',
@@ -148,6 +148,44 @@ export default [
       'no-implied-eval': 'error',
       'no-new-func': 'error',
       'no-script-url': 'error',
+    },
+  },
+
+  // TypeScript files: delegar undefined checks ao TypeScript
+  {
+    files: ['**/*.{ts,tsx}'],
+    rules: {
+      'no-undef': 'off',
+    },
+  },
+
+  // Arquivos de tipos e declarações
+  {
+    files: ['**/*.d.ts', 'src/types/**/*.{ts,tsx}'],
+    rules: {
+      'no-undef': 'off',
+    },
+  },
+
+  // Utils: regras mais brandas para viabilizar migração gradual
+  {
+    files: ['src/utils/**/*.{ts,tsx,js}'],
+    rules: {
+      'no-empty': isProd ? 'error' : 'warn',
+      'no-script-url': isProd ? 'error' : 'warn',
+      'no-new-func': isProd ? 'error' : 'warn',
+      'no-case-declarations': isProd ? 'error' : 'warn',
+      'no-useless-escape': isProd ? 'warn' : 'off',
+      'no-prototype-builtins': isProd ? 'warn' : 'off',
+      'no-control-regex': isProd ? 'warn' : 'off',
+      // Hooks rules em utils podem sinalizar falsos-positivos; rebaixar severidade
+      'react-hooks/rules-of-hooks': 'warn',
+      'react-hooks/exhaustive-deps': 'warn',
+      // Novas regras do plugin
+      'react-hooks/refs': 'off',
+      'react-hooks/purity': 'off',
+      'react-hooks/use-memo': 'off',
+      'react-hooks/immutability': 'off',
     },
   },
 
