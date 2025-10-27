@@ -215,8 +215,8 @@ interface PropertiesColumnProps {
 | Métrica | Status | Meta |
 |---------|--------|------|
 | Sistema implementado | ✅ | ✅ |
-| Console.logs substituídos | 0/5685 | 5685 |
-| Arquivos migrados | 0 | ~200 |
+| Console.logs substituídos | iniciado | 5685 |
+| Arquivos migrados | 3 (componentLibrary, UnifiedCacheService, pixelManager) | ~200 |
 
 ### Deprecação de Serviços
 | Métrica | Antes | Depois | Meta |
@@ -284,7 +284,7 @@ interface PropertiesColumnProps {
 ### Logger
 - [x] Sistema criado
 - [x] Integrado em ServiceAliases
-- [ ] Substituição iniciada
+- [x] Substituição iniciada
 - [ ] Lint rule configurada
 - [ ] Documentação criada
 
