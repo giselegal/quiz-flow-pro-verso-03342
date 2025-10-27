@@ -27,10 +27,10 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
     const [startTime] = React.useState(Date.now());
 
     React.useEffect(() => {
-        appLogger.debug('🔄 [LOADING] Iniciando timeout de', timeout, 'ms');
+        appLogger.debug('🔄 [LOADING] Iniciando timeout', { timeoutMs: timeout });
 
         const timeoutId = setTimeout(() => {
-            appLogger.warn('⏰ [LOADING] Timeout atingido após', timeout, 'ms');
+            appLogger.warn('⏰ [LOADING] Timeout atingido', { timeoutMs: timeout });
             setIsTimeout(true);
         }, timeout);
 
@@ -66,7 +66,7 @@ export const EditorLoadingWrapper: React.FC<EditorLoadingWrapperProps> = ({
 
             handleRetry();
         } catch (error) {
-            appLogger.error('❌ [LOADING] Erro ao limpar storage:', error);
+            appLogger.error('❌ [LOADING] Erro ao limpar storage', { error });
             handleRetry();
         }
     };
