@@ -153,7 +153,6 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 return <TextInlineAtomic block={block} {...rest} />;
             case 'image-inline':
             case 'image':
-            case 'image-display-inline':
                 return <ImageInlineAtomic block={block} {...rest} />;
             case 'form-input':
             case 'input-field':
