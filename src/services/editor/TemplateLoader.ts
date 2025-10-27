@@ -412,7 +412,7 @@ export class TemplateLoader {
               blocks = [
                 { id: `${normalizedKey}-transition-title`, type: 'transition-title', order: 0, properties: {}, content: { text: title } },
                 { id: `${normalizedKey}-transition-text`, type: 'transition-text', order: 1, properties: {}, content: { text } },
-                { id: `${normalizedKey}-transition-cta`, type: 'cta-inline', order: 2, properties: {}, content: { label: nextLabel, href: '#next', variant: 'primary', size: 'large' } },
+                { id: `${normalizedKey}-transition-cta`, type: 'cta-inline', order: 2, properties: { text: nextLabel, variant: 'primary', size: 'large', action: 'next-step', nextStepId: 'step-20' }, content: {} },
               ] as any[];
             }
           }
