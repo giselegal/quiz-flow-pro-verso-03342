@@ -14,6 +14,7 @@ import { funnelUnifiedService, UnifiedFunnelData } from '@/services/FunnelUnifie
 import { enhancedFunnelService } from '@/services/EnhancedFunnelService';
 import { normalizeFunnelId } from '@/utils/funnelNormalizer';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
+import { getLogger } from '@/utils/logging';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -76,8 +77,9 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
     debug = false,
     context = FunnelContext.EDITOR,
 }) => {
-    console.log('🔧 UnifiedCRUDProvider: Rendering', { funnelId, autoLoad, debug, context });
-    
+    const logger = getLogger();
+    logger.debug('🔧 UnifiedCRUDProvider: Rendering', { funnelId, autoLoad, debug, context, scope: 'unifiedCRUD' });
+
     // ========================================================================
     // STATE
     // ========================================================================
