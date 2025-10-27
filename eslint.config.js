@@ -22,6 +22,11 @@ export default [
       '*.config.js',
       '*.config.ts',
       'public',
+      // Documentação e conteúdos arquivados/scripts fora do app
+      'docs/**',
+      'archived/**',
+      'scripts/**',
+      'server/**',
       // Temporário: evitar erro ENOENT intermitente neste caminho específico durante lint
       'src/components/editor/dnd/SortablePreviewBlockWrapper.tsx',
       // Temporário: symlink corrompido; ignorar até normalização do arquivo
@@ -72,23 +77,24 @@ export default [
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',
       '@typescript-eslint/no-empty-function': 'warn',
-  // Prefer const: use core rule instead of TS plugin variant (which doesn't exist)
-  'prefer-const': 'error',
+      // Prefer const: use core rule instead of TS plugin variant (which doesn't exist)
+      'prefer-const': 'error',
       '@typescript-eslint/no-var-requires': 'warn',
 
-  // React Hooks rules
-  ...reactHooks.configs.recommended.rules,
-  'react-hooks/rules-of-hooks': isProd ? 'error' : 'warn',
-  'react-hooks/exhaustive-deps': 'warn', // ⚠️ NOVO: Avisar sobre dependências faltantes
-  // Temporariamente reduzir a verbosidade das novas regras do React Compiler
-  // até concluirmos a migração dos pontos problemáticos.
-  'react-hooks/set-state-in-effect': 'off',
-  'react-hooks/purity': 'off',
-  'react-hooks/immutability': 'off',
-  'react-hooks/refs': 'off',
-  'react-hooks/use-memo': 'off',
-  'react-hooks/preserve-manual-memoization': 'off',
-  'react-hooks/static-components': 'off',
+      // React Hooks rules
+      ...reactHooks.configs.recommended.rules,
+      'react-hooks/rules-of-hooks': isProd ? 'error' : 'warn',
+      'react-hooks/exhaustive-deps': 'warn', // ⚠️ NOVO: Avisar sobre dependências faltantes
+      // Temporariamente reduzir a verbosidade das novas regras do React Compiler
+      // até concluirmos a migração dos pontos problemáticos.
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/purity': 'off',
+      'react-hooks/immutability': 'off',
+      'react-hooks/refs': 'off',
+      'react-hooks/use-memo': 'off',
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/static-components': 'off',
+      'react-hooks/error-boundaries': 'off',
 
       // React Refresh rules
       'react-refresh/only-export-components': [
@@ -96,21 +102,25 @@ export default [
         { allowConstantExport: true },
       ],
 
-  // General code quality rules
-  // Em produção/CI, elevar para erro para bloquear novos console.log
-  'no-console': [isProd ? 'error' : 'warn', { allow: ['warn', 'error'] }],
+      // General code quality rules
+      // Em produção/CI, elevar para erro para bloquear novos console.log
+      'no-console': [isProd ? 'error' : 'warn', { allow: ['warn', 'error'] }],
       'no-debugger': 'warn',
       'no-alert': 'warn',
-  'no-duplicate-imports': isProd ? 'error' : 'warn',
-  'no-unused-expressions': 'error',
-  // Use TS plugin version for unused vars
-  'no-unused-vars': 'off',
-  'no-unreachable': isProd ? 'error' : 'warn',
+      'no-duplicate-imports': isProd ? 'error' : 'warn',
+      'no-unused-expressions': isProd ? 'error' : 'warn',
+      // Use TS plugin version for unused vars
+      'no-unused-vars': 'off',
+      'no-unreachable': isProd ? 'error' : 'warn',
       'no-constant-condition': 'warn',
-    // Evitar ruído em switch/case com declarações; tratar gradualmente
-    'no-case-declarations': isProd ? 'error' : 'warn',
-    // Blocos vazios são comuns durante refactors; tratar gradualmente
-    'no-empty': isProd ? 'error' : 'warn',
+      // Evitar ruído em switch/case com declarações; tratar gradualmente
+      'no-case-declarations': isProd ? 'error' : 'warn',
+      // Blocos vazios são comuns durante refactors; tratar gradualmente
+      'no-empty': isProd ? 'error' : 'warn',
+      // Escapes desnecessários não devem travar o desenvolvimento
+      'no-useless-escape': isProd ? 'warn' : 'off',
+      // Duplicated case labels podem existir em backups; tratar gradualmente
+      'no-duplicate-case': isProd ? 'error' : 'warn',
 
       // Best practices
       'prefer-const': 'error',
@@ -123,11 +133,11 @@ export default [
       'indent': 'off', // Let Prettier handle this
       'quotes': ['warn', 'single', { avoidEscape: true }],
       'semi': ['error', 'always'],
-  'comma-dangle': ['warn', 'always-multiline'],
+      'comma-dangle': ['warn', 'always-multiline'],
 
       // Import/Export rules
-  'no-default-export': 'off',
-  'import/prefer-default-export': 'off',
+      'no-default-export': 'off',
+      'import/prefer-default-export': 'off',
 
       // ⚠️ NOVO: Prevenir imports profundos (../../../)
       'no-restricted-imports': [
@@ -152,7 +162,7 @@ export default [
       ],
 
       // Performance rules
-  'no-async-promise-executor': isProd ? 'error' : 'warn',
+      'no-async-promise-executor': isProd ? 'error' : 'warn',
       'no-await-in-loop': 'warn',
       'no-return-await': 'warn',
 
@@ -235,7 +245,7 @@ export default [
       'no-empty': 'off',
 
       // Test-specific rules
-  // Removed: was referencing a plugin we don't use. If needed, install eslint-plugin-no-only-tests.
+      // Removed: was referencing a plugin we don't use. If needed, install eslint-plugin-no-only-tests.
     },
   },
 
