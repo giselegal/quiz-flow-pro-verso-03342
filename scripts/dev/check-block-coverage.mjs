@@ -123,6 +123,41 @@ function collectRendererTypes() {
   return Array.from(out).sort();
 }
 
+function collectUniversalRendererTypes() {
+  const p = path.join(ROOT, 'src', 'components', 'editor', 'blocks', 'UniversalBlockRenderer.tsx');
+  const txt = readFileSafe(p);
+  const objStart = txt.indexOf('const BlockComponentRegistry');
+  if (objStart < 0) return [];
+  const afterConst = txt.slice(objStart);
+  const firstBrace = afterConst.indexOf('{');
+  if (firstBrace < 0) return [];
+  let depth = 0;
+  let endIdx = -1;
+  for (let i = firstBrace; i < afterConst.length; i++) {
+    const ch = afterConst[i];
+    if (ch === '{') depth++;
+    else if (ch === '}') {
+      depth--;
+      if (depth === 0) { endIdx = i; break; }
+    }
+  }
+  if (endIdx < 0) return [];
+  const objLiteral = afterConst.slice(firstBrace, endIdx + 1);
+  const reQuoted = /['"]([a-zA-Z0-9_.*-]+)['"]\s*:/g;
+  const reBare = /\b([a-zA-Z_][a-zA-Z0-9_-]*)\s*:/g;
+  const out = new Set();
+  let m;
+  while ((m = reQuoted.exec(objLiteral)) !== null) {
+    const key = m[1];
+    if (key && !key.includes('*')) out.add(key);
+  }
+  while ((m = reBare.exec(objLiteral)) !== null) {
+    const key = m[1];
+    if (key && !key.includes('*')) out.add(key);
+  }
+  return Array.from(out).sort();
+}
+
 function main() {
   const usedRaw = collectTemplateTypes();
 
@@ -130,7 +165,7 @@ function main() {
   // Use: node scripts/dev/check-block-coverage.mjs --normalize
   const shouldNormalize = process.argv.includes('--normalize');
 
-  // Subconjunto essencial do BLOCK_TYPE_MAP (alinhado com src/utils/blockTypeMapper.ts)
+  // Subconjunto essencial do BLOCK_TYPE_MAP (alinhado com src/utils/blockTypeMapper.ts) + aliases genéricos
   const BLOCK_TYPE_MAP = {
     // Seções v3 → blocos atômicos/registry
     HeroSection: 'result-congrats',
@@ -149,6 +184,8 @@ function main() {
 
     // CTA genérico
     CTAButton: 'cta-inline',
+    ctabutton: 'cta-inline',
+    'cta-section-inline': 'cta-inline',
 
     // Perguntas
     'question-progress': 'question-progress',
@@ -157,19 +194,113 @@ function main() {
     'question-instructions': 'question-instructions',
     'question-navigation': 'question-navigation',
     'options-grid': 'options-grid',
+    'options grid': 'options-grid',
+    'option-grid': 'options-grid',
+    options: 'options-grid',
+    question: 'question-text',
+    'quiz-question': 'question-text',
+    'quiz-options-grid': 'options-grid',
 
     // Transição
     'transition-hero': 'transition-hero',
     'transition-title': 'transition-title',
     'transition-text': 'transition-text',
+    transition: 'transition-title',
+    'transition-result': 'transition-hero',
+    'transition-loader': 'transition-loader',
+    'transition-progress': 'transition-progress',
+
+    // Conteúdo genérico → blocos atômicos
+    header: 'heading-inline',
+    title: 'heading-inline',
+    subtitle: 'text-inline',
+    description: 'text-inline',
+    paragraph: 'text-inline',
+    footer: 'legal-notice',
+    logo: 'image-inline',
+    'image-display': 'image-inline',
+    progress: 'progress-inline',
+    'progress-bar': 'progress-inline',
+    loading: 'transition-loader',
+    spinner: 'transition-loader',
+
+    // Oferta/Resultado genéricos
+    offer: 'offer-hero',
+    'offer-header': 'offer-hero',
+    'offer-hero-section': 'offer-hero',
+    'result-display': 'result-main',
+    result: 'result-main',
+    'result-offer': 'offer-hero',
+    'result-card-inline': 'result-card',
+    'result.headline': 'result-congrats',
+    'result.secondaryList': 'result-secondary-styles',
+
+    // Aliases diversos
+    headline: 'heading-inline',
+    'heading-inline': 'heading-inline',
+    heading: 'heading-inline',
+    'quiz-progress': 'progress-inline',
+    'quiz-button': 'button-inline',
+    'lead-form': 'lead-form',
+    // Ofertas: aliases observados
+    'offer-faq-section': 'offer-faq-section',
+    'offer-guarantee-section': 'guarantee',
+    'offer-problem-section': 'benefits',
+    'offer-product-showcase': 'result-style',
+    'offer-solution-section': 'benefits',
+    'offer.testimonial': 'testimonials',
+    // Preços
+    price: 'pricing',
+    'pricing-card': 'pricing',
+    // Social proof/testemunhos
+    'social-proof': 'testimonials',
+    testimonial: 'testimonial-card-inline',
+    'testimonial-card': 'testimonial-card-inline',
+    'testimonials-inline': 'testimonials',
+    // Perguntas/estratégico
+    'question-block': 'question-text',
+    strategic: 'strategic-question',
+    'strategic-question-main': 'strategic-question',
+    // Outros
+    faq: 'offer-faq-section',
+    video: 'image-inline',
+    'welcome-form-block': 'intro-form',
+    'transition.next': 'transition-title',
+    'quiz-offer-pricing-inline': 'offer-pricing-table',
+    'style-card': 'style-card-inline',
+  };
+
+  const IGNORE_TYPES = new Set([
+    // Palavras que aparecem como "type" em outras estruturas (não são block types)
+    'image/x-icon',
+    'required',
+    'both',
+    'singleChoice',
+    'multipleChoice',
+    // valores de estilo (não são blocos)
+    'romântico', 'elegante', 'natural', 'classico', 'criativo', 'dramático', 'sexy', 'highest', 'solid', 'fade', 'scale', 'slideUp',
+    // mais termos que aparecem como metadados de seleção
+    'selection', 'single-choice', 'multiple', 'multiple-choice', 'scored',
+  ]);
+
+  const isPlausibleBlockType = (t) => {
+    if (!t || IGNORE_TYPES.has(t)) return false;
+    if (BLOCK_TYPE_MAP[t]) return true;
+    // V3 sections com PascalCase reconhecidas
+    if (/^[A-Z][A-Za-z]+Section$/.test(t)) return true;
+    // Tipos canônicos com kebab-case e opcionais namespaces com ponto
+    if (/^[a-z0-9-]+(\.[a-z0-9-]+)?$/.test(t)) return true;
+    return false;
   };
 
   const mapType = (t) => BLOCK_TYPE_MAP[t] || t;
-  const used = shouldNormalize ? Array.from(new Set(usedRaw.map(mapType))).sort() : usedRaw;
+  const filtered = usedRaw.filter(isPlausibleBlockType);
+  const used = shouldNormalize ? Array.from(new Set(filtered.map(mapType))).sort() : filtered;
   const schemas = collectSchemaTypes();
   const registry = Array.from(new Set([
     ...collectRegistryTypes(),
     ...collectRendererTypes(),
+    ...collectUniversalRendererTypes(),
   ])).sort();
 
   const noSchema = used.filter(t => !schemas.includes(t));
