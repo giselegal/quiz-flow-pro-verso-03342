@@ -16,7 +16,8 @@
  */
 
 
-console.log('📦 QuizModularProductionEditor: Module loading...');
+const logModule = createLogger({ namespace: 'QuizModularEditor' });
+logModule.debug('📦 QuizModularProductionEditor: Module loading...');
 
 import React, { useState, useCallback, useEffect, useMemo, Suspense, useRef } from 'react';
 import '@/styles/globals.css'; // garante estilos de produção (quiz-option*, quiz-options-*)
@@ -431,7 +432,7 @@ interface QuizModularProductionEditorProps {
 export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorProps> = ({
     funnelId: initialFunnelId
 }) => {
-    console.log('✅ QuizModularProductionEditor: Component rendering', { initialFunnelId });
+    logModule.debug('✅ QuizModularProductionEditor: Component rendering', { initialFunnelId });
 
     // 🎯 FASE 5: Cache Service para otimização
     // Cache unificado disponível para futuras otimizações locais do editor
