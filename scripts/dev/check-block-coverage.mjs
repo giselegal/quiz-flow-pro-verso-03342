@@ -84,7 +84,48 @@ function collectRegistryTypes() {
 }
 
 function main() {
-  const used = collectTemplateTypes();
+  const usedRaw = collectTemplateTypes();
+
+  // Opção: normalizar tipos via mapeamento conhecido (reduz falsos positivos)
+  // Use: node scripts/dev/check-block-coverage.mjs --normalize
+  const shouldNormalize = process.argv.includes('--normalize');
+
+  // Subconjunto essencial do BLOCK_TYPE_MAP (alinhado com src/utils/blockTypeMapper.ts)
+  const BLOCK_TYPE_MAP = {
+    // Seções v3 → blocos atômicos/registry
+    HeroSection: 'result-congrats',
+    StyleProfileSection: 'result-main',
+    TransformationSection: 'benefits',
+    MethodStepsSection: 'benefits',
+    BonusSection: 'benefits',
+    SocialProofSection: 'testimonials',
+    OfferSection: 'offer-hero',
+    GuaranteeSection: 'guarantee',
+    ResultCalculationSection: 'result-calculation',
+
+    // Variantes comuns
+    'result-card': 'result-card',
+    'result-header': 'result-congrats',
+
+    // CTA genérico
+    CTAButton: 'cta-inline',
+
+    // Perguntas
+    'question-progress': 'question-progress',
+    'question-number': 'question-number',
+    'question-text': 'question-text',
+    'question-instructions': 'question-instructions',
+    'question-navigation': 'question-navigation',
+    'options-grid': 'options-grid',
+
+    // Transição
+    'transition-hero': 'transition-hero',
+    'transition-title': 'transition-title',
+    'transition-text': 'transition-text',
+  };
+
+  const mapType = (t) => BLOCK_TYPE_MAP[t] || t;
+  const used = shouldNormalize ? Array.from(new Set(usedRaw.map(mapType))).sort() : usedRaw;
   const schemas = collectSchemaTypes();
   const registry = collectRegistryTypes();
 
