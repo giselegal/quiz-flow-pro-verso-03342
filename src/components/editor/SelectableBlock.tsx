@@ -59,6 +59,8 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = ({
             e.preventDefault();
             e.stopPropagation();
             onSelect(blockId);
+            // Abrir painel de propriedades imediatamente ao selecionar
+            onOpenProperties?.(blockId);
         }
     }, [blockId, isEditable, onSelect]);
 
