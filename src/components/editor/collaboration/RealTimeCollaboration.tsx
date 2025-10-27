@@ -619,7 +619,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
             case 'move':
             case 'resize':
                 // Would need to store previous state for proper undo
-                const element = elements.find(el => el.id === operation.elementId);
+                const element = elements.find((el: EditorElement) => el.id === operation.elementId);
                 if (element) {
                     inverseOp.data = { /* previous state */ };
                 }
