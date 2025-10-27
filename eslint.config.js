@@ -103,7 +103,7 @@ export default [
       'indent': 'off', // Let Prettier handle this
       'quotes': ['warn', 'single', { avoidEscape: true }],
       'semi': ['error', 'always'],
-      'comma-dangle': ['warn', 'es5'],
+  'comma-dangle': ['warn', 'always-multiline'],
 
       // Import/Export rules
   'no-default-export': 'off',
