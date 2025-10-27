@@ -558,7 +558,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     };
 
     // Validação em tempo real (fase inicial - regras básicas)
-    const { byStep, byBlock } = useValidation(steps);
+    const { byStep, byBlock } = useValidation(stepsView || steps);
 
     // Hook de alterações não salvas
     const {
@@ -2780,7 +2780,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         const stepIdToUse = currentStepId || fallbackStepId;
 
         // Itens da coluna de etapas
-        const stepItems = steps.map(s => ({
+        const stepItems = (stepsView || steps).map(s => ({
             id: s.id,
             label: s.id,
             blockCount: (s.blocks || []).length,
@@ -3130,7 +3130,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             />
                         ) : (
                             <StepNavigator
-                                steps={steps}
+                                steps={stepsView || steps}
                                 selectedStepId={editorCtx ? effectiveSelectedStepId : selectedStepId}
                                 byStep={byStep as any}
                                 onSelect={(id) => { setSelectedStepIdUnified(id); setSelectedBlockIdUnified(''); }}
@@ -3173,7 +3173,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                     canvasPanel={(
                         <CanvasArea
                             enableInlinePreview
-                            steps={steps}
+                            steps={stepsView || steps}
                             selectedStep={selectedStep}
                             headerConfig={headerConfig}
                             liveScores={liveScores}
@@ -3288,7 +3288,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         <DuplicateBlockDialog
                             open={duplicateModalOpen}
                             blockType={blockPendingDuplicate?.type}
-                            steps={steps.map(s => ({ id: s.id, type: s.type }))}
+                            steps={(stepsView || steps).map(s => ({ id: s.id, type: s.type }))}
                             targetStepId={targetStepId}
                             onChangeTarget={setTargetStepId}
                             onCancel={() => { setDuplicateModalOpen(false); setBlockPendingDuplicate(null); }}
@@ -3330,10 +3330,11 @@ const LivePreviewContainer: React.FC<LivePreviewContainerProps> = React.memo(({ 
 
     // Debounce para não repintar runtime a cada digitação
     React.useEffect(() => {
+        const base = stepsView || steps;
         if (debounceRef.current) window.clearTimeout(debounceRef.current);
-        debounceRef.current = window.setTimeout(() => setDebouncedSteps(steps), 400);
+        debounceRef.current = window.setTimeout(() => setDebouncedSteps(base), 400);
         return () => { if (debounceRef.current) window.clearTimeout(debounceRef.current); };
-    }, [steps]);
+    }, [stepsView, steps]);
 
     // Persistir preferência de modo
     React.useEffect(() => {
