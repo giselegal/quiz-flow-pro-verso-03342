@@ -10,8 +10,8 @@
 
 import React, { useMemo } from 'react';
 import { appLogger } from '@/utils/logger';
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, useSortable, arrayMove } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import UniversalBlockRenderer from '@/components/editor/blocks/UniversalBlockRenderer';
 import { useResultOptional } from '@/contexts/ResultContext';
@@ -34,6 +34,7 @@ interface ModularResultStepProps {
     onBlockSelect?: (blockId: string) => void;
     onOpenProperties?: (blockId: string) => void;
     editor?: any;
+    onBlocksReorder?: (stepId: string, newOrder: string[]) => void;
 }
 
 /**
@@ -106,6 +107,7 @@ export default function ModularResultStep({
     onBlockSelect = () => { },
     onOpenProperties = () => { },
     editor: editorProp,
+    onBlocksReorder,
 }: ModularResultStepProps) {
     const editorContext = useEditor({ optional: true });
     const resultCtx = useResultOptional();
@@ -189,6 +191,24 @@ export default function ModularResultStep({
             .filter(Boolean) as Block[];
     }, [blocks, localOrder]);
 
+    // DnD config (faltava DndContext para reordenação funcionar)
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    );
+
+    const handleDragEnd = (event: any) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+        const ids = [...localOrder];
+        const oldIndex = ids.indexOf(String(active.id));
+        const newIndex = ids.indexOf(String(over.id));
+        if (oldIndex >= 0 && newIndex >= 0) {
+            const newIds = arrayMove(ids, oldIndex, newIndex);
+            setLocalOrder(newIds);
+            onBlocksReorder?.(stepKey, newIds);
+        }
+    };
+
     // Drop zones
     const DropZoneBefore: React.FC<{ blockId: string; blockIndex: number }> = ({ blockId }) => {
         const dropZoneId = `drop-before-${blockId}`;
@@ -197,8 +217,8 @@ export default function ModularResultStep({
             <div
                 ref={setNodeRef}
                 className={`h-8 -my-2 relative transition-all duration-200 border-2 rounded-md ${isOver
-                        ? 'bg-blue-100 border-blue-400 border-dashed shadow-lg'
-                        : 'bg-gray-50 border-gray-300 border-dashed opacity-40 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400'
+                    ? 'bg-blue-100 border-blue-400 border-dashed shadow-lg'
+                    : 'bg-gray-50 border-gray-300 border-dashed opacity-40 hover:opacity-100 hover:bg-blue-50 hover:border-blue-400'
                     }`}
             >
                 <div className={`absolute inset-0 flex items-center justify-center ${isOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
@@ -246,20 +266,22 @@ export default function ModularResultStep({
             <main className="w-full max-w-6xl mx-auto px-4 py-8">
                 <div className="bg-card p-6 md:p-12 rounded-lg shadow-lg max-w-4xl mx-auto">
                     {isEditable && orderedBlocks.length > 0 ? (
-                        <SortableContext items={localOrder} strategy={verticalListSortingStrategy}>
-                            {orderedBlocks.map((block: Block, index: number) => (
-                                <SortableBlock key={block.id} id={block.id} index={index}>
-                                    <UniversalBlockRenderer
-                                        block={block}
-                                        mode="editor"
-                                        isSelected={selectedBlockId === block.id}
-                                        onSelect={() => handleBlockClick(block.id)}
-                                        onClick={() => handleBlockClick(block.id)}
-                                    />
-                                </SortableBlock>
-                            ))}
-                            <CanvasEndDroppable />
-                        </SortableContext>
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                            <SortableContext items={localOrder} strategy={verticalListSortingStrategy}>
+                                {orderedBlocks.map((block: Block, index: number) => (
+                                    <SortableBlock key={block.id} id={block.id} index={index}>
+                                        <UniversalBlockRenderer
+                                            block={block}
+                                            mode="editor"
+                                            isSelected={selectedBlockId === block.id}
+                                            onSelect={() => handleBlockClick(block.id)}
+                                            onClick={() => handleBlockClick(block.id)}
+                                        />
+                                    </SortableBlock>
+                                ))}
+                                <CanvasEndDroppable />
+                            </SortableContext>
+                        </DndContext>
                     ) : orderedBlocks.length > 0 ? (
                         <>
                             {orderedBlocks.map((block: Block) => (

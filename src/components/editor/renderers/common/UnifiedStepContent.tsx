@@ -414,6 +414,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                         data={stepData as any}
                         blocks={(step as any)?.blocks || (editorState.stepBlocks as any)[stepKey] || []}
                         isEditable={isEditMode}
+                        onBlocksReorder={handleBlocksReorder}
                         userProfile={{
                             userName: (sessionData as any).userName || 'Visitante',
                             resultStyle: (primaryStyleId || (sessionData as any).resultStyle || (isEditMode ? 'natural' : '')) || 'natural',
