@@ -1,4 +1,4 @@
-import React, { Suspense, useMemo } from 'react';
+import React, { Suspense, useMemo, useState } from 'react';
 import { appLogger } from '@/utils/logger';
 import { Card, CardContent } from '@/components/ui/card';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -13,6 +13,7 @@ import { smartMigration } from '@/utils/stepDataMigration';
 import MemoBlockRow from './BlockRow';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { Badge } from '@/components/ui/badge';
+import { FixedSizeList as RWFixedSizeList } from 'react-window';
 
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
@@ -151,7 +152,12 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     // ✅ NOVO: Zona droppable ao final do canvas para aceitar novos componentes
     const { setNodeRef: setDropZoneRef, isOver } = useDroppable({
         id: 'canvas-end',
-    }); return (
+    });
+
+    // 🔬 DEV: toggle simples para avaliar react-window vs virtualização custom
+    const [useRW, setUseRW] = useState<boolean>(false);
+
+    return (
         <div className="flex-1 bg-gray-100 flex flex-col overflow-hidden">
             {/* 🎯 CANVAS HEADER - Controles de modo e device */}
             <div className="px-4 py-2 bg-white border-b flex items-center justify-between">
@@ -174,6 +180,17 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                         >
                             <Eye className="w-4 h-4" />
                             Preview
+                        </Button>
+                    )}
+                    {process.env.NODE_ENV === 'development' && (
+                        <Button
+                            onClick={() => setUseRW(v => !v)}
+                            variant={useRW ? 'default' : 'outline'}
+                            size="sm"
+                            className="gap-2"
+                            title="Alternar react-window (DEV)"
+                        >
+                            RW
                         </Button>
                     )}
                 </div>
@@ -235,35 +252,81 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                             {(virtualizationEnabled || BlockRow) ? (
                                 <div data-testid="canvas-legacy-virtualized">
                                     {virtualizationEnabled && (
-                                        <div className="mb-2 text-xs text-muted-foreground">
-                                            Virtualização ativa — {vTotal} blocos — exibindo {vVisible.length}
+                                        <div className="mb-2 text-xs text-muted-foreground flex items-center gap-2">
+                                            <span>Virtualização ativa — {vTotal} blocos — exibindo {vVisible.length}</span>
+                                            {process.env.NODE_ENV === 'development' && (
+                                                <span className="text-[10px] text-slate-400">modo: {useRW ? 'react-window' : 'custom'}</span>
+                                            )}
                                         </div>
                                     )}
-                                    {vTopSpacer > 0 && <div style={{ height: vTopSpacer }} />}
-                                    {vVisible.map((block: any) => {
-                                        const RowComp = (BlockRow as any) || (MemoBlockRow as any);
-                                        return (
-                                            <RowComp
-                                                key={block.id}
-                                                block={block}
-                                                allBlocks={rootBlocks}
-                                                // Defaults defensivos para compat com testes
-                                                byBlock={{}}
-                                                selectedBlockId={selectedBlockId || ''}
-                                                isMultiSelected={isMultiSelected || ((id: string) => false)}
-                                                handleBlockClick={handleBlockClick || ((e: any) => { })}
-                                                renderBlockPreview={renderBlockPreview || ((b: any) => null)}
-                                                removeBlock={removeBlock || (() => { })}
-                                                stepId={migratedStep.id}
-                                                setBlockPendingDuplicate={setBlockPendingDuplicate || (() => { })}
-                                                setTargetStepId={setTargetStepId || (() => { })}
-                                                setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
-                                                hoverContainerId={hoverContainerId}
-                                                setHoverContainerId={setHoverContainerId}
-                                                activeId={activeId}
-                                            />);
-                                    })}
-                                    {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
+
+                                    {/* Caminho experimental com react-window (DEV) */}
+                                    {virtualizationEnabled && useRW && process.env.NODE_ENV === 'development' ? (
+                                        <div className="border rounded-md">
+                                            <RWFixedSizeList
+                                                height={800}
+                                                width={'100%'}
+                                                itemCount={rootBlocks.length}
+                                                itemSize={140}
+                                                itemKey={(index) => rootBlocks[index].id}
+                                            >
+                                                {({ index, style }) => {
+                                                    const block = rootBlocks[index];
+                                                    const RowComp = (BlockRow as any) || (MemoBlockRow as any);
+                                                    return (
+                                                        <div style={style}>
+                                                            <RowComp
+                                                                key={block.id}
+                                                                block={block}
+                                                                allBlocks={rootBlocks}
+                                                                byBlock={{}}
+                                                                selectedBlockId={selectedBlockId || ''}
+                                                                isMultiSelected={isMultiSelected || ((id: string) => false)}
+                                                                handleBlockClick={handleBlockClick || ((e: any) => { })}
+                                                                renderBlockPreview={renderBlockPreview || ((b: any) => null)}
+                                                                removeBlock={removeBlock || (() => { })}
+                                                                stepId={migratedStep.id}
+                                                                setBlockPendingDuplicate={setBlockPendingDuplicate || (() => { })}
+                                                                setTargetStepId={setTargetStepId || (() => { })}
+                                                                setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
+                                                                hoverContainerId={hoverContainerId}
+                                                                setHoverContainerId={setHoverContainerId}
+                                                                activeId={activeId}
+                                                            />
+                                                        </div>
+                                                    );
+                                                }}
+                                            </RWFixedSizeList>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            {vTopSpacer > 0 && <div style={{ height: vTopSpacer }} />}
+                                            {vVisible.map((block: any) => {
+                                                const RowComp = (BlockRow as any) || (MemoBlockRow as any);
+                                                return (
+                                                    <RowComp
+                                                        key={block.id}
+                                                        block={block}
+                                                        allBlocks={rootBlocks}
+                                                        // Defaults defensivos para compat com testes
+                                                        byBlock={{}}
+                                                        selectedBlockId={selectedBlockId || ''}
+                                                        isMultiSelected={isMultiSelected || ((id: string) => false)}
+                                                        handleBlockClick={handleBlockClick || ((e: any) => { })}
+                                                        renderBlockPreview={renderBlockPreview || ((b: any) => null)}
+                                                        removeBlock={removeBlock || (() => { })}
+                                                        stepId={migratedStep.id}
+                                                        setBlockPendingDuplicate={setBlockPendingDuplicate || (() => { })}
+                                                        setTargetStepId={setTargetStepId || (() => { })}
+                                                        setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
+                                                        hoverContainerId={hoverContainerId}
+                                                        setHoverContainerId={setHoverContainerId}
+                                                        activeId={activeId}
+                                                    />);
+                                            })}
+                                            {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}
+                                        </>
+                                    )}
                                 </div>
                             ) : (
                                 <>
