@@ -883,9 +883,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         // 🚀 ASYNC: Carregar steps de forma lazy e assíncrona
                         (async () => {
                             try {
-                                console.time('⚡ Lazy load all steps');
+                                const __t0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
                                 const stepsMap = await loadAllQuizSteps();
-                                console.timeEnd('⚡ Lazy load all steps');
+                                const __t1 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+                                appLogger.debug('⚡ Lazy load all steps', { ms: Math.round(__t1 - __t0) });
 
                                 const enriched: EditableQuizStep[] = await Promise.all(STEP_ORDER.map(async (stepId, idx) => {
                                     const quizStep = stepsMap.get(stepId);
