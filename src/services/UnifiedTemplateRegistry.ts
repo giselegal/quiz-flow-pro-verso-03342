@@ -137,7 +137,10 @@ export class UnifiedTemplateRegistry {
    * Carregar step (cascade L1 → L2 → L3)
    */
   async getStep(stepId: string): Promise<Block[]> {
-    console.time(`[Registry] getStep(${stepId})`);
+    // Evita colisão de labels em execuções concorrentes (especialmente em testes)
+    const _timeBase = `[Registry] getStep(${stepId})`;
+    const _timeLabel = `${_timeBase}#${typeof performance !== 'undefined' && typeof performance.now === 'function' ? Math.floor(performance.now()) : Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+    console.time(_timeLabel);
     this.stats.loads++;
     
     // L1: Memory Cache (5ms)
@@ -145,7 +148,7 @@ export class UnifiedTemplateRegistry {
     if (l1Result) {
       this.stats.l1Hits++;
       console.log(`⚡ L1 HIT: ${stepId} (${l1Result.length} blocos)`);
-      console.timeEnd(`[Registry] getStep(${stepId})`);
+      console.timeEnd(_timeLabel);
       return l1Result;
     }
     
@@ -160,7 +163,7 @@ export class UnifiedTemplateRegistry {
           
           // Promover para L1
           this.l1Cache.set(stepId, l2Entry.blocks);
-          console.timeEnd(`[Registry] getStep(${stepId})`);
+          console.timeEnd(_timeLabel);
           return l2Entry.blocks;
         }
       } catch (error) {
@@ -177,7 +180,7 @@ export class UnifiedTemplateRegistry {
       // Promover para L1 e L2
       this.l1Cache.set(stepId, l3Result);
       await this.saveToL2(stepId, l3Result);
-      console.timeEnd(`[Registry] getStep(${stepId})`);
+      console.timeEnd(_timeLabel);
       return l3Result;
     }
     
@@ -193,7 +196,7 @@ export class UnifiedTemplateRegistry {
       console.log(`✅ Carregado do servidor: ${stepId} (${serverResult.length} blocos)`);
     }
     
-    console.timeEnd(`[Registry] getStep(${stepId})`);
+    console.timeEnd(_timeLabel);
     return serverResult || [];
   }
 
