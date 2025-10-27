@@ -1804,8 +1804,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         }
         // Progress Header (bloco opcional adicional ao cabeçalho fixo)
         if (type === 'progress-header') {
-            const totalSteps = steps.length;
-            const currentIndex = selectedStep ? steps.findIndex(s => s.id === selectedStep.id) : -1;
+            const totalSteps = (stepsView || steps).length;
+            const currentIndex = selectedStep ? (stepsView || steps).findIndex(s => s.id === selectedStep.id) : -1;
             const auto = properties?.autoProgress !== false && properties?.progressEnabled !== false;
             const percent = auto && currentIndex >= 0 && totalSteps > 0
                 ? Math.min(100, Math.round(((currentIndex + 1) / totalSteps) * 100))
