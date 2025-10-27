@@ -1,6 +1,9 @@
 /**
  * Serviço para gerenciar múltiplos Facebook Pixels no sistema
  */
+import { getLogger } from '@/utils/logging';
+
+const logger = getLogger();
 
 interface FunnelConfig {
   pixelId: string;
@@ -99,7 +102,7 @@ export const trackFunnelEvent = (eventName: string, eventData: Record<string, an
   };
 
   // Registra no console para debugging
-  console.log(`Tracking funnel event: ${eventName}`, enrichedData);
+  logger.info('pixel', 'Tracking funnel event', { eventName, data: enrichedData });
 
   // Se o Facebook Pixel estiver disponível, envia o evento
   if (typeof window !== 'undefined' && window.fbq) {
