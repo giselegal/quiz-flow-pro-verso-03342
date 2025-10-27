@@ -253,6 +253,8 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   onClick,
 }) => {
   const logger = useLogger('BlockRenderer');
+  // Garante ID seguro para logs, métricas e attributes mesmo quando houver dados incompletos em runtime
+  const safeBlockId = (block && typeof (block as any).id === 'string') ? (block as any).id : '';
 
   // 🚨 DEPRECATION WARNING
   if (isPreviewing !== undefined && process.env.NODE_ENV === 'development') {
@@ -279,7 +281,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 
     // Sample rate: só registra 1 a cada N renders por bloco para reduzir ruído
     const SAMPLE_RATE = 10; // 10%
-    const shouldSample = (Math.abs(hashCode(block.id)) % 100) < SAMPLE_RATE;
+    const shouldSample = (Math.abs(hashCode(safeBlockId)) % 100) < SAMPLE_RATE;
 
     if (shouldSample) {
       const now = Date.now();
@@ -290,11 +292,11 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         isSelected,
       };
       // LRU já limita tamanho, mas ainda assim evitar explosão de chaves
-      renderCache.set(`${block.id}-${now % 10_000}`, renderData);
+      renderCache.set(`${safeBlockId}-${now % 10_000}`, renderData);
 
       blockRendererDebug.logRender({
         blockType: block.type,
-        blockId: block.id,
+        blockId: safeBlockId,
         renderTime,
         timestamp: now,
         isSelected,
@@ -326,32 +328,32 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
   // ✅ LOG DE RENDERIZAÇÃO (apenas em desenvolvimento)
   React.useEffect(() => {
     logger.render(`UniversalBlockRenderer[${block.type}]`, {
-      blockId: block.id,
+      blockId: safeBlockId,
       isSelected,
       isPreviewing,
       hasComponent: !!BlockComponent,
     });
-  }, [block.type, block.id, BlockComponent, isSelected, isPreviewing, logger]);
+  }, [block.type, safeBlockId, BlockComponent, isSelected, isPreviewing, logger]);
 
   // ✅ OTIMIZAÇÃO: Memoizar handlers com dependências estáveis
   const handleUpdate = React.useMemo(() =>
-    onUpdate ? (updates: any) => onUpdate(block.id, updates) : undefined
-    , [block.id, onUpdate]);
+    onUpdate ? (updates: any) => onUpdate(safeBlockId, updates) : undefined
+    , [safeBlockId, onUpdate]);
 
   const handleClick = React.useMemo(() => {
     if (onSelect) {
-      return () => onSelect(block.id);
+      return () => onSelect(safeBlockId);
     } else if (onClick) {
       return onClick;
     }
     return undefined;
-  }, [block.id, onSelect, onClick]);
+  }, [safeBlockId, onSelect, onClick]);
 
   if (!BlockComponent) {
     // Log detalhado para debug
     logger.error('Componente não encontrado', {
       blockType: block.type,
-      blockId: block.id,
+      blockId: safeBlockId,
       availableInCache: Array.from(componentCache.keys()),
       availableInRegistry: Object.keys(BlockComponentRegistry),
     });
@@ -364,14 +366,14 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         )}
         style={style}
         onClick={!isPreviewing ? handleClick : undefined}
-        data-block-id={block.id}
+        data-block-id={safeBlockId}
         data-block-type={block.type}
       >
         <div className="text-sm text-red-700 font-medium mb-2">
           ⚠️ Componente não encontrado: {block.type}
         </div>
         <div className="text-xs text-red-600 mb-2">
-          ID: {block.id}
+          ID: {safeBlockId}
         </div>
         <div className="text-xs text-red-500">
           Verifique se o componente está registrado no EnhancedBlockRegistry
@@ -411,7 +413,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
       )}
       style={style}
       onClick={isEditMode ? handleClick : undefined}
-      data-block-id={block.id}
+      data-block-id={safeBlockId}
       data-block-type={block.type}
     >
       {/* 🎯 CONTROLES DE EDIÇÃO - Apenas em modo edição */}
@@ -419,7 +421,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onDelete(block.id);
+            onDelete(safeBlockId);
           }}
           className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity z-10"
         >
@@ -429,7 +431,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 
       {isEditMode && isSelected && (
         <div className="absolute top-0 left-0 -mt-6 text-xs bg-blue-500 text-white px-2 py-1 rounded z-10">
-          {block.type} #{block.id}
+          {block.type} #{safeBlockId}
         </div>
       )}
 
@@ -443,7 +445,8 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
           </div>
         }
       >
-        <ErrorBoundary blockType={block.type} blockId={block.id}>
+        <ErrorBoundary blockType={block.type} blockId={safeBlockId}>
+          {/* Nota: ErrorBoundary recebe o ID "cru" do bloco; caso esteja ausente, passamos o safeBlockId para rastreamento estável */}
           {BlockComponent && (
             <BlockComponent
               // ✅ CORE PROPS - AtomicBlockProps padrão
@@ -459,7 +462,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
                 handleUpdate(updates);
               } : undefined}
 
-              onDelete={onDelete ? () => onDelete(block.id) : undefined}
+              onDelete={onDelete ? () => onDelete(safeBlockId) : undefined}
 
             // ❌ REMOVED: isPreviewing (deprecated - use isEditable instead)
             />

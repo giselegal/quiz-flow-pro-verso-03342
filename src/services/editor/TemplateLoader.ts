@@ -37,7 +37,8 @@ export interface LoadedTemplate {
 
 export class TemplateLoader {
   private masterTemplateRef: any | null = null;
-  private loadingSteps = new Set<string>();
+  // Mantém promessas em voo por step, evitando concorrência e erros "already loading"
+  private inFlightLoads = new Map<string, Promise<LoadedTemplate>>();
 
   /**
    * Utilitário: executa uma função assíncrona com retry + backoff exponencial simples.
@@ -78,81 +79,91 @@ export class TemplateLoader {
   async loadStep(step: number | string): Promise<LoadedTemplate> {
     const normalizedKey = this.normalizeStepKey(step);
 
-    // Proteção contra carregamento duplicado
-    if (this.loadingSteps.has(normalizedKey)) {
-      console.log(`⏭️ Skip: ${normalizedKey} já está sendo carregado`);
-      throw new Error(`Step ${normalizedKey} already loading`);
+    // De-dup: se já existe um carregamento em andamento para esse step, reutiliza a mesma promise
+    const existing = this.inFlightLoads.get(normalizedKey);
+    if (existing) {
+      console.log(`⏭️ Reutilizando carregamento em andamento para ${normalizedKey}`);
+      return existing;
     }
 
-    this.loadingSteps.add(normalizedKey);
+    // Cria a promise de carregamento e registra no mapa
+    const loadPromise = (async (): Promise<LoadedTemplate> => {
+      try {
+        console.group(`🔍 [TemplateLoader] ${normalizedKey}`);
+        console.log('🎯 TEMPLATE_SOURCES:', TEMPLATE_SOURCES);
+
+        // Preferência explícita: quando ?template=quiz21StepsComplete estiver na URL do /editor,
+        // priorizamos os JSONs individuais gerados em public/templates/step-XX.json
+        let preferPublicStepJSON = TEMPLATE_SOURCES.preferPublicStepJSON;
+        try {
+          if (typeof window !== 'undefined' && window.location?.search) {
+            const sp = new URLSearchParams(window.location.search);
+            // URL param força preferência
+            if ((sp.get('template') || '').toLowerCase() === 'quiz21stepscomplete') {
+              preferPublicStepJSON = true;
+            }
+          }
+        } catch {
+          // ignore
+        }
+
+        // Preferência: quando for fluxo de template via ?template=quiz21StepsComplete,
+        // tentamos os JSONs públicos PRIMEIRO (evita cache desatualizado em dev)
+        if (preferPublicStepJSON) {
+          const fromPublic = await this.loadFromPublicStepJSON(normalizedKey);
+          if (fromPublic) return fromPublic;
+        }
+
+        // Estratégia 1: Cache unificado (somente se não forçar público)
+        const cached = this.loadFromCache(normalizedKey);
+        if (cached) return cached;
+
+        // Estratégia 2: Master JSON público (PRIORIDADE quando flag ativa!)
+        console.log('🔍 Verificando flag useMasterJSON:', TEMPLATE_SOURCES.useMasterJSON);
+        if (TEMPLATE_SOURCES.useMasterJSON) {
+          console.log('✅ Flag useMasterJSON está TRUE - tentando carregar master JSON...');
+          const fromMaster = await this.loadFromMasterJSON(normalizedKey);
+          if (fromMaster) {
+            console.log(`🎉 Master JSON SUCCESS: ${fromMaster.blocks.length} blocos, source: ${fromMaster.source}`);
+            return fromMaster;
+          }
+          console.warn('⚠️ loadFromMasterJSON retornou null - tentando outras fontes...');
+        } else {
+          console.warn('❌ Flag useMasterJSON está FALSE - pulando master JSON');
+        }
+
+        // Estratégia 3: TemplateRegistry (fonte canônica em memória - FALLBACK)
+        const fromRegistry = this.loadFromRegistry(normalizedKey);
+        if (fromRegistry) return fromRegistry;
+
+        // Estratégia 4: JSON normalizado (gates 02-11) - controlado por flag
+        if (TEMPLATE_SOURCES.useNormalizedJSON) {
+          const normalized = await this.loadNormalized(normalizedKey);
+          if (normalized) return normalized;
+        }
+
+        // Estratégia 5: Templates modulares (controlado por flag)
+        if (TEMPLATE_SOURCES.useModularTemplates) {
+          const modular = this.loadModular(normalizedKey);
+          if (modular) return modular;
+        }
+
+        // Estratégia 6: TypeScript template (fallback)
+        console.warn('🔄 Caindo no fallback TypeScript template');
+        return this.loadFromTypescript(normalizedKey);
+      } finally {
+        console.groupEnd();
+      }
+    })();
+
+    this.inFlightLoads.set(normalizedKey, loadPromise);
 
     try {
-      console.group(`🔍 [TemplateLoader] ${normalizedKey}`);
-      console.log('🎯 TEMPLATE_SOURCES:', TEMPLATE_SOURCES);
-
-      // Preferência explícita: quando ?template=quiz21StepsComplete estiver na URL do /editor,
-      // priorizamos os JSONs individuais gerados em public/templates/step-XX.json
-      let preferPublicStepJSON = TEMPLATE_SOURCES.preferPublicStepJSON;
-      try {
-        if (typeof window !== 'undefined' && window.location?.search) {
-          const sp = new URLSearchParams(window.location.search);
-          // URL param força preferência
-          if ((sp.get('template') || '').toLowerCase() === 'quiz21stepscomplete') {
-            preferPublicStepJSON = true;
-          }
-        }
-      } catch {
-        // ignore
-      }
-
-      // Preferência: quando for fluxo de template via ?template=quiz21StepsComplete,
-      // tentamos os JSONs públicos PRIMEIRO (evita cache desatualizado em dev)
-      if (preferPublicStepJSON) {
-        const fromPublic = await this.loadFromPublicStepJSON(normalizedKey);
-        if (fromPublic) return fromPublic;
-      }
-
-      // Estratégia 1: Cache unificado (somente se não forçar público)
-      const cached = this.loadFromCache(normalizedKey);
-      if (cached) return cached;
-
-      // Estratégia 2: Master JSON público (PRIORIDADE quando flag ativa!)
-      console.log('🔍 Verificando flag useMasterJSON:', TEMPLATE_SOURCES.useMasterJSON);
-      if (TEMPLATE_SOURCES.useMasterJSON) {
-        console.log('✅ Flag useMasterJSON está TRUE - tentando carregar master JSON...');
-        const fromMaster = await this.loadFromMasterJSON(normalizedKey);
-        if (fromMaster) {
-          console.log(`🎉 Master JSON SUCCESS: ${fromMaster.blocks.length} blocos, source: ${fromMaster.source}`);
-          return fromMaster;
-        }
-        console.warn('⚠️ loadFromMasterJSON retornou null - tentando outras fontes...');
-      } else {
-        console.warn('❌ Flag useMasterJSON está FALSE - pulando master JSON');
-      }
-
-      // Estratégia 3: TemplateRegistry (fonte canônica em memória - FALLBACK)
-      const fromRegistry = this.loadFromRegistry(normalizedKey);
-      if (fromRegistry) return fromRegistry;
-
-      // Estratégia 4: JSON normalizado (gates 02-11) - controlado por flag
-      if (TEMPLATE_SOURCES.useNormalizedJSON) {
-        const normalized = await this.loadNormalized(normalizedKey);
-        if (normalized) return normalized;
-      }
-
-      // Estratégia 5: Templates modulares (controlado por flag)
-      if (TEMPLATE_SOURCES.useModularTemplates) {
-        const modular = this.loadModular(normalizedKey);
-        if (modular) return modular;
-      }
-
-      // Estratégia 6: TypeScript template (fallback)
-      console.warn('🔄 Caindo no fallback TypeScript template');
-      return this.loadFromTypescript(normalizedKey);
-
+      const result = await loadPromise;
+      return result;
     } finally {
-      this.loadingSteps.delete(normalizedKey);
-      console.groupEnd();
+      // Limpa a referência independentemente de sucesso ou erro, permitindo novos loads futuros
+      this.inFlightLoads.delete(normalizedKey);
     }
   }
 
@@ -689,7 +700,7 @@ export class TemplateLoader {
    */
   clear(): void {
     this.masterTemplateRef = null;
-    this.loadingSteps.clear();
+    this.inFlightLoads.clear();
   }
 }
 
