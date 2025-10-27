@@ -12,6 +12,7 @@ import { templateCache } from '@/utils/TemplateCache';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { templateKey } from '@/utils/cacheKeys';
 import { getQuiz21StepsTemplate } from '@/templates/imports';
+import { TemplateRegistry } from '@/services/TemplateRegistry';
 
 // Nota: Mantendo imports legados como referência, mas não utilizando no runtime
 // Para compatibilidade histórica apenas
@@ -69,7 +70,36 @@ export function loadStepTemplate(stepId: string): Block[] {
     }
   }
 
-  // 1. Primeiro tenta obter do template canônico (TS)
+  // 1. Preferir TemplateRegistry (pode conter overrides v3.1 blocks ou v3 sections)
+  try {
+    const registry = TemplateRegistry.getInstance();
+    const fromRegistry = registry.get(stepId);
+    if (fromRegistry) {
+      const tpl: any = fromRegistry;
+      // Caso override venha como blocks (v3.1), já convertemos diretamente
+      if (Array.isArray(tpl.blocks)) {
+        const blocks = convertTemplateBlocksToBlocks(tpl.blocks);
+        templateCache.set(cacheKey, blocks);
+        unifiedCache.set(cacheKey, blocks);
+        return blocks;
+      }
+      // Caso venha como sections (v3), mapear sections → blocks
+      if (Array.isArray(tpl.sections)) {
+        const blocks = (tpl.sections as any[]).map((section: any, index: number) => ({
+          id: section.id || `${stepId}-block-${index}`,
+          type: section.type,
+          order: section.position || index,
+          properties: section.properties || section.style || {},
+          content: section.content || {},
+        }));
+        templateCache.set(cacheKey, blocks);
+        unifiedCache.set(cacheKey, blocks);
+        return blocks;
+      }
+    }
+  } catch {}
+
+  // 2. Tentar obter do template canônico (TS)
   const canonicalTemplate = getQuiz21StepsTemplate();
   if (canonicalTemplate && canonicalTemplate[stepId]) {
     console.log(`✅ [loadStepTemplate] Usando fonte canônica (TS) para ${stepId}`);
@@ -91,7 +121,7 @@ export function loadStepTemplate(stepId: string): Block[] {
     return blocks;
   }
   
-  // 2. Fallback para templates legados (apenas compatibilidade histórica)
+  // 3. Fallback para templates legados (apenas compatibilidade histórica)
   console.warn(`⚠️ [loadStepTemplate] Fonte canônica não encontrou ${stepId}, usando fallback (deprecado)`);
   const templates: Record<string, StepTemplate> = {
     'step-12': step12Template as StepTemplate,
@@ -129,12 +159,13 @@ export function loadStepTemplate(stepId: string): Block[] {
  * Carrega todos os templates modulares
  */
 export function loadAllModularTemplates(): Record<string, Block[]> {
-  return {
-    'step-12': loadStepTemplate('step-12'),
-    'step-13': loadStepTemplate('step-13'),
-    'step-19': loadStepTemplate('step-19'),
-    'step-20': loadStepTemplate('step-20'),
-  };
+  // Carregar 1..21 dinamicamente
+  const result: Record<string, Block[]> = {};
+  for (let i = 1; i <= 21; i++) {
+    const id = `step-${String(i).padStart(2, '0')}`;
+    result[id] = loadStepTemplate(id);
+  }
+  return result;
 }
 
 /**
@@ -142,7 +173,13 @@ export function loadAllModularTemplates(): Record<string, Block[]> {
  * Estes steps têm arrays de blocos direto no JSON, sem conversão
  */
 export function hasStaticBlocksJSON(stepId: string): boolean {
-  return ['step-12', 'step-19', 'step-20'].includes(stepId);
+  try {
+    const registry = TemplateRegistry.getInstance();
+    const tpl: any = registry.get(stepId);
+    return Array.isArray(tpl?.blocks);
+  } catch {
+    return ['step-12', 'step-19', 'step-20'].includes(stepId);
+  }
 }
 
 /**
@@ -150,8 +187,16 @@ export function hasStaticBlocksJSON(stepId: string): boolean {
  * MANTIDO para backward compatibility
  */
 export function hasModularTemplate(stepId: string): boolean {
-  // ✅ Apenas steps com JSON modular específico (12, 13, 19, 20)
-  // Steps 1-11, 14-18, 21 usam Master JSON ou TypeScript fallback
+  // Preferir detecção dinâmica via TemplateRegistry
+  try {
+    const registry = TemplateRegistry.getInstance();
+    const tpl: any = registry.get(stepId);
+    if (tpl && (Array.isArray(tpl.blocks) || Array.isArray(tpl.sections))) return true;
+  } catch {}
+  // Caso contrário, considerar canônico TS disponível
+  const canonical = getQuiz21StepsTemplate() as any;
+  if (canonical && canonical[stepId]) return true;
+  // Fallback legado
   return ['step-12', 'step-13', 'step-19', 'step-20'].includes(stepId);
 }
 
@@ -159,12 +204,11 @@ export function hasModularTemplate(stepId: string): boolean {
  * Obtém metadata do template
  */
 export function getTemplateMetadata(stepId: string): { name: string; description: string } | null {
-  const templates: Record<string, StepTemplate> = {
-    'step-12': step12Template as StepTemplate,
-    'step-19': step19Template as StepTemplate,
-    'step-20': step20Template as StepTemplate,
-  };
-
-  const template = templates[stepId];
-  return template?.metadata || null;
+  try {
+    const registry = TemplateRegistry.getInstance();
+    const tpl: any = registry.get(stepId);
+    if (tpl?.metadata) return tpl.metadata;
+  } catch {}
+  const canonical = getQuiz21StepsTemplate() as any;
+  return canonical?.[stepId]?.metadata || null;
 }
