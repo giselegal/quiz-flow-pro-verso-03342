@@ -72,11 +72,51 @@ function collectRegistryTypes() {
   const txt = readFileSafe(reg);
   const objStart = txt.indexOf('export const ENHANCED_BLOCK_REGISTRY');
   if (objStart < 0) return [];
-  const slice = txt.slice(objStart);
-  const re = /['`]([a-zA-Z0-9_.*-]+)['`]\s*:/g; // chaves do objeto
+  // Isolar apenas o literal do objeto do registro para evitar falsos positivos
+  const afterConst = txt.slice(objStart);
+  const firstBrace = afterConst.indexOf('{');
+  if (firstBrace < 0) return [];
+  let depth = 0;
+  let endIdx = -1;
+  for (let i = firstBrace; i < afterConst.length; i++) {
+    const ch = afterConst[i];
+    if (ch === '{') depth++;
+    else if (ch === '}') {
+      depth--;
+      if (depth === 0) { endIdx = i; break; }
+    }
+  }
+  if (endIdx < 0) return [];
+  const objLiteral = afterConst.slice(firstBrace, endIdx + 1);
+
+  // Capturar chaves com e sem aspas: 'key':, "key":, key:
+  const reQuoted = /['"]([a-zA-Z0-9_.*-]+)['"]\s*:/g;
+  const reBare = /\b([a-zA-Z_][a-zA-Z0-9_-]*)\s*:/g;
+
   const out = new Set();
   let m;
-  while ((m = re.exec(slice)) !== null) {
+  while ((m = reQuoted.exec(objLiteral)) !== null) {
+    const key = m[1];
+    if (key && !key.includes('*')) out.add(key);
+  }
+  while ((m = reBare.exec(objLiteral)) !== null) {
+    const key = m[1];
+    // Evitar capturar palavras reservadas comuns do objeto que não são chaves reais de bloco
+    // mas mantemos nomes simples como benefits, guarantee, etc.
+    if (key && !key.includes('*')) out.add(key);
+  }
+  return Array.from(out).sort();
+}
+
+function collectRendererTypes() {
+  // Considerar tipos suportados diretamente pelo BlockTypeRenderer (switch/case)
+  const p = path.join(ROOT, 'src', 'components', 'editor', 'quiz', 'renderers', 'BlockTypeRenderer.tsx');
+  const txt = readFileSafe(p);
+  if (!txt) return [];
+  const re = /case\s+['"]([^'\"]+)['"]\s*:/g;
+  const out = new Set();
+  let m;
+  while ((m = re.exec(txt)) !== null) {
     const key = m[1];
     if (key && !key.includes('*')) out.add(key);
   }
@@ -127,7 +167,10 @@ function main() {
   const mapType = (t) => BLOCK_TYPE_MAP[t] || t;
   const used = shouldNormalize ? Array.from(new Set(usedRaw.map(mapType))).sort() : usedRaw;
   const schemas = collectSchemaTypes();
-  const registry = collectRegistryTypes();
+  const registry = Array.from(new Set([
+    ...collectRegistryTypes(),
+    ...collectRendererTypes(),
+  ])).sort();
 
   const noSchema = used.filter(t => !schemas.includes(t));
   const noRegistry = used.filter(t => !registry.includes(t));
