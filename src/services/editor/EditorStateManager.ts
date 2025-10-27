@@ -53,41 +53,86 @@ export class EditorStateManager {
       const idx = currentBlocks.findIndex(b => b.id === blockId);
       if (idx === -1) return prev;
 
+      const ids = new Set(currentBlocks.map(b => b.id));
       const source = currentBlocks[idx] as any;
 
-      // Gera um ID único baseado no original
-      const baseId = `${source.id}-copy`;
-      let n = 1;
-      let newId = baseId;
-      const ids = new Set(currentBlocks.map(b => b.id));
-      while (ids.has(newId)) {
-        n += 1;
-        newId = `${baseId}-${n}`;
-      }
+      // Coleta descendentes (DFS) com base em parentId
+      const childrenMap = new Map<string, any[]>();
+      currentBlocks.forEach((b: any) => {
+        const p = (b.parentId || null) as string | null;
+        if (!childrenMap.has(p || '__root__')) childrenMap.set(p || '__root__', []);
+        childrenMap.get(p || '__root__')!.push(b);
+      });
 
-      // Cópia rasa do bloco (mantém type/content/properties/parentId quando existir)
-      const duplicated: Block = {
-        ...(source as Block),
-        id: newId,
-        order: idx + 1,
-        // parentId não faz parte da interface Block; preservar se existir em tempo de execução
-        ...(source.parentId ? { parentId: source.parentId } : {}),
-      } as any as Block;
+      const collectSubtree = (rootId: string): any[] => {
+        const result: any[] = [];
+        const stack: string[] = [rootId];
+        while (stack.length) {
+          const cur = stack.pop()!;
+          const node = currentBlocks.find(b => b.id === cur) as any;
+          if (node) {
+            result.push(node);
+            const kids = (childrenMap.get(cur) || []) as any[];
+            // Empilhar em ordem inversa para preservar ordem natural ao desempilhar
+            for (let i = kids.length - 1; i >= 0; i--) stack.push(kids[i].id);
+          }
+        }
+        return result;
+      };
+
+      const subtree = collectSubtree(source.id);
+
+      // Gerador de IDs únicos baseado no id original do bloco
+      const makeUniqueId = (base: string): string => {
+        let candidate = `${base}-copy`;
+        let n = 1;
+        while (ids.has(candidate)) {
+          n += 1;
+          candidate = `${base}-copy-${n}`;
+        }
+        ids.add(candidate);
+        return candidate;
+      };
+
+      const idMap = new Map<string, string>();
+      // Cria primeiro o ID do root para poder mapear filhos
+      idMap.set(source.id, makeUniqueId(source.id));
+
+      // Gera duplicatas mantendo relação de parentId (apontando para novos IDs)
+      const duplicates: Block[] = subtree.map((orig: any, i) => {
+        const isRoot = i === 0;
+        if (!isRoot && !idMap.has(orig.id)) idMap.set(orig.id, makeUniqueId(orig.id));
+        const newId = idMap.get(orig.id)!;
+        const newParentId = orig.parentId ? (idMap.get(orig.parentId) || orig.parentId) : null;
+        const dup: Block = {
+          ...(orig as Block),
+          id: newId,
+          // order será reatribuído globalmente adiante
+          order: orig.order,
+          ...(newParentId ? { parentId: newParentId } : { parentId: null }),
+        } as any as Block;
+        return dup;
+      });
+
+      // Posição de inserção: logo após a maior posição de índice entre os nós da subárvore (mantém proximidade)
+      const subtreeIndices = subtree.map(n => currentBlocks.findIndex(b => b.id === n.id)).filter(i => i >= 0);
+      const insertPos = (subtreeIndices.length ? Math.max(...subtreeIndices) : idx) + 1;
 
       const newBlocks = [...currentBlocks];
-      newBlocks.splice(idx + 1, 0, duplicated);
+      newBlocks.splice(insertPos, 0, ...duplicates);
       const reordered = newBlocks.map((b, i) => ({ ...b, order: i }));
 
+      const newRootId = idMap.get(source.id)!;
       const newState = {
         ...prev,
         stepBlocks: {
           ...prev.stepBlocks,
           [stepKey]: reordered,
         },
-        selectedBlockId: newId,
+        selectedBlockId: newRootId,
       } as EditorState;
 
-      createdId = newId;
+      createdId = newRootId;
       this.history.push(newState);
       return newState;
     });
