@@ -6,7 +6,7 @@ import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
 import reactPlugin from 'eslint-plugin-react';
-import nextPlugin from 'eslint-plugin-next';
+import nextPlugin from '@next/eslint-plugin-next';
 
 const isProd = process.env.NODE_ENV === 'production' || process.env.CI === 'true';
 
