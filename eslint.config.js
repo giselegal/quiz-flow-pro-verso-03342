@@ -24,6 +24,8 @@ export default [
       'public',
       // Temporário: evitar erro ENOENT intermitente neste caminho específico durante lint
       'src/components/editor/dnd/SortablePreviewBlockWrapper.tsx',
+      // Temporário: symlink corrompido; ignorar até normalização do arquivo
+      'src/components/editor/sidebar/EnhancedComponentsSidebar.tsx',
     ],
   },
 
