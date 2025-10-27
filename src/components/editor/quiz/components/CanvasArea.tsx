@@ -95,7 +95,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     }, [rawBlocks]);
     // ✅ Virtualização habilitada automaticamente quando houver muitos blocos raiz e não estiver em drag
     // Reduzido de 60 → 20 para ativar mais cedo e evitar custo de renderização antes do limiar
-    const virtualizationEnabled = (rawBlocks?.length || 0) >= 20 && (activeId == null);
+    // Padrão: habilitar virtualização apenas em listas grandes (>= 60) e quando não há drag ativo
+    const virtualizationEnabled = (rawBlocks?.length || 0) >= 60 && (activeId == null);
     const {
         visible: vVisible,
         topSpacer: vTopSpacer,
