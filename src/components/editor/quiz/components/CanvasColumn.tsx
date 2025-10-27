@@ -29,6 +29,7 @@ interface CanvasColumnProps {
   onBlockDelete?: (blockId: string) => void;
   onBlockDuplicate?: (blockId: string) => void;
   onBlockReorder?: (oldIndex: number, newIndex: number) => void;
+  onInsertAtIndex?: (index: number) => void;
   renderBlock?: (block: CanvasBlock) => React.ReactNode;
   className?: string;
 }
@@ -41,6 +42,7 @@ export const CanvasColumn: React.FC<CanvasColumnProps> = ({
   onBlockDelete,
   onBlockDuplicate,
   onBlockReorder,
+  onInsertAtIndex,
   renderBlock,
   className,
 }) => {
@@ -78,6 +80,17 @@ export const CanvasColumn: React.FC<CanvasColumnProps> = ({
             </Alert>
           ) : (
             <div className="space-y-4">
+              {/* Zona de inserção antes do primeiro bloco */}
+              {!isPreviewMode && (
+                <button
+                  type="button"
+                  data-testid="insert-zone-0"
+                  className="w-full h-8 -my-1 border-2 border-dashed rounded text-[11px] text-slate-500 hover:border-blue-400 hover:text-blue-600 transition-colors"
+                  onClick={() => onInsertAtIndex?.(0)}
+                >
+                  + Inserir aqui
+                </button>
+              )}
               {blocks.map((block, index) => (
                 <div
                   key={block.id}
@@ -179,6 +192,19 @@ export const CanvasColumn: React.FC<CanvasColumnProps> = ({
                       </div>
                     )}
                   </div>
+                  {/* Zona de inserção após o bloco */}
+                  {!isPreviewMode && (
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        data-testid={`insert-zone-${index + 1}`}
+                        className="w-full h-8 -my-1 border-2 border-dashed rounded text-[11px] text-slate-500 hover:border-blue-400 hover:text-blue-600 transition-colors"
+                        onClick={(e) => { e.stopPropagation(); onInsertAtIndex?.(index + 1); }}
+                      >
+                        + Inserir aqui
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

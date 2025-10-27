@@ -2787,12 +2787,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // FASE 2: Layout Modular (4 colunas) - habilitado por flag simples
     const USE_PHASE2_MODULAR_LAYOUT = (() => {
+        // Travar ON por padrão em qualquer ambiente; permitir desligar via localStorage = '0'
         try {
             const v = StorageService.safeGetString('editor:phase2:modular');
-            if (v === '1') return true;
             if (v === '0') return false;
         } catch { /* ignore */ }
-        return !!import.meta.env.DEV; // habilita por padrão em DEV
+        return true;
     })();
 
     if (USE_PHASE2_MODULAR_LAYOUT) {
@@ -2917,6 +2917,52 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     });
                                 }
                                 setIsDirty(true);
+                            }}
+                            onInsertAtIndex={(insertIndex) => {
+                                if (!selectedStep) return;
+                                // Se existir provider, abriremos uma escolha simples de tipo e chamaremos addBlockAtIndex
+                                const commonTypes = ['heading', 'text-inline', 'image-inline', 'container', 'options-grid'];
+                                const choice = prompt(`Tipo do componente para inserir (ex: ${commonTypes.join(', ')}):`, 'text-inline');
+                                const type = (choice || 'text-inline').trim();
+                                const component = COMPONENT_LIBRARY.find(c => c.type === type || c.blockType === type) || { type, blockType: type, defaultProps: {}, defaultContent: {}, label: type } as any;
+                                const newBlock = {
+                                    id: `${selectedStep.id}-${component.type}-${Date.now()}`,
+                                    type: component.blockType || component.type,
+                                    order: 0,
+                                    parentId: null,
+                                    properties: { ...(component.defaultProps || {}) },
+                                    content: { ...(component.defaultContent || {}) },
+                                } as any;
+                                if (editorCtx?.actions?.addBlockAtIndex) {
+                                    editorCtx.actions.addBlockAtIndex(selectedStep.id, newBlock as any, insertIndex).then(() => {
+                                        setSelectedBlockIdUnified(newBlock.id);
+                                        setIsDirty(true);
+                                        toast({ title: 'Componente inserido', description: component.label });
+                                    });
+                                } else {
+                                    // Fallback local: inserir no array e recalcular order dos top-level
+                                    setSteps(prev => {
+                                        const next = prev.map(st => {
+                                            if (st.id !== selectedStep.id) return st;
+                                            const topBlocks = (st.blocks || [])
+                                                .filter(b => !b.parentId)
+                                                .sort((a, b) => (a.order || 0) - (b.order || 0));
+                                            const cl = topBlocks.slice();
+                                            cl.splice(insertIndex, 0, newBlock);
+                                            const orderById: Record<string, number> = {};
+                                            cl.forEach((b, i) => { orderById[b.id] = i; });
+                                            const updatedBlocks = [...(st.blocks || []), newBlock].map(b => (
+                                                b.parentId ? b : { ...b, order: orderById[b.id] ?? (b.order || 0) }
+                                            ));
+                                            return { ...st, blocks: updatedBlocks };
+                                        });
+                                        pushHistory(next);
+                                        return next;
+                                    });
+                                    setSelectedBlockIdUnified(newBlock.id);
+                                    setIsDirty(true);
+                                    toast({ title: 'Componente inserido', description: component.label });
+                                }
                             }}
                         />
                     </div>
