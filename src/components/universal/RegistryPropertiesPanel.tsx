@@ -570,7 +570,7 @@ const ModernFieldRenderer: React.FC<{
               htmlFor={schema.key}
               className="text-sm font-medium cursor-pointer"
             >
-              {Boolean(value) ? 'Ativado' : 'Desativado'}
+              {value ? 'Ativado' : 'Desativado'}
             </Label>
           </div>
         );

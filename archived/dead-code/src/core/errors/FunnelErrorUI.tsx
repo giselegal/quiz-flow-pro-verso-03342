@@ -376,7 +376,7 @@ export const FunnelErrorToast: React.FC<FunnelErrorUIProps & {
         useEffect(() => {
             if (!autoHide) return;
 
-            let startTime = Date.now();
+            const startTime = Date.now();
             let animationFrame: number;
 
             const updateProgress = () => {

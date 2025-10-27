@@ -58,7 +58,7 @@ function fixScores(template, stepId) {
     console.log(`  🎯 Corrigindo scores no ${stepId}...`);
 
     let fixedCount = 0;
-    let errors = [];
+    const errors = [];
 
     template.blocks.forEach(block => {
         if (block.type === 'quiz-question' || block.type === 'options-grid') {

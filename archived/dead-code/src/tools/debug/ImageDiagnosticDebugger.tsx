@@ -56,7 +56,7 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
     const originalSize = await getImageSize(url);
     const optimizedSize = await getImageSize(optimizedUrl);
 
-    let suggestedImprovements: string[] = [];
+    const suggestedImprovements: string[] = [];
     if (isCloudinary && optimizationSettings.quality < 80) {
       suggestedImprovements.push('Aumentar a qualidade da imagem para pelo menos 80.');
     }
@@ -137,7 +137,7 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
     const totalImagesRendered = images.length;
     let totalImagesWithIssues = 0;
     let totalDownloadedBytes = 0;
-    let detailedIssues: ImageDiagnosticResult['detailedIssues'] = [];
+    const detailedIssues: ImageDiagnosticResult['detailedIssues'] = [];
 
     for (const imageEl of images) {
       const url = imageEl.src;

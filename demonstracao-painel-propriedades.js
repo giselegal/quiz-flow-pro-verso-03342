@@ -11,7 +11,7 @@ console.log('================================================================');
 // ============================================================================
 
 // 1. ESTADO GLOBAL SIMULADO (EditorContext)
-let globalEditorState = {
+const globalEditorState = {
     blocks: [
         {
             id: 'step-1-text-1',

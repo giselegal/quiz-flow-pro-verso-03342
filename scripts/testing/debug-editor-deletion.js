@@ -19,7 +19,7 @@ components.forEach((comp, i) => {
 
 // 3. Procurar botões de exclusão
 const allButtons = document.querySelectorAll('button');
-let deleteButtons = [];
+const deleteButtons = [];
 
 allButtons.forEach((btn, i) => {
   // Verificar se é botão de lixeira

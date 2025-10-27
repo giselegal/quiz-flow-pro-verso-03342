@@ -357,7 +357,7 @@ export class TemplateEditorService {
         try {
             if (typeof window !== 'undefined' && window.localStorage) {
                 // Calcular apenas dados relacionados ao quiz21
-                for (let key in localStorage) {
+                for (const key in localStorage) {
                     if (key.startsWith('quiz21-') || key.startsWith('quiz-master-')) {
                         const value = localStorage.getItem(key);
                         if (value) {

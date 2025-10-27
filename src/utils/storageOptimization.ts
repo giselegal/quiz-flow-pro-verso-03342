@@ -72,7 +72,7 @@ export class StorageOptimizer {
   private estimateLocalStorageSize(): number {
     let total = 0;
     try {
-      for (let key in localStorage) {
+      for (const key in localStorage) {
         if (localStorage.hasOwnProperty(key)) {
           total += localStorage[key].length + key.length;
         }

@@ -26,7 +26,7 @@ const allComponents = [...step20Components, ...step21Components];
 function analyzeResponsiveness(content, filePath) {
   const fileName = path.basename(filePath, '.tsx');
   let score = 100;
-  let issues = [];
+  const issues = [];
 
   // Padrões problemáticos para responsividade
   const problemPatterns = [

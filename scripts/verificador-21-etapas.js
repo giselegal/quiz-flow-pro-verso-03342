@@ -11,7 +11,7 @@ async function verificarEtapas() {
 
   try {
     const template = require(templatePath).default;
-    let relatorio = [];
+    const relatorio = [];
     let temErros = false;
 
     // 1. Verificação de Componentes

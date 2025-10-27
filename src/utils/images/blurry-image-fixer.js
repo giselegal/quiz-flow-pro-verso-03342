@@ -84,7 +84,7 @@ export const replaceBlurryIntroImages = () => {
   const introImages = document.querySelectorAll('.quiz-intro img, [data-section="intro"] img');
   console.log(`Encontradas ${introImages.length} imagens na introdução`);
 
-  let stats = {
+  const stats = {
     total: introImages.length,
     replaced: 0,
     skipped: 0,

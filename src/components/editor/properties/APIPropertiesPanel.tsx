@@ -218,7 +218,7 @@ const PropertyField: React.FC<PropertyFieldProps> = memo(({
                         onCheckedChange={handleChange}
                     />
                     <Label htmlFor={fieldId} className="text-sm">
-                        {Boolean(value) ? 'Ativado' : 'Desativado'}
+                        {value ? 'Ativado' : 'Desativado'}
                     </Label>
                 </div>
             )}

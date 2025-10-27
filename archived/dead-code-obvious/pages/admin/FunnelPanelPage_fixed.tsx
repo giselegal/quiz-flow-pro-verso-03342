@@ -145,7 +145,7 @@ const FunnelPanelPage: React.FC = () => {
 
     const finalTemplates: UnifiedTemplate[] = React.useMemo(() => {
         if (filteredTemplates && filteredTemplates.length) {
-            let list = [...filteredTemplates];
+            const list = [...filteredTemplates];
             if (sort === 'name') {
                 list.sort((a, b) => a.name.localeCompare(b.name));
             } else if (sort === 'createdAt') {

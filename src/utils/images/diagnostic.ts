@@ -172,8 +172,8 @@ export const generateImageReport = () => {
   const imageIssues = checkRenderedImages();
 
   // Calculate total download size (approximate)
-  let totalBytes = 0;
-  let issueBytes = 0;
+  const totalBytes = 0;
+  const issueBytes = 0;
 
   // Return the report
   return {

@@ -37,10 +37,10 @@ export interface QuizIntroBlockProps extends BlockComponentProps {
 import { getMarginClass, type MarginProps } from '@/utils/marginUtils';
 
 // Variáveis de margem para compatibilidade com o sistema de controles deslizantes
-let marginTop: number | undefined = 0;
-let marginBottom: number | undefined = 0;
-let marginLeft: number | undefined = 0;
-let marginRight: number | undefined = 0;
+const marginTop: number | undefined = 0;
+const marginBottom: number | undefined = 0;
+const marginLeft: number | undefined = 0;
+const marginRight: number | undefined = 0;
 
 const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
   block,

@@ -68,7 +68,7 @@ function addTsNoCheck(filePath) {
 console.log('🔧 Adicionando @ts-nocheck nos arquivos problemáticos...\n');
 
 let success = 0;
-let total = filesToFix.length;
+const total = filesToFix.length;
 
 filesToFix.forEach(file => {
   if (addTsNoCheck(file)) {

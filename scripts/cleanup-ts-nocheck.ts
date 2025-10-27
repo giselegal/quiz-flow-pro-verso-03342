@@ -100,7 +100,7 @@ function canRemoveDirectives(file: TsCheckFile): boolean {
   const originalContent = fs.readFileSync(fullPath, 'utf-8');
   
   // Remove diretivas temporariamente
-  let cleanContent = originalContent
+  const cleanContent = originalContent
     .replace(TS_NOCHECK, '')
     .replace(TS_IGNORE, '')
     .replace(TS_EXPECT_ERROR, '');

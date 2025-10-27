@@ -436,7 +436,7 @@ export class SupabaseApiClient {
     callback: (payload: { eventType: string; new: T; old: T }) => void,
     filter?: string
   ) {
-    let subscription = (supabase as any)
+    const subscription = (supabase as any)
       .channel(`${table}_changes`)
       .on('postgres_changes' as any, {
         event: '*',

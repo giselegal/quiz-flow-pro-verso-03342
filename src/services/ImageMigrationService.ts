@@ -153,8 +153,8 @@ class ImageMigrationService {
             optimizedSize?: number;
         }> = [];
 
-        let totalOriginalSize = 0;
-        let totalOptimizedSize = 0;
+        const totalOriginalSize = 0;
+        const totalOptimizedSize = 0;
         let migrated = 0;
         let failed = 0;
 

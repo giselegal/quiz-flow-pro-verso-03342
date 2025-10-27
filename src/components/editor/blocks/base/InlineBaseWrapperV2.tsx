@@ -218,7 +218,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
   // 3. RESPONSIVO: Classes mobile-first
   const getResponsiveClasses = () => {
-    let classes = [];
+    const classes = [];
 
     // Base classes
     classes.push(gapClasses[gap]);

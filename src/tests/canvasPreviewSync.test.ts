@@ -27,7 +27,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
         console.log('🧪 Testando sincronização de título...');
 
         // Simular estado inicial do preview
-        let previewState = {
+        const previewState = {
             steps: [...mockSteps],
             lastUpdate: Date.now(),
             isLoading: false,
@@ -55,7 +55,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
     it('Preview deve refletir mudanças na ordem das etapas', async () => {
         console.log('🧪 Testando reordenação de etapas...');
 
-        let previewState = {
+        const previewState = {
             steps: [...mockSteps],
             lastUpdate: Date.now(),
             updateCount: 0
@@ -84,7 +84,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
     it('Preview deve refletir adição de novas etapas', async () => {
         console.log('🧪 Testando adição de etapas...');
 
-        let previewState = {
+        const previewState = {
             steps: [...mockSteps],
             lastUpdate: Date.now(),
             updateCount: 0
@@ -114,7 +114,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
     it('Preview deve refletir remoção de etapas', async () => {
         console.log('🧪 Testando remoção de etapas...');
 
-        let previewState = {
+        const previewState = {
             steps: [...mockSteps],
             lastUpdate: Date.now(),
             updateCount: 0
@@ -169,7 +169,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
     it('Preview deve manter sincronização com seleção de etapa ativa', async () => {
         console.log('🧪 Testando seleção de etapa ativa...');
 
-        let previewState = {
+        const previewState = {
             steps: [...mockSteps],
             selectedStepId: 'step-1',
             lastUpdate: Date.now(),
@@ -191,7 +191,7 @@ describe('🔄 Sincronização Canvas ↔ Preview', () => {
     it('Preview deve lidar com mudanças de propriedades das etapas', async () => {
         console.log('🧪 Testando mudanças de propriedades...');
 
-        let previewState = {
+        const previewState = {
             steps: [...mockSteps],
             lastUpdate: Date.now(),
             updateCount: 0

@@ -24,7 +24,7 @@ function verificarSchemaDados() {
     const typesPath = join(__dirname, '../src/types');
     const files = fs.readdirSync(typesPath);
 
-    let interfacesEncontradas = new Set();
+    const interfacesEncontradas = new Set();
 
     files.forEach(file => {
       const conteudo = fs.readFileSync(join(typesPath, file), 'utf8');
@@ -61,7 +61,7 @@ function verificarHooks() {
     const hooksPath = join(__dirname, '../src/hooks');
     const files = fs.readdirSync(hooksPath);
 
-    let hooksEncontrados = new Set();
+    const hooksEncontrados = new Set();
 
     files.forEach(file => {
       const conteudo = fs.readFileSync(join(hooksPath, file), 'utf8');

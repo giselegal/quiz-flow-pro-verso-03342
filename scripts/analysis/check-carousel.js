@@ -23,8 +23,8 @@ function checkForCarouselImplementations() {
     'scroll-smooth',
   ];
 
-  let carouselImplementations = [];
-  let componentsWithMultipleItems = [];
+  const carouselImplementations = [];
+  const componentsWithMultipleItems = [];
 
   allFiles.forEach(fileName => {
     const filePath = path.join(baseDir, fileName);

@@ -134,7 +134,7 @@ export const useValidation = () => {
 
       applicableRules.forEach(rule => {
         let isValid = true;
-        let message = rule.message;
+        const message = rule.message;
 
         switch (rule.type) {
           case 'required':

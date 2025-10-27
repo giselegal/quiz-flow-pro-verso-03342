@@ -468,7 +468,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   const visibleMeta = React.useMemo(() => {
     const visibleCount = Math.max(1, Math.ceil(containerHeight / AVG_ITEM_HEIGHT));
     let startIndex = Math.max(0, Math.floor(scrollTop / AVG_ITEM_HEIGHT) - OVERSCAN);
-    let endIndex = Math.min(blocks.length, startIndex + visibleCount + OVERSCAN * 2);
+    const endIndex = Math.min(blocks.length, startIndex + visibleCount + OVERSCAN * 2);
     // Ajuste final caso end alcance o fim
     if (endIndex - startIndex < visibleCount && endIndex === blocks.length) {
       startIndex = Math.max(0, blocks.length - (visibleCount + OVERSCAN * 2));

@@ -377,7 +377,7 @@ class UnifiedStorageService {
       }
 
       // Estimar quota (varia por provider)
-      let quota = { used: totalSize, available: 5 * 1024 * 1024, percentage: 0 }; // Default 5MB
+      const quota = { used: totalSize, available: 5 * 1024 * 1024, percentage: 0 }; // Default 5MB
 
       if (this.currentProvider === 'localStorage') {
         quota.available = 5 * 1024 * 1024; // ~5MB típico

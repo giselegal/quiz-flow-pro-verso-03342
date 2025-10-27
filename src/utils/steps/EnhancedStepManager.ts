@@ -896,7 +896,7 @@ export class EnhancedStepManager {
 
     private executeBusinessRuleActions(step: EnhancedStepMetadata, rule: BusinessRule): EnhancedStepMetadata {
         // Implementar execução de ações das regras de negócio
-        let modifiedStep = { ...step };
+        const modifiedStep = { ...step };
 
         for (const action of rule.actions) {
             switch (action.type) {

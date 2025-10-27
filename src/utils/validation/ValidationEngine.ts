@@ -169,7 +169,7 @@ export class ValidationEngine {
         const errors: string[] = [];
         const warnings: string[] = [];
         const info: string[] = [];
-        let sanitized = options.sanitize ? { ...data } : undefined;
+        const sanitized = options.sanitize ? { ...data } : undefined;
 
         for (const rule of rules) {
             // Skip ignored fields

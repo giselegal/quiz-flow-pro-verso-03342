@@ -319,7 +319,7 @@ class RollbackService {
   private startHealthMonitoring(deploymentId: string) {
     this.stopHealthMonitoring();
     
-    let monitoringStart = Date.now();
+    const monitoringStart = Date.now();
     
     this.monitoringInterval = setInterval(async () => {
       const healthCheck = await this.performHealthCheck();

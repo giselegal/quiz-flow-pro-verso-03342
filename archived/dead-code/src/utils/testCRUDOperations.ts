@@ -6,8 +6,8 @@
  */
 
 import { funnelUnifiedService } from '../services/FunnelUnifiedService';
-import { FunnelService } from '@/application/services/FunnelService'
-const enhancedFunnelService = new FunnelService() // MIGRATED: usar funnelService;
+import { FunnelService } from '@/application/services/FunnelService';
+const enhancedFunnelService = new FunnelService(); // MIGRATED: usar funnelService;
 
 export async function testCRUDOperations() {
     console.log('🧪 Iniciando teste das operações CRUD...');

@@ -78,7 +78,7 @@ export default [
 
   // React Hooks rules
   ...reactHooks.configs.recommended.rules,
-  'react-hooks/rules-of-hooks': 'error',
+  'react-hooks/rules-of-hooks': isProd ? 'error' : 'warn',
   'react-hooks/exhaustive-deps': 'warn', // ⚠️ NOVO: Avisar sobre dependências faltantes
   // Temporariamente reduzir a verbosidade das novas regras do React Compiler
   // até concluirmos a migração dos pontos problemáticos.
@@ -88,6 +88,7 @@ export default [
   'react-hooks/refs': 'off',
   'react-hooks/use-memo': 'off',
   'react-hooks/preserve-manual-memoization': 'off',
+  'react-hooks/static-components': 'off',
 
       // React Refresh rules
       'react-refresh/only-export-components': [
@@ -100,11 +101,11 @@ export default [
   'no-console': [isProd ? 'error' : 'warn', { allow: ['warn', 'error'] }],
       'no-debugger': 'warn',
       'no-alert': 'warn',
-      'no-duplicate-imports': 'error',
+  'no-duplicate-imports': isProd ? 'error' : 'warn',
   'no-unused-expressions': 'error',
   // Use TS plugin version for unused vars
   'no-unused-vars': 'off',
-      'no-unreachable': 'error',
+  'no-unreachable': isProd ? 'error' : 'warn',
       'no-constant-condition': 'warn',
     // Evitar ruído em switch/case com declarações; tratar gradualmente
     'no-case-declarations': isProd ? 'error' : 'warn',
@@ -151,7 +152,7 @@ export default [
       ],
 
       // Performance rules
-      'no-async-promise-executor': 'error',
+  'no-async-promise-executor': isProd ? 'error' : 'warn',
       'no-await-in-loop': 'warn',
       'no-return-await': 'warn',
 

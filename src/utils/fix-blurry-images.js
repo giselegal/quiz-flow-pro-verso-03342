@@ -218,7 +218,7 @@ function getSimplifiedCloudinaryUrl(url) {
     if (urlParts.length !== 2) return url;
 
     const baseUrl = urlParts[0] + '/upload/';
-    let path = urlParts[1];
+    const path = urlParts[1];
 
     // Extrai a versão, se existir
     const versionMatch = path.match(/^(v\d+)\//);

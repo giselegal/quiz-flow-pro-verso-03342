@@ -297,7 +297,7 @@ export class MonitoringService {
    * Obtém logs filtrados
    */
   getLogs(level?: LogLevel, limit?: number): LogEntry[] {
-    let filtered = level ? this.logs.filter(log => log.level === level) : this.logs;
+    const filtered = level ? this.logs.filter(log => log.level === level) : this.logs;
     return limit ? filtered.slice(-limit) : filtered;
   }
 
@@ -305,7 +305,7 @@ export class MonitoringService {
    * Obtém métricas filtradas
    */
   getMetrics(names?: string[], limit?: number): PerformanceMetric[] {
-    let filtered = names ? 
+    const filtered = names ? 
       this.metrics.filter(metric => names.includes(metric.name)) : 
       this.metrics;
     return limit ? filtered.slice(-limit) : filtered;

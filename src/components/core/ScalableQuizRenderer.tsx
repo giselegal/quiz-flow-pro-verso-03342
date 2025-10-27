@@ -89,7 +89,7 @@ export const ScalableQuizRenderer = memo<ScalableQuizRendererProps>(({
                 console.log(`🔍 Template info carregado para ${funnelId}:`, tpl);
 
                 // 2. Usar totalSteps do template (dinâmico)
-                let detectedSteps = (tpl && tpl.totalSteps) ? tpl.totalSteps : 1;
+                const detectedSteps = (tpl && tpl.totalSteps) ? tpl.totalSteps : 1;
 
                 // 3. Carrega dados reais do quiz via BlockPropertiesAPI (opcional)
                 try {

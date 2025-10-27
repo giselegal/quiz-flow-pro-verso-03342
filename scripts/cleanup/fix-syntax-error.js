@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 const filePath = path.join(__dirname, 'src', 'templates', 'quiz21StepsComplete.ts');
 
 // Ler o conteúdo atual do arquivo
-let content = fs.readFileSync(filePath, 'utf8');
+const content = fs.readFileSync(filePath, 'utf8');
 
 // Verificar e corrigir linhas problemáticas
 // Dividir o conteúdo em linhas
@@ -19,7 +19,7 @@ const lines = content.split('\n');
 
 // Verificar a indentação e estrutura
 let insideObject = 0;
-let correctedLines = [];
+const correctedLines = [];
 
 for (let i = 0; i < lines.length; i++) {
   let line = lines[i];

@@ -497,7 +497,7 @@ const FunnelPanelPage: React.FC = () => {
     }
 
     if (funnelTemplates && funnelTemplates.length) {
-      let list = [...funnelTemplates];
+      const list = [...funnelTemplates];
       if (sort === 'name') {
         list.sort((a, b) => a.name.localeCompare(b.name));
       } else if (sort === 'createdAt') {

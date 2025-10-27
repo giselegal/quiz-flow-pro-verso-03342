@@ -178,7 +178,7 @@ function generateMigrationReport(): string {
     const totalChanges = migrationResults.reduce((sum, r) => sum + r.changesMade, 0);
     const errors = migrationResults.filter(r => !r.success);
 
-    let report = `
+    const report = `
 # 🔄 RELATÓRIO DE MIGRAÇÃO - useEditor → useUnifiedEditor
 
 ## 📊 Estatísticas
@@ -235,7 +235,7 @@ ${errors.map(e => `- \`${e.filePath}\`: ${e.error}`).join('\n')}
 export function executeMigration(workspaceRoot: string = process.cwd()): void {
     console.log('🚀 Iniciando migração useEditor → useUnifiedEditor...\n');
 
-    let allFiles: string[] = [];
+    const allFiles: string[] = [];
 
     // Encontrar todos os arquivos para migrar
     for (const scanDir of MIGRATION_CONFIG.scanDirs) {

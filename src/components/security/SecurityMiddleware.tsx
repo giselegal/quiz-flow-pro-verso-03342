@@ -150,7 +150,7 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
 
     // Monitorar tentativas de debug
     const handleDevToolsCheck = () => {
-      let devtools = { open: false };
+      const devtools = { open: false };
       const threshold = 160;
       
       setInterval(() => {

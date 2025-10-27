@@ -74,7 +74,7 @@ function addTsNoCheck(filePath) {
 console.log('🔧 Batch fixing TypeScript errors...\n');
 
 let successCount = 0;
-let totalCount = filesToFix.length;
+const totalCount = filesToFix.length;
 
 filesToFix.forEach(file => {
   if (addTsNoCheck(file)) {

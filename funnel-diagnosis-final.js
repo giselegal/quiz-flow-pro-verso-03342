@@ -217,7 +217,7 @@ console.log('\n🏆 SCORE FINAL DO SISTEMA');
 console.log('='.repeat(60));
 
 let score = 100;
-let issues = [];
+const issues = [];
 
 // Penalizar problemas
 if (hasShallowLeak) {

@@ -532,7 +532,7 @@ const Canvas: React.FC<CanvasProps> = ({
 
     // Canvas dimensions based on device mode
     const canvasStyle = useMemo(() => {
-        let width = '100%';
+        const width = '100%';
         let maxWidth = 'none';
 
         switch (deviceMode) {

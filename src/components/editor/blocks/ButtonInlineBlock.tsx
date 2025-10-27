@@ -623,7 +623,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
             // Handle URL navigation (com fallback para FUNNEL_CONFIG.ctas e UTM defaults)
             if (action === 'url') {
               // Definir destino prioritário: url > href > CTA global primária
-              let targetUrl = (url || href || FUNNEL_CONFIG?.ctas?.primary?.url || '').trim();
+              const targetUrl = (url || href || FUNNEL_CONFIG?.ctas?.primary?.url || '').trim();
               if (!targetUrl) return; // nada a fazer
 
               try {

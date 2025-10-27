@@ -78,4 +78,4 @@ export const isValidRoute: RouteValidator = (path: string): boolean => {
   }
 
   return false;
-}
+};
