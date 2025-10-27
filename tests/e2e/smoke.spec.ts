@@ -33,7 +33,7 @@ test.describe('Smoke Tests - Páginas Principais', () => {
         const criticalErrors = errors.filter(error =>
             error.includes('ReferenceError') ||
             error.includes('TypeError') ||
-            error.includes('is not defined')
+            error.includes('is not defined'),
         );
 
         expect(criticalErrors.length).toBe(0);

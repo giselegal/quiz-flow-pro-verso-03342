@@ -119,7 +119,7 @@ test.describe('Security Flow Tests', () => {
             /password/i,
             /credit.card/i,
             /ssn/i,
-            /social.security/i
+            /social.security/i,
         ];
 
         page.route('**/*', (route) => {

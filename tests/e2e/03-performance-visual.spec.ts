@@ -83,7 +83,7 @@ test.describe('Performance - Core Web Vitals', () => {
             if (url.endsWith('.js') && response.status() === 200) {
                 jsRequests.push({
                     url,
-                    size: response.headers()['content-length'] || 0
+                    size: response.headers()['content-length'] || 0,
                 });
             }
         });
@@ -110,7 +110,7 @@ test.describe('Performance - Core Web Vitals', () => {
             if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
                 imageRequests.push({
                     url,
-                    contentType: response.headers()['content-type']
+                    contentType: response.headers()['content-type'],
                 });
             }
         });
@@ -120,7 +120,7 @@ test.describe('Performance - Core Web Vitals', () => {
 
         // Verificar se usa formatos modernos
         const modernFormats = imageRequests.filter(img =>
-            img.contentType?.includes('webp') || img.url.includes('.webp')
+            img.contentType?.includes('webp') || img.url.includes('.webp'),
         );
 
         console.log(`Imagens: ${imageRequests.length} total, ${modernFormats.length} WebP`);
@@ -139,7 +139,7 @@ test.describe('Regressão Visual - Screenshots', () => {
 
         await expect(page).toHaveScreenshot('01-home-page.png', {
             fullPage: true,
-            maxDiffPixels: 100
+            maxDiffPixels: 100,
         });
     });
 
@@ -150,7 +150,7 @@ test.describe('Regressão Visual - Screenshots', () => {
         await nameInput.fill('João Silva');
 
         await expect(page).toHaveScreenshot('02-name-filled.png', {
-            maxDiffPixels: 100
+            maxDiffPixels: 100,
         });
     });
 
@@ -167,7 +167,7 @@ test.describe('Regressão Visual - Screenshots', () => {
         await page.waitForTimeout(500);
 
         await expect(page).toHaveScreenshot('03-quiz-question.png', {
-            maxDiffPixels: 100
+            maxDiffPixels: 100,
         });
     });
 
@@ -178,7 +178,7 @@ test.describe('Regressão Visual - Screenshots', () => {
 
         await expect(page).toHaveScreenshot('04-mobile-home.png', {
             fullPage: true,
-            maxDiffPixels: 100
+            maxDiffPixels: 100,
         });
     });
 
@@ -189,7 +189,7 @@ test.describe('Regressão Visual - Screenshots', () => {
 
         await expect(page).toHaveScreenshot('05-tablet-home.png', {
             fullPage: true,
-            maxDiffPixels: 100
+            maxDiffPixels: 100,
         });
     });
 });

@@ -76,9 +76,9 @@ test.describe('Quiz Flow - Jornada Completa (20 Steps)', () => {
         for (let i = 1; i <= 19; i++) {
             // Aguarda botões ou elementos clicáveis aparecerem
             const clickableElements = page.locator('button:not([disabled])').or(
-                page.locator('[role="button"]')
+                page.locator('[role="button"]'),
             ).or(
-                page.locator('div[class*="option"]')
+                page.locator('div[class*="option"]'),
             );
 
             const count = await clickableElements.count();
@@ -147,9 +147,9 @@ test.describe('Quiz Flow - Jornada Completa (20 Steps)', () => {
 
         // Procura por indicador de progresso
         const progressBar = page.locator('[role="progressbar"]').or(
-            page.locator('.progress')
+            page.locator('.progress'),
         ).or(
-            page.locator('[class*="progress"]')
+            page.locator('[class*="progress"]'),
         );
 
         // Verifica se existe barra de progresso
@@ -181,7 +181,7 @@ test.describe('Quiz Flow - Jornada Completa (20 Steps)', () => {
 
         // Procura botão voltar
         const backButton = page.locator('button:has-text("Voltar")').or(
-            page.locator('[aria-label*="voltar"]')
+            page.locator('[aria-label*="voltar"]'),
         );
 
         const hasBackButton = await backButton.count() > 0;
@@ -263,11 +263,11 @@ test.describe('Quiz Flow - Tela de Resultados Personalizada', () => {
         for (let i = 1; i <= 19; i++) {
             // Tenta encontrar opções clicáveis (botões, divs com classe option, etc)
             const clickableElements = page.locator('button:not([disabled])').or(
-                page.locator('[role="button"]')
+                page.locator('[role="button"]'),
             ).or(
-                page.locator('div[class*="option"]')
+                page.locator('div[class*="option"]'),
             ).or(
-                page.locator('div[class*="Option"]')
+                page.locator('div[class*="Option"]'),
             );
 
             const count = await clickableElements.count();
@@ -568,7 +568,7 @@ test.describe('Quiz Flow - Tela de Resultados Personalizada', () => {
             descricao: false,
             imagem: false,
             caracteristicas: false,
-            estilosSecundarios: false
+            estilosSecundarios: false,
         };
 
         // 1. Verifica nome do usuário

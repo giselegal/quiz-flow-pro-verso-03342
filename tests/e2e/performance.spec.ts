@@ -121,14 +121,14 @@ test.describe('Performance Tests', () => {
         
         // Check for no 4xx/5xx errors on critical resources
         const errorResponses = responses.filter(response => 
-            response.startsWith('4') || response.startsWith('5')
+            response.startsWith('4') || response.startsWith('5'),
         );
         
         // Filter out common non-critical 404s (favicon, etc.)
         const criticalErrors = errorResponses.filter(error => 
             !error.includes('favicon') && 
             !error.includes('.map') &&
-            !error.toLowerCase().includes('analytics')
+            !error.toLowerCase().includes('analytics'),
         );
         
         expect(criticalErrors.length).toBe(0);
@@ -140,7 +140,7 @@ test.describe('Performance Tests', () => {
         const viewports = [
             { name: 'Mobile', width: 375, height: 667 },
             { name: 'Tablet', width: 768, height: 1024 },
-            { name: 'Desktop', width: 1200, height: 800 }
+            { name: 'Desktop', width: 1200, height: 800 },
         ];
 
         for (const viewport of viewports) {

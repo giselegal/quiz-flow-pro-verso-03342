@@ -23,7 +23,7 @@ test.describe('FASE 2 & 3A - Templates JSON e Componentes', () => {
         test('deve carregar templates JSON com sucesso', async ({ page }) => {
             // Verificar se o template foi carregado
             await expect(page.locator('[data-testid="quiz-container"]')).toBeVisible({
-                timeout: 10000
+                timeout: 10000,
             });
 
             // Verificar se não há erro de carregamento
@@ -38,7 +38,7 @@ test.describe('FASE 2 & 3A - Templates JSON e Componentes', () => {
 
             // Verificar se o spinner ou mensagem de loading aparece
             const loadingVisible = await page.locator('[data-testid="loading-spinner"], .animate-spin, text=/carregando/i').first().isVisible({
-                timeout: 3000
+                timeout: 3000,
             }).catch(() => false);
 
             if (loadingVisible) {
@@ -140,7 +140,7 @@ test.describe('FASE 2 & 3A - Templates JSON e Componentes', () => {
 
             // Verificar se há conteúdo de resultado
             const hasResultContent = await page.locator('text=/seu estilo|resultado|elegante|romântico/i').first().isVisible({
-                timeout: 5000
+                timeout: 5000,
             }).catch(() => false);
 
             expect(hasResultContent).toBeTruthy();

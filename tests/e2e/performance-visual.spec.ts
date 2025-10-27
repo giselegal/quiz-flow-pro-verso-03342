@@ -113,7 +113,7 @@ test.describe('Performance e Métricas', () => {
                 name: entry.name,
                 type: entry.initiatorType,
                 size: entry.transferSize,
-                duration: entry.duration
+                duration: entry.duration,
             }));
         });
 
@@ -176,7 +176,7 @@ test.describe('Performance e Métricas', () => {
                 displayWidth: img.width,
                 displayHeight: img.height,
                 loading: img.loading,
-                hasAlt: img.alt.length > 0
+                hasAlt: img.alt.length > 0,
             }));
         });
 
@@ -215,7 +215,7 @@ test.describe('Performance e Métricas', () => {
                 count: scripts.length,
                 totalSize,
                 totalDuration,
-                avgDuration: scripts.length > 0 ? totalDuration / scripts.length : 0
+                avgDuration: scripts.length > 0 ? totalDuration / scripts.length : 0,
             };
         });
 
@@ -244,7 +244,7 @@ test.describe('Regressão Visual', () => {
         // Capturar screenshot
         await page.screenshot({
             path: 'tests/e2e/screenshots/quiz-home.png',
-            fullPage: true
+            fullPage: true,
         });
 
         console.log('✅ Screenshot salvo: tests/e2e/screenshots/quiz-home.png');
@@ -268,7 +268,7 @@ test.describe('Regressão Visual', () => {
 
             await page.screenshot({
                 path: 'tests/e2e/screenshots/quiz-question.png',
-                fullPage: true
+                fullPage: true,
             });
 
             console.log('✅ Screenshot salvo: tests/e2e/screenshots/quiz-question.png');
@@ -285,7 +285,7 @@ test.describe('Regressão Visual', () => {
         await page.setViewportSize({ width: 1920, height: 1080 });
         await page.waitForTimeout(500);
         await page.screenshot({
-            path: 'tests/e2e/screenshots/quiz-desktop.png'
+            path: 'tests/e2e/screenshots/quiz-desktop.png',
         });
         console.log('✅ Screenshot desktop salvo');
 
@@ -293,7 +293,7 @@ test.describe('Regressão Visual', () => {
         await page.setViewportSize({ width: 768, height: 1024 });
         await page.waitForTimeout(500);
         await page.screenshot({
-            path: 'tests/e2e/screenshots/quiz-tablet.png'
+            path: 'tests/e2e/screenshots/quiz-tablet.png',
         });
         console.log('✅ Screenshot tablet salvo');
 
@@ -301,7 +301,7 @@ test.describe('Regressão Visual', () => {
         await page.setViewportSize({ width: 375, height: 667 });
         await page.waitForTimeout(500);
         await page.screenshot({
-            path: 'tests/e2e/screenshots/quiz-mobile.png'
+            path: 'tests/e2e/screenshots/quiz-mobile.png',
         });
         console.log('✅ Screenshot mobile salvo');
     });
@@ -318,7 +318,7 @@ test.describe('Regressão Visual', () => {
 
         await page.screenshot({
             path: 'tests/e2e/screenshots/quiz-dark-mode.png',
-            fullPage: true
+            fullPage: true,
         });
 
         console.log('✅ Screenshot dark mode salvo');
@@ -365,7 +365,7 @@ test.describe('Regressão Visual', () => {
                 family: font.family,
                 status: font.status,
                 weight: font.weight,
-                style: font.style
+                style: font.style,
             }));
         });
 

@@ -27,7 +27,7 @@ export class TestDataGenerator {
             userId: faker.string.uuid(),
             isPublished: faker.datatype.boolean(),
             tags: faker.lorem.words(3).split(' '),
-            ...overrides
+            ...overrides,
         };
     }
 
@@ -43,7 +43,7 @@ export class TestDataGenerator {
             order: faker.number.int({ min: 1, max: 20 }),
             required: faker.datatype.boolean(),
             validationRules: this.generateValidationRules(),
-            ...overrides
+            ...overrides,
         };
     }
 
@@ -55,14 +55,14 @@ export class TestDataGenerator {
             {
                 type: 'required',
                 message: 'Este campo é obrigatório',
-                active: true
+                active: true,
             },
             {
                 type: 'minLength',
                 value: faker.number.int({ min: 1, max: 10 }),
                 message: 'Mínimo de caracteres requerido',
-                active: faker.datatype.boolean()
-            }
+                active: faker.datatype.boolean(),
+            },
         ];
     }
 
@@ -78,7 +78,7 @@ export class TestDataGenerator {
             avatar: faker.image.avatar(),
             createdAt: faker.date.past(),
             lastLogin: faker.date.recent(),
-            ...overrides
+            ...overrides,
         };
     }
 
@@ -94,7 +94,7 @@ export class TestDataGenerator {
             networkLatency: faker.number.int({ min: 10, max: 500 }),
             userInteractionLatency: faker.number.int({ min: 5, max: 100 }),
             errorRate: faker.number.float({ min: 0, max: 5, fractionDigits: 2 }),
-            userEngagement: faker.number.int({ min: 60, max: 100 })
+            userEngagement: faker.number.int({ min: 60, max: 100 }),
         };
     }
 }
@@ -111,7 +111,7 @@ export class PageUtils {
     static async waitForElement(
         page: Page,
         selector: string,
-        timeout: number = 5000
+        timeout: number = 5000,
     ): Promise<Locator> {
         const element = page.locator(selector);
         await element.waitFor({ timeout });
@@ -171,7 +171,7 @@ export class PageUtils {
             results.push({
                 name: breakpoint.name,
                 passed: isVisible && (hasExpectedClass || false),
-                viewport: breakpoint.size
+                viewport: breakpoint.size,
             });
         }
 
@@ -195,7 +195,7 @@ export class ValidationUtils {
                 loadTime: perf.loadEventEnd - perf.loadEventStart,
                 domContentLoaded: perf.domContentLoadedEventEnd - perf.domContentLoadedEventStart,
                 firstPaint: performance.getEntriesByName('first-paint')[0]?.startTime || 0,
-                firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0
+                firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0,
             };
         });
 
@@ -208,8 +208,8 @@ export class ValidationUtils {
                 loadTime: metrics.loadTime < 3000,
                 domContentLoaded: metrics.domContentLoaded < 1500,
                 firstPaint: metrics.firstPaint < 1000,
-                firstContentfulPaint: metrics.firstContentfulPaint < 1500
-            }
+                firstContentfulPaint: metrics.firstContentfulPaint < 1500,
+            },
         };
     }
 
@@ -221,7 +221,7 @@ export class ValidationUtils {
             xss: /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi.test(input),
             sqlInjection: /(union|select|insert|delete|update|drop|create|alter|exec|execute)/i.test(input),
             htmlInjection: /<[^>]+>/g.test(input),
-            jsInjection: /(javascript:|on\w+\s*=)/i.test(input)
+            jsInjection: /(javascript:|on\w+\s*=)/i.test(input),
         };
 
         return {
@@ -232,7 +232,7 @@ export class ValidationUtils {
             sanitizedInput: input
                 .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
                 .replace(/[<>]/g, '')
-                .trim()
+                .trim(),
         };
     }
 
@@ -252,7 +252,7 @@ export class ValidationUtils {
                         type: 'missing-alt-text',
                         element: `img:nth-child(${index + 1})`,
                         severity: 'warning',
-                        message: 'Image missing alt text'
+                        message: 'Image missing alt text',
                     });
                 }
 
@@ -267,7 +267,7 @@ export class ValidationUtils {
                             type: 'missing-label',
                             element: `input:nth-child(${index + 1})`,
                             severity: 'error',
-                            message: 'Form input missing label'
+                            message: 'Form input missing label',
                         });
                     }
                 }
@@ -275,7 +275,7 @@ export class ValidationUtils {
 
             return {
                 issues,
-                passed: issues.filter(i => i.severity === 'error').length === 0
+                passed: issues.filter(i => i.severity === 'error').length === 0,
             };
         });
 
@@ -299,7 +299,7 @@ export class MockDataUtils {
             message: options.message || 'Success',
             timestamp: new Date().toISOString(),
             requestId: faker.string.uuid(),
-            ...(options.pagination && { pagination: options.pagination })
+            ...(options.pagination && { pagination: options.pagination }),
         };
     }
 
@@ -313,7 +313,7 @@ export class MockDataUtils {
                 route.fulfill({
                     status: mock.status || 200,
                     contentType: 'application/json',
-                    body: JSON.stringify(response)
+                    body: JSON.stringify(response),
                 });
             });
         }
@@ -336,7 +336,7 @@ export class MockDataUtils {
           left: 50%;
           transform: translate(-50%, -50%);
         }
-      `
+      `,
         });
 
         await page.waitForTimeout(duration);
@@ -350,7 +350,7 @@ export class MockDataUtils {
         ${selector}::after {
           display: none;
         }
-      `
+      `,
         });
     }
 }
@@ -365,7 +365,7 @@ export class DeviceUtils {
         mobile: { width: 375, height: 667 },
         tablet: { width: 768, height: 1024 },
         desktop: { width: 1920, height: 1080 },
-        ultrawide: { width: 2560, height: 1440 }
+        ultrawide: { width: 2560, height: 1440 },
     };
 
     /**
@@ -373,7 +373,7 @@ export class DeviceUtils {
      */
     static async testMultipleDevices(
         page: Page,
-        testFn: (device: DeviceConfig) => Promise<void>
+        testFn: (device: DeviceConfig) => Promise<void>,
     ) {
         for (const [name, viewport] of Object.entries(this.COMMON_DEVICES)) {
             await page.setViewportSize(viewport);
@@ -538,5 +538,5 @@ export {
     type PerformanceTestResult,
     type SecurityValidation,
     type AccessibilityResult,
-    type DeviceConfig
+    type DeviceConfig,
 };

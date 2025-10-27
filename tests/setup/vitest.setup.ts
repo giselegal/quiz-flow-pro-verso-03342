@@ -12,7 +12,7 @@ import { vi } from 'vitest';
             if (/localhost:3000|:\\?3000|\/_?api\//i.test(url)) {
                 return new Response(JSON.stringify({ mock: true, url, ok: true }), {
                     status: 200,
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
                 }) as any;
             }
             return new Response(JSON.stringify({ mock: true, url }), { status: 200, headers: { 'Content-Type': 'application/json' } }) as any;
@@ -24,7 +24,7 @@ import { vi } from 'vitest';
 // Mock indexedDB mínimo para evitar erros em hooks que o utilizam
 if (typeof (global as any).indexedDB === 'undefined') {
     (global as any).indexedDB = {
-        open: () => ({ addEventListener() { }, result: {}, onsuccess: null, onerror: null })
+        open: () => ({ addEventListener() { }, result: {}, onsuccess: null, onerror: null }),
     };
 }
 
@@ -35,7 +35,7 @@ if (typeof (global as any).localStorage === 'undefined') {
         getItem: (k: string) => (k in store ? store[k] : null),
         setItem: (k: string, v: string) => { store[k] = String(v); },
         removeItem: (k: string) => { delete store[k]; },
-        clear: () => { Object.keys(store).forEach(k => delete store[k]); }
+        clear: () => { Object.keys(store).forEach(k => delete store[k]); },
     } as Storage;
 }
 

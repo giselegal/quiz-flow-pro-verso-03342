@@ -48,8 +48,8 @@ test.describe('🎯 Solução B: Props → Blocks E2E Tests', () => {
         options: [
           { label: 'Clássico', value: 'classico' },
           { label: 'Moderno', value: 'moderno' },
-          { label: 'Boho', value: 'boho' }
-        ]
+          { label: 'Boho', value: 'boho' },
+        ],
       }, null, 2);
       
       await propsTextarea.fill(newProps);
@@ -122,7 +122,7 @@ test.describe('🎯 Solução B: Props → Blocks E2E Tests', () => {
         question: 'Test?',
         requiredSelections: 5,
         maxSelections: 1,
-        options: [{ label: 'A' }]
+        options: [{ label: 'A' }],
       }, null, 2);
       
       await textarea.fill(invalidProps);
@@ -171,7 +171,7 @@ test.describe('🎯 Solução B: Props → Blocks E2E Tests', () => {
     if (await textarea.isVisible({ timeout: 2000 }).catch(() => false)) {
       const props = JSON.stringify({
         question: 'Teste Undo?',
-        options: [{ label: 'A' }]
+        options: [{ label: 'A' }],
       }, null, 2);
       await textarea.fill(props);
 
@@ -229,7 +229,7 @@ test.describe('🎯 Solução B: Props → Blocks E2E Tests', () => {
         title: 'Descubra Seu Estilo',
         subtitle: 'Em poucos minutos',
         cta: 'Começar Agora',
-        layout: 'centered'
+        layout: 'centered',
       }, null, 2);
       
       await textarea.fill(introProps);
@@ -346,12 +346,12 @@ test.describe('🎯 Solução B: Props → Blocks E2E Tests', () => {
     if (await textarea.isVisible({ timeout: 2000 }).catch(() => false)) {
       const manyOptions = Array.from({ length: 10 }, (_, i) => ({
         label: `Opção ${i + 1}`,
-        value: `opcao-${i + 1}`
+        value: `opcao-${i + 1}`,
       }));
 
       const props = JSON.stringify({
         question: 'Performance test?',
-        options: manyOptions
+        options: manyOptions,
       }, null, 2);
 
       const startTime = Date.now();

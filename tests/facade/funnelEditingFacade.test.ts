@@ -4,9 +4,9 @@ import { QuizFunnelEditingFacade, type FunnelSnapshot } from '@/editor/facade/Fu
 const baseSnapshot: FunnelSnapshot = {
     steps: [
         { id: 's1', title: 'Intro', order: 0, blocks: [], meta: { type: 'intro', nextStep: 's2' } },
-        { id: 's2', title: 'Pergunta', order: 1, blocks: [], meta: { type: 'question', nextStep: '' } }
+        { id: 's2', title: 'Pergunta', order: 1, blocks: [], meta: { type: 'question', nextStep: '' } },
     ],
-    meta: { id: 'funnel-1', templateId: 'quiz-estilo', updatedAt: Date.now() }
+    meta: { id: 'funnel-1', templateId: 'quiz-estilo', updatedAt: Date.now() },
 };
 
 describe('QuizFunnelEditingFacade (smoke)', () => {

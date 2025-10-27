@@ -11,7 +11,7 @@ test.describe('Responsividade - Todos os Dispositivos', () => {
         { name: 'iPhone SE', width: 375, height: 667 },
         { name: 'iPad', width: 768, height: 1024 },
         { name: 'Desktop', width: 1200, height: 800 },
-        { name: 'Ultrawide', width: 1920, height: 1080 }
+        { name: 'Ultrawide', width: 1920, height: 1080 },
     ];
 
     devices.forEach(device => {
@@ -28,7 +28,7 @@ test.describe('Responsividade - Todos os Dispositivos', () => {
 
             // No horizontal scroll
             const hasHorizontalScroll = await page.evaluate(() => 
-                document.body.scrollWidth > window.innerWidth
+                document.body.scrollWidth > window.innerWidth,
             );
             expect(hasHorizontalScroll).toBeFalsy();
 

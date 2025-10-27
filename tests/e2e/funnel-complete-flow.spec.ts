@@ -113,7 +113,7 @@ test.describe('🎯 Fluxo Completo: Dashboard → Editor → Supabase', () => {
         // Tirar screenshot para documentação
         await page.screenshot({
             path: './test-results/editor-loaded.png',
-            fullPage: true
+            fullPage: true,
         });
     });
 
@@ -257,7 +257,7 @@ test.describe('🎯 Fluxo Completo: Dashboard → Editor → Supabase', () => {
                 domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
                 loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
                 firstPaint: performance.getEntriesByName('first-paint')[0]?.startTime || 0,
-                firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0
+                firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0,
             };
         });
 
@@ -292,5 +292,5 @@ test.describe('🎯 Fluxo Completo: Dashboard → Editor → Supabase', () => {
 test.use({
     viewport: { width: 1920, height: 1080 },
     video: 'retain-on-failure',
-    screenshot: 'only-on-failure'
+    screenshot: 'only-on-failure',
 });

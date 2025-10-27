@@ -22,9 +22,9 @@ test('DEBUG: Capturar estrutura HTML da tela de resultados', async ({ page }) =>
     // Responde todas as perguntas até chegar nos resultados
     for (let i = 0; i < 20; i++) {
         const clickableElements = page.locator('button:not([disabled])').or(
-            page.locator('[role="button"]')
+            page.locator('[role="button"]'),
         ).or(
-            page.locator('div[class*="option"]')
+            page.locator('div[class*="option"]'),
         );
 
         const count = await clickableElements.count();
@@ -80,8 +80,8 @@ test('DEBUG: Capturar estrutura HTML da tela de resultados', async ({ page }) =>
         imgs.map(img => ({
             src: img.getAttribute('src'),
             alt: img.getAttribute('alt'),
-            class: img.getAttribute('class')
-        }))
+            class: img.getAttribute('class'),
+        })),
     );
     console.log('\n=== IMAGENS ENCONTRADAS ===');
     console.log(JSON.stringify(images, null, 2));

@@ -70,7 +70,7 @@ async function completarQuiz(page: Page, userName: string) {
         }
 
         // NÃO precisa clicar no botão - o auto-advance acontece automaticamente
-        console.log(`  ⏳ Aguardando auto-advance (2s)...`);
+        console.log('  ⏳ Aguardando auto-advance (2s)...');
         await page.waitForTimeout(2500);
     }    // STEP 12: Transição
     console.log('\n🔄 Step 12: Transição...');
@@ -92,7 +92,7 @@ async function completarQuiz(page: Page, userName: string) {
             try {
                 // Selecionar primeira opção
                 await options.first().click({ timeout: 5000 });
-                console.log(`    ✓ Opção selecionada`);
+                console.log('    ✓ Opção selecionada');
                 await page.waitForTimeout(500);
 
                 // Clicar no botão de continuar (avanço MANUAL)
@@ -101,7 +101,7 @@ async function completarQuiz(page: Page, userName: string) {
 
                 if (btnExists > 0) {
                     await continueBtn.first().click({ timeout: 5000 });
-                    console.log(`    ✓ Botão continuar clicado (avanço manual)`);
+                    console.log('    ✓ Botão continuar clicado (avanço manual)');
                     await page.waitForTimeout(1000);
                 }
             } catch (error) {
@@ -151,14 +151,14 @@ test.describe('Tela de Resultados - Validação Completa', () => {
         // Lista dos 8 estilos possíveis
         const estilosPossiveis = [
             'Natural', 'Clássico', 'Contemporâneo', 'Elegante',
-            'Romântico', 'Sexy', 'Dramático', 'Criativo'
+            'Romântico', 'Sexy', 'Dramático', 'Criativo',
         ];
 
         const bodyText = await page.locator('body').textContent();
 
         // Verifica se algum dos estilos aparece
         const estilosEncontrados = estilosPossiveis.filter(estilo =>
-            bodyText?.toLowerCase().includes(estilo.toLowerCase())
+            bodyText?.toLowerCase().includes(estilo.toLowerCase()),
         );
 
         expect(estilosEncontrados.length).toBeGreaterThanOrEqual(1);
@@ -208,7 +208,7 @@ test.describe('Tela de Resultados - Validação Completa', () => {
         const palavrasChave = [
             'Personalidade', 'Cores', 'Tecidos', 'Tecido',
             'Estampas', 'Estampa', 'Acessórios', 'Acessório',
-            'características', 'estilo', 'roupa', 'look'
+            'características', 'estilo', 'roupa', 'look',
         ];
 
         let palavrasEncontradas = 0;
@@ -259,12 +259,12 @@ test.describe('Tela de Resultados - Validação Completa', () => {
         // Lista dos 8 estilos possíveis
         const estilos = [
             'Natural', 'Clássico', 'Contemporâneo', 'Elegante',
-            'Romântico', 'Sexy', 'Dramático', 'Criativo'
+            'Romântico', 'Sexy', 'Dramático', 'Criativo',
         ];
 
         // Conta quantos estilos diferentes aparecem
         const estilosEncontrados = estilos.filter(estilo =>
-            bodyText?.toLowerCase().includes(estilo.toLowerCase())
+            bodyText?.toLowerCase().includes(estilo.toLowerCase()),
         );
 
         console.log(`📊 Estilos identificados (${estilosEncontrados.length}):`, estilosEncontrados.join(', '));
@@ -312,7 +312,7 @@ test.describe('Tela de Resultados - Validação Completa', () => {
         const ctaTexts = [
             'comprar', 'adquirir', 'garantir', 'aproveitar',
             'começar', 'iniciar', 'descobrir', 'acessar',
-            'quero', 'ver', 'conhecer'
+            'quero', 'ver', 'conhecer',
         ];
 
         const buttons = page.locator('button:visible, a.button, a.btn, [role="button"]:visible');

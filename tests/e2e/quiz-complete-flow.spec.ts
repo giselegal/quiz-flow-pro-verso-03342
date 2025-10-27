@@ -187,7 +187,7 @@ test.describe('Fluxo Completo do Quiz - 21 Steps', () => {
             const localStorageData = await page.evaluate(() => {
                 return {
                     userName: localStorage.getItem('userName') || localStorage.getItem('quizUserName'),
-                    quizData: localStorage.getItem('quizData')
+                    quizData: localStorage.getItem('quizData'),
                 };
             });
 

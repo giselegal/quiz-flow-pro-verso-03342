@@ -33,7 +33,7 @@ test.describe('Legacy Adapter Round Trip', () => {
             expect(draft1.stages.length).toBeGreaterThan(0);
 
             const originalFirstName = draft1.meta.name;
-            const newName = originalFirstName + ' (Edited)';
+            const newName = `${originalFirstName  } (Edited)`;
 
             // Reorder (se houver ao menos 2 stages, troca as duas primeiras)
             // Monta uma reorder baseada no slug legacy (stage.meta.stageSlug) porque stage ids mudam a cada conversão

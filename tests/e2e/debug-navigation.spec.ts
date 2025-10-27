@@ -38,7 +38,7 @@ test('DEBUG: Ver o que acontece após clicar no botão', async ({ page }) => {
         '.quiz-option',
         'input[type="radio"]',
         'input[type="checkbox"]',
-        '[data-testid*="option"]'
+        '[data-testid*="option"]',
     ];
 
     for (const seletor of seletores) {

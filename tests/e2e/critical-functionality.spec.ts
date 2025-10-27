@@ -90,7 +90,7 @@ test.describe('Funcionalidades Críticas', () => {
             { name: 'Mobile', width: 375, height: 667 },
             { name: 'Tablet', width: 768, height: 1024 },
             { name: 'Desktop', width: 1200, height: 800 },
-            { name: 'Large Desktop', width: 1920, height: 1080 }
+            { name: 'Large Desktop', width: 1920, height: 1080 },
         ];
 
         for (const viewport of viewports) {
@@ -134,7 +134,7 @@ test.describe('Funcionalidades Críticas', () => {
                 const criticalErrors = errors.filter(error =>
                     error.includes('ReferenceError') ||
                     error.includes('TypeError: Cannot read') ||
-                    error.includes('is not defined')
+                    error.includes('is not defined'),
                 );
                 
                 expect(criticalErrors.length).toBe(0);
@@ -174,7 +174,7 @@ test.describe('Funcionalidades Críticas', () => {
                 const testFunnelData = {
                     id: 'e2e-test-funnel',
                     steps: ['step-1', 'step-2'],
-                    currentStep: 1
+                    currentStep: 1,
                 };
                 localStorage.setItem('funnel-data', JSON.stringify(testFunnelData));
             });
