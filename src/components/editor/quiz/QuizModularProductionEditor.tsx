@@ -2764,6 +2764,31 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                             onBlockSelect={(id) => setSelectedBlockIdUnified(id)}
                             onBlockDelete={(id) => { if (!selectedStep) return; removeBlock(selectedStep.id, id); }}
                             onBlockDuplicate={(id) => { if (!selectedStep) return; const blk = (selectedStep.blocks || []).find(b => b.id === id); if (blk) duplicateBlock(selectedStep.id, blk); }}
+                            onBlockReorder={(oldIndex, newIndex) => {
+                                if (!selectedStep) return;
+                                setSteps(prev => {
+                                    const next = prev.map(st => {
+                                        if (st.id !== selectedStep.id) return st;
+                                        // Seleciona e ordena apenas blocos de topo
+                                        const topBlocks = (st.blocks || [])
+                                            .filter(b => !b.parentId)
+                                            .sort((a, b) => (a.order || 0) - (b.order || 0));
+                                        if (oldIndex < 0 || oldIndex >= topBlocks.length || newIndex < 0 || newIndex >= topBlocks.length) return st;
+                                        const reordered = topBlocks.slice();
+                                        const [moved] = reordered.splice(oldIndex, 1);
+                                        reordered.splice(newIndex, 0, moved);
+                                        const orderById: Record<string, number> = {};
+                                        reordered.forEach((b, i) => { orderById[b.id] = i; });
+                                        const updatedBlocks = st.blocks.map(b => (
+                                            b.parentId ? b : { ...b, order: orderById[b.id] ?? (b.order || 0) }
+                                        ));
+                                        return { ...st, blocks: updatedBlocks };
+                                    });
+                                    pushHistory(next);
+                                    return next;
+                                });
+                                setIsDirty(true);
+                            }}
                         />
                     </div>
 
