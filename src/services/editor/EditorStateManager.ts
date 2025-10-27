@@ -203,47 +203,103 @@ export class EditorStateManager {
       const active = blocks.find(b => b.id === blockId);
       if (!active) return prev;
 
-      const siblings = (pid: string | null) => blocks.filter(b => (b.parentId || null) === (pid || null)).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      // Índices auxiliares
+      const byId = new Map<string, any>(blocks.map(b => [b.id, b]));
+      const childrenMap = new Map<string | null, any[]>();
+      for (const b of blocks) {
+        const p = (b.parentId || null) as string | null;
+        const arr = childrenMap.get(p) || [];
+        arr.push(b);
+        childrenMap.set(p, arr);
+      }
+      const getSiblings = (pid: string | null) => (childrenMap.get(pid || null) || [])
+        .filter(Boolean)
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
+      // Determinar parent alvo: prioridade para targetParentId; se ausente e houver over, usar parent do over; senão manter parent atual
       const fromParent = active.parentId || null;
-      const toParent = targetParentId != null ? targetParentId : (() => {
-        if (!overBlockId) return fromParent;
-        const over = blocks.find(b => b.id === overBlockId);
-        return over ? (over.parentId || null) : fromParent;
-      })();
-
-      const sameParent = (fromParent || null) === (toParent || null);
-
-      // Remover ativo da lista de irmãos de origem
-      const originSibs = siblings(fromParent).filter(b => b.id !== active.id);
-      originSibs.forEach((b, i) => { b.order = i; });
-
-      // Atualizar parent do ativo
-      active.parentId = toParent || null;
-
-      // Calcular posição no alvo
-      const targetSibs = siblings(toParent);
-      if (overBlockId) {
-        const idx = targetSibs.findIndex(b => b.id === overBlockId);
-        if (idx >= 0) {
-          // Inserir antes do over
-          targetSibs.splice(idx, 0, active);
-        } else {
-          targetSibs.push(active);
-        }
-      } else {
-        targetSibs.push(active);
+      let toParent = targetParentId != null ? targetParentId : fromParent;
+      if (targetParentId == null && overBlockId) {
+        const overNode = byId.get(overBlockId);
+        if (overNode) toParent = overNode.parentId || null;
       }
 
-      // Reatribuir ordem nos irmãos de destino
+      // Guardas de segurança
+      if (toParent === active.id) {
+        // Não permitir parent = o próprio nó
+        return prev;
+      }
+
+      // Prevenir ciclos: não mover para dentro de sua própria subárvore
+      const collectDescendants = (rootId: string): Set<string> => {
+        const result = new Set<string>();
+        const stack = [rootId];
+        while (stack.length) {
+          const cur = stack.pop()!;
+          const kids = childrenMap.get(cur) || [];
+          for (const k of kids) {
+            if (!result.has(k.id)) {
+              result.add(k.id);
+              stack.push(k.id);
+            }
+          }
+        }
+        return result;
+      };
+      const descendants = collectDescendants(active.id);
+      if (toParent && descendants.has(toParent)) {
+        // Alvo é um descendente -> operação inválida
+        return prev;
+      }
+
+      // Se over aponta para o próprio nó, é no-op
+      if (overBlockId && overBlockId === active.id && (fromParent || null) === (toParent || null)) {
+        return prev;
+      }
+
+      // Remover ativo da lista de origem
+      const originSibs = getSiblings(fromParent).filter(b => b.id !== active.id);
+      originSibs.forEach((b, i) => { b.order = i; });
+
+      // Atualizar parent
+      active.parentId = toParent || null;
+
+      // Lista de destino (sem o ativo)
+      const targetSibs = getSiblings(toParent).filter(b => b.id !== active.id);
+
+      // Índice atual do ativo (se mesmo parent)
+      const currentIndexInTarget = targetSibs.findIndex(b => b.id === active.id);
+
+      // Calcular índice de inserção
+      let insertIndex: number = targetSibs.length; // default: fim
+      if (overBlockId) {
+        const idx = targetSibs.findIndex(b => b.id === overBlockId);
+        if (idx >= 0) insertIndex = idx; // inserir antes do over
+      }
+
+      // No-op: mesmo parent e posição igual
+      if ((fromParent || null) === (toParent || null)) {
+        const sourceSibs = getSiblings(fromParent).filter(b => b.id !== active.id);
+        const oldIndex = (getSiblings(fromParent).findIndex(b => b.id === active.id));
+        // Se oldIndex == -1 significa que getSiblings(fromParent) já não inclui mais o ativo por causa da atualização anterior
+        // Recuperar pelo order do próprio ativo
+        const inferredOldIndex = oldIndex >= 0 ? oldIndex : active.order ?? sourceSibs.length;
+        if (inferredOldIndex === insertIndex || (overBlockId === null && inferredOldIndex === sourceSibs.length)) {
+          return prev;
+        }
+      }
+
+      // Inserir no destino
+      targetSibs.splice(insertIndex, 0, active);
       targetSibs.forEach((b, i) => { b.order = i; });
 
-      // Reconstituir array final preservando demais blocos
-      const updated = blocks.map(b => {
-        if ((b.parentId || null) === (fromParent || null) || (b.parentId || null) === (toParent || null) || b.id === active.id) {
-          // Já atualizado via originSibs/targetSibs
-          return b;
-        }
+      // Atualizar childrenMap com as listas reordenadas
+      childrenMap.set(fromParent, originSibs);
+      childrenMap.set(toParent, targetSibs);
+
+      // Reconstituir vetor final mantendo demais blocos inalterados
+      const newBlocks = blocks.map(b => {
+        // orders já atualizados nas referências dos próprios objetos
         return b;
       });
 
@@ -251,7 +307,7 @@ export class EditorStateManager {
         ...prev,
         stepBlocks: {
           ...prev.stepBlocks,
-          [stepKey]: updated as Block[],
+          [stepKey]: newBlocks as Block[],
         },
       } as EditorState;
 
