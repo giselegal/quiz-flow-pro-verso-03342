@@ -260,6 +260,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                                 setDuplicateModalOpen={setDuplicateModalOpen || (() => { })}
                                                 hoverContainerId={hoverContainerId}
                                                 setHoverContainerId={setHoverContainerId}
+                                                activeId={activeId}
                                             />);
                                     })}
                                     {vBottomSpacer > 0 && <div style={{ height: vBottomSpacer }} />}

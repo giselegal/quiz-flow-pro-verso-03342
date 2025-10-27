@@ -26,6 +26,8 @@ export interface BlockRowProps {
     expandedContainers?: Set<string>;
     toggleContainer?: (id: string) => void;
     setHoverContainerId?: React.Dispatch<React.SetStateAction<string | null>>;
+    /** Id do item sendo arrastado; quando presente, pausamos virtualização de filhos para estabilidade do DnD */
+    activeId?: string | null;
 }
 
 /**
@@ -91,6 +93,7 @@ const Inner: React.FC<BlockRowProps> = (props) => {
     const expandedContainers = props.expandedContainers ?? new Set<string>();
     const toggleContainer = props.toggleContainer;
     const setHoverContainerId = props.setHoverContainerId;
+    const activeId = props.activeId ?? null;
     // Defensive default for byBlock
     const byBlockSafe: Record<string, any[]> = byBlock || {} as any;
     const hasErrors = !!byBlockSafe[block.id]?.length;
@@ -99,6 +102,15 @@ const Inner: React.FC<BlockRowProps> = (props) => {
     const isContainer = block.type === 'container';
     const isHoverTarget = hoverContainerId === block.id;
     const isExpanded = !isContainer || (expandedContainers?.has?.(block.id) ?? false);
+
+    // 🔬 DEV: contador leve de renders por bloco para diagnóstico
+    if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
+        const w = window as any;
+        w.__perf = w.__perf || {};
+        w.__perf.blockRowRenders = (w.__perf.blockRowRenders || 0) + 1;
+        w.__perf.blocks = w.__perf.blocks || {};
+        w.__perf.blocks[block.id] = (w.__perf.blocks[block.id] || 0) + 1;
+    }
 
     // Calcular índice do bloco atual (índice real no array, não filtrado)
     const blockIndex = allBlocks.findIndex(b => b.id === block.id);
@@ -113,7 +125,8 @@ const Inner: React.FC<BlockRowProps> = (props) => {
 
     // Virtualização leve para muitos filhos de container
     // Observação: para minimizar impactos no DnD, ativamos apenas com muitos itens e quando expandido
-    const childrenVirtualizationEnabled = isContainer && isExpanded && (childrenSorted.length >= 40);
+    // e PAUSAMOS durante arraste ativo (activeId != null) para estabilidade do DnD
+    const childrenVirtualizationEnabled = isContainer && isExpanded && (childrenSorted.length >= 40) && (activeId == null);
     const {
         visible: vChildren,
         topSpacer: vChildrenTop,
@@ -232,6 +245,7 @@ const Inner: React.FC<BlockRowProps> = (props) => {
                                             expandedContainers={expandedContainers}
                                             toggleContainer={toggleContainer}
                                             setHoverContainerId={setHoverContainerId}
+                                            activeId={activeId}
                                         />
                                     ))}
                                     {childrenVirtualizationEnabled && vChildrenBottom > 0 && (
@@ -273,6 +287,8 @@ const Inner: React.FC<BlockRowProps> = (props) => {
         const prevChildren = prev.allBlocks.filter(b => b.parentId === prev.block.id).length;
         const nextChildren = next.allBlocks.filter(b => b.parentId === next.block.id).length;
         if (prevChildren !== nextChildren) return false;
+        // Quando container é grande (virtualizável), precisamos re-renderizar ao iniciar/terminar drag
+        if ((prevChildren >= 40 || nextChildren >= 40) && (prev.activeId !== next.activeId)) return false;
     }
     if (prev.selectedBlockId === prev.block.id || next.selectedBlockId === next.block.id) {
         if (prev.selectedBlockId !== next.selectedBlockId) return false;
