@@ -78,7 +78,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
     context = FunnelContext.EDITOR,
 }) => {
     const logger = getLogger();
-    logger.debug('🔧 UnifiedCRUDProvider: Rendering', { funnelId, autoLoad, debug, context, scope: 'unifiedCRUD' });
+    logger.debug('unifiedCRUD', '🔧 UnifiedCRUDProvider: Rendering', { funnelId, autoLoad, debug, context });
 
     // ========================================================================
     // STATE
