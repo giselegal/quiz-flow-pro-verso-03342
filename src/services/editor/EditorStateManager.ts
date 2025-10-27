@@ -139,6 +139,59 @@ export class EditorStateManager {
 
     return createdId;
   }
+
+  /**
+   * Insere múltiplos blocos (snippets) preservando hierarquia relativa via parentId
+   * Retorna os novos IDs inseridos na ordem gerada
+   */
+  async insertSnippetBlocks(stepKey: string, snippetBlocks: Block[]): Promise<string[]> {
+    const createdIds: string[] = [];
+    this.updateState(prev => {
+      const currentBlocks = prev.stepBlocks[stepKey] || [];
+
+      const timestamp = Date.now();
+      const idMap = new Map<string, string>();
+
+      // Gera IDs consistentes por tipo e momento (curto, legível)
+      const makeId = (origId: string, type: string, idx: number): string => {
+        let candidate = `${type}-snip-${timestamp}-${idx}`;
+        let n = 1;
+        const used = new Set(currentBlocks.map(b => b.id));
+        while (used.has(candidate)) { n += 1; candidate = `${type}-snip-${timestamp}-${idx}-${n}`; }
+        return candidate;
+      };
+
+      // Construir clones preservando relação de parentId enquanto possível
+      const clones: Block[] = snippetBlocks.map((b: any, idx: number) => {
+        const newId = makeId(b.id, String(b.type || 'block'), idx);
+        idMap.set(b.id, newId);
+        createdIds.push(newId);
+        return {
+          ...(b as Block),
+          id: newId,
+          // parentId preservado apenas se fizer parte do snippet; caso contrário, torna-se root
+          ...(b.parentId ? { parentId: idMap.get(b.parentId) || null } : { parentId: null }),
+        } as any as Block;
+      });
+
+      // Inserir clones ao final mantendo ordem relativa de entrada
+      const newBlocks = [...currentBlocks, ...clones];
+      const reordered = newBlocks.map((b, i) => ({ ...b, order: i }));
+
+      const newState = {
+        ...prev,
+        stepBlocks: {
+          ...prev.stepBlocks,
+          [stepKey]: reordered,
+        },
+      } as EditorState;
+
+      this.history.push(newState);
+      return newState;
+    });
+
+    return createdIds;
+  }
   /**
    * Adiciona bloco ao final de um step
    */
