@@ -5,6 +5,7 @@
 import { getStepTemplate as getJSONTemplate } from '@/config/templates/templates';
 import { cacheService } from '@/services/UnifiedCacheService';
 import { TOTAL_STEPS } from '@/config/stepsConfig';
+import { appLogger } from '@/utils/logger';
 
 // 🔧 CACHE MIGRADO PARA UnifiedCacheService
 // @deprecated Inline TEMPLATE_CACHE substituído por cacheService.get('templates', key)
@@ -13,7 +14,7 @@ import { TOTAL_STEPS } from '@/config/stepsConfig';
 async function preloadAllTemplates(): Promise<void> {
   if (typeof window === 'undefined') return;
 
-  console.log('🚀 Pré-carregando todos os templates v3...');
+  appLogger.info('🚀 Pré-carregando todos os templates v3...');
 
   const promises = Array.from({ length: TOTAL_STEPS }, (_, i) => {
     const stepNumber = i + 1;
@@ -44,33 +45,33 @@ async function preloadAllTemplates(): Promise<void> {
                 };
               });
               cacheService.set('templates', `step-${stepNumber}`, blocks, 10 * 60 * 1000); // 10min cache
-              console.log(`✅ Template ${stepNumber} pré-carregado: ${blocks.length} blocos`);
+              appLogger.info(`✅ Template ${stepNumber} pré-carregado: ${blocks.length} blocos`);
             } else if (template.blocks && Array.isArray(template.blocks)) {
               cacheService.set('templates', `step-${stepNumber}`, template.blocks, 10 * 60 * 1000);
-              console.log(`✅ Template ${stepNumber} pré-carregado: ${template.blocks.length} blocos`);
+              appLogger.info(`✅ Template ${stepNumber} pré-carregado: ${template.blocks.length} blocos`);
             }
           });
         }
       })
       .catch(error => {
-        console.warn(`⚠️ Falha ao pré-carregar template ${stepNumber}:`, error);
+  appLogger.warn(`⚠️ Falha ao pré-carregar template ${stepNumber}:`, { error });
       });
   });
 
   await Promise.allSettled(promises);
   const stats = cacheService.getStoreStats('templates');
-  console.log(`🎯 Pré-carregamento concluído: ${stats.size}/${TOTAL_STEPS} templates`);
+  appLogger.info(`🎯 Pré-carregamento concluído: ${stats.size}/${TOTAL_STEPS} templates`);
 }
 
 // 🔧 FUNÇÃO SÍNCRONA QUE USA CACHE
 function getTemplateFromCache(stepNumber: number): any[] {
   const cached = cacheService.get<any[]>('templates', `step-${stepNumber}`);
   if (cached && Array.isArray(cached)) {
-    console.log(`💾 Template ${stepNumber} do cache: ${cached.length} blocos`);
+    appLogger.info(`💾 Template ${stepNumber} do cache: ${cached.length} blocos`);
     return cached;
   }
 
-  console.warn(`❌ Template ${stepNumber} não está no cache`);
+  appLogger.warn(`❌ Template ${stepNumber} não está no cache`);
   return [];
 }
 
@@ -82,14 +83,14 @@ function ensureTemplateLoaded(stepNumber: number): any[] {
   if (cacheService.has('templates', `step-${stepNumber}`)) {
     const cached = cacheService.get<any[]>('templates', `step-${stepNumber}`);
     if (cached && Array.isArray(cached)) {
-      console.log(`⚡ Template ${stepNumber} do cache: ${cached.length} blocos`);
+      appLogger.info(`⚡ Template ${stepNumber} do cache: ${cached.length} blocos`);
       return cached;
     }
   }
 
   // Se não está carregando ainda, iniciar agora
   if (!preloadingStarted && typeof window !== 'undefined') {
-    console.log('🚀 Iniciando carregamento lazy de templates...');
+    appLogger.info('🚀 Iniciando carregamento lazy de templates...');
     preloadingStarted = true;
     preloadAllTemplates(); // Não bloqueia
   }
@@ -99,7 +100,7 @@ function ensureTemplateLoaded(stepNumber: number): any[] {
   const templatePath = `/templates/step-${stepId}-v3.json`;
 
   try {
-    console.log(`🔄 Tentando carregar síncrono: ${templatePath}`);
+    appLogger.info(`🔄 Tentando carregar síncrono: ${templatePath}`);
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', templatePath, false); // síncrono
@@ -126,15 +127,15 @@ function ensureTemplateLoaded(stepNumber: number): any[] {
 
         // Cachear para uso futuro
         cacheService.set('templates', `step-${stepNumber}`, blocks, 10 * 60 * 1000);
-        console.log(`💾 Template ${stepNumber} carregado síncrono e cacheado: ${blocks.length} blocos`);
+        appLogger.info(`💾 Template ${stepNumber} carregado síncrono e cacheado: ${blocks.length} blocos`);
         return blocks;
       }
     }
   } catch (error) {
-    console.warn(`⚠️ Fallback síncrono falhou para step ${stepNumber}:`, error);
+    appLogger.warn(`⚠️ Fallback síncrono falhou para step ${stepNumber}:`, { error, stepNumber });
   }
 
-  console.warn(`❌ Nenhum template encontrado para step ${stepNumber}`);
+  appLogger.warn(`❌ Nenhum template encontrado para step ${stepNumber}`);
   return [];
 }
 
@@ -205,55 +206,53 @@ class StepTemplateService {
    * Obtém template de uma etapa específica
    */
   getStepTemplate(stepId: string | number): any[] {
-    const stepNumber = typeof stepId === 'string' ? parseInt(stepId.replace(/\D/g, '')) : stepId;
+  const stepNumber = typeof stepId === 'string' ? parseInt(stepId.replace(/\D/g, '')) : stepId;
 
-    console.log(`🔍 [StepTemplateService] Buscando template para etapa ${stepNumber}`);
-    console.log('🧪 [DEBUG] stepId original:', stepId);
-    console.log('🧪 [DEBUG] stepNumber convertido:', stepNumber);
+  appLogger.debug(`🔍 [StepTemplateService] Buscando template para etapa ${stepNumber}`, { stepId, stepNumber });
 
     // ✅ USAR TEMPLATE JSON v3 SÍNCRONO
     try {
-      console.log(`🎯 [CORREÇÃO] Carregando template v3 SYNC para etapa ${stepNumber}...`);
+  appLogger.info(`🎯 [CORREÇÃO] Carregando template v3 SYNC para etapa ${stepNumber}...`);
       const syncTemplate = ensureTemplateLoaded(stepNumber);
 
       if (syncTemplate && Array.isArray(syncTemplate) && syncTemplate.length > 0) {
-        console.log(`✅ Template v3 SYNC carregado para etapa ${stepNumber}: ${syncTemplate.length} blocos`);
-        console.log('🧱 [DEBUG] Tipos de blocos:', syncTemplate.map((b: any) => b.type));
+        appLogger.info(`✅ Template v3 SYNC carregado para etapa ${stepNumber}: ${syncTemplate.length} blocos`);
+        appLogger.debug('🧱 [DEBUG] Tipos de blocos:', { types: syncTemplate.map((b: any) => b.type) });
         return syncTemplate;
       }
 
-      console.warn(`⚠️ Template v3 SYNC vazio para etapa ${stepNumber}, tentando async...`);
+      appLogger.warn(`⚠️ Template v3 SYNC vazio para etapa ${stepNumber}, tentando async...`);
 
       // Fallback async (não retorna imediatamente, mas popula cache)
       getJSONTemplate(stepNumber).then((asyncTemplate) => {
         if (asyncTemplate && asyncTemplate.blocks) {
-          console.log(`🔄 Template async carregado para cache: etapa ${stepNumber}`);
+          appLogger.info(`🔄 Template async carregado para cache: etapa ${stepNumber}`);
         }
       }).catch(err => {
-        console.warn(`⚠️ Template async falhou para etapa ${stepNumber}:`, err);
+        appLogger.warn(`⚠️ Template async falhou para etapa ${stepNumber}:`, { error: err });
       });
 
     } catch (error) {
-      console.error(`❌ Erro ao carregar template SYNC da etapa ${stepNumber}:`, error);
+      appLogger.error(`❌ Erro ao carregar template SYNC da etapa ${stepNumber}:`, { error });
     }
 
     // Fallback para o sistema antigo (só como backup)
     const stepMapping = STEP_MAPPING[stepNumber];
     if (stepMapping) {
-      console.log(`🔄 Fallback para mapping da etapa ${stepNumber}:`, stepMapping.name);
+      appLogger.info(`🔄 Fallback para mapping da etapa ${stepNumber}: ${stepMapping.name}`);
       try {
         const template = stepMapping.getTemplate();
         if (template && template.length > 0) {
-          console.log(`✅ Template fallback carregado para etapa ${stepNumber}: ${template.length} blocos`);
+          appLogger.info(`✅ Template fallback carregado para etapa ${stepNumber}: ${template.length} blocos`);
           return template;
         }
       } catch (error) {
-        console.error(`❌ Erro no fallback da etapa ${stepNumber}:`, error);
+        appLogger.error(`❌ Erro no fallback da etapa ${stepNumber}:`, { error });
       }
     }
 
     // Template padrão como último recurso
-    console.warn(`⚠️ Usando template padrão para etapa ${stepNumber}`);
+  appLogger.warn(`⚠️ Usando template padrão para etapa ${stepNumber}`);
     return this.getDefaultTemplate(stepNumber);
   }
 
@@ -314,7 +313,7 @@ class StepTemplateService {
    * Template padrão para etapas sem template específico
    */
   private getDefaultTemplate(stepNumber: number): any[] {
-    console.log(`🔧 [StepTemplateService] Gerando template padrão para etapa ${stepNumber}`);
+  appLogger.info(`🔧 [StepTemplateService] Gerando template padrão para etapa ${stepNumber}`);
 
     const defaultTemplate = [
       {
@@ -365,8 +364,8 @@ class StepTemplateService {
       },
     ];
 
-    console.log(`🧱 [DEBUG] Template padrão gerado com ${defaultTemplate.length} blocos`);
-    console.log(`🧱 [DEBUG] Tipos: ${defaultTemplate.map(b => b.type).join(', ')}`);
+  appLogger.debug(`🧱 [DEBUG] Template padrão gerado com ${defaultTemplate.length} blocos`, { count: defaultTemplate.length });
+  appLogger.debug('🧱 [DEBUG] Tipos:', { types: defaultTemplate.map(b => b.type) });
 
     return defaultTemplate;
   }
