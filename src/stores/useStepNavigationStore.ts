@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { appLogger } from '@/utils/logger';
 
 interface StepNavigationConfig {
   // Configurações de Seleção
@@ -242,7 +243,7 @@ export const useStepNavigationStore = create<StepNavigationStore>()(
             });
           }
         } catch (error) {
-          console.error('Erro ao importar configurações:', error);
+          appLogger.error('Erro ao importar configurações', { error });
         }
       },
     }),
