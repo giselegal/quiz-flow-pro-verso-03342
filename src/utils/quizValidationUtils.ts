@@ -241,36 +241,37 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
         return { isValid: true, errors, warnings };
     }
 
-    // Verificar se offerMap existe
+    // A PARTIR DE AGORA: offerMap NÃO é obrigatório na última etapa.
+    // Caso ausente ou incompleto, sinalizar apenas como aviso (não bloquear fluxo).
     if (!step.offerMap) {
-        errors.push({
+        warnings.push({
             stepId: step.id,
             field: 'offerMap',
-            message: `offerMap é obrigatório para última etapa (${step.id})`,
-            severity: 'error',
+            message: `offerMap ausente na etapa de oferta (${step.id}) – opcional`,
+            severity: 'warning',
         });
-        return { isValid: false, errors, warnings };
+        return { isValid: true, errors, warnings };
     }
 
     // Verificar se tem as 4 chaves obrigatórias
     OFFER_MAP_KEYS.forEach(key => {
         if (!step.offerMap![key]) {
-            errors.push({
+            warnings.push({
                 stepId: step.id,
                 field: 'offerMap',
-                message: `Falta oferta para a chave: "${key}"`,
-                severity: 'error',
+                message: `Falta oferta para a chave: "${key}" (opcional)`,
+                severity: 'warning',
             });
         } else {
             // Verificar se a oferta está completa
             const offer = step.offerMap![key];
 
             if (!offer.title) {
-                errors.push({
+                warnings.push({
                     stepId: step.id,
                     field: `offerMap['${key}'].title`,
                     message: `Oferta "${key}" não tem título`,
-                    severity: 'error',
+                    severity: 'warning',
                 });
             }
 
@@ -284,11 +285,11 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
             }
 
             if (!offer.buttonText) {
-                errors.push({
+                warnings.push({
                     stepId: step.id,
                     field: `offerMap['${key}'].buttonText`,
                     message: `Oferta "${key}" não tem texto do botão`,
-                    severity: 'error',
+                    severity: 'warning',
                 });
             }
 
