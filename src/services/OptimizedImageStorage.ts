@@ -82,7 +82,7 @@ class OptimizedImageStorage {
 
             request.onsuccess = () => {
                 this.db = request.result;
-                console.log('✅ IndexedDB inicializado com sucesso');
+                // logger?.info?.('imageCache', 'IndexedDB inicializado com sucesso');
                 resolve();
             };
 
@@ -93,7 +93,7 @@ class OptimizedImageStorage {
                     const store = db.createObjectStore(this.config.storeName, { keyPath: 'id' });
                     store.createIndex('timestamp', 'timestamp', { unique: false });
                     store.createIndex('originalUrl', 'originalUrl', { unique: false });
-                    console.log('📦 Object store criado:', this.config.storeName);
+                    // logger?.debug?.('imageCache', 'Object store criado', { storeName: this.config.storeName });
                 }
             };
         });
@@ -199,7 +199,7 @@ class OptimizedImageStorage {
         // Verificar se já existe
         const existing = await this.getImage(id);
         if (existing) {
-            console.log('🔄 Imagem já existe no cache:', id);
+            // logger?.debug?.('imageCache', 'Imagem já existe no cache', { id });
             return existing;
         }
 
@@ -231,18 +231,18 @@ class OptimizedImageStorage {
             // Salvar no IndexedDB
             await this.saveToDB(imageData);
 
-            console.log('✅ Imagem otimizada e salva:', {
-                id,
-                originalSize: metadata.originalSize,
-                optimizedSize: blob.size,
-                compressionRatio: metadata.compressionRatio,
-                format: metadata.format,
-            });
+            // logger?.info?.('imageCache', 'Imagem otimizada e salva', {
+            //     id,
+            //     originalSize: metadata.originalSize,
+            //     optimizedSize: blob.size,
+            //     compressionRatio: metadata.compressionRatio,
+            //     format: metadata.format,
+            // });
 
             return URL.createObjectURL(blob);
 
         } catch (error) {
-            console.error('❌ Erro ao armazenar imagem:', error);
+            // logger?.error?.('imageCache', 'Erro ao armazenar imagem', error);
             throw error;
         }
     }
@@ -489,7 +489,7 @@ class OptimizedImageStorage {
             const request = store.clear();
 
             request.onsuccess = () => {
-                console.log('🧹 Cache de imagens limpo');
+                // logger?.info?.('imageCache', 'Cache de imagens limpo');
                 resolve();
             };
             request.onerror = () => reject(request.error);
