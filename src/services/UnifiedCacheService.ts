@@ -24,6 +24,9 @@
 
 import { LRUCache } from 'lru-cache';
 import { editorEventBus } from '@/lib/editorEventBus';
+import { getLogger } from '@/utils/logging';
+
+const logger = getLogger();
 
 interface CacheOptions {
   max: number;           // Máximo de entradas
@@ -145,12 +148,12 @@ export class UnifiedCacheService {
     
     if (value !== undefined) {
       this.stats[store].hits++;
-      console.log(`✅ [Cache HIT] ${store}:${key}`);
+      logger.debug('cache', 'Cache HIT', { store, key });
       return value as T;
     }
     
     this.stats[store].misses++;
-    console.log(`❌ [Cache MISS] ${store}:${key}`);
+    logger.debug('cache', 'Cache MISS', { store, key });
     return null;
   }
 
@@ -160,7 +163,7 @@ export class UnifiedCacheService {
   set<T = any>(store: CacheStore, key: string, value: T, ttl?: number): void {
     const options = ttl ? { ttl } : undefined;
     this.stores[store].set(key, value, options);
-    console.log(`💾 [Cache SET] ${store}:${key}`);
+    logger.debug('cache', 'Cache SET', { store, key });
   }
 
   /**
@@ -175,7 +178,7 @@ export class UnifiedCacheService {
    */
   delete(store: CacheStore, key: string): boolean {
     const deleted = this.stores[store].delete(key);
-    console.log(`🗑️ [Cache DELETE] ${store}:${key} (${deleted ? 'success' : 'not found'})`);
+    logger.debug('cache', 'Cache DELETE', { store, key, deleted });
     return deleted;
   }
 
@@ -193,7 +196,7 @@ export class UnifiedCacheService {
       }
     }
     
-    console.log(`🗑️ [Cache INVALIDATE PREFIX] ${store}:${prefix}* (${count} entries)`);
+    logger.debug('cache', 'Cache INVALIDATE PREFIX', { store, prefix, count });
     return count;
   }
 
@@ -203,7 +206,7 @@ export class UnifiedCacheService {
   clearStore(store: CacheStore): void {
     const size = this.stores[store].size;
     this.stores[store].clear();
-    console.log(`🗑️ [Cache CLEAR STORE] ${store} (${size} entries removed)`);
+    logger.info('cache', 'Cache CLEAR STORE', { store, removed: size });
   }
 
   /**
@@ -216,7 +219,7 @@ export class UnifiedCacheService {
       this.stores[store as CacheStore].clear();
       total += size;
     }
-    console.log(`🗑️ [Cache CLEAR ALL] ${total} entries removed`);
+    logger.info('cache', 'Cache CLEAR ALL', { totalRemoved: total });
   }
 
   /**
@@ -286,41 +289,32 @@ export class UnifiedCacheService {
     for (const store in this.stats) {
       this.stats[store as CacheStore] = { hits: 0, misses: 0 };
     }
-    console.log('📊 [Cache Stats] Reset');
+    logger.info('cache', 'Cache Stats Reset');
   }
 
   /**
    * Log estatísticas formatadas
    */
   logStats(): void {
-    console.group('📊 UnifiedCacheService Stats');
-    
     const allStats = this.getAllStats();
     let totalHitRate = 0;
     let storeCount = 0;
-    
-    for (const [store, stats] of Object.entries(allStats.stores)) {
+
+    for (const [, stats] of Object.entries(allStats.stores)) {
       if (stats.size > 0 || stats.hits > 0 || stats.misses > 0) {
-        console.log(`\n${store}:`);
-        console.log(`  Size: ${stats.size}/${stats.max}`);
-        console.log(`  Hit Rate: ${stats.hitRate.toFixed(1)}%`);
-        console.log(`  Hits: ${stats.hits} | Misses: ${stats.misses}`);
-        console.log(`  Memory: ${(stats.memoryUsage / 1024).toFixed(1)} KB`);
-        
         totalHitRate += stats.hitRate;
         storeCount++;
       }
     }
-    
+
     const avgHitRate = storeCount > 0 ? totalHitRate / storeCount : 0;
-    
-    console.log('\n📈 GLOBAL:');
-    console.log(`  Average Hit Rate: ${avgHitRate.toFixed(1)}%`);
-    console.log(`  Total Memory: ${(allStats.total.memoryUsage / 1024).toFixed(1)} KB`);
-    console.log(`  Total Entries: ${allStats.total.size}`);
-    console.log(`  Active Stores: ${storeCount}/${Object.keys(allStats.stores).length}`);
-    
-    console.groupEnd();
+
+    logger.info('cache', 'UnifiedCacheService Stats', {
+      stores: allStats.stores,
+      total: allStats.total,
+      avgHitRate,
+      storeCount,
+    });
   }
 
   /**
@@ -347,7 +341,7 @@ export class UnifiedCacheService {
       this.invalidateByPrefix('validation', stepId);
     });
 
-    console.log('🔄 [Cache] Auto-invalidação configurada');
+    logger.info('cache', 'Auto-invalidação configurada');
   }
 
   /**
@@ -361,7 +355,7 @@ export class UnifiedCacheService {
    * Pré-aquecer cache (warm-up)
    */
   async warmup(store: CacheStore, entries: Array<{ key: string; value: any }>): Promise<void> {
-    console.log(`🔥 [Cache WARMUP] ${store} - ${entries.length} entries`);
+    logger.info('cache', 'Cache WARMUP', { store, entries: entries.length });
     
     for (const { key, value } of entries) {
       this.set(store, key, value);
