@@ -58,7 +58,13 @@ const run = async () => {
   for (const file of files) {
     scanned++;
     const abs = path.resolve(file);
-    const code = fs.readFileSync(abs, 'utf8');
+    let code;
+    try {
+      code = fs.readFileSync(abs, 'utf8');
+    } catch (e) {
+      // Arquivo pode ter sido movido/removido; apenas ignore
+      continue;
+    }
     if (!/\bconsole\.(log|warn|error)\s*\(/.test(code)) continue;
     const replaced = replaceConsole(code);
     if (replaced === code) continue;
