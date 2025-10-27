@@ -103,6 +103,34 @@ export const CanvasColumn: React.FC<CanvasColumnProps> = ({
                       >
                         <GripVertical className="h-4 w-4" />
                       </Button>
+                      {onBlockReorder && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            title="Mover para cima"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (index > 0) onBlockReorder(index, index - 1);
+                            }}
+                          >
+                            <span className="text-xs">↑</span>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            title="Mover para baixo"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (index < blocks.length - 1) onBlockReorder(index, index + 1);
+                            }}
+                          >
+                            <span className="text-xs">↓</span>
+                          </Button>
+                        </>
+                      )}
                     </div>
                   )}
 

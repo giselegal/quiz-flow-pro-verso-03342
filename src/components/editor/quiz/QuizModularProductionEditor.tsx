@@ -721,22 +721,24 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                         } as EditableQuizStep;
                                     });
 
-                                    // Opcional: substituir steps 12/19/20 por JSON estático mais rico (se disponível)
+                                    // Preferir SEMPRE o template modular (quando disponível) para TODOS os steps
+                                    // Mantém fallback para conversão master→sections→blocks quando indisponível
                                     try {
-                                        const preferStatic = ['step-12', 'step-19', 'step-20'] as const;
                                         built.forEach((s, i) => {
-                                            if (preferStatic.includes(s.id as any)) {
+                                            try {
                                                 const staticBlocks = loadStepTemplate(s.id);
                                                 if (Array.isArray(staticBlocks) && staticBlocks.length > 0) {
-                                                    // Converter Block[] (editor) → BlockComponent[] (editor UI)
                                                     const asComponents = blocksToBlockComponents(staticBlocks as any);
                                                     built[i] = { ...s, blocks: asComponents };
-                                                    appLogger.debug(`✅ Substituído por JSON estático rico: ${s.id} (${asComponents.length} blocos)`);
+                                                    appLogger.debug(`✅ Template modular aplicado: ${s.id} (${asComponents.length} blocos)`);
                                                 }
+                                            } catch (inner) {
+                                                // Silencioso: manter fallback para este step
+                                                if (import.meta.env.DEV) appLogger.debug('ℹ️ Sem template modular para', s.id);
                                             }
                                         });
                                     } catch (e) {
-                                        appLogger.warn('⚠️ Falha ao aplicar substituição por JSON estático (12/19/20):', e);
+                                        appLogger.warn('⚠️ Falha ao aplicar templates modulares (all-steps):', e);
                                     }
 
                                     setSteps(built);
@@ -769,6 +771,21 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     properties: partial.properties || {},
                                 });
                             };
+
+                            // 0) Tentar template modular para QUALQUER step (fonte canônica ou JSON)
+                            try {
+                                const templateBlocks = await loadStepTemplate(stepId);
+                                if (Array.isArray(templateBlocks) && templateBlocks.length > 0) {
+                                    return templateBlocks.map((block: any, idx: number) => ({
+                                        ...block,
+                                        id: block.id || `${stepId}-block-${idx + 1}`,
+                                        order: idx,
+                                        parentId: null,
+                                    }));
+                                }
+                            } catch {
+                                // segue para fallback por tipo
+                            }
                             switch (quizStep.type) {
                                 case 'question': {
                                     if (quizStep.questionText) {
@@ -815,20 +832,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 }
                                 case 'transition':
                                 case 'transition-result': {
-                                    // ✅ MODULAR: Carregar blocos de JSON estático para Steps 12, 19
-                                    const stepNumber = parseInt(stepId.split('-')[1]);
-                                    if (stepNumber === 12 || stepNumber === 19) {
-                                        appLogger.debug(`✅ Carregando blocos modulares para ${stepId} (transition)`);
-                                        const templateBlocks = await loadStepTemplate(stepId);
-                                        if (templateBlocks && templateBlocks.length > 0) {
-                                            return templateBlocks.map((block: any, idx: number) => ({
-                                                ...block,
-                                                id: block.id || `${stepId}-block-${idx + 1}`,
-                                                order: idx,
-                                                parentId: null,
-                                            }));
-                                        }
-                                    }
                                     // Fallback para steps sem template JSON
                                     if (quizStep.title) {
                                         push({
@@ -854,20 +857,6 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     break;
                                 }
                                 case 'result': {
-                                    // ✅ MODULAR: Carregar blocos de JSON estático para Step 20
-                                    const stepNumber = parseInt(stepId.split('-')[1]);
-                                    if (stepNumber === 20) {
-                                        appLogger.debug(`✅ Carregando blocos modulares para ${stepId} (result)`);
-                                        const templateBlocks = await loadStepTemplate(stepId);
-                                        if (templateBlocks && templateBlocks.length > 0) {
-                                            return templateBlocks.map((block: any, idx: number) => ({
-                                                ...block,
-                                                id: block.id || `${stepId}-block-${idx + 1}`,
-                                                order: idx,
-                                                parentId: null,
-                                            }));
-                                        }
-                                    }
                                     // Fallback para steps sem template JSON
                                     push({
                                         type: 'result-header-inline',
