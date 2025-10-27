@@ -949,48 +949,11 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // ✅ CRÍTICO: Sincronizar mudanças do EditorProvider de volta para o estado steps
+    // Desativa sync bidirecional de blocos quando Provider está ativo.
+    // Usamos stepsView (derivado) para leitura e ações do Provider para escrita.
     useEffect(() => {
-        if (!editorCtx?.state?.stepBlocks) return;
-
-        const stepBlocks = editorCtx.state.stepBlocks;
-        const stepKeys = Object.keys(stepBlocks);
-
-        if (stepKeys.length === 0) return;
-
-        appLogger.debug('🔄 Sincronizando EditorProvider.stepBlocks → QuizModularProductionEditor.steps', {
-            stepsKeys: stepKeys,
-            currentStepsCount: steps.length,
-        });
-
-        // Atualizar blocos nos steps correspondentes
-        setSteps(prevSteps => {
-            return prevSteps.map(step => {
-                const stepKey = step.id;
-                const newBlocks = stepBlocks[stepKey];
-
-                // Se há novos blocos para este step, atualizar
-                if (newBlocks && Array.isArray(newBlocks)) {
-                    appLogger.debug(`✅ Atualizando ${stepKey} com ${newBlocks.length} blocos`);
-                    return {
-                        ...step,
-                        blocks: newBlocks.map((block: any) => ({
-                            id: block.id,
-                            type: block.type,
-                            content: block.content || {},
-                            properties: block.properties || {},
-                            order: block.order || 0,
-                            parentId: block.parentId || null,
-                        })),
-                    };
-                }
-
-                return step;
-            });
-        });
-
-        // Marcar como alterado
-        setIsDirty(true);
+        if (editorCtx?.state?.stepBlocks) return; // Provider ativo: não sincronizar para steps locais
+        // Quando não há Provider, nada muda (mantemos steps locais normalmente)
     }, [editorCtx?.state?.stepBlocks]);
 
     // ✅ FASE 3: FALLBACK Empty State - Mostrar mensagem se nenhum step foi carregado
@@ -1061,7 +1024,33 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Layout responsivo (tabs legacy removidos)
 
     const [navOpen, setNavOpen] = useState(false);
-    const navAnalysis = useMemo(() => buildNavigationMap(steps.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [steps]);
+    // Vista unificada de steps: quando Provider está presente, ler blocos diretamente do Provider (fonte única)
+    const providerStepsMap = editorCtx?.state?.stepBlocks as Record<string, any[]> | undefined;
+    const stepsView = useMemo(() => {
+        if (!providerStepsMap) return steps;
+        const adaptBlocks = (arr: any[]) => (arr || []).map(b => ({
+            id: b.id,
+            type: b.type,
+            content: b.content || {},
+            properties: b.properties || {},
+            order: b.order || 0,
+            parentId: b.parentId || null,
+        }));
+        if (!steps || steps.length === 0) {
+            const keys = Object.keys(providerStepsMap).sort();
+            return keys.map((key, idx) => ({
+                id: key,
+                type: 'question',
+                order: idx + 1,
+                blocks: adaptBlocks(providerStepsMap[key]),
+            })) as EditableQuizStep[];
+        }
+        return steps.map(s => ({
+            ...s,
+            blocks: adaptBlocks(providerStepsMap[s.id] || s.blocks || []),
+        }));
+    }, [providerStepsMap, steps]);
+    const navAnalysis = useMemo(() => buildNavigationMap(stepsView.map(s => ({ id: s.id, order: s.order, nextStep: s.nextStep as any, autoLinked: (s as any).autoLinked }))), [stepsView]);
 
     // ==========================
     // Gestão de Etapas (Add / Reorder / Delete)
@@ -1129,10 +1118,10 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const refreshSnippets = () => setSnippets(snippetsManager.list());
     useEffect(() => { refreshSnippets(); }, []);
 
-    // Step selecionado
+    // Step selecionado baseado na visão unificada
     const selectedStep = useMemo(() =>
-        steps.find(s => s.id === (editorCtx ? effectiveSelectedStepId : selectedStepId)),
-        [steps, effectiveSelectedStepId, selectedStepId, editorCtx],
+        stepsView.find(s => s.id === (editorCtx ? effectiveSelectedStepId : selectedStepId)),
+        [stepsView, effectiveSelectedStepId, selectedStepId, editorCtx],
     );
 
     const setSelectedStepIdUnified = useCallback((id: string) => {
@@ -1147,7 +1136,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
 
     // Hook de seleção / clipboard deve vir antes de dependências que usam selectedBlockId
     const selectionApi = useSelectionClipboard({
-        steps,
+        steps: stepsView,
         selectedStepId: editorCtx ? effectiveSelectedStepId : selectedStepId,
         setSteps,
         pushHistory,
@@ -1505,7 +1494,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     const scoringMap = useMemo<Record<string, Record<string, number>>>(() => {
         // Placeholder: cada opção vale 1 ponto genérico (usado apenas para demonstrar variação)
         const map: Record<string, Record<string, number>> = {};
-        steps.forEach(step => {
+        (stepsView || steps).forEach(step => {
             step.blocks.filter(b => b.type === 'quiz-options').forEach(b => {
                 const options = b.content.options || [];
                 map[b.id] = options.reduce((acc: any, opt: any) => {
@@ -1515,7 +1504,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             });
         });
         return map;
-    }, [steps]);
+    }, [stepsView, steps]);
 
     const { scores: liveScores, topStyle } = useLiveScoring({ selections: quizSelections, scoringMap });
 
@@ -1543,7 +1532,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Converte seleções locais (por bloco) em respostas por etapa, compatíveis com o runtime de produção
     const previewAnswers = useMemo<Record<string, string[]>>(() => {
         const map: Record<string, string[]> = {};
-        steps.forEach(step => {
+        (stepsView || steps).forEach(step => {
             // Considera apenas blocos de pergunta (quiz-options)
             const qBlocks = step.blocks.filter(b => b.type === 'quiz-options');
             const selections: string[] = [];
@@ -1557,7 +1546,7 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             }
         });
         return map;
-    }, [steps, quizSelections]);
+    }, [stepsView, steps, quizSelections]);
 
     // Cálculo de resultado real (usa computeResult da produção)
     const previewResult = useMemo(() => {
