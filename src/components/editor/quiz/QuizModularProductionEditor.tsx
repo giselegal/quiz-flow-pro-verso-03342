@@ -1194,6 +1194,8 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Refs para estados usados apenas para leitura em callbacks estáveis
     const selectedStepRef = useRef<EditableQuizStep | undefined>(undefined);
     useEffect(() => { selectedStepRef.current = selectedStep; }, [selectedStep]);
+    const selectedBlockRef = useRef<EditorBlockComponent | undefined>(undefined);
+    useEffect(() => { selectedBlockRef.current = selectedBlock; }, [selectedBlock]);
     const toastRef = useRef(toast);
     useEffect(() => { toastRef.current = toast; }, [toast]);
 
@@ -1500,13 +1502,32 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
     // Cache de pré-visualizações para evitar recomputar nós React pesados
     const previewCacheRef = useRef<Map<string, { key: string; node: React.ReactNode }>>(new Map());
 
+    // FASE 1.1: Fingerprints leves para invalidar cache sem JSON.stringify profundo
+    const shallowFingerprint = (obj: any): string => {
+        if (!obj || typeof obj !== 'object') return String(obj ?? '');
+        try {
+            const entries = Object.entries(obj)
+                .filter(([, v]) => v == null || typeof v !== 'object')
+                .sort(([a], [b]) => a.localeCompare(b));
+            return JSON.stringify(Object.fromEntries(entries));
+        } catch { return ''; }
+    };
+    const dynamicContextKey = (blockId: string): string => {
+        try {
+            const sels = quizSelections[blockId] || [];
+            const stepKey = editorCtx ? effectiveSelectedStepId : selectedStepId;
+            return `${sels.length}:${stepKey || ''}`;
+        } catch { return ''; }
+    };
+
     const renderBlockPreview = (block: EditorBlockComponent, all: EditorBlockComponent[]) => {
         const { type, content, properties, id } = block;
         const children = getChildren(all, id);
         // Construir hash de dependências (alterações de dados relevantes invalidam cache)
         const expanded = type === 'container' ? (expandedContainers ? expandedContainers.has(id) : false) : false; // guarda defensiva
         const childIds = type === 'container' ? children.map(c => c.id).join(',') : '';
-        const dynamicContextHash = JSON.stringify({ liveScores, selections: quizSelections[id], currentStep: editorCtx ? effectiveSelectedStepId : selectedStepId }); // inclui seleções e etapa atual
+        // Fingerprint leve do contexto dinâmico (evita serialização profunda)
+        const dynamicContextHash = dynamicContextKey(id);
         const key = [
             id,
             type,
@@ -1514,15 +1535,15 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
             block.parentId || '',
             expanded ? '1' : '0',
             childIds,
-            JSON.stringify(properties || {}),
-            JSON.stringify(content || {}),
+            shallowFingerprint(properties || {}),
+            shallowFingerprint(content || {}),
             dynamicContextHash,
-            // Hash leve de unifiedConfig relevante (estilos, ofertas, scoring) para invalidar cache ao mudar
-            JSON.stringify({
-                styles: Object.keys((unifiedConfig?.results?.styles as any) || {}),
-                offers: Object.keys((unifiedConfig?.results?.offersMap as any) || {}),
-                scoring: (unifiedConfig?.runtime as any)?.scoring ? Object.keys((unifiedConfig?.runtime as any).scoring) : [],
-            }),
+            // Hash leve (somente contagens relevantes) de unifiedConfig
+            [
+                Object.keys(((unifiedConfig?.results as any)?.styles) || {}).length,
+                Object.keys(((unifiedConfig?.results as any)?.offersMap) || {}).length,
+                (unifiedConfig?.runtime as any)?.scoring ? Object.keys((unifiedConfig?.runtime as any).scoring).length : 0,
+            ].join(':'),
         ].join('|');
         const cached = previewCacheRef.current.get(id);
         if (cached && cached.key === key) return cached.node;

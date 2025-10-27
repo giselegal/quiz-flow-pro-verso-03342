@@ -88,7 +88,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         return roots.sort((a: any, b: any) => (a?.order ?? 0) - (b?.order ?? 0));
     }, [rawBlocks]);
     // ✅ Virtualização habilitada automaticamente quando houver muitos blocos raiz e não estiver em drag
-    const virtualizationEnabled = (rawBlocks?.length || 0) >= 60 && (activeId == null);
+    // Reduzido de 60 → 20 para ativar mais cedo e evitar custo de renderização antes do limiar
+    const virtualizationEnabled = (rawBlocks?.length || 0) >= 20 && (activeId == null);
     const {
         visible: vVisible,
         topSpacer: vTopSpacer,
