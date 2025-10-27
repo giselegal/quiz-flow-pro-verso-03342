@@ -13,7 +13,7 @@ import { smartMigration } from '@/utils/stepDataMigration';
 import MemoBlockRow from './BlockRow';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { Badge } from '@/components/ui/badge';
-import { FixedSizeList as RWFixedSizeList } from 'react-window';
+// react-window será carregado dinamicamente em DEV para avaliação
 
 // Virtualização agora tratada internamente via hook
 import { useVirtualBlocks } from '../hooks/useVirtualBlocks';
@@ -156,6 +156,18 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     // 🔬 DEV: toggle simples para avaliar react-window vs virtualização custom
     const [useRW, setUseRW] = useState<boolean>(false);
+    const [RWModule, setRWModule] = useState<any>(null);
+    React.useEffect(() => {
+        let active = true;
+        if (process.env.NODE_ENV === 'development' && useRW) {
+            import('react-window')
+                .then((mod) => { if (active) setRWModule(mod); })
+                .catch(() => { if (active) setRWModule(null); });
+        } else {
+            setRWModule(null);
+        }
+        return () => { active = false; };
+    }, [useRW]);
 
     return (
         <div className="flex-1 bg-gray-100 flex flex-col overflow-hidden">
@@ -261,16 +273,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                     )}
 
                                     {/* Caminho experimental com react-window (DEV) */}
-                                    {virtualizationEnabled && useRW && process.env.NODE_ENV === 'development' ? (
+                                    {virtualizationEnabled && useRW && process.env.NODE_ENV === 'development' && RWModule?.FixedSizeList ? (
                                         <div className="border rounded-md">
-                                            <RWFixedSizeList
+                                            <RWModule.FixedSizeList
                                                 height={800}
                                                 width={'100%'}
                                                 itemCount={rootBlocks.length}
                                                 itemSize={140}
-                                                itemKey={(index) => rootBlocks[index].id}
+                                                itemKey={(index: number) => rootBlocks[index].id}
                                             >
-                                                {({ index, style }) => {
+                                                {({ index, style }: { index: number; style: React.CSSProperties }) => {
                                                     const block = rootBlocks[index];
                                                     const RowComp = (BlockRow as any) || (MemoBlockRow as any);
                                                     return (
@@ -296,7 +308,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
                                                         </div>
                                                     );
                                                 }}
-                                            </RWFixedSizeList>
+                                            </RWModule.FixedSizeList>
                                         </div>
                                     ) : (
                                         <>
