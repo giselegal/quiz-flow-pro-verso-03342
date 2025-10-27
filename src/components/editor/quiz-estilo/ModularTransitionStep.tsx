@@ -72,10 +72,13 @@ export default function ModularTransitionStep({
         return editor?.state?.stepBlocks?.[stepKey] || [];
     }, [blocksProp, editor?.state?.stepBlocks, stepKey]);
 
-    // ✅ FASE 2: Auto-load se blocos estão vazios (CORREÇÃO CRÍTICA)
+    // ✅ FASE 2: Auto-load se blocos estão vazios (com guarda para evitar loops)
+    const autoloadRequestedRef = React.useRef(false);
     React.useEffect(() => {
-        // Só autoload se não foram fornecidos blocos por props
-        if ((Array.isArray(blocksProp) ? blocksProp.length === 0 : true) && blocks.length === 0 && editor?.actions?.ensureStepLoaded) {
+        const noBlocksInProps = !(Array.isArray(blocksProp) && blocksProp.length > 0);
+        const noBlocksInState = blocks.length === 0;
+        if (!autoloadRequestedRef.current && noBlocksInProps && noBlocksInState && editor?.actions?.ensureStepLoaded) {
+            autoloadRequestedRef.current = true;
             appLogger.debug(`🔄 [ModularTransitionStep] Auto-loading ${stepKey} (blocks empty)`);
             editor.actions.ensureStepLoaded(stepKey).then(() => {
                 appLogger.debug(`✅ [ModularTransitionStep] Loaded ${stepKey} successfully`);
@@ -83,7 +86,7 @@ export default function ModularTransitionStep({
                 appLogger.error(`❌ [ModularTransitionStep] Failed to load ${stepKey}:`, err);
             });
         }
-    }, [stepKey, blocksProp, blocks.length, editor?.actions]);
+    }, [stepKey, blocksProp, blocks.length, editor?.actions?.ensureStepLoaded]);
 
     // ✅ FASE 3: Debug logs apenas em DEV
     React.useEffect(() => {
