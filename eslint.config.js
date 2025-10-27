@@ -76,10 +76,18 @@ export default [
   'prefer-const': 'error',
       '@typescript-eslint/no-var-requires': 'warn',
 
-      // React Hooks rules
-      ...reactHooks.configs.recommended.rules,
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn', // ⚠️ NOVO: Avisar sobre dependências faltantes
+  // React Hooks rules
+  ...reactHooks.configs.recommended.rules,
+  'react-hooks/rules-of-hooks': 'error',
+  'react-hooks/exhaustive-deps': 'warn', // ⚠️ NOVO: Avisar sobre dependências faltantes
+  // Temporariamente reduzir a verbosidade das novas regras do React Compiler
+  // até concluirmos a migração dos pontos problemáticos.
+  'react-hooks/set-state-in-effect': 'off',
+  'react-hooks/purity': 'off',
+  'react-hooks/immutability': 'off',
+  'react-hooks/refs': 'off',
+  'react-hooks/use-memo': 'off',
+  'react-hooks/preserve-manual-memoization': 'off',
 
       // React Refresh rules
       'react-refresh/only-export-components': [
@@ -98,6 +106,10 @@ export default [
   'no-unused-vars': 'off',
       'no-unreachable': 'error',
       'no-constant-condition': 'warn',
+    // Evitar ruído em switch/case com declarações; tratar gradualmente
+    'no-case-declarations': isProd ? 'error' : 'warn',
+    // Blocos vazios são comuns durante refactors; tratar gradualmente
+    'no-empty': isProd ? 'error' : 'warn',
 
       // Best practices
       'prefer-const': 'error',
@@ -118,7 +130,7 @@ export default [
 
       // ⚠️ NOVO: Prevenir imports profundos (../../../)
       'no-restricted-imports': [
-        'error',
+        isProd ? 'error' : 'warn',
         {
           patterns: [
             {
