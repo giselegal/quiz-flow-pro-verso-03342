@@ -4,6 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
+import importPlugin from 'eslint-plugin-import';
 
 const isProd = process.env.NODE_ENV === 'production' || process.env.CI === 'true';
 
@@ -66,7 +67,8 @@ export default [
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',
       '@typescript-eslint/no-empty-function': 'warn',
-      '@typescript-eslint/prefer-const': 'error',
+  // Prefer const: use core rule instead of TS plugin variant (which doesn't exist)
+  'prefer-const': 'error',
       '@typescript-eslint/no-var-requires': 'warn',
 
       // React Hooks rules
@@ -104,8 +106,8 @@ export default [
       'comma-dangle': ['warn', 'es5'],
 
       // Import/Export rules
-      'no-default-export': 'off',
-      'import/prefer-default-export': 'off',
+  'no-default-export': 'off',
+  'import/prefer-default-export': 'off',
 
       // ⚠️ NOVO: Prevenir imports profundos (../../../)
       'no-restricted-imports': [
@@ -174,7 +176,7 @@ export default [
       'no-unused-expressions': 'off',
 
       // Test-specific rules
-      'no-only-tests/no-only-tests': 'off',
+  // Removed: was referencing a plugin we don't use. If needed, install eslint-plugin-no-only-tests.
     },
   },
 
