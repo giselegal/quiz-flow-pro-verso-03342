@@ -99,7 +99,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         setError(null);
 
         try {
-            if (debug) console.log('🎯 UnifiedCRUDProvider: Creating funnel', name);
+            if (debug) logger.debug('unifiedCRUD', '🎯 UnifiedCRUDProvider: Creating funnel', { name });
 
             const newFunnel = await funnelUnifiedService.createFunnel({
                 name,
@@ -120,7 +120,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao criar funil';
 
-            console.error('🚨 UnifiedCRUDProvider: Erro detalhado ao criar funnel:', {
+            logger.error('unifiedCRUD', '🚨 UnifiedCRUDProvider: Erro detalhado ao criar funnel', {
                 error: err,
                 stack: err instanceof Error ? err.stack : 'N/A',
                 funcName: 'createFunnel',
@@ -129,7 +129,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
 
             setError(`Erro ao criar funil: ${errorMessage}`);
 
-            if (debug) console.error('❌ Error creating funnel:', err);
+            if (debug) logger.error('unifiedCRUD', '❌ Error creating funnel', err as any);
 
             // Re-throw com mais contexto
             throw new Error(`Falha na criação do funil "${name}": ${errorMessage}`);
@@ -143,18 +143,18 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         setError(null);
 
         try {
-            if (debug) console.log('📂 UnifiedCRUDProvider: Loading funnel', id);
+            if (debug) logger.debug('unifiedCRUD', '📂 UnifiedCRUDProvider: Loading funnel', { id });
 
             // ✅ NORMALIZAR ID ANTES DE BUSCAR
             const normalized = normalizeFunnelId(id);
             const searchId = normalized.baseId;
 
-            console.log('🔍 Normalizando funnelId:', { original: id, normalized: searchId });
+            logger.debug('unifiedCRUD', '🔍 Normalizando funnelId', { original: id, normalized: searchId });
 
             const funnel = await enhancedFunnelService.getFunnelWithFallback(searchId, undefined, context);
 
             if (!funnel) {
-                console.warn(`⚠️ Funil não encontrado com ID normalizado: ${searchId} (original: ${id})`);
+                logger.warn('unifiedCRUD', '⚠️ Funil não encontrado com ID normalizado', { normalizedId: searchId, originalId: id });
                 const fallbackFunnel = await enhancedFunnelService.createFallbackFunnel(id, context);
                 if (!fallbackFunnel) {
                     throw new Error(`Funil não encontrado: ${id}`);
@@ -183,13 +183,13 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                     return prev.map(f => f.id === funnel.id ? funnel : f);
                 });
 
-                if (debug) console.log('✅ Funnel loaded:', funnel.id);
+                if (debug) logger.debug('unifiedCRUD', '✅ Funnel loaded', { id: funnel.id });
             }
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar funil';
             setError(errorMessage);
-            if (debug) console.error('❌ Error loading funnel:', err);
+            if (debug) logger.error('unifiedCRUD', '❌ Error loading funnel', err as any);
             throw err;
         } finally {
             setIsLoading(false);
@@ -207,7 +207,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         setError(null);
 
         try {
-            if (debug) console.log('💾 UnifiedCRUDProvider: Saving funnel', targetFunnel.id);
+            if (debug) logger.debug('unifiedCRUD', '💾 UnifiedCRUDProvider: Saving funnel', { id: targetFunnel.id });
 
             const updatedFunnel = await funnelUnifiedService.updateFunnel(
                 targetFunnel.id,
@@ -223,12 +223,12 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
             setCurrentFunnel(updatedFunnel);
             setFunnels(prev => prev.map(f => f.id === updatedFunnel.id ? updatedFunnel : f));
 
-            if (debug) console.log('✅ Funnel saved:', updatedFunnel.id);
+            if (debug) logger.debug('unifiedCRUD', '✅ Funnel saved', { id: updatedFunnel.id });
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao salvar funil';
             setError(errorMessage);
-            if (debug) console.error('❌ Error saving funnel:', err);
+            if (debug) logger.error('unifiedCRUD', '❌ Error saving funnel', err as any);
             throw err;
         } finally {
             setIsSaving(false);
@@ -240,7 +240,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         setError(null);
 
         try {
-            if (debug) console.log('📋 UnifiedCRUDProvider: Duplicating funnel', id);
+            if (debug) logger.debug('unifiedCRUD', '📋 UnifiedCRUDProvider: Duplicating funnel', { id });
 
             const duplicatedFunnel = await funnelUnifiedService.duplicateFunnel(id, newName);
 
@@ -248,13 +248,13 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
             setFunnels(prev => [duplicatedFunnel, ...prev]);
             setCurrentFunnel(duplicatedFunnel);
 
-            if (debug) console.log('✅ Funnel duplicated:', duplicatedFunnel.id);
+            if (debug) logger.debug('unifiedCRUD', '✅ Funnel duplicated', { id: duplicatedFunnel.id });
             return duplicatedFunnel;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao duplicar funil';
             setError(errorMessage);
-            if (debug) console.error('❌ Error duplicating funnel:', err);
+            if (debug) logger.error('unifiedCRUD', '❌ Error duplicating funnel', err as any);
             throw err;
         } finally {
             setIsLoading(false);
