@@ -43,9 +43,9 @@ appLogger.error('Critical error');
 - ✅ Namespace para organização
 
 ### Próximos Passos
-- [ ] Substituir `console.log()` por `appLogger.log()` gradualmente
-- [ ] Priorizar arquivos em `src/services/`
-- [ ] Criar lint rule para prevenir novos console.log
+- [ ] Substituir `console.log()` por `appLogger.log()` gradualmente (restantes ≈3.049 ocorrências em `src/`)
+- [x] Priorizar arquivos em `src/services/` (planejamento definido)
+- [x] Criar lint rule para prevenir novos console.log (ativada via `no-console` em produção/CI)
 - [ ] Documentar guia de uso do logger
 
 ---
@@ -93,7 +93,7 @@ const logDeprecationWarning = (oldName: string, newName: string) => {
 **Total:** 117 → ~40 serviços (-65%)
 
 ### Próximos Passos
-- [ ] Adicionar telemetria para rastrear uso de aliases deprecated
+- [x] Adicionar telemetria para rastrear uso de aliases deprecated (Proxies registrando 1ª utilização)
 - [ ] Criar script de migração automática
 - [ ] Gerar relatório de uso por arquivo
 - [ ] Arquivar serviços duplicados após migração completa
@@ -109,7 +109,7 @@ const logDeprecationWarning = (oldName: string, newName: string) => {
 
 ### Solução Implementada
 
-**Status:** ✅ Componentes modulares criados
+**Status:** ✅ Componentes modulares criados; 🔄 Integração em progresso no arquivo canônico
 
 **Arquitetura Nova:**
 
@@ -201,10 +201,10 @@ interface PropertiesColumnProps {
 ```
 
 ### Próximos Passos
-- [ ] Integrar componentes modulares no QuizModularProductionEditor
+- [ ] Integrar componentes modulares no QuizModularProductionEditor (parcial: renderização já utiliza colunas)
 - [ ] Testar funcionalidades após refatoração
-- [ ] Criar testes unitários para cada componente
-- [ ] Reduzir QuizModularProductionEditor.tsx de 3131 → ~500 linhas
+- [x] Criar testes unitários para cada componente (4 testes mínimos adicionados)
+- [ ] Reduzir QuizModularProductionEditor.tsx de 3131 → ~500 linhas (atual: 3520)
 - [ ] Documentar API de cada componente
 
 ---
