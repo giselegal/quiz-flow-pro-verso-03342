@@ -266,7 +266,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         setError(null);
 
         try {
-            if (debug) console.log('🗑️ UnifiedCRUDProvider: Deleting funnel', id);
+            if (debug) logger.debug('unifiedCRUD', '🗑️ UnifiedCRUDProvider: Deleting funnel', { id });
 
             const success = await funnelUnifiedService.deleteFunnel(id);
 
@@ -278,13 +278,13 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
                 }
             }
 
-            if (debug) console.log(success ? '✅ Funnel deleted' : '❌ Failed to delete funnel');
+            if (debug) logger.debug('unifiedCRUD', success ? '✅ Funnel deleted' : '❌ Failed to delete funnel', { id, success });
             return success;
 
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Erro ao deletar funil';
             setError(errorMessage);
-            if (debug) console.error('❌ Error deleting funnel:', err);
+            if (debug) logger.error('unifiedCRUD', '❌ Error deleting funnel', err as any);
             throw err;
         } finally {
             setIsLoading(false);
