@@ -261,8 +261,10 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
     };
 
     const handleBlocksReorder = (stepId: string, newOrder: string[]) => {
+        // 1) Persistir ordem lógica no metadata do step
         handleEdit('blockOrder', newOrder);
 
+        // 2) Se houver provider, tentar refletir ordem nos IDs reais
         try {
             if (!editor?.actions?.reorderBlocks || !editor?.state?.stepBlocks) return;
 
@@ -271,13 +273,17 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
 
             const desiredRealOrder: string[] = [];
             for (const logicalId of newOrder) {
-                const realId = resolveRealBlockId(logicalId);
+                const realId = resolveRealBlockId(logicalId) || logicalId;
                 if (realId && !desiredRealOrder.includes(realId)) {
                     desiredRealOrder.push(realId);
                 }
             }
 
             const currentIds: string[] = blocks.map(b => String(b.id));
+
+            // Evitar loops: se a ordem desejada já é igual à atual, não faz nada
+            const equal = desiredRealOrder.length === currentIds.length && desiredRealOrder.every((id, i) => id === currentIds[i]);
+            if (equal) return;
 
             const currentIndices = desiredRealOrder
                 .map(id => currentIds.indexOf(id))
