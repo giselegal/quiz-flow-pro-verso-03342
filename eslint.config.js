@@ -232,6 +232,25 @@ export default [
       'no-console': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       'no-await-in-loop': 'off', // Common in E2E tests
+      // Permitir uso direto de localStorage e blocos vazios em testes E2E
+      'no-restricted-globals': 'off',
+      'no-empty': 'off',
+      // Permitir imports profundos em utilitários de testes
+      'no-restricted-imports': 'off',
+    },
+  },
+
+  // Supabase Edge Functions (Deno runtime)
+  {
+    files: ['supabase/functions/**/*.{ts,tsx,js}'],
+    languageOptions: {
+      globals: {
+        Deno: 'readonly',
+      },
+    },
+    rules: {
+      // Deno fornece Deno global; evitar no-undef aqui
+      'no-undef': 'off',
     },
   },
 
