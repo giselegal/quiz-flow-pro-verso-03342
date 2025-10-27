@@ -486,7 +486,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         const template = getQuiz21StepsTemplate();
         const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
         const rawStep = (template as any)[stepId];
-        console.debug('🧪 Debug getStepBehavior fallback context', {
+        appLogger.debug('🧪 Debug getStepBehavior fallback context', {
           stepId,
           hasRawStep: !!rawStep,
           rawType: typeof rawStep,
