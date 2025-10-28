@@ -10,7 +10,7 @@
  * META: -60% re-renders, 100% preview offline
  */
 
-import { useMemo, useCallback, useEffect, useRef } from 'react';
+import { useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import type { QuizConfig } from '@/types/quiz-config';
 import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { getPreloadBlocks } from '@/registry/blockCategories';
@@ -343,12 +343,3 @@ export function useStepCache(ttl: number = 5 * 60 * 1000) {
 // ============================================================================
 // EXPORTS
 // ============================================================================
-
-export {
-    useMemoizedMergedConfig,
-    useIntelligentPrefetch,
-    useLoadingDeduplication,
-    useOfflineFirstConfig,
-    useMemoizedCallback,
-    useStepCache,
-};
