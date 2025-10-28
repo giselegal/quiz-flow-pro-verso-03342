@@ -170,19 +170,18 @@ export class TemplateLoader {
 
   /**
    * Estratégia: Carregar JSON individual público em public/templates/step-XX.json
-   * - Tenta sufixo -v3.json e depois .json
+   * - ATUALIZADO: Remove tentativa de carregar -v3.json (arquivados)
+   * - Tenta apenas .json (formato blocks[])
    * - Converte para Block[] com mapeamentos e normalização de campos
    */
   private async loadFromPublicStepJSON(normalizedKey: string): Promise<LoadedTemplate | null> {
     try {
       const base = `/templates/${normalizedKey}`;
-      // Ordem de tentativa:
+      // Ordem de tentativa (SEM -v3.json que foi arquivado):
       // 1) v3.1 blocks (public/templates/blocks/step-XX.json)
-      // 2) v3 sections (public/templates/step-XX-v3.json)
-      // 3) canônico (public/templates/step-XX.json)
+      // 2) canônico (public/templates/step-XX.json)
       const urls = [
         `/templates/blocks/${normalizedKey}.json`,
-        `${base}-v3.json`,
         `${base}.json`,
       ];
       let data: any | null = null;
