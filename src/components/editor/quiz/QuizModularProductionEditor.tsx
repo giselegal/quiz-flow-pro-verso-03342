@@ -94,7 +94,7 @@ import { BlockComponent as EditorBlockComponent, EditableQuizStep as EditorEdita
 import { buildFashionStyle21Steps } from '@/templates/fashionStyle21PtBR';
 import { getQuiz21StepsTemplate } from '@/templates/imports';
 import { QuizTemplateAdapter } from '@/core/migration/QuizTemplateAdapter';
-import { safeGetTemplateBlocks, blocksToBlockComponents } from '@/utils/templateConverter';
+import { blocksToBlockComponents, convertTemplateToBlocks } from '@/utils/templateConverter';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import type { StepType } from '@/types/quiz-schema';
 import { useSelectionClipboard } from './hooks/useSelectionClipboard';
@@ -108,6 +108,7 @@ import { loadStepTemplate } from '@/utils/loadStepTemplates';
 import { loadQuizStep, loadAllQuizSteps, STEP_ORDER, preloadAdjacentSteps } from '@/data/quizStepsLazy';
 import type { QuizStep } from '@/data/quizSteps';
 import CanvasArea from './components/CanvasArea';
+// ✅ FASE 1.2: Migrado safeGetTemplateBlocks → convertTemplateToBlocks
 import BlockRow from './components/BlockRow';
 import { BlockComponent, EditableQuizStep, BlockSnippet } from './types';
 // ✅ FASE 6: Lazy load PropertiesPanel (componente grande com schemas dinâmicos)
@@ -697,11 +698,12 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                         appLogger.warn('🔄 Falha ao carregar funnel, usando template quiz21StepsComplete como fallback', e);
 
                         // Forçar carregamento do template como fallback
+                        // ✅ FASE 1.2: Migrado para convertTemplateToBlocks
                         const initial: EditorEditableQuizStep[] = Array.from({ length: 21 }).map((_, idx) => {
                             const stepNumber = idx + 1;
                             const stepId = `step-${stepNumber.toString().padStart(2, '0')}`;
                             const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
-                            const blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam);
+                            const blocks = convertTemplateToBlocks(quizTemplate);
 
                             // Determinar tipo de step baseado no índice (mesmo padrão usado abaixo)
                             const getStepType = (index: number): 'intro' | 'question' | 'strategic-question' | 'transition' | 'transition-result' | 'result' | 'offer' => {
@@ -760,12 +762,13 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     const master = await resp.json();
                                     const stepIds = Array.from({ length: 21 }).map((_, i) => toStepId(i + 1));
 
+                                    // ✅ FASE 1.2: Migrado para convertTemplateToBlocks
                                     const built: EditableQuizStep[] = stepIds.map((stepId, idx) => {
                                         const stepConf = master?.steps?.[stepId];
                                         // Hidratar sections com QUIZ_STEPS (titulos, perguntas, opções, CTA...)
                                         const sections = hydrateSectionsWithQuizSteps(stepId, stepConf?.sections);
                                         // Converter sections → BlockComponent[] usando o mapeador central
-                                        const blocks = safeGetTemplateBlocks(stepId, { [stepId]: { sections } }) || [];
+                                        const blocks = convertTemplateToBlocks({ [stepId]: { sections } });
 
                                         return {
                                             id: stepId,

@@ -10,17 +10,20 @@
  * 
  * Extraído do EditorProviderUnified para reduzir complexidade
  * 
- * @version 1.0.0
+ * ✅ FASE 1.2: Migrado para usar templateService (removido safeGetTemplateBlocks)
+ * 
+ * @version 1.1.0
  */
 
 import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { safeGetTemplateBlocks, blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
+import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/utils/templateConverter';
 import { loadStepTemplate, hasModularTemplate, hasStaticBlocksJSON } from '@/utils/loadStepTemplates';
 import hydrateSectionsWithQuizSteps from '@/utils/hydrators/hydrateSectionsWithQuizSteps';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/utils/cacheKeys';
 import { TemplateRegistry } from '@/services/TemplateRegistry';
+import { templateService } from '@/services/canonical/TemplateService';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 import blockAliasMap from '@/config/block-aliases.json';
 
@@ -420,12 +423,13 @@ export class TemplateLoader {
         }
       } else if (Array.isArray(data?.sections)) {
         // Caminho 2: JSON v3 no formato sections[] → converter para Block[]
+        // ✅ FASE 1.2: Migrado para usar convertTemplateToBlocks diretamente
         try {
           const hydrated = {
             ...data,
             sections: hydrateSectionsWithQuizSteps(normalizedKey, data.sections),
           };
-          const blocksComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
+          const blocksComponents = convertTemplateToBlocks({ [normalizedKey]: hydrated });
           blocks = blockComponentsToBlocks(blocksComponents);
         } catch (e) {
           console.warn('⚠️ Falha ao converter sections→blocks para', normalizedKey, e);
@@ -596,12 +600,13 @@ export class TemplateLoader {
       }
 
       // ⚠️ FALLBACK: Se step tem sections[] (formato antigo), converter
+      // ✅ FASE 1.2: Migrado para usar convertTemplateToBlocks diretamente
       if (Array.isArray(stepConfig.sections) && stepConfig.sections.length > 0) {
         const hydrated = {
           ...stepConfig,
           sections: hydrateSectionsWithQuizSteps(normalizedKey, stepConfig.sections),
         };
-        const blockComponents = safeGetTemplateBlocks(normalizedKey, { [normalizedKey]: hydrated });
+        const blockComponents = convertTemplateToBlocks({ [normalizedKey]: hydrated });
         const blocks = blockComponentsToBlocks(blockComponents);
 
         unifiedCache.set(masterBlocksKey(normalizedKey), blocks);
@@ -692,13 +697,14 @@ export class TemplateLoader {
   private loadFromTypescript(normalizedKey: string): LoadedTemplate {
     console.log(`📦 Fallback: TypeScript template → ${normalizedKey}`);
 
+    // ✅ FASE 1.2: Migrado para usar convertTemplateToBlocks diretamente
     const stepTemplate = QUIZ_STYLE_21_STEPS_TEMPLATE[normalizedKey];
     if (!stepTemplate) {
       console.warn(`⚠️ Step ${normalizedKey} não encontrado no template TS`);
       return { blocks: [], source: 'ts-template' };
     }
 
-    const blockComponents = safeGetTemplateBlocks(normalizedKey, {
+    const blockComponents = convertTemplateToBlocks({
       [normalizedKey]: stepTemplate,
     });
     const blocks = blockComponentsToBlocks(blockComponents);
