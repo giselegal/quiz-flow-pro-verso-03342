@@ -2,8 +2,6 @@ import React from 'react';
 import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
-import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityWrapper';
-import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { EditorProvider } from '../components/editor/EditorProviderMigrationAdapter';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
@@ -11,7 +9,7 @@ import FunnelFallback from '@/components/editor/FunnelFallback';
 import EditorFallback from '@/components/editor/EditorFallback';
 
 /**
- * 🎯 MAIN EDITOR UNIFICADO - VERSÃO SIMPLIFICADA E ROBUSTA
+ * 🎯 MAIN EDITOR UNIFICADO - VERSÃO SIMPLIFICADA E ROBUSTA ✅ FASE 2.3 ATUALIZADO
  *
  * Editor principal com foco em estabilidade e prevenção de loading infinito:
  * - Timeout automático de 10 segundos
@@ -19,6 +17,7 @@ import EditorFallback from '@/components/editor/EditorFallback';
  * - Validação de parâmetros
  * - Recovery automático de erros
  * - Logs detalhados para debug
+ * - ✅ FASE 2.3: Removido LegacyCompatibilityWrapper (compatibilidade via hook)
  */
 const MainEditorUnified: React.FC = () => {
     const [location] = useLocation();
@@ -74,23 +73,18 @@ const MainEditorUnified: React.FC = () => {
                     quizId={funnelId || templateId || 'local-funnel'}
                     storageKey={`editor-unified-${funnelId || templateId || 'new'}`}
                 >
-                    <LegacyCompatibilityWrapper
-                        enableWarnings={debugMode}
-                        initialContext={FunnelContext.EDITOR}
-                    >
-                        {sanitizedParams.funnelId ? (
-                            <FunnelValidatedEditor
-                                templateId={sanitizedParams.templateId}
-                                funnelId={sanitizedParams.funnelId}
-                                debugMode={debugMode}
-                            />
-                        ) : (
-                            <EditorFallback
-                                templateId={sanitizedParams.templateId}
-                                funnelId={sanitizedParams.funnelId}
-                            />
-                        )}
-                    </LegacyCompatibilityWrapper>
+                    {sanitizedParams.funnelId ? (
+                        <FunnelValidatedEditor
+                            templateId={sanitizedParams.templateId}
+                            funnelId={sanitizedParams.funnelId}
+                            debugMode={debugMode}
+                        />
+                    ) : (
+                        <EditorFallback
+                            templateId={sanitizedParams.templateId}
+                            funnelId={sanitizedParams.funnelId}
+                        />
+                    )}
                 </EditorProvider>
             </FunnelMasterProvider>
         </ErrorBoundary>

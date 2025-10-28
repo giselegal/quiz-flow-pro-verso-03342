@@ -5,16 +5,17 @@
  * Mantém compatibilidade com código antigo sem overhead de Provider adicional
  */
 
-import { useEditorContext } from '@/components/editor/EditorProviderUnified';
+import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 export interface LegacyEditorAPI {
     funnelContext: FunnelContext;
-    // Métodos delegados para EditorProviderUnified
-    getCurrentStep: () => any;
-    updateStep: (stepId: string, updates: any) => void;
-    addStep: (step: any) => void;
-    deleteStep: (stepId: string) => void;
+    // Métodos delegados para EditorProviderUnified (compatibilidade)
+    getCurrentStep: () => number;
+    getStepBlocks: (step: number) => any[];
+    updateBlock: (stepKey: string, blockId: string, updates: any) => Promise<void>;
+    addBlock: (stepKey: string, block: any) => Promise<void>;
+    removeBlock: (stepKey: string, blockId: string) => Promise<void>;
 }
 
 /**
@@ -29,11 +30,11 @@ export interface LegacyEditorAPI {
  * @returns API legada compatível
  */
 export function useLegacyEditor(enableWarnings = false): LegacyEditorAPI {
-    const editorContext = useEditorContext();
+    const editorContext = useEditor();
 
     if (enableWarnings) {
         console.warn(
-            '⚠️ [LEGACY] useLegacyEditor em uso. Considere migrar para useEditorContext diretamente.'
+            '⚠️ [LEGACY] useLegacyEditor em uso. Considere migrar para useEditor diretamente.'
         );
     }
 
@@ -41,21 +42,24 @@ export function useLegacyEditor(enableWarnings = false): LegacyEditorAPI {
         funnelContext: FunnelContext.EDITOR,
         
         getCurrentStep: () => {
-            return editorContext.state.currentStepId 
-                ? editorContext.state.steps[editorContext.state.currentStepId]
-                : null;
+            return editorContext.state.currentStep;
         },
 
-        updateStep: (stepId: string, updates: any) => {
-            editorContext.actions.updateStep(stepId, updates);
+        getStepBlocks: (step: number) => {
+            const stepKey = `step-${step}`;
+            return editorContext.state.stepBlocks[stepKey] || [];
         },
 
-        addStep: (step: any) => {
-            editorContext.actions.addStep(step);
+        updateBlock: async (stepKey: string, blockId: string, updates: any) => {
+            await editorContext.actions.updateBlock(stepKey, blockId, updates);
         },
 
-        deleteStep: (stepId: string) => {
-            editorContext.actions.deleteStep(stepId);
+        addBlock: async (stepKey: string, block: any) => {
+            await editorContext.actions.addBlock(stepKey, block);
+        },
+
+        removeBlock: async (stepKey: string, blockId: string) => {
+            await editorContext.actions.removeBlock(stepKey, blockId);
         },
     };
 }

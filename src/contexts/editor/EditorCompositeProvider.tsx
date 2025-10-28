@@ -39,7 +39,7 @@ export interface EditorCompositeProviderProps {
  * Provider consolidado que gerencia:
  * - State de funil (FunnelMasterProvider)
  * - State de editor (EditorProvider)
- * - Compatibilidade legada (LegacyCompatibilityWrapper)
+ * - ✅ FASE 2.3: Compatibilidade legada via hook (useLegacyEditor)
  * 
  * Uso:
  * ```tsx
@@ -74,12 +74,7 @@ export const EditorCompositeProvider: React.FC<EditorCompositeProviderProps> = (
                 funnelId={providerConfig.funnelId}
                 storageKey={providerConfig.storageKey}
             >
-                <LegacyCompatibilityWrapper
-                    enableWarnings={providerConfig.debugMode}
-                    initialContext={FunnelContext.EDITOR}
-                >
-                    {children}
-                </LegacyCompatibilityWrapper>
+                {children}
             </EditorProvider>
         </FunnelMasterProvider>
     );
