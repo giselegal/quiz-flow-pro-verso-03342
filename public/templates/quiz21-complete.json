@@ -3075,6 +3075,7 @@
     },
     "step-20": {
       "templateVersion": "3.0",
+      "type": "result",
       "metadata": {
         "id": "step-20-atomic",
         "name": "Resultado Personalizado - Atomic v3",
