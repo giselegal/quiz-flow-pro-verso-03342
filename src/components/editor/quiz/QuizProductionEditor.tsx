@@ -31,7 +31,7 @@ import {
 import { cn } from '@/lib/utils';
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import QuizProductionPreview from './QuizProductionPreview';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { templateService } from '@/services/canonical/TemplateService';
 import { useToast } from '@/hooks/use-toast';
 
 interface EditableQuizStep {
@@ -110,8 +110,9 @@ export const QuizProductionEditor: React.FC<QuizProductionEditorProps> = ({
                 variant: 'destructive',
             });
 
-            // Fallback: carregar QUIZ_STEPS
-            const fallbackSteps = Object.entries(QUIZ_STEPS).map(([id, step], index) => ({
+            // Fallback: carregar do TemplateService
+            const allSteps = templateService.getAllStepsSync();
+            const fallbackSteps = Object.entries(allSteps).map(([id, step], index) => ({
                 id,
                 order: index + 1,
                 ...step,

@@ -14,7 +14,8 @@
  */
 
 import { EditableQuizStep, StepType } from '@/components/editor/quiz/types';
-import { QUIZ_STEPS, QuizStep } from '@/data/quizSteps';
+import type { QuizStep } from '@/data/quizSteps';
+import { templateService } from '@/services/canonical/TemplateService';
 
 /**
  * 🎯 DEFAULTS POR TIPO DE STEP
@@ -87,7 +88,7 @@ export const adaptStepData = (
   const metadata = extractMetadata(editableStep);
   const productionData = getProductionStepData(editableStep.id);
 
-  // 🔒 Tipo canônico do step: prioriza produção (QUIZ_STEPS) e, como fallback, infere pelo número
+  // 🔒 Tipo canônico do step: prioriza produção (TemplateService) e, como fallback, infere pelo número
   const stepNumber = extractStepNumber(editableStep.id);
   const stepType = (productionData?.type as StepType) || inferStepType(stepNumber);
   const defaults = STEP_DEFAULTS[stepType] || {};
@@ -194,10 +195,12 @@ function extractMetadata(step: EditableQuizStep): Partial<QuizStep> {
 
 /**
  * 📦 BUSCA DE DADOS DE PRODUÇÃO
- * Usa quizSteps.ts como fonte de verdade
+ * Usa TemplateService como fonte de verdade
  */
 function getProductionStepData(stepId: string): QuizStep | undefined {
-  return QUIZ_STEPS[stepId];
+  // ✅ MIGRADO: Usar TemplateService
+  const allSteps = templateService.getAllStepsSync();
+  return allSteps[stepId];
 }
 
 /**

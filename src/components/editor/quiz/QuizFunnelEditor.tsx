@@ -25,7 +25,8 @@ import { useUnifiedCRUD } from '@/contexts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
+import type { QuizStep } from '@/data/quizSteps';
+import { templateService } from '@/services/canonical/TemplateService';
 import { styleConfigGisele } from '@/data/styles';
 import { Plus, Save, Trash2, ArrowUp, ArrowDown, Copy, RefreshCw, ListTree } from 'lucide-react';
 import { Undo2, Redo2 } from 'lucide-react';
@@ -510,7 +511,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
         if (!text) return '';
         const primary = phPrimaryStyle || 'principal';
         const secondaries = phSecondaryStyles.split(',').map(s => s.trim()).filter(Boolean);
-        const repl = (src: string, token: string, value: string) => src.replace(new RegExp(token.replace(/[{}]/g, m => `\\${  m}`), 'g'), value);
+        const repl = (src: string, token: string, value: string) => src.replace(new RegExp(token.replace(/[{}]/g, m => `\\${m}`), 'g'), value);
         let out = text;
         out = repl(out, '{userName}', phUserName || 'Usuária');
         out = repl(out, '{primaryStyle}', primary);
@@ -614,7 +615,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
     useEffect(() => {
         if (isInitialized) return;
 
-        // Se funil tiver quizSteps, usar; caso contrário montar de QUIZ_STEPS
+        // Se funil tiver quizSteps, usar; caso contrário montar do TemplateService
         const existing = (crud.currentFunnel as any)?.quizSteps as EditableQuizStep[] | undefined;
         if (existing && existing.length) {
             setSteps(existing.map(s => ({ ...s })));
@@ -622,8 +623,9 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
             setIsInitialized(true);
             return;
         }
-        // Converter QUIZ_STEPS (Record) para array
-        const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step }));
+        // Converter TemplateService (Record) para array
+        const allSteps = templateService.getAllStepsSync();
+        const conv: EditableQuizStep[] = Object.entries(allSteps).map(([id, step]) => ({ id, ...step }));
         setSteps(conv);
         if (conv.length) setSelectedId(conv[0].id);
         setIsInitialized(true);
@@ -1187,8 +1189,8 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                 });
                                                 // options length / ids
                                                 if ((before as any).options || (after as any).options) {
-                                                    const bOpts = ((before as any).options || []).map((o: any) => `${o.id  }:${  o.text}`).join('|');
-                                                    const aOpts = ((after as any).options || []).map((o: any) => `${o.id  }:${  o.text}`).join('|');
+                                                    const bOpts = ((before as any).options || []).map((o: any) => `${o.id}:${o.text}`).join('|');
+                                                    const aOpts = ((after as any).options || []).map((o: any) => `${o.id}:${o.text}`).join('|');
                                                     if (bOpts !== aOpts) changes.push('options');
                                                 }
                                                 if (before.type === 'offer' || after.type === 'offer') {
@@ -1205,7 +1207,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                             setImportDiff({ added, removed, modified });
                                             setPendingImport(second.data as EditableQuizStep[]);
                                         } catch (err: any) {
-                                            alert(`Falha ao importar JSON: ${  err.message}`);
+                                            alert(`Falha ao importar JSON: ${err.message}`);
                                         } finally {
                                             e.target.value = '';
                                         }
@@ -1341,7 +1343,8 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                         setSteps(existing.map(s => ({ ...s })));
                                         setSelectedId(existing[0].id);
                                     } else {
-                                        const conv: EditableQuizStep[] = Object.entries(QUIZ_STEPS).map(([id, step]) => ({ id, ...step }));
+                                        const allSteps = templateService.getAllStepsSync();
+                                        const conv: EditableQuizStep[] = Object.entries(allSteps).map(([id, step]) => ({ id, ...step }));
                                         setSteps(conv);
                                         setSelectedId(conv[0]?.id || '');
                                     }
@@ -1483,7 +1486,7 @@ const QuizFunnelEditor: React.FC<QuizFunnelEditorProps> = ({ funnelId, templateI
                                                                                     // Atualizar preview se estiver ativo
                                                                                     if (activeBlockPreviewId === b.id) setActiveBlockPreviewId(b.id);
                                                                                 } catch (err: any) {
-                                                                                    setBlockConfigError(`JSON inválido: ${  err.message}`);
+                                                                                    setBlockConfigError(`JSON inválido: ${err.message}`);
                                                                                 }
                                                                             }}>Salvar</Button>
                                                                         </div>

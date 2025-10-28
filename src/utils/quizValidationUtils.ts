@@ -11,8 +11,9 @@
  * 4. FormInput obrigatório no step-01
  */
 
-import { QuizStep, QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+import type { QuizStep } from '@/data/quizSteps';
 import { styleMapping, type StyleId } from '@/data/styles';
+import { templateService } from '@/services/canonical/TemplateService';
 
 // ================================
 // TIPOS
@@ -129,11 +130,11 @@ export function validateNextStep(step: QuizStep & { id: string }, allStepIds?: s
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
 
-    // Determinar última etapa dinamicamente (permite excluir step-21)
-    let ids = allStepIds && allStepIds.length > 0 ? allStepIds : STEP_ORDER;
+    // ✅ MIGRADO: Usar TemplateService ao invés de STEP_ORDER
+    let ids = allStepIds && allStepIds.length > 0 ? allStepIds : templateService.getStepOrder();
     // Normalização defensiva: se os IDs parecerem numéricos ("0", "1"...) converter para step-XX para manter consistência
-    if (ids.every(id => /^\d+$/.test(id))) {
-        ids = ids.map(n => `step-${String(Number(n) + 1).padStart(2, '0')}`); // +1 para alinhar com step-01
+    if (ids.every((id: string) => /^\d+$/.test(id))) {
+        ids = ids.map((n: string) => `step-${String(Number(n) + 1).padStart(2, '0')}`); // +1 para alinhar com step-01
     }
     const lastId = ids[ids.length - 1];
     if (step.id === lastId) {
@@ -199,17 +200,20 @@ export function validateNextStep(step: QuizStep & { id: string }, allStepIds?: s
  * Retorna a lista de nextStep válidos para uso em dropdowns
  */
 export function getValidNextSteps(currentStepId: string): Array<{ value: string; label: string }> {
-    const currentIndex = STEP_ORDER.indexOf(currentStepId);
+    // ✅ MIGRADO: Usar TemplateService
+    const stepOrder = templateService.getStepOrder();
+    const allSteps = templateService.getAllStepsSync();
+    const currentIndex = stepOrder.indexOf(currentStepId);
 
     // Se é a última etapa, não tem nextStep
-    if (currentIndex === STEP_ORDER.length - 1) {
+    if (currentIndex === stepOrder.length - 1) {
         return [{ value: 'null', label: 'Nenhum (última etapa)' }];
     }
 
     // Retornar todas as etapas após a atual
-    return STEP_ORDER.slice(currentIndex + 1).map(stepId => ({
+    return stepOrder.slice(currentIndex + 1).map((stepId: string) => ({
         value: stepId,
-        label: `${stepId} (${QUIZ_STEPS[stepId]?.type || 'desconhecido'})`,
+        label: `${stepId} (${allSteps[stepId]?.type || 'desconhecido'})`,
     }));
 }
 
@@ -234,8 +238,8 @@ export function validateOfferMap(step: QuizStep & { id: string }, allStepIds?: s
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
 
-    // Apenas para a última etapa se ela for offer (dinâmico)
-    const ids = allStepIds && allStepIds.length > 0 ? allStepIds : STEP_ORDER;
+    // ✅ MIGRADO: Usar TemplateService
+    const ids = allStepIds && allStepIds.length > 0 ? allStepIds : templateService.getStepOrder();
     const lastId = ids[ids.length - 1];
     if (step.type !== 'offer' || step.id !== lastId) {
         return { isValid: true, errors, warnings };
@@ -487,8 +491,10 @@ export function validateCompleteFunnel(steps: Record<string, QuizStep>): Validat
 
     // Validação global: se estiver usando 21 etapas, checar faltantes; se 20, aceitar ausência de step-21
     if (stepIds.length >= 20) {
-        const required = STEP_ORDER.filter(id => id !== 'step-21');
-        const missing = required.filter(id => !stepIds.includes(id));
+        // ✅ MIGRADO: Usar TemplateService
+        const stepOrder = templateService.getStepOrder();
+        const required = stepOrder.filter((id: string) => id !== 'step-21');
+        const missing = required.filter((id: string) => !stepIds.includes(id));
         if (missing.length > 0) {
             allErrors.push({
                 stepId: 'global',
