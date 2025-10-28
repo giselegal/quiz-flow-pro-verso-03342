@@ -114,16 +114,15 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
   const stepsSource = externalSteps || loadedSteps || QUIZ_STEPS;
 
   // 🎯 FASE 1: Inicializar NavigationService com steps atuais
-  const navigationService = useMemo(() => {
-    const navService = getNavigationService();
+  const navService = useMemo(() => {
     const steps = Object.entries(stepsSource).map(([id, step], index) => ({
       id,
       nextStep: (step as any).nextStep ?? (step as any).navigation?.nextStep,
       order: index,
       type: (step as any).type,
     }));
-    navService.buildNavigationMap(steps);
-    return navService;
+    navigationService.buildNavigationMap(steps);
+    return navigationService;
   }, [stepsSource]);
 
   // 🎯 FASE 2: Carregar template JSON quando step mudar
@@ -189,7 +188,7 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       if (!canAdvance) return prev;
       
       // 🎯 FASE 1: Usar NavigationService para resolver nextStep
-      const nextStepId = navigationService.resolveNextStep(prev.currentStep, Object.entries(source).map(([id, step], index) => ({
+      const nextStepResult = navService.resolveNextStep(prev.currentStep, Object.entries(source).map(([id, step], index) => ({
         id,
         nextStep: (step as any).nextStep ?? (step as any).navigation?.nextStep,
         order: index,
@@ -197,8 +196,8 @@ export function useQuizState(funnelId?: string, externalSteps?: Record<string, a
       })));
       
       // Fallback para navegação linear se NavigationService não resolver
-      const next = nextStepId || getNextFromOrder(STEP_ORDER, prev.currentStep);
-      return { ...prev, currentStep: next };
+      const nextStepId = (nextStepResult.success && nextStepResult.data) || getNextFromOrder(STEP_ORDER, prev.currentStep);
+      return { ...prev, currentStep: nextStepId };
     });
   }, [stepsSource, navigationService]);
 
