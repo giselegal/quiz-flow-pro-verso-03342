@@ -1,0 +1,59 @@
+
+> rest-express@1.0.0 prebuild
+> npm run build:templates
+
+
+> rest-express@1.0.0 build:templates
+> tsx scripts/build-templates-from-master.ts
+
+[34m🔧 GERADOR DE TEMPLATES v2 (Master-based)
+[0m
+[36m📋 Carregando quiz21-complete.json...[0m
+[36m🔍 Extraindo blocks de cada step...
+[0m
+[32m  ✓ step-01: 3 blocks[0m
+[32m  ✓ step-02: 3 blocks[0m
+[32m  ✓ step-03: 4 blocks[0m
+[32m  ✓ step-04: 5 blocks[0m
+[32m  ✓ step-05: 5 blocks[0m
+[32m  ✓ step-06: 5 blocks[0m
+[32m  ✓ step-07: 5 blocks[0m
+[32m  ✓ step-08: 5 blocks[0m
+[32m  ✓ step-09: 5 blocks[0m
+[32m  ✓ step-10: 5 blocks[0m
+[32m  ✓ step-11: 5 blocks[0m
+[32m  ✓ step-12: 3 blocks[0m
+[32m  ✓ step-13: 5 blocks[0m
+[32m  ✓ step-14: 5 blocks[0m
+[32m  ✓ step-15: 5 blocks[0m
+[32m  ✓ step-16: 5 blocks[0m
+[32m  ✓ step-17: 5 blocks[0m
+[32m  ✓ step-18: 5 blocks[0m
+[32m  ✓ step-19: 3 blocks[0m
+[32m  ✓ step-20: 11 blocks[0m
+[32m  ✓ step-21: 2 blocks[0m
+[34m
+🔨 Gerando quiz21StepsComplete.ts...[0m
+[32m  ✅ quiz21StepsComplete.ts gerado (67.85 KB)[0m
+[34m🔨 Gerando embedded.ts...[0m
+[32m  ✅ embedded.ts gerado (69.59 KB)[0m
+[34m
+📊 ESTATÍSTICAS:[0m
+[36m   • Steps processados: 21[0m
+[36m   • Total de blocos: 99[0m
+[36m   • quiz21StepsComplete.ts: 67.85 KB[0m
+[36m   • embedded.ts: 69.59 KB[0m
+[32m
+✅ GERAÇÃO CONCLUÍDA![0m
+[33m
+📝 Próximos passos:[0m
+[0m   1. Validar: npx tsx scripts/validate-templates.ts[0m
+[0m   2. Testar: npm run dev[0m
+[0m   3. Commit: git add public/templates/ src/templates/[0m
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/server.js
+
+vite v7.1.11 building for production...
+transforming...
+✓ 3520 modules transformed.

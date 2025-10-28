@@ -11,7 +11,7 @@
  * 2. Execute: npm run build:templates
  * 3. Commit: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-28T12:40:18.340Z
+ * Gerado em: 2025-10-28T12:55:17.813Z
  * Versão: 3.0.0
  */
 
