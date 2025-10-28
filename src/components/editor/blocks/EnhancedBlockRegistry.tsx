@@ -1,273 +1,81 @@
 /**
- * Enhanced Block Registry - Componentes específicos do quiz com identidade visual
+ * Enhanced Block Registry - Wrapper sobre UnifiedBlockRegistry
  * 
- * Este é o arquivo canônico para o registro de blocos do editor.
- * Todos os componentes devem ser importados daqui.
+ * ⚠️ OTIMIZADO: Removidos 20+ imports estáticos duplicados
+ * Agora delega para UnifiedBlockRegistry para eliminar duplicação de código.
+ * 
+ * Mantém apenas:
+ * - 5 blocos críticos (text, image, button, options-grid, form-input)
+ * - Componentes legados únicos (IntroStep, QuestionStep, etc.)
  */
-import { lazy, type ComponentType } from 'react';
+import { type ComponentType } from 'react';
 import { appLogger } from '@/utils/logger';
-// Importações estáticas essenciais para renderização imediata dos blocos principais
+import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
+
+// ⚡ APENAS 5 BLOCOS CRÍTICOS - Imports estáticos necessários
 import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
 import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
 import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
-import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
 import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
-import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
-import SalesHeroBlock from '@/components/editor/blocks/SalesHeroBlock';
-import DecorativeBarInlineBlock from '@/components/editor/blocks/DecorativeBarInlineBlock';
-// Lazy imports otimizados - Componentes Modulares do Quiz
-const QuizLogoBlock = lazy(() => import('@/components/editor/blocks/QuizLogoBlock'));
-const QuizProgressBlock = lazy(() => import('@/components/editor/blocks/QuizProgressBlock'));
-const QuizBackButtonBlock = lazy(() => import('@/components/editor/blocks/QuizBackButtonBlock'));
-const QuizQuestionHeaderBlock = lazy(() => import('@/components/editor/blocks/QuizQuestionHeaderBlock'));
-import QuizTransitionLoaderBlock from '@/components/editor/blocks/QuizTransitionLoaderBlock';
-const QuizResultHeaderBlock = lazy(() => import('@/components/editor/blocks/QuizResultHeaderBlock'));
-const QuizOfferHeroBlock = lazy(() => import('@/components/editor/blocks/QuizOfferHeroBlock'));
 
-import HeadingInlineBlock from '@/components/editor/blocks/HeadingInlineBlock';
-import {
-    Step20ResultHeaderBlock,
-    Step20StyleRevealBlock,
-    Step20UserGreetingBlock,
-    Step20CompatibilityBlock,
-    Step20SecondaryStylesBlock,
-    Step20PersonalizedOfferBlock,
-    Step20CompleteTemplateBlock,
-} from '@/components/editor/blocks/Step20ModularBlocks';
-import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
-
-// Lazy imports para Sections V3 (Question, Transition, Offer)
-const QuestionHeroSection = lazy(() => import('@/components/sections/questions').then(m => ({ default: m.QuestionHeroSection })));
-const TransitionHeroSection = lazy(() => import('@/components/sections/transitions').then(m => ({ default: m.TransitionHeroSection })));
-const OfferHeroSection = lazy(() => import('@/components/sections/offer').then(m => ({ default: m.OfferHeroSection })));
-const PricingSection = lazy(() => import('@/components/sections/offer').then(m => ({ default: m.PricingSection })));
-const StrategicQuestionBlock = lazy(() => import('@/components/editor/blocks/StrategicQuestionBlock'));
-
-// Componentes legados (runtime otimizado - auto-contidos e performáticos)
+// 🗃️ COMPONENTES LEGADOS ÚNICOS - Não estão no UnifiedBlockRegistry
+// Mantidos para compatibilidade retroativa com QuizAppConnected
 import IntroStep from '@/components/quiz/IntroStep';
 import QuestionStep from '@/components/quiz/QuestionStep';
 import StrategicQuestionStep from '@/components/quiz/StrategicQuestionStep';
 import TransitionStep from '@/components/quiz/TransitionStep';
 import ResultStep from '@/components/quiz/ResultStep';
 
-// Imports estáticos dos blocos atômicos de transição para evitar falhas de dynamic import no preview remoto
-import TransitionTitleBlock from '@/components/editor/blocks/atomic/TransitionTitleBlock';
-import TransitionLoaderBlock from '@/components/editor/blocks/atomic/TransitionLoaderBlock';
-import TransitionTextBlock from '@/components/editor/blocks/atomic/TransitionTextBlock';
-import TransitionProgressBlock from '@/components/editor/blocks/atomic/TransitionProgressBlock';
-import TransitionMessageBlock from '@/components/editor/blocks/atomic/TransitionMessageBlock';
+// 🔄 SINGLETON DO UNIFIED REGISTRY
+const _unifiedRegistry = UnifiedBlockRegistry.getInstance();
 
-// Imports estáticos dos blocos atômicos de intro (Step 1)
-import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
-import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHeaderBlock';
-import IntroTitleBlock from '@/components/editor/blocks/atomic/IntroTitleBlock';
-import IntroImageBlock from '@/components/editor/blocks/atomic/IntroImageBlock';
-import IntroDescriptionBlock from '@/components/editor/blocks/atomic/IntroDescriptionBlock';
-import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
-import FooterCopyrightBlock from '@/components/editor/blocks/atomic/FooterCopyrightBlock';
-import ImageDisplayInlineBlockAtomic from '@/components/editor/blocks/inline/ImageDisplayInlineBlock';
+// 🎯 REGISTRY OTIMIZADO - Delega para UnifiedBlockRegistry
+// Mantém apenas componentes únicos não disponíveis no UnifiedBlockRegistry
+const ENHANCED_ONLY_COMPONENTS: Record<string, ComponentType<any>> = {
+    // 🗃️ COMPONENTES LEGADOS ÚNICOS (não estão no UnifiedBlockRegistry)
+    'intro-step': IntroStep,
+    'question-step': QuestionStep,
+    'strategic-question-step': StrategicQuestionStep,
+    'transition-step': TransitionStep,
+    'result-step': ResultStep,
 
-// 🎯 REGISTRY COMPLETO - 150+ COMPONENTES MAPEADOS
-export const ENHANCED_BLOCK_REGISTRY: Record<string, ComponentType<any>> = {
-    // ============================================================================
-    // 📦 COMPONENTES MODULARES (Editor e Casos Avançados)
-    // ============================================================================
-
-    // 🧩 COMPONENTES MODULARES DO QUIZ (100% Editáveis)
-    'quiz-logo': QuizLogoBlock,
-    'quiz-progress-bar': QuizProgressBlock,
-    'quiz-back-button': QuizBackButtonBlock,
-    'quiz-question-header': QuizQuestionHeaderBlock,
-    'quiz-transition-loader': QuizTransitionLoaderBlock,
-    'quiz-result-header': QuizResultHeaderBlock,
-    'quiz-offer-hero': QuizOfferHeroBlock,
-
-    // ✅ STEP 01 - COMPONENTES BÁSICOS
-    // Preferir versões estáticas para tipos críticos usados no template
-    'quiz-intro-header': IntroLogoHeaderBlock, // Usar versão simples apenas logo + linha
-    'decorative-bar': DecorativeBarInlineBlock,
-    'decorative-bar-inline': DecorativeBarInlineBlock,
-    text: TextInlineBlock,
-    'text-inline': TextInlineBlock,
-    image: ImageInlineBlock,
-    'image-inline': ImageInlineBlock,
-    'form-input': FormInputBlock,
-    button: ButtonInlineBlock,
-    'button-inline': ButtonInlineBlock,
-    'legal-notice': LegalNoticeInlineBlock,
-    'legal-notice-inline': LegalNoticeInlineBlock,
-
-    // ✅ STEP 01 - BLOCOS ATÔMICOS DE INTRO (100% Modulares)
-    'intro-logo': IntroLogoBlock,
-    'intro-logo-header': IntroLogoHeaderBlock,
-    'intro-form': IntroFormBlock,
-    'image-display-inline': ImageDisplayInlineBlockAtomic,
-    'footer-copyright': FooterCopyrightBlock,
-    'intro-title': IntroTitleBlock,
-    'intro-image': IntroImageBlock,
-    'intro-description': IntroDescriptionBlock,
-
-    // ✅ STEPS 02-11 - PERGUNTAS DO QUIZ (NOVOS BLOCOS MODULARES)
-    'question-progress': lazy(() => import('@/components/editor/blocks/atomic/QuestionProgressBlock')),
-    'question-number': lazy(() => import('@/components/editor/blocks/atomic/QuestionNumberBlock')),
-    'question-text': lazy(() => import('@/components/editor/blocks/atomic/QuestionTextBlock')),
-    // Alias: alguns templates usam "question-title" como heading curto
-    'question-title': lazy(() => import('@/components/editor/blocks/atomic/QuestionTextBlock')),
-    'question-instructions': lazy(() => import('@/components/editor/blocks/atomic/QuestionInstructionsBlock')),
-    'question-navigation': lazy(() => import('@/components/editor/blocks/atomic/QuestionNavigationBlock')),
-    'quiz-start-page-inline': QuizIntroHeaderBlock,
-    'quiz-personal-info-inline': FormInputBlock,
-    'quiz-question-inline': TextInlineBlock,
-    'quiz-options': OptionsGridBlock, // ✅ Mapeamento direto para quiz-options
-    'quiz-options-inline': OptionsGridBlock,
-    'options-grid': OptionsGridBlock,
-    'question-hero': QuestionHeroSection, // ✅ NOVO - Section para question-hero
-    // Container e aliases via lazy para evitar ciclo com BasicContainerBlock
-    'form-container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
-    // Aliases de container estável
-    'container': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
-    'section': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
-    'box': lazy(() => import('@/components/editor/blocks/BasicContainerBlock')),
-
-    // ✅ SALES PAGES - HERO
-    'sales-hero': SalesHeroBlock,
-
-    // ✅ STEP 12 - TRANSIÇÃO
-    hero: lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
-    'quiz-transition': lazy(() => import('@/components/editor/blocks/QuizTransitionBlock')),
-    'transition-hero': TransitionHeroSection, // ✅ NOVO - Section para transition-hero
-    'loading-animation': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
-    'loader-inline': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
-
-    // ✅ STEP 12 & 19 - BLOCOS ATÔMICOS DE TRANSIÇÃO (100% Modulares) - Direct imports para performance
-    'transition-title': TransitionTitleBlock,
-    'transition-subtitle': lazy(() => import('./TransitionSubtitleBlock')),
-    'transition-image': lazy(() => import('./TransitionImageBlock')),
-    'transition-description': lazy(() => import('./TransitionDescriptionBlock')),
-    'transition-loader': TransitionLoaderBlock,
-    'transition-text': TransitionTextBlock,
-    'transition-progress': TransitionProgressBlock,
-    'transition-message': TransitionMessageBlock,
-
-    // ✅ STEPS 13-18 - PERGUNTAS AVANÇADAS
-    'quiz-advanced-question': TextInlineBlock,
-    'strategic-question': StrategicQuestionBlock, // ✅ NOVO - Strategic question block
-    'quiz-style-question': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
-    'style-card-inline': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
-    'style-cards-grid': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
-
-    // ✅ STEP 19 - PROCESSAMENTO
-    'quiz-processing': lazy(() => import('@/components/editor/blocks/LoaderInlineBlock')),
-    'progress-bar': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
-    'progress-inline': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
-
-    // ✅ STEP 20 - RESULTADO
-    'result-header-inline': lazy(() => import('@/components/editor/blocks/ResultHeaderInlineBlock')),
-    'modular-result-header': lazy(() => import('@/components/editor/modules/ModularResultHeader')),
-    'quiz-result-style': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
-    'secondary-styles': lazy(() => import('@/components/editor/blocks/SecondaryStylesInlineBlock')),
-    'quiz-result-secondary': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
-    'result-card': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
-
-    // ✅ STEP 20 - BLOCOS ATÔMICOS DE RESULTADO (100% Modulares) - Direct imports para performance
-    'result-congrats': lazy(() => import('./ResultCongratsBlock')),
-    'result-main': lazy(() => import('./atomic/ResultMainBlock')),
-    'result-style': lazy(() => import('./atomic/ResultStyleBlock')),
-    'result-image': lazy(() => import('./atomic/ResultImageBlock')),
-    'result-description': lazy(() => import('./atomic/ResultDescriptionBlock')),
-    'result-header': lazy(() => import('./atomic/ResultHeaderBlock')),
-    'result-characteristics': lazy(() => import('./atomic/ResultCharacteristicsBlock')),
-    'result-cta': lazy(() => import('./atomic/ResultCTABlock')),
-    'result-cta-primary': lazy(() => import('./atomic/ResultCTAPrimaryBlock')),
-    'result-cta-secondary': lazy(() => import('./atomic/ResultCTASecondaryBlock')),
-    'result-progress-bars': lazy(() => import('./ResultProgressBarsBlock')),
-    'result-secondary-styles': lazy(() => import('./atomic/ResultSecondaryStylesBlock')),
-    'result-share': lazy(() => import('./atomic/ResultShareBlock')),
-
-    // 🤖 IA - FASHION AI GENERATOR
-    'fashion-ai-generator': FashionAIGeneratorBlock,
-
-    // 🆕 STEP 20 - Módulos Modulares
-    'step20-result-header': Step20ResultHeaderBlock,
-    'step20-style-reveal': Step20StyleRevealBlock,
-    'step20-user-greeting': Step20UserGreetingBlock,
-    'step20-compatibility': Step20CompatibilityBlock,
-    'step20-secondary-styles': Step20SecondaryStylesBlock,
-    'step20-personalized-offer': Step20PersonalizedOfferBlock,
-    'step20-complete-template': Step20CompleteTemplateBlock,
-
-    // ✅ STEP 21 - OFERTA
-    'offer-hero': OfferHeroSection, // ✅ NOVO - Section para offer-hero
-    'pricing': PricingSection, // ✅ NOVO - Seção de preços/tabela de oferta
-    'urgency-timer-inline': lazy(() => import('@/components/editor/blocks/UrgencyTimerInlineBlock')),
-    'before-after-inline': lazy(() => import('@/components/editor/blocks/BeforeAfterInlineBlock')),
-    bonus: lazy(() => import('@/components/editor/blocks/BonusBlock')),
-    'bonus-inline': lazy(() => import('@/components/editor/blocks/BonusInlineBlock')),
-    'secure-purchase': lazy(() => import('@/components/editor/blocks/SecurePurchaseBlock')),
-    'value-anchoring': lazy(() => import('@/components/editor/blocks/ValueAnchoringBlock')),
-    'mentor-section-inline': lazy(
-        () => import('@/components/editor/blocks/MentorSectionInlineBlock'),
-    ),
-
-    // 🎯 NOVOS COMPONENTES DE DEPOIMENTOS COM DADOS REAIS
-    'testimonial-card-inline': lazy(() => import('@/components/editor/blocks/TestimonialCardInlineBlock')),
-    'testimonials-carousel-inline': lazy(() => import('@/components/editor/blocks/TestimonialsCarouselInlineBlock')),
-
-    // ✅ ALIASES PARA COMPATIBILIDADE
-    'personalized-hook-inline': lazy(
-        () => import('@/components/editor/blocks/StyleCardInlineBlock'),
-    ),
-    'final-value-proposition-inline': lazy(
-        () => import('@/components/editor/blocks/ValueAnchoringBlock'),
-    ),
-    navigation: lazy(() => import('@/components/editor/blocks/QuizNavigationBlock')),
-    'quiz-results': lazy(() => import('@/components/editor/blocks/StyleCardsGridBlock')),
-    'style-results': lazy(() => import('@/components/editor/blocks/StyleCardInlineBlock')),
-    'options-grid-inline': OptionsGridBlock,
-    'button-inline-fixed': ButtonInlineBlock,
-
-    // ✅ BLOCOS DE OFERTA
-    benefits: lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
-    'benefits-list': lazy(() => import('@/components/editor/blocks/BenefitsListBlock')),
-    testimonials: lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
-    'testimonials-grid': lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
-    guarantee: lazy(() => import('@/components/editor/blocks/GuaranteeBlock')),
-    'guarantee-badge': ImageInlineBlock,
-    'quiz-offer-cta-inline': ButtonInlineBlock,
-    'cta-inline': ButtonInlineBlock,
-
-    // ✅ BLOCOS UNIVERSAIS
-    heading: HeadingInlineBlock,
-    'heading-inline': HeadingInlineBlock,
-    // Aliases para compatibilidade com templates antigos
-    headline: HeadingInlineBlock,
-    'headline-inline': HeadingInlineBlock,
-    'lead-form': lazy(() => import('@/components/editor/blocks/LeadFormBlock')),
-    'connected-lead-form': lazy(() => import('@/components/editor/blocks/ConnectedLeadFormBlock')),
-
-    // ✅ BLOCOS AVANÇADOS
-    'connected-template-wrapper': lazy(
-        () => import('@/components/editor/blocks/ConnectedTemplateWrapperBlock'),
-    ),
-    'quiz-navigation': lazy(() => import('@/components/editor/blocks/QuizNavigationBlock')),
-    'gradient-animation': lazy(() => import('@/components/editor/blocks/GradientAnimationBlock')),
-
-    // ✅ ALIASES PARA COMPATIBILIDADE COM NOMES ANTIGOS
-    'quiz-intro': QuizIntroHeaderBlock,
-    'quiz-form': FormInputBlock,
-    'quiz-button': ButtonInlineBlock,
-    'quiz-text': TextInlineBlock,
-    'quiz-image': ImageInlineBlock,
-    'quiz-progress': lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
-
-    // ✅ FALLBACKS PARA TIPOS DESCONHECIDOS
-    'form-*': FormInputBlock, // Fallback para formulários
-    'button-*': ButtonInlineBlock, // Fallback para botões
-    'text-*': TextInlineBlock, // Fallback para textos
-    'image-*': ImageInlineBlock, // Fallback para imagens
-    'quiz-*': TextInlineBlock, // Fallback geral para quiz
+    // Aliases legados
+    'intro-step-legacy': IntroStep,
+    'question-step-legacy': QuestionStep,
+    'strategic-question-legacy': StrategicQuestionStep,
+    'transition-step-legacy': TransitionStep,
+    'result-step-legacy': ResultStep,
 };
+
+// 🔄 PROXY REGISTRY - Delega para UnifiedBlockRegistry com fallback local
+export const ENHANCED_BLOCK_REGISTRY = new Proxy(ENHANCED_ONLY_COMPONENTS, {
+    get(target, prop: string) {
+        // 1️⃣ Verificar se existe nos componentes únicos locais
+        if (prop in target) {
+            return target[prop];
+        }
+
+        // 2️⃣ Delegar para UnifiedBlockRegistry
+        const unifiedComponent = _unifiedRegistry.getComponent(prop);
+        if (unifiedComponent) {
+            return unifiedComponent;
+        }
+
+        // 3️⃣ Fallback para TextInlineBlock
+        appLogger.warn(`⚠️ Componente "${prop}" não encontrado. Usando fallback TextInlineBlock.`);
+        return TextInlineBlock;
+    },
+
+    has(target, prop: string) {
+        return prop in target || _unifiedRegistry.getComponent(prop as string) !== null;
+    },
+
+    ownKeys(target) {
+        const unifiedKeys = _unifiedRegistry.getAllTypes();
+        return [...Object.keys(target), ...unifiedKeys];
+    },
+});
 
 /**
  * Obtém o componente de bloco aprimorado com base no tipo
