@@ -113,6 +113,7 @@ class QuizEditorBridge {
 
     /**
      * 💾 Salvar rascunho de edição
+     * ✅ FASE 4.1: Validações rigorosas integradas (NavigationService + BlockRegistry)
      * ✅ FASE 6.5: Validações automáticas antes de salvar
      */
     async saveDraft(funnel: QuizFunnelData): Promise<string> {
@@ -127,42 +128,11 @@ class QuizEditorBridge {
             console.log('🛠️ nextStep preenchido automaticamente em', auto.filledCount, 'etapas');
         }
 
-        // ✅ FASE 5: Validar integridade completa antes de salvar usando steps pós-autoFill
-        const validation = validateCompleteFunnel(workingSteps as any);
+        // ✅ FASE 4.1: Validação rigorosa em múltiplas camadas
+        const workingFunnel = { ...funnel, steps: workingSteps };
+        await this.validateForSave(workingFunnel);
 
-        if (!validation.isValid) {
-            // Se as falhas forem APENAS sobre offerMap (rascunho), não bloquear salvamento.
-            const offerMapOnlyErrors = validation.errors.length > 0 &&
-                validation.errors.every(e => /offerMap/i.test(e.field));
-
-            if (offerMapOnlyErrors) {
-                console.warn('⚠️ Validação de offerMap incompleta em rascunho – permitindo salvar. Detalhes:', validation.errors);
-            } else {
-                // Agrupar erros de nextStep para mensagem mais clara
-                // Determinar última etapa dinamicamente (maior order; fallback pelo maior índice numérico em id)
-                const lastStep = workingSteps.reduce((acc, s) => {
-                    if (!acc) return s;
-                    if ((s.order ?? 0) > (acc.order ?? 0)) return s;
-                    return acc;
-                }, workingSteps[0]);
-                const lastId = lastStep?.id;
-                const missingNextStepIds = workingSteps
-                    .filter(s => s.id !== lastId && (s.nextStep === undefined || s.nextStep === null))
-                    .map(s => s.id);
-                const baseMsg = validation.errors.map(e => e.message).join('; ');
-                const errorMsg = missingNextStepIds.length
-                    ? `${baseMsg}; Etapas faltando: ${missingNextStepIds.join(', ')}`
-                    : baseMsg;
-                console.error('❌ Validação falhou:', errorMsg, { missingNextStepIds });
-                throw new Error(`Validação falhou: ${errorMsg}`);
-            }
-        }
-
-        if (validation.warnings.length > 0) {
-            console.warn('⚠️ Avisos de validação:', validation.warnings);
-        }
-
-        console.log('✅ Validação passou:', validation);
+        console.log('✅ Validação rigorosa passou');
 
         const draftId = funnel.id === 'production' ? `draft-${Date.now()}` : funnel.id;
 
@@ -230,16 +200,11 @@ class QuizEditorBridge {
             console.log('🛠️ (publish) nextStep preenchido automaticamente em', auto.filledCount, 'etapas');
         }
 
-        // ✅ FASE 5: Validação CRÍTICA antes de publicar usando steps finalizados
-        const validation = validateCompleteFunnel(publishingSteps as any);
+        // ✅ FASE 4.1: Validação RIGOROSA antes de publicar usando steps finalizados
+        const publishingFunnel = { ...draft, steps: publishingSteps };
+        await this.validateForProduction(publishingFunnel);
 
-        if (!validation.isValid) {
-            const errorMsg = validation.errors.map(e => e.message).join('; ');
-            console.error('❌ PUBLICAÇÃO BLOQUEADA - Validação falhou:', errorMsg);
-            throw new Error(`Publicação bloqueada: ${errorMsg}`);
-        }
-
-        console.log('✅ Validação passou. Publicando...');
+        console.log('✅ Validação rigorosa passou. Publicando...');
 
         // Converter steps para formato QUIZ_STEPS
         const quizSteps = this.convertToQuizSteps(publishingSteps as any);
