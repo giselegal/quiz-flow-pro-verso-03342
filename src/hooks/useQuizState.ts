@@ -22,7 +22,7 @@ import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified'
 import { quizEditorBridge } from '@/services/QuizEditorBridge';
 import { useFeatureFlags } from './useFeatureFlags';
 import { useTemplateLoader } from './useTemplateLoader';
-import { getNavigationService } from '@/services/NavigationService';
+import { navigationService } from '@/services/canonical/NavigationService';
 // Note: STRATEGIC_ANSWER_TO_OFFER_KEY commented - not used
 // import { STRATEGIC_ANSWER_TO_OFFER_KEY } from '@/data/quizSteps';
 
