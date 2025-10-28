@@ -1,12 +1,15 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { NavigationService } from '@/services/NavigationService';
 
 /**
- * QuizRuntimeRegistry
- * Mantém um mapa de steps sobrescrevendo QUIZ_STEPS padrão quando em modo editor.
+ * QuizRuntimeRegistry - FASE 2.2 REFATORADO
+ * 
+ * ✅ Integrado com NavigationService
+ * ✅ Validação automática de navegação
+ * ✅ Conversões redundantes eliminadas
  */
 export interface RuntimeStepOverride {
     id: string;
-    // shape mínimo usado por useQuizState: type, nextStep, question metadata, options
     type: string;
     nextStep?: string;
     requiredSelections?: number;
@@ -18,15 +21,15 @@ export interface RuntimeStepOverride {
     buttonText?: string;
     title?: string;
     text?: string;
-    // Novo: blocos modulares (fase 2). Cada step pode carregar uma lista de BlockInstance serializada simples.
     blocks?: Array<{ id: string; type: string; config: Record<string, any> }>;
-    // Novo: offerMap para etapa final (result / offer custom). Mantém estrutura bruta (validação ocorre em outro nível)
     offerMap?: Record<string, any>;
 }
 
 interface RegistryContextValue {
     steps: Record<string, RuntimeStepOverride>;
     version: number;
+    navigationMap: Record<string, string | null>; // ✅ FASE 2.2: Expor mapa de navegação
+    isValid: boolean; // ✅ FASE 2.2: Status de validação
     setSteps: (map: Record<string, RuntimeStepOverride>) => void;
     upsertStep: (step: RuntimeStepOverride) => void;
     clear: () => void;
@@ -38,26 +41,106 @@ export const QuizRuntimeRegistryProvider: React.FC<{ children: React.ReactNode }
     const [steps, setStepsState] = useState<Record<string, RuntimeStepOverride>>({});
     const [version, setVersion] = useState(0);
 
+    // ✅ FASE 2.2: NavigationService integrado
+    const navigationService = useMemo(() => new NavigationService(), []);
+
+    // ✅ FASE 2.2: Calcular mapa de navegação e validação automaticamente
+    const { navigationMap, isValid } = useMemo(() => {
+        const stepArray = Object.values(steps);
+        if (stepArray.length === 0) {
+            return { navigationMap: {}, isValid: true };
+        }
+
+        const navMap = navigationService.buildNavigationMap(stepArray.map(s => ({
+            id: s.id,
+            nextStep: s.nextStep,
+            type: s.type,
+        })));
+
+        const validation = navigationService.validateNavigation();
+
+        return {
+            navigationMap: navMap,
+            isValid: validation.valid
+        };
+    }, [steps, navigationService]);
+
     const setSteps = useCallback((map: Record<string, RuntimeStepOverride>) => {
-        setStepsState(map);
+        // ✅ FASE 2.2: Preencher nextStep automaticamente se ausente
+        const stepsArray = Object.values(map);
+        const navSteps = stepsArray.map((s, index) => ({
+            id: s.id,
+            nextStep: s.nextStep,
+            order: index,
+            type: s.type,
+        }));
+
+        const navMap = navigationService.buildNavigationMap(navSteps);
+
+        // Aplicar navegação preenchida de volta aos steps
+        const enrichedMap = Object.entries(map).reduce((acc, [id, step]) => {
+            acc[id] = {
+                ...step,
+                nextStep: navMap[id] ?? step.nextStep,
+            };
+            return acc;
+        }, {} as Record<string, RuntimeStepOverride>);
+
+        setStepsState(enrichedMap);
         setVersion(v => v + 1);
-    }, []);
+    }, [navigationService]);
 
     const upsertStep = useCallback((step: RuntimeStepOverride) => {
-        setStepsState(prev => ({ ...prev, [step.id]: step }));
+        setStepsState(prev => {
+            const updated = { ...prev, [step.id]: step };
+
+            // Recalcular navegação para o step atualizado
+            const stepsArray = Object.values(updated);
+            const navMap = navigationService.buildNavigationMap(stepsArray.map(s => ({
+                id: s.id,
+                nextStep: s.nextStep,
+                type: s.type,
+            })));
+
+            // Aplicar nextStep recalculado
+            return Object.entries(updated).reduce((acc, [id, s]) => {
+                acc[id] = {
+                    ...s,
+                    nextStep: navMap[id] ?? s.nextStep,
+                };
+                return acc;
+            }, {} as Record<string, RuntimeStepOverride>);
+        });
         setVersion(v => v + 1);
-    }, []);
+    }, [navigationService]);
 
     const clear = useCallback(() => {
         setStepsState({});
         setVersion(v => v + 1);
     }, []);
 
+    const contextValue = useMemo<RegistryContextValue>(() => ({
+        steps,
+        version,
+        navigationMap,
+        isValid,
+        setSteps,
+        upsertStep,
+        clear,
+    }), [steps, version, navigationMap, isValid, setSteps, upsertStep, clear]);
+
     return (
-        <QuizRuntimeRegistryContext.Provider value={{ steps, version, setSteps, upsertStep, clear }}>
+        <QuizRuntimeRegistryContext.Provider value={contextValue}>
             {children}
         </QuizRuntimeRegistryContext.Provider>
     );
+};
+
+return (
+    <QuizRuntimeRegistryContext.Provider value={{ steps, version, setSteps, upsertStep, clear }}>
+        {children}
+    </QuizRuntimeRegistryContext.Provider>
+);
 };
 
 export function useQuizRuntimeRegistry() {
