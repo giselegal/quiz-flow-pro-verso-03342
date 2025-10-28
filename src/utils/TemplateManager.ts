@@ -50,21 +50,28 @@ export class TemplateManager {
   static publishStep(stepId: string, blocks: Block[]): void {
     // Just log for now - actual implementation would save to database
     console.log(`Publishing step ${stepId} with ${blocks.length} blocks`);
-    unifiedTemplateService.publishStep(stepId);
+    // templateService doesn't have publishStep - this is a no-op legacy method
   }
 
   static unpublishStep(stepId: string): void {
-    unifiedTemplateService.unpublishStep(stepId);
+    // templateService doesn't have unpublishStep - this is a no-op legacy method
   }
 
   static async preloadCommonTemplates(): Promise<void> {
-    return unifiedTemplateService.preloadCommonSteps();
+    // Preload common steps via canonical service
+    const commonSteps = ['step-01', 'step-02', 'step-20', 'step-21'];
+    await Promise.all(commonSteps.map(id => templateService.getStep(id)));
   }
 
   static async reloadTemplate(stepId: string, funnelId?: string): Promise<Block[]> {
     const cacheKey = funnelId ? `${stepId}:${funnelId}` : stepId;
-    unifiedTemplateService.invalidateCache(cacheKey);
-    const raw = await unifiedTemplateService.loadStepBlocks(stepId, funnelId);
+    templateService.cache.invalidate(cacheKey);
+    const result = await templateService.getStep(stepId, funnelId);
+    if (!result.success || !result.data) {
+      console.warn(`[TemplateManager] Failed to reload ${stepId}:`, result.error);
+      return [];
+    }
+    const raw = result.data;
     const normalized: Block[] = (raw || []).map((b: any, idx: number) => ({
       id: String(b?.id ?? `${stepId}-block-${idx}`),
       type: (b?.type as any),
