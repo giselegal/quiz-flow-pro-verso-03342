@@ -3,7 +3,7 @@ import { useEditor } from '@/components/editor/EditorProviderMigrationAdapter';
 import { Block } from '@/types/editor';
 import { useCallback, useEffect, useState } from 'react';
 import type { QuizStep } from '@/data/quizSteps';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 import { QuizStepAdapter } from '@/adapters/QuizStepAdapter';
 import { TOTAL_STEPS } from '@/config/stepsConfig';
 
@@ -56,7 +56,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
   const [cachedTemplates, setCachedTemplates] = useState<Record<string, StageTemplate>>({});
 
   /**
-   * 🎯 NOVO: Carrega template JSON do step específico
+   * 🎯 MIGRADO: Carrega template usando TemplateService canonical
    */
   const loadQuizEstiloTemplate = useCallback(
     async (stepNumber: number): Promise<QuizStep> => {
@@ -72,58 +72,31 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
       setError(null);
 
       try {
-        // 2. Tentar carregar JSON (priorizar canônico step-XX.json, depois fallback -v3)
-        console.log(`📥 Carregando template JSON: ${stepId}`);
+        // 2. Usar TemplateService canonical
+        console.log(`📥 Carregando template via TemplateService: ${stepId}`);
+        const templateService = TemplateService.getInstance();
+        const result = await templateService.getStep(stepId);
 
-        let jsonTemplate: any | null = null;
-
-        try {
-          // Preferir v3 como fonte de verdade
-          const jsonModuleV3 = await import(
-            /* @vite-ignore */
-            `/templates/${stepId}-v3.json`
-          );
-          jsonTemplate = (jsonModuleV3 as any).default || jsonModuleV3;
-          console.log(`✅ Template ${stepId}-v3.json carregado`);
-        } catch (errV3) {
-          console.warn(`⚠️ Falha ao carregar ${stepId}-v3.json, tentando canônico .json...`, errV3);
-          const jsonModuleCanonical = await import(
-            /* @vite-ignore */
-            `/templates/${stepId}.json`
-          );
-          jsonTemplate = (jsonModuleCanonical as any).default || jsonModuleCanonical;
-          console.log(`✅ Template ${stepId}.json carregado (fallback)`);
+        if (!result.success) {
+          throw new Error(`Template ${stepId} não encontrado: ${result.error.message}`);
         }
 
-        // 3. Adaptar para QuizStep
-        console.log(`🔄 Adaptando template ${stepId} de JSON para QuizStep`);
-        const adapted = QuizStepAdapter.fromJSON(jsonTemplate);
+        // 3. Adaptar blocos para QuizStep
+        console.log(`🔄 Adaptando template ${stepId} para QuizStep`);
+        const blocks = result.data;
+        const adapted = QuizStepAdapter.fromBlocks(blocks, stepId);
 
         // 4. Salvar no cache
         templateCache[stepId] = adapted;
 
-        console.log(`✅ Template ${stepId} carregado com sucesso do JSON`);
+        console.log(`✅ Template ${stepId} carregado com sucesso via TemplateService`);
         return adapted;
 
       } catch (err) {
-        console.warn(
-          `⚠️ Erro ao carregar template JSON ${stepId}, usando fallback QUIZ_STEPS`,
-          err,
-        );
-
-        // 5. Fallback para QUIZ_STEPS
-        const fallbackStep = QUIZ_STEPS[stepId];
-
-        if (!fallbackStep) {
-          const error = new Error(`Step ${stepId} não encontrado em nenhum template`);
-          setError(error);
-          throw error;
-        }
-
-        // Salvar fallback no cache
-        templateCache[stepId] = fallbackStep;
-
-        return fallbackStep;
+        const error = err as Error;
+        console.error(`❌ Erro ao carregar template ${stepId}:`, error);
+        setError(error);
+        throw error;
 
       } finally {
         setIsLoading(false);
@@ -133,7 +106,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
   );
 
   /**
-   * 🎯 NOVO: Carrega todos os templates de uma vez (prefetch)
+   * 🎯 MIGRADO: Carrega todos os templates via TemplateService
    */
   const loadAllTemplates = useCallback(
     async (): Promise<Record<string, QuizStep>> => {
@@ -159,16 +132,14 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
 
         const stepsMap = Object.fromEntries(validResults);
 
-        console.log(`✅ Templates carregados: ${Object.keys(stepsMap).length}/${TOTAL_STEPS}`);
+        console.log(`✅ Templates carregados via TemplateService: ${Object.keys(stepsMap).length}/${TOTAL_STEPS}`);
 
         return stepsMap;
 
       } catch (err) {
         console.error('❌ Erro ao carregar templates:', err);
         setError(err as Error);
-
-        // Fallback completo para QUIZ_STEPS
-        return QUIZ_STEPS;
+        throw err;
 
       } finally {
         setIsLoading(false);

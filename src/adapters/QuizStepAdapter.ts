@@ -434,4 +434,63 @@ export class QuizStepAdapter {
 
         return blocks;
     }
+
+    /**
+     * 🆕 MIGRAÇÃO: Converte blocos (Block[]) do TemplateService para QuizStep
+     */
+    static fromBlocks(blocks: any[], stepId: string): QuizStep {
+        // Detectar tipo baseado nos blocos
+        const hasIntroForm = blocks.some(b => b.type === 'intro-form');
+        const hasQuizQuestion = blocks.some(b => b.type === 'quiz-question');
+        const hasTransitionContent = blocks.some(b => b.type === 'transition-content');
+        const hasResultDisplay = blocks.some(b => b.type === 'result-display');
+        const hasOfferCard = blocks.some(b => b.type === 'offer-card');
+
+        let type: QuizStep['type'] = 'question';
+        
+        if (hasIntroForm) {
+            type = 'intro';
+        } else if (hasTransitionContent) {
+            type = 'transition';
+        } else if (hasResultDisplay) {
+            type = 'result';
+        } else if (hasOfferCard) {
+            type = 'offer';
+        } else if (hasQuizQuestion) {
+            // Verificar se é strategic baseado no stepId
+            const stepNumber = parseInt(stepId.replace('step-', ''));
+            type = (stepNumber >= 13 && stepNumber <= 18) ? 'strategic-question' : 'question';
+        }
+
+        // Extrair informações dos blocos
+        const titleBlock = blocks.find(b => 
+            b.type === 'intro-title' || 
+            b.type === 'heading-inline' || 
+            b.type === 'question-text'
+        );
+        
+        const questionBlock = blocks.find(b => b.type === 'quiz-question');
+        const formBlock = blocks.find(b => b.type === 'intro-form');
+
+        // Construir QuizStep básico
+        const quizStep: QuizStep = {
+            id: stepId,
+            type,
+            title: titleBlock?.content?.title || titleBlock?.content?.text || '',
+        };
+
+        // Adicionar campos específicos por tipo
+        if (type === 'question' || type === 'strategic-question') {
+            quizStep.questionText = questionBlock?.content?.question || '';
+            quizStep.options = questionBlock?.content?.options || [];
+            quizStep.requiredSelections = questionBlock?.content?.multiSelect ?? 3;
+        }
+
+        if (type === 'intro' && formBlock) {
+            quizStep.placeholder = formBlock?.content?.placeholder;
+            quizStep.formQuestion = titleBlock?.content?.title || '';
+        }
+
+        return quizStep;
+    }
 }

@@ -1,3 +1,11 @@
+/**
+ * ⚠️ DEPRECATED: Este script usa quizSteps.ts (obsoleto)
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
+ */
+
+console.warn('⚠️ AVISO: seed-draft-faithful.ts usa quizSteps.ts (DEPRECATED)');
+console.warn('📖 Use quiz21-complete.json como fonte única\n');
+
 import { QUIZ_STEPS, STEP_ORDER, type QuizStep } from '../src/data/quizSteps';
 import { quizEditorBridge as bridge } from '../src/services/QuizEditorBridge';
 import fs from 'fs';

@@ -11,7 +11,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/adapters/UnifiedQuizStepAdapter';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { TemplateService } from '@/services/canonical/TemplateService';
 import { supabase } from '@/integrations/supabase/customClient';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 
@@ -57,38 +57,31 @@ export function useUnifiedQuizLoader(
         case 'database':
           // Carregar do Supabase (quando tabela quiz_production for criada)
           // TODO: Implementar após criar tabela quiz_production
-          console.warn('Database source not yet implemented - falling back to hardcoded');
-          const hardcodedFallback = QUIZ_STEPS[stepId];
-          if (hardcodedFallback) {
-            unifiedStep = UnifiedQuizStepAdapter.fromQuizStep(hardcodedFallback, stepId);
+          console.warn('Database source not yet implemented - falling back to TemplateService');
+          const templateService = TemplateService.getInstance();
+          const dbFallbackResult = await templateService.getStep(stepId);
+          if (dbFallbackResult.success) {
+            unifiedStep = UnifiedQuizStepAdapter.fromBlocks(dbFallbackResult.data as any, stepId);
           }
           break;
         
         case 'templates':
-          // Carregar JSON v3.0 template
-          // ⚠️ Verificar se deve tentar carregar arquivos individuais
-          if (!TEMPLATE_SOURCES.preferPublicStepJSON) {
-            console.warn('preferPublicStepJSON=false - Fallback para hardcoded');
-            const hardcodedFallback = QUIZ_STEPS[stepId];
-            if (hardcodedFallback) {
-              unifiedStep = UnifiedQuizStepAdapter.fromQuizStep(hardcodedFallback, stepId);
-            }
-            break;
-          }
+          // Carregar via TemplateService canonical
+          const templateServiceTemplates = TemplateService.getInstance();
+          const templateResult = await templateServiceTemplates.getStep(stepId);
           
-          const response = await fetch(`/templates/${stepId}-v3.json`);
-          if (response.ok) {
-            const json = await response.json();
-            unifiedStep = UnifiedQuizStepAdapter.fromJSON(json);
+          if (templateResult.success) {
+            unifiedStep = UnifiedQuizStepAdapter.fromBlocks(templateResult.data as any, stepId);
           }
           break;
         
         case 'hardcoded':
         default:
-          // Fallback para QUIZ_STEPS hardcoded
-          const hardcodedStep = QUIZ_STEPS[stepId];
-          if (hardcodedStep) {
-            unifiedStep = UnifiedQuizStepAdapter.fromQuizStep(hardcodedStep, stepId);
+          // Usar TemplateService como fonte única
+          const templateServiceDefault = TemplateService.getInstance();
+          const defaultResult = await templateServiceDefault.getStep(stepId);
+          if (defaultResult.success) {
+            unifiedStep = UnifiedQuizStepAdapter.fromBlocks(defaultResult.data as any, stepId);
           }
           break;
       }

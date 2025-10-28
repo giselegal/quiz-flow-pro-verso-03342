@@ -1,85 +1,79 @@
 /**
- * 🚀 HOOK: FUNNEL PUBLICATION
+ * 🚀 HOOK: FUNNEL PUBLICATION (Refatorado)
  * 
- * Gerencia configurações técnicas de publicação
- * Integrado com a nova arquitetura core de funis
+ * Gerencia configurações técnicas de publicação usando serviços canonical.
+ * 
+ * ARQUITETURA:
+ * - Hook: Apenas React state management
+ * - Services: Business logic (FunnelSettingsService, PublicationService)
+ * - Components: UI rendering
+ * 
+ * Integrado com arquitetura canonical:
+ * - FunnelSettingsService: CRUD de settings
+ * - PublicationService: Validação e publicação
+ * - Zod schemas: Validação de dados
  */
 
 import { useState, useCallback, useEffect } from 'react';
-// import { useFunnel } from '@/core/funnel';
+import { FunnelSettingsService } from '@/services/canonical/data/FunnelSettingsService';
+import { PublicationService } from '@/services/canonical/PublicationService';
 import type {
-    FunnelPublicationSettings,
-    ResultConfiguration,
-    KeywordResultMapping,
-} from '@/components/editor/publication/FunnelPublicationPanel';
+    PublicationSettings,
+    DomainSettings,
+    ResultsSettings,
+    SEOSettings,
+    TrackingSettings,
+    SecuritySettings,
+} from '@/services/canonical/data/FunnelSettingsService';
+
+// Re-export types para compatibilidade
+export type FunnelPublicationSettings = PublicationSettings;
+export type ResultConfiguration = ResultsSettings['primary'];
+export type KeywordResultMapping = ResultsSettings['keywords'][number];
 
 // ============================================================================
-// TYPES
+// HOOK OPTIONS & RETURN
 // ============================================================================
 
 export interface UseFunnelPublicationOptions {
     autoSave?: boolean;
-    onPublish?: (settings: FunnelPublicationSettings) => Promise<void>;
-    onSave?: (settings: FunnelPublicationSettings) => Promise<void>;
+    autoSaveDelay?: number; // Default: 1000ms
 }
 
 export interface UseFunnelPublicationReturn {
     // Estado
-    settings: FunnelPublicationSettings;
+    settings: PublicationSettings;
     isLoading: boolean;
     isSaving: boolean;
     isPublishing: boolean;
     error: Error | null;
 
     // Ações principais
-    updateSettings: (updates: Partial<FunnelPublicationSettings>) => void;
+    updateSettings: (updates: Partial<PublicationSettings>) => void;
     saveSettings: () => Promise<void>;
     publishFunnel: () => Promise<void>;
+    unpublishFunnel: () => Promise<void>;
     resetSettings: () => void;
 
-    // Configurações específicas
-    updateDomain: (domain: Partial<FunnelPublicationSettings['domain']>) => void;
-    updateResults: (results: Partial<FunnelPublicationSettings['results']>) => void;
-    updateSEO: (seo: Partial<FunnelPublicationSettings['seo']>) => void;
-    updateTracking: (tracking: Partial<FunnelPublicationSettings['tracking']>) => void;
-    updateSecurity: (security: Partial<FunnelPublicationSettings['security']>) => void;
+    // Configurações específicas (por seção)
+    updateDomain: (domain: Partial<DomainSettings>) => void;
+    updateResults: (results: Partial<ResultsSettings>) => void;
+    updateSEO: (seo: Partial<SEOSettings>) => void;
+    updateTracking: (tracking: Partial<TrackingSettings>) => void;
+    updateSecurity: (security: Partial<SecuritySettings>) => void;
 
     // Utilitários
-    generatePreviewUrl: () => string;
-    validateSettings: () => { isValid: boolean; errors: string[] };
+    generatePreviewUrl: () => string | null;
+    validateSettings: () => Promise<{ isValid: boolean; errors: string[]; warnings: string[] }>;
     getPublicationStatus: () => 'draft' | 'published' | 'error';
 }
 
 // ============================================================================
-// DEFAULT SETTINGS
+// SERVICE INSTANCES
 // ============================================================================
 
-const DEFAULT_SETTINGS: FunnelPublicationSettings = {
-    domain: {
-        slug: '',
-        seoFriendlyUrl: true,
-    },
-    results: {
-        primary: {
-            id: 'primary',
-            username: '',
-            title: '',
-            description: '',
-            percentage: 0,
-            primaryFunction: '',
-            images: {},
-        },
-        secondary: [],
-        keywords: [],
-    },
-    seo: {
-        robots: 'index,follow',
-    },
-    tracking: {
-        utmParameters: {},
-    },
-    security: {},
-};
+const funnelSettingsService = FunnelSettingsService.getInstance();
+const publicationService = PublicationService.getInstance();
 
 // ============================================================================
 // MAIN HOOK
@@ -90,14 +84,34 @@ export function useFunnelPublication(
     options: UseFunnelPublicationOptions = {},
 ): UseFunnelPublicationReturn {
 
-    const [settings, setSettings] = useState<FunnelPublicationSettings>(DEFAULT_SETTINGS);
+    const [settings, setSettings] = useState<PublicationSettings>({
+        domain: { slug: '', seoFriendlyUrl: true },
+        results: {
+            calculationType: 'weighted',
+            primary: {
+                id: 'primary',
+                username: '',
+                title: '',
+                description: '',
+                percentage: 0,
+                primaryFunction: '',
+                images: {},
+            },
+            secondary: [],
+            keywords: [],
+        },
+        seo: { robots: 'index,follow' },
+        tracking: { utmParameters: {} },
+        security: {},
+    });
+
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
     // ============================================================================
-    // LOAD SETTINGS
+    // LOAD SETTINGS (usando FunnelSettingsService)
     // ============================================================================
 
     const loadSettings = useCallback(async () => {
@@ -105,69 +119,62 @@ export function useFunnelPublication(
         setError(null);
 
         try {
-            // Integrar com o serviço de publicação
-            // const savedSettings = await funnelPublicationService.getSettings(funnelId);
-
-            // Mock para desenvolvimento
-            const savedSettings = localStorage.getItem(`funnel_publication_${funnelId}`);
-            if (savedSettings) {
-                setSettings(JSON.parse(savedSettings));
+            const result = await funnelSettingsService.getSettings(funnelId);
+            
+            if (result.success && result.data) {
+                setSettings(result.data);
             } else {
-                setSettings({
-                    ...DEFAULT_SETTINGS,
-                    domain: {
-                        ...DEFAULT_SETTINGS.domain,
-                        slug: generateSlugFromFunnelId(funnelId),
-                    },
-                });
+                console.warn('Failed to load settings:', result.success ? 'No data' : result.error.message);
+                // Manter settings padrão
             }
         } catch (err) {
             setError(err as Error);
+            console.error('Error loading settings:', err);
         } finally {
             setIsLoading(false);
         }
     }, [funnelId]);
 
     // ============================================================================
-    // UPDATE METHODS
+    // UPDATE METHODS (apenas state management React)
     // ============================================================================
 
-    const updateSettings = useCallback((updates: Partial<FunnelPublicationSettings>) => {
+    const updateSettings = useCallback((updates: Partial<PublicationSettings>) => {
         setSettings(prev => ({
             ...prev,
             ...updates,
         }));
     }, []);
 
-    const updateDomain = useCallback((domain: Partial<FunnelPublicationSettings['domain']>) => {
+    const updateDomain = useCallback((domain: Partial<DomainSettings>) => {
         setSettings(prev => ({
             ...prev,
             domain: { ...prev.domain, ...domain },
         }));
     }, []);
 
-    const updateResults = useCallback((results: Partial<FunnelPublicationSettings['results']>) => {
+    const updateResults = useCallback((results: Partial<ResultsSettings>) => {
         setSettings(prev => ({
             ...prev,
             results: { ...prev.results, ...results },
         }));
     }, []);
 
-    const updateSEO = useCallback((seo: Partial<FunnelPublicationSettings['seo']>) => {
+    const updateSEO = useCallback((seo: Partial<SEOSettings>) => {
         setSettings(prev => ({
             ...prev,
             seo: { ...prev.seo, ...seo },
         }));
     }, []);
 
-    const updateTracking = useCallback((tracking: Partial<FunnelPublicationSettings['tracking']>) => {
+    const updateTracking = useCallback((tracking: Partial<TrackingSettings>) => {
         setSettings(prev => ({
             ...prev,
             tracking: { ...prev.tracking, ...tracking },
         }));
     }, []);
 
-    const updateSecurity = useCallback((security: Partial<FunnelPublicationSettings['security']>) => {
+    const updateSecurity = useCallback((security: Partial<SecuritySettings>) => {
         setSettings(prev => ({
             ...prev,
             security: { ...prev.security, ...security },
@@ -175,7 +182,7 @@ export function useFunnelPublication(
     }, []);
 
     // ============================================================================
-    // SAVE & PUBLISH
+    // SAVE & PUBLISH (usando PublicationService)
     // ============================================================================
 
     const saveSettings = useCallback(async () => {
@@ -183,12 +190,10 @@ export function useFunnelPublication(
         setError(null);
 
         try {
-            // Salvar no serviço
-            if (options.onSave) {
-                await options.onSave(settings);
-            } else {
-                // Fallback para localStorage
-                localStorage.setItem(`funnel_publication_${funnelId}`, JSON.stringify(settings));
+            const result = await funnelSettingsService.updateSettings(funnelId, settings);
+            
+            if (!result.success) {
+                throw result.error;
             }
         } catch (err) {
             setError(err as Error);
@@ -196,48 +201,59 @@ export function useFunnelPublication(
         } finally {
             setIsSaving(false);
         }
-    }, [settings, funnelId, options]);
+    }, [settings, funnelId]);
 
     const publishFunnel = useCallback(async () => {
         setIsPublishing(true);
         setError(null);
 
         try {
-            // Validar antes de publicar
-            const validation = validateSettings();
-            if (!validation.isValid) {
-                throw new Error(`Erros de validação: ${validation.errors.join(', ')}`);
+            const result = await publicationService.publish(funnelId, { force: false });
+            
+            if (!result.success) {
+                throw result.error;
             }
 
-            // Salvar primeiro
-            await saveSettings();
-
-            // Publicar
-            if (options.onPublish) {
-                await options.onPublish(settings);
-            } else {
-                // Mock de publicação
-                console.log('🚀 Publicando funil:', {
-                    funnelId,
-                    url: generatePreviewUrl(),
-                    settings,
-                });
-            }
+            console.log('✅ Funnel published:', result.data);
         } catch (err) {
             setError(err as Error);
             throw err;
         } finally {
             setIsPublishing(false);
         }
-    }, [settings, saveSettings, options, funnelId]);
+    }, [funnelId]);
 
-    const resetSettings = useCallback(() => {
-        setSettings(DEFAULT_SETTINGS);
+    const unpublishFunnel = useCallback(async () => {
+        setIsPublishing(true);
         setError(null);
-    }, []);
+
+        try {
+            const result = await publicationService.unpublish(funnelId);
+            
+            if (!result.success) {
+                throw result.error;
+            }
+
+            console.log('✅ Funnel unpublished');
+        } catch (err) {
+            setError(err as Error);
+            throw err;
+        } finally {
+            setIsPublishing(false);
+        }
+    }, [funnelId]);
+
+    const resetSettings = useCallback(async () => {
+        try {
+            await loadSettings();
+            setError(null);
+        } catch (err) {
+            console.error('Failed to reset settings:', err);
+        }
+    }, [loadSettings]);
 
     // ============================================================================
-    // UTILITIES
+    // UTILITIES (usando PublicationService)
     // ============================================================================
 
     const generatePreviewUrl = useCallback(() => {
@@ -248,52 +264,35 @@ export function useFunnelPublication(
         }
 
         const subdomain = domain.subdomain || 'app';
-        return `https://${subdomain}.quizquest.com/${domain.slug}`;
+        return `https://${subdomain}.quizflowpro.com/${domain.slug}`;
     }, [settings]);
 
-    const validateSettings = useCallback(() => {
-        const errors: string[] = [];
-
-        // Validar domínio
-        if (!settings.domain.slug) {
-            errors.push('Slug do funil é obrigatório');
+    const validateSettings = useCallback(async () => {
+        const result = await publicationService.validate(settings);
+        
+        if (!result.success || !result.data) {
+            return {
+                isValid: false,
+                errors: ['Validation failed'],
+                warnings: [],
+            };
         }
 
-        // Validar resultado principal
-        if (!settings.results.primary.title) {
-            errors.push('Título do resultado principal é obrigatório');
-        }
-
-        if (!settings.results.primary.description) {
-            errors.push('Descrição do resultado principal é obrigatória');
-        }
-
-        // Validar SEO básico
-        if (settings.seo.title && settings.seo.title.length > 60) {
-            errors.push('Título SEO deve ter no máximo 60 caracteres');
-        }
-
-        if (settings.seo.description && settings.seo.description.length > 160) {
-            errors.push('Meta description deve ter no máximo 160 caracteres');
-        }
-
-        // Validar tracking
-        if (settings.tracking.googleAnalytics && !settings.tracking.googleAnalytics.startsWith('GA4-')) {
-            errors.push('ID do Google Analytics deve começar com GA4-');
-        }
-
+        const { isValid, errors, warnings } = result.data;
+        
         return {
-            isValid: errors.length === 0,
-            errors,
+            isValid,
+            errors: errors.map(e => e.message),
+            warnings: warnings.map(w => w.message),
         };
     }, [settings]);
 
-    const getPublicationStatus = useCallback(() => {
+    const getPublicationStatus = useCallback((): 'draft' | 'published' | 'error' => {
         if (error) return 'error';
-
-        // Verificar se foi publicado (aqui você checaria com o serviço)
+        
+        // Verificar se tem configurações mínimas
         const hasBasicSettings = settings.domain.slug && settings.results.primary.title;
-
+        
         return hasBasicSettings ? 'published' : 'draft';
     }, [error, settings]);
 
@@ -302,14 +301,15 @@ export function useFunnelPublication(
     // ============================================================================
 
     useEffect(() => {
-        if (options.autoSave && !isLoading) {
+        if (options.autoSave && !isLoading && !isSaving) {
+            const delay = options.autoSaveDelay || 1000;
             const timeoutId = setTimeout(() => {
                 saveSettings().catch(console.error);
-            }, 2000); // Auto-save após 2 segundos de inatividade
+            }, delay);
 
             return () => clearTimeout(timeoutId);
         }
-    }, [settings, options.autoSave, isLoading, saveSettings]);
+    }, [settings, options.autoSave, options.autoSaveDelay, isLoading, isSaving, saveSettings]);
 
     // ============================================================================
     // LOAD ON MOUNT
@@ -335,6 +335,7 @@ export function useFunnelPublication(
         updateSettings,
         saveSettings,
         publishFunnel,
+        unpublishFunnel,
         resetSettings,
 
         // Configurações específicas

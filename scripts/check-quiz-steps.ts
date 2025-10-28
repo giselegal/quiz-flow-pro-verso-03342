@@ -1,6 +1,11 @@
 /**
  * Script para verificar QUIZ_STEPS
+ * 
+ * ⚠️ DEPRECATED: Este script usa quizSteps.ts (obsoleto)
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
  */
+
+console.warn('⚠️ AVISO: Este script usa quizSteps.ts (DEPRECATED)\n');
 
 import { QUIZ_STEPS } from '../src/data/quizSteps';
 

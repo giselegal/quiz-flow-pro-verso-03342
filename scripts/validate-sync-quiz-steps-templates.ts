@@ -3,8 +3,17 @@
 /**
  * 🔍 VALIDAÇÃO DE SINCRONIZAÇÃO: QUIZ_STEPS vs quiz21StepsComplete
  * 
+ * ⚠️ AVISO: Este script usa quizSteps.ts que está DEPRECATED
+ * 
  * Compara navigation.nextStep entre as duas fontes e identifica inconsistências
+ * 
+ * @deprecated Use TemplateService.getInstance() ao invés de QUIZ_STEPS
+ * @see src/services/canonical/TemplateService.ts
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
  */
+
+console.warn('⚠️ AVISO: Este script usa quizSteps.ts (DEPRECATED)');
+console.warn('📖 Veja: ARQUITETURA_TEMPLATES_DEFINITIVA.md\n');
 
 import { QUIZ_STEPS } from '../src/data/quizSteps';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '../src/templates/quiz21StepsComplete';

@@ -1,6 +1,23 @@
 /**
  * 🎯 ESTRUTURA DAS ETAPAS DO QUIZ - GISELE GALVÃO
  * 
+ * @deprecated ⚠️ ESTE ARQUIVO ESTÁ DEPRECATED!
+ * 
+ * USE INSTEAD: TemplateService.getInstance().getStep(stepId)
+ * 
+ * MOTIVO: Este arquivo duplica dados de quiz21-complete.json
+ * FONTE ÚNICA: public/templates/quiz21-complete.json
+ * SERVICE CANONICAL: src/services/canonical/TemplateService.ts
+ * 
+ * MIGRAÇÃO EM PROGRESSO:
+ * - ✅ useTemplateLoader.ts migrado
+ * - ✅ useUnifiedQuizLoader.ts migrado
+ * - ⏳ 50+ arquivos restantes
+ * 
+ * Este arquivo será REMOVIDO após migração completa.
+ * 
+ * ---
+ * 
  * Este arquivo contém todas as 21 etapas do quiz de estilo pessoal:
  * - Etapa 1: Introdução e coleta do nome
  * - Etapas 2-11: 10 perguntas principais do quiz (pontuação por estilo)
@@ -10,6 +27,14 @@
  * - Etapa 20: Exibição do resultado personalizado
  * - Etapa 21: Oferta personalizada baseada nas respostas estratégicas
  */
+
+// ⚠️ DEPRECATION WARNING
+if (typeof console !== 'undefined' && console.warn) {
+  console.warn(
+    '⚠️ DEPRECATED: quizSteps.ts is deprecated. Use TemplateService.getInstance().getStep(stepId) instead.\n' +
+    'See: src/services/canonical/TemplateService.ts'
+  );
+}
 
 export interface QuizOption {
     id: string;
