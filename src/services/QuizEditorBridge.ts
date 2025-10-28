@@ -6,12 +6,19 @@
  * 
  * ✅ FASE 4.1: Validação rigorosa integrada com NavigationService e BlockRegistry
  * ✅ FASE 6.5: Integrado com utilitários testados (91 testes)
+ * ✅ MIGRADO: Usa TemplateService ao invés de QUIZ_STEPS/STEP_ORDER deprecated
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
  */
 
-import { QUIZ_STEPS, STEP_ORDER, type QuizStep } from '@/data/quizSteps';
+import type { QuizStep } from '@/data/quizSteps';
+import { templateService } from '@/services/canonical/TemplateService';
 import { supabase } from '@/integrations/supabase/customClient';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
+
+// Constants derivados do TemplateService
+const STEP_ORDER = templateService.getStepOrder();
+const QUIZ_STEPS_FALLBACK = templateService.getAllStepsSync();
 
 // ✅ FASE 4.1: Integração com serviços canônicos
 import { navigationService } from '@/services/canonical/NavigationService';
@@ -81,18 +88,18 @@ class QuizEditorBridge {
         }
 
         // Tentar carregar draft do Supabase
-        const draft = await this.loadDraftFromDatabase(funnelId);
-        if (draft) return draft;
-
-        // Fallback: criar novo draft baseado na produção
-        return this.createDraftFromProduction(funnelId);
-    }
-
     /**
-     * 📦 Carregar funil de produção (QUIZ_STEPS atual)
+     * 📦 Carregar funil de produção (via TemplateService)
      */
     private loadProductionFunnel(): QuizFunnelData {
         const steps: EditorQuizStep[] = STEP_ORDER.map((stepId, index) => {
+            const stepData = QUIZ_STEPS_FALLBACK[stepId];
+            return {
+                id: stepId,
+                order: index + 1,
+                ...stepData,
+            };
+        });st steps: EditorQuizStep[] = STEP_ORDER.map((stepId, index) => {
             const stepData = QUIZ_STEPS[stepId];
             return {
                 id: stepId,
@@ -453,11 +460,11 @@ class QuizEditorBridge {
         const v3Templates = await this.loadAllV3Templates();
         return v3Templates;
     }
-
-    /**
-     * 📦 Carregar todos os templates JSON v3.0 como fallback
-     */
-    private async loadAllV3Templates(): Promise<Record<string, QuizStep>> {
+        // ⚠️ Verificar se deve tentar carregar arquivos individuais
+        if (!TEMPLATE_SOURCES.preferPublicStepJSON) {
+            console.log('⚠️ preferPublicStepJSON=false - Usando TemplateService fallback');
+            return { ...QUIZ_STEPS_FALLBACK };
+        }te async loadAllV3Templates(): Promise<Record<string, QuizStep>> {
         const steps: Record<string, QuizStep> = {};
 
         // ⚠️ Verificar se deve tentar carregar arquivos individuais
@@ -483,15 +490,8 @@ class QuizEditorBridge {
 
                 // Converter Block[] para EditableBlock[] (adaptar formato)
                 const editableBlocks = blocks.map((b, idx) => ({
-                    id: b.id,
-                    type: b.type,
-                    order: b.order ?? idx,
-                    properties: b.properties || {},
-                    content: b.content || {},
-                }));
-
-                // Inferir tipo do step baseado no stepId ou usar fallback
-                const fallbackStep = QUIZ_STEPS[stepId];
+                // Inferir tipo do step baseado no stepId ou usar fallback do TemplateService
+                const fallbackStep = QUIZ_STEPS_FALLBACK[stepId];
                 const stepType = fallbackStep?.type || 'question';
 
                 // Converter blocks[] para QuizStep
@@ -503,6 +503,13 @@ class QuizEditorBridge {
                     ...stepData,
                     type: stepType, // garantir type definido
                 } as QuizStep;
+
+                console.log(`✅ Template ${stepId} carregado do JSON v3.0`);
+            } catch (error) {
+                // Fallback para TemplateService
+                console.warn(`⚠️  Fallback para ${stepId}:`, error);
+                steps[stepId] = QUIZ_STEPS_FALLBACK[stepId];
+            }   } as QuizStep;
 
                 console.log(`✅ Template ${stepId} carregado do JSON v3.0`);
             } catch (error) {

@@ -3,13 +3,20 @@
  * 
  * Bridge consolidado que usa os novos adapters unificados
  * Substitui fragmentação entre QuizEditorBridge e outros loaders
+ * 
+ * ✅ MIGRADO: Usa TemplateService ao invés de QUIZ_STEPS/STEP_ORDER deprecated
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
  */
 
 import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/adapters/UnifiedQuizStepAdapter';
 import { useUnifiedQuizLoader } from '@/hooks/useUnifiedQuizLoader';
-import { QUIZ_STEPS, STEP_ORDER } from '@/data/quizSteps';
+import { templateService } from '@/services/canonical/TemplateService';
 import { supabase } from '@/integrations/supabase/customClient';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
+
+// Constants derivados do TemplateService
+const STEP_ORDER = templateService.getStepOrder();
+const QUIZ_STEPS_FALLBACK = templateService.getAllStepsSync();
 
 export interface UnifiedFunnelData {
   id: string;
@@ -44,15 +51,15 @@ export class UnifiedQuizBridge {
   /**
    * Carregar funil completo de produção
    */
-  async loadProductionFunnel(): Promise<UnifiedFunnelData> {
-    const cacheKey = 'production-funnel';
-    
-    if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey)!;
-    }
-
     const steps: Record<string, UnifiedQuizStep> = {};
 
+    // Converter TemplateService steps para UnifiedQuizStep
+    for (const stepId of STEP_ORDER) {
+      const quizStep = QUIZ_STEPS_FALLBACK[stepId];
+      if (quizStep) {
+        steps[stepId] = UnifiedQuizStepAdapter.fromQuizStep(quizStep, stepId);
+      }
+    }
     // Converter QUIZ_STEPS para UnifiedQuizStep
     for (const stepId of STEP_ORDER) {
       const quizStep = QUIZ_STEPS[stepId];
@@ -74,11 +81,11 @@ export class UnifiedQuizBridge {
       },
     };
 
-    this.cache.set(cacheKey, funnel);
-    return funnel;
-  }
-
-  /**
+  async loadStep(stepId: string, source: 'database' | 'templates' | 'hardcoded' = 'hardcoded'): Promise<UnifiedQuizStep | null> {
+    switch (source) {
+      case 'hardcoded':
+        const quizStep = QUIZ_STEPS_FALLBACK[stepId];
+        return quizStep ? UnifiedQuizStepAdapter.fromQuizStep(quizStep, stepId) : null;
    * Carregar step individual
    */
   async loadStep(stepId: string, source: 'database' | 'templates' | 'hardcoded' = 'hardcoded'): Promise<UnifiedQuizStep | null> {
