@@ -1,7 +1,7 @@
 /**
  * 🏗️ BUILD-TIME TEMPLATES EMBEDDED
  * 
- * Gerado automaticamente em: 2025-10-28T12:55:17.816Z
+ * Gerado automaticamente em: 2025-10-28T13:41:15.986Z
  * Total de steps: 21
  * Total de blocos: 99
  * 
@@ -110,42 +110,50 @@ const embedded: Record<string, Block[]> = {
             {
               "id": "natural",
               "text": "Natural",
-              "image": "/quiz-assets/natural.webp"
+              "image": "/quiz-assets/natural.webp",
+              "imageUrl": "/quiz-assets/natural.webp"
             },
             {
               "id": "classico",
               "text": "Clássico",
-              "image": "/quiz-assets/classico.webp"
+              "image": "/quiz-assets/classico.webp",
+              "imageUrl": "/quiz-assets/classico.webp"
             },
             {
               "id": "contemporaneo",
               "text": "Contemporâneo",
-              "image": "/quiz-assets/contemporaneo.webp"
+              "image": "/quiz-assets/contemporaneo.webp",
+              "imageUrl": "/quiz-assets/contemporaneo.webp"
             },
             {
               "id": "elegante",
               "text": "Elegante",
-              "image": "/quiz-assets/elegante.webp"
+              "image": "/quiz-assets/elegante.webp",
+              "imageUrl": "/quiz-assets/elegante.webp"
             },
             {
               "id": "romantico",
               "text": "Romântico",
-              "image": "/quiz-assets/romantico.webp"
+              "image": "/quiz-assets/romantico.webp",
+              "imageUrl": "/quiz-assets/romantico.webp"
             },
             {
               "id": "sexy",
               "text": "Sexy",
-              "image": "/quiz-assets/sexy.webp"
+              "image": "/quiz-assets/sexy.webp",
+              "imageUrl": "/quiz-assets/sexy.webp"
             },
             {
               "id": "dramatico",
               "text": "Dramático",
-              "image": "/quiz-assets/dramatico.webp"
+              "image": "/quiz-assets/dramatico.webp",
+              "imageUrl": "/quiz-assets/dramatico.webp"
             },
             {
               "id": "criativo",
               "text": "Criativo",
-              "image": "/quiz-assets/criativo.webp"
+              "image": "/quiz-assets/criativo.webp",
+              "imageUrl": "/quiz-assets/criativo.webp"
             }
           ],
           "columns": 2,

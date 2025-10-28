@@ -14,6 +14,7 @@ interface Option {
   id: string;
   text: string;
   imageUrl?: string;
+  image?: string; // ✅ FASE 3: Alias para compatibilidade com templates
   value?: string;
   category?: string;
   styleCategory?: string;

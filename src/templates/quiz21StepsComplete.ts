@@ -11,7 +11,7 @@
  * 2. Execute: npm run build:templates
  * 3. Commit: JSON + este arquivo TS
  * 
- * Gerado em: 2025-10-28T12:55:17.813Z
+ * Gerado em: 2025-10-28T13:41:15.984Z
  * Versão: 3.0.0
  */
 
@@ -99,8 +99,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "title": "Bem-vinda ao Quiz de Estilo"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "intro-subtitle",
@@ -109,8 +108,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       "properties": {},
       "content": {
         "text": "Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "intro-form",
@@ -126,8 +124,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "placeholder": "Digite seu nome aqui",
         "buttonText": "Começar Agora",
         "required": true
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -145,8 +142,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-02-title",
@@ -160,12 +156,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "Pergunta 1 de 10"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-02-options",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 2,
       "properties": {
         "backgroundColor": "transparent",
@@ -180,42 +175,50 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           {
             "id": "natural",
             "text": "Natural",
-            "image": "/quiz-assets/natural.webp"
+            "image": "/quiz-assets/natural.webp",
+            "imageUrl": "/quiz-assets/natural.webp"
           },
           {
             "id": "classico",
             "text": "Clássico",
-            "image": "/quiz-assets/classico.webp"
+            "image": "/quiz-assets/classico.webp",
+            "imageUrl": "/quiz-assets/classico.webp"
           },
           {
             "id": "contemporaneo",
             "text": "Contemporâneo",
-            "image": "/quiz-assets/contemporaneo.webp"
+            "image": "/quiz-assets/contemporaneo.webp",
+            "imageUrl": "/quiz-assets/contemporaneo.webp"
           },
           {
             "id": "elegante",
             "text": "Elegante",
-            "image": "/quiz-assets/elegante.webp"
+            "image": "/quiz-assets/elegante.webp",
+            "imageUrl": "/quiz-assets/elegante.webp"
           },
           {
             "id": "romantico",
             "text": "Romântico",
-            "image": "/quiz-assets/romantico.webp"
+            "image": "/quiz-assets/romantico.webp",
+            "imageUrl": "/quiz-assets/romantico.webp"
           },
           {
             "id": "sexy",
             "text": "Sexy",
-            "image": "/quiz-assets/sexy.webp"
+            "image": "/quiz-assets/sexy.webp",
+            "imageUrl": "/quiz-assets/sexy.webp"
           },
           {
             "id": "dramatico",
             "text": "Dramático",
-            "image": "/quiz-assets/dramatico.webp"
+            "image": "/quiz-assets/dramatico.webp",
+            "imageUrl": "/quiz-assets/dramatico.webp"
           },
           {
             "id": "criativo",
             "text": "Criativo",
-            "image": "/quiz-assets/criativo.webp"
+            "image": "/quiz-assets/criativo.webp",
+            "imageUrl": "/quiz-assets/criativo.webp"
           }
         ],
         "columns": 2,
@@ -223,8 +226,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "minSelections": 3,
         "maxSelections": 3,
         "showImages": true
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -242,8 +244,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-03-title",
@@ -257,12 +258,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "Pergunta 2 de 10"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-03",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 2,
       "properties": {
         "backgroundColor": "transparent",
@@ -325,12 +325,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
         "requiredSelections": 3
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-03-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 3,
       "properties": {},
       "content": {
@@ -338,8 +337,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -357,8 +355,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-04-question-title",
@@ -370,8 +367,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-04",
@@ -394,12 +390,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-04",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "backgroundColor": "transparent",
@@ -470,12 +465,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
         "requiredSelections": 3
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-04-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -483,8 +477,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -502,8 +495,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-05-question-title",
@@ -515,8 +507,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "QUAIS DETALHES VOCÊ GOSTA?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-05",
@@ -535,12 +526,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-05",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -601,12 +591,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
         "requiredSelections": 3
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-05-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -614,8 +603,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -633,8 +621,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-06-question-title",
@@ -646,8 +633,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-06",
@@ -666,12 +652,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-06",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -740,12 +725,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
         "requiredSelections": 3
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-06-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -753,8 +737,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -772,8 +755,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-07-question-title",
@@ -785,8 +767,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "QUAL CASACO É SEU FAVORITO?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-07",
@@ -805,12 +786,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-07",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -879,12 +859,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
         "requiredSelections": 3
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-07-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -892,8 +871,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -911,8 +889,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-08-question-title",
@@ -924,8 +901,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "QUAL SUA CALÇA FAVORITA?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-08",
@@ -944,12 +920,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-08",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -1018,12 +993,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
         "requiredSelections": 3
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-08-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -1031,8 +1005,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -1050,8 +1023,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-09-question-title",
@@ -1063,8 +1035,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-09",
@@ -1083,12 +1054,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-09",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -1157,12 +1127,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
         "requiredSelections": 3
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-09-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -1170,8 +1139,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -1189,8 +1157,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-10-question-title",
@@ -1202,8 +1169,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-10",
@@ -1222,12 +1188,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-10",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -1296,12 +1261,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
         "requiredSelections": 3
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-10-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -1309,8 +1273,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -1328,8 +1291,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-11-question-title",
@@ -1341,8 +1303,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES..."
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-11",
@@ -1361,12 +1322,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-11",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -1427,12 +1387,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "autoAdvanceDelay": 1500,
         "validationMessage": "Selecione 3 opções para continuar",
         "requiredSelections": 3
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-11-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -1440,8 +1399,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -1465,8 +1423,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "message": "Continue para descobrir ainda mais sobre seu estilo único!",
         "autoAdvanceDelay": 3500,
         "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-12-transition-text",
@@ -1478,12 +1435,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-12-transition-cta",
-      "type": "CTAButton",
+      "type": "button",
       "order": 2,
       "properties": {},
       "content": {
@@ -1491,8 +1447,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "medium"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -1510,8 +1465,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-13-question-title",
@@ -1523,8 +1477,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-13",
@@ -1543,12 +1496,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-13",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -1587,12 +1539,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "imageSize": 256,
         "autoAdvance": true,
         "autoAdvanceDelay": 1500
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-13-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -1600,8 +1551,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -1619,8 +1569,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-14-question-title",
@@ -1632,8 +1581,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "O que mais te desafia na hora de se vestir?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-14",
@@ -1652,12 +1600,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-14",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -1696,12 +1643,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "imageSize": 256,
         "autoAdvance": true,
         "autoAdvanceDelay": 1500
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-14-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -1709,8 +1655,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -1728,8 +1673,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-15-question-title",
@@ -1741,8 +1685,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-15",
@@ -1761,12 +1704,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-15",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -1805,12 +1747,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "imageSize": 256,
         "autoAdvance": true,
         "autoAdvanceDelay": 1500
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-15-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -1818,8 +1759,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -1837,8 +1777,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-16-question-title",
@@ -1850,8 +1789,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-16",
@@ -1870,12 +1808,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-16",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -1914,12 +1851,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "imageSize": 256,
         "autoAdvance": true,
         "autoAdvanceDelay": 1500
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-16-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -1927,8 +1863,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -1946,8 +1881,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-17-question-title",
@@ -1959,8 +1893,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-17",
@@ -1979,12 +1912,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-17",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -2023,12 +1955,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "imageSize": 256,
         "autoAdvance": true,
         "autoAdvanceDelay": 1500
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-17-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -2036,8 +1967,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -2055,8 +1985,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showPercentage": true,
         "barColor": "#B89B7A",
         "backgroundColor": "#e5e7eb"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-18-question-title",
@@ -2068,8 +1997,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
       },
       "content": {
         "text": "Qual desses resultados você mais gostaria de alcançar?"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "question-hero-18",
@@ -2088,12 +2016,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "showProgress": true,
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "options-grid-18",
-      "type": "options grid",
+      "type": "options-grid",
       "order": 3,
       "properties": {
         "type": "slideUp",
@@ -2132,12 +2059,11 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "imageSize": 256,
         "autoAdvance": true,
         "autoAdvanceDelay": 1500
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-18-cta-next",
-      "type": "CTAButton",
+      "type": "button",
       "order": 4,
       "properties": {},
       "content": {
@@ -2145,8 +2071,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "href": "#next",
         "variant": "primary",
         "size": "large"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -2169,8 +2094,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "subtitle": "Preparando seu resultado personalizado",
         "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
         "autoAdvanceDelay": 3000
-      },
-      "parentId": null
+      }
     },
     {
       "id": "step-19-transition-text",
@@ -2180,20 +2104,18 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "type": "fade",
         "duration": 300
       },
-      "content": {},
-      "parentId": null
+      "content": {}
     },
     {
       "id": "step-19-transition-cta",
-      "type": "CTAButton",
+      "type": "button",
       "order": 2,
       "properties": {},
       "content": {
         "label": "...",
         "variant": "outline",
         "size": "small"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -2224,8 +2146,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           }
         }
       },
-      "content": {},
-      "parentId": null
+      "content": {}
     },
     {
       "id": "result-main",
@@ -2249,8 +2170,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           "showDescription": true
         }
       },
-      "content": {},
-      "parentId": null
+      "content": {}
     },
     {
       "id": "result-progress-bars",
@@ -2272,8 +2192,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           "titleFormat": "Além do {primaryStyle}, você também tem traços de:"
         }
       },
-      "content": {},
-      "parentId": null
+      "content": {}
     },
     {
       "id": "result-secondary-styles",
@@ -2289,8 +2208,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           "tagStyle": "rounded-full"
         }
       },
-      "content": {},
-      "parentId": null
+      "content": {}
     },
     {
       "id": "result-image",
@@ -2307,8 +2225,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           "showDecorations": false
         }
       },
-      "content": {},
-      "parentId": null
+      "content": {}
     },
     {
       "id": "result-description",
@@ -2327,8 +2244,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           "closingMessage": "✨ É a mistura desses elementos que torna a sua imagem única."
         }
       },
-      "content": {},
-      "parentId": null
+      "content": {}
     },
     {
       "id": "button-cta-primary",
@@ -2347,8 +2263,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "backgroundColor": "#B89B7A",
         "textColor": "#ffffff",
         "hoverColor": "#a08966"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "result-share",
@@ -2367,8 +2282,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           "whatsapp",
           "linkedin"
         ]
-      },
-      "parentId": null
+      }
     },
     {
       "id": "transformation-benefits",
@@ -2383,8 +2297,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           "style": "rich-text"
         }
       },
-      "content": {},
-      "parentId": null
+      "content": {}
     },
     {
       "id": "method-steps",
@@ -2399,8 +2312,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           "style": "rich-text"
         }
       },
-      "content": {},
-      "parentId": null
+      "content": {}
     },
     {
       "id": "button-cta-final",
@@ -2419,8 +2331,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "backgroundColor": "#B89B7A",
         "textColor": "#ffffff",
         "hoverColor": "#a08966"
-      },
-      "parentId": null
+      }
     }
   ],
 
@@ -2438,8 +2349,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "subtitle": "Oferta exclusiva para quem completou o quiz de estilo",
         "description": "Descubra como valorizar seu estilo único e se sentir confiante em qualquer ocasião com o método exclusivo 5 Passos.",
         "urgencyMessage": "Oferta por tempo limitado!"
-      },
-      "parentId": null
+      }
     },
     {
       "id": "pricing-21",
@@ -2462,8 +2372,7 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         "title": "Investimento que Transforma",
         "ctaText": "Quero Transformar Meu Estilo Agora!",
         "ctaUrl": "https://pay.kiwify.com.br/DkYC1Aj"
-      },
-      "parentId": null
+      }
     }
   ],
 };

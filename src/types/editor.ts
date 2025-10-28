@@ -113,6 +113,28 @@ export type BlockType =
   | 'quiz-offer-cta-inline'
   | 'step-header-inline'
   | 'step01-intro'
+  
+  // ✅ FASE 3: Blocos atomic/modular adicionados
+  | 'intro-form'
+  | 'question-progress'
+  | 'question-number'
+  | 'question-text'
+  | 'question-title'
+  | 'question-instructions'
+  | 'question-navigation'
+  | 'question-hero'
+  | 'transition-title'
+  | 'transition-subtitle'
+  | 'transition-loader'
+  | 'transition-text'
+  | 'transition-progress'
+  | 'transition-message'
+  | 'transition-image'
+  | 'transition-description'
+  | 'transition-hero'
+  | 'result-cta-primary'
+  | 'result-cta-secondary'
+  | 'result-share'
 
   // Blocos de resultado e estilo
   | 'style-result'
@@ -482,6 +504,7 @@ export interface BaseBlock {
   id: string;
   order: number;
   properties?: Record<string, any>;
+  parentId?: string; // ✅ FASE 3: Para blocos aninhados/hierárquicos
 }
 
 // Interface Block específica por tipo

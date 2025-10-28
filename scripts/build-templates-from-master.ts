@@ -60,10 +60,47 @@ function loadMaster(): any {
 }
 
 /**
+ * ✅ FASE 3: Normaliza tipos de blocks para conformidade TypeScript
+ */
+function normalizeBlock(block: any): any {
+  const normalized = { ...block };
+  
+  // Fix: parentId null → undefined
+  if (normalized.parentId === null) {
+    delete normalized.parentId;
+  }
+  
+  // Fix: type corrections
+  const typeMap: Record<string, string> = {
+    'options grid': 'options-grid',
+    'CTAButton': 'button',
+  };
+  
+  if (normalized.type && typeMap[normalized.type]) {
+    normalized.type = typeMap[normalized.type];
+  }
+  
+  // Fix: options.image → options.imageUrl
+  if (normalized.content?.options && Array.isArray(normalized.content.options)) {
+    normalized.content.options = normalized.content.options.map((opt: any) => {
+      if (opt.image && !opt.imageUrl) {
+        return { ...opt, imageUrl: opt.image, image: opt.image };
+      }
+      return opt;
+    });
+  }
+  
+  return normalized;
+}
+
+/**
  * Gera o código TypeScript para um step
  */
 function generateStepCode(stepId: string, blocks: any[]): string {
-  const blocksJson = JSON.stringify(blocks, null, 2);
+  // ✅ FASE 3: Normaliza cada block antes de gerar
+  const normalizedBlocks = blocks.map(normalizeBlock);
+  
+  const blocksJson = JSON.stringify(normalizedBlocks, null, 2);
   const indented = blocksJson
     .split('\n')
     .map(line => '  ' + line)
