@@ -34,6 +34,11 @@ class ImageCacheManager {
     }
 
     private async initDB(): Promise<void> {
+        // Skip in Node.js environment
+        if (typeof indexedDB === 'undefined') {
+            return Promise.resolve();
+        }
+
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(this.dbName, this.dbVersion);
 
