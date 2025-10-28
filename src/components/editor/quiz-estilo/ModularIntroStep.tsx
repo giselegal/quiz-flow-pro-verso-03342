@@ -61,6 +61,16 @@ export default function ModularIntroStep({
     const [fallbackBlocks, setFallbackBlocks] = React.useState<Block[]>([]);
     const effectiveBlocks = React.useMemo(() => (Array.isArray(blocks) && blocks.length > 0) ? blocks : fallbackBlocks, [blocks, fallbackBlocks]);
 
+    // Debug: verificar se blocos estão chegando
+    React.useEffect(() => {
+        console.log('🔍 [ModularIntroStep] Debug:', {
+            propsBlocks: blocks?.length || 0,
+            fallbackBlocks: fallbackBlocks.length,
+            effectiveBlocks: effectiveBlocks.length,
+            stepId: STEP_ID
+        });
+    }, [blocks, fallbackBlocks, effectiveBlocks, STEP_ID]);
+
     // Evitar auto-load repetido em modo Strict/edição
     const autoloadRequestedRef = React.useRef(false);
     React.useEffect(() => {
@@ -89,6 +99,16 @@ export default function ModularIntroStep({
         const list = (effectiveBlocks as Block[]).filter(b => !('parentId' in (b as any)) || !(b as any).parentId);
         return list.sort((a, b) => (a.order || 0) - (b.order || 0));
     }, [effectiveBlocks, hasRealBlocks]);
+
+    // Debug: verificar blocos filtrados
+    React.useEffect(() => {
+        console.log('🔍 [ModularIntroStep] Renderização:', {
+            hasRealBlocks,
+            topLevelBlocksCount: topLevelBlocks.length,
+            topLevelBlocksIds: topLevelBlocks.map(b => b.id),
+            topLevelBlocksTypes: topLevelBlocks.map(b => (b as any).type)
+        });
+    }, [hasRealBlocks, topLevelBlocks]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
