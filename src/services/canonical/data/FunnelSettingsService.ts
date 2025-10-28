@@ -19,6 +19,7 @@ import { BaseCanonicalService, ServiceResult } from '@/services/canonical/types'
 import { supabase } from '@/integrations/supabase/customClient';
 import { CacheService } from '@/services/canonical/CacheService';
 import { CanonicalServicesMonitor } from '@/services/canonical/monitoring';
+import type { Json } from '@/integrations/supabase/types';
 
 // ============================================================================
 // TYPES
@@ -289,23 +290,23 @@ export class FunnelSettingsService extends BaseCanonicalService {
   // ============================================================================
 
   async updateDomain(funnelId: string, domain: Partial<DomainSettings>): Promise<ServiceResult<PublicationSettings>> {
-    return this.updateSettings(funnelId, { domain });
+    return this.updateSettings(funnelId, { domain } as Partial<PublicationSettings>);
   }
 
   async updateSEO(funnelId: string, seo: Partial<SEOSettings>): Promise<ServiceResult<PublicationSettings>> {
-    return this.updateSettings(funnelId, { seo });
+    return this.updateSettings(funnelId, { seo } as Partial<PublicationSettings>);
   }
 
   async updateTracking(funnelId: string, tracking: Partial<TrackingSettings>): Promise<ServiceResult<PublicationSettings>> {
-    return this.updateSettings(funnelId, { tracking });
+    return this.updateSettings(funnelId, { tracking } as Partial<PublicationSettings>);
   }
 
   async updateResults(funnelId: string, results: Partial<ResultsSettings>): Promise<ServiceResult<PublicationSettings>> {
-    return this.updateSettings(funnelId, { results });
+    return this.updateSettings(funnelId, { results } as Partial<PublicationSettings>);
   }
 
   async updateSecurity(funnelId: string, security: Partial<SecuritySettings>): Promise<ServiceResult<PublicationSettings>> {
-    return this.updateSettings(funnelId, { security });
+    return this.updateSettings(funnelId, { security } as Partial<PublicationSettings>);
   }
 
   // ============================================================================
