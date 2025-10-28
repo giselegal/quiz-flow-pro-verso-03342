@@ -8,12 +8,23 @@
 export const BLOCK_TYPE_MAP: Record<string, string> = {
     // Aliases de nomenclatura com/sem hífen
     'options grid': 'options-grid',
+    // Normalizações de caixa/letras comuns
+    'ctabutton': 'cta-inline',
 
     // ====== V3 SECTIONS → BLOCK TYPES (MAPEAMENTO COMPLETO) ======
     // Intro blocks - mapear para componentes completos usados no editor/preview
     // Gargalo #1: corrigir mapeamentos para blocos atômicos reais
     'intro-hero': 'intro-logo-header',    // ✅ CORRIGIDO: apenas logo + linha decorativa (não mais quiz-intro-header)
     'welcome-form': 'intro-form',  // ✅ Mapear para componente correto do registro
+
+    // Intro (Step 01) – seções atômicas v3 (identidade preservada)
+    'quiz-intro-header': 'quiz-intro-header',
+    'intro-title': 'intro-title',
+    'intro-image': 'intro-image',
+    'intro-description': 'intro-description',
+    'intro-form': 'intro-form',
+    'footer-copyright': 'footer-copyright',
+    'image-display-inline': 'image-display-inline',
 
     // ✅ Question blocks (Steps 2-11)
     'question-progress': 'question-progress',
@@ -43,7 +54,7 @@ export const BLOCK_TYPE_MAP: Record<string, string> = {
     'result-secondary-styles': 'result-secondary-styles',
     'result-image': 'result-image',
     'result-description': 'result-description',
-    
+
     // Legacy sections (v2 format - mapeando para atomic v3)
     'HeroSection': 'result-congrats',  // ✅ CORRIGIDO: usa bloco atômico
     'StyleProfileSection': 'result-main',  // ✅ CORRIGIDO: usa bloco atômico

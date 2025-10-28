@@ -61,16 +61,22 @@ export default function ModularIntroStep({
     const [fallbackBlocks, setFallbackBlocks] = React.useState<Block[]>([]);
     const effectiveBlocks = React.useMemo(() => (Array.isArray(blocks) && blocks.length > 0) ? blocks : fallbackBlocks, [blocks, fallbackBlocks]);
 
+    // Evitar auto-load repetido em modo Strict/edição
+    const autoloadRequestedRef = React.useRef(false);
     React.useEffect(() => {
         // Se já temos blocos via props, não precisa carregar
         if (Array.isArray(blocks) && blocks.length > 0) return;
+        if (autoloadRequestedRef.current) return;
+        autoloadRequestedRef.current = true;
         // Tentar extrair step key canônica (ex.: step-01)
         const m = String(data?.id || '').match(/step-\d{2}/);
         const stepKey = m ? m[0] : 'step-01';
         try {
             const comps = safeGetTemplateBlocks(stepKey, getQuiz21StepsTemplate());
             const asBlocks = blockComponentsToBlocks(comps);
-            if (asBlocks.length) setFallbackBlocks(asBlocks as any);
+            if (Array.isArray(asBlocks) && asBlocks.length > 0) {
+                setFallbackBlocks(asBlocks as any);
+            }
         } catch (e) {
             // noop
         }
