@@ -200,13 +200,14 @@
             "duration": 300
           },
           "content": {
-            "text": "Pergunta 1 de 10"
+            "text": "Pergunta 1 de 10",
+            "subtitle": "QUAL O SEU TIPO DE ROUPA FAVORITA?"
           },
           "parentId": null
         },
         {
           "id": "step-02-options",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 2,
           "properties": {
             "backgroundColor": "transparent",
@@ -220,43 +221,43 @@
             "options": [
               {
                 "id": "natural",
-                "text": "Natural",
-                "image": "/quiz-assets/natural.webp"
+                "text": "Conforto, leveza e praticidade no vestir",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp"
               },
               {
                 "id": "classico",
-                "text": "Clássico",
-                "image": "/quiz-assets/classico.webp"
+                "text": "Discrição, caimento clássico e sobriedade",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp"
               },
               {
                 "id": "contemporaneo",
-                "text": "Contemporâneo",
-                "image": "/quiz-assets/contemporaneo.webp"
+                "text": "Praticidade com um toque de estilo atual",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp"
               },
               {
                 "id": "elegante",
-                "text": "Elegante",
-                "image": "/quiz-assets/elegante.webp"
+                "text": "Elegância refinada, moderna e sem exageros",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"
               },
               {
                 "id": "romantico",
-                "text": "Romântico",
-                "image": "/quiz-assets/romantico.webp"
+                "text": "Delicadeza em tecidos suaves e fluidos",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp"
               },
               {
                 "id": "sexy",
-                "text": "Sexy",
-                "image": "/quiz-assets/sexy.webp"
+                "text": "Sensualidade com destaque para o corpo",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp"
               },
               {
                 "id": "dramatico",
-                "text": "Dramático",
-                "image": "/quiz-assets/dramatico.webp"
+                "text": "Impacto visual com peças estruturadas e assimétricas",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp"
               },
               {
                 "id": "criativo",
-                "text": "Criativo",
-                "image": "/quiz-assets/criativo.webp"
+                "text": "Mix criativo com formas ousadas e originais",
+                "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp"
               }
             ],
             "columns": 2,
