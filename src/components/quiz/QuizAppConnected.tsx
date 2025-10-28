@@ -494,7 +494,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
             return (
                 <div
                     key={idx}
-                    className={`normalized-block-wrapper${  debug ? ' outline outline-2 outline-emerald-400/70 rounded-sm relative' : ''}`}
+                    className={`normalized-block-wrapper${debug ? ' outline outline-2 outline-emerald-400/70 rounded-sm relative' : ''}`}
                     data-block-type={block.type}
                 >
                     {debug && (
@@ -624,9 +624,12 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 );
             case 'question': {
                 const answers = (state.answers[state.currentStep] || []) as string[];
+                // 🎯 MIGRAÇÃO BLOCKS: Passar blocos do quiz21-complete.json
+                const questionBlocks = (currentStepData as any).blocks || [];
                 return (
                     <QuestionStep
                         data={currentStepData as any}
+                        blocks={questionBlocks}
                         currentAnswers={answers}
                         onAnswersChange={(newAnswers: string[]) => {
                             // Atualiza respostas e avança se completou requiredSelections
@@ -769,7 +772,7 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                         )}
                     </div>
                 ) : normalizedStep ? (
-                    <div className={`max-w-6xl mx-auto px-4 py-8 space-y-8${  normalizedDebug ? ' normalized-debug-mode' : ''}`}>
+                    <div className={`max-w-6xl mx-auto px-4 py-8 space-y-8${normalizedDebug ? ' normalized-debug-mode' : ''}`}>
                         {normalizedStep.blocks.map((b: any, idx: number) => (
                             <NormalizedBlockRenderer key={idx} block={b} idx={idx} debug={normalizedDebug} />
                         ))}
