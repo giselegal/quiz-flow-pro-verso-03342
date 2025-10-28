@@ -8,14 +8,14 @@ export const TEMPLATE_FILES: string[] = Array.from({ length: 21 }, (_, i) => {
   const n = String(i + 1).padStart(2, '0');
   return `step-${n}-template.json`;
 });
-import { unifiedTemplateService } from '../services/UnifiedTemplateService';
+import { templateService } from '@/services/canonical/TemplateService';
 import type { Block } from '../types/editor';
 import { StorageService } from '@/services/core/StorageService';
 
 /**
  * 🎯 TEMPLATE MANAGER - FASE 2 CONSOLIDADO
  * 
- * Agora usa UnifiedTemplateService internamente
+ * Agora usa canonical/TemplateService internamente
  * Mantém API backward compatible
  */
 export class TemplateManager {
@@ -29,7 +29,12 @@ export class TemplateManager {
   private static PUBLISH_PREFIX = 'quiz_published_blocks_';
 
   static async loadStepBlocks(stepId: string, funnelId?: string): Promise<Block[]> {
-    const raw = await unifiedTemplateService.loadStepBlocks(stepId, funnelId);
+    const result = await templateService.getStep(stepId, funnelId);
+    if (!result.success || !result.data) {
+      console.warn(`[TemplateManager] Failed to load ${stepId}:`, result.error);
+      return [];
+    }
+    const raw = result.data;
     // Normalizar tipo para o Block do editor (BlockType)
     const normalized: Block[] = (raw || []).map((b: any, idx: number) => ({
       id: String(b?.id ?? `${stepId}-block-${idx}`),
