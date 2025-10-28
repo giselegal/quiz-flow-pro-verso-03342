@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Flow Pro - Versão Pública</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        .selected-option {
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .progress-bar {
+            transition: width 0.5s ease-out;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Container Principal -->
+    <div id="quiz-container"></div>
+
+    <script>
+        // ============================================================================
+        // DADOS DO QUIZ (simulação - no Next.js viria do Supabase)
+        // ============================================================================
+        const QUIZ_DATA = {
+            id: 'demo-quiz-001',
+            title: 'Descubra Seu Perfil Empreendedor',
+            description: 'Em apenas 5 minutos, descubra qual é o seu estilo de empreendedorismo!',
+            totalSteps: 6,
+            steps: [
+                {
+                    id: 'intro',
+                    type: 'intro',
+                    title: 'Descubra Seu Perfil Empreendedor',
+                    description: 'Um quiz rápido e divertido para identificar suas características como empreendedor.',
+                    logo: '🚀'
+                },
+                {
+                    id: 'step-01',
+                    type: 'question',
+                    questionNumber: '1',
+                    questionText: 'Como você lida com desafios?',
+                    instructions: 'Escolha a opção que mais combina com você',
+                    requiredSelections: 1,
+                    options: [
+                        { id: 'q1-a', text: 'Enfrento de cabeça, busco soluções imediatas', value: 'action' },
+                        { id: 'q1-b', text: 'Analiso cuidadosamente antes de agir', value: 'strategy' },
+                        { id: 'q1-c', text: 'Busco ajuda e colaboração', value: 'team' },
+                        { id: 'q1-d', text: 'Adapto-me conforme a situação evolui', value: 'flexible' }
+                    ]
+                },
+                {
+                    id: 'step-02',
+                    type: 'question',
+                    questionNumber: '2',
+                    questionText: 'Qual seu maior motivador?',
+                    instructions: 'Selecione até 2 opções',
+                    requiredSelections: 2,
+                    options: [
+                        { id: 'q2-a', text: '💰 Liberdade Financeira' },
+                        { id: 'q2-b', text: '🌟 Impacto Social' },
+                        { id: 'q2-c', text: '🎯 Realização Pessoal' },
+                        { id: 'q2-d', text: '🚀 Inovação' },
+                        { id: 'q2-e', text: '👥 Construir Equipe' },
+                        { id: 'q2-f', text: '🏆 Reconhecimento' }
+                    ]
+                },
+                {
+                    id: 'step-03',
+                    type: 'question',
+                    questionNumber: '3',
+                    questionText: 'Como você toma decisões importantes?',
+                    requiredSelections: 1,
+                    options: [
+                        { id: 'q3-a', text: 'Confio na intuição' },
+                        { id: 'q3-b', text: 'Analiso dados e métricas' },
+                        { id: 'q3-c', text: 'Consulto mentores/especialistas' },
+                        { id: 'q3-d', text: 'Testo rapidamente (MVP)' }
+                    ]
+                },
+                {
+                    id: 'transition',
+                    type: 'transition',
+                    message: 'Analisando suas respostas...'
+                },
+                {
+                    id: 'result',
+                    type: 'result',
+                    title: 'Você é um Empreendedor Visionário! 🌟',
+                    description: 'Parabéns! Seu perfil mostra características de um empreendedor que pensa grande e age com estratégia.',
+                    characteristics: [
+                        'Visão de longo prazo e planejamento estratégico',
+                        'Capacidade de inspirar e liderar equipes',
+                        'Foco em inovação e transformação',
+                        'Resiliência frente a desafios'
+                    ],
+                    ctaText: 'Baixar Relatório Completo',
+                    ctaUrl: '#'
+                }
+            ]
+        };
+
+        // ============================================================================
+        // ESTADO GLOBAL
+        // ============================================================================
+        let state = {
+            currentStepIndex: 0,
+            answers: {},
+            userName: '',
+            startTime: Date.now(),
+            completed: false
+        };
+
+        // Carregar do localStorage
+        const savedState = localStorage.getItem(`quiz_${QUIZ_DATA.id}`);
+        if (savedState) {
+            try {
+                state = JSON.parse(savedState);
+            } catch (e) {
+                console.error('Erro ao carregar estado:', e);
+            }
+        }
+
+        // ============================================================================
+        // UTILITÁRIOS
+        // ============================================================================
+        function saveState() {
+            localStorage.setItem(`quiz_${QUIZ_DATA.id}`, JSON.stringify(state));
+        }
+
+        function computeProgress() {
+            return Math.round(((state.currentStepIndex + 1) / QUIZ_DATA.totalSteps) * 100);
+        }
+
+        function validateAnswer(stepId) {
+            const step = QUIZ_DATA.steps[state.currentStepIndex];
+            const answers = state.answers[stepId] || [];
+            return answers.length === (step.requiredSelections || 1);
+        }
+
+        // ============================================================================
+        // COMPONENTES DE RENDERIZAÇÃO
+        // ============================================================================
+        function renderIntro(step) {
+            return `
+                <div class="min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center p-6">
+                    <div class="max-w-2xl w-full text-center fade-in">
+                        ${step.logo ? `<div class="text-8xl mb-8 scale-in">${step.logo}</div>` : ''}
+                        
+                        <h1 class="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                            ${step.title}
+                        </h1>
+                        
+                        ${step.description ? `
+                            <p class="text-xl text-gray-600 mb-12 leading-relaxed">
+                                ${step.description}
+                            </p>
+                        ` : ''}
+
+                        <div class="bg-white p-8 rounded-2xl shadow-lg mb-6">
+                            <label class="block text-left mb-3 text-sm font-medium text-gray-700">
+                                Como você gostaria de ser chamado?
+                            </label>
+                            <input
+                                id="userName"
+                                type="text"
+                                value="${state.userName || ''}"
+                                placeholder="Digite seu nome"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-yellow-600 focus:outline-none text-lg"
+                            />
+                        </div>
+
+                        <button
+                            onclick="handleStart()"
+                            id="startButton"
+                            class="w-full md:w-auto px-12 py-4 rounded-xl font-semibold text-lg transition-all transform bg-yellow-600 text-white hover:bg-yellow-700 hover:scale-105 shadow-lg"
+                        >
+                            Começar Quiz →
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderQuestion(step) {
+            const currentAnswers = state.answers[step.id] || [];
+            const progress = computeProgress();
+            const isValid = validateAnswer(step.id);
+
+            return `
+                <div class="min-h-screen bg-gradient-to-b from-white to-gray-50">
+                    <!-- Progress Bar -->
+                    <div class="fixed top-0 left-0 right-0 h-2 bg-gray-200 z-50">
+                        <div class="h-full bg-gradient-to-r from-yellow-600 to-yellow-800 progress-bar" style="width: ${progress}%"></div>
+                    </div>
+
+                    <div class="container mx-auto px-4 py-12 pt-20 max-w-4xl fade-in">
+                        <!-- Header -->
+                        <div class="mb-12">
+                            <div class="text-sm text-gray-500 mb-3 font-medium">
+                                Pergunta ${step.questionNumber} de ${QUIZ_DATA.totalSteps}
+                            </div>
+                            <h2 class="text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                                ${step.questionText}
+                            </h2>
+                            ${step.instructions ? `
+                                <p class="text-lg text-gray-600">${step.instructions}</p>
+                            ` : ''}
+                        </div>
+
+                        <!-- Options Grid -->
+                        <div class="grid gap-4 mb-12 ${step.options.length > 4 ? 'md:grid-cols-3' : 'md:grid-cols-2'}">
+                            ${step.options.map(option => {
+                const isSelected = currentAnswers.includes(option.id);
+                return `
+                                    <button
+                                        onclick="handleOptionClick('${step.id}', '${option.id}')"
+                                        class="flex flex-col items-center p-6 border-2 rounded-2xl transition-all duration-300 ${isSelected
+                        ? 'border-yellow-800 bg-gradient-to-br from-white to-yellow-50 shadow-xl selected-option'
+                        : 'border-gray-200 bg-white hover:border-yellow-600 hover:shadow-md'
+                    }"
+                                    >
+                                        <p class="text-center font-medium leading-relaxed text-gray-900 text-lg">
+                                            ${option.text}
+                                        </p>
+
+                                        ${isSelected ? `
+                                            <div class="mt-4 w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center shadow-lg scale-in">
+                                                <span class="text-white font-bold">✓</span>
+                                            </div>
+                                        ` : ''}
+                                    </button>
+                                `;
+            }).join('')}
+                        </div>
+
+                        <!-- Navigation -->
+                        <div class="flex gap-4 justify-between items-center">
+                            <button
+                                onclick="handlePrev()"
+                                ${state.currentStepIndex <= 1 ? 'disabled' : ''}
+                                class="px-8 py-3 border-2 border-gray-300 rounded-xl font-medium text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                ← Voltar
+                            </button>
+
+                            <div class="flex-1 text-center">
+                                ${(step.requiredSelections || 1) > 1 ? `
+                                    <p class="text-sm text-gray-500">
+                                        ${currentAnswers.length} de ${step.requiredSelections} selecionado(s)
+                                    </p>
+                                ` : ''}
+                            </div>
+
+                            <button
+                                onclick="handleNext()"
+                                ${!isValid ? 'disabled' : ''}
+                                class="px-12 py-3 rounded-xl font-semibold transition-all transform ${isValid
+                    ? 'bg-yellow-600 text-white hover:bg-yellow-700 hover:scale-105 shadow-lg'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                }"
+                            >
+                                Continuar →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTransition(step) {
+            setTimeout(handleNext, 2000);
+
+            return `
+                <div class="min-h-screen bg-gradient-to-br from-yellow-600 to-yellow-800 flex items-center justify-center p-6">
+                    <div class="text-center text-white fade-in">
+                        <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full mx-auto mb-6 spinner"></div>
+                        <h2 class="text-3xl font-bold mb-4">${step.message}</h2>
+                        <p class="text-lg opacity-90">Aguarde um momento...</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderResult(step) {
+            return `
+                <div class="min-h-screen bg-gradient-to-b from-white to-gray-50 py-12 px-6">
+                    <div class="max-w-3xl mx-auto fade-in">
+                        <div class="text-center mb-12">
+                            <div class="inline-block mb-6 scale-in">
+                                <div class="w-24 h-24 bg-gradient-to-br from-yellow-600 to-yellow-800 rounded-full flex items-center justify-center text-white text-5xl shadow-xl">
+                                    🎉
+                                </div>
+                            </div>
+
+                            <h1 class="text-5xl font-bold text-gray-900 mb-4">
+                                Parabéns${state.userName ? `, ${state.userName}` : ''}!
+                            </h1>
+                            
+                            <p class="text-2xl text-gray-600 mb-8">
+                                ${step.title}
+                            </p>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl shadow-lg mb-8">
+                            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                                ${step.description}
+                            </p>
+
+                            ${step.characteristics ? `
+                                <div class="space-y-3">
+                                    <h3 class="font-bold text-xl text-gray-900 mb-4">
+                                        Suas Características:
+                                    </h3>
+                                    ${step.characteristics.map((char, index) => `
+                                        <div class="flex items-start gap-3 fade-in" style="animation-delay: ${index * 100}ms">
+                                            <span class="text-yellow-600 text-xl">✓</span>
+                                            <p class="text-gray-700">${char}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            ${step.ctaUrl ? `
+                                <a
+                                    href="${step.ctaUrl}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="px-10 py-4 bg-gradient-to-r from-yellow-600 to-yellow-800 text-white rounded-xl font-semibold text-lg hover:scale-105 transition-transform shadow-lg text-center"
+                                >
+                                    ${step.ctaText || 'Saiba Mais'} →
+                                </a>
+                            ` : ''}
+
+                            <button
+                                onclick="handleRestart()"
+                                class="px-10 py-4 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 transition-all"
+                            >
+                                🔄 Refazer Quiz
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================================
+        // HANDLERS
+        // ============================================================================
+        function handleStart() {
+            const nameInput = document.getElementById('userName');
+            const name = nameInput ? nameInput.value.trim() : '';
+
+            if (!name) {
+                alert('Por favor, digite seu nome para começar!');
+                return;
+            }
+
+            state.userName = name;
+            state.currentStepIndex = 1;
+            state.startTime = Date.now();
+            saveState();
+            render();
+        }
+
+        function handleOptionClick(stepId, optionId) {
+            const step = QUIZ_DATA.steps[state.currentStepIndex];
+            const currentAnswers = state.answers[stepId] || [];
+            const isSelected = currentAnswers.includes(optionId);
+            const maxSelections = step.requiredSelections || 1;
+
+            let newAnswers;
+            if (isSelected) {
+                newAnswers = currentAnswers.filter(id => id !== optionId);
+            } else if (currentAnswers.length < maxSelections) {
+                newAnswers = [...currentAnswers, optionId];
+            } else if (maxSelections === 1) {
+                newAnswers = [optionId];
+            } else {
+                return; // Já atingiu máximo de seleções
+            }
+
+            state.answers[stepId] = newAnswers;
+            saveState();
+            render();
+        }
+
+        function handleNext() {
+            if (state.currentStepIndex < QUIZ_DATA.steps.length - 1) {
+                state.currentStepIndex++;
+                saveState();
+                render();
+            } else {
+                state.completed = true;
+                saveState();
+                render();
+            }
+        }
+
+        function handlePrev() {
+            if (state.currentStepIndex > 1) {
+                state.currentStepIndex--;
+                saveState();
+                render();
+            }
+        }
+
+        function handleRestart() {
+            if (confirm('Deseja realmente refazer o quiz? Suas respostas serão perdidas.')) {
+                state = {
+                    currentStepIndex: 0,
+                    answers: {},
+                    userName: '',
+                    startTime: Date.now(),
+                    completed: false
+                };
+                localStorage.removeItem(`quiz_${QUIZ_DATA.id}`);
+                render();
+            }
+        }
+
+        // ============================================================================
+        // RENDERIZAÇÃO PRINCIPAL
+        // ============================================================================
+        function render() {
+            const container = document.getElementById('quiz-container');
+            const currentStep = QUIZ_DATA.steps[state.currentStepIndex];
+
+            let html = '';
+            switch (currentStep.type) {
+                case 'intro':
+                    html = renderIntro(currentStep);
+                    break;
+                case 'question':
+                case 'strategic-question':
+                    html = renderQuestion(currentStep);
+                    break;
+                case 'transition':
+                    html = renderTransition(currentStep);
+                    break;
+                case 'result':
+                case 'offer':
+                    html = renderResult(currentStep);
+                    break;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Renderizar inicialmente
+        render();
+    </script>
+</body>
+
+</html>
