@@ -45,6 +45,18 @@ import TransitionMessageBlock from './atomic/TransitionMessageBlock';
 // Blocos Atômicos Adicionais
 import CTAButtonBlock from './atomic/CTAButtonBlock';
 import IntroFormBlock from './atomic/IntroFormBlock';
+import IntroTitleBlock from './atomic/IntroTitleBlock';
+import IntroDescriptionBlock from './atomic/IntroDescriptionBlock';
+import IntroImageBlock from './atomic/IntroImageBlock';
+import IntroLogoBlock from './atomic/IntroLogoBlock';
+import IntroLogoHeaderBlock from './atomic/IntroLogoHeaderBlock';
+import QuestionTextBlock from './atomic/QuestionTextBlock';
+import QuestionNumberBlock from './atomic/QuestionNumberBlock';
+import QuestionProgressBlock from './atomic/QuestionProgressBlock';
+import QuestionInstructionsBlock from './atomic/QuestionInstructionsBlock';
+import ResultCTAPrimaryBlock from './atomic/ResultCTAPrimaryBlock';
+import ResultCTASecondaryBlock from './atomic/ResultCTASecondaryBlock';
+import FooterCopyrightBlock from './atomic/FooterCopyrightBlock';
 
 // Blocos Atômicos de Resultado (Step 20)
 import ResultHeaderBlock from './atomic/ResultHeaderBlock';
@@ -141,38 +153,61 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'quiz-intro-header': QuizIntroHeaderBlock,
   'quiz-question': QuizQuestionBlock,
   'quiz-option': QuizOptionBlock,
-  'quiz-options': OptionsGridBlock, // ✅ CORRIGIDO: usar componente novo
+  'quiz-options': OptionsGridBlock,
   'quiz-header': QuizHeaderBlock,
   'quiz-title': QuizTitleBlock,
   'options-grid': OptionsGridBlock,
-  'options grid': OptionsGridBlock, // ✅ NOVO: alias com espaço
+  'options grid': OptionsGridBlock, // ✅ alias com espaço
+
+  // Text & Heading
   'text-inline': TextInlineBlock,
   'heading-inline': HeadingInlineBlock,
   heading: HeadingInlineBlock,
   headline: HeadingInlineBlock,
   'headline-inline': HeadingInlineBlock,
-  // Navegação de perguntas (usado em steps de perguntas e como alias em alguns templates)
+
+  // Question blocks
   'question-navigation': QuestionNavigationBlock,
   'quiz-navigation': QuestionNavigationBlock,
-  'question-progress': QuestionNavigationBlock, // ✅ NOVO: alias
-  // Alias comum em templates antigos
-  'question-title': TextInlineBlock,
+  'question-progress': QuestionProgressBlock, // ✅ CORRIGIDO: usar componente específico
+  'question-text': QuestionTextBlock,
+  'question-title': QuestionTextBlock, // alias
+  'question-number': QuestionNumberBlock,
+  'question-instructions': QuestionInstructionsBlock,
+
+  // Intro blocks
+  'intro-form': IntroFormBlock,
+  'intro-title': IntroTitleBlock,
+  'intro-description': IntroDescriptionBlock,
+  'intro-image': IntroImageBlock,
+  'intro-logo': IntroLogoBlock,
+  'intro-logo-header': IntroLogoHeaderBlock,
+
+  // Buttons & CTA
   'button-inline': ButtonInlineBlock,
   'cta-inline': ButtonInlineBlock,
-  'CTAButton': CTAButtonBlock, // ✅ NOVO: CTA Button atômico
+  'CTAButton': CTAButtonBlock,
+
+  // Form
   'form-input': FormInputBlock,
-  'intro-form': IntroFormBlock, // ✅ NOVO: Intro Form atômico
   'image-inline': ImageInlineBlock,
+
+  // Footer
+  'footer-copyright': FooterCopyrightBlock,
+
+  // Other components
   'fashion-ai-generator': FashionAIGeneratorBlock,
   'mentor-section-inline': MentorSectionInlineBlock,
   'testimonial-card-inline': TestimonialCardInlineBlock,
   testimonials: TestimonialsInlineBlock,
   'testimonials-carousel-inline': TestimonialsCarouselInlineBlock,
+
   // Sections (compatibilidade)
-  'question-hero': QuestionHeroSection, // ✅ NOVO: Question Hero Section
-  'transition-hero': TransitionHeroSection, // ✅ NOVO: Transition Hero Section
-  'result-congrats': ResultHeaderBlock, // ✅ NOVO: alias para result-header
-  'result-progress-bars': ResultSecondaryStylesBlock, // ✅ NOVO: alias
+  'question-hero': QuestionHeroSection,
+  'transition-hero': TransitionHeroSection,
+  'result-congrats': ResultHeaderBlock, // alias
+  'result-progress-bars': ResultSecondaryStylesBlock, // alias
+
   // Step20 Components
   'step20-result-header': Step20ResultHeaderBlock,
   'step20-style-reveal': Step20StyleRevealBlock,
@@ -181,25 +216,31 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'step20-secondary-styles': Step20SecondaryStylesBlock,
   'step20-personalized-offer': Step20PersonalizedOfferBlock,
   'step20-complete-template': Step20ResultHeaderBlock,
-  // ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
+
+  // ✅ Result calculation
   'result-calculation': ResultCalculationSection,
   ResultCalculationSection,
-  // ✅ BLOCOS ATÔMICOS - Transição (Steps 12 & 19)
+
+  // ✅ Transition Blocks (Steps 12 & 19)
   'transition-title': TransitionTitleBlock,
   'transition-loader': TransitionLoaderBlock,
   'transition-text': TransitionTextBlock,
   'transition-progress': TransitionProgressBlock,
   'transition-message': TransitionMessageBlock,
-  // ✅ BLOCOS ATÔMICOS - Resultado (Step 20)
+
+  // ✅ Result Blocks (Step 20)
   'result-header': ResultHeaderBlock,
   'result-main': ResultMainBlock,
   'result-image': ResultImageBlock,
   'result-description': ResultDescriptionBlock,
   'result-characteristics': ResultCharacteristicsBlock,
   'result-cta': ResultCTABlock,
+  'result-cta-primary': ResultCTAPrimaryBlock,
+  'result-cta-secondary': ResultCTASecondaryBlock,
   'result-secondary-styles': ResultSecondaryStylesBlock,
   'result-style': ResultStyleBlock,
   'result-share': ResultShareBlock,
+
   // ✅ FASE 3A: Componentes inline específicos
   'image-display-inline': ImageDisplayInlineBlock,
   'decorative-bar-inline': DecorativeBarInlineBlock,
