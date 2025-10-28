@@ -379,7 +379,7 @@
         },
         {
           "id": "options-grid-03",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 2,
           "properties": {
             "backgroundColor": "transparent",
@@ -578,7 +578,7 @@
         },
         {
           "id": "options-grid-04",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "backgroundColor": "transparent",
@@ -769,7 +769,7 @@
         },
         {
           "id": "options-grid-05",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -950,7 +950,7 @@
         },
         {
           "id": "options-grid-06",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -1139,7 +1139,7 @@
         },
         {
           "id": "options-grid-07",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -1328,7 +1328,7 @@
         },
         {
           "id": "options-grid-08",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -1517,7 +1517,7 @@
         },
         {
           "id": "options-grid-09",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -1706,7 +1706,7 @@
         },
         {
           "id": "options-grid-10",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -1895,7 +1895,7 @@
         },
         {
           "id": "options-grid-11",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -2167,7 +2167,7 @@
         },
         {
           "id": "options-grid-13",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -2326,7 +2326,7 @@
         },
         {
           "id": "options-grid-14",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -2485,7 +2485,7 @@
         },
         {
           "id": "options-grid-15",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -2644,7 +2644,7 @@
         },
         {
           "id": "options-grid-16",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -2803,7 +2803,7 @@
         },
         {
           "id": "options-grid-17",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",
@@ -2962,7 +2962,7 @@
         },
         {
           "id": "options-grid-18",
-          "type": "options grid",
+          "type": "options-grid",
           "order": 3,
           "properties": {
             "type": "slideUp",

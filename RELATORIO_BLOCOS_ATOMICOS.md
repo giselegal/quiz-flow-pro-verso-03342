@@ -10,8 +10,8 @@
 | ✅ Blocos atômicos corretos | 47 |
 | ⚠️ Blocos que deveriam ser atômicos | 0 |
 | 📦 Blocos de seção (v3) | 18 |
-| 🔧 Blocos genéricos (OK) | 20 |
-| ❓ Blocos desconhecidos | 16 |
+| 🔧 Blocos genéricos (OK) | 35 |
+| ❓ Blocos desconhecidos | 1 |
 | **Taxa de uso correto** | **100.0%** |
 
 ## ✅ Conclusão
