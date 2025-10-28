@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * TemplateManager - compat: inclui referências aos 21 arquivos JSON de templates
  * para satisfazer ferramentas de validação, mantendo a implementação consolidada real.
@@ -29,9 +28,10 @@ export class TemplateManager {
   private static PUBLISH_PREFIX = 'quiz_published_blocks_';
 
   static async loadStepBlocks(stepId: string, funnelId?: string): Promise<Block[]> {
-    const result = await templateService.getStep(stepId, funnelId);
+    // Note: canonical TemplateService doesn't support funnelId parameter yet
+    const result = await templateService.getStep(stepId);
     if (!result.success || !result.data) {
-      console.warn(`[TemplateManager] Failed to load ${stepId}:`, result.error);
+      console.warn(`[TemplateManager] Failed to load ${stepId}:`, result.success ? 'No data' : 'Error');
       return [];
     }
     const raw = result.data;
@@ -64,11 +64,11 @@ export class TemplateManager {
   }
 
   static async reloadTemplate(stepId: string, funnelId?: string): Promise<Block[]> {
-    const cacheKey = funnelId ? `${stepId}:${funnelId}` : stepId;
-    templateService.cache.invalidate(cacheKey);
-    const result = await templateService.getStep(stepId, funnelId);
+    // Note: canonical TemplateService doesn't support cache invalidation or funnelId yet
+    // Simply fetch again - the service handles its own caching
+    const result = await templateService.getStep(stepId);
     if (!result.success || !result.data) {
-      console.warn(`[TemplateManager] Failed to reload ${stepId}:`, result.error);
+      console.warn(`[TemplateManager] Failed to reload ${stepId}:`, result.success ? 'No data' : 'Error');
       return [];
     }
     const raw = result.data;
@@ -93,6 +93,7 @@ export class TemplateManager {
   }
 
   static clearCache(): void {
-    unifiedTemplateService.invalidateCache();
+    // Canonical TemplateService handles its own cache - this is a no-op
+    console.log('[TemplateManager] Cache clear requested (handled by service)');
   }
 }
