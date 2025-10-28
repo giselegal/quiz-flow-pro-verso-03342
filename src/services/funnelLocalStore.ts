@@ -15,5 +15,5 @@
 // Re-export everything from the migrated storage service
 export * from './migratedFunnelLocalStore';
 export { migratedFunnelLocalStore as funnelLocalStore } from './migratedFunnelLocalStore';
-// Compatibilidade: exportar UnifiedStorageService para consumidores legados
-export { UnifiedStorageService } from './UnifiedStorageService';
+// Compatibilidade: UnifiedStorageService removido - use canonical/StorageService
+// export { StorageService } from '@/services/canonical/StorageService';
