@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 import { useUnifiedCRUD } from '@/contexts';
 import { editorEvents } from '@/events/editorEvents';
-import { QUIZ_STEPS } from '@/data/quizSteps';
+import { templateService } from '@/services/canonical/TemplateService';
 
 // Reusar tipo de modo localmente (evitar import circular se houver)
 export type EditorMode = 'visual' | 'builder' | 'funnel' | 'headless' | 'admin-integrated' | 'quiz';
@@ -151,7 +151,9 @@ export function useEditorBootstrap(): UseEditorBootstrapResult {
         }
 
         try {
-            const quizSeedArray = Array.isArray(QUIZ_STEPS) ? QUIZ_STEPS as any[] : Object.values(QUIZ_STEPS as any);
+            // ✅ MIGRADO: Usar TemplateService ao invés de QUIZ_STEPS
+            const allSteps = templateService.getAllStepsSync();
+            const quizSeedArray = Array.isArray(allSteps) ? allSteps as any[] : Object.values(allSteps as any);
             funnel.quizSteps = quizSeedArray.map(s => ({ ...s }));
             seedGuardRef.current = true;
             setSeedApplied(true);
