@@ -13,7 +13,10 @@
  * - Auto-preencher nextStep quando ausente (navegação linear por order)
  * - Resolver nextStep considerando hierarquia de fontes
  * - Detectar ciclos e steps órfãos
+ * - Aplicar configuração de steps opcionais (ex: step-21)
  */
+
+import { getConfiguredNextStep, isStepEnabled } from '@/config/quizNavigation';
 
 export interface StepNavigationInfo {
   id: string;
@@ -63,9 +66,11 @@ export class NavigationService {
       this.steps.set(step.id, step);
     }
 
-    // Construir mapa básico
+    // Construir mapa básico aplicando configuração de steps opcionais
     for (const step of steps) {
-      this.navigationMap[step.id] = step.nextStep ?? null;
+      const defaultNext = step.nextStep ?? null;
+      // Aplicar configuração (ex: desabilitar step-21 se ENABLE_OFFER_STEP=false)
+      this.navigationMap[step.id] = getConfiguredNextStep(step.id, defaultNext);
     }
 
     return this.navigationMap;
@@ -235,8 +240,9 @@ export class NavigationService {
    * 
    * Ordem de prioridade:
    * 1. nextStep explícito no step
-   * 2. Navegação linear por order
-   * 3. null (step terminal)
+   * 2. Configuração de steps opcionais (ex: step-21)
+   * 3. Navegação linear por order
+   * 4. null (step terminal)
    * 
    * @param stepId - ID do step atual
    * @param steps - Lista de steps disponíveis
@@ -245,7 +251,9 @@ export class NavigationService {
   resolveNextStep(stepId: string, steps?: StepNavigationInfo[]): string | null {
     // Se há mapa de navegação construído, usar
     if (this.navigationMap[stepId] !== undefined) {
-      return this.navigationMap[stepId];
+      const defaultNext = this.navigationMap[stepId];
+      // Aplicar configuração de steps opcionais
+      return getConfiguredNextStep(stepId, defaultNext);
     }
 
     // Se steps foram fornecidos, construir mapa temporário
@@ -260,17 +268,21 @@ export class NavigationService {
       const step = sorted[index];
 
       // 1. nextStep explícito
+      let nextStepId: string | null = null;
       if (step.nextStep !== undefined) {
-        return step.nextStep;
+        nextStepId = step.nextStep;
       }
-
       // 2. Navegação linear
-      if (index < sorted.length - 1) {
-        return sorted[index + 1].id;
+      else if (index < sorted.length - 1) {
+        nextStepId = sorted[index + 1].id;
+      }
+      // 3. Step terminal
+      else {
+        nextStepId = null;
       }
 
-      // 3. Step terminal
-      return null;
+      // Aplicar configuração de steps opcionais
+      return getConfiguredNextStep(stepId, nextStepId);
     }
 
     // Sem informações suficientes

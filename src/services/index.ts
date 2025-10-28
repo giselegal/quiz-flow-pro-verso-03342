@@ -26,6 +26,16 @@ export { UnifiedStorageService } from './UnifiedStorageService';
 // Configuration Services
 export { SupabaseConfigurationStorage } from './SupabaseConfigurationStorage';
 
+// Quiz Navigation Configuration
+export {
+  QUIZ_NAV_CONFIG,
+  QUIZ_STRUCTURE,
+  getConfiguredNextStep,
+  isOptionalStep,
+  getEnabledSteps,
+  isStepEnabled,
+} from '../config/quizNavigation';
+
 // Types
 export type {
   StepNavigationInfo,
