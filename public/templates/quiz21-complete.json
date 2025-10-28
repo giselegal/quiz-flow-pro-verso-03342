@@ -3278,8 +3278,8 @@
             "order": 7
           },
           "content": {
-            "text": "Quero Dominar Meu Estilo em 5 Passos",
-            "url": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+            "text": "{ctaPrimaryText}",
+            "url": "{ctaPrimaryUrl}",
             "variant": "primary",
             "size": "large",
             "fullWidth": true,
@@ -3350,8 +3350,8 @@
             "order": 10
           },
           "content": {
-            "text": "Garantir Minha Vaga Agora",
-            "url": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+            "text": "{ctaSecondaryText}",
+            "url": "{ctaSecondaryUrl}",
             "variant": "primary",
             "size": "large",
             "fullWidth": true,

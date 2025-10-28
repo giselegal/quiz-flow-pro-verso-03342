@@ -1,7 +1,7 @@
 /**
  * 🏗️ BUILD-TIME TEMPLATES EMBEDDED
  * 
- * Gerado automaticamente em: 2025-10-28T03:34:02.683Z
+ * Gerado automaticamente em: 2025-10-28T04:50:00.709Z
  * Total de steps: 21
  * Total de blocos: 99
  * 
@@ -2251,8 +2251,8 @@ const embedded: Record<string, Block[]> = {
           "order": 7
         },
         "content": {
-          "text": "Quero Dominar Meu Estilo em 5 Passos",
-          "url": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+          "text": "{ctaPrimaryText}",
+          "url": "{ctaPrimaryUrl}",
           "variant": "primary",
           "size": "large",
           "fullWidth": true,
@@ -2323,8 +2323,8 @@ const embedded: Record<string, Block[]> = {
           "order": 10
         },
         "content": {
-          "text": "Garantir Minha Vaga Agora",
-          "url": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+          "text": "{ctaSecondaryText}",
+          "url": "{ctaSecondaryUrl}",
           "variant": "primary",
           "size": "large",
           "fullWidth": true,

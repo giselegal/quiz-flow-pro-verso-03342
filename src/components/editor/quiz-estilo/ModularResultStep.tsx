@@ -18,6 +18,7 @@ import { useResultOptional } from '@/contexts/ResultContext';
 import { interpolateDeep } from '@/utils/interpolate';
 import { useEditor } from '@/components/editor/EditorProviderUnified';
 import { Block } from '@/types/editor';
+import { styleMapping } from '@/data/styles';
 
 interface ModularResultStepProps {
     data: any;
@@ -40,6 +41,7 @@ interface ModularResultStepProps {
 /**
  * Injeta dados dinâmicos do usuário nos blocos
  * Substitui placeholders como {userName}, {resultStyle}
+ * Converte IDs de estilo em nomes legíveis usando styleMapping
  */
 function injectDynamicData(block: Block, userProfile?: ModularResultStepProps['userProfile']): Block {
     if (!userProfile) return block;
@@ -47,17 +49,28 @@ function injectDynamicData(block: Block, userProfile?: ModularResultStepProps['u
     const injectedBlock = { ...block } as Block & { content?: any };
     const blockType = String(injectedBlock.type);
 
+    // Converter ID do estilo para nome legível
+    const getStyleDisplayName = (styleId: string): string => {
+        const style = (styleMapping as any)[styleId];
+        return style?.name || styleId;
+    };
+
+    const primaryStyleName = getStyleDisplayName(userProfile.resultStyle);
+    const secondaryStyleNames = (userProfile.secondaryStyles || []).map(id => getStyleDisplayName(id));
+
     // Injetar no content.text
     if ((injectedBlock as any).content?.text) {
         (injectedBlock as any).content.text = (injectedBlock as any).content.text
             .replace(/{userName}/g, userProfile.userName || 'Visitante')
-            .replace(/{resultStyle}/g, userProfile.resultStyle || 'Clássico Elegante');
+            .replace(/{resultStyle}/g, primaryStyleName)
+            .replace(/{ctaPrimaryText}/g, 'Quero Dominar Meu Estilo em 5 Passos')
+            .replace(/{ctaSecondaryText}/g, 'Garantir Minha Vaga Agora');
     }
 
     // Injetar no content.styleName
     if ((injectedBlock as any).content?.styleName) {
         (injectedBlock as any).content.styleName = (injectedBlock as any).content.styleName
-            .replace(/{resultStyle}/g, userProfile.resultStyle || 'Clássico Elegante');
+            .replace(/{resultStyle}/g, primaryStyleName);
     }
 
     // Injetar dados no content para blocos específicos
@@ -71,28 +84,35 @@ function injectDynamicData(block: Block, userProfile?: ModularResultStepProps['u
     if (blockType === 'result-main') {
         (injectedBlock as any).content = {
             ...(injectedBlock as any).content,
-            resultStyle: userProfile.resultStyle,
+            resultStyle: primaryStyleName,
         };
     }
 
     if (blockType === 'result-progress-bars' && userProfile.scores) {
+        // Converter IDs de estilo em nomes legíveis nos scores
+        const scoresWithNames = userProfile.scores.map(s => ({
+            name: getStyleDisplayName(s.name),
+            score: s.score
+        }));
         (injectedBlock as any).content = {
             ...(injectedBlock as any).content,
-            scores: userProfile.scores,
+            scores: scoresWithNames,
         };
     }
 
     if (blockType === 'result-secondary-styles' && userProfile.secondaryStyles) {
         (injectedBlock as any).content = {
             ...(injectedBlock as any).content,
-            styles: userProfile.secondaryStyles.map(name => ({ name })),
+            styles: secondaryStyleNames.map(name => ({ name })),
         };
     }
 
-    // Injetar no content.url (para imagens dinâmicas)
+    // Injetar no content.url (para imagens dinâmicas e CTAs)
     if ((injectedBlock as any).content?.url) {
         (injectedBlock as any).content.url = (injectedBlock as any).content.url
-            .replace(/{resultStyle}/g, (userProfile.resultStyle || 'natural').toLowerCase().replace(/\s+/g, '-'));
+            .replace(/{resultStyle}/g, (userProfile.resultStyle || 'natural').toLowerCase().replace(/\s+/g, '-'))
+            .replace(/{ctaPrimaryUrl}/g, 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912')
+            .replace(/{ctaSecondaryUrl}/g, 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912');
     }
 
     return injectedBlock;

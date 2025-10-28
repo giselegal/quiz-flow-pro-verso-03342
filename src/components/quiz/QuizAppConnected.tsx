@@ -678,7 +678,13 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                     <ResultStep
                         data={currentStepData as any}
                         blocks={resultBlocks}
-                        userProfile={state.userProfile as any}
+                        userProfile={{
+                            ...state.userProfile,
+                            scores: Object.entries(state.scores).map(([name, score]) => ({
+                                name,
+                                score
+                            }))
+                        } as any}
                     />
                 );
             }
