@@ -182,6 +182,7 @@ export type BlockType =
   | 'guarantee'
   | 'cta'
   | 'offer-cta'
+  | 'offer-hero'
   | 'offerHero'
   | 'products'
   | 'video'
