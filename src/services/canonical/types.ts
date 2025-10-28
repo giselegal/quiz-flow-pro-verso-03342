@@ -148,6 +148,23 @@ export abstract class BaseCanonicalService implements ICanonicalService {
     console.error(`[${this.name}]`, ...args);
   }
 
+  /**
+   * Helper para criar resultado de sucesso
+   */
+  protected success<T>(data: T): ServiceResult<T> {
+    return { success: true, data };
+  }
+
+  /**
+   * Helper para criar resultado de falha
+   */
+  protected failure<T>(errorCode: string, message: string): ServiceResult<T> {
+    return { 
+      success: false, 
+      error: new Error(`[${errorCode}] ${message}`)
+    };
+  }
+
   protected createResult<T>(data: T): ServiceResult<T> {
     return { success: true, data };
   }

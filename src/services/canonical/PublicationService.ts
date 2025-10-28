@@ -105,7 +105,7 @@ export class PublicationService extends BaseCanonicalService {
 
     try {
       // 1. Buscar funnel
-      const funnelResult = await this.funnelDataService.getFunnelById(funnelId);
+      const funnelResult = await this.funnelDataService.getFunnel(funnelId);
       if (!funnelResult.success || !funnelResult.data) {
         return this.failure('FUNNEL_NOT_FOUND', `Funnel ${funnelId} not found`);
       }
@@ -156,15 +156,13 @@ export class PublicationService extends BaseCanonicalService {
 
       // 6. Atualizar status do funnel
       const publishedAt = options.timestamp || new Date();
-      const { error } = await supabase
-        .from('funnels')
-        .update({
-          status: 'published' as FunnelStatus,
-          published_at: publishedAt.toISOString(),
-        })
-        .eq('id', funnelId);
-
-      if (error) {
+        const { error } = await supabase
+          .from('funnels')
+          .update({
+            is_published: false,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', funnelId);      if (error) {
         return this.failure('PUBLISH_FAILED', `Failed to publish: ${error.message}`);
       }
 
@@ -415,7 +413,7 @@ export class PublicationService extends BaseCanonicalService {
 
       // Verificar conflitos
       for (const funnel of data) {
-        const existingSettings = funnel.settings as PublicationSettings;
+        const existingSettings = funnel.settings as unknown as PublicationSettings;
         const existingUrl = this.buildUrl(existingSettings.domain);
 
         if (currentUrl === existingUrl) {

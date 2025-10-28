@@ -266,7 +266,7 @@ export class FunnelSettingsService extends BaseCanonicalService {
       // Atualizar no Supabase
       const { error } = await supabase
         .from('funnels')
-        .update({ settings: newSettings })
+        .update({ settings: newSettings as unknown as Json })
         .eq('id', funnelId);
 
       if (error) {
