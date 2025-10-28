@@ -315,6 +315,8 @@ interface FunnelMasterProviderProps {
 
 /**
  * 🎯 FUNNEL MASTER PROVIDER - Provider Consolidado
+ * 
+ * @deprecated Use UnifiedAppProvider instead. Será removido na v3.0.
  */
 export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
   children,
@@ -322,6 +324,16 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
   enableCache = true,
   debugMode = false,
 }) => {
+  // Runtime deprecation warning
+  useEffect(() => {
+    console.warn(
+      '⚠️ FunnelMasterProvider is deprecated and will be removed in v3.0.\n' +
+      'Please migrate to UnifiedAppProvider:\n' +
+      'import { UnifiedAppProvider } from "@/providers/UnifiedAppProvider";\n' +
+      'See documentation for migration guide.'
+    );
+  }, []);
+
   const [state, dispatch] = useReducer(funnelMasterReducer, {
     ...initialState,
     funnelId: funnelId || null,
