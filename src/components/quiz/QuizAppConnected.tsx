@@ -612,16 +612,19 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
     const legacyRender = () => {
         const type = currentStepData.type;
         switch (type) {
-            case 'intro':
+            case 'intro': {
+                const introBlocks = (currentStepData as any).blocks || [];
                 return (
                     <IntroStep
                         data={currentStepData as any}
+                        blocks={introBlocks}
                         onNameSubmit={(name: string) => {
                             setUserName(name);
                             nextStep();
                         }}
                     />
                 );
+            }
             case 'question': {
                 const answers = (state.answers[state.currentStep] || []) as string[];
                 // 🎯 MIGRAÇÃO BLOCKS: Passar blocos do quiz21-complete.json
@@ -659,20 +662,26 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                 );
             }
             case 'transition':
-            case 'transition-result':
+            case 'transition-result': {
+                const transitionBlocks = (currentStepData as any).blocks || [];
                 return (
                     <TransitionStep
                         data={currentStepData as any}
+                        blocks={transitionBlocks}
                         onComplete={() => nextStep()}
                     />
                 );
-            case 'result':
+            }
+            case 'result': {
+                const resultBlocks = (currentStepData as any).blocks || [];
                 return (
                     <ResultStep
                         data={currentStepData as any}
+                        blocks={resultBlocks}
                         userProfile={state.userProfile as any}
                     />
                 );
+            }
             default:
                 return null;
         }
@@ -791,9 +800,11 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
                     // Fallback para tipo legado ainda não registrado
                     (() => {
                         console.log('⚠️ [transition-result bypass]', { stepId: currentStepId, type: currentStepData.type });
+                        const transitionBlocks = (currentStepData as any).blocks || [];
                         return (
                             <TransitionStep
                                 data={{ ...currentStepData, ...currentStepConfig }}
+                                blocks={transitionBlocks}
                                 onComplete={() => nextStep()}
                             />
                         );
