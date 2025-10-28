@@ -1,28 +1,35 @@
 /**
- * 🏗️ PROVIDERS INDEX - FASE 2 (ATUALIZADO P1)
+ * 🏗️ PROVIDERS INDEX - FASE 2 CONSOLIDADA
  * 
- * Exportações centralizadas dos providers consolidados
+ * Exportações centralizadas dos providers.
+ * 
+ * ✅ RECOMENDADO: UnifiedAppProvider (use este!)
+ * ⚠️ DEPRECATED: ConsolidatedProvider, FunnelMasterProvider
+ * 🔧 INTERNO: SuperUnifiedProvider (usado por UnifiedAppProvider)
  */
 
-// 🎯 FASE P1: Unified App Provider (RECOMENDADO)
+// ✅ PROVIDER CANÔNICO - USE ESTE!
 export { 
   UnifiedAppProvider,
   default as UnifiedAppProviderDefault,
 } from './UnifiedAppProvider';
 
-// ⚠️ DEPRECATED: Consolidated Provider (usar UnifiedAppProvider)
+// ⚠️ DEPRECATED: Use UnifiedAppProvider
+/** @deprecated Use UnifiedAppProvider instead */
 export { 
   ConsolidatedProvider,
   default as ConsolidatedProviderDefault,
 } from './ConsolidatedProvider';
 
-// Super Unified Provider
+// 🔧 INTERNO: Usado internamente por UnifiedAppProvider
+// Não use diretamente, a menos que saiba o que está fazendo
 export {
   default as SuperUnifiedProvider,
   useSuperUnified,
 } from './SuperUnifiedProvider';
 
-// Funnel Master Provider (consolidates 5+ providers)
+// ⚠️ DEPRECATED: Use hooks do UnifiedAppProvider
+/** @deprecated Use UnifiedAppProvider with UnifiedCRUD context instead */
 export { 
   FunnelMasterProvider,
   useFunnelMaster,
@@ -33,8 +40,8 @@ export {
   useQuiz21Steps,
 } from './FunnelMasterProvider';
 
-// Optimized Provider Stack
+// 🔧 INTERNO: Stack otimizado (legado)
 export { default as OptimizedProviderStack } from './OptimizedProviderStack';
 
-// Legacy Providers (mantidos para compatibilidade)
+// 🔧 INTERNO: Runtime providers para editor
 export { EditorRuntimeProviders } from '@/contexts';
