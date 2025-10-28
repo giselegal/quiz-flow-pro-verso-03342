@@ -1,6 +1,10 @@
 /**
  * 🎯 STEP TO BLOCKS - Decomposição de Steps em Blocos
  * 
+ * ⚠️ DEPRECATED: Este arquivo usa quizSteps.ts (obsoleto)
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
+ * @todo Migrar para Block[] diretamente de TemplateService
+ * 
  * Funções para converter steps do formato antigo (EditableQuizStep)
  * para o formato novo (array de BlockData).
  * 

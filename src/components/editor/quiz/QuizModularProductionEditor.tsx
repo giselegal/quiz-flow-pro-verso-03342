@@ -106,7 +106,14 @@ const BuilderSystemPanel = React.lazy(() => import('@/components/editor/BuilderS
 import { loadStepTemplate } from '@/utils/loadStepTemplates';
 // Dados canônicos das etapas (lazy loading para performance)
 import { loadQuizStep, loadAllQuizSteps, STEP_ORDER, preloadAdjacentSteps } from '@/data/quizStepsLazy';
+
+/**
+ * ⚠️ AVISO: Importação temporária de QuizStep (em migração para TemplateService)
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
+ * @todo Migrar para Block[] após refatoração do editor
+ */
 import type { QuizStep } from '@/data/quizSteps';
+
 import CanvasArea from './components/CanvasArea';
 // ✅ FASE 1.2: Migrado safeGetTemplateBlocks → convertTemplateToBlocks
 import BlockRow from './components/BlockRow';

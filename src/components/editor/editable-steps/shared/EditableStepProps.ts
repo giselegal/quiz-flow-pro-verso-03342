@@ -3,6 +3,10 @@
  * 
  * Interface comum para todos os componentes editáveis.
  * Define a estrutura padrão que cada componente editável deve seguir.
+ * 
+ * ⚠️ DEPRECATED: Esta interface usa QuizStep (obsoleto)
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
+ * @todo Migrar para Block[] de TemplateService
  */
 
 import { QuizStep } from '@/data/quizSteps';

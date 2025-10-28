@@ -4,6 +4,10 @@
  * Registro central de todos os adaptadores de componentes.
  * Mapeia tipos de step para seus respectivos adaptadores.
  * Parte da FASE 1 do plano de modularização.
+ * 
+ * ⚠️ DEPRECATED: Este registry usa QuizStep (obsoleto)
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
+ * @todo Migrar para Block[] de TemplateService
  */
 
 import { EditorComponentAdapter, ExtendedEditorComponentAdapter, createAdapter } from './EditorComponentAdapter';

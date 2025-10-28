@@ -3,6 +3,10 @@
  * 
  * Interface abstrata para criar adaptadores que conectam componentes de produção
  * com o sistema editável do editor. Parte da FASE 1 do plano de modularização.
+ * 
+ * ⚠️ DEPRECATED: Este adapter usa QuizStep (obsoleto)
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
+ * @todo Migrar para Block[] de TemplateService
  */
 
 import { QuizStep } from '@/data/quizSteps';

@@ -1,3 +1,9 @@
+/**
+ * ⚠️ DEPRECATED: Este arquivo usa quizSteps.ts (obsoleto)
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
+ * @todo Migrar para TemplateService.getInstance()
+ */
+
 import { QUIZ_STEPS, type QuizStep } from '@/data/quizSteps';
 import { StorageService } from '@/services/core/StorageService';
 

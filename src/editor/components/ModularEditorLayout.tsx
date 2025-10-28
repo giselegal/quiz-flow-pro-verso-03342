@@ -27,6 +27,12 @@ import {
     Circle,
     AlertCircle,
 } from 'lucide-react';
+
+/**
+ * ⚠️ DEPRECATED: Este componente usa QuizStep de quizSteps.ts (obsoleto)
+ * @see ARQUITETURA_TEMPLATES_DEFINITIVA.md
+ * @todo Migrar para Block[] de TemplateService
+ */
 import type { QuizStep } from '@/data/quizSteps';
 
 // ✅ Mesmo tipo usado no QuizFunnelEditorWYSIWYG
