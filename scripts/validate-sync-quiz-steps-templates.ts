@@ -52,8 +52,8 @@ for (const stepId of Array.from(allStepIds).sort()) {
     // Se não encontrou, procurar em content.nextStep (algumas implementações antigas)
     if (templateNext === undefined) {
       for (const block of templateBlocks) {
-        if (block.content?.nextStep !== undefined) {
-          templateNext = block.content.nextStep;
+        if ((block as any).content?.nextStep !== undefined) {
+          templateNext = (block as any).content.nextStep;
           break;
         }
       }
