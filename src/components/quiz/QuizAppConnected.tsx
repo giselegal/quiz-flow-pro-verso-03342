@@ -279,13 +279,13 @@ export default function QuizAppConnected({ funnelId = 'quiz-estilo-21-steps', ed
         } else {
             console.log(`⏸️ Auto-avanço NÃO acionado: aguardando seleções em ${state.currentStep}`);
         }
-    ], [
-            state.currentStep,
-            state.answers,
-            state.userProfile.strategicAnswers,
-            currentStepData,
-            nextStep,
-        ]);
+    }, [
+        state.currentStep,
+        state.answers,
+        state.userProfile.strategicAnswers,
+        currentStepData,
+        nextStep,
+    ]);
 
     // ============================================================================
     // ✅ FASE 3.3: INTELLIGENT PREFETCH
