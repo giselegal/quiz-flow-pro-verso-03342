@@ -42,6 +42,10 @@ import TransitionTextBlock from './atomic/TransitionTextBlock';
 import TransitionProgressBlock from './atomic/TransitionProgressBlock';
 import TransitionMessageBlock from './atomic/TransitionMessageBlock';
 
+// Blocos Atômicos Adicionais
+import CTAButtonBlock from './atomic/CTAButtonBlock';
+import IntroFormBlock from './atomic/IntroFormBlock';
+
 // Blocos Atômicos de Resultado (Step 20)
 import ResultHeaderBlock from './atomic/ResultHeaderBlock';
 import ResultMainBlock from './atomic/ResultMainBlock';
@@ -74,6 +78,10 @@ import TestimonialsInlineBlock from '@/components/blocks/inline/TestimonialsInli
 import QuizOfferPricingInlineBlock from '@/components/blocks/inline/QuizOfferPricingInlineBlock';
 import OfferFaqSectionInlineBlock from '@/components/blocks/inline/OfferFaqSectionInlineBlock';
 import QuizOfferCTAInlineBlock from '@/components/blocks/inline/QuizOfferCTAInlineBlock';
+
+// Sections (para compatibilidade com blocos que ainda usam sections)
+import { QuestionHeroSection } from '@/components/sections/questions/QuestionHeroSection';
+import { TransitionHeroSection } from '@/components/sections/transitions/TransitionHeroSection';
 
 export interface UniversalBlockRendererProps {
   block: Block;
@@ -137,6 +145,7 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   'quiz-header': QuizHeaderBlock,
   'quiz-title': QuizTitleBlock,
   'options-grid': OptionsGridBlock,
+  'options grid': OptionsGridBlock, // ✅ NOVO: alias com espaço
   'text-inline': TextInlineBlock,
   'heading-inline': HeadingInlineBlock,
   heading: HeadingInlineBlock,
@@ -145,17 +154,25 @@ const BlockComponentRegistry: Record<string, React.FC<any>> = {
   // Navegação de perguntas (usado em steps de perguntas e como alias em alguns templates)
   'question-navigation': QuestionNavigationBlock,
   'quiz-navigation': QuestionNavigationBlock,
+  'question-progress': QuestionNavigationBlock, // ✅ NOVO: alias
   // Alias comum em templates antigos
   'question-title': TextInlineBlock,
   'button-inline': ButtonInlineBlock,
   'cta-inline': ButtonInlineBlock,
+  'CTAButton': CTAButtonBlock, // ✅ NOVO: CTA Button atômico
   'form-input': FormInputBlock,
+  'intro-form': IntroFormBlock, // ✅ NOVO: Intro Form atômico
   'image-inline': ImageInlineBlock,
   'fashion-ai-generator': FashionAIGeneratorBlock,
   'mentor-section-inline': MentorSectionInlineBlock,
   'testimonial-card-inline': TestimonialCardInlineBlock,
   testimonials: TestimonialsInlineBlock,
   'testimonials-carousel-inline': TestimonialsCarouselInlineBlock,
+  // Sections (compatibilidade)
+  'question-hero': QuestionHeroSection, // ✅ NOVO: Question Hero Section
+  'transition-hero': TransitionHeroSection, // ✅ NOVO: Transition Hero Section
+  'result-congrats': ResultHeaderBlock, // ✅ NOVO: alias para result-header
+  'result-progress-bars': ResultSecondaryStylesBlock, // ✅ NOVO: alias
   // Step20 Components
   'step20-result-header': Step20ResultHeaderBlock,
   'step20-style-reveal': Step20StyleRevealBlock,
