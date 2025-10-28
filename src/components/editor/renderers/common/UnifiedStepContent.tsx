@@ -265,67 +265,134 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         } catch { /* noop */ }
     }, [editor?.actions, ui?.propertiesPanelOpen, togglePropertiesPanel]);
 
-    // Callbacks para persistência (no futuro: integrar com EditorProvider)
-    const handleEdit = (field: string, value: any) => {
+    // Helper: normalizar chave de step para formato step-XX
+    const normalizeStepKey = useCallback((key: string | number): string => {
+        const str = String(key);
+        const m = str.match(/^step-(\d{1,2})$/);
+        if (m) {
+            const n = parseInt(m[1], 10);
+            if (!isNaN(n)) return `step-${String(n).padStart(2, '0')}`;
+        }
+        // Se for apenas número, adicionar prefixo
+        const num = parseInt(str, 10);
+        if (!isNaN(num)) return `step-${String(num).padStart(2, '0')}`;
+        return str;
+    }, []);
+
+    // Callbacks para persistência integrado com EditorProvider
+    const handleEdit = useCallback(async (field: string, value: any) => {
+        // 1. Atualizar metadata local para feedback imediato
         (stepData as any).metadata = {
             ...((stepData as any).metadata || {}),
             [field]: value,
         };
-    };
 
-    const handleBlocksReorder = (stepId: string, newOrder: string[]) => {
-        // 1) Persistir ordem lógica no metadata do step
-        handleEdit('blockOrder', newOrder);
+        // 2. Persistir no EditorStateManager para histórico e re-renderização
+        if (editor?.actions?.updateBlock && stepData?.id) {
+            try {
+                const stepKey = normalizeStepKey(step.id || step.step?.toString() || '1');
+                await editor.actions.updateBlock(stepKey, stepData.id, {
+                    metadata: {
+                        ...((stepData as any).metadata || {}),
+                        [field]: value,
+                    }
+                });
+                appLogger.debug('✅ handleEdit persistido:', { field, value, stepKey, blockId: stepData.id });
+            } catch (err) {
+                appLogger.error('❌ Erro ao persistir edição:', err);
+            }
+        }
+    }, [editor, stepData, step.id, step.step, normalizeStepKey]);
 
-        // 2) Se houver provider, tentar refletir ordem nos IDs reais
+    const handleBlocksReorder = useCallback(async (stepId: string, newOrder: string[]) => {
+        // 1. Persistir ordem lógica no metadata (feedback imediato)
+        await handleEdit('blockOrder', newOrder);
+
+        // 2. Persistir ordem no EditorStateManager
+        if (!editor?.actions?.reorderBlocks || !editor?.state?.stepBlocks) {
+            appLogger.debug('⏭️ Skip reorderBlocks: editor não disponível');
+            return;
+        }
+
         try {
-            if (!editor?.actions?.reorderBlocks || !editor?.state?.stepBlocks) return;
+            const normalizedKey = normalizeStepKey(stepId);
+            const blocks: any[] = (editor.state.stepBlocks as any)[normalizedKey] || [];
 
-            const blocks: any[] = (editor.state.stepBlocks as any)[stepKey] || [];
-            if (!Array.isArray(blocks) || blocks.length === 0) return;
+            if (!Array.isArray(blocks) || blocks.length === 0) {
+                appLogger.debug('⏭️ Skip reorderBlocks: sem blocos no step', normalizedKey);
+                return;
+            }
 
-            const desiredRealOrder: string[] = [];
+            // Mapear IDs lógicos para IDs reais (resolveRealBlockId ou usar direto)
+            const currentOrder = blocks.map(b => String(b.id));
+            const desiredOrder: string[] = [];
+
             for (const logicalId of newOrder) {
                 const realId = resolveRealBlockId(logicalId) || logicalId;
-                if (realId && !desiredRealOrder.includes(realId)) {
-                    desiredRealOrder.push(realId);
+                if (realId && currentOrder.includes(realId) && !desiredOrder.includes(realId)) {
+                    desiredOrder.push(realId);
                 }
             }
 
-            const currentIds: string[] = blocks.map(b => String(b.id));
+            // Verificar se ordem mudou
+            const isSameOrder = desiredOrder.length === currentOrder.length &&
+                desiredOrder.every((id, i) => id === currentOrder[i]);
 
-            // Evitar loops: se a ordem desejada já é igual à atual, não faz nada
-            const equal = desiredRealOrder.length === currentIds.length && desiredRealOrder.every((id, i) => id === currentIds[i]);
-            if (equal) return;
+            if (isSameOrder) {
+                appLogger.debug('⏭️ Skip reorderBlocks: ordem já está correta');
+                return;
+            }
 
-            const currentIndices = desiredRealOrder
-                .map(id => currentIds.indexOf(id))
-                .filter(idx => idx >= 0);
-            const baseIndex = currentIndices.length > 0 ? Math.min(...currentIndices) : 0;
+            // Aplicar reordenação sequencialmente
+            const workingOrder = [...currentOrder];
+            for (let newIndex = 0; newIndex < desiredOrder.length; newIndex++) {
+                const targetId = desiredOrder[newIndex];
+                const currentIndex = workingOrder.indexOf(targetId);
 
-            const moveLocal = (arr: string[], from: number, to: number) => {
-                const item = arr.splice(from, 1)[0];
-                arr.splice(to, 0, item);
+                if (currentIndex !== -1 && currentIndex !== newIndex) {
+                    await editor.actions.reorderBlocks(normalizedKey, currentIndex, newIndex);
+                    // Atualizar array local para próxima iteração
+                    const [movedItem] = workingOrder.splice(currentIndex, 1);
+                    workingOrder.splice(newIndex, 0, movedItem);
+                    appLogger.debug('✅ Bloco reordenado:', { targetId, from: currentIndex, to: newIndex });
+                }
+            }
+
+            appLogger.debug('✅ handleBlocksReorder concluído:', { stepId: normalizedKey, newOrder: desiredOrder });
+        } catch (err) {
+            appLogger.error('❌ Erro ao reordenar blocos:', err);
+        }
+    }, [editor, normalizeStepKey, resolveRealBlockId, handleEdit]);
+
+    // Callback para adicionar novos blocos
+    const handleAddBlock = useCallback(async (blockType: string, position?: number) => {
+        if (!editor?.actions?.addBlockAtIndex && !editor?.actions?.addBlock) {
+            appLogger.warn('⏭️ Skip addBlock: editor não disponível');
+            return;
+        }
+
+        try {
+            const normalizedKey = normalizeStepKey(step.id || '1');
+            const blocks: any[] = (editor.state?.stepBlocks as any)?.[normalizedKey] || [];
+            
+            const newBlock: any = {
+                id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                type: blockType as any,
+                content: {},
+                order: position ?? blocks.length,
             };
 
-            (async () => {
-                for (let i = 0; i < desiredRealOrder.length; i++) {
-                    const targetId = desiredRealOrder[i];
-                    const currentIndex = currentIds.indexOf(targetId);
-                    if (currentIndex === -1) continue;
-                    const targetIndex = baseIndex + i;
-                    if (currentIndex !== targetIndex) {
-                        await editor.actions.reorderBlocks(stepKey, currentIndex, targetIndex);
-                        moveLocal(currentIds, currentIndex, targetIndex);
-                    }
-                }
-            })();
+            if (position !== undefined && editor.actions.addBlockAtIndex) {
+                await editor.actions.addBlockAtIndex(normalizedKey, newBlock, position);
+                appLogger.debug('✅ Bloco adicionado na posição:', { blockType, position, blockId: newBlock.id });
+            } else if (editor.actions.addBlock) {
+                await editor.actions.addBlock(normalizedKey, newBlock);
+                appLogger.debug('✅ Bloco adicionado no final:', { blockType, blockId: newBlock.id });
+            }
         } catch (err) {
-            appLogger.warn('Falha ao aplicar reordenação no provider, seguirá apenas metadata:', err);
+            appLogger.error('❌ Erro ao adicionar bloco:', err);
         }
-    };
-
-    const renderStepComponent = () => {
+    }, [editor, normalizeStepKey, step.id]);    const renderStepComponent = () => {
         switch (step.type) {
             case 'intro': {
                 return (
