@@ -287,11 +287,39 @@ export class UnifiedTemplateService {
   async preloadCommonSteps(stepIds: string[] = ['step-01', 'step-02', 'step-03']): Promise<void> {
     const promises = stepIds.map(id => 
       this.loadTemplate(id).catch(error => 
-        console.warn(`Failed to preload \${id}:`, error)
+        console.warn(`Failed to preload ${id}:`, error)
       )
     );
     await Promise.all(promises);
-    console.log(`✅ Preloaded \${stepIds.length} steps`);
+    console.log(`✅ Preloaded ${stepIds.length} steps`);
+  }
+
+  /**
+   * Obtém template completo (compatibilidade legada)
+   */
+  async getTemplate(templateId: string): Promise<any> {
+    const blocks = await this.loadTemplate(templateId);
+    return {
+      id: templateId,
+      blocks,
+      metadata: {},
+    };
+  }
+
+  /**
+   * Obtém step template (compatibilidade legada)
+   */
+  getStepTemplate(stepId: string, _funnelId?: string): any {
+    const result = getStepTemplate(stepId);
+    return result.step || {};
+  }
+
+  /**
+   * Obtém todos os steps (compatibilidade legada)
+   */
+  getAllSteps(): Record<string, any> {
+    const result = getStepTemplate('step-01');
+    return result.step || {};
   }
 
   getStats() {

@@ -12,6 +12,13 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+// Mock de import.meta.env para evitar erros em scripts Node
+if (typeof (globalThis as any).process !== 'undefined') {
+  (process as any).env = process.env || {};
+  process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+}
+
 // Evitar aliases TS fora de src: usar import dinâmico com caminhos relativos ao projeto
 
 const __filename = fileURLToPath(import.meta.url);

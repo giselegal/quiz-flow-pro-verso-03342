@@ -31,7 +31,22 @@ export interface LogLevel {
 export const createLoggerConfig = (
     overrides: Partial<LoggerConfig> = {},
 ): LoggerConfig => {
-    const environment = (import.meta.env.NODE_ENV || 'development') as LoggerConfig['environment'];
+    // Suportar tanto browser ((import.meta as any)?.env) quanto Node (process.env)
+    let envValue = 'development';
+    try {
+        // Browser/Vite
+        if (typeof (import.meta as any)?.env?.NODE_ENV === 'string') {
+            envValue = (import.meta as any).env.NODE_ENV;
+        }
+        // Node.js
+        else if (typeof process !== 'undefined' && process.env?.NODE_ENV) {
+            envValue = process.env.NODE_ENV;
+        }
+    } catch {
+        // Fallback para development se houver erro
+    }
+    
+    const environment = envValue as LoggerConfig['environment'];
 
     const baseConfig: LoggerConfig = {
         environment,
@@ -80,9 +95,9 @@ export const productionConfig = createLoggerConfig({
     defaultFormatter: 'json',
     batchSize: 50,
     flushInterval: 10000,
-    remoteEndpoint: import.meta.env.VITE_LOGGING_ENDPOINT,
+    remoteEndpoint: (import.meta as any)?.env?.VITE_LOGGING_ENDPOINT,
     remoteHeaders: {
-        'Authorization': `Bearer ${import.meta.env.VITE_LOGGING_API_KEY}`,
+        'Authorization': `Bearer ${(import.meta as any)?.env?.VITE_LOGGING_API_KEY || ''}`,
         'Content-Type': 'application/json',
     },
     // Block debug contexts in production
@@ -107,16 +122,16 @@ export const stagingConfig = createLoggerConfig({
     includeStackTrace: true,
     defaultFormatter: 'json',
     enableStorage: true,
-    remoteEndpoint: import.meta.env.VITE_STAGING_LOGGING_ENDPOINT,
+    remoteEndpoint: (import.meta as any)?.env?.VITE_STAGING_LOGGING_ENDPOINT,
     remoteHeaders: {
-        'Authorization': `Bearer ${import.meta.env.VITE_STAGING_LOGGING_API_KEY}`,
+        'Authorization': `Bearer ${(import.meta as any)?.env?.VITE_STAGING_LOGGING_API_KEY || ''}`,
         'Content-Type': 'application/json',
     },
 });
 
 // Config selector based on environment
 export const getConfigForEnvironment = (): LoggerConfig => {
-    const env = import.meta.env.NODE_ENV || 'development';
+    const env = (import.meta as any)?.env?.NODE_ENV || 'development';
 
     switch (env) {
         case 'production':
@@ -133,10 +148,11 @@ export const getConfigForEnvironment = (): LoggerConfig => {
 
 // Feature flags for logging
 export const LoggingFeatures = {
-    ENABLE_REMOTE_LOGGING: import.meta.env.VITE_ENABLE_REMOTE_LOGGING === 'true',
-    ENABLE_PERFORMANCE_LOGGING: import.meta.env.VITE_ENABLE_PERFORMANCE_LOGGING !== 'false',
-    ENABLE_STORAGE_LOGGING: import.meta.env.VITE_ENABLE_STORAGE_LOGGING !== 'false',
-    ENABLE_DEBUG_CONTEXT: import.meta.env.VITE_ENABLE_DEBUG_LOGGING === 'true',
-    MAX_LOG_BUFFER_SIZE: parseInt(import.meta.env.VITE_MAX_LOG_BUFFER_SIZE || '1000'),
-    LOG_FLUSH_INTERVAL: parseInt(import.meta.env.VITE_LOG_FLUSH_INTERVAL || '5000'),
+    ENABLE_REMOTE_LOGGING: (import.meta as any)?.env?.VITE_ENABLE_REMOTE_LOGGING === 'true',
+    ENABLE_PERFORMANCE_LOGGING: (import.meta as any)?.env?.VITE_ENABLE_PERFORMANCE_LOGGING !== 'false',
+    ENABLE_STORAGE_LOGGING: (import.meta as any)?.env?.VITE_ENABLE_STORAGE_LOGGING !== 'false',
+    ENABLE_DEBUG_CONTEXT: (import.meta as any)?.env?.VITE_ENABLE_DEBUG_LOGGING === 'true',
+    MAX_LOG_BUFFER_SIZE: parseInt((import.meta as any)?.env?.VITE_MAX_LOG_BUFFER_SIZE || '1000'),
+    LOG_FLUSH_INTERVAL: parseInt((import.meta as any)?.env?.VITE_LOG_FLUSH_INTERVAL || '5000'),
 };
+
