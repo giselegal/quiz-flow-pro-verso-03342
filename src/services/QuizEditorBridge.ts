@@ -4,6 +4,7 @@
  * Serviço que sincroniza edições do editor com o runtime de produção
  * Permite editar, salvar e substituir o funil /quiz-estilo
  * 
+ * ✅ FASE 4.1: Validação rigorosa integrada com NavigationService e BlockRegistry
  * ✅ FASE 6.5: Integrado com utilitários testados (91 testes)
  */
 
@@ -11,6 +12,12 @@ import { QUIZ_STEPS, STEP_ORDER, type QuizStep } from '@/data/quizSteps';
 import { supabase } from '@/integrations/supabase/customClient';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
+
+// ✅ FASE 4.1: Integração com serviços canônicos
+import { navigationService } from '@/services/canonical/NavigationService';
+import { blockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { templateService } from '@/services/canonical/TemplateService';
+
 // @TEMP: Helper para forçar reconhecimento de tabelas recém adicionadas nos tipos gerados
 type AnySupabase = typeof supabase & { from: (table: string) => any };
 const supabaseAny = supabase as AnySupabase;

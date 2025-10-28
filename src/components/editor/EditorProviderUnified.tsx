@@ -21,7 +21,7 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useState,
 import { useUnifiedCRUD } from '@/contexts';
 import { Block } from '@/types/editor';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { blockComponentsToBlocks } from '@/utils/templateConverter';
 import { loadStepTemplate, hasModularTemplate } from '@/utils/loadStepTemplates';
 import { unifiedCache } from '@/utils/UnifiedTemplateCache';
 import { stepBlocksKey, masterBlocksKey, masterTemplateKey } from '@/utils/cacheKeys';
@@ -32,7 +32,7 @@ import { funnelComponentsService } from '@/services/funnelComponentsService';
 import type { UnifiedStage, UnifiedFunnel } from '@/services/UnifiedCRUDService';
 import { createLogger, appLogger } from '@/utils/logger';
 
-// ✅ FASE 2.1: Integrar serviços consolidados
+// ✅ FASE 1.2 & 2.1: Integrar serviços consolidados (removido safeGetTemplateBlocks)
 import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
 import { templateService } from '@/services/canonical/TemplateService';
 import { navigationService } from '@/services/canonical/NavigationService';
