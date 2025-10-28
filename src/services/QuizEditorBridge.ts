@@ -11,14 +11,9 @@
  */
 
 import type { QuizStep } from '@/data/quizSteps';
-import { templateService } from '@/services/canonical/TemplateService';
 import { supabase } from '@/integrations/supabase/customClient';
 import { autoFillNextSteps } from '@/utils/autoFillNextSteps';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
-
-// Constants derivados do TemplateService
-const STEP_ORDER = templateService.getStepOrder();
-const QUIZ_STEPS_FALLBACK = templateService.getAllStepsSync();
 
 // ✅ FASE 4.1: Integração com serviços canônicos
 import { navigationService } from '@/services/canonical/NavigationService';
