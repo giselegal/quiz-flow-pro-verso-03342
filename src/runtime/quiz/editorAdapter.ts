@@ -2,7 +2,6 @@
 import type { EditableQuizStepLite } from '@/types/editor-lite';
 import type { RuntimeStepOverride } from './QuizRuntimeRegistry';
 import { getBlockConfig, normalizeOption, extractOptions, extractQuestionText, extractQuestionNumber } from '@/utils/blockConfigMerger';
-import { getNavigationService } from '@/services/NavigationService';
 
 /**
  * Converte a lista de steps editáveis do editor para o formato consumido pelo runtime (override).

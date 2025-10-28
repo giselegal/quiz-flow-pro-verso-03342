@@ -1,16 +1,16 @@
 /**
- * 🎯 EDITOR COMPOSITE PROVIDER (Sprint 1 - TK-ED-02)
+ * 🎯 EDITOR COMPOSITE PROVIDER (Sprint 1 - TK-ED-02) ✅ FASE 2.3 ATUALIZADO
  * 
  * Consolida múltiplos providers em uma hierarquia otimizada de 2 níveis
  * 
  * ANTES (5 níveis):
  * - FunnelMasterProvider
  * - EditorProvider  
- * - LegacyCompatibilityWrapper
+ * - LegacyCompatibilityWrapper ❌ REMOVIDO
  * - UnifiedCRUDProvider (implícito)
  * - EditorQuizProvider (implícito)
  * 
- * DEPOIS (2 níveis):
+ * DEPOIS (2 níveis) ✅:
  * - EditorCompositeProvider (dados + lógica)
  * - EditorUIProvider (UI state)
  * 
@@ -18,13 +18,12 @@
  * - 70% redução em re-renders
  * - 60% redução em overhead de contexto
  * - API mais limpa e previsível
+ * - ✅ FASE 2.3: Removido LegacyCompatibilityWrapper (substituído por hook)
  */
 
 import React, { ReactNode, useMemo } from 'react';
 import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
 import { EditorProvider } from '@/components/editor/EditorProviderMigrationAdapter';
-import { LegacyCompatibilityWrapper } from '@/core/contexts/LegacyCompatibilityWrapper';
-import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 export interface EditorCompositeProviderProps {
     children: ReactNode;
