@@ -473,6 +473,26 @@ export class UnifiedBlockRegistry {
   }
 
   /**
+   * ✅ FASE 3.1: Register critical component (immediate loading)
+   * Blocos críticos são carregados imediatamente e não usam code splitting
+   */
+  registerCritical(definition: {
+    id: string;
+    component: React.ComponentType<any>;
+    displayName?: string;
+    category?: string;
+  }): void {
+    this.registry.set(definition.id, definition.component);
+    this.criticalComponents.add(definition.id);
+    this.updateCache(definition.id, definition.component);
+    
+    appLogger.info(`[UnifiedBlockRegistry] ✅ Registered CRITICAL: ${definition.id}`, {
+      displayName: definition.displayName,
+      category: definition.category,
+    });
+  }
+
+  /**
    * Register lazy component
    */
   registerLazy(
