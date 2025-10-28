@@ -948,8 +948,9 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                 }
                                 default: {
                                     // fallback genérico preservando blocks antigos se existirem
+                                    // ✅ FASE 1.2: Migrado para convertTemplateToBlocks
                                     const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
-                                    const legacyBlocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam) || [];
+                                    const legacyBlocks = convertTemplateToBlocks(quizTemplate);
                                     return legacyBlocks;
                                 }
                             }
@@ -969,17 +970,18 @@ export const QuizModularProductionEditor: React.FC<QuizModularProductionEditorPr
                                     const legacyType = buildStepType(idx);
                                     const next = quizStep?.nextStep || (idx < STEP_ORDER.length - 1 ? STEP_ORDER[idx + 1] : undefined);
                                     let blocks: any[] = [];
+                                    // ✅ FASE 1.2: Migrado para convertTemplateToBlocks
                                     try {
                                         if (quizStep) {
                                             blocks = await buildEnrichedBlocksForStep(stepId, quizStep);
                                         } else {
                                             const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
-                                            blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam) || [];
+                                            blocks = convertTemplateToBlocks(quizTemplate);
                                         }
                                     } catch (e) {
                                         appLogger.warn('⚠️ Falha ao construir blocks enriquecidos para', { stepId, error: e });
                                         const quizTemplate = getQuiz21StepsTemplate(); // Template normalizado com _source='ts'
-                                        blocks = safeGetTemplateBlocks(stepId, quizTemplate, funnelParam) || [];
+                                        blocks = convertTemplateToBlocks(quizTemplate);
                                     }
                                     return {
                                         id: stepId,

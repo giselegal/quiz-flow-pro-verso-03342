@@ -6,7 +6,7 @@ import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { Block } from '@/types/editor';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { cn } from '@/lib/utils';
-import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { convertTemplateToBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
 import { getQuiz21StepsTemplate } from '@/templates/imports';
 
 interface ModularIntroStepProps {
@@ -82,7 +82,7 @@ export default function ModularIntroStep({
         const m = String(data?.id || '').match(/step-\d{2}/);
         const stepKey = m ? m[0] : 'step-01';
         try {
-            const comps = safeGetTemplateBlocks(stepKey, getQuiz21StepsTemplate());
+            const comps = convertTemplateToBlocks(getQuiz21StepsTemplate());
             const asBlocks = blockComponentsToBlocks(comps);
             if (Array.isArray(asBlocks) && asBlocks.length > 0) {
                 setFallbackBlocks(asBlocks as any);
