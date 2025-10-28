@@ -56,48 +56,58 @@ interface PerformanceMetrics {
 // ============================================================================
 // STATIC IMPORTS - COMPONENTES CRÍTICOS (Carregamento Imediato)
 // ============================================================================
-// ============================================================================
-// BLOCOS CRÍTICOS - Apenas 25 blocos essenciais carregados estaticamente
-// Os demais 90+ blocos usam lazy loading via lazyImports abaixo
+// 🎯 APENAS 10 BLOCOS MAIS CRÍTICOS - Carregamento imediato
+// Todos os outros 100+ blocos usam lazy loading via lazyImports
 // ============================================================================
 
-// Blocos fundamentais (text, heading, image, button)
+// Blocos fundamentais essenciais (aparecem em 90%+ dos steps)
 import TextInlineBlock from '@/components/editor/blocks/TextInlineBlock';
-import HeadingInlineBlock from '@/components/editor/blocks/HeadingInlineBlock';
 import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
 import ButtonInlineBlock from '@/components/editor/blocks/ButtonInlineBlock';
 
-// Quiz core (quiz-intro-header, options-grid, form-input)
-import QuizIntroHeaderBlock from '@/components/editor/blocks/QuizIntroHeaderBlock';
+// Quiz core essencial (não funciona sem eles)
 import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
 import FormInputBlock from '@/components/editor/blocks/FormInputBlock';
 
-// Atomic blocks - Intro (Step 1) - 7 blocos
-import IntroLogoBlock from '@/components/editor/blocks/atomic/IntroLogoBlock';
-import IntroLogoHeaderBlock from '@/components/editor/blocks/atomic/IntroLogoHeaderBlock';
-import IntroTitleBlock from '@/components/editor/blocks/atomic/IntroTitleBlock';
-import IntroImageBlock from '@/components/editor/blocks/atomic/IntroImageBlock';
-import IntroDescriptionBlock from '@/components/editor/blocks/atomic/IntroDescriptionBlock';
-import IntroFormBlock from '@/components/editor/blocks/atomic/IntroFormBlock';
-import DecorativeBarInlineBlock from '@/components/editor/blocks/DecorativeBarInlineBlock';
-import LegalNoticeInlineBlock from '@/components/editor/blocks/LegalNoticeInlineBlock';
-
-// Blocos de transição (Step 12, 19) - 6 blocos
-import QuizTransitionLoaderBlock from '@/components/editor/blocks/QuizTransitionLoaderBlock';
-import TransitionTitleBlock from '@/components/editor/blocks/atomic/TransitionTitleBlock';
-import TransitionLoaderBlock from '@/components/editor/blocks/atomic/TransitionLoaderBlock';
-import TransitionTextBlock from '@/components/editor/blocks/atomic/TransitionTextBlock';
-import TransitionProgressBlock from '@/components/editor/blocks/atomic/TransitionProgressBlock';
-import TransitionMessageBlock from '@/components/editor/blocks/atomic/TransitionMessageBlock';
-
-// TOTAL: 25 blocos críticos carregados estaticamente
-// Os outros 90+ blocos (Step20, ofertas, testimonials, etc.) usam lazy loading
+// TOTAL: 5 blocos críticos carregados estaticamente
+// Os outros 105+ blocos (heading, intro, transitions, step20, ofertas, etc.) usam lazy loading
 
 // ============================================================================
 // LAZY IMPORTS - COMPONENTES NÃO-CRÍTICOS (Code Splitting)
 // ============================================================================
 
 const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<any> }>> = {
+  // 🔄 BLOCOS MOVIDOS DE STATIC → LAZY (20 blocos)
+  // Heading (4 variantes)
+  'heading': () => import('@/components/editor/blocks/HeadingInlineBlock'),
+  'heading-inline': () => import('@/components/editor/blocks/HeadingInlineBlock'),
+  'headline': () => import('@/components/editor/blocks/HeadingInlineBlock'),
+  'headline-inline': () => import('@/components/editor/blocks/HeadingInlineBlock'),
+  
+  // Intro blocks - Step 1 (7 blocos)
+  'intro-logo': () => import('@/components/editor/blocks/atomic/IntroLogoBlock'),
+  'intro-logo-header': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
+  'intro-title': () => import('@/components/editor/blocks/atomic/IntroTitleBlock'),
+  'intro-image': () => import('@/components/editor/blocks/atomic/IntroImageBlock'),
+  'intro-description': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
+  'intro-form': () => import('@/components/editor/blocks/atomic/IntroFormBlock'),
+  'quiz-intro': () => import('@/components/editor/blocks/QuizIntroHeaderBlock'), // Alias
+  
+  // Decorative/UI (3 blocos)
+  'quiz-intro-header': () => import('@/components/editor/blocks/QuizIntroHeaderBlock'),
+  'decorative-bar': () => import('@/components/editor/blocks/DecorativeBarInlineBlock'),
+  'decorative-bar-inline': () => import('@/components/editor/blocks/DecorativeBarInlineBlock'),
+  'legal-notice': () => import('@/components/editor/blocks/LegalNoticeInlineBlock'),
+  'legal-notice-inline': () => import('@/components/editor/blocks/LegalNoticeInlineBlock'),
+  
+  // Transition blocks - Steps 12, 19 (6 blocos)
+  'quiz-transition-loader': () => import('@/components/editor/blocks/QuizTransitionLoaderBlock'),
+  'transition-title': () => import('@/components/editor/blocks/atomic/TransitionTitleBlock'),
+  'transition-loader': () => import('@/components/editor/blocks/atomic/TransitionLoaderBlock'),
+  'transition-text': () => import('@/components/editor/blocks/atomic/TransitionTextBlock'),
+  'transition-progress': () => import('@/components/editor/blocks/atomic/TransitionProgressBlock'),
+  'transition-message': () => import('@/components/editor/blocks/atomic/TransitionMessageBlock'),
+
   // Quiz Components
   'quiz-logo': () => import('@/components/editor/blocks/QuizLogoBlock'),
   'quiz-progress-bar': () => import('@/components/editor/blocks/QuizProgressBlock'),
@@ -260,51 +270,24 @@ export class UnifiedBlockRegistry {
   // ==========================================================================
 
   private initializeCriticalComponents(): void {
+    // 🎯 APENAS 5 BLOCOS CRÍTICOS - Os outros 105+ usam lazy loading
     const criticalBlocks: Record<string, React.ComponentType<any>> = {
-      // Basic Components
+      // Basic Components (aparecem em 90%+ dos steps)
       'text': TextInlineBlock,
       'text-inline': TextInlineBlock,
       'button': ButtonInlineBlock,
       'button-inline': ButtonInlineBlock,
       'image': ImageInlineBlock,
       'image-inline': ImageInlineBlock,
+      
+      // Quiz Core (não funciona sem eles)
       'form-input': FormInputBlock,
       'options-grid': OptionsGridBlock,
       'quiz-options': OptionsGridBlock,
       'quiz-options-inline': OptionsGridBlock,
-      'heading': HeadingInlineBlock,
-      'heading-inline': HeadingInlineBlock,
-      'headline': HeadingInlineBlock,
-      'headline-inline': HeadingInlineBlock,
       
-      // Quiz Components (críticos)
-      'quiz-intro-header': QuizIntroHeaderBlock,
-      'decorative-bar': DecorativeBarInlineBlock,
-      'decorative-bar-inline': DecorativeBarInlineBlock,
-      'legal-notice': LegalNoticeInlineBlock,
-      'legal-notice-inline': LegalNoticeInlineBlock,
-      'quiz-transition-loader': QuizTransitionLoaderBlock,
-      
-      // Atomic Blocks - Transition (críticos - Steps 12, 19)
-      'transition-title': TransitionTitleBlock,
-      'transition-loader': TransitionLoaderBlock,
-      'transition-text': TransitionTextBlock,
-      'transition-progress': TransitionProgressBlock,
-      'transition-message': TransitionMessageBlock,
-      
-      // Atomic Blocks - Intro (críticos - Step 1)
-      'intro-logo': IntroLogoBlock,
-      'intro-logo-header': IntroLogoHeaderBlock,
-      'intro-title': IntroTitleBlock,
-      'intro-image': IntroImageBlock,
-      'intro-description': IntroDescriptionBlock,
-      'intro-form': IntroFormBlock,
-      
-      // NOTA: Step 20 Modular, Sales, AI, footer-copyright agora usam lazy loading (ver lazyImports abaixo)
-      
-      // Aliases
+      // Aliases para compatibilidade
       'cta-inline': ButtonInlineBlock,
-      'quiz-intro': QuizIntroHeaderBlock,
       'quiz-form': FormInputBlock,
       'quiz-button': ButtonInlineBlock,
       'quiz-text': TextInlineBlock,

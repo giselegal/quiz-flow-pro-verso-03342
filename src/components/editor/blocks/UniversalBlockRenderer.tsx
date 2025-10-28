@@ -1,99 +1,16 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, Suspense } from 'react';
 import { appLogger } from '@/utils/logger';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { getEnhancedBlockComponent } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import { blockRendererDebug } from '@/components/editor/debug/BlockRendererDebug';
 import { cacheManager } from '@/utils/cache/LRUCache';
 import { useLogger } from '@/utils/logger/SmartLogger';
 
-// Importações diretas para componentes críticos (performance)
-import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
-import OptionsGridBlock from './OptionsGridBlock';
-import TextInlineBlock from './TextInlineBlock';
-import QuestionNavigationBlock from '@/components/editor/blocks/atomic/QuestionNavigationBlock';
-import ButtonInlineBlock from './ButtonInlineBlock';
-import { FashionAIGeneratorBlock } from '@/components/blocks/ai';
-import MentorSectionInlineBlock from './MentorSectionInlineBlock';
-import TestimonialCardInlineBlock from './TestimonialCardInlineBlock';
-import TestimonialsCarouselInlineBlock from './TestimonialsCarouselInlineBlock';
+// 🎯 UNIFIED BLOCK REGISTRY - Lazy loading com code splitting
+import { unifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
 
-// Importações adicionais de quiz components
-import QuizQuestionBlock from './QuizQuestionBlock';
-import QuizOptionBlock from './QuizOptionBlock';
-import QuizHeaderBlock from './QuizHeaderBlock';
-import QuizTitleBlock from './QuizTitleBlock';
-import FormInputBlock from './FormInputBlock';
-
-// Importações dos componentes Step20
-import {
-  Step20ResultHeaderBlock,
-  Step20StyleRevealBlock,
-  Step20UserGreetingBlock,
-  Step20CompatibilityBlock,
-  Step20SecondaryStylesBlock,
-  Step20PersonalizedOfferBlock,
-} from './Step20ModularBlocks';
-
-// Blocos Atômicos de Transição (Steps 12 & 19)
-import TransitionTitleBlock from './atomic/TransitionTitleBlock';
-import TransitionLoaderBlock from './atomic/TransitionLoaderBlock';
-import TransitionTextBlock from './atomic/TransitionTextBlock';
-import TransitionProgressBlock from './atomic/TransitionProgressBlock';
-import TransitionMessageBlock from './atomic/TransitionMessageBlock';
-
-// Blocos Atômicos Adicionais
-import CTAButtonBlock from './atomic/CTAButtonBlock';
-import IntroFormBlock from './atomic/IntroFormBlock';
-import IntroTitleBlock from './atomic/IntroTitleBlock';
-import IntroDescriptionBlock from './atomic/IntroDescriptionBlock';
-import IntroImageBlock from './atomic/IntroImageBlock';
-import IntroLogoBlock from './atomic/IntroLogoBlock';
-import IntroLogoHeaderBlock from './atomic/IntroLogoHeaderBlock';
-import QuestionTextBlock from './atomic/QuestionTextBlock';
-import QuestionNumberBlock from './atomic/QuestionNumberBlock';
-import QuestionProgressBlock from './atomic/QuestionProgressBlock';
-import QuestionInstructionsBlock from './atomic/QuestionInstructionsBlock';
-import ResultCTAPrimaryBlock from './atomic/ResultCTAPrimaryBlock';
-import ResultCTASecondaryBlock from './atomic/ResultCTASecondaryBlock';
-import FooterCopyrightBlock from './atomic/FooterCopyrightBlock';
-
-// Blocos Atômicos de Resultado (Step 20)
-import ResultHeaderBlock from './atomic/ResultHeaderBlock';
-import ResultMainBlock from './atomic/ResultMainBlock';
-import ResultImageBlock from './atomic/ResultImageBlock';
-import ResultDescriptionBlock from './atomic/ResultDescriptionBlock';
-import ResultCharacteristicsBlock from './atomic/ResultCharacteristicsBlock';
-import ResultCTABlock from './atomic/ResultCTABlock';
-import ResultSecondaryStylesBlock from './atomic/ResultSecondaryStylesBlock';
-import ResultStyleBlock from './atomic/ResultStyleBlock';
-import ResultShareBlock from './atomic/ResultShareBlock';
-import HeadingInlineBlock from '@/components/editor/blocks/HeadingInlineBlock';
-import ImageInlineBlock from '@/components/editor/blocks/ImageInlineBlock';
-import GuaranteeBlock from '@/components/editor/blocks/GuaranteeBlock';
-
-// ✅ HÍBRIDO: Componente de cálculo de resultado (Step 20)
-import { default as ResultCalculationSection } from '@/components/blocks/ResultCalculationSection';
-
-// ✅ FASE 3A: Importações dos novos componentes inline
-import ImageDisplayInlineBlock from '@/components/blocks/inline/ImageDisplayInlineBlock';
-import DecorativeBarInlineBlock from '@/components/blocks/inline/DecorativeBarInlineBlock';
-import LeadFormBlock from '@/components/blocks/inline/LeadFormBlock';
-import ResultCardInlineBlock from '@/components/blocks/inline/ResultCardInlineBlock';
-import ResultDisplayBlock from '@/components/blocks/inline/ResultDisplayBlock';
-import LoadingAnimationBlock from '@/components/blocks/inline/LoadingAnimationBlock';
-import SpinnerBlock from '@/components/blocks/inline/SpinnerBlock';
-import OfferHeaderInlineBlock from '@/components/blocks/inline/OfferHeaderInlineBlock';
-import OfferHeroSectionInlineBlock from '@/components/blocks/inline/OfferHeroSectionInlineBlock';
-import BenefitsInlineBlock from '@/components/blocks/inline/BenefitsInlineBlock';
-import TestimonialsInlineBlock from '@/components/blocks/inline/TestimonialsInlineBlock';
-import QuizOfferPricingInlineBlock from '@/components/blocks/inline/QuizOfferPricingInlineBlock';
-import OfferFaqSectionInlineBlock from '@/components/blocks/inline/OfferFaqSectionInlineBlock';
-import QuizOfferCTAInlineBlock from '@/components/blocks/inline/QuizOfferCTAInlineBlock';
-
-// Sections (para compatibilidade com blocos que ainda usam sections)
-import { QuestionHeroSection } from '@/components/sections/questions/QuestionHeroSection';
-import { TransitionHeroSection } from '@/components/sections/transitions/TransitionHeroSection';
+// 🔄 REMOVIDOS 90+ imports estáticos - Agora usa UnifiedBlockRegistry
+// Todos os componentes são carregados via lazy loading ou cache do registry
 
 export interface UniversalBlockRendererProps {
   block: Block;
