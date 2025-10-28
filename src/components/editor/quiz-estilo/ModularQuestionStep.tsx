@@ -7,7 +7,7 @@ import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { Block } from '@/types/editor';
 import { BlockTypeRenderer } from '@/components/editor/quiz/renderers/BlockTypeRenderer';
 import { cn } from '@/lib/utils';
-import { safeGetTemplateBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
+import { convertTemplateToBlocks, blockComponentsToBlocks } from '@/utils/templateConverter';
 import { getQuiz21StepsTemplate } from '@/templates/imports';
 import { Question } from '@/core/domains/quiz/entities/Question';
 import { Answer } from '@/core/domains/quiz/entities/Answer';
@@ -209,7 +209,7 @@ export default function ModularQuestionStep({
         try {
             // Usar getQuiz21StepsTemplate() em vez de importar diretamente
             const template = getQuiz21StepsTemplate();
-            const comps = safeGetTemplateBlocks(stepKey, template);
+            const comps = convertTemplateToBlocks(template);
             const asBlocks = blockComponentsToBlocks(comps);
             if (asBlocks.length) setFallbackBlocks(asBlocks as any);
         } catch (error) {
