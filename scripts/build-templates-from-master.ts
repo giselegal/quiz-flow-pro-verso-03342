@@ -80,11 +80,12 @@ function normalizeBlock(block: any): any {
     normalized.type = typeMap[normalized.type];
   }
   
-  // Fix: options.image → options.imageUrl
+    // Normalizar options se existirem (image → imageUrl)
   if (normalized.content?.options && Array.isArray(normalized.content.options)) {
     normalized.content.options = normalized.content.options.map((opt: any) => {
       if (opt.image && !opt.imageUrl) {
-        return { ...opt, imageUrl: opt.image, image: opt.image };
+        const { image, ...rest } = opt;
+        return { ...rest, imageUrl: image };
       }
       return opt;
     });
