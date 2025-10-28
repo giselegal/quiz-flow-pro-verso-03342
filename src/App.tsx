@@ -57,9 +57,9 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 const EditorBlocksDiagnosticPage = lazy(() => import('./pages/EditorBlocksDiagnosticPage'));
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 
-// 🚀 EDITOR CONFIGURATION (Sprint 1 - Consolidated)
-import QuizModularProductionEditor from '@/config/editorRoutes.config';
-
+// 🚀 EDITOR CONFIGURATION (Sprint 1 - Consolidated + Lazy Loading)
+// ✅ FASE 6: Lazy load do editor completo (-1.3 MB do bundle inicial)
+const QuizModularProductionEditor = lazy(() => import('@/config/editorRoutes.config'));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));

@@ -101,7 +101,8 @@ import { useSelectionClipboard } from './hooks/useSelectionClipboard';
 import { useVirtualBlocks } from './hooks/useVirtualBlocks';
 import StepNavigator from './components/StepNavigator';
 import ComponentLibraryPanel from './components/ComponentLibraryPanel';
-import { BuilderSystemPanel } from '@/components/editor/BuilderSystemPanel';
+// ✅ FASE 6: Lazy load de componentes pesados do editor
+const BuilderSystemPanel = React.lazy(() => import('@/components/editor/BuilderSystemPanel').then(m => ({ default: m.BuilderSystemPanel })));
 import { loadStepTemplate } from '@/utils/loadStepTemplates';
 // Dados canônicos das etapas (lazy loading para performance)
 import { loadQuizStep, loadAllQuizSteps, STEP_ORDER, preloadAdjacentSteps } from '@/data/quizStepsLazy';
@@ -109,12 +110,14 @@ import type { QuizStep } from '@/data/quizSteps';
 import CanvasArea from './components/CanvasArea';
 import BlockRow from './components/BlockRow';
 import { BlockComponent, EditableQuizStep, BlockSnippet } from './types';
-import PropertiesPanel from './components/PropertiesPanel';
+// ✅ FASE 6: Lazy load PropertiesPanel (componente grande com schemas dinâmicos)
+const PropertiesPanel = React.lazy(() => import('./components/PropertiesPanel'));
 // Fase 2 - Colunas Modulares
 import { StepNavigatorColumn } from './components/StepNavigatorColumn';
 import { ComponentLibraryColumn } from './components/ComponentLibraryColumn';
 import { CanvasColumn } from './components/CanvasColumn';
-import { PropertiesColumn as PropertiesColumnPhase2 } from './components/PropertiesColumn';
+// ✅ FASE 6: Lazy load PropertiesColumn (componente grande)
+const PropertiesColumnPhase2 = React.lazy(() => import('./components/PropertiesColumn').then(m => ({ default: m.PropertiesColumn })));
 import DuplicateBlockDialog from './components/DuplicateBlockDialog';
 import { useUnsavedChanges } from '@/hooks/useUnsavedChanges';
 import { UnsavedChangesIndicator } from './components/UnsavedChangesIndicator';

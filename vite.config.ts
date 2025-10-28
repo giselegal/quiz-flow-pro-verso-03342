@@ -81,15 +81,15 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       cssMinify: 'lightningcss',
       cssCodeSplit: true,
-      modulePreload: {
-        // Garantir que vendor-react seja sempre pré-carregado
-        polyfill: true,
-        resolveDependencies: (filename, deps, { hostId, hostType }) => {
-          // Forçar vendor-react como dependência de todos os chunks
-          return deps;
-        },
-      },
+      // 🎯 FASE 6: Chunk size limits otimizados
+      chunkSizeWarningLimit: 500, // Warning em 500 kB (antes era padrão 500)
       rollupOptions: {
+        onwarn(warning, warn) {
+          // Suprimir warnings específicos que não são críticos
+          if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
+          if (warning.code === 'SOURCEMAP_ERROR') return;
+          warn(warning);
+        },
         // Evita problemas de ordem de inicialização em cenários com ciclos leves
         preserveEntrySignatures: 'exports-only',
         input: { main: path.resolve(__dirname, 'index.html') },
@@ -101,14 +101,59 @@ export default defineConfig(({ mode }) => {
         output: {
           // Nomes de arquivos para chunks
           chunkFileNames: 'assets/[name]-[hash].js',
-          // 🚀 ESTRATÉGIA ULTRA-SIMPLIFICADA - Um único vendor chunk
-          // Resolve TODOS os problemas de dependências circulares
+          // 🎯 FASE 6: VENDOR CHUNKS OPTIMIZATION (-100 kB estimado)
+          // Estratégia granular para melhor code splitting e caching
           manualChunks: (id) => {
-            // TUDO do node_modules vai para um único chunk
             if (id.includes('node_modules')) {
-              return 'vendor';
+              // React ecosystem (core) - mais estável, melhor cache
+              if (id.includes('react') || id.includes('react-dom') || id.includes('react-is') || id.includes('scheduler')) {
+                return 'vendor-react';
+              }
+              
+              // UI Libraries - carregadas em quase todas as páginas
+              if (id.includes('@radix-ui') || id.includes('class-variance-authority') || id.includes('clsx') || id.includes('tailwind-merge')) {
+                return 'vendor-ui';
+              }
+              
+              // DnD Kit - usado apenas no editor
+              if (id.includes('@dnd-kit')) {
+                return 'vendor-dnd';
+              }
+              
+              // Charts - usado apenas em dashboards
+              if (id.includes('recharts') || id.includes('d3-')) {
+                return 'vendor-charts';
+              }
+              
+              // Supabase - usado globalmente mas pode ser separado
+              if (id.includes('@supabase') || id.includes('postgrest-js') || id.includes('gotrue-js')) {
+                return 'vendor-supabase';
+              }
+              
+              // Utilities - lodash, date-fns, etc
+              if (id.includes('lodash') || id.includes('date-fns') || id.includes('dayjs')) {
+                return 'vendor-utils';
+              }
+              
+              // Routing
+              if (id.includes('wouter') || id.includes('regexparam')) {
+                return 'vendor-router';
+              }
+              
+              // Resto dos vendors (menos críticos)
+              return 'vendor-misc';
             }
-            // Código interno: deixar Vite gerenciar automaticamente
+            
+            // Code splitting interno: separar editor do runtime
+            if (id.includes('/src/components/editor/')) {
+              return 'app-editor';
+            }
+            
+            if (id.includes('/src/runtime/') || id.includes('/src/components/quiz/')) {
+              return 'app-runtime';
+            }
+            
+            // Deixar Vite gerenciar automaticamente o resto
           }
         },
       },
