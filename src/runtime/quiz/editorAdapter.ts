@@ -6,30 +6,14 @@ import { getNavigationService } from '@/services/NavigationService';
 
 /**
  * Converte a lista de steps editáveis do editor para o formato consumido pelo runtime (override).
+ * 
+ * ✅ FASE 2.2: Simplificado - navegação automática delegada ao QuizRuntimeRegistry
  */
 export function editorStepsToRuntimeMap(steps: EditableQuizStepLite[]): Record<string, RuntimeStepOverride> {
     const map: Record<string, RuntimeStepOverride> = {};
 
-    // 🎯 FASE 1: Usar NavigationService para construir mapa de navegação
-    const navigationService = getNavigationService();
-    const navSteps = steps.map((s, index) => ({
-        id: s.id,
-        nextStep: (s as any).nextStep,
-        order: (s as any).order ?? index,
-        type: s.type,
-    }));
-    navigationService.buildNavigationMap(navSteps);
-
-    // Preparar fallback de navegação baseado em order (se disponível) - mantido para compatibilidade
-    const ordered = Array.isArray(steps)
-        ? steps.slice().sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
-        : [];
-    const nextById: Record<string, string | undefined> = {};
-    for (let i = 0; i < ordered.length; i++) {
-        const cur = ordered[i];
-        const nxt = ordered[i + 1];
-        if (cur?.id) nextById[cur.id] = nxt?.id;
-    }
+    // ✅ REMOVIDO: NavigationService é gerenciado automaticamente pelo QuizRuntimeRegistry
+    // Apenas convertemos dados, sem calcular navegação aqui
 
     for (const s of steps) {
         if (!s?.id) continue;
@@ -72,9 +56,9 @@ export function editorStepsToRuntimeMap(steps: EditableQuizStepLite[]): Record<s
             }
         }
 
-        // 🎯 FASE 1: Usar NavigationService para resolver nextStep
-        const resolvedNextStep = navigationService.resolveNextStep(s.id, navSteps);
-        const nextStep = resolvedNextStep ?? (s as any).nextStep ?? nextById[s.id];
+        // ✅ FASE 2.2: nextStep será preenchido automaticamente pelo QuizRuntimeRegistry
+        // Apenas passamos o valor original (se houver), sem cálculos redundantes
+        const nextStep = (s as any).nextStep;
 
         map[s.id] = {
             id: s.id,
