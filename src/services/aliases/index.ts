@@ -58,8 +58,8 @@ export { default as HybridTemplateService } from '@/services/HybridTemplateServi
 // Tipos úteis expostos via barrel para imports estáveis
 export type { StepTemplate } from '@/services/HybridTemplateService';
 
-// Storage compatível
-export { UnifiedStorageService } from '@/services/UnifiedStorageService';
+// Storage compatível (já exportado acima como classe)
+// export { StorageService } from '@/services/canonical/StorageService';
 
 // Quiz e dados auxiliares
 export { QUIZ_21_COMPLETE_DATA } from '@/services/Quiz21CompleteService';

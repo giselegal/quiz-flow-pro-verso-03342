@@ -747,3 +747,54 @@ export class MonitoringService extends BaseCanonicalService {
 
 // Export singleton instance
 export const monitoringService = MonitoringService.getInstance();
+
+// ============================================================================
+// REACT HOOK
+// ============================================================================
+
+import { useState, useEffect } from 'react';
+
+/**
+ * React Hook for monitoring
+ * Provides metrics, event tracking, and error reporting
+ */
+export const useMonitoring = () => {
+  const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
+
+  useEffect(() => {
+    // Initial metrics
+    const result = monitoringService.system.getMetrics();
+    if (result.success && result.data) {
+      setMetrics(result.data);
+    }
+
+    // Update metrics every 5 seconds
+    const interval = setInterval(async () => {
+      const result = await monitoringService.system.getMetrics();
+      if (result.success && result.data) {
+        setMetrics(result.data);
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const trackEvent = (event: string, data?: any) => {
+    console.log('[MonitoringService] Event tracked:', event, data);
+  };
+
+  const trackError = (error: Error, context?: any) => {
+    monitoringService.errors.track(error, context?.component, context, 'medium');
+  };
+
+  const trackPerformance = (name: string, value: number) => {
+    monitoringService.performance.track(name, value, 'ms', 'custom');
+  };
+
+  return {
+    metrics,
+    trackEvent,
+    trackError,
+    trackPerformance,
+  };
+};

@@ -4,7 +4,7 @@
  * Sistema para rollout gradual e controle de feature flags em produção
  */
 
-import { useMonitoring } from '@/services/MonitoringService';
+import { useMonitoring } from '@/services/canonical/MonitoringService';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
 import React, { useEffect, useState } from 'react';
 
@@ -317,13 +317,12 @@ const GradualRolloutSection: React.FC<{
         {config.gradualRollout.stages.map((stage, index) => (
           <div
             key={index}
-            className={`p-3 rounded border-2 transition-colors ${
-              isActive && index === currentStage
+            className={`p-3 rounded border-2 transition-colors ${isActive && index === currentStage
                 ? 'border-blue-400 bg-blue-50'
                 : index < currentStage
                   ? 'border-green-400 bg-green-50'
                   : 'border-gray-200 bg-white'
-            }`}
+              }`}
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div>

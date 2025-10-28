@@ -7,7 +7,7 @@
 import { Badge } from '@/components/ui/badge';
 import { appLogger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
-import { useMonitoring } from '@/services/MonitoringService';
+import { useMonitoring } from '@/services/canonical/MonitoringService';
 import { useFeatureFlags } from '@/utils/FeatureFlagManager';
 import {
   Download,

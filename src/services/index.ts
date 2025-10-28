@@ -20,7 +20,7 @@ export { UnifiedTemplateRegistry } from './UnifiedTemplateRegistry';
 export { UnifiedCacheService } from './UnifiedCacheService';
 
 // Storage Services
-export { UnifiedStorageService } from './UnifiedStorageService';
+// UnifiedStorageService removed - use canonical/StorageService instead
 
 // Configuration Services
 export { SupabaseConfigurationStorage } from './SupabaseConfigurationStorage';

@@ -4,7 +4,7 @@
  * Engine de preview 100% idêntico à produção com suporte a arrastar e soltar
  */
 
-import { useMonitoring } from '@/services/MonitoringService';
+import { useMonitoring } from '@/services/canonical/MonitoringService';
 import { appLogger } from '@/utils/logger';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
