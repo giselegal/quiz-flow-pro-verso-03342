@@ -12,7 +12,6 @@ export * from './templateService';
 // ============================================================================
 
 // Template & Block Services
-export { UnifiedTemplateService } from './UnifiedTemplateService';
 export { NavigationService, getNavigationService, createNavigationService } from './NavigationService';
 export { TemplateRegistry } from './TemplateRegistry';
 export { UnifiedTemplateRegistry } from './UnifiedTemplateRegistry';

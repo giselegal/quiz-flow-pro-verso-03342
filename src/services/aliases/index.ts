@@ -55,7 +55,6 @@ export { default as MasterTemplateService } from '@/services/templates/MasterTem
 // ===== Compatibilidade com ServiceAliases (ponte de migração) =====
 // Template layer (legados com depreciação)
 export { default as HybridTemplateService } from '@/services/HybridTemplateService';
-export { UnifiedTemplateService, unifiedTemplateService } from '@/services/UnifiedTemplateService';
 // Tipos úteis expostos via barrel para imports estáveis
 export type { StepTemplate } from '@/services/HybridTemplateService';
 

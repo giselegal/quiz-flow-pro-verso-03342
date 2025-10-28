@@ -34,7 +34,7 @@ import { createLogger, appLogger } from '@/utils/logger';
 
 // ✅ FASE 2.1: Integrar serviços consolidados
 import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
-import { UnifiedTemplateService } from '@/services/UnifiedTemplateService';
+import { templateService } from '@/services/canonical/TemplateService';
 import { NavigationService } from '@/services/NavigationService';
 
 // ============================================================================
@@ -178,7 +178,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
 
     // ✅ FASE 2.1: Instanciar serviços unificados
     const blockRegistry = useMemo(() => UnifiedBlockRegistry.getInstance(), []);
-    const templateService = useMemo(() => UnifiedTemplateService.getInstance(), []);
+    // const templateService = useMemo(() => templateService, []); // Não precisa - já é singleton
     const navigationService = useMemo(() => new NavigationService(), []);
 
     // Refs para debounce
@@ -356,8 +356,15 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
                 ? `step-${step.toString().padStart(2, '0')}`
                 : (String(step).match(/^step-(\d{1,2})$/) ? `step-${parseInt(String(step).replace('step-', ''), 10).toString().padStart(2, '0')}` : String(step));
 
-            // ✅ FASE 2.1: Usar templateService consolidado
-            const blocks = await templateService.loadTemplate(normalizedKey);
+            // ✅ FASE 2.1: Usar templateService canonical
+            const result = await templateService.getStep(normalizedKey);
+
+            if (!result.success || !result.data) {
+                appLogger.warn(`⚠️ Step ${normalizedKey} não encontrado no templateService`);
+                return;
+            }
+
+            const blocks = result.data;
 
             if (blocks && blocks.length > 0) {
                 setState(prev => ({
@@ -379,7 +386,7 @@ export const EditorProviderUnified: React.FC<EditorProviderUnifiedProps> = ({
         } catch (error) {
             appLogger.error('❌ Erro ao carregar step:', error);
         }
-    }, [templateService]);
+    }, []);
 
     // 🔄 Forçar recarregamento do step a partir dos JSONs públicos
     const reloadStepFromJSON = useCallback(async (step?: number | string) => {
