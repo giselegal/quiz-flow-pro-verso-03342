@@ -143,6 +143,10 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
         const start = Date.now();
         this.emit('save/start', { timestamp: start });
         try {
+            // Atualizar updatedAt no state.meta ANTES de criar snapshot
+            const newUpdatedAt = Date.now();
+            this.state.meta = { ...this.state.meta, updatedAt: newUpdatedAt };
+            
             const snapshot: FunnelSnapshot = {
                 steps: this.state.steps.map(s => ({
                     id: s.id,
@@ -151,7 +155,7 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
                     blocks: s.blocks.map(b => ({ id: b.id, type: b.type, data: b.data })),
                     meta: s.meta,
                 })),
-                meta: { ...this.state.meta, updatedAt: Date.now() },
+                meta: this.state.meta,
             };
             if (this.persistFn) {
                 await this.persistFn(snapshot);
