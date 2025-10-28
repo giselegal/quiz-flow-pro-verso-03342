@@ -136,13 +136,6 @@ export const QuizRuntimeRegistryProvider: React.FC<{ children: React.ReactNode }
     );
 };
 
-return (
-    <QuizRuntimeRegistryContext.Provider value={{ steps, version, setSteps, upsertStep, clear }}>
-        {children}
-    </QuizRuntimeRegistryContext.Provider>
-);
-};
-
 export function useQuizRuntimeRegistry() {
     const ctx = useContext(QuizRuntimeRegistryContext);
     if (!ctx) throw new Error('useQuizRuntimeRegistry deve ser usado dentro de QuizRuntimeRegistryProvider');
