@@ -330,7 +330,7 @@ export const FunnelMasterProvider: React.FC<FunnelMasterProviderProps> = ({
       '⚠️ FunnelMasterProvider is deprecated and will be removed in v3.0.\n' +
       'Please migrate to UnifiedAppProvider:\n' +
       'import { UnifiedAppProvider } from "@/providers/UnifiedAppProvider";\n' +
-      'See documentation for migration guide.'
+      'See documentation for migration guide.',
     );
   }, []);
 

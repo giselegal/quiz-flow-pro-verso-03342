@@ -46,7 +46,7 @@ export const ConsolidatedProvider: React.FC<ConsolidatedProviderProps> = ({
   useEffect(() => {
     console.warn(
       '⚠️ ConsolidatedProvider is deprecated. Use UnifiedAppProvider instead.\n' +
-      'See: src/providers/UnifiedAppProvider.tsx'
+      'See: src/providers/UnifiedAppProvider.tsx',
     );
   }, []);
 
