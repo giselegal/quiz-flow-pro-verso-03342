@@ -7,7 +7,7 @@ import { cacheManager } from '@/utils/cache/LRUCache';
 import { useLogger } from '@/utils/logger/SmartLogger';
 
 // 🎯 UNIFIED BLOCK REGISTRY - Lazy loading com code splitting
-import { unifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
+import { UnifiedBlockRegistry } from '@/registry/UnifiedBlockRegistry';
 
 // 🔄 REMOVIDOS 90+ imports estáticos - Agora usa UnifiedBlockRegistry
 // Todos os componentes são carregados via lazy loading ou cache do registry
@@ -33,9 +33,6 @@ export interface UniversalBlockRendererProps {
 // ✅ CACHE PARA DADOS DE RENDERIZAÇÃO
 const renderCache = cacheManager.getCache('render');
 
-// ✅ CACHE PARA COMPONENTES RESOLVIDOS
-const componentCache = cacheManager.getCache('components');
-
 interface BlockRenderData {
   timestamp: number;
   renderTime: number;
@@ -43,193 +40,36 @@ interface BlockRenderData {
   isSelected: boolean;
 }
 
-const createFallbackComponent = (type: string) => {
-  return (props: any) => {
-    const { isSelected, isPreviewing, onUpdate, block, ...domProps } = props;
+// 🎯 SKELETON DE LOADING PARA LAZY COMPONENTS
+const BlockSkeleton: React.FC<{ type: string }> = ({ type }) => (
+  <div className="animate-pulse p-4 border border-gray-200 rounded bg-gray-50">
+    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+  </div>
+);
 
-    return (
-      <div
-        {...domProps}
-        className={cn('p-4 border border-gray-300 rounded', domProps.className)}
-      >
-        <div className="text-sm text-gray-600">
-          {type === 'text' && (block?.content?.text || block?.content?.content || 'Texto')}
-          {type === 'headline' && (block?.content?.text || 'Título')}
-          {type === 'image' && 'Imagem'}
-          {type === 'button' && (block?.content?.text || 'Botão')}
-          {type === 'form' && 'Formulário'}
-          {type === 'spacer' && ''}
-          {type === 'container' && 'Container'}
-        </div>
-      </div>
-    );
-  };
-};
-
-const BlockComponentRegistry: Record<string, React.FC<any>> = {
-  'quiz-intro-header': QuizIntroHeaderBlock,
-  'quiz-question': QuizQuestionBlock,
-  'quiz-option': QuizOptionBlock,
-  'quiz-options': OptionsGridBlock,
-  'quiz-header': QuizHeaderBlock,
-  'quiz-title': QuizTitleBlock,
-  'options-grid': OptionsGridBlock,
-  'options grid': OptionsGridBlock, // ✅ alias com espaço
-
-  // Text & Heading
-  'text-inline': TextInlineBlock,
-  'heading-inline': HeadingInlineBlock,
-  heading: HeadingInlineBlock,
-  headline: HeadingInlineBlock,
-  'headline-inline': HeadingInlineBlock,
-
-  // Question blocks
-  'question-navigation': QuestionNavigationBlock,
-  'quiz-navigation': QuestionNavigationBlock,
-  'question-progress': QuestionProgressBlock, // ✅ CORRIGIDO: usar componente específico
-  'question-text': QuestionTextBlock,
-  'question-title': QuestionTextBlock, // alias
-  'question-number': QuestionNumberBlock,
-  'question-instructions': QuestionInstructionsBlock,
-
-  // Intro blocks
-  'intro-form': IntroFormBlock,
-  'intro-title': IntroTitleBlock,
-  'intro-description': IntroDescriptionBlock,
-  'intro-image': IntroImageBlock,
-  'intro-logo': IntroLogoBlock,
-  'intro-logo-header': IntroLogoHeaderBlock,
-
-  // Buttons & CTA
-  'button-inline': ButtonInlineBlock,
-  'cta-inline': ButtonInlineBlock,
-  'CTAButton': CTAButtonBlock,
-
-  // Form
-  'form-input': FormInputBlock,
-  'image-inline': ImageInlineBlock,
-
-  // Footer
-  'footer-copyright': FooterCopyrightBlock,
-
-  // Other components
-  'fashion-ai-generator': FashionAIGeneratorBlock,
-  'mentor-section-inline': MentorSectionInlineBlock,
-  'testimonial-card-inline': TestimonialCardInlineBlock,
-  testimonials: TestimonialsInlineBlock,
-  'testimonials-carousel-inline': TestimonialsCarouselInlineBlock,
-
-  // Sections (compatibilidade)
-  'question-hero': QuestionHeroSection,
-  'transition-hero': TransitionHeroSection,
-  'result-congrats': ResultHeaderBlock, // alias
-  'result-progress-bars': ResultSecondaryStylesBlock, // alias
-
-  // Step20 Components
-  'step20-result-header': Step20ResultHeaderBlock,
-  'step20-style-reveal': Step20StyleRevealBlock,
-  'step20-user-greeting': Step20UserGreetingBlock,
-  'step20-compatibility': Step20CompatibilityBlock,
-  'step20-secondary-styles': Step20SecondaryStylesBlock,
-  'step20-personalized-offer': Step20PersonalizedOfferBlock,
-  'step20-complete-template': Step20ResultHeaderBlock,
-
-  // ✅ Result calculation
-  'result-calculation': ResultCalculationSection,
-  ResultCalculationSection,
-
-  // ✅ Transition Blocks (Steps 12 & 19)
-  'transition-title': TransitionTitleBlock,
-  'transition-loader': TransitionLoaderBlock,
-  'transition-text': TransitionTextBlock,
-  'transition-progress': TransitionProgressBlock,
-  'transition-message': TransitionMessageBlock,
-
-  // ✅ Result Blocks (Step 20)
-  'result-header': ResultHeaderBlock,
-  'result-main': ResultMainBlock,
-  'result-image': ResultImageBlock,
-  'result-description': ResultDescriptionBlock,
-  'result-characteristics': ResultCharacteristicsBlock,
-  'result-cta': ResultCTABlock,
-  'result-cta-primary': ResultCTAPrimaryBlock,
-  'result-cta-secondary': ResultCTASecondaryBlock,
-  'result-secondary-styles': ResultSecondaryStylesBlock,
-  'result-style': ResultStyleBlock,
-  'result-share': ResultShareBlock,
-
-  // ✅ FASE 3A: Componentes inline específicos
-  'image-display-inline': ImageDisplayInlineBlock,
-  'decorative-bar-inline': DecorativeBarInlineBlock,
-  'lead-form': LeadFormBlock,
-  'result-card-inline': ResultCardInlineBlock,
-  'result-display': ResultDisplayBlock,
-  'loading-animation': LoadingAnimationBlock,
-  'spinner': SpinnerBlock,
-  // ✅ FASE 3A: Componentes de Offer
-  'offer-header': OfferHeaderInlineBlock,
-  'offer-hero': OfferHeroSectionInlineBlock,
-  'offer-hero-section': OfferHeroSectionInlineBlock,
-  'offer-benefits-list': BenefitsInlineBlock,
-  'offer-testimonials': TestimonialsInlineBlock,
-  'offer-pricing-table': QuizOfferPricingInlineBlock,
-  'offer-faq-section': OfferFaqSectionInlineBlock,
-  'offer-cta-section': QuizOfferCTAInlineBlock,
-  pricing: QuizOfferPricingInlineBlock,
-  guarantee: GuaranteeBlock,
-  // Fallbacks para tipos básicos
-  'text': createFallbackComponent('text'),
-  'image': createFallbackComponent('image'),
-  'button': createFallbackComponent('button'),
-  'form': createFallbackComponent('form'),
-  'spacer': createFallbackComponent('spacer'),
-  'container': createFallbackComponent('container'),
-  // Suporte a tipos genéricos de quiz e funnel
-  'quiz': createFallbackComponent('quiz'),
-  'funnel': createFallbackComponent('funnel'),
-};
-
-// ✅ HOOK OTIMIZADO PARA RECUPERAÇÃO DE COMPONENTES
+// ✅ HOOK OTIMIZADO PARA RECUPERAÇÃO DE COMPONENTES VIA UNIFIED REGISTRY
 const useBlockComponent = (blockType: string): React.ComponentType<any> | null => {
   const logger = useLogger('BlockComponent');
 
   return useMemo(() => {
-    // Verificar cache primeiro
-    const cached = componentCache.get(blockType);
-    if (cached) {
-      logger.debug(`Cache hit para componente: ${blockType}`);
-      return cached as React.ComponentType<any>;
+    logger.debug(`Resolvendo componente via UnifiedBlockRegistry: ${blockType}`);
+
+    // Tentar pegar componente lazy primeiro (performance)
+    const lazyComponent = UnifiedBlockRegistry.getInstance().getLazyComponent(blockType);
+    if (lazyComponent) {
+      logger.debug(`Componente lazy encontrado: ${blockType}`);
+      return lazyComponent;
     }
 
-    logger.debug(`Resolvendo componente: ${blockType}`);
-
-    // Tentar registry direto primeiro (performance crítica)
-    let component = BlockComponentRegistry[blockType];
-
-    if (!component) {
-      // Fallback para enhanced registry - converter para React.FC
-      const enhancedComponent = getEnhancedBlockComponent(blockType);
-      const isValid = typeof enhancedComponent === 'function' || (typeof enhancedComponent === 'object' && enhancedComponent !== null && '$$typeof' in enhancedComponent);
-      if (isValid) {
-        component = enhancedComponent as React.FC<any>;
-      } else {
-        logger.error(`Enhanced registry retornou componente inválido para ${blockType}. Usando fallback de placeholder.`);
-        component = BlockComponentRegistry['text'];
-      }
+    // Fallback para componente síncrono (críticos)
+    const syncComponent = UnifiedBlockRegistry.getInstance().getComponent(blockType);
+    if (syncComponent) {
+      logger.debug(`Componente síncrono encontrado: ${blockType}`);
+      return syncComponent;
     }
 
-    if (component) {
-      // Cachear componente resolvido
-      componentCache.set(blockType, component);
-      logger.debug(`Componente ${blockType} cacheado com sucesso`);
-      return component as React.ComponentType<any>;
-    } else {
-      logger.warn(`Componente não encontrado: ${blockType}`, {
-        availableInRegistry: Object.keys(BlockComponentRegistry),
-        availableInEnhanced: 'check EnhancedBlockRegistry',
-      });
-    }
-
+    logger.warn(`Componente não encontrado no UnifiedBlockRegistry: ${blockType}`);
     return null;
   }, [blockType, logger]);
 };
@@ -344,11 +184,12 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
 
   if (!BlockComponent) {
     // Log detalhado para debug
+    const registry = UnifiedBlockRegistry.getInstance();
     logger.error('Componente não encontrado', {
       blockType: block.type,
       blockId: safeBlockId,
-      availableInCache: Array.from(componentCache.keys()),
-      availableInRegistry: Object.keys(BlockComponentRegistry),
+      availableTypes: registry.getAllTypes().slice(0, 20), // Primeiros 20 para não poluir log
+      isCritical: registry.isCritical(block.type),
     });
 
     return (
@@ -369,19 +210,18 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = memo(({
           ID: {safeBlockId}
         </div>
         <div className="text-xs text-red-500">
-          Verifique se o componente está registrado no EnhancedBlockRegistry
+          Verifique se o componente está registrado no UnifiedBlockRegistry
         </div>
         {!isPreviewing && (
           <button
             onClick={() => {
-              const cacheStats = componentCache.getStats();
               logger.info('Debug info:', {
                 blockType: block.type,
                 blockId: block.id,
                 blockContent: block.content,
                 blockProperties: block.properties,
-                availableComponents: Object.keys(BlockComponentRegistry),
-                cacheStats,
+                availableTypes: registry.getAllTypes(),
+                criticalTypes: registry.getCriticalTypes(),
               });
             }}
             className="mt-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200"
