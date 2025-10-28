@@ -156,22 +156,27 @@ const QuizIntegratedRenderer: React.FC = () => {
 };
 
 /**
- * 🎯 PÁGINA PRINCIPAL DO QUIZ COM PROVIDERS CONSOLIDADOS
+ * 🎯 PÁGINA PRINCIPAL DO QUIZ
  *
  * Estrutura de Providers (SIMPLIFICADA):
- * 1. FunnelMasterProvider - Consolida todas as funcionalidades (funis, quiz, steps)
+ * 1. UnifiedAppProvider - Provider canônico único (consolida auth, theme, state, CRUD)
  * 2. EditorProvider - Sistema de blocos (mantido)
  */
 const QuizPage: React.FC = () => {
   return (
-    <FunnelMasterProvider
+    <UnifiedAppProvider
+      context={FunnelContext.PREVIEW}
+      autoLoad={true}
       debugMode={true}
-      enableCache={true}
+      initialFeatures={{
+        enableCache: true,
+        enableAnalytics: true,
+      }}
     >
       <EditorProvider>
         <QuizIntegratedRenderer />
       </EditorProvider>
-    </FunnelMasterProvider>
+    </UnifiedAppProvider>
   );
 };
 
