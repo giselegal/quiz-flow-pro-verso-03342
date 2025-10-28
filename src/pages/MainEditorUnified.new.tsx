@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
-import { FunnelMasterProvider } from '@/providers/FunnelMasterProvider';
+import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
+import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { EditorProvider } from '../components/editor/EditorProviderMigrationAdapter';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
@@ -62,10 +63,15 @@ const MainEditorUnified: React.FC = () => {
 
     return (
         <ErrorBoundary>
-            <FunnelMasterProvider
-                funnelId={sanitizedParams.funnelId}
+            <UnifiedAppProvider
+                context={FunnelContext.EDITOR}
+                autoLoad={true}
                 debugMode={debugMode}
-                enableCache={true}
+                initialFeatures={{
+                    enableCache: true,
+                    enableAnalytics: true,
+                    enableAdvancedEditor: true,
+                }}
             >
                 <EditorProvider
                     enableSupabase={!!realFunnelId} // Ativar Supabase apenas para funis reais
@@ -86,7 +92,7 @@ const MainEditorUnified: React.FC = () => {
                         />
                     )}
                 </EditorProvider>
-            </FunnelMasterProvider>
+            </UnifiedAppProvider>
         </ErrorBoundary>
     );
 };
