@@ -290,7 +290,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         // 2. Persistir no EditorStateManager para histórico e re-renderização
         if (editor?.actions?.updateBlock && stepData?.id) {
             try {
-                const stepKey = normalizeStepKey(step.id || step.step?.toString() || '1');
+                const stepKey = normalizeStepKey(step.id || '1');
                 await editor.actions.updateBlock(stepKey, stepData.id, {
                     metadata: {
                         ...((stepData as any).metadata || {}),
@@ -302,7 +302,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                 appLogger.error('❌ Erro ao persistir edição:', err);
             }
         }
-    }, [editor, stepData, step.id, step.step, normalizeStepKey]);
+    }, [editor, stepData, step.id, normalizeStepKey]);
 
     const handleBlocksReorder = useCallback(async (stepId: string, newOrder: string[]) => {
         // 1. Persistir ordem lógica no metadata (feedback imediato)
