@@ -12,10 +12,11 @@
  * import { FunnelUnifiedService } from '@/services/aliases';
  */
 
-// Canônicos diretos
+// Canonical Service Aliases
 export { templateService } from '@/services/canonical/TemplateService';
 export { cacheService } from '@/services/canonical/CacheService';
 export { dataService as FunnelUnifiedService } from '@/services/canonical/DataService';
+export { navigationService } from '@/services/canonical/NavigationService';
 
 // Exportações opcionais para ampliar adoção
 export { validationService } from '@/services/canonical/ValidationService';

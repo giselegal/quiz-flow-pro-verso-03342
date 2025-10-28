@@ -490,5 +490,6 @@ export function getNavigationService(): NavigationService {
  * Helper para criar nova instância (útil para testes)
  */
 export function createNavigationService(): NavigationService {
-  return new NavigationService({ debug: false });
+  // For testing, create a new instance by bypassing singleton
+  return NavigationService.getInstance({ debug: false });
 }

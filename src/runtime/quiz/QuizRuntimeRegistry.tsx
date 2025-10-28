@@ -75,7 +75,8 @@ export const QuizRuntimeRegistryProvider: React.FC<{ children: React.ReactNode }
             type: s.type,
         }));
 
-        const navMap = navigationService.buildNavigationMap(navSteps);
+        const navMapResult = navigationService.buildNavigationMap(navSteps);
+        const navMap = navMapResult.success ? navMapResult.data : {};
 
         // Aplicar navegação preenchida de volta aos steps
         const enrichedMap = Object.entries(map).reduce((acc, [id, step]) => {
@@ -88,7 +89,7 @@ export const QuizRuntimeRegistryProvider: React.FC<{ children: React.ReactNode }
 
         setStepsState(enrichedMap);
         setVersion(v => v + 1);
-    }, [navigationService]);
+    }, []);
 
     const upsertStep = useCallback((step: RuntimeStepOverride) => {
         setStepsState(prev => {
@@ -96,11 +97,12 @@ export const QuizRuntimeRegistryProvider: React.FC<{ children: React.ReactNode }
 
             // Recalcular navegação para o step atualizado
             const stepsArray = Object.values(updated);
-            const navMap = navigationService.buildNavigationMap(stepsArray.map(s => ({
+            const navMapResult = navigationService.buildNavigationMap(stepsArray.map(s => ({
                 id: s.id,
                 nextStep: s.nextStep,
                 type: s.type,
             })));
+            const navMap = navMapResult.success ? navMapResult.data : {};
 
             // Aplicar nextStep recalculado
             return Object.entries(updated).reduce((acc, [id, s]) => {
@@ -112,7 +114,7 @@ export const QuizRuntimeRegistryProvider: React.FC<{ children: React.ReactNode }
             }, {} as Record<string, RuntimeStepOverride>);
         });
         setVersion(v => v + 1);
-    }, [navigationService]);
+    }, []);
 
     const clear = useCallback(() => {
         setStepsState({});

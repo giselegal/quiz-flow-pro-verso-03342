@@ -12,7 +12,7 @@ export * from './templateService';
 // ============================================================================
 
 // Template & Block Services
-export { NavigationService, getNavigationService, createNavigationService } from './NavigationService';
+// NavigationService moved to canonical - use: import { navigationService } from '@/services/canonical/NavigationService';
 export { TemplateRegistry } from './TemplateRegistry';
 export { UnifiedTemplateRegistry } from './UnifiedTemplateRegistry';
 
@@ -36,9 +36,10 @@ export {
 } from '../config/quizNavigation';
 
 // Types
+// NavigationService types moved to canonical
 export type {
   StepNavigationInfo,
   NavigationMap,
   NavigationValidationResult,
   NavigationGraph,
-} from './NavigationService';
+} from './canonical/NavigationService';

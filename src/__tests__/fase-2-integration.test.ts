@@ -2,14 +2,15 @@
  * 🧪 TESTES DA FASE 2 - JSON Template Integration
  * 
  * Testes focados nas implementações da FASE 2:
- * - JsonTemplateService
- * - Feature flags integration
- * - Loading/Error states
- * - Type helpers
+ * - ✅ Feature flags integration
+ * - ✅ Loading/Error states
+ * - ✅ Type helpers
+ * 
+ * NOTE: JsonTemplateService removed - functionality consolidated in canonical/TemplateService
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import jsonTemplateService, { JsonTemplateService } from '@/services/JsonTemplateService';
+// import jsonTemplateService, { JsonTemplateService } from '@/services/JsonTemplateService'; // REMOVED
 import {
     isJsonBlockType,
     isQuizBlockType,
@@ -21,6 +22,13 @@ import {
 
 describe('FASE 2 - JSON Template Integration', () => {
     describe('JsonTemplateService', () => {
+        it.skip('JsonTemplateService removed - use canonical/TemplateService', () => {
+            // This service was consolidated into canonical/TemplateService
+            // See: src/services/canonical/TemplateService.ts
+            expect(true).toBe(true);
+        });
+
+        /* COMMENTED OUT - JsonTemplateService removed
         beforeEach(() => {
             // Limpar cache antes de cada teste
             jsonTemplateService.clearCache();
@@ -53,31 +61,7 @@ describe('FASE 2 - JSON Template Integration', () => {
             expect(Array.isArray(templates)).toBe(true);
             expect(templates.length).toBe(21); // Quiz tem 21 steps
         });
-
-        it('deve ter métricas inicializadas', () => {
-            const metrics = jsonTemplateService.getMetrics();
-
-            expect(metrics).toBeDefined();
-            expect(metrics.hits).toBe(0);
-            expect(metrics.misses).toBe(0);
-            expect(metrics.errors).toBe(0);
-        });
-
-        it('deve limpar cache', () => {
-            jsonTemplateService.clearCache();
-
-            const stats = jsonTemplateService.getStats();
-            expect(stats.cache.size).toBe(0);
-        });
-
-        it('deve resetar métricas', () => {
-            jsonTemplateService.resetMetrics();
-
-            const metrics = jsonTemplateService.getMetrics();
-            expect(metrics.hits).toBe(0);
-            expect(metrics.misses).toBe(0);
-            expect(metrics.totalLoadTime).toBe(0);
-        });
+        */
     });
 
     describe('Type Helpers - isJsonBlockType', () => {
