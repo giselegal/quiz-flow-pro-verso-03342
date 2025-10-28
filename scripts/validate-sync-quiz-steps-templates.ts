@@ -43,8 +43,8 @@ for (const stepId of Array.from(allStepIds).sort()) {
   if (Array.isArray(templateBlocks)) {
     // Procurar por um bloco com navigation.nextStep
     for (const block of templateBlocks) {
-      if (block.navigation?.nextStep !== undefined) {
-        templateNext = block.navigation.nextStep;
+      if ((block as any).navigation?.nextStep !== undefined) {
+        templateNext = (block as any).navigation.nextStep;
         break;
       }
     }

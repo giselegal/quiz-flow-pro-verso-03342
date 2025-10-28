@@ -6,7 +6,7 @@ import { QUIZ_STEPS } from '../src/data/quizSteps';
 import { getQuiz21StepsTemplate } from '../src/templates/imports';
 
 console.log('🔍 COMPARANDO FONTES DE DADOS\n');
-console.log('='*60);
+console.log('='.repeat(60));
 
 // Fonte 1: QUIZ_STEPS (quizSteps.ts)
 console.log('\n📘 FONTE 1: QUIZ_STEPS (src/data/quizSteps.ts)');
